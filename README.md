@@ -16,7 +16,7 @@ Requirements
 
 Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above.
 
-For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/). We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you. See the Getting Started section for examples.
+For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/). We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
 
 Features
 --------
@@ -107,7 +107,7 @@ If you find a bug (highly likely!) then please report it on github.
 
 If you have a feature request, or have written a small game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
 
-You can do this on the Phaser board at the [HTML5 Game Devs forum]() or email: rich@photonstorm.com
+You can do this on the [HTML5 Game Devs forum](http://www.html5gamedevs.com) or email: rich@photonstorm.com
 
 Bugs?
 -----
