@@ -11,6 +11,8 @@ Phaser is a 2D JavaScript/TypeScript HTML5 Game Framework based heavily on [Flix
 
 Follow us on [twitter](https://twitter.com/photonstorm) and our [blog](http://www.photonstorm.com) for development updates.
 
+For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/)
+
 ![Phaser Cameras](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_cams.png)
 
 Requirements
@@ -28,45 +30,58 @@ Phaser was born from a cross-polination of the AS3 Flixel game library and our o
 Phaser fully or partially supports the following features. This list is growing constantly and we are aware there are still a number of essential features missing:
 
 *	Asset Loading
+
 	Images, Sprite Sheets, Texture Packer Data, JSON, Text Files, Audio File.
 
 *	Cameras
+
 	Multiple world cameras, camera scale, zoom, rotation, deadzones and Sprite following.
 
 *	Sprites
+
 	All sprites have physics properties including velocity, acceleration, bounce and drag.
 	ScrollFactor allows them to re-act to cameras at different rates.
 
 *	Groups
+
 	Group sprites together for collision checks, visibility toggling and function iteration.
 
 *	Animation
+
 	Sprites can be animated by a sprite sheet or Texture Atlas (JSON Array format supported).
 	Animation playback controls, looping, fps based timer and custom frames.
 
 *	Collision
+
 	A QuadTree based Sprite to Sprite, Sprite to Group or Group to Group collision system.
 
 *	Particles
+
 	An Emitter can emit Sprites in a burst or at a constant rate, setting physics properties.
 
 *	Input
+
 	Keyboard and Mouse handling supported (Touch coming asap)
 
 *	Stage
+
 	Easily change properties about your game via the stage, such as background color, position and size.
 
 *	World
+
 	The game world can be any size and Sprites and collision happens within it.
 
-*	Sound (partial support)
+*	Sound
+
 	Currently uses WebAudio for playback. A lot more work needs to be done in this area.
 
 *	State Management
+
 	For larger games it's useful to break your game down into States, i.e. MainMenu, Level1, GameOver, etc.
 	The state manager makes swapping states easy, but the use of a state is completely optional.
 
 *	Cache
+
 	All loaded resources are stored in an easy to access cache, which can be cleared between State changes
 	or persist through-out the whole game.
 
@@ -92,7 +107,7 @@ Beyond this there are lots of other things we plan to add such as WebGL support,
 Test Suite
 ----------
 
-Phase comes with an ever growing Test Suite. Personally we learn better by looking at small refined code examples, so we create lots of them to test each new feature we add. Inside the Tests folder you'll find the current set. If you write a particuarly good test then please send it to us.
+Phaser comes with an ever growing Test Suite. Personally we learn better by looking at small refined code examples, so we create lots of them to test each new feature we add. Inside the Tests folder you'll find the current set. If you write a particuarly good test then please send it to us.
 
 The tests need running through a local web server (to avoid file access permission errors from your browser).
 
@@ -111,7 +126,7 @@ If you find a bug (highly likely!) then please report it on github.
 
 If you have a feature request, or have written a small game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
 
-You can do this on the [HTML5 Game Devs forum](http://www.html5gamedevs.com) or email: rich@photonstorm.com
+You can do this on the Phased board on the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/) or email: rich@photonstorm.com
 
 Bugs?
 -----
