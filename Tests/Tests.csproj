@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{DC8A0795-0F9C-4216-A95D-6C3346EA7E26}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Tests</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:51901/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="cameras\camera alpha.ts" />
+    <TypeScriptCompile Include="cameras\camera bounds.ts" />
+    <TypeScriptCompile Include="cameras\camera position.ts" />
+    <TypeScriptCompile Include="cameras\camera rotation.ts" />
+    <TypeScriptCompile Include="cameras\camera scale.ts" />
+    <TypeScriptCompile Include="cameras\camera shadow.ts" />
+    <TypeScriptCompile Include="cameras\camera texture.ts" />
+    <TypeScriptCompile Include="cameras\fade fx.ts" />
+    <TypeScriptCompile Include="cameras\flash fx.ts" />
+    <TypeScriptCompile Include="cameras\focus on.ts" />
+    <TypeScriptCompile Include="cameras\follow deadzone.ts" />
+    <TypeScriptCompile Include="cameras\follow sprite.ts" />
+    <TypeScriptCompile Include="cameras\follow topdown.ts" />
+    <TypeScriptCompile Include="cameras\multicam1.ts" />
+    <TypeScriptCompile Include="cameras\scroll factor.ts" />
+    <TypeScriptCompile Include="cameras\shake fx.ts" />
+    <TypeScriptCompile Include="collision\collide sprites.ts" />
+    <TypeScriptCompile Include="collision\falling balls.ts" />
+    <TypeScriptCompile Include="groups\basic group.ts" />
+    <TypeScriptCompile Include="input\mouse scale.ts" />
+    <TypeScriptCompile Include="mini games\formula 1.ts" />
+    <TypeScriptCompile Include="misc\multi game.ts" />
+    <TypeScriptCompile Include="particles\basic emitter.ts" />
+    <TypeScriptCompile Include="particles\graphic emitter.ts" />
+    <TypeScriptCompile Include="particles\multiple streams.ts" />
+    <TypeScriptCompile Include="particles\sprite emitter.ts" />
+    <TypeScriptCompile Include="particles\when particles collide.ts" />
+    <TypeScriptCompile Include="sprites\animation 1.ts" />
+    <TypeScriptCompile Include="sprites\mark of the bunny.ts" />
+    <TypeScriptCompile Include="sprites\texture atlas 2.ts" />
+    <TypeScriptCompile Include="sprites\texture atlas 3.ts" />
+    <TypeScriptCompile Include="sprites\texture atlas 4.ts" />
+    <TypeScriptCompile Include="sprites\texture atlas.ts" />
+    <TypeScriptCompile Include="sprites\velocity.ts" />
+    <TypeScriptCompile Include="tilemap\basic tilemap.ts" />
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
+</Project>

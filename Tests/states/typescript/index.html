@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
+    <title>Phaser Test Runner : TypeScript State Test 1</title>
+    <link rel="stylesheet" href="../../phaser.css" type="text/css" />
+    <script src="../../phaser.js"></script>
+    <script src="MainMenu.js"></script>
+    <script src="FakeGame.js"></script>
+</head>
+<body>
+
+    <div id="game"></div>
+
+    <script type="text/javascript">
+
+    var myGame = new Game(this, 'game', 840, 400);
+
+    myGame.switchState(MainMenu);
+
+    </script>
+
+</body>
+</html>
