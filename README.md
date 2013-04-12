@@ -11,6 +11,8 @@ Phaser is a 2D JavaScript/TypeScript HTML5 Game Framework based heavily on [Flix
 
 Follow us on [twitter](https://twitter.com/photonstorm) and our [blog](http://www.photonstorm.com) for development updates.
 
+![Phaser Cameras](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_cams.png)
+
 Requirements
 ------------
 
@@ -71,6 +73,8 @@ Phaser fully or partially supports the following features. This list is growing 
 *	Tilemaps
 	Support for CSV and Tiled JSON format tile maps	is implemented but currently limited.
 
+![Phaser Particles](http://www.photonstorm.com/wp-content/uploads/2013/04/phaster_particles.png)
+
 Work in Progress
 ----------------
 
@@ -113,6 +117,8 @@ Bugs?
 -----
 
 Please add them to the [Issue Tracker][1] with as much info as possible.
+
+![Phaser Tilemap](http://www.photonstorm.com/wp-content/uploads/2013/04/phaster_tilemap.png)
 
 License
 -------
