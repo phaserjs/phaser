@@ -25,6 +25,7 @@ Thumbs.db
 *.map
 *.config
 *.sublime-workspace
+.DS_Store
 launcher.html
 tests.html
 [Bb]in

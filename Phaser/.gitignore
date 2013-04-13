@@ -23,9 +23,10 @@ Thumbs.db
 *.map
 *.orig
 *.js
-!kiwi-lite.js
+!phaser.js
 *.map
 *.config
+.DS_Store
 [Bb]in
 [Dd]ebug*/
 *.lib
@@ -34,3 +35,4 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+
