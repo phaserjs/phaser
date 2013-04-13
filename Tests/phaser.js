@@ -1,3 +1,4 @@
+/// <reference path="Game.ts" />
 /**
 *  Phaser - GameMath
 *
@@ -1584,8 +1585,8 @@ var Rectangle = (function () {
 })();
 /// <reference path="../Game.ts" />
 /// <reference path="../GameMath.ts" />
-/// <reference path="../Rectangle.ts" />
-/// <reference path="../Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Point.ts" />
 var Camera = (function () {
     /**
     * Instantiates a new camera at the specified location, with the specified size and zoom level.
@@ -2092,8 +2093,8 @@ var Camera = (function () {
 })();
 /// <reference path="Game.ts" />
 /// <reference path="GameMath.ts" />
-/// <reference path="Rectangle.ts" />
-/// <reference path="Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
 /// <reference path="system/Camera.ts" />
 //  TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
 //  TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
@@ -2226,8 +2227,8 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path="Basic.ts" />
 /// <reference path="Game.ts" />
 /// <reference path="GameMath.ts" />
-/// <reference path="Rectangle.ts" />
-/// <reference path="Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
 var GameObject = (function (_super) {
     __extends(GameObject, _super);
     function GameObject(game, x, y, width, height) {
@@ -2620,8 +2621,8 @@ var GameObject = (function (_super) {
 /// <reference path="GameObject.ts" />
 /// <reference path="Game.ts" />
 /// <reference path="GameMath.ts" />
-/// <reference path="Rectangle.ts" />
-/// <reference path="Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
 var Sprite = (function (_super) {
     __extends(Sprite, _super);
     function Sprite(game, x, y, key) {
@@ -3356,7 +3357,7 @@ var Particle = (function (_super) {
 })(Sprite);
 /// <reference path="Group.ts" />
 /// <reference path="Particle.ts" />
-/// <reference path="Point.ts" />
+/// <reference path="geom/Point.ts" />
 /**
 * <code>Emitter</code> is a lightweight particle emitter.
 * It can be used for one-time explosions or for
@@ -3933,15 +3934,17 @@ var SoundManager = (function () {
     function SoundManager(game) {
         this._context = null;
         this._game = game;
-        if(!!window['AudioContext']) {
-            this._context = new window['AudioContext']();
-        } else if(!!window['webkitAudioContext']) {
-            this._context = new window['webkitAudioContext']();
-        }
-        if(this._context !== null) {
-            this._gainNode = this._context.createGainNode();
-            this._gainNode.connect(this._context.destination);
-            this._volume = 1;
+        if(game.device.webaudio == true) {
+            if(!!window['AudioContext']) {
+                this._context = new window['AudioContext']();
+            } else if(!!window['webkitAudioContext']) {
+                this._context = new window['webkitAudioContext']();
+            }
+            if(this._context !== null) {
+                this._gainNode = this._context.createGainNode();
+                this._gainNode.connect(this._context.destination);
+                this._volume = 1;
+            }
         }
     }
     SoundManager.prototype.mute = function () {
@@ -4071,9 +4074,90 @@ var Sound = (function () {
     });
     return Sound;
 })();
+/// <reference path="../Game.ts" />
+/*
+* Based on code from Viewporter v2.0
+* http://github.com/zynga/viewporter
+*
+* Copyright 2011, Zynga Inc.
+* Licensed under the MIT License.
+* https://raw.github.com/zynga/viewporter/master/MIT-LICENSE.txt
+*/
+var FullScreen = (function () {
+    function FullScreen(game) {
+        var _this = this;
+        this._game = game;
+        this.orientation = window['orientation'];
+        window.addEventListener('orientationchange', function (event) {
+            return _this.checkOrientation(event);
+        }, false);
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+    }
+    FullScreen.prototype.go = function () {
+        this.refresh();
+    };
+    FullScreen.prototype.update = function () {
+        if(window.innerWidth !== this.width || window.innerHeight !== this.height) {
+            this.refresh();
+        }
+    };
+    Object.defineProperty(FullScreen.prototype, "isLandscape", {
+        get: function () {
+            return window['orientation'] === 90 || window['orientation'] === -90;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    FullScreen.prototype.checkOrientation = function (event) {
+        if(window['orientation'] !== this.orientation) {
+            this.refresh();
+            this.orientation = window['orientation'];
+        }
+    };
+    FullScreen.prototype.refresh = function () {
+        var _this = this;
+        //  We can't do anything about the status bars in iPads, web apps or desktops
+        if(this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false) {
+            document.documentElement.style.minHeight = '5000px';
+            this._startHeight = window.innerHeight;
+            if(this._game.device.android && this._game.device.chrome == false) {
+                window.scrollTo(0, 1);
+            } else {
+                window.scrollTo(0, 0);
+            }
+        }
+        if(this._check == null) {
+            this._iterations = 40;
+            this._check = window.setInterval(function () {
+                return _this.retryFullScreen();
+            }, 10);
+        }
+    };
+    FullScreen.prototype.retryFullScreen = function () {
+        if(this._game.device.android && this._game.device.chrome == false) {
+            window.scrollTo(0, 1);
+        } else {
+            window.scrollTo(0, 0);
+        }
+        this._iterations--;
+        if(window.innerHeight > this._startHeight || this._iterations < 0) {
+            // set minimum height of content to new window height
+            document.documentElement.style.minHeight = window.innerHeight + 'px';
+            this._game.stage.canvas.style.width = window.innerWidth + 'px';
+            this._game.stage.canvas.style.height = window.innerHeight + 'px';
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+            clearInterval(this._check);
+            this._check = null;
+        }
+    };
+    return FullScreen;
+})();
 /// <reference path="Game.ts" />
-/// <reference path="Point.ts" />
-/// <reference path="Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
+/// <reference path="system/Fullscreen.ts" />
 var Stage = (function () {
     function Stage(game, parent, width, height) {
         var _this = this;
@@ -4085,12 +4169,14 @@ var Stage = (function () {
         this.canvas.height = height;
         if(document.getElementById(parent)) {
             document.getElementById(parent).appendChild(this.canvas);
+            document.getElementById(parent).style.overflow = 'hidden';
         } else {
             document.body.appendChild(this.canvas);
         }
-        var offset = this.getOffset(this.canvas);
-        this.bounds = new Rectangle(offset.x, offset.y, width, height);
         this.context = this.canvas.getContext('2d');
+        this.offset = this.getOffset(this.canvas);
+        this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
+        this.fullscreen = new FullScreen(this._game);
         //document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
         //document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
         window.onblur = function (event) {
@@ -4100,7 +4186,10 @@ var Stage = (function () {
             return _this.visibilityChange(event);
         };
     }
+    Stage.ORIENTATION_LANDSCAPE = 0;
+    Stage.ORIENTATION_PORTRAIT = 1;
     Stage.prototype.update = function () {
+        this.fullscreen.update();
         if(this.clear) {
             //  implement dirty rect? could take up more cpu time than it saves. needs benching.
             this.context.clearRect(0, 0, this.width, this.height);
@@ -4232,6 +4321,7 @@ var Stage = (function () {
     });
     return Stage;
 })();
+/// <reference path="Game.ts" />
 var Time = (function () {
     function Time(game) {
         this.timeScale = 1.0;
@@ -4335,7 +4425,7 @@ var Time = (function () {
 /// <reference path="../Game.ts" />
 /// <reference path="../GameObject.ts" />
 /// <reference path="../Tilemap.ts" />
-/// <reference path="../Rectangle.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="Camera.ts" />
 /**
 * A Tilemap Buffer
@@ -4454,8 +4544,8 @@ var TilemapBuffer = (function () {
 })();
 /// <reference path="Game.ts" />
 /// <reference path="GameObject.ts" />
-/// <reference path="Point.ts" />
-/// <reference path="Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
 /// <reference path="system/TilemapBuffer.ts" />
 var Tilemap = (function (_super) {
     __extends(Tilemap, _super);
@@ -4650,7 +4740,7 @@ var LinkedList = (function () {
     };
     return LinkedList;
 })();
-/// <reference path="../Rectangle.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../Basic.ts" />
 /// <reference path="LinkedList.ts" />
 /**
@@ -5052,8 +5142,8 @@ var QuadTree = (function (_super) {
 /// <reference path="Game.ts" />
 /// <reference path="GameMath.ts" />
 /// <reference path="Group.ts" />
-/// <reference path="Rectangle.ts" />
-/// <reference path="Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
 /// <reference path="Sprite.ts" />
 /// <reference path="Tilemap.ts" />
 /// <reference path="system/Camera.ts" />
@@ -5638,21 +5728,1279 @@ var Keyboard = (function () {
     Keyboard.NUM_LOCK = 144;
     return Keyboard;
 })();
+/// <reference path="Signal.ts" />
+/*
+*	SignalBinding
+*
+*	@desc		An object that represents a binding between a Signal and a listener function.
+*              Released under the MIT license
+*				http://millermedeiros.github.com/js-signals/
+*
+*	@version	1. - 7th March 2013
+*
+*	@author 	Richard Davey, TypeScript conversion
+*	@author		Miller Medeiros, JS Signals
+*
+*/
+var SignalBinding = (function () {
+    /**
+    * Object that represents a binding between a Signal and a listener function.
+    * <br />- <strong>This is an internal constructor and shouldn't be called by regular users.</strong>
+    * <br />- inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
+    * @author Miller Medeiros
+    * @constructor
+    * @internal
+    * @name SignalBinding
+    * @param {Signal} signal Reference to Signal object that listener is currently bound to.
+    * @param {Function} listener Handler function bound to the signal.
+    * @param {boolean} isOnce If binding should be executed just once.
+    * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @param {Number} [priority] The priority level of the event listener. (default = 0).
+    */
+    function SignalBinding(signal, listener, isOnce, listenerContext, priority) {
+        if (typeof priority === "undefined") { priority = 0; }
+        /**
+        * If binding is active and should be executed.
+        * @type boolean
+        */
+        this.active = true;
+        /**
+        * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute`. (curried parameters)
+        * @type Array|null
+        */
+        this.params = null;
+        this._listener = listener;
+        this._isOnce = isOnce;
+        this.context = listenerContext;
+        this._signal = signal;
+        this.priority = priority || 0;
+    }
+    SignalBinding.prototype.execute = /**
+    * Call listener passing arbitrary parameters.
+    * <p>If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.</p>
+    * @param {Array} [paramsArr] Array of parameters that should be passed to the listener
+    * @return {*} Value returned by the listener.
+    */
+    function (paramsArr) {
+        var handlerReturn;
+        var params;
+        if(this.active && !!this._listener) {
+            params = this.params ? this.params.concat(paramsArr) : paramsArr;
+            handlerReturn = this._listener.apply(this.context, params);
+            if(this._isOnce) {
+                this.detach();
+            }
+        }
+        return handlerReturn;
+    };
+    SignalBinding.prototype.detach = /**
+    * Detach binding from signal.
+    * - alias to: mySignal.remove(myBinding.getListener());
+    * @return {Function|null} Handler function bound to the signal or `null` if binding was previously detached.
+    */
+    function () {
+        return this.isBound() ? this._signal.remove(this._listener, this.context) : null;
+    };
+    SignalBinding.prototype.isBound = /**
+    * @return {Boolean} `true` if binding is still bound to the signal and have a listener.
+    */
+    function () {
+        return (!!this._signal && !!this._listener);
+    };
+    SignalBinding.prototype.isOnce = /**
+    * @return {boolean} If SignalBinding will only be executed once.
+    */
+    function () {
+        return this._isOnce;
+    };
+    SignalBinding.prototype.getListener = /**
+    * @return {Function} Handler function bound to the signal.
+    */
+    function () {
+        return this._listener;
+    };
+    SignalBinding.prototype.getSignal = /**
+    * @return {Signal} Signal that listener is currently bound to.
+    */
+    function () {
+        return this._signal;
+    };
+    SignalBinding.prototype._destroy = /**
+    * Delete instance properties
+    * @private
+    */
+    function () {
+        delete this._signal;
+        delete this._listener;
+        delete this.context;
+    };
+    SignalBinding.prototype.toString = /**
+    * @return {string} String representation of the object.
+    */
+    function () {
+        return '[SignalBinding isOnce:' + this._isOnce + ', isBound:' + this.isBound() + ', active:' + this.active + ']';
+    };
+    return SignalBinding;
+})();
+/// <reference path="SignalBinding.ts" />
+/*
+*	Signal
+*
+*	@desc		A TypeScript conversion of JS Signals by Miller Medeiros
+*              Released under the MIT license
+*				http://millermedeiros.github.com/js-signals/
+*
+*	@version	1. - 7th March 2013
+*
+*	@author 	Richard Davey, TypeScript conversion
+*	@author		Miller Medeiros, JS Signals
+*
+*/
+/**
+* Custom event broadcaster
+* <br />- inspired by Robert Penner's AS3 Signals.
+* @name Signal
+* @author Miller Medeiros
+* @constructor
+*/
+var Signal = (function () {
+    function Signal() {
+        /**
+        *
+        * @property _bindings
+        * @type Array
+        * @private
+        */
+        this._bindings = [];
+        /**
+        *
+        * @property _prevParams
+        * @type Any
+        * @private
+        */
+        this._prevParams = null;
+        /**
+        * If Signal should keep record of previously dispatched parameters and
+        * automatically execute listener during `add()`/`addOnce()` if Signal was
+        * already dispatched before.
+        * @type boolean
+        */
+        this.memorize = false;
+        /**
+        * @type boolean
+        * @private
+        */
+        this._shouldPropagate = true;
+        /**
+        * If Signal is active and should broadcast events.
+        * <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
+        * @type boolean
+        */
+        this.active = true;
+    }
+    Signal.VERSION = '1.0.0';
+    Signal.prototype.validateListener = /**
+    *
+    * @method validateListener
+    * @param {Any} listener
+    * @param {Any} fnName
+    */
+    function (listener, fnName) {
+        if(typeof listener !== 'function') {
+            throw new Error('listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName));
+        }
+    };
+    Signal.prototype._registerListener = /**
+    * @param {Function} listener
+    * @param {boolean} isOnce
+    * @param {Object} [listenerContext]
+    * @param {Number} [priority]
+    * @return {SignalBinding}
+    * @private
+    */
+    function (listener, isOnce, listenerContext, priority) {
+        var prevIndex = this._indexOfListener(listener, listenerContext);
+        var binding;
+        if(prevIndex !== -1) {
+            binding = this._bindings[prevIndex];
+            if(binding.isOnce() !== isOnce) {
+                throw new Error('You cannot add' + (isOnce ? '' : 'Once') + '() then add' + (!isOnce ? '' : 'Once') + '() the same listener without removing the relationship first.');
+            }
+        } else {
+            binding = new SignalBinding(this, listener, isOnce, listenerContext, priority);
+            this._addBinding(binding);
+        }
+        if(this.memorize && this._prevParams) {
+            binding.execute(this._prevParams);
+        }
+        return binding;
+    };
+    Signal.prototype._addBinding = /**
+    *
+    * @method _addBinding
+    * @param {SignalBinding} binding
+    * @private
+    */
+    function (binding) {
+        //simplified insertion sort
+        var n = this._bindings.length;
+        do {
+            --n;
+        }while(this._bindings[n] && binding.priority <= this._bindings[n].priority);
+        this._bindings.splice(n + 1, 0, binding);
+    };
+    Signal.prototype._indexOfListener = /**
+    *
+    * @method _indexOfListener
+    * @param {Function} listener
+    * @return {number}
+    * @private
+    */
+    function (listener, context) {
+        var n = this._bindings.length;
+        var cur;
+        while(n--) {
+            cur = this._bindings[n];
+            if(cur.getListener() === listener && cur.context === context) {
+                return n;
+            }
+        }
+        return -1;
+    };
+    Signal.prototype.has = /**
+    * Check if listener was attached to Signal.
+    * @param {Function} listener
+    * @param {Object} [context]
+    * @return {boolean} if Signal has the specified listener.
+    */
+    function (listener, context) {
+        if (typeof context === "undefined") { context = null; }
+        return this._indexOfListener(listener, context) !== -1;
+    };
+    Signal.prototype.add = /**
+    * Add a listener to the signal.
+    * @param {Function} listener Signal handler function.
+    * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+    * @return {SignalBinding} An Object representing the binding between the Signal and listener.
+    */
+    function (listener, listenerContext, priority) {
+        if (typeof listenerContext === "undefined") { listenerContext = null; }
+        if (typeof priority === "undefined") { priority = 0; }
+        this.validateListener(listener, 'add');
+        return this._registerListener(listener, false, listenerContext, priority);
+    };
+    Signal.prototype.addOnce = /**
+    * Add listener to the signal that should be removed after first execution (will be executed only once).
+    * @param {Function} listener Signal handler function.
+    * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+    * @return {SignalBinding} An Object representing the binding between the Signal and listener.
+    */
+    function (listener, listenerContext, priority) {
+        if (typeof listenerContext === "undefined") { listenerContext = null; }
+        if (typeof priority === "undefined") { priority = 0; }
+        this.validateListener(listener, 'addOnce');
+        return this._registerListener(listener, true, listenerContext, priority);
+    };
+    Signal.prototype.remove = /**
+    * Remove a single listener from the dispatch queue.
+    * @param {Function} listener Handler function that should be removed.
+    * @param {Object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
+    * @return {Function} Listener handler function.
+    */
+    function (listener, context) {
+        if (typeof context === "undefined") { context = null; }
+        this.validateListener(listener, 'remove');
+        var i = this._indexOfListener(listener, context);
+        if(i !== -1) {
+            this._bindings[i]._destroy()//no reason to a SignalBinding exist if it isn't attached to a signal
+            ;
+            this._bindings.splice(i, 1);
+        }
+        return listener;
+    };
+    Signal.prototype.removeAll = /**
+    * Remove all listeners from the Signal.
+    */
+    function () {
+        var n = this._bindings.length;
+        while(n--) {
+            this._bindings[n]._destroy();
+        }
+        this._bindings.length = 0;
+    };
+    Signal.prototype.getNumListeners = /**
+    * @return {number} Number of listeners attached to the Signal.
+    */
+    function () {
+        return this._bindings.length;
+    };
+    Signal.prototype.halt = /**
+    * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
+    * <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
+    * @see Signal.prototype.disable
+    */
+    function () {
+        this._shouldPropagate = false;
+    };
+    Signal.prototype.dispatch = /**
+    * Dispatch/Broadcast Signal to all listeners added to the queue.
+    * @param {...*} [params] Parameters that should be passed to each handler.
+    */
+    function () {
+        var paramsArr = [];
+        for (var _i = 0; _i < (arguments.length - 0); _i++) {
+            paramsArr[_i] = arguments[_i + 0];
+        }
+        if(!this.active) {
+            return;
+        }
+        var n = this._bindings.length;
+        var bindings;
+        if(this.memorize) {
+            this._prevParams = paramsArr;
+        }
+        if(!n) {
+            //should come after memorize
+            return;
+        }
+        bindings = this._bindings.slice(0)//clone array in case add/remove items during dispatch
+        ;
+        this._shouldPropagate = true//in case `halt` was called before dispatch or during the previous dispatch.
+        ;
+        //execute all callbacks until end of the list or until a callback returns `false` or stops propagation
+        //reverse loop since listeners with higher priority will be added at the end of the list
+        do {
+            n--;
+        }while(bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
+    };
+    Signal.prototype.forget = /**
+    * Forget memorized arguments.
+    * @see Signal.memorize
+    */
+    function () {
+        this._prevParams = null;
+    };
+    Signal.prototype.dispose = /**
+    * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
+    * <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
+    */
+    function () {
+        this.removeAll();
+        delete this._bindings;
+        delete this._prevParams;
+    };
+    Signal.prototype.toString = /**
+    * @return {string} String representation of the object.
+    */
+    function () {
+        return '[Signal active:' + this.active + ' numListeners:' + this.getNumListeners() + ']';
+    };
+    return Signal;
+})();
+/// <reference path="Point.ts" />
+/**
+*	Geom - Circle
+*
+*	@desc 		A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
+*
+*	@version 	1.2 - 27th February 2013
+*	@author 	Richard Davey
+*	@author 	Ross Kettle
+*
+*  @todo       Intersections
+*/
+var Circle = (function () {
+    /**
+    * Creates a new Circle object with the center coordinate specified by the x and y parameters and the diameter specified by the diameter parameter. If you call this function without parameters, a circle with x, y, diameter and radius properties set to 0 is created.
+    * @class Circle
+    * @constructor
+    * @param {Number} x The x coordinate of the center of the circle.
+    * @param {Number} y The y coordinate of the center of the circle.
+    * @return {Circle} This circle object
+    **/
+    function Circle(x, y, diameter) {
+        if (typeof x === "undefined") { x = 0; }
+        if (typeof y === "undefined") { y = 0; }
+        if (typeof diameter === "undefined") { diameter = 0; }
+        /**
+        * The diameter of the circle
+        * @property _diameter
+        * @type Number
+        **/
+        this._diameter = 0;
+        /**
+        * The radius of the circle
+        * @property _radius
+        * @type Number
+        **/
+        this._radius = 0;
+        /**
+        * The x coordinate of the center of the circle
+        * @property x
+        * @type Number
+        **/
+        this.x = 0;
+        /**
+        * The y coordinate of the center of the circle
+        * @property y
+        * @type Number
+        **/
+        this.y = 0;
+        this.setTo(x, y, diameter);
+    }
+    Circle.prototype.diameter = /**
+    * The diameter of the circle. The largest distance between any two points on the circle. The same as the radius * 2.
+    * @method diameter
+    * @param {Number} The diameter of the circle.
+    * @return {Number}
+    **/
+    function (value) {
+        if(value && value > 0) {
+            this._diameter = value;
+            this._radius = value * 0.5;
+        }
+        return this._diameter;
+    };
+    Circle.prototype.radius = /**
+    * The radius of the circle. The length of a line extending from the center of the circle to any point on the circle itself. The same as half the diameter.
+    * @method radius
+    * @param {Number} The radius of the circle.
+    **/
+    function (value) {
+        if(value && value > 0) {
+            this._radius = value;
+            this._diameter = value * 2;
+        }
+        return this._radius;
+    };
+    Circle.prototype.circumference = /**
+    * The circumference of the circle.
+    * @method circumference
+    * @return {Number}
+    **/
+    function () {
+        return 2 * (Math.PI * this._radius);
+    };
+    Circle.prototype.bottom = /**
+    * The sum of the y and radius properties. Changing the bottom property of a Circle object has no effect on the x and y properties, but does change the diameter.
+    * @method bottom
+    * @param {Number} The value to adjust the height of the circle by.
+    **/
+    function (value) {
+        if(value && !isNaN(value)) {
+            if(value < this.y) {
+                this._radius = 0;
+                this._diameter = 0;
+            } else {
+                this.radius(value - this.y);
+            }
+        }
+        return this.y + this._radius;
+    };
+    Circle.prototype.left = /**
+    * The x coordinate of the leftmost point of the circle. Changing the left property of a Circle object has no effect on the x and y properties. However it does affect the diameter, whereas changing the x value does not affect the diameter property.
+    * @method left
+    * @param {Number} The value to adjust the position of the leftmost point of the circle by.
+    **/
+    function (value) {
+        if(value && !isNaN(value)) {
+            if(value < this.x) {
+                this.radius(this.x - value);
+            } else {
+                this._radius = 0;
+                this._diameter = 0;
+            }
+        }
+        return this.x - this._radius;
+    };
+    Circle.prototype.right = /**
+    * The x coordinate of the rightmost point of the circle. Changing the right property of a Circle object has no effect on the x and y properties. However it does affect the diameter, whereas changing the x value does not affect the diameter property.
+    * @method right
+    * @param {Number} The amount to adjust the diameter of the circle by.
+    **/
+    function (value) {
+        if(value && !isNaN(value)) {
+            if(value > this.x) {
+                this.radius(value - this.x);
+            } else {
+                this._radius = 0;
+                this._diameter = 0;
+            }
+        }
+        return this.x + this._radius;
+    };
+    Circle.prototype.top = /**
+    * The sum of the y minus the radius property. Changing the top property of a Circle object has no effect on the x and y properties, but does change the diameter.
+    * @method bottom
+    * @param {Number} The amount to adjust the height of the circle by.
+    **/
+    function (value) {
+        if(value && !isNaN(value)) {
+            if(value > this.y) {
+                this._radius = 0;
+                this._diameter = 0;
+            } else {
+                this.radius(this.y - value);
+            }
+        }
+        return this.y - this._radius;
+    };
+    Circle.prototype.area = /**
+    * Gets the area of this Circle.
+    * @method area
+    * @return {Number} This area of this circle.
+    **/
+    function () {
+        if(this._radius > 0) {
+            return Math.PI * this._radius * this._radius;
+        } else {
+            return 0;
+        }
+    };
+    Circle.prototype.isEmpty = /**
+    * Determines whether or not this Circle object is empty.
+    * @method isEmpty
+    * @return {Boolean} A value of true if the Circle objects diameter is less than or equal to 0; otherwise false.
+    **/
+    function () {
+        if(this._diameter < 1) {
+            return true;
+        }
+        return false;
+    };
+    Circle.prototype.clone = /**
+    * Whether the circle intersects with a line. Checks against infinite line defined by the two points on the line, not the line segment.
+    * If you need details about the intersection then use Kiwi.Geom.Intersect.lineToCircle instead.
+    * @method intersectCircleLine
+    * @param {Object} the line object to check.
+    * @return {Boolean}
+    **/
+    /*
+    public intersectCircleLine(line: Line): bool {
+    
+    return Intersect.lineToCircle(line, this).result;
+    
+    }
+    */
+    /**
+    * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
+    * @method clone
+    * @param {Circle} output Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+    * @return {Kiwi.Geom.Circle}
+    **/
+    function (output) {
+        if (typeof output === "undefined") { output = new Circle(); }
+        return output.setTo(this.x, this.y, this._diameter);
+    };
+    Circle.prototype.copyFrom = /**
+    * Return true if the given x/y coordinates are within this Circle object.
+    * If you need details about the intersection then use Kiwi.Geom.Intersect.circleContainsPoint instead.
+    * @method contains
+    * @param {Number} The X value of the coordinate to test.
+    * @param {Number} The Y value of the coordinate to test.
+    * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+    **/
+    /*
+    public contains(x: number, y: number): bool {
+    
+    return Intersect.circleContainsPoint(this, <Point> { x: x, y: y }).result;
+    
+    }
+    */
+    /**
+    * Return true if the coordinates of the given Point object are within this Circle object.
+    * If you need details about the intersection then use Kiwi.Geom.Intersect.circleContainsPoint instead.
+    * @method containsPoint
+    * @param {Kiwi.Geom.Point} The Point object to test.
+    * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+    **/
+    /*
+    public containsPoint(point:Point): bool {
+    
+    return Intersect.circleContainsPoint(this, point).result;
+    
+    }
+    */
+    /**
+    * Return true if the given Circle is contained entirely within this Circle object.
+    * If you need details about the intersection then use Kiwi.Geom.Intersect.circleToCircle instead.
+    * @method containsCircle
+    * @param {Kiwi.Geom.Circle} The Circle object to test.
+    * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+    **/
+    /*
+    public containsCircle(circle:Circle): bool {
+    
+    return Intersect.circleToCircle(this, circle).result;
+    
+    }
+    */
+    /**
+    * Copies all of circle data from the source Circle object into the calling Circle object.
+    * @method copyFrom
+    * @param {Circle} rect The source circle object to copy from
+    * @return {Circle} This circle object
+    **/
+    function (source) {
+        return this.setTo(source.x, source.y, source.diameter());
+    };
+    Circle.prototype.copyTo = /**
+    * Copies all of circle data from this Circle object into the destination Circle object.
+    * @method copyTo
+    * @param {Circle} circle The destination circle object to copy in to
+    * @return {Circle} The destination circle object
+    **/
+    function (target) {
+        return target.copyFrom(this);
+    };
+    Circle.prototype.distanceTo = /**
+    * Returns the distance from the center of this Circle object to the given object (can be Circle, Point or anything with x/y values)
+    * @method distanceFrom
+    * @param {Circle/Point} target - The destination Point object.
+    * @param {Boolean} round - Round the distance to the nearest integer (default false)
+    * @return {Number} The distance between this Point object and the destination Point object.
+    **/
+    function (target, round) {
+        if (typeof round === "undefined") { round = false; }
+        var dx = this.x - target.x;
+        var dy = this.y - target.y;
+        if(round === true) {
+            return Math.round(Math.sqrt(dx * dx + dy * dy));
+        } else {
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+    };
+    Circle.prototype.equals = /**
+    * Determines whether the object specified in the toCompare parameter is equal to this Circle object. This method compares the x, y and diameter properties of an object against the same properties of this Circle object.
+    * @method equals
+    * @param {Circle} toCompare The circle to compare to this Circle object.
+    * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
+    **/
+    function (toCompare) {
+        if(this.x === toCompare.x && this.y === toCompare.y && this.diameter() === toCompare.diameter()) {
+            return true;
+        }
+        return false;
+    };
+    Circle.prototype.intersects = /**
+    * Determines whether the Circle object specified in the toIntersect parameter intersects with this Circle object. This method checks the radius distances between the two Circle objects to see if they intersect.
+    * @method intersects
+    * @param {Circle} toIntersect The Circle object to compare against to see if it intersects with this Circle object.
+    * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
+    **/
+    function (toIntersect) {
+        if(this.distanceTo(toIntersect, false) < (this._radius + toIntersect._radius)) {
+            return true;
+        }
+        return false;
+    };
+    Circle.prototype.circumferencePoint = /**
+    * Returns a Point object containing the coordinates of a point on the circumference of this Circle based on the given angle.
+    * @method circumferencePoint
+    * @param {Number} The angle in radians (unless asDegrees is true) to return the point from.
+    * @param {Boolean} Is the given angle in radians (false) or degrees (true)?
+    * @param {Kiwi.Geom.Point} An optional Point object to put the result in to. If none specified a new Point object will be created.
+    * @return {Kiwi.Geom.Point} The Point object holding the result.
+    **/
+    function (angle, asDegrees, output) {
+        if (typeof asDegrees === "undefined") { asDegrees = false; }
+        if (typeof output === "undefined") { output = new Point(); }
+        if(asDegrees === true) {
+            //angle = angle * (Math.PI / 180); // Degrees to Radians
+            angle = angle * (180 / Math.PI)// Radians to Degrees
+            ;
+        }
+        output.x = this.x + this._radius * Math.cos(angle);
+        output.y = this.y + this._radius * Math.sin(angle);
+        return output;
+    };
+    Circle.prototype.offset = /**
+    * Adjusts the location of the Circle object, as determined by its center coordinate, by the specified amounts.
+    * @method offset
+    * @param {Number} dx Moves the x value of the Circle object by this amount.
+    * @param {Number} dy Moves the y value of the Circle object by this amount.
+    * @return {Circle} This Circle object.
+    **/
+    function (dx, dy) {
+        if(!isNaN(dx) && !isNaN(dy)) {
+            this.x += dx;
+            this.y += dy;
+        }
+        return this;
+    };
+    Circle.prototype.offsetPoint = /**
+    * Adjusts the location of the Circle object using a Point object as a parameter. This method is similar to the Circle.offset() method, except that it takes a Point object as a parameter.
+    * @method offsetPoint
+    * @param {Point} point A Point object to use to offset this Circle object.
+    * @return {Circle} This Circle object.
+    **/
+    function (point) {
+        return this.offset(point.x, point.y);
+    };
+    Circle.prototype.setTo = /**
+    * Sets the members of Circle to the specified values.
+    * @method setTo
+    * @param {Number} x The x coordinate of the center of the circle.
+    * @param {Number} y The y coordinate of the center of the circle.
+    * @param {Number} diameter The diameter of the circle in pixels.
+    * @return {Circle} This circle object
+    **/
+    function (x, y, diameter) {
+        this.x = x;
+        this.y = y;
+        this._diameter = diameter;
+        this._radius = diameter * 0.5;
+        return this;
+    };
+    Circle.prototype.toString = /**
+    * Returns a string representation of this object.
+    * @method toString
+    * @return {string} a string representation of the instance.
+    **/
+    function () {
+        return "[{Circle (x=" + this.x + " y=" + this.y + " diameter=" + this.diameter() + " radius=" + this.radius() + ")}]";
+    };
+    return Circle;
+})();
+/// <reference path="../../Game.ts" />
+/// <reference path="../../geom/Point.ts" />
+/// <reference path="../../geom/Circle.ts" />
+/**
+*	Input - Finger
+*
+*	@desc 		A Finger object used by the Touch manager
+*
+*	@version 	1.1 - 27th February 2013
+*	@author 	Richard Davey
+*
+*  @todo       Lots
+*/
+var Finger = (function () {
+    /**
+    * Constructor
+    * @param {Kiwi.Game} game.
+    * @return {Kiwi.Input.Finger} This object.
+    */
+    function Finger(game) {
+        /**
+        *
+        * @property point
+        * @type Point
+        **/
+        this.point = null;
+        /**
+        *
+        * @property circle
+        * @type Circle
+        **/
+        this.circle = null;
+        /**
+        *
+        * @property withinGame
+        * @type Boolean
+        */
+        this.withinGame = false;
+        /**
+        * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
+        * @property clientX
+        * @type Number
+        */
+        this.clientX = -1;
+        //
+        /**
+        * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
+        * @property clientY
+        * @type Number
+        */
+        this.clientY = -1;
+        //
+        /**
+        * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
+        * @property pageX
+        * @type Number
+        */
+        this.pageX = -1;
+        /**
+        * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
+        * @property pageY
+        * @type Number
+        */
+        this.pageY = -1;
+        /**
+        * The horizontal coordinate of point relative to the screen in pixels
+        * @property screenX
+        * @type Number
+        */
+        this.screenX = -1;
+        /**
+        * The vertical coordinate of point relative to the screen in pixels
+        * @property screenY
+        * @type Number
+        */
+        this.screenY = -1;
+        /**
+        * The horizontal coordinate of point relative to the game element
+        * @property x
+        * @type Number
+        */
+        this.x = -1;
+        /**
+        * The vertical coordinate of point relative to the game element
+        * @property y
+        * @type Number
+        */
+        this.y = -1;
+        /**
+        *
+        * @property isDown
+        * @type Boolean
+        **/
+        this.isDown = false;
+        /**
+        *
+        * @property isUp
+        * @type Boolean
+        **/
+        this.isUp = false;
+        /**
+        *
+        * @property timeDown
+        * @type Number
+        **/
+        this.timeDown = 0;
+        /**
+        *
+        * @property duration
+        * @type Number
+        **/
+        this.duration = 0;
+        /**
+        *
+        * @property timeUp
+        * @type Number
+        **/
+        this.timeUp = 0;
+        /**
+        *
+        * @property justPressedRate
+        * @type Number
+        **/
+        this.justPressedRate = 200;
+        /**
+        *
+        * @property justReleasedRate
+        * @type Number
+        **/
+        this.justReleasedRate = 200;
+        this._game = game;
+        this.active = false;
+    }
+    Finger.prototype.start = /**
+    *
+    * @method start
+    * @param {Any} event
+    */
+    function (event) {
+        this.identifier = event.identifier;
+        this.target = event.target;
+        //  populate geom objects
+        if(this.point === null) {
+            this.point = new Point();
+        }
+        if(this.circle === null) {
+            this.circle = new Circle(0, 0, 44);
+        }
+        this.move(event);
+        this.active = true;
+        this.withinGame = true;
+        this.isDown = true;
+        this.isUp = false;
+        this.timeDown = this._game.time.now;
+    };
+    Finger.prototype.move = /**
+    *
+    * @method move
+    * @param {Any} event
+    */
+    function (event) {
+        this.clientX = event.clientX;
+        this.clientY = event.clientY;
+        this.pageX = event.pageX;
+        this.pageY = event.pageY;
+        this.screenX = event.screenX;
+        this.screenY = event.screenY;
+        this.x = this.pageX - this._game.stage.offset.x;
+        this.y = this.pageY - this._game.stage.offset.y;
+        this.point.setTo(this.x, this.y);
+        this.circle.setTo(this.x, this.y, 44);
+        //  Droppings history (used for gestures and motion tracking)
+        this.duration = this._game.time.now - this.timeDown;
+    };
+    Finger.prototype.leave = /**
+    *
+    * @method leave
+    * @param {Any} event
+    */
+    function (event) {
+        this.withinGame = false;
+        this.move(event);
+    };
+    Finger.prototype.stop = /**
+    *
+    * @method stop
+    * @param {Any} event
+    */
+    function (event) {
+        this.active = false;
+        this.withinGame = false;
+        this.isDown = false;
+        this.isUp = true;
+        this.timeUp = this._game.time.now;
+        this.duration = this.timeUp - this.timeDown;
+    };
+    Finger.prototype.justPressed = /**
+    *
+    * @method justPressed
+    * @param {Number} [duration].
+    * @return {Boolean}
+    */
+    function (duration) {
+        if (typeof duration === "undefined") { duration = this.justPressedRate; }
+        if(this.isDown === true && (this.timeDown + duration) > this._game.time.now) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    Finger.prototype.justReleased = /**
+    *
+    * @method justReleased
+    * @param {Number} [duration].
+    * @return {Boolean}
+    */
+    function (duration) {
+        if (typeof duration === "undefined") { duration = this.justReleasedRate; }
+        if(this.isUp === true && (this.timeUp + duration) > this._game.time.now) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    Finger.prototype.toString = /**
+    * Returns a string representation of this object.
+    * @method toString
+    * @return {string} a string representation of the instance.
+    **/
+    function () {
+        return "[{Finger (identifer=" + this.identifier + " active=" + this.active + " duration=" + this.duration + " withinGame=" + this.withinGame + " x=" + this.x + " y=" + this.y + " clientX=" + this.clientX + " clientY=" + this.clientY + " screenX=" + this.screenX + " screenY=" + this.screenY + " pageX=" + this.pageX + " pageY=" + this.pageY + ")}]";
+    };
+    return Finger;
+})();
+/// <reference path="../../Game.ts" />
+/// <reference path="../../Signal.ts" />
+/// <reference path="Finger.ts" />
+/**
+*	Input - Touch
+*
+*	@desc 		http://www.w3.org/TR/touch-events/
+*              https://developer.mozilla.org/en-US/docs/DOM/TouchList
+*              http://www.html5rocks.com/en/mobile/touchandmouse/
+*              Android 2.x only supports 1 touch event at once, no multi-touch
+*
+*	@version 	1.1 - 27th February 2013
+*	@author 	Richard Davey
+*
+*  @todo       Try and resolve update lag in Chrome/Android
+*              Gestures (pinch, zoom, swipe)
+*              GameObject Touch
+*              Touch point within GameObject
+*              Input Zones (mouse and touch) - lock entities within them + axis aligned drags
+*/
+var Touch = (function () {
+    /**
+    * Constructor
+    * @param {Game} game.
+    * @return {Touch} This object.
+    */
+    function Touch(game) {
+        /**
+        *
+        * @property isDown
+        * @type Boolean
+        **/
+        this.isDown = false;
+        /**
+        *
+        * @property isUp
+        * @type Boolean
+        **/
+        this.isUp = true;
+        this._game = game;
+        this.finger1 = new Finger(this._game);
+        this.finger2 = new Finger(this._game);
+        this.finger3 = new Finger(this._game);
+        this.finger4 = new Finger(this._game);
+        this.finger5 = new Finger(this._game);
+        this.finger6 = new Finger(this._game);
+        this.finger7 = new Finger(this._game);
+        this.finger8 = new Finger(this._game);
+        this.finger9 = new Finger(this._game);
+        this.finger10 = new Finger(this._game);
+        this._fingers = [
+            this.finger1, 
+            this.finger2, 
+            this.finger3, 
+            this.finger4, 
+            this.finger5, 
+            this.finger6, 
+            this.finger7, 
+            this.finger8, 
+            this.finger9, 
+            this.finger10
+        ];
+        this.touchDown = new Signal();
+        this.touchUp = new Signal();
+        this.start();
+    }
+    Touch.prototype.start = /**
+    *
+    * @method start
+    */
+    function () {
+        var _this = this;
+        this._game.stage.canvas.addEventListener('touchstart', function (event) {
+            return _this.onTouchStart(event);
+        }, false);
+        this._game.stage.canvas.addEventListener('touchmove', function (event) {
+            return _this.onTouchMove(event);
+        }, false);
+        this._game.stage.canvas.addEventListener('touchend', function (event) {
+            return _this.onTouchEnd(event);
+        }, false);
+        this._game.stage.canvas.addEventListener('touchenter', function (event) {
+            return _this.onTouchEnter(event);
+        }, false);
+        this._game.stage.canvas.addEventListener('touchleave', function (event) {
+            return _this.onTouchLeave(event);
+        }, false);
+        this._game.stage.canvas.addEventListener('touchcancel', function (event) {
+            return _this.onTouchCancel(event);
+        }, false);
+        document.addEventListener('touchmove', function (event) {
+            return _this.consumeTouchMove(event);
+        }, false);
+    };
+    Touch.prototype.consumeTouchMove = /**
+    * Prevent iOS bounce-back (doesn't work?)
+    * @method consumeTouchMove
+    * @param {Any} event
+    **/
+    function (event) {
+        event.preventDefault();
+    };
+    Touch.prototype.onTouchStart = /**
+    *
+    * @method onTouchStart
+    * @param {Any} event
+    **/
+    function (event) {
+        event.preventDefault();
+        //  A list of all the touch points that BECAME active with the current event
+        //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
+        //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
+        //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
+        //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+        for(var i = 0; i < event.changedTouches.length; i++) {
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].active === false) {
+                    this._fingers[f].start(event.changedTouches[i]);
+                    this.x = this._fingers[f].x;
+                    this.y = this._fingers[f].y;
+                    this.touchDown.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
+                    this.isDown = true;
+                    this.isUp = false;
+                    break;
+                }
+            }
+        }
+    };
+    Touch.prototype.onTouchCancel = /**
+    * Doesn't appear to be supported by most browsers yet
+    * @method onTouchCancel
+    * @param {Any} event
+    **/
+    function (event) {
+        event.preventDefault();
+        //  Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
+        //  http://www.w3.org/TR/touch-events/#dfn-touchcancel
+        //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+        for(var i = 0; i < event.changedTouches.length; i++) {
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].identifier === event.changedTouches[i].identifier) {
+                    this._fingers[f].stop(event.changedTouches[i]);
+                    break;
+                }
+            }
+        }
+    };
+    Touch.prototype.onTouchEnter = /**
+    * Doesn't appear to be supported by most browsers yet
+    * @method onTouchEnter
+    * @param {Any} event
+    **/
+    function (event) {
+        event.preventDefault();
+        //  For touch enter and leave its a list of the touch points that have entered or left the target
+        //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
+        //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
+        //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+        for(var i = 0; i < event.changedTouches.length; i++) {
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].active === false) {
+                    this._fingers[f].start(event.changedTouches[i]);
+                    break;
+                }
+            }
+        }
+    };
+    Touch.prototype.onTouchLeave = /**
+    * Doesn't appear to be supported by most browsers yet
+    * @method onTouchLeave
+    * @param {Any} event
+    **/
+    function (event) {
+        event.preventDefault();
+        //  For touch enter and leave its a list of the touch points that have entered or left the target
+        //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+        for(var i = 0; i < event.changedTouches.length; i++) {
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].identifier === event.changedTouches[i].identifier) {
+                    this._fingers[f].leave(event.changedTouches[i]);
+                    break;
+                }
+            }
+        }
+    };
+    Touch.prototype.onTouchMove = /**
+    *
+    * @method onTouchMove
+    * @param {Any} event
+    **/
+    function (event) {
+        event.preventDefault();
+        //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
+        //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
+        //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+        for(var i = 0; i < event.changedTouches.length; i++) {
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].identifier === event.changedTouches[i].identifier) {
+                    this._fingers[f].move(event.changedTouches[i]);
+                    this.x = this._fingers[f].x;
+                    this.y = this._fingers[f].y;
+                    break;
+                }
+            }
+        }
+    };
+    Touch.prototype.onTouchEnd = /**
+    *
+    * @method onTouchEnd
+    * @param {Any} event
+    **/
+    function (event) {
+        event.preventDefault();
+        //  For touch end its a list of the touch points that have been removed from the surface
+        //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
+        //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+        for(var i = 0; i < event.changedTouches.length; i++) {
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].identifier === event.changedTouches[i].identifier) {
+                    this._fingers[f].stop(event.changedTouches[i]);
+                    this.x = this._fingers[f].x;
+                    this.y = this._fingers[f].y;
+                    this.touchUp.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
+                    this.isDown = false;
+                    this.isUp = true;
+                    break;
+                }
+            }
+        }
+    };
+    Touch.prototype.calculateDistance = /**
+    *
+    * @method calculateDistance
+    * @param {Finger} finger1
+    * @param {Finger} finger2
+    **/
+    function (finger1, finger2) {
+    };
+    Touch.prototype.calculateAngle = /**
+    *
+    * @method calculateAngle
+    * @param {Finger} finger1
+    * @param {Finger} finger2
+    **/
+    function (finger1, finger2) {
+    };
+    Touch.prototype.checkOverlap = /**
+    *
+    * @method checkOverlap
+    * @param {Finger} finger1
+    * @param {Finger} finger2
+    **/
+    function (finger1, finger2) {
+    };
+    Touch.prototype.update = /**
+    *
+    * @method update
+    */
+    function () {
+        this._game.input.x = this.x;
+        this._game.input.y = this.y;
+    };
+    Touch.prototype.stop = /**
+    *
+    * @method stop
+    */
+    function () {
+        //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
+        //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
+        //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
+        //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
+        //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
+        //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+            };
+    Touch.prototype.reset = /**
+    *
+    * @method reset
+    **/
+    function () {
+        this.isDown = false;
+        this.isUp = false;
+    };
+    return Touch;
+})();
 /// <reference path="../../Game.ts" />
 /// <reference path="Mouse.ts" />
 /// <reference path="Keyboard.ts" />
+/// <reference path="Touch.ts" />
 var Input = (function () {
     function Input(game) {
         this._game = game;
         this.mouse = new Mouse(this._game);
         this.keyboard = new Keyboard(this._game);
+        this.touch = new Touch(this._game);
     }
     Input.prototype.update = function () {
         this.mouse.update();
+        this.touch.update();
     };
     Input.prototype.reset = function () {
         this.mouse.reset();
         this.keyboard.reset();
+        this.touch.reset();
     };
     Input.prototype.getWorldX = function (camera) {
         return this.x;
@@ -5812,6 +7160,665 @@ var RequestAnimationFrame = (function () {
     };
     return RequestAnimationFrame;
 })();
+/**
+*  Repeatable Random Data Generator
+*
+*  @desc       Manages the creation of unique internal game IDs
+*              Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
+*              Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
+*
+*	@version 	1.1 - 1st March 2013
+*	@author 	Josh Faul
+*	@author 	Richard Davey, TypeScript conversion and additional methods
+*/
+var RandomDataGenerator = (function () {
+    /**
+    * @constructor
+    * @param {Array} seeds
+    * @return {Kiwi.Utils.RandomDataGenerator}
+    */
+    function RandomDataGenerator(seeds) {
+        if (typeof seeds === "undefined") { seeds = []; }
+        /**
+        * @property c
+        * @type Number
+        * @private
+        */
+        this.c = 1;
+        this.sow(seeds);
+    }
+    RandomDataGenerator.prototype.uint32 = /**
+    * @method uint32
+    * @private
+    */
+    function () {
+        return this.rnd.apply(this) * 0x100000000;// 2^32
+        
+    };
+    RandomDataGenerator.prototype.fract32 = /**
+    * @method fract32
+    * @private
+    */
+    function () {
+        return this.rnd.apply(this) + (this.rnd.apply(this) * 0x200000 | 0) * 1.1102230246251565e-16;// 2^-53
+        
+    };
+    RandomDataGenerator.prototype.rnd = // private random helper
+    /**
+    * @method rnd
+    * @private
+    */
+    function () {
+        var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10;// 2^-32
+        
+        this.c = t | 0;
+        this.s0 = this.s1;
+        this.s1 = this.s2;
+        this.s2 = t - this.c;
+        return this.s2;
+    };
+    RandomDataGenerator.prototype.hash = /**
+    * @method hash
+    * @param {Any} data
+    * @private
+    */
+    function (data) {
+        var h, i, n;
+        n = 0xefc8249d;
+        data = data.toString();
+        for(i = 0; i < data.length; i++) {
+            n += data.charCodeAt(i);
+            h = 0.02519603282416938 * n;
+            n = h >>> 0;
+            h -= n;
+            h *= n;
+            n = h >>> 0;
+            h -= n;
+            n += h * 0x100000000// 2^32
+            ;
+        }
+        return (n >>> 0) * 2.3283064365386963e-10;// 2^-32
+        
+    };
+    RandomDataGenerator.prototype.sow = /**
+    * Reset the seed of the random data generator
+    * @method sow
+    * @param {Array} seeds
+    */
+    function (seeds) {
+        if (typeof seeds === "undefined") { seeds = []; }
+        this.s0 = this.hash(' ');
+        this.s1 = this.hash(this.s0);
+        this.s2 = this.hash(this.s1);
+        var seed;
+        for(var i = 0; seed = seeds[i++]; ) {
+            this.s0 -= this.hash(seed);
+            this.s0 += ~~(this.s0 < 0);
+            this.s1 -= this.hash(seed);
+            this.s1 += ~~(this.s1 < 0);
+            this.s2 -= this.hash(seed);
+            this.s2 += ~~(this.s2 < 0);
+        }
+    };
+    Object.defineProperty(RandomDataGenerator.prototype, "integer", {
+        get: /**
+        * Returns a random integer between 0 and 2^32
+        * @method integer
+        * @return {Number}
+        */
+        function () {
+            return this.uint32();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RandomDataGenerator.prototype, "frac", {
+        get: /**
+        * Returns a random real number between 0 and 1
+        * @method frac
+        * @return {Number}
+        */
+        function () {
+            return this.fract32();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RandomDataGenerator.prototype, "real", {
+        get: /**
+        * Returns a random real number between 0 and 2^32
+        * @method real
+        * @return {Number}
+        */
+        function () {
+            return this.uint32() + this.fract32();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RandomDataGenerator.prototype.integerInRange = /**
+    * Returns a random integer between min and max
+    * @method integerInRange
+    * @param {Number} min
+    * @param {Number} max
+    * @return {Number}
+    */
+    function (min, max) {
+        return Math.floor(this.realInRange(min, max));
+    };
+    RandomDataGenerator.prototype.realInRange = /**
+    * Returns a random real number between min and max
+    * @method realInRange
+    * @param {Number} min
+    * @param {Number} max
+    * @return {Number}
+    */
+    function (min, max) {
+        min = min || 0;
+        max = max || 0;
+        return this.frac * (max - min) + min;
+    };
+    Object.defineProperty(RandomDataGenerator.prototype, "normal", {
+        get: /**
+        * Returns a random real number between -1 and 1
+        * @method normal
+        * @return {Number}
+        */
+        function () {
+            return 1 - 2 * this.frac;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RandomDataGenerator.prototype, "uuid", {
+        get: /**
+        * Returns a valid v4 UUID hex string (from https://gist.github.com/1308368)
+        * @method uuid
+        * @return {String}
+        */
+        function () {
+            var a, b;
+            for(b = a = ''; a++ < 36; b += ~a % 5 | a * 3 & 4 ? (a ^ 15 ? 8 ^ this.frac * (a ^ 20 ? 16 : 4) : 4).toString(16) : '-') {
+                ;
+            }
+            return b;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RandomDataGenerator.prototype.pick = /**
+    * Returns a random member of `array`
+    * @method pick
+    * @param {Any} array
+    */
+    function (array) {
+        return array[this.integerInRange(0, array.length)];
+    };
+    RandomDataGenerator.prototype.weightedPick = /**
+    * Returns a random member of `array`, favoring the earlier entries
+    * @method weightedPick
+    * @param {Any} array
+    */
+    function (array) {
+        return array[~~(Math.pow(this.frac, 2) * array.length)];
+    };
+    RandomDataGenerator.prototype.timestamp = /**
+    * Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified
+    * @method timestamp
+    * @param {Number} min
+    * @param {Number} max
+    */
+    function (min, max) {
+        if (typeof min === "undefined") { min = 946684800000; }
+        if (typeof max === "undefined") { max = 1577862000000; }
+        return this.realInRange(min, max);
+    };
+    Object.defineProperty(RandomDataGenerator.prototype, "angle", {
+        get: /**
+        * Returns a random angle between -180 and 180
+        * @method angle
+        */
+        function () {
+            return this.integerInRange(-180, 180);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return RandomDataGenerator;
+})();
+/// <reference path="../Game.ts" />
+/**
+*  Device
+*
+*  @desc       Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
+*              https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
+*
+*	@version 	1.0 - March 5th 2013
+*	@author 	Richard Davey
+*	@author		mrdoob
+*	@author		Modernizr team
+*/
+var Device = (function () {
+    /**
+    *
+    * @constructor
+    * @return {Device} This Object
+    */
+    function Device() {
+        //  Operating System
+        this.desktop = false;
+        /**
+        *
+        * @property iOS
+        * @type Boolean
+        */
+        this.iOS = false;
+        /**
+        *
+        * @property android
+        * @type Boolean
+        */
+        this.android = false;
+        /**
+        *
+        * @property chromeOS
+        * @type Boolean
+        */
+        this.chromeOS = false;
+        /**
+        *
+        * @property linux
+        * @type Boolean
+        */
+        this.linux = false;
+        /**
+        *
+        * @property maxOS
+        * @type Boolean
+        */
+        this.macOS = false;
+        /**
+        *
+        * @property windows
+        * @type Boolean
+        */
+        this.windows = false;
+        //  Features
+        /**
+        *
+        * @property canvas
+        * @type Boolean
+        */
+        this.canvas = false;
+        /**
+        *
+        * @property file
+        * @type Boolean
+        */
+        this.file = false;
+        /**
+        *
+        * @property fileSystem
+        * @type Boolean
+        */
+        this.fileSystem = false;
+        /**
+        *
+        * @property localStorage
+        * @type Boolean
+        */
+        this.localStorage = false;
+        /**
+        *
+        * @property webGL
+        * @type Boolean
+        */
+        this.webGL = false;
+        /**
+        *
+        * @property worker
+        * @type Boolean
+        */
+        this.worker = false;
+        /**
+        *
+        * @property touch
+        * @type Boolean
+        */
+        this.touch = false;
+        /**
+        *
+        * @property css3D
+        * @type Boolean
+        */
+        this.css3D = false;
+        //  Browser
+        /**
+        *
+        * @property arora
+        * @type Boolean
+        */
+        this.arora = false;
+        /**
+        *
+        * @property chrome
+        * @type Boolean
+        */
+        this.chrome = false;
+        /**
+        *
+        * @property epiphany
+        * @type Boolean
+        */
+        this.epiphany = false;
+        /**
+        *
+        * @property firefox
+        * @type Boolean
+        */
+        this.firefox = false;
+        /**
+        *
+        * @property ie
+        * @type Boolean
+        */
+        this.ie = false;
+        /**
+        *
+        * @property ieVersion
+        * @type Number
+        */
+        this.ieVersion = 0;
+        /**
+        *
+        * @property mobileSafari
+        * @type Boolean
+        */
+        this.mobileSafari = false;
+        /**
+        *
+        * @property midori
+        * @type Boolean
+        */
+        this.midori = false;
+        /**
+        *
+        * @property opera
+        * @type Boolean
+        */
+        this.opera = false;
+        /**
+        *
+        * @property safari
+        * @type Boolean
+        */
+        this.safari = false;
+        this.webApp = false;
+        //  Audio
+        /**
+        *
+        * @property audioData
+        * @type Boolean
+        */
+        this.audioData = false;
+        /**
+        *
+        * @property webaudio
+        * @type Boolean
+        */
+        this.webaudio = false;
+        /**
+        *
+        * @property ogg
+        * @type Boolean
+        */
+        this.ogg = false;
+        /**
+        *
+        * @property mp3
+        * @type Boolean
+        */
+        this.mp3 = false;
+        /**
+        *
+        * @property wav
+        * @type Boolean
+        */
+        this.wav = false;
+        /**
+        *
+        * @property m4a
+        * @type Boolean
+        */
+        this.m4a = false;
+        //  Device
+        /**
+        *
+        * @property iPhone
+        * @type Boolean
+        */
+        this.iPhone = false;
+        /**
+        *
+        * @property iPhone4
+        * @type Boolean
+        */
+        this.iPhone4 = false;
+        /**
+        *
+        * @property iPad
+        * @type Boolean
+        */
+        this.iPad = false;
+        /**
+        *
+        * @property pixelRatio
+        * @type Number
+        */
+        this.pixelRatio = 0;
+        this._checkAudio();
+        this._checkBrowser();
+        this._checkCSS3D();
+        this._checkDevice();
+        this._checkFeatures();
+        this._checkOS();
+    }
+    Device.prototype._checkOS = /**
+    *
+    * @method _checkOS
+    * @private
+    */
+    function () {
+        var ua = navigator.userAgent;
+        if(/Android/.test(ua)) {
+            this.android = true;
+        } else if(/CrOS/.test(ua)) {
+            this.chromeOS = true;
+        } else if(/iP[ao]d|iPhone/i.test(ua)) {
+            this.iOS = true;
+        } else if(/Linux/.test(ua)) {
+            this.linux = true;
+        } else if(/Mac OS/.test(ua)) {
+            this.macOS = true;
+        } else if(/Windows/.test(ua)) {
+            this.windows = true;
+        }
+        if(this.windows || this.macOS || this.linux) {
+            this.desktop = true;
+        }
+    };
+    Device.prototype._checkFeatures = /**
+    *
+    * @method _checkFeatures
+    * @private
+    */
+    function () {
+        this.canvas = !!window['CanvasRenderingContext2D'];
+        try  {
+            this.localStorage = !!localStorage.getItem;
+        } catch (error) {
+            this.localStorage = false;
+        }
+        this.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
+        this.fileSystem = !!window['requestFileSystem'];
+        this.webGL = !!window['WebGLRenderingContext'];
+        this.worker = !!window['Worker'];
+        if('ontouchstart' in document.documentElement || window.navigator.msPointerEnabled) {
+            this.touch = true;
+        }
+    };
+    Device.prototype._checkBrowser = /**
+    *
+    * @method _checkBrowser
+    * @private
+    */
+    function () {
+        var ua = navigator.userAgent;
+        if(/Arora/.test(ua)) {
+            this.arora = true;
+        } else if(/Chrome/.test(ua)) {
+            this.chrome = true;
+        } else if(/Epiphany/.test(ua)) {
+            this.epiphany = true;
+        } else if(/Firefox/.test(ua)) {
+            this.firefox = true;
+        } else if(/Mobile Safari/.test(ua)) {
+            this.mobileSafari = true;
+        } else if(/MSIE (\d+\.\d+);/.test(ua)) {
+            this.ie = true;
+            this.ieVersion = parseInt(RegExp.$1);
+        } else if(/Midori/.test(ua)) {
+            this.midori = true;
+        } else if(/Opera/.test(ua)) {
+            this.opera = true;
+        } else if(/Safari/.test(ua)) {
+            this.safari = true;
+        }
+        // WebApp mode in iOS
+        if(navigator['standalone']) {
+            this.webApp = true;
+        }
+    };
+    Device.prototype._checkAudio = /**
+    *
+    * @method _checkAudio
+    * @private
+    */
+    function () {
+        this.audioData = !!(window['Audio']);
+        this.webaudio = !!(window['webkitAudioContext'] || window['AudioContext']);
+        var audioElement = document.createElement('audio');
+        var result = false;
+        try  {
+            if(result = !!audioElement.canPlayType) {
+                if(audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, '')) {
+                    this.ogg = true;
+                }
+                if(audioElement.canPlayType('audio/mpeg;').replace(/^no$/, '')) {
+                    this.mp3 = true;
+                }
+                // Mimetypes accepted:
+                //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
+                //   bit.ly/iphoneoscodecs
+                if(audioElement.canPlayType('audio/wav; codecs="1"').replace(/^no$/, '')) {
+                    this.wav = true;
+                }
+                if(audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, '')) {
+                    this.m4a = true;
+                }
+            }
+        } catch (e) {
+        }
+    };
+    Device.prototype._checkDevice = /**
+    *
+    * @method _checkDevice
+    * @private
+    */
+    function () {
+        this.pixelRatio = window['devicePixelRatio'] || 1;
+        this.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
+        this.iPhone4 = (this.pixelRatio == 2 && this.iPhone);
+        this.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
+    };
+    Device.prototype._checkCSS3D = /**
+    *
+    * @method _checkCSS3D
+    * @private
+    */
+    function () {
+        var el = document.createElement('p');
+        var has3d;
+        var transforms = {
+            'webkitTransform': '-webkit-transform',
+            'OTransform': '-o-transform',
+            'msTransform': '-ms-transform',
+            'MozTransform': '-moz-transform',
+            'transform': 'transform'
+        };
+        // Add it to the body to get the computed style.
+        document.body.insertBefore(el, null);
+        for(var t in transforms) {
+            if(el.style[t] !== undefined) {
+                el.style[t] = "translate3d(1px,1px,1px)";
+                has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
+            }
+        }
+        document.body.removeChild(el);
+        this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
+    };
+    Device.prototype.getAll = /**
+    *
+    * @method getAll
+    * @return {String}
+    */
+    function () {
+        var output = '';
+        output = output.concat('Device\n');
+        output = output.concat('iPhone : ' + this.iPhone + '\n');
+        output = output.concat('iPhone4 : ' + this.iPhone4 + '\n');
+        output = output.concat('iPad : ' + this.iPad + '\n');
+        output = output.concat('\n');
+        output = output.concat('Operating System\n');
+        output = output.concat('iOS: ' + this.iOS + '\n');
+        output = output.concat('Android: ' + this.android + '\n');
+        output = output.concat('ChromeOS: ' + this.chromeOS + '\n');
+        output = output.concat('Linux: ' + this.linux + '\n');
+        output = output.concat('MacOS: ' + this.macOS + '\n');
+        output = output.concat('Windows: ' + this.windows + '\n');
+        output = output.concat('\n');
+        output = output.concat('Browser\n');
+        output = output.concat('Arora: ' + this.arora + '\n');
+        output = output.concat('Chrome: ' + this.chrome + '\n');
+        output = output.concat('Epiphany: ' + this.epiphany + '\n');
+        output = output.concat('Firefox: ' + this.firefox + '\n');
+        output = output.concat('Internet Explorer: ' + this.ie + ' (' + this.ieVersion + ')\n');
+        output = output.concat('Mobile Safari: ' + this.mobileSafari + '\n');
+        output = output.concat('Midori: ' + this.midori + '\n');
+        output = output.concat('Opera: ' + this.opera + '\n');
+        output = output.concat('Safari: ' + this.safari + '\n');
+        output = output.concat('\n');
+        output = output.concat('Features\n');
+        output = output.concat('Canvas: ' + this.canvas + '\n');
+        output = output.concat('File: ' + this.file + '\n');
+        output = output.concat('FileSystem: ' + this.fileSystem + '\n');
+        output = output.concat('LocalStorage: ' + this.localStorage + '\n');
+        output = output.concat('WebGL: ' + this.webGL + '\n');
+        output = output.concat('Worker: ' + this.worker + '\n');
+        output = output.concat('Touch: ' + this.touch + '\n');
+        output = output.concat('CSS 3D: ' + this.css3D + '\n');
+        output = output.concat('\n');
+        output = output.concat('Audio\n');
+        output = output.concat('Audio Data: ' + this.canvas + '\n');
+        output = output.concat('Web Audio: ' + this.canvas + '\n');
+        output = output.concat('Can play OGG: ' + this.canvas + '\n');
+        output = output.concat('Can play MP3: ' + this.canvas + '\n');
+        output = output.concat('Can play M4A: ' + this.canvas + '\n');
+        output = output.concat('Can play WAV: ' + this.canvas + '\n');
+        return output;
+    };
+    return Device;
+})();
 /// <reference path="Cache.ts" />
 /// <reference path="Cameras.ts" />
 /// <reference path="Emitter.ts" />
@@ -5825,10 +7832,12 @@ var RequestAnimationFrame = (function () {
 /// <reference path="World.ts" />
 /// <reference path="system/input/Input.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
+/// <reference path="system/RandomDataGenerator.ts" />
+/// <reference path="system/Device.ts" />
 /**
 *   Phaser
 *
-*   v0.5 - April 12th 2013
+*   v0.6 - April 13th 2013
 *
 *   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -5874,7 +7883,7 @@ var Game = (function () {
             }, false);
         }
     }
-    Game.VERSION = 'Phaser version 0.5';
+    Game.VERSION = 'Phaser version 0.6';
     Game.prototype.boot = function (parent, width, height) {
         var _this = this;
         if(!document.body) {
@@ -5882,6 +7891,7 @@ var Game = (function () {
                 return _this.boot(parent, width, height);
             }, 13);
         } else {
+            this.device = new Device();
             this.stage = new Stage(this, parent, width, height);
             this.world = new World(this, width, height);
             this.sound = new SoundManager(this);
@@ -5890,6 +7900,9 @@ var Game = (function () {
             this.time = new Time(this);
             this.input = new Input(this);
             this.math = new GameMath(this);
+            this.rnd = new RandomDataGenerator([
+                (Date.now() * Math.random()).toString()
+            ]);
             this.framerate = 60;
             //  Display the default game screen?
             if(this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null) {

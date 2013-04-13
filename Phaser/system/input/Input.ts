@@ -1,6 +1,7 @@
 /// <reference path="../../Game.ts" />
 /// <reference path="Mouse.ts" />
 /// <reference path="Keyboard.ts" />
+/// <reference path="Touch.ts" />
 
 class Input {
 
@@ -10,6 +11,7 @@ class Input {
 
         this.mouse = new Mouse(this._game);
         this.keyboard = new Keyboard(this._game);
+        this.touch = new Touch(this._game);
 
     }
 
@@ -17,6 +19,7 @@ class Input {
 
     public mouse: Mouse;
     public keyboard: Keyboard;
+    public touch: Touch;
 
     public x: number;
     public y: number;
@@ -24,6 +27,7 @@ class Input {
     public update() {
 
         this.mouse.update();
+        this.touch.update();
 
     }
 
@@ -31,6 +35,7 @@ class Input {
 
         this.mouse.reset();
         this.keyboard.reset();
+        this.touch.reset();
 
     }
 

@@ -89,5 +89,8 @@
     <TypeScriptCompile Include="sprites\velocity.ts" />
     <TypeScriptCompile Include="tilemap\basic tilemap.ts" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="mobile\" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

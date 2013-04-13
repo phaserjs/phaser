@@ -1,7 +1,7 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../GameObject.ts" />
 /// <reference path="../Tilemap.ts" />
-/// <reference path="../Rectangle.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="Camera.ts" />
 
 /**

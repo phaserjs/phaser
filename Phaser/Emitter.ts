@@ -1,6 +1,6 @@
 /// <reference path="Group.ts" />
 /// <reference path="Particle.ts" />
-/// <reference path="Point.ts" />
+/// <reference path="geom/Point.ts" />
 
 /**
  * <code>Emitter</code> is a lightweight particle emitter.

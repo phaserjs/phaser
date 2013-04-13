@@ -11,11 +11,13 @@
 /// <reference path="World.ts" />
 /// <reference path="system/input/Input.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
+/// <reference path="system/RandomDataGenerator.ts" />
+/// <reference path="system/Device.ts" />
 
 /**
 *   Phaser
 *
-*   v0.5 - April 12th 2013
+*   v0.6 - April 13th 2013
 *
 *   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -48,6 +50,8 @@ class Game {
     
     }
 
+    public static VERSION: string = 'Phaser version 0.6';
+
     private _raf: RequestAnimationFrame;
     private _maxAccumulation: number = 32;
     private _accumulator: number = 0;
@@ -55,8 +59,6 @@ class Game {
     private _loadComplete: bool = false;
     private _paused: bool = false;
     private _pendingState = null;
-
-    public static VERSION: string = 'Phaser version 0.5';
 
     //  Event callbacks
     public callbackContext;
@@ -75,6 +77,8 @@ class Game {
     public time: Time;
     public math: GameMath;
     public world: World;
+    public rnd: RandomDataGenerator;
+    public device: Device;
 
     public isBooted: bool = false;
 
@@ -86,6 +90,7 @@ class Game {
         }
         else
         {
+            this.device = new Device();
             this.stage = new Stage(this, parent, width, height);
             this.world = new World(this, width, height);
             this.sound = new SoundManager(this);
@@ -94,6 +99,7 @@ class Game {
             this.time = new Time(this);
             this.input = new Input(this);
             this.math = new GameMath(this);
+            this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
             this.framerate = 60;
 

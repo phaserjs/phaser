@@ -1,4 +1,4 @@
-/// <reference path="../Rectangle.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../Basic.ts" />
 /// <reference path="LinkedList.ts" />
 

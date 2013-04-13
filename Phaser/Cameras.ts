@@ -1,7 +1,7 @@
 /// <reference path="Game.ts" />
 /// <reference path="GameMath.ts" />
-/// <reference path="Rectangle.ts" />
-/// <reference path="Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
 /// <reference path="system/Camera.ts" />
 
 //  TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct

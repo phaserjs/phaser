@@ -1,3 +1,5 @@
+/// <reference path="Game.ts" />
+
 class Time {
 
     constructor(game: Game) {

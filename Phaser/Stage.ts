@@ -1,6 +1,7 @@
 /// <reference path="Game.ts" />
-/// <reference path="Point.ts" />
-/// <reference path="Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
+/// <reference path="system/Fullscreen.ts" />
 
 class Stage {
 
@@ -15,17 +16,19 @@ class Stage {
         if (document.getElementById(parent))
         {
             document.getElementById(parent).appendChild(this.canvas);
+            document.getElementById(parent).style.overflow = 'hidden';
         }
         else
         {
             document.body.appendChild(this.canvas);
         }
 
-        var offset:Point = this.getOffset(this.canvas);
-
-        this.bounds = new Rectangle(offset.x, offset.y, width, height);
-
         this.context = this.canvas.getContext('2d');
+
+        this.offset = this.getOffset(this.canvas);
+        this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
+
+        this.fullscreen = new FullScreen(this._game);
 
         //document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
         //document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
@@ -37,12 +40,19 @@ class Stage {
     private _game: Game;
     private _bgColor: string;
 
+    public static ORIENTATION_LANDSCAPE:number = 0;
+    public static ORIENTATION_PORTRAIT:number = 1;
+
     public bounds: Rectangle;
     public clear: bool = true;
     public canvas: HTMLCanvasElement;
     public context: CanvasRenderingContext2D;
+    public offset: Point;
+    public fullscreen: FullScreen;
 
     public update() {
+
+        this.fullscreen.update();
 
         if (this.clear)
         {

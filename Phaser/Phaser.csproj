@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -66,8 +66,8 @@
     <TypeScriptCompile Include="Group.ts" />
     <TypeScriptCompile Include="Loader.ts" />
     <TypeScriptCompile Include="Particle.ts" />
-    <TypeScriptCompile Include="Point.ts" />
-    <TypeScriptCompile Include="Rectangle.ts" />
+    <TypeScriptCompile Include="geom\Point.ts" />
+    <TypeScriptCompile Include="geom\Rectangle.ts" />
     <TypeScriptCompile Include="Sound.ts" />
     <TypeScriptCompile Include="Sprite.ts" />
     <TypeScriptCompile Include="Stage.ts" />
@@ -88,6 +88,19 @@
     <TypeScriptCompile Include="Tilemap.ts" />
     <TypeScriptCompile Include="Time.ts" />
     <TypeScriptCompile Include="World.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="geom\Circle.ts" />
+    <Content Include="Signal.ts" />
+    <Content Include="SignalBinding.ts" />
+    <Content Include="system\Device.ts" />
+    <Content Include="system\FullScreen.js">
+      <DependentUpon>FullScreen.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="system\FullScreen.ts" />
+    <Content Include="system\input\Finger.ts" />
+    <Content Include="system\input\Touch.ts" />
+    <Content Include="system\RandomDataGenerator.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>

@@ -1,7 +1,7 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../GameMath.ts" />
-/// <reference path="../Rectangle.ts" />
-/// <reference path="../Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Point.ts" />
 
 class Camera {
 

@@ -1,7 +1,7 @@
 /// <reference path="Game.ts" />
 /// <reference path="GameObject.ts" />
-/// <reference path="Point.ts" />
-/// <reference path="Rectangle.ts" />
+/// <reference path="geom/Point.ts" />
+/// <reference path="geom/Rectangle.ts" />
 /// <reference path="system/TilemapBuffer.ts" />
 
 class Tilemap extends GameObject {

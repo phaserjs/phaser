@@ -4,21 +4,24 @@ class SoundManager {
 
         this._game = game;
 
-		if (!!window['AudioContext'])
-		{
-			this._context = new window['AudioContext']();
-		}
-		else if (!!window['webkitAudioContext'])
-		{
-			this._context = new window['webkitAudioContext']();
-		}
+        if (game.device.webaudio == true)
+        {
+		    if (!!window['AudioContext'])
+		    {
+			    this._context = new window['AudioContext']();
+		    }
+		    else if (!!window['webkitAudioContext'])
+		    {
+			    this._context = new window['webkitAudioContext']();
+		    }
 
-		if (this._context !== null)
-		{
-		    this._gainNode = this._context.createGainNode();
-		    this._gainNode.connect(this._context.destination);
-		    this._volume = 1;
-		}
+		    if (this._context !== null)
+		    {
+		        this._gainNode = this._context.createGainNode();
+		        this._gainNode.connect(this._context.destination);
+		        this._volume = 1;
+		    }
+        }
 
     }
 
