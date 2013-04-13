@@ -1,9 +1,9 @@
 Phaser
 ======
 
-Version 0.5
+Version 0.6
 
-12th April 2013
+13th April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -14,6 +14,20 @@ Follow us on [twitter](https://twitter.com/photonstorm) and our [blog](http://ww
 For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/)
 
 ![Phaser Cameras](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_cams.png)
+
+Change Log
+----------
+
+V0.6
+
+Added in Touch support for mobile devices (and desktops that enable it) and populated x/y coords in Input with common values from touch and mouse.
+Added new Circle geometry class (used by Touch) and moved them into a Geom folder.
+Added in Device class for device inspection.
+Added FullScreen class to enable full-screen support on mobile devices (scrolls URL bar out of the way on iOS and Android)
+
+V0.5
+
+Initial release
 
 Requirements
 ------------
@@ -29,63 +43,64 @@ Phaser was born from a cross-polination of the AS3 Flixel game library and our o
 
 Phaser fully or partially supports the following features. This list is growing constantly and we are aware there are still a number of essential features missing:
 
-*	Asset Loading
+*	Asset Loading<br />
 
 	Images, Sprite Sheets, Texture Packer Data, JSON, Text Files, Audio File.
 
-*	Cameras
+*	Cameras<br />
 
 	Multiple world cameras, camera scale, zoom, rotation, deadzones and Sprite following.
 
-*	Sprites
+*	Sprites<br />
 
 	All sprites have physics properties including velocity, acceleration, bounce and drag.
 	ScrollFactor allows them to re-act to cameras at different rates.
 
-*	Groups
+*	Groups<br />
 
 	Group sprites together for collision checks, visibility toggling and function iteration.
 
-*	Animation
+*	Animation<br />
 
 	Sprites can be animated by a sprite sheet or Texture Atlas (JSON Array format supported).
 	Animation playback controls, looping, fps based timer and custom frames.
 
-*	Collision
+*	Collision<br />
 
 	A QuadTree based Sprite to Sprite, Sprite to Group or Group to Group collision system.
 
-*	Particles
+*	Particles<br />
 
 	An Emitter can emit Sprites in a burst or at a constant rate, setting physics properties.
 
-*	Input
+*	Input<br />
 
-	Keyboard and Mouse handling supported (Touch coming asap)
+	Keyboard, Mouse and Touch handling supported (MSPointer events coming soon)
 
-*	Stage
+*	Stage<br />
 
 	Easily change properties about your game via the stage, such as background color, position and size.
 
-*	World
+*	World<br />
 
 	The game world can be any size and Sprites and collision happens within it.
 
-*	Sound
+*	Sound<br />
 
 	Currently uses WebAudio for playback. A lot more work needs to be done in this area.
 
-*	State Management
+*	State Management<br />
 
 	For larger games it's useful to break your game down into States, i.e. MainMenu, Level1, GameOver, etc.
 	The state manager makes swapping states easy, but the use of a state is completely optional.
 
-*	Cache
+*	Cache<br />
 
 	All loaded resources are stored in an easy to access cache, which can be cleared between State changes
 	or persist through-out the whole game.
 
-*	Tilemaps
+*	Tilemaps<br />
+
 	Support for CSV and Tiled JSON format tile maps	is implemented but currently limited.
 
 ![Phaser Particles](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_particles.png)
