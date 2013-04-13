@@ -42,7 +42,7 @@ class FullScreen {
 
     public update() {
 
-        if (window.innerWidth !== this.width || window.innerHeight !== this.height)
+        if (this._game.stage.scaleMode !== Stage.SCALE_FIXED && (window.innerWidth !== this.width || window.innerHeight !== this.height))
         {
             this.refresh();
         }
