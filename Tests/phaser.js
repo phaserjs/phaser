@@ -1634,6 +1634,9 @@ var Camera = (function () {
         this.shadowOffset = new Point(4, 4);
         this.visible = true;
         this.alpha = 1;
+        //  The x/y position of the current input event in world coordinates
+        this.inputX = 0;
+        this.inputY = 0;
         this._game = game;
         this.ID = id;
         this._stageX = x;
@@ -1849,6 +1852,9 @@ var Camera = (function () {
         }
         this.worldView.x = this.scroll.x;
         this.worldView.y = this.scroll.y;
+        //  Input values
+        this.inputX = this.worldView.x + this._game.input.x;
+        this.inputY = this.worldView.y + this._game.input.y;
         //  Update the Flash effect
         if(this._fxFlashAlpha > 0) {
             this._fxFlashAlpha -= this._game.time.elapsed / this._fxFlashDuration;
@@ -4083,39 +4089,40 @@ var Sound = (function () {
 * Licensed under the MIT License.
 * https://raw.github.com/zynga/viewporter/master/MIT-LICENSE.txt
 */
-var FullScreen = (function () {
-    function FullScreen(game) {
+var StageScaleMode = (function () {
+    function StageScaleMode(game) {
         var _this = this;
+        this._startHeight = 0;
+        this.width = 0;
+        this.height = 0;
         this._game = game;
         this.orientation = window['orientation'];
         window.addEventListener('orientationchange', function (event) {
             return _this.checkOrientation(event);
         }, false);
-        this.width = window.innerWidth;
-        this.height = window.innerHeight;
     }
-    FullScreen.prototype.go = function () {
-        this.refresh();
-    };
-    FullScreen.prototype.update = function () {
-        if(this._game.stage.scaleMode !== Stage.SCALE_FIXED && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
+    StageScaleMode.EXACT_FIT = 0;
+    StageScaleMode.NO_SCALE = 1;
+    StageScaleMode.SHOW_ALL = 2;
+    StageScaleMode.prototype.update = function () {
+        if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
             this.refresh();
         }
     };
-    Object.defineProperty(FullScreen.prototype, "isLandscape", {
+    Object.defineProperty(StageScaleMode.prototype, "isLandscape", {
         get: function () {
             return window['orientation'] === 90 || window['orientation'] === -90;
         },
         enumerable: true,
         configurable: true
     });
-    FullScreen.prototype.checkOrientation = function (event) {
+    StageScaleMode.prototype.checkOrientation = function (event) {
         if(window['orientation'] !== this.orientation) {
             this.refresh();
             this.orientation = window['orientation'];
         }
     };
-    FullScreen.prototype.refresh = function () {
+    StageScaleMode.prototype.refresh = function () {
         var _this = this;
         //  We can't do anything about the status bars in iPads, web apps or desktops
         if(this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false) {
@@ -4130,38 +4137,66 @@ var FullScreen = (function () {
         if(this._check == null) {
             this._iterations = 40;
             this._check = window.setInterval(function () {
-                return _this.retryFullScreen();
+                return _this.setScreenSize();
             }, 10);
         }
     };
-    FullScreen.prototype.retryFullScreen = function () {
-        if(this._game.device.android && this._game.device.chrome == false) {
-            window.scrollTo(0, 1);
-        } else {
-            window.scrollTo(0, 0);
+    StageScaleMode.prototype.setScreenSize = function () {
+        if(this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false) {
+            if(this._game.device.android && this._game.device.chrome == false) {
+                window.scrollTo(0, 1);
+            } else {
+                window.scrollTo(0, 0);
+            }
         }
         this._iterations--;
         if(window.innerHeight > this._startHeight || this._iterations < 0) {
-            // set minimum height of content to new window height
+            // Set minimum height of content to new window height
             document.documentElement.style.minHeight = window.innerHeight + 'px';
-            this._game.stage.canvas.style.width = window.innerWidth + 'px';
-            this._game.stage.canvas.style.height = window.innerHeight + 'px';
-            this.width = window.innerWidth;
-            this.height = window.innerHeight;
+            if(this._game.stage.scaleMode == StageScaleMode.EXACT_FIT) {
+                if(this._game.stage.maxScaleX && window.innerWidth > this._game.stage.maxScaleX) {
+                    this.width = this._game.stage.maxScaleX;
+                } else {
+                    this.width = window.innerWidth;
+                }
+                if(this._game.stage.maxScaleY && window.innerHeight > this._game.stage.maxScaleY) {
+                    this.height = this._game.stage.maxScaleY;
+                } else {
+                    this.height = window.innerHeight;
+                }
+            } else if(this._game.stage.scaleMode == StageScaleMode.SHOW_ALL) {
+                var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
+                this.width = Math.round(this._game.stage.width * multiplier);
+                this.height = Math.round(this._game.stage.height * multiplier);
+                if(this._game.stage.maxScaleX && this.width > this._game.stage.maxScaleX) {
+                    this.width = this._game.stage.maxScaleX;
+                }
+                if(this._game.stage.maxScaleY && this.height > this._game.stage.maxScaleY) {
+                    this.height = this._game.stage.maxScaleY;
+                }
+            }
+            this._game.stage.canvas.style.width = this.width + 'px';
+            this._game.stage.canvas.style.height = this.height + 'px';
+            this._game.input.scaleX = this._game.stage.width / this.width;
+            this._game.input.scaleY = this._game.stage.height / this.height;
             clearInterval(this._check);
             this._check = null;
         }
     };
-    return FullScreen;
+    return StageScaleMode;
 })();
 /// <reference path="Game.ts" />
 /// <reference path="geom/Point.ts" />
 /// <reference path="geom/Rectangle.ts" />
-/// <reference path="system/Fullscreen.ts" />
+/// <reference path="system/StageScaleMode.ts" />
 var Stage = (function () {
     function Stage(game, parent, width, height) {
         var _this = this;
         this.clear = true;
+        this.minScaleX = null;
+        this.maxScaleX = null;
+        this.minScaleY = null;
+        this.maxScaleY = null;
         this._logo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAO1JREFUeNpi/P//PwM6YGRkxBQEAqBaRnQxFmwa10d6MAjrMqMofHv5L1we2SBGmAtAktg0ogOQQYHLd8ANYYFpPtTmzUAMAFmwnsEDrAdkCAvMZlIAsiFMMAEYsKvaSrQhIMCELkGsV2AAbIC8gCQYgwKIUABiNYBf9yoYH7n7n6CzN274g2IYEyFbsNmKLIaSkHpP7WSwUfbA0ASzFQRslBlxp0RcAF0TRhggA3zhAJIDpUKU5A9KyshpHDkjFZu5g2nJMFcwXVJSgqIGnBKx5bKenh4w/XzVbgbPtlIUcVgSxuoCUgHIIIAAAwArtXwJBABO6QAAAABJRU5ErkJggg==";
         this._game = game;
         this.canvas = document.createElement('canvas');
@@ -4177,8 +4212,8 @@ var Stage = (function () {
         this.offset = this.getOffset(this.canvas);
         this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
         this.aspectRatio = width / height;
-        this.scaleMode = Stage.SCALE_FIXED;
-        this.fullscreen = new FullScreen(this._game);
+        this.scaleMode = StageScaleMode.NO_SCALE;
+        this.scale = new StageScaleMode(this._game);
         //document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
         //document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
         window.onblur = function (event) {
@@ -4188,13 +4223,10 @@ var Stage = (function () {
             return _this.visibilityChange(event);
         };
     }
-    Stage.SCALE_FIXED = 0;
-    Stage.SCALE_PROPORTIONAL = 1;
-    Stage.SCALE_FULL = 2;
     Stage.ORIENTATION_LANDSCAPE = 0;
     Stage.ORIENTATION_PORTRAIT = 1;
     Stage.prototype.update = function () {
-        this.fullscreen.update();
+        this.scale.update();
         if(this.clear) {
             //  implement dirty rect? could take up more cpu time than it saves. needs benching.
             this.context.clearRect(0, 0, this.width, this.height);
@@ -5177,9 +5209,13 @@ var World = (function () {
         this._cameras.destroy();
     };
     World.prototype.setSize = //  World methods
-    function (width, height) {
+    function (width, height, updateCameraBounds) {
+        if (typeof updateCameraBounds === "undefined") { updateCameraBounds = true; }
         this.bounds.width = width;
         this.bounds.height = height;
+        if(updateCameraBounds == true) {
+            this._game.camera.setBounds(0, 0, width, height);
+        }
     };
     Object.defineProperty(World.prototype, "width", {
         get: function () {
@@ -5536,13 +5572,15 @@ var Mouse = (function () {
         this.button = event.button;
         this._x = event.clientX - this._game.stage.x;
         this._y = event.clientY - this._game.stage.y;
+        this._game.input.x = this._x * this._game.input.scaleX;
+        this._game.input.y = this._y * this._game.input.scaleY;
         this.isDown = true;
         this.isUp = false;
         this.timeDown = this._game.time.now;
     };
     Mouse.prototype.update = function () {
-        this._game.input.x = this._x;
-        this._game.input.y = this._y;
+        //this._game.input.x = this._x * this._game.input.scaleX;
+        //this._game.input.y = this._y * this._game.input.scaleY;
         if(this.isDown) {
             this.duration = this._game.time.now - this.timeDown;
         }
@@ -5551,6 +5589,8 @@ var Mouse = (function () {
         this.button = event.button;
         this._x = event.clientX - this._game.stage.x;
         this._y = event.clientY - this._game.stage.y;
+        this._game.input.x = this._x * this._game.input.scaleX;
+        this._game.input.y = this._y * this._game.input.scaleY;
     };
     Mouse.prototype.onMouseUp = function (event) {
         this.button = event.button;
@@ -5560,6 +5600,8 @@ var Mouse = (function () {
         this.duration = this.timeUp - this.timeDown;
         this._x = event.clientX - this._game.stage.x;
         this._y = event.clientY - this._game.stage.y;
+        this._game.input.x = this._x * this._game.input.scaleX;
+        this._game.input.y = this._y * this._game.input.scaleY;
     };
     return Mouse;
 })();
@@ -5582,6 +5624,7 @@ var Keyboard = (function () {
         }, false);
     };
     Keyboard.prototype.onKeyDown = function (event) {
+        event.preventDefault();
         if(!this._keys[event.keyCode]) {
             this._keys[event.keyCode] = {
                 isDown: true,
@@ -5594,6 +5637,7 @@ var Keyboard = (function () {
         }
     };
     Keyboard.prototype.onKeyUp = function (event) {
+        event.preventDefault();
         if(!this._keys[event.keyCode]) {
             this._keys[event.keyCode] = {
                 isDown: false,
@@ -6732,6 +6776,18 @@ var Touch = (function () {
     function Touch(game) {
         /**
         *
+        * @property x
+        * @type Number
+        **/
+        this.x = 0;
+        /**
+        *
+        * @property y
+        * @type Number
+        **/
+        this.y = 0;
+        /**
+        *
         * @property isDown
         * @type Boolean
         **/
@@ -6823,6 +6879,8 @@ var Touch = (function () {
                     this._fingers[f].start(event.changedTouches[i]);
                     this.x = this._fingers[f].x;
                     this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
                     this.touchDown.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
                     this.isDown = true;
                     this.isUp = false;
@@ -6904,6 +6962,8 @@ var Touch = (function () {
                     this._fingers[f].move(event.changedTouches[i]);
                     this.x = this._fingers[f].x;
                     this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
                     break;
                 }
             }
@@ -6925,6 +6985,8 @@ var Touch = (function () {
                     this._fingers[f].stop(event.changedTouches[i]);
                     this.x = this._fingers[f].x;
                     this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
                     this.touchUp.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
                     this.isDown = false;
                     this.isUp = true;
@@ -6962,8 +7024,6 @@ var Touch = (function () {
     * @method update
     */
     function () {
-        this._game.input.x = this.x;
-        this._game.input.y = this.y;
     };
     Touch.prototype.stop = /**
     *
@@ -6993,12 +7053,22 @@ var Touch = (function () {
 /// <reference path="Touch.ts" />
 var Input = (function () {
     function Input(game) {
+        this.x = 0;
+        this.y = 0;
+        this.scaleX = 1;
+        this.scaleY = 1;
+        this.worldX = 0;
+        this.worldY = 0;
         this._game = game;
         this.mouse = new Mouse(this._game);
         this.keyboard = new Keyboard(this._game);
         this.touch = new Touch(this._game);
     }
     Input.prototype.update = function () {
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+        this.worldX = this._game.camera.worldView.x + this.x;
+        this.worldY = this._game.camera.worldView.y + this.y;
         this.mouse.update();
         this.touch.update();
     };
@@ -7008,10 +7078,20 @@ var Input = (function () {
         this.touch.reset();
     };
     Input.prototype.getWorldX = function (camera) {
-        return this.x;
+        if (typeof camera === "undefined") { camera = this._game.camera; }
+        return camera.worldView.x + this.x;
     };
     Input.prototype.getWorldY = function (camera) {
-        return this.y;
+        if (typeof camera === "undefined") { camera = this._game.camera; }
+        return camera.worldView.y + this.y;
+    };
+    Input.prototype.renderDebugInfo = function (x, y, color) {
+        if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+        this._game.stage.context.fillStyle = color;
+        this._game.stage.context.fillText('Input', x, y);
+        this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
+        this._game.stage.context.fillText('World X: ' + this.worldX + ' World Y: ' + this.worldY, x, y + 28);
+        this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
     };
     return Input;
 })();
@@ -7842,7 +7922,7 @@ var Device = (function () {
 /**
 *   Phaser
 *
-*   v0.6 - April 13th 2013
+*   v0.7 - April 14th 2013
 *
 *   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -7888,7 +7968,7 @@ var Game = (function () {
             }, false);
         }
     }
-    Game.VERSION = 'Phaser version 0.6';
+    Game.VERSION = 'Phaser version 0.7';
     Game.prototype.boot = function (parent, width, height) {
         var _this = this;
         if(!document.body) {

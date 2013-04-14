@@ -3,9 +3,16 @@
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    //  Here we create a quite tiny game (320x240 in size)
+    var myGame = new Game(this, 'game', 320, 240, init, create, update);
 
     function init() {
+
+        //  This sets a limit on the up-scale
+        myGame.stage.maxScaleX = 640;
+        myGame.stage.maxScaleY = 480;
+        //  Then we tell Phaser that we want it to scale up to whatever the browser can handle, but to do it proportionally
+        myGame.stage.scaleMode = StageScaleMode.SHOW_ALL;
 
         myGame.loader.addImageFile('melon', 'assets/sprites/melon.png');
 
@@ -15,40 +22,42 @@
 
     function create() {
 
-        myGame.world.width = 3000;
-        myGame.world.height = 3000;
+        myGame.world.setSize(2000, 2000);
 
         for (var i = 0; i < 1000; i++)
         {
-            myGame.createSprite(Math.random() * 3000, Math.random() * 3000, 'melon');
+            myGame.createSprite(myGame.world.randomX, myGame.world.randomY, 'melon');
         }
 
-        myGame.stage.clear = true;
+        myGame.onRenderCallback = render;
 
     }
 
     function update() {
 
-        myGame.stage.context.fillStyle = 'rgb(255,255,255)';
-        myGame.stage.context.fillText('x: ' + myGame.input.x + ' y: ' + myGame.input.y, 10, 20);
-
         if (myGame.input.keyboard.isDown(Keyboard.LEFT))
         {
-            myGame.camera.x -= 4;
+            myGame.camera.scroll.x -= 4;
         }
         else if (myGame.input.keyboard.isDown(Keyboard.RIGHT))
         {
-            myGame.camera.x += 4;
+            myGame.camera.scroll.x += 4;
         }
 
         if (myGame.input.keyboard.isDown(Keyboard.UP))
         {
-            myGame.camera.y -= 4;
+            myGame.camera.scroll.y -= 4;
         }
         else if (myGame.input.keyboard.isDown(Keyboard.DOWN))
         {
-            myGame.camera.y += 4;
+            myGame.camera.scroll.y += 4;
         }
+
+    }
+
+    function render() {
+
+        myGame.input.renderDebugInfo(16, 16);
 
     }
 

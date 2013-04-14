@@ -64,14 +64,14 @@ class Touch {
     * @property x
     * @type Number
     **/
-    public x: number;
+    public x: number = 0;
 
     /** 
     * 
     * @property y
     * @type Number
     **/
-    public y: number;
+    public y: number = 0;
 
     /** 
     * 
@@ -227,6 +227,8 @@ class Touch {
                     this._fingers[f].start(event.changedTouches[i]);
                     this.x = this._fingers[f].x;
                     this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
                     this.touchDown.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
                     this.isDown = true;
                     this.isUp = false;
@@ -338,6 +340,8 @@ class Touch {
                     this._fingers[f].move(event.changedTouches[i]);
                     this.x = this._fingers[f].x;
                     this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
                     break;
                 }
             }
@@ -367,6 +371,8 @@ class Touch {
                     this._fingers[f].stop(event.changedTouches[i]);
                     this.x = this._fingers[f].x;
                     this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
                     this.touchUp.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
                     this.isDown = false;
                     this.isUp = true;
@@ -410,8 +416,6 @@ class Touch {
     */
     public update() {
 
-        this._game.input.x = this.x;
-        this._game.input.y = this.y;
 
     }
 

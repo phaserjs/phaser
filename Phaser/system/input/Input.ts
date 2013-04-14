@@ -21,10 +21,22 @@ class Input {
     public keyboard: Keyboard;
     public touch: Touch;
 
-    public x: number;
-    public y: number;
+    public x: number = 0;
+    public y: number = 0;
+
+    public scaleX: number = 1;
+    public scaleY: number = 1;
+
+    public worldX: number = 0;
+    public worldY: number = 0;
 
     public update() {
+
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+
+        this.worldX = this._game.camera.worldView.x + this.x;
+        this.worldY = this._game.camera.worldView.y + this.y;
 
         this.mouse.update();
         this.touch.update();
@@ -39,15 +51,25 @@ class Input {
 
     }
 
-    public getWorldX(camera: Camera): number {
+    public getWorldX(camera?: Camera = this._game.camera) {
 
-        return this.x;
+        return camera.worldView.x + this.x;
 
     }
 
-    public getWorldY(camera: Camera): number {
+    public getWorldY(camera?: Camera = this._game.camera) {
 
-        return this.y;
+        return camera.worldView.y + this.y;
+
+    }
+
+    public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
+
+        this._game.stage.context.fillStyle = color;
+        this._game.stage.context.fillText('Input', x, y);
+        this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
+        this._game.stage.context.fillText('World X: ' + this.worldX + ' World Y: ' + this.worldY, x, y + 28);
+        this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
 
     }
 

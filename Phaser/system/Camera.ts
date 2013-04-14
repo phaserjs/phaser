@@ -93,6 +93,10 @@ class Camera {
     public visible: bool = true;
     public alpha: number = 1;
 
+    //  The x/y position of the current input event in world coordinates
+    public inputX: number = 0;
+    public inputY: number = 0;
+
     /**
     * The camera is filled with this color and returns to normal at the given duration.
     * 
@@ -349,6 +353,10 @@ class Camera {
 
         this.worldView.x = this.scroll.x;
         this.worldView.y = this.scroll.y;
+
+        //  Input values
+        this.inputX = this.worldView.x + this._game.input.x;
+        this.inputY = this.worldView.y + this._game.input.y;
 
         //  Update the Flash effect
         if (this._fxFlashAlpha > 0)

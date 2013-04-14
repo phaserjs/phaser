@@ -61,10 +61,15 @@ class World {
 
     //  World methods
 
-    public setSize(width: number, height: number) {
+    public setSize(width: number, height: number, updateCameraBounds: bool = true) {
 
         this.bounds.width = width;
         this.bounds.height = height;
+
+        if (updateCameraBounds == true)
+        {
+            this._game.camera.setBounds(0, 0, width, height);
+        }
 
     }
 

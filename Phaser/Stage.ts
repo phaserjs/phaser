@@ -1,7 +1,7 @@
 /// <reference path="Game.ts" />
 /// <reference path="geom/Point.ts" />
 /// <reference path="geom/Rectangle.ts" />
-/// <reference path="system/Fullscreen.ts" />
+/// <reference path="system/StageScaleMode.ts" />
 
 class Stage {
 
@@ -28,8 +28,8 @@ class Stage {
         this.offset = this.getOffset(this.canvas);
         this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
         this.aspectRatio = width / height;
-        this.scaleMode = Stage.SCALE_FIXED;
-        this.fullscreen = new FullScreen(this._game);
+        this.scaleMode = StageScaleMode.NO_SCALE;
+        this.scale = new StageScaleMode(this._game);
 
         //document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
         //document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
@@ -41,9 +41,6 @@ class Stage {
     private _game: Game;
     private _bgColor: string;
 
-    public static SCALE_FIXED:number = 0;
-    public static SCALE_PROPORTIONAL:number = 1;
-    public static SCALE_FULL:number = 2;
 
     public static ORIENTATION_LANDSCAPE:number = 0;
     public static ORIENTATION_PORTRAIT:number = 1;
@@ -54,12 +51,17 @@ class Stage {
     public canvas: HTMLCanvasElement;
     public context: CanvasRenderingContext2D;
     public offset: Point;
-    public fullscreen: FullScreen;
+    public scale: StageScaleMode;
     public scaleMode: number;
-
+    
+    public minScaleX: number = null;
+    public maxScaleX: number = null;
+    public minScaleY: number = null;
+    public maxScaleY: number = null;
+    
     public update() {
 
-        this.fullscreen.update();
+        this.scale.update();
 
         if (this.clear)
         {

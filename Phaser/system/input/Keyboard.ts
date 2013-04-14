@@ -23,6 +23,8 @@ class Keyboard {
 
     public onKeyDown(event: KeyboardEvent) {
 
+        event.preventDefault();
+
         if (!this._keys[event.keyCode])
         {
             this._keys[event.keyCode] = { isDown: true, timeDown: this._game.time.now, timeUp: 0 };
@@ -36,6 +38,8 @@ class Keyboard {
     }
 
     public onKeyUp(event: KeyboardEvent) {
+
+        event.preventDefault();
 
         if (!this._keys[event.keyCode])
         {

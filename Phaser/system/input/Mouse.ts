@@ -49,6 +49,9 @@ class Mouse {
         this._x = event.clientX - this._game.stage.x;
         this._y = event.clientY - this._game.stage.y;
 
+        this._game.input.x = this._x * this._game.input.scaleX;
+        this._game.input.y = this._y * this._game.input.scaleY;
+
         this.isDown = true;
         this.isUp = false;
         this.timeDown = this._game.time.now;
@@ -57,8 +60,8 @@ class Mouse {
 
     public update() {
 
-        this._game.input.x = this._x;
-        this._game.input.y = this._y;
+        //this._game.input.x = this._x * this._game.input.scaleX;
+        //this._game.input.y = this._y * this._game.input.scaleY;
 
         if (this.isDown)
         {
@@ -74,6 +77,9 @@ class Mouse {
         this._x = event.clientX - this._game.stage.x;
         this._y = event.clientY - this._game.stage.y;
 
+        this._game.input.x = this._x * this._game.input.scaleX;
+        this._game.input.y = this._y * this._game.input.scaleY;
+
     }
 
     public onMouseUp(event: MouseEvent) {
@@ -86,6 +92,9 @@ class Mouse {
 
         this._x = event.clientX - this._game.stage.x;
         this._y = event.clientY - this._game.stage.y;
+
+        this._game.input.x = this._x * this._game.input.scaleX;
+        this._game.input.y = this._y * this._game.input.scaleY;
 
     }
 

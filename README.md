@@ -1,9 +1,9 @@
 Phaser
 ======
 
-Version 0.6
+Version 0.7
 
-13th April 2013
+14th April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -17,6 +17,13 @@ For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.h
 
 Change Log
 ----------
+
+V0.7
+
+Renamed FullScreen to StageScaleMode as it's much more fitting. Tested across Android and iOS with the various scale modes.
+Added in world x/y coordinates to the input class, and the ability to get world x/y input coordinates from any Camera.
+Added the RandomDataGenerator for seeded random number generation.
+Setting the game world size now resizes the default camera (optional bool flag)
 
 V0.6
 
@@ -35,6 +42,8 @@ Requirements
 Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above.
 
 For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/). We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
+
+Phaser is 147KB minified and just 30KB gzipped (sizes accurate as of version 0.7)
 
 Features
 --------
@@ -79,7 +88,7 @@ Phaser fully or partially supports the following features. This list is growing 
 
 *	Stage<br />
 
-	Easily change properties about your game via the stage, such as background color, position and size.
+	Easily change properties about your game via the stage, such as background color, position, size and scale.
 
 *	World<br />
 
@@ -103,6 +112,10 @@ Phaser fully or partially supports the following features. This list is growing 
 
 	Support for CSV and Tiled JSON format tile maps	is implemented but currently limited.
 
+*	Game Scaling<br />
+
+	Game scaling under your control. Removes URL/status bar on mobile (iOS and Android) and allows proportional scaling, fixed size and orientation checks.
+
 ![Phaser Particles](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_particles.png)
 
 Work in Progress
@@ -112,8 +125,7 @@ We've a number of features that we know Phaser is lacking, here is our current p
 
 *	Tilemap collision and layers
 *	Better sound controls
-*	Touch and MSPointer support
-*	Game scaling on mobile
+*	MSPointer support
 *	Text Rendering
 *	Buttons
 
