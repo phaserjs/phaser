@@ -61,6 +61,9 @@ class GameMath {
     public static EPSILON: number = 0.0001;//single float average epsilon
     public static LONG_EPSILON: number = 0.00000001;//arbitrary 8 digit epsilon
 
+    public cosTable = [];
+    public sinTable = [];
+
     public computeMachineEpsilon(): number {
         // Machine epsilon ala Eispack
         var fourThirds: number = 4.0 / 3.0;
@@ -964,7 +967,7 @@ class GameMath {
      * @return	The rounded value of that number.
      */
     public floor(Value: number): number {
-        var n: number = Value|0;
+        var n: number = Value | 0;
         return (Value > 0) ? (n) : ((n != Value) ? (n - 1) : (n));
     }
 
@@ -976,10 +979,45 @@ class GameMath {
      * @return	The rounded value of that number.
      */
     public ceil(Value: number): number {
-        var n: number = Value|0;
+        var n: number = Value | 0;
         return (Value > 0) ? ((n != Value) ? (n + 1) : (n)) : (n);
     }
 
+    /**
+     * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
+     * <p>
+     * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
+     * you should get the results via getSinTable() and getCosTable(). This generator is fast enough to be used in real-time.
+     * </p>
+     * @param length 		The length of the wave
+     * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+     * @param cosAmplitude 	The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+     * @param frequency 	The frequency of the sine and cosine table data
+     * @return	Returns the sine table
+     * @see getSinTable
+     * @see getCosTable
+     */
+    public sinCosGenerator(length: number, sinAmplitude?: number = 1.0, cosAmplitude?: number = 1.0, frequency?: number = 1.0) {
+
+        var sin: number = sinAmplitude;
+        var cos: number = cosAmplitude;
+        var frq: number = frequency * Math.PI / length;
+
+        this.cosTable = [];
+        this.sinTable = [];
+
+        for (var c: number = 0; c < length; c++)
+        {
+            cos -= sin * frq;
+            sin += cos * frq;
+
+            this.cosTable[c] = cos;
+            this.sinTable[c] = sin;
+        }
+
+        return this.sinTable;
+
+    }
 
 
 }

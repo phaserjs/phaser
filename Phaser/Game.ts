@@ -17,7 +17,7 @@
 /**
 *   Phaser
 *
-*   v0.7a - April 15th 2013
+*   v0.8 - April 15th 2013
 *
 *   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -50,7 +50,7 @@ class Game {
     
     }
 
-    public static VERSION: string = 'Phaser version 0.7a';
+    public static VERSION: string = 'Phaser version 0.8';
 
     private _raf: RequestAnimationFrame;
     private _maxAccumulation: number = 32;
@@ -348,6 +348,10 @@ class Game {
 
     public createSprite(x: number, y: number, key?: string = ''): Sprite {
         return this.world.createSprite(x, y, key);
+    }
+
+    public createDynamicTexture(key: string, width: number, height: number): DynamicTexture {
+        return this.world.createDynamicTexture(key, width, height);
     }
 
     public createGroup(MaxSize?: number = 0): Group {

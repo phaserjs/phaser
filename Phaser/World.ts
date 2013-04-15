@@ -134,6 +134,10 @@ class World {
         return <Sprite> this.group.add(new Sprite(this._game, x, y, key));
     }
 
+    public createDynamicTexture(key:string, width: number, height: number): DynamicTexture {
+        return new DynamicTexture(this._game, key, width, height);
+    }
+
     public createGroup(MaxSize?: number = 0): Group {
         return <Group> this.group.add(new Group(this._game, MaxSize));
     }

@@ -1,4 +1,5 @@
 /// <reference path="Animations.ts" />
+/// <reference path="DynamicTexture.ts" />
 /// <reference path="GameObject.ts" />
 /// <reference path="Game.ts" />
 /// <reference path="GameMath.ts" />
@@ -30,6 +31,7 @@ class Sprite extends GameObject {
     private _texture;
     private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
+    private _dynamicTexture: bool = false;
 
     public animations: Animations;
 
@@ -45,17 +47,35 @@ class Sprite extends GameObject {
 
     public loadGraphic(key: string): Sprite {
 
-        if (this._game.cache.isSpriteSheet(key) == false)
+        if (this._game.cache.getImage(key) !== null)
         {
-            this._texture = this._game.cache.getImage(key);
-            this.bounds.width = this._texture.width;
-            this.bounds.height = this._texture.height;
+            if (this._game.cache.isSpriteSheet(key) == false)
+            {
+                this._texture = this._game.cache.getImage(key);
+                this.bounds.width = this._texture.width;
+                this.bounds.height = this._texture.height;
+            }
+            else
+            {
+                this._texture = this._game.cache.getImage(key);
+                this.animations.loadFrameData(this._game.cache.getFrameData(key));
+            }
+
+            this._dynamicTexture = false;
         }
-        else
-        {
-            this._texture = this._game.cache.getImage(key);
-            this.animations.loadFrameData(this._game.cache.getFrameData(key));
-        }
+
+        return this;
+
+    }
+
+    public loadDynamicTexture(texture: DynamicTexture): Sprite {
+
+        this._texture = texture;
+
+        this.bounds.width = this._texture.width;
+        this.bounds.height = this._texture.height;
+
+        this._dynamicTexture = true;
 
         return this;
 
@@ -66,6 +86,8 @@ class Sprite extends GameObject {
         this._texture = null;
         this.width = width;
         this.height = height;
+
+        this._dynamicTexture = false;
 
         return this;
     }
@@ -143,7 +165,7 @@ class Sprite extends GameObject {
         this._dw = this.bounds.width * this.scale.x;
         this._dh = this.bounds.height * this.scale.y;
 
-        if (this.animations.currentFrame !== null)
+        if (this._dynamicTexture == false && this.animations.currentFrame !== null)
         {
             this._sx = this.animations.currentFrame.x;
             this._sy = this.animations.currentFrame.y;
@@ -187,17 +209,34 @@ class Sprite extends GameObject {
 
         if (this._texture != null)
         {
-            this._game.stage.context.drawImage(
-                this._texture,	    //	Source Image
-                this._sx, 			//	Source X (location within the source image)
-                this._sy, 			//	Source Y
-                this._sw, 			//	Source Width
-                this._sh, 			//	Source Height
-                this._dx, 			//	Destination X (where on the canvas it'll be drawn)
-                this._dy, 			//	Destination Y
-                this._dw, 			//	Destination Width (always same as Source Width unless scaled)
-                this._dh			//	Destination Height (always same as Source Height unless scaled)
-            );
+            if (this._dynamicTexture)
+            {
+                this._game.stage.context.drawImage(
+                    this._texture.canvas,   //	Source Image
+                    this._sx, 			    //	Source X (location within the source image)
+                    this._sy, 			    //	Source Y
+                    this._sw, 			    //	Source Width
+                    this._sh, 			    //	Source Height
+                    this._dx, 			    //	Destination X (where on the canvas it'll be drawn)
+                    this._dy, 			    //	Destination Y
+                    this._dw, 			    //	Destination Width (always same as Source Width unless scaled)
+                    this._dh			    //	Destination Height (always same as Source Height unless scaled)
+                );
+            }
+            else
+            {
+                this._game.stage.context.drawImage(
+                    this._texture,	    //	Source Image
+                    this._sx, 			//	Source X (location within the source image)
+                    this._sy, 			//	Source Y
+                    this._sw, 			//	Source Width
+                    this._sh, 			//	Source Height
+                    this._dx, 			//	Destination X (where on the canvas it'll be drawn)
+                    this._dy, 			//	Destination Y
+                    this._dw, 			//	Destination Width (always same as Source Width unless scaled)
+                    this._dh			//	Destination Height (always same as Source Height unless scaled)
+                );
+            }
         }
         else
         {

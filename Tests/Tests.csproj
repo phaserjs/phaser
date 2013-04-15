@@ -92,5 +92,17 @@
   <ItemGroup>
     <Folder Include="mobile\" />
   </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="sprites\dynamic texture 1.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sprites\dynamic texture 1.js">
+      <DependentUpon>dynamic texture 1.ts</DependentUpon>
+    </Content>
+    <Content Include="sprites\dynamic texture 2.js">
+      <DependentUpon>dynamic texture 2.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="sprites\dynamic texture 2.ts" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

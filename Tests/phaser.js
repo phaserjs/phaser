@@ -10,6 +10,9 @@
 */
 var GameMath = (function () {
     function GameMath(game) {
+        //arbitrary 8 digit epsilon
+        this.cosTable = [];
+        this.sinTable = [];
         /**
         * The global random number generator seed (for deterministic behavior in recordings and saves).
         */
@@ -50,8 +53,7 @@ var GameMath = (function () {
     GameMath.PERC_EPSILON = 0.001;
     GameMath.EPSILON = 0.0001;
     GameMath.LONG_EPSILON = 0.00000001;
-    GameMath.prototype.computeMachineEpsilon = //arbitrary 8 digit epsilon
-    function () {
+    GameMath.prototype.computeMachineEpsilon = function () {
         // Machine epsilon ala Eispack
         var fourThirds = 4.0 / 3.0;
         var third = fourThirds - 1.0;
@@ -842,6 +844,37 @@ var GameMath = (function () {
     function (Value) {
         var n = Value | 0;
         return (Value > 0) ? ((n != Value) ? (n + 1) : (n)) : (n);
+    };
+    GameMath.prototype.sinCosGenerator = /**
+    * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
+    * <p>
+    * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
+    * you should get the results via getSinTable() and getCosTable(). This generator is fast enough to be used in real-time.
+    * </p>
+    * @param length 		The length of the wave
+    * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+    * @param cosAmplitude 	The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+    * @param frequency 	The frequency of the sine and cosine table data
+    * @return	Returns the sine table
+    * @see getSinTable
+    * @see getCosTable
+    */
+    function (length, sinAmplitude, cosAmplitude, frequency) {
+        if (typeof sinAmplitude === "undefined") { sinAmplitude = 1.0; }
+        if (typeof cosAmplitude === "undefined") { cosAmplitude = 1.0; }
+        if (typeof frequency === "undefined") { frequency = 1.0; }
+        var sin = sinAmplitude;
+        var cos = cosAmplitude;
+        var frq = frequency * Math.PI / length;
+        this.cosTable = [];
+        this.sinTable = [];
+        for(var c = 0; c < length; c++) {
+            cos -= sin * frq;
+            sin += cos * frq;
+            this.cosTable[c] = cos;
+            this.sinTable[c] = sin;
+        }
+        return this.sinTable;
     };
     return GameMath;
 })();
@@ -2225,6 +2258,153 @@ var Basic = (function () {
     };
     return Basic;
 })();
+/// <reference path="Game.ts" />
+var DynamicTexture = (function () {
+    function DynamicTexture(game, key, width, height) {
+        this._sx = 0;
+        this._sy = 0;
+        this._sw = 0;
+        this._sh = 0;
+        this._dx = 0;
+        this._dy = 0;
+        this._dw = 0;
+        this._dh = 0;
+        this._game = game;
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.context = this.canvas.getContext('2d');
+        this.bounds = new Rectangle(0, 0, width, height);
+    }
+    DynamicTexture.prototype.getPixel = function (x, y) {
+        //r = imageData.data[0];
+        //g = imageData.data[1];
+        //b = imageData.data[2];
+        //a = imageData.data[3];
+        var imageData = this.context.getImageData(x, y, 1, 1);
+        return this.getColor(imageData.data[0], imageData.data[1], imageData.data[2]);
+    };
+    DynamicTexture.prototype.getPixel32 = function (x, y) {
+        var imageData = this.context.getImageData(x, y, 1, 1);
+        return this.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
+    };
+    DynamicTexture.prototype.getPixels = //  Returns a CanvasPixelArray
+    function (rect) {
+        return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
+    };
+    DynamicTexture.prototype.setPixel = function (x, y, color) {
+        this.context.fillStyle = color;
+        this.context.fillRect(x, y, 1, 1);
+    };
+    DynamicTexture.prototype.setPixel32 = function (x, y, color) {
+        this.context.fillStyle = color;
+        this.context.fillRect(x, y, 1, 1);
+    };
+    DynamicTexture.prototype.setPixels = function (rect, input) {
+        this.context.putImageData(input, rect.x, rect.y);
+    };
+    DynamicTexture.prototype.fillRect = function (rect, color) {
+        this.context.fillStyle = color;
+        this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
+    };
+    DynamicTexture.prototype.pasteImage = function (key, frame, destX, destY, destWidth, destHeight) {
+        if (typeof frame === "undefined") { frame = -1; }
+        if (typeof destX === "undefined") { destX = 0; }
+        if (typeof destY === "undefined") { destY = 0; }
+        if (typeof destWidth === "undefined") { destWidth = null; }
+        if (typeof destHeight === "undefined") { destHeight = null; }
+        var texture = null;
+        var frameData;
+        this._sx = 0;
+        this._sy = 0;
+        this._dx = destX;
+        this._dy = destY;
+        //  TODO - Load a frame from a sprite sheet, otherwise we'll draw the whole lot
+        if(frame > -1) {
+            //if (this._game.cache.isSpriteSheet(key))
+            //{
+            //    texture = this._game.cache.getImage(key);
+            //this.animations.loadFrameData(this._game.cache.getFrameData(key));
+            //}
+                    } else {
+            texture = this._game.cache.getImage(key);
+            this._sw = texture.width;
+            this._sh = texture.height;
+            this._dw = texture.width;
+            this._dh = texture.height;
+        }
+        if(destWidth !== null) {
+            this._dw = destWidth;
+        }
+        if(destHeight !== null) {
+            this._dh = destHeight;
+        }
+        if(texture != null) {
+            this.context.drawImage(texture, //	Source Image
+            this._sx, //	Source X (location within the source image)
+            this._sy, //	Source Y
+            this._sw, //	Source Width
+            this._sh, //	Source Height
+            this._dx, //	Destination X (where on the canvas it'll be drawn)
+            this._dy, //	Destination Y
+            this._dw, //	Destination Width (always same as Source Width unless scaled)
+            this._dh);
+            //	Destination Height (always same as Source Height unless scaled)
+                    }
+    };
+    DynamicTexture.prototype.copyPixels = //  TODO - Add in support for: alphaBitmapData: BitmapData = null, alphaPoint: Point = null, mergeAlpha: bool = false
+    function (sourceTexture, sourceRect, destPoint) {
+        //  Swap for drawImage if the sourceRect is the same size as the sourceTexture to avoid a costly getImageData call
+        if(sourceRect.equals(this.bounds) == true) {
+            this.context.drawImage(sourceTexture.canvas, destPoint.x, destPoint.y);
+        } else {
+            this.context.putImageData(sourceTexture.getPixels(sourceRect), destPoint.x, destPoint.y);
+        }
+    };
+    DynamicTexture.prototype.clear = function () {
+        this.context.clearRect(0, 0, this.bounds.width, this.bounds.height);
+    };
+    Object.defineProperty(DynamicTexture.prototype, "width", {
+        get: function () {
+            return this.bounds.width;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DynamicTexture.prototype, "height", {
+        get: function () {
+            return this.bounds.height;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DynamicTexture.prototype.getColor32 = /**
+    * Given an alpha and 3 color values this will return an integer representation of it
+    *
+    * @param	alpha	The Alpha value (between 0 and 255)
+    * @param	red		The Red channel value (between 0 and 255)
+    * @param	green	The Green channel value (between 0 and 255)
+    * @param	blue	The Blue channel value (between 0 and 255)
+    *
+    * @return	A native color value integer (format: 0xAARRGGBB)
+    */
+    function (alpha, red, green, blue) {
+        return alpha << 24 | red << 16 | green << 8 | blue;
+    };
+    DynamicTexture.prototype.getColor = /**
+    * Given 3 color values this will return an integer representation of it
+    *
+    * @param	red		The Red channel value (between 0 and 255)
+    * @param	green	The Green channel value (between 0 and 255)
+    * @param	blue	The Blue channel value (between 0 and 255)
+    *
+    * @return	A native color value integer (format: 0xRRGGBB)
+    */
+    function (red, green, blue) {
+        return red << 16 | green << 8 | blue;
+    };
+    return DynamicTexture;
+})();
 var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -2624,6 +2804,7 @@ var GameObject = (function (_super) {
     return GameObject;
 })(Basic);
 /// <reference path="Animations.ts" />
+/// <reference path="DynamicTexture.ts" />
 /// <reference path="GameObject.ts" />
 /// <reference path="Game.ts" />
 /// <reference path="GameMath.ts" />
@@ -2636,6 +2817,7 @@ var Sprite = (function (_super) {
         if (typeof y === "undefined") { y = 0; }
         if (typeof key === "undefined") { key = null; }
         _super.call(this, game, x, y);
+        this._dynamicTexture = false;
         //  local rendering related temp vars to help avoid gc spikes
         this._sx = 0;
         this._sy = 0;
@@ -2655,14 +2837,24 @@ var Sprite = (function (_super) {
         }
     }
     Sprite.prototype.loadGraphic = function (key) {
-        if(this._game.cache.isSpriteSheet(key) == false) {
-            this._texture = this._game.cache.getImage(key);
-            this.bounds.width = this._texture.width;
-            this.bounds.height = this._texture.height;
-        } else {
-            this._texture = this._game.cache.getImage(key);
-            this.animations.loadFrameData(this._game.cache.getFrameData(key));
+        if(this._game.cache.getImage(key) !== null) {
+            if(this._game.cache.isSpriteSheet(key) == false) {
+                this._texture = this._game.cache.getImage(key);
+                this.bounds.width = this._texture.width;
+                this.bounds.height = this._texture.height;
+            } else {
+                this._texture = this._game.cache.getImage(key);
+                this.animations.loadFrameData(this._game.cache.getFrameData(key));
+            }
+            this._dynamicTexture = false;
         }
+        return this;
+    };
+    Sprite.prototype.loadDynamicTexture = function (texture) {
+        this._texture = texture;
+        this.bounds.width = this._texture.width;
+        this.bounds.height = this._texture.height;
+        this._dynamicTexture = true;
         return this;
     };
     Sprite.prototype.makeGraphic = function (width, height, color) {
@@ -2670,6 +2862,7 @@ var Sprite = (function (_super) {
         this._texture = null;
         this.width = width;
         this.height = height;
+        this._dynamicTexture = false;
         return this;
     };
     Sprite.prototype.inCamera = function (camera) {
@@ -2731,7 +2924,7 @@ var Sprite = (function (_super) {
         this._dy = cameraOffsetY + (this.bounds.y - camera.worldView.y);
         this._dw = this.bounds.width * this.scale.x;
         this._dh = this.bounds.height * this.scale.y;
-        if(this.animations.currentFrame !== null) {
+        if(this._dynamicTexture == false && this.animations.currentFrame !== null) {
             this._sx = this.animations.currentFrame.x;
             this._sy = this.animations.currentFrame.y;
             if(this.animations.currentFrame.trimmed) {
@@ -2764,17 +2957,30 @@ var Sprite = (function (_super) {
         //this._game.stage.context.fillStyle = 'rgba(255,0,0,0.3)';
         //this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
         if(this._texture != null) {
-            this._game.stage.context.drawImage(this._texture, //	Source Image
-            this._sx, //	Source X (location within the source image)
-            this._sy, //	Source Y
-            this._sw, //	Source Width
-            this._sh, //	Source Height
-            this._dx, //	Destination X (where on the canvas it'll be drawn)
-            this._dy, //	Destination Y
-            this._dw, //	Destination Width (always same as Source Width unless scaled)
-            this._dh);
-            //	Destination Height (always same as Source Height unless scaled)
-                    } else {
+            if(this._dynamicTexture) {
+                this._game.stage.context.drawImage(this._texture.canvas, //	Source Image
+                this._sx, //	Source X (location within the source image)
+                this._sy, //	Source Y
+                this._sw, //	Source Width
+                this._sh, //	Source Height
+                this._dx, //	Destination X (where on the canvas it'll be drawn)
+                this._dy, //	Destination Y
+                this._dw, //	Destination Width (always same as Source Width unless scaled)
+                this._dh);
+                //	Destination Height (always same as Source Height unless scaled)
+                            } else {
+                this._game.stage.context.drawImage(this._texture, //	Source Image
+                this._sx, //	Source X (location within the source image)
+                this._sy, //	Source Y
+                this._sw, //	Source Width
+                this._sh, //	Source Height
+                this._dx, //	Destination X (where on the canvas it'll be drawn)
+                this._dy, //	Destination Y
+                this._dw, //	Destination Width (always same as Source Width unless scaled)
+                this._dh);
+                //	Destination Height (always same as Source Height unless scaled)
+                            }
+        } else {
             this._game.stage.context.fillStyle = 'rgb(255,255,255)';
             this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
         }
@@ -5296,6 +5502,9 @@ var World = (function () {
     World.prototype.createSprite = function (x, y, key) {
         if (typeof key === "undefined") { key = ''; }
         return this.group.add(new Sprite(this._game, x, y, key));
+    };
+    World.prototype.createDynamicTexture = function (key, width, height) {
+        return new DynamicTexture(this._game, key, width, height);
     };
     World.prototype.createGroup = function (MaxSize) {
         if (typeof MaxSize === "undefined") { MaxSize = 0; }
@@ -7932,7 +8141,7 @@ var Device = (function () {
 /**
 *   Phaser
 *
-*   v0.7a - April 15th 2013
+*   v0.8 - April 15th 2013
 *
 *   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -7978,7 +8187,7 @@ var Game = (function () {
             }, false);
         }
     }
-    Game.VERSION = 'Phaser version 0.7a';
+    Game.VERSION = 'Phaser version 0.8';
     Game.prototype.boot = function (parent, width, height) {
         var _this = this;
         if(!document.body) {
@@ -8170,6 +8379,9 @@ var Game = (function () {
     Game.prototype.createSprite = function (x, y, key) {
         if (typeof key === "undefined") { key = ''; }
         return this.world.createSprite(x, y, key);
+    };
+    Game.prototype.createDynamicTexture = function (key, width, height) {
+        return this.world.createDynamicTexture(key, width, height);
     };
     Game.prototype.createGroup = function (MaxSize) {
         if (typeof MaxSize === "undefined") { MaxSize = 0; }

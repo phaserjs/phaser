@@ -22,6 +22,8 @@ V0.8
 
 Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.
 Updated texture atlas 4 demo to show this.
+Fixed a bug that would cause a run-time error if you tried to create a sprite using an invalid texture key.
+Added in DynamicTexture support and atest case for it.
 
 V0.7
 
