@@ -20,23 +20,23 @@ Change Log
 
 V0.8
 
-Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.
-Updated texture atlas 4 demo to show this.
-Fixed a bug that would cause a run-time error if you tried to create a sprite using an invalid texture key.
-Added in DynamicTexture support and atest case for it.
+Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.<br />
+Updated texture atlas 4 demo to show this.<br />
+Fixed a bug that would cause a run-time error if you tried to create a sprite using an invalid texture key.<br />
+Added in DynamicTexture support and a test case for it.<br />
 
 V0.7
 
-Renamed FullScreen to StageScaleMode as it's much more fitting. Tested across Android and iOS with the various scale modes.
-Added in world x/y coordinates to the input class, and the ability to get world x/y input coordinates from any Camera.
-Added the RandomDataGenerator for seeded random number generation.
+Renamed FullScreen to StageScaleMode as it's much more fitting. Tested across Android and iOS with the various scale modes.<br />
+Added in world x/y coordinates to the input class, and the ability to get world x/y input coordinates from any Camera.<br />
+Added the RandomDataGenerator for seeded random number generation.<br />
 Setting the game world size now resizes the default camera (optional bool flag)
 
 V0.6
 
-Added in Touch support for mobile devices (and desktops that enable it) and populated x/y coords in Input with common values from touch and mouse.
-Added new Circle geometry class (used by Touch) and moved them into a Geom folder.
-Added in Device class for device inspection.
+Added in Touch support for mobile devices (and desktops that enable it) and populated x/y coords in Input with common values from touch and mouse.<br />
+Added new Circle geometry class (used by Touch) and moved them into a Geom folder.<br />
+Added in Device class for device inspection.<br />
 Added FullScreen class to enable full-screen support on mobile devices (scrolls URL bar out of the way on iOS and Android)
 
 V0.5
