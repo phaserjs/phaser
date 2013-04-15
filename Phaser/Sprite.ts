@@ -104,6 +104,14 @@ class Sprite extends GameObject {
         return this.animations.frame;
     }
 
+    public set frameName(value?: string) {
+        this.animations.frameName = value;
+    }
+
+    public get frameName(): string {
+        return this.animations.frameName;
+    }
+
     public render(camera:Camera, cameraOffsetX: number, cameraOffsetY: number): bool {
 
         //  Render checks
@@ -135,7 +143,7 @@ class Sprite extends GameObject {
         this._dw = this.bounds.width * this.scale.x;
         this._dh = this.bounds.height * this.scale.y;
 
-        if (this.animations.currentFrame)
+        if (this.animations.currentFrame !== null)
         {
             this._sx = this.animations.currentFrame.x;
             this._sy = this.animations.currentFrame.y;

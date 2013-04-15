@@ -17,14 +17,17 @@
     function create() {
         myGame.camera.backgroundColor = 'rgb(40, 40, 40)';
         chick = myGame.createSprite(64, 64, 'atlas');
-        chick.animations.frame = 0;
+        //  You can set the frame based on the frame name (which TexturePacker usually sets to be the filename of the image itself)
+        chick.frameName = 'budbrain_chick.png';
+        //  Or by setting the frame index
+        //chick.frame = 0;
         cop = myGame.createSprite(600, 64, 'atlas');
-        cop.animations.frame = 2;
+        cop.frameName = 'ladycop.png';
         robot = myGame.createSprite(50, 300, 'atlas');
-        robot.animations.frame = 3;
+        robot.frameName = 'robot.png';
         car = myGame.createSprite(100, 400, 'atlas');
-        car.animations.frame = 4;
+        car.frameName = 'supercars_parsec.png';
         mech = myGame.createSprite(250, 100, 'atlas');
-        mech.animations.frame = 5;
+        mech.frameName = 'titan_mech.png';
     }
 })();

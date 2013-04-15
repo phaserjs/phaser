@@ -1,9 +1,9 @@
 Phaser
 ======
 
-Version 0.7
+Version 0.8
 
-14th April 2013
+15th April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -17,6 +17,11 @@ For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.h
 
 Change Log
 ----------
+
+V0.8
+
+Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.
+Updated texture atlas 4 demo to show this.
 
 V0.7
 

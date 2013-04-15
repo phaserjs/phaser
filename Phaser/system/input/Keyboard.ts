@@ -23,7 +23,7 @@ class Keyboard {
 
     public onKeyDown(event: KeyboardEvent) {
 
-        event.preventDefault();
+        //event.preventDefault();
 
         if (!this._keys[event.keyCode])
         {
@@ -39,7 +39,7 @@ class Keyboard {
 
     public onKeyUp(event: KeyboardEvent) {
 
-        event.preventDefault();
+        //event.preventDefault();
 
         if (!this._keys[event.keyCode])
         {

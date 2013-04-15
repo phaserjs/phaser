@@ -2697,6 +2697,16 @@ var Sprite = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Sprite.prototype, "frameName", {
+        get: function () {
+            return this.animations.frameName;
+        },
+        set: function (value) {
+            this.animations.frameName = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Sprite.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
         //  Render checks
         if(this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.inCamera(camera.worldView) == false) {
@@ -2721,7 +2731,7 @@ var Sprite = (function (_super) {
         this._dy = cameraOffsetY + (this.bounds.y - camera.worldView.y);
         this._dw = this.bounds.width * this.scale.x;
         this._dh = this.bounds.height * this.scale.y;
-        if(this.animations.currentFrame) {
+        if(this.animations.currentFrame !== null) {
             this._sx = this.animations.currentFrame.x;
             this._sy = this.animations.currentFrame.y;
             if(this.animations.currentFrame.trimmed) {
@@ -5624,7 +5634,7 @@ var Keyboard = (function () {
         }, false);
     };
     Keyboard.prototype.onKeyDown = function (event) {
-        event.preventDefault();
+        //event.preventDefault();
         if(!this._keys[event.keyCode]) {
             this._keys[event.keyCode] = {
                 isDown: true,
@@ -5637,7 +5647,7 @@ var Keyboard = (function () {
         }
     };
     Keyboard.prototype.onKeyUp = function (event) {
-        event.preventDefault();
+        //event.preventDefault();
         if(!this._keys[event.keyCode]) {
             this._keys[event.keyCode] = {
                 isDown: false,
@@ -7922,7 +7932,7 @@ var Device = (function () {
 /**
 *   Phaser
 *
-*   v0.7 - April 14th 2013
+*   v0.7a - April 15th 2013
 *
 *   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -7968,7 +7978,7 @@ var Game = (function () {
             }, false);
         }
     }
-    Game.VERSION = 'Phaser version 0.7';
+    Game.VERSION = 'Phaser version 0.7a';
     Game.prototype.boot = function (parent, width, height) {
         var _this = this;
         if(!document.body) {
@@ -8193,6 +8203,7 @@ var Game = (function () {
 var FrameData = (function () {
     function FrameData() {
         this._frames = [];
+        this._frameNames = [];
     }
     Object.defineProperty(FrameData.prototype, "total", {
         get: function () {
@@ -8202,12 +8213,22 @@ var FrameData = (function () {
         configurable: true
     });
     FrameData.prototype.addFrame = function (frame) {
+        frame.index = this._frames.length;
         this._frames.push(frame);
+        if(frame.name !== '') {
+            this._frameNames[frame.name] = frame.index;
+        }
         return frame;
     };
-    FrameData.prototype.getFrame = function (frame) {
-        if(this._frames[frame]) {
-            return this._frames[frame];
+    FrameData.prototype.getFrame = function (index) {
+        if(this._frames[index]) {
+            return this._frames[index];
+        }
+        return null;
+    };
+    FrameData.prototype.getFrameByName = function (name) {
+        if(this._frameNames[name] >= 0) {
+            return this._frames[this._frameNames[name]];
         }
         return null;
     };
@@ -8244,7 +8265,9 @@ var FrameData = (function () {
 /// <reference path="AnimationLoader.ts" />
 /// <reference path="FrameData.ts" />
 var Frame = (function () {
-    function Frame(x, y, width, height) {
+    function Frame(x, y, width, height, name) {
+        //  Useful for Texture Atlas files (is set to the filename value)
+        this.name = '';
         //  Rotated? (not yet implemented)
         this.rotated = false;
         //  Either cw or ccw, rotation is always 90 degrees
@@ -8253,6 +8276,7 @@ var Frame = (function () {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.name = name;
         this.rotated = false;
         this.trimmed = false;
     }
@@ -8399,15 +8423,8 @@ var AnimationLoader = (function () {
         var data = new FrameData();
         var x = 0;
         var y = 0;
-        //console.log('\n\nSpriteSheet Data');
-        //console.log('Image Size:', width, 'x', height);
-        //console.log('Frame Size:', frameWidth, 'x', frameHeight);
-        //console.log('Start X/Y:', x, 'x', y);
-        //console.log('Frames (Total: ' + total + ')');
-        //console.log('-------------');
         for(var i = 0; i < total; i++) {
-            data.addFrame(new Frame(x, y, frameWidth, frameHeight));
-            //console.log('Frame', i, '=', x, y);
+            data.addFrame(new Frame(x, y, frameWidth, frameHeight, ''));
             x += frameWidth;
             if(x === width) {
                 x = 0;
@@ -8423,9 +8440,8 @@ var AnimationLoader = (function () {
         var frames = json;
         var newFrame;
         for(var i = 0; i < frames.length; i++) {
-            newFrame = data.addFrame(new Frame(frames[i].frame.x, frames[i].frame.y, frames[i].frame.w, frames[i].frame.h));
+            newFrame = data.addFrame(new Frame(frames[i].frame.x, frames[i].frame.y, frames[i].frame.w, frames[i].frame.h, frames[i].filename));
             newFrame.setTrim(frames[i].trimmed, frames[i].sourceSize.w, frames[i].sourceSize.h, frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].spriteSourceSize.w, frames[i].spriteSourceSize.h);
-            newFrame.filename = frames[i].filename;
         }
         return data;
     };
@@ -8630,6 +8646,21 @@ var Animations = (function () {
                 this._parent.bounds.width = this.currentFrame.width;
                 this._parent.bounds.height = this.currentFrame.height;
                 this._frameIndex = value;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Animations.prototype, "frameName", {
+        get: function () {
+            return this.currentFrame.name;
+        },
+        set: function (value) {
+            this.currentFrame = this._frameData.getFrameByName(value);
+            if(this.currentFrame !== null) {
+                this._parent.bounds.width = this.currentFrame.width;
+                this._parent.bounds.height = this.currentFrame.height;
+                this._frameIndex = this.currentFrame.index;
             }
         },
         enumerable: true,

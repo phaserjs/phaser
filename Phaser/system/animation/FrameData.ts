@@ -9,10 +9,12 @@ class FrameData {
     constructor() {
 
         this._frames = [];
+        this._frameNames = [];
 
     }
 
     private _frames: Frame[];
+    private _frameNames;
 
     public get total(): number {
         return this._frames.length;
@@ -20,17 +22,35 @@ class FrameData {
 
     public addFrame(frame: Frame):Frame {
 
+        frame.index = this._frames.length;
+
         this._frames.push(frame);
+
+        if (frame.name !== '')
+        {
+            this._frameNames[frame.name] = frame.index;
+        }
 
         return frame;
 
     }
 
-    public getFrame(frame: number):Frame {
+    public getFrame(index: number):Frame {
 
-        if (this._frames[frame])
+        if (this._frames[index])
         {
-            return this._frames[frame];
+            return this._frames[index];
+        }
+
+        return null;
+
+    }
+
+    public getFrameByName(name: string):Frame {
+
+        if (this._frameNames[name] >= 0)
+        {
+            return this._frames[this._frameNames[name]];
         }
 
         return null;

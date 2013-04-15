@@ -41,18 +41,9 @@ class AnimationLoader {
         var x = 0;
         var y = 0;
 
-        //console.log('\n\nSpriteSheet Data');
-        //console.log('Image Size:', width, 'x', height);
-        //console.log('Frame Size:', frameWidth, 'x', frameHeight);
-        //console.log('Start X/Y:', x, 'x', y);
-        //console.log('Frames (Total: ' + total + ')');
-        //console.log('-------------');
-
         for (var i = 0; i < total; i++)
         {
-            data.addFrame(new Frame(x, y, frameWidth, frameHeight));
-
-            //console.log('Frame', i, '=', x, y);
+            data.addFrame(new Frame(x, y, frameWidth, frameHeight, ''));
 
             x += frameWidth;
 
@@ -80,9 +71,8 @@ class AnimationLoader {
 
         for (var i = 0; i < frames.length; i++)
         {
-            newFrame = data.addFrame(new Frame(frames[i].frame.x, frames[i].frame.y, frames[i].frame.w, frames[i].frame.h));
+            newFrame = data.addFrame(new Frame(frames[i].frame.x, frames[i].frame.y, frames[i].frame.w, frames[i].frame.h, frames[i].filename));
             newFrame.setTrim(frames[i].trimmed, frames[i].sourceSize.w, frames[i].sourceSize.h, frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].spriteSourceSize.w, frames[i].spriteSourceSize.h);
-            newFrame.filename = frames[i].filename;
         }
 
         return data;

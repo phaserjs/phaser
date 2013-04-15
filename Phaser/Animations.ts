@@ -124,5 +124,22 @@ class Animations {
         }
 
     }
+    
+    public get frameName(): string {
+        return this.currentFrame.name;
+    }
+
+    public set frameName(value: string) {
+
+        this.currentFrame = this._frameData.getFrameByName(value);
+
+        if (this.currentFrame !== null)
+        {
+            this._parent.bounds.width = this.currentFrame.width;
+            this._parent.bounds.height = this.currentFrame.height;
+            this._frameIndex = this.currentFrame.index;
+        }
+
+    }
 
 }
