@@ -12,7 +12,7 @@ module Phaser {
 
             this._game = game;
 
-            this._cameras = new Cameras(this._game, 0, 0, width, height);
+            this._cameras = new CameraManager(this._game, 0, 0, width, height);
 
             this._game.camera = this._cameras.current;
 
@@ -25,7 +25,7 @@ module Phaser {
         }
 
         private _game: Game;
-        private _cameras: Cameras;
+        private _cameras: CameraManager;
 
         public group: Group;
         public bounds: Rectangle;

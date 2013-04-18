@@ -1,4 +1,5 @@
 /// <reference path="../../Game.ts" />
+/// <reference path="../../Signal.ts" />
 
 /**
 *   Phaser

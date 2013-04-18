@@ -1,5 +1,6 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../Basic.ts" />
+/// <reference path="../Signal.ts" />
 
 /**
 *   Phaser
@@ -80,6 +81,15 @@ module Phaser {
         public allowCollisions: number;
         public last: Point;
 
+        //  Input
+        public inputEnabled: bool = false;
+        private _inputOver: bool = false;
+
+        public onInputOver: Phaser.Signal;
+        public onInputOut: Phaser.Signal;
+        public onInputDown: Phaser.Signal;
+        public onInputUp: Phaser.Signal;
+
         public preUpdate() {
 
             //  flicker time
@@ -99,8 +109,19 @@ module Phaser {
                 this.updateMotion();
             }
 
+            if (this.inputEnabled)
+            {
+                this.updateInput();
+            }
+
             this.wasTouching = this.touching;
             this.touching = Collision.NONE;
+
+        }
+
+        private updateInput() {
+
+
 
         }
 
@@ -129,8 +150,8 @@ module Phaser {
         }
 
         /**
-        * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>FlxGroup</code>.
-        * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
+        * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
+        * If the group has a LOT of things in it, it might be faster to use <code>G.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         * 
         * @param	ObjectOrGroup	The object or group being tested.
@@ -160,7 +181,7 @@ module Phaser {
             }
 
             /*
-            if (typeof ObjectOrGroup === 'FlxTilemap')
+            if (typeof ObjectOrGroup === 'Tilemap')
             {
                 //Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
                 // we redirect the call to the tilemap overlap here.
@@ -190,7 +211,7 @@ module Phaser {
         }
 
         /**
-        * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>FlxGroup</code>?
+        * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
         * This is distinct from overlapsPoint(), which just checks that ponumber, rather than taking the object's size numbero account.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         * 
@@ -223,13 +244,13 @@ module Phaser {
             }
 
             /*
-            if (typeof ObjectOrGroup === 'FlxTilemap')
+            if (typeof ObjectOrGroup === 'Tilemap')
             {
                 //Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
                 // we redirect the call to the tilemap overlap here.
                 //However, since this is overlapsAt(), we also have to invent the appropriate position for the tilemap.
                 //So we calculate the offset between the player and the requested position, and subtract that from the tilemap.
-                var tilemap: FlxTilemap = ObjectOrGroup;
+                var tilemap: Tilemap = ObjectOrGroup;
                 return tilemap.overlapsAt(tilemap.x - (X - this.x), tilemap.y - (Y - this.y), this, InScreenSpace, Camera);
             }
             */

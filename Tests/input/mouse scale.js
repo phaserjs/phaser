@@ -1,4 +1,4 @@
-/// <reference path="../../Phaser/Phaser.ts" />
+/// <reference path="../../Phaser/Game.ts" />
 (function () {
     //  Here we create a quite tiny game (320x240 in size)
     var myGame = new Phaser.Game(this, 'game', 320, 240, init, create, update);

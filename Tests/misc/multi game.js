@@ -1,4 +1,4 @@
-/// <reference path="../../Phaser/Phaser.ts" />
+/// <reference path="../../Phaser/Game.ts" />
 (function () {
     //  Let's test having 2 totally separate games embedded on the same page
     var myGame = new Phaser.Game(this, 'game', 400, 400, init, create, update);

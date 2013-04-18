@@ -1,5 +1,5 @@
-/// <reference path="../Game.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="../Game.ts" />
 
 /**
 *   Phaser
@@ -281,7 +281,7 @@ module Phaser {
             this.bounds.setTo(X, Y, Width, Height);
 
             //if(UpdateWorld)
-            //	FlxG.worldBounds.copyFrom(bounds);
+            //	G.worldBounds.copyFrom(bounds);
 
             this.update();
         }

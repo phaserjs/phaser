@@ -10,7 +10,7 @@
 
 module Phaser {
 
-    export class Cameras {
+    export class CameraManager {
 
         constructor(game: Game, x: number, y: number, width: number, height: number) {
 

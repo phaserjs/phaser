@@ -7,7 +7,7 @@
 
 module Phaser {
 
-    export class Animations {
+    export class AnimationManager {
 
         constructor(game: Game, parent: Sprite) {
 

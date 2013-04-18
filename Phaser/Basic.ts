@@ -56,17 +56,17 @@ module Phaser {
         public isGroup: bool;
 
         /**
-         * Controls whether <code>update()</code> and <code>draw()</code> are automatically called by FlxState/FlxGroup.
+         * Controls whether <code>update()</code> and <code>draw()</code> are automatically called by State/Group.
          */
         public exists: bool;
 
         /**
-         * Controls whether <code>update()</code> is automatically called by FlxState/FlxGroup.
+         * Controls whether <code>update()</code> is automatically called by State/Group.
          */
         public active: bool;
 
         /**
-         * Controls whether <code>draw()</code> is automatically called by FlxState/FlxGroup.
+         * Controls whether <code>draw()</code> is automatically called by State/Group.
          */
         public visible: bool;
 
@@ -125,7 +125,7 @@ module Phaser {
 
         /**
          * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
-         * In practice, this is most often called by <code>FlxObject.reset()</code>.
+         * In practice, this is most often called by <code>Object.reset()</code>.
          */
         public revive() {
             this.alive = true;

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -55,70 +55,253 @@
     <TypeScriptOutFile>../build/phaser.js</TypeScriptOutFile>
   </PropertyGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Phaser.ts" />
-    <TypeScriptCompile Include="Animations.ts" />
-    <TypeScriptCompile Include="Basic.ts" />
-    <TypeScriptCompile Include="Cache.ts" />
-    <TypeScriptCompile Include="Cameras.ts" />
-    <TypeScriptCompile Include="gameobjects\Emitter.ts" />
-    <TypeScriptCompile Include="Game.ts" />
-    <TypeScriptCompile Include="GameMath.ts" />
-    <TypeScriptCompile Include="gameobjects\GameObject.ts" />
-    <TypeScriptCompile Include="Group.ts" />
-    <TypeScriptCompile Include="Loader.ts" />
-    <TypeScriptCompile Include="gameobjects\Particle.ts" />
-    <TypeScriptCompile Include="geom\Circle.ts" />
-    <TypeScriptCompile Include="geom\Point.ts" />
-    <TypeScriptCompile Include="geom\Rectangle.ts" />
-    <TypeScriptCompile Include="Sound.ts" />
-    <TypeScriptCompile Include="gameobjects\Sprite.ts" />
-    <TypeScriptCompile Include="Stage.ts" />
-    <TypeScriptCompile Include="State.ts" />
-    <TypeScriptCompile Include="Signal.ts" />
-    <TypeScriptCompile Include="SignalBinding.ts" />
-    <TypeScriptCompile Include="system\animation\Animation.ts" />
-    <TypeScriptCompile Include="system\animation\AnimationLoader.ts" />
-    <TypeScriptCompile Include="system\animation\Frame.ts" />
-    <TypeScriptCompile Include="system\animation\FrameData.ts" />
-    <TypeScriptCompile Include="system\Camera.ts" />
-    <TypeScriptCompile Include="system\Device.ts" />
-    <TypeScriptCompile Include="system\input\Finger.ts" />
-    <TypeScriptCompile Include="system\input\Input.ts" />
-    <TypeScriptCompile Include="system\input\Keyboard.ts" />
-    <TypeScriptCompile Include="system\input\Mouse.ts" />
-    <TypeScriptCompile Include="system\input\Touch.ts" />
-    <TypeScriptCompile Include="system\LinkedList.ts" />
-    <TypeScriptCompile Include="system\QuadTree.ts" />
-    <TypeScriptCompile Include="system\RandomDataGenerator.ts" />
-    <TypeScriptCompile Include="system\RequestAnimationFrame.ts" />
-    <TypeScriptCompile Include="system\StageScaleMode.ts" />
-    <TypeScriptCompile Include="system\Tile.ts" />
-    <TypeScriptCompile Include="system\TilemapBuffer.ts" />
-    <TypeScriptCompile Include="gameobjects\Tilemap.ts" />
-    <TypeScriptCompile Include="Time.ts" />
-    <TypeScriptCompile Include="World.ts" />
-    <TypeScriptCompile Include="DynamicTexture.ts" />
-    <TypeScriptCompile Include="Collision.ts" />
-    <TypeScriptCompile Include="system\Tween.ts" />
-    <TypeScriptCompile Include="geom\Line.ts" />
-    <TypeScriptCompile Include="gameobjects\GeomSprite.ts" />
-    <TypeScriptCompile Include="geom\IntersectResult.ts" />
-    <TypeScriptCompile Include="Motion.ts" />
-    <TypeScriptCompile Include="TweenManager.ts" />
-    <TypeScriptCompile Include="system\easing\Back.ts" />
-    <TypeScriptCompile Include="system\easing\Bounce.ts" />
-    <TypeScriptCompile Include="system\easing\Circular.ts" />
-    <TypeScriptCompile Include="system\easing\Cubic.ts" />
-    <TypeScriptCompile Include="system\easing\Elastic.ts" />
-    <TypeScriptCompile Include="system\easing\Exponential.ts" />
-    <TypeScriptCompile Include="system\easing\Linear.ts" />
-    <TypeScriptCompile Include="system\easing\Quadratic.ts" />
-    <TypeScriptCompile Include="system\easing\Quartic.ts" />
-    <TypeScriptCompile Include="system\easing\Quintic.ts" />
-    <TypeScriptCompile Include="system\easing\Sinusoidal.ts" />
+    <Folder Include="plugins\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="plugins\" />
+    <Content Include="AnimationManager.js">
+      <DependentUpon>AnimationManager.ts</DependentUpon>
+    </Content>
+    <Content Include="Collision.js">
+      <DependentUpon>Collision.ts</DependentUpon>
+    </Content>
+    <Content Include="DynamicTexture.js">
+      <DependentUpon>DynamicTexture.ts</DependentUpon>
+    </Content>
+    <Content Include="Game.js">
+      <DependentUpon>Game.ts</DependentUpon>
+    </Content>
+    <Content Include="GameMath.js">
+      <DependentUpon>GameMath.ts</DependentUpon>
+    </Content>
+    <Content Include="gameobjects\Emitter.js">
+      <DependentUpon>Emitter.ts</DependentUpon>
+    </Content>
+    <Content Include="gameobjects\GameObject.js">
+      <DependentUpon>GameObject.ts</DependentUpon>
+    </Content>
+    <Content Include="gameobjects\GeomSprite.js">
+      <DependentUpon>GeomSprite.ts</DependentUpon>
+    </Content>
+    <Content Include="gameobjects\Particle.js">
+      <DependentUpon>Particle.ts</DependentUpon>
+    </Content>
+    <Content Include="gameobjects\Sprite.js">
+      <DependentUpon>Sprite.ts</DependentUpon>
+    </Content>
+    <Content Include="gameobjects\Tilemap.js">
+      <DependentUpon>Tilemap.ts</DependentUpon>
+    </Content>
+    <Content Include="geom\Circle.js">
+      <DependentUpon>Circle.ts</DependentUpon>
+    </Content>
+    <Content Include="geom\IntersectResult.js">
+      <DependentUpon>IntersectResult.ts</DependentUpon>
+    </Content>
+    <Content Include="geom\Line.js">
+      <DependentUpon>Line.ts</DependentUpon>
+    </Content>
+    <Content Include="geom\Point.js">
+      <DependentUpon>Point.ts</DependentUpon>
+    </Content>
+    <Content Include="geom\Rectangle.js">
+      <DependentUpon>Rectangle.ts</DependentUpon>
+    </Content>
+    <Content Include="system\animation\Animation.js">
+      <DependentUpon>Animation.ts</DependentUpon>
+    </Content>
+    <Content Include="system\animation\AnimationLoader.js">
+      <DependentUpon>AnimationLoader.ts</DependentUpon>
+    </Content>
+    <Content Include="system\animation\Frame.js">
+      <DependentUpon>Frame.ts</DependentUpon>
+    </Content>
+    <Content Include="system\animation\FrameData.js">
+      <DependentUpon>FrameData.ts</DependentUpon>
+    </Content>
+    <Content Include="system\Camera.js">
+      <DependentUpon>Camera.ts</DependentUpon>
+    </Content>
+    <Content Include="system\Device.js">
+      <DependentUpon>Device.ts</DependentUpon>
+    </Content>
+    <Content Include="system\LinkedList.js">
+      <DependentUpon>LinkedList.ts</DependentUpon>
+    </Content>
+    <Content Include="system\QuadTree.js">
+      <DependentUpon>QuadTree.ts</DependentUpon>
+    </Content>
+    <Content Include="system\RandomDataGenerator.js">
+      <DependentUpon>RandomDataGenerator.ts</DependentUpon>
+    </Content>
+    <Content Include="system\RequestAnimationFrame.js">
+      <DependentUpon>RequestAnimationFrame.ts</DependentUpon>
+    </Content>
+    <Content Include="system\StageScaleMode.js">
+      <DependentUpon>StageScaleMode.ts</DependentUpon>
+    </Content>
+    <Content Include="system\Tile.js">
+      <DependentUpon>Tile.ts</DependentUpon>
+    </Content>
+    <Content Include="system\TilemapBuffer.js">
+      <DependentUpon>TilemapBuffer.ts</DependentUpon>
+    </Content>
+    <Content Include="system\Tween.js">
+      <DependentUpon>Tween.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="system\Tween.ts" />
+    <TypeScriptCompile Include="system\TilemapBuffer.ts" />
+    <TypeScriptCompile Include="system\Tile.ts" />
+    <TypeScriptCompile Include="system\StageScaleMode.ts" />
+    <TypeScriptCompile Include="system\RequestAnimationFrame.ts" />
+    <TypeScriptCompile Include="system\RandomDataGenerator.ts" />
+    <TypeScriptCompile Include="system\QuadTree.ts" />
+    <TypeScriptCompile Include="system\LinkedList.ts" />
+    <TypeScriptCompile Include="system\Device.ts" />
+    <TypeScriptCompile Include="system\Camera.ts" />
+    <Content Include="system\easing\Back.js">
+      <DependentUpon>Back.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Bounce.js">
+      <DependentUpon>Bounce.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Circular.js">
+      <DependentUpon>Circular.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Cubic.js">
+      <DependentUpon>Cubic.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Elastic.js">
+      <DependentUpon>Elastic.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Exponential.js">
+      <DependentUpon>Exponential.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Linear.js">
+      <DependentUpon>Linear.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Quadratic.js">
+      <DependentUpon>Quadratic.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Quartic.js">
+      <DependentUpon>Quartic.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Quintic.js">
+      <DependentUpon>Quintic.ts</DependentUpon>
+    </Content>
+    <Content Include="system\easing\Sinusoidal.js">
+      <DependentUpon>Sinusoidal.ts</DependentUpon>
+    </Content>
+    <Content Include="system\input\Finger.js">
+      <DependentUpon>Finger.ts</DependentUpon>
+    </Content>
+    <Content Include="system\input\Input.js">
+      <DependentUpon>Input.ts</DependentUpon>
+    </Content>
+    <Content Include="system\input\Keyboard.js">
+      <DependentUpon>Keyboard.ts</DependentUpon>
+    </Content>
+    <Content Include="system\input\Mouse.js">
+      <DependentUpon>Mouse.ts</DependentUpon>
+    </Content>
+    <Content Include="system\input\Touch.js">
+      <DependentUpon>Touch.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="system\input\Touch.ts" />
+    <TypeScriptCompile Include="system\input\Mouse.ts" />
+    <TypeScriptCompile Include="system\input\Keyboard.ts" />
+    <TypeScriptCompile Include="system\input\Input.ts" />
+    <TypeScriptCompile Include="system\input\Finger.ts" />
+    <TypeScriptCompile Include="system\easing\Sinusoidal.ts" />
+    <TypeScriptCompile Include="system\easing\Quintic.ts" />
+    <TypeScriptCompile Include="system\easing\Quartic.ts" />
+    <TypeScriptCompile Include="system\easing\Quadratic.ts" />
+    <TypeScriptCompile Include="system\easing\Linear.ts" />
+    <TypeScriptCompile Include="system\easing\Exponential.ts" />
+    <TypeScriptCompile Include="system\easing\Elastic.ts" />
+    <TypeScriptCompile Include="system\easing\Cubic.ts" />
+    <TypeScriptCompile Include="system\easing\Circular.ts" />
+    <TypeScriptCompile Include="system\easing\Bounce.ts" />
+    <TypeScriptCompile Include="system\easing\Back.ts" />
+    <TypeScriptCompile Include="system\animation\FrameData.ts" />
+    <TypeScriptCompile Include="system\animation\Frame.ts" />
+    <TypeScriptCompile Include="system\animation\AnimationLoader.ts" />
+    <TypeScriptCompile Include="system\animation\Animation.ts" />
+    <TypeScriptCompile Include="geom\Rectangle.ts" />
+    <TypeScriptCompile Include="geom\Point.ts" />
+    <TypeScriptCompile Include="geom\Line.ts" />
+    <TypeScriptCompile Include="geom\IntersectResult.ts" />
+    <TypeScriptCompile Include="geom\Circle.ts" />
+    <TypeScriptCompile Include="gameobjects\Tilemap.ts" />
+    <TypeScriptCompile Include="gameobjects\Sprite.ts" />
+    <TypeScriptCompile Include="gameobjects\Particle.ts" />
+    <TypeScriptCompile Include="gameobjects\GeomSprite.ts" />
+    <TypeScriptCompile Include="gameobjects\GameObject.ts" />
+    <TypeScriptCompile Include="gameobjects\Emitter.ts" />
+    <Content Include="Group.js">
+      <DependentUpon>Group.ts</DependentUpon>
+    </Content>
+    <Content Include="Loader.js">
+      <DependentUpon>Loader.ts</DependentUpon>
+    </Content>
+    <Content Include="Motion.js">
+      <DependentUpon>Motion.ts</DependentUpon>
+    </Content>
+    <Content Include="Phaser.js">
+      <DependentUpon>Phaser.ts</DependentUpon>
+    </Content>
+    <Content Include="Signal.js">
+      <DependentUpon>Signal.ts</DependentUpon>
+    </Content>
+    <Content Include="SignalBinding.js">
+      <DependentUpon>SignalBinding.ts</DependentUpon>
+    </Content>
+    <Content Include="Sound.js">
+      <DependentUpon>Sound.ts</DependentUpon>
+    </Content>
+    <Content Include="Stage.js">
+      <DependentUpon>Stage.ts</DependentUpon>
+    </Content>
+    <Content Include="State.js">
+      <DependentUpon>State.ts</DependentUpon>
+    </Content>
+    <Content Include="Time.js">
+      <DependentUpon>Time.ts</DependentUpon>
+    </Content>
+    <Content Include="TweenManager.js">
+      <DependentUpon>TweenManager.ts</DependentUpon>
+    </Content>
+    <Content Include="World.js">
+      <DependentUpon>World.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="World.ts" />
+    <TypeScriptCompile Include="TweenManager.ts" />
+    <TypeScriptCompile Include="Time.ts" />
+    <TypeScriptCompile Include="State.ts" />
+    <TypeScriptCompile Include="Stage.ts" />
+    <TypeScriptCompile Include="Sound.ts" />
+    <TypeScriptCompile Include="SignalBinding.ts" />
+    <TypeScriptCompile Include="Signal.ts" />
+    <TypeScriptCompile Include="Phaser.ts" />
+    <TypeScriptCompile Include="Motion.ts" />
+    <TypeScriptCompile Include="Loader.ts" />
+    <TypeScriptCompile Include="Group.ts" />
+    <TypeScriptCompile Include="GameMath.ts" />
+    <TypeScriptCompile Include="Game.ts" />
+    <TypeScriptCompile Include="DynamicTexture.ts" />
+    <TypeScriptCompile Include="Collision.ts" />
+    <TypeScriptCompile Include="AnimationManager.ts" />
+    <Content Include="Basic.js">
+      <DependentUpon>Basic.ts</DependentUpon>
+    </Content>
+    <Content Include="Cache.js">
+      <DependentUpon>Cache.ts</DependentUpon>
+    </Content>
+    <Content Include="CameraManager.js">
+      <DependentUpon>CameraManager.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="CameraManager.ts" />
+    <TypeScriptCompile Include="Cache.ts" />
+    <TypeScriptCompile Include="Basic.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>

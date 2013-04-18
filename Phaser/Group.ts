@@ -60,7 +60,7 @@ module Phaser {
         private _maxSize: number;
 
         /**
-         * Internal helper variable for recycling objects a la <code>FlxEmitter</code>.
+         * Internal helper variable for recycling objects a la <code>Emitter</code>.
          */
         private _marker: number;
 
@@ -185,7 +185,7 @@ module Phaser {
         }
 
         /**
-         * Adds a new <code>Basic</code> subclass (Basic, FlxBasic, Enemy, etc) to the group.
+         * Adds a new <code>Basic</code> subclass (Basic, Basic, Enemy, etc) to the group.
          * Group will try to replace a null member of the array first.
          * Failing that, Group will add it to the end of the member array,
          * assuming there is room for it, and doubling the size of the array if necessary.
@@ -275,7 +275,7 @@ module Phaser {
          * and no object class was provided, it will return null
          * instead of a valid object!</p>
          * 
-         * @param	ObjectClass		The class type you want to recycle (e.g. FlxBasic, EvilRobot, etc). Do NOT "new" the class in the parameter!
+         * @param	ObjectClass		The class type you want to recycle (e.g. Basic, EvilRobot, etc). Do NOT "new" the class in the parameter!
          * 
          * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
          */
@@ -382,7 +382,7 @@ module Phaser {
          * Call this function to sort the group according to a particular value and order.
          * For example, to sort game objects for Zelda-style overlaps you might call
          * <code>myGroup.sort("y",Group.ASCENDING)</code> at the bottom of your
-         * <code>FlxState.update()</code> override.  To sort all existing objects after
+         * <code>State.update()</code> override.  To sort all existing objects after
          * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
          * 
          * @param	Index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
@@ -696,7 +696,7 @@ module Phaser {
         }
 
         /**
-         * Remove all instances of <code>Basic</code> subclass (FlxBasic, FlxBlock, etc) from the list.
+         * Remove all instances of <code>Basic</code> subclass (Basic, Block, etc) from the list.
          * WARNING: does not destroy() or kill() any of these objects!
          */
         public clear() {

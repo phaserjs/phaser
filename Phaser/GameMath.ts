@@ -858,8 +858,8 @@ module Phaser {
         /**
         * Fetch a random entry from the given array.
         * Will return null if random selection is missing, or array has no entries.
-        * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
-        * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
+        * <code>G.getRandom()</code> is deterministic and safe for use with replays/recordings.
+        * HOWEVER, <code>U.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
         * 
         * @param	Objects		An array of objects.
         * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.

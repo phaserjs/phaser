@@ -1,4 +1,4 @@
-/// <reference path="../../Phaser/Phaser.ts" />
+/// <reference path="../../Phaser/Game.ts" />
 (function () {
     var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     var leftEmitter;

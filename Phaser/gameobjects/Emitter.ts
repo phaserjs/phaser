@@ -24,7 +24,7 @@ module Phaser {
     export class Emitter extends Group {
 
         /**
-         * Creates a new <code>FlxEmitter</code> object at a specific position.
+         * Creates a new <code>Emitter</code> object at a specific position.
          * Does NOT automatically generate or attach particles!
          * 
          * @param	X		The X position of the emitter.
@@ -176,13 +176,13 @@ module Phaser {
         /**
          * This function generates a new array of particle sprites to attach to the emitter.
          * 
-         * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+         * @param	Graphics		If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
          * @param	Quantity		The number of particles to generate when using the "create from image" option.
          * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
          * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
          * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
          * 
-         * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+         * @return	This Emitter instance (nice for chaining stuff together, if you're into that).
          */
         public makeParticles(Graphics, Quantity: number = 50, BakedRotations: number = 16, Multiple: bool = false, Collide: number = 0.8): Emitter {
 
@@ -447,9 +447,9 @@ module Phaser {
         }
 
         /**
-         * Change the emitter's midpoint to match the midpoint of a <code>FlxObject</code>.
+         * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
          * 
-         * @param	Object		The <code>FlxObject</code> that you want to sync up with.
+         * @param	Object		The <code>Object</code> that you want to sync up with.
          */
         public at(Object) {
             Object.getMidpoint(this._point);

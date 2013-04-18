@@ -1,21 +1,3 @@
-/**
-*   Phaser
-*
-*   v0.9 - April 18th 2013
-*
-*   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
-*
-*   Richard Davey (@photonstorm)
-*   Adam Saltsman (@ADAMATOMIC) (original Flixel code)
-*
-*   "If you want your children to be intelligent,  read them fairy tales."
-*   "If you want them to be more intelligent, read them more fairy tales."
-*                                                       -- Albert Einstein
-*/
-var Phaser;
-(function (Phaser) {
-    Phaser.VERSION = 'Phaser version 0.9';
-})(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
 * This is a useful "generic" object.
@@ -86,7 +68,7 @@ var Phaser;
         };
         Basic.prototype.revive = /**
         * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
-        * In practice, this is most often called by <code>FlxObject.reset()</code>.
+        * In practice, this is most often called by <code>Object.reset()</code>.
         */
         function () {
             this.alive = true;
@@ -102,129 +84,390 @@ var Phaser;
     })();
     Phaser.Basic = Basic;    
 })(Phaser || (Phaser = {}));
-/// <reference path="Game.ts" />
+/// <reference path="Signal.ts" />
+/*
+*	SignalBinding
+*
+*	@desc		An object that represents a binding between a Signal and a listener function.
+*              Released under the MIT license
+*				http://millermedeiros.github.com/js-signals/
+*
+*	@version	1. - 7th March 2013
+*
+*	@author 	Richard Davey, TypeScript conversion
+*	@author		Miller Medeiros, JS Signals
+*
+*/
 /**
 *   Phaser
 */
 var Phaser;
 (function (Phaser) {
-    var Cache = (function () {
-        function Cache(game) {
-            this._game = game;
-            this._canvases = {
-            };
-            this._images = {
-            };
-            this._sounds = {
-            };
-            this._text = {
-            };
+    var SignalBinding = (function () {
+        /**
+        * Object that represents a binding between a Signal and a listener function.
+        * <br />- <strong>This is an internal constructor and shouldn't be called by regular users.</strong>
+        * <br />- inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
+        * @author Miller Medeiros
+        * @constructor
+        * @internal
+        * @name SignalBinding
+        * @param {Signal} signal Reference to Signal object that listener is currently bound to.
+        * @param {Function} listener Handler function bound to the signal.
+        * @param {boolean} isOnce If binding should be executed just once.
+        * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+        * @param {Number} [priority] The priority level of the event listener. (default = 0).
+        */
+        function SignalBinding(signal, listener, isOnce, listenerContext, priority) {
+            if (typeof priority === "undefined") { priority = 0; }
+            /**
+            * If binding is active and should be executed.
+            * @type boolean
+            */
+            this.active = true;
+            /**
+            * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute`. (curried parameters)
+            * @type Array|null
+            */
+            this.params = null;
+            this._listener = listener;
+            this._isOnce = isOnce;
+            this.context = listenerContext;
+            this._signal = signal;
+            this.priority = priority || 0;
         }
-        Cache.prototype.addCanvas = function (key, canvas, context) {
-            this._canvases[key] = {
-                canvas: canvas,
-                context: context
-            };
-        };
-        Cache.prototype.addSpriteSheet = function (key, url, data, frameWidth, frameHeight, frameMax) {
-            this._images[key] = {
-                url: url,
-                data: data,
-                spriteSheet: true,
-                frameWidth: frameWidth,
-                frameHeight: frameHeight
-            };
-            this._images[key].frameData = Phaser.AnimationLoader.parseSpriteSheet(this._game, key, frameWidth, frameHeight, frameMax);
-        };
-        Cache.prototype.addTextureAtlas = function (key, url, data, jsonData) {
-            this._images[key] = {
-                url: url,
-                data: data,
-                spriteSheet: true
-            };
-            this._images[key].frameData = Phaser.AnimationLoader.parseJSONData(this._game, jsonData);
-        };
-        Cache.prototype.addImage = function (key, url, data) {
-            this._images[key] = {
-                url: url,
-                data: data,
-                spriteSheet: false
-            };
-        };
-        Cache.prototype.addSound = function (key, url, data) {
-            this._sounds[key] = {
-                url: url,
-                data: data,
-                decoded: false
-            };
-        };
-        Cache.prototype.decodedSound = function (key, data) {
-            this._sounds[key].data = data;
-            this._sounds[key].decoded = true;
-        };
-        Cache.prototype.addText = function (key, url, data) {
-            this._text[key] = {
-                url: url,
-                data: data
-            };
-        };
-        Cache.prototype.getCanvas = function (key) {
-            if(this._canvases[key]) {
-                return this._canvases[key].canvas;
+        SignalBinding.prototype.execute = /**
+        * Call listener passing arbitrary parameters.
+        * <p>If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.</p>
+        * @param {Array} [paramsArr] Array of parameters that should be passed to the listener
+        * @return {*} Value returned by the listener.
+        */
+        function (paramsArr) {
+            var handlerReturn;
+            var params;
+            if(this.active && !!this._listener) {
+                params = this.params ? this.params.concat(paramsArr) : paramsArr;
+                handlerReturn = this._listener.apply(this.context, params);
+                if(this._isOnce) {
+                    this.detach();
+                }
             }
-            return null;
+            return handlerReturn;
         };
-        Cache.prototype.getImage = function (key) {
-            if(this._images[key]) {
-                return this._images[key].data;
-            }
-            return null;
+        SignalBinding.prototype.detach = /**
+        * Detach binding from signal.
+        * - alias to: mySignal.remove(myBinding.getListener());
+        * @return {Function|null} Handler function bound to the signal or `null` if binding was previously detached.
+        */
+        function () {
+            return this.isBound() ? this._signal.remove(this._listener, this.context) : null;
         };
-        Cache.prototype.getFrameData = function (key) {
-            if(this._images[key] && this._images[key].spriteSheet == true) {
-                return this._images[key].frameData;
-            }
-            return null;
+        SignalBinding.prototype.isBound = /**
+        * @return {Boolean} `true` if binding is still bound to the signal and have a listener.
+        */
+        function () {
+            return (!!this._signal && !!this._listener);
         };
-        Cache.prototype.getSound = function (key) {
-            if(this._sounds[key]) {
-                return this._sounds[key].data;
-            }
-            return null;
+        SignalBinding.prototype.isOnce = /**
+        * @return {boolean} If SignalBinding will only be executed once.
+        */
+        function () {
+            return this._isOnce;
         };
-        Cache.prototype.isSoundDecoded = function (key) {
-            if(this._sounds[key]) {
-                return this._sounds[key].decoded;
-            }
+        SignalBinding.prototype.getListener = /**
+        * @return {Function} Handler function bound to the signal.
+        */
+        function () {
+            return this._listener;
         };
-        Cache.prototype.isSpriteSheet = function (key) {
-            if(this._images[key]) {
-                return this._images[key].spriteSheet;
-            }
+        SignalBinding.prototype.getSignal = /**
+        * @return {Signal} Signal that listener is currently bound to.
+        */
+        function () {
+            return this._signal;
         };
-        Cache.prototype.getText = function (key) {
-            if(this._text[key]) {
-                return this._text[key].data;
-            }
-            return null;
+        SignalBinding.prototype._destroy = /**
+        * Delete instance properties
+        * @private
+        */
+        function () {
+            delete this._signal;
+            delete this._listener;
+            delete this.context;
         };
-        Cache.prototype.destroy = function () {
-            for(var item in this._canvases) {
-                delete this._canvases[item['key']];
-            }
-            for(var item in this._images) {
-                delete this._images[item['key']];
-            }
-            for(var item in this._sounds) {
-                delete this._sounds[item['key']];
-            }
-            for(var item in this._text) {
-                delete this._text[item['key']];
-            }
+        SignalBinding.prototype.toString = /**
+        * @return {string} String representation of the object.
+        */
+        function () {
+            return '[SignalBinding isOnce:' + this._isOnce + ', isBound:' + this.isBound() + ', active:' + this.active + ']';
         };
-        return Cache;
+        return SignalBinding;
     })();
-    Phaser.Cache = Cache;    
+    Phaser.SignalBinding = SignalBinding;    
+})(Phaser || (Phaser = {}));
+/// <reference path="SignalBinding.ts" />
+/*
+*	Signal
+*
+*	@desc		A TypeScript conversion of JS Signals by Miller Medeiros
+*              Released under the MIT license
+*				http://millermedeiros.github.com/js-signals/
+*
+*	@version	1. - 7th March 2013
+*
+*	@author 	Richard Davey, TypeScript conversion
+*	@author		Miller Medeiros, JS Signals
+*
+*/
+/**
+* Custom event broadcaster
+* <br />- inspired by Robert Penner's AS3 Signals.
+* @name Signal
+* @author Miller Medeiros
+* @constructor
+*/
+/**
+*   Phaser
+*/
+var Phaser;
+(function (Phaser) {
+    var Signal = (function () {
+        function Signal() {
+            /**
+            *
+            * @property _bindings
+            * @type Array
+            * @private
+            */
+            this._bindings = [];
+            /**
+            *
+            * @property _prevParams
+            * @type Any
+            * @private
+            */
+            this._prevParams = null;
+            /**
+            * If Signal should keep record of previously dispatched parameters and
+            * automatically execute listener during `add()`/`addOnce()` if Signal was
+            * already dispatched before.
+            * @type boolean
+            */
+            this.memorize = false;
+            /**
+            * @type boolean
+            * @private
+            */
+            this._shouldPropagate = true;
+            /**
+            * If Signal is active and should broadcast events.
+            * <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
+            * @type boolean
+            */
+            this.active = true;
+        }
+        Signal.VERSION = '1.0.0';
+        Signal.prototype.validateListener = /**
+        *
+        * @method validateListener
+        * @param {Any} listener
+        * @param {Any} fnName
+        */
+        function (listener, fnName) {
+            if(typeof listener !== 'function') {
+                throw new Error('listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName));
+            }
+        };
+        Signal.prototype._registerListener = /**
+        * @param {Function} listener
+        * @param {boolean} isOnce
+        * @param {Object} [listenerContext]
+        * @param {Number} [priority]
+        * @return {SignalBinding}
+        * @private
+        */
+        function (listener, isOnce, listenerContext, priority) {
+            var prevIndex = this._indexOfListener(listener, listenerContext);
+            var binding;
+            if(prevIndex !== -1) {
+                binding = this._bindings[prevIndex];
+                if(binding.isOnce() !== isOnce) {
+                    throw new Error('You cannot add' + (isOnce ? '' : 'Once') + '() then add' + (!isOnce ? '' : 'Once') + '() the same listener without removing the relationship first.');
+                }
+            } else {
+                binding = new Phaser.SignalBinding(this, listener, isOnce, listenerContext, priority);
+                this._addBinding(binding);
+            }
+            if(this.memorize && this._prevParams) {
+                binding.execute(this._prevParams);
+            }
+            return binding;
+        };
+        Signal.prototype._addBinding = /**
+        *
+        * @method _addBinding
+        * @param {SignalBinding} binding
+        * @private
+        */
+        function (binding) {
+            //simplified insertion sort
+            var n = this._bindings.length;
+            do {
+                --n;
+            }while(this._bindings[n] && binding.priority <= this._bindings[n].priority);
+            this._bindings.splice(n + 1, 0, binding);
+        };
+        Signal.prototype._indexOfListener = /**
+        *
+        * @method _indexOfListener
+        * @param {Function} listener
+        * @return {number}
+        * @private
+        */
+        function (listener, context) {
+            var n = this._bindings.length;
+            var cur;
+            while(n--) {
+                cur = this._bindings[n];
+                if(cur.getListener() === listener && cur.context === context) {
+                    return n;
+                }
+            }
+            return -1;
+        };
+        Signal.prototype.has = /**
+        * Check if listener was attached to Signal.
+        * @param {Function} listener
+        * @param {Object} [context]
+        * @return {boolean} if Signal has the specified listener.
+        */
+        function (listener, context) {
+            if (typeof context === "undefined") { context = null; }
+            return this._indexOfListener(listener, context) !== -1;
+        };
+        Signal.prototype.add = /**
+        * Add a listener to the signal.
+        * @param {Function} listener Signal handler function.
+        * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+        * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+        * @return {SignalBinding} An Object representing the binding between the Signal and listener.
+        */
+        function (listener, listenerContext, priority) {
+            if (typeof listenerContext === "undefined") { listenerContext = null; }
+            if (typeof priority === "undefined") { priority = 0; }
+            this.validateListener(listener, 'add');
+            return this._registerListener(listener, false, listenerContext, priority);
+        };
+        Signal.prototype.addOnce = /**
+        * Add listener to the signal that should be removed after first execution (will be executed only once).
+        * @param {Function} listener Signal handler function.
+        * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+        * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+        * @return {SignalBinding} An Object representing the binding between the Signal and listener.
+        */
+        function (listener, listenerContext, priority) {
+            if (typeof listenerContext === "undefined") { listenerContext = null; }
+            if (typeof priority === "undefined") { priority = 0; }
+            this.validateListener(listener, 'addOnce');
+            return this._registerListener(listener, true, listenerContext, priority);
+        };
+        Signal.prototype.remove = /**
+        * Remove a single listener from the dispatch queue.
+        * @param {Function} listener Handler function that should be removed.
+        * @param {Object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
+        * @return {Function} Listener handler function.
+        */
+        function (listener, context) {
+            if (typeof context === "undefined") { context = null; }
+            this.validateListener(listener, 'remove');
+            var i = this._indexOfListener(listener, context);
+            if(i !== -1) {
+                this._bindings[i]._destroy()//no reason to a SignalBinding exist if it isn't attached to a signal
+                ;
+                this._bindings.splice(i, 1);
+            }
+            return listener;
+        };
+        Signal.prototype.removeAll = /**
+        * Remove all listeners from the Signal.
+        */
+        function () {
+            var n = this._bindings.length;
+            while(n--) {
+                this._bindings[n]._destroy();
+            }
+            this._bindings.length = 0;
+        };
+        Signal.prototype.getNumListeners = /**
+        * @return {number} Number of listeners attached to the Signal.
+        */
+        function () {
+            return this._bindings.length;
+        };
+        Signal.prototype.halt = /**
+        * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
+        * <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
+        * @see Signal.prototype.disable
+        */
+        function () {
+            this._shouldPropagate = false;
+        };
+        Signal.prototype.dispatch = /**
+        * Dispatch/Broadcast Signal to all listeners added to the queue.
+        * @param {...*} [params] Parameters that should be passed to each handler.
+        */
+        function () {
+            var paramsArr = [];
+            for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                paramsArr[_i] = arguments[_i + 0];
+            }
+            if(!this.active) {
+                return;
+            }
+            var n = this._bindings.length;
+            var bindings;
+            if(this.memorize) {
+                this._prevParams = paramsArr;
+            }
+            if(!n) {
+                //should come after memorize
+                return;
+            }
+            bindings = this._bindings.slice(0)//clone array in case add/remove items during dispatch
+            ;
+            this._shouldPropagate = true//in case `halt` was called before dispatch or during the previous dispatch.
+            ;
+            //execute all callbacks until end of the list or until a callback returns `false` or stops propagation
+            //reverse loop since listeners with higher priority will be added at the end of the list
+            do {
+                n--;
+            }while(bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
+        };
+        Signal.prototype.forget = /**
+        * Forget memorized arguments.
+        * @see Signal.memorize
+        */
+        function () {
+            this._prevParams = null;
+        };
+        Signal.prototype.dispose = /**
+        * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
+        * <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
+        */
+        function () {
+            this.removeAll();
+            delete this._bindings;
+            delete this._prevParams;
+        };
+        Signal.prototype.toString = /**
+        * @return {string} String representation of the object.
+        */
+        function () {
+            return '[Signal active:' + this.active + ' numListeners:' + this.getNumListeners() + ']';
+        };
+        return Signal;
+    })();
+    Phaser.Signal = Signal;    
 })(Phaser || (Phaser = {}));
 var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
@@ -233,6 +476,7 @@ var __extends = this.__extends || function (d, b) {
 };
 /// <reference path="../Game.ts" />
 /// <reference path="../Basic.ts" />
+/// <reference path="../Signal.ts" />
 /**
 *   Phaser
 */
@@ -249,6 +493,9 @@ var Phaser;
             this._angle = 0;
             this.z = 0;
             this.moves = true;
+            //  Input
+            this.inputEnabled = false;
+            this._inputOver = false;
             this.bounds = new Phaser.Rectangle(x, y, width, height);
             this.exists = true;
             this.active = true;
@@ -289,8 +536,13 @@ var Phaser;
             if(this.moves) {
                 this.updateMotion();
             }
+            if(this.inputEnabled) {
+                this.updateInput();
+            }
             this.wasTouching = this.touching;
             this.touching = Phaser.Collision.NONE;
+        };
+        GameObject.prototype.updateInput = function () {
         };
         GameObject.prototype.updateMotion = function () {
             var delta;
@@ -311,8 +563,8 @@ var Phaser;
             this.bounds.y += delta;
         };
         GameObject.prototype.overlaps = /**
-        * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>FlxGroup</code>.
-        * If the group has a LOT of things in it, it might be faster to use <code>FlxG.overlaps()</code>.
+        * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
+        * If the group has a LOT of things in it, it might be faster to use <code>G.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
         * @param	ObjectOrGroup	The object or group being tested.
@@ -336,7 +588,7 @@ var Phaser;
                 return results;
             }
             /*
-            if (typeof ObjectOrGroup === 'FlxTilemap')
+            if (typeof ObjectOrGroup === 'Tilemap')
             {
             //Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
             // we redirect the call to the tilemap overlap here.
@@ -355,7 +607,7 @@ var Phaser;
             return (objectScreenPos.x + ObjectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) && (objectScreenPos.y + ObjectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
         };
         GameObject.prototype.overlapsAt = /**
-        * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>FlxGroup</code>?
+        * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
         * This is distinct from overlapsPoint(), which just checks that ponumber, rather than taking the object's size numbero account.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
@@ -383,13 +635,13 @@ var Phaser;
                 return results;
             }
             /*
-            if (typeof ObjectOrGroup === 'FlxTilemap')
+            if (typeof ObjectOrGroup === 'Tilemap')
             {
             //Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
             // we redirect the call to the tilemap overlap here.
             //However, since this is overlapsAt(), we also have to invent the appropriate position for the tilemap.
             //So we calculate the offset between the player and the requested position, and subtract that from the tilemap.
-            var tilemap: FlxTilemap = ObjectOrGroup;
+            var tilemap: Tilemap = ObjectOrGroup;
             return tilemap.overlapsAt(tilemap.x - (X - this.x), tilemap.y - (Y - this.y), this, InScreenSpace, Camera);
             }
             */
@@ -620,6 +872,7 @@ var Phaser;
     Phaser.GameObject = GameObject;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="../AnimationManager.ts" />
 /// <reference path="GameObject.ts" />
 /**
 *   Phaser
@@ -644,7 +897,7 @@ var Phaser;
             this._dw = 0;
             this._dh = 0;
             this._texture = null;
-            this.animations = new Phaser.Animations(this._game, this);
+            this.animations = new Phaser.AnimationManager(this._game, this);
             if(key !== null) {
                 this.loadGraphic(key);
             } else {
@@ -756,7 +1009,8 @@ var Phaser;
             //	Rotation
             if(this.angle !== 0) {
                 this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
+                //this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
+                this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
                 this._game.stage.context.rotate(this.angle * (Math.PI / 180));
                 this._dx = -(this._dw / 2);
                 this._dy = -(this._dh / 2);
@@ -822,8 +1076,535 @@ var Phaser;
     })(Phaser.GameObject);
     Phaser.Sprite = Sprite;    
 })(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
+/// <reference path="../../Game.ts" />
+/**
+*	Animation
+*
+*	@desc 		Loads Sprite Sheets and Texture Atlas formats into a unified FrameData object
+*
+*	@version 	1.0 - 22nd March 2013
+*	@author 	Richard Davey
+*/
+/**
+*   Phaser
+*/
+var Phaser;
+(function (Phaser) {
+    var Animation = (function () {
+        function Animation(game, parent, frameData, name, frames, delay, looped) {
+            this._game = game;
+            this._parent = parent;
+            this._frames = frames;
+            this._frameData = frameData;
+            this.name = name;
+            this.delay = 1000 / delay;
+            this.looped = looped;
+            this.isFinished = false;
+            this.isPlaying = false;
+        }
+        Object.defineProperty(Animation.prototype, "frameTotal", {
+            get: function () {
+                return this._frames.length;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Animation.prototype, "frame", {
+            get: function () {
+                return this._frameIndex;
+            },
+            set: function (value) {
+                this.currentFrame = this._frameData.getFrame(value);
+                if(this.currentFrame !== null) {
+                    this._parent.bounds.width = this.currentFrame.width;
+                    this._parent.bounds.height = this.currentFrame.height;
+                    this._frameIndex = value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Animation.prototype.play = function (frameRate, loop) {
+            if (typeof frameRate === "undefined") { frameRate = null; }
+            if(frameRate !== null) {
+                this.delay = 1000 / frameRate;
+            }
+            if(loop !== undefined) {
+                this.looped = loop;
+            }
+            this.isPlaying = true;
+            this.isFinished = false;
+            this._timeLastFrame = this._game.time.now;
+            this._timeNextFrame = this._game.time.now + this.delay;
+            this._frameIndex = 0;
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+        };
+        Animation.prototype.onComplete = function () {
+            this.isPlaying = false;
+            this.isFinished = true;
+            //  callback
+                    };
+        Animation.prototype.stop = function () {
+            this.isPlaying = false;
+            this.isFinished = true;
+        };
+        Animation.prototype.update = function () {
+            if(this.isPlaying == true && this._game.time.now >= this._timeNextFrame) {
+                this._frameIndex++;
+                if(this._frameIndex == this._frames.length) {
+                    if(this.looped) {
+                        this._frameIndex = 0;
+                        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                    } else {
+                        this.onComplete();
+                    }
+                } else {
+                    this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                }
+                this._timeLastFrame = this._game.time.now;
+                this._timeNextFrame = this._game.time.now + this.delay;
+                return true;
+            }
+            return false;
+        };
+        Animation.prototype.destroy = function () {
+            this._game = null;
+            this._parent = null;
+            this._frames = null;
+            this._frameData = null;
+            this.currentFrame = null;
+            this.isPlaying = false;
+        };
+        return Animation;
+    })();
+    Phaser.Animation = Animation;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../../Game.ts" />
+/**
+*   Phaser
+*/
+var Phaser;
+(function (Phaser) {
+    var AnimationLoader = (function () {
+        function AnimationLoader() { }
+        AnimationLoader.parseSpriteSheet = function parseSpriteSheet(game, key, frameWidth, frameHeight, frameMax) {
+            //  How big is our image?
+            var img = game.cache.getImage(key);
+            if(img == null) {
+                return null;
+            }
+            var width = img.width;
+            var height = img.height;
+            var row = Math.round(width / frameWidth);
+            var column = Math.round(height / frameHeight);
+            var total = row * column;
+            if(frameMax !== -1) {
+                total = frameMax;
+            }
+            //  Zero or smaller than frame sizes?
+            if(width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0) {
+                return null;
+            }
+            //  Let's create some frames then
+            var data = new Phaser.FrameData();
+            var x = 0;
+            var y = 0;
+            for(var i = 0; i < total; i++) {
+                data.addFrame(new Phaser.Frame(x, y, frameWidth, frameHeight, ''));
+                x += frameWidth;
+                if(x === width) {
+                    x = 0;
+                    y += frameHeight;
+                }
+            }
+            return data;
+        };
+        AnimationLoader.parseJSONData = function parseJSONData(game, json) {
+            //  Let's create some frames then
+            var data = new Phaser.FrameData();
+            //  By this stage frames is a fully parsed array
+            var frames = json;
+            var newFrame;
+            for(var i = 0; i < frames.length; i++) {
+                newFrame = data.addFrame(new Phaser.Frame(frames[i].frame.x, frames[i].frame.y, frames[i].frame.w, frames[i].frame.h, frames[i].filename));
+                newFrame.setTrim(frames[i].trimmed, frames[i].sourceSize.w, frames[i].sourceSize.h, frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].spriteSourceSize.w, frames[i].spriteSourceSize.h);
+            }
+            return data;
+        };
+        return AnimationLoader;
+    })();
+    Phaser.AnimationLoader = AnimationLoader;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../../Game.ts" />
+/**
+*   Phaser
+*/
+var Phaser;
+(function (Phaser) {
+    var Frame = (function () {
+        function Frame(x, y, width, height, name) {
+            //  Useful for Texture Atlas files (is set to the filename value)
+            this.name = '';
+            //  Rotated? (not yet implemented)
+            this.rotated = false;
+            //  Either cw or ccw, rotation is always 90 degrees
+            this.rotationDirection = 'cw';
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.name = name;
+            this.rotated = false;
+            this.trimmed = false;
+        }
+        Frame.prototype.setRotation = function (rotated, rotationDirection) {
+            //  Not yet supported
+                    };
+        Frame.prototype.setTrim = function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
+            this.trimmed = trimmed;
+            this.sourceSizeW = actualWidth;
+            this.sourceSizeH = actualHeight;
+            this.spriteSourceSizeX = destX;
+            this.spriteSourceSizeY = destY;
+            this.spriteSourceSizeW = destWidth;
+            this.spriteSourceSizeH = destHeight;
+        };
+        return Frame;
+    })();
+    Phaser.Frame = Frame;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../../Game.ts" />
+/**
+*   Phaser
+*/
+var Phaser;
+(function (Phaser) {
+    var FrameData = (function () {
+        function FrameData() {
+            this._frames = [];
+            this._frameNames = [];
+        }
+        Object.defineProperty(FrameData.prototype, "total", {
+            get: function () {
+                return this._frames.length;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        FrameData.prototype.addFrame = function (frame) {
+            frame.index = this._frames.length;
+            this._frames.push(frame);
+            if(frame.name !== '') {
+                this._frameNames[frame.name] = frame.index;
+            }
+            return frame;
+        };
+        FrameData.prototype.getFrame = function (index) {
+            if(this._frames[index]) {
+                return this._frames[index];
+            }
+            return null;
+        };
+        FrameData.prototype.getFrameByName = function (name) {
+            if(this._frameNames[name] >= 0) {
+                return this._frames[this._frameNames[name]];
+            }
+            return null;
+        };
+        FrameData.prototype.checkFrameName = function (name) {
+            if(this._frameNames[name] >= 0) {
+                return true;
+            }
+            return false;
+        };
+        FrameData.prototype.getFrameRange = function (start, end, output) {
+            if (typeof output === "undefined") { output = []; }
+            for(var i = start; i <= end; i++) {
+                output.push(this._frames[i]);
+            }
+            return output;
+        };
+        FrameData.prototype.getFrameIndexes = function (output) {
+            if (typeof output === "undefined") { output = []; }
+            output.length = 0;
+            for(var i = 0; i < this._frames.length; i++) {
+                output.push(i);
+            }
+            return output;
+        };
+        FrameData.prototype.getFrameIndexesByName = function (input) {
+            var output = [];
+            for(var i = 0; i < input.length; i++) {
+                if(this.getFrameByName(input[i])) {
+                    output.push(this.getFrameByName(input[i]).index);
+                }
+            }
+            return output;
+        };
+        FrameData.prototype.getAllFrames = function () {
+            return this._frames;
+        };
+        FrameData.prototype.getFrames = function (range) {
+            var output = [];
+            for(var i = 0; i < range.length; i++) {
+                output.push(this._frames[i]);
+            }
+            return output;
+        };
+        return FrameData;
+    })();
+    Phaser.FrameData = FrameData;    
+})(Phaser || (Phaser = {}));
+/// <reference path="Game.ts" />
+/// <reference path="gameobjects/Sprite.ts" />
+/// <reference path="system/animation/Animation.ts" />
+/// <reference path="system/animation/AnimationLoader.ts" />
+/// <reference path="system/animation/Frame.ts" />
+/// <reference path="system/animation/FrameData.ts" />
+var Phaser;
+(function (Phaser) {
+    var AnimationManager = (function () {
+        function AnimationManager(game, parent) {
+            this._frameData = null;
+            this.currentFrame = null;
+            this._game = game;
+            this._parent = parent;
+            this._anims = {
+            };
+        }
+        AnimationManager.prototype.loadFrameData = function (frameData) {
+            this._frameData = frameData;
+            this.frame = 0;
+        };
+        AnimationManager.prototype.add = function (name, frames, frameRate, loop, useNumericIndex) {
+            if (typeof frames === "undefined") { frames = null; }
+            if (typeof frameRate === "undefined") { frameRate = 60; }
+            if (typeof loop === "undefined") { loop = false; }
+            if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
+            if(this._frameData == null) {
+                return;
+            }
+            if(frames == null) {
+                frames = this._frameData.getFrameIndexes();
+            } else {
+                if(this.validateFrames(frames, useNumericIndex) == false) {
+                    return;
+                }
+            }
+            if(useNumericIndex == false) {
+                frames = this._frameData.getFrameIndexesByName(frames);
+            }
+            this._anims[name] = new Phaser.Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
+            this.currentAnim = this._anims[name];
+        };
+        AnimationManager.prototype.validateFrames = function (frames, useNumericIndex) {
+            for(var i = 0; i < frames.length; i++) {
+                if(useNumericIndex == true) {
+                    if(frames[i] > this._frameData.total) {
+                        return false;
+                    }
+                } else {
+                    if(this._frameData.checkFrameName(frames[i]) == false) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        AnimationManager.prototype.play = function (name, frameRate, loop) {
+            if (typeof frameRate === "undefined") { frameRate = null; }
+            if(this._anims[name]) {
+                this.currentAnim = this._anims[name];
+                this.currentAnim.play(frameRate, loop);
+            }
+        };
+        AnimationManager.prototype.stop = function (name) {
+            if(this._anims[name]) {
+                this.currentAnim = this._anims[name];
+                this.currentAnim.stop();
+            }
+        };
+        AnimationManager.prototype.update = function () {
+            if(this.currentAnim && this.currentAnim.update() == true) {
+                this.currentFrame = this.currentAnim.currentFrame;
+                this._parent.bounds.width = this.currentFrame.width;
+                this._parent.bounds.height = this.currentFrame.height;
+            }
+        };
+        Object.defineProperty(AnimationManager.prototype, "frameData", {
+            get: function () {
+                return this._frameData;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(AnimationManager.prototype, "frameTotal", {
+            get: function () {
+                return this._frameData.total;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(AnimationManager.prototype, "frame", {
+            get: function () {
+                return this._frameIndex;
+            },
+            set: function (value) {
+                this.currentFrame = this._frameData.getFrame(value);
+                if(this.currentFrame !== null) {
+                    this._parent.bounds.width = this.currentFrame.width;
+                    this._parent.bounds.height = this.currentFrame.height;
+                    this._frameIndex = value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(AnimationManager.prototype, "frameName", {
+            get: function () {
+                return this.currentFrame.name;
+            },
+            set: function (value) {
+                this.currentFrame = this._frameData.getFrameByName(value);
+                if(this.currentFrame !== null) {
+                    this._parent.bounds.width = this.currentFrame.width;
+                    this._parent.bounds.height = this.currentFrame.height;
+                    this._frameIndex = this.currentFrame.index;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return AnimationManager;
+    })();
+    Phaser.AnimationManager = AnimationManager;    
+})(Phaser || (Phaser = {}));
+/// <reference path="Game.ts" />
+/**
+*   Phaser
+*/
+var Phaser;
+(function (Phaser) {
+    var Cache = (function () {
+        function Cache(game) {
+            this._game = game;
+            this._canvases = {
+            };
+            this._images = {
+            };
+            this._sounds = {
+            };
+            this._text = {
+            };
+        }
+        Cache.prototype.addCanvas = function (key, canvas, context) {
+            this._canvases[key] = {
+                canvas: canvas,
+                context: context
+            };
+        };
+        Cache.prototype.addSpriteSheet = function (key, url, data, frameWidth, frameHeight, frameMax) {
+            this._images[key] = {
+                url: url,
+                data: data,
+                spriteSheet: true,
+                frameWidth: frameWidth,
+                frameHeight: frameHeight
+            };
+            this._images[key].frameData = Phaser.AnimationLoader.parseSpriteSheet(this._game, key, frameWidth, frameHeight, frameMax);
+        };
+        Cache.prototype.addTextureAtlas = function (key, url, data, jsonData) {
+            this._images[key] = {
+                url: url,
+                data: data,
+                spriteSheet: true
+            };
+            this._images[key].frameData = Phaser.AnimationLoader.parseJSONData(this._game, jsonData);
+        };
+        Cache.prototype.addImage = function (key, url, data) {
+            this._images[key] = {
+                url: url,
+                data: data,
+                spriteSheet: false
+            };
+        };
+        Cache.prototype.addSound = function (key, url, data) {
+            this._sounds[key] = {
+                url: url,
+                data: data,
+                decoded: false
+            };
+        };
+        Cache.prototype.decodedSound = function (key, data) {
+            this._sounds[key].data = data;
+            this._sounds[key].decoded = true;
+        };
+        Cache.prototype.addText = function (key, url, data) {
+            this._text[key] = {
+                url: url,
+                data: data
+            };
+        };
+        Cache.prototype.getCanvas = function (key) {
+            if(this._canvases[key]) {
+                return this._canvases[key].canvas;
+            }
+            return null;
+        };
+        Cache.prototype.getImage = function (key) {
+            if(this._images[key]) {
+                return this._images[key].data;
+            }
+            return null;
+        };
+        Cache.prototype.getFrameData = function (key) {
+            if(this._images[key] && this._images[key].spriteSheet == true) {
+                return this._images[key].frameData;
+            }
+            return null;
+        };
+        Cache.prototype.getSound = function (key) {
+            if(this._sounds[key]) {
+                return this._sounds[key].data;
+            }
+            return null;
+        };
+        Cache.prototype.isSoundDecoded = function (key) {
+            if(this._sounds[key]) {
+                return this._sounds[key].decoded;
+            }
+        };
+        Cache.prototype.isSpriteSheet = function (key) {
+            if(this._images[key]) {
+                return this._images[key].spriteSheet;
+            }
+        };
+        Cache.prototype.getText = function (key) {
+            if(this._text[key]) {
+                return this._text[key].data;
+            }
+            return null;
+        };
+        Cache.prototype.destroy = function () {
+            for(var item in this._canvases) {
+                delete this._canvases[item['key']];
+            }
+            for(var item in this._images) {
+                delete this._images[item['key']];
+            }
+            for(var item in this._sounds) {
+                delete this._sounds[item['key']];
+            }
+            for(var item in this._text) {
+                delete this._text[item['key']];
+            }
+        };
+        return Cache;
+    })();
+    Phaser.Cache = Cache;    
+})(Phaser || (Phaser = {}));
 /// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="../Game.ts" />
 /**
 *   Phaser
 */
@@ -1048,7 +1829,7 @@ var Phaser;
             }
             this.bounds.setTo(X, Y, Width, Height);
             //if(UpdateWorld)
-            //	FlxG.worldBounds.copyFrom(bounds);
+            //	G.worldBounds.copyFrom(bounds);
             this.update();
         };
         Camera.prototype.update = function () {
@@ -1350,31 +2131,31 @@ var Phaser;
 */
 var Phaser;
 (function (Phaser) {
-    var Cameras = (function () {
-        function Cameras(game, x, y, width, height) {
+    var CameraManager = (function () {
+        function CameraManager(game, x, y, width, height) {
             this._game = game;
             this._cameras = [];
             this.current = this.addCamera(x, y, width, height);
         }
-        Cameras.prototype.getAll = function () {
+        CameraManager.prototype.getAll = function () {
             return this._cameras;
         };
-        Cameras.prototype.update = function () {
+        CameraManager.prototype.update = function () {
             this._cameras.forEach(function (camera) {
                 return camera.update();
             });
         };
-        Cameras.prototype.render = function () {
+        CameraManager.prototype.render = function () {
             this._cameras.forEach(function (camera) {
                 return camera.render();
             });
         };
-        Cameras.prototype.addCamera = function (x, y, width, height) {
+        CameraManager.prototype.addCamera = function (x, y, width, height) {
             var newCam = new Phaser.Camera(this._game, this._cameras.length, x, y, width, height);
             this._cameras.push(newCam);
             return newCam;
         };
-        Cameras.prototype.removeCamera = function (id) {
+        CameraManager.prototype.removeCamera = function (id) {
             if(this._cameras[id]) {
                 if(this.current === this._cameras[id]) {
                     this.current = null;
@@ -1385,13 +2166,13 @@ var Phaser;
                 return false;
             }
         };
-        Cameras.prototype.destroy = function () {
+        CameraManager.prototype.destroy = function () {
             this._cameras.length = 0;
             this.current = this.addCamera(0, 0, this._game.stage.width, this._game.stage.height);
         };
-        return Cameras;
+        return CameraManager;
     })();
-    Phaser.Cameras = Cameras;    
+    Phaser.CameraManager = CameraManager;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
@@ -4892,8 +5673,8 @@ var Phaser;
         GameMath.prototype.getRandom = /**
         * Fetch a random entry from the given array.
         * Will return null if random selection is missing, or array has no entries.
-        * <code>FlxG.getRandom()</code> is deterministic and safe for use with replays/recordings.
-        * HOWEVER, <code>FlxU.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
+        * <code>G.getRandom()</code> is deterministic and safe for use with replays/recordings.
+        * HOWEVER, <code>U.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
         *
         * @param	Objects		An array of objects.
         * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
@@ -5105,7 +5886,7 @@ var Phaser;
             configurable: true
         });
         Group.prototype.add = /**
-        * Adds a new <code>Basic</code> subclass (Basic, FlxBasic, Enemy, etc) to the group.
+        * Adds a new <code>Basic</code> subclass (Basic, Basic, Enemy, etc) to the group.
         * Group will try to replace a null member of the array first.
         * Failing that, Group will add it to the end of the member array,
         * assuming there is room for it, and doubling the size of the array if necessary.
@@ -5172,7 +5953,7 @@ var Phaser;
         * and no object class was provided, it will return null
         * instead of a valid object!</p>
         *
-        * @param	ObjectClass		The class type you want to recycle (e.g. FlxBasic, EvilRobot, etc). Do NOT "new" the class in the parameter!
+        * @param	ObjectClass		The class type you want to recycle (e.g. Basic, EvilRobot, etc). Do NOT "new" the class in the parameter!
         *
         * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
         */
@@ -5245,7 +6026,7 @@ var Phaser;
         * Call this function to sort the group according to a particular value and order.
         * For example, to sort game objects for Zelda-style overlaps you might call
         * <code>myGroup.sort("y",Group.ASCENDING)</code> at the bottom of your
-        * <code>FlxState.update()</code> override.  To sort all existing objects after
+        * <code>State.update()</code> override.  To sort all existing objects after
         * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
         *
         * @param	Index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
@@ -5468,7 +6249,7 @@ var Phaser;
             return this._game.math.getRandom(this.members, StartIndex, Length);
         };
         Group.prototype.clear = /**
-        * Remove all instances of <code>Basic</code> subclass (FlxBasic, FlxBlock, etc) from the list.
+        * Remove all instances of <code>Basic</code> subclass (Basic, Block, etc) from the list.
         * WARNING: does not destroy() or kill() any of these objects!
         */
         function () {
@@ -6114,391 +6895,6 @@ var Phaser;
     })();
     Phaser.Motion = Motion;    
 })(Phaser || (Phaser = {}));
-/// <reference path="Signal.ts" />
-/*
-*	SignalBinding
-*
-*	@desc		An object that represents a binding between a Signal and a listener function.
-*              Released under the MIT license
-*				http://millermedeiros.github.com/js-signals/
-*
-*	@version	1. - 7th March 2013
-*
-*	@author 	Richard Davey, TypeScript conversion
-*	@author		Miller Medeiros, JS Signals
-*
-*/
-/**
-*   Phaser
-*/
-var Phaser;
-(function (Phaser) {
-    var SignalBinding = (function () {
-        /**
-        * Object that represents a binding between a Signal and a listener function.
-        * <br />- <strong>This is an internal constructor and shouldn't be called by regular users.</strong>
-        * <br />- inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
-        * @author Miller Medeiros
-        * @constructor
-        * @internal
-        * @name SignalBinding
-        * @param {Signal} signal Reference to Signal object that listener is currently bound to.
-        * @param {Function} listener Handler function bound to the signal.
-        * @param {boolean} isOnce If binding should be executed just once.
-        * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-        * @param {Number} [priority] The priority level of the event listener. (default = 0).
-        */
-        function SignalBinding(signal, listener, isOnce, listenerContext, priority) {
-            if (typeof priority === "undefined") { priority = 0; }
-            /**
-            * If binding is active and should be executed.
-            * @type boolean
-            */
-            this.active = true;
-            /**
-            * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute`. (curried parameters)
-            * @type Array|null
-            */
-            this.params = null;
-            this._listener = listener;
-            this._isOnce = isOnce;
-            this.context = listenerContext;
-            this._signal = signal;
-            this.priority = priority || 0;
-        }
-        SignalBinding.prototype.execute = /**
-        * Call listener passing arbitrary parameters.
-        * <p>If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.</p>
-        * @param {Array} [paramsArr] Array of parameters that should be passed to the listener
-        * @return {*} Value returned by the listener.
-        */
-        function (paramsArr) {
-            var handlerReturn;
-            var params;
-            if(this.active && !!this._listener) {
-                params = this.params ? this.params.concat(paramsArr) : paramsArr;
-                handlerReturn = this._listener.apply(this.context, params);
-                if(this._isOnce) {
-                    this.detach();
-                }
-            }
-            return handlerReturn;
-        };
-        SignalBinding.prototype.detach = /**
-        * Detach binding from signal.
-        * - alias to: mySignal.remove(myBinding.getListener());
-        * @return {Function|null} Handler function bound to the signal or `null` if binding was previously detached.
-        */
-        function () {
-            return this.isBound() ? this._signal.remove(this._listener, this.context) : null;
-        };
-        SignalBinding.prototype.isBound = /**
-        * @return {Boolean} `true` if binding is still bound to the signal and have a listener.
-        */
-        function () {
-            return (!!this._signal && !!this._listener);
-        };
-        SignalBinding.prototype.isOnce = /**
-        * @return {boolean} If SignalBinding will only be executed once.
-        */
-        function () {
-            return this._isOnce;
-        };
-        SignalBinding.prototype.getListener = /**
-        * @return {Function} Handler function bound to the signal.
-        */
-        function () {
-            return this._listener;
-        };
-        SignalBinding.prototype.getSignal = /**
-        * @return {Signal} Signal that listener is currently bound to.
-        */
-        function () {
-            return this._signal;
-        };
-        SignalBinding.prototype._destroy = /**
-        * Delete instance properties
-        * @private
-        */
-        function () {
-            delete this._signal;
-            delete this._listener;
-            delete this.context;
-        };
-        SignalBinding.prototype.toString = /**
-        * @return {string} String representation of the object.
-        */
-        function () {
-            return '[SignalBinding isOnce:' + this._isOnce + ', isBound:' + this.isBound() + ', active:' + this.active + ']';
-        };
-        return SignalBinding;
-    })();
-    Phaser.SignalBinding = SignalBinding;    
-})(Phaser || (Phaser = {}));
-/// <reference path="SignalBinding.ts" />
-/*
-*	Signal
-*
-*	@desc		A TypeScript conversion of JS Signals by Miller Medeiros
-*              Released under the MIT license
-*				http://millermedeiros.github.com/js-signals/
-*
-*	@version	1. - 7th March 2013
-*
-*	@author 	Richard Davey, TypeScript conversion
-*	@author		Miller Medeiros, JS Signals
-*
-*/
-/**
-* Custom event broadcaster
-* <br />- inspired by Robert Penner's AS3 Signals.
-* @name Signal
-* @author Miller Medeiros
-* @constructor
-*/
-/**
-*   Phaser
-*/
-var Phaser;
-(function (Phaser) {
-    var Signal = (function () {
-        function Signal() {
-            /**
-            *
-            * @property _bindings
-            * @type Array
-            * @private
-            */
-            this._bindings = [];
-            /**
-            *
-            * @property _prevParams
-            * @type Any
-            * @private
-            */
-            this._prevParams = null;
-            /**
-            * If Signal should keep record of previously dispatched parameters and
-            * automatically execute listener during `add()`/`addOnce()` if Signal was
-            * already dispatched before.
-            * @type boolean
-            */
-            this.memorize = false;
-            /**
-            * @type boolean
-            * @private
-            */
-            this._shouldPropagate = true;
-            /**
-            * If Signal is active and should broadcast events.
-            * <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
-            * @type boolean
-            */
-            this.active = true;
-        }
-        Signal.VERSION = '1.0.0';
-        Signal.prototype.validateListener = /**
-        *
-        * @method validateListener
-        * @param {Any} listener
-        * @param {Any} fnName
-        */
-        function (listener, fnName) {
-            if(typeof listener !== 'function') {
-                throw new Error('listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName));
-            }
-        };
-        Signal.prototype._registerListener = /**
-        * @param {Function} listener
-        * @param {boolean} isOnce
-        * @param {Object} [listenerContext]
-        * @param {Number} [priority]
-        * @return {SignalBinding}
-        * @private
-        */
-        function (listener, isOnce, listenerContext, priority) {
-            var prevIndex = this._indexOfListener(listener, listenerContext);
-            var binding;
-            if(prevIndex !== -1) {
-                binding = this._bindings[prevIndex];
-                if(binding.isOnce() !== isOnce) {
-                    throw new Error('You cannot add' + (isOnce ? '' : 'Once') + '() then add' + (!isOnce ? '' : 'Once') + '() the same listener without removing the relationship first.');
-                }
-            } else {
-                binding = new Phaser.SignalBinding(this, listener, isOnce, listenerContext, priority);
-                this._addBinding(binding);
-            }
-            if(this.memorize && this._prevParams) {
-                binding.execute(this._prevParams);
-            }
-            return binding;
-        };
-        Signal.prototype._addBinding = /**
-        *
-        * @method _addBinding
-        * @param {SignalBinding} binding
-        * @private
-        */
-        function (binding) {
-            //simplified insertion sort
-            var n = this._bindings.length;
-            do {
-                --n;
-            }while(this._bindings[n] && binding.priority <= this._bindings[n].priority);
-            this._bindings.splice(n + 1, 0, binding);
-        };
-        Signal.prototype._indexOfListener = /**
-        *
-        * @method _indexOfListener
-        * @param {Function} listener
-        * @return {number}
-        * @private
-        */
-        function (listener, context) {
-            var n = this._bindings.length;
-            var cur;
-            while(n--) {
-                cur = this._bindings[n];
-                if(cur.getListener() === listener && cur.context === context) {
-                    return n;
-                }
-            }
-            return -1;
-        };
-        Signal.prototype.has = /**
-        * Check if listener was attached to Signal.
-        * @param {Function} listener
-        * @param {Object} [context]
-        * @return {boolean} if Signal has the specified listener.
-        */
-        function (listener, context) {
-            if (typeof context === "undefined") { context = null; }
-            return this._indexOfListener(listener, context) !== -1;
-        };
-        Signal.prototype.add = /**
-        * Add a listener to the signal.
-        * @param {Function} listener Signal handler function.
-        * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-        * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
-        * @return {SignalBinding} An Object representing the binding between the Signal and listener.
-        */
-        function (listener, listenerContext, priority) {
-            if (typeof listenerContext === "undefined") { listenerContext = null; }
-            if (typeof priority === "undefined") { priority = 0; }
-            this.validateListener(listener, 'add');
-            return this._registerListener(listener, false, listenerContext, priority);
-        };
-        Signal.prototype.addOnce = /**
-        * Add listener to the signal that should be removed after first execution (will be executed only once).
-        * @param {Function} listener Signal handler function.
-        * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-        * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
-        * @return {SignalBinding} An Object representing the binding between the Signal and listener.
-        */
-        function (listener, listenerContext, priority) {
-            if (typeof listenerContext === "undefined") { listenerContext = null; }
-            if (typeof priority === "undefined") { priority = 0; }
-            this.validateListener(listener, 'addOnce');
-            return this._registerListener(listener, true, listenerContext, priority);
-        };
-        Signal.prototype.remove = /**
-        * Remove a single listener from the dispatch queue.
-        * @param {Function} listener Handler function that should be removed.
-        * @param {Object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
-        * @return {Function} Listener handler function.
-        */
-        function (listener, context) {
-            if (typeof context === "undefined") { context = null; }
-            this.validateListener(listener, 'remove');
-            var i = this._indexOfListener(listener, context);
-            if(i !== -1) {
-                this._bindings[i]._destroy()//no reason to a SignalBinding exist if it isn't attached to a signal
-                ;
-                this._bindings.splice(i, 1);
-            }
-            return listener;
-        };
-        Signal.prototype.removeAll = /**
-        * Remove all listeners from the Signal.
-        */
-        function () {
-            var n = this._bindings.length;
-            while(n--) {
-                this._bindings[n]._destroy();
-            }
-            this._bindings.length = 0;
-        };
-        Signal.prototype.getNumListeners = /**
-        * @return {number} Number of listeners attached to the Signal.
-        */
-        function () {
-            return this._bindings.length;
-        };
-        Signal.prototype.halt = /**
-        * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
-        * <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
-        * @see Signal.prototype.disable
-        */
-        function () {
-            this._shouldPropagate = false;
-        };
-        Signal.prototype.dispatch = /**
-        * Dispatch/Broadcast Signal to all listeners added to the queue.
-        * @param {...*} [params] Parameters that should be passed to each handler.
-        */
-        function () {
-            var paramsArr = [];
-            for (var _i = 0; _i < (arguments.length - 0); _i++) {
-                paramsArr[_i] = arguments[_i + 0];
-            }
-            if(!this.active) {
-                return;
-            }
-            var n = this._bindings.length;
-            var bindings;
-            if(this.memorize) {
-                this._prevParams = paramsArr;
-            }
-            if(!n) {
-                //should come after memorize
-                return;
-            }
-            bindings = this._bindings.slice(0)//clone array in case add/remove items during dispatch
-            ;
-            this._shouldPropagate = true//in case `halt` was called before dispatch or during the previous dispatch.
-            ;
-            //execute all callbacks until end of the list or until a callback returns `false` or stops propagation
-            //reverse loop since listeners with higher priority will be added at the end of the list
-            do {
-                n--;
-            }while(bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
-        };
-        Signal.prototype.forget = /**
-        * Forget memorized arguments.
-        * @see Signal.memorize
-        */
-        function () {
-            this._prevParams = null;
-        };
-        Signal.prototype.dispose = /**
-        * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
-        * <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
-        */
-        function () {
-            this.removeAll();
-            delete this._bindings;
-            delete this._prevParams;
-        };
-        Signal.prototype.toString = /**
-        * @return {string} String representation of the object.
-        */
-        function () {
-            return '[Signal active:' + this.active + ' numListeners:' + this.getNumListeners() + ']';
-        };
-        return Signal;
-    })();
-    Phaser.Signal = Signal;    
-})(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
 *   Phaser
@@ -6654,6 +7050,24 @@ var Phaser;
         return Sound;
     })();
     Phaser.Sound = Sound;    
+})(Phaser || (Phaser = {}));
+/**
+*   Phaser
+*
+*   v0.9 - April 18th 2013
+*
+*   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
+*
+*   Richard Davey (@photonstorm)
+*   Adam Saltsman (@ADAMATOMIC) (original Flixel code)
+*
+*   "If you want your children to be intelligent,  read them fairy tales."
+*   "If you want them to be more intelligent, read them more fairy tales."
+*                                                       -- Albert Einstein
+*/
+var Phaser;
+(function (Phaser) {
+    Phaser.VERSION = 'Phaser version 0.9';
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /*
@@ -7066,588 +7480,6 @@ var Phaser;
     })();
     Phaser.Time = Time;    
 })(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Back = (function () {
-            function Back() { }
-            Back.In = function In(k) {
-                var s = 1.70158;
-                return k * k * ((s + 1) * k - s);
-            };
-            Back.Out = function Out(k) {
-                var s = 1.70158;
-                return --k * k * ((s + 1) * k + s) + 1;
-            };
-            Back.InOut = function InOut(k) {
-                var s = 1.70158 * 1.525;
-                if((k *= 2) < 1) {
-                    return 0.5 * (k * k * ((s + 1) * k - s));
-                }
-                return 0.5 * ((k -= 2) * k * ((s + 1) * k + s) + 2);
-            };
-            return Back;
-        })();
-        Easing.Back = Back;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Bounce = (function () {
-            function Bounce() { }
-            Bounce.In = function In(k) {
-                return 1 - Phaser.Easing.Bounce.Out(1 - k);
-            };
-            Bounce.Out = function Out(k) {
-                if(k < (1 / 2.75)) {
-                    return 7.5625 * k * k;
-                } else if(k < (2 / 2.75)) {
-                    return 7.5625 * (k -= (1.5 / 2.75)) * k + 0.75;
-                } else if(k < (2.5 / 2.75)) {
-                    return 7.5625 * (k -= (2.25 / 2.75)) * k + 0.9375;
-                } else {
-                    return 7.5625 * (k -= (2.625 / 2.75)) * k + 0.984375;
-                }
-            };
-            Bounce.InOut = function InOut(k) {
-                if(k < 0.5) {
-                    return Phaser.Easing.Bounce.In(k * 2) * 0.5;
-                }
-                return Phaser.Easing.Bounce.Out(k * 2 - 1) * 0.5 + 0.5;
-            };
-            return Bounce;
-        })();
-        Easing.Bounce = Bounce;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Circular = (function () {
-            function Circular() { }
-            Circular.In = function In(k) {
-                return 1 - Math.sqrt(1 - k * k);
-            };
-            Circular.Out = function Out(k) {
-                return Math.sqrt(1 - (--k * k));
-            };
-            Circular.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return -0.5 * (Math.sqrt(1 - k * k) - 1);
-                }
-                return 0.5 * (Math.sqrt(1 - (k -= 2) * k) + 1);
-            };
-            return Circular;
-        })();
-        Easing.Circular = Circular;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Cubic = (function () {
-            function Cubic() { }
-            Cubic.In = function In(k) {
-                return k * k * k;
-            };
-            Cubic.Out = function Out(k) {
-                return --k * k * k + 1;
-            };
-            Cubic.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return 0.5 * k * k * k;
-                }
-                return 0.5 * ((k -= 2) * k * k + 2);
-            };
-            return Cubic;
-        })();
-        Easing.Cubic = Cubic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Elastic = (function () {
-            function Elastic() { }
-            Elastic.In = function In(k) {
-                var s, a = 0.1, p = 0.4;
-                if(k === 0) {
-                    return 0;
-                }
-                if(k === 1) {
-                    return 1;
-                }
-                if(!a || a < 1) {
-                    a = 1;
-                    s = p / 4;
-                } else {
-                    s = p * Math.asin(1 / a) / (2 * Math.PI);
-                }
-                return -(a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
-            };
-            Elastic.Out = function Out(k) {
-                var s, a = 0.1, p = 0.4;
-                if(k === 0) {
-                    return 0;
-                }
-                if(k === 1) {
-                    return 1;
-                }
-                if(!a || a < 1) {
-                    a = 1;
-                    s = p / 4;
-                } else {
-                    s = p * Math.asin(1 / a) / (2 * Math.PI);
-                }
-                return (a * Math.pow(2, -10 * k) * Math.sin((k - s) * (2 * Math.PI) / p) + 1);
-            };
-            Elastic.InOut = function InOut(k) {
-                var s, a = 0.1, p = 0.4;
-                if(k === 0) {
-                    return 0;
-                }
-                if(k === 1) {
-                    return 1;
-                }
-                if(!a || a < 1) {
-                    a = 1;
-                    s = p / 4;
-                } else {
-                    s = p * Math.asin(1 / a) / (2 * Math.PI);
-                }
-                if((k *= 2) < 1) {
-                    return -0.5 * (a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
-                }
-                return a * Math.pow(2, -10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p) * 0.5 + 1;
-            };
-            return Elastic;
-        })();
-        Easing.Elastic = Elastic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Exponential = (function () {
-            function Exponential() { }
-            Exponential.In = function In(k) {
-                return k === 0 ? 0 : Math.pow(1024, k - 1);
-            };
-            Exponential.Out = function Out(k) {
-                return k === 1 ? 1 : 1 - Math.pow(2, -10 * k);
-            };
-            Exponential.InOut = function InOut(k) {
-                if(k === 0) {
-                    return 0;
-                }
-                if(k === 1) {
-                    return 1;
-                }
-                if((k *= 2) < 1) {
-                    return 0.5 * Math.pow(1024, k - 1);
-                }
-                return 0.5 * (-Math.pow(2, -10 * (k - 1)) + 2);
-            };
-            return Exponential;
-        })();
-        Easing.Exponential = Exponential;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Linear = (function () {
-            function Linear() { }
-            Linear.None = function None(k) {
-                return k;
-            };
-            return Linear;
-        })();
-        Easing.Linear = Linear;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Quadratic = (function () {
-            function Quadratic() { }
-            Quadratic.In = function In(k) {
-                return k * k;
-            };
-            Quadratic.Out = function Out(k) {
-                return k * (2 - k);
-            };
-            Quadratic.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return 0.5 * k * k;
-                }
-                return -0.5 * (--k * (k - 2) - 1);
-            };
-            return Quadratic;
-        })();
-        Easing.Quadratic = Quadratic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Quartic = (function () {
-            function Quartic() { }
-            Quartic.In = function In(k) {
-                return k * k * k * k;
-            };
-            Quartic.Out = function Out(k) {
-                return 1 - (--k * k * k * k);
-            };
-            Quartic.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return 0.5 * k * k * k * k;
-                }
-                return -0.5 * ((k -= 2) * k * k * k - 2);
-            };
-            return Quartic;
-        })();
-        Easing.Quartic = Quartic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Quintic = (function () {
-            function Quintic() { }
-            Quintic.In = function In(k) {
-                return k * k * k * k * k;
-            };
-            Quintic.Out = function Out(k) {
-                return --k * k * k * k * k + 1;
-            };
-            Quintic.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return 0.5 * k * k * k * k * k;
-                }
-                return 0.5 * ((k -= 2) * k * k * k * k + 2);
-            };
-            return Quintic;
-        })();
-        Easing.Quintic = Quintic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Sinusoidal = (function () {
-            function Sinusoidal() { }
-            Sinusoidal.In = function In(k) {
-                return 1 - Math.cos(k * Math.PI / 2);
-            };
-            Sinusoidal.Out = function Out(k) {
-                return Math.sin(k * Math.PI / 2);
-            };
-            Sinusoidal.InOut = function InOut(k) {
-                return 0.5 * (1 - Math.cos(Math.PI * k));
-            };
-            return Sinusoidal;
-        })();
-        Easing.Sinusoidal = Sinusoidal;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="easing/Back.ts" />
-/// <reference path="easing/Bounce.ts" />
-/// <reference path="easing/Circular.ts" />
-/// <reference path="easing/Cubic.ts" />
-/// <reference path="easing/Elastic.ts" />
-/// <reference path="easing/Exponential.ts" />
-/// <reference path="easing/Linear.ts" />
-/// <reference path="easing/Quadratic.ts" />
-/// <reference path="easing/Quartic.ts" />
-/// <reference path="easing/Quintic.ts" />
-/// <reference path="easing/Sinusoidal.ts" />
-/**
-*	Phaser - Tween
-*
-*	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js) converted to TypeScript and integrated into Phaser
-*
-*	@version 	1.0 - 11th January 2013
-*
-*	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-*/
-var Phaser;
-(function (Phaser) {
-    var Tween = (function () {
-        function Tween(object, game) {
-            this._object = null;
-            this._pausedTime = 0;
-            this._valuesStart = {
-            };
-            this._valuesEnd = {
-            };
-            this._duration = 1000;
-            this._delayTime = 0;
-            this._startTime = null;
-            this._chainedTweens = [];
-            this._object = object;
-            this._game = game;
-            this._manager = this._game.tweens;
-            this._interpolationFunction = this._game.math.linearInterpolation;
-            this._easingFunction = Phaser.Easing.Linear.None;
-            this.onStart = new Phaser.Signal();
-            this.onUpdate = new Phaser.Signal();
-            this.onComplete = new Phaser.Signal();
-        }
-        Tween.prototype.to = function (properties, duration, ease, autoStart) {
-            if (typeof duration === "undefined") { duration = 1000; }
-            if (typeof ease === "undefined") { ease = null; }
-            if (typeof autoStart === "undefined") { autoStart = false; }
-            this._duration = duration;
-            //  If properties isn't an object this will fail, sanity check it here somehow?
-            this._valuesEnd = properties;
-            if(ease !== null) {
-                this._easingFunction = ease;
-            }
-            if(autoStart === true) {
-                return this.start();
-            } else {
-                return this;
-            }
-        };
-        Tween.prototype.start = function () {
-            if(this._game === null || this._object === null) {
-                return;
-            }
-            this._manager.add(this);
-            this.onStart.dispatch(this._object);
-            this._startTime = this._game.time.now + this._delayTime;
-            for(var property in this._valuesEnd) {
-                // This prevents the interpolation of null values or of non-existing properties
-                if(this._object[property] === null || !(property in this._object)) {
-                    throw Error('Phaser.Tween interpolation of null value of non-existing property');
-                    continue;
-                }
-                // check if an Array was provided as property value
-                if(this._valuesEnd[property] instanceof Array) {
-                    if(this._valuesEnd[property].length === 0) {
-                        continue;
-                    }
-                    // create a local copy of the Array with the start value at the front
-                    this._valuesEnd[property] = [
-                        this._object[property]
-                    ].concat(this._valuesEnd[property]);
-                }
-                this._valuesStart[property] = this._object[property];
-            }
-            return this;
-        };
-        Tween.prototype.stop = function () {
-            if(this._manager !== null) {
-                this._manager.remove(this);
-            }
-            return this;
-        };
-        Object.defineProperty(Tween.prototype, "parent", {
-            set: function (value) {
-                this._game = value;
-                this._manager = this._game.tweens;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Tween.prototype, "delay", {
-            get: function () {
-                return this._delayTime;
-            },
-            set: function (amount) {
-                this._delayTime = amount;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Tween.prototype, "easing", {
-            get: function () {
-                return this._easingFunction;
-            },
-            set: function (easing) {
-                this._easingFunction = easing;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Tween.prototype, "interpolation", {
-            get: function () {
-                return this._interpolationFunction;
-            },
-            set: function (interpolation) {
-                this._interpolationFunction = interpolation;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Tween.prototype.chain = function (tween) {
-            this._chainedTweens.push(tween);
-            return this;
-        };
-        Tween.prototype.update = function (time) {
-            if(this._game.paused == true) {
-                if(this._pausedTime == 0) {
-                    this._pausedTime = time;
-                }
-            } else {
-                //  Ok we aren't paused, but was there some time gained?
-                if(this._pausedTime > 0) {
-                    this._startTime += (time - this._pausedTime);
-                    this._pausedTime = 0;
-                }
-            }
-            if(time < this._startTime) {
-                return true;
-            }
-            var elapsed = (time - this._startTime) / this._duration;
-            elapsed = elapsed > 1 ? 1 : elapsed;
-            var value = this._easingFunction(elapsed);
-            for(var property in this._valuesStart) {
-                //  Add checks for object, array, numeric up front
-                if(this._valuesEnd[property] instanceof Array) {
-                    this._object[property] = this._interpolationFunction(this._valuesEnd[property], value);
-                } else {
-                    this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * value;
-                }
-            }
-            this.onUpdate.dispatch(this._object, value);
-            if(elapsed == 1) {
-                this.onComplete.dispatch(this._object);
-                for(var i = 0; i < this._chainedTweens.length; i++) {
-                    this._chainedTweens[i].start();
-                }
-                return false;
-            }
-            return true;
-        };
-        return Tween;
-    })();
-    Phaser.Tween = Tween;    
-})(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /// <reference path="system/Tween.ts" />
 /**
@@ -7728,7 +7560,7 @@ var Phaser;
     var World = (function () {
         function World(game, width, height) {
             this._game = game;
-            this._cameras = new Phaser.Cameras(this._game, 0, 0, width, height);
+            this._cameras = new Phaser.CameraManager(this._game, 0, 0, width, height);
             this._game.camera = this._cameras.current;
             this.group = new Phaser.Group(this._game, 0);
             this.bounds = new Phaser.Rectangle(0, 0, width, height);
@@ -8689,6 +8521,7 @@ var Phaser;
     Phaser.RequestAnimationFrame = RequestAnimationFrame;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
+/// <reference path="../../Signal.ts" />
 /**
 *   Phaser
 */
@@ -9578,7 +9411,7 @@ var Phaser;
     var Emitter = (function (_super) {
         __extends(Emitter, _super);
         /**
-        * Creates a new <code>FlxEmitter</code> object at a specific position.
+        * Creates a new <code>Emitter</code> object at a specific position.
         * Does NOT automatically generate or attach particles!
         *
         * @param	X		The X position of the emitter.
@@ -9624,13 +9457,13 @@ var Phaser;
         Emitter.prototype.makeParticles = /**
         * This function generates a new array of particle sprites to attach to the emitter.
         *
-        * @param	Graphics		If you opted to not pre-configure an array of FlxSprite objects, you can simply pass in a particle image or sprite sheet.
+        * @param	Graphics		If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
         * @param	Quantity		The number of particles to generate when using the "create from image" option.
         * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
         * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
         * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
         *
-        * @return	This FlxEmitter instance (nice for chaining stuff together, if you're into that).
+        * @return	This Emitter instance (nice for chaining stuff together, if you're into that).
         */
         function (Graphics, Quantity, BakedRotations, Multiple, Collide) {
             if (typeof Quantity === "undefined") { Quantity = 50; }
@@ -9832,9 +9665,9 @@ var Phaser;
             this.maxRotation = Max;
         };
         Emitter.prototype.at = /**
-        * Change the emitter's midpoint to match the midpoint of a <code>FlxObject</code>.
+        * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
         *
-        * @param	Object		The <code>FlxObject</code> that you want to sync up with.
+        * @param	Object		The <code>Object</code> that you want to sync up with.
         */
         function (Object) {
             Object.getMidpoint(this._point);
@@ -9992,7 +9825,7 @@ var Phaser;
                 this._dx -= (camera.worldView.x * this.scrollFactor.x);
                 this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
-            //	Rotation (misleading?)
+            //	Rotation (could be misleading as it doesn't work re: collision)
             if(this.angle !== 0) {
                 this._game.stage.context.save();
                 this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
@@ -10006,8 +9839,8 @@ var Phaser;
             this._dh = Math.round(this._dh);
             this._game.stage.saveCanvasValues();
             //  Debug
-            this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
-            this._game.stage.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            //this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
+            //this._game.stage.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
             this._game.stage.context.lineWidth = this.lineWidth;
             this._game.stage.context.strokeStyle = this.lineColor;
             this._game.stage.context.fillStyle = this.fillColor;
@@ -10229,7 +10062,7 @@ var Phaser;
     var Tile = (function (_super) {
         __extends(Tile, _super);
         /**
-        * Instantiate this new tile object.  This is usually called from <code>FlxTilemap.loadMap()</code>.
+        * Instantiate this new tile object.  This is usually called from <code>Tilemap.loadMap()</code>.
         *
         * @param Tilemap			A reference to the tilemap object creating the tile.
         * @param Index				The actual core map data index for this tile type.
@@ -10560,10 +10393,10 @@ var Phaser;
     })(Phaser.GameObject);
     Phaser.Tilemap = Tilemap;    
 })(Phaser || (Phaser = {}));
-/// <reference path="Animations.ts" />
+/// <reference path="AnimationManager.ts" />
 /// <reference path="Basic.ts" />
 /// <reference path="Cache.ts" />
-/// <reference path="Cameras.ts" />
+/// <reference path="CameraManager.ts" />
 /// <reference path="Collision.ts" />
 /// <reference path="DynamicTexture.ts" />
 /// <reference path="GameMath.ts" />
@@ -10863,408 +10696,587 @@ var Phaser;
     })();
     Phaser.Game = Game;    
 })(Phaser || (Phaser = {}));
-/// <reference path="../../Game.ts" />
-/**
-*	Animation
-*
-*	@desc 		Loads Sprite Sheets and Texture Atlas formats into a unified FrameData object
-*
-*	@version 	1.0 - 22nd March 2013
-*	@author 	Richard Davey
-*/
-/**
-*   Phaser
-*/
 var Phaser;
 (function (Phaser) {
-    var Animation = (function () {
-        function Animation(game, parent, frameData, name, frames, delay, looped) {
-            this._game = game;
-            this._parent = parent;
-            this._frames = frames;
-            this._frameData = frameData;
-            this.name = name;
-            this.delay = 1000 / delay;
-            this.looped = looped;
-            this.isFinished = false;
-            this.isPlaying = false;
-        }
-        Object.defineProperty(Animation.prototype, "frameTotal", {
-            get: function () {
-                return this._frames.length;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Animation.prototype, "frame", {
-            get: function () {
-                return this._frameIndex;
-            },
-            set: function (value) {
-                this.currentFrame = this._frameData.getFrame(value);
-                if(this.currentFrame !== null) {
-                    this._parent.bounds.width = this.currentFrame.width;
-                    this._parent.bounds.height = this.currentFrame.height;
-                    this._frameIndex = value;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Animation.prototype.play = function (frameRate, loop) {
-            if (typeof frameRate === "undefined") { frameRate = null; }
-            if(frameRate !== null) {
-                this.delay = 1000 / frameRate;
-            }
-            if(loop !== undefined) {
-                this.looped = loop;
-            }
-            this.isPlaying = true;
-            this.isFinished = false;
-            this._timeLastFrame = this._game.time.now;
-            this._timeNextFrame = this._game.time.now + this.delay;
-            this._frameIndex = 0;
-            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-        };
-        Animation.prototype.onComplete = function () {
-            this.isPlaying = false;
-            this.isFinished = true;
-            //  callback
-                    };
-        Animation.prototype.stop = function () {
-            this.isPlaying = false;
-            this.isFinished = true;
-        };
-        Animation.prototype.update = function () {
-            if(this.isPlaying == true && this._game.time.now >= this._timeNextFrame) {
-                this._frameIndex++;
-                if(this._frameIndex == this._frames.length) {
-                    if(this.looped) {
-                        this._frameIndex = 0;
-                        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-                    } else {
-                        this.onComplete();
-                    }
-                } else {
-                    this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-                }
-                this._timeLastFrame = this._game.time.now;
-                this._timeNextFrame = this._game.time.now + this.delay;
-                return true;
-            }
-            return false;
-        };
-        Animation.prototype.destroy = function () {
-            this._game = null;
-            this._parent = null;
-            this._frames = null;
-            this._frameData = null;
-            this.currentFrame = null;
-            this.isPlaying = false;
-        };
-        return Animation;
-    })();
-    Phaser.Animation = Animation;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../../Game.ts" />
-/**
-*   Phaser
-*/
-var Phaser;
-(function (Phaser) {
-    var AnimationLoader = (function () {
-        function AnimationLoader() { }
-        AnimationLoader.parseSpriteSheet = function parseSpriteSheet(game, key, frameWidth, frameHeight, frameMax) {
-            //  How big is our image?
-            var img = game.cache.getImage(key);
-            if(img == null) {
-                return null;
-            }
-            var width = img.width;
-            var height = img.height;
-            var row = Math.round(width / frameWidth);
-            var column = Math.round(height / frameHeight);
-            var total = row * column;
-            if(frameMax !== -1) {
-                total = frameMax;
-            }
-            //  Zero or smaller than frame sizes?
-            if(width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0) {
-                return null;
-            }
-            //  Let's create some frames then
-            var data = new Phaser.FrameData();
-            var x = 0;
-            var y = 0;
-            for(var i = 0; i < total; i++) {
-                data.addFrame(new Phaser.Frame(x, y, frameWidth, frameHeight, ''));
-                x += frameWidth;
-                if(x === width) {
-                    x = 0;
-                    y += frameHeight;
-                }
-            }
-            return data;
-        };
-        AnimationLoader.parseJSONData = function parseJSONData(game, json) {
-            //  Let's create some frames then
-            var data = new Phaser.FrameData();
-            //  By this stage frames is a fully parsed array
-            var frames = json;
-            var newFrame;
-            for(var i = 0; i < frames.length; i++) {
-                newFrame = data.addFrame(new Phaser.Frame(frames[i].frame.x, frames[i].frame.y, frames[i].frame.w, frames[i].frame.h, frames[i].filename));
-                newFrame.setTrim(frames[i].trimmed, frames[i].sourceSize.w, frames[i].sourceSize.h, frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].spriteSourceSize.w, frames[i].spriteSourceSize.h);
-            }
-            return data;
-        };
-        return AnimationLoader;
-    })();
-    Phaser.AnimationLoader = AnimationLoader;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../../Game.ts" />
-/**
-*   Phaser
-*/
-var Phaser;
-(function (Phaser) {
-    var Frame = (function () {
-        function Frame(x, y, width, height, name) {
-            //  Useful for Texture Atlas files (is set to the filename value)
-            this.name = '';
-            //  Rotated? (not yet implemented)
-            this.rotated = false;
-            //  Either cw or ccw, rotation is always 90 degrees
-            this.rotationDirection = 'cw';
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-            this.name = name;
-            this.rotated = false;
-            this.trimmed = false;
-        }
-        Frame.prototype.setRotation = function (rotated, rotationDirection) {
-            //  Not yet supported
-                    };
-        Frame.prototype.setTrim = function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
-            this.trimmed = trimmed;
-            this.sourceSizeW = actualWidth;
-            this.sourceSizeH = actualHeight;
-            this.spriteSourceSizeX = destX;
-            this.spriteSourceSizeY = destY;
-            this.spriteSourceSizeW = destWidth;
-            this.spriteSourceSizeH = destHeight;
-        };
-        return Frame;
-    })();
-    Phaser.Frame = Frame;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../../Game.ts" />
-/**
-*   Phaser
-*/
-var Phaser;
-(function (Phaser) {
-    var FrameData = (function () {
-        function FrameData() {
-            this._frames = [];
-            this._frameNames = [];
-        }
-        Object.defineProperty(FrameData.prototype, "total", {
-            get: function () {
-                return this._frames.length;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        FrameData.prototype.addFrame = function (frame) {
-            frame.index = this._frames.length;
-            this._frames.push(frame);
-            if(frame.name !== '') {
-                this._frameNames[frame.name] = frame.index;
-            }
-            return frame;
-        };
-        FrameData.prototype.getFrame = function (index) {
-            if(this._frames[index]) {
-                return this._frames[index];
-            }
-            return null;
-        };
-        FrameData.prototype.getFrameByName = function (name) {
-            if(this._frameNames[name] >= 0) {
-                return this._frames[this._frameNames[name]];
-            }
-            return null;
-        };
-        FrameData.prototype.checkFrameName = function (name) {
-            if(this._frameNames[name] >= 0) {
-                return true;
-            }
-            return false;
-        };
-        FrameData.prototype.getFrameRange = function (start, end, output) {
-            if (typeof output === "undefined") { output = []; }
-            for(var i = start; i <= end; i++) {
-                output.push(this._frames[i]);
-            }
-            return output;
-        };
-        FrameData.prototype.getFrameIndexes = function (output) {
-            if (typeof output === "undefined") { output = []; }
-            output.length = 0;
-            for(var i = 0; i < this._frames.length; i++) {
-                output.push(i);
-            }
-            return output;
-        };
-        FrameData.prototype.getFrameIndexesByName = function (input) {
-            var output = [];
-            for(var i = 0; i < input.length; i++) {
-                if(this.getFrameByName(input[i])) {
-                    output.push(this.getFrameByName(input[i]).index);
-                }
-            }
-            return output;
-        };
-        FrameData.prototype.getAllFrames = function () {
-            return this._frames;
-        };
-        FrameData.prototype.getFrames = function (range) {
-            var output = [];
-            for(var i = 0; i < range.length; i++) {
-                output.push(this._frames[i]);
-            }
-            return output;
-        };
-        return FrameData;
-    })();
-    Phaser.FrameData = FrameData;    
-})(Phaser || (Phaser = {}));
-/// <reference path="Game.ts" />
-/// <reference path="gameobjects/Sprite.ts" />
-/// <reference path="system/animation/Animation.ts" />
-/// <reference path="system/animation/AnimationLoader.ts" />
-/// <reference path="system/animation/Frame.ts" />
-/// <reference path="system/animation/FrameData.ts" />
-var Phaser;
-(function (Phaser) {
-    var Animations = (function () {
-        function Animations(game, parent) {
-            this._frameData = null;
-            this.currentFrame = null;
-            this._game = game;
-            this._parent = parent;
-            this._anims = {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Back = (function () {
+            function Back() { }
+            Back.In = function In(k) {
+                var s = 1.70158;
+                return k * k * ((s + 1) * k - s);
             };
+            Back.Out = function Out(k) {
+                var s = 1.70158;
+                return --k * k * ((s + 1) * k + s) + 1;
+            };
+            Back.InOut = function InOut(k) {
+                var s = 1.70158 * 1.525;
+                if((k *= 2) < 1) {
+                    return 0.5 * (k * k * ((s + 1) * k - s));
+                }
+                return 0.5 * ((k -= 2) * k * ((s + 1) * k + s) + 2);
+            };
+            return Back;
+        })();
+        Easing.Back = Back;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Bounce = (function () {
+            function Bounce() { }
+            Bounce.In = function In(k) {
+                return 1 - Phaser.Easing.Bounce.Out(1 - k);
+            };
+            Bounce.Out = function Out(k) {
+                if(k < (1 / 2.75)) {
+                    return 7.5625 * k * k;
+                } else if(k < (2 / 2.75)) {
+                    return 7.5625 * (k -= (1.5 / 2.75)) * k + 0.75;
+                } else if(k < (2.5 / 2.75)) {
+                    return 7.5625 * (k -= (2.25 / 2.75)) * k + 0.9375;
+                } else {
+                    return 7.5625 * (k -= (2.625 / 2.75)) * k + 0.984375;
+                }
+            };
+            Bounce.InOut = function InOut(k) {
+                if(k < 0.5) {
+                    return Phaser.Easing.Bounce.In(k * 2) * 0.5;
+                }
+                return Phaser.Easing.Bounce.Out(k * 2 - 1) * 0.5 + 0.5;
+            };
+            return Bounce;
+        })();
+        Easing.Bounce = Bounce;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Circular = (function () {
+            function Circular() { }
+            Circular.In = function In(k) {
+                return 1 - Math.sqrt(1 - k * k);
+            };
+            Circular.Out = function Out(k) {
+                return Math.sqrt(1 - (--k * k));
+            };
+            Circular.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return -0.5 * (Math.sqrt(1 - k * k) - 1);
+                }
+                return 0.5 * (Math.sqrt(1 - (k -= 2) * k) + 1);
+            };
+            return Circular;
+        })();
+        Easing.Circular = Circular;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Cubic = (function () {
+            function Cubic() { }
+            Cubic.In = function In(k) {
+                return k * k * k;
+            };
+            Cubic.Out = function Out(k) {
+                return --k * k * k + 1;
+            };
+            Cubic.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return 0.5 * k * k * k;
+                }
+                return 0.5 * ((k -= 2) * k * k + 2);
+            };
+            return Cubic;
+        })();
+        Easing.Cubic = Cubic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Elastic = (function () {
+            function Elastic() { }
+            Elastic.In = function In(k) {
+                var s, a = 0.1, p = 0.4;
+                if(k === 0) {
+                    return 0;
+                }
+                if(k === 1) {
+                    return 1;
+                }
+                if(!a || a < 1) {
+                    a = 1;
+                    s = p / 4;
+                } else {
+                    s = p * Math.asin(1 / a) / (2 * Math.PI);
+                }
+                return -(a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
+            };
+            Elastic.Out = function Out(k) {
+                var s, a = 0.1, p = 0.4;
+                if(k === 0) {
+                    return 0;
+                }
+                if(k === 1) {
+                    return 1;
+                }
+                if(!a || a < 1) {
+                    a = 1;
+                    s = p / 4;
+                } else {
+                    s = p * Math.asin(1 / a) / (2 * Math.PI);
+                }
+                return (a * Math.pow(2, -10 * k) * Math.sin((k - s) * (2 * Math.PI) / p) + 1);
+            };
+            Elastic.InOut = function InOut(k) {
+                var s, a = 0.1, p = 0.4;
+                if(k === 0) {
+                    return 0;
+                }
+                if(k === 1) {
+                    return 1;
+                }
+                if(!a || a < 1) {
+                    a = 1;
+                    s = p / 4;
+                } else {
+                    s = p * Math.asin(1 / a) / (2 * Math.PI);
+                }
+                if((k *= 2) < 1) {
+                    return -0.5 * (a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
+                }
+                return a * Math.pow(2, -10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p) * 0.5 + 1;
+            };
+            return Elastic;
+        })();
+        Easing.Elastic = Elastic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Exponential = (function () {
+            function Exponential() { }
+            Exponential.In = function In(k) {
+                return k === 0 ? 0 : Math.pow(1024, k - 1);
+            };
+            Exponential.Out = function Out(k) {
+                return k === 1 ? 1 : 1 - Math.pow(2, -10 * k);
+            };
+            Exponential.InOut = function InOut(k) {
+                if(k === 0) {
+                    return 0;
+                }
+                if(k === 1) {
+                    return 1;
+                }
+                if((k *= 2) < 1) {
+                    return 0.5 * Math.pow(1024, k - 1);
+                }
+                return 0.5 * (-Math.pow(2, -10 * (k - 1)) + 2);
+            };
+            return Exponential;
+        })();
+        Easing.Exponential = Exponential;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Linear = (function () {
+            function Linear() { }
+            Linear.None = function None(k) {
+                return k;
+            };
+            return Linear;
+        })();
+        Easing.Linear = Linear;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Quadratic = (function () {
+            function Quadratic() { }
+            Quadratic.In = function In(k) {
+                return k * k;
+            };
+            Quadratic.Out = function Out(k) {
+                return k * (2 - k);
+            };
+            Quadratic.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return 0.5 * k * k;
+                }
+                return -0.5 * (--k * (k - 2) - 1);
+            };
+            return Quadratic;
+        })();
+        Easing.Quadratic = Quadratic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Quartic = (function () {
+            function Quartic() { }
+            Quartic.In = function In(k) {
+                return k * k * k * k;
+            };
+            Quartic.Out = function Out(k) {
+                return 1 - (--k * k * k * k);
+            };
+            Quartic.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return 0.5 * k * k * k * k;
+                }
+                return -0.5 * ((k -= 2) * k * k * k - 2);
+            };
+            return Quartic;
+        })();
+        Easing.Quartic = Quartic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Quintic = (function () {
+            function Quintic() { }
+            Quintic.In = function In(k) {
+                return k * k * k * k * k;
+            };
+            Quintic.Out = function Out(k) {
+                return --k * k * k * k * k + 1;
+            };
+            Quintic.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return 0.5 * k * k * k * k * k;
+                }
+                return 0.5 * ((k -= 2) * k * k * k * k + 2);
+            };
+            return Quintic;
+        })();
+        Easing.Quintic = Quintic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    *	Phaser - Easing
+    *
+    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
+    *
+    *	@version 	1.0 - 11th January 2013
+    *
+    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    */
+    (function (Easing) {
+        var Sinusoidal = (function () {
+            function Sinusoidal() { }
+            Sinusoidal.In = function In(k) {
+                return 1 - Math.cos(k * Math.PI / 2);
+            };
+            Sinusoidal.Out = function Out(k) {
+                return Math.sin(k * Math.PI / 2);
+            };
+            Sinusoidal.InOut = function InOut(k) {
+                return 0.5 * (1 - Math.cos(Math.PI * k));
+            };
+            return Sinusoidal;
+        })();
+        Easing.Sinusoidal = Sinusoidal;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="easing/Back.ts" />
+/// <reference path="easing/Bounce.ts" />
+/// <reference path="easing/Circular.ts" />
+/// <reference path="easing/Cubic.ts" />
+/// <reference path="easing/Elastic.ts" />
+/// <reference path="easing/Exponential.ts" />
+/// <reference path="easing/Linear.ts" />
+/// <reference path="easing/Quadratic.ts" />
+/// <reference path="easing/Quartic.ts" />
+/// <reference path="easing/Quintic.ts" />
+/// <reference path="easing/Sinusoidal.ts" />
+/**
+*	Phaser - Tween
+*
+*	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js) converted to TypeScript and integrated into Phaser
+*
+*	@version 	1.0 - 11th January 2013
+*
+*	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+*/
+var Phaser;
+(function (Phaser) {
+    var Tween = (function () {
+        function Tween(object, game) {
+            this._object = null;
+            this._pausedTime = 0;
+            this._valuesStart = {
+            };
+            this._valuesEnd = {
+            };
+            this._duration = 1000;
+            this._delayTime = 0;
+            this._startTime = null;
+            this._chainedTweens = [];
+            this._object = object;
+            this._game = game;
+            this._manager = this._game.tweens;
+            this._interpolationFunction = this._game.math.linearInterpolation;
+            this._easingFunction = Phaser.Easing.Linear.None;
+            this.onStart = new Phaser.Signal();
+            this.onUpdate = new Phaser.Signal();
+            this.onComplete = new Phaser.Signal();
         }
-        Animations.prototype.loadFrameData = function (frameData) {
-            this._frameData = frameData;
-            this.frame = 0;
+        Tween.prototype.to = function (properties, duration, ease, autoStart) {
+            if (typeof duration === "undefined") { duration = 1000; }
+            if (typeof ease === "undefined") { ease = null; }
+            if (typeof autoStart === "undefined") { autoStart = false; }
+            this._duration = duration;
+            //  If properties isn't an object this will fail, sanity check it here somehow?
+            this._valuesEnd = properties;
+            if(ease !== null) {
+                this._easingFunction = ease;
+            }
+            if(autoStart === true) {
+                return this.start();
+            } else {
+                return this;
+            }
         };
-        Animations.prototype.add = function (name, frames, frameRate, loop, useNumericIndex) {
-            if (typeof frames === "undefined") { frames = null; }
-            if (typeof frameRate === "undefined") { frameRate = 60; }
-            if (typeof loop === "undefined") { loop = false; }
-            if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
-            if(this._frameData == null) {
+        Tween.prototype.start = function () {
+            if(this._game === null || this._object === null) {
                 return;
             }
-            if(frames == null) {
-                frames = this._frameData.getFrameIndexes();
-            } else {
-                if(this.validateFrames(frames, useNumericIndex) == false) {
-                    return;
+            this._manager.add(this);
+            this.onStart.dispatch(this._object);
+            this._startTime = this._game.time.now + this._delayTime;
+            for(var property in this._valuesEnd) {
+                // This prevents the interpolation of null values or of non-existing properties
+                if(this._object[property] === null || !(property in this._object)) {
+                    throw Error('Phaser.Tween interpolation of null value of non-existing property');
+                    continue;
                 }
+                // check if an Array was provided as property value
+                if(this._valuesEnd[property] instanceof Array) {
+                    if(this._valuesEnd[property].length === 0) {
+                        continue;
+                    }
+                    // create a local copy of the Array with the start value at the front
+                    this._valuesEnd[property] = [
+                        this._object[property]
+                    ].concat(this._valuesEnd[property]);
+                }
+                this._valuesStart[property] = this._object[property];
             }
-            if(useNumericIndex == false) {
-                frames = this._frameData.getFrameIndexesByName(frames);
-            }
-            this._anims[name] = new Phaser.Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
-            this.currentAnim = this._anims[name];
+            return this;
         };
-        Animations.prototype.validateFrames = function (frames, useNumericIndex) {
-            for(var i = 0; i < frames.length; i++) {
-                if(useNumericIndex == true) {
-                    if(frames[i] > this._frameData.total) {
-                        return false;
-                    }
-                } else {
-                    if(this._frameData.checkFrameName(frames[i]) == false) {
-                        return false;
-                    }
+        Tween.prototype.stop = function () {
+            if(this._manager !== null) {
+                this._manager.remove(this);
+            }
+            return this;
+        };
+        Object.defineProperty(Tween.prototype, "parent", {
+            set: function (value) {
+                this._game = value;
+                this._manager = this._game.tweens;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Tween.prototype, "delay", {
+            get: function () {
+                return this._delayTime;
+            },
+            set: function (amount) {
+                this._delayTime = amount;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Tween.prototype, "easing", {
+            get: function () {
+                return this._easingFunction;
+            },
+            set: function (easing) {
+                this._easingFunction = easing;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Tween.prototype, "interpolation", {
+            get: function () {
+                return this._interpolationFunction;
+            },
+            set: function (interpolation) {
+                this._interpolationFunction = interpolation;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Tween.prototype.chain = function (tween) {
+            this._chainedTweens.push(tween);
+            return this;
+        };
+        Tween.prototype.update = function (time) {
+            if(this._game.paused == true) {
+                if(this._pausedTime == 0) {
+                    this._pausedTime = time;
                 }
+            } else {
+                //  Ok we aren't paused, but was there some time gained?
+                if(this._pausedTime > 0) {
+                    this._startTime += (time - this._pausedTime);
+                    this._pausedTime = 0;
+                }
+            }
+            if(time < this._startTime) {
+                return true;
+            }
+            var elapsed = (time - this._startTime) / this._duration;
+            elapsed = elapsed > 1 ? 1 : elapsed;
+            var value = this._easingFunction(elapsed);
+            for(var property in this._valuesStart) {
+                //  Add checks for object, array, numeric up front
+                if(this._valuesEnd[property] instanceof Array) {
+                    this._object[property] = this._interpolationFunction(this._valuesEnd[property], value);
+                } else {
+                    this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * value;
+                }
+            }
+            this.onUpdate.dispatch(this._object, value);
+            if(elapsed == 1) {
+                this.onComplete.dispatch(this._object);
+                for(var i = 0; i < this._chainedTweens.length; i++) {
+                    this._chainedTweens[i].start();
+                }
+                return false;
             }
             return true;
         };
-        Animations.prototype.play = function (name, frameRate, loop) {
-            if (typeof frameRate === "undefined") { frameRate = null; }
-            if(this._anims[name]) {
-                this.currentAnim = this._anims[name];
-                this.currentAnim.play(frameRate, loop);
-            }
-        };
-        Animations.prototype.stop = function (name) {
-            if(this._anims[name]) {
-                this.currentAnim = this._anims[name];
-                this.currentAnim.stop();
-            }
-        };
-        Animations.prototype.update = function () {
-            if(this.currentAnim && this.currentAnim.update() == true) {
-                this.currentFrame = this.currentAnim.currentFrame;
-                this._parent.bounds.width = this.currentFrame.width;
-                this._parent.bounds.height = this.currentFrame.height;
-            }
-        };
-        Object.defineProperty(Animations.prototype, "frameData", {
-            get: function () {
-                return this._frameData;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Animations.prototype, "frameTotal", {
-            get: function () {
-                return this._frameData.total;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Animations.prototype, "frame", {
-            get: function () {
-                return this._frameIndex;
-            },
-            set: function (value) {
-                this.currentFrame = this._frameData.getFrame(value);
-                if(this.currentFrame !== null) {
-                    this._parent.bounds.width = this.currentFrame.width;
-                    this._parent.bounds.height = this.currentFrame.height;
-                    this._frameIndex = value;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Animations.prototype, "frameName", {
-            get: function () {
-                return this.currentFrame.name;
-            },
-            set: function (value) {
-                this.currentFrame = this._frameData.getFrameByName(value);
-                if(this.currentFrame !== null) {
-                    this._parent.bounds.width = this.currentFrame.width;
-                    this._parent.bounds.height = this.currentFrame.height;
-                    this._frameIndex = this.currentFrame.index;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Animations;
+        return Tween;
     })();
-    Phaser.Animations = Animations;    
+    Phaser.Tween = Tween;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**

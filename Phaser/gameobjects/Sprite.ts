@@ -1,4 +1,5 @@
 /// <reference path="../Game.ts" />
+/// <reference path="../AnimationManager.ts" />
 /// <reference path="GameObject.ts" />
 
 /**
@@ -15,7 +16,7 @@ module Phaser {
 
             this._texture = null;
 
-            this.animations = new Animations(this._game, this);
+            this.animations = new AnimationManager(this._game, this);
 
             if (key !== null)
             {
@@ -34,7 +35,7 @@ module Phaser {
         private _context: CanvasRenderingContext2D;
         private _dynamicTexture: bool = false;
 
-        public animations: Animations;
+        public animations: AnimationManager;
 
         //  local rendering related temp vars to help avoid gc spikes
         private _sx: number = 0;
@@ -189,7 +190,8 @@ module Phaser {
             if (this.angle !== 0)
             {
                 this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
+                //this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
+                this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
                 this._game.stage.context.rotate(this.angle * (Math.PI / 180));
                 this._dx = -(this._dw / 2);
                 this._dy = -(this._dh / 2);

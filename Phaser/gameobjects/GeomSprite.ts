@@ -217,7 +217,7 @@ module Phaser {
                 this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
 
-            //	Rotation (misleading?)
+            //	Rotation (could be misleading as it doesn't work re: collision)
             if (this.angle !== 0)
             {
                 this._game.stage.context.save();
@@ -235,8 +235,8 @@ module Phaser {
             this._game.stage.saveCanvasValues();
 
             //  Debug
-            this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
-            this._game.stage.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            //this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
+            //this._game.stage.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
             this._game.stage.context.lineWidth = this.lineWidth;
             this._game.stage.context.strokeStyle = this.lineColor;

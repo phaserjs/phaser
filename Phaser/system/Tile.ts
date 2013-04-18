@@ -18,7 +18,7 @@ module Phaser {
     export class Tile extends GameObject {
 
         /**
-         * Instantiate this new tile object.  This is usually called from <code>FlxTilemap.loadMap()</code>.
+         * Instantiate this new tile object.  This is usually called from <code>Tilemap.loadMap()</code>.
          * 
          * @param Tilemap			A reference to the tilemap object creating the tile.
          * @param Index				The actual core map data index for this tile type.
@@ -47,8 +47,8 @@ module Phaser {
 
         /**
          * This function is called whenever an object hits a tile of this type.
-         * This function should take the form <code>myFunction(Tile:FlxTile,Object:FlxObject)</code>.
-         * Defaults to null, set through <code>FlxTilemap.setTileProperties()</code>.
+         * This function should take the form <code>myFunction(Tile:Tile,Object:Object)</code>.
+         * Defaults to null, set through <code>Tilemap.setTileProperties()</code>.
          */
         public callback;
 
@@ -56,7 +56,7 @@ module Phaser {
          * Each tile can store its own filter class for their callback functions.
          * That is, the callback will only be triggered if an object with a class
          * type matching the filter touched it.
-         * Defaults to null, set through <code>FlxTilemap.setTileProperties()</code>.
+         * Defaults to null, set through <code>Tilemap.setTileProperties()</code>.
          */
         public filter;
 

@@ -1,4 +1,4 @@
-/// <reference path="../../Phaser/Phaser.ts" />
+/// <reference path="../../Phaser/Game.ts" />
 
 (function () {
 
