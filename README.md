@@ -19,6 +19,7 @@ Change Log
 ----------
 
 V0.9
+
 Large refactoring. Everything now lives inside the Phaser module, so all code and all tests have been updated to reflect this. Makes coding a tiny bit
 more verbose but stops the framework from globbing up the global namespace. Also should make code-insight work in WebStorm and similar editors.<br />
 Added the new GeomSprite object. This is a sprite that uses a geometry class for display (Circle, Rectangle, Point, Line). It's extremely flexible!<br />
