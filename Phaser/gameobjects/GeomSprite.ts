@@ -409,7 +409,7 @@ module Phaser {
             }
 
             //  Line vs. Circle
-            if (this.type == GeomSprite.LINE && source.type == GeomSprite.LINE)
+            if (this.type == GeomSprite.LINE && source.type == GeomSprite.CIRCLE)
             {
                 return Collision.lineToCircle(this.line, source.circle).result;
             }
@@ -421,7 +421,7 @@ module Phaser {
             }
 
             //  Line vs. Point
-            if (this.type == GeomSprite.LINE && source.type == GeomSprite.LINE)
+            if (this.type == GeomSprite.LINE && source.type == GeomSprite.POINT)
             {
                 return this.line.isPointOnLine(source.point.x, source.point.y);
             }
