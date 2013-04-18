@@ -3,7 +3,10 @@
 /// <reference path="../Signal.ts" />
 
 /**
-*   Phaser
+* Phaser - GameObject
+*
+* This is the base GameObject on which all other game objects are derived. It contains all the logic required for position,
+* motion, size, collision and input.
 */
 
 module Phaser {

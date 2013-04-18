@@ -1,17 +1,9 @@
 /// <reference path="../Game.ts" />
 
 /**
- *	Point
- *
- *	@desc 		The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
- *
- *	@version 	1.2 - 27th February 2013
- *	@author 	Richard Davey
- *  @todo       polar, interpolate
- */
-
-/**
-*   Phaser
+* Phaser - Point
+*
+* The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
 */
 
 module Phaser {

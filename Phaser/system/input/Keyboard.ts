@@ -1,7 +1,11 @@
 /// <reference path="../../Game.ts" />
 
 /**
-*   Phaser
+* Phaser - Keyboard
+*
+* The Keyboard class handles keyboard interactions with the game and the resulting events.
+* The avoid stealing all browser input we don't use event.preventDefault. If you would like to trap a specific key however
+* then use the addKeyCapture() method.
 */
 
 module Phaser {

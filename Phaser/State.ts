@@ -1,7 +1,9 @@
 /// <reference path="Game.ts" />
 
 /**
-*   Phaser
+* Phaser - State
+*
+* This is a base State class which can be extended if you are creating your game using TypeScript.
 */
 
 module Phaser {

@@ -1,7 +1,9 @@
 /// <reference path="../../Game.ts" />
 
 /**
-*   Phaser
+* Phaser - AnimationLoader
+*
+* Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
 */
 
 module Phaser {

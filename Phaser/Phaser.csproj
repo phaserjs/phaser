@@ -106,6 +106,14 @@
     <Content Include="geom\Rectangle.js">
       <DependentUpon>Rectangle.ts</DependentUpon>
     </Content>
+    <Content Include="SoundManager.js">
+      <DependentUpon>SoundManager.ts</DependentUpon>
+    </Content>
+    <Content Include="system\Sound.js">
+      <DependentUpon>Sound.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="system\Sound.ts" />
+    <TypeScriptCompile Include="SoundManager.ts" />
     <Content Include="system\animation\Animation.js">
       <DependentUpon>Animation.ts</DependentUpon>
     </Content>
@@ -255,9 +263,6 @@
     <Content Include="SignalBinding.js">
       <DependentUpon>SignalBinding.ts</DependentUpon>
     </Content>
-    <Content Include="Sound.js">
-      <DependentUpon>Sound.ts</DependentUpon>
-    </Content>
     <Content Include="Stage.js">
       <DependentUpon>Stage.ts</DependentUpon>
     </Content>
@@ -278,7 +283,6 @@
     <TypeScriptCompile Include="Time.ts" />
     <TypeScriptCompile Include="State.ts" />
     <TypeScriptCompile Include="Stage.ts" />
-    <TypeScriptCompile Include="Sound.ts" />
     <TypeScriptCompile Include="SignalBinding.ts" />
     <TypeScriptCompile Include="Signal.ts" />
     <TypeScriptCompile Include="Phaser.ts" />

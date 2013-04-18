@@ -1,13 +1,9 @@
 /// <reference path="../Game.ts" />
 
 /**
- * A miniature linked list class.
- * Useful for optimizing time-critical or highly repetitive tasks!
- * See <code>QuadTree</code> for how to use it, IF YOU DARE.
- */
-
-/**
-*   Phaser
+* Phaser - LinkedList
+*
+* A miniature linked list class. Useful for optimizing time-critical or highly repetitive tasks!
 */
 
 module Phaser {

@@ -1,16 +1,11 @@
 /// <reference path="../Game.ts" />
 
-/*
- * Based on code from Viewporter v2.0
- * http://github.com/zynga/viewporter
- *
- * Copyright 2011, Zynga Inc.
- * Licensed under the MIT License.
- * https://raw.github.com/zynga/viewporter/master/MIT-LICENSE.txt
- */
-
 /**
-*   Phaser
+* Phaser - StageScaleMode
+*
+* This class controls the scaling of your game. On mobile devices it will also remove the URL bar and allow
+* you to maintain proportion and aspect ratio.
+* It is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
 */
 
 module Phaser {

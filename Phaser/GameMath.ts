@@ -1,14 +1,11 @@
 /// <reference path="Game.ts" />
 
 /**
- *  Phaser - GameMath
- *
- *  @desc       Adds a set of extra Math functions and extends a few commonly used ones.
- *              Includes methods written by Dylan Engelman and Adam Saltsman.
- *
- *	@version 	1.0 - 17th March 2013
- *	@author 	Richard Davey
- */
+* Phaser - GameMath
+*
+* Adds a set of extra Math functions used through-out Phaser.
+* Includes methods written by Dylan Engelman and Adam Saltsman.
+*/
 
 module Phaser {
 

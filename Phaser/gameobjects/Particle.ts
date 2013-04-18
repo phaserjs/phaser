@@ -2,19 +2,10 @@
 /// <reference path="Sprite.ts" />
 
 /**
- * This is a simple particle class that extends the default behavior
- * of <code>Sprite</code> to have slightly more specialized behavior
- * common to many game scenarios.  You can override and extend this class
- * just like you would <code>Sprite</code>. While <code>Emitter</code>
- * used to work with just any old sprite, it now requires a
- * <code>Particle</code> based class.
- * 
- * @author Adam Atomic
- * @author Richard Davey
- */
-
-/**
-*   Phaser
+* Phaser - Particle
+*
+* This is a simple particle class that extends a Sprite to have a slightly more
+* specialised behaviour. It is used exclusively by the Emitter class and can be extended as required.
 */
 
 module Phaser {

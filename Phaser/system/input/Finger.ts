@@ -1,18 +1,9 @@
 /// <reference path="../../Game.ts" />
 
 /**
- *	Input - Finger
- *
- *	@desc 		A Finger object used by the Touch manager
- *
- *	@version 	1.1 - 27th February 2013
- *	@author 	Richard Davey
- *
- *  @todo       Lots
- */
-
-/**
-*   Phaser
+* Phaser - Finger
+*
+* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
 */
 
 module Phaser {

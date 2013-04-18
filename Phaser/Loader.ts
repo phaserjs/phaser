@@ -1,7 +1,10 @@
 /// <reference path="Game.ts" />
 
 /**
-*   Phaser
+* Phaser - Loader
+*
+* The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+* It uses a combination of Image() loading and xhr and provides for progress and completion callbacks.
 */
 
 module Phaser {

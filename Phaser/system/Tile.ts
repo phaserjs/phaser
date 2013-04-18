@@ -1,16 +1,9 @@
 /// <reference path="../Game.ts" />
 
 /**
- * A simple helper object for <code>Tilemap</code> that helps expand collision opportunities and control.
- * You can use <code>Tilemap.setTileProperties()</code> to alter the collision properties and
- * callback functions and filters for this object to do things like one-way tiles or whatever.
- * 
- * @author	Adam Atomic
- * @author	Richard Davey
- */
-
-/**
-*   Phaser
+* Phaser - Tile
+*
+* A simple helper object for <code>Tilemap</code> that helps expand collision opportunities and control.
 */
 
 module Phaser {

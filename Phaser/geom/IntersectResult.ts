@@ -1,13 +1,10 @@
 /// <reference path="../Game.ts" />
 
 /**
- *	Phaser - Geom - IntersectResult
- *
- *	@desc 		A light-weight result object to hold the results of an intersection
- *
- *	@version 	1.0 - 15th October 2012
- *	@author 	Richard Davey
- */
+* Phaser - IntersectResult
+*
+* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
+*/
 
 module Phaser {
 

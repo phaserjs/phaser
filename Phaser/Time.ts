@@ -1,7 +1,9 @@
 /// <reference path="Game.ts" />
 
 /**
-*   Phaser
+* Phaser - Time
+*
+* This is the game clock and it manages elapsed time and calculation of delta values, used for game object motion.
 */
 
 module Phaser {

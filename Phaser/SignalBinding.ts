@@ -1,21 +1,12 @@
 /// <reference path="Signal.ts" />
 
-/*
- *	SignalBinding
- *				
- *	@desc		An object that represents a binding between a Signal and a listener function.
- *              Released under the MIT license
- *				http://millermedeiros.github.com/js-signals/
- *
- *	@version	1. - 7th March 2013
- *
- *	@author 	Richard Davey, TypeScript conversion
- *	@author		Miller Medeiros, JS Signals
- *
-*/
-
 /**
-*   Phaser
+* Phaser - SignalBinding
+*
+* An object that represents a binding between a Signal and a listener function.
+* Based on JS Signals by Miller Medeiros. Converted by TypeScript by Richard Davey.
+* Released under the MIT license
+* http://millermedeiros.github.com/js-signals/
 */
 
 module Phaser {

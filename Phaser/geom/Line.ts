@@ -1,14 +1,10 @@
 /// <reference path="../Game.ts" />
 
 /**
- *	Phaser - Geom - Line
- *
- *	@desc 		A Line object is an infinte line through space. The two sets of x/y coordinates define the Line Segment.
- *
- *	@version 	1.0 - 11th October 2012
- *	@author 	Ross Kettle
- *	@author 	Richard Davey
- */
+* Phaser - Line
+*
+* A Line object is an infinte line through space. The two sets of x/y coordinates define the Line Segment.
+*/
 
 module Phaser {
 

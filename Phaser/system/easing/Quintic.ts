@@ -1,14 +1,10 @@
 /// <reference path="../../Game.ts" />
 
 /**
- *	Phaser - Easing
- *
- *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
- *
- *	@version 	1.0 - 11th January 2013
- *
- *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
- */
+* Phaser - Easing - Quintic
+*
+* For use with Phaser.Tween
+*/
 
 module Phaser.Easing {
 

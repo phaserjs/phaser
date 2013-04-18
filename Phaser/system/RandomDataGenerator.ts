@@ -1,19 +1,11 @@
 /// <reference path="../Game.ts" />
 
 /**
- *  Repeatable Random Data Generator
- *
- *  @desc       Manages the creation of unique internal game IDs
- *              Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
- *              Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
- *
- *	@version 	1.1 - 1st March 2013
- *	@author 	Josh Faul
- *	@author 	Richard Davey, TypeScript conversion and additional methods
- */
-
-/**
-*   Phaser
+* Phaser - RandomDataGenerator
+*
+* An extremely useful repeatable random data generator. Access it via Game.rnd
+* Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
+* Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
 */
 
 module Phaser {

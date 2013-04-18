@@ -2,25 +2,19 @@
 /// <reference path="Finger.ts" />
 
 /**
- *	Input - Touch
- *
- *	@desc 		http://www.w3.org/TR/touch-events/
- *              https://developer.mozilla.org/en-US/docs/DOM/TouchList
- *              http://www.html5rocks.com/en/mobile/touchandmouse/
- *              Android 2.x only supports 1 touch event at once, no multi-touch
- *
- *	@version 	1.1 - 27th February 2013
- *	@author 	Richard Davey
- *
- *  @todo       Try and resolve update lag in Chrome/Android
- *              Gestures (pinch, zoom, swipe)
- *              GameObject Touch
- *              Touch point within GameObject
- *              Input Zones (mouse and touch) - lock entities within them + axis aligned drags
- */
-
-/**
-*   Phaser
+* Phaser - Touch
+*
+* The Touch class handles touch interactions with the game and the resulting Finger objects.
+* http://www.w3.org/TR/touch-events/
+* https://developer.mozilla.org/en-US/docs/DOM/TouchList
+* http://www.html5rocks.com/en/mobile/touchandmouse/
+* Note: Android 2.x only supports 1 touch event at once, no multi-touch
+*
+*  @todo       Try and resolve update lag in Chrome/Android
+*              Gestures (pinch, zoom, swipe)
+*              GameObject Touch
+*              Touch point within GameObject
+*              Input Zones (mouse and touch) - lock entities within them + axis aligned drags
 */
 
 module Phaser {

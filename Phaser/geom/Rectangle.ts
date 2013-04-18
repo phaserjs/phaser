@@ -1,16 +1,9 @@
 /// <reference path="../Game.ts" />
 
 /**
- *	Rectangle
- *
- *	@desc 		A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
- *
- *	@version 	1.2 - 15th October 2012
- *	@author 	Richard Davey
- */
-
-/**
-*   Phaser
+* Phaser - Rectangle
+*
+* A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
 */
 
 module Phaser {

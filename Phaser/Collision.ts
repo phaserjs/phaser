@@ -7,7 +7,9 @@
 /// <reference path="system/QuadTree.ts" />
 
 /**
-*   Phaser - Collision
+* Phaser - Collision
+*
+* A set of extremely useful collision and geometry intersection functions.
 */
 
 module Phaser {

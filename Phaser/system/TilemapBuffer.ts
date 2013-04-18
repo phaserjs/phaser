@@ -1,9 +1,9 @@
 /// <reference path="../Game.ts" />
 
 /**
-* A Tilemap Buffer
-* 
-* @author	Richard Davey
+* Phaser - TilemapBuffer
+*
+* Responsible for rendering a portion of a tilemap to the given Camera.
 */
 
 module Phaser {

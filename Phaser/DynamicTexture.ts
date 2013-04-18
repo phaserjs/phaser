@@ -1,7 +1,12 @@
 /// <reference path="Game.ts" />
 
 /**
-*   Phaser
+* Phaser - DynamicTexture
+*
+* A DynamicTexture can be thought of as a mini canvas into which you can draw anything.
+* Game Objects can be assigned a DynamicTexture, so when they render in the world they do so
+* based on the contents of the texture at the time. This allows you to create powerful effects
+* once and have them replicated across as many game objects as you like.
 */
 
 module Phaser {

@@ -10,7 +10,7 @@
 /// <reference path="Motion.ts" />
 /// <reference path="Signal.ts" />
 /// <reference path="SignalBinding.ts" />
-/// <reference path="Sound.ts" />
+/// <reference path="SoundManager.ts" />
 /// <reference path="Stage.ts" />
 /// <reference path="Time.ts" />
 /// <reference path="TweenManager.ts" />
@@ -30,10 +30,10 @@
 /// <reference path="gameobjects/Tilemap.ts" />
 
 /**
-*   Phaser
+* Phaser - Game
 *
-*   Richard Davey (@photonstorm)
-*   Adam Saltsman (@ADAMATOMIC) (original Flixel code)
+* This is where the magic happens. The Game object is the heart of your game, providing quick access to common
+* functions and handling the boot process.
 */
 
 module Phaser {

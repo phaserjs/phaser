@@ -2,27 +2,14 @@
 /// <reference path="system/Tween.ts" />
 
 /**
- *	Phaser - Tween Manager
- *
- *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js) converted to TypeScript, patched and integrated into Phaser
- *
- *	@version 	1.0 - 11th January 2013
- *
- *	@author 	Richard Davey, TypeScript conversion and Phaser integration
- *  @author     sole / http://soledadpenades.com
- *  @author     mrdoob / http://mrdoob.com
- *  @author     Robert Eisele / http://www.xarg.org
- *  @author     Philippe / http://philippe.elsass.me
- *  @author     Robert Penner / http://www.robertpenner.com/easing_terms_of_use.html
- *  @author     Paul Lewis / http://www.aerotwist.com/
- *  @author     lechecacharro
- *  @author     Josh Faul / http://jocafa.com/
- *  @author     egraether / http://egraether.com/
- *
- *	@todo       
- *              1) Allow for tweening direct numeric values, not just object properties
- *              2) YoYo support
- */
+* Phaser - TweenManager
+*
+* The Game has a single instance of the TweenManager through which all Tween objects are created and updated.
+* Tweens are hooked into the game clock and pause system, adjusting based on the game state.
+* TweenManager is based heavily on tween.js by sole (http://soledadpenades.com).
+* I converted it to TypeScript, swapped the callbacks for signals and patched a few issues with regard 
+* to properties and completion errors. Please see https://github.com/sole/tween.js for a full list of contributors.
+*/
 
 module Phaser {
 

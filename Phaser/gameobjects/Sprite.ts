@@ -3,7 +3,10 @@
 /// <reference path="GameObject.ts" />
 
 /**
-*   Phaser
+* Phaser - Sprite
+*
+* The Sprite GameObject is an extension of the core GameObject that includes support for animation and dynamic textures.
+* It's probably the most used GameObject of all.
 */
 
 module Phaser {

@@ -2,21 +2,11 @@
 /// <reference path="../Group.ts" />
 
 /**
- * <code>Emitter</code> is a lightweight particle emitter.
- * It can be used for one-time explosions or for
- * continuous fx like rain and fire.  <code>Emitter</code>
- * is not optimized or anything; all it does is launch
- * <code>Particle</code> objects out at set intervals
- * by setting their positions and velocities accordingly.
- * It is easy to use and relatively efficient,
- * relying on <code>Group</code>'s RECYCLE POWERS.
- * 
- * @author	Adam Atomic
- * @author	Richard Davey
- */
-
-/**
-*   Phaser
+* Phaser - Emitter
+*
+* Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+* continuous effects like rain and fire. All it really does is launch Particle objects out
+* at set intervals, and fixes their positions and velocities accorindgly.
 */
 
 module Phaser {

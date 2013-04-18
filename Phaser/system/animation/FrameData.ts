@@ -1,7 +1,9 @@
 /// <reference path="../../Game.ts" />
 
 /**
-*   Phaser
+* Phaser - FrameData
+*
+* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
 */
 
 module Phaser {

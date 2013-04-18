@@ -1,7 +1,11 @@
 /// <reference path="Game.ts" />
 
 /**
-*   Phaser
+* Phaser - World
+*
+* A game has only one world. The world is an abstract place in which all game objects live. It is not bound
+* by stage limits and can be any size or dimension. You look into the world via cameras and all game objects
+* live within the world at world-based coordinates. By default a world is created the same size as your Stage.
 */
 
 module Phaser {

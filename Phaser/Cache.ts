@@ -1,7 +1,10 @@
 /// <reference path="Game.ts" />
 
 /**
-*   Phaser
+* Phaser - Cache
+*
+* A game only has one instance of a Cache and it is used to store all externally loaded assets such
+* as images, sounds and data files as a result of Loader calls. Cache items use string based keys for look-up.
 */
 
 module Phaser {

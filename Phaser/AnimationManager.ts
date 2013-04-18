@@ -5,6 +5,13 @@
 /// <reference path="system/animation/Frame.ts" />
 /// <reference path="system/animation/FrameData.ts" />
 
+/**
+* Phaser - AnimationManager
+*
+* Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
+* sprite specific animations.
+*/
+
 module Phaser {
 
     export class AnimationManager {

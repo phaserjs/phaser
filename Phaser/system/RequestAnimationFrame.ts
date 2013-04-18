@@ -1,16 +1,9 @@
 /// <reference path="../Game.ts" />
 
 /**
- *  RequestAnimationFrame
- *
- *  @desc       Abstracts away the use of RAF or setTimeOut for the core game update loop. The callback can be re-mapped on the fly.
- *
- *	@version 	0.3 - 15th October 2012
- *	@author 	Richard Davey
- */
-
-/**
-*   Phaser
+* Phaser - RequestAnimationFrame
+*
+* Abstracts away the use of RAF or setTimeOut for the core game update loop. The callback can be re-mapped on the fly.
 */
 
 module Phaser {

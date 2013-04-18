@@ -1,16 +1,9 @@
 /// <reference path="../../Game.ts" />
 
 /**
- *	Animation
- *
- *	@desc 		Loads Sprite Sheets and Texture Atlas formats into a unified FrameData object
- *
- *	@version 	1.0 - 22nd March 2013
- *	@author 	Richard Davey
- */
-
-/**
-*   Phaser
+* Phaser - Animation
+*
+* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
 */
 
 module Phaser {

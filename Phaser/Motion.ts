@@ -2,7 +2,9 @@
 /// <reference path="gameobjects/GameObject.ts" />
 
 /**
- * Phaser - Motion
+* Phaser - Motion
+*
+* The Motion class contains lots of useful functions for moving game objects around in world space.
 */
 
 module Phaser {

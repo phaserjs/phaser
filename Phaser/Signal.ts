@@ -1,29 +1,12 @@
 /// <reference path="SignalBinding.ts" />
 
-/*
- *	Signal
- *				
- *	@desc		A TypeScript conversion of JS Signals by Miller Medeiros
- *              Released under the MIT license
- *				http://millermedeiros.github.com/js-signals/
- *
- *	@version	1. - 7th March 2013
- *
- *	@author 	Richard Davey, TypeScript conversion
- *	@author		Miller Medeiros, JS Signals
- *
-*/
-
 /**
-* Custom event broadcaster
-* <br />- inspired by Robert Penner's AS3 Signals.
-* @name Signal
-* @author Miller Medeiros
-* @constructor
-*/
-
-/**
-*   Phaser
+* Phaser - Signal
+*
+* A Signal is used for object communication via a custom broadcaster instead of Events.
+* Based on JS Signals by Miller Medeiros. Converted by TypeScript by Richard Davey.
+* Released under the MIT license
+* http://millermedeiros.github.com/js-signals/
 */
 
 module Phaser {

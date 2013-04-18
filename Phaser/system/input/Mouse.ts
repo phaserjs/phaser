@@ -1,7 +1,9 @@
 /// <reference path="../../Game.ts" />
 
 /**
-*   Phaser
+* Phaser - Mouse
+*
+* The Mouse class handles mouse interactions with the game and the resulting events.
 */
 
 module Phaser {

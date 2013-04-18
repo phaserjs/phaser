@@ -2,7 +2,11 @@
 /// <reference path="../Game.ts" />
 
 /**
-*   Phaser
+* Phaser - Camera
+*
+* A Camera is your view into the game world. It has a position, size, scale and rotation and renders only those objects
+* within its field of view. The game automatically creates a single Stage sized camera on boot, but it can be changed and
+* additional cameras created via the CameraManager.
 */
 
 module Phaser {

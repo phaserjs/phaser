@@ -1,11 +1,14 @@
 /// <reference path="Game.ts" />
 /// <reference path="system/Camera.ts" />
 
-//  TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
-//  TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
-
 /**
-*   Phaser
+* Phaser - CameraManager
+*
+* Your game only has one CameraManager instance and it's responsible for looking after, creating and destroying
+* all of the cameras in the world.
+*
+* TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
+* TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 */
 
 module Phaser {

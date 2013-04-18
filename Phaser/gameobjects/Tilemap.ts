@@ -4,7 +4,10 @@
 /// <reference path="../system/TilemapBuffer.ts" />
 
 /**
-*   Phaser
+* Phaser - Tilemap
+*
+* This GameObject allows for the display of a tilemap within the game world. Tile maps consist of an image, tile data and a size.
+* Internally it creates a TilemapBuffer for each camera in the world.
 */
 
 module Phaser {

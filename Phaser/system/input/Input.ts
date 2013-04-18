@@ -2,7 +2,9 @@
 /// <reference path="../../Signal.ts" />
 
 /**
-*   Phaser
+* Phaser - Input
+*
+* A game specific Input manager that looks after the mouse, keyboard and touch objects. This is updated by the core game loop.
 */
 
 module Phaser {

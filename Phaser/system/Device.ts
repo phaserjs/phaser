@@ -1,19 +1,10 @@
 /// <reference path="../Game.ts" />
 
 /**
- *  Device
- *
- *  @desc       Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
- *              https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
- *
- *	@version 	1.0 - March 5th 2013
- *	@author 	Richard Davey
- *	@author		mrdoob
- *	@author		Modernizr team
- */
-
-/**
-*   Phaser
+* Phaser - Device
+*
+* Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
+* https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
 */
 
 module Phaser {

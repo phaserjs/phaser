@@ -1,16 +1,10 @@
 /// <reference path="Game.ts" />
 
 /**
- * This is a useful "generic" object.
- * Both <code>GameObject</code> and <code>Group</code> extend this class,
- * as do the plugins.  Has no size, position or graphical data.
- * 
- * @author	Adam Atomic
- * @author	Richard Davey
- */
-
-/**
-*   Phaser
+* Phaser - Basic
+*
+* A useful "generic" object on which all GameObjects and Groups are based.
+* It has no size, position or graphical data.
 */
 
 module Phaser {

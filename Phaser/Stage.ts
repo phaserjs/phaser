@@ -3,7 +3,10 @@
 /// <reference path="system/StageScaleMode.ts" />
 
 /**
-*   Phaser
+* Phaser - Stage
+*
+* The Stage is the canvas on which everything is displayed. This class handles display within the web browser, focus handling,
+* resizing, scaling and pause/boot screens.
 */
 
 module Phaser {

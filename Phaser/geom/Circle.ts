@@ -1,13 +1,10 @@
 /// <reference path="../Game.ts" />
 
 /**
- *	Phaser - Geom - Circle
- *
- *	@desc 		A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
- *
- *	@version 	1.1 - 11th October 2012
- *	@author 	Richard Davey
- */
+* Phaser - Circle
+*
+* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
+*/
 
 module Phaser {
 

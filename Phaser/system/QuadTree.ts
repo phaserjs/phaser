@@ -2,15 +2,11 @@
 /// <reference path="LinkedList.ts" />
 
 /**
- * A fairly generic quad tree structure for rapid overlap checks.
- * QuadTree is also configured for single or dual list operation.
- * You can add items either to its A list or its B list.
- * When you do an overlap check, you can compare the A list to itself,
- * or the A list against the B list.  Handy for different things!
- */
-
-/**
-*   Phaser
+* Phaser - QuadTree
+*
+* A fairly generic quad tree structure for rapid overlap checks. QuadTree is also configured for single or dual list operation.
+* You can add items either to its A list or its B list. When you do an overlap check, you can compare the A list to itself,
+* or the A list against the B list.  Handy for different things!
 */
 
 module Phaser {

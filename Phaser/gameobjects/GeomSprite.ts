@@ -1,7 +1,11 @@
 /// <reference path="../Game.ts" />
 
 /**
-*   Phaser
+* Phaser - GeomSprite
+*
+* A GeomSprite is a special kind of GameObject that contains a base geometry class (Circle, Line, Point, Rectangle).
+* They can be rendered in the game and used for collision just like any other game object. Display of them is controlled
+* via the lineWidth / lineColor / fillColor and renderOutline / renderFill properties.
 */
 
 module Phaser {

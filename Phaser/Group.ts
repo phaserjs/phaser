@@ -2,16 +2,10 @@
 /// <reference path="Game.ts" />
 
 /**
-* This is an organizational class that can update and render a bunch of <code>Basic</code>s.
-* NOTE: Although <code>Group</code> extends <code>Basic</code>, it will not automatically
-* add itself to the global collisions quad tree, it will only add its members.
-* 
-* @author	Adam Atomic
-* @author	Richard Davey
-*/
-
-/**
-*   Phaser
+* Phaser - Group
+*
+* This class is used for organising, updating and sorting game objects.
+*
 */
 
 module Phaser {

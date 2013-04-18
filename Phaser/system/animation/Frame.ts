@@ -1,7 +1,9 @@
 /// <reference path="../../Game.ts" />
 
 /**
-*   Phaser
+* Phaser - Frame
+*
+* A Frame is a single frame of an animation and is part of a FrameData collection.
 */
 
 module Phaser {
