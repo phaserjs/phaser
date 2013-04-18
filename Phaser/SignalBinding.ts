@@ -14,7 +14,13 @@
  *
 */
 
-    class SignalBinding {
+/**
+*   Phaser
+*/
+
+module Phaser {
+
+    export class SignalBinding {
 
         /**
          * Object that represents a binding between a Signal and a listener function.
@@ -184,3 +190,4 @@
 
     }
 
+}

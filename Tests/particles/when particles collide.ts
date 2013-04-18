@@ -1,13 +1,11 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
-/// <reference path="../../Phaser/Emitter.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
-    var leftEmitter: Emitter;
-    var rightEmitter: Emitter;
+    var leftEmitter: Phaser.Emitter;
+    var rightEmitter: Phaser.Emitter;
 
     function init() {
 

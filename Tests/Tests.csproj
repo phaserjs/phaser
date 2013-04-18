@@ -96,12 +96,48 @@
     <TypeScriptCompile Include="sprites\dynamic texture 1.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="tweens\bounce.js">
+      <DependentUpon>bounce.ts</DependentUpon>
+    </Content>
+    <Content Include="tweens\elastic.js">
+      <DependentUpon>elastic.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="tweens\elastic.ts" />
+    <TypeScriptCompile Include="tweens\bounce.ts" />
+    <TypeScriptCompile Include="sprites\animate by framename.ts" />
+    <TypeScriptCompile Include="geometry\rectangle.ts" />
+    <TypeScriptCompile Include="geometry\rect vs rect.ts" />
+    <TypeScriptCompile Include="geometry\circle.ts" />
+    <Content Include="geometry\circle.js">
+      <DependentUpon>circle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geometry\point.ts" />
+    <TypeScriptCompile Include="geometry\line.ts" />
+    <Content Include="geometry\line.js">
+      <DependentUpon>line.ts</DependentUpon>
+    </Content>
+    <Content Include="geometry\point.js">
+      <DependentUpon>point.ts</DependentUpon>
+    </Content>
+    <Content Include="geometry\rect vs rect.js">
+      <DependentUpon>rect vs rect.ts</DependentUpon>
+    </Content>
+    <Content Include="geometry\rectangle.js">
+      <DependentUpon>rectangle.ts</DependentUpon>
+    </Content>
+    <Content Include="sprites\animate by framename.js">
+      <DependentUpon>animate by framename.ts</DependentUpon>
+    </Content>
     <Content Include="sprites\dynamic texture 1.js">
       <DependentUpon>dynamic texture 1.ts</DependentUpon>
     </Content>
     <Content Include="sprites\dynamic texture 2.js">
       <DependentUpon>dynamic texture 2.ts</DependentUpon>
     </Content>
+    <Content Include="sprites\rotation.js">
+      <DependentUpon>rotation.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="sprites\rotation.ts" />
     <TypeScriptCompile Include="sprites\dynamic texture 2.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />

@@ -4,8 +4,8 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 /// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
-/// <reference path="../../Phaser/Emitter.ts" />
+/// <reference path="../../Phaser/gameobjects/Particle.ts" />
+/// <reference path="../../Phaser/gameobjects/Emitter.ts" />
 //  Actually we could achieve the same result as this by using a sprite sheet and basic Particle
 //  but it still shows you how to use it properly from TypeScript, so it was worth making
 var customParticle = (function (_super) {
@@ -22,9 +22,9 @@ var customParticle = (function (_super) {
         this.loadGraphic(game.math.getRandom(s));
     }
     return customParticle;
-})(Particle);
+})(Phaser.Particle);
 (function () {
-    var myGame = new Game(this, 'game', 800, 600, init, create);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
     var emitter;
     function init() {
         myGame.loader.addImageFile('carrot', 'assets/sprites/carrot.png');

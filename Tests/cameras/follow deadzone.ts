@@ -1,9 +1,8 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     function init() {
 
@@ -16,7 +15,7 @@
 
     }
 
-    var car: Sprite;
+    var car: Phaser.Sprite;
 
     function create() {
 
@@ -26,7 +25,7 @@
 
         myGame.camera.follow(car);
         //  Here we'll set our own custom deadzone which is 64px smaller than the stage size on all sides
-        myGame.camera.deadzone = new Rectangle(64, 64, myGame.stage.width - 128, myGame.stage.height - 128);
+        myGame.camera.deadzone = new Phaser.Rectangle(64, 64, myGame.stage.width - 128, myGame.stage.height - 128);
         myGame.camera.setBounds(0, 0, myGame.world.width, myGame.world.height);
 
     }
@@ -41,18 +40,18 @@
 		car.angularVelocity = 0;
 		car.angularAcceleration = 0;
 
-        if (myGame.input.keyboard.isDown(Keyboard.LEFT))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             car.angularVelocity = -200;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.RIGHT))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             car.angularVelocity = 200;
         }
 
-        if (myGame.input.keyboard.isDown(Keyboard.UP))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            var motion:Point = myGame.math.velocityFromAngle(car.angle, 300);
+            var motion:Phaser.Point = myGame.motion.velocityFromAngle(car.angle, 300);
 
             car.velocity.copyFrom(motion);
         }

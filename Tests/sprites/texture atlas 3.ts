@@ -1,9 +1,8 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     function init() {
 
@@ -16,7 +15,7 @@
 
     }
 
-    var bot: Sprite;
+    var bot: Phaser.Sprite;
 
     function create() {
 

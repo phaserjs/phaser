@@ -1,7 +1,6 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 (function () {
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
         myGame.loader.addImageFile('slime', 'assets/sprites/slime.png');
         myGame.loader.addImageFile('eyes', 'assets/sprites/slimeeyes.png');
@@ -31,16 +30,16 @@
         eyes.velocity.x = 0;
         eyes.velocity.y = 0;
         eyes.angularVelocity = 0;
-        if(myGame.input.keyboard.isDown(Keyboard.LEFT)) {
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             slime.angularVelocity = -200;
             eyes.angularVelocity = -200;
-        } else if(myGame.input.keyboard.isDown(Keyboard.RIGHT)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             slime.angularVelocity = 200;
             eyes.angularVelocity = 200;
         }
-        if(myGame.input.keyboard.isDown(Keyboard.UP)) {
-            slime.velocity.copyFrom(myGame.math.velocityFromAngle(slime.angle, 200));
-            eyes.velocity.copyFrom(myGame.math.velocityFromAngle(slime.angle, 200));
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+            slime.velocity.copyFrom(myGame.motion.velocityFromAngle(slime.angle, 200));
+            eyes.velocity.copyFrom(myGame.motion.velocityFromAngle(slime.angle, 200));
         }
     }
     //  This creates a simple sine-wave effect running through our DynamicTexture.

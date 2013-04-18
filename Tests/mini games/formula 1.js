@@ -1,7 +1,6 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 (function () {
-    var myGame = new Game(this, 'game', 840, 400, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 840, 400, init, create, update);
     function init() {
         myGame.loader.addImageFile('track', 'assets/games/f1/track.png');
         myGame.loader.addImageFile('car', 'assets/games/f1/car1.png');
@@ -16,22 +15,22 @@
         car.rotation = 180;
         car.maxVelocity.setTo(150, 150);
         bigCam = myGame.createCamera(640, 0, 100, 200);
-        bigCam.follow(car, Camera.STYLE_LOCKON);
+        bigCam.follow(car, Phaser.Camera.STYLE_LOCKON);
         bigCam.setBounds(0, 0, myGame.stage.width, myGame.stage.height);
         bigCam.showBorder = true;
         bigCam.borderColor = 'rgb(0,0,0)';
         bigCam.scale.setTo(2, 2);
     }
     function update() {
-        if(myGame.input.keyboard.isDown(Keyboard.LEFT)) {
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             car.rotation -= 4;
-        } else if(myGame.input.keyboard.isDown(Keyboard.RIGHT)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             car.rotation += 4;
         }
-        if(myGame.input.keyboard.isDown(Keyboard.UP)) {
-            car.velocity.copyFrom(myGame.math.velocityFromAngle(car.angle, 150));
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+            car.velocity.copyFrom(myGame.motion.velocityFromAngle(car.angle, 150));
         } else {
-            car.velocity.copyFrom(myGame.math.velocityFromAngle(car.angle, 60));
+            car.velocity.copyFrom(myGame.motion.velocityFromAngle(car.angle, 60));
         }
     }
 })();

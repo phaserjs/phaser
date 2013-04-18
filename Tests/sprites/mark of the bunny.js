@@ -1,8 +1,6 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Group.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 (function () {
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
         myGame.loader.addImageFile('bunny', 'assets/sprites/wabbit.png');
         myGame.loader.load();
@@ -35,7 +33,7 @@
     function update() {
         fps.textContent = 'Press Up to add more\n\nBunnies: ' + myGame.world.group.length + '\nFPS: ' + myGame.time.fps + ' (' + myGame.time.fpsMin + '-' + myGame.time.fpsMax + ')';
         myGame.world.group.forEach(checkWalls);
-        if(myGame.input.keyboard.isDown(Keyboard.UP)) {
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
             addBunnies(10);
         }
     }

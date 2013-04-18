@@ -1,7 +1,7 @@
 {"frames": [
 
 {
-	"filename": "running bot.swf/0000",
+	"filename": "run00",
 	"frame": {"x":34,"y":128,"w":56,"h":60},
 	"rotated": false,
 	"trimmed": true,
@@ -9,7 +9,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0001",
+	"filename": "run01",
 	"frame": {"x":54,"y":0,"w":56,"h":58},
 	"rotated": false,
 	"trimmed": true,
@@ -17,7 +17,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0002",
+	"filename": "run02",
 	"frame": {"x":54,"y":58,"w":56,"h":58},
 	"rotated": false,
 	"trimmed": true,
@@ -25,7 +25,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0003",
+	"filename": "run03",
 	"frame": {"x":0,"y":192,"w":34,"h":64},
 	"rotated": false,
 	"trimmed": true,
@@ -33,7 +33,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0004",
+	"filename": "run04",
 	"frame": {"x":0,"y":64,"w":54,"h":64},
 	"rotated": false,
 	"trimmed": true,
@@ -41,7 +41,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0005",
+	"filename": "run05",
 	"frame": {"x":196,"y":0,"w":56,"h":58},
 	"rotated": false,
 	"trimmed": true,
@@ -49,7 +49,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0006",
+	"filename": "run06",
 	"frame": {"x":0,"y":0,"w":54,"h":64},
 	"rotated": false,
 	"trimmed": true,
@@ -57,7 +57,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0007",
+	"filename": "run07",
 	"frame": {"x":140,"y":0,"w":56,"h":58},
 	"rotated": false,
 	"trimmed": true,
@@ -65,7 +65,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0008",
+	"filename": "run08",
 	"frame": {"x":34,"y":188,"w":50,"h":60},
 	"rotated": false,
 	"trimmed": true,
@@ -73,7 +73,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0009",
+	"filename": "run09",
 	"frame": {"x":0,"y":128,"w":34,"h":64},
 	"rotated": false,
 	"trimmed": true,
@@ -81,7 +81,7 @@
 	"sourceSize": {"w":56,"h":64}
 },
 {
-	"filename": "running bot.swf/0010",
+	"filename": "run10",
 	"frame": {"x":84,"y":188,"w":56,"h":58},
 	"rotated": false,
 	"trimmed": true,

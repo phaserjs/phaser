@@ -1,8 +1,6 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
-/// <reference path="../../Phaser/Tilemap.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 (function () {
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
         //  Tiled JSON Test
         myGame.loader.addTextFile('jsontest', 'assets/maps/test.json');
@@ -17,12 +15,12 @@
     var map;
     var bigCam;
     function create() {
-        myGame.camera.deadzone = new Rectangle(64, 64, myGame.stage.width - 128, myGame.stage.height - 128);
+        myGame.camera.deadzone = new Phaser.Rectangle(64, 64, myGame.stage.width - 128, myGame.stage.height - 128);
         bigCam = myGame.createCamera(30, 30, 200, 200);
         bigCam.showBorder = true;
         bigCam.scale.setTo(1.5, 1.5);
         //map = myGame.createTilemap('jsontiles', 'jsontest', Tilemap.FORMAT_TILED_JSON);
-        map = myGame.createTilemap('csvtiles', 'csvtest', Tilemap.FORMAT_CSV, 16, 16);
+        map = myGame.createTilemap('csvtiles', 'csvtest', Phaser.Tilemap.FORMAT_CSV, 16, 16);
         //  for now like this, but change to auto soon
         myGame.world.setSize(map.widthInPixels, map.heightInPixels);
         console.log('world size', map.widthInPixels, map.heightInPixels);
@@ -30,7 +28,7 @@
         bigCam.setBounds(0, 0, myGame.world.width, myGame.world.height);
         car = myGame.createSprite(300, 100, 'car');
         myGame.camera.follow(car);
-        bigCam.follow(car, Camera.STYLE_LOCKON);
+        bigCam.follow(car, Phaser.Camera.STYLE_LOCKON);
         myGame.onRenderCallback = render;
     }
     function update() {
@@ -39,13 +37,13 @@
         car.velocity.y = 0;
         car.angularVelocity = 0;
         car.angularAcceleration = 0;
-        if(myGame.input.keyboard.isDown(Keyboard.LEFT)) {
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             car.angularVelocity = -200;
-        } else if(myGame.input.keyboard.isDown(Keyboard.RIGHT)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             car.angularVelocity = 200;
         }
-        if(myGame.input.keyboard.isDown(Keyboard.UP)) {
-            var motion = myGame.math.velocityFromAngle(car.angle, 300);
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+            var motion = myGame.motion.velocityFromAngle(car.angle, 300);
             car.velocity.copyFrom(motion);
         }
     }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -46,31 +46,32 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
-    <TypeScriptOutFile>phaser.js</TypeScriptOutFile>
+    <TypeScriptOutFile>../build/phaser.js</TypeScriptOutFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
-    <TypeScriptSourceMap>true</TypeScriptSourceMap>
-    <TypeScriptOutFile>phaser.js</TypeScriptOutFile>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptOutFile>../build/phaser.js</TypeScriptOutFile>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Phaser.ts" />
     <TypeScriptCompile Include="Animations.ts" />
     <TypeScriptCompile Include="Basic.ts" />
     <TypeScriptCompile Include="Cache.ts" />
     <TypeScriptCompile Include="Cameras.ts" />
-    <TypeScriptCompile Include="Emitter.ts" />
+    <TypeScriptCompile Include="gameobjects\Emitter.ts" />
     <TypeScriptCompile Include="Game.ts" />
     <TypeScriptCompile Include="GameMath.ts" />
-    <TypeScriptCompile Include="GameObject.ts" />
+    <TypeScriptCompile Include="gameobjects\GameObject.ts" />
     <TypeScriptCompile Include="Group.ts" />
     <TypeScriptCompile Include="Loader.ts" />
-    <TypeScriptCompile Include="Particle.ts" />
+    <TypeScriptCompile Include="gameobjects\Particle.ts" />
     <TypeScriptCompile Include="geom\Circle.ts" />
     <TypeScriptCompile Include="geom\Point.ts" />
     <TypeScriptCompile Include="geom\Rectangle.ts" />
     <TypeScriptCompile Include="Sound.ts" />
-    <TypeScriptCompile Include="Sprite.ts" />
+    <TypeScriptCompile Include="gameobjects\Sprite.ts" />
     <TypeScriptCompile Include="Stage.ts" />
     <TypeScriptCompile Include="State.ts" />
     <TypeScriptCompile Include="Signal.ts" />
@@ -93,21 +94,35 @@
     <TypeScriptCompile Include="system\StageScaleMode.ts" />
     <TypeScriptCompile Include="system\Tile.ts" />
     <TypeScriptCompile Include="system\TilemapBuffer.ts" />
-    <TypeScriptCompile Include="Tilemap.ts" />
+    <TypeScriptCompile Include="gameobjects\Tilemap.ts" />
     <TypeScriptCompile Include="Time.ts" />
     <TypeScriptCompile Include="World.ts" />
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="DynamicTexture.ts" />
+    <TypeScriptCompile Include="Collision.ts" />
+    <TypeScriptCompile Include="system\Tween.ts" />
+    <TypeScriptCompile Include="geom\Line.ts" />
+    <TypeScriptCompile Include="gameobjects\GeomSprite.ts" />
+    <TypeScriptCompile Include="geom\IntersectResult.ts" />
+    <TypeScriptCompile Include="Motion.ts" />
+    <TypeScriptCompile Include="TweenManager.ts" />
+    <TypeScriptCompile Include="system\easing\Back.ts" />
+    <TypeScriptCompile Include="system\easing\Bounce.ts" />
+    <TypeScriptCompile Include="system\easing\Circular.ts" />
+    <TypeScriptCompile Include="system\easing\Cubic.ts" />
+    <TypeScriptCompile Include="system\easing\Elastic.ts" />
+    <TypeScriptCompile Include="system\easing\Exponential.ts" />
+    <TypeScriptCompile Include="system\easing\Linear.ts" />
+    <TypeScriptCompile Include="system\easing\Quadratic.ts" />
+    <TypeScriptCompile Include="system\easing\Quartic.ts" />
+    <TypeScriptCompile Include="system\easing\Quintic.ts" />
+    <TypeScriptCompile Include="system\easing\Sinusoidal.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DynamicTexture.js">
-      <DependentUpon>DynamicTexture.ts</DependentUpon>
-    </Content>
+    <Folder Include="plugins\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>
-    <PostBuildEvent>cd $(ProjectDir)
-copy $(ProjectDir)phaser.js ..\Tests\</PostBuildEvent>
+    <PostBuildEvent>cd $(ProjectDir)..\build
+copy phaser.js ..\Tests\</PostBuildEvent>
   </PropertyGroup>
 </Project>

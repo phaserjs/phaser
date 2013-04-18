@@ -1,9 +1,9 @@
 Phaser
 ======
 
-Version 0.8
+Version 0.9
 
-15th April 2013
+18th April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -17,6 +17,17 @@ For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.h
 
 Change Log
 ----------
+
+V0.9
+Large refactoring. Everything now lives inside the Phaser module, so all code and all tests have been updated to reflect this. Makes coding a tiny bit
+more verbose but stops the framework from globbing up the global namespace. Also should make code-insight work in WebStorm and similar editors.<br />
+Added the new GeomSprite object. This is a sprite that uses a geometry class for display (Circle, Rectangle, Point, Line). It's extremely flexible!<br />
+Added Geometry intersection results objects.<br />
+Added new Collision class and moved some functions there. Contains all the Game Object and Geometry Intersection methods.<br />
+Can now create a sprite animation based on frame names rather than indexes. Useful when you've an animation inside a texture atlas. Added test to show.<br />
+Added addKeyCapture(), removeKeyCapture() and clearCaptures() to Input.Keyboard. Calls event.preventDefault() on any keycode set to capture, allowing you to avoid page scrolling when using the cursor keys in a game for example.<br />
+Added new Motion class which contains lots of handy functions like 'moveTowardsObject', 'velocityFromAngle' and more.<br />
+Tween Manager added. You can now create tweens via Game.createTween (or for more control game.tweens). All the usual suspects are here: Bounce, Elastic, Quintic, etc and it's hooked into the core game clock, so if your game pauses and resumes your tweens adjust accordingly.
 
 V0.8
 

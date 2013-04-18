@@ -1,7 +1,6 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 (function () {
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
         myGame.world.setSize(1920, 1920);
         myGame.loader.addImageFile('grid', 'assets/tests/debug-grid-1920x1920.png');
@@ -24,13 +23,13 @@
     function update() {
         myGame.camera.renderDebugInfo(32, 32);
         melon.renderDebugInfo(200, 32);
-        if(myGame.input.keyboard.isDown(Keyboard.LEFT)) {
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             myGame.camera.focusOnXY(640, 640);
-        } else if(myGame.input.keyboard.isDown(Keyboard.RIGHT)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             myGame.camera.focusOnXY(1234, 800);
-        } else if(myGame.input.keyboard.isDown(Keyboard.UP)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
             myGame.camera.focusOnXY(50, 200);
-        } else if(myGame.input.keyboard.isDown(Keyboard.DOWN)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
             myGame.camera.focusOnXY(1700, 1700);
         }
     }

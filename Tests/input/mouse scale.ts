@@ -1,10 +1,9 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
     //  Here we create a quite tiny game (320x240 in size)
-    var myGame = new Game(this, 'game', 320, 240, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 320, 240, init, create, update);
 
     function init() {
 
@@ -12,7 +11,7 @@
         myGame.stage.maxScaleX = 640;
         myGame.stage.maxScaleY = 480;
         //  Then we tell Phaser that we want it to scale up to whatever the browser can handle, but to do it proportionally
-        myGame.stage.scaleMode = StageScaleMode.SHOW_ALL;
+        myGame.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
 
         myGame.loader.addImageFile('melon', 'assets/sprites/melon.png');
 
@@ -35,20 +34,20 @@
 
     function update() {
 
-        if (myGame.input.keyboard.isDown(Keyboard.LEFT))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             myGame.camera.scroll.x -= 4;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.RIGHT))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             myGame.camera.scroll.x += 4;
         }
 
-        if (myGame.input.keyboard.isDown(Keyboard.UP))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
             myGame.camera.scroll.y -= 4;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.DOWN))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
             myGame.camera.scroll.y += 4;
         }

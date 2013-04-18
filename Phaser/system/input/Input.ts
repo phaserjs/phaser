@@ -1,75 +1,80 @@
 /// <reference path="../../Game.ts" />
-/// <reference path="Mouse.ts" />
-/// <reference path="Keyboard.ts" />
-/// <reference path="Touch.ts" />
 
-class Input {
+/**
+*   Phaser
+*/
 
-    constructor(game: Game) {
+module Phaser {
 
-        this._game = game;
+    export class Input {
 
-        this.mouse = new Mouse(this._game);
-        this.keyboard = new Keyboard(this._game);
-        this.touch = new Touch(this._game);
+        constructor(game: Game) {
 
-    }
+            this._game = game;
 
-    private _game: Game;
+            this.mouse = new Mouse(this._game);
+            this.keyboard = new Keyboard(this._game);
+            this.touch = new Touch(this._game);
 
-    public mouse: Mouse;
-    public keyboard: Keyboard;
-    public touch: Touch;
+        }
 
-    public x: number = 0;
-    public y: number = 0;
+        private _game: Game;
 
-    public scaleX: number = 1;
-    public scaleY: number = 1;
+        public mouse: Mouse;
+        public keyboard: Keyboard;
+        public touch: Touch;
 
-    public worldX: number = 0;
-    public worldY: number = 0;
+        public x: number = 0;
+        public y: number = 0;
 
-    public update() {
+        public scaleX: number = 1;
+        public scaleY: number = 1;
 
-        this.x = Math.round(this.x);
-        this.y = Math.round(this.y);
+        public worldX: number = 0;
+        public worldY: number = 0;
 
-        this.worldX = this._game.camera.worldView.x + this.x;
-        this.worldY = this._game.camera.worldView.y + this.y;
+        public update() {
 
-        this.mouse.update();
-        this.touch.update();
+            this.x = Math.round(this.x);
+            this.y = Math.round(this.y);
 
-    }
+            this.worldX = this._game.camera.worldView.x + this.x;
+            this.worldY = this._game.camera.worldView.y + this.y;
 
-    public reset() {
+            this.mouse.update();
+            this.touch.update();
 
-        this.mouse.reset();
-        this.keyboard.reset();
-        this.touch.reset();
+        }
 
-    }
+        public reset() {
 
-    public getWorldX(camera?: Camera = this._game.camera) {
+            this.mouse.reset();
+            this.keyboard.reset();
+            this.touch.reset();
 
-        return camera.worldView.x + this.x;
+        }
 
-    }
+        public getWorldX(camera?: Camera = this._game.camera) {
 
-    public getWorldY(camera?: Camera = this._game.camera) {
+            return camera.worldView.x + this.x;
 
-        return camera.worldView.y + this.y;
+        }
 
-    }
+        public getWorldY(camera?: Camera = this._game.camera) {
 
-    public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
+            return camera.worldView.y + this.y;
 
-        this._game.stage.context.fillStyle = color;
-        this._game.stage.context.fillText('Input', x, y);
-        this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
-        this._game.stage.context.fillText('World X: ' + this.worldX + ' World Y: ' + this.worldY, x, y + 28);
-        this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
+        }
+
+        public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
+
+            this._game.stage.context.fillStyle = color;
+            this._game.stage.context.fillText('Input', x, y);
+            this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
+            this._game.stage.context.fillText('World X: ' + this.worldX + ' World Y: ' + this.worldY, x, y + 28);
+            this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
+
+        }
 
     }
 

@@ -1,8 +1,6 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
-/// <reference path="../../Phaser/Emitter.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 (function () {
-    var myGame = new Game(this, 'game', 800, 600, init, create);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
     var emitter;
     function init() {
         myGame.loader.addImageFile('jet', 'assets/sprites/jets.png');

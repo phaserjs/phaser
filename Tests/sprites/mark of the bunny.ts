@@ -1,10 +1,8 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Group.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     function init() {
 
@@ -56,14 +54,14 @@
 
         myGame.world.group.forEach(checkWalls);
 
-        if (myGame.input.keyboard.isDown(Keyboard.UP))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
             addBunnies(10);
         }
 
     }
 
-    function checkWalls(bunny:Sprite) {
+    function checkWalls(bunny:Phaser.Sprite) {
 
         if (bunny.x > maxX)
         {

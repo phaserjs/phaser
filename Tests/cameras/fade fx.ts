@@ -1,9 +1,8 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     function init() {
 
@@ -14,7 +13,7 @@
 
     }
 
-    var car: Sprite;
+    var car: Phaser.Sprite;
 
     function create() {
 
@@ -33,18 +32,18 @@
 		car.angularVelocity = 0;
 		car.angularAcceleration = 0;
 
-        if (myGame.input.keyboard.isDown(Keyboard.LEFT))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             car.angularVelocity = -200;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.RIGHT))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             car.angularVelocity = 200;
         }
 
-        if (myGame.input.keyboard.isDown(Keyboard.UP))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            var motion:Point = myGame.math.velocityFromAngle(car.angle, 300);
+            var motion:Phaser.Point = myGame.motion.velocityFromAngle(car.angle, 300);
 
             car.velocity.copyFrom(motion);
         }

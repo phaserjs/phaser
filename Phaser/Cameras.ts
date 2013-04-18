@@ -1,79 +1,83 @@
 /// <reference path="Game.ts" />
-/// <reference path="GameMath.ts" />
-/// <reference path="geom/Rectangle.ts" />
-/// <reference path="geom/Point.ts" />
 /// <reference path="system/Camera.ts" />
 
 //  TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
 //  TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 
-class Cameras {
+/**
+*   Phaser
+*/
 
-    constructor(game: Game, x: number, y: number, width: number, height: number) {
+module Phaser {
 
-        this._game = game;
+    export class Cameras {
 
-        this._cameras = [];
+        constructor(game: Game, x: number, y: number, width: number, height: number) {
 
-        this.current = this.addCamera(x, y, width, height);
+            this._game = game;
 
-    }
+            this._cameras = [];
 
-    private _game: Game;
+            this.current = this.addCamera(x, y, width, height);
 
-    private _cameras: Camera[];
+        }
 
-    public current: Camera;
+        private _game: Game;
 
-    public getAll(): Camera[] {
-        return this._cameras;
-    }
+        private _cameras: Camera[];
 
-    public update() {
-        this._cameras.forEach((camera) => camera.update());
-    }
+        public current: Camera;
 
-    public render() {
-        this._cameras.forEach((camera) => camera.render());
-    }
+        public getAll(): Camera[] {
+            return this._cameras;
+        }
 
-    public addCamera(x: number, y: number, width: number, height: number): Camera {
+        public update() {
+            this._cameras.forEach((camera) => camera.update());
+        }
 
-        var newCam: Camera = new Camera(this._game, this._cameras.length, x, y, width, height);
+        public render() {
+            this._cameras.forEach((camera) => camera.render());
+        }
 
-        this._cameras.push(newCam);
+        public addCamera(x: number, y: number, width: number, height: number): Camera {
 
-        return newCam;
+            var newCam: Camera = new Camera(this._game, this._cameras.length, x, y, width, height);
 
-    }
+            this._cameras.push(newCam);
 
-    public removeCamera(id: number): bool {
+            return newCam;
 
-        if (this._cameras[id])
-        {
-            if (this.current === this._cameras[id])
+        }
+
+        public removeCamera(id: number): bool {
+
+            if (this._cameras[id])
             {
-                this.current = null;
+                if (this.current === this._cameras[id])
+                {
+                    this.current = null;
+                }
+
+                this._cameras.splice(id, 1);
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
 
-            this._cameras.splice(id, 1);
-
-            return true;
-        }
-        else
-        {
-            return false;
         }
 
-    }
+        public destroy() {
 
-    public destroy() {
+            this._cameras.length = 0;
 
-        this._cameras.length = 0;
+            this.current = this.addCamera(0, 0, this._game.stage.width, this._game.stage.height);
 
-        this.current = this.addCamera(0, 0, this._game.stage.width, this._game.stage.height);
+        }
 
     }
 
 }
-

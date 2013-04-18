@@ -1,7 +1,6 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 (function () {
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
         myGame.loader.addImageFile('ball0', 'assets/sprites/yellow_ball.png');
         myGame.loader.addImageFile('ball1', 'assets/sprites/aqua_ball.png');
@@ -19,7 +18,7 @@
         atari.immovable = true;
         balls = myGame.createGroup();
         for(var i = 0; i < 100; i++) {
-            var tempBall = new Sprite(myGame, Math.random() * myGame.stage.width, -32, 'ball' + Math.round(Math.random() * 5));
+            var tempBall = new Phaser.Sprite(myGame, Math.random() * myGame.stage.width, -32, 'ball' + Math.round(Math.random() * 5));
             tempBall.velocity.y = 100 + Math.random() * 150;
             tempBall.elasticity = 0.9;
             balls.add(tempBall);
@@ -27,9 +26,9 @@
     }
     function update() {
         atari.velocity.x = 0;
-        if(myGame.input.keyboard.isDown(Keyboard.LEFT)) {
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             atari.velocity.x = -400;
-        } else if(myGame.input.keyboard.isDown(Keyboard.RIGHT)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             atari.velocity.x = 400;
         }
         balls.forEach(checkOffScreen, false);

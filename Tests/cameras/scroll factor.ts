@@ -1,9 +1,8 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     function init() {
 
@@ -17,7 +16,7 @@
 
     }
 
-    var melon: Sprite;
+    var melon: Phaser.Sprite;
 
     function create() {
 
@@ -41,20 +40,20 @@
         myGame.camera.renderDebugInfo(32, 32);
         melon.renderDebugInfo(200, 32);
 
-        if (myGame.input.keyboard.isDown(Keyboard.LEFT))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             myGame.camera.scroll.x -= 1;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.RIGHT))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             myGame.camera.scroll.x += 1;
         }
 
-        if (myGame.input.keyboard.isDown(Keyboard.UP))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
             myGame.camera.scroll.y -= 1;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.DOWN))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
             myGame.camera.scroll.y += 1;
         }

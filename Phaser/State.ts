@@ -1,71 +1,97 @@
 /// <reference path="Game.ts" />
 
-class State {
+/**
+*   Phaser
+*/
 
-    constructor(game: Game) {
+module Phaser {
 
-        this.game = game;
+    export class State {
 
-        this.camera = game.camera;
-        this.cache = game.cache;
-        this.input = game.input;
-        this.loader = game.loader;
-        this.sound = game.sound;
-        this.stage = game.stage;
-        this.time = game.time;
-        this.math = game.math;
-        this.world = game.world;
+        constructor(game: Game) {
 
-    }
+            this.game = game;
 
-    public game: Game;
+            this.camera = game.camera;
+            this.cache = game.cache;
+            this.collision = game.collision;
+            this.input = game.input;
+            this.loader = game.loader;
+            this.math = game.math;
+            this.motion = game.motion;
+            this.sound = game.sound;
+            this.stage = game.stage;
+            this.time = game.time;
+            this.tweens = game.tweens;
+            this.world = game.world;
 
-    public camera: Camera;
-    public cache: Cache;
-    public input: Input;
-    public loader: Loader;
-    public sound: SoundManager;
-    public stage: Stage;
-    public time: Time;
-    public math: GameMath;
-    public world: World;
+        }
+
+        public game: Game;
+
+        public camera: Camera;
+        public cache: Cache;
+        public collision: Collision;
+        public input: Input;
+        public loader: Loader;
+        public math: GameMath;
+        public motion: Motion;
+        public sound: SoundManager;
+        public stage: Stage;
+        public time: Time;
+        public tweens: TweenManager;
+        public world: World;
 
 
-    //  Overload these in your own States
-    public init() {}
-    public create() {}
-    public update() {}
-    public render() {}
-    public paused() {}
+        //  Overload these in your own States
+        public init() { }
+        public create() { }
+        public update() { }
+        public render() { }
+        public paused() { }
 
-    //  Handy Proxy methods
+        //  Handy Proxy methods
 
-    public createCamera(x: number, y: number, width: number, height: number): Camera {
-        return this.game.world.createCamera(x, y, width, height);
-    }
+        public createCamera(x: number, y: number, width: number, height: number): Camera {
+            return this.game.world.createCamera(x, y, width, height);
+        }
 
-    public createSprite(x: number, y: number, key?: string = ''): Sprite {
-        return this.game.world.createSprite(x, y, key);
-    }
+        public createGeomSprite(x: number, y: number): GeomSprite {
+            return this.world.createGeomSprite(x, y);
+        }
 
-    public createGroup(MaxSize?: number = 0): Group {
-        return this.game.world.createGroup(MaxSize);
-    }
+        public createSprite(x: number, y: number, key?: string = ''): Sprite {
+            return this.game.world.createSprite(x, y, key);
+        }
 
-    public createParticle(): Particle {
-        return this.game.world.createParticle();
-    }
+        public createDynamicTexture(key: string, width: number, height: number): DynamicTexture {
+            return this.game.world.createDynamicTexture(key, width, height);
+        }
 
-    public createEmitter(x?: number = 0, y?: number = 0, size?:number = 0): Emitter {
-        return this.game.world.createEmitter(x, y, size);
-    }
+        public createGroup(MaxSize?: number = 0): Group {
+            return this.game.world.createGroup(MaxSize);
+        }
 
-    public createTilemap(key:string, mapData:string, format:number, tileWidth?:number,tileHeight?:number): Tilemap {
-        return this.game.world.createTilemap(key, mapData, format, tileWidth, tileHeight);
-    }
+        public createParticle(): Particle {
+            return this.game.world.createParticle();
+        }
 
-    public collide(ObjectOrGroup1: Basic = null, ObjectOrGroup2: Basic = null, NotifyCallback = null): bool {
-        return this.game.world.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, World.separate);
+        public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
+            return this.game.world.createEmitter(x, y, size);
+        }
+
+        public createTilemap(key: string, mapData: string, format: number, tileWidth?: number, tileHeight?: number): Tilemap {
+            return this.game.world.createTilemap(key, mapData, format, tileWidth, tileHeight);
+        }
+
+        public createTween(obj): Tween {
+            return this.game.tweens.create(obj);
+        }
+
+        public collide(ObjectOrGroup1: Basic = null, ObjectOrGroup2: Basic = null, NotifyCallback = null): bool {
+            return this.collision.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, Collision.separate);
+        }
+
     }
 
 }

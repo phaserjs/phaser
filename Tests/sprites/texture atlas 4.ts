@@ -1,9 +1,8 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
 
     function init() {
 
@@ -16,11 +15,11 @@
 
     }
 
-    var chick: Sprite;
-    var car: Sprite;
-    var mech: Sprite;
-    var robot: Sprite;
-    var cop: Sprite;
+    var chick: Phaser.Sprite;
+    var car: Phaser.Sprite;
+    var mech: Phaser.Sprite;
+    var robot: Phaser.Sprite;
+    var cop: Phaser.Sprite;
 
     function create() {
 

@@ -1,9 +1,8 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     function init() {
 
@@ -14,9 +13,9 @@
 
     }
 
-    var slime: Sprite;
-    var eyes: Sprite;
-    var wobble: DynamicTexture;
+    var slime: Phaser.Sprite;
+    var eyes: Phaser.Sprite;
+    var wobble: Phaser.DynamicTexture;
 
     function create() {
 
@@ -50,21 +49,21 @@
         eyes.velocity.y = 0;
 		eyes.angularVelocity = 0;
 
-        if (myGame.input.keyboard.isDown(Keyboard.LEFT))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             slime.angularVelocity = -200;
             eyes.angularVelocity = -200;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.RIGHT))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             slime.angularVelocity = 200;
             eyes.angularVelocity = 200;
         }
 
-        if (myGame.input.keyboard.isDown(Keyboard.UP))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            slime.velocity.copyFrom(myGame.math.velocityFromAngle(slime.angle, 200));
-            eyes.velocity.copyFrom(myGame.math.velocityFromAngle(slime.angle, 200));
+            slime.velocity.copyFrom(myGame.motion.velocityFromAngle(slime.angle, 200));
+            eyes.velocity.copyFrom(myGame.motion.velocityFromAngle(slime.angle, 200));
         }
 
     }

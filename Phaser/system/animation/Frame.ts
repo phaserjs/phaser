@@ -1,67 +1,71 @@
 /// <reference path="../../Game.ts" />
-/// <reference path="../../Sprite.ts" />
-/// <reference path="Animation.ts" />
-/// <reference path="AnimationLoader.ts" />
-/// <reference path="FrameData.ts" />
 
-class Frame {
+/**
+*   Phaser
+*/
 
-    constructor(x: number, y: number, width: number, height: number, name: string) {
+module Phaser {
 
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.name = name;
+    export class Frame {
 
-        this.rotated = false;
-        this.trimmed = false;
+        constructor(x: number, y: number, width: number, height: number, name: string) {
 
-    }
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.name = name;
 
-    //  Position within the image to cut from
-    public x: number;
-    public y: number;
-    public width: number;
-    public height: number;
+            this.rotated = false;
+            this.trimmed = false;
 
-    //  Useful for Sprite Sheets
-    public index: number;
+        }
 
-    //  Useful for Texture Atlas files (is set to the filename value)
-    public name: string = '';
+        //  Position within the image to cut from
+        public x: number;
+        public y: number;
+        public width: number;
+        public height: number;
 
-    //  Rotated? (not yet implemented)
-    public rotated: bool = false;
+        //  Useful for Sprite Sheets
+        public index: number;
 
-    //  Either cw or ccw, rotation is always 90 degrees
-    public rotationDirection: string = 'cw';
+        //  Useful for Texture Atlas files (is set to the filename value)
+        public name: string = '';
 
-    //  Was it trimmed when packed?
-    public trimmed: bool;
+        //  Rotated? (not yet implemented)
+        public rotated: bool = false;
 
-    //  The coordinates of the trimmed sprite inside the original sprite
-    public sourceSizeW: number;
-    public sourceSizeH: number;
-    public spriteSourceSizeX: number;
-    public spriteSourceSizeY: number;
-    public spriteSourceSizeW: number;
-    public spriteSourceSizeH: number;
+        //  Either cw or ccw, rotation is always 90 degrees
+        public rotationDirection: string = 'cw';
 
-    public setRotation(rotated: bool, rotationDirection: string) {
-        //  Not yet supported
-    }
+        //  Was it trimmed when packed?
+        public trimmed: bool;
 
-    public setTrim(trimmed: bool, actualWidth, actualHeight, destX, destY, destWidth, destHeight, ) {
+        //  The coordinates of the trimmed sprite inside the original sprite
+        public sourceSizeW: number;
+        public sourceSizeH: number;
+        public spriteSourceSizeX: number;
+        public spriteSourceSizeY: number;
+        public spriteSourceSizeW: number;
+        public spriteSourceSizeH: number;
 
-        this.trimmed = trimmed;
+        public setRotation(rotated: bool, rotationDirection: string) {
+            //  Not yet supported
+        }
 
-        this.sourceSizeW = actualWidth;
-        this.sourceSizeH = actualHeight;
-        this.spriteSourceSizeX = destX;
-        this.spriteSourceSizeY = destY;
-        this.spriteSourceSizeW = destWidth;
-        this.spriteSourceSizeH = destHeight;
+        public setTrim(trimmed: bool, actualWidth, actualHeight, destX, destY, destWidth, destHeight, ) {
+
+            this.trimmed = trimmed;
+
+            this.sourceSizeW = actualWidth;
+            this.sourceSizeH = actualHeight;
+            this.spriteSourceSizeX = destX;
+            this.spriteSourceSizeY = destY;
+            this.spriteSourceSizeW = destWidth;
+            this.spriteSourceSizeH = destHeight;
+
+        }
 
     }
 

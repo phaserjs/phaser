@@ -1,13 +1,12 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
     //  Let's test having 2 totally separate games embedded on the same page
-    var myGame = new Game(this, 'game', 400, 400, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 400, 400, init, create, update);
     
     //  They can share the same parent div, they'll just butt-up next to each other
-    var myGame2 = new Game(this, 'game', 400, 400, init2, create2, update2);
+    var myGame2 = new Phaser.Game(this, 'game', 400, 400, init2, create2, update2);
 
     function init() {
 
@@ -32,20 +31,20 @@
 
     function update() {
 
-        if (myGame.input.keyboard.isDown(Keyboard.LEFT))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             myGame.camera.scroll.x -= 4;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.RIGHT))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             myGame.camera.scroll.x += 4;
         }
 
-        if (myGame.input.keyboard.isDown(Keyboard.UP))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
             myGame.camera.scroll.y += 4;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.DOWN))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
             myGame.camera.scroll.y -= 4;
         }
@@ -86,18 +85,18 @@
 		car.angularVelocity = 0;
 		car.angularAcceleration = 0;
 
-        if (myGame2.input.keyboard.isDown(Keyboard.LEFT))
+        if (myGame2.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             car.angularVelocity = -200;
         }
-        else if (myGame2.input.keyboard.isDown(Keyboard.RIGHT))
+        else if (myGame2.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             car.angularVelocity = 200;
         }
 
-        if (myGame2.input.keyboard.isDown(Keyboard.UP))
+        if (myGame2.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            car.velocity.copyFrom(myGame2.math.velocityFromAngle(car.angle, 300));
+            car.velocity.copyFrom(myGame.motion.velocityFromAngle(car.angle, 300));
         }
 
     }

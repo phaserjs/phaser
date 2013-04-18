@@ -1,7 +1,6 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 (function () {
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
         myGame.world.setSize(1920, 1200);
         myGame.camera.setBounds(0, 0, 1920, 1200);
@@ -17,14 +16,14 @@
     }
     function update() {
         myGame.camera.renderDebugInfo(32, 32);
-        if(myGame.input.keyboard.isDown(Keyboard.LEFT)) {
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             myGame.camera.scroll.x -= 4;
-        } else if(myGame.input.keyboard.isDown(Keyboard.RIGHT)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             myGame.camera.scroll.x += 4;
         }
-        if(myGame.input.keyboard.isDown(Keyboard.UP)) {
+        if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
             myGame.camera.scroll.y -= 4;
-        } else if(myGame.input.keyboard.isDown(Keyboard.DOWN)) {
+        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
             myGame.camera.scroll.y += 4;
         }
     }

@@ -1,9 +1,8 @@
-/// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
+/// <reference path="../../Phaser/Phaser.ts" />
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     function init() {
 
@@ -19,8 +18,8 @@
 
     }
 
-    var atari: Sprite;
-    var balls: Group;
+    var atari: Phaser.Sprite;
+    var balls: Phaser.Group;
 
     function create() {
 
@@ -31,7 +30,7 @@
 
         for (var i = 0; i < 100; i++)
         {
-            var tempBall: Sprite = new Sprite(myGame, Math.random() * myGame.stage.width, -32, 'ball' + Math.round(Math.random() * 5));
+            var tempBall: Phaser.Sprite = new Phaser.Sprite(myGame, Math.random() * myGame.stage.width, -32, 'ball' + Math.round(Math.random() * 5));
             tempBall.velocity.y = 100 + Math.random() * 150;
             tempBall.elasticity = 0.9;
             balls.add(tempBall);
@@ -43,11 +42,11 @@
 
         atari.velocity.x = 0;
 
-        if (myGame.input.keyboard.isDown(Keyboard.LEFT))
+        if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
             atari.velocity.x = -400;
         }
-        else if (myGame.input.keyboard.isDown(Keyboard.RIGHT))
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
             atari.velocity.x = 400;
         }
@@ -58,7 +57,7 @@
 
     }
 
-    function checkOffScreen(ball:Sprite) {
+    function checkOffScreen(ball:Phaser.Sprite) {
 
         if (ball.y < -32 || ball.y > myGame.stage.height || ball.x < 0 || ball.x > myGame.stage.width)
         {

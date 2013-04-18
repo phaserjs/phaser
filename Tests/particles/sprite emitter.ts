@@ -1,12 +1,12 @@
 /// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/Sprite.ts" />
-/// <reference path="../../Phaser/Emitter.ts" />
+/// <reference path="../../Phaser/gameobjects/Particle.ts" />
+/// <reference path="../../Phaser/gameobjects/Emitter.ts" />
 
 //  Actually we could achieve the same result as this by using a sprite sheet and basic Particle
 //  but it still shows you how to use it properly from TypeScript, so it was worth making
-class customParticle extends Particle {
+class customParticle extends Phaser.Particle {
 
-    constructor(game:Game) {
+    constructor(game:Phaser.Game) {
 
         super(game);
 
@@ -19,9 +19,9 @@ class customParticle extends Particle {
 
 (function () {
 
-    var myGame = new Game(this, 'game', 800, 600, init, create);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
 
-    var emitter: Emitter;
+    var emitter: Phaser.Emitter;
 
     function init() {
 
