@@ -1,14 +1,9 @@
 /// <reference path="Game.ts" />
 /**
-* This is a useful "generic" object.
-* Both <code>GameObject</code> and <code>Group</code> extend this class,
-* as do the plugins.  Has no size, position or graphical data.
+* Phaser - Basic
 *
-* @author	Adam Atomic
-* @author	Richard Davey
-*/
-/**
-*   Phaser
+* A useful "generic" object on which all GameObjects and Groups are based.
+* It has no size, position or graphical data.
 */
 var Phaser;
 (function (Phaser) {
@@ -85,21 +80,13 @@ var Phaser;
     Phaser.Basic = Basic;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Signal.ts" />
-/*
-*	SignalBinding
-*
-*	@desc		An object that represents a binding between a Signal and a listener function.
-*              Released under the MIT license
-*				http://millermedeiros.github.com/js-signals/
-*
-*	@version	1. - 7th March 2013
-*
-*	@author 	Richard Davey, TypeScript conversion
-*	@author		Miller Medeiros, JS Signals
-*
-*/
 /**
-*   Phaser
+* Phaser - SignalBinding
+*
+* An object that represents a binding between a Signal and a listener function.
+* Based on JS Signals by Miller Medeiros. Converted by TypeScript by Richard Davey.
+* Released under the MIT license
+* http://millermedeiros.github.com/js-signals/
 */
 var Phaser;
 (function (Phaser) {
@@ -206,28 +193,13 @@ var Phaser;
     Phaser.SignalBinding = SignalBinding;    
 })(Phaser || (Phaser = {}));
 /// <reference path="SignalBinding.ts" />
-/*
-*	Signal
-*
-*	@desc		A TypeScript conversion of JS Signals by Miller Medeiros
-*              Released under the MIT license
-*				http://millermedeiros.github.com/js-signals/
-*
-*	@version	1. - 7th March 2013
-*
-*	@author 	Richard Davey, TypeScript conversion
-*	@author		Miller Medeiros, JS Signals
-*
-*/
 /**
-* Custom event broadcaster
-* <br />- inspired by Robert Penner's AS3 Signals.
-* @name Signal
-* @author Miller Medeiros
-* @constructor
-*/
-/**
-*   Phaser
+* Phaser - Signal
+*
+* A Signal is used for object communication via a custom broadcaster instead of Events.
+* Based on JS Signals by Miller Medeiros. Converted by TypeScript by Richard Davey.
+* Released under the MIT license
+* http://millermedeiros.github.com/js-signals/
 */
 var Phaser;
 (function (Phaser) {
@@ -478,7 +450,10 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path="../Basic.ts" />
 /// <reference path="../Signal.ts" />
 /**
-*   Phaser
+* Phaser - GameObject
+*
+* This is the base GameObject on which all other game objects are derived. It contains all the logic required for position,
+* motion, size, collision and input.
 */
 var Phaser;
 (function (Phaser) {
@@ -875,7 +850,10 @@ var Phaser;
 /// <reference path="../AnimationManager.ts" />
 /// <reference path="GameObject.ts" />
 /**
-*   Phaser
+* Phaser - Sprite
+*
+* The Sprite GameObject is an extension of the core GameObject that includes support for animation and dynamic textures.
+* It's probably the most used GameObject of all.
 */
 var Phaser;
 (function (Phaser) {
@@ -1078,15 +1056,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*	Animation
+* Phaser - Animation
 *
-*	@desc 		Loads Sprite Sheets and Texture Atlas formats into a unified FrameData object
-*
-*	@version 	1.0 - 22nd March 2013
-*	@author 	Richard Davey
-*/
-/**
-*   Phaser
+* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
 */
 var Phaser;
 (function (Phaser) {
@@ -1181,7 +1153,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - AnimationLoader
+*
+* Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
 */
 var Phaser;
 (function (Phaser) {
@@ -1237,7 +1211,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - Frame
+*
+* A Frame is a single frame of an animation and is part of a FrameData collection.
 */
 var Phaser;
 (function (Phaser) {
@@ -1275,7 +1251,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - FrameData
+*
+* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
 */
 var Phaser;
 (function (Phaser) {
@@ -1361,6 +1339,12 @@ var Phaser;
 /// <reference path="system/animation/AnimationLoader.ts" />
 /// <reference path="system/animation/Frame.ts" />
 /// <reference path="system/animation/FrameData.ts" />
+/**
+* Phaser - AnimationManager
+*
+* Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
+* sprite specific animations.
+*/
 var Phaser;
 (function (Phaser) {
     var AnimationManager = (function () {
@@ -1481,7 +1465,10 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
-*   Phaser
+* Phaser - Cache
+*
+* A game only has one instance of a Cache and it is used to store all externally loaded assets such
+* as images, sounds and data files as a result of Loader calls. Cache items use string based keys for look-up.
 */
 var Phaser;
 (function (Phaser) {
@@ -1606,7 +1593,11 @@ var Phaser;
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="../Game.ts" />
 /**
-*   Phaser
+* Phaser - Camera
+*
+* A Camera is your view into the game world. It has a position, size, scale and rotation and renders only those objects
+* within its field of view. The game automatically creates a single Stage sized camera on boot, but it can be changed and
+* additional cameras created via the CameraManager.
 */
 var Phaser;
 (function (Phaser) {
@@ -2124,10 +2115,14 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /// <reference path="system/Camera.ts" />
-//  TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
-//  TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 /**
-*   Phaser
+* Phaser - CameraManager
+*
+* Your game only has one CameraManager instance and it's responsible for looking after, creating and destroying
+* all of the cameras in the world.
+*
+* TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
+* TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 */
 var Phaser;
 (function (Phaser) {
@@ -2176,16 +2171,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Point
+* Phaser - Point
 *
-*	@desc 		The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
-*
-*	@version 	1.2 - 27th February 2013
-*	@author 	Richard Davey
-*  @todo       polar, interpolate
-*/
-/**
-*   Phaser
+* The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
 */
 var Phaser;
 (function (Phaser) {
@@ -2440,15 +2428,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Rectangle
+* Phaser - Rectangle
 *
-*	@desc 		A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
-*
-*	@version 	1.2 - 15th October 2012
-*	@author 	Richard Davey
-*/
-/**
-*   Phaser
+* A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
 */
 var Phaser;
 (function (Phaser) {
@@ -2929,12 +2911,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Phaser - Geom - Circle
+* Phaser - Circle
 *
-*	@desc 		A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
-*
-*	@version 	1.1 - 11th October 2012
-*	@author 	Richard Davey
+* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
 */
 var Phaser;
 (function (Phaser) {
@@ -3343,13 +3322,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Phaser - Geom - Line
+* Phaser - Line
 *
-*	@desc 		A Line object is an infinte line through space. The two sets of x/y coordinates define the Line Segment.
-*
-*	@version 	1.0 - 11th October 2012
-*	@author 	Ross Kettle
-*	@author 	Richard Davey
+* A Line object is an infinte line through space. The two sets of x/y coordinates define the Line Segment.
 */
 var Phaser;
 (function (Phaser) {
@@ -3617,12 +3592,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Phaser - Geom - IntersectResult
+* Phaser - IntersectResult
 *
-*	@desc 		A light-weight result object to hold the results of an intersection
-*
-*	@version 	1.0 - 15th October 2012
-*	@author 	Richard Davey
+* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
 */
 var Phaser;
 (function (Phaser) {
@@ -3665,12 +3637,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* A miniature linked list class.
-* Useful for optimizing time-critical or highly repetitive tasks!
-* See <code>QuadTree</code> for how to use it, IF YOU DARE.
-*/
-/**
-*   Phaser
+* Phaser - LinkedList
+*
+* A miniature linked list class. Useful for optimizing time-critical or highly repetitive tasks!
 */
 var Phaser;
 (function (Phaser) {
@@ -3699,14 +3668,11 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="LinkedList.ts" />
 /**
-* A fairly generic quad tree structure for rapid overlap checks.
-* QuadTree is also configured for single or dual list operation.
-* You can add items either to its A list or its B list.
-* When you do an overlap check, you can compare the A list to itself,
+* Phaser - QuadTree
+*
+* A fairly generic quad tree structure for rapid overlap checks. QuadTree is also configured for single or dual list operation.
+* You can add items either to its A list or its B list. When you do an overlap check, you can compare the A list to itself,
 * or the A list against the B list.  Handy for different things!
-*/
-/**
-*   Phaser
 */
 var Phaser;
 (function (Phaser) {
@@ -4108,7 +4074,9 @@ var Phaser;
 /// <reference path="geom/IntersectResult.ts" />
 /// <reference path="system/QuadTree.ts" />
 /**
-*   Phaser - Collision
+* Phaser - Collision
+*
+* A set of extremely useful collision and geometry intersection functions.
 */
 var Phaser;
 (function (Phaser) {
@@ -4772,7 +4740,12 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
-*   Phaser
+* Phaser - DynamicTexture
+*
+* A DynamicTexture can be thought of as a mini canvas into which you can draw anything.
+* Game Objects can be assigned a DynamicTexture, so when they render in the world they do so
+* based on the contents of the texture at the time. This allows you to create powerful effects
+* once and have them replicated across as many game objects as you like.
 */
 var Phaser;
 (function (Phaser) {
@@ -4926,13 +4899,10 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
-*  Phaser - GameMath
+* Phaser - GameMath
 *
-*  @desc       Adds a set of extra Math functions and extends a few commonly used ones.
-*              Includes methods written by Dylan Engelman and Adam Saltsman.
-*
-*	@version 	1.0 - 17th March 2013
-*	@author 	Richard Davey
+* Adds a set of extra Math functions used through-out Phaser.
+* Includes methods written by Dylan Engelman and Adam Saltsman.
 */
 var Phaser;
 (function (Phaser) {
@@ -5780,15 +5750,10 @@ var Phaser;
 /// <reference path="Basic.ts" />
 /// <reference path="Game.ts" />
 /**
-* This is an organizational class that can update and render a bunch of <code>Basic</code>s.
-* NOTE: Although <code>Group</code> extends <code>Basic</code>, it will not automatically
-* add itself to the global collisions quad tree, it will only add its members.
+* Phaser - Group
 *
-* @author	Adam Atomic
-* @author	Richard Davey
-*/
-/**
-*   Phaser
+* This class is used for organising, updating and sorting game objects.
+*
 */
 var Phaser;
 (function (Phaser) {
@@ -6290,7 +6255,10 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
-*   Phaser
+* Phaser - Loader
+*
+* The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+* It uses a combination of Image() loading and xhr and provides for progress and completion callbacks.
 */
 var Phaser;
 (function (Phaser) {
@@ -6590,6 +6558,8 @@ var Phaser;
 /// <reference path="gameobjects/GameObject.ts" />
 /**
 * Phaser - Motion
+*
+* The Motion class contains lots of useful functions for moving game objects around in world space.
 */
 var Phaser;
 (function (Phaser) {
@@ -6896,8 +6866,11 @@ var Phaser;
     Phaser.Motion = Motion;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
+/// <reference path="system/Sound.ts" />
 /**
-*   Phaser
+* Phaser - SoundManager
+*
+* This is an embroyonic web audio sound management class. There is a lot of work still to do here.
 */
 var Phaser;
 (function (Phaser) {
@@ -6978,108 +6951,32 @@ var Phaser;
     })();
     Phaser.SoundManager = SoundManager;    
 })(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    var Sound = (function () {
-        function Sound(context, gainNode, data, volume, loop) {
-            if (typeof volume === "undefined") { volume = 1; }
-            if (typeof loop === "undefined") { loop = false; }
-            this.loop = false;
-            this.isPlaying = false;
-            this.isDecoding = false;
-            this._context = context;
-            this._gainNode = gainNode;
-            this._buffer = data;
-            this._volume = volume;
-            this.loop = loop;
-            //  Local volume control
-            if(this._context !== null) {
-                this._localGainNode = this._context.createGainNode();
-                this._localGainNode.connect(this._gainNode);
-                this._localGainNode.gain.value = this._volume;
-            }
-            if(this._buffer === null) {
-                this.isDecoding = true;
-            } else {
-                this.play();
-            }
-        }
-        Sound.prototype.setDecodedBuffer = function (data) {
-            this._buffer = data;
-            this.isDecoding = false;
-            this.play();
-        };
-        Sound.prototype.play = function () {
-            if(this._buffer === null || this.isDecoding === true) {
-                return;
-            }
-            this._sound = this._context.createBufferSource();
-            this._sound.buffer = this._buffer;
-            this._sound.connect(this._localGainNode);
-            if(this.loop) {
-                this._sound.loop = true;
-            }
-            this._sound.noteOn(0)// the zero is vitally important, crashes iOS6 without it
-            ;
-            this.duration = this._sound.buffer.duration;
-            this.isPlaying = true;
-        };
-        Sound.prototype.stop = function () {
-            if(this.isPlaying === true) {
-                this.isPlaying = false;
-                this._sound.noteOff(0);
-            }
-        };
-        Sound.prototype.mute = function () {
-            this._localGainNode.gain.value = 0;
-        };
-        Sound.prototype.unmute = function () {
-            this._localGainNode.gain.value = this._volume;
-        };
-        Object.defineProperty(Sound.prototype, "volume", {
-            get: function () {
-                return this._volume;
-            },
-            set: function (value) {
-                this._volume = value;
-                this._localGainNode.gain.value = this._volume;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Sound;
-    })();
-    Phaser.Sound = Sound;    
-})(Phaser || (Phaser = {}));
 /**
-*   Phaser
+* Phaser
 *
-*   v0.9 - April 18th 2013
+*  v0.9 - April 18th 2013
 *
-*   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
+* A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
-*   Richard Davey (@photonstorm)
-*   Adam Saltsman (@ADAMATOMIC) (original Flixel code)
+* Richard Davey (@photonstorm)
 *
-*   "If you want your children to be intelligent,  read them fairy tales."
-*   "If you want them to be more intelligent, read them more fairy tales."
-*                                                       -- Albert Einstein
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for the original Flixel AS3 code on which Phaser is based.
+*
+* "If you want your children to be intelligent,  read them fairy tales."
+* "If you want them to be more intelligent, read them more fairy tales."
+*                                                     -- Albert Einstein
 */
 var Phaser;
 (function (Phaser) {
     Phaser.VERSION = 'Phaser version 0.9';
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/*
-* Based on code from Viewporter v2.0
-* http://github.com/zynga/viewporter
-*
-* Copyright 2011, Zynga Inc.
-* Licensed under the MIT License.
-* https://raw.github.com/zynga/viewporter/master/MIT-LICENSE.txt
-*/
 /**
-*   Phaser
+* Phaser - StageScaleMode
+*
+* This class controls the scaling of your game. On mobile devices it will also remove the URL bar and allow
+* you to maintain proportion and aspect ratio.
+* It is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
 */
 var Phaser;
 (function (Phaser) {
@@ -7185,7 +7082,10 @@ var Phaser;
 /// <reference path="Game.ts" />
 /// <reference path="system/StageScaleMode.ts" />
 /**
-*   Phaser
+* Phaser - Stage
+*
+* The Stage is the canvas on which everything is displayed. This class handles display within the web browser, focus handling,
+* resizing, scaling and pause/boot screens.
 */
 var Phaser;
 (function (Phaser) {
@@ -7374,7 +7274,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
-*   Phaser
+* Phaser - Time
+*
+* This is the game clock and it manages elapsed time and calculation of delta values, used for game object motion.
 */
 var Phaser;
 (function (Phaser) {
@@ -7480,29 +7382,550 @@ var Phaser;
     })();
     Phaser.Time = Time;    
 })(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Back
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Back = (function () {
+            function Back() { }
+            Back.In = function In(k) {
+                var s = 1.70158;
+                return k * k * ((s + 1) * k - s);
+            };
+            Back.Out = function Out(k) {
+                var s = 1.70158;
+                return --k * k * ((s + 1) * k + s) + 1;
+            };
+            Back.InOut = function InOut(k) {
+                var s = 1.70158 * 1.525;
+                if((k *= 2) < 1) {
+                    return 0.5 * (k * k * ((s + 1) * k - s));
+                }
+                return 0.5 * ((k -= 2) * k * ((s + 1) * k + s) + 2);
+            };
+            return Back;
+        })();
+        Easing.Back = Back;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Bounce
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Bounce = (function () {
+            function Bounce() { }
+            Bounce.In = function In(k) {
+                return 1 - Phaser.Easing.Bounce.Out(1 - k);
+            };
+            Bounce.Out = function Out(k) {
+                if(k < (1 / 2.75)) {
+                    return 7.5625 * k * k;
+                } else if(k < (2 / 2.75)) {
+                    return 7.5625 * (k -= (1.5 / 2.75)) * k + 0.75;
+                } else if(k < (2.5 / 2.75)) {
+                    return 7.5625 * (k -= (2.25 / 2.75)) * k + 0.9375;
+                } else {
+                    return 7.5625 * (k -= (2.625 / 2.75)) * k + 0.984375;
+                }
+            };
+            Bounce.InOut = function InOut(k) {
+                if(k < 0.5) {
+                    return Phaser.Easing.Bounce.In(k * 2) * 0.5;
+                }
+                return Phaser.Easing.Bounce.Out(k * 2 - 1) * 0.5 + 0.5;
+            };
+            return Bounce;
+        })();
+        Easing.Bounce = Bounce;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Circular
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Circular = (function () {
+            function Circular() { }
+            Circular.In = function In(k) {
+                return 1 - Math.sqrt(1 - k * k);
+            };
+            Circular.Out = function Out(k) {
+                return Math.sqrt(1 - (--k * k));
+            };
+            Circular.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return -0.5 * (Math.sqrt(1 - k * k) - 1);
+                }
+                return 0.5 * (Math.sqrt(1 - (k -= 2) * k) + 1);
+            };
+            return Circular;
+        })();
+        Easing.Circular = Circular;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Cubic
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Cubic = (function () {
+            function Cubic() { }
+            Cubic.In = function In(k) {
+                return k * k * k;
+            };
+            Cubic.Out = function Out(k) {
+                return --k * k * k + 1;
+            };
+            Cubic.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return 0.5 * k * k * k;
+                }
+                return 0.5 * ((k -= 2) * k * k + 2);
+            };
+            return Cubic;
+        })();
+        Easing.Cubic = Cubic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Elastic
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Elastic = (function () {
+            function Elastic() { }
+            Elastic.In = function In(k) {
+                var s, a = 0.1, p = 0.4;
+                if(k === 0) {
+                    return 0;
+                }
+                if(k === 1) {
+                    return 1;
+                }
+                if(!a || a < 1) {
+                    a = 1;
+                    s = p / 4;
+                } else {
+                    s = p * Math.asin(1 / a) / (2 * Math.PI);
+                }
+                return -(a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
+            };
+            Elastic.Out = function Out(k) {
+                var s, a = 0.1, p = 0.4;
+                if(k === 0) {
+                    return 0;
+                }
+                if(k === 1) {
+                    return 1;
+                }
+                if(!a || a < 1) {
+                    a = 1;
+                    s = p / 4;
+                } else {
+                    s = p * Math.asin(1 / a) / (2 * Math.PI);
+                }
+                return (a * Math.pow(2, -10 * k) * Math.sin((k - s) * (2 * Math.PI) / p) + 1);
+            };
+            Elastic.InOut = function InOut(k) {
+                var s, a = 0.1, p = 0.4;
+                if(k === 0) {
+                    return 0;
+                }
+                if(k === 1) {
+                    return 1;
+                }
+                if(!a || a < 1) {
+                    a = 1;
+                    s = p / 4;
+                } else {
+                    s = p * Math.asin(1 / a) / (2 * Math.PI);
+                }
+                if((k *= 2) < 1) {
+                    return -0.5 * (a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
+                }
+                return a * Math.pow(2, -10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p) * 0.5 + 1;
+            };
+            return Elastic;
+        })();
+        Easing.Elastic = Elastic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Exponential
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Exponential = (function () {
+            function Exponential() { }
+            Exponential.In = function In(k) {
+                return k === 0 ? 0 : Math.pow(1024, k - 1);
+            };
+            Exponential.Out = function Out(k) {
+                return k === 1 ? 1 : 1 - Math.pow(2, -10 * k);
+            };
+            Exponential.InOut = function InOut(k) {
+                if(k === 0) {
+                    return 0;
+                }
+                if(k === 1) {
+                    return 1;
+                }
+                if((k *= 2) < 1) {
+                    return 0.5 * Math.pow(1024, k - 1);
+                }
+                return 0.5 * (-Math.pow(2, -10 * (k - 1)) + 2);
+            };
+            return Exponential;
+        })();
+        Easing.Exponential = Exponential;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Linear
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Linear = (function () {
+            function Linear() { }
+            Linear.None = function None(k) {
+                return k;
+            };
+            return Linear;
+        })();
+        Easing.Linear = Linear;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Quadratic
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Quadratic = (function () {
+            function Quadratic() { }
+            Quadratic.In = function In(k) {
+                return k * k;
+            };
+            Quadratic.Out = function Out(k) {
+                return k * (2 - k);
+            };
+            Quadratic.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return 0.5 * k * k;
+                }
+                return -0.5 * (--k * (k - 2) - 1);
+            };
+            return Quadratic;
+        })();
+        Easing.Quadratic = Quadratic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Quartic
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Quartic = (function () {
+            function Quartic() { }
+            Quartic.In = function In(k) {
+                return k * k * k * k;
+            };
+            Quartic.Out = function Out(k) {
+                return 1 - (--k * k * k * k);
+            };
+            Quartic.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return 0.5 * k * k * k * k;
+                }
+                return -0.5 * ((k -= 2) * k * k * k - 2);
+            };
+            return Quartic;
+        })();
+        Easing.Quartic = Quartic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Quintic
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Quintic = (function () {
+            function Quintic() { }
+            Quintic.In = function In(k) {
+                return k * k * k * k * k;
+            };
+            Quintic.Out = function Out(k) {
+                return --k * k * k * k * k + 1;
+            };
+            Quintic.InOut = function InOut(k) {
+                if((k *= 2) < 1) {
+                    return 0.5 * k * k * k * k * k;
+                }
+                return 0.5 * ((k -= 2) * k * k * k * k + 2);
+            };
+            return Quintic;
+        })();
+        Easing.Quintic = Quintic;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Easing - Sinusoidal
+    *
+    * For use with Phaser.Tween
+    */
+    (function (Easing) {
+        var Sinusoidal = (function () {
+            function Sinusoidal() { }
+            Sinusoidal.In = function In(k) {
+                return 1 - Math.cos(k * Math.PI / 2);
+            };
+            Sinusoidal.Out = function Out(k) {
+                return Math.sin(k * Math.PI / 2);
+            };
+            Sinusoidal.InOut = function InOut(k) {
+                return 0.5 * (1 - Math.cos(Math.PI * k));
+            };
+            return Sinusoidal;
+        })();
+        Easing.Sinusoidal = Sinusoidal;        
+    })(Phaser.Easing || (Phaser.Easing = {}));
+    var Easing = Phaser.Easing;
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="easing/Back.ts" />
+/// <reference path="easing/Bounce.ts" />
+/// <reference path="easing/Circular.ts" />
+/// <reference path="easing/Cubic.ts" />
+/// <reference path="easing/Elastic.ts" />
+/// <reference path="easing/Exponential.ts" />
+/// <reference path="easing/Linear.ts" />
+/// <reference path="easing/Quadratic.ts" />
+/// <reference path="easing/Quartic.ts" />
+/// <reference path="easing/Quintic.ts" />
+/// <reference path="easing/Sinusoidal.ts" />
+/**
+* Phaser - Tween
+*
+* Based heavily on tween.js by sole (https://github.com/sole/tween.js) converted to TypeScript and integrated into Phaser
+*/
+var Phaser;
+(function (Phaser) {
+    var Tween = (function () {
+        function Tween(object, game) {
+            this._object = null;
+            this._pausedTime = 0;
+            this._valuesStart = {
+            };
+            this._valuesEnd = {
+            };
+            this._duration = 1000;
+            this._delayTime = 0;
+            this._startTime = null;
+            this._chainedTweens = [];
+            this._object = object;
+            this._game = game;
+            this._manager = this._game.tweens;
+            this._interpolationFunction = this._game.math.linearInterpolation;
+            this._easingFunction = Phaser.Easing.Linear.None;
+            this.onStart = new Phaser.Signal();
+            this.onUpdate = new Phaser.Signal();
+            this.onComplete = new Phaser.Signal();
+        }
+        Tween.prototype.to = function (properties, duration, ease, autoStart) {
+            if (typeof duration === "undefined") { duration = 1000; }
+            if (typeof ease === "undefined") { ease = null; }
+            if (typeof autoStart === "undefined") { autoStart = false; }
+            this._duration = duration;
+            //  If properties isn't an object this will fail, sanity check it here somehow?
+            this._valuesEnd = properties;
+            if(ease !== null) {
+                this._easingFunction = ease;
+            }
+            if(autoStart === true) {
+                return this.start();
+            } else {
+                return this;
+            }
+        };
+        Tween.prototype.start = function () {
+            if(this._game === null || this._object === null) {
+                return;
+            }
+            this._manager.add(this);
+            this.onStart.dispatch(this._object);
+            this._startTime = this._game.time.now + this._delayTime;
+            for(var property in this._valuesEnd) {
+                // This prevents the interpolation of null values or of non-existing properties
+                if(this._object[property] === null || !(property in this._object)) {
+                    throw Error('Phaser.Tween interpolation of null value of non-existing property');
+                    continue;
+                }
+                // check if an Array was provided as property value
+                if(this._valuesEnd[property] instanceof Array) {
+                    if(this._valuesEnd[property].length === 0) {
+                        continue;
+                    }
+                    // create a local copy of the Array with the start value at the front
+                    this._valuesEnd[property] = [
+                        this._object[property]
+                    ].concat(this._valuesEnd[property]);
+                }
+                this._valuesStart[property] = this._object[property];
+            }
+            return this;
+        };
+        Tween.prototype.stop = function () {
+            if(this._manager !== null) {
+                this._manager.remove(this);
+            }
+            return this;
+        };
+        Object.defineProperty(Tween.prototype, "parent", {
+            set: function (value) {
+                this._game = value;
+                this._manager = this._game.tweens;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Tween.prototype, "delay", {
+            get: function () {
+                return this._delayTime;
+            },
+            set: function (amount) {
+                this._delayTime = amount;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Tween.prototype, "easing", {
+            get: function () {
+                return this._easingFunction;
+            },
+            set: function (easing) {
+                this._easingFunction = easing;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Tween.prototype, "interpolation", {
+            get: function () {
+                return this._interpolationFunction;
+            },
+            set: function (interpolation) {
+                this._interpolationFunction = interpolation;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Tween.prototype.chain = function (tween) {
+            this._chainedTweens.push(tween);
+            return this;
+        };
+        Tween.prototype.update = function (time) {
+            if(this._game.paused == true) {
+                if(this._pausedTime == 0) {
+                    this._pausedTime = time;
+                }
+            } else {
+                //  Ok we aren't paused, but was there some time gained?
+                if(this._pausedTime > 0) {
+                    this._startTime += (time - this._pausedTime);
+                    this._pausedTime = 0;
+                }
+            }
+            if(time < this._startTime) {
+                return true;
+            }
+            var elapsed = (time - this._startTime) / this._duration;
+            elapsed = elapsed > 1 ? 1 : elapsed;
+            var value = this._easingFunction(elapsed);
+            for(var property in this._valuesStart) {
+                //  Add checks for object, array, numeric up front
+                if(this._valuesEnd[property] instanceof Array) {
+                    this._object[property] = this._interpolationFunction(this._valuesEnd[property], value);
+                } else {
+                    this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * value;
+                }
+            }
+            this.onUpdate.dispatch(this._object, value);
+            if(elapsed == 1) {
+                this.onComplete.dispatch(this._object);
+                for(var i = 0; i < this._chainedTweens.length; i++) {
+                    this._chainedTweens[i].start();
+                }
+                return false;
+            }
+            return true;
+        };
+        return Tween;
+    })();
+    Phaser.Tween = Tween;    
+})(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /// <reference path="system/Tween.ts" />
 /**
-*	Phaser - Tween Manager
+* Phaser - TweenManager
 *
-*	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js) converted to TypeScript, patched and integrated into Phaser
-*
-*	@version 	1.0 - 11th January 2013
-*
-*	@author 	Richard Davey, TypeScript conversion and Phaser integration
-*  @author     sole / http://soledadpenades.com
-*  @author     mrdoob / http://mrdoob.com
-*  @author     Robert Eisele / http://www.xarg.org
-*  @author     Philippe / http://philippe.elsass.me
-*  @author     Robert Penner / http://www.robertpenner.com/easing_terms_of_use.html
-*  @author     Paul Lewis / http://www.aerotwist.com/
-*  @author     lechecacharro
-*  @author     Josh Faul / http://jocafa.com/
-*  @author     egraether / http://egraether.com/
-*
-*	@todo
-*              1) Allow for tweening direct numeric values, not just object properties
-*              2) YoYo support
+* The Game has a single instance of the TweenManager through which all Tween objects are created and updated.
+* Tweens are hooked into the game clock and pause system, adjusting based on the game state.
+* TweenManager is based heavily on tween.js by sole (http://soledadpenades.com).
+* I converted it to TypeScript, swapped the callbacks for signals and patched a few issues with regard
+* to properties and completion errors. Please see https://github.com/sole/tween.js for a full list of contributors.
 */
 var Phaser;
 (function (Phaser) {
@@ -7553,7 +7976,11 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
-*   Phaser
+* Phaser - World
+*
+* A game has only one world. The world is an abstract place in which all game objects live. It is not bound
+* by stage limits and can be any size or dimension. You look into the world via cameras and all game objects
+* live within the world at world-based coordinates. By default a world is created the same size as your Stage.
 */
 var Phaser;
 (function (Phaser) {
@@ -7690,18 +8117,10 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*  Device
+* Phaser - Device
 *
-*  @desc       Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
-*              https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
-*
-*	@version 	1.0 - March 5th 2013
-*	@author 	Richard Davey
-*	@author		mrdoob
-*	@author		Modernizr team
-*/
-/**
-*   Phaser
+* Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
+* https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
 */
 var Phaser;
 (function (Phaser) {
@@ -8130,18 +8549,11 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*  Repeatable Random Data Generator
+* Phaser - RandomDataGenerator
 *
-*  @desc       Manages the creation of unique internal game IDs
-*              Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
-*              Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
-*
-*	@version 	1.1 - 1st March 2013
-*	@author 	Josh Faul
-*	@author 	Richard Davey, TypeScript conversion and additional methods
-*/
-/**
-*   Phaser
+* An extremely useful repeatable random data generator. Access it via Game.rnd
+* Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
+* Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
 */
 var Phaser;
 (function (Phaser) {
@@ -8364,15 +8776,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*  RequestAnimationFrame
+* Phaser - RequestAnimationFrame
 *
-*  @desc       Abstracts away the use of RAF or setTimeOut for the core game update loop. The callback can be re-mapped on the fly.
-*
-*	@version 	0.3 - 15th October 2012
-*	@author 	Richard Davey
-*/
-/**
-*   Phaser
+* Abstracts away the use of RAF or setTimeOut for the core game update loop. The callback can be re-mapped on the fly.
 */
 var Phaser;
 (function (Phaser) {
@@ -8523,7 +8929,9 @@ var Phaser;
 /// <reference path="../../Game.ts" />
 /// <reference path="../../Signal.ts" />
 /**
-*   Phaser
+* Phaser - Input
+*
+* A game specific Input manager that looks after the mouse, keyboard and touch objects. This is updated by the core game loop.
 */
 var Phaser;
 (function (Phaser) {
@@ -8575,7 +8983,11 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - Keyboard
+*
+* The Keyboard class handles keyboard interactions with the game and the resulting events.
+* The avoid stealing all browser input we don't use event.preventDefault. If you would like to trap a specific key however
+* then use the addKeyCapture() method.
 */
 var Phaser;
 (function (Phaser) {
@@ -8769,7 +9181,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - Mouse
+*
+* The Mouse class handles mouse interactions with the game and the resulting events.
 */
 var Phaser;
 (function (Phaser) {
@@ -8845,17 +9259,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*	Input - Finger
+* Phaser - Finger
 *
-*	@desc 		A Finger object used by the Touch manager
-*
-*	@version 	1.1 - 27th February 2013
-*	@author 	Richard Davey
-*
-*  @todo       Lots
-*/
-/**
-*   Phaser
+* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
 */
 var Phaser;
 (function (Phaser) {
@@ -9085,24 +9491,19 @@ var Phaser;
 /// <reference path="../../Game.ts" />
 /// <reference path="Finger.ts" />
 /**
-*	Input - Touch
+* Phaser - Touch
 *
-*	@desc 		http://www.w3.org/TR/touch-events/
-*              https://developer.mozilla.org/en-US/docs/DOM/TouchList
-*              http://www.html5rocks.com/en/mobile/touchandmouse/
-*              Android 2.x only supports 1 touch event at once, no multi-touch
-*
-*	@version 	1.1 - 27th February 2013
-*	@author 	Richard Davey
+* The Touch class handles touch interactions with the game and the resulting Finger objects.
+* http://www.w3.org/TR/touch-events/
+* https://developer.mozilla.org/en-US/docs/DOM/TouchList
+* http://www.html5rocks.com/en/mobile/touchandmouse/
+* Note: Android 2.x only supports 1 touch event at once, no multi-touch
 *
 *  @todo       Try and resolve update lag in Chrome/Android
 *              Gestures (pinch, zoom, swipe)
 *              GameObject Touch
 *              Touch point within GameObject
 *              Input Zones (mouse and touch) - lock entities within them + axis aligned drags
-*/
-/**
-*   Phaser
 */
 var Phaser;
 (function (Phaser) {
@@ -9391,20 +9792,11 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="../Group.ts" />
 /**
-* <code>Emitter</code> is a lightweight particle emitter.
-* It can be used for one-time explosions or for
-* continuous fx like rain and fire.  <code>Emitter</code>
-* is not optimized or anything; all it does is launch
-* <code>Particle</code> objects out at set intervals
-* by setting their positions and velocities accordingly.
-* It is easy to use and relatively efficient,
-* relying on <code>Group</code>'s RECYCLE POWERS.
+* Phaser - Emitter
 *
-* @author	Adam Atomic
-* @author	Richard Davey
-*/
-/**
-*   Phaser
+* Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+* continuous effects like rain and fire. All it really does is launch Particle objects out
+* at set intervals, and fixes their positions and velocities accorindgly.
 */
 var Phaser;
 (function (Phaser) {
@@ -9680,7 +10072,11 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*   Phaser
+* Phaser - GeomSprite
+*
+* A GeomSprite is a special kind of GameObject that contains a base geometry class (Circle, Line, Point, Rectangle).
+* They can be rendered in the game and used for collision just like any other game object. Display of them is controlled
+* via the lineWidth / lineColor / fillColor and renderOutline / renderFill properties.
 */
 var Phaser;
 (function (Phaser) {
@@ -9971,18 +10367,10 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="Sprite.ts" />
 /**
-* This is a simple particle class that extends the default behavior
-* of <code>Sprite</code> to have slightly more specialized behavior
-* common to many game scenarios.  You can override and extend this class
-* just like you would <code>Sprite</code>. While <code>Emitter</code>
-* used to work with just any old sprite, it now requires a
-* <code>Particle</code> based class.
+* Phaser - Particle
 *
-* @author Adam Atomic
-* @author Richard Davey
-*/
-/**
-*   Phaser
+* This is a simple particle class that extends a Sprite to have a slightly more
+* specialised behaviour. It is used exclusively by the Emitter class and can be extended as required.
 */
 var Phaser;
 (function (Phaser) {
@@ -10047,15 +10435,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* A simple helper object for <code>Tilemap</code> that helps expand collision opportunities and control.
-* You can use <code>Tilemap.setTileProperties()</code> to alter the collision properties and
-* callback functions and filters for this object to do things like one-way tiles or whatever.
+* Phaser - Tile
 *
-* @author	Adam Atomic
-* @author	Richard Davey
-*/
-/**
-*   Phaser
+* A simple helper object for <code>Tilemap</code> that helps expand collision opportunities and control.
 */
 var Phaser;
 (function (Phaser) {
@@ -10097,9 +10479,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* A Tilemap Buffer
+* Phaser - TilemapBuffer
 *
-* @author	Richard Davey
+* Responsible for rendering a portion of a tilemap to the given Camera.
 */
 var Phaser;
 (function (Phaser) {
@@ -10220,7 +10602,10 @@ var Phaser;
 /// <reference path="../system/Tile.ts" />
 /// <reference path="../system/TilemapBuffer.ts" />
 /**
-*   Phaser
+* Phaser - Tilemap
+*
+* This GameObject allows for the display of a tilemap within the game world. Tile maps consist of an image, tile data and a size.
+* Internally it creates a TilemapBuffer for each camera in the world.
 */
 var Phaser;
 (function (Phaser) {
@@ -10405,7 +10790,7 @@ var Phaser;
 /// <reference path="Motion.ts" />
 /// <reference path="Signal.ts" />
 /// <reference path="SignalBinding.ts" />
-/// <reference path="Sound.ts" />
+/// <reference path="SoundManager.ts" />
 /// <reference path="Stage.ts" />
 /// <reference path="Time.ts" />
 /// <reference path="TweenManager.ts" />
@@ -10424,10 +10809,10 @@ var Phaser;
 /// <reference path="gameobjects/Sprite.ts" />
 /// <reference path="gameobjects/Tilemap.ts" />
 /**
-*   Phaser
+* Phaser - Game
 *
-*   Richard Davey (@photonstorm)
-*   Adam Saltsman (@ADAMATOMIC) (original Flixel code)
+* This is where the magic happens. The Game object is the heart of your game, providing quick access to common
+* functions and handling the boot process.
 */
 var Phaser;
 (function (Phaser) {
@@ -10696,591 +11081,91 @@ var Phaser;
     })();
     Phaser.Game = Game;    
 })(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Back = (function () {
-            function Back() { }
-            Back.In = function In(k) {
-                var s = 1.70158;
-                return k * k * ((s + 1) * k - s);
-            };
-            Back.Out = function Out(k) {
-                var s = 1.70158;
-                return --k * k * ((s + 1) * k + s) + 1;
-            };
-            Back.InOut = function InOut(k) {
-                var s = 1.70158 * 1.525;
-                if((k *= 2) < 1) {
-                    return 0.5 * (k * k * ((s + 1) * k - s));
-                }
-                return 0.5 * ((k -= 2) * k * ((s + 1) * k + s) + 2);
-            };
-            return Back;
-        })();
-        Easing.Back = Back;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Bounce = (function () {
-            function Bounce() { }
-            Bounce.In = function In(k) {
-                return 1 - Phaser.Easing.Bounce.Out(1 - k);
-            };
-            Bounce.Out = function Out(k) {
-                if(k < (1 / 2.75)) {
-                    return 7.5625 * k * k;
-                } else if(k < (2 / 2.75)) {
-                    return 7.5625 * (k -= (1.5 / 2.75)) * k + 0.75;
-                } else if(k < (2.5 / 2.75)) {
-                    return 7.5625 * (k -= (2.25 / 2.75)) * k + 0.9375;
-                } else {
-                    return 7.5625 * (k -= (2.625 / 2.75)) * k + 0.984375;
-                }
-            };
-            Bounce.InOut = function InOut(k) {
-                if(k < 0.5) {
-                    return Phaser.Easing.Bounce.In(k * 2) * 0.5;
-                }
-                return Phaser.Easing.Bounce.Out(k * 2 - 1) * 0.5 + 0.5;
-            };
-            return Bounce;
-        })();
-        Easing.Bounce = Bounce;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Circular = (function () {
-            function Circular() { }
-            Circular.In = function In(k) {
-                return 1 - Math.sqrt(1 - k * k);
-            };
-            Circular.Out = function Out(k) {
-                return Math.sqrt(1 - (--k * k));
-            };
-            Circular.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return -0.5 * (Math.sqrt(1 - k * k) - 1);
-                }
-                return 0.5 * (Math.sqrt(1 - (k -= 2) * k) + 1);
-            };
-            return Circular;
-        })();
-        Easing.Circular = Circular;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Cubic = (function () {
-            function Cubic() { }
-            Cubic.In = function In(k) {
-                return k * k * k;
-            };
-            Cubic.Out = function Out(k) {
-                return --k * k * k + 1;
-            };
-            Cubic.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return 0.5 * k * k * k;
-                }
-                return 0.5 * ((k -= 2) * k * k + 2);
-            };
-            return Cubic;
-        })();
-        Easing.Cubic = Cubic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Elastic = (function () {
-            function Elastic() { }
-            Elastic.In = function In(k) {
-                var s, a = 0.1, p = 0.4;
-                if(k === 0) {
-                    return 0;
-                }
-                if(k === 1) {
-                    return 1;
-                }
-                if(!a || a < 1) {
-                    a = 1;
-                    s = p / 4;
-                } else {
-                    s = p * Math.asin(1 / a) / (2 * Math.PI);
-                }
-                return -(a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
-            };
-            Elastic.Out = function Out(k) {
-                var s, a = 0.1, p = 0.4;
-                if(k === 0) {
-                    return 0;
-                }
-                if(k === 1) {
-                    return 1;
-                }
-                if(!a || a < 1) {
-                    a = 1;
-                    s = p / 4;
-                } else {
-                    s = p * Math.asin(1 / a) / (2 * Math.PI);
-                }
-                return (a * Math.pow(2, -10 * k) * Math.sin((k - s) * (2 * Math.PI) / p) + 1);
-            };
-            Elastic.InOut = function InOut(k) {
-                var s, a = 0.1, p = 0.4;
-                if(k === 0) {
-                    return 0;
-                }
-                if(k === 1) {
-                    return 1;
-                }
-                if(!a || a < 1) {
-                    a = 1;
-                    s = p / 4;
-                } else {
-                    s = p * Math.asin(1 / a) / (2 * Math.PI);
-                }
-                if((k *= 2) < 1) {
-                    return -0.5 * (a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
-                }
-                return a * Math.pow(2, -10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p) * 0.5 + 1;
-            };
-            return Elastic;
-        })();
-        Easing.Elastic = Elastic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Exponential = (function () {
-            function Exponential() { }
-            Exponential.In = function In(k) {
-                return k === 0 ? 0 : Math.pow(1024, k - 1);
-            };
-            Exponential.Out = function Out(k) {
-                return k === 1 ? 1 : 1 - Math.pow(2, -10 * k);
-            };
-            Exponential.InOut = function InOut(k) {
-                if(k === 0) {
-                    return 0;
-                }
-                if(k === 1) {
-                    return 1;
-                }
-                if((k *= 2) < 1) {
-                    return 0.5 * Math.pow(1024, k - 1);
-                }
-                return 0.5 * (-Math.pow(2, -10 * (k - 1)) + 2);
-            };
-            return Exponential;
-        })();
-        Easing.Exponential = Exponential;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Linear = (function () {
-            function Linear() { }
-            Linear.None = function None(k) {
-                return k;
-            };
-            return Linear;
-        })();
-        Easing.Linear = Linear;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Quadratic = (function () {
-            function Quadratic() { }
-            Quadratic.In = function In(k) {
-                return k * k;
-            };
-            Quadratic.Out = function Out(k) {
-                return k * (2 - k);
-            };
-            Quadratic.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return 0.5 * k * k;
-                }
-                return -0.5 * (--k * (k - 2) - 1);
-            };
-            return Quadratic;
-        })();
-        Easing.Quadratic = Quadratic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Quartic = (function () {
-            function Quartic() { }
-            Quartic.In = function In(k) {
-                return k * k * k * k;
-            };
-            Quartic.Out = function Out(k) {
-                return 1 - (--k * k * k * k);
-            };
-            Quartic.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return 0.5 * k * k * k * k;
-                }
-                return -0.5 * ((k -= 2) * k * k * k - 2);
-            };
-            return Quartic;
-        })();
-        Easing.Quartic = Quartic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Quintic = (function () {
-            function Quintic() { }
-            Quintic.In = function In(k) {
-                return k * k * k * k * k;
-            };
-            Quintic.Out = function Out(k) {
-                return --k * k * k * k * k + 1;
-            };
-            Quintic.InOut = function InOut(k) {
-                if((k *= 2) < 1) {
-                    return 0.5 * k * k * k * k * k;
-                }
-                return 0.5 * ((k -= 2) * k * k * k * k + 2);
-            };
-            return Quintic;
-        })();
-        Easing.Quintic = Quintic;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /**
-    *	Phaser - Easing
-    *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
-    */
-    (function (Easing) {
-        var Sinusoidal = (function () {
-            function Sinusoidal() { }
-            Sinusoidal.In = function In(k) {
-                return 1 - Math.cos(k * Math.PI / 2);
-            };
-            Sinusoidal.Out = function Out(k) {
-                return Math.sin(k * Math.PI / 2);
-            };
-            Sinusoidal.InOut = function InOut(k) {
-                return 0.5 * (1 - Math.cos(Math.PI * k));
-            };
-            return Sinusoidal;
-        })();
-        Easing.Sinusoidal = Sinusoidal;        
-    })(Phaser.Easing || (Phaser.Easing = {}));
-    var Easing = Phaser.Easing;
-})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="easing/Back.ts" />
-/// <reference path="easing/Bounce.ts" />
-/// <reference path="easing/Circular.ts" />
-/// <reference path="easing/Cubic.ts" />
-/// <reference path="easing/Elastic.ts" />
-/// <reference path="easing/Exponential.ts" />
-/// <reference path="easing/Linear.ts" />
-/// <reference path="easing/Quadratic.ts" />
-/// <reference path="easing/Quartic.ts" />
-/// <reference path="easing/Quintic.ts" />
-/// <reference path="easing/Sinusoidal.ts" />
+/// <reference path="../SoundManager.ts" />
 /**
-*	Phaser - Tween
+* Phaser - Sound
 *
-*	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js) converted to TypeScript and integrated into Phaser
-*
-*	@version 	1.0 - 11th January 2013
-*
-*	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+* A Sound file, used by the Game.SoundManager for playback.
 */
 var Phaser;
 (function (Phaser) {
-    var Tween = (function () {
-        function Tween(object, game) {
-            this._object = null;
-            this._pausedTime = 0;
-            this._valuesStart = {
-            };
-            this._valuesEnd = {
-            };
-            this._duration = 1000;
-            this._delayTime = 0;
-            this._startTime = null;
-            this._chainedTweens = [];
-            this._object = object;
-            this._game = game;
-            this._manager = this._game.tweens;
-            this._interpolationFunction = this._game.math.linearInterpolation;
-            this._easingFunction = Phaser.Easing.Linear.None;
-            this.onStart = new Phaser.Signal();
-            this.onUpdate = new Phaser.Signal();
-            this.onComplete = new Phaser.Signal();
-        }
-        Tween.prototype.to = function (properties, duration, ease, autoStart) {
-            if (typeof duration === "undefined") { duration = 1000; }
-            if (typeof ease === "undefined") { ease = null; }
-            if (typeof autoStart === "undefined") { autoStart = false; }
-            this._duration = duration;
-            //  If properties isn't an object this will fail, sanity check it here somehow?
-            this._valuesEnd = properties;
-            if(ease !== null) {
-                this._easingFunction = ease;
+    var Sound = (function () {
+        function Sound(context, gainNode, data, volume, loop) {
+            if (typeof volume === "undefined") { volume = 1; }
+            if (typeof loop === "undefined") { loop = false; }
+            this.loop = false;
+            this.isPlaying = false;
+            this.isDecoding = false;
+            this._context = context;
+            this._gainNode = gainNode;
+            this._buffer = data;
+            this._volume = volume;
+            this.loop = loop;
+            //  Local volume control
+            if(this._context !== null) {
+                this._localGainNode = this._context.createGainNode();
+                this._localGainNode.connect(this._gainNode);
+                this._localGainNode.gain.value = this._volume;
             }
-            if(autoStart === true) {
-                return this.start();
+            if(this._buffer === null) {
+                this.isDecoding = true;
             } else {
-                return this;
+                this.play();
             }
+        }
+        Sound.prototype.setDecodedBuffer = function (data) {
+            this._buffer = data;
+            this.isDecoding = false;
+            this.play();
         };
-        Tween.prototype.start = function () {
-            if(this._game === null || this._object === null) {
+        Sound.prototype.play = function () {
+            if(this._buffer === null || this.isDecoding === true) {
                 return;
             }
-            this._manager.add(this);
-            this.onStart.dispatch(this._object);
-            this._startTime = this._game.time.now + this._delayTime;
-            for(var property in this._valuesEnd) {
-                // This prevents the interpolation of null values or of non-existing properties
-                if(this._object[property] === null || !(property in this._object)) {
-                    throw Error('Phaser.Tween interpolation of null value of non-existing property');
-                    continue;
-                }
-                // check if an Array was provided as property value
-                if(this._valuesEnd[property] instanceof Array) {
-                    if(this._valuesEnd[property].length === 0) {
-                        continue;
-                    }
-                    // create a local copy of the Array with the start value at the front
-                    this._valuesEnd[property] = [
-                        this._object[property]
-                    ].concat(this._valuesEnd[property]);
-                }
-                this._valuesStart[property] = this._object[property];
+            this._sound = this._context.createBufferSource();
+            this._sound.buffer = this._buffer;
+            this._sound.connect(this._localGainNode);
+            if(this.loop) {
+                this._sound.loop = true;
             }
-            return this;
+            this._sound.noteOn(0)// the zero is vitally important, crashes iOS6 without it
+            ;
+            this.duration = this._sound.buffer.duration;
+            this.isPlaying = true;
         };
-        Tween.prototype.stop = function () {
-            if(this._manager !== null) {
-                this._manager.remove(this);
+        Sound.prototype.stop = function () {
+            if(this.isPlaying === true) {
+                this.isPlaying = false;
+                this._sound.noteOff(0);
             }
-            return this;
         };
-        Object.defineProperty(Tween.prototype, "parent", {
+        Sound.prototype.mute = function () {
+            this._localGainNode.gain.value = 0;
+        };
+        Sound.prototype.unmute = function () {
+            this._localGainNode.gain.value = this._volume;
+        };
+        Object.defineProperty(Sound.prototype, "volume", {
+            get: function () {
+                return this._volume;
+            },
             set: function (value) {
-                this._game = value;
-                this._manager = this._game.tweens;
+                this._volume = value;
+                this._localGainNode.gain.value = this._volume;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Tween.prototype, "delay", {
-            get: function () {
-                return this._delayTime;
-            },
-            set: function (amount) {
-                this._delayTime = amount;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Tween.prototype, "easing", {
-            get: function () {
-                return this._easingFunction;
-            },
-            set: function (easing) {
-                this._easingFunction = easing;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Tween.prototype, "interpolation", {
-            get: function () {
-                return this._interpolationFunction;
-            },
-            set: function (interpolation) {
-                this._interpolationFunction = interpolation;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Tween.prototype.chain = function (tween) {
-            this._chainedTweens.push(tween);
-            return this;
-        };
-        Tween.prototype.update = function (time) {
-            if(this._game.paused == true) {
-                if(this._pausedTime == 0) {
-                    this._pausedTime = time;
-                }
-            } else {
-                //  Ok we aren't paused, but was there some time gained?
-                if(this._pausedTime > 0) {
-                    this._startTime += (time - this._pausedTime);
-                    this._pausedTime = 0;
-                }
-            }
-            if(time < this._startTime) {
-                return true;
-            }
-            var elapsed = (time - this._startTime) / this._duration;
-            elapsed = elapsed > 1 ? 1 : elapsed;
-            var value = this._easingFunction(elapsed);
-            for(var property in this._valuesStart) {
-                //  Add checks for object, array, numeric up front
-                if(this._valuesEnd[property] instanceof Array) {
-                    this._object[property] = this._interpolationFunction(this._valuesEnd[property], value);
-                } else {
-                    this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * value;
-                }
-            }
-            this.onUpdate.dispatch(this._object, value);
-            if(elapsed == 1) {
-                this.onComplete.dispatch(this._object);
-                for(var i = 0; i < this._chainedTweens.length; i++) {
-                    this._chainedTweens[i].start();
-                }
-                return false;
-            }
-            return true;
-        };
-        return Tween;
+        return Sound;
     })();
-    Phaser.Tween = Tween;    
+    Phaser.Sound = Sound;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
-*   Phaser
+* Phaser - State
+*
+* This is a base State class which can be extended if you are creating your game using TypeScript.
 */
 var Phaser;
 (function (Phaser) {

@@ -80,21 +80,13 @@ var Phaser;
     Phaser.Basic = Basic;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Signal.ts" />
-/*
-*	SignalBinding
-*
-*	@desc		An object that represents a binding between a Signal and a listener function.
-*              Released under the MIT license
-*				http://millermedeiros.github.com/js-signals/
-*
-*	@version	1. - 7th March 2013
-*
-*	@author 	Richard Davey, TypeScript conversion
-*	@author		Miller Medeiros, JS Signals
-*
-*/
 /**
-*   Phaser
+* Phaser - SignalBinding
+*
+* An object that represents a binding between a Signal and a listener function.
+* Based on JS Signals by Miller Medeiros. Converted by TypeScript by Richard Davey.
+* Released under the MIT license
+* http://millermedeiros.github.com/js-signals/
 */
 var Phaser;
 (function (Phaser) {
@@ -201,28 +193,13 @@ var Phaser;
     Phaser.SignalBinding = SignalBinding;    
 })(Phaser || (Phaser = {}));
 /// <reference path="SignalBinding.ts" />
-/*
-*	Signal
-*
-*	@desc		A TypeScript conversion of JS Signals by Miller Medeiros
-*              Released under the MIT license
-*				http://millermedeiros.github.com/js-signals/
-*
-*	@version	1. - 7th March 2013
-*
-*	@author 	Richard Davey, TypeScript conversion
-*	@author		Miller Medeiros, JS Signals
-*
-*/
 /**
-* Custom event broadcaster
-* <br />- inspired by Robert Penner's AS3 Signals.
-* @name Signal
-* @author Miller Medeiros
-* @constructor
-*/
-/**
-*   Phaser
+* Phaser - Signal
+*
+* A Signal is used for object communication via a custom broadcaster instead of Events.
+* Based on JS Signals by Miller Medeiros. Converted by TypeScript by Richard Davey.
+* Released under the MIT license
+* http://millermedeiros.github.com/js-signals/
 */
 var Phaser;
 (function (Phaser) {
@@ -473,7 +450,10 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path="../Basic.ts" />
 /// <reference path="../Signal.ts" />
 /**
-*   Phaser
+* Phaser - GameObject
+*
+* This is the base GameObject on which all other game objects are derived. It contains all the logic required for position,
+* motion, size, collision and input.
 */
 var Phaser;
 (function (Phaser) {
@@ -870,7 +850,10 @@ var Phaser;
 /// <reference path="../AnimationManager.ts" />
 /// <reference path="GameObject.ts" />
 /**
-*   Phaser
+* Phaser - Sprite
+*
+* The Sprite GameObject is an extension of the core GameObject that includes support for animation and dynamic textures.
+* It's probably the most used GameObject of all.
 */
 var Phaser;
 (function (Phaser) {
@@ -1073,15 +1056,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*	Animation
+* Phaser - Animation
 *
-*	@desc 		Loads Sprite Sheets and Texture Atlas formats into a unified FrameData object
-*
-*	@version 	1.0 - 22nd March 2013
-*	@author 	Richard Davey
-*/
-/**
-*   Phaser
+* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
 */
 var Phaser;
 (function (Phaser) {
@@ -1176,7 +1153,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - AnimationLoader
+*
+* Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
 */
 var Phaser;
 (function (Phaser) {
@@ -1232,7 +1211,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - Frame
+*
+* A Frame is a single frame of an animation and is part of a FrameData collection.
 */
 var Phaser;
 (function (Phaser) {
@@ -1270,7 +1251,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - FrameData
+*
+* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
 */
 var Phaser;
 (function (Phaser) {
@@ -1610,7 +1593,11 @@ var Phaser;
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="../Game.ts" />
 /**
-*   Phaser
+* Phaser - Camera
+*
+* A Camera is your view into the game world. It has a position, size, scale and rotation and renders only those objects
+* within its field of view. The game automatically creates a single Stage sized camera on boot, but it can be changed and
+* additional cameras created via the CameraManager.
 */
 var Phaser;
 (function (Phaser) {
@@ -2184,16 +2171,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Point
+* Phaser - Point
 *
-*	@desc 		The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
-*
-*	@version 	1.2 - 27th February 2013
-*	@author 	Richard Davey
-*  @todo       polar, interpolate
-*/
-/**
-*   Phaser
+* The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
 */
 var Phaser;
 (function (Phaser) {
@@ -2448,15 +2428,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Rectangle
+* Phaser - Rectangle
 *
-*	@desc 		A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
-*
-*	@version 	1.2 - 15th October 2012
-*	@author 	Richard Davey
-*/
-/**
-*   Phaser
+* A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
 */
 var Phaser;
 (function (Phaser) {
@@ -2937,12 +2911,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Phaser - Geom - Circle
+* Phaser - Circle
 *
-*	@desc 		A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
-*
-*	@version 	1.1 - 11th October 2012
-*	@author 	Richard Davey
+* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
 */
 var Phaser;
 (function (Phaser) {
@@ -3351,13 +3322,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Phaser - Geom - Line
+* Phaser - Line
 *
-*	@desc 		A Line object is an infinte line through space. The two sets of x/y coordinates define the Line Segment.
-*
-*	@version 	1.0 - 11th October 2012
-*	@author 	Ross Kettle
-*	@author 	Richard Davey
+* A Line object is an infinte line through space. The two sets of x/y coordinates define the Line Segment.
 */
 var Phaser;
 (function (Phaser) {
@@ -3625,12 +3592,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*	Phaser - Geom - IntersectResult
+* Phaser - IntersectResult
 *
-*	@desc 		A light-weight result object to hold the results of an intersection
-*
-*	@version 	1.0 - 15th October 2012
-*	@author 	Richard Davey
+* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
 */
 var Phaser;
 (function (Phaser) {
@@ -3673,12 +3637,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* A miniature linked list class.
-* Useful for optimizing time-critical or highly repetitive tasks!
-* See <code>QuadTree</code> for how to use it, IF YOU DARE.
-*/
-/**
-*   Phaser
+* Phaser - LinkedList
+*
+* A miniature linked list class. Useful for optimizing time-critical or highly repetitive tasks!
 */
 var Phaser;
 (function (Phaser) {
@@ -3707,14 +3668,11 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="LinkedList.ts" />
 /**
-* A fairly generic quad tree structure for rapid overlap checks.
-* QuadTree is also configured for single or dual list operation.
-* You can add items either to its A list or its B list.
-* When you do an overlap check, you can compare the A list to itself,
+* Phaser - QuadTree
+*
+* A fairly generic quad tree structure for rapid overlap checks. QuadTree is also configured for single or dual list operation.
+* You can add items either to its A list or its B list. When you do an overlap check, you can compare the A list to itself,
 * or the A list against the B list.  Handy for different things!
-*/
-/**
-*   Phaser
 */
 var Phaser;
 (function (Phaser) {
@@ -6297,7 +6255,10 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
-*   Phaser
+* Phaser - Loader
+*
+* The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+* It uses a combination of Image() loading and xhr and provides for progress and completion callbacks.
 */
 var Phaser;
 (function (Phaser) {
@@ -6597,6 +6558,8 @@ var Phaser;
 /// <reference path="gameobjects/GameObject.ts" />
 /**
 * Phaser - Motion
+*
+* The Motion class contains lots of useful functions for moving game objects around in world space.
 */
 var Phaser;
 (function (Phaser) {
@@ -6903,6 +6866,7 @@ var Phaser;
     Phaser.Motion = Motion;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
+/// <reference path="system/Sound.ts" />
 /**
 * Phaser - SoundManager
 *
@@ -6988,35 +6952,31 @@ var Phaser;
     Phaser.SoundManager = SoundManager;    
 })(Phaser || (Phaser = {}));
 /**
-*   Phaser
+* Phaser
 *
-*   v0.9 - April 18th 2013
+*  v0.9 - April 18th 2013
 *
-*   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
+* A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
-*   Richard Davey (@photonstorm)
+* Richard Davey (@photonstorm)
 *
-*   Many thanks to Adam Saltsman (@ADAMATOMIC) for the original Flixel AS3 code on which Phaser is based.
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for the original Flixel AS3 code on which Phaser is based.
 *
-*   "If you want your children to be intelligent,  read them fairy tales."
-*   "If you want them to be more intelligent, read them more fairy tales."
-*                                                       -- Albert Einstein
+* "If you want your children to be intelligent,  read them fairy tales."
+* "If you want them to be more intelligent, read them more fairy tales."
+*                                                     -- Albert Einstein
 */
 var Phaser;
 (function (Phaser) {
     Phaser.VERSION = 'Phaser version 0.9';
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/*
-* Based on code from Viewporter v2.0
-* http://github.com/zynga/viewporter
-*
-* Copyright 2011, Zynga Inc.
-* Licensed under the MIT License.
-* https://raw.github.com/zynga/viewporter/master/MIT-LICENSE.txt
-*/
 /**
-*   Phaser
+* Phaser - StageScaleMode
+*
+* This class controls the scaling of your game. On mobile devices it will also remove the URL bar and allow
+* you to maintain proportion and aspect ratio.
+* It is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
 */
 var Phaser;
 (function (Phaser) {
@@ -7426,13 +7386,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Back
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Back = (function () {
@@ -7462,13 +7418,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Bounce
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Bounce = (function () {
@@ -7503,13 +7455,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Circular
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Circular = (function () {
@@ -7536,13 +7484,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Cubic
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Cubic = (function () {
@@ -7569,13 +7513,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Elastic
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Elastic = (function () {
@@ -7641,13 +7581,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Exponential
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Exponential = (function () {
@@ -7680,13 +7616,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Linear
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Linear = (function () {
@@ -7704,13 +7636,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Quadratic
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Quadratic = (function () {
@@ -7737,13 +7665,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Quartic
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Quartic = (function () {
@@ -7770,13 +7694,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Quintic
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Quintic = (function () {
@@ -7803,13 +7723,9 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../Game.ts" />
     /**
-    *	Phaser - Easing
+    * Phaser - Easing - Sinusoidal
     *
-    *	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js)
-    *
-    *	@version 	1.0 - 11th January 2013
-    *
-    *	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+    * For use with Phaser.Tween
     */
     (function (Easing) {
         var Sinusoidal = (function () {
@@ -7842,13 +7758,9 @@ var Phaser;
 /// <reference path="easing/Quintic.ts" />
 /// <reference path="easing/Sinusoidal.ts" />
 /**
-*	Phaser - Tween
+* Phaser - Tween
 *
-*	@desc 		Based heavily on tween.js by sole (https://github.com/sole/tween.js) converted to TypeScript and integrated into Phaser
-*
-*	@version 	1.0 - 11th January 2013
-*
-*	@author 	Richard Davey, TypeScript conversion and Phaser integration. See Phaser.TweenManager for the full tween.js author list
+* Based heavily on tween.js by sole (https://github.com/sole/tween.js) converted to TypeScript and integrated into Phaser
 */
 var Phaser;
 (function (Phaser) {
@@ -8205,18 +8117,10 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*  Device
+* Phaser - Device
 *
-*  @desc       Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
-*              https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
-*
-*	@version 	1.0 - March 5th 2013
-*	@author 	Richard Davey
-*	@author		mrdoob
-*	@author		Modernizr team
-*/
-/**
-*   Phaser
+* Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
+* https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
 */
 var Phaser;
 (function (Phaser) {
@@ -8645,18 +8549,11 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*  Repeatable Random Data Generator
+* Phaser - RandomDataGenerator
 *
-*  @desc       Manages the creation of unique internal game IDs
-*              Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
-*              Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
-*
-*	@version 	1.1 - 1st March 2013
-*	@author 	Josh Faul
-*	@author 	Richard Davey, TypeScript conversion and additional methods
-*/
-/**
-*   Phaser
+* An extremely useful repeatable random data generator. Access it via Game.rnd
+* Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
+* Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
 */
 var Phaser;
 (function (Phaser) {
@@ -8879,15 +8776,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*  RequestAnimationFrame
+* Phaser - RequestAnimationFrame
 *
-*  @desc       Abstracts away the use of RAF or setTimeOut for the core game update loop. The callback can be re-mapped on the fly.
-*
-*	@version 	0.3 - 15th October 2012
-*	@author 	Richard Davey
-*/
-/**
-*   Phaser
+* Abstracts away the use of RAF or setTimeOut for the core game update loop. The callback can be re-mapped on the fly.
 */
 var Phaser;
 (function (Phaser) {
@@ -9038,7 +8929,9 @@ var Phaser;
 /// <reference path="../../Game.ts" />
 /// <reference path="../../Signal.ts" />
 /**
-*   Phaser
+* Phaser - Input
+*
+* A game specific Input manager that looks after the mouse, keyboard and touch objects. This is updated by the core game loop.
 */
 var Phaser;
 (function (Phaser) {
@@ -9090,7 +8983,11 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - Keyboard
+*
+* The Keyboard class handles keyboard interactions with the game and the resulting events.
+* The avoid stealing all browser input we don't use event.preventDefault. If you would like to trap a specific key however
+* then use the addKeyCapture() method.
 */
 var Phaser;
 (function (Phaser) {
@@ -9284,7 +9181,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*   Phaser
+* Phaser - Mouse
+*
+* The Mouse class handles mouse interactions with the game and the resulting events.
 */
 var Phaser;
 (function (Phaser) {
@@ -9360,17 +9259,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-*	Input - Finger
+* Phaser - Finger
 *
-*	@desc 		A Finger object used by the Touch manager
-*
-*	@version 	1.1 - 27th February 2013
-*	@author 	Richard Davey
-*
-*  @todo       Lots
-*/
-/**
-*   Phaser
+* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
 */
 var Phaser;
 (function (Phaser) {
@@ -9600,24 +9491,19 @@ var Phaser;
 /// <reference path="../../Game.ts" />
 /// <reference path="Finger.ts" />
 /**
-*	Input - Touch
+* Phaser - Touch
 *
-*	@desc 		http://www.w3.org/TR/touch-events/
-*              https://developer.mozilla.org/en-US/docs/DOM/TouchList
-*              http://www.html5rocks.com/en/mobile/touchandmouse/
-*              Android 2.x only supports 1 touch event at once, no multi-touch
-*
-*	@version 	1.1 - 27th February 2013
-*	@author 	Richard Davey
+* The Touch class handles touch interactions with the game and the resulting Finger objects.
+* http://www.w3.org/TR/touch-events/
+* https://developer.mozilla.org/en-US/docs/DOM/TouchList
+* http://www.html5rocks.com/en/mobile/touchandmouse/
+* Note: Android 2.x only supports 1 touch event at once, no multi-touch
 *
 *  @todo       Try and resolve update lag in Chrome/Android
 *              Gestures (pinch, zoom, swipe)
 *              GameObject Touch
 *              Touch point within GameObject
 *              Input Zones (mouse and touch) - lock entities within them + axis aligned drags
-*/
-/**
-*   Phaser
 */
 var Phaser;
 (function (Phaser) {
@@ -9906,20 +9792,11 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="../Group.ts" />
 /**
-* <code>Emitter</code> is a lightweight particle emitter.
-* It can be used for one-time explosions or for
-* continuous fx like rain and fire.  <code>Emitter</code>
-* is not optimized or anything; all it does is launch
-* <code>Particle</code> objects out at set intervals
-* by setting their positions and velocities accordingly.
-* It is easy to use and relatively efficient,
-* relying on <code>Group</code>'s RECYCLE POWERS.
+* Phaser - Emitter
 *
-* @author	Adam Atomic
-* @author	Richard Davey
-*/
-/**
-*   Phaser
+* Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+* continuous effects like rain and fire. All it really does is launch Particle objects out
+* at set intervals, and fixes their positions and velocities accorindgly.
 */
 var Phaser;
 (function (Phaser) {
@@ -10195,7 +10072,11 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-*   Phaser
+* Phaser - GeomSprite
+*
+* A GeomSprite is a special kind of GameObject that contains a base geometry class (Circle, Line, Point, Rectangle).
+* They can be rendered in the game and used for collision just like any other game object. Display of them is controlled
+* via the lineWidth / lineColor / fillColor and renderOutline / renderFill properties.
 */
 var Phaser;
 (function (Phaser) {
@@ -10486,18 +10367,10 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="Sprite.ts" />
 /**
-* This is a simple particle class that extends the default behavior
-* of <code>Sprite</code> to have slightly more specialized behavior
-* common to many game scenarios.  You can override and extend this class
-* just like you would <code>Sprite</code>. While <code>Emitter</code>
-* used to work with just any old sprite, it now requires a
-* <code>Particle</code> based class.
+* Phaser - Particle
 *
-* @author Adam Atomic
-* @author Richard Davey
-*/
-/**
-*   Phaser
+* This is a simple particle class that extends a Sprite to have a slightly more
+* specialised behaviour. It is used exclusively by the Emitter class and can be extended as required.
 */
 var Phaser;
 (function (Phaser) {
@@ -10562,15 +10435,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* A simple helper object for <code>Tilemap</code> that helps expand collision opportunities and control.
-* You can use <code>Tilemap.setTileProperties()</code> to alter the collision properties and
-* callback functions and filters for this object to do things like one-way tiles or whatever.
+* Phaser - Tile
 *
-* @author	Adam Atomic
-* @author	Richard Davey
-*/
-/**
-*   Phaser
+* A simple helper object for <code>Tilemap</code> that helps expand collision opportunities and control.
 */
 var Phaser;
 (function (Phaser) {
@@ -10612,9 +10479,9 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* A Tilemap Buffer
+* Phaser - TilemapBuffer
 *
-* @author	Richard Davey
+* Responsible for rendering a portion of a tilemap to the given Camera.
 */
 var Phaser;
 (function (Phaser) {
@@ -10735,7 +10602,10 @@ var Phaser;
 /// <reference path="../system/Tile.ts" />
 /// <reference path="../system/TilemapBuffer.ts" />
 /**
-*   Phaser
+* Phaser - Tilemap
+*
+* This GameObject allows for the display of a tilemap within the game world. Tile maps consist of an image, tile data and a size.
+* Internally it creates a TilemapBuffer for each camera in the world.
 */
 var Phaser;
 (function (Phaser) {

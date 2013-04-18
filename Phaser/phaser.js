@@ -1,16 +1,17 @@
 /**
-*   Phaser
+* Phaser
 *
-*   v0.9 - April 18th 2013
+*  v0.9 - April 18th 2013
 *
-*   A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
+* A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
-*   Richard Davey (@photonstorm)
-*   Adam Saltsman (@ADAMATOMIC) (original Flixel code)
+* Richard Davey (@photonstorm)
 *
-*   "If you want your children to be intelligent,  read them fairy tales."
-*   "If you want them to be more intelligent, read them more fairy tales."
-*                                                       -- Albert Einstein
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for the original Flixel AS3 code on which Phaser is based.
+*
+* "If you want your children to be intelligent,  read them fairy tales."
+* "If you want them to be more intelligent, read them more fairy tales."
+*                                                     -- Albert Einstein
 */
 var Phaser;
 (function (Phaser) {
