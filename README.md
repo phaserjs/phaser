@@ -1,9 +1,9 @@
 Phaser
 ======
 
-Version 0.9
+Version 0.9.1
 
-18th April 2013
+19th April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -17,6 +17,16 @@ For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.h
 
 Change Log
 ----------
+
+V0.9.1
+
+Added the new align property to GameObjects that controls placement when rendering.<br />
+Added an align example to the Sprites test group (click the mouse to change alignment position)<br />
+Added a new MicroPoint class. Same as Point but much smaller / less functions, updated GameObject to use it.<br />
+Completely rebuilt the Rectangle class to use MicroPoints and store the values of the 9 points around the edges, to be used
+for new collision system.<br />
+Game.Input now has 2 signals you can subscribe to for down/up events, see the Sprite align example for use.<br />
+Updated the States examples to bring in-line with 0.9 release.
 
 V0.9
 
