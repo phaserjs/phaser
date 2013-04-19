@@ -29,4 +29,13 @@
 
     }
 
+    function checkPoints() {
+
+        if (box2.rect.containsPoint(box1.rect.topLeft))
+        {
+
+        }
+
+    }
+
 })();

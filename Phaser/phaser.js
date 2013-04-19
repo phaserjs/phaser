@@ -1,7 +1,7 @@
 /**
 * Phaser
 *
-*  v0.9 - April 18th 2013
+*  v0.9.1 - April 19th 2013
 *
 * A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -15,5 +15,5 @@
 */
 var Phaser;
 (function (Phaser) {
-    Phaser.VERSION = 'Phaser version 0.9';
+    Phaser.VERSION = 'Phaser version 0.9.1';
 })(Phaser || (Phaser = {}));

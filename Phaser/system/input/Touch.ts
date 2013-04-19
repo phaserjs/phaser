@@ -229,6 +229,7 @@ module Phaser {
                         this._game.input.x = this.x * this._game.input.scaleX;
                         this._game.input.y = this.y * this._game.input.scaleY;
                         this.touchDown.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
+                        this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeDown);
                         this.isDown = true;
                         this.isUp = false;
                         break;
@@ -373,6 +374,7 @@ module Phaser {
                         this._game.input.x = this.x * this._game.input.scaleX;
                         this._game.input.y = this.y * this._game.input.scaleY;
                         this.touchUp.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
+                        this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeUp);
                         this.isDown = false;
                         this.isUp = true;
                         break;

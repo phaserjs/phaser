@@ -19,6 +19,9 @@ module Phaser {
             this.keyboard = new Keyboard(this._game);
             this.touch = new Touch(this._game);
 
+            this.onDown = new Phaser.Signal();
+            this.onUp = new Phaser.Signal();
+
         }
 
         private _game: Game;
@@ -35,6 +38,9 @@ module Phaser {
 
         public worldX: number = 0;
         public worldY: number = 0;
+
+        public onDown: Phaser.Signal;
+        public onUp: Phaser.Signal;
 
         public update() {
 

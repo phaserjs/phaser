@@ -63,6 +63,8 @@ module Phaser {
             this.isUp = false;
             this.timeDown = this._game.time.now;
 
+            this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this.timeDown);
+
         }
 
         public update() {
@@ -102,6 +104,8 @@ module Phaser {
 
             this._game.input.x = this._x * this._game.input.scaleX;
             this._game.input.y = this._y * this._game.input.scaleY;
+
+            this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this.timeDown);
 
         }
 

@@ -34,11 +34,7 @@ module Phaser {
         }
 
         private _texture;
-        private _canvas: HTMLCanvasElement;
-        private _context: CanvasRenderingContext2D;
         private _dynamicTexture: bool = false;
-
-        public animations: AnimationManager;
 
         //  local rendering related temp vars to help avoid gc spikes
         private _sx: number = 0;
@@ -49,6 +45,12 @@ module Phaser {
         private _dy: number = 0;
         private _dw: number = 0;
         private _dh: number = 0;
+
+        public animations: AnimationManager;
+
+        public renderDebug: bool = false;
+        public renderDebugColor: string = 'rgba(0,255,0,0.5)';
+        public renderDebugPointColor: string = 'rgba(255,255,255,1)';
 
         public loadGraphic(key: string): Sprite {
 
@@ -98,7 +100,7 @@ module Phaser {
         }
 
         public inCamera(camera: Rectangle): bool {
-
+            
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
             {
                 this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
@@ -110,7 +112,7 @@ module Phaser {
             }
             else
             {
-                return camera.overlap(this.bounds);
+                return camera.intersects(this.bounds, this.bounds.length);
             }
 
         }
@@ -165,10 +167,47 @@ module Phaser {
             this._sy = 0;
             this._sw = this.bounds.width;
             this._sh = this.bounds.height;
-            this._dx = cameraOffsetX + (this.bounds.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.y - camera.worldView.y);
+            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
             this._dw = this.bounds.width * this.scale.x;
             this._dh = this.bounds.height * this.scale.y;
+
+            if (this.align == GameObject.ALIGN_TOP_CENTER)
+            {
+                this._dx -= this.bounds.halfWidth * this.scale.x;
+            }
+            else if (this.align == GameObject.ALIGN_TOP_RIGHT)
+            {
+                this._dx -= this.bounds.width * this.scale.x;
+            }
+            else if (this.align == GameObject.ALIGN_CENTER_LEFT)
+            {
+                this._dy -= this.bounds.halfHeight * this.scale.y;
+            }
+            else if (this.align == GameObject.ALIGN_CENTER)
+            {
+                this._dx -= this.bounds.halfWidth * this.scale.x;
+                this._dy -= this.bounds.halfHeight * this.scale.y;
+            }
+            else if (this.align == GameObject.ALIGN_CENTER_RIGHT)
+            {
+                this._dx -= this.bounds.width * this.scale.x;
+                this._dy -= this.bounds.halfHeight * this.scale.y;
+            }
+            else if (this.align == GameObject.ALIGN_BOTTOM_LEFT)
+            {
+                this._dy -= this.bounds.height * this.scale.y;
+            }
+            else if (this.align == GameObject.ALIGN_BOTTOM_CENTER)
+            {
+                this._dx -= this.bounds.halfWidth * this.scale.x;
+                this._dy -= this.bounds.height * this.scale.y;
+            }
+            else if (this.align == GameObject.ALIGN_BOTTOM_RIGHT)
+            {
+                this._dx -= this.bounds.width * this.scale.x;
+                this._dy -= this.bounds.height * this.scale.y;
+            }
 
             if (this._dynamicTexture == false && this.animations.currentFrame !== null)
             {
@@ -209,10 +248,6 @@ module Phaser {
             this._dw = Math.round(this._dw);
             this._dh = Math.round(this._dh);
 
-            //  Debug test
-            //this._game.stage.context.fillStyle = 'rgba(255,0,0,0.3)';
-            //this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-
             if (this._texture != null)
             {
                 if (this._dynamicTexture)
@@ -250,6 +285,11 @@ module Phaser {
                 this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
 
+            if (this.renderDebug)
+            {
+                this.renderBounds();
+            }
+
             //if (this.flip === true || this.rotation !== 0)
             if (this.rotation !== 0)
             {
@@ -263,6 +303,29 @@ module Phaser {
             }
 
             return true;
+
+        }
+
+        private renderBounds() {
+
+            this._game.stage.context.fillStyle = this.renderDebugColor;
+            this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+            this._game.stage.context.fillStyle = this.renderDebugPointColor;
+
+            var hw = this.bounds.halfWidth * this.scale.x;
+            var hh = this.bounds.halfHeight * this.scale.y;
+            var sw = (this.bounds.width * this.scale.x) - 1;
+            var sh = (this.bounds.height * this.scale.y) - 1;
+            
+            this._game.stage.context.fillRect(this._dx, this._dy, 1, 1);            //  top left
+            this._game.stage.context.fillRect(this._dx + hw, this._dy, 1, 1);       //  top center
+            this._game.stage.context.fillRect(this._dx + sw, this._dy, 1, 1);       //  top right
+            this._game.stage.context.fillRect(this._dx, this._dy + hh, 1, 1);       //  left center
+            this._game.stage.context.fillRect(this._dx + hw, this._dy + hh, 1, 1);  //  center
+            this._game.stage.context.fillRect(this._dx + sw, this._dy + hh, 1, 1);  //  right center
+            this._game.stage.context.fillRect(this._dx, this._dy + sh, 1, 1);       //  bottom left
+            this._game.stage.context.fillRect(this._dx + hw, this._dy + sh, 1, 1);  //  bottom center
+            this._game.stage.context.fillRect(this._dx + sw, this._dy + sh, 1, 1);  //  bottom right
 
         }
 

@@ -100,6 +100,10 @@
     <Content Include="geom\Line.js">
       <DependentUpon>Line.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="geom\MicroPoint.ts" />
+    <Content Include="geom\MicroPoint.js">
+      <DependentUpon>MicroPoint.ts</DependentUpon>
+    </Content>
     <Content Include="geom\Point.js">
       <DependentUpon>Point.ts</DependentUpon>
     </Content>

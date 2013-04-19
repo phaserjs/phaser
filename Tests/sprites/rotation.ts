@@ -20,22 +20,17 @@
         teddy.x = myGame.stage.centerX - teddy.width / 2;
         teddy.y = myGame.stage.centerY - teddy.height / 2;
 
-        teddy.origin.setTo(-100, -100);
-
     }
 
     function update() {
 
-		teddy.angularVelocity = 0;
-		//car.angularAcceleration = 0;
-
         if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            teddy.angularVelocity = -200;
+            teddy.angularAcceleration = -40;
         }
         else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            teddy.angularVelocity = 200;
+            teddy.angularAcceleration = 40;
         }
 
     }

@@ -182,7 +182,7 @@ module Phaser {
             }
             else
             {
-                return camera.overlap(this.bounds);
+                return camera.intersects(this.bounds);
             }
 
         }
@@ -221,7 +221,8 @@ module Phaser {
                 this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
 
-            //	Rotation (could be misleading as it doesn't work re: collision)
+            //	Rotation is disabled for now as I don't want it to be misleading re: collision
+            /*
             if (this.angle !== 0)
             {
                 this._game.stage.context.save();
@@ -230,6 +231,7 @@ module Phaser {
                 this._dx = -(this._dw / 2);
                 this._dy = -(this._dh / 2);
             }
+            */
 
             this._dx = Math.round(this._dx);
             this._dy = Math.round(this._dy);
@@ -286,7 +288,6 @@ module Phaser {
                 else
                 {
                     this._game.stage.context.beginPath();
-
                     this._game.stage.context.rect(this._dx, this._dy, this.rect.width, this.rect.height);
                     this._game.stage.context.stroke();
 
@@ -297,6 +298,19 @@ module Phaser {
 
                     this._game.stage.context.closePath();
                 }
+
+                //  And now the edge points
+                this._game.stage.context.fillStyle = 'rgb(255,255,255)';
+                this.renderPoint(this._dx, this._dy, this.rect.topLeft, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.topCenter, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.topRight, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.leftCenter, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.center, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.rightCenter, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.bottomLeft, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.bottomCenter, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.bottomRight, 2);
+
             }
 
             this._game.stage.restoreCanvasValues();
@@ -313,6 +327,14 @@ module Phaser {
             }
 
             return true;
+
+        }
+
+        public renderPoint(offsetX, offsetY, point, size) {
+
+            offsetX = 0;
+            offsetY = 0;
+            this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, 1, 1);
 
         }
 

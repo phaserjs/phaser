@@ -478,9 +478,10 @@ var Phaser;
             this.alive = true;
             this.isGroup = false;
             this.alpha = 1;
-            this.scale = new Phaser.Point(1, 1);
-            this.last = new Phaser.Point(x, y);
-            this.origin = new Phaser.Point(this.bounds.halfWidth, this.bounds.halfHeight);
+            this.scale = new Phaser.MicroPoint(1, 1);
+            this.last = new Phaser.MicroPoint(x, y);
+            this.origin = new Phaser.MicroPoint(this.bounds.halfWidth, this.bounds.halfHeight);
+            this.align = GameObject.ALIGN_TOP_LEFT;
             this.mass = 1.0;
             this.elasticity = 0.0;
             this.health = 1;
@@ -489,17 +490,26 @@ var Phaser;
             this.touching = Phaser.Collision.NONE;
             this.wasTouching = Phaser.Collision.NONE;
             this.allowCollisions = Phaser.Collision.ANY;
-            this.velocity = new Phaser.Point();
-            this.acceleration = new Phaser.Point();
-            this.drag = new Phaser.Point();
-            this.maxVelocity = new Phaser.Point(10000, 10000);
+            this.velocity = new Phaser.MicroPoint();
+            this.acceleration = new Phaser.MicroPoint();
+            this.drag = new Phaser.MicroPoint();
+            this.maxVelocity = new Phaser.MicroPoint(10000, 10000);
             this.angle = 0;
             this.angularVelocity = 0;
             this.angularAcceleration = 0;
             this.angularDrag = 0;
             this.maxAngular = 10000;
-            this.scrollFactor = new Phaser.Point(1.0, 1.0);
+            this.scrollFactor = new Phaser.MicroPoint(1.0, 1.0);
         }
+        GameObject.ALIGN_TOP_LEFT = 0;
+        GameObject.ALIGN_TOP_CENTER = 1;
+        GameObject.ALIGN_TOP_RIGHT = 2;
+        GameObject.ALIGN_CENTER_LEFT = 3;
+        GameObject.ALIGN_CENTER = 4;
+        GameObject.ALIGN_CENTER_RIGHT = 5;
+        GameObject.ALIGN_BOTTOM_LEFT = 6;
+        GameObject.ALIGN_BOTTOM_CENTER = 7;
+        GameObject.ALIGN_BOTTOM_RIGHT = 8;
         GameObject.prototype.preUpdate = function () {
             //  flicker time
             this.last.x = this.bounds.x;
@@ -583,7 +593,7 @@ var Phaser;
         };
         GameObject.prototype.overlapsAt = /**
         * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
-        * This is distinct from overlapsPoint(), which just checks that ponumber, rather than taking the object's size numbero account.
+        * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
         * @param	X				The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
@@ -636,13 +646,13 @@ var Phaser;
             return (objectScreenPos.x + ObjectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) && (objectScreenPos.y + ObjectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
         };
         GameObject.prototype.overlapsPoint = /**
-        * Checks to see if a ponumber in 2D world space overlaps this <code>GameObject</code> object.
+        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *
-        * @param	Point			The ponumber in world space you want to check.
+        * @param	Point			The point in world space you want to check.
         * @param	InScreenSpace	Whether to take scroll factors numbero account when checking for overlap.
         * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether or not the ponumber overlaps this object.
+        * @return	Whether or not the point overlaps this object.
         */
         function (point, InScreenSpace, Camera) {
             if (typeof InScreenSpace === "undefined") { InScreenSpace = false; }
@@ -661,7 +671,7 @@ var Phaser;
         GameObject.prototype.onScreen = /**
         * Check and see if this object is currently on screen.
         *
-        * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param	Camera		Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
         *
         * @return	Whether the object is on screen or not.
         */
@@ -677,15 +687,15 @@ var Phaser;
         * Call this to figure out the on-screen position of the object.
         *
         * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        * @param	Point		Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param	Point		Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
         *
-        * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+        * @return	The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
         function (point, Camera) {
             if (typeof point === "undefined") { point = null; }
             if (typeof Camera === "undefined") { Camera = null; }
             if(point == null) {
-                point = new Phaser.Point();
+                point = new Phaser.MicroPoint();
             }
             if(Camera == null) {
                 Camera = this._game.camera;
@@ -719,19 +729,18 @@ var Phaser;
             configurable: true
         });
         GameObject.prototype.getMidpoint = /**
-        * Retrieve the midponumber of this object in world coordinates.
+        * Retrieve the midpoint of this object in world coordinates.
         *
         * @Point	Allows you to pass in an existing <code>Point</code> object if you're so inclined.  Otherwise a new one is created.
         *
-        * @return	A <code>Point</code> object containing the midponumber of this object in world coordinates.
+        * @return	A <code>Point</code> object containing the midpoint of this object in world coordinates.
         */
         function (point) {
             if (typeof point === "undefined") { point = null; }
             if(point == null) {
-                point = new Phaser.Point();
+                point = new Phaser.MicroPoint();
             }
-            point.x = this.x + this.width * 0.5;
-            point.y = this.y + this.height * 0.5;
+            point.copyFrom(this.bounds.center);
             return point;
         };
         GameObject.prototype.reset = /**
@@ -874,6 +883,9 @@ var Phaser;
             this._dy = 0;
             this._dw = 0;
             this._dh = 0;
+            this.renderDebug = false;
+            this.renderDebugColor = 'rgba(0,255,0,0.5)';
+            this.renderDebugPointColor = 'rgba(255,255,255,1)';
             this._texture = null;
             this.animations = new Phaser.AnimationManager(this._game, this);
             if(key !== null) {
@@ -920,7 +932,7 @@ var Phaser;
                 this._dh = this.bounds.height * this.scale.y;
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
             } else {
-                return camera.overlap(this.bounds);
+                return camera.intersects(this.bounds, this.bounds.length);
             }
         };
         Sprite.prototype.postUpdate = function () {
@@ -967,10 +979,31 @@ var Phaser;
             this._sy = 0;
             this._sw = this.bounds.width;
             this._sh = this.bounds.height;
-            this._dx = cameraOffsetX + (this.bounds.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.y - camera.worldView.y);
+            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
             this._dw = this.bounds.width * this.scale.x;
             this._dh = this.bounds.height * this.scale.y;
+            if(this.align == Phaser.GameObject.ALIGN_TOP_CENTER) {
+                this._dx -= this.bounds.halfWidth * this.scale.x;
+            } else if(this.align == Phaser.GameObject.ALIGN_TOP_RIGHT) {
+                this._dx -= this.bounds.width * this.scale.x;
+            } else if(this.align == Phaser.GameObject.ALIGN_CENTER_LEFT) {
+                this._dy -= this.bounds.halfHeight * this.scale.y;
+            } else if(this.align == Phaser.GameObject.ALIGN_CENTER) {
+                this._dx -= this.bounds.halfWidth * this.scale.x;
+                this._dy -= this.bounds.halfHeight * this.scale.y;
+            } else if(this.align == Phaser.GameObject.ALIGN_CENTER_RIGHT) {
+                this._dx -= this.bounds.width * this.scale.x;
+                this._dy -= this.bounds.halfHeight * this.scale.y;
+            } else if(this.align == Phaser.GameObject.ALIGN_BOTTOM_LEFT) {
+                this._dy -= this.bounds.height * this.scale.y;
+            } else if(this.align == Phaser.GameObject.ALIGN_BOTTOM_CENTER) {
+                this._dx -= this.bounds.halfWidth * this.scale.x;
+                this._dy -= this.bounds.height * this.scale.y;
+            } else if(this.align == Phaser.GameObject.ALIGN_BOTTOM_RIGHT) {
+                this._dx -= this.bounds.width * this.scale.x;
+                this._dy -= this.bounds.height * this.scale.y;
+            }
             if(this._dynamicTexture == false && this.animations.currentFrame !== null) {
                 this._sx = this.animations.currentFrame.x;
                 this._sy = this.animations.currentFrame.y;
@@ -1001,9 +1034,6 @@ var Phaser;
             this._dy = Math.round(this._dy);
             this._dw = Math.round(this._dw);
             this._dh = Math.round(this._dh);
-            //  Debug test
-            //this._game.stage.context.fillStyle = 'rgba(255,0,0,0.3)';
-            //this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             if(this._texture != null) {
                 if(this._dynamicTexture) {
                     this._game.stage.context.drawImage(this._texture.canvas, //	Source Image
@@ -1032,6 +1062,9 @@ var Phaser;
                 this._game.stage.context.fillStyle = 'rgb(255,255,255)';
                 this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
+            if(this.renderDebug) {
+                this.renderBounds();
+            }
             //if (this.flip === true || this.rotation !== 0)
             if(this.rotation !== 0) {
                 this._game.stage.context.translate(0, 0);
@@ -1041,6 +1074,33 @@ var Phaser;
                 this._game.stage.context.globalAlpha = globalAlpha;
             }
             return true;
+        };
+        Sprite.prototype.renderBounds = function () {
+            this._game.stage.context.fillStyle = this.renderDebugColor;
+            this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+            this._game.stage.context.fillStyle = this.renderDebugPointColor;
+            var hw = this.bounds.halfWidth * this.scale.x;
+            var hh = this.bounds.halfHeight * this.scale.y;
+            var sw = (this.bounds.width * this.scale.x) - 1;
+            var sh = (this.bounds.height * this.scale.y) - 1;
+            this._game.stage.context.fillRect(this._dx, this._dy, 1, 1)//  top left
+            ;
+            this._game.stage.context.fillRect(this._dx + hw, this._dy, 1, 1)//  top center
+            ;
+            this._game.stage.context.fillRect(this._dx + sw, this._dy, 1, 1)//  top right
+            ;
+            this._game.stage.context.fillRect(this._dx, this._dy + hh, 1, 1)//  left center
+            ;
+            this._game.stage.context.fillRect(this._dx + hw, this._dy + hh, 1, 1)//  center
+            ;
+            this._game.stage.context.fillRect(this._dx + sw, this._dy + hh, 1, 1)//  right center
+            ;
+            this._game.stage.context.fillRect(this._dx, this._dy + sh, 1, 1)//  bottom left
+            ;
+            this._game.stage.context.fillRect(this._dx + hw, this._dy + sh, 1, 1)//  bottom center
+            ;
+            this._game.stage.context.fillRect(this._dx + sw, this._dy + sh, 1, 1)//  bottom right
+            ;
         };
         Sprite.prototype.renderDebugInfo = function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
@@ -2182,8 +2242,8 @@ var Phaser;
         * Creates a new point. If you pass no parameters to this method, a point is created at (0,0).
         * @class Point
         * @constructor
-        * @param {Number} x One-liner. Default is ?.
-        * @param {Number} y One-liner. Default is ?.
+        * @param {Number} x The horizontal position of this point (default 0)
+        * @param {Number} y The vertical position of this point (default 0)
         **/
         function Point(x, y) {
             if (typeof x === "undefined") { x = 0; }
@@ -2393,7 +2453,7 @@ var Phaser;
         };
         Point.prototype.setTo = /**
         * Sets the x and y values of this Point object to the given coordinates.
-        * @method set
+        * @method setTo
         * @param {Number} x - The horizontal position of this point.
         * @param {Number} y - The vertical position of this point.
         * @return {Point} This Point object. Useful for chaining method calls.
@@ -2427,6 +2487,7 @@ var Phaser;
     Phaser.Point = Point;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="MicroPoint.ts" />
 /**
 * Phaser - Rectangle
 *
@@ -2450,94 +2511,241 @@ var Phaser;
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = 0; }
             if (typeof height === "undefined") { height = 0; }
+            this._tempX = null;
+            this._tempY = null;
+            this._tempWidth = null;
+            this._tempHeight = null;
             /**
+            * The width of the rectangle
+            * @property width
+            * @type Number
+            **/
+            this._width = 0;
+            /**
+            * The height of the rectangle
+            * @property height
+            * @type Number
+            **/
+            this._height = 0;
+            /**
+            * Half of the width of the rectangle
+            * @property halfWidth
+            * @type Number
+            **/
+            this._halfWidth = 0;
+            /**
+            * Half of the height of the rectangle
+            * @property halfHeight
+            * @type Number
+            **/
+            this._halfHeight = 0;
+            /**
+            * The size of the longest side (width or height)
+            * @property length
+            * @type Number
+            **/
+            this.length = 0;
+            this._width = width;
+            if(width > 0) {
+                this._halfWidth = Math.round(width / 2);
+            }
+            this._height = height;
+            if(height > 0) {
+                this._halfHeight = Math.round(height / 2);
+            }
+            this.length = Math.max(this._width, this._height);
+            this.topLeft = new Phaser.MicroPoint(x, y, this);
+            this.topCenter = new Phaser.MicroPoint(x + this._halfWidth, y, this);
+            this.topRight = new Phaser.MicroPoint(x + this._width - 1, y, this);
+            this.leftCenter = new Phaser.MicroPoint(x, y + this._halfHeight, this);
+            this.center = new Phaser.MicroPoint(x + this._halfWidth, y + this._halfHeight, this);
+            this.rightCenter = new Phaser.MicroPoint(x + this._width - 1, y + this._halfHeight, this);
+            this.bottomLeft = new Phaser.MicroPoint(x, y + this._height - 1, this);
+            this.bottomCenter = new Phaser.MicroPoint(x + this._halfWidth, y + this._height - 1, this);
+            this.bottomRight = new Phaser.MicroPoint(x + this._width - 1, y + this._height - 1, this);
+        }
+        Object.defineProperty(Rectangle.prototype, "x", {
+            get: /**
             * The x coordinate of the top-left corner of the rectangle
             * @property x
             * @type Number
             **/
-            this.x = 0;
-            /**
+            function () {
+                return this.topLeft.x;
+            },
+            set: /**
+            * The x coordinate of the top-left corner of the rectangle
+            * @property x
+            * @type Number
+            **/
+            function (value) {
+                this.topLeft.x = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "y", {
+            get: /**
             * The y coordinate of the top-left corner of the rectangle
             * @property y
             * @type Number
             **/
-            this.y = 0;
-            /**
-            * The width of the rectangle in pixels
+            function () {
+                return this.topLeft.y;
+            },
+            set: /**
+            * The y coordinate of the top-left corner of the rectangle
+            * @property y
+            * @type Number
+            **/
+            function (value) {
+                this.topLeft.y = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Rectangle.prototype.updateBounds = /**
+        * Updates all of the MicroPoints based on the values of width and height.
+        * You should not normally call this directly.
+        **/
+        function () {
+            if(this._tempWidth !== null) {
+                this._width = this._tempWidth;
+                this._halfWidth = 0;
+                if(this._width > 0) {
+                    this._halfWidth = Math.round(this._width / 2);
+                }
+            }
+            if(this._tempHeight !== null) {
+                this._height = this._tempHeight;
+                this._halfHeight = 0;
+                if(this._height > 0) {
+                    this._halfHeight = Math.round(this._height / 2);
+                }
+            }
+            this.length = Math.max(this._width, this._height);
+            if(this._tempX !== null && this._tempY !== null) {
+                this.topLeft.setTo(this._tempX, this._tempY, false);
+            } else if(this._tempX !== null && this._tempY == null) {
+                this.topLeft.setTo(this._tempX, this.topLeft.y, false);
+            } else if(this._tempX == null && this._tempY !== null) {
+                this.topLeft.setTo(this.topLeft.x, this._tempY, false);
+            } else {
+                this.topLeft.setTo(this.x, this.y, false);
+            }
+            this.topCenter.setTo(this.x + this._halfWidth, this.y, false);
+            this.topRight.setTo(this.x + this._width - 1, this.y, false);
+            this.leftCenter.setTo(this.x, this.y + this._halfHeight, false);
+            this.center.setTo(this.x + this._halfWidth, this.y + this._halfHeight, false);
+            this.rightCenter.setTo(this.x + this._width - 1, this.y + this._halfHeight, false);
+            this.bottomLeft.setTo(this.x, this.y + this._height - 1, false);
+            this.bottomCenter.setTo(this.x + this._halfWidth, this.y + this._height - 1, false);
+            this.bottomRight.setTo(this.x + this._width - 1, this.y + this._height - 1, false);
+            this._tempX = null;
+            this._tempY = null;
+            this._tempWidth = null;
+            this._tempHeight = null;
+        };
+        Object.defineProperty(Rectangle.prototype, "width", {
+            get: /**
+            * The width of the rectangle
             * @property width
             * @type Number
             **/
-            this.width = 0;
-            /**
-            * The height of the rectangle in pixels
+            function () {
+                return this._width;
+            },
+            set: /**
+            * The width of the rectangle
+            * @property width
+            * @type Number
+            **/
+            function (value) {
+                this._width = value;
+                this._halfWidth = Math.round(value / 2);
+                this.updateBounds();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "height", {
+            get: /**
+            * The height of the rectangle
             * @property height
             * @type Number
             **/
-            this.height = 0;
-            this.setTo(x, y, width, height);
-        }
+            function () {
+                return this._height;
+            },
+            set: /**
+            * The height of the rectangle
+            * @property height
+            * @type Number
+            **/
+            function (value) {
+                this._height = value;
+                this._halfHeight = Math.round(value / 2);
+                this.updateBounds();
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Rectangle.prototype, "halfWidth", {
-            get: function () {
-                return Math.round(this.width / 2);
+            get: /**
+            * Half of the width of the rectangle
+            * @property halfWidth
+            * @type Number
+            **/
+            function () {
+                return this._halfWidth;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Rectangle.prototype, "halfHeight", {
-            get: function () {
-                return Math.round(this.height / 2);
+            get: /**
+            * Half of the height of the rectangle
+            * @property halfHeight
+            * @type Number
+            **/
+            function () {
+                return this._halfHeight;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Rectangle.prototype, "bottom", {
             get: /**
-            * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+            * The sum of the y and height properties.
+            * Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
             * @method bottom
             * @return {Number}
             **/
             function () {
-                return this.y + this.height;
+                return this.bottomCenter.y;
             },
             set: /**
-            * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+            * The sum of the y and height properties.
+            * Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
             * @method bottom
             * @param {Number} value
             **/
             function (value) {
                 if(value < this.y) {
-                    this.height = 0;
+                    this._tempHeight = 0;
                 } else {
-                    this.height = this.y + value;
+                    this._tempHeight = this.y + value;
                 }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "bottomRight", {
-            get: /**
-            * Returns a Point containing the location of the Rectangle's bottom-right corner, determined by the values of the right and bottom properties.
-            * @method bottomRight
-            * @return {Point}
-            **/
-            function () {
-                return new Phaser.Point(this.right, this.bottom);
-            },
-            set: /**
-            * Sets the bottom-right corner of this Rectangle, determined by the values of the given Point object.
-            * @method bottomRight
-            * @param {Point} value
-            **/
-            function (value) {
-                this.right = value.x;
-                this.bottom = value.y;
+                this.updateBounds();
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Rectangle.prototype, "left", {
             get: /**
-            * The x coordinate of the top-left corner of the rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
+            * The x coordinate of the top-left corner of the rectangle.
+            * Changing the left property of a Rectangle object has no effect on the y and height properties.
+            * However it does affect the width property, whereas changing the x value does not affect the width property.
             * @method left
             * @ return {number}
             **/
@@ -2545,44 +2753,51 @@ var Phaser;
                 return this.x;
             },
             set: /**
-            * The x coordinate of the top-left corner of the rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
+            * The x coordinate of the top-left corner of the rectangle.
+            * Changing the left property of a Rectangle object has no effect on the y and height properties.
+            * However it does affect the width property, whereas changing the x value does not affect the width property.
             * @method left
             * @param {Number} value
             **/
             function (value) {
                 var diff = this.x - value;
-                if(this.width + diff < 0) {
-                    this.width = 0;
-                    this.x = value;
+                if(this._width + diff < 0) {
+                    this._tempWidth = 0;
+                    this._tempX = value;
                 } else {
-                    this.width += diff;
-                    this.x = value;
+                    this._tempWidth = this._width + diff;
+                    this._tempX = value;
                 }
+                this.updateBounds();
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Rectangle.prototype, "right", {
             get: /**
-            * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties. However it does affect the width property.
+            * The sum of the x and width properties.
+            * Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+            * However it does affect the width property.
             * @method right
             * @return {Number}
             **/
             function () {
-                return this.x + this.width;
+                return this.rightCenter.x;
             },
             set: /**
-            * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties. However it does affect the width property.
+            * The sum of the x and width properties.
+            * Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+            * However it does affect the width property.
             * @method right
             * @param {Number} value
             **/
             function (value) {
-                if(value < this.x) {
-                    this.width = 0;
-                    return this.x;
+                if(value < this.topLeft.x) {
+                    this._tempWidth = 0;
                 } else {
-                    this.width = (value - this.x);
+                    this._tempWidth = (value - this.topLeft.x);
                 }
+                this.updateBounds();
             },
             enumerable: true,
             configurable: true
@@ -2595,7 +2810,7 @@ var Phaser;
         **/
         function (output) {
             if (typeof output === "undefined") { output = new Phaser.Point(); }
-            return output.setTo(this.width, this.height);
+            return output.setTo(this._width, this._height);
         };
         Object.defineProperty(Rectangle.prototype, "volume", {
             get: /**
@@ -2604,7 +2819,7 @@ var Phaser;
             * @return {Number}
             **/
             function () {
-                return this.width * this.height;
+                return this._width * this._height;
             },
             enumerable: true,
             configurable: true
@@ -2616,55 +2831,39 @@ var Phaser;
             * @return {Number}
             **/
             function () {
-                return (this.width * 2) + (this.height * 2);
+                return (this._width * 2) + (this._height * 2);
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Rectangle.prototype, "top", {
             get: /**
-            * The y coordinate of the top-left corner of the rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties. However it does affect the height property, whereas changing the y value does not affect the height property.
+            * The y coordinate of the top-left corner of the rectangle.
+            * Changing the top property of a Rectangle object has no effect on the x and width properties.
+            * However it does affect the height property, whereas changing the y value does not affect the height property.
             * @method top
             * @return {Number}
             **/
             function () {
-                return this.y;
+                return this.topCenter.y;
             },
             set: /**
-            * The y coordinate of the top-left corner of the rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties. However it does affect the height property, whereas changing the y value does not affect the height property.
+            * The y coordinate of the top-left corner of the rectangle.
+            * Changing the top property of a Rectangle object has no effect on the x and width properties.
+            * However it does affect the height property, whereas changing the y value does not affect the height property.
             * @method top
             * @param {Number} value
             **/
             function (value) {
-                var diff = this.y - value;
-                if(this.height + diff < 0) {
-                    this.height = 0;
-                    this.y = value;
+                var diff = this.topCenter.y - value;
+                if(this._height + diff < 0) {
+                    this._tempHeight = 0;
+                    this._tempY = value;
                 } else {
-                    this.height += diff;
-                    this.y = value;
+                    this._tempHeight = this._height + diff;
+                    this._tempY = value;
                 }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "topLeft", {
-            get: /**
-            * The location of the Rectangle object's top-left corner, determined by the x and y coordinates of the point.
-            * @method topLeft
-            * @return {Point}
-            **/
-            function () {
-                return new Phaser.Point(this.x, this.y);
-            },
-            set: /**
-            * The location of the Rectangle object's top-left corner, determined by the x and y coordinates of the point.
-            * @method topLeft
-            * @param {Point} value
-            **/
-            function (value) {
-                this.x = value.x;
-                this.y = value.y;
+                this.updateBounds();
             },
             enumerable: true,
             configurable: true
@@ -2687,13 +2886,14 @@ var Phaser;
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
         **/
         function (x, y) {
-            if(x >= this.x && x <= this.right && y >= this.y && y <= this.bottom) {
+            if(x >= this.topLeft.x && x <= this.topRight.x && y >= this.topLeft.y && y <= this.bottomRight.y) {
                 return true;
             }
             return false;
         };
         Rectangle.prototype.containsPoint = /**
-        * Determines whether the specified point is contained within the rectangular region defined by this Rectangle object. This method is similar to the Rectangle.contains() method, except that it takes a Point object as a parameter.
+        * Determines whether the specified point is contained within the rectangular region defined by this Rectangle object.
+        * This method is similar to the Rectangle.contains() method, except that it takes a Point object as a parameter.
         * @method containsPoint
         * @param {Point} point The point object being checked. Can be Point or any object with .x and .y values.
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
@@ -2702,7 +2902,8 @@ var Phaser;
             return this.contains(point.x, point.y);
         };
         Rectangle.prototype.containsRect = /**
-        * Determines whether the Rectangle object specified by the rect parameter is contained within this Rectangle object. A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
+        * Determines whether the Rectangle object specified by the rect parameter is contained within this Rectangle object.
+        * A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
         * @method containsRect
         * @param {Rectangle} rect The rectangle object being checked.
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
@@ -2712,7 +2913,7 @@ var Phaser;
             if(rect.volume > this.volume) {
                 return false;
             }
-            if(rect.x >= this.x && rect.y >= this.y && rect.right <= this.right && rect.bottom <= this.bottom) {
+            if(rect.x >= this.topLeft.x && rect.y >= this.topLeft.y && rect.rightCenter.x <= this.rightCenter.x && rect.bottomCenter.y <= this.bottomCenter.y) {
                 return true;
             }
             return false;
@@ -2736,35 +2937,38 @@ var Phaser;
             return target.copyFrom(this);
         };
         Rectangle.prototype.equals = /**
-        * Determines whether the object specified in the toCompare parameter is equal to this Rectangle object. This method compares the x, y, width, and height properties of an object against the same properties of this Rectangle object.
+        * Determines whether the object specified in the toCompare parameter is equal to this Rectangle object.
+        * This method compares the x, y, width, and height properties of an object against the same properties of this Rectangle object.
         * @method equals
         * @param {Rectangle} toCompare The rectangle to compare to this Rectangle object.
         * @return {Boolean} A value of true if the object has exactly the same values for the x, y, width, and height properties as this Rectangle object; otherwise false.
         **/
         function (toCompare) {
-            if(this.x === toCompare.x && this.y === toCompare.y && this.width === toCompare.width && this.height === toCompare.height) {
+            if(this.topLeft.equals(toCompare.topLeft) && this.bottomRight.equals(toCompare.bottomRight)) {
                 return true;
             }
             return false;
         };
         Rectangle.prototype.inflate = /**
-        * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
+        * Increases the size of the Rectangle object by the specified amounts.
+        * The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value,
+        * and to the top and the bottom by the dy value.
         * @method inflate
         * @param {Number} dx The amount to be added to the left side of this Rectangle.
         * @param {Number} dy The amount to be added to the bottom side of this Rectangle.
         * @return {Rectangle} This Rectangle object.
         **/
         function (dx, dy) {
-            if(!isNaN(dx) && !isNaN(dy)) {
-                this.x -= dx;
-                this.width += 2 * dx;
-                this.y -= dy;
-                this.height += 2 * dy;
-            }
+            this._tempX = this.topLeft.x - dx;
+            this._tempWidth = this._width + (2 * dx);
+            this._tempY = this.topLeft.y - dy;
+            this._tempHeight = this._height + (2 * dy);
+            this.updateBounds();
             return this;
         };
         Rectangle.prototype.inflatePoint = /**
-        * Increases the size of the Rectangle object. This method is similar to the Rectangle.inflate() method except it takes a Point object as a parameter.
+        * Increases the size of the Rectangle object.
+        * This method is similar to the Rectangle.inflate() method except it takes a Point object as a parameter.
         * @method inflatePoint
         * @param {Point} point The x property of this Point object is used to increase the horizontal dimension of the Rectangle object. The y property is used to increase the vertical dimension of the Rectangle object.
         * @return {Rectangle} This Rectangle object.
@@ -2773,7 +2977,9 @@ var Phaser;
             return this.inflate(point.x, point.y);
         };
         Rectangle.prototype.intersection = /**
-        * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
+        * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object,
+        * returns the area of intersection as a Rectangle object. If the rectangles do not intersect, this method
+        * returns an empty Rectangle object with its properties set to 0.
         * @method intersection
         * @param {Rectangle} toIntersect The Rectangle object to compare against to see if it intersects with this Rectangle object.
         * @param {Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
@@ -2782,41 +2988,24 @@ var Phaser;
         function (toIntersect, output) {
             if (typeof output === "undefined") { output = new Rectangle(); }
             if(this.intersects(toIntersect) === true) {
-                output.x = Math.max(toIntersect.x, this.x);
-                output.y = Math.max(toIntersect.y, this.y);
-                output.width = Math.min(toIntersect.right, this.right) - output.x;
-                output.height = Math.min(toIntersect.bottom, this.bottom) - output.y;
+                output.x = Math.max(toIntersect.topLeft.x, this.topLeft.x);
+                output.y = Math.max(toIntersect.topLeft.y, this.topLeft.y);
+                output.width = Math.min(toIntersect.rightCenter.x, this.rightCenter.x) - output.x;
+                output.height = Math.min(toIntersect.bottomCenter.y, this.bottomCenter.y) - output.y;
             }
             return output;
         };
         Rectangle.prototype.intersects = /**
-        * Determines whether the object specified in the toIntersect parameter intersects with this Rectangle object. This method checks the x, y, width, and height properties of the specified Rectangle object to see if it intersects with this Rectangle object.
+        * Determines whether the object specified intersects (overlaps) with this Rectangle object.
+        * This method checks the x, y, width, and height properties of the specified Rectangle object to see if it intersects with this Rectangle object.
         * @method intersects
-        * @param {Rectangle} toIntersect The Rectangle object to compare against to see if it intersects with this Rectangle object.
+        * @param {Rectangle} r2 The Rectangle object to compare against to see if it intersects with this Rectangle object.
+        * @param {Number} t A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
         **/
-        function (toIntersect) {
-            if(toIntersect.x >= this.right) {
-                return false;
-            }
-            if(toIntersect.right <= this.x) {
-                return false;
-            }
-            if(toIntersect.bottom <= this.y) {
-                return false;
-            }
-            if(toIntersect.y >= this.bottom) {
-                return false;
-            }
-            return true;
-        };
-        Rectangle.prototype.overlap = /**
-        * Checks for overlaps between this Rectangle and the given Rectangle. Returns an object with boolean values for each check.
-        * @method overlap
-        * @return {Boolean} true if the rectangles overlap, otherwise false
-        **/
-        function (rect) {
-            return (rect.x + rect.width > this.x) && (rect.x < this.x + this.width) && (rect.y + rect.height > this.y) && (rect.y < this.y + this.height);
+        function (r2, t) {
+            if (typeof t === "undefined") { t = 0; }
+            return !(r2.left > this.right + t || r2.right < this.left - t || r2.top > this.bottom + t || r2.bottom < this.top - t);
         };
         Object.defineProperty(Rectangle.prototype, "isEmpty", {
             get: /**
@@ -2874,16 +3063,11 @@ var Phaser;
         * @return {Rectangle} This rectangle object
         **/
         function (x, y, width, height) {
-            if(!isNaN(x) && !isNaN(y) && !isNaN(width) && !isNaN(height)) {
-                this.x = x;
-                this.y = y;
-                if(width > 0) {
-                    this.width = width;
-                }
-                if(height > 0) {
-                    this.height = height;
-                }
-            }
+            this._tempX = x;
+            this._tempY = y;
+            this._tempWidth = width;
+            this._tempHeight = height;
+            this.updateBounds();
             return this;
         };
         Rectangle.prototype.union = /**
@@ -6568,8 +6752,7 @@ var Phaser;
             this._game = game;
         }
         Motion.prototype.computeVelocity = /**
-        * A tween-like function that takes a starting velocity
-        * and some other factors and returns an altered velocity.
+        * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
         *
         * @param	Velocity		Any component of velocity (e.g. 20).
         * @param	Acceleration	Rate at which the velocity is changing.
@@ -6865,6 +7048,86 @@ var Phaser;
     })();
     Phaser.Motion = Motion;    
 })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../SoundManager.ts" />
+/**
+* Phaser - Sound
+*
+* A Sound file, used by the Game.SoundManager for playback.
+*/
+var Phaser;
+(function (Phaser) {
+    var Sound = (function () {
+        function Sound(context, gainNode, data, volume, loop) {
+            if (typeof volume === "undefined") { volume = 1; }
+            if (typeof loop === "undefined") { loop = false; }
+            this.loop = false;
+            this.isPlaying = false;
+            this.isDecoding = false;
+            this._context = context;
+            this._gainNode = gainNode;
+            this._buffer = data;
+            this._volume = volume;
+            this.loop = loop;
+            //  Local volume control
+            if(this._context !== null) {
+                this._localGainNode = this._context.createGainNode();
+                this._localGainNode.connect(this._gainNode);
+                this._localGainNode.gain.value = this._volume;
+            }
+            if(this._buffer === null) {
+                this.isDecoding = true;
+            } else {
+                this.play();
+            }
+        }
+        Sound.prototype.setDecodedBuffer = function (data) {
+            this._buffer = data;
+            this.isDecoding = false;
+            this.play();
+        };
+        Sound.prototype.play = function () {
+            if(this._buffer === null || this.isDecoding === true) {
+                return;
+            }
+            this._sound = this._context.createBufferSource();
+            this._sound.buffer = this._buffer;
+            this._sound.connect(this._localGainNode);
+            if(this.loop) {
+                this._sound.loop = true;
+            }
+            this._sound.noteOn(0)// the zero is vitally important, crashes iOS6 without it
+            ;
+            this.duration = this._sound.buffer.duration;
+            this.isPlaying = true;
+        };
+        Sound.prototype.stop = function () {
+            if(this.isPlaying === true) {
+                this.isPlaying = false;
+                this._sound.noteOff(0);
+            }
+        };
+        Sound.prototype.mute = function () {
+            this._localGainNode.gain.value = 0;
+        };
+        Sound.prototype.unmute = function () {
+            this._localGainNode.gain.value = this._volume;
+        };
+        Object.defineProperty(Sound.prototype, "volume", {
+            get: function () {
+                return this._volume;
+            },
+            set: function (value) {
+                this._volume = value;
+                this._localGainNode.gain.value = this._volume;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Sound;
+    })();
+    Phaser.Sound = Sound;    
+})(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /// <reference path="system/Sound.ts" />
 /**
@@ -7108,6 +7371,9 @@ var Phaser;
             } else {
                 document.body.appendChild(this.canvas);
             }
+            //  Consume default actions on the canvas
+            this.canvas.style.msTouchAction = 'none';
+            this.canvas.style['touch-action'] = 'none';
             this.context = this.canvas.getContext('2d');
             this.offset = this.getOffset(this.canvas);
             this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, width, height);
@@ -8947,6 +9213,8 @@ var Phaser;
             this.mouse = new Phaser.Mouse(this._game);
             this.keyboard = new Phaser.Keyboard(this._game);
             this.touch = new Phaser.Touch(this._game);
+            this.onDown = new Phaser.Signal();
+            this.onUp = new Phaser.Signal();
         }
         Input.prototype.update = function () {
             this.x = Math.round(this.x);
@@ -9227,6 +9495,7 @@ var Phaser;
             this.isDown = true;
             this.isUp = false;
             this.timeDown = this._game.time.now;
+            this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this.timeDown);
         };
         Mouse.prototype.update = function () {
             //this._game.input.x = this._x * this._game.input.scaleX;
@@ -9252,6 +9521,7 @@ var Phaser;
             this._y = event.clientY - this._game.stage.y;
             this._game.input.x = this._x * this._game.input.scaleX;
             this._game.input.y = this._y * this._game.input.scaleY;
+            this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this.timeDown);
         };
         return Mouse;
     })();
@@ -9622,6 +9892,7 @@ var Phaser;
                         this._game.input.x = this.x * this._game.input.scaleX;
                         this._game.input.y = this.y * this._game.input.scaleY;
                         this.touchDown.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
+                        this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeDown);
                         this.isDown = true;
                         this.isUp = false;
                         break;
@@ -9728,6 +9999,7 @@ var Phaser;
                         this._game.input.x = this.x * this._game.input.scaleX;
                         this._game.input.y = this.y * this._game.input.scaleY;
                         this.touchUp.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
+                        this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeUp);
                         this.isDown = false;
                         this.isUp = true;
                         break;
@@ -10194,7 +10466,7 @@ var Phaser;
                 this._dh = this.bounds.height * this.scale.y;
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
             } else {
-                return camera.overlap(this.bounds);
+                return camera.intersects(this.bounds);
             }
         };
         GeomSprite.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
@@ -10221,14 +10493,17 @@ var Phaser;
                 this._dx -= (camera.worldView.x * this.scrollFactor.x);
                 this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
-            //	Rotation (could be misleading as it doesn't work re: collision)
-            if(this.angle !== 0) {
-                this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
-                this._game.stage.context.rotate(this.angle * (Math.PI / 180));
-                this._dx = -(this._dw / 2);
-                this._dy = -(this._dh / 2);
+            //	Rotation is disabled for now as I don't want it to be misleading re: collision
+            /*
+            if (this.angle !== 0)
+            {
+            this._game.stage.context.save();
+            this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
+            this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+            this._dx = -(this._dw / 2);
+            this._dy = -(this._dh / 2);
             }
+            */
             this._dx = Math.round(this._dx);
             this._dy = Math.round(this._dy);
             this._dw = Math.round(this._dw);
@@ -10272,6 +10547,17 @@ var Phaser;
                     }
                     this._game.stage.context.closePath();
                 }
+                //  And now the edge points
+                this._game.stage.context.fillStyle = 'rgb(255,255,255)';
+                this.renderPoint(this._dx, this._dy, this.rect.topLeft, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.topCenter, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.topRight, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.leftCenter, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.center, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.rightCenter, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.bottomLeft, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.bottomCenter, 2);
+                this.renderPoint(this._dx, this._dy, this.rect.bottomRight, 2);
             }
             this._game.stage.restoreCanvasValues();
             if(this.rotation !== 0) {
@@ -10282,6 +10568,11 @@ var Phaser;
                 this._game.stage.context.globalAlpha = globalAlpha;
             }
             return true;
+        };
+        GeomSprite.prototype.renderPoint = function (offsetX, offsetY, point, size) {
+            offsetX = 0;
+            offsetY = 0;
+            this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, 1, 1);
         };
         GeomSprite.prototype.renderDebugInfo = function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
@@ -10347,7 +10638,7 @@ var Phaser;
                 return Phaser.Collision.lineSegmentToLineSegment(this.line, source.line).result;
             }
             //  Line vs. Circle
-            if(this.type == GeomSprite.LINE && source.type == GeomSprite.LINE) {
+            if(this.type == GeomSprite.LINE && source.type == GeomSprite.CIRCLE) {
                 return Phaser.Collision.lineToCircle(this.line, source.circle).result;
             }
             //  Line vs. Rect
@@ -10355,7 +10646,7 @@ var Phaser;
                 return Phaser.Collision.lineSegmentToRectangle(this.line, source.rect).result;
             }
             //  Line vs. Point
-            if(this.type == GeomSprite.LINE && source.type == GeomSprite.LINE) {
+            if(this.type == GeomSprite.LINE && source.type == GeomSprite.POINT) {
                 return this.line.isPointOnLine(source.point.x, source.point.y);
             }
             return false;
@@ -11082,84 +11373,138 @@ var Phaser;
     Phaser.Game = Game;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../SoundManager.ts" />
 /**
-* Phaser - Sound
+* Phaser - MicroPoint
 *
-* A Sound file, used by the Game.SoundManager for playback.
+* The MicroPoint object represents a location in a two-dimensional coordinate system,
+* where x represents the horizontal axis and y represents the vertical axis.
+* It is different to the Point class in that it doesn't contain any of the help methods like add/substract/distanceTo, etc.
+* Use a MicroPoint when all you literally need is a solid container for x and y (such as in the Rectangle class).
 */
 var Phaser;
 (function (Phaser) {
-    var Sound = (function () {
-        function Sound(context, gainNode, data, volume, loop) {
-            if (typeof volume === "undefined") { volume = 1; }
-            if (typeof loop === "undefined") { loop = false; }
-            this.loop = false;
-            this.isPlaying = false;
-            this.isDecoding = false;
-            this._context = context;
-            this._gainNode = gainNode;
-            this._buffer = data;
-            this._volume = volume;
-            this.loop = loop;
-            //  Local volume control
-            if(this._context !== null) {
-                this._localGainNode = this._context.createGainNode();
-                this._localGainNode.connect(this._gainNode);
-                this._localGainNode.gain.value = this._volume;
-            }
-            if(this._buffer === null) {
-                this.isDecoding = true;
-            } else {
-                this.play();
-            }
+    var MicroPoint = (function () {
+        /**
+        * Creates a new point. If you pass no parameters to this method, a point is created at (0,0).
+        * @class MicroPoint
+        * @constructor
+        * @param {Number} x The horizontal position of this point (default 0)
+        * @param {Number} y The vertical position of this point (default 0)
+        **/
+        function MicroPoint(x, y, parent) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof parent === "undefined") { parent = null; }
+            this._x = x;
+            this._y = y;
+            this.parent = parent;
         }
-        Sound.prototype.setDecodedBuffer = function (data) {
-            this._buffer = data;
-            this.isDecoding = false;
-            this.play();
-        };
-        Sound.prototype.play = function () {
-            if(this._buffer === null || this.isDecoding === true) {
-                return;
-            }
-            this._sound = this._context.createBufferSource();
-            this._sound.buffer = this._buffer;
-            this._sound.connect(this._localGainNode);
-            if(this.loop) {
-                this._sound.loop = true;
-            }
-            this._sound.noteOn(0)// the zero is vitally important, crashes iOS6 without it
-            ;
-            this.duration = this._sound.buffer.duration;
-            this.isPlaying = true;
-        };
-        Sound.prototype.stop = function () {
-            if(this.isPlaying === true) {
-                this.isPlaying = false;
-                this._sound.noteOff(0);
-            }
-        };
-        Sound.prototype.mute = function () {
-            this._localGainNode.gain.value = 0;
-        };
-        Sound.prototype.unmute = function () {
-            this._localGainNode.gain.value = this._volume;
-        };
-        Object.defineProperty(Sound.prototype, "volume", {
-            get: function () {
-                return this._volume;
+        Object.defineProperty(MicroPoint.prototype, "x", {
+            get: /**
+            * The x coordinate of the top-left corner of the rectangle
+            * @property x
+            * @type Number
+            **/
+            function () {
+                return this._x;
             },
-            set: function (value) {
-                this._volume = value;
-                this._localGainNode.gain.value = this._volume;
+            set: /**
+            * The x coordinate of the top-left corner of the rectangle
+            * @property x
+            * @type Number
+            **/
+            function (value) {
+                this._x = value;
+                if(this.parent) {
+                    this.parent.updateBounds();
+                }
             },
             enumerable: true,
             configurable: true
         });
-        return Sound;
+        Object.defineProperty(MicroPoint.prototype, "y", {
+            get: /**
+            * The y coordinate of the top-left corner of the rectangle
+            * @property y
+            * @type Number
+            **/
+            function () {
+                return this._y;
+            },
+            set: /**
+            * The y coordinate of the top-left corner of the rectangle
+            * @property y
+            * @type Number
+            **/
+            function (value) {
+                this._y = value;
+                if(this.parent) {
+                    this.parent.updateBounds();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        MicroPoint.prototype.copyFrom = /**
+        * Copies the x and y values from any given object to this MicroPoint.
+        * @method copyFrom
+        * @param {any} source - The object to copy from.
+        * @return {MicroPoint} This MicroPoint object. Useful for chaining method calls.
+        **/
+        function (source) {
+            return this.setTo(source.x, source.y);
+        };
+        MicroPoint.prototype.copyTo = /**
+        * Copies the x and y values from this MicroPoint to any given object.
+        * @method copyTo
+        * @param {any} target - The object to copy to.
+        * @return {any} The target object.
+        **/
+        function (target) {
+            target.x = this._x;
+            target.y = this._y;
+            return target;
+        };
+        MicroPoint.prototype.setTo = /**
+        * Sets the x and y values of this MicroPoint object to the given coordinates.
+        * @method setTo
+        * @param {Number} x - The horizontal position of this point.
+        * @param {Number} y - The vertical position of this point.
+        * @return {MicroPoint} This MicroPoint object. Useful for chaining method calls.
+        **/
+        function (x, y, callParent) {
+            if (typeof callParent === "undefined") { callParent = true; }
+            this._x = x;
+            this._y = y;
+            if(this.parent != null && callParent == true) {
+                this.parent.updateBounds();
+            }
+            return this;
+        };
+        MicroPoint.prototype.equals = /**
+        * Determines whether this MicroPoint object and the given object are equal. They are equal if they have the same x and y values.
+        * @method equals
+        * @param {any} point - The object to compare against. Must have x and y properties.
+        * @return {Boolean} A value of true if the object is equal to this MicroPoin object; false if it is not equal.
+        **/
+        function (toCompare) {
+            if(this._x === toCompare.x && this._y === toCompare.y) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        MicroPoint.prototype.toString = /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the instance.
+        **/
+        function () {
+            return '[{MicroPoint (x=' + this._x + ' y=' + this._y + ')}]';
+        };
+        return MicroPoint;
     })();
-    Phaser.Sound = Sound;    
+    Phaser.MicroPoint = MicroPoint;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**

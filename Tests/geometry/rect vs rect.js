@@ -15,4 +15,8 @@
             box1.fillColor = 'rgb(0,255,0)';
         }
     }
+    function checkPoints() {
+        if(box2.rect.containsPoint(box1.rect.topLeft)) {
+        }
+    }
 })();

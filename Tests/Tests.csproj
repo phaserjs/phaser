@@ -100,6 +100,10 @@
     <Content Include="misc\screen grab.js">
       <DependentUpon>screen grab.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="sprites\align.ts" />
+    <Content Include="sprites\align.js">
+      <DependentUpon>align.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\bounce.js">
       <DependentUpon>bounce.ts</DependentUpon>
     </Content>

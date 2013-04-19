@@ -10,12 +10,18 @@
         teddy = myGame.createSprite(0, 0, 'teddy');
         teddy.x = myGame.stage.centerX - teddy.width / 2;
         teddy.y = myGame.stage.centerY - teddy.height / 2;
+        myGame.input.onDown.add(click, this);
+        teddy.renderDebug = true;
+    }
+    function click() {
+        if(teddy.align == Phaser.GameObject.ALIGN_BOTTOM_RIGHT) {
+            teddy.align = Phaser.GameObject.ALIGN_TOP_LEFT;
+        } else {
+            teddy.align++;
+        }
     }
     function update() {
-        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            teddy.angularAcceleration = -40;
-        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            teddy.angularAcceleration = 40;
-        }
+        teddy.x = myGame.input.x;
+        teddy.y = myGame.input.y;
     }
 })();

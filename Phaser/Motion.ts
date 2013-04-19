@@ -20,8 +20,7 @@ module Phaser {
         private _game: Game;
 
         /**
-        * A tween-like function that takes a starting velocity
-        * and some other factors and returns an altered velocity.
+        * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
         * 
         * @param	Velocity		Any component of velocity (e.g. 20).
         * @param	Acceleration	Rate at which the velocity is changing.
@@ -385,7 +384,7 @@ module Phaser {
 		public angleBetweenMouse(a:GameObject, asDegrees:bool = false):number
 		{
 			//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
-			var p:Point = a.getScreenXY();
+			var p:MicroPoint = a.getScreenXY();
 			
 			var dx:number = a._game.input.x - p.x;
 			var dy:number = a._game.input.y - p.y;

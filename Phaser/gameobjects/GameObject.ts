@@ -24,10 +24,11 @@ module Phaser {
             this.alive = true;
             this.isGroup = false;
             this.alpha = 1;
-            this.scale = new Point(1, 1);
+            this.scale = new MicroPoint(1, 1);
 
-            this.last = new Point(x, y);
-            this.origin = new Point(this.bounds.halfWidth, this.bounds.halfHeight);
+            this.last = new MicroPoint(x, y);
+            this.origin = new MicroPoint(this.bounds.halfWidth, this.bounds.halfHeight);
+            this.align = GameObject.ALIGN_TOP_LEFT;
             this.mass = 1.0;
             this.elasticity = 0.0;
             this.health = 1;
@@ -38,10 +39,10 @@ module Phaser {
             this.wasTouching = Collision.NONE;
             this.allowCollisions = Collision.ANY;
 
-            this.velocity = new Point();
-            this.acceleration = new Point();
-            this.drag = new Point();
-            this.maxVelocity = new Point(10000, 10000);
+            this.velocity = new MicroPoint();
+            this.acceleration = new MicroPoint();
+            this.drag = new MicroPoint();
+            this.maxVelocity = new MicroPoint(10000, 10000);
 
             this.angle = 0;
             this.angularVelocity = 0;
@@ -49,40 +50,58 @@ module Phaser {
             this.angularDrag = 0;
             this.maxAngular = 10000;
 
-            this.scrollFactor = new Point(1.0, 1.0);
+            this.scrollFactor = new MicroPoint(1.0, 1.0);
 
         }
 
         private _angle: number = 0;
-        public _point: Point;
+
+        public static ALIGN_TOP_LEFT: number = 0;
+        public static ALIGN_TOP_CENTER: number = 1;
+        public static ALIGN_TOP_RIGHT: number = 2;
+        public static ALIGN_CENTER_LEFT: number = 3;
+        public static ALIGN_CENTER: number = 4;
+        public static ALIGN_CENTER_RIGHT: number = 5;
+        public static ALIGN_BOTTOM_LEFT: number = 6;
+        public static ALIGN_BOTTOM_CENTER: number = 7;
+        public static ALIGN_BOTTOM_RIGHT: number = 8;
+
+        public _point: MicroPoint;
 
         public bounds: Rectangle;
+        public align: number;
         public facing: number;
         public alpha: number;
-        public scale: Point;
-        public origin: Point;
+        public scale: MicroPoint;
+        public origin: MicroPoint;
         public z: number = 0;
 
         //  Physics properties
         public immovable: bool;
-        public velocity: Point;
+
+        //  Velocity is given in pixels per second. Therefore a velocity of
+        //  100 will move at a rate of 100 pixels every 1000 ms (1sec). It's not balls-on
+        //  accurate due to the way timers work, but it's pretty close. Expect tolerance
+        //  of +- 10 px. Also that speed assumes no drag
+        public velocity: MicroPoint;
+
         public mass: number;
         public elasticity: number;
-        public acceleration: Point;
-        public drag: Point;
-        public maxVelocity: Point;
+        public acceleration: MicroPoint;
+        public drag: MicroPoint;
+        public maxVelocity: MicroPoint;
         public angularVelocity: number;
         public angularAcceleration: number;
         public angularDrag: number;
         public maxAngular: number;
-        public scrollFactor: Point;
+        public scrollFactor: MicroPoint;
 
         public health: number;
         public moves: bool = true;
         public touching: number;
         public wasTouching: number;
         public allowCollisions: number;
-        public last: Point;
+        public last: MicroPoint;
 
         //  Input
         public inputEnabled: bool = false;
@@ -123,9 +142,6 @@ module Phaser {
         }
 
         private updateInput() {
-
-
-
         }
 
         private updateMotion() {
@@ -215,7 +231,7 @@ module Phaser {
 
         /**
         * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
-        * This is distinct from overlapsPoint(), which just checks that ponumber, rather than taking the object's size numbero account.
+        * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         * 
         * @param	X				The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
@@ -283,13 +299,13 @@ module Phaser {
         }
 
         /**
-        * Checks to see if a ponumber in 2D world space overlaps this <code>GameObject</code> object.
+        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         * 
-        * @param	Point			The ponumber in world space you want to check.
+        * @param	Point			The point in world space you want to check.
         * @param	InScreenSpace	Whether to take scroll factors numbero account when checking for overlap.
         * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         * 
-        * @return	Whether or not the ponumber overlaps this object.
+        * @return	Whether or not the point overlaps this object.
         */
         public overlapsPoint(point: Point, InScreenSpace: bool = false, Camera: Camera = null): bool {
 
@@ -315,7 +331,7 @@ module Phaser {
         /**
         * Check and see if this object is currently on screen.
         * 
-        * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param	Camera		Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
         * 
         * @return	Whether the object is on screen or not.
         */
@@ -336,15 +352,15 @@ module Phaser {
         * Call this to figure out the on-screen position of the object.
         * 
         * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        * @param	Point		Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param	Point		Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
         * 
-        * @return	The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+        * @return	The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
-        public getScreenXY(point: Point = null, Camera: Camera = null): Point {
+        public getScreenXY(point: MicroPoint = null, Camera: Camera = null): MicroPoint {
 
             if (point == null)
             {
-                point = new Point();
+                point = new MicroPoint();
             }
 
             if (Camera == null)
@@ -387,21 +403,20 @@ module Phaser {
         }
 
         /**
-        * Retrieve the midponumber of this object in world coordinates.
+        * Retrieve the midpoint of this object in world coordinates.
         * 
         * @Point	Allows you to pass in an existing <code>Point</code> object if you're so inclined.  Otherwise a new one is created.
         * 
-        * @return	A <code>Point</code> object containing the midponumber of this object in world coordinates.
+        * @return	A <code>Point</code> object containing the midpoint of this object in world coordinates.
         */
-        public getMidpoint(point: Point = null): Point {
+        public getMidpoint(point: MicroPoint = null): MicroPoint {
 
             if (point == null)
             {
-                point = new Point();
+                point = new MicroPoint();
             }
 
-            point.x = this.x + this.width * 0.5;
-            point.y = this.y + this.height * 0.5;
+            point.copyFrom(this.bounds.center);
 
             return point;
 

@@ -14,8 +14,8 @@ module Phaser {
         * Creates a new point. If you pass no parameters to this method, a point is created at (0,0).
         * @class Point
         * @constructor
-        * @param {Number} x One-liner. Default is ?.
-        * @param {Number} y One-liner. Default is ?.
+        * @param {Number} x The horizontal position of this point (default 0)
+        * @param {Number} y The vertical position of this point (default 0)
         **/
         constructor(x: number = 0, y: number = 0) {
 
@@ -298,7 +298,7 @@ module Phaser {
 
         /**
          * Sets the x and y values of this Point object to the given coordinates.
-         * @method set
+         * @method setTo
          * @param {Number} x - The horizontal position of this point.
          * @param {Number} y - The vertical position of this point.
          * @return {Point} This Point object. Useful for chaining method calls.

@@ -8,9 +8,10 @@
 
     function create() {
 
-        box = myGame.createGeomSprite(200, 200);
+        box = myGame.createGeomSprite(0, 0);
 
         box.createRectangle(64, 64);
+        box.renderOutline = false;
 
     }
 
@@ -18,21 +19,23 @@
 
         box.velocity.x = 0;
         box.velocity.y = 0;
-		box.angularVelocity = 0;
-		box.angularAcceleration = 0;
 
         if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            box.angularVelocity = -200;
+            box.velocity.x = -200;
         }
         else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            box.angularVelocity = 200;
+            box.velocity.x = 200;
         }
 
         if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            box.velocity.copyFrom(myGame.motion.velocityFromAngle(box.angle, 200));
+            box.velocity.y = -200;
+        }
+        else if (myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+        {
+            box.velocity.y = 200;
         }
 
     }
