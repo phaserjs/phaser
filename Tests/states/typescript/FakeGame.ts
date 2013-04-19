@@ -1,5 +1,5 @@
-/// <reference path="../../../Kiwi Lite/Game.ts" />
-/// <reference path="../../../Kiwi Lite/State.ts" />
+/// <reference path="../../../Phaser/Game.ts" />
+/// <reference path="../../../Phaser/State.ts" />
 
 class FakeGame extends State {
 
@@ -9,8 +9,8 @@ class FakeGame extends State {
 
     }
 
-    private car: Sprite;
-    private bigCam: Camera;
+    private car: Phaser.Sprite;
+    private bigCam: Phaser.Camera;
 
     public init() {
 

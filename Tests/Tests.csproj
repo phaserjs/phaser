@@ -96,6 +96,10 @@
     <TypeScriptCompile Include="sprites\dynamic texture 1.ts" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="misc\screen grab.ts" />
+    <Content Include="misc\screen grab.js">
+      <DependentUpon>screen grab.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\bounce.js">
       <DependentUpon>bounce.ts</DependentUpon>
     </Content>

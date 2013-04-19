@@ -1,5 +1,5 @@
-/// <reference path="../../../Kiwi Lite/Game.ts" />
-/// <reference path="../../../Kiwi Lite/State.ts" />
+/// <reference path="../../../Phaser/Game.ts" />
+/// <reference path="../../../Phaser/State.ts" />
 /// <reference path="FakeGame.ts" />
 
 class MainMenu extends State {
@@ -10,7 +10,7 @@ class MainMenu extends State {
 
     }
 
-    private monster: Sprite;
+    private monster: Phaser.Sprite;
     private isFalling: bool = false;
     private hasClicked: bool = false;
 

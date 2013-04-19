@@ -31,6 +31,10 @@ module Phaser {
                 document.body.appendChild(this.canvas);
             }
 
+            //  Consume default actions on the canvas
+            this.canvas.style.msTouchAction = 'none';
+            this.canvas.style['touch-action'] = 'none';
+
             this.context = this.canvas.getContext('2d');
 
             this.offset = this.getOffset(this.canvas);
