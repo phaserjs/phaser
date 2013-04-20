@@ -20,57 +20,57 @@ Change Log
 
 V0.9.2
 
-Fixed issue with create not being called if there was an empty init method.<br />
-Added ability to flip a sprite (Sprite.flipped = true) + a test case for it.<br />
-Added ability to restart a sprite animation.<br />
-Sprite animations don't restart if you call play on them when they are already running.<br />
+* Fixed issue with create not being called if there was an empty init method.
+* Added ability to flip a sprite (Sprite.flipped = true) + a test case for it.
+* Added ability to restart a sprite animation.
+* Sprite animations don't restart if you call play on them when they are already running.
+* Added Stage.disablePauseScreen. Set to true to stop your game pausing when the tab loses focus.
 
 V0.9.1
 
-Added the new align property to GameObjects that controls placement when rendering.<br />
-Added an align example to the Sprites test group (click the mouse to change alignment position)<br />
-Added a new MicroPoint class. Same as Point but much smaller / less functions, updated GameObject to use it.<br />
-Completely rebuilt the Rectangle class to use MicroPoints and store the values of the 9 points around the edges, to be used
-for new collision system.<br />
-Game.Input now has 2 signals you can subscribe to for down/up events, see the Sprite align example for use.<br />
-Updated the States examples to bring in-line with 0.9 release.
+* Added the new align property to GameObjects that controls placement when rendering.
+* Added an align example to the Sprites test group (click the mouse to change alignment position)
+* Added a new MicroPoint class. Same as Point but much smaller / less functions, updated GameObject to use it.
+* Completely rebuilt the Rectangle class to use MicroPoints and store the values of the 9 points around the edges, to be used
+for new collision system.
+* Game.Input now has 2 signals you can subscribe to for down/up events, see the Sprite align example for use.
+* Updated the States examples to bring in-line with 0.9 release.
 
 V0.9
 
-Large refactoring. Everything now lives inside the Phaser module, so all code and all tests have been updated to reflect this. Makes coding a tiny bit
-more verbose but stops the framework from globbing up the global namespace. Also should make code-insight work in WebStorm and similar editors.<br />
-Added the new GeomSprite object. This is a sprite that uses a geometry class for display (Circle, Rectangle, Point, Line). It's extremely flexible!<br />
-Added Geometry intersection results objects.<br />
-Added new Collision class and moved some functions there. Contains all the Game Object and Geometry Intersection methods.<br />
-Can now create a sprite animation based on frame names rather than indexes. Useful when you've an animation inside a texture atlas. Added test to show.<br />
-Added addKeyCapture(), removeKeyCapture() and clearCaptures() to Input.Keyboard. Calls event.preventDefault() on any keycode set to capture, allowing you to avoid page scrolling when using the cursor keys in a game for example.<br />
-Added new Motion class which contains lots of handy functions like 'moveTowardsObject', 'velocityFromAngle' and more.<br />
-Tween Manager added. You can now create tweens via Game.createTween (or for more control game.tweens). All the usual suspects are here: Bounce, Elastic, Quintic, etc and it's hooked into the core game clock, so if your game pauses and resumes your tweens adjust accordingly.
+* Large refactoring. Everything now lives inside the Phaser module, so all code and all tests have been updated to reflect this. Makes coding a tiny bit more verbose but stops the framework from globbing up the global namespace. Also should make code-insight work in WebStorm and similar editors.
+* Added the new GeomSprite object. This is a sprite that uses a geometry class for display (Circle, Rectangle, Point, Line). It's extremely flexible!
+* Added Geometry intersection results objects.
+* Added new Collision class and moved some functions there. Contains all the Game Object and Geometry Intersection methods.
+* Can now create a sprite animation based on frame names rather than indexes. Useful when you've an animation inside a texture atlas. Added test to show.
+* Added addKeyCapture(), removeKeyCapture() and clearCaptures() to Input.Keyboard. Calls event.preventDefault() on any keycode set to capture, allowing you to avoid page scrolling when using the cursor keys in a game for example.
+* Added new Motion class which contains lots of handy functions like 'moveTowardsObject', 'velocityFromAngle' and more.
+* Tween Manager added. You can now create tweens via Game.createTween (or for more control game.tweens). All the usual suspects are here: Bounce, * Elastic, Quintic, etc and it's hooked into the core game clock, so if your game pauses and resumes your tweens adjust accordingly.
 
 V0.8
 
-Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.<br />
-Updated texture atlas 4 demo to show this.<br />
-Fixed a bug that would cause a run-time error if you tried to create a sprite using an invalid texture key.<br />
-Added in DynamicTexture support and a test case for it.<br />
+* Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.
+* Updated texture atlas 4 demo to show this.
+* Fixed a bug that would cause a run-time error if you tried to create a sprite using an invalid texture key.
+* Added in DynamicTexture support and a test case for it.
 
 V0.7
 
-Renamed FullScreen to StageScaleMode as it's much more fitting. Tested across Android and iOS with the various scale modes.<br />
-Added in world x/y coordinates to the input class, and the ability to get world x/y input coordinates from any Camera.<br />
-Added the RandomDataGenerator for seeded random number generation.<br />
-Setting the game world size now resizes the default camera (optional bool flag)
+* Renamed FullScreen to StageScaleMode as it's much more fitting. Tested across Android and iOS with the various scale modes.
+* Added in world x/y coordinates to the input class, and the ability to get world x/y input coordinates from any Camera.
+* Added the RandomDataGenerator for seeded random number generation.
+* Setting the game world size now resizes the default camera (optional bool flag)
 
 V0.6
 
-Added in Touch support for mobile devices (and desktops that enable it) and populated x/y coords in Input with common values from touch and mouse.<br />
-Added new Circle geometry class (used by Touch) and moved them into a Geom folder.<br />
-Added in Device class for device inspection.<br />
-Added FullScreen class to enable full-screen support on mobile devices (scrolls URL bar out of the way on iOS and Android)
+* Added in Touch support for mobile devices (and desktops that enable it) and populated x/y coords in Input with common values from touch and mouse.
+* Added new Circle geometry class (used by Touch) and moved them into a Geom folder.
+* Added in Device class for device inspection.
+* Added FullScreen class to enable full-screen support on mobile devices (scrolls URL bar out of the way on iOS and Android)
 
 V0.5
 
-Initial release
+* Initial release
 
 Requirements
 ------------

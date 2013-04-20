@@ -7384,6 +7384,7 @@ var Phaser;
         function Stage(game, parent, width, height) {
             var _this = this;
             this.clear = true;
+            this.disablePauseScreen = false;
             this.minScaleX = null;
             this.maxScaleX = null;
             this.minScaleY = null;
@@ -7432,15 +7433,18 @@ var Phaser;
             this.context.fillText('Game Size: ' + this.width + ' x ' + this.height, 10, 40);
             this.context.fillText('x: ' + this.x + ' y: ' + this.y, 10, 60);
         };
-        Stage.prototype.visibilityChange = function (event) {
+        Stage.prototype.visibilityChange = //if (document['hidden'] === true || document['webkitHidden'] === true)
+        function (event) {
+            if(this.disablePauseScreen) {
+                return;
+            }
             if(event.type == 'blur' && this._game.paused == false && this._game.isBooted == true) {
                 this._game.paused = true;
                 this.drawPauseScreen();
             } else if(event.type == 'focus') {
                 this._game.paused = false;
             }
-            //if (document['hidden'] === true || document['webkitHidden'] === true)
-                    };
+        };
         Stage.prototype.drawInitScreen = function () {
             this.context.fillStyle = 'rgb(40, 40, 40)';
             this.context.fillRect(0, 0, this.width, this.height);

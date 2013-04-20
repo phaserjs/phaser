@@ -62,6 +62,7 @@ module Phaser {
         public clear: bool = true;
         public canvas: HTMLCanvasElement;
         public context: CanvasRenderingContext2D;
+        public disablePauseScreen: bool = false;
         public offset: Point;
         public scale: StageScaleMode;
         public scaleMode: number;
@@ -92,7 +93,13 @@ module Phaser {
 
         }
 
+        //if (document['hidden'] === true || document['webkitHidden'] === true)
         private visibilityChange(event) {
+
+            if (this.disablePauseScreen)
+            {
+                return;
+            }
 
             if (event.type == 'blur' && this._game.paused == false && this._game.isBooted == true)
             {
@@ -103,8 +110,6 @@ module Phaser {
             {
                 this._game.paused = false;
             }
-
-            //if (document['hidden'] === true || document['webkitHidden'] === true)
 
         }
 
