@@ -520,6 +520,14 @@ module Phaser {
             this._angle = this._game.math.wrap(value, 360, 0);
         }
 
+        public set width(value:number) {
+            this.bounds.width = value;
+        }
+
+        public set height(value:number) {
+            this.bounds.height = value;
+        }
+
         public get width(): number {
             return this.bounds.width;
         }

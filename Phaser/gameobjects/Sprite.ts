@@ -1,6 +1,7 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../AnimationManager.ts" />
 /// <reference path="GameObject.ts" />
+/// <reference path="../system/Camera.ts" />
 
 /**
 * Phaser - Sprite
@@ -125,7 +126,7 @@ module Phaser {
 
         }
 
-        public set frame(value?: number) {
+        public set frame(value: number) {
             this.animations.frame = value;
         }
 
@@ -133,7 +134,7 @@ module Phaser {
             return this.animations.frame;
         }
 
-        public set frameName(value?: string) {
+        public set frameName(value: string) {
             this.animations.frameName = value;
         }
 
@@ -228,7 +229,7 @@ module Phaser {
                 this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
 
-            //	Rotation
+            //	Rotation - needs to be set from origin
             if (this.angle !== 0)
             {
                 this._game.stage.context.save();
@@ -287,7 +288,7 @@ module Phaser {
 
             if (this.renderDebug)
             {
-                this.renderBounds();
+                this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
             }
 
             //if (this.flip === true || this.rotation !== 0)
@@ -306,7 +307,11 @@ module Phaser {
 
         }
 
-        private renderBounds() {
+        // Renders the bounding box around this Sprite and the contact points. Useful for visually debugging.
+        private renderBounds(camera:Camera, cameraOffsetX:number, cameraOffsetY:number) {
+
+            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
 
             this._game.stage.context.fillStyle = this.renderDebugColor;
             this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
