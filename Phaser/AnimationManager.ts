@@ -100,8 +100,18 @@ module Phaser {
 
             if (this._anims[name])
             {
-                this.currentAnim = this._anims[name];
-                this.currentAnim.play(frameRate, loop);
+                if (this.currentAnim == this._anims[name])
+                {
+                    if (this.currentAnim.isPlaying == false)
+                    {
+                        this.currentAnim.play(frameRate, loop);
+                    }
+                }
+                else
+                {
+                    this.currentAnim = this._anims[name];
+                    this.currentAnim.play(frameRate, loop);
+                }
             }
 
         }

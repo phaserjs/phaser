@@ -104,6 +104,10 @@
     <Content Include="sprites\align.js">
       <DependentUpon>align.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="sprites\flipped.ts" />
+    <Content Include="sprites\flipped.js">
+      <DependentUpon>flipped.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\bounce.js">
       <DependentUpon>bounce.ts</DependentUpon>
     </Content>

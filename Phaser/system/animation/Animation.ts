@@ -87,11 +87,16 @@ module Phaser {
 
         }
 
-        private onComplete() {
+        public restart() {
 
-            this.isPlaying = false;
-            this.isFinished = true;
-            //  callback
+            this.isPlaying = true;
+            this.isFinished = false;
+
+            this._timeLastFrame = this._game.time.now;
+            this._timeNextFrame = this._game.time.now + this.delay;
+
+            this._frameIndex = 0;
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
         }
 
@@ -143,6 +148,14 @@ module Phaser {
             this._frameData = null;
             this.currentFrame = null;
             this.isPlaying = false;
+
+        }
+
+        private onComplete() {
+
+            this.isPlaying = false;
+            this.isFinished = true;
+            //  callback
 
         }
 

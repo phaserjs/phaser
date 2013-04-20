@@ -529,8 +529,6 @@ module Phaser {
                 this._game.stage.context.clip();
             }
 
-            //this.totalSpritesRendered = this._game.world.renderSpritesInCamera(this.worldView, sx, sy);
-            //this._game.world.group.render(this.worldView, this.worldView.x, this.worldView.y, sx, sy);
             this._game.world.group.render(this, this._sx, this._sy);
 
             if (this.showBorder)

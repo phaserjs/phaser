@@ -202,7 +202,20 @@ module Phaser {
 
             if (this.onInitCallback !== null)
             {
+                this.loader.reset();
+
                 this.onInitCallback.call(this.callbackContext);
+
+                //  Is the loader empty?
+                if (this.loader.queueSize == 0)
+                {
+                    if (this.onCreateCallback !== null)
+                    {
+                        this.onCreateCallback.call(this.callbackContext);
+                    }
+
+                    this._loadComplete = true;
+                }
             }
             else
             {

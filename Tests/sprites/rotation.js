@@ -10,6 +10,7 @@
         teddy = myGame.createSprite(0, 0, 'teddy');
         teddy.x = myGame.stage.centerX - teddy.width / 2;
         teddy.y = myGame.stage.centerY - teddy.height / 2;
+        teddy.renderDebug = true;
     }
     function update() {
         if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {

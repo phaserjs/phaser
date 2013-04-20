@@ -52,6 +52,7 @@ module Phaser {
         public renderDebug: bool = false;
         public renderDebugColor: string = 'rgba(0,255,0,0.5)';
         public renderDebugPointColor: string = 'rgba(255,255,255,1)';
+        public flipped: bool = false;
 
         public loadGraphic(key: string): Sprite {
 
@@ -157,13 +158,6 @@ module Phaser {
                 this._game.stage.context.globalAlpha = this.alpha;
             }
 
-            //if (this.flip === true)
-            //{
-            //	this.context.save();
-            //	this.context.translate(game.canvas.width, 0);
-            //	this.context.scale(-1, 1);
-            //}
-
             this._sx = 0;
             this._sy = 0;
             this._sw = this.bounds.width;
@@ -229,15 +223,24 @@ module Phaser {
                 this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
 
-            //	Rotation - needs to be set from origin
-            if (this.angle !== 0)
+            //	Rotation - needs to work from origin point really, but for now from center
+            if (this.angle !== 0 || this.flipped == true)
             {
                 this._game.stage.context.save();
-                //this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
                 this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
-                this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+
+                if (this.angle !== 0)
+                {
+                    this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+                }
+
                 this._dx = -(this._dw / 2);
                 this._dy = -(this._dh / 2);
+
+                if (this.flipped == true)
+                {
+                	this._game.stage.context.scale(-1, 1);
+                }
             }
 
             this._sx = Math.round(this._sx);
@@ -286,16 +289,15 @@ module Phaser {
                 this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
 
+            if (this.flipped === true || this.rotation !== 0)
+            {
+                //this._game.stage.context.translate(0, 0);
+                this._game.stage.context.restore();
+            }
+
             if (this.renderDebug)
             {
                 this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
-            }
-
-            //if (this.flip === true || this.rotation !== 0)
-            if (this.rotation !== 0)
-            {
-                this._game.stage.context.translate(0, 0);
-                this._game.stage.context.restore();
             }
 
             if (globalAlpha > -1)

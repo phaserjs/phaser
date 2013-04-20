@@ -1,9 +1,9 @@
 Phaser
 ======
 
-Version 0.9.1
+Version 0.9.2
 
-19th April 2013
+20th April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -17,6 +17,13 @@ For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.h
 
 Change Log
 ----------
+
+V0.9.2
+
+Fixed issue with create not being called if there was an empty init method.<br />
+Added ability to flip a sprite (Sprite.flipped = true) + a test case for it.<br />
+Added ability to restart a sprite animation.<br />
+Sprite animations don't restart if you call play on them when they are already running.<br />
 
 V0.9.1
 

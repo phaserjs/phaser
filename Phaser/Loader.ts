@@ -18,6 +18,7 @@ module Phaser {
             this._keys = [];
             this._fileList = {};
             this._xhr = new XMLHttpRequest();
+            this._queueSize = 0;
 
         }
 
@@ -29,20 +30,18 @@ module Phaser {
         private _onFileLoad;
         private _progressChunk: number;
         private _xhr: XMLHttpRequest;
+        private _queueSize: number;
 
         public hasLoaded: bool;
         public progress: number;
 
-        private checkKeyExists(key: string): bool {
+        public reset() {
+            this._queueSize = 0;
+        }
 
-            if (this._fileList[key])
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        public get queueSize(): number {
+
+            return this._queueSize;
 
         }
 
@@ -50,6 +49,7 @@ module Phaser {
 
             if (this.checkKeyExists(key) === false)
             {
+                this._queueSize++;
                 this._fileList[key] = { type: 'image', key: key, url: url, data: null, error: false, loaded: false };
                 this._keys.push(key);
             }
@@ -60,6 +60,7 @@ module Phaser {
 
             if (this.checkKeyExists(key) === false)
             {
+                this._queueSize++;
                 this._fileList[key] = { type: 'spritesheet', key: key, url: url, data: null, frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, error: false, loaded: false };
                 this._keys.push(key);
             }
@@ -68,15 +69,12 @@ module Phaser {
 
         public addTextureAtlas(key: string, url: string, jsonURL?: string = null, jsonData? = null) {
 
-            //console.log('addTextureAtlas');
-            //console.log(typeof jsonData);
-
             if (this.checkKeyExists(key) === false)
             {
                 if (jsonURL !== null)
                 {
-                    //console.log('A URL to a json file has been given');
                     //  A URL to a json file has been given
+                    this._queueSize++;
                     this._fileList[key] = { type: 'textureatlas', key: key, url: url, data: null, jsonURL: jsonURL, jsonData: null, error: false, loaded: false };
                     this._keys.push(key);
                 }
@@ -85,24 +83,21 @@ module Phaser {
                     //  A json string or object has been given
                     if (typeof jsonData === 'string')
                     {
-                        //console.log('A json string has been given');
                         var data = JSON.parse(jsonData);
-                        //console.log(data);
                         //  Malformed?
                         if (data['frames'])
                         {
-                            //console.log('frames array found');
+                            this._queueSize++;
                             this._fileList[key] = { type: 'textureatlas', key: key, url: url, data: null, jsonURL: null, jsonData: data['frames'], error: false, loaded: false };
                             this._keys.push(key);
                         }
                     }
                     else
                     {
-                        //console.log('A json object has been given', jsonData);
                         //  Malformed?
                         if (jsonData['frames'])
                         {
-                            //console.log('frames array found');
+                            this._queueSize++;
                             this._fileList[key] = { type: 'textureatlas', key: key, url: url, data: null, jsonURL: null, jsonData: jsonData['frames'], error: false, loaded: false };
                             this._keys.push(key);
                         }
@@ -118,6 +113,7 @@ module Phaser {
 
             if (this.checkKeyExists(key) === false)
             {
+                this._queueSize++;
                 this._fileList[key] = { type: 'audio', key: key, url: url, data: null, buffer: null, error: false, loaded: false };
                 this._keys.push(key);
             }
@@ -128,6 +124,7 @@ module Phaser {
 
             if (this.checkKeyExists(key) === false)
             {
+                this._queueSize++;
                 this._fileList[key] = { type: 'text', key: key, url: url, data: null, error: false, loaded: false };
                 this._keys.push(key);
             }
@@ -243,7 +240,6 @@ module Phaser {
                     break;
 
                 case 'textureatlas':
-                    //console.log('texture atlas loaded');
                     if (file.jsonURL == null)
                     {
                         this._game.cache.addTextureAtlas(file.key, file.url, file.data, file.jsonData);
@@ -251,7 +247,6 @@ module Phaser {
                     else
                     {
                         //  Load the JSON before carrying on with the next file
-                        //console.log('Loading the JSON before carrying on with the next file');
                         loadNext = false;
                         this._xhr.open("GET", file.jsonURL, true);
                         this._xhr.responseType = "text";
@@ -281,11 +276,7 @@ module Phaser {
 
         private jsonLoadComplete(key: string) {
 
-            //console.log('json load complete');
-
             var data = JSON.parse(this._xhr.response);
-
-            //console.log(data);
 
             //  Malformed?
             if (data['frames'])
@@ -300,8 +291,6 @@ module Phaser {
 
         private jsonLoadError(key: string) {
 
-            //console.log('json load error');
-
             var file = this._fileList[key];
             file.error = true;
             this.nextFile(key, true);
@@ -311,6 +300,11 @@ module Phaser {
         private nextFile(previousKey: string, success: bool) {
 
             this.progress = Math.round(this.progress + this._progressChunk);
+            
+            if (this.progress > 1)
+            {
+                this.progress = 1;
+            }
 
             if (this._onFileLoad)
             {
@@ -331,6 +325,19 @@ module Phaser {
                 {
                     this._onComplete.call(this._game.callbackContext);
                 }
+            }
+
+        }
+
+        private checkKeyExists(key: string): bool {
+
+            if (this._fileList[key])
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
 
         }
