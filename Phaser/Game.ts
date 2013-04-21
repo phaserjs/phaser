@@ -50,7 +50,7 @@ module Phaser {
 
             if (document.readyState === 'complete' || document.readyState === 'interactive')
             {
-                this.boot(parent, width, height);
+                window.setTimeout(() => this.boot(parent, width, height), 0);
             }
             else
             {
