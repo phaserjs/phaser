@@ -57,6 +57,7 @@ module Phaser {
             {
                 if (this.validateFrames(frames, useNumericIndex) == false)
                 {
+                    throw Error('Invalid frames given to Animation ' + name);
                     return;
                 }
             }
@@ -151,10 +152,10 @@ module Phaser {
 
         public set frame(value: number) {
 
-            this.currentFrame = this._frameData.getFrame(value);
-
-            if (this.currentFrame !== null)
+            if (this._frameData.getFrame(value) !== null)
             {
+                this.currentFrame = this._frameData.getFrame(value);
+
                 this._parent.bounds.width = this.currentFrame.width;
                 this._parent.bounds.height = this.currentFrame.height;
                 this._frameIndex = value;
@@ -168,10 +169,10 @@ module Phaser {
 
         public set frameName(value: string) {
 
-            this.currentFrame = this._frameData.getFrameByName(value);
-
-            if (this.currentFrame !== null)
+            if (this._frameData.getFrameByName(value) !== null)
             {
+                this.currentFrame = this._frameData.getFrameByName(value);
+
                 this._parent.bounds.width = this.currentFrame.width;
                 this._parent.bounds.height = this.currentFrame.height;
                 this._frameIndex = this.currentFrame.index;

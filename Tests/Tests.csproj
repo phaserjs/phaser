@@ -101,6 +101,22 @@
       <DependentUpon>screen grab.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="sprites\align.ts" />
+    <TypeScriptCompile Include="scrollzones\simple scrollzone.ts" />
+    <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
+    <Content Include="scrollzones\ballscroller.js">
+      <DependentUpon>ballscroller.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scrollzones\parallax.ts" />
+    <Content Include="scrollzones\parallax.js">
+      <DependentUpon>parallax.ts</DependentUpon>
+    </Content>
+    <Content Include="scrollzones\simple scrollzone.js">
+      <DependentUpon>simple scrollzone.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scrollzones\texture repeat.ts" />
+    <Content Include="scrollzones\texture repeat.js">
+      <DependentUpon>texture repeat.ts</DependentUpon>
+    </Content>
     <Content Include="sprites\align.js">
       <DependentUpon>align.ts</DependentUpon>
     </Content>

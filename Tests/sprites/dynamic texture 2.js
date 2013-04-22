@@ -12,7 +12,7 @@
     function create() {
         myGame.camera.backgroundColor = 'rgb(82,154,206)';
         //  Create our DynamicTexture
-        wobble = myGame.createDynamicTexture('wobbly', 48, 100);
+        wobble = myGame.createDynamicTexture(48, 100);
         slime = myGame.createSprite(200, 300);
         slime.width = 48;
         slime.height = 100;

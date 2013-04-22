@@ -1,9 +1,9 @@
 Phaser
 ======
 
-Version 0.9.2
+Version 0.9.3
 
-20th April 2013
+21st April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -17,6 +17,17 @@ For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.h
 
 Change Log
 ----------
+
+V0.9.3
+
+* Fixed issues with Group not adding reference to Game to newly created objects.
+* Added more robust frame checking into AnimationManager
+* Re-built Tilemap handling from scratch to allow for proper layered maps (as exported from Tiled / Mappy)
+* Tilemap no longer requires a buffer per Camera (in prep for WebGL support)
+* Added shiftSinTable and shiftCosTable to the GameMath class to allow for quick iteration through the data tables.
+* Added the new ScrollZone game object. Endlessly useful but especially for scrolling backdrops. Created several example tests.
+* Removed the need for DynamicTextures to require a key property and updated test cases.
+
 
 V0.9.2
 

@@ -12,13 +12,14 @@ module Phaser {
     export class Rectangle {
 
         /**
-        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a rectangle with x, y, width, and height properties set to 0 is created.
+        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters.
+        * If you call this function without parameters, a rectangle with x, y, width, and height properties set to 0 is created.
         * @class Rectangle
         * @constructor
         * @param {Number} x The x coordinate of the top-left corner of the rectangle.
         * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
+        * @param {Number} width The width of the rectangle.
+        * @param {Number} height The height of the rectangle.
         * @return {Rectangle} This rectangle object
         **/
         constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {

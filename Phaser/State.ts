@@ -66,8 +66,8 @@ module Phaser {
             return this.game.world.createSprite(x, y, key);
         }
 
-        public createDynamicTexture(key: string, width: number, height: number): DynamicTexture {
-            return this.game.world.createDynamicTexture(key, width, height);
+        public createDynamicTexture(width: number, height: number): DynamicTexture {
+            return this.game.world.createDynamicTexture(width, height);
         }
 
         public createGroup(MaxSize?: number = 0): Group {
@@ -82,8 +82,12 @@ module Phaser {
             return this.game.world.createEmitter(x, y, size);
         }
 
-        public createTilemap(key: string, mapData: string, format: number, tileWidth?: number, tileHeight?: number): Tilemap {
-            return this.game.world.createTilemap(key, mapData, format, tileWidth, tileHeight);
+        public createScrollZone(key:string, x: number, y: number, width: number, height: number): ScrollZone {
+            return this.game.world.createScrollZone(key, x, y, width, height);
+        }
+
+        public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
+            return this.game.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
         }
 
         public createTween(obj): Tween {

@@ -945,6 +945,38 @@ module Phaser {
 
         }
 
+        /**
+        * Shifts through the sin table data by one value and returns it.
+        * This effectively moves the position of the data from the start to the end of the table.
+        * @return	The sin value.
+        */
+        public shiftSinTable(): number {
+
+            if (this.sinTable)
+            {
+                var s = this.sinTable.shift();
+                this.sinTable.push(s);
+                return s;
+            }
+
+        }
+
+        /**
+        * Shifts through the cos table data by one value and returns it.
+        * This effectively moves the position of the data from the start to the end of the table.
+        * @return	The cos value.
+        */
+        public shiftCosTable(): number {
+
+            if (this.cosTable)
+            {
+                var s = this.cosTable.shift();
+                this.cosTable.push(s);
+                return s;
+            }
+
+        }
+
 		/**
 		 * Finds the length of the given vector
 		 * 

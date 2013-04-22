@@ -85,6 +85,10 @@
     <Content Include="gameobjects\Particle.js">
       <DependentUpon>Particle.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="gameobjects\ScrollZone.ts" />
+    <Content Include="gameobjects\ScrollZone.js">
+      <DependentUpon>ScrollZone.ts</DependentUpon>
+    </Content>
     <Content Include="gameobjects\Sprite.js">
       <DependentUpon>Sprite.ts</DependentUpon>
     </Content>
@@ -106,6 +110,10 @@
     </Content>
     <Content Include="geom\Point.js">
       <DependentUpon>Point.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geom\Quad.ts" />
+    <Content Include="geom\Quad.js">
+      <DependentUpon>Quad.ts</DependentUpon>
     </Content>
     <Content Include="geom\Rectangle.js">
       <DependentUpon>Rectangle.ts</DependentUpon>
@@ -154,14 +162,14 @@
     <Content Include="system\Tile.js">
       <DependentUpon>Tile.ts</DependentUpon>
     </Content>
-    <Content Include="system\TilemapBuffer.js">
-      <DependentUpon>TilemapBuffer.ts</DependentUpon>
+    <TypeScriptCompile Include="system\TilemapLayer.ts" />
+    <Content Include="system\TilemapLayer.js">
+      <DependentUpon>TilemapLayer.ts</DependentUpon>
     </Content>
     <Content Include="system\Tween.js">
       <DependentUpon>Tween.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="system\Tween.ts" />
-    <TypeScriptCompile Include="system\TilemapBuffer.ts" />
     <TypeScriptCompile Include="system\Tile.ts" />
     <TypeScriptCompile Include="system\StageScaleMode.ts" />
     <TypeScriptCompile Include="system\RequestAnimationFrame.ts" />

@@ -286,7 +286,7 @@ module Phaser {
                         return null;
                     }
 
-                    return this.add(new ObjectClass());
+                    return this.add(new ObjectClass(this._game));
                 }
                 else
                 {
@@ -314,7 +314,7 @@ module Phaser {
                     return null;
                 }
 
-                return this.add(new ObjectClass());
+                return this.add(new ObjectClass(this._game));
             }
         }
 

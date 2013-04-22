@@ -13,7 +13,7 @@ module Phaser {
 
     export class DynamicTexture {
 
-        constructor(game: Game, key: string, width: number, height: number) {
+        constructor(game: Game, width: number, height: number) {
 
             this._game = game;
 

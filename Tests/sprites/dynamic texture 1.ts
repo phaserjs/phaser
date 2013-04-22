@@ -17,7 +17,7 @@
     function create() {
 
         //  Create our DynamicTexture
-        wobblyBall = myGame.createDynamicTexture('wobbly', 32, 64);
+        wobblyBall = myGame.createDynamicTexture(32, 64);
 
         //  And apply it to 100 randomly positioned sprites
         for (var i = 0; i < 100; i++)

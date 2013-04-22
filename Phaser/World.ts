@@ -125,7 +125,7 @@ module Phaser {
             return this._cameras.getAll();
         }
 
-        //  Sprites
+        //  Game Objects
 
         //  Drop this?
         public addExistingSprite(sprite: Sprite): Sprite {
@@ -140,21 +140,21 @@ module Phaser {
             return <GeomSprite> this.group.add(new GeomSprite(this._game, x, y));
         }
 
-        public createDynamicTexture(key: string, width: number, height: number): DynamicTexture {
-            return new DynamicTexture(this._game, key, width, height);
+        public createDynamicTexture(width: number, height: number): DynamicTexture {
+            return new DynamicTexture(this._game, width, height);
         }
 
         public createGroup(MaxSize?: number = 0): Group {
             return <Group> this.group.add(new Group(this._game, MaxSize));
         }
 
-        //  Tilemaps
-
-        public createTilemap(key: string, mapData: string, format: number, tileWidth?: number, tileHeight?: number): Tilemap {
-            return <Tilemap> this.group.add(new Tilemap(this._game, key, mapData, format, tileWidth, tileHeight));
+        public createScrollZone(key: string, x: number, y: number, width: number, height: number): ScrollZone {
+            return <ScrollZone> this.group.add(new ScrollZone(this._game, key, x, y, width, height));
         }
 
-        //  Emitters
+        public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
+            return <Tilemap> this.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
+        }
 
         public createParticle(): Particle {
             return new Particle(this._game);
