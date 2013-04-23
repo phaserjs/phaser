@@ -289,7 +289,7 @@ module Phaser {
                 this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
 
-            if (this.flipped === true || this.rotation !== 0)
+            if (this.flipped === true || this.rotation !== 0 || this.rotationOffset !== 0)
             {
                 //this._game.stage.context.translate(0, 0);
                 this._game.stage.context.restore();

@@ -372,7 +372,7 @@ module Phaser {
 
             particle.acceleration.y = this.gravity;
 
-            if (this.minRotation != this.maxRotation)
+            if (this.minRotation != this.maxRotation && this.minRotation !== 0 && this.maxRotation !== 0)
             {
                 particle.angularVelocity = this.minRotation + this._game.math.random() * (this.maxRotation - this.minRotation);
             }

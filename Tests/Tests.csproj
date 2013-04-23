@@ -107,6 +107,10 @@
       <DependentUpon>ballscroller.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scrollzones\parallax.ts" />
+    <TypeScriptCompile Include="scrollzones\blasteroids.ts" />
+    <Content Include="scrollzones\blasteroids.js">
+      <DependentUpon>blasteroids.ts</DependentUpon>
+    </Content>
     <Content Include="scrollzones\parallax.js">
       <DependentUpon>parallax.ts</DependentUpon>
     </Content>
@@ -120,10 +124,6 @@
     </Content>
     <Content Include="scrollzones\simple scrollzone.js">
       <DependentUpon>simple scrollzone.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scrollzones\texture repeat.ts" />
-    <Content Include="scrollzones\texture repeat.js">
-      <DependentUpon>texture repeat.ts</DependentUpon>
     </Content>
     <Content Include="sprites\align.js">
       <DependentUpon>align.ts</DependentUpon>
