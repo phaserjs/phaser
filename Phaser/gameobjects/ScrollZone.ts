@@ -64,6 +64,12 @@ module Phaser {
 
         public addRegion(x: number, y: number, width: number, height: number, speedX?:number = 0, speedY?:number = 0):ScrollRegion {
 
+            if (x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height)
+            {
+                throw Error('Invalid ScrollRegion defined. Cannot be larger than parent ScrollZone');
+                return;
+            }
+
             this.currentRegion = new ScrollRegion(x, y, width, height, speedX, speedY);
 
             this.regions.push(this.currentRegion);
@@ -78,6 +84,8 @@ module Phaser {
             {
                 this.currentRegion.scrollSpeed.setTo(x, y);
             }
+
+            return this;
 
         }
 

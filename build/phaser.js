@@ -11581,6 +11581,14 @@ var Phaser;
             if (typeof t === "undefined") { t = 0; }
             return !(q.left > this.right + t || q.right < this.left - t || q.top > this.bottom + t || q.bottom < this.top - t);
         };
+        Quad.prototype.toString = /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        function () {
+            return "[{Quad (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + ")}]";
+        };
         return Quad;
     })();
     Phaser.Quad = Quad;    
@@ -11603,41 +11611,40 @@ var Phaser;
             this._inverseHeight = 0;
             this.visible = true;
             //	Our seamless scrolling quads
-            this._A = new Phaser.Quad(0, 0, width, height);
-            this._B = new Phaser.Quad();
-            this._C = new Phaser.Quad();
-            this._D = new Phaser.Quad();
+            this._A = new Phaser.Quad(x, y, width, height);
+            this._B = new Phaser.Quad(x, y, width, height);
+            this._C = new Phaser.Quad(x, y, width, height);
+            this._D = new Phaser.Quad(x, y, width, height);
             this._scroll = new Phaser.MicroPoint();
-            this._offset = new Phaser.MicroPoint(x, y);
+            this._bounds = new Phaser.Quad(x, y, width, height);
             this.scrollSpeed = new Phaser.MicroPoint(speedX, speedY);
-            this.bounds = new Phaser.Quad(0, 0, width, height);
         }
         ScrollRegion.prototype.update = function (delta) {
-            this._scroll.x = Math.round(this._scroll.x + (this.scrollSpeed.x));
-            this._scroll.y = Math.round(this._scroll.y + (this.scrollSpeed.y));
-            if(this._scroll.x > this._offset.x + this.bounds.width) {
-                this._scroll.x = this._offset.x;
+            this._scroll.x += this.scrollSpeed.x;
+            this._scroll.y += this.scrollSpeed.y;
+            if(this._scroll.x > this._bounds.right) {
+                this._scroll.x = this._bounds.x;
             }
-            if(this._scroll.x < this._offset.x) {
-                this._scroll.x = this._offset.x + this.bounds.width;
+            if(this._scroll.x < this._bounds.x) {
+                this._scroll.x = this._bounds.right;
             }
-            if(this._scroll.y > this._offset.y + this.bounds.height) {
-                this._scroll.y = this._offset.y;
+            if(this._scroll.y > this._bounds.bottom) {
+                this._scroll.y = this._bounds.y;
             }
-            if(this._scroll.y < this._offset.y) {
-                this._scroll.y = this._offset.y + this.bounds.height;
+            if(this._scroll.y < this._bounds.y) {
+                this._scroll.y = this._bounds.bottom;
             }
             //	Anchor Dimensions
-            this._anchorWidth = this.bounds.width - this._scroll.x;
-            this._anchorHeight = this.bounds.height - this._scroll.y;
-            if(this._anchorWidth > this.bounds.width) {
-                this._anchorWidth = this.bounds.width;
+            this._anchorWidth = (this._bounds.width - this._scroll.x) + this._bounds.x;
+            this._anchorHeight = (this._bounds.height - this._scroll.y) + this._bounds.y;
+            if(this._anchorWidth > this._bounds.width) {
+                this._anchorWidth = this._bounds.width;
             }
-            if(this._anchorHeight > this.bounds.height) {
-                this._anchorHeight = this.bounds.height;
+            if(this._anchorHeight > this._bounds.height) {
+                this._anchorHeight = this._bounds.height;
             }
-            this._inverseWidth = this.bounds.width - this._anchorWidth;
-            this._inverseHeight = this.bounds.height - this._anchorHeight;
+            this._inverseWidth = this._bounds.width - this._anchorWidth;
+            this._inverseHeight = this._bounds.height - this._anchorHeight;
             //	Quad A
             this._A.setTo(this._scroll.x, this._scroll.y, this._anchorWidth, this._anchorHeight);
             //	Quad B
@@ -11656,11 +11663,19 @@ var Phaser;
             if(this.visible == false) {
                 return;
             }
+            //  dx/dy are the world coordinates to render the FULL ScrollZone into.
+            //  This ScrollRegion may be smaller than that and offset from the dx/dy coordinates.
             this.crop(context, texture, this._A.x, this._A.y, this._A.width, this._A.height, dx, dy, dw, dh, 0, 0);
             this.crop(context, texture, this._B.x, this._B.y, this._B.width, this._B.height, dx, dy, dw, dh, this._A.width, 0);
             this.crop(context, texture, this._C.x, this._C.y, this._C.width, this._C.height, dx, dy, dw, dh, 0, this._A.height);
             this.crop(context, texture, this._D.x, this._D.y, this._D.width, this._D.height, dx, dy, dw, dh, this._C.width, this._A.height);
-        };
+            //context.fillStyle = 'rgb(255,255,255)';
+            //context.font = '18px Arial';
+            //context.fillText('QuadA: ' + this._A.toString(), 32, 450);
+            //context.fillText('QuadB: ' + this._B.toString(), 32, 480);
+            //context.fillText('QuadC: ' + this._C.toString(), 32, 510);
+            //context.fillText('QuadD: ' + this._D.toString(), 32, 540);
+                    };
         ScrollRegion.prototype.crop = function (context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
             offsetX += destX;
             offsetY += destY;
@@ -11670,6 +11685,12 @@ var Phaser;
             if(srcH > (destY + destH) - offsetY) {
                 srcH = (destY + destH) - offsetY;
             }
+            srcX = Math.floor(srcX);
+            srcY = Math.floor(srcY);
+            srcW = Math.floor(srcW);
+            srcH = Math.floor(srcH);
+            offsetX = Math.floor(offsetX + this._bounds.x);
+            offsetY = Math.floor(offsetY + this._bounds.y);
             if(srcW > 0 && srcH > 0) {
                 context.drawImage(texture, srcX, srcY, srcW, srcH, offsetX, offsetY, srcW, srcH);
             }
@@ -11729,6 +11750,10 @@ var Phaser;
         ScrollZone.prototype.addRegion = function (x, y, width, height, speedX, speedY) {
             if (typeof speedX === "undefined") { speedX = 0; }
             if (typeof speedY === "undefined") { speedY = 0; }
+            if(x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height) {
+                throw Error('Invalid ScrollRegion defined. Cannot be larger than parent ScrollZone');
+                return;
+            }
             this.currentRegion = new Phaser.ScrollRegion(x, y, width, height, speedX, speedY);
             this.regions.push(this.currentRegion);
             return this.currentRegion;
@@ -11737,6 +11762,7 @@ var Phaser;
             if(this.currentRegion) {
                 this.currentRegion.scrollSpeed.setTo(x, y);
             }
+            return this;
         };
         ScrollZone.prototype.update = function () {
             for(var i = 0; i < this.regions.length; i++) {

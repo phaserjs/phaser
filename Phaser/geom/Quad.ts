@@ -82,6 +82,17 @@ module Phaser {
 
         }
 
+        /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        public toString(): string {
+
+            return "[{Quad (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + ")}]";
+
+        }
+
     }
 
 }

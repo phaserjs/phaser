@@ -15,16 +15,13 @@ module Phaser {
         constructor(x: number, y: number, width: number, height: number, speedX:number, speedY:number) {
 
 	        //	Our seamless scrolling quads
-            this._A = new Quad(0, 0, width, height);
-            this._B = new Quad();
-	        this._C = new Quad();
-	        this._D = new Quad();
-
+            this._A = new Quad(x, y, width, height);
+            this._B = new Quad(x, y, width, height);
+	        this._C = new Quad(x, y, width, height);
+	        this._D = new Quad(x, y, width, height);
             this._scroll = new MicroPoint();
-            this._offset = new MicroPoint(x, y);
-
+            this._bounds = new Quad(x, y, width, height);
             this.scrollSpeed = new MicroPoint(speedX, speedY);
-            this.bounds = new Quad(0, 0, width, height);
 
         }
 
@@ -33,59 +30,58 @@ module Phaser {
         private _C: Quad;
         private _D: Quad;
 
+        private _bounds: Quad;
         private _scroll: MicroPoint;
-        private _offset: MicroPoint;
 
         private _anchorWidth: number = 0;
         private _anchorHeight: number = 0;
         private _inverseWidth: number = 0;
         private _inverseHeight: number = 0;
 
-        public bounds: Quad;
         public visible: bool = true;
         public scrollSpeed: MicroPoint;
 
         public update(delta: number) {
 
-		    this._scroll.x = Math.round(this._scroll.x + (this.scrollSpeed.x));
-		    this._scroll.y = Math.round(this._scroll.y + (this.scrollSpeed.y));
+		    this._scroll.x += this.scrollSpeed.x;
+		    this._scroll.y += this.scrollSpeed.y;
 
-		    if (this._scroll.x > this._offset.x + this.bounds.width)
+		    if (this._scroll.x > this._bounds.right)
 		    {
-			    this._scroll.x = this._offset.x;
+			    this._scroll.x = this._bounds.x;
 		    }
 
-		    if (this._scroll.x < this._offset.x)
+		    if (this._scroll.x < this._bounds.x)
 		    {
-			    this._scroll.x = this._offset.x + this.bounds.width;
+			    this._scroll.x = this._bounds.right;
 		    }
 
-		    if (this._scroll.y > this._offset.y + this.bounds.height)
+		    if (this._scroll.y > this._bounds.bottom)
 		    {
-			    this._scroll.y = this._offset.y;
+			    this._scroll.y = this._bounds.y;
 		    }
 
-		    if (this._scroll.y < this._offset.y)
+		    if (this._scroll.y < this._bounds.y)
 		    {
-			    this._scroll.y = this._offset.y + this.bounds.height;
+			    this._scroll.y = this._bounds.bottom;
 		    }
 
 		    //	Anchor Dimensions
-		    this._anchorWidth = this.bounds.width - this._scroll.x;
-		    this._anchorHeight = this.bounds.height - this._scroll.y;
+		    this._anchorWidth = (this._bounds.width - this._scroll.x) + this._bounds.x;
+		    this._anchorHeight = (this._bounds.height - this._scroll.y) + this._bounds.y;
 
-		    if (this._anchorWidth > this.bounds.width)
+		    if (this._anchorWidth > this._bounds.width)
 		    {
-			    this._anchorWidth = this.bounds.width;
+			    this._anchorWidth = this._bounds.width;
 		    }
 
-		    if (this._anchorHeight > this.bounds.height)
+		    if (this._anchorHeight > this._bounds.height)
 		    {
-			    this._anchorHeight = this.bounds.height;
+			    this._anchorHeight = this._bounds.height;
 		    }
 
-		    this._inverseWidth = this.bounds.width - this._anchorWidth;
-            this._inverseHeight = this.bounds.height - this._anchorHeight;
+		    this._inverseWidth = this._bounds.width - this._anchorWidth;
+            this._inverseHeight = this._bounds.height - this._anchorHeight;
 
 		    //	Quad A
 		    this._A.setTo(this._scroll.x, this._scroll.y, this._anchorWidth, this._anchorHeight);
@@ -113,10 +109,20 @@ module Phaser {
                 return;
             }
 
+            //  dx/dy are the world coordinates to render the FULL ScrollZone into.
+            //  This ScrollRegion may be smaller than that and offset from the dx/dy coordinates.
+
             this.crop(context, texture, this._A.x, this._A.y, this._A.width, this._A.height, dx, dy, dw, dh, 0, 0);
             this.crop(context, texture, this._B.x, this._B.y, this._B.width, this._B.height, dx, dy, dw, dh, this._A.width, 0);
             this.crop(context, texture, this._C.x, this._C.y, this._C.width, this._C.height, dx, dy, dw, dh, 0, this._A.height);
             this.crop(context, texture, this._D.x, this._D.y, this._D.width, this._D.height, dx, dy, dw, dh, this._C.width, this._A.height);
+
+            //context.fillStyle = 'rgb(255,255,255)';
+            //context.font = '18px Arial';
+            //context.fillText('QuadA: ' + this._A.toString(), 32, 450);
+            //context.fillText('QuadB: ' + this._B.toString(), 32, 480);
+            //context.fillText('QuadC: ' + this._C.toString(), 32, 510);
+            //context.fillText('QuadD: ' + this._D.toString(), 32, 540);
 
         }
 
@@ -134,6 +140,13 @@ module Phaser {
             {
                 srcH = (destY + destH) - offsetY;
             }
+
+            srcX = Math.floor(srcX);
+            srcY = Math.floor(srcY);
+            srcW = Math.floor(srcW);
+            srcH = Math.floor(srcH);
+            offsetX = Math.floor(offsetX + this._bounds.x);
+            offsetY = Math.floor(offsetY + this._bounds.y);
 
             if (srcW > 0 && srcH > 0)
             {

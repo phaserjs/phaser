@@ -7,22 +7,21 @@
         myGame.loader.load();
     }
     function create() {
-        //  In this example we're creating a whole bunch of ScrollZones working on the same image
         var zone = myGame.createScrollZone('starray');
-        var y = 10;
-        var speed = 6;
-        speed -= 0.3;
+        zone.currentRegion.visible = false;
+        var y = 0;
+        var speed = 16;
         //	The image consists of 10px high scrolling layers, this creates them quickly (top = fastest, getting slower as we move down)
-        for(var z = 0; z < 31; z++) {
+        for(var z = 0; z < 32; z++) {
             zone.addRegion(0, y, 640, 10, speed);
-            if(z <= 14) {
-                speed -= 0.3;
+            if(z <= 15) {
+                speed -= 1;
             } else {
-                speed += 0.3;
+                speed += 1;
             }
-            if(z == 14) {
+            if(z == 15) {
                 y = 240;
-                speed += 0.3;
+                speed += 1;
             } else {
                 y += 10;
             }
