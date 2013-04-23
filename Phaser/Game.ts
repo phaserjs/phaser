@@ -398,7 +398,7 @@ module Phaser {
             return this.world.createEmitter(x, y, size);
         }
 
-        public createScrollZone(key:string, x: number, y: number, width: number, height: number): ScrollZone {
+        public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
             return this.world.createScrollZone(key, x, y, width, height);
         }
 

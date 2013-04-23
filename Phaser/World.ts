@@ -108,11 +108,6 @@ module Phaser {
 
         //  Cameras
 
-        public addExistingCamera(cam: Camera): Camera {
-            //return this._cameras.addCamera(x, y, width, height);
-            return cam;
-        }
-
         public createCamera(x: number, y: number, width: number, height: number): Camera {
             return this._cameras.addCamera(x, y, width, height);
         }
@@ -126,11 +121,6 @@ module Phaser {
         }
 
         //  Game Objects
-
-        //  Drop this?
-        public addExistingSprite(sprite: Sprite): Sprite {
-            return <Sprite> this.group.add(sprite);
-        }
 
         public createSprite(x: number, y: number, key?: string = ''): Sprite {
             return <Sprite> this.group.add(new Sprite(this._game, x, y, key));
@@ -148,7 +138,7 @@ module Phaser {
             return <Group> this.group.add(new Group(this._game, MaxSize));
         }
 
-        public createScrollZone(key: string, x: number, y: number, width: number, height: number): ScrollZone {
+        public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
             return <ScrollZone> this.group.add(new ScrollZone(this._game, key, x, y, width, height));
         }
 

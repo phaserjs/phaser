@@ -86,6 +86,10 @@
       <DependentUpon>Particle.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="gameobjects\ScrollZone.ts" />
+    <TypeScriptCompile Include="gameobjects\ScrollRegion.ts" />
+    <Content Include="gameobjects\ScrollRegion.js">
+      <DependentUpon>ScrollRegion.ts</DependentUpon>
+    </Content>
     <Content Include="gameobjects\ScrollZone.js">
       <DependentUpon>ScrollZone.ts</DependentUpon>
     </Content>

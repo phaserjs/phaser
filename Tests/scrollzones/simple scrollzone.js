@@ -3,18 +3,14 @@
 (function () {
     var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        myGame.loader.addImageFile('dragonsun', 'assets/pics/cougar_dragonsun.png');
-        myGame.loader.addImageFile('overlay', 'assets/pics/scrollframe.png');
+        myGame.loader.addImageFile('crystal', 'assets/pics/jim_sachs_time_crystal.png');
         myGame.loader.load();
     }
-    var scroller;
     function create() {
-        //  This creates our ScrollZone. It is positioned at x32 y32 (world coodinates)
-        //  and is a size of 352x240 (which matches the window in our overlay image)
-        scroller = myGame.createScrollZone('dragonsun', 32, 32, 352, 240);
-        //  The speed of the scroll movement
-        scroller.scrollSpeed.x = 4;
-        scroller.scrollSpeed.y = 2;
-        myGame.createSprite(0, 0, 'overlay');
+        //  This creates our ScrollZone. It is positioned at x0 y0 (world coodinates) by default and uses
+        //  the 'crystal' image from the cache.
+        //  The default is for the scroll zone to create 1 new scrolling region the size of the whole image you gave it.
+        //  For this example we'll keep that, but look at the other tests to see reasons why you may not want to.
+        myGame.createScrollZone('crystal').setSpeed(4, 2);
     }
 })();

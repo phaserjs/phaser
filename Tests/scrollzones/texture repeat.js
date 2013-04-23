@@ -3,19 +3,19 @@
 (function () {
     var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
-        myGame.loader.addImageFile('balls', 'assets/misc/starfield.jpg');
+        myGame.loader.addImageFile('starfield', 'assets/misc/starfield.jpg');
         myGame.loader.load();
     }
     var scroller;
     var ship;
     function create() {
-        //  This creates a ScrollZone the size of the game window
-        //  The texture will repeat automatically
-        scroller = myGame.createScrollZone('balls', 0, 0, 800, 600);
+        //  512 x 512
+        scroller = myGame.createScrollZone('starfield', 0, 0, 1024, 512);
+        //  Some sin/cos data for the movement
+        myGame.math.sinCosGenerator(256, 4, 4, 2);
     }
     function update() {
-        //	Cycle through the wave data and apply it to the scroll speed (causes the circular wave motion)
-        scroller.scrollSpeed.x = myGame.math.shiftSinTable();
-        scroller.scrollSpeed.y = myGame.math.shiftCosTable();
+        scroller.currentRegion.scrollSpeed.x = myGame.math.shiftSinTable();
+        scroller.currentRegion.scrollSpeed.y = myGame.math.shiftCosTable();
     }
 })();

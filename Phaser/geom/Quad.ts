@@ -52,6 +52,35 @@ module Phaser {
 
         }
 
+        public get left(): number {
+            return this.x;
+        }
+
+        public get right(): number {
+            return this.x + this.width;
+        }
+
+        public get top(): number {
+            return this.y;
+        }
+
+        public get bottom(): number {
+            return this.y + this.height;
+        }
+
+        /**
+        * Determines whether the object specified intersects (overlaps) with this Quad object.
+        * This method checks the x, y, width, and height properties of the specified Quad object to see if it intersects with this Quad object.
+        * @method intersects
+        * @param {Quad} q The Quad to compare against to see if it intersects with this Quad.
+        * @param {Number} t A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
+        **/
+        public intersects(q: Quad, t?: number = 0): bool {
+
+            return !(q.left > this.right + t || q.right < this.left - t || q.top > this.bottom + t || q.bottom < this.top - t);
+
+        }
 
     }
 

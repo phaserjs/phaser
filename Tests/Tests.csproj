@@ -110,6 +110,10 @@
     <Content Include="scrollzones\parallax.js">
       <DependentUpon>parallax.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scrollzones\scroll window.ts" />
+    <Content Include="scrollzones\scroll window.js">
+      <DependentUpon>scroll window.ts</DependentUpon>
+    </Content>
     <Content Include="scrollzones\simple scrollzone.js">
       <DependentUpon>simple scrollzone.ts</DependentUpon>
     </Content>

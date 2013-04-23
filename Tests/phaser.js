@@ -8522,12 +8522,8 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        World.prototype.addExistingCamera = //  Cameras
-        function (cam) {
-            //return this._cameras.addCamera(x, y, width, height);
-            return cam;
-        };
-        World.prototype.createCamera = function (x, y, width, height) {
+        World.prototype.createCamera = //  Cameras
+        function (x, y, width, height) {
             return this._cameras.addCamera(x, y, width, height);
         };
         World.prototype.removeCamera = function (id) {
@@ -8536,12 +8532,8 @@ var Phaser;
         World.prototype.getAllCameras = function () {
             return this._cameras.getAll();
         };
-        World.prototype.addExistingSprite = //  Game Objects
-        //  Drop this?
-        function (sprite) {
-            return this.group.add(sprite);
-        };
-        World.prototype.createSprite = function (x, y, key) {
+        World.prototype.createSprite = //  Game Objects
+        function (x, y, key) {
             if (typeof key === "undefined") { key = ''; }
             return this.group.add(new Phaser.Sprite(this._game, x, y, key));
         };
@@ -8556,6 +8548,10 @@ var Phaser;
             return this.group.add(new Phaser.Group(this._game, MaxSize));
         };
         World.prototype.createScrollZone = function (key, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
             return this.group.add(new Phaser.ScrollZone(this._game, key, x, y, width, height));
         };
         World.prototype.createTilemap = function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
@@ -11477,6 +11473,10 @@ var Phaser;
             return this.world.createEmitter(x, y, size);
         };
         Game.prototype.createScrollZone = function (key, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
             return this.world.createScrollZone(key, x, y, width, height);
         };
         Game.prototype.createTilemap = function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
@@ -11541,6 +11541,46 @@ var Phaser;
             this.height = height;
             return this;
         };
+        Object.defineProperty(Quad.prototype, "left", {
+            get: function () {
+                return this.x;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Quad.prototype, "right", {
+            get: function () {
+                return this.x + this.width;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Quad.prototype, "top", {
+            get: function () {
+                return this.y;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Quad.prototype, "bottom", {
+            get: function () {
+                return this.y + this.height;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Quad.prototype.intersects = /**
+        * Determines whether the object specified intersects (overlaps) with this Quad object.
+        * This method checks the x, y, width, and height properties of the specified Quad object to see if it intersects with this Quad object.
+        * @method intersects
+        * @param {Quad} q The Quad to compare against to see if it intersects with this Quad.
+        * @param {Number} t A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
+        **/
+        function (q, t) {
+            if (typeof t === "undefined") { t = 0; }
+            return !(q.left > this.right + t || q.right < this.left - t || q.top > this.bottom + t || q.bottom < this.top - t);
+        };
         return Quad;
     })();
     Phaser.Quad = Quad;    
@@ -11548,79 +11588,56 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="../geom/Quad.ts" />
 /**
-* Phaser - ScrollZone
+* Phaser - ScrollRegion
 *
-* Creates a scrolling region of the given width and height from an image in the cache.
-* The ScrollZone can be positioned anywhere in-world like a normal game object.
-* The image within it is scrolled via the scrollSpeed.x/y properties.
-* If you create a scroll zone larger than the given source image it will create a DynamicTexture and fill it with a pattern of the source image.
+* Creates a scrolling region within a ScrollZone.
+* It is scrolled via the scrollSpeed.x/y properties.
 */
 var Phaser;
 (function (Phaser) {
-    var ScrollZone = (function (_super) {
-        __extends(ScrollZone, _super);
-        /**
-        *
-        */
-        function ScrollZone(game, key, x, y, width, height) {
-                _super.call(this, game, x, y, width, height);
-            this._dynamicTexture = null;
-            //  local rendering related temp vars to help avoid gc spikes
-            this._dx = 0;
-            this._dy = 0;
-            this._dw = 0;
-            this._dh = 0;
+    var ScrollRegion = (function () {
+        function ScrollRegion(x, y, width, height, speedX, speedY) {
             this._anchorWidth = 0;
             this._anchorHeight = 0;
             this._inverseWidth = 0;
             this._inverseHeight = 0;
-            this.flipped = false;
+            this.visible = true;
             //	Our seamless scrolling quads
             this._A = new Phaser.Quad(0, 0, width, height);
             this._B = new Phaser.Quad();
             this._C = new Phaser.Quad();
             this._D = new Phaser.Quad();
             this._scroll = new Phaser.MicroPoint();
-            this.offset = new Phaser.MicroPoint();
-            this.scrollSpeed = new Phaser.MicroPoint();
-            if(this._game.cache.getImage(key)) {
-                this._texture = this._game.cache.getImage(key);
-                this.bounds.width = width;
-                this.bounds.height = height;
-                this._sourceWidth = this._texture.width;
-                this._sourceHeight = this._texture.height;
-                // If the Scrolling Zone is BIGGER than the texture we need to create a repeating pattern DynamicTexture
-                if(this._texture.width < width || this._texture.height < height) {
-                    this.createRepeatingTexture();
-                }
-            }
+            this._offset = new Phaser.MicroPoint(x, y);
+            this.scrollSpeed = new Phaser.MicroPoint(speedX, speedY);
+            this.bounds = new Phaser.Quad(0, 0, width, height);
         }
-        ScrollZone.prototype.update = function () {
-            this._scroll.x = Math.round(this._scroll.x + this.scrollSpeed.x);
-            this._scroll.y = Math.round(this._scroll.y + this.scrollSpeed.y);
-            if(this._scroll.x > this._sourceWidth) {
-                this._scroll.x = 0;
+        ScrollRegion.prototype.update = function (delta) {
+            this._scroll.x = Math.round(this._scroll.x + (this.scrollSpeed.x));
+            this._scroll.y = Math.round(this._scroll.y + (this.scrollSpeed.y));
+            if(this._scroll.x > this._offset.x + this.bounds.width) {
+                this._scroll.x = this._offset.x;
             }
-            if(this._scroll.x < 0) {
-                this._scroll.x = this._sourceWidth;
+            if(this._scroll.x < this._offset.x) {
+                this._scroll.x = this._offset.x + this.bounds.width;
             }
-            if(this._scroll.y > this._sourceHeight) {
-                this._scroll.y = 0;
+            if(this._scroll.y > this._offset.y + this.bounds.height) {
+                this._scroll.y = this._offset.y;
             }
-            if(this._scroll.y < 0) {
-                this._scroll.y = this._sourceHeight;
+            if(this._scroll.y < this._offset.y) {
+                this._scroll.y = this._offset.y + this.bounds.height;
             }
             //	Anchor Dimensions
-            this._anchorWidth = this._sourceWidth - this._scroll.x;
-            this._anchorHeight = this._sourceHeight - this._scroll.y;
-            if(this._anchorWidth > this.width) {
-                this._anchorWidth = this.width;
+            this._anchorWidth = this.bounds.width - this._scroll.x;
+            this._anchorHeight = this.bounds.height - this._scroll.y;
+            if(this._anchorWidth > this.bounds.width) {
+                this._anchorWidth = this.bounds.width;
             }
-            if(this._anchorHeight > this.height) {
-                this._anchorHeight = this.height;
+            if(this._anchorHeight > this.bounds.height) {
+                this._anchorHeight = this.bounds.height;
             }
-            this._inverseWidth = this.width - this._anchorWidth;
-            this._inverseHeight = this.height - this._anchorHeight;
+            this._inverseWidth = this.bounds.width - this._anchorWidth;
+            this._inverseHeight = this.bounds.height - this._anchorHeight;
             //	Quad A
             this._A.setTo(this._scroll.x, this._scroll.y, this._anchorWidth, this._anchorHeight);
             //	Quad B
@@ -11634,6 +11651,97 @@ var Phaser;
             //	Quad D
             this._D.width = this._inverseWidth;
             this._D.height = this._inverseHeight;
+        };
+        ScrollRegion.prototype.render = function (context, texture, dx, dy, dw, dh) {
+            if(this.visible == false) {
+                return;
+            }
+            this.crop(context, texture, this._A.x, this._A.y, this._A.width, this._A.height, dx, dy, dw, dh, 0, 0);
+            this.crop(context, texture, this._B.x, this._B.y, this._B.width, this._B.height, dx, dy, dw, dh, this._A.width, 0);
+            this.crop(context, texture, this._C.x, this._C.y, this._C.width, this._C.height, dx, dy, dw, dh, 0, this._A.height);
+            this.crop(context, texture, this._D.x, this._D.y, this._D.width, this._D.height, dx, dy, dw, dh, this._C.width, this._A.height);
+        };
+        ScrollRegion.prototype.crop = function (context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
+            offsetX += destX;
+            offsetY += destY;
+            if(srcW > (destX + destW) - offsetX) {
+                srcW = (destX + destW) - offsetX;
+            }
+            if(srcH > (destY + destH) - offsetY) {
+                srcH = (destY + destH) - offsetY;
+            }
+            if(srcW > 0 && srcH > 0) {
+                context.drawImage(texture, srcX, srcY, srcW, srcH, offsetX, offsetY, srcW, srcH);
+            }
+        };
+        return ScrollRegion;
+    })();
+    Phaser.ScrollRegion = ScrollRegion;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../geom/Quad.ts" />
+/// <reference path="ScrollRegion.ts" />
+/**
+* Phaser - ScrollZone
+*
+* Creates a scrolling region of the given width and height from an image in the cache.
+* The ScrollZone can be positioned anywhere in-world like a normal game object, re-act to physics, collision, etc.
+* The image within it is scrolled via ScrollRegions and their scrollSpeed.x/y properties.
+* If you create a scroll zone larger than the given source image it will create a DynamicTexture and fill it with a pattern of the source image.
+*/
+var Phaser;
+(function (Phaser) {
+    var ScrollZone = (function (_super) {
+        __extends(ScrollZone, _super);
+        function ScrollZone(game, key, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
+                _super.call(this, game, x, y, width, height);
+            this._dynamicTexture = null;
+            //  local rendering related temp vars to help avoid gc spikes
+            this._dx = 0;
+            this._dy = 0;
+            this._dw = 0;
+            this._dh = 0;
+            this.flipped = false;
+            this.regions = [];
+            if(this._game.cache.getImage(key)) {
+                this._texture = this._game.cache.getImage(key);
+                this.width = this._texture.width;
+                this.height = this._texture.height;
+                if(width > this._texture.width || height > this._texture.height) {
+                    //  Create our repeating texture (as the source image wasn't large enough for the requested size)
+                    this.createRepeatingTexture(width, height);
+                    this.width = width;
+                    this.height = height;
+                }
+                //  Create a default ScrollRegion at the requested size
+                this.addRegion(0, 0, this.width, this.height);
+                //  If the zone is smaller than the image itself then shrink the bounds
+                if((width < this._texture.width || height < this._texture.height) && width !== 0 && height !== 0) {
+                    this.width = width;
+                    this.height = height;
+                }
+            }
+        }
+        ScrollZone.prototype.addRegion = function (x, y, width, height, speedX, speedY) {
+            if (typeof speedX === "undefined") { speedX = 0; }
+            if (typeof speedY === "undefined") { speedY = 0; }
+            this.currentRegion = new Phaser.ScrollRegion(x, y, width, height, speedX, speedY);
+            this.regions.push(this.currentRegion);
+            return this.currentRegion;
+        };
+        ScrollZone.prototype.setSpeed = function (x, y) {
+            if(this.currentRegion) {
+                this.currentRegion.scrollSpeed.setTo(x, y);
+            }
+        };
+        ScrollZone.prototype.update = function () {
+            for(var i = 0; i < this.regions.length; i++) {
+                this.regions[i].update(this._game.time.delta);
+            }
         };
         ScrollZone.prototype.inCamera = function (camera) {
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
@@ -11656,8 +11764,8 @@ var Phaser;
                 var globalAlpha = this._game.stage.context.globalAlpha;
                 this._game.stage.context.globalAlpha = this.alpha;
             }
-            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x) + this.offset.x;
-            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y) + this.offset.y;
+            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
             this._dw = this.bounds.width * this.scale.x;
             this._dh = this.bounds.height * this.scale.y;
             //	Apply camera difference
@@ -11680,31 +11788,13 @@ var Phaser;
             }
             this._dx = Math.round(this._dx);
             this._dy = Math.round(this._dy);
-            if(this._dynamicTexture) {
-                if(this._A.width !== 0 && this._A.height !== 0) {
-                    this._game.stage.context.drawImage(this._dynamicTexture.canvas, this._A.x, this._A.y, this._A.width, this._A.height, this._dx, this._dy, this._A.width, this._A.height);
-                }
-                if(this._B.width !== 0 && this._B.height !== 0) {
-                    this._game.stage.context.drawImage(this._dynamicTexture.canvas, this._B.x, this._B.y, this._B.width, this._B.height, this._dx + this._A.width, this._dy, this._B.width, this._B.height);
-                }
-                if(this._C.width !== 0 && this._C.height !== 0) {
-                    this._game.stage.context.drawImage(this._dynamicTexture.canvas, this._C.x, this._C.y, this._C.width, this._C.height, this._dx, this._dy + this._A.height, this._C.width, this._C.height);
-                }
-                if(this._D.width !== 0 && this._D.height !== 0) {
-                    this._game.stage.context.drawImage(this._dynamicTexture.canvas, this._D.x, this._D.y, this._D.width, this._D.height, this._dx + this._C.width, this._dy + this._A.height, this._D.width, this._D.height);
-                }
-            } else {
-                if(this._A.width !== 0 && this._A.height !== 0) {
-                    this._game.stage.context.drawImage(this._texture, this._A.x, this._A.y, this._A.width, this._A.height, this._dx, this._dy, this._A.width, this._A.height);
-                }
-                if(this._B.width !== 0 && this._B.height !== 0) {
-                    this._game.stage.context.drawImage(this._texture, this._B.x, this._B.y, this._B.width, this._B.height, this._dx + this._A.width, this._dy, this._B.width, this._B.height);
-                }
-                if(this._C.width !== 0 && this._C.height !== 0) {
-                    this._game.stage.context.drawImage(this._texture, this._C.x, this._C.y, this._C.width, this._C.height, this._dx, this._dy + this._A.height, this._C.width, this._C.height);
-                }
-                if(this._D.width !== 0 && this._D.height !== 0) {
-                    this._game.stage.context.drawImage(this._texture, this._D.x, this._D.y, this._D.width, this._D.height, this._dx + this._C.width, this._dy + this._A.height, this._D.width, this._D.height);
+            this._dw = Math.round(this._dw);
+            this._dh = Math.round(this._dh);
+            for(var i = 0; i < this.regions.length; i++) {
+                if(this._dynamicTexture) {
+                    this.regions[i].render(this._game.stage.context, this._dynamicTexture.canvas, this._dx, this._dy, this._dw, this._dh);
+                } else {
+                    this.regions[i].render(this._game.stage.context, this._texture, this._dx, this._dy, this._dw, this._dh);
                 }
             }
             if(globalAlpha > -1) {
@@ -11712,16 +11802,14 @@ var Phaser;
             }
             return true;
         };
-        ScrollZone.prototype.createRepeatingTexture = function () {
+        ScrollZone.prototype.createRepeatingTexture = function (regionWidth, regionHeight) {
             //	Work out how many we'll need of the source image to make it tile properly
-            var tileWidth = Math.ceil(this.width / this._sourceWidth) * this._sourceWidth;
-            var tileHeight = Math.ceil(this.height / this._sourceHeight) * this._sourceHeight;
+            var tileWidth = Math.ceil(this._texture.width / regionWidth) * regionWidth;
+            var tileHeight = Math.ceil(this._texture.height / regionHeight) * regionHeight;
             this._dynamicTexture = new Phaser.DynamicTexture(this._game, tileWidth, tileHeight);
             this._dynamicTexture.context.rect(0, 0, tileWidth, tileHeight);
             this._dynamicTexture.context.fillStyle = this._dynamicTexture.context.createPattern(this._texture, "repeat");
             this._dynamicTexture.context.fill();
-            this._sourceWidth = tileWidth;
-            this._sourceHeight = tileHeight;
         };
         return ScrollZone;
     })(Phaser.GameObject);
@@ -11834,6 +11922,10 @@ var Phaser;
             return this.game.world.createEmitter(x, y, size);
         };
         State.prototype.createScrollZone = function (key, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
             return this.game.world.createScrollZone(key, x, y, width, height);
         };
         State.prototype.createTilemap = function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {

@@ -27,7 +27,6 @@
             var tempSprite = myGame.createSprite(myGame.stage.randomX, 0, 'bunny');
             tempSprite.velocity.x = -200 + (Math.random() * 400);
             tempSprite.velocity.y = 100 + Math.random() * 200;
-            myGame.world.addExistingSprite(tempSprite);
         }
     }
     function update() {

@@ -16,6 +16,7 @@
     function create() {
 
         //  In this example we're creating a whole bunch of ScrollZones working on the same image
+        var zone: Phaser.ScrollZone = myGame.createScrollZone('starray');
 
 		var y:number = 10;
 		var speed:number = 6;
@@ -25,9 +26,7 @@
 		//	The image consists of 10px high scrolling layers, this creates them quickly (top = fastest, getting slower as we move down)
 		for (var z:number = 0; z < 31; z++)
 		{
-            var zone:Phaser.ScrollZone = myGame.createScrollZone('starray', 0, y, 640, 10);
-            zone.scrollSpeed.setTo(speed, 0);
-            zone.offset.y = y;
+		    zone.addRegion(0, y, 640, 10, speed);
 				
 			if (z <= 14)
 			{
