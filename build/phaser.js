@@ -1666,6 +1666,8 @@ var Phaser;
             this.looped = looped;
             this.isFinished = false;
             this.isPlaying = false;
+            this._frameIndex = 0;
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
         }
         Object.defineProperty(Animation.prototype, "frameTotal", {
             get: function () {
@@ -1982,6 +1984,7 @@ var Phaser;
             }
             this._anims[name] = new Phaser.Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
             this.currentAnim = this._anims[name];
+            this.currentFrame = this.currentAnim.currentFrame;
         };
         AnimationManager.prototype.validateFrames = function (frames, useNumericIndex) {
             for(var i = 0; i < frames.length; i++) {
@@ -9477,7 +9480,13 @@ var Phaser;
             }, false);
         };
         Keyboard.prototype.addKeyCapture = function (keycode) {
-            this._capture[keycode] = true;
+            if(typeof keycode == 'array') {
+                for(var code in keycode) {
+                    this._capture[code] = true;
+                }
+            } else {
+                this._capture[keycode] = true;
+            }
         };
         Keyboard.prototype.removeKeyCapture = function (keycode) {
             delete this._capture[keycode];
@@ -11217,8 +11226,8 @@ var Phaser;
 /**
 * Phaser - Game
 *
-* This is where the magic happens. The Game object is the heart of your game, providing quick access to common
-* functions and handling the boot process.
+* This is where the magic happens. The Game object is the heart of your game,
+* providing quick access to common functions and handling the boot process.
 */
 var Phaser;
 (function (Phaser) {
@@ -11250,15 +11259,23 @@ var Phaser;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
             if(document.readyState === 'complete' || document.readyState === 'interactive') {
-                this.boot(parent, width, height);
+                setTimeout(function (parent, width, height) {
+                    return _this.boot(parent, width, height);
+                });
             } else {
                 document.addEventListener('DOMContentLoaded', function () {
+                    return _this.boot(parent, width, height);
+                }, false);
+                window.addEventListener('load', function () {
                     return _this.boot(parent, width, height);
                 }, false);
             }
         }
         Game.prototype.boot = function (parent, width, height) {
             var _this = this;
+            if(this.isBooted == true) {
+                return;
+            }
             if(!document.body) {
                 window.setTimeout(function () {
                     return _this.boot(parent, width, height);

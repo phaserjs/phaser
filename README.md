@@ -3,7 +3,7 @@ Phaser
 
 Version 0.9.3
 
-23rd April 2013
+24th April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -27,7 +27,10 @@ V0.9.3
 * Added shiftSinTable and shiftCosTable to the GameMath class to allow for quick iteration through the data tables.
 * Added the new ScrollZone game object. Endlessly useful but especially for scrolling backdrops. Created 6 example tests.
 * Removed the need for DynamicTextures to require a key property and updated test cases.
-* Add the rotationOffset value to GameObject (and thus Sprite). Useful if your graphics need to rotate but don't weren't drawn facing zero degrees (to the right).
+* Add the rotationOffset value to GameObject (and thus Sprite). Useful if your graphics need to rotate but weren't drawn facing zero degrees (to the right).
+* You can now pass an array or a single value to Input.Keyboard.addKeyCapture()
+* Fixed a potential race condition issue in Game.boot (thanks Hackmaniac)
+* Fixed issue with showing frame zero of a texture atlas before the animation started playing (thanks JesseFreeman)
 
 V0.9.2
 

@@ -33,8 +33,8 @@
 /**
 * Phaser - Game
 *
-* This is where the magic happens. The Game object is the heart of your game, providing quick access to common
-* functions and handling the boot process.
+* This is where the magic happens. The Game object is the heart of your game, 
+* providing quick access to common functions and handling the boot process.
 */
 
 module Phaser {
@@ -51,11 +51,12 @@ module Phaser {
 
             if (document.readyState === 'complete' || document.readyState === 'interactive')
             {
-                this.boot(parent, width, height);
+                setTimeout((parent, width, height) => this.boot(parent, width, height));
             }
             else
             {
                 document.addEventListener('DOMContentLoaded', () => this.boot(parent, width, height), false);
+                window.addEventListener('load', () => this.boot(parent, width, height), false);
             }
 
         }
@@ -94,6 +95,11 @@ module Phaser {
         public isBooted: bool = false;
 
         private boot(parent: string, width: number, height: number) {
+
+            if (this.isBooted == true)
+            {
+                return;
+            }
 
             if (!document.body)
             {

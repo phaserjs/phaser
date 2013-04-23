@@ -30,12 +30,26 @@ module Phaser {
 
         }
 
-        public addKeyCapture(keycode: number) {
-            this._capture[keycode] = true;
+        public addKeyCapture(keycode) {
+
+            if (typeof keycode == 'array')
+            {
+                for (var code in keycode)
+                {
+                    this._capture[code] = true;
+                }
+            }
+            else
+            {
+                this._capture[keycode] = true;
+            }
+
         }
 
         public removeKeyCapture(keycode: number) {
+
             delete this._capture[keycode];
+
         }
 
         public clearCaptures() {

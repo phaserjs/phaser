@@ -70,6 +70,7 @@ module Phaser {
             this._anims[name] = new Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
 
             this.currentAnim = this._anims[name];
+            this.currentFrame = this.currentAnim.currentFrame;
 
         }
 

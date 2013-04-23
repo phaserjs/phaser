@@ -24,6 +24,9 @@ module Phaser {
             this.isFinished = false;
             this.isPlaying = false;
 
+            this._frameIndex = 0;
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
         }
 
         private _game: Game;
