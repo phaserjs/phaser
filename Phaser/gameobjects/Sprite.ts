@@ -224,14 +224,14 @@ module Phaser {
             }
 
             //	Rotation - needs to work from origin point really, but for now from center
-            if (this.angle !== 0 || this.flipped == true)
+            if (this.angle !== 0 || this.rotationOffset !== 0 || this.flipped == true)
             {
                 this._game.stage.context.save();
                 this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
 
-                if (this.angle !== 0)
+                if (this.angle !== 0 || this.rotationOffset !== 0)
                 {
-                    this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+                    this._game.stage.context.rotate((this.rotationOffset + this.angle) * (Math.PI / 180));
                 }
 
                 this._dx = -(this._dw / 2);

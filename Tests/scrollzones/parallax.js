@@ -8,6 +8,7 @@
     }
     function create() {
         var zone = myGame.createScrollZone('starray');
+        //  Hide the default region (the full image)
         zone.currentRegion.visible = false;
         var y = 0;
         var speed = 16;

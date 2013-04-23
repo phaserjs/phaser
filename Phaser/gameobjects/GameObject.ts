@@ -76,6 +76,11 @@ module Phaser {
         public origin: MicroPoint;
         public z: number = 0;
 
+        //  This value is added to the angle of the GameObject.
+        //  For example if you had a sprite drawn facing straight up then you could set
+        //  rotationOffset to 90 and it would correspond correctly with Phasers rotation system
+        public rotationOffset: number = 0;
+
         //  Physics properties
         public immovable: bool;
 

@@ -3,7 +3,7 @@ Phaser
 
 Version 0.9.3
 
-21st April 2013
+23rd April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -25,9 +25,9 @@ V0.9.3
 * Re-built Tilemap handling from scratch to allow for proper layered maps (as exported from Tiled / Mappy)
 * Tilemap no longer requires a buffer per Camera (in prep for WebGL support)
 * Added shiftSinTable and shiftCosTable to the GameMath class to allow for quick iteration through the data tables.
-* Added the new ScrollZone game object. Endlessly useful but especially for scrolling backdrops. Created several example tests.
+* Added the new ScrollZone game object. Endlessly useful but especially for scrolling backdrops. Created 6 example tests.
 * Removed the need for DynamicTextures to require a key property and updated test cases.
-
+* Add the rotationOffset value to GameObject (and thus Sprite). Useful if your graphics need to rotate but don't weren't drawn facing zero degrees (to the right).
 
 V0.9.2
 

@@ -467,6 +467,10 @@ var Phaser;
                 _super.call(this, game);
             this._angle = 0;
             this.z = 0;
+            //  This value is added to the angle of the GameObject.
+            //  For example if you had a sprite drawn facing straight up then you could set
+            //  rotationOffset to 90 and it would correspond correctly with Phasers rotation system
+            this.rotationOffset = 0;
             this.moves = true;
             //  Input
             this.inputEnabled = false;
@@ -1541,11 +1545,11 @@ var Phaser;
                 this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
             //	Rotation - needs to work from origin point really, but for now from center
-            if(this.angle !== 0 || this.flipped == true) {
+            if(this.angle !== 0 || this.rotationOffset !== 0 || this.flipped == true) {
                 this._game.stage.context.save();
                 this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
-                if(this.angle !== 0) {
-                    this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+                if(this.angle !== 0 || this.rotationOffset !== 0) {
+                    this._game.stage.context.rotate((this.rotationOffset + this.angle) * (Math.PI / 180));
                 }
                 this._dx = -(this._dw / 2);
                 this._dy = -(this._dh / 2);
@@ -6983,6 +6987,9 @@ var Phaser;
         * @return	A Point where Point.x contains the velocity x value and Point.y contains the velocity y value
         */
         function (angle, speed) {
+            if(isNaN(speed)) {
+                speed = 0;
+            }
             var a = this._game.math.degreesToRadians(angle);
             return new Phaser.Point((Math.cos(a) * speed), (Math.sin(a) * speed));
         };

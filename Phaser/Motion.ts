@@ -79,6 +79,11 @@ module Phaser {
         */
         public velocityFromAngle(angle: number, speed: number): Point {
 
+            if (isNaN(speed))
+            {
+                speed = 0;
+            }
+
             var a: number = this._game.math.degreesToRadians(angle);
 
             return new Point((Math.cos(a) * speed), (Math.sin(a) * speed));

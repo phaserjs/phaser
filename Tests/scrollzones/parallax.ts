@@ -17,6 +17,7 @@
 
         var zone: Phaser.ScrollZone = myGame.createScrollZone('starray');
 
+        //  Hide the default region (the full image)
         zone.currentRegion.visible = false;
 
 		var y:number = 0;
