@@ -132,6 +132,10 @@
     <Content Include="sprites\flipped.js">
       <DependentUpon>flipped.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="tilemap\small map.ts" />
+    <Content Include="tilemap\small map.js">
+      <DependentUpon>small map.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\bounce.js">
       <DependentUpon>bounce.ts</DependentUpon>
     </Content>

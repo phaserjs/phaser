@@ -26,8 +26,8 @@ module Phaser {
         }
 
         private _game: Game;
-
         private _cameras: Camera[];
+        private _cameraInstance: number = 0;
 
         public current: Camera;
 
@@ -45,9 +45,11 @@ module Phaser {
 
         public addCamera(x: number, y: number, width: number, height: number): Camera {
 
-            var newCam: Camera = new Camera(this._game, this._cameras.length, x, y, width, height);
+            var newCam: Camera = new Camera(this._game, this._cameraInstance, x, y, width, height);
 
             this._cameras.push(newCam);
+
+            this._cameraInstance++;
 
             return newCam;
 
@@ -55,21 +57,22 @@ module Phaser {
 
         public removeCamera(id: number): bool {
 
-            if (this._cameras[id])
+            for (var c = 0; c < this._cameras.length; c++)
             {
-                if (this.current === this._cameras[id])
+                if (this._cameras[c].ID == id)
                 {
-                    this.current = null;
+                    if (this.current.ID === this._cameras[c].ID)
+                    {
+                        this.current = null;
+                    }
+
+                    this._cameras.splice(c, 1);
+
+                    return true;
                 }
-
-                this._cameras.splice(id, 1);
-
-                return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
 
         }
 

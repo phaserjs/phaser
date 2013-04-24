@@ -54,10 +54,13 @@ module Phaser {
 
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number) {
 
-            //  Loop through the layers
-            for (var i = 0; i < this._layers.length; i++)
+            if (this.cameraBlacklist.indexOf(camera.ID) == -1)
             {
-                this._layers[i].render(camera, cameraOffsetX, cameraOffsetY);
+                //  Loop through the layers
+                for (var i = 0; i < this._layers.length; i++)
+                {
+                    this._layers[i].render(camera, cameraOffsetX, cameraOffsetY);
+                }
             }
 
         }

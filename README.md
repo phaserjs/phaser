@@ -20,17 +20,21 @@ Change Log
 
 V0.9.3
 
-* Fixed issues with Group not adding reference to Game to newly created objects.
+* Added the new ScrollZone game object. Endlessly useful but especially for scrolling backdrops. Created 6 example tests.
+* Added GameObject.hideFromCamera(cameraID) to stop an object rendering to specific cameras (also showToCamera and clearCameraList)
+* Added GameObject.setBounds() to confine a game object to a specific area within the world (useful for stopping them going off the edges)
+* Added GameObject.outOfBoundsAction, can be either OUT OF BOUNDS STOP which stops the object moving, or OUT OF BOUNDS KILL which kills it.
+* Added GameObject.rotationOffset. Useful if your graphics need to rotate but weren't drawn facing zero degrees (to the right).
+* Added shiftSinTable and shiftCosTable to the GameMath class to allow for quick iteration through the data tables.
 * Added more robust frame checking into AnimationManager
 * Re-built Tilemap handling from scratch to allow for proper layered maps (as exported from Tiled / Mappy)
 * Tilemap no longer requires a buffer per Camera (in prep for WebGL support)
-* Added shiftSinTable and shiftCosTable to the GameMath class to allow for quick iteration through the data tables.
-* Added the new ScrollZone game object. Endlessly useful but especially for scrolling backdrops. Created 6 example tests.
-* Removed the need for DynamicTextures to require a key property and updated test cases.
-* Add the rotationOffset value to GameObject (and thus Sprite). Useful if your graphics need to rotate but weren't drawn facing zero degrees (to the right).
-* You can now pass an array or a single value to Input.Keyboard.addKeyCapture()
+* Fixed issues with Group not adding reference to Game to newly created objects (thanks JesseFreeman)
 * Fixed a potential race condition issue in Game.boot (thanks Hackmaniac)
 * Fixed issue with showing frame zero of a texture atlas before the animation started playing (thanks JesseFreeman)
+* Fixed a bug where Camera.visible = false would still render
+* Removed the need for DynamicTextures to require a key property and updated test cases.
+* You can now pass an array or a single value to Input.Keyboard.addKeyCapture().
 
 V0.9.2
 

@@ -34,6 +34,7 @@ module Phaser {
             this.health = 1;
             this.immovable = false;
             this.moves = true;
+            this.worldBounds = null;
 
             this.touching = Collision.NONE;
             this.wasTouching = Collision.NONE;
@@ -50,6 +51,7 @@ module Phaser {
             this.angularDrag = 0;
             this.maxAngular = 10000;
 
+            this.cameraBlacklist = [];
             this.scrollFactor = new MicroPoint(1.0, 1.0);
 
         }
@@ -66,9 +68,15 @@ module Phaser {
         public static ALIGN_BOTTOM_CENTER: number = 7;
         public static ALIGN_BOTTOM_RIGHT: number = 8;
 
+        public static OUT_OF_BOUNDS_STOP: number = 0;
+        public static OUT_OF_BOUNDS_KILL: number = 1;
+
         public _point: MicroPoint;
 
+        public cameraBlacklist: number[];
         public bounds: Rectangle;
+        public worldBounds: Quad;
+        public outOfBoundsAction: number = 0;
         public align: number;
         public facing: number;
         public alpha: number;
@@ -136,6 +144,37 @@ module Phaser {
                 this.updateMotion();
             }
 
+            if (this.worldBounds != null)
+            {
+                if (this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL)
+                {
+                    if (this.x < this.worldBounds.x || this.x > this.worldBounds.right || this.y < this.worldBounds.y || this.y > this.worldBounds.bottom)
+                    {
+                        this.kill();
+                    }
+                }
+                else
+                {
+                    if (this.x < this.worldBounds.x)
+                    {
+                        this.x = this.worldBounds.x;
+                    }
+                    else if (this.x > this.worldBounds.right)
+                    {
+                        this.x = this.worldBounds.right;
+                    }
+
+                    if (this.y < this.worldBounds.y)
+                    {
+                        this.y = this.worldBounds.y;
+                    }
+                    else if (this.y > this.worldBounds.bottom)
+                    {
+                        this.y = this.worldBounds.bottom;
+                    }
+                }
+            }
+
             if (this.inputEnabled)
             {
                 this.updateInput();
@@ -175,7 +214,7 @@ module Phaser {
 
         /**
         * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
-        * If the group has a LOT of things in it, it might be faster to use <code>G.overlaps()</code>.
+        * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         * 
         * @param	ObjectOrGroup	The object or group being tested.
@@ -486,6 +525,44 @@ module Phaser {
             {
                 this.kill();
             }
+
+        }
+
+        /**
+        * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
+        * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
+        * it can be stopped from leaving the world, or a section of it.
+        */
+        public setBounds(x: number, y: number, width: number, height: number) {
+
+            this.worldBounds = new Quad(x, y, width, height);
+
+        }
+
+        /**
+        * If you do not wish this object to be visible to a specific camera, pass the camera here.
+        */
+        public hideFromCamera(camera: Camera) {
+
+            if (this.cameraBlacklist.indexOf(camera.ID) == -1)
+            {
+                this.cameraBlacklist.push(camera.ID);
+            }
+
+        }
+
+        public showToCamera(camera: Camera) {
+
+            if (this.cameraBlacklist.indexOf(camera.ID) !== -1)
+            {
+                this.cameraBlacklist.slice(this.cameraBlacklist.indexOf(camera.ID), 1);
+            }
+
+        }
+
+        public clearCameraList() {
+
+            this.cameraBlacklist.length = 0;
 
         }
 

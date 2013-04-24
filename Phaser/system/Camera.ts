@@ -439,7 +439,7 @@ module Phaser {
 
         public render() {
 
-            if (this.visible === false && this.alpha < 0.1)
+            if (this.visible === false || this.alpha < 0.1)
             {
                 return;
             }

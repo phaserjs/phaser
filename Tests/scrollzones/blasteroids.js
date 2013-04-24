@@ -27,6 +27,8 @@
             var tempBullet = new Phaser.Sprite(myGame, myGame.stage.centerX, myGame.stage.centerY, 'bullet');
             tempBullet.exists = false;
             tempBullet.rotationOffset = 90;
+            tempBullet.setBounds(-100, -100, 900, 700);
+            tempBullet.outOfBoundsAction = Phaser.GameObject.OUT_OF_BOUNDS_KILL;
             bullets.add(tempBullet);
         }
         ship = myGame.createSprite(myGame.stage.centerX, myGame.stage.centerY, 'nashwan');
@@ -34,8 +36,6 @@
         ship.rotationOffset = 90;
     }
     function update() {
-        //  Recycle bullets
-        bullets.forEach(recycleBullet);
         ship.angularVelocity = 0;
         if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             ship.angularVelocity = -200;

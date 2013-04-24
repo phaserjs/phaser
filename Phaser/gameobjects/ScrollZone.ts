@@ -119,7 +119,7 @@ module Phaser {
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number) {
 
             //  Render checks
-            if (this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.inCamera(camera.worldView) == false)
+            if (this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false)
             {
                 return false;
             }

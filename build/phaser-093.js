@@ -466,6 +466,7 @@ var Phaser;
             if (typeof height === "undefined") { height = 16; }
                 _super.call(this, game);
             this._angle = 0;
+            this.outOfBoundsAction = 0;
             this.z = 0;
             //  This value is added to the angle of the GameObject.
             //  For example if you had a sprite drawn facing straight up then you could set
@@ -491,6 +492,7 @@ var Phaser;
             this.health = 1;
             this.immovable = false;
             this.moves = true;
+            this.worldBounds = null;
             this.touching = Phaser.Collision.NONE;
             this.wasTouching = Phaser.Collision.NONE;
             this.allowCollisions = Phaser.Collision.ANY;
@@ -503,6 +505,7 @@ var Phaser;
             this.angularAcceleration = 0;
             this.angularDrag = 0;
             this.maxAngular = 10000;
+            this.cameraBlacklist = [];
             this.scrollFactor = new Phaser.MicroPoint(1.0, 1.0);
         }
         GameObject.ALIGN_TOP_LEFT = 0;
@@ -514,6 +517,8 @@ var Phaser;
         GameObject.ALIGN_BOTTOM_LEFT = 6;
         GameObject.ALIGN_BOTTOM_CENTER = 7;
         GameObject.ALIGN_BOTTOM_RIGHT = 8;
+        GameObject.OUT_OF_BOUNDS_STOP = 0;
+        GameObject.OUT_OF_BOUNDS_KILL = 1;
         GameObject.prototype.preUpdate = function () {
             //  flicker time
             this.last.x = this.bounds.x;
@@ -524,6 +529,24 @@ var Phaser;
         GameObject.prototype.postUpdate = function () {
             if(this.moves) {
                 this.updateMotion();
+            }
+            if(this.worldBounds != null) {
+                if(this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL) {
+                    if(this.x < this.worldBounds.x || this.x > this.worldBounds.right || this.y < this.worldBounds.y || this.y > this.worldBounds.bottom) {
+                        this.kill();
+                    }
+                } else {
+                    if(this.x < this.worldBounds.x) {
+                        this.x = this.worldBounds.x;
+                    } else if(this.x > this.worldBounds.right) {
+                        this.x = this.worldBounds.right;
+                    }
+                    if(this.y < this.worldBounds.y) {
+                        this.y = this.worldBounds.y;
+                    } else if(this.y > this.worldBounds.bottom) {
+                        this.y = this.worldBounds.bottom;
+                    }
+                }
             }
             if(this.inputEnabled) {
                 this.updateInput();
@@ -553,7 +576,7 @@ var Phaser;
         };
         GameObject.prototype.overlaps = /**
         * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
-        * If the group has a LOT of things in it, it might be faster to use <code>G.overlaps()</code>.
+        * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
         * @param	ObjectOrGroup	The object or group being tested.
@@ -798,6 +821,30 @@ var Phaser;
             if(this.health <= 0) {
                 this.kill();
             }
+        };
+        GameObject.prototype.setBounds = /**
+        * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
+        * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
+        * it can be stopped from leaving the world, or a section of it.
+        */
+        function (x, y, width, height) {
+            this.worldBounds = new Phaser.Quad(x, y, width, height);
+        };
+        GameObject.prototype.hideFromCamera = /**
+        * If you do not wish this object to be visible to a specific camera, pass the camera here.
+        */
+        function (camera) {
+            if(this.cameraBlacklist.indexOf(camera.ID) == -1) {
+                this.cameraBlacklist.push(camera.ID);
+            }
+        };
+        GameObject.prototype.showToCamera = function (camera) {
+            if(this.cameraBlacklist.indexOf(camera.ID) !== -1) {
+                this.cameraBlacklist.slice(this.cameraBlacklist.indexOf(camera.ID), 1);
+            }
+        };
+        GameObject.prototype.clearCameraList = function () {
+            this.cameraBlacklist.length = 0;
         };
         GameObject.prototype.destroy = function () {
         };
@@ -1191,7 +1238,7 @@ var Phaser;
             }
         };
         Camera.prototype.render = function () {
-            if(this.visible === false && this.alpha < 0.1) {
+            if(this.visible === false || this.alpha < 0.1) {
                 return;
             }
             if((this._fxShakeOffset.x != 0) || (this._fxShakeOffset.y != 0)) {
@@ -1494,7 +1541,7 @@ var Phaser;
         });
         Sprite.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
             //  Render checks
-            if(this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.inCamera(camera.worldView) == false) {
+            if(this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
                 return false;
             }
             //  Alpha
@@ -2216,6 +2263,7 @@ var Phaser;
 (function (Phaser) {
     var CameraManager = (function () {
         function CameraManager(game, x, y, width, height) {
+            this._cameraInstance = 0;
             this._game = game;
             this._cameras = [];
             this.current = this.addCamera(x, y, width, height);
@@ -2234,20 +2282,22 @@ var Phaser;
             });
         };
         CameraManager.prototype.addCamera = function (x, y, width, height) {
-            var newCam = new Phaser.Camera(this._game, this._cameras.length, x, y, width, height);
+            var newCam = new Phaser.Camera(this._game, this._cameraInstance, x, y, width, height);
             this._cameras.push(newCam);
+            this._cameraInstance++;
             return newCam;
         };
         CameraManager.prototype.removeCamera = function (id) {
-            if(this._cameras[id]) {
-                if(this.current === this._cameras[id]) {
-                    this.current = null;
+            for(var c = 0; c < this._cameras.length; c++) {
+                if(this._cameras[c].ID == id) {
+                    if(this.current.ID === this._cameras[c].ID) {
+                        this.current = null;
+                    }
+                    this._cameras.splice(c, 1);
+                    return true;
                 }
-                this._cameras.splice(id, 1);
-                return true;
-            } else {
-                return false;
             }
+            return false;
         };
         CameraManager.prototype.destroy = function () {
             this._cameras.length = 0;
@@ -7415,7 +7465,7 @@ var Phaser;
 /**
 * Phaser
 *
-*  v0.9.3 - April 22nd 2013
+* v0.9.3 - April 24th 2013
 *
 * A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -10679,7 +10729,7 @@ var Phaser;
         };
         GeomSprite.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
             //  Render checks
-            if(this.type == GeomSprite.UNASSIGNED || this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.inCamera(camera.worldView) == false) {
+            if(this.type == GeomSprite.UNASSIGNED || this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
                 return false;
             }
             //  Alpha
@@ -11058,9 +11108,9 @@ var Phaser;
                 this._columnData = this.mapData[row];
                 for(var tile = this._startX; tile < this._startX + this._maxX; tile++) {
                     if(this._tileOffsets[this._columnData[tile]]) {
-                        this._game.stage.context.drawImage(this._texture, // Source Image
-                        this._tileOffsets[this._columnData[tile]].x, // Source X (location within the source image)
-                        this._tileOffsets[this._columnData[tile]].y, // Source Y
+                        this._game.stage.context.drawImage(this._texture, //  Source Image
+                        this._tileOffsets[this._columnData[tile]].x, //  Source X (location within the source image)
+                        this._tileOffsets[this._columnData[tile]].y, //  Source Y
                         this.tileWidth, //	Source Width
                         this.tileHeight, //	Source Height
                         this._tx, //	Destination X (where on the canvas it'll be drawn)
@@ -11121,9 +11171,11 @@ var Phaser;
         Tilemap.prototype.update = function () {
         };
         Tilemap.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
-            //  Loop through the layers
-            for(var i = 0; i < this._layers.length; i++) {
-                this._layers[i].render(camera, cameraOffsetX, cameraOffsetY);
+            if(this.cameraBlacklist.indexOf(camera.ID) == -1) {
+                //  Loop through the layers
+                for(var i = 0; i < this._layers.length; i++) {
+                    this._layers[i].render(camera, cameraOffsetX, cameraOffsetY);
+                }
             }
         };
         Tilemap.prototype.parseCSV = function (data, key, tileWidth, tileHeight) {
@@ -11806,7 +11858,7 @@ var Phaser;
         };
         ScrollZone.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
             //  Render checks
-            if(this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.inCamera(camera.worldView) == false) {
+            if(this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
                 return false;
             }
             //  Alpha

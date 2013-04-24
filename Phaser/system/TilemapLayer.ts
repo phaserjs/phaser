@@ -22,7 +22,6 @@ module Phaser {
             //this.scrollFactor = new MicroPoint(1, 1);
 
             this.mapData = [];
-
             this._texture = this._game.cache.getImage(key);
 
             this.parseTileOffsets();
@@ -197,9 +196,9 @@ module Phaser {
                     if (this._tileOffsets[this._columnData[tile]])
                     {
                         this._game.stage.context.drawImage(
-                            this._texture,	                                // Source Image
-                            this._tileOffsets[this._columnData[tile]].x,    // Source X (location within the source image)
-                            this._tileOffsets[this._columnData[tile]].y,    // Source Y
+                            this._texture,	                                //  Source Image
+                            this._tileOffsets[this._columnData[tile]].x,    //  Source X (location within the source image)
+                            this._tileOffsets[this._columnData[tile]].y,    //  Source Y
                             this.tileWidth, 	                            //	Source Width
                             this.tileHeight, 	                            //	Source Height
                             this._tx, 	    	                            //	Destination X (where on the canvas it'll be drawn)
