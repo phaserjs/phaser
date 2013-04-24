@@ -11311,7 +11311,7 @@ var Phaser;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
             if(document.readyState === 'complete' || document.readyState === 'interactive') {
-                setTimeout(function (parent, width, height) {
+                setTimeout(function () {
                     return _this.boot(parent, width, height);
                 });
             } else {
