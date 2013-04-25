@@ -22,6 +22,9 @@
     var car: Phaser.Sprite;
     var marker: Phaser.GeomSprite;
     var tile: Phaser.Tile;
+    var emitter: Phaser.Emitter;
+
+    var mo;
 
     function create() {
 
@@ -31,9 +34,18 @@
 
         myGame.camera.backgroundColor = 'rgb(47,154,204)';
 
-        car = myGame.createSprite(250, 0, 'ufo');
+        myGame.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.UP, Phaser.Keyboard.DOWN]);
+
+        emitter = myGame.createEmitter(32, 32);
+        emitter.width = 700;
+        emitter.makeParticles(null, 50, 0, false, 0);
+        emitter.gravity = 100;
+        emitter.setRotation(0,0);
+        emitter.start(false);
+
+        car = myGame.createSprite(250, 64, 'ufo');
         car.renderRotation = false;
-        car.renderDebug = true;
+        //car.renderDebug = true;
 
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
         //car.velocity.y = 10;
@@ -41,8 +53,9 @@
         marker = myGame.createGeomSprite(0, 0);
         marker.createRectangle(16, 16);
         marker.renderFill = false;
+        marker.visible = false;
 
-        myGame.onRenderCallback = render;
+        //myGame.onRenderCallback = render;
 
     }
 
@@ -53,51 +66,56 @@
 
         //myGame.collide(car, map.currentLayer);
 
+
+
         car.velocity.x = 0;
         car.velocity.y = 0;
 
         if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            car.velocity.x = -100;
+            car.velocity.x = -200;
         }
         else if (myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            car.velocity.x = 100;
+            car.velocity.x = 200;
         }
 
         if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            car.velocity.y = -100;
+            car.velocity.y = -200;
         }
         else if (myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
-            car.velocity.y = 100;
+            car.velocity.y = 200;
         }
+
+        mo = map.collide(car);
+        //map.getTileOverlaps()
 
     }
 
-    function render {
+    function render() {
 
         tile = map.getTileFromInputXY();
 
-        var b = map.getTileOverlaps(car);
+        //var b = map.getTileOverlaps(car);
 
         myGame.stage.context.font = '18px Arial';
         myGame.stage.context.fillStyle = 'rgb(255,255,255)';
-        myGame.stage.context.fillText(tile.toString(), 32, 32);
+        //myGame.stage.context.fillText(tile.toString(), 32, 32);
         myGame.input.renderDebugInfo(32, 64, 'rgb(255,255,255)');
         myGame.stage.context.fillStyle = 'rgb(255,255,255)';
-        myGame.stage.context.fillText(b.x + ' ' + b.y + ' ' + b.w + ' ' + b.h, 32, 200);
+        myGame.stage.context.fillText(mo.x + ' ' + mo.y + ' ' + mo.w + ' ' + mo.h, 32, 200);
         myGame.stage.context.fillText(car.bounds.x + ' ' + car.bounds.y + ' ' + car.bounds.width + ' ' + car.bounds.height, 32, 232);
 
 
         var i = 0;
 
-        for (var y = b.y; y < b.y + b.h; y++)
+        for (var y = mo.y; y < mo.y + mo.h; y++)
         {
-            for (var x = b.x; x < b.x + b.w; x++)
+            for (var x = mo.x; x < mo.x + mo.w; x++)
             {
-                if (b.collision[i] == true)
+                if (mo.collision[i] == true)
                 {
                     myGame.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
                 }

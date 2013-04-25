@@ -224,16 +224,13 @@ module Phaser {
             {
                 if (objectOrGroup.exists && objectOrGroup.allowCollisions != Collision.NONE)
                 {
-                    //  Get the tiles this object overlaps with (could be any number based on its width/height)
-
-                    //  Iterate through each tile, checking if it overlaps with the object bounds
-
-                    //  Yes? then separate, else abort
+                    this.currentLayer.getTileOverlaps(objectOrGroup);
                 }
             }
             else
             {
                 // todo
+                objectOrGroup.forEachAlive(this.currentLayer.getTileOverlaps);
             }
 
             return true;

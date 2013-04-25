@@ -316,8 +316,7 @@ module Phaser {
             }
             else
             {
-                throw Error("Invalid State object given. Must contain at least a create or update function.");
-                return;
+                throw new Error("Invalid State object given. Must contain at least a create or update function.");
             }
 
         }
@@ -419,8 +418,8 @@ module Phaser {
             return this.tweens.create(obj);
         }
 
-        public collide(ObjectOrGroup1: Basic = null, ObjectOrGroup2: Basic = null, NotifyCallback = null): bool {
-            return this.collision.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, Collision.separate);
+        public collide(objectOrGroup1: Basic = null, objectOrGroup2: Basic = null, notifyCallback = null): bool {
+            return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate);
         }
 
     }

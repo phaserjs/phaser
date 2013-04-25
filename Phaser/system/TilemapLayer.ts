@@ -127,7 +127,7 @@ module Phaser {
                     
                     if (tempBounds.intersects(object.bounds))
                     {
-                        result.push(true);
+                        result.push(Collision.separateTile(object, { x: tempBounds.x, y: tempBounds.y, width: tempBounds.width, height: tempBounds.height, mass: 1.0, immovable: true, allowCollisions: Collision.ANY }));
                     }
                     else
                     {

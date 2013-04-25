@@ -1,6 +1,7 @@
 /// <reference path="Game.ts" />
 /// <reference path="geom/Point.ts" />
 /// <reference path="geom/Rectangle.ts" />
+/// <reference path="geom/Quad.ts" />
 /// <reference path="geom/Circle.ts" />
 /// <reference path="geom/Line.ts" />
 /// <reference path="geom/IntersectResult.ts" />
@@ -16,76 +17,124 @@ module Phaser {
 
     export class Collision {
 
+        /**
+         * Collision constructor
+         * @param game A reference to the current Game
+         */
         constructor(game: Game) {
 
             this._game = game;
 
         }
 
+        /**
+         * Local private reference to Game
+         */
         private _game: Game;
 
+        /**
+         * Flag used to allow GameObjects to collide on their left side
+         * @type {number}
+         */
         public static LEFT: number = 0x0001;
+
+        /**
+         * Flag used to allow GameObjects to collide on their right side
+         * @type {number}
+         */
         public static RIGHT: number = 0x0010;
+
+        /**
+         * Flag used to allow GameObjects to collide on their top side
+         * @type {number}
+         */
         public static UP: number = 0x0100;
+
+        /**
+         * Flag used to allow GameObjects to collide on their bottom side
+         * @type {number}
+         */
         public static DOWN: number = 0x1000;
+
+        /**
+         * Flag used with GameObjects to disable collision
+         * @type {number}
+         */
         public static NONE: number = 0;
+
+        /**
+         * Flag used to allow GameObjects to collide with a ceiling
+         * @type {number}
+         */
         public static CEILING: number = Collision.UP;
+
+        /**
+         * Flag used to allow GameObjects to collide with a floor
+         * @type {number}
+         */
         public static FLOOR: number = Collision.DOWN;
+
+        /**
+         * Flag used to allow GameObjects to collide with a wall (same as LEFT+RIGHT)
+         * @type {number}
+         */
         public static WALL: number = Collision.LEFT | Collision.RIGHT;
+
+        /**
+         * Flag used to allow GameObjects to collide on any face
+         * @type {number}
+         */
         public static ANY: number = Collision.LEFT | Collision.RIGHT | Collision.UP | Collision.DOWN;
+
+        /**
+         * The overlap bias is used when calculating hull overlap before separation - change it if you have especially small or large GameObjects
+         * @type {number}
+         */
         public static OVERLAP_BIAS: number = 4;
 
-        /**
-	     * -------------------------------------------------------------------------------------------
-	     * Lines
-	     * -------------------------------------------------------------------------------------------
-	     **/
 
         /**
-	     * Check if the two given Line objects intersect
-	     * @method lineToLine
-	     * @param {Phaser.Line} The first line object to check
-	     * @param {Phaser.Line} The second line object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y
-	     **/
+         * Checks for Line to Line intersection and returns an IntersectResult object containing the results of the intersection.
+         * @param line1 The first Line object to check
+         * @param line2 The second Line object to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static lineToLine(line1: Line, line2: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            var denom = (line1.x1 - line1.x2) * (line2.y1 - line2.y2) - (line1.y1 - line1.y2) * (line2.x1 - line2.x2);
+            var denominator = (line1.x1 - line1.x2) * (line2.y1 - line2.y2) - (line1.y1 - line1.y2) * (line2.x1 - line2.x2);
 
-            if (denom !== 0)
+            if (denominator !== 0)
             {
                 output.result = true;
-                output.x = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (line2.x1 - line2.x2) - (line1.x1 - line1.x2) * (line2.x1 * line2.y2 - line2.y1 * line2.x2)) / denom;
-                output.y = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (line2.y1 - line2.y2) - (line1.y1 - line1.y2) * (line2.x1 * line2.y2 - line2.y1 * line2.x2)) / denom;
+                output.x = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (line2.x1 - line2.x2) - (line1.x1 - line1.x2) * (line2.x1 * line2.y2 - line2.y1 * line2.x2)) / denominator;
+                output.y = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (line2.y1 - line2.y2) - (line1.y1 - line1.y2) * (line2.x1 * line2.y2 - line2.y1 * line2.x2)) / denominator;
             }
 
             return output;
         }
 
         /**
-	     * Check if the Line and Line Segment intersects
-	     * @method lineToLineSegment
-	     * @param {Phaser.Line} The line object to check
-	     * @param {Phaser.Line} The line segment object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y
-	     **/
-        public static lineToLineSegment(line1: Line, seg: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
+         * Checks for Line to Line Segment intersection and returns an IntersectResult object containing the results of the intersection.
+         * @param line The Line object to check
+         * @param seg The Line segment object to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
+        public static lineToLineSegment(line: Line, seg: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            var denom = (line1.x1 - line1.x2) * (seg.y1 - seg.y2) - (line1.y1 - line1.y2) * (seg.x1 - seg.x2);
+            var denominator = (line.x1 - line.x2) * (seg.y1 - seg.y2) - (line.y1 - line.y2) * (seg.x1 - seg.x2);
 
-            if (denom !== 0)
+            if (denominator !== 0)
             {
-                output.x = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (seg.x1 - seg.x2) - (line1.x1 - line1.x2) * (seg.x1 * seg.y2 - seg.y1 * seg.x2)) / denom;
-                output.y = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (seg.y1 - seg.y2) - (line1.y1 - line1.y2) * (seg.x1 * seg.y2 - seg.y1 * seg.x2)) / denom;
+                output.x = ((line.x1 * line.y2 - line.y1 * line.x2) * (seg.x1 - seg.x2) - (line.x1 - line.x2) * (seg.x1 * seg.y2 - seg.y1 * seg.x2)) / denominator;
+                output.y = ((line.x1 * line.y2 - line.y1 * line.x2) * (seg.y1 - seg.y2) - (line.y1 - line.y2) * (seg.x1 * seg.y2 - seg.y1 * seg.x2)) / denominator;
 
                 var maxX = Math.max(seg.x1, seg.x2);
                 var minX = Math.min(seg.x1, seg.x2);
                 var maxY = Math.max(seg.y1, seg.y2);
                 var minY = Math.min(seg.y1, seg.y2);
 
-                //if (!(output.x <= maxX && output.x >= minX) || !(output.y <= maxY && output.y >= minY))
                 if ((output.x <= maxX && output.x >= minX) === true || (output.y <= maxY && output.y >= minY) === true)
                 {
                     output.result = true;
@@ -98,24 +147,23 @@ module Phaser {
         }
 
         /**
-	     * Check if the Line and Line Segment intersects
-	     * @method lineToLineSegment
-	     * @param {Phaser.Line} The line object to check
-	     * @param {number} The x1 value
-	     * @param {number} The y1 value
-	     * @param {number} The x2 value
-	     * @param {number} The y2 value
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y
-	     **/
+         * Checks for Line to Raw Line Segment intersection and returns the result in the IntersectResult object.
+         * @param line The Line object to check
+         * @param x1 The start x coordinate of the raw segment
+         * @param y1 The start y coordinate of the raw segment
+         * @param x2 The end x coordinate of the raw segment
+         * @param y2 The end y coordinate of the raw segment
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static lineToRawSegment(line: Line, x1: number, y1: number, x2: number, y2: number, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            var denom = (line.x1 - line.x2) * (y1 - y2) - (line.y1 - line.y2) * (x1 - x2);
+            var denominator = (line.x1 - line.x2) * (y1 - y2) - (line.y1 - line.y2) * (x1 - x2);
 
-            if (denom !== 0)
+            if (denominator !== 0)
             {
-                output.x = ((line.x1 * line.y2 - line.y1 * line.x2) * (x1 - x2) - (line.x1 - line.x2) * (x1 * y2 - y1 * x2)) / denom;
-                output.y = ((line.x1 * line.y2 - line.y1 * line.x2) * (y1 - y2) - (line.y1 - line.y2) * (x1 * y2 - y1 * x2)) / denom;
+                output.x = ((line.x1 * line.y2 - line.y1 * line.x2) * (x1 - x2) - (line.x1 - line.x2) * (x1 * y2 - y1 * x2)) / denominator;
+                output.y = ((line.x1 * line.y2 - line.y1 * line.x2) * (y1 - y2) - (line.y1 - line.y2) * (x1 * y2 - y1 * x2)) / denominator;
 
                 var maxX = Math.max(x1, x2);
                 var minX = Math.min(x1, x2);
@@ -134,21 +182,20 @@ module Phaser {
         }
 
         /**
-	     * Check if the Line and Ray intersects
-	     * @method lineToRay
-	     * @param {Phaser.Line} The Line object to check
-	     * @param {Phaser.Line} The Ray object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y
-	     **/
+         * Checks for Line to Ray intersection and returns the result in an IntersectResult object.
+         * @param line1 The Line object to check
+         * @param ray The Ray object to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static lineToRay(line1: Line, ray: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            var denom = (line1.x1 - line1.x2) * (ray.y1 - ray.y2) - (line1.y1 - line1.y2) * (ray.x1 - ray.x2);
+            var denominator = (line1.x1 - line1.x2) * (ray.y1 - ray.y2) - (line1.y1 - line1.y2) * (ray.x1 - ray.x2);
 
-            if (denom !== 0)
+            if (denominator !== 0)
             {
-                output.x = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (ray.x1 - ray.x2) - (line1.x1 - line1.x2) * (ray.x1 * ray.y2 - ray.y1 * ray.x2)) / denom;
-                output.y = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (ray.y1 - ray.y2) - (line1.y1 - line1.y2) * (ray.x1 * ray.y2 - ray.y1 * ray.x2)) / denom;
+                output.x = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (ray.x1 - ray.x2) - (line1.x1 - line1.x2) * (ray.x1 * ray.y2 - ray.y1 * ray.x2)) / denominator;
+                output.y = ((line1.x1 * line1.y2 - line1.y1 * line1.x2) * (ray.y1 - ray.y2) - (line1.y1 - line1.y2) * (ray.x1 * ray.y2 - ray.y1 * ray.x2)) / denominator;
                 output.result = true; // true unless either of the 2 following conditions are met
 
                 if (!(ray.x1 >= ray.x2) && output.x < ray.x1)
@@ -166,14 +213,14 @@ module Phaser {
 
         }
 
+
         /**
-	     * Check if the Line and Circle intersects
-	     * @method lineToCircle
-	     * @param {Phaser.Line} The Line object to check
-	     * @param {Phaser.Circle} The Circle object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection
-	     **/
+         * Check if the Line and Circle objects intersect
+         * @param line The Line object to check
+         * @param circle The Circle object to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static lineToCircle(line: Line, circle: Circle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
             //  Get a perpendicular line running to the center of the circle
@@ -187,17 +234,16 @@ module Phaser {
         }
 
         /**
-	     * Check if the Line intersects each side of the Rectangle
-	     * @method lineToRectangle
-	     * @param {Phaser.Line} The Line object to check
-	     * @param {Phaser.Rectangle} The Rectangle object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection
-	     **/
+         * Check if the Line intersects each side of the Rectangle
+         * @param line The Line object to check
+         * @param rect The Rectangle object to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static lineToRectangle(line: Line, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
             //  Top of the Rectangle vs the Line
-            this.lineToRawSegment(line, rect.x, rect.y, rect.right, rect.y, output);
+            Collision.lineToRawSegment(line, rect.x, rect.y, rect.right, rect.y, output);
 
             if (output.result === true)
             {
@@ -205,7 +251,7 @@ module Phaser {
             }
 
             //  Left of the Rectangle vs the Line
-            this.lineToRawSegment(line, rect.x, rect.y, rect.x, rect.bottom, output);
+            Collision.lineToRawSegment(line, rect.x, rect.y, rect.x, rect.bottom, output);
 
             if (output.result === true)
             {
@@ -213,7 +259,7 @@ module Phaser {
             }
 
             //  Bottom of the Rectangle vs the Line
-            this.lineToRawSegment(line, rect.x, rect.bottom, rect.right, rect.bottom, output);
+            Collision.lineToRawSegment(line, rect.x, rect.bottom, rect.right, rect.bottom, output);
 
             if (output.result === true)
             {
@@ -221,29 +267,22 @@ module Phaser {
             }
 
             //  Right of the Rectangle vs the Line
-            this.lineToRawSegment(line, rect.right, rect.y, rect.right, rect.bottom, output);
+            Collision.lineToRawSegment(line, rect.right, rect.y, rect.right, rect.bottom, output);
 
             return output;
 
         }
 
         /**
-	     * -------------------------------------------------------------------------------------------
-	     * Line Segment
-	     * -------------------------------------------------------------------------------------------
-	     **/
-
-        /**
-	     * Check if Line1 intersects with Line2
-	     * @method lineSegmentToLineSegment
-	     * @param {Phaser.Line} The first line object to check
-	     * @param {Phaser.Line} The second line object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y
-	     **/
+         * Check if the two Line Segments intersect and returns the result in an IntersectResult object.
+         * @param line1 The first Line Segment to check
+         * @param line2 The second Line Segment to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static lineSegmentToLineSegment(line1: Line, line2: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            this.lineToLineSegment(line1, line2, output);
+            Collision.lineToLineSegment(line1, line2);
 
             if (output.result === true)
             {
@@ -258,21 +297,20 @@ module Phaser {
         }
 
         /**
-	     * Check if the Line Segment intersects with the Ray
-	     * @method lineSegmentToRay
-	     * @param {Phaser.Line} The Line object to check
-	     * @param {Phaser.Line} The Line Ray object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y
-	     **/
-        public static lineSegmentToRay(line1: Line, ray: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
+         * Check if the Line Segment intersects with the Ray and returns the result in an IntersectResult object.
+         * @param line The Line Segment to check.
+         * @param ray The Ray to check.
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
+        public static lineSegmentToRay(line: Line, ray: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            this.lineToRay(line1, ray, output);
+            Collision.lineToRay(line, ray, output);
 
             if (output.result === true)
             {
-                if (!(output.x >= Math.min(line1.x1, line1.x2) && output.x <= Math.max(line1.x1, line1.x2)
-                    && output.y >= Math.min(line1.y1, line1.y2) && output.y <= Math.max(line1.y1, line1.y2)))
+                if (!(output.x >= Math.min(line.x1, line.x2) && output.x <= Math.max(line.x1, line.x2)
+                    && output.y >= Math.min(line.y1, line.y2) && output.y <= Math.max(line.y1, line.y2)))
                 {
                     output.result = false;
                 }
@@ -283,13 +321,12 @@ module Phaser {
         }
 
         /**
-	     * Check if the Line Segment intersects with the Circle
-	     * @method lineSegmentToCircle
-	     * @param {Phaser.Line} The Line object to check
-	     * @param {Phaser.Circle} The Circle object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y
-	     **/
+         * Check if the Line Segment intersects with the Circle and returns the result in an IntersectResult object.
+         * @param seg The Line Segment to check.
+         * @param circle The Circle to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static lineSegmentToCircle(seg: Line, circle: Circle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
             var perp = seg.perp(circle.x, circle.y);
@@ -309,7 +346,7 @@ module Phaser {
                 else
                 {
                     //  Worst case - segment doesn't traverse center, so no perpendicular connection.
-                    if (this.circleContainsPoint(circle, <Point> { x: seg.x1, y: seg.y1 }) || this.circleContainsPoint(circle, <Point> { x: seg.x2, y: seg.y2 }))
+                    if (Collision.circleContainsPoint(circle, <Point> { x: seg.x1, y: seg.y1 }) || Collision.circleContainsPoint(circle, <Point> { x: seg.x2, y: seg.y2 }))
                     {
                         output.result = true;
                     }
@@ -321,13 +358,12 @@ module Phaser {
         }
 
         /**
-	     * Check if the Line Segment intersects with the Rectangle
-	     * @method lineSegmentToCircle
-	     * @param {Phaser.Line} The Line object to check
-	     * @param {Phaser.Circle} The Circle object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y
-	     **/
+         * Check if the Line Segment intersects with the Rectangle and returns the result in an IntersectResult object.
+         * @param seg The Line Segment to check.
+         * @param rect The Rectangle to check.
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static lineSegmentToRectangle(seg: Line, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
             if (rect.contains(seg.x1, seg.y1) && rect.contains(seg.x2, seg.y2))
@@ -337,7 +373,7 @@ module Phaser {
             else
             {
                 //  Top of the Rectangle vs the Line
-                this.lineToRawSegment(seg, rect.x, rect.y, rect.right, rect.bottom, output);
+                Collision.lineToRawSegment(seg, rect.x, rect.y, rect.right, rect.bottom, output);
 
                 if (output.result === true)
                 {
@@ -345,7 +381,7 @@ module Phaser {
                 }
 
                 //  Left of the Rectangle vs the Line
-                this.lineToRawSegment(seg, rect.x, rect.y, rect.x, rect.bottom, output);
+                Collision.lineToRawSegment(seg, rect.x, rect.y, rect.x, rect.bottom, output);
 
                 if (output.result === true)
                 {
@@ -353,7 +389,7 @@ module Phaser {
                 }
 
                 //  Bottom of the Rectangle vs the Line
-                this.lineToRawSegment(seg, rect.x, rect.bottom, rect.right, rect.bottom, output);
+                Collision.lineToRawSegment(seg, rect.x, rect.bottom, rect.right, rect.bottom, output);
 
                 if (output.result === true)
                 {
@@ -361,7 +397,7 @@ module Phaser {
                 }
 
                 //  Right of the Rectangle vs the Line
-                this.lineToRawSegment(seg, rect.right, rect.y, rect.right, rect.bottom, output);
+                Collision.lineToRawSegment(seg, rect.right, rect.y, rect.right, rect.bottom, output);
 
                 return output;
 
@@ -372,63 +408,58 @@ module Phaser {
         }
 
         /**
-	     * -------------------------------------------------------------------------------------------
-	     * Ray
-	     * -------------------------------------------------------------------------------------------
-	     **/
-
-        /**
-	     * Check if the two given Circle objects intersect
-	     * @method circleToCircle
-	     * @param {Phaser.Circle} The first circle object to check
-	     * @param {Phaser.Circle} The second circle object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection
-	     **/
+         * Check for Ray to Rectangle intersection and returns the result in an IntersectResult object.
+         * @param ray The Ray to check.
+         * @param rect The Rectangle to check.
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static rayToRectangle(ray: Line, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
             //  Currently just finds first intersection - might not be closest to ray pt1
-            this.lineToRectangle(ray, rect, output);
+            Collision.lineToRectangle(ray, rect, output);
 
             return output;
 
         }
 
-        /**
-         * Check whether a ray intersects a line segment, returns the parametric value where the intersection occurs.
-         * @method rayToLineSegment
-         * @static
-         * @param {Number} rayx1. The origin x of the ray.
-         * @param {Number} rayy1. The origin y of the ray.
-         * @param {Number} rayx2. The direction x of the ray. 
-         * @param {Number} rayy2. The direction y of the ray.
-         * @param {Number} linex1. The x of the first point of the line segment.
-         * @param {Number} liney1. The y of the first point of the line segment.
-         * @param {Number} linex2. The x of the second point of the line segment.
-         * @param {Number} liney2. The y of the second point of the line segment.
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection stored in x
-         **/
-        public static rayToLineSegment(rayx1, rayy1, rayx2, rayy2, linex1, liney1, linex2, liney2, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            var r, s, d;
+        /**
+         * Check whether a Ray intersects a Line segment and returns the parametric value where the intersection occurs in an IntersectResult object.
+         * @param rayX1
+         * @param rayY1
+         * @param rayX2
+         * @param rayY2
+         * @param lineX1
+         * @param lineY1
+         * @param lineX2
+         * @param lineY2
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
+        public static rayToLineSegment(rayX1, rayY1, rayX2, rayY2, lineX1, lineY1, lineX2, lineY2, output?: IntersectResult = new IntersectResult): IntersectResult {
+
+            var r:number;
+            var s:number;
+            var d:number;
 
             // Check lines are not parallel
-            if ((rayy2 - rayy1) / (rayx2 - rayx1) != (liney2 - liney1) / (linex2 - linex1))
+            if ((rayY2 - rayY1) / (rayX2 - rayX1) != (lineY2 - lineY1) / (lineX2 - lineX1))
             {
-                d = (((rayx2 - rayx1) * (liney2 - liney1)) - (rayy2 - rayy1) * (linex2 - linex1));
+                d = (((rayX2 - rayX1) * (lineY2 - lineY1)) - (rayY2 - rayY1) * (lineX2 - lineX1));
 
                 if (d != 0)
                 {
-                    r = (((rayy1 - liney1) * (linex2 - linex1)) - (rayx1 - linex1) * (liney2 - liney1)) / d;
-                    s = (((rayy1 - liney1) * (rayx2 - rayx1)) - (rayx1 - linex1) * (rayy2 - rayy1)) / d;
+                    r = (((rayY1 - lineY1) * (lineX2 - lineX1)) - (rayX1 - lineX1) * (lineY2 - lineY1)) / d;
+                    s = (((rayY1 - lineY1) * (rayX2 - rayX1)) - (rayX1 - lineX1) * (rayY2 - rayY1)) / d;
 
                     if (r >= 0)
                     {
                         if (s >= 0 && s <= 1)
                         {
                             output.result = true;
-                            output.x = rayx1 + r * (rayx2 - rayx1), rayy1 + r * (rayy2 - rayy1);
+                            output.x = rayX1 + r * (rayX2 - rayX1);
+                            output.y = rayY1 + r * (rayY2 - rayY1);
                         }
                     }
                 }
@@ -439,19 +470,13 @@ module Phaser {
         }
 
         /**
-	     * -------------------------------------------------------------------------------------------
-	     * Rectangles
-	     * -------------------------------------------------------------------------------------------
-	     **/
-
-        /**
-         * Determines whether the specified point is contained within the rectangular region defined by the Rectangle object.
-         * @method pointToRectangle
-         * @param {Point} point The point object being checked.
-         * @param {Rectangle} rect The rectangle object being checked.
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y/result
-         **/
-        public static pointToRectangle(point: Point, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
+         * Determines whether the specified point is contained within the rectangular region defined by the Rectangle object and returns the result in an IntersectResult object.
+         * @param point The Point or MicroPoint object to check, or any object with x and y properties.
+         * @param rect The Rectangle object to check the point against
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
+        public static pointToRectangle(point, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
             output.setTo(point.x, point.y);
 
@@ -462,13 +487,12 @@ module Phaser {
         }
 
         /**
-	     * Check whether two axis aligned rectangles intersect. Return the intersecting rectangle dimensions if they do.
-	     * @method rectangleToRectangle
-	     * @param {Phaser.Rectangle} The first Rectangle object
-	     * @param {Phaser.Rectangle} The second Rectangle object
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection in x/y/width/height
-	     **/
+         * Check whether two axis aligned Rectangles intersect and returns the intersecting rectangle dimensions in an IntersectResult object if they do.
+         * @param rect1 The first Rectangle object.
+         * @param rect2 The second Rectangle object.
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static rectangleToRectangle(rect1: Rectangle, rect2: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
             var leftX = Math.max(rect1.x, rect2.x);
@@ -490,42 +514,41 @@ module Phaser {
 
         }
 
+        /**
+         * Checks if the Rectangle and Circle objects intersect and returns the result in an IntersectResult object.
+         * @param rect The Rectangle object to check
+         * @param circle The Circle object to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static rectangleToCircle(rect: Rectangle, circle: Circle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            return this.circleToRectangle(circle, rect, output);
+            return Collision.circleToRectangle(circle, rect, output);
 
         }
 
         /**
-	     * -------------------------------------------------------------------------------------------
-	     * Circle
-	     * -------------------------------------------------------------------------------------------
-	     **/
-
-        /**
-	     * Check if the two given Circle objects intersect
-	     * @method circleToCircle
-	     * @param {Phaser.Circle} The first circle object to check
-	     * @param {Phaser.Circle} The second circle object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection
-	     **/
+         * Checks if the two Circle objects intersect and returns the result in an IntersectResult object.
+         * @param circle1 The first Circle object to check
+         * @param circle2 The second Circle object to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static circleToCircle(circle1: Circle, circle2: Circle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            output.result = ((circle1.radius + circle2.radius) * (circle1.radius + circle2.radius)) >= this.distanceSquared(circle1.x, circle1.y, circle2.x, circle2.y);
+            output.result = ((circle1.radius + circle2.radius) * (circle1.radius + circle2.radius)) >= Collision.distanceSquared(circle1.x, circle1.y, circle2.x, circle2.y);
 
             return output;
 
         }
 
         /**
-	     * Check if the given Rectangle intersects with the given Circle
-	     * @method circleToRectangle
-	     * @param {Phaser.Circle} The circle object to check
-	     * @param {Phaser.Rectangle} The Rectangle object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection
-	     **/
+         * Checks if the Circle object intersects with the Rectangle and returns the result in an IntersectResult object.
+         * @param circle The Circle object to check
+         * @param rect The Rectangle object to check
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
         public static circleToRectangle(circle: Circle, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
 
             var inflatedRect: Rectangle = rect.clone();
@@ -539,59 +562,46 @@ module Phaser {
         }
 
         /**
-	     * Check if the given Point is found within the given Circle
-	     * @method circleContainsPoint
-	     * @param {Phaser.Circle} The circle object to check
-	     * @param {Phaser.Point} The point object to check
-	     * @param {Phaser.IntersectResult} An optional IntersectResult object to store the intersection values in (one is created if none given)
-	     * @return {Phaser.IntersectResult} An IntersectResult object containing the results of this intersection
-	     **/
-        public static circleContainsPoint(circle: Circle, point: Point, output?: IntersectResult = new IntersectResult): IntersectResult {
+         * Checks if the Point object is contained within the Circle and returns the result in an IntersectResult object.
+         * @param circle The Circle object to check
+         * @param point A Point or MicroPoint object to check, or any object with x and y properties
+         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
+         */
+        public static circleContainsPoint(circle: Circle, point, output?: IntersectResult = new IntersectResult): IntersectResult {
 
-            output.result = circle.radius * circle.radius >= this.distanceSquared(circle.x, circle.y, point.x, point.y);
+            output.result = circle.radius * circle.radius >= Collision.distanceSquared(circle.x, circle.y, point.x, point.y);
 
             return output;
 
         }
 
         /**
-	     * -------------------------------------------------------------------------------------------
-	     * Game Object Collision
-	     * -------------------------------------------------------------------------------------------
-	     **/
+         * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+         * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+         * @param object1 The first GameObject or Group to check. If null the world.group is used.
+         * @param object2 The second GameObject or Group to check.
+         * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+         * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+         * @returns {boolean} true if the objects overlap, otherwise false.
+         */
+        public overlap(object1: Basic = null, object2: Basic = null, notifyCallback = null, processCallback = null): bool {
 
-        /**
-        * Call this function to see if one <code>GameObject</code> overlaps another.
-        * Can be called with one object and one group, or two groups, or two objects,
-        * whatever floats your boat! For maximum performance try bundling a lot of objects
-        * together using a <code>Group</code> (or even bundling groups together!).
-        * 
-        * <p>NOTE: does NOT take objects' scrollfactor into account, all overlaps are checked in world space.</p>
-        * 
-        * @param	ObjectOrGroup1	The first object or group you want to check.
-        * @param	ObjectOrGroup2	The second object or group you want to check.  If it is the same as the first it knows to just do a comparison within that group.
-        * @param	NotifyCallback	A function with two <code>GameObject</code> parameters - e.g. <code>myOverlapFunction(Object1:GameObject,Object2:GameObject)</code> - that is called if those two objects overlap.
-        * @param	ProcessCallback	A function with two <code>GameObject</code> parameters - e.g. <code>myOverlapFunction(Object1:GameObject,Object2:GameObject)</code> - that is called if those two objects overlap.  If a ProcessCallback is provided, then NotifyCallback will only be called if ProcessCallback returns true for those objects!
-        * 
-        * @return	Whether any overlaps were detected.
-        */
-        public overlap(ObjectOrGroup1: Basic = null, ObjectOrGroup2: Basic = null, NotifyCallback = null, ProcessCallback = null): bool {
-
-            if (ObjectOrGroup1 == null)
+            if (object1 == null)
             {
-                ObjectOrGroup1 = this._game.world.group;
+                object1 = this._game.world.group;
             }
 
-            if (ObjectOrGroup2 == ObjectOrGroup1)
+            if (object2 == object1)
             {
-                ObjectOrGroup2 = null;
+                object2 = null;
             }
 
             QuadTree.divisions = this._game.world.worldDivisions;
 
             var quadTree: QuadTree = new QuadTree(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
 
-            quadTree.load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, ProcessCallback);
+            quadTree.load(object1, object2, notifyCallback, processCallback);
 
             var result: bool = quadTree.execute();
 
@@ -604,17 +614,15 @@ module Phaser {
         }
 
         /**
-         * The main collision resolution.
-         * 
-         * @param	Object1 	Any <code>Sprite</code>.
-         * @param	Object2		Any other <code>Sprite</code>.
-         * 
-         * @return	Whether the objects in fact touched and were separated.
+         * The core Collision separation function used by Collision.overlap.
+         * @param object1 The first GameObject to separate
+         * @param object2 The second GameObject to separate
+         * @returns {boolean} Returns true if the objects were separated, otherwise false.
          */
-        public static separate(Object1, Object2): bool {
+        public static separate(object1, object2): bool {
 
-            var separatedX: bool = Collision.separateX(Object1, Object2);
-            var separatedY: bool = Collision.separateY(Object1, Object2);
+            var separatedX: bool = Collision.separateX(object1, object2);
+            var separatedY: bool = Collision.separateY(object1, object2);
 
             return separatedX || separatedY;
 
@@ -622,181 +630,75 @@ module Phaser {
 
         /**
          * Collision resolution specifically for GameObjects vs. Tiles.
-         * 
-         * @param	Object1 	Any <code>GameObject</code>.
-         * @param	Object2		Any <code>Tile</code>.
-         * 
-         * @return	Whether the objects in fact touched and were separated.
+         * @param object The GameObject to separate
+         * @param tile The Tile to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated
          */
-        public static separateTile(object:GameObject, tile:Tile): bool {
+        public static separateTile(object:GameObject, tile): bool {
 
-            //var separatedX: bool = Collision.separateTileX(object, tile);
-            //var separatedY: bool = Collision.separateTileY(object, tile);
+            var separatedX: bool = Collision.separateTileX(object, tile);
+            var separatedY: bool = Collision.separateTileY(object, tile);
 
-            //return separatedX || separatedY;
-
-            return false;
+            return separatedX || separatedY;
 
         }
-
-        /*
-        public static separateTileX(object:GameObject, tile:Tile): bool {
-
-            //First, get the two object deltas
-            var overlap: number = 0;
-            var obj1delta: number = object.x - object.last.x;
-            var obj2delta: number = tile.x;
-
-            if (obj1delta != obj2delta)
-            {
-                //Check if the X hulls actually overlap
-                var obj1deltaAbs: number = (obj1delta > 0) ? obj1delta : -obj1delta;
-                var obj2deltaAbs: number = (obj2delta > 0) ? obj2delta : -obj2delta;
-                //var obj1rect: Rectangle = new Rectangle(Object1.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + ((obj1delta > 0) ? obj1delta : -obj1delta), Object1.height);
-                //var obj2rect: Rectangle = new Rectangle(Object2.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + ((obj2delta > 0) ? obj2delta : -obj2delta), Object2.height);
-
-                //if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
-                //{
-                    var maxOverlap: number = obj1deltaAbs + obj2deltaAbs + Collision.OVERLAP_BIAS;
-
-                    //If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (obj1delta > obj2delta)
-                    {
-                        overlap = Object1.x + Object1.width - Object2.x;
-
-                        if ((overlap > maxOverlap) || !(Object1.allowCollisions & Collision.RIGHT) || !(Object2.allowCollisions & Collision.LEFT))
-                        {
-                            overlap = 0;
-                        }
-                        else
-                        {
-                            Object1.touching |= Collision.RIGHT;
-                            Object2.touching |= Collision.LEFT;
-                        }
-                    }
-                    else if (obj1delta < obj2delta)
-                        {
-                        overlap = Object1.x - Object2.width - Object2.x;
-
-                        if ((-overlap > maxOverlap) || !(Object1.allowCollisions & Collision.LEFT) || !(Object2.allowCollisions & Collision.RIGHT))
-                        {
-                            overlap = 0;
-                        }
-                        else
-                        {
-                            Object1.touching |= Collision.LEFT;
-                            Object2.touching |= Collision.RIGHT;
-                        }
-
-                    }
-
-                }
-            }
-
-            //Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (overlap != 0)
-            {
-                var obj1v: number = Object1.velocity.x;
-                var obj2v: number = Object2.velocity.x;
-
-                if (!obj1immovable && !obj2immovable)
-                {
-                    overlap *= 0.5;
-                    Object1.x = Object1.x - overlap;
-                    Object2.x += overlap;
-
-                    var obj1velocity: number = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
-                    var obj2velocity: number = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
-                    var average: number = (obj1velocity + obj2velocity) * 0.5;
-                    obj1velocity -= average;
-                    obj2velocity -= average;
-                    Object1.velocity.x = average + obj1velocity * Object1.elasticity;
-                    Object2.velocity.x = average + obj2velocity * Object2.elasticity;
-                }
-                else if (!obj1immovable)
-                    {
-                    Object1.x = Object1.x - overlap;
-                    Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
-                }
-                else if (!obj2immovable)
-                    {
-                    Object2.x += overlap;
-                    Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-        */
 
         /**
-         * The X-axis component of the object separation process.
-         * 
-         * @param	Object1 	Any <code>Sprite</code>.
-         * @param	Object2		Any other <code>Sprite</code>.
-         * 
-         * @return	Whether the objects in fact touched and were separated along the X axis.
+         * Separates the two objects on their x axis
+         * @param object The GameObject to separate
+         * @param tile The Tile to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
          */
-        public static separateX(Object1, Object2): bool {
+        public static separateTileX(object, tile): bool {
 
-            //can't separate two immovable objects
-            var obj1immovable: bool = Object1.immovable;
-            var obj2immovable: bool = Object2.immovable;
-
-            if (obj1immovable && obj2immovable)
+            //  Can't separate two immovable objects
+            if (object.immovable && tile.immovable)
             {
                 return false;
             }
 
-            //First, get the two object deltas
+            //  First, get the two object deltas
             var overlap: number = 0;
-            var obj1delta: number = Object1.x - Object1.last.x;
-            var obj2delta: number = Object2.x - Object2.last.x;
+            var objDelta: number = object.x - object.last.x;
+            var tileDelta: number = 0;
 
-            if (obj1delta != obj2delta)
+            if (objDelta != tileDelta)
             {
-                //Check if the X hulls actually overlap
-                var obj1deltaAbs: number = (obj1delta > 0) ? obj1delta : -obj1delta;
-                var obj2deltaAbs: number = (obj2delta > 0) ? obj2delta : -obj2delta;
-                var obj1rect: Rectangle = new Rectangle(Object1.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + ((obj1delta > 0) ? obj1delta : -obj1delta), Object1.height);
-                var obj2rect: Rectangle = new Rectangle(Object2.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + ((obj2delta > 0) ? obj2delta : -obj2delta), Object2.height);
+                //  Check if the X hulls actually overlap
+                var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                var tileDeltaAbs: number = (tileDelta > 0) ? tileDelta : -tileDelta;
+                var objBounds: Quad = new Quad(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+                var tileBounds: Quad = new Quad(tile.x - ((tileDelta > 0) ? tileDelta : 0), tile.y, tile.width + ((tileDelta > 0) ? tileDelta : -tileDelta), tile.height);
 
-                if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
+                if ((objBounds.x + objBounds.width > tileBounds.x) && (objBounds.x < tileBounds.x + tileBounds.width) && (objBounds.y + objBounds.height > tileBounds.y) && (objBounds.y < tileBounds.y + tileBounds.height))
                 {
-                    var maxOverlap: number = obj1deltaAbs + obj2deltaAbs + Collision.OVERLAP_BIAS;
+                    var maxOverlap: number = objDeltaAbs + tileDeltaAbs + Collision.OVERLAP_BIAS;
 
-                    //If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (obj1delta > obj2delta)
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (objDelta > tileDelta)
                     {
-                        overlap = Object1.x + Object1.width - Object2.x;
+                        overlap = object.x + object.width - tile.x;
 
-                        if ((overlap > maxOverlap) || !(Object1.allowCollisions & Collision.RIGHT) || !(Object2.allowCollisions & Collision.LEFT))
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || !(tile.allowCollisions & Collision.LEFT))
                         {
                             overlap = 0;
                         }
                         else
                         {
-                            Object1.touching |= Collision.RIGHT;
-                            Object2.touching |= Collision.LEFT;
+                            object.touching |= Collision.RIGHT;
                         }
                     }
-                    else if (obj1delta < obj2delta)
-                        {
-                        overlap = Object1.x - Object2.width - Object2.x;
+                    else if (objDelta < tileDelta)
+                    {
+                        overlap = object.x - tile.width - tile.x;
 
-                        if ((-overlap > maxOverlap) || !(Object1.allowCollisions & Collision.LEFT) || !(Object2.allowCollisions & Collision.RIGHT))
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || !(tile.allowCollisions & Collision.RIGHT))
                         {
                             overlap = 0;
                         }
                         else
                         {
-                            Object1.touching |= Collision.LEFT;
-                            Object2.touching |= Collision.RIGHT;
+                            object.touching |= Collision.LEFT;
                         }
 
                     }
@@ -804,35 +706,27 @@ module Phaser {
                 }
             }
 
-            //Then adjust their positions and velocities accordingly (if there was any overlap)
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (overlap != 0)
             {
-                var obj1v: number = Object1.velocity.x;
-                var obj2v: number = Object2.velocity.x;
+                var objVelocity: number = object.velocity.x;
+                var tileVelocity: number = 0;
 
-                if (!obj1immovable && !obj2immovable)
+                if (!object.immovable && !tile.immovable)
                 {
                     overlap *= 0.5;
-                    Object1.x = Object1.x - overlap;
-                    Object2.x += overlap;
+                    object.x = object.x - overlap;
 
-                    var obj1velocity: number = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
-                    var obj2velocity: number = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
-                    var average: number = (obj1velocity + obj2velocity) * 0.5;
-                    obj1velocity -= average;
-                    obj2velocity -= average;
-                    Object1.velocity.x = average + obj1velocity * Object1.elasticity;
-                    Object2.velocity.x = average + obj2velocity * Object2.elasticity;
+                    var objNewVelocity: number = Math.sqrt((tileVelocity * tileVelocity * tile.mass) / object.mass) * ((tileVelocity > 0) ? 1 : -1);
+                    var tileNewVelocity: number = Math.sqrt((objVelocity * objVelocity * object.mass) / tile.mass) * ((objVelocity > 0) ? 1 : -1);
+                    var average: number = (objNewVelocity + tileNewVelocity) * 0.5;
+                    objNewVelocity -= average;
+                    object.velocity.x = average + objNewVelocity * object.elasticity;
                 }
-                else if (!obj1immovable)
-                    {
-                    Object1.x = Object1.x - overlap;
-                    Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
-                }
-                else if (!obj2immovable)
-                    {
-                    Object2.x += overlap;
-                    Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
+                else if (!object.immovable)
+                {
+                    object.x = object.x - overlap;
+                    object.velocity.x = tileVelocity - objVelocity * object.elasticity;
                 }
 
                 return true;
@@ -845,123 +739,98 @@ module Phaser {
         }
 
         /**
-         * The Y-axis component of the object separation process.
-         * 
-         * @param	Object1 	Any <code>Sprite</code>.
-         * @param	Object2		Any other <code>Sprite</code>.
-         * 
-         * @return	Whether the objects in fact touched and were separated along the Y axis.
+         * Separates the two objects on their y axis
+         * @param object The first GameObject to separate
+         * @param tile The second GameObject to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
          */
-        public static separateY(Object1, Object2): bool {
+        public static separateTileY(object, tile): bool {
 
-            //can't separate two immovable objects
-
-            var obj1immovable: bool = Object1.immovable;
-            var obj2immovable: bool = Object2.immovable;
-
-            if (obj1immovable && obj2immovable)
+            //  Can't separate two immovable objects
+            if (object.immovable && tile.immovable) {
                 return false;
-
-            //If one of the objects is a tilemap, just pass it off.
-            /*
-            if (typeof Object1 === 'Tilemap')
-            {
-                return Object1.overlapsWithCallback(Object2, separateY);
             }
-    
-            if (typeof Object2 === 'Tilemap')
-            {
-                return Object2.overlapsWithCallback(Object1, separateY, true);
-            }
-            */
 
-            //First, get the two object deltas
+            //  First, get the two object deltas
             var overlap: number = 0;
-            var obj1delta: number = Object1.y - Object1.last.y;
-            var obj2delta: number = Object2.y - Object2.last.y;
+            var objDelta: number = object.y - object.last.y;
+            var tileDelta: number = 0;
 
-            if (obj1delta != obj2delta)
+            if (objDelta != tileDelta)
             {
-                //Check if the Y hulls actually overlap
-                var obj1deltaAbs: number = (obj1delta > 0) ? obj1delta : -obj1delta;
-                var obj2deltaAbs: number = (obj2delta > 0) ? obj2delta : -obj2delta;
-                var obj1rect: Rectangle = new Rectangle(Object1.x, Object1.y - ((obj1delta > 0) ? obj1delta : 0), Object1.width, Object1.height + obj1deltaAbs);
-                var obj2rect: Rectangle = new Rectangle(Object2.x, Object2.y - ((obj2delta > 0) ? obj2delta : 0), Object2.width, Object2.height + obj2deltaAbs);
+                //  Check if the Y hulls actually overlap
+                var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                var tileDeltaAbs: number = (tileDelta > 0) ? tileDelta : -tileDelta;
+                var objBounds: Quad = new Quad(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+                var tileBounds: Quad = new Quad(tile.x, tile.y - ((tileDelta > 0) ? tileDelta : 0), tile.width, tile.height + tileDeltaAbs);
 
-                if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
+                if ((objBounds.x + objBounds.width > tileBounds.x) && (objBounds.x < tileBounds.x + tileBounds.width) && (objBounds.y + objBounds.height > tileBounds.y) && (objBounds.y < tileBounds.y + tileBounds.height))
                 {
-                    var maxOverlap: number = obj1deltaAbs + obj2deltaAbs + Collision.OVERLAP_BIAS;
+                    var maxOverlap: number = objDeltaAbs + tileDeltaAbs + Collision.OVERLAP_BIAS;
 
-                    //If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (obj1delta > obj2delta)
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (objDelta > tileDelta)
                     {
-                        overlap = Object1.y + Object1.height - Object2.y;
+                        overlap = object.y + object.height - tile.y;
 
-                        if ((overlap > maxOverlap) || !(Object1.allowCollisions & Collision.DOWN) || !(Object2.allowCollisions & Collision.UP))
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || !(tile.allowCollisions & Collision.UP))
                         {
                             overlap = 0;
                         }
                         else
                         {
-                            Object1.touching |= Collision.DOWN;
-                            Object2.touching |= Collision.UP;
+                            object.touching |= Collision.DOWN;
+                            //tile.touching |= Collision.UP;
                         }
                     }
-                    else if (obj1delta < obj2delta)
-                        {
-                        overlap = Object1.y - Object2.height - Object2.y;
+                    else if (objDelta < tileDelta)
+                    {
+                        overlap = object.y - tile.height - tile.y;
 
-                        if ((-overlap > maxOverlap) || !(Object1.allowCollisions & Collision.UP) || !(Object2.allowCollisions & Collision.DOWN))
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || !(tile.allowCollisions & Collision.DOWN))
                         {
                             overlap = 0;
                         }
                         else
                         {
-                            Object1.touching |= Collision.UP;
-                            Object2.touching |= Collision.DOWN;
+                            object.touching |= Collision.UP;
+                            //tile.touching |= Collision.DOWN;
                         }
                     }
                 }
             }
 
-            //Then adjust their positions and velocities accordingly (if there was any overlap)
+            // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (overlap != 0)
             {
-                var obj1v: number = Object1.velocity.y;
-                var obj2v: number = Object2.velocity.y;
+                var objVelocity: number = object.velocity.y;
+                var tileVelocity: number = 0;
 
-                if (!obj1immovable && !obj2immovable)
+                if (!object.immovable && !tile.immovable)
                 {
                     overlap *= 0.5;
-                    Object1.y = Object1.y - overlap;
-                    Object2.y += overlap;
+                    object.y = object.y - overlap;
+                    //tile.y += overlap;
 
-                    var obj1velocity: number = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
-                    var obj2velocity: number = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
-                    var average: number = (obj1velocity + obj2velocity) * 0.5;
-                    obj1velocity -= average;
-                    obj2velocity -= average;
-                    Object1.velocity.y = average + obj1velocity * Object1.elasticity;
-                    Object2.velocity.y = average + obj2velocity * Object2.elasticity;
+                    var objNewVelocity: number = Math.sqrt((tileVelocity * tileVelocity * tile.mass) / object.mass) * ((tileVelocity > 0) ? 1 : -1);
+                    var tileNewVelocity: number = Math.sqrt((objVelocity * objVelocity * object.mass) / tile.mass) * ((objVelocity > 0) ? 1 : -1);
+                    var average: number = (objNewVelocity + tileNewVelocity) * 0.5;
+                    objNewVelocity -= average;
+                    //tileNewVelocity -= average;
+                    object.velocity.y = average + objNewVelocity * object.elasticity;
+                    //tile.velocity.y = average + tileNewVelocity * tile.elasticity;
                 }
-                else if (!obj1immovable)
+                else if (!object.immovable)
+                {
+                    //console.log('y sep', overlap, object.y);
+                    object.y = object.y - overlap;
+                    object.velocity.y = tileVelocity - objVelocity * object.elasticity;
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (tile.active && tile.moves && (objDelta > tileDelta))
                     {
-                    Object1.y = Object1.y - overlap;
-                    Object1.velocity.y = obj2v - obj1v * Object1.elasticity;
-                    //This is special case code that handles cases like horizontal moving platforms you can ride
-                    if (Object2.active && Object2.moves && (obj1delta > obj2delta))
-                    {
-                        Object1.x += Object2.x - Object2.last.x;
-                    }
-                }
-                else if (!obj2immovable)
-                    {
-                    Object2.y += overlap;
-                    Object2.velocity.y = obj1v - obj2v * Object2.elasticity;
-                    //This is special case code that handles cases like horizontal moving platforms you can ride
-                    if (Object1.active && Object1.moves && (obj1delta < obj2delta))
-                    {
-                        Object2.x += Object1.x - Object1.last.x;
+                        //object.x += tile.x - tile.x;
                     }
                 }
 
@@ -973,21 +842,245 @@ module Phaser {
             }
         }
 
+        /**
+         * Separates the two objects on their x axis
+         * @param object1 The first GameObject to separate
+         * @param object2 The second GameObject to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+         */
+        public static separateX(object1, object2): bool {
+
+            //  Can't separate two immovable objects
+            if (object1.immovable && object2.immovable)
+            {
+                return false;
+            }
+
+            //  First, get the two object deltas
+            var overlap: number = 0;
+            var obj1Delta: number = object1.x - object1.last.x;
+            var obj2Delta: number = object2.x - object2.last.x;
+
+            if (obj1Delta != obj2Delta)
+            {
+                //  Check if the X hulls actually overlap
+                var obj1DeltaAbs: number = (obj1Delta > 0) ? obj1Delta : -obj1Delta;
+                var obj2DeltaAbs: number = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
+                var obj1Bounds: Quad = new Quad(object1.x - ((obj1Delta > 0) ? obj1Delta : 0), object1.last.y, object1.width + ((obj1Delta > 0) ? obj1Delta : -obj1Delta), object1.height);
+                var obj2Bounds: Quad = new Quad(object2.x - ((obj2Delta > 0) ? obj2Delta : 0), object2.last.y, object2.width + ((obj2Delta > 0) ? obj2Delta : -obj2Delta), object2.height);
+
+                if ((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height))
+                {
+                    var maxOverlap: number = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (obj1Delta > obj2Delta)
+                    {
+                        overlap = object1.x + object1.width - object2.x;
+
+                        if ((overlap > maxOverlap) || !(object1.allowCollisions & Collision.RIGHT) || !(object2.allowCollisions & Collision.LEFT))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object1.touching |= Collision.RIGHT;
+                            object2.touching |= Collision.LEFT;
+                        }
+                    }
+                    else if (obj1Delta < obj2Delta)
+                    {
+                        overlap = object1.x - object2.width - object2.x;
+
+                        if ((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.LEFT) || !(object2.allowCollisions & Collision.RIGHT))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object1.touching |= Collision.LEFT;
+                            object2.touching |= Collision.RIGHT;
+                        }
+
+                    }
+
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                var obj1Velocity: number = object1.velocity.x;
+                var obj2Velocity: number = object2.velocity.x;
+
+                if (!object1.immovable && !object2.immovable)
+                {
+                    overlap *= 0.5;
+                    object1.x = object1.x - overlap;
+                    object2.x += overlap;
+
+                    var obj1NewVelocity: number = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
+                    var obj2NewVelocity: number = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
+                    var average: number = (obj1NewVelocity + obj2NewVelocity) * 0.5;
+                    obj1NewVelocity -= average;
+                    obj2NewVelocity -= average;
+                    object1.velocity.x = average + obj1NewVelocity * object1.elasticity;
+                    object2.velocity.x = average + obj2NewVelocity * object2.elasticity;
+                }
+                else if (!object1.immovable)
+                {
+                    object1.x = object1.x - overlap;
+                    object1.velocity.x = obj2Velocity - obj1Velocity * object1.elasticity;
+                }
+                else if (!object2.immovable)
+                {
+                    object2.x += overlap;
+                    object2.velocity.x = obj1Velocity - obj2Velocity * object2.elasticity;
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
 
         /**
-	     * -------------------------------------------------------------------------------------------
-	     * Distance
-	     * -------------------------------------------------------------------------------------------
-	     **/
+         * Separates the two objects on their y axis
+         * @param object1 The first GameObject to separate
+         * @param object2 The second GameObject to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+         */
+        public static separateY(object1, object2): bool {
 
+            //  Can't separate two immovable objects
+            if (object1.immovable && object2.immovable) {
+                return false;
+            }
+
+            //  First, get the two object deltas
+            var overlap: number = 0;
+            var obj1Delta: number = object1.y - object1.last.y;
+            var obj2Delta: number = object2.y - object2.last.y;
+
+            if (obj1Delta != obj2Delta)
+            {
+                //  Check if the Y hulls actually overlap
+                var obj1DeltaAbs: number = (obj1Delta > 0) ? obj1Delta : -obj1Delta;
+                var obj2DeltaAbs: number = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
+                var obj1Bounds: Quad = new Quad(object1.x, object1.y - ((obj1Delta > 0) ? obj1Delta : 0), object1.width, object1.height + obj1DeltaAbs);
+                var obj2Bounds: Quad = new Quad(object2.x, object2.y - ((obj2Delta > 0) ? obj2Delta : 0), object2.width, object2.height + obj2DeltaAbs);
+
+                if ((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height))
+                {
+                    var maxOverlap: number = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (obj1Delta > obj2Delta)
+                    {
+                        overlap = object1.y + object1.height - object2.y;
+
+                        if ((overlap > maxOverlap) || !(object1.allowCollisions & Collision.DOWN) || !(object2.allowCollisions & Collision.UP))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object1.touching |= Collision.DOWN;
+                            object2.touching |= Collision.UP;
+                        }
+                    }
+                    else if (obj1Delta < obj2Delta)
+                    {
+                        overlap = object1.y - object2.height - object2.y;
+
+                        if ((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.UP) || !(object2.allowCollisions & Collision.DOWN))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object1.touching |= Collision.UP;
+                            object2.touching |= Collision.DOWN;
+                        }
+                    }
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                var obj1Velocity: number = object1.velocity.y;
+                var obj2Velocity: number = object2.velocity.y;
+
+                if (!object1.immovable && !object2.immovable)
+                {
+                    overlap *= 0.5;
+                    object1.y = object1.y - overlap;
+                    object2.y += overlap;
+
+                    var obj1NewVelocity: number = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
+                    var obj2NewVelocity: number = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
+                    var average: number = (obj1NewVelocity + obj2NewVelocity) * 0.5;
+                    obj1NewVelocity -= average;
+                    obj2NewVelocity -= average;
+                    object1.velocity.y = average + obj1NewVelocity * object1.elasticity;
+                    object2.velocity.y = average + obj2NewVelocity * object2.elasticity;
+                }
+                else if (!object1.immovable)
+                {
+                    object1.y = object1.y - overlap;
+                    object1.velocity.y = obj2Velocity - obj1Velocity * object1.elasticity;
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (object2.active && object2.moves && (obj1Delta > obj2Delta))
+                    {
+                        object1.x += object2.x - object2.last.x;
+                    }
+                }
+                else if (!object2.immovable)
+                {
+                    object2.y += overlap;
+                    object2.velocity.y = obj1Velocity - obj2Velocity * object2.elasticity;
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (object1.active && object1.moves && (obj1Delta < obj2Delta))
+                    {
+                        object2.x += object1.x - object1.last.x;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /**
+         * Returns the distance between the two given coordinates.
+         * @param x1 The X value of the first coordinate
+         * @param y1 The Y value of the first coordinate
+         * @param x2 The X value of the second coordinate
+         * @param y2 The Y value of the second coordinate
+         * @returns {number} The distance between the two coordinates
+         */
         public static distance(x1: number, y1: number, x2: number, y2: number) {
             return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
         }
 
+        /**
+         * Returns the distanced squared between the two given coordinates.
+         * @param x1 The X value of the first coordinate
+         * @param y1 The Y value of the first coordinate
+         * @param x2 The X value of the second coordinate
+         * @param y2 The Y value of the second coordinate
+         * @returns {number} The distance between the two coordinates
+         */
         public static distanceSquared(x1: number, y1: number, x2: number, y2: number) {
             return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
         }
-
 
     }
 
