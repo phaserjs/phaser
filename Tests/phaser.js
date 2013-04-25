@@ -472,6 +472,7 @@ var Phaser;
             //  For example if you had a sprite drawn facing straight up then you could set
             //  rotationOffset to 90 and it would correspond correctly with Phasers rotation system
             this.rotationOffset = 0;
+            this.renderRotation = true;
             this.moves = true;
             //  Input
             this.inputEnabled = false;
@@ -1125,24 +1126,22 @@ var Phaser;
         Camera.prototype.setBounds = /**
         * Specify the boundaries of the world or where the camera is allowed to move.
         *
-        * @param	X				The smallest X value of your world (usually 0).
-        * @param	Y				The smallest Y value of your world (usually 0).
-        * @param	Width			The largest X value of your world (usually the world width).
-        * @param	Height			The largest Y value of your world (usually the world height).
-        * @param	UpdateWorld		Whether the global quad-tree's dimensions should be updated to match (default: false).
+        * @param	x				The smallest X value of your world (usually 0).
+        * @param	y				The smallest Y value of your world (usually 0).
+        * @param	width			The largest X value of your world (usually the world width).
+        * @param	height			The largest Y value of your world (usually the world height).
         */
-        function (X, Y, Width, Height, UpdateWorld) {
-            if (typeof X === "undefined") { X = 0; }
-            if (typeof Y === "undefined") { Y = 0; }
-            if (typeof Width === "undefined") { Width = 0; }
-            if (typeof Height === "undefined") { Height = 0; }
-            if (typeof UpdateWorld === "undefined") { UpdateWorld = false; }
+        function (x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
             if(this.bounds == null) {
                 this.bounds = new Phaser.Rectangle();
             }
-            this.bounds.setTo(X, Y, Width, Height);
-            //if(UpdateWorld)
-            //	G.worldBounds.copyFrom(bounds);
+            this.bounds.setTo(x, y, width, height);
+            this.worldView.setTo(x, y, width, height);
+            this.scroll.setTo(0, 0);
             this.update();
         };
         Camera.prototype.update = function () {
@@ -1177,13 +1176,13 @@ var Phaser;
                     this.scroll.x = this.bounds.left;
                 }
                 if(this.scroll.x > this.bounds.right - this.width) {
-                    this.scroll.x = this.bounds.right - this.width;
+                    this.scroll.x = (this.bounds.right - this.width) + 1;
                 }
                 if(this.scroll.y < this.bounds.top) {
                     this.scroll.y = this.bounds.top;
                 }
                 if(this.scroll.y > this.bounds.bottom - this.height) {
-                    this.scroll.y = this.bounds.bottom - this.height;
+                    this.scroll.y = (this.bounds.bottom - this.height) + 1;
                 }
             }
             this.worldView.x = this.scroll.x;
@@ -1595,7 +1594,7 @@ var Phaser;
             if(this.angle !== 0 || this.rotationOffset !== 0 || this.flipped == true) {
                 this._game.stage.context.save();
                 this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
-                if(this.angle !== 0 || this.rotationOffset !== 0) {
+                if(this.renderRotation == true && (this.angle !== 0 || this.rotationOffset !== 0)) {
                     this._game.stage.context.rotate((this.rotationOffset + this.angle) * (Math.PI / 180));
                 }
                 this._dx = -(this._dw / 2);
@@ -4369,7 +4368,7 @@ var Phaser;
         * @return	Whether or not any overlaps were found.
         */
         function () {
-            //console.log('quadtree execute');
+            console.log('quadtree execute');
             var overlapProcessed = false;
             var iterator;
             if(this._headA.object != null) {
@@ -4415,7 +4414,6 @@ var Phaser;
         * @return	Whether or not any overlaps were found.
         */
         function () {
-            //console.log('overlapNode');
             //Walk the list and check for overlaps
             var overlapProcessed = false;
             var checkObject;
@@ -7465,7 +7463,7 @@ var Phaser;
 /**
 * Phaser
 *
-* v0.9.3 - April 24th 2013
+* v0.9.4 - April 24th 2013
 *
 * A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -7479,7 +7477,7 @@ var Phaser;
 */
 var Phaser;
 (function (Phaser) {
-    Phaser.VERSION = 'Phaser version 0.9.3';
+    Phaser.VERSION = 'Phaser version 0.9.4';
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
@@ -9491,6 +9489,7 @@ var Phaser;
         };
         Input.prototype.renderDebugInfo = function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            this._game.stage.context.font = '14px Courier';
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
             this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
@@ -9530,7 +9529,7 @@ var Phaser;
             }, false);
         };
         Keyboard.prototype.addKeyCapture = function (keycode) {
-            if(typeof keycode == 'array') {
+            if(typeof keycode === 'object') {
                 for(var code in keycode) {
                     this._capture[code] = true;
                 }
@@ -10991,7 +10990,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var TilemapLayer = (function () {
-        function TilemapLayer(game, key, mapFormat, name, tileWidth, tileHeight) {
+        function TilemapLayer(game, parent, key, mapFormat, name, tileWidth, tileHeight) {
             this._startX = 0;
             this._startY = 0;
             this._maxX = 0;
@@ -11003,12 +11002,16 @@ var Phaser;
             this._oldCameraX = 0;
             this._oldCameraY = 0;
             this.alpha = 1;
+            this.exists = true;
             this.visible = true;
             this.widthInTiles = 0;
             this.heightInTiles = 0;
             this.widthInPixels = 0;
             this.heightInPixels = 0;
+            this.tileMargin = 0;
+            this.tileSpacing = 0;
             this._game = game;
+            this._parent = parent;
             this.name = name;
             this.mapFormat = mapFormat;
             this.tileWidth = tileWidth;
@@ -11017,8 +11020,84 @@ var Phaser;
             //this.scrollFactor = new MicroPoint(1, 1);
             this.mapData = [];
             this._texture = this._game.cache.getImage(key);
-            this.parseTileOffsets();
         }
+        TilemapLayer.prototype.getTileFromWorldXY = function (x, y) {
+            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+            return this.getTileIndex(x, y);
+        };
+        TilemapLayer.prototype.getTileOverlaps = function (object) {
+            //var result: bool = false;
+            //var x: number = object.x;
+            //var y: number = object.y;
+            //  What tiles do we need to check against?
+            var mapX = this._game.math.snapToFloor(object.bounds.x, this.tileWidth);
+            var mapY = this._game.math.snapToFloor(object.bounds.y, this.tileHeight);
+            var mapW = this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth;
+            var mapH = this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight;
+            var tileX = mapX / this.tileWidth;
+            var tileY = mapY / this.tileHeight;
+            var tileW = mapW / this.tileWidth;
+            var tileH = mapH / this.tileHeight;
+            if(tileX < 0) {
+                tileX = 0;
+            }
+            if(tileY < 0) {
+                tileY = 0;
+            }
+            if(tileW > this.widthInTiles) {
+                tileW = this.widthInTiles;
+            }
+            if(tileH > this.heightInTiles) {
+                tileH = this.heightInTiles;
+            }
+            //  Loop through the tiles we've got and check overlaps accordingly
+            var tiles = this.getTileBlock(tileX, tileY, tileW, tileH);
+            var result = [];
+            var tempBounds = new Phaser.Quad();
+            for(var r = 0; r < tiles.length; r++) {
+                if(tiles[r].tile.allowCollisions != Phaser.Collision.NONE) {
+                    tempBounds.setTo(tiles[r].x * this.tileWidth, tiles[r].y * this.tileHeight, this.tileWidth, this.tileHeight);
+                    if(tempBounds.intersects(object.bounds)) {
+                        result.push(true);
+                    } else {
+                        result.push(false);
+                    }
+                } else {
+                    result.push(false);
+                }
+            }
+            //return { x: mapX, y: mapY, w: mapW, h: mapH, collision: result };
+            return {
+                x: tileX,
+                y: tileY,
+                w: tileW,
+                h: tileH,
+                collision: result
+            };
+        };
+        TilemapLayer.prototype.getTileBlock = //public checkTileOverlap(object:GameObject,
+        function (x, y, width, height) {
+            var output = [];
+            for(var ty = y; ty < y + height; ty++) {
+                for(var tx = x; tx < x + width; tx++) {
+                    output.push({
+                        x: tx,
+                        y: ty,
+                        tile: this._parent.tiles[this.mapData[ty][tx]]
+                    });
+                }
+            }
+            return output;
+        };
+        TilemapLayer.prototype.getTileIndex = function (x, y) {
+            if(y >= 0 && y < this.mapData.length) {
+                if(x >= 0 && x < this.mapData[y].length) {
+                    return this.mapData[y][x];
+                }
+            }
+            return null;
+        };
         TilemapLayer.prototype.addColumn = function (column) {
             var data = [];
             for(var c = 0; c < column.length; c++) {
@@ -11034,6 +11113,7 @@ var Phaser;
         };
         TilemapLayer.prototype.updateBounds = function () {
             this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
+            console.log('layer bounds', this.boundsInTiles);
         };
         TilemapLayer.prototype.parseTileOffsets = function () {
             this._tileOffsets = [];
@@ -11043,8 +11123,8 @@ var Phaser;
                 this._tileOffsets[0] = null;
                 i = 1;
             }
-            for(var ty = 0; ty < this._texture.height; ty += this.tileHeight) {
-                for(var tx = 0; tx < this._texture.width; tx += this.tileWidth) {
+            for(var ty = this.tileMargin; ty < this._texture.height; ty += (this.tileHeight + this.tileSpacing)) {
+                for(var tx = this.tileMargin; tx < this._texture.width; tx += (this.tileWidth + this.tileSpacing)) {
                     this._tileOffsets[i] = {
                         x: tx,
                         y: ty
@@ -11052,6 +11132,7 @@ var Phaser;
                     i++;
                 }
             }
+            return this._tileOffsets.length;
         };
         TilemapLayer.prototype.renderDebugInfo = function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
@@ -11077,6 +11158,12 @@ var Phaser;
             }
             if(this._startY < 0) {
                 this._startY = 0;
+            }
+            if(this._maxX > this.widthInTiles) {
+                this._maxX = this.widthInTiles;
+            }
+            if(this._maxY > this.heightInTiles) {
+                this._maxY = this.heightInTiles;
             }
             if(this._startX + this._maxX > this.widthInTiles) {
                 this._startX = this.widthInTiles - this._maxX;
@@ -11134,8 +11221,44 @@ var Phaser;
     Phaser.TilemapLayer = TilemapLayer;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/**
+* Phaser - Tile
+*
+* A Tile is a single representation of a tile within a Tilemap
+*/
+var Phaser;
+(function (Phaser) {
+    var Tile = (function () {
+        function Tile(game, tilemap, index, width, height) {
+            this._game = game;
+            this.tilemap = tilemap;
+            this.index = index;
+            this.width = width;
+            this.height = height;
+            this.allowCollisions = Phaser.Collision.NONE;
+        }
+        Tile.prototype.destroy = /**
+        * Clean up memory.
+        */
+        function () {
+            this.tilemap = null;
+        };
+        Tile.prototype.toString = /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        function () {
+            return "[{Tiled (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
+        };
+        return Tile;
+    })();
+    Phaser.Tile = Tile;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
 /// <reference path="GameObject.ts" />
 /// <reference path="../system/TilemapLayer.ts" />
+/// <reference path="../system/Tile.ts" />
 /**
 * Phaser - Tilemap
 *
@@ -11152,7 +11275,8 @@ var Phaser;
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
                 _super.call(this, game);
             this.isGroup = false;
-            this._layers = [];
+            this.tiles = [];
+            this.layers = [];
             this.mapFormat = format;
             switch(format) {
                 case Tilemap.FORMAT_CSV:
@@ -11173,13 +11297,13 @@ var Phaser;
         Tilemap.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
             if(this.cameraBlacklist.indexOf(camera.ID) == -1) {
                 //  Loop through the layers
-                for(var i = 0; i < this._layers.length; i++) {
-                    this._layers[i].render(camera, cameraOffsetX, cameraOffsetY);
+                for(var i = 0; i < this.layers.length; i++) {
+                    this.layers[i].render(camera, cameraOffsetX, cameraOffsetY);
                 }
             }
         };
         Tilemap.prototype.parseCSV = function (data, key, tileWidth, tileHeight) {
-            var layer = new Phaser.TilemapLayer(this._game, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this._layers.length.toString(), tileWidth, tileHeight);
+            var layer = new Phaser.TilemapLayer(this._game, this, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
             //  Trim any rogue whitespace from the data
             data = data.trim();
             var rows = data.split("\n");
@@ -11190,17 +11314,21 @@ var Phaser;
                 }
             }
             layer.updateBounds();
+            var tileQuantity = layer.parseTileOffsets();
             this.currentLayer = layer;
-            this._layers.push(layer);
+            this.layers.push(layer);
+            this.generateTiles(tileQuantity);
         };
         Tilemap.prototype.parseTiledJSON = function (data, key) {
             //  Trim any rogue whitespace from the data
             data = data.trim();
             var json = JSON.parse(data);
             for(var i = 0; i < json.layers.length; i++) {
-                var layer = new Phaser.TilemapLayer(this._game, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
+                var layer = new Phaser.TilemapLayer(this._game, this, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
                 layer.alpha = json.layers[i].opacity;
                 layer.visible = json.layers[i].visible;
+                layer.tileMargin = json.tilesets[0].margin;
+                layer.tileSpacing = json.tilesets[0].spacing;
                 var c = 0;
                 var row;
                 for(var t = 0; t < json.layers[i].data.length; t++) {
@@ -11215,8 +11343,15 @@ var Phaser;
                     }
                 }
                 layer.updateBounds();
+                var tileQuantity = layer.parseTileOffsets();
                 this.currentLayer = layer;
-                this._layers.push(layer);
+                this.layers.push(layer);
+            }
+            this.generateTiles(tileQuantity);
+        };
+        Tilemap.prototype.generateTiles = function (qty) {
+            for(var i = 0; i < qty; i++) {
+                this.tiles.push(new Phaser.Tile(this._game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
             }
         };
         Object.defineProperty(Tilemap.prototype, "widthInPixels", {
@@ -11233,12 +11368,59 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
+        Tilemap.prototype.setCollisionRange = //  Tile Collision
+        function (start, end, collision) {
+            if (typeof collision === "undefined") { collision = Phaser.Collision.ANY; }
+            for(var i = start; i < end; i++) {
+                this.tiles[i].allowCollisions = collision;
+            }
+        };
+        Tilemap.prototype.setCollisionByIndex = function (values, collision) {
+            if (typeof collision === "undefined") { collision = Phaser.Collision.ANY; }
+            for(var i = 0; i < values.length; i++) {
+                this.tiles[values[i]].allowCollisions = collision;
+            }
+        };
+        Tilemap.prototype.getTile = //  Tile Management
+        function (x, y, layer) {
+            if (typeof layer === "undefined") { layer = 0; }
+            return this.tiles[this.layers[layer].getTileIndex(x, y)];
+        };
+        Tilemap.prototype.getTileFromWorldXY = function (x, y, layer) {
+            if (typeof layer === "undefined") { layer = 0; }
+            return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
+        };
+        Tilemap.prototype.getTileFromInputXY = function (layer) {
+            if (typeof layer === "undefined") { layer = 0; }
+            return this.tiles[this.layers[layer].getTileFromWorldXY(this._game.input.worldX, this._game.input.worldY)];
+        };
+        Tilemap.prototype.getTileOverlaps = function (object) {
+            return this.currentLayer.getTileOverlaps(object);
+        };
+        Tilemap.prototype.collide = //  COLLIDE
+        function (objectOrGroup, callback) {
+            if (typeof objectOrGroup === "undefined") { objectOrGroup = null; }
+            if (typeof callback === "undefined") { callback = null; }
+            if(objectOrGroup == null) {
+                objectOrGroup = this._game.world.group;
+            }
+            //  Group?
+            if(objectOrGroup.isGroup == false) {
+                if(objectOrGroup.exists && objectOrGroup.allowCollisions != Phaser.Collision.NONE) {
+                    //  Get the tiles this object overlaps with (could be any number based on its width/height)
+                    //  Iterate through each tile, checking if it overlaps with the object bounds
+                    //  Yes? then separate, else abort
+                                    }
+            } else {
+                // todo
+                            }
+            return true;
+        };
         return Tilemap;
     })(Phaser.GameObject);
     Phaser.Tilemap = Tilemap;    
     //  Set current layer
     //  Set layer order?
-    //  Get tile from x/y
     //  Get block of tiles
     //  Swap tiles around
     //  Delete tiles of certain type
@@ -11280,6 +11462,9 @@ var Phaser;
 *
 * This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
+*
+* "Hell, there are no rules here - we're trying to accomplish something."
+*                                                       Thomas A. Edison
 */
 var Phaser;
 (function (Phaser) {
@@ -11649,7 +11834,7 @@ var Phaser;
         * Determines whether the object specified intersects (overlaps) with this Quad object.
         * This method checks the x, y, width, and height properties of the specified Quad object to see if it intersects with this Quad object.
         * @method intersects
-        * @param {Quad} q The Quad to compare against to see if it intersects with this Quad.
+        * @param {Object} q The object to check for intersection with this Quad. Must have left/right/top/bottom properties (Rectangle, Quad).
         * @param {Number} t A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
         **/
@@ -11916,50 +12101,6 @@ var Phaser;
         return ScrollZone;
     })(Phaser.GameObject);
     Phaser.ScrollZone = ScrollZone;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
-* Phaser - Tile
-*
-* A simple helper object for <code>Tilemap</code> that helps expand collision opportunities and control.
-*/
-var Phaser;
-(function (Phaser) {
-    var Tile = (function (_super) {
-        __extends(Tile, _super);
-        /**
-        * Instantiate this new tile object.  This is usually called from <code>Tilemap.loadMap()</code>.
-        *
-        * @param Tilemap			A reference to the tilemap object creating the tile.
-        * @param Index				The actual core map data index for this tile type.
-        * @param Width				The width of the tile.
-        * @param Height			The height of the tile.
-        * @param Visible			Whether the tile is visible or not.
-        * @param AllowCollisions	The collision flags for the object.  By default this value is ANY or NONE depending on the parameters sent to loadMap().
-        */
-        function Tile(game, Tilemap, Index, Width, Height, Visible, AllowCollisions) {
-                _super.call(this, game, 0, 0, Width, Height);
-            this.immovable = true;
-            this.moves = false;
-            this.callback = null;
-            this.filter = null;
-            this.tilemap = Tilemap;
-            this.index = Index;
-            this.visible = Visible;
-            this.allowCollisions = AllowCollisions;
-            this.mapIndex = 0;
-        }
-        Tile.prototype.destroy = /**
-        * Clean up memory.
-        */
-        function () {
-            _super.prototype.destroy.call(this);
-            this.callback = null;
-            this.tilemap = null;
-        };
-        return Tile;
-    })(Phaser.GameObject);
-    Phaser.Tile = Tile;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**

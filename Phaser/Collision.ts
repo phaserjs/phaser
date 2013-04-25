@@ -604,7 +604,7 @@ module Phaser {
         }
 
         /**
-         * The main collision resolution in flixel.
+         * The main collision resolution.
          * 
          * @param	Object1 	Any <code>Sprite</code>.
          * @param	Object2		Any other <code>Sprite</code>.
@@ -619,6 +619,120 @@ module Phaser {
             return separatedX || separatedY;
 
         }
+
+        /**
+         * Collision resolution specifically for GameObjects vs. Tiles.
+         * 
+         * @param	Object1 	Any <code>GameObject</code>.
+         * @param	Object2		Any <code>Tile</code>.
+         * 
+         * @return	Whether the objects in fact touched and were separated.
+         */
+        public static separateTile(object:GameObject, tile:Tile): bool {
+
+            //var separatedX: bool = Collision.separateTileX(object, tile);
+            //var separatedY: bool = Collision.separateTileY(object, tile);
+
+            //return separatedX || separatedY;
+
+            return false;
+
+        }
+
+        /*
+        public static separateTileX(object:GameObject, tile:Tile): bool {
+
+            //First, get the two object deltas
+            var overlap: number = 0;
+            var obj1delta: number = object.x - object.last.x;
+            var obj2delta: number = tile.x;
+
+            if (obj1delta != obj2delta)
+            {
+                //Check if the X hulls actually overlap
+                var obj1deltaAbs: number = (obj1delta > 0) ? obj1delta : -obj1delta;
+                var obj2deltaAbs: number = (obj2delta > 0) ? obj2delta : -obj2delta;
+                //var obj1rect: Rectangle = new Rectangle(Object1.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + ((obj1delta > 0) ? obj1delta : -obj1delta), Object1.height);
+                //var obj2rect: Rectangle = new Rectangle(Object2.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + ((obj2delta > 0) ? obj2delta : -obj2delta), Object2.height);
+
+                //if ((obj1rect.x + obj1rect.width > obj2rect.x) && (obj1rect.x < obj2rect.x + obj2rect.width) && (obj1rect.y + obj1rect.height > obj2rect.y) && (obj1rect.y < obj2rect.y + obj2rect.height))
+                //{
+                    var maxOverlap: number = obj1deltaAbs + obj2deltaAbs + Collision.OVERLAP_BIAS;
+
+                    //If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (obj1delta > obj2delta)
+                    {
+                        overlap = Object1.x + Object1.width - Object2.x;
+
+                        if ((overlap > maxOverlap) || !(Object1.allowCollisions & Collision.RIGHT) || !(Object2.allowCollisions & Collision.LEFT))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            Object1.touching |= Collision.RIGHT;
+                            Object2.touching |= Collision.LEFT;
+                        }
+                    }
+                    else if (obj1delta < obj2delta)
+                        {
+                        overlap = Object1.x - Object2.width - Object2.x;
+
+                        if ((-overlap > maxOverlap) || !(Object1.allowCollisions & Collision.LEFT) || !(Object2.allowCollisions & Collision.RIGHT))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            Object1.touching |= Collision.LEFT;
+                            Object2.touching |= Collision.RIGHT;
+                        }
+
+                    }
+
+                }
+            }
+
+            //Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                var obj1v: number = Object1.velocity.x;
+                var obj2v: number = Object2.velocity.x;
+
+                if (!obj1immovable && !obj2immovable)
+                {
+                    overlap *= 0.5;
+                    Object1.x = Object1.x - overlap;
+                    Object2.x += overlap;
+
+                    var obj1velocity: number = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
+                    var obj2velocity: number = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
+                    var average: number = (obj1velocity + obj2velocity) * 0.5;
+                    obj1velocity -= average;
+                    obj2velocity -= average;
+                    Object1.velocity.x = average + obj1velocity * Object1.elasticity;
+                    Object2.velocity.x = average + obj2velocity * Object2.elasticity;
+                }
+                else if (!obj1immovable)
+                    {
+                    Object1.x = Object1.x - overlap;
+                    Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
+                }
+                else if (!obj2immovable)
+                    {
+                    Object2.x += overlap;
+                    Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        */
 
         /**
          * The X-axis component of the object separation process.
@@ -638,19 +752,6 @@ module Phaser {
             {
                 return false;
             }
-
-            //If one of the objects is a tilemap, just pass it off.
-            /*
-            if (typeof Object1 === 'Tilemap')
-            {
-                return Object1.overlapsWithCallback(Object2, separateX);
-            }
-    
-            if (typeof Object2 === 'Tilemap')
-            {
-                return Object2.overlapsWithCallback(Object1, separateX, true);
-            }
-            */
 
             //First, get the two object deltas
             var overlap: number = 0;

@@ -35,6 +35,9 @@
 *
 * This is where the magic happens. The Game object is the heart of your game, 
 * providing quick access to common functions and handling the boot process.
+*
+* "Hell, there are no rules here - we're trying to accomplish something."
+*                                                       Thomas A. Edison
 */
 
 module Phaser {

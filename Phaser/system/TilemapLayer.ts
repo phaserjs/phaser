@@ -10,9 +10,10 @@ module Phaser {
 
     export class TilemapLayer {
 
-        constructor(game: Game, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number) {
+        constructor(game: Game, parent:Tilemap, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number) {
 
             this._game = game;
+            this._parent = parent;
 
             this.name = name;
             this.mapFormat = mapFormat;
@@ -24,11 +25,10 @@ module Phaser {
             this.mapData = [];
             this._texture = this._game.cache.getImage(key);
 
-            this.parseTileOffsets();
-
         }
 
         private _game: Game;
+        private _parent: Tilemap;
         private _texture;
         private _tileOffsets;
         private _startX: number = 0;
@@ -45,6 +45,7 @@ module Phaser {
 
         public name: string;
         public alpha: number = 1;
+        public exists: bool = true;
         public visible: bool = true;
         //public scrollFactor: MicroPoint;
         public orientation: string;
@@ -62,6 +63,119 @@ module Phaser {
 
         public widthInPixels: number = 0;
         public heightInPixels: number = 0;
+
+        public tileMargin: number = 0;
+        public tileSpacing: number = 0;
+
+        public getTileFromWorldXY(x: number, y: number): number {
+
+            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+
+            return this.getTileIndex(x, y);
+
+        }
+
+        public getTileOverlaps(object: GameObject) {
+
+            //var result: bool = false;
+            //var x: number = object.x;
+            //var y: number = object.y;
+
+            //  What tiles do we need to check against?
+            var mapX:number = this._game.math.snapToFloor(object.bounds.x, this.tileWidth);
+            var mapY:number = this._game.math.snapToFloor(object.bounds.y, this.tileHeight);
+            var mapW:number = this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth;
+            var mapH:number = this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight;
+
+            var tileX = mapX / this.tileWidth;
+            var tileY = mapY / this.tileHeight;
+            var tileW = mapW / this.tileWidth;
+            var tileH = mapH / this.tileHeight;
+
+            if (tileX < 0)
+            {
+                tileX = 0;
+            }
+
+            if (tileY < 0)
+            {
+                tileY = 0;
+            }
+
+            if (tileW > this.widthInTiles)
+            {
+                tileW = this.widthInTiles;
+            }
+
+            if (tileH > this.heightInTiles)
+            {
+                tileH = this.heightInTiles;
+            }
+
+            //  Loop through the tiles we've got and check overlaps accordingly
+            var tiles = this.getTileBlock(tileX, tileY, tileW, tileH);
+
+            var result = [];
+            var tempBounds = new Quad();
+
+            for (var r = 0; r < tiles.length; r++)
+            {
+                if (tiles[r].tile.allowCollisions != Collision.NONE)
+                {
+                    tempBounds.setTo(tiles[r].x * this.tileWidth, tiles[r].y * this.tileHeight, this.tileWidth, this.tileHeight);
+                    
+                    if (tempBounds.intersects(object.bounds))
+                    {
+                        result.push(true);
+                    }
+                    else
+                    {
+                        result.push(false);
+                    }
+                }
+                else
+                {
+                    result.push(false);
+                }
+            }
+
+            //return { x: mapX, y: mapY, w: mapW, h: mapH, collision: result };
+            return { x: tileX, y: tileY, w: tileW, h: tileH, collision: result };
+
+        }
+
+        //public checkTileOverlap(object:GameObject, 
+
+        public getTileBlock(x: number, y: number, width: number, height: number) {
+
+            var output = [];
+
+            for (var ty = y; ty < y + height; ty++)
+            {
+                for (var tx = x; tx < x + width; tx++)
+                {
+                    output.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                }
+            }
+
+            return output;
+
+        }
+
+        public getTileIndex(x: number, y: number): number {
+
+            if (y >= 0 && y < this.mapData.length)
+            {
+                if (x >= 0 && x < this.mapData[y].length)
+                {
+                    return this.mapData[y][x];
+                }
+            }
+            
+            return null;
+
+        }
 
         public addColumn(column) {
 
@@ -89,9 +203,11 @@ module Phaser {
 
             this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
 
+            console.log('layer bounds', this.boundsInTiles);
+
         }
 
-        private parseTileOffsets() {
+        public parseTileOffsets():number {
 
             this._tileOffsets = [];
 
@@ -104,14 +220,16 @@ module Phaser {
                 i = 1;
             }
 
-            for (var ty = 0; ty < this._texture.height; ty += this.tileHeight)
+            for (var ty = this.tileMargin; ty < this._texture.height; ty += (this.tileHeight + this.tileSpacing))
             {
-                for (var tx = 0; tx < this._texture.width; tx += this.tileWidth)
+                for (var tx = this.tileMargin; tx < this._texture.width; tx += (this.tileWidth + this.tileSpacing))
                 {
                     this._tileOffsets[i] = { x: tx, y: ty };
                     i++;
                 }
             }
+
+            return this._tileOffsets.length;
 
         }
 
@@ -149,6 +267,16 @@ module Phaser {
             if (this._startY < 0)
             {
                 this._startY = 0;
+            }
+
+            if (this._maxX > this.widthInTiles)
+            {
+                this._maxX = this.widthInTiles;
+            }
+
+            if (this._maxY > this.heightInTiles)
+            {
+                this._maxY = this.heightInTiles;
             }
 
             if (this._startX + this._maxX > this.widthInTiles)

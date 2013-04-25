@@ -133,6 +133,14 @@
       <DependentUpon>flipped.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="tilemap\small map.ts" />
+    <TypeScriptCompile Include="tilemap\get tile.ts" />
+    <TypeScriptCompile Include="tilemap\collision.ts" />
+    <Content Include="tilemap\collision.js">
+      <DependentUpon>collision.ts</DependentUpon>
+    </Content>
+    <Content Include="tilemap\get tile.js">
+      <DependentUpon>get tile.ts</DependentUpon>
+    </Content>
     <Content Include="tilemap\small map.js">
       <DependentUpon>small map.ts</DependentUpon>
     </Content>

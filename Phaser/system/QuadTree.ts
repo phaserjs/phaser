@@ -632,7 +632,7 @@ module Phaser {
          */
         public execute(): bool {
 
-            //console.log('quadtree execute');
+            console.log('quadtree execute');
 
             var overlapProcessed: bool = false;
             var iterator: LinkedList;
@@ -703,8 +703,6 @@ module Phaser {
          * @return	Whether or not any overlaps were found.
          */
         private overlapNode(): bool {
-
-            //console.log('overlapNode');
 
             //Walk the list and check for overlaps
             var overlapProcessed: bool = false;

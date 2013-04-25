@@ -269,23 +269,21 @@ module Phaser {
         /**
          * Specify the boundaries of the world or where the camera is allowed to move.
          * 
-         * @param	X				The smallest X value of your world (usually 0).
-         * @param	Y				The smallest Y value of your world (usually 0).
-         * @param	Width			The largest X value of your world (usually the world width).
-         * @param	Height			The largest Y value of your world (usually the world height).
-         * @param	UpdateWorld		Whether the global quad-tree's dimensions should be updated to match (default: false).
+         * @param	x				The smallest X value of your world (usually 0).
+         * @param	y				The smallest Y value of your world (usually 0).
+         * @param	width			The largest X value of your world (usually the world width).
+         * @param	height			The largest Y value of your world (usually the world height).
          */
-        public setBounds(X: number = 0, Y: number = 0, Width: number = 0, Height: number = 0, UpdateWorld: bool = false) {
+        public setBounds(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
 
             if (this.bounds == null)
             {
                 this.bounds = new Rectangle();
             }
 
-            this.bounds.setTo(X, Y, Width, Height);
-
-            //if(UpdateWorld)
-            //	G.worldBounds.copyFrom(bounds);
+            this.bounds.setTo(x, y, width, height);
+            this.worldView.setTo(x, y, width, height);
+            this.scroll.setTo(0, 0);
 
             this.update();
         }
@@ -345,7 +343,7 @@ module Phaser {
 
                 if (this.scroll.x > this.bounds.right - this.width)
                 {
-                    this.scroll.x = this.bounds.right - this.width;
+                    this.scroll.x = (this.bounds.right - this.width) + 1;
                 }
 
                 if (this.scroll.y < this.bounds.top)
@@ -355,7 +353,7 @@ module Phaser {
 
                 if (this.scroll.y > this.bounds.bottom - this.height)
                 {
-                    this.scroll.y = this.bounds.bottom - this.height;
+                    this.scroll.y = (this.bounds.bottom - this.height) + 1;
                 }
             }
 

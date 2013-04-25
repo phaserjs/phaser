@@ -32,7 +32,7 @@ module Phaser {
 
         public addKeyCapture(keycode) {
 
-            if (typeof keycode == 'array')
+            if (typeof keycode === 'object')
             {
                 for (var code in keycode)
                 {
