@@ -1,3 +1,5 @@
+/// <reference path="../../Phaser/gameobjects/Tilemap.ts" />
+/// <reference path="../../Phaser/Game.ts" />
 (function () {
     var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
@@ -34,15 +36,19 @@
         emitter.start(false);
         car = myGame.createSprite(250, 64, 'ufo');
         car.renderRotation = false;
+        //car.renderDebug = true;
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
+        //car.velocity.y = 10;
         marker = myGame.createGeomSprite(0, 0);
         marker.createRectangle(16, 16);
         marker.renderFill = false;
         marker.visible = false;
-    }
+        //myGame.onRenderCallback = render;
+            }
     function update() {
         marker.x = myGame.math.snapToFloor(myGame.input.worldX, 16);
         marker.y = myGame.math.snapToFloor(myGame.input.worldY, 16);
+        //myGame.collide(car, map.currentLayer);
         car.velocity.x = 0;
         car.velocity.y = 0;
         if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
@@ -56,11 +62,14 @@
             car.velocity.y = 200;
         }
         mo = map.collide(car);
-    }
+        //map.getTileOverlaps()
+            }
     function render() {
         tile = map.getTileFromInputXY();
+        //var b = map.getTileOverlaps(car);
         myGame.stage.context.font = '18px Arial';
         myGame.stage.context.fillStyle = 'rgb(255,255,255)';
+        //myGame.stage.context.fillText(tile.toString(), 32, 32);
         myGame.input.renderDebugInfo(32, 64, 'rgb(255,255,255)');
         myGame.stage.context.fillStyle = 'rgb(255,255,255)';
         myGame.stage.context.fillText(mo.x + ' ' + mo.y + ' ' + mo.w + ' ' + mo.h, 32, 200);
