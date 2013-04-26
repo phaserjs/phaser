@@ -32,11 +32,11 @@ module Phaser {
 
         public addKeyCapture(keycode) {
 
-            if (typeof keycode == 'array')
+            if (typeof keycode === 'object')
             {
-                for (var code in keycode)
+                for (var i:number = 0; i < keycode.length; i++)
                 {
-                    this._capture[code] = true;
+                    this._capture[keycode[i]] = true;
                 }
             }
             else

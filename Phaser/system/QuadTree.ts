@@ -704,8 +704,6 @@ module Phaser {
          */
         private overlapNode(): bool {
 
-            //console.log('overlapNode');
-
             //Walk the list and check for overlaps
             var overlapProcessed: bool = false;
             var checkObject;

@@ -89,6 +89,8 @@ module Phaser {
         //  rotationOffset to 90 and it would correspond correctly with Phasers rotation system
         public rotationOffset: number = 0;
 
+        public renderRotation: bool = true;
+
         //  Physics properties
         public immovable: bool;
 

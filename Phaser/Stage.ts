@@ -43,8 +43,8 @@ module Phaser {
             this.scaleMode = StageScaleMode.NO_SCALE;
             this.scale = new StageScaleMode(this._game);
 
-            //document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
-            //document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
+            document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
+            document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
             window.onblur = (event) => this.visibilityChange(event);
             window.onfocus = (event) => this.visibilityChange(event);
 
@@ -95,6 +95,8 @@ module Phaser {
 
         //if (document['hidden'] === true || document['webkitHidden'] === true)
         private visibilityChange(event) {
+
+            //console.log(event);
 
             if (this.disablePauseScreen)
             {

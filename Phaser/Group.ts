@@ -450,7 +450,7 @@ module Phaser {
             }
         }
 
-        public forEach(callback, Recurse: bool = false) {
+        public forEach(callback, recursive: bool = false) {
 
             var basic;
             var i: number = 0;
@@ -461,9 +461,33 @@ module Phaser {
 
                 if (basic != null)
                 {
-                    if (Recurse && (basic.isGroup == true))
+                    if (recursive && (basic.isGroup == true))
                     {
                         basic.forEach(callback, true);
+                    }
+                    else
+                    {
+                        callback.call(this, basic);
+                    }
+                }
+            }
+
+        }
+
+        public forEachAlive(callback, recursive: bool = false) {
+
+            var basic;
+            var i: number = 0;
+
+            while (i < this.length)
+            {
+                basic = this.members[i++];
+
+                if (basic != null && basic.alive)
+                {
+                    if (recursive && (basic.isGroup == true))
+                    {
+                        basic.forEachAlive(callback, true);
                     }
                     else
                     {
