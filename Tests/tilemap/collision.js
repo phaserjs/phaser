@@ -7,6 +7,7 @@
         myGame.loader.addImageFile('tiles', 'assets/tiles/platformer_tiles.png');
         myGame.loader.addImageFile('ufo', 'assets/sprites/ufo.png');
         myGame.loader.addImageFile('melon', 'assets/sprites/melon.png');
+        myGame.loader.addImageFile('chunk', 'assets/sprites/chunk.png');
         myGame.loader.load();
     }
     var map;
@@ -27,10 +28,10 @@
         ]);
         emitter = myGame.createEmitter(32, 80);
         emitter.width = 700;
-        emitter.makeParticles('melon', 100, 0, false, 0);
+        emitter.makeParticles('chunk', 100, 0, false, 1);
         emitter.gravity = 200;
         emitter.bounce = 0.8;
-        emitter.start(false, 10, 0.1);
+        emitter.start(false, 10, 0.05);
         car = myGame.createSprite(250, 64, 'ufo');
         car.renderRotation = false;
         test = myGame.createSprite(200, 64, 'ufo');
