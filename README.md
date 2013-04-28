@@ -1,7 +1,7 @@
 Phaser
 ======
 
-Version: 0.9.4 Released: XX April 2013
+Version: 0.9.4 Released: 28th April 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -20,16 +20,15 @@ Latest Update
 
 V0.9.4
 
-* Fixed Tilemap bounds check if map was smaller than game dimensions
 * Added Tilemap.getTile, getTileFromWorldXY, getTileFromInputXY
 * Added Tilemap.setCollisionByIndex and setCollisionByRange
 * Added GameObject.renderRotation boolean to control if the sprite will visually rotate or not (useful when angle needs to change but graphics don't)
 * Added additional check to Camera.width/height so you cannot set them larger than the Stage size
 * Added Collision.separateTile and Tilemap.collide
+* Fixed Tilemap bounds check if map was smaller than game dimensions
 * Fixed: Made World._cameras public, World.cameras and turned Game.camera into a getter for it (thanks Hackmaniac)
 * Fixed: Circle.isEmpty properly checks diameter (thanks bapuna)
-
-
+* Updated Gruntfile to export new version of phaser.js wrapped in a UMD block for require.js/commonJS (thanks Hackmaniac)
 
 Requirements
 ------------
