@@ -474,7 +474,7 @@ module Phaser {
 
         }
 
-        public forEachAlive(callback, recursive: bool = false) {
+        public forEachAlive(context, callback, recursive: bool = false) {
 
             var basic;
             var i: number = 0;
@@ -487,11 +487,11 @@ module Phaser {
                 {
                     if (recursive && (basic.isGroup == true))
                     {
-                        basic.forEachAlive(callback, true);
+                        basic.forEachAlive(context, callback, true);
                     }
                     else
                     {
-                        callback.call(this, basic);
+                        callback.call(context, basic);
                     }
                 }
             }

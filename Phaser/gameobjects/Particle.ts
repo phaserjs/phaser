@@ -43,6 +43,7 @@ module Phaser {
          * be dead yet, and then has some special bounce behavior if there is some gravity on it.
          */
         public update() {
+
             //lifespan behavior
             if (this.lifespan <= 0)
             {

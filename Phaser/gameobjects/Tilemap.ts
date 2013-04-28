@@ -49,6 +49,7 @@ module Phaser {
         public tiles : Tile[];
         public layers : TilemapLayer[];
         public currentLayer: TilemapLayer;
+        public collisionLayer: TilemapLayer;
         public mapFormat: number;
 
         public update() {
@@ -90,10 +91,13 @@ module Phaser {
             var tileQuantity = layer.parseTileOffsets();
 
             this.currentLayer = layer;
+            this.collisionLayer = layer;
 
             this.layers.push(layer);
 
             this.generateTiles(tileQuantity);
+
+            console.log('generate layer csv');
 
         }
 
@@ -132,6 +136,7 @@ module Phaser {
                         layer.addColumn(row);
                         c = 0;
                     }
+                    console.log('generate layer json');
                 }
 
                 layer.updateBounds();
@@ -139,6 +144,7 @@ module Phaser {
                 var tileQuantity = layer.parseTileOffsets();
 
                 this.currentLayer = layer;
+                this.collisionLayer = layer;
 
                 this.layers.push(layer);
 
@@ -167,20 +173,20 @@ module Phaser {
 
         //  Tile Collision
 
-        public setCollisionRange(start: number, end: number, collision?:number = Collision.ANY) {
+        public setCollisionRange(start: number, end: number, collision?:number = Collision.ANY, resetCollisions: bool = false) {
 
             for (var i = start; i < end; i++)
             {
-                this.tiles[i].allowCollisions = collision;
+                this.tiles[i].setCollision(collision, resetCollisions);
             }
 
         }
 
-        public setCollisionByIndex(values:number[], collision?:number = Collision.ANY) {
+        public setCollisionByIndex(values:number[], collision?:number = Collision.ANY, resetCollisions: bool = false) {
 
             for (var i = 0; i < values.length; i++)
             {
-                this.tiles[values[i]].allowCollisions = collision;
+                this.tiles[values[i]].setCollision(collision, resetCollisions);
             }
 
         }
@@ -222,18 +228,29 @@ module Phaser {
             //  Group?
             if (objectOrGroup.isGroup == false)
             {
-                if (objectOrGroup.exists && objectOrGroup.allowCollisions != Collision.NONE)
-                {
-                    this.currentLayer.getTileOverlaps(objectOrGroup);
-                }
+                return this.collideGameObject(objectOrGroup);
             }
             else
             {
-                // todo
-                objectOrGroup.forEachAlive(this.currentLayer.getTileOverlaps);
+                objectOrGroup.forEachAlive(this, this.collideGameObject, true);
             }
 
             return true;
+
+        }
+
+        public collideGameObject(object: GameObject): bool {
+
+            if (object == this) { return false; }
+
+            if (object.immovable == false && object.exists == true && object.allowCollisions != Collision.NONE)
+            {
+                return this.collisionLayer.getTileOverlaps(object);
+            }
+            else
+            {
+                return false;
+            }
 
         }
 

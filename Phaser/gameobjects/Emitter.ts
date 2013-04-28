@@ -174,7 +174,7 @@ module Phaser {
          * 
          * @return	This Emitter instance (nice for chaining stuff together, if you're into that).
          */
-        public makeParticles(Graphics, Quantity: number = 50, BakedRotations: number = 16, Multiple: bool = false, Collide: number = 0.8): Emitter {
+        public makeParticles(Graphics, Quantity: number = 50, BakedRotations: number = 16, Multiple: bool = false, Collide: number = 0): Emitter {
 
             this.maxSize = Quantity;
 
@@ -236,8 +236,10 @@ module Phaser {
 
                 if (Collide > 0)
                 {
-                    particle.width *= Collide;
-                    particle.height *= Collide;
+                    particle.allowCollisions = Collision.ANY;
+                    particle.elasticity = Collide;
+                    //particle.width *= Collide;
+                    //particle.height *= Collide;
                     //particle.centerOffsets();
                 }
                 else

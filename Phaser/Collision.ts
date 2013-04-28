@@ -92,6 +92,17 @@ module Phaser {
          */
         public static OVERLAP_BIAS: number = 4;
 
+        /**
+         * This holds the result of the tile separation check, true if the object was moved, otherwise false
+         * @type {boolean}
+         */
+        public static TILE_OVERLAP: bool = false;
+
+        /**
+         * A temporary Quad used in the separation process to help avoid gc spikes
+         * @type {Quad}
+         */
+        public static _tempBounds: Quad;
 
         /**
          * Checks for Line to Line intersection and returns an IntersectResult object containing the results of the intersection.
@@ -634,10 +645,10 @@ module Phaser {
          * @param tile The Tile to separate
          * @returns {boolean} Whether the objects in fact touched and were separated
          */
-        public static separateTile(object:GameObject, tile): bool {
+        public static separateTile(object:GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool): bool {
 
-            var separatedX: bool = Collision.separateTileX(object, tile);
-            var separatedY: bool = Collision.separateTileY(object, tile);
+            var separatedX: bool = Collision.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight);
+            var separatedY: bool = Collision.separateTileY(object, x, y, width, height, mass, collideUp, collideDown);
 
             return separatedX || separatedY;
 
@@ -649,37 +660,34 @@ module Phaser {
          * @param tile The Tile to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
          */
-        public static separateTileX(object, tile): bool {
+        public static separateTileX(object:GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool): bool {
 
-            //  Can't separate two immovable objects
-            if (object.immovable && tile.immovable)
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if (object.immovable)
             {
                 return false;
             }
 
-            //  First, get the two object deltas
+            //  First, get the object delta
             var overlap: number = 0;
             var objDelta: number = object.x - object.last.x;
-            var tileDelta: number = 0;
 
-            if (objDelta != tileDelta)
+            if (objDelta != 0)
             {
                 //  Check if the X hulls actually overlap
                 var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-                var tileDeltaAbs: number = (tileDelta > 0) ? tileDelta : -tileDelta;
                 var objBounds: Quad = new Quad(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
-                var tileBounds: Quad = new Quad(tile.x - ((tileDelta > 0) ? tileDelta : 0), tile.y, tile.width + ((tileDelta > 0) ? tileDelta : -tileDelta), tile.height);
 
-                if ((objBounds.x + objBounds.width > tileBounds.x) && (objBounds.x < tileBounds.x + tileBounds.width) && (objBounds.y + objBounds.height > tileBounds.y) && (objBounds.y < tileBounds.y + tileBounds.height))
+                if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
                 {
-                    var maxOverlap: number = objDeltaAbs + tileDeltaAbs + Collision.OVERLAP_BIAS;
+                    var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
 
                     //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (objDelta > tileDelta)
+                    if (objDelta > 0)
                     {
-                        overlap = object.x + object.width - tile.x;
+                        overlap = object.x + object.width - x;
 
-                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || !(tile.allowCollisions & Collision.LEFT))
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
                         {
                             overlap = 0;
                         }
@@ -688,11 +696,11 @@ module Phaser {
                             object.touching |= Collision.RIGHT;
                         }
                     }
-                    else if (objDelta < tileDelta)
+                    else if (objDelta < 0)
                     {
-                        overlap = object.x - tile.width - tile.x;
+                        overlap = object.x - width - x;
 
-                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || !(tile.allowCollisions & Collision.RIGHT))
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
                         {
                             overlap = 0;
                         }
@@ -709,26 +717,9 @@ module Phaser {
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (overlap != 0)
             {
-                var objVelocity: number = object.velocity.x;
-                var tileVelocity: number = 0;
-
-                if (!object.immovable && !tile.immovable)
-                {
-                    overlap *= 0.5;
-                    object.x = object.x - overlap;
-
-                    var objNewVelocity: number = Math.sqrt((tileVelocity * tileVelocity * tile.mass) / object.mass) * ((tileVelocity > 0) ? 1 : -1);
-                    var tileNewVelocity: number = Math.sqrt((objVelocity * objVelocity * object.mass) / tile.mass) * ((objVelocity > 0) ? 1 : -1);
-                    var average: number = (objNewVelocity + tileNewVelocity) * 0.5;
-                    objNewVelocity -= average;
-                    object.velocity.x = average + objNewVelocity * object.elasticity;
-                }
-                else if (!object.immovable)
-                {
-                    object.x = object.x - overlap;
-                    object.velocity.x = tileVelocity - objVelocity * object.elasticity;
-                }
-
+                object.x = object.x - overlap;
+                object.velocity.x = -(object.velocity.x * object.elasticity);
+                Collision.TILE_OVERLAP = true;
                 return true;
             }
             else
@@ -744,57 +735,53 @@ module Phaser {
          * @param tile The second GameObject to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
          */
-        public static separateTileY(object, tile): bool {
+        public static separateTileY(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool): bool {
 
-            //  Can't separate two immovable objects
-            if (object.immovable && tile.immovable) {
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if (object.immovable)
+            {
                 return false;
             }
 
             //  First, get the two object deltas
             var overlap: number = 0;
             var objDelta: number = object.y - object.last.y;
-            var tileDelta: number = 0;
 
-            if (objDelta != tileDelta)
+            if (objDelta != 0)
             {
                 //  Check if the Y hulls actually overlap
                 var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-                var tileDeltaAbs: number = (tileDelta > 0) ? tileDelta : -tileDelta;
                 var objBounds: Quad = new Quad(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
-                var tileBounds: Quad = new Quad(tile.x, tile.y - ((tileDelta > 0) ? tileDelta : 0), tile.width, tile.height + tileDeltaAbs);
 
-                if ((objBounds.x + objBounds.width > tileBounds.x) && (objBounds.x < tileBounds.x + tileBounds.width) && (objBounds.y + objBounds.height > tileBounds.y) && (objBounds.y < tileBounds.y + tileBounds.height))
+                if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
                 {
-                    var maxOverlap: number = objDeltaAbs + tileDeltaAbs + Collision.OVERLAP_BIAS;
+                    var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
 
                     //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (objDelta > tileDelta)
+                    if (objDelta > 0)
                     {
-                        overlap = object.y + object.height - tile.y;
+                        overlap = object.y + object.height - y;
 
-                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || !(tile.allowCollisions & Collision.UP))
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
                         {
                             overlap = 0;
                         }
                         else
                         {
                             object.touching |= Collision.DOWN;
-                            //tile.touching |= Collision.UP;
                         }
                     }
-                    else if (objDelta < tileDelta)
+                    else if (objDelta < 0)
                     {
-                        overlap = object.y - tile.height - tile.y;
+                        overlap = object.y - height - y;
 
-                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || !(tile.allowCollisions & Collision.DOWN))
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
                         {
                             overlap = 0;
                         }
                         else
                         {
                             object.touching |= Collision.UP;
-                            //tile.touching |= Collision.DOWN;
                         }
                     }
                 }
@@ -805,35 +792,9 @@ module Phaser {
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (overlap != 0)
             {
-                var objVelocity: number = object.velocity.y;
-                var tileVelocity: number = 0;
-
-                if (!object.immovable && !tile.immovable)
-                {
-                    overlap *= 0.5;
-                    object.y = object.y - overlap;
-                    //tile.y += overlap;
-
-                    var objNewVelocity: number = Math.sqrt((tileVelocity * tileVelocity * tile.mass) / object.mass) * ((tileVelocity > 0) ? 1 : -1);
-                    var tileNewVelocity: number = Math.sqrt((objVelocity * objVelocity * object.mass) / tile.mass) * ((objVelocity > 0) ? 1 : -1);
-                    var average: number = (objNewVelocity + tileNewVelocity) * 0.5;
-                    objNewVelocity -= average;
-                    //tileNewVelocity -= average;
-                    object.velocity.y = average + objNewVelocity * object.elasticity;
-                    //tile.velocity.y = average + tileNewVelocity * tile.elasticity;
-                }
-                else if (!object.immovable)
-                {
-                    //console.log('y sep', overlap, object.y);
-                    object.y = object.y - overlap;
-                    object.velocity.y = tileVelocity - objVelocity * object.elasticity;
-                    //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (tile.active && tile.moves && (objDelta > tileDelta))
-                    {
-                        //object.x += tile.x - tile.x;
-                    }
-                }
-
+                object.y = object.y - overlap;
+                object.velocity.y = -(object.velocity.y * object.elasticity);
+                Collision.TILE_OVERLAP = true;
                 return true;
             }
             else
