@@ -3621,7 +3621,7 @@ var Phaser;
             * @return {Boolean} A value of true if the Circle objects diameter is less than or equal to 0; otherwise false.
             **/
             function () {
-                if(this._diameter < 1) {
+                if(this._diameter <= 0) {
                     return true;
                 }
                 return false;
@@ -7619,7 +7619,7 @@ var Phaser;
 /**
 * Phaser
 *
-* v0.9.4 - April 24th 2013
+* v0.9.4 - April 28th 2013
 *
 * A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -8486,7 +8486,6 @@ var Phaser;
             this.onStart.dispatch(this._object);
             this._startTime = this._game.time.now + this._delayTime;
             for(var property in this._valuesEnd) {
-                console.log(typeof property);
                 // This prevents the interpolation of null values or of non-existing properties
                 if(this._object[property] === null || !(property in this._object)) {
                     throw Error('Phaser.Tween interpolation of null value of non-existing property');
@@ -8665,8 +8664,8 @@ var Phaser;
     var World = (function () {
         function World(game, width, height) {
             this._game = game;
-            this._cameras = new Phaser.CameraManager(this._game, 0, 0, width, height);
-            this._game.camera = this._cameras.current;
+            this.cameras = new Phaser.CameraManager(this._game, 0, 0, width, height);
+            this._game.camera = this.cameras.current;
             this.group = new Phaser.Group(this._game, 0);
             this.bounds = new Phaser.Rectangle(0, 0, width, height);
             this.worldDivisions = 6;
@@ -8675,15 +8674,15 @@ var Phaser;
             this.group.preUpdate();
             this.group.update();
             this.group.postUpdate();
-            this._cameras.update();
+            this.cameras.update();
         };
         World.prototype.render = function () {
             //  Unlike in flixel our render process is camera driven, not group driven
-            this._cameras.render();
+            this.cameras.render();
         };
         World.prototype.destroy = function () {
             this.group.destroy();
-            this._cameras.destroy();
+            this.cameras.destroy();
         };
         World.prototype.setSize = //  World methods
         function (width, height, updateCameraBounds) {
@@ -8744,13 +8743,13 @@ var Phaser;
         });
         World.prototype.createCamera = //  Cameras
         function (x, y, width, height) {
-            return this._cameras.addCamera(x, y, width, height);
+            return this.cameras.addCamera(x, y, width, height);
         };
         World.prototype.removeCamera = function (id) {
-            return this._cameras.removeCamera(id);
+            return this.cameras.removeCamera(id);
         };
         World.prototype.getAllCameras = function () {
-            return this._cameras.getAll();
+            return this.cameras.getAll();
         };
         World.prototype.createSprite = //  Game Objects
         function (x, y, key) {
@@ -11859,7 +11858,6 @@ var Phaser;
             this.onUpdateCallback = null;
             this.onRenderCallback = null;
             this.onPausedCallback = null;
-            this.camera = null;
             this.cache = null;
             this.input = null;
             this.loader = null;
@@ -11947,6 +11945,13 @@ var Phaser;
             if (typeof notifyCallback === "undefined") { notifyCallback = null; }
             return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Phaser.Collision.separate);
         };
+        Object.defineProperty(Game.prototype, "camera", {
+            get: function () {
+                return this.world.cameras.current;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Game;
     })();
     Phaser.Game = Game;    
