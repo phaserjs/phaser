@@ -80,7 +80,6 @@ module Phaser {
         public onRenderCallback = null;
         public onPausedCallback = null;
 
-        public camera: Camera; // quick reference to the default created camera, access the rest via .world
         public cache: Cache;
         public collision: Collision;
         public input: Input;
@@ -330,7 +329,6 @@ module Phaser {
             this.onUpdateCallback = null;
             this.onRenderCallback = null;
             this.onPausedCallback = null;
-            this.camera = null;
             this.cache = null;
             this.input = null;
             this.loader = null;
@@ -420,6 +418,10 @@ module Phaser {
 
         public collide(objectOrGroup1: Basic = null, objectOrGroup2: Basic = null, notifyCallback = null): bool {
             return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate);
+        }
+
+        public get camera(): Camera {
+            return this.world.cameras.current;
         }
 
     }

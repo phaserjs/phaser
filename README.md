@@ -26,6 +26,9 @@ V0.9.4
 * Added GameObject.renderRotation boolean to control if the sprite will visually rotate or not (useful when angle needs to change but graphics don't)
 * Added additional check to Camera.width/height so you cannot set them larger than the Stage size
 * Added Collision.separateTile and Tilemap.collide
+* Fixed: Made World._cameras public, World.cameras and turned Game.camera into a getter for it (thanks Hackmaniac)
+* Fixed: Circle.isEmpty properly checks diameter (thanks bapuna)
+
 
 
 Requirements

@@ -8486,6 +8486,7 @@ var Phaser;
             this.onStart.dispatch(this._object);
             this._startTime = this._game.time.now + this._delayTime;
             for(var property in this._valuesEnd) {
+                console.log(typeof property);
                 // This prevents the interpolation of null values or of non-existing properties
                 if(this._object[property] === null || !(property in this._object)) {
                     throw Error('Phaser.Tween interpolation of null value of non-existing property');
@@ -10509,13 +10510,13 @@ var Phaser;
             this.y = Y;
             this.width = 0;
             this.height = 0;
-            this.minParticleSpeed = new Phaser.Point(-100, -100);
-            this.maxParticleSpeed = new Phaser.Point(100, 100);
+            this.minParticleSpeed = new Phaser.MicroPoint(-100, -100);
+            this.maxParticleSpeed = new Phaser.MicroPoint(100, 100);
             this.minRotation = -360;
             this.maxRotation = 360;
             this.gravity = 0;
             this.particleClass = null;
-            this.particleDrag = new Phaser.Point();
+            this.particleDrag = new Phaser.MicroPoint();
             this.frequency = 0.1;
             this.lifespan = 3;
             this.bounce = 0;
@@ -10523,7 +10524,7 @@ var Phaser;
             this._counter = 0;
             this._explode = true;
             this.on = false;
-            this._point = new Phaser.Point();
+            this._point = new Phaser.MicroPoint();
         }
         Emitter.prototype.destroy = /**
         * Clean up memory.
