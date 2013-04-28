@@ -1,6 +1,7 @@
 /// <reference path="../Game.ts" />
 /// <reference path="GameObject.ts" />
 /// <reference path="../system/TilemapLayer.ts" />
+/// <reference path="../system/Tile.ts" />
 
 /**
 * Phaser - Tilemap
@@ -19,7 +20,8 @@ module Phaser {
 
             this.isGroup = false;
 
-            this._layers = [];
+            this.tiles = [];
+            this.layers = [];
 
             this.mapFormat = format;
 
@@ -41,11 +43,11 @@ module Phaser {
 
         }
 
-        private _layers : TilemapLayer[];
-
         public static FORMAT_CSV: number = 0;
         public static FORMAT_TILED_JSON: number = 1;
 
+        public tiles : Tile[];
+        public layers : TilemapLayer[];
         public currentLayer: TilemapLayer;
         public mapFormat: number;
 
@@ -57,9 +59,9 @@ module Phaser {
             if (this.cameraBlacklist.indexOf(camera.ID) == -1)
             {
                 //  Loop through the layers
-                for (var i = 0; i < this._layers.length; i++)
+                for (var i = 0; i < this.layers.length; i++)
                 {
-                    this._layers[i].render(camera, cameraOffsetX, cameraOffsetY);
+                    this.layers[i].render(camera, cameraOffsetX, cameraOffsetY);
                 }
             }
 
@@ -67,7 +69,7 @@ module Phaser {
 
         private parseCSV(data: string, key: string, tileWidth: number, tileHeight: number) {
 
-            var layer: TilemapLayer = new TilemapLayer(this._game, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this._layers.length.toString(), tileWidth, tileHeight);
+            var layer: TilemapLayer = new TilemapLayer(this._game, this, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
 
             //  Trim any rogue whitespace from the data
             data = data.trim();
@@ -85,10 +87,13 @@ module Phaser {
             }
 
             layer.updateBounds();
+            var tileQuantity = layer.parseTileOffsets();
 
             this.currentLayer = layer;
 
-            this._layers.push(layer);
+            this.layers.push(layer);
+
+            this.generateTiles(tileQuantity);
 
         }
 
@@ -101,10 +106,12 @@ module Phaser {
 
             for (var i = 0; i < json.layers.length; i++)
             {
-                var layer: TilemapLayer = new TilemapLayer(this._game, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
+                var layer: TilemapLayer = new TilemapLayer(this._game, this, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
                 
                 layer.alpha = json.layers[i].opacity;
                 layer.visible = json.layers[i].visible;
+                layer.tileMargin = json.tilesets[0].margin;
+                layer.tileSpacing = json.tilesets[0].spacing;
 
                 var c = 0;
                 var row;
@@ -129,10 +136,23 @@ module Phaser {
 
                 layer.updateBounds();
 
+                var tileQuantity = layer.parseTileOffsets();
+
                 this.currentLayer = layer;
 
-                this._layers.push(layer);
+                this.layers.push(layer);
 
+            }
+
+            this.generateTiles(tileQuantity);
+
+        }
+
+        private generateTiles(qty:number) {
+
+            for (var i = 0; i < qty; i++)
+            {
+                this.tiles.push(new Tile(this._game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
             }
 
         }
@@ -145,9 +165,81 @@ module Phaser {
             return this.currentLayer.heightInPixels;
         }
 
+        //  Tile Collision
+
+        public setCollisionRange(start: number, end: number, collision?:number = Collision.ANY) {
+
+            for (var i = start; i < end; i++)
+            {
+                this.tiles[i].allowCollisions = collision;
+            }
+
+        }
+
+        public setCollisionByIndex(values:number[], collision?:number = Collision.ANY) {
+
+            for (var i = 0; i < values.length; i++)
+            {
+                this.tiles[values[i]].allowCollisions = collision;
+            }
+
+        }
+
+        //  Tile Management
+
+        public getTile(x: number, y: number, layer?: number = 0):Tile {
+
+            return this.tiles[this.layers[layer].getTileIndex(x, y)];
+
+        }
+
+        public getTileFromWorldXY(x: number, y: number, layer?: number = 0):Tile {
+
+            return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
+
+        }
+
+        public getTileFromInputXY(layer?: number = 0):Tile {
+
+            return this.tiles[this.layers[layer].getTileFromWorldXY(this._game.input.worldX, this._game.input.worldY)];
+
+        }
+
+        public getTileOverlaps(object: GameObject) {
+
+            return this.currentLayer.getTileOverlaps(object);
+
+        }
+
+        //  COLLIDE
+        public collide(objectOrGroup = null, callback = null): bool {
+
+            if (objectOrGroup == null)
+            {
+                objectOrGroup = this._game.world.group;
+            }
+
+            //  Group?
+            if (objectOrGroup.isGroup == false)
+            {
+                if (objectOrGroup.exists && objectOrGroup.allowCollisions != Collision.NONE)
+                {
+                    this.currentLayer.getTileOverlaps(objectOrGroup);
+                }
+            }
+            else
+            {
+                // todo
+                objectOrGroup.forEachAlive(this.currentLayer.getTileOverlaps);
+            }
+
+            return true;
+
+        }
+
+
         //  Set current layer
         //  Set layer order?
-        //  Get tile from x/y
         //  Get block of tiles
         //  Swap tiles around
         //  Delete tiles of certain type

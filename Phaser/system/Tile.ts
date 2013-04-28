@@ -3,55 +3,35 @@
 /**
 * Phaser - Tile
 *
-* A simple helper object for <code>Tilemap</code> that helps expand collision opportunities and control.
+* A Tile is a single representation of a tile within a Tilemap
 */
 
 module Phaser {
 
-    export class Tile extends GameObject {
+    export class Tile {
 
-        /**
-         * Instantiate this new tile object.  This is usually called from <code>Tilemap.loadMap()</code>.
-         * 
-         * @param Tilemap			A reference to the tilemap object creating the tile.
-         * @param Index				The actual core map data index for this tile type.
-         * @param Width				The width of the tile.
-         * @param Height			The height of the tile.
-         * @param Visible			Whether the tile is visible or not.
-         * @param AllowCollisions	The collision flags for the object.  By default this value is ANY or NONE depending on the parameters sent to loadMap().
-         */
-        constructor(game: Game, Tilemap: Tilemap, Index: number, Width: number, Height: number, Visible: bool, AllowCollisions: number) {
+        constructor(game: Game, tilemap: Tilemap, index: number, width: number, height: number) {
 
-            super(game, 0, 0, Width, Height);
+            this._game = game;
+            this.tilemap = tilemap;
+            this.index = index;
 
-            this.immovable = true;
-            this.moves = false;
-            this.callback = null;
-            this.filter = null;
-
-            this.tilemap = Tilemap;
-            this.index = Index;
-            this.visible = Visible;
-            this.allowCollisions = AllowCollisions;
-
-            this.mapIndex = 0;
+            this.width = width;
+            this.height = height;
+            this.allowCollisions = Collision.NONE;
 
         }
 
-        /**
-         * This function is called whenever an object hits a tile of this type.
-         * This function should take the form <code>myFunction(Tile:Tile,Object:Object)</code>.
-         * Defaults to null, set through <code>Tilemap.setTileProperties()</code>.
-         */
-        public callback;
+        private _game: Game;
 
-        /**
-         * Each tile can store its own filter class for their callback functions.
-         * That is, the callback will only be triggered if an object with a class
-         * type matching the filter touched it.
-         * Defaults to null, set through <code>Tilemap.setTileProperties()</code>.
-         */
-        public filter;
+        //  You can give this Tile a friendly name to help with debugging. Never used internally.
+        public name: string;
+
+        public width: number;
+
+        public height: number;
+
+        public allowCollisions: number;
 
         /**
          * A reference to the tilemap this tile object belongs to.
@@ -66,20 +46,22 @@ module Phaser {
         public index: number;
 
         /**
-         * The current map index of this tile object at this moment.
-         * You can think of tile objects as moving around the tilemap helping with collisions.
-         * This value is only reliable and useful if used from the callback function.
-         */
-        public mapIndex: number;
-
-        /**
          * Clean up memory.
          */
         public destroy() {
 
-            super.destroy();
-            this.callback = null;
             this.tilemap = null;
+
+        }
+
+        /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        public toString(): string {
+
+            return "[{Tiled (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
 
         }
 
