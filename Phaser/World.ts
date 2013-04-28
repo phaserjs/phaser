@@ -16,9 +16,9 @@ module Phaser {
 
             this._game = game;
 
-            this._cameras = new CameraManager(this._game, 0, 0, width, height);
+            this.cameras = new CameraManager(this._game, 0, 0, width, height);
 
-            this._game.camera = this._cameras.current;
+            this._game.camera = this.cameras.current;
 
             this.group = new Group(this._game, 0);
 
@@ -29,8 +29,8 @@ module Phaser {
         }
 
         private _game: Game;
-        private _cameras: CameraManager;
 
+        public cameras: CameraManager;
         public group: Group;
         public bounds: Rectangle;
         public worldDivisions: number;
@@ -41,14 +41,14 @@ module Phaser {
             this.group.update();
             this.group.postUpdate();
 
-            this._cameras.update();
+            this.cameras.update();
 
         }
 
         public render() {
 
             //  Unlike in flixel our render process is camera driven, not group driven
-            this._cameras.render();
+            this.cameras.render();
 
         }
 
@@ -56,7 +56,7 @@ module Phaser {
 
             this.group.destroy();
 
-            this._cameras.destroy();
+            this.cameras.destroy();
 
         }
 
@@ -109,15 +109,15 @@ module Phaser {
         //  Cameras
 
         public createCamera(x: number, y: number, width: number, height: number): Camera {
-            return this._cameras.addCamera(x, y, width, height);
+            return this.cameras.addCamera(x, y, width, height);
         }
 
         public removeCamera(id: number): bool {
-            return this._cameras.removeCamera(id);
+            return this.cameras.removeCamera(id);
         }
 
         public getAllCameras(): Camera[] {
-            return this._cameras.getAll();
+            return this.cameras.getAll();
         }
 
         //  Game Objects

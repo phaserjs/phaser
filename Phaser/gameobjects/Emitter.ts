@@ -27,13 +27,13 @@ module Phaser {
             this.y = Y;
             this.width = 0;
             this.height = 0;
-            this.minParticleSpeed = new Point(-100, -100);
-            this.maxParticleSpeed = new Point(100, 100);
+            this.minParticleSpeed = new MicroPoint(-100, -100);
+            this.maxParticleSpeed = new MicroPoint(100, 100);
             this.minRotation = -360;
             this.maxRotation = 360;
             this.gravity = 0;
             this.particleClass = null;
-            this.particleDrag = new Point();
+            this.particleDrag = new MicroPoint();
             this.frequency = 0.1;
             this.lifespan = 3;
             this.bounce = 0;
@@ -41,7 +41,7 @@ module Phaser {
             this._counter = 0;
             this._explode = true;
             this.on = false;
-            this._point = new Point();
+            this._point = new MicroPoint();
         }
 
         /**
@@ -68,18 +68,18 @@ module Phaser {
          * The minimum possible velocity of a particle.
          * The default value is (-100,-100).
          */
-        public minParticleSpeed: Point;
+        public minParticleSpeed: MicroPoint;
 
         /**
          * The maximum possible velocity of a particle.
          * The default value is (100,100).
          */
-        public maxParticleSpeed: Point;
+        public maxParticleSpeed: MicroPoint;
 
         /**
          * The X and Y drag component of particles launched from the emitter.
          */
-        public particleDrag: Point;
+        public particleDrag: MicroPoint;
 
         /**
          * The minimum possible angular velocity of a particle.  The default value is -360.
@@ -149,7 +149,7 @@ module Phaser {
         /**
          * Internal point object, handy for reusing for memory mgmt purposes.
          */
-        private _point: Point;
+        private _point: MicroPoint;
 
         /**
          * Clean up memory.

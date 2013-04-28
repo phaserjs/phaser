@@ -27,10 +27,9 @@
         ]);
         emitter = myGame.createEmitter(32, 80);
         emitter.width = 700;
-        emitter.makeParticles('melon', 100, 0, false, 1);
+        emitter.makeParticles('melon', 100, 0, false, 0);
         emitter.gravity = 200;
         emitter.bounce = 0.8;
-        //emitter.setRotation(0, 0);
         emitter.start(false, 10, 0.1);
         car = myGame.createSprite(250, 64, 'ufo');
         car.renderRotation = false;

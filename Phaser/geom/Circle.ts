@@ -262,7 +262,7 @@ module Phaser {
 	     **/
         get isEmpty(): bool {
 
-            if (this._diameter < 1)
+            if (this._diameter <= 0)
             {
                 return true;
             }
