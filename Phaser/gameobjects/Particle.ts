@@ -22,6 +22,7 @@ module Phaser {
 
             this.lifespan = 0;
             this.friction = 500;
+
         }
 
         /**

@@ -24,6 +24,8 @@ V0.9.4
 * Added Tilemap.getTile, getTileFromWorldXY, getTileFromInputXY
 * Added Tilemap.setCollisionByIndex and setCollisionByRange
 * Added GameObject.renderRotation boolean to control if the sprite will visually rotate or not (useful when angle needs to change but graphics don't)
+* Added additional check to Camera.width/height so you cannot set them larger than the Stage size
+* Added Collision.separateTile and Tilemap.collide
 
 
 Requirements

@@ -928,12 +928,12 @@ var Phaser;
             this._fxShakeIntensity = 0;
             this._fxShakeDuration = 0;
             this._fxShakeComplete = null;
-            this._fxShakeOffset = new Phaser.Point(0, 0);
+            this._fxShakeOffset = new Phaser.MicroPoint(0, 0);
             this._fxShakeDirection = 0;
             this._fxShakePrevX = 0;
             this._fxShakePrevY = 0;
-            this.scale = new Phaser.Point(1, 1);
-            this.scroll = new Phaser.Point(0, 0);
+            this.scale = new Phaser.MicroPoint(1, 1);
+            this.scroll = new Phaser.MicroPoint(0, 0);
             this.bounds = null;
             this.deadzone = null;
             //  Camera Border
@@ -947,7 +947,7 @@ var Phaser;
             this.showShadow = false;
             this.shadowColor = 'rgb(0,0,0)';
             this.shadowBlur = 10;
-            this.shadowOffset = new Phaser.Point(4, 4);
+            this.shadowOffset = new Phaser.MicroPoint(4, 4);
             this.visible = true;
             this.alpha = 1;
             //  The x/y position of the current input event in world coordinates
@@ -1075,32 +1075,26 @@ var Phaser;
                     var w = this.width / 8;
                     var h = this.height / 3;
                     this.deadzone = new Phaser.Rectangle((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
-                    console.log('follow 1');
                     break;
                 case Camera.STYLE_TOPDOWN:
                     helper = Math.max(this.width, this.height) / 4;
                     this.deadzone = new Phaser.Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
-                    console.log('follow 2');
                     break;
                 case Camera.STYLE_TOPDOWN_TIGHT:
                     helper = Math.max(this.width, this.height) / 8;
                     this.deadzone = new Phaser.Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
-                    console.log('follow 3');
                     break;
                 case Camera.STYLE_LOCKON:
                 default:
                     this.deadzone = null;
-                    console.log('follow 4');
                     break;
             }
         };
         Camera.prototype.focusOnXY = function (x, y) {
-            console.log('focusOn', x, y);
             x += (x > 0) ? 0.0000001 : -0.0000001;
             y += (y > 0) ? 0.0000001 : -0.0000001;
             this.scroll.x = Math.round(x - this.worldView.halfWidth);
             this.scroll.y = Math.round(y - this.worldView.halfHeight);
-            console.log('focusOn scroll', this.scroll.x, this.scroll.y);
         };
         Camera.prototype.focusOn = function (point) {
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
@@ -1125,7 +1119,6 @@ var Phaser;
                 this.bounds = new Phaser.Rectangle();
             }
             this.bounds.setTo(x, y, width, height);
-            this.worldView.setTo(x, y, width, height);
             this.scroll.setTo(0, 0);
             this.update();
         };
@@ -1155,7 +1148,7 @@ var Phaser;
                     }
                 }
             }
-            //  Make sure we didn't go outside the camera's bounds
+            //  Make sure we didn't go outside the cameras bounds
             if(this.bounds !== null) {
                 if(this.scroll.x < this.bounds.left) {
                     this.scroll.x = this.bounds.left;
@@ -1172,6 +1165,7 @@ var Phaser;
             }
             this.worldView.x = this.scroll.x;
             this.worldView.y = this.scroll.y;
+            //console.log(this.worldView.width, this.worldView.height);
             //  Input values
             this.inputX = this.worldView.x + this._game.input.x;
             this.inputY = this.worldView.y + this._game.input.y;
@@ -1340,7 +1334,8 @@ var Phaser;
             this.worldView.width = width;
             this.worldView.height = height;
             this.checkClip();
-        };
+            //console.log('Camera setSize', width, height);
+                    };
         Camera.prototype.renderDebugInfo = function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             this._game.stage.context.fillStyle = color;
@@ -1378,6 +1373,9 @@ var Phaser;
                 return this.worldView.width;
             },
             set: function (value) {
+                if(value > this._game.stage.width) {
+                    value = this._game.stage.width;
+                }
                 this.worldView.width = value;
                 this.checkClip();
             },
@@ -1389,6 +1387,9 @@ var Phaser;
                 return this.worldView.height;
             },
             set: function (value) {
+                if(value > this._game.stage.height) {
+                    value = this._game.stage.height;
+                }
                 this.worldView.height = value;
                 this.checkClip();
             },
@@ -3356,6 +3357,20 @@ var Phaser;
         Object.defineProperty(Quad.prototype, "bottom", {
             get: function () {
                 return this.y + this.height;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Quad.prototype, "halfWidth", {
+            get: function () {
+                return this.width / 2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Quad.prototype, "halfHeight", {
+            get: function () {
+                return this.height / 2;
             },
             enumerable: true,
             configurable: true
@@ -10581,9 +10596,8 @@ var Phaser;
                 }
                 if(Collide > 0) {
                     particle.allowCollisions = Phaser.Collision.ANY;
-                    particle.elasticity = Collide;
-                    //particle.width *= Collide;
-                    //particle.height *= Collide;
+                    particle.width *= Collide;
+                    particle.height *= Collide;
                     //particle.centerOffsets();
                                     } else {
                     particle.allowCollisions = Phaser.Collision.NONE;
@@ -11487,7 +11501,6 @@ var Phaser;
             this.collisionLayer = layer;
             this.layers.push(layer);
             this.generateTiles(tileQuantity);
-            console.log('generate layer csv');
         };
         Tilemap.prototype.parseTiledJSON = function (data, key) {
             //  Trim any rogue whitespace from the data
@@ -11511,7 +11524,6 @@ var Phaser;
                         layer.addColumn(row);
                         c = 0;
                     }
-                    console.log('generate layer json');
                 }
                 layer.updateBounds();
                 var tileQuantity = layer.parseTileOffsets();

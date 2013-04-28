@@ -68,6 +68,14 @@ module Phaser {
             return this.y + this.height;
         }
 
+        public get halfWidth(): number {
+            return this.width / 2;
+        }
+
+        public get halfHeight(): number {
+            return this.height / 2;
+        }
+
         /**
         * Determines whether the object specified intersects (overlaps) with this Quad object.
         * This method checks the x, y, width, and height properties of the specified Quad object to see if it intersects with this Quad object.

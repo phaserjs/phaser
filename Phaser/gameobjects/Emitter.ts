@@ -237,9 +237,8 @@ module Phaser {
                 if (Collide > 0)
                 {
                     particle.allowCollisions = Collision.ANY;
-                    particle.elasticity = Collide;
-                    //particle.width *= Collide;
-                    //particle.height *= Collide;
+                    particle.width *= Collide;
+                    particle.height *= Collide;
                     //particle.centerOffsets();
                 }
                 else
