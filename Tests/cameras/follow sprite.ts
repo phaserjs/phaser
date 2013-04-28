@@ -25,17 +25,16 @@
 
         myGame.camera.follow(car);
 
+        myGame.onRenderCallback = render;
+
     }
 
     function update() {
 
-        myGame.camera.renderDebugInfo(32, 32);
-        car.renderDebugInfo(200, 32);
 
         car.velocity.x = 0;
         car.velocity.y = 0;
 		car.angularVelocity = 0;
-		car.angularAcceleration = 0;
 
         if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
@@ -48,10 +47,15 @@
 
         if (myGame.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            var motion:Phaser.Point = myGame.motion.velocityFromAngle(car.angle, 300);
-
-            car.velocity.copyFrom(motion);
+            car.velocity.copyFrom(myGame.motion.velocityFromAngle(car.angle, 300));
         }
+
+    }
+
+    function render() {
+
+        myGame.camera.renderDebugInfo(32, 32);
+        car.renderDebugInfo(200, 32);
 
     }
 

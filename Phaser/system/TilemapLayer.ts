@@ -43,6 +43,11 @@ module Phaser {
         private _oldCameraY: number = 0;
         private _columnData;
 
+        private _tempTileX: number;
+        private _tempTileY: number;
+        private _tempTileW: number;
+        private _tempTileH: number;
+
         public name: string;
         public alpha: number = 1;
         public exists: bool = true;
@@ -78,76 +83,56 @@ module Phaser {
 
         public getTileOverlaps(object: GameObject) {
 
-            //var result: bool = false;
-            //var x: number = object.x;
-            //var y: number = object.y;
+            //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
+            if (object.bounds.x < 0 || object.bounds.x > this.widthInPixels || object.bounds.y < 0 || object.bounds.bottom > this.heightInPixels)
+            {
+                return;
+            }
 
             //  What tiles do we need to check against?
-            var mapX:number = this._game.math.snapToFloor(object.bounds.x, this.tileWidth);
-            var mapY:number = this._game.math.snapToFloor(object.bounds.y, this.tileHeight);
-            var mapW:number = this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth;
-            var mapH:number = this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight;
-
-            var tileX = mapX / this.tileWidth;
-            var tileY = mapY / this.tileHeight;
-            var tileW = mapW / this.tileWidth;
-            var tileH = mapH / this.tileHeight;
-
-            if (tileX < 0)
-            {
-                tileX = 0;
-            }
-
-            if (tileY < 0)
-            {
-                tileY = 0;
-            }
-
-            if (tileW > this.widthInTiles)
-            {
-                tileW = this.widthInTiles;
-            }
-
-            if (tileH > this.heightInTiles)
-            {
-                tileH = this.heightInTiles;
-            }
+            this._tempTileX = this._game.math.snapToFloor(object.bounds.x, this.tileWidth) / this.tileWidth;
+            this._tempTileY = this._game.math.snapToFloor(object.bounds.y, this.tileHeight) / this.tileHeight;
+            this._tempTileW = (this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
+            this._tempTileH = (this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
 
             //  Loop through the tiles we've got and check overlaps accordingly
-            var tiles = this.getTileBlock(tileX, tileY, tileW, tileH);
+            var tiles = this.getTileBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH);
 
-            var result = [];
-            var tempBounds = new Quad();
+            Collision.TILE_OVERLAP = false;
 
             for (var r = 0; r < tiles.length; r++)
             {
                 if (tiles[r].tile.allowCollisions != Collision.NONE)
                 {
-                    tempBounds.setTo(tiles[r].x * this.tileWidth, tiles[r].y * this.tileHeight, this.tileWidth, this.tileHeight);
-                    
-                    if (tempBounds.intersects(object.bounds))
-                    {
-                        result.push(Collision.separateTile(object, { x: tempBounds.x, y: tempBounds.y, width: tempBounds.width, height: tempBounds.height, mass: 1.0, immovable: true, allowCollisions: Collision.ANY }));
-                    }
-                    else
-                    {
-                        result.push(false);
-                    }
-                }
-                else
-                {
-                    result.push(false);
+                    Collision.separateTile(object, tiles[r].x * this.tileWidth, tiles[r].y * this.tileHeight, this.tileWidth, this.tileHeight, tiles[r].tile.mass, tiles[r].tile.collideLeft, tiles[r].tile.collideRight, tiles[r].tile.collideUp, tiles[r].tile.collideDown);
                 }
             }
 
-            //return { x: mapX, y: mapY, w: mapW, h: mapH, collision: result };
-            return { x: tileX, y: tileY, w: tileW, h: tileH, collision: result };
+            return Collision.TILE_OVERLAP;
 
         }
 
-        //public checkTileOverlap(object:GameObject, 
-
         public getTileBlock(x: number, y: number, width: number, height: number) {
+
+            if (x < 0)
+            {
+                x = 0;
+            }
+
+            if (y < 0)
+            {
+                y = 0;
+            }
+
+            if (width > this.widthInTiles)
+            {
+                width = this.widthInTiles;
+            }
+
+            if (height > this.heightInTiles)
+            {
+                height = this.heightInTiles;
+            }
 
             var output = [];
 
@@ -155,7 +140,10 @@ module Phaser {
             {
                 for (var tx = x; tx < x + width; tx++)
                 {
-                    output.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                    if (this.mapData[ty] && this.mapData[ty][tx])
+                    {
+                        output.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                    }
                 }
             }
 
@@ -203,7 +191,7 @@ module Phaser {
 
             this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
 
-            console.log('layer bounds', this.boundsInTiles);
+            //console.log('layer bounds', this.boundsInTiles);
 
         }
 

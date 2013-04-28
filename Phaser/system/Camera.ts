@@ -221,6 +221,7 @@ module Phaser {
         public follow(target: Sprite, style?: number = Camera.STYLE_LOCKON) {
 
             this._target = target;
+
             var helper: number;
 
             switch (style)
@@ -229,18 +230,22 @@ module Phaser {
                     var w: number = this.width / 8;
                     var h: number = this.height / 3;
                     this.deadzone = new Rectangle((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
+                    console.log('follow 1');
                     break;
                 case Camera.STYLE_TOPDOWN:
                     helper = Math.max(this.width, this.height) / 4;
                     this.deadzone = new Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
+                    console.log('follow 2');
                     break;
                 case Camera.STYLE_TOPDOWN_TIGHT:
                     helper = Math.max(this.width, this.height) / 8;
                     this.deadzone = new Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
+                    console.log('follow 3');
                     break;
                 case Camera.STYLE_LOCKON:
                 default:
                     this.deadzone = null;
+                    console.log('follow 4');
                     break;
             }
 
@@ -248,11 +253,15 @@ module Phaser {
 
         public focusOnXY(x: number, y: number) {
 
+            console.log('focusOn', x, y);
+
             x += (x > 0) ? 0.0000001 : -0.0000001;
             y += (y > 0) ? 0.0000001 : -0.0000001;
 
             this.scroll.x = Math.round(x - this.worldView.halfWidth);
             this.scroll.y = Math.round(y - this.worldView.halfHeight);
+
+            console.log('focusOn scroll',this.scroll.x, this.scroll.y);
 
         }
 
@@ -494,7 +503,6 @@ module Phaser {
                 this._game.stage.context.translate(-(this._sx + this.worldView.halfWidth), -(this._sy + this.worldView.halfHeight));
             }
 
-
             //  Background
             if (this.opaque == true)
             {
@@ -560,7 +568,6 @@ module Phaser {
             if (this._rotation !== 0 || this._clip)
             {
                 this._game.stage.context.translate(0, 0);
-                //this._game.stage.context.restore();
             }
 
             //  maybe just do this every frame regardless?

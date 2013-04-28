@@ -29,8 +29,8 @@ module Phaser {
             this.last = new MicroPoint(x, y);
             this.origin = new MicroPoint(this.bounds.halfWidth, this.bounds.halfHeight);
             this.align = GameObject.ALIGN_TOP_LEFT;
-            this.mass = 1.0;
-            this.elasticity = 0.0;
+            this.mass = 1;
+            this.elasticity = 0;
             this.health = 1;
             this.immovable = false;
             this.moves = true;
@@ -52,7 +52,7 @@ module Phaser {
             this.maxAngular = 10000;
 
             this.cameraBlacklist = [];
-            this.scrollFactor = new MicroPoint(1.0, 1.0);
+            this.scrollFactor = new MicroPoint(1, 1);
 
         }
 
@@ -245,17 +245,6 @@ module Phaser {
 
             }
 
-            /*
-            if (typeof ObjectOrGroup === 'Tilemap')
-            {
-                //Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
-                // we redirect the call to the tilemap overlap here.
-                return ObjectOrGroup.overlaps(this, InScreenSpace, Camera);
-            }
-            */
-
-            //var object: GameObject = ObjectOrGroup;
-
             if (!InScreenSpace)
             {
                 return (ObjectOrGroup.x + ObjectOrGroup.width > this.x) && (ObjectOrGroup.x < this.x + this.width) &&
@@ -307,20 +296,6 @@ module Phaser {
 
                 return results;
             }
-
-            /*
-            if (typeof ObjectOrGroup === 'Tilemap')
-            {
-                //Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
-                // we redirect the call to the tilemap overlap here.
-                //However, since this is overlapsAt(), we also have to invent the appropriate position for the tilemap.
-                //So we calculate the offset between the player and the requested position, and subtract that from the tilemap.
-                var tilemap: Tilemap = ObjectOrGroup;
-                return tilemap.overlapsAt(tilemap.x - (X - this.x), tilemap.y - (Y - this.y), this, InScreenSpace, Camera);
-            }
-            */
-
-            //var object: GameObject = ObjectOrGroup;
 
             if (!InScreenSpace)
             {

@@ -27,11 +27,16 @@ module Phaser {
         //  You can give this Tile a friendly name to help with debugging. Never used internally.
         public name: string;
 
+        public mass: number = 1.0;
         public width: number;
-
         public height: number;
 
         public allowCollisions: number;
+
+        public collideLeft: bool = false;
+        public collideRight: bool = false;
+        public collideUp: bool = false;
+        public collideDown: bool = false;
 
         /**
          * A reference to the tilemap this tile object belongs to.
@@ -51,6 +56,56 @@ module Phaser {
         public destroy() {
 
             this.tilemap = null;
+
+        }
+
+        public setCollision(collision: number, resetCollisions: bool) {
+
+            if (resetCollisions)
+            {
+                this.resetCollision();
+            }
+
+            this.allowCollisions = collision;
+
+            if (collision & Collision.ANY)
+            {
+                this.collideLeft = true;
+                this.collideRight = true;
+                this.collideUp = true;
+                this.collideDown = true;
+                return;
+            }
+
+            if (collision & Collision.LEFT || collision & Collision.WALL)
+            {
+                this.collideLeft = true;
+            }
+
+            if (collision & Collision.RIGHT || collision & Collision.WALL)
+            {
+                this.collideRight = true;
+            }
+
+            if (collision & Collision.UP || collision & Collision.CEILING)
+            {
+                this.collideUp = true;
+            }
+
+            if (collision & Collision.DOWN || collision & Collision.CEILING)
+            {
+                this.collideDown = true;
+            }
+
+        }
+
+        public resetCollision() {
+
+            this.allowCollisions = Collision.NONE;
+            this.collideLeft = false;
+            this.collideRight = false;
+            this.collideUp = false;
+            this.collideDown = false;
 
         }
 

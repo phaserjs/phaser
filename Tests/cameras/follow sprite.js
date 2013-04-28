@@ -12,22 +12,23 @@
         myGame.createSprite(0, 0, 'grid');
         car = myGame.createSprite(400, 300, 'car');
         myGame.camera.follow(car);
+        myGame.onRenderCallback = render;
     }
     function update() {
-        myGame.camera.renderDebugInfo(32, 32);
-        car.renderDebugInfo(200, 32);
         car.velocity.x = 0;
         car.velocity.y = 0;
         car.angularVelocity = 0;
-        car.angularAcceleration = 0;
         if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             car.angularVelocity = -200;
         } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             car.angularVelocity = 200;
         }
         if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-            var motion = myGame.motion.velocityFromAngle(car.angle, 300);
-            car.velocity.copyFrom(motion);
+            car.velocity.copyFrom(myGame.motion.velocityFromAngle(car.angle, 300));
         }
+    }
+    function render() {
+        myGame.camera.renderDebugInfo(32, 32);
+        car.renderDebugInfo(200, 32);
     }
 })();
