@@ -97,8 +97,6 @@ module Phaser {
 
             this.generateTiles(tileQuantity);
 
-            console.log('generate layer csv');
-
         }
 
         private parseTiledJSON(data: string, key: string) {
@@ -136,7 +134,6 @@ module Phaser {
                         layer.addColumn(row);
                         c = 0;
                     }
-                    console.log('generate layer json');
                 }
 
                 layer.updateBounds();

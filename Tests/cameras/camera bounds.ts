@@ -25,11 +25,11 @@
             myGame.createSprite(Math.random() * myGame.world.width, Math.random() * myGame.world.height, 'melon');
         }
 
+        myGame.onRenderCallback = render;
+
     }
 
     function update() {
-
-        myGame.camera.renderDebugInfo(32, 32);
 
         if (myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
@@ -48,6 +48,12 @@
         {
             myGame.camera.scroll.y += 4;
         }
+
+    }
+
+    function render() {
+
+        myGame.camera.renderDebugInfo(32, 32);
 
     }
 

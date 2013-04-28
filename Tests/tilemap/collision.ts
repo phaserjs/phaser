@@ -1,20 +1,6 @@
 /// <reference path="../../Phaser/gameobjects/Tilemap.ts" />
 /// <reference path="../../Phaser/Game.ts" />
 
-class customParticle2 extends Phaser.Particle {
-
-    constructor(game:Phaser.Game) {
-
-        super(game);
-
-        var s = ['carrot', 'melon', 'eggplant', 'mushroom', 'pineapple'];
-
-        this.loadGraphic(game.math.getRandom(s));
-        this.elasticity = 0.8;
-    }
-
-}
-
 (function () {
 
     var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
@@ -24,11 +10,7 @@ class customParticle2 extends Phaser.Particle {
         myGame.loader.addTextFile('platform', 'assets/maps/platform-test-1.json');
         myGame.loader.addImageFile('tiles', 'assets/tiles/platformer_tiles.png');
         myGame.loader.addImageFile('ufo', 'assets/sprites/ufo.png');
-        myGame.loader.addImageFile('carrot', 'assets/sprites/carrot.png');
         myGame.loader.addImageFile('melon', 'assets/sprites/melon.png');
-        myGame.loader.addImageFile('eggplant', 'assets/sprites/eggplant.png');
-        myGame.loader.addImageFile('mushroom', 'assets/sprites/mushroom.png');
-        myGame.loader.addImageFile('pineapple', 'assets/sprites/pineapple.png');
 
         myGame.loader.load();
 
@@ -38,6 +20,7 @@ class customParticle2 extends Phaser.Particle {
     var car: Phaser.Sprite;
     var tile: Phaser.Tile;
     var emitter: Phaser.Emitter;
+    var test: Phaser.Sprite;
 
     function create() {
 
@@ -51,15 +34,18 @@ class customParticle2 extends Phaser.Particle {
 
         emitter = myGame.createEmitter(32, 80);
         emitter.width = 700;
-        emitter.particleClass = customParticle2;
-        emitter.makeParticles(null, 100, 0, false, 0.7);
-        emitter.gravity = 100;
-        emitter.setRotation(0,0);
-        emitter.start(false, 10, 0.05);
+        emitter.makeParticles('melon', 100, 0, false, 1);
+        emitter.gravity = 200;
+        emitter.bounce = 0.8;
+        emitter.start(false, 10, 0.1);
 
         car = myGame.createSprite(250, 64, 'ufo');
         car.renderRotation = false;
-        //car.renderDebug = true;
+
+        test = myGame.createSprite(200, 64, 'ufo');
+        test.elasticity = 1;
+        test.velocity.x = 50;
+        test.velocity.y = 100;
 
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
 
@@ -88,12 +74,11 @@ class customParticle2 extends Phaser.Particle {
             car.velocity.y = 200;
         }
 
-        //  Collide the space ship with the particles
-        myGame.collide(car, emitter);
-
         //  Collide everything with the map
-        //map.collide();
-        map.collide(emitter);
+        map.collide();
+
+        //  And collide everything in the game :)
+        myGame.collide();
 
     }
 

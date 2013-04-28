@@ -60,7 +60,7 @@ module Phaser {
         private _fxShakeIntensity: number = 0;
         private _fxShakeDuration: number = 0;
         private _fxShakeComplete = null;
-        private _fxShakeOffset: Point = new Point(0, 0);
+        private _fxShakeOffset: MicroPoint = new MicroPoint(0, 0);
         private _fxShakeDirection: number = 0;
         private _fxShakePrevX: number = 0;
         private _fxShakePrevY: number = 0;
@@ -77,8 +77,8 @@ module Phaser {
         public ID: number;
         public worldView: Rectangle;
         public totalSpritesRendered: number;
-        public scale: Point = new Point(1, 1);
-        public scroll: Point = new Point(0, 0);
+        public scale: MicroPoint = new MicroPoint(1, 1);
+        public scroll: MicroPoint = new MicroPoint(0, 0);
         public bounds: Rectangle = null;
         public deadzone: Rectangle = null;
 
@@ -96,7 +96,7 @@ module Phaser {
         public showShadow: bool = false;
         public shadowColor: string = 'rgb(0,0,0)';
         public shadowBlur: number = 10;
-        public shadowOffset: Point = new Point(4, 4);
+        public shadowOffset: MicroPoint = new MicroPoint(4, 4);
 
         public visible: bool = true;
         public alpha: number = 1;
@@ -230,22 +230,18 @@ module Phaser {
                     var w: number = this.width / 8;
                     var h: number = this.height / 3;
                     this.deadzone = new Rectangle((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
-                    console.log('follow 1');
                     break;
                 case Camera.STYLE_TOPDOWN:
                     helper = Math.max(this.width, this.height) / 4;
                     this.deadzone = new Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
-                    console.log('follow 2');
                     break;
                 case Camera.STYLE_TOPDOWN_TIGHT:
                     helper = Math.max(this.width, this.height) / 8;
                     this.deadzone = new Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
-                    console.log('follow 3');
                     break;
                 case Camera.STYLE_LOCKON:
                 default:
                     this.deadzone = null;
-                    console.log('follow 4');
                     break;
             }
 
@@ -253,19 +249,15 @@ module Phaser {
 
         public focusOnXY(x: number, y: number) {
 
-            console.log('focusOn', x, y);
-
             x += (x > 0) ? 0.0000001 : -0.0000001;
             y += (y > 0) ? 0.0000001 : -0.0000001;
 
             this.scroll.x = Math.round(x - this.worldView.halfWidth);
             this.scroll.y = Math.round(y - this.worldView.halfHeight);
 
-            console.log('focusOn scroll',this.scroll.x, this.scroll.y);
-
         }
 
-        public focusOn(point: Point) {
+        public focusOn(point) {
 
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
@@ -291,7 +283,7 @@ module Phaser {
             }
 
             this.bounds.setTo(x, y, width, height);
-            this.worldView.setTo(x, y, width, height);
+
             this.scroll.setTo(0, 0);
 
             this.update();
@@ -342,7 +334,7 @@ module Phaser {
 
             }
 
-            //  Make sure we didn't go outside the camera's bounds
+            //  Make sure we didn't go outside the cameras bounds
             if (this.bounds !== null)
             {
                 if (this.scroll.x < this.bounds.left)
@@ -368,6 +360,8 @@ module Phaser {
 
             this.worldView.x = this.scroll.x;
             this.worldView.y = this.scroll.y;
+
+            //console.log(this.worldView.width, this.worldView.height);
 
             //  Input values
             this.inputX = this.worldView.x + this._game.input.x;
@@ -610,8 +604,9 @@ module Phaser {
 
             this.worldView.width = width;
             this.worldView.height = height;
-
             this.checkClip();
+
+            //console.log('Camera setSize', width, height);
 
         }
 
@@ -652,6 +647,12 @@ module Phaser {
         }
 
         public set width(value: number) {
+
+            if (value > this._game.stage.width)
+            {
+                value = this._game.stage.width;
+            }
+
             this.worldView.width = value;
             this.checkClip();
         }
@@ -661,6 +662,12 @@ module Phaser {
         }
 
         public set height(value: number) {
+
+            if (value > this._game.stage.height)
+            {
+                value = this._game.stage.height;
+            }
+
             this.worldView.height = value;
             this.checkClip();
         }
