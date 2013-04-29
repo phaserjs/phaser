@@ -95,6 +95,7 @@ module Phaser {
         public device: Device;
 
         public isBooted: bool = false;
+        public isRunning: bool = false;
 
         private boot(parent: string, width: number, height: number) {
 
@@ -124,16 +125,16 @@ module Phaser {
                 this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
                 this.framerate = 60;
+                this.isBooted = true;
 
                 //  Display the default game screen?
                 if (this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
                 {
-                    this.isBooted = false;
-                    this.stage.drawInitScreen();
+                    this._raf = new RequestAnimationFrame(this.bootLoop, this);
                 }
                 else
                 {
-                    this.isBooted = true;
+                    this.isRunning = true;
                     this._loadComplete = false;
 
                     this._raf = new RequestAnimationFrame(this.loop, this);
@@ -160,22 +161,33 @@ module Phaser {
 
         }
 
+        private bootLoop() {
+
+            this.time.update();
+            this.tweens.update();
+            this.input.update();
+            this.stage.update();
+
+        }
+
+        private pausedLoop() {
+
+            this.time.update();
+            this.tweens.update();
+            this.input.update();
+            this.stage.update();
+
+            if (this.onPausedCallback !== null)
+            {
+                this.onPausedCallback.call(this.callbackContext);
+            }
+
+        }
+
         private loop() {
 
             this.time.update();
             this.tweens.update();
-
-            if (this._paused == true)
-            {
-                if (this.onPausedCallback !== null)
-                {
-                    this.onPausedCallback.call(this.callbackContext);
-                }
-
-                return;
-
-            }
-
             this.input.update();
             this.stage.update();
 
@@ -349,12 +361,21 @@ module Phaser {
             if (value == true && this._paused == false)
             {
                 this._paused = true;
+                this._raf.setCallback(this.pausedLoop);
             }
             else if (value == false && this._paused == true)
             {
                 this._paused = false;
                 this.time.time = Date.now();
                 this.input.reset();
+                if (this.isRunning == false)
+                {
+                    this._raf.setCallback(this.bootLoop);
+                }
+                else
+                {
+                    this._raf.setCallback(this.loop);
+                }
             }
 
         }

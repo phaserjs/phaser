@@ -1,15 +1,15 @@
 Phaser
 ======
 
-Version: 0.9.4 Released: 28th April 2013
+Version: 0.9.5 - Released: XXX 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 Phaser is a 2D JavaScript/TypeScript HTML5 Game Framework based heavily on [Flixel](http://www.flixel.org).
 
-Follow us on [twitter](https://twitter.com/photonstorm) and our [blog](http://www.photonstorm.com) for development updates.
-
-For support post to the Phaser board on the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/)
+[Twitter](https://twitter.com/photonstorm)
+[Development Blog](http://www.photonstorm.com)
+[Support Forum](http://www.html5gamedevs.com/forum/14-phaser/)
 
 Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
@@ -18,17 +18,14 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 Latest Update
 -------------
 
-V0.9.4
+V0.9.5
 
-* Added Tilemap.getTile, getTileFromWorldXY, getTileFromInputXY
-* Added Tilemap.setCollisionByIndex and setCollisionByRange
-* Added GameObject.renderRotation boolean to control if the sprite will visually rotate or not (useful when angle needs to change but graphics don't)
-* Added additional check to Camera.width/height so you cannot set them larger than the Stage size
-* Added Collision.separateTile and Tilemap.collide
-* Fixed Tilemap bounds check if map was smaller than game dimensions
-* Fixed: Made World._cameras public, World.cameras and turned Game.camera into a getter for it (thanks Hackmaniac)
-* Fixed: Circle.isEmpty properly checks diameter (thanks bapuna)
-* Updated Gruntfile to export new version of phaser.js wrapped in a UMD block for require.js/commonJS (thanks Hackmaniac)
+* Moved the BootScreen and PauseScreen out of Stage into their own classes (system/screens/BootScreen and PauseScreen)
+* Updated the PauseScreen to show a subtle animation effect, making it easier to create your own interesting pause screens.
+* Modified Game so it splits into 3 loops - bootLoop, pauseLoop and loop (the core loop)
+* Updated the BootScreen with the new logo and new color cycle effect
+* Added Game.isRunning - set to true once the Game.boot process is over IF you gave some functions to the constructor or a state
+* Fixed small bug in Signal.removeAll where it could try to shorten the _bindings even if undefined
 
 Requirements
 ------------
@@ -37,7 +34,11 @@ Games created with Phaser require a modern web browser that supports the canvas 
 
 For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/). We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
 
-Phaser is 147KB minified and just 30KB gzipped (sizes accurate as of version 0.7)
+If you are compiling via TypeScript from the command-line please use `--target ES5` and `--nolib`
+
+If you need it the included Grunt file will generate a RequireJS/CommonJS version of Phaser on build.
+
+Phaser is just 45KB gzipped and minified.
 
 Features
 --------
@@ -108,7 +109,7 @@ Phaser fully or partially supports the following features. This list is growing 
 
 *	Tilemaps<br />
 
-	Support for CSV and Tiled JSON format tile maps	is implemented but currently limited.
+	Support for CSV and Tiled JSON format tile maps. Supports Layered Tiled maps and layer based collision.
 
 *	Game Scaling<br />
 
@@ -121,13 +122,12 @@ Work in Progress
 
 We've a number of features that we know Phaser is lacking, here is our current priority list:
 
-*	Tilemap collision and layers
 *	Better sound controls
 *	MSPointer support
 *	Text Rendering
 *	Buttons
 
-Beyond this there are lots of other things we plan to add such as WebGL support, Spline animation format support, sloped collision tiles, path finding and support for custom plugins. But the list above are more priority items and is by no means exhaustive either! However we do feel that the core structure of Phaser is now pretty locked down, so safe to use for small scale production games.
+Beyond this there are lots of other things we plan to add such as WebGL support, Spline animation format support, sloped collision tiles, path finding and support for custom plugins. But the list above are priority items, and by no means exhaustive either! However we do feel that the core structure of Phaser is now tightly locked down, so safe to use for small scale production games.
 
 Test Suite
 ----------
@@ -142,6 +142,8 @@ Make sure you can browse to the Tests folder via your web server. If you've got 
 
 Right now the Test Suite requires PHP, but we will remove this requirement soon.
 
+You can also browse the [Phaser Test Suite](http://gametest.mobi/phaser/) online.
+
 Contributing
 ------------
 
@@ -151,7 +153,7 @@ If you find a bug (highly likely!) then please report it on github.
 
 If you have a feature request, or have written a small game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
 
-You can do this on the Phased board on the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/) or email: rich@photonstorm.com
+You can do this on the Phaser board that is part of the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/) or email: rich@photonstorm.com
 
 Bugs?
 -----
@@ -162,6 +164,18 @@ Please add them to the [Issue Tracker][1] with as much info as possible.
 
 Change Log
 ----------
+
+V0.9.4
+
+* Added Tilemap.getTile, getTileFromWorldXY, getTileFromInputXY
+* Added Tilemap.setCollisionByIndex and setCollisionByRange
+* Added GameObject.renderRotation boolean to control if the sprite will visually rotate or not (useful when angle needs to change but graphics don't)
+* Added additional check to Camera.width/height so you cannot set them larger than the Stage size
+* Added Collision.separateTile and Tilemap.collide
+* Fixed Tilemap bounds check if map was smaller than game dimensions
+* Fixed: Made World._cameras public, World.cameras and turned Game.camera into a getter for it (thanks Hackmaniac)
+* Fixed: Circle.isEmpty properly checks diameter (thanks bapuna)
+* Updated Gruntfile to export new version of phaser.js wrapped in a UMD block for require.js/commonJS (thanks Hackmaniac)
 
 V0.9.3
 

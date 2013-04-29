@@ -323,7 +323,7 @@ module Phaser {
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         * 
         * @param	Point			The point in world space you want to check.
-        * @param	InScreenSpace	Whether to take scroll factors numbero account when checking for overlap.
+        * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
         * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         * 
         * @return	Whether or not the point overlaps this object.

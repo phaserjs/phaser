@@ -1,6 +1,8 @@
 /// <reference path="Phaser.ts" />
 /// <reference path="Game.ts" />
 /// <reference path="system/StageScaleMode.ts" />
+/// <reference path="system/screens/BootScreen.ts" />
+/// <reference path="system/screens/PauseScreen.ts" />
 
 /**
 * Phaser - Stage
@@ -43,6 +45,9 @@ module Phaser {
             this.scaleMode = StageScaleMode.NO_SCALE;
             this.scale = new StageScaleMode(this._game);
 
+            this._bootScreen = new BootScreen(this._game);
+            this._pauseScreen = new PauseScreen(this._game, width, height);
+
             document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
             document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
             window.onblur = (event) => this.visibilityChange(event);
@@ -52,7 +57,8 @@ module Phaser {
 
         private _game: Game;
         private _bgColor: string;
-
+        private _bootScreen;
+        private _pauseScreen;
 
         public static ORIENTATION_LANDSCAPE: number = 0;
         public static ORIENTATION_PORTRAIT: number = 1;
@@ -63,6 +69,7 @@ module Phaser {
         public canvas: HTMLCanvasElement;
         public context: CanvasRenderingContext2D;
         public disablePauseScreen: bool = false;
+        public disableBootScreen: bool = false;
         public offset: Point;
         public scale: StageScaleMode;
         public scaleMode: number;
@@ -82,88 +89,45 @@ module Phaser {
                 this.context.clearRect(0, 0, this.width, this.height);
             }
 
+            if (this._game.isRunning == false && this.disableBootScreen == false)
+            {
+                this._bootScreen.update();
+                this._bootScreen.render();
+            }
+
+            if (this._game.paused == true && this.disablePauseScreen == false)
+            {
+                this._pauseScreen.update();
+                this._pauseScreen.render();
+            }
+
         }
 
-        public renderDebugInfo() {
-
-            this.context.fillStyle = 'rgb(255,255,255)';
-            this.context.fillText(Phaser.VERSION, 10, 20);
-            this.context.fillText('Game Size: ' + this.width + ' x ' + this.height, 10, 40);
-            this.context.fillText('x: ' + this.x + ' y: ' + this.y, 10, 60);
-
-        }
-
-        //if (document['hidden'] === true || document['webkitHidden'] === true)
         private visibilityChange(event) {
-
-            //console.log(event);
 
             if (this.disablePauseScreen)
             {
                 return;
             }
 
-            if (event.type == 'blur' && this._game.paused == false && this._game.isBooted == true)
+            if (event.type === 'blur' || document['hidden'] === true || document['webkitHidden'] === true)
             {
-                this._game.paused = true;
-                this.drawPauseScreen();
+                if (this._game.paused == false)
+                {
+                    this._pauseScreen.onPaused();
+                    this.saveCanvasValues();
+                    this._game.paused = true;
+                }
             }
             else if (event.type == 'focus')
             {
-                this._game.paused = false;
+                if (this._game.paused == true)
+                {
+                    this._pauseScreen.onResume();
+                    this._game.paused = false;
+                    this.restoreCanvasValues();
+                }
             }
-
-        }
-
-        public drawInitScreen() {
-
-            this.context.fillStyle = 'rgb(40, 40, 40)';
-            this.context.fillRect(0, 0, this.width, this.height);
-
-            this.context.fillStyle = 'rgb(255,255,255)';
-            this.context.font = 'bold 18px Arial';
-            this.context.textBaseline = 'top';
-            this.context.fillText(Phaser.VERSION, 54, 32);
-            this.context.fillText('Game Size: ' + this.width + ' x ' + this.height, 32, 64);
-            this.context.fillText('www.photonstorm.com', 32, 96);
-            this.context.font = '16px Arial';
-            this.context.fillText('You are seeing this screen because you didn\'t specify any default', 32, 160);
-            this.context.fillText('functions in the Game constructor, or use Game.loadState()', 32, 184);
-
-            var image = new Image();
-            var that = this;
-
-            image.onload = function () {
-                that.context.drawImage(image, 32, 32);
-            };
-
-            image.src = this._logo;
-
-        }
-
-        private drawPauseScreen() {
-
-            this.saveCanvasValues();
-
-            this.context.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            this.context.fillRect(0, 0, this.width, this.height);
-
-            //  Draw a 'play' arrow
-            var arrowWidth = Math.round(this.width / 2);
-            var arrowHeight = Math.round(this.height / 2);
-
-            var sx = this.centerX - arrowWidth / 2;
-            var sy = this.centerY - arrowHeight / 2;
-
-            this.context.beginPath();
-            this.context.moveTo(sx, sy);
-            this.context.lineTo(sx, sy + arrowHeight);
-            this.context.lineTo(sx + arrowWidth, this.centerY);
-            this.context.fillStyle = 'rgba(255, 255, 255, 0.8)';
-            this.context.fill();
-            this.context.closePath();
-
-            this.restoreCanvasValues();
 
         }
 
@@ -239,8 +203,6 @@ module Phaser {
         public get randomY(): number {
             return Math.round(Math.random() * this.bounds.height);
         }
-
-        private _logo: string = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAO1JREFUeNpi/P//PwM6YGRkxBQEAqBaRnQxFmwa10d6MAjrMqMofHv5L1we2SBGmAtAktg0ogOQQYHLd8ANYYFpPtTmzUAMAFmwnsEDrAdkCAvMZlIAsiFMMAEYsKvaSrQhIMCELkGsV2AAbIC8gCQYgwKIUABiNYBf9yoYH7n7n6CzN274g2IYEyFbsNmKLIaSkHpP7WSwUfbA0ASzFQRslBlxp0RcAF0TRhggA3zhAJIDpUKU5A9KyshpHDkjFZu5g2nJMFcwXVJSgqIGnBKx5bKenh4w/XzVbgbPtlIUcVgSxuoCUgHIIIAAAwArtXwJBABO6QAAAABJRU5ErkJggg==";
 
     }
 

@@ -99,6 +99,10 @@
     <TypeScriptCompile Include="sprites\align.ts" />
     <TypeScriptCompile Include="scrollzones\simple scrollzone.ts" />
     <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
+    <TypeScriptCompile Include="misc\bootscreen.ts" />
+    <Content Include="misc\bootscreen.js">
+      <DependentUpon>bootscreen.ts</DependentUpon>
+    </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>
     </Content>

@@ -125,6 +125,14 @@
     <Content Include="SoundManager.js">
       <DependentUpon>SoundManager.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="system\screens\PauseScreen.ts" />
+    <TypeScriptCompile Include="system\screens\BootScreen.ts" />
+    <Content Include="system\screens\BootScreen.js">
+      <DependentUpon>BootScreen.ts</DependentUpon>
+    </Content>
+    <Content Include="system\screens\PauseScreen.js">
+      <DependentUpon>PauseScreen.ts</DependentUpon>
+    </Content>
     <Content Include="system\Sound.js">
       <DependentUpon>Sound.ts</DependentUpon>
     </Content>

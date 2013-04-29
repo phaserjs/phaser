@@ -30,6 +30,7 @@ module Phaser {
             this._interpolationFunction = this._game.math.linearInterpolation;
             this._easingFunction = Phaser.Easing.Linear.None;
 
+            this._chainedTweens = [];
             this.onStart = new Phaser.Signal();
             this.onUpdate = new Phaser.Signal();
             this.onComplete = new Phaser.Signal();
@@ -125,6 +126,8 @@ module Phaser {
 	        {
 	            this._manager.remove(this);
 	        }
+
+	        this.onComplete.dispose();
 
 	        return this;
 

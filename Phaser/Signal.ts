@@ -211,7 +211,7 @@ module Phaser {
 
             if (i !== -1)
             {
-                this._bindings[i]._destroy(); //no reason to a SignalBinding exist if it isn't attached to a signal
+                this._bindings[i]._destroy();
                 this._bindings.splice(i, 1);
             }
 
@@ -224,14 +224,17 @@ module Phaser {
          */
         public removeAll() {
 
-            var n: number = this._bindings.length;
-
-            while (n--)
+            if (this._bindings)
             {
-                this._bindings[n]._destroy();
-            }
+                var n: number = this._bindings.length;
 
-            this._bindings.length = 0;
+                while (n--)
+                {
+                    this._bindings[n]._destroy();
+                }
+
+                this._bindings.length = 0;
+            }
 
         }
 
