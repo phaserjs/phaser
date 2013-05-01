@@ -47,12 +47,14 @@
     <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
     <TypeScriptOutFile>../build/phaser.js</TypeScriptOutFile>
+    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
     <TypeScriptOutFile>../build/phaser.js</TypeScriptOutFile>
+    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="plugins\" />
@@ -66,6 +68,10 @@
     </Content>
     <Content Include="DynamicTexture.js">
       <DependentUpon>DynamicTexture.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="FXManager.ts" />
+    <Content Include="FXManager.js">
+      <DependentUpon>FXManager.ts</DependentUpon>
     </Content>
     <Content Include="Game.js">
       <DependentUpon>Game.ts</DependentUpon>

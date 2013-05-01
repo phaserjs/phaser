@@ -43,6 +43,7 @@ if (isset($_GET['f']))
     <title>Phaser Test Runner: <?php echo $state?></title>
     <link rel="stylesheet" href="phaser.css" type="text/css" />
     <script src="phaser.js"></script>
+    <script src="phaser-fx.js"></script>
 <?php
     if ($state)
     {
@@ -106,7 +107,7 @@ if ($state == false)
         //  If $key is an array, output it as an h2 or something
         if (is_array($value) && count($value) > 0)
         {
-            echo "<h2>$key</h2>";
+            echo "<h2>$key (" . count($value) . " examples)</h2>";
             printJSLinks($key, $value);
         }
 

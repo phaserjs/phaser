@@ -7,7 +7,7 @@
 *
 * Richard Davey (@photonstorm)
 *
-* Many thanks to Adam Saltsman (@ADAMATOMIC) for the original Flixel AS3 code on which Phaser is based.
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel on which Phaser took a lot of inspiration.
 *
 * "If you want your children to be intelligent,  read them fairy tales."
 * "If you want them to be more intelligent, read them more fairy tales."

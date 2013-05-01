@@ -20,12 +20,20 @@ Latest Update
 
 V0.9.5
 
-* Moved the BootScreen and PauseScreen out of Stage into their own classes (system/screens/BootScreen and PauseScreen)
+* Moved the BootScreen and PauseScreen out of Stage into their own classes (system/screens/BootScreen and PauseScreen).
 * Updated the PauseScreen to show a subtle animation effect, making it easier to create your own interesting pause screens.
-* Modified Game so it splits into 3 loops - bootLoop, pauseLoop and loop (the core loop)
-* Updated the BootScreen with the new logo and new color cycle effect
-* Added Game.isRunning - set to true once the Game.boot process is over IF you gave some functions to the constructor or a state
-* Fixed small bug in Signal.removeAll where it could try to shorten the _bindings even if undefined
+* Modified Game so it splits into 3 loops - bootLoop, pauseLoop and loop (the core loop).
+* Updated the BootScreen with the new logo and new color cycle effect.
+* Added Game.isRunning - set to true once the Game.boot process is over IF you gave some functions to the constructor or a state.
+* Fixed small bug in Signal.removeAll where it could try to shorten the _bindings even if undefined.
+* Added the new FXManager which is used for handling all special effects on Cameras (and soon other game objects).
+* Removed Flash, Fade and Shake from the Camera class and moved to the new SpecialFX project.
+* SpecialFX compiles to phaser-fx.js in the build folder, which is copied over to Tests. If you don't need the FX, don't include the .js file.
+* The project is now generating TypeScript declaration files and all Tests were updated to use them in their references.
+* Fixed a bug in Flash, Fade and Shake where the duration would fail on anything above 3 seconds.
+* Fixed a bug in Camera Shake that made it go a bit haywire, now shakes correctly.
+* Added new Scanlines Camera FX.
+
 
 Requirements
 ------------
@@ -43,7 +51,7 @@ Phaser is just 45KB gzipped and minified.
 Features
 --------
 
-Phaser was born from a cross-polination of the AS3 Flixel game library and our own internal HTML5 game framework. The objective was to allow you to make games _really_ quickly and remove some of the speed barriers HTML5 puts in your way.
+Phaser was born from a cross-pollination of the AS3 Flixel game library and our own internal HTML5 game framework. The objective was to allow you to make games _really_ quickly and remove some of the speed barriers HTML5 puts in your way.
 
 Phaser fully or partially supports the following features. This list is growing constantly and we are aware there are still a number of essential features missing:
 
@@ -132,7 +140,7 @@ Beyond this there are lots of other things we plan to add such as WebGL support,
 Test Suite
 ----------
 
-Phaser comes with an ever growing Test Suite. Personally we learn better by looking at small refined code examples, so we create lots of them to test each new feature we add. Inside the Tests folder you'll find the current set. If you write a particuarly good test then please send it to us.
+Phaser comes with an ever growing Test Suite. Personally we learn better by looking at small refined code examples, so we create lots of them to test each new feature we add. Inside the Tests folder you'll find the current set. If you write a particularly good test then please send it to us.
 
 The tests need running through a local web server (to avoid file access permission errors from your browser).
 

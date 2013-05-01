@@ -53,6 +53,7 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="camera fx\flash.ts" />
     <TypeScriptCompile Include="cameras\camera alpha.ts" />
     <TypeScriptCompile Include="cameras\camera bounds.ts" />
     <TypeScriptCompile Include="cameras\camera position.ts" />
@@ -60,15 +61,12 @@
     <TypeScriptCompile Include="cameras\camera scale.ts" />
     <TypeScriptCompile Include="cameras\camera shadow.ts" />
     <TypeScriptCompile Include="cameras\camera texture.ts" />
-    <TypeScriptCompile Include="cameras\fade fx.ts" />
-    <TypeScriptCompile Include="cameras\flash fx.ts" />
     <TypeScriptCompile Include="cameras\focus on.ts" />
     <TypeScriptCompile Include="cameras\follow deadzone.ts" />
     <TypeScriptCompile Include="cameras\follow sprite.ts" />
     <TypeScriptCompile Include="cameras\follow topdown.ts" />
     <TypeScriptCompile Include="cameras\multicam1.ts" />
     <TypeScriptCompile Include="cameras\scroll factor.ts" />
-    <TypeScriptCompile Include="cameras\shake fx.ts" />
     <TypeScriptCompile Include="collision\collide sprites.ts" />
     <TypeScriptCompile Include="collision\falling balls.ts" />
     <TypeScriptCompile Include="groups\basic group.ts" />
@@ -100,6 +98,21 @@
     <TypeScriptCompile Include="scrollzones\simple scrollzone.ts" />
     <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
     <TypeScriptCompile Include="misc\bootscreen.ts" />
+    <TypeScriptCompile Include="camera fx\fade.ts" />
+    <Content Include="camera fx\fade.js">
+      <DependentUpon>fade.ts</DependentUpon>
+    </Content>
+    <Content Include="camera fx\flash.js">
+      <DependentUpon>flash.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="camera fx\shake.ts" />
+    <TypeScriptCompile Include="camera fx\scanlines.ts" />
+    <Content Include="camera fx\scanlines.js">
+      <DependentUpon>scanlines.ts</DependentUpon>
+    </Content>
+    <Content Include="camera fx\shake.js">
+      <DependentUpon>shake.ts</DependentUpon>
+    </Content>
     <Content Include="misc\bootscreen.js">
       <DependentUpon>bootscreen.ts</DependentUpon>
     </Content>

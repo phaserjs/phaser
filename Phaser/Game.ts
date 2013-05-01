@@ -4,6 +4,7 @@
 /// <reference path="CameraManager.ts" />
 /// <reference path="Collision.ts" />
 /// <reference path="DynamicTexture.ts" />
+/// <reference path="FXManager.ts" />
 /// <reference path="GameMath.ts" />
 /// <reference path="Group.ts" />
 /// <reference path="Loader.ts" />

@@ -920,19 +920,6 @@ var Phaser;
             this._target = null;
             this._sx = 0;
             this._sy = 0;
-            this._fxFlashComplete = null;
-            this._fxFlashDuration = 0;
-            this._fxFlashAlpha = 0;
-            this._fxFadeComplete = null;
-            this._fxFadeDuration = 0;
-            this._fxFadeAlpha = 0;
-            this._fxShakeIntensity = 0;
-            this._fxShakeDuration = 0;
-            this._fxShakeComplete = null;
-            this._fxShakeOffset = new Phaser.MicroPoint(0, 0);
-            this._fxShakeDirection = 0;
-            this._fxShakePrevX = 0;
-            this._fxShakePrevY = 0;
             this.scale = new Phaser.MicroPoint(1, 1);
             this.scroll = new Phaser.MicroPoint(0, 0);
             this.bounds = null;
@@ -958,6 +945,7 @@ var Phaser;
             this.ID = id;
             this._stageX = x;
             this._stageY = y;
+            this.fx = new Phaser.FXManager(this._game, this);
             //  The view into the world canvas we wish to render
             this.worldView = new Phaser.Rectangle(0, 0, width, height);
             this.checkClip();
@@ -966,107 +954,6 @@ var Phaser;
         Camera.STYLE_PLATFORMER = 1;
         Camera.STYLE_TOPDOWN = 2;
         Camera.STYLE_TOPDOWN_TIGHT = 3;
-        Camera.SHAKE_BOTH_AXES = 0;
-        Camera.SHAKE_HORIZONTAL_ONLY = 1;
-        Camera.SHAKE_VERTICAL_ONLY = 2;
-        Camera.prototype.flash = /**
-        * The camera is filled with this color and returns to normal at the given duration.
-        *
-        * @param	Color		The color you want to use in 0xRRGGBB format, i.e. 0xffffff for white.
-        * @param	Duration	How long it takes for the flash to fade.
-        * @param	OnComplete	An optional function you want to run when the flash finishes. Set to null for no callback.
-        * @param	Force		Force an already running flash effect to reset.
-        */
-        function (color, duration, onComplete, force) {
-            if (typeof color === "undefined") { color = 0xffffff; }
-            if (typeof duration === "undefined") { duration = 1; }
-            if (typeof onComplete === "undefined") { onComplete = null; }
-            if (typeof force === "undefined") { force = false; }
-            if(force === false && this._fxFlashAlpha > 0) {
-                //  You can't flash again unless you force it
-                return;
-            }
-            if(duration <= 0) {
-                duration = 1;
-            }
-            var red = color >> 16 & 0xFF;
-            var green = color >> 8 & 0xFF;
-            var blue = color & 0xFF;
-            this._fxFlashColor = 'rgba(' + red + ',' + green + ',' + blue + ',';
-            this._fxFlashDuration = duration;
-            this._fxFlashAlpha = 1;
-            this._fxFlashComplete = onComplete;
-        };
-        Camera.prototype.fade = /**
-        * The camera is gradually filled with this color.
-        *
-        * @param	Color		The color you want to use in 0xRRGGBB format, i.e. 0xffffff for white.
-        * @param	Duration	How long it takes for the flash to fade.
-        * @param	OnComplete	An optional function you want to run when the flash finishes. Set to null for no callback.
-        * @param	Force		Force an already running flash effect to reset.
-        */
-        function (color, duration, onComplete, force) {
-            if (typeof color === "undefined") { color = 0x000000; }
-            if (typeof duration === "undefined") { duration = 1; }
-            if (typeof onComplete === "undefined") { onComplete = null; }
-            if (typeof force === "undefined") { force = false; }
-            if(force === false && this._fxFadeAlpha > 0) {
-                //  You can't fade again unless you force it
-                return;
-            }
-            if(duration <= 0) {
-                duration = 1;
-            }
-            var red = color >> 16 & 0xFF;
-            var green = color >> 8 & 0xFF;
-            var blue = color & 0xFF;
-            this._fxFadeColor = 'rgba(' + red + ',' + green + ',' + blue + ',';
-            this._fxFadeDuration = duration;
-            this._fxFadeAlpha = 0.01;
-            this._fxFadeComplete = onComplete;
-        };
-        Camera.prototype.shake = /**
-        * A simple screen-shake effect.
-        *
-        * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
-        * @param	Duration	The length in seconds that the shaking effect should last.
-        * @param	OnComplete	A function you want to run when the shake effect finishes.
-        * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-        * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
-        */
-        function (intensity, duration, onComplete, force, direction) {
-            if (typeof intensity === "undefined") { intensity = 0.05; }
-            if (typeof duration === "undefined") { duration = 0.5; }
-            if (typeof onComplete === "undefined") { onComplete = null; }
-            if (typeof force === "undefined") { force = true; }
-            if (typeof direction === "undefined") { direction = Camera.SHAKE_BOTH_AXES; }
-            if(!force && ((this._fxShakeOffset.x != 0) || (this._fxShakeOffset.y != 0))) {
-                return;
-            }
-            //  If a shake is not already running we need to store the offsets here
-            if(this._fxShakeOffset.x == 0 && this._fxShakeOffset.y == 0) {
-                this._fxShakePrevX = this._stageX;
-                this._fxShakePrevY = this._stageY;
-            }
-            this._fxShakeIntensity = intensity;
-            this._fxShakeDuration = duration;
-            this._fxShakeComplete = onComplete;
-            this._fxShakeDirection = direction;
-            this._fxShakeOffset.setTo(0, 0);
-        };
-        Camera.prototype.stopFX = /**
-        * Just turns off all the camera effects instantly.
-        */
-        function () {
-            this._fxFlashAlpha = 0;
-            this._fxFadeAlpha = 0;
-            if(this._fxShakeDuration !== 0) {
-                this._fxShakeDuration = 0;
-                this._fxShakeOffset.setTo(0, 0);
-                this._stageX = this._fxShakePrevX;
-                this._stageY = this._fxShakePrevY;
-            }
-        };
         Camera.prototype.follow = function (target, style) {
             if (typeof style === "undefined") { style = Camera.STYLE_LOCKON; }
             this._target = target;
@@ -1124,6 +1011,7 @@ var Phaser;
             this.update();
         };
         Camera.prototype.update = function () {
+            this.fx.preUpdate();
             if(this._target !== null) {
                 if(this.deadzone == null) {
                     this.focusOnXY(this._target.x + this._target.origin.x, this._target.y + this._target.origin.y);
@@ -1166,73 +1054,22 @@ var Phaser;
             }
             this.worldView.x = this.scroll.x;
             this.worldView.y = this.scroll.y;
-            //console.log(this.worldView.width, this.worldView.height);
             //  Input values
             this.inputX = this.worldView.x + this._game.input.x;
             this.inputY = this.worldView.y + this._game.input.y;
-            //  Update the Flash effect
-            if(this._fxFlashAlpha > 0) {
-                this._fxFlashAlpha -= this._game.time.elapsed / this._fxFlashDuration;
-                this._fxFlashAlpha = this._game.math.roundTo(this._fxFlashAlpha, -2);
-                if(this._fxFlashAlpha <= 0) {
-                    this._fxFlashAlpha = 0;
-                    if(this._fxFlashComplete !== null) {
-                        this._fxFlashComplete();
-                    }
-                }
-            }
-            //  Update the Fade effect
-            if(this._fxFadeAlpha > 0) {
-                this._fxFadeAlpha += this._game.time.elapsed / this._fxFadeDuration;
-                this._fxFadeAlpha = this._game.math.roundTo(this._fxFadeAlpha, -2);
-                if(this._fxFadeAlpha >= 1) {
-                    this._fxFadeAlpha = 1;
-                    if(this._fxFadeComplete !== null) {
-                        this._fxFadeComplete();
-                    }
-                }
-            }
-            //  Update the "shake" special effect
-            if(this._fxShakeDuration > 0) {
-                this._fxShakeDuration -= this._game.time.elapsed;
-                this._fxShakeDuration = this._game.math.roundTo(this._fxShakeDuration, -2);
-                if(this._fxShakeDuration <= 0) {
-                    this._fxShakeDuration = 0;
-                    this._fxShakeOffset.setTo(0, 0);
-                    this._stageX = this._fxShakePrevX;
-                    this._stageY = this._fxShakePrevY;
-                    if(this._fxShakeComplete != null) {
-                        this._fxShakeComplete();
-                    }
-                } else {
-                    if((this._fxShakeDirection == Camera.SHAKE_BOTH_AXES) || (this._fxShakeDirection == Camera.SHAKE_HORIZONTAL_ONLY)) {
-                        //this._fxShakeOffset.x = ((this._game.math.random() * this._fxShakeIntensity * this.worldView.width * 2 - this._fxShakeIntensity * this.worldView.width) * this._zoom;
-                        this._fxShakeOffset.x = (this._game.math.random() * this._fxShakeIntensity * this.worldView.width * 2 - this._fxShakeIntensity * this.worldView.width);
-                    }
-                    if((this._fxShakeDirection == Camera.SHAKE_BOTH_AXES) || (this._fxShakeDirection == Camera.SHAKE_VERTICAL_ONLY)) {
-                        //this._fxShakeOffset.y = (this._game.math.random() * this._fxShakeIntensity * this.worldView.height * 2 - this._fxShakeIntensity * this.worldView.height) * this._zoom;
-                        this._fxShakeOffset.y = (this._game.math.random() * this._fxShakeIntensity * this.worldView.height * 2 - this._fxShakeIntensity * this.worldView.height);
-                    }
-                }
-            }
+            this.fx.postUpdate();
         };
         Camera.prototype.render = function () {
             if(this.visible === false || this.alpha < 0.1) {
                 return;
             }
-            if((this._fxShakeOffset.x != 0) || (this._fxShakeOffset.y != 0)) {
-                //this._stageX = this._fxShakePrevX + (this.worldView.halfWidth * this._zoom) + this._fxShakeOffset.x;
-                //this._stageY = this._fxShakePrevY + (this.worldView.halfHeight * this._zoom) + this._fxShakeOffset.y;
-                this._stageX = this._fxShakePrevX + (this.worldView.halfWidth) + this._fxShakeOffset.x;
-                this._stageY = this._fxShakePrevY + (this.worldView.halfHeight) + this._fxShakeOffset.y;
-                //console.log('shake', this._fxShakeDuration, this._fxShakeIntensity, this._fxShakeOffset.x, this._fxShakeOffset.y);
-                            }
             //if (this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1)
             //{
             //this._game.stage.context.save();
             //}
-            //  It may be safe/quicker to just save the context every frame regardless
+            //  It may be safer/quicker to just save the context every frame regardless (needs testing on mobile)
             this._game.stage.context.save();
+            this.fx.preRender(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
             if(this.alpha !== 1) {
                 this._game.stage.context.globalAlpha = this.alpha;
             }
@@ -1274,6 +1111,7 @@ var Phaser;
                 this._game.stage.context.shadowOffsetX = 0;
                 this._game.stage.context.shadowOffsetY = 0;
             }
+            this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
             //  Clip the camera so we don't get sprites appearing outside the edges
             if(this._clip) {
                 this._game.stage.context.beginPath();
@@ -1288,24 +1126,14 @@ var Phaser;
                 this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
                 this._game.stage.context.stroke();
             }
-            //  "Flash" FX
-            if(this._fxFlashAlpha > 0) {
-                this._game.stage.context.fillStyle = this._fxFlashColor + this._fxFlashAlpha + ')';
-                this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-            }
-            //  "Fade" FX
-            if(this._fxFadeAlpha > 0) {
-                this._game.stage.context.fillStyle = this._fxFadeColor + this._fxFadeAlpha + ')';
-                this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-            }
             //  Scale off
             if(this.scale.x !== 1 || this.scale.y !== 1) {
                 this._game.stage.context.scale(1, 1);
             }
+            this.fx.postRender(this, this._sx, this._sy, this.worldView.width, this.worldView.height);
             if(this._rotation !== 0 || this._clip) {
                 this._game.stage.context.translate(0, 0);
             }
-            //  maybe just do this every frame regardless?
             this._game.stage.context.restore();
             if(this.alpha !== 1) {
                 this._game.stage.context.globalAlpha = 1;
@@ -1335,8 +1163,7 @@ var Phaser;
             this.worldView.width = width;
             this.worldView.height = height;
             this.checkClip();
-            //console.log('Camera setSize', width, height);
-                    };
+        };
         Camera.prototype.renderDebugInfo = function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             this._game.stage.context.fillStyle = color;
@@ -7626,7 +7453,7 @@ var Phaser;
 *
 * Richard Davey (@photonstorm)
 *
-* Many thanks to Adam Saltsman (@ADAMATOMIC) for the original Flixel AS3 code on which Phaser is based.
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel on which Phaser took a lot of inspiration.
 *
 * "If you want your children to be intelligent,  read them fairy tales."
 * "If you want them to be more intelligent, read them more fairy tales."
@@ -11750,12 +11577,261 @@ var Phaser;
     //  Delete tiles of certain type
     //  Erase tiles
     })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../geom/Quad.ts" />
+/**
+* Phaser - ScrollRegion
+*
+* Creates a scrolling region within a ScrollZone.
+* It is scrolled via the scrollSpeed.x/y properties.
+*/
+var Phaser;
+(function (Phaser) {
+    var ScrollRegion = (function () {
+        function ScrollRegion(x, y, width, height, speedX, speedY) {
+            this._anchorWidth = 0;
+            this._anchorHeight = 0;
+            this._inverseWidth = 0;
+            this._inverseHeight = 0;
+            this.visible = true;
+            //	Our seamless scrolling quads
+            this._A = new Phaser.Quad(x, y, width, height);
+            this._B = new Phaser.Quad(x, y, width, height);
+            this._C = new Phaser.Quad(x, y, width, height);
+            this._D = new Phaser.Quad(x, y, width, height);
+            this._scroll = new Phaser.MicroPoint();
+            this._bounds = new Phaser.Quad(x, y, width, height);
+            this.scrollSpeed = new Phaser.MicroPoint(speedX, speedY);
+        }
+        ScrollRegion.prototype.update = function (delta) {
+            this._scroll.x += this.scrollSpeed.x;
+            this._scroll.y += this.scrollSpeed.y;
+            if(this._scroll.x > this._bounds.right) {
+                this._scroll.x = this._bounds.x;
+            }
+            if(this._scroll.x < this._bounds.x) {
+                this._scroll.x = this._bounds.right;
+            }
+            if(this._scroll.y > this._bounds.bottom) {
+                this._scroll.y = this._bounds.y;
+            }
+            if(this._scroll.y < this._bounds.y) {
+                this._scroll.y = this._bounds.bottom;
+            }
+            //	Anchor Dimensions
+            this._anchorWidth = (this._bounds.width - this._scroll.x) + this._bounds.x;
+            this._anchorHeight = (this._bounds.height - this._scroll.y) + this._bounds.y;
+            if(this._anchorWidth > this._bounds.width) {
+                this._anchorWidth = this._bounds.width;
+            }
+            if(this._anchorHeight > this._bounds.height) {
+                this._anchorHeight = this._bounds.height;
+            }
+            this._inverseWidth = this._bounds.width - this._anchorWidth;
+            this._inverseHeight = this._bounds.height - this._anchorHeight;
+            //	Quad A
+            this._A.setTo(this._scroll.x, this._scroll.y, this._anchorWidth, this._anchorHeight);
+            //	Quad B
+            this._B.y = this._scroll.y;
+            this._B.width = this._inverseWidth;
+            this._B.height = this._anchorHeight;
+            //	Quad C
+            this._C.x = this._scroll.x;
+            this._C.width = this._anchorWidth;
+            this._C.height = this._inverseHeight;
+            //	Quad D
+            this._D.width = this._inverseWidth;
+            this._D.height = this._inverseHeight;
+        };
+        ScrollRegion.prototype.render = function (context, texture, dx, dy, dw, dh) {
+            if(this.visible == false) {
+                return;
+            }
+            //  dx/dy are the world coordinates to render the FULL ScrollZone into.
+            //  This ScrollRegion may be smaller than that and offset from the dx/dy coordinates.
+            this.crop(context, texture, this._A.x, this._A.y, this._A.width, this._A.height, dx, dy, dw, dh, 0, 0);
+            this.crop(context, texture, this._B.x, this._B.y, this._B.width, this._B.height, dx, dy, dw, dh, this._A.width, 0);
+            this.crop(context, texture, this._C.x, this._C.y, this._C.width, this._C.height, dx, dy, dw, dh, 0, this._A.height);
+            this.crop(context, texture, this._D.x, this._D.y, this._D.width, this._D.height, dx, dy, dw, dh, this._C.width, this._A.height);
+            //context.fillStyle = 'rgb(255,255,255)';
+            //context.font = '18px Arial';
+            //context.fillText('QuadA: ' + this._A.toString(), 32, 450);
+            //context.fillText('QuadB: ' + this._B.toString(), 32, 480);
+            //context.fillText('QuadC: ' + this._C.toString(), 32, 510);
+            //context.fillText('QuadD: ' + this._D.toString(), 32, 540);
+                    };
+        ScrollRegion.prototype.crop = function (context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
+            offsetX += destX;
+            offsetY += destY;
+            if(srcW > (destX + destW) - offsetX) {
+                srcW = (destX + destW) - offsetX;
+            }
+            if(srcH > (destY + destH) - offsetY) {
+                srcH = (destY + destH) - offsetY;
+            }
+            srcX = Math.floor(srcX);
+            srcY = Math.floor(srcY);
+            srcW = Math.floor(srcW);
+            srcH = Math.floor(srcH);
+            offsetX = Math.floor(offsetX + this._bounds.x);
+            offsetY = Math.floor(offsetY + this._bounds.y);
+            if(srcW > 0 && srcH > 0) {
+                context.drawImage(texture, srcX, srcY, srcW, srcH, offsetX, offsetY, srcW, srcH);
+            }
+        };
+        return ScrollRegion;
+    })();
+    Phaser.ScrollRegion = ScrollRegion;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../geom/Quad.ts" />
+/// <reference path="ScrollRegion.ts" />
+/**
+* Phaser - ScrollZone
+*
+* Creates a scrolling region of the given width and height from an image in the cache.
+* The ScrollZone can be positioned anywhere in-world like a normal game object, re-act to physics, collision, etc.
+* The image within it is scrolled via ScrollRegions and their scrollSpeed.x/y properties.
+* If you create a scroll zone larger than the given source image it will create a DynamicTexture and fill it with a pattern of the source image.
+*/
+var Phaser;
+(function (Phaser) {
+    var ScrollZone = (function (_super) {
+        __extends(ScrollZone, _super);
+        function ScrollZone(game, key, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
+                _super.call(this, game, x, y, width, height);
+            this._dynamicTexture = null;
+            //  local rendering related temp vars to help avoid gc spikes
+            this._dx = 0;
+            this._dy = 0;
+            this._dw = 0;
+            this._dh = 0;
+            this.flipped = false;
+            this.regions = [];
+            if(this._game.cache.getImage(key)) {
+                this._texture = this._game.cache.getImage(key);
+                this.width = this._texture.width;
+                this.height = this._texture.height;
+                if(width > this._texture.width || height > this._texture.height) {
+                    //  Create our repeating texture (as the source image wasn't large enough for the requested size)
+                    this.createRepeatingTexture(width, height);
+                    this.width = width;
+                    this.height = height;
+                }
+                //  Create a default ScrollRegion at the requested size
+                this.addRegion(0, 0, this.width, this.height);
+                //  If the zone is smaller than the image itself then shrink the bounds
+                if((width < this._texture.width || height < this._texture.height) && width !== 0 && height !== 0) {
+                    this.width = width;
+                    this.height = height;
+                }
+            }
+        }
+        ScrollZone.prototype.addRegion = function (x, y, width, height, speedX, speedY) {
+            if (typeof speedX === "undefined") { speedX = 0; }
+            if (typeof speedY === "undefined") { speedY = 0; }
+            if(x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height) {
+                throw Error('Invalid ScrollRegion defined. Cannot be larger than parent ScrollZone');
+                return;
+            }
+            this.currentRegion = new Phaser.ScrollRegion(x, y, width, height, speedX, speedY);
+            this.regions.push(this.currentRegion);
+            return this.currentRegion;
+        };
+        ScrollZone.prototype.setSpeed = function (x, y) {
+            if(this.currentRegion) {
+                this.currentRegion.scrollSpeed.setTo(x, y);
+            }
+            return this;
+        };
+        ScrollZone.prototype.update = function () {
+            for(var i = 0; i < this.regions.length; i++) {
+                this.regions[i].update(this._game.time.delta);
+            }
+        };
+        ScrollZone.prototype.inCamera = function (camera) {
+            if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
+                this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
+                this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
+                this._dw = this.bounds.width * this.scale.x;
+                this._dh = this.bounds.height * this.scale.y;
+                return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
+            } else {
+                return camera.intersects(this.bounds, this.bounds.length);
+            }
+        };
+        ScrollZone.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
+            //  Render checks
+            if(this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
+                return false;
+            }
+            //  Alpha
+            if(this.alpha !== 1) {
+                var globalAlpha = this._game.stage.context.globalAlpha;
+                this._game.stage.context.globalAlpha = this.alpha;
+            }
+            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
+            this._dw = this.bounds.width * this.scale.x;
+            this._dh = this.bounds.height * this.scale.y;
+            //	Apply camera difference
+            if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
+                this._dx -= (camera.worldView.x * this.scrollFactor.x);
+                this._dy -= (camera.worldView.y * this.scrollFactor.y);
+            }
+            //	Rotation - needs to work from origin point really, but for now from center
+            if(this.angle !== 0 || this.flipped == true) {
+                this._game.stage.context.save();
+                this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+                if(this.angle !== 0) {
+                    this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+                }
+                this._dx = -(this._dw / 2);
+                this._dy = -(this._dh / 2);
+                if(this.flipped == true) {
+                    this._game.stage.context.scale(-1, 1);
+                }
+            }
+            this._dx = Math.round(this._dx);
+            this._dy = Math.round(this._dy);
+            this._dw = Math.round(this._dw);
+            this._dh = Math.round(this._dh);
+            for(var i = 0; i < this.regions.length; i++) {
+                if(this._dynamicTexture) {
+                    this.regions[i].render(this._game.stage.context, this._dynamicTexture.canvas, this._dx, this._dy, this._dw, this._dh);
+                } else {
+                    this.regions[i].render(this._game.stage.context, this._texture, this._dx, this._dy, this._dw, this._dh);
+                }
+            }
+            if(globalAlpha > -1) {
+                this._game.stage.context.globalAlpha = globalAlpha;
+            }
+            return true;
+        };
+        ScrollZone.prototype.createRepeatingTexture = function (regionWidth, regionHeight) {
+            //	Work out how many we'll need of the source image to make it tile properly
+            var tileWidth = Math.ceil(this._texture.width / regionWidth) * regionWidth;
+            var tileHeight = Math.ceil(this._texture.height / regionHeight) * regionHeight;
+            this._dynamicTexture = new Phaser.DynamicTexture(this._game, tileWidth, tileHeight);
+            this._dynamicTexture.context.rect(0, 0, tileWidth, tileHeight);
+            this._dynamicTexture.context.fillStyle = this._dynamicTexture.context.createPattern(this._texture, "repeat");
+            this._dynamicTexture.context.fill();
+        };
+        return ScrollZone;
+    })(Phaser.GameObject);
+    Phaser.ScrollZone = ScrollZone;    
+})(Phaser || (Phaser = {}));
 /// <reference path="AnimationManager.ts" />
 /// <reference path="Basic.ts" />
 /// <reference path="Cache.ts" />
 /// <reference path="CameraManager.ts" />
 /// <reference path="Collision.ts" />
 /// <reference path="DynamicTexture.ts" />
+/// <reference path="FXManager.ts" />
 /// <reference path="GameMath.ts" />
 /// <reference path="Group.ts" />
 /// <reference path="Loader.ts" />
@@ -12104,253 +12180,143 @@ var Phaser;
     })();
     Phaser.Game = Game;    
 })(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="../geom/Quad.ts" />
+/// <reference path="Game.ts" />
 /**
-* Phaser - ScrollRegion
+* Phaser - FXManager
 *
-* Creates a scrolling region within a ScrollZone.
-* It is scrolled via the scrollSpeed.x/y properties.
+* The FXManager controls all special effects applied to game objects such as Cameras.
 */
 var Phaser;
 (function (Phaser) {
-    var ScrollRegion = (function () {
-        function ScrollRegion(x, y, width, height, speedX, speedY) {
-            this._anchorWidth = 0;
-            this._anchorHeight = 0;
-            this._inverseWidth = 0;
-            this._inverseHeight = 0;
+    var FXManager = (function () {
+        function FXManager(game, parent) {
+            this._game = game;
+            this._parent = parent;
+            this._fx = [];
+            this.active = true;
             this.visible = true;
-            //	Our seamless scrolling quads
-            this._A = new Phaser.Quad(x, y, width, height);
-            this._B = new Phaser.Quad(x, y, width, height);
-            this._C = new Phaser.Quad(x, y, width, height);
-            this._D = new Phaser.Quad(x, y, width, height);
-            this._scroll = new Phaser.MicroPoint();
-            this._bounds = new Phaser.Quad(x, y, width, height);
-            this.scrollSpeed = new Phaser.MicroPoint(speedX, speedY);
         }
-        ScrollRegion.prototype.update = function (delta) {
-            this._scroll.x += this.scrollSpeed.x;
-            this._scroll.y += this.scrollSpeed.y;
-            if(this._scroll.x > this._bounds.right) {
-                this._scroll.x = this._bounds.x;
-            }
-            if(this._scroll.x < this._bounds.x) {
-                this._scroll.x = this._bounds.right;
-            }
-            if(this._scroll.y > this._bounds.bottom) {
-                this._scroll.y = this._bounds.y;
-            }
-            if(this._scroll.y < this._bounds.y) {
-                this._scroll.y = this._bounds.bottom;
-            }
-            //	Anchor Dimensions
-            this._anchorWidth = (this._bounds.width - this._scroll.x) + this._bounds.x;
-            this._anchorHeight = (this._bounds.height - this._scroll.y) + this._bounds.y;
-            if(this._anchorWidth > this._bounds.width) {
-                this._anchorWidth = this._bounds.width;
-            }
-            if(this._anchorHeight > this._bounds.height) {
-                this._anchorHeight = this._bounds.height;
-            }
-            this._inverseWidth = this._bounds.width - this._anchorWidth;
-            this._inverseHeight = this._bounds.height - this._anchorHeight;
-            //	Quad A
-            this._A.setTo(this._scroll.x, this._scroll.y, this._anchorWidth, this._anchorHeight);
-            //	Quad B
-            this._B.y = this._scroll.y;
-            this._B.width = this._inverseWidth;
-            this._B.height = this._anchorHeight;
-            //	Quad C
-            this._C.x = this._scroll.x;
-            this._C.width = this._anchorWidth;
-            this._C.height = this._inverseHeight;
-            //	Quad D
-            this._D.width = this._inverseWidth;
-            this._D.height = this._inverseHeight;
-        };
-        ScrollRegion.prototype.render = function (context, texture, dx, dy, dw, dh) {
-            if(this.visible == false) {
-                return;
-            }
-            //  dx/dy are the world coordinates to render the FULL ScrollZone into.
-            //  This ScrollRegion may be smaller than that and offset from the dx/dy coordinates.
-            this.crop(context, texture, this._A.x, this._A.y, this._A.width, this._A.height, dx, dy, dw, dh, 0, 0);
-            this.crop(context, texture, this._B.x, this._B.y, this._B.width, this._B.height, dx, dy, dw, dh, this._A.width, 0);
-            this.crop(context, texture, this._C.x, this._C.y, this._C.width, this._C.height, dx, dy, dw, dh, 0, this._A.height);
-            this.crop(context, texture, this._D.x, this._D.y, this._D.width, this._D.height, dx, dy, dw, dh, this._C.width, this._A.height);
-            //context.fillStyle = 'rgb(255,255,255)';
-            //context.font = '18px Arial';
-            //context.fillText('QuadA: ' + this._A.toString(), 32, 450);
-            //context.fillText('QuadB: ' + this._B.toString(), 32, 480);
-            //context.fillText('QuadC: ' + this._C.toString(), 32, 510);
-            //context.fillText('QuadD: ' + this._D.toString(), 32, 540);
-                    };
-        ScrollRegion.prototype.crop = function (context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
-            offsetX += destX;
-            offsetY += destY;
-            if(srcW > (destX + destW) - offsetX) {
-                srcW = (destX + destW) - offsetX;
-            }
-            if(srcH > (destY + destH) - offsetY) {
-                srcH = (destY + destH) - offsetY;
-            }
-            srcX = Math.floor(srcX);
-            srcY = Math.floor(srcY);
-            srcW = Math.floor(srcW);
-            srcH = Math.floor(srcH);
-            offsetX = Math.floor(offsetX + this._bounds.x);
-            offsetY = Math.floor(offsetY + this._bounds.y);
-            if(srcW > 0 && srcH > 0) {
-                context.drawImage(texture, srcX, srcY, srcW, srcH, offsetX, offsetY, srcW, srcH);
-            }
-        };
-        return ScrollRegion;
-    })();
-    Phaser.ScrollRegion = ScrollRegion;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="../geom/Quad.ts" />
-/// <reference path="ScrollRegion.ts" />
-/**
-* Phaser - ScrollZone
-*
-* Creates a scrolling region of the given width and height from an image in the cache.
-* The ScrollZone can be positioned anywhere in-world like a normal game object, re-act to physics, collision, etc.
-* The image within it is scrolled via ScrollRegions and their scrollSpeed.x/y properties.
-* If you create a scroll zone larger than the given source image it will create a DynamicTexture and fill it with a pattern of the source image.
-*/
-var Phaser;
-(function (Phaser) {
-    var ScrollZone = (function (_super) {
-        __extends(ScrollZone, _super);
-        function ScrollZone(game, key, x, y, width, height) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof width === "undefined") { width = 0; }
-            if (typeof height === "undefined") { height = 0; }
-                _super.call(this, game, x, y, width, height);
-            this._dynamicTexture = null;
-            //  local rendering related temp vars to help avoid gc spikes
-            this._dx = 0;
-            this._dy = 0;
-            this._dw = 0;
-            this._dh = 0;
-            this.flipped = false;
-            this.regions = [];
-            if(this._game.cache.getImage(key)) {
-                this._texture = this._game.cache.getImage(key);
-                this.width = this._texture.width;
-                this.height = this._texture.height;
-                if(width > this._texture.width || height > this._texture.height) {
-                    //  Create our repeating texture (as the source image wasn't large enough for the requested size)
-                    this.createRepeatingTexture(width, height);
-                    this.width = width;
-                    this.height = height;
-                }
-                //  Create a default ScrollRegion at the requested size
-                this.addRegion(0, 0, this.width, this.height);
-                //  If the zone is smaller than the image itself then shrink the bounds
-                if((width < this._texture.width || height < this._texture.height) && width !== 0 && height !== 0) {
-                    this.width = width;
-                    this.height = height;
-                }
-            }
-        }
-        ScrollZone.prototype.addRegion = function (x, y, width, height, speedX, speedY) {
-            if (typeof speedX === "undefined") { speedX = 0; }
-            if (typeof speedY === "undefined") { speedY = 0; }
-            if(x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height) {
-                throw Error('Invalid ScrollRegion defined. Cannot be larger than parent ScrollZone');
-                return;
-            }
-            this.currentRegion = new Phaser.ScrollRegion(x, y, width, height, speedX, speedY);
-            this.regions.push(this.currentRegion);
-            return this.currentRegion;
-        };
-        ScrollZone.prototype.setSpeed = function (x, y) {
-            if(this.currentRegion) {
-                this.currentRegion.scrollSpeed.setTo(x, y);
-            }
-            return this;
-        };
-        ScrollZone.prototype.update = function () {
-            for(var i = 0; i < this.regions.length; i++) {
-                this.regions[i].update(this._game.time.delta);
-            }
-        };
-        ScrollZone.prototype.inCamera = function (camera) {
-            if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
-                this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
-                this._dw = this.bounds.width * this.scale.x;
-                this._dh = this.bounds.height * this.scale.y;
-                return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
+        FXManager.prototype.add = /**
+        * Adds a new FX to the FXManager.
+        * The effect must be an object with at least one of the following methods: preUpdate, postUpdate, preRender, render or postRender.
+        * A new instance of the effect will be created and a reference to Game will be passed to the object constructor.
+        */
+        function (effect) {
+            var result = false;
+            var newEffect = {
+                effect: {
+                },
+                preUpdate: false,
+                postUpdate: false,
+                preRender: false,
+                render: false,
+                postRender: false
+            };
+            if(typeof effect === 'function') {
+                newEffect.effect = new effect(this._game, this._parent);
             } else {
-                return camera.intersects(this.bounds, this.bounds.length);
+                throw new Error("Invalid object given to Phaser.FXManager.add");
+            }
+            //  Check for methods now to avoid having to do this every loop
+            if(typeof newEffect.effect['preUpdate'] === 'function') {
+                newEffect.preUpdate = true;
+                result = true;
+            }
+            if(typeof newEffect.effect['postUpdate'] === 'function') {
+                newEffect.postUpdate = true;
+                result = true;
+            }
+            if(typeof newEffect.effect['preRender'] === 'function') {
+                newEffect.preRender = true;
+                result = true;
+            }
+            if(typeof newEffect.effect['render'] === 'function') {
+                newEffect.render = true;
+                result = true;
+            }
+            if(typeof newEffect.effect['postRender'] === 'function') {
+                newEffect.postRender = true;
+                result = true;
+            }
+            if(result == true) {
+                this._length = this._fx.push(newEffect);
+                return newEffect.effect;
+            } else {
+                return result;
             }
         };
-        ScrollZone.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
-            //  Render checks
-            if(this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
-                return false;
-            }
-            //  Alpha
-            if(this.alpha !== 1) {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
-            }
-            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
-            this._dw = this.bounds.width * this.scale.x;
-            this._dh = this.bounds.height * this.scale.y;
-            //	Apply camera difference
-            if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
-                this._dx -= (camera.worldView.x * this.scrollFactor.x);
-                this._dy -= (camera.worldView.y * this.scrollFactor.y);
-            }
-            //	Rotation - needs to work from origin point really, but for now from center
-            if(this.angle !== 0 || this.flipped == true) {
-                this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
-                if(this.angle !== 0) {
-                    this._game.stage.context.rotate(this.angle * (Math.PI / 180));
-                }
-                this._dx = -(this._dw / 2);
-                this._dy = -(this._dh / 2);
-                if(this.flipped == true) {
-                    this._game.stage.context.scale(-1, 1);
+        FXManager.prototype.preUpdate = /**
+        * Pre-update is called at the start of the objects update cycle, before any other updates have taken place.
+        */
+        function () {
+            if(this.active) {
+                for(var i = 0; i < this._length; i++) {
+                    if(this._fx[i].preUpdate) {
+                        this._fx[i].effect.preUpdate();
+                    }
                 }
             }
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
-            for(var i = 0; i < this.regions.length; i++) {
-                if(this._dynamicTexture) {
-                    this.regions[i].render(this._game.stage.context, this._dynamicTexture.canvas, this._dx, this._dy, this._dw, this._dh);
-                } else {
-                    this.regions[i].render(this._game.stage.context, this._texture, this._dx, this._dy, this._dw, this._dh);
-                }
-            }
-            if(globalAlpha > -1) {
-                this._game.stage.context.globalAlpha = globalAlpha;
-            }
-            return true;
         };
-        ScrollZone.prototype.createRepeatingTexture = function (regionWidth, regionHeight) {
-            //	Work out how many we'll need of the source image to make it tile properly
-            var tileWidth = Math.ceil(this._texture.width / regionWidth) * regionWidth;
-            var tileHeight = Math.ceil(this._texture.height / regionHeight) * regionHeight;
-            this._dynamicTexture = new Phaser.DynamicTexture(this._game, tileWidth, tileHeight);
-            this._dynamicTexture.context.rect(0, 0, tileWidth, tileHeight);
-            this._dynamicTexture.context.fillStyle = this._dynamicTexture.context.createPattern(this._texture, "repeat");
-            this._dynamicTexture.context.fill();
+        FXManager.prototype.postUpdate = /**
+        * Post-update is called at the end of the objects update cycle, after other update logic has taken place.
+        */
+        function () {
+            if(this.active) {
+                for(var i = 0; i < this._length; i++) {
+                    if(this._fx[i].postUpdate) {
+                        this._fx[i].effect.postUpdate();
+                    }
+                }
+            }
         };
-        return ScrollZone;
-    })(Phaser.GameObject);
-    Phaser.ScrollZone = ScrollZone;    
+        FXManager.prototype.preRender = /**
+        * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
+        * It happens directly AFTER a canvas context.save has happened if added to a Camera.
+        */
+        function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+            if(this.visible) {
+                for(var i = 0; i < this._length; i++) {
+                    if(this._fx[i].preRender) {
+                        this._fx[i].effect.preRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                    }
+                }
+            }
+        };
+        FXManager.prototype.render = /**
+        * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
+        */
+        function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+            if(this.visible) {
+                for(var i = 0; i < this._length; i++) {
+                    if(this._fx[i].preRender) {
+                        this._fx[i].effect.preRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                    }
+                }
+            }
+        };
+        FXManager.prototype.postRender = /**
+        * Post-render is called during the objects render cycle, after the children/image data has been rendered.
+        * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
+        */
+        function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+            if(this.visible) {
+                for(var i = 0; i < this._length; i++) {
+                    if(this._fx[i].postRender) {
+                        this._fx[i].effect.postRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                    }
+                }
+            }
+        };
+        FXManager.prototype.destroy = /**
+        * Clear down this FXManager and null out references
+        */
+        function () {
+            this._game = null;
+            this._fx = null;
+        };
+        return FXManager;
+    })();
+    Phaser.FXManager = FXManager;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
