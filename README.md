@@ -1,7 +1,7 @@
 Phaser
 ======
 
-Version: 0.9.5 - Released: XXX 2013
+Version: 0.9.5 - Released: 2nd May 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -50,6 +50,7 @@ V0.9.5
 * Added TilemapLayer.fillTiles - fills the given region of the map with the tile specified.
 * Added TilemapLayer.randomiseTiles - fills the given region of the map with a random tile from the list specified.
 * Added fun new "map draw" test - reflect those carrots! :)
+* Changed SoundManager class to respect volume on first place (thanks initials and hackmaniac)
 
 Requirements
 ------------

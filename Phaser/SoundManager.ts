@@ -111,7 +111,7 @@ module Phaser {
                     var tempSound: Sound = new Sound(this._context, this._gainNode, null, volume, loop);
 
                     //  this is an async process, so we can return the Sound object anyway, it just won't be playing yet
-                    this.decode(key, () => this.play(key), tempSound);
+                    this.decode(key, () => tempSound.play(), tempSound);
 
                     return tempSound;
                 }

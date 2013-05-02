@@ -54,7 +54,7 @@ module Phaser {
 
             this._buffer = data;
             this.isDecoding = false;
-            this.play();
+            //this.play();
 
         }
 
