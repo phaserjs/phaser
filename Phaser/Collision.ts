@@ -645,10 +645,10 @@ module Phaser {
          * @param tile The Tile to separate
          * @returns {boolean} Whether the objects in fact touched and were separated
          */
-        public static separateTile(object:GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool): bool {
+        public static separateTile(object:GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool, separateX: bool, separateY: bool): bool {
 
-            var separatedX: bool = Collision.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight);
-            var separatedY: bool = Collision.separateTileY(object, x, y, width, height, mass, collideUp, collideDown);
+            var separatedX: bool = Collision.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
+            var separatedY: bool = Collision.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
 
             return separatedX || separatedY;
 
@@ -660,7 +660,7 @@ module Phaser {
          * @param tile The Tile to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
          */
-        public static separateTileX(object:GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool): bool {
+        public static separateTileX(object:GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
 
             //  Can't separate two immovable objects (tiles are always immovable)
             if (object.immovable)
@@ -717,8 +717,12 @@ module Phaser {
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (overlap != 0)
             {
-                object.x = object.x - overlap;
-                object.velocity.x = -(object.velocity.x * object.elasticity);
+                if (separate == true)
+                {
+                    object.x = object.x - overlap;
+                    object.velocity.x = -(object.velocity.x * object.elasticity);
+                }
+
                 Collision.TILE_OVERLAP = true;
                 return true;
             }
@@ -735,7 +739,7 @@ module Phaser {
          * @param tile The second GameObject to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
          */
-        public static separateTileY(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool): bool {
+        public static separateTileY(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
 
             //  Can't separate two immovable objects (tiles are always immovable)
             if (object.immovable)
@@ -792,8 +796,12 @@ module Phaser {
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (overlap != 0)
             {
-                object.y = object.y - overlap;
-                object.velocity.y = -(object.velocity.y * object.elasticity);
+                if (separate == true)
+                {
+                    object.y = object.y - overlap;
+                    object.velocity.y = -(object.velocity.y * object.elasticity);
+                }
+
                 Collision.TILE_OVERLAP = true;
                 return true;
             }

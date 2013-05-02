@@ -152,6 +152,10 @@
     <TypeScriptCompile Include="tilemap\small map.ts" />
     <TypeScriptCompile Include="tilemap\get tile.ts" />
     <TypeScriptCompile Include="tilemap\collision.ts" />
+    <TypeScriptCompile Include="tilemap\collide with tile.ts" />
+    <Content Include="tilemap\collide with tile.js">
+      <DependentUpon>collide with tile.ts</DependentUpon>
+    </Content>
     <Content Include="tilemap\collision.js">
       <DependentUpon>collision.ts</DependentUpon>
     </Content>

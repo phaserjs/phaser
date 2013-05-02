@@ -4827,9 +4827,9 @@ var Phaser;
         * @param tile The Tile to separate
         * @returns {boolean} Whether the objects in fact touched and were separated
         */
-        function separateTile(object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown) {
-            var separatedX = Collision.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight);
-            var separatedY = Collision.separateTileY(object, x, y, width, height, mass, collideUp, collideDown);
+        function separateTile(object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
+            var separatedX = Collision.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
+            var separatedY = Collision.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
             return separatedX || separatedY;
         };
         Collision.separateTileX = /**
@@ -4838,7 +4838,7 @@ var Phaser;
         * @param tile The Tile to separate
         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
         */
-        function separateTileX(object, x, y, width, height, mass, collideLeft, collideRight) {
+        function separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separate) {
             //  Can't separate two immovable objects (tiles are always immovable)
             if(object.immovable) {
                 return false;
@@ -4872,8 +4872,10 @@ var Phaser;
             }
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if(overlap != 0) {
-                object.x = object.x - overlap;
-                object.velocity.x = -(object.velocity.x * object.elasticity);
+                if(separate == true) {
+                    object.x = object.x - overlap;
+                    object.velocity.x = -(object.velocity.x * object.elasticity);
+                }
                 Collision.TILE_OVERLAP = true;
                 return true;
             } else {
@@ -4886,7 +4888,7 @@ var Phaser;
         * @param tile The second GameObject to separate
         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
         */
-        function separateTileY(object, x, y, width, height, mass, collideUp, collideDown) {
+        function separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separate) {
             //  Can't separate two immovable objects (tiles are always immovable)
             if(object.immovable) {
                 return false;
@@ -4921,8 +4923,10 @@ var Phaser;
             // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if(overlap != 0) {
-                object.y = object.y - overlap;
-                object.velocity.y = -(object.velocity.y * object.elasticity);
+                if(separate == true) {
+                    object.y = object.y - overlap;
+                    object.velocity.y = -(object.velocity.y * object.elasticity);
+                }
                 Collision.TILE_OVERLAP = true;
                 return true;
             } else {
@@ -6341,40 +6345,40 @@ var Phaser;
         Group.prototype.remove = /**
         * Removes an object from the group.
         *
-        * @param	Object	The <code>Basic</code> you want to remove.
-        * @param	Splice	Whether the object should be cut from the array entirely or not.
+        * @param	object	The <code>Basic</code> you want to remove.
+        * @param	splice	Whether the object should be cut from the array entirely or not.
         *
         * @return	The removed object.
         */
-        function (Object, Splice) {
-            if (typeof Splice === "undefined") { Splice = false; }
-            var index = this.members.indexOf(Object);
+        function (object, splice) {
+            if (typeof splice === "undefined") { splice = false; }
+            var index = this.members.indexOf(object);
             if((index < 0) || (index >= this.members.length)) {
                 return null;
             }
-            if(Splice) {
+            if(splice) {
                 this.members.splice(index, 1);
                 this.length--;
             } else {
                 this.members[index] = null;
             }
-            return Object;
+            return object;
         };
         Group.prototype.replace = /**
         * Replaces an existing <code>Basic</code> with a new one.
         *
-        * @param	OldObject	The object you want to replace.
-        * @param	NewObject	The new object you want to use instead.
+        * @param	oldObject	The object you want to replace.
+        * @param	newObject	The new object you want to use instead.
         *
         * @return	The new object.
         */
-        function (OldObject, NewObject) {
-            var index = this.members.indexOf(OldObject);
+        function (oldObject, newObject) {
+            var index = this.members.indexOf(oldObject);
             if((index < 0) || (index >= this.members.length)) {
                 return null;
             }
-            this.members[index] = NewObject;
-            return NewObject;
+            this.members[index] = newObject;
+            return newObject;
         };
         Group.prototype.sort = /**
         * Call this function to sort the group according to a particular value and order.
@@ -6383,14 +6387,14 @@ var Phaser;
         * <code>State.update()</code> override.  To sort all existing objects after
         * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
         *
-        * @param	Index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
-        * @param	Order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
+        * @param	index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
+        * @param	order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
         */
-        function (Index, Order) {
-            if (typeof Index === "undefined") { Index = "y"; }
-            if (typeof Order === "undefined") { Order = Group.ASCENDING; }
-            this._sortIndex = Index;
-            this._sortOrder = Order;
+        function (index, order) {
+            if (typeof index === "undefined") { index = "y"; }
+            if (typeof order === "undefined") { order = Group.ASCENDING; }
+            this._sortIndex = index;
+            this._sortOrder = order;
             this.members.sort(this.sortHandler);
         };
         Group.prototype.setAll = /**
@@ -11151,6 +11155,7 @@ var Phaser;
             this.boundsInTiles = new Phaser.Rectangle();
             //this.scrollFactor = new MicroPoint(1, 1);
             this.mapData = [];
+            this._tempTileBlock = [];
             this._texture = this._game.cache.getImage(key);
         }
         TilemapLayer.prototype.getTileFromWorldXY = function (x, y) {
@@ -11168,15 +11173,19 @@ var Phaser;
             this._tempTileY = this._game.math.snapToFloor(object.bounds.y, this.tileHeight) / this.tileHeight;
             this._tempTileW = (this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
             this._tempTileH = (this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
-            //  Loop through the tiles we've got and check overlaps accordingly
-            var tiles = this.getTileBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH);
+            //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
+            this.getTileBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH);
             Phaser.Collision.TILE_OVERLAP = false;
-            for(var r = 0; r < tiles.length; r++) {
-                if(tiles[r].tile.allowCollisions != Phaser.Collision.NONE) {
-                    Phaser.Collision.separateTile(object, tiles[r].x * this.tileWidth, tiles[r].y * this.tileHeight, this.tileWidth, this.tileHeight, tiles[r].tile.mass, tiles[r].tile.collideLeft, tiles[r].tile.collideRight, tiles[r].tile.collideUp, tiles[r].tile.collideDown);
+            for(var r = 0; r < this._tempTileBlock.length; r++) {
+                if(Phaser.Collision.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true) {
+                    this._tempBlockResults.push({
+                        x: this._tempTileBlock[r].x,
+                        y: this._tempTileBlock[r].y,
+                        tile: this._tempTileBlock[r].tile
+                    });
                 }
             }
-            return Phaser.Collision.TILE_OVERLAP;
+            return this._tempBlockResults;
         };
         TilemapLayer.prototype.getTileBlock = function (x, y, width, height) {
             if(x < 0) {
@@ -11191,11 +11200,13 @@ var Phaser;
             if(height > this.heightInTiles) {
                 height = this.heightInTiles;
             }
-            var output = [];
+            this._tempTileBlock = [];
+            this._tempBlockResults = [];
             for(var ty = y; ty < y + height; ty++) {
                 for(var tx = x; tx < x + width; tx++) {
-                    if(this.mapData[ty] && this.mapData[ty][tx]) {
-                        output.push({
+                    //  We only want to consider the tile for checking if you can actually collide with it
+                    if(this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Phaser.Collision.NONE) {
+                        this._tempTileBlock.push({
                             x: tx,
                             y: ty,
                             tile: this._parent.tiles[this.mapData[ty][tx]]
@@ -11203,7 +11214,6 @@ var Phaser;
                     }
                 }
             }
-            return output;
         };
         TilemapLayer.prototype.getTileIndex = function (x, y) {
             if(y >= 0 && y < this.mapData.length) {
@@ -11350,6 +11360,8 @@ var Phaser;
             this.collideRight = false;
             this.collideUp = false;
             this.collideDown = false;
+            this.separateX = true;
+            this.separateY = true;
             this._game = game;
             this.tilemap = tilemap;
             this.index = index;
@@ -11363,10 +11375,12 @@ var Phaser;
         function () {
             this.tilemap = null;
         };
-        Tile.prototype.setCollision = function (collision, resetCollisions) {
+        Tile.prototype.setCollision = function (collision, resetCollisions, separateX, separateY) {
             if(resetCollisions) {
                 this.resetCollision();
             }
+            this.separateX = separateX;
+            this.separateY = separateY;
             this.allowCollisions = collision;
             if(collision & Phaser.Collision.ANY) {
                 this.collideLeft = true;
@@ -11426,6 +11440,7 @@ var Phaser;
             if (typeof tileWidth === "undefined") { tileWidth = 0; }
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
                 _super.call(this, game);
+            this.collisionCallback = null;
             this.isGroup = false;
             this.tiles = [];
             this.layers = [];
@@ -11522,23 +11537,37 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Tilemap.prototype.setCollisionRange = //  Tile Collision
-        function (start, end, collision, resetCollisions) {
+        Tilemap.prototype.setCollisionCallback = //  Tile Collision
+        function (context, callback) {
+            this.collisionCallbackContext = context;
+            this.collisionCallback = callback;
+        };
+        Tilemap.prototype.setCollisionRange = function (start, end, collision, resetCollisions, separateX, separateY) {
             if (typeof collision === "undefined") { collision = Phaser.Collision.ANY; }
             if (typeof resetCollisions === "undefined") { resetCollisions = false; }
+            if (typeof separateX === "undefined") { separateX = true; }
+            if (typeof separateY === "undefined") { separateY = true; }
             for(var i = start; i < end; i++) {
-                this.tiles[i].setCollision(collision, resetCollisions);
+                this.tiles[i].setCollision(collision, resetCollisions, separateX, separateY);
             }
         };
-        Tilemap.prototype.setCollisionByIndex = function (values, collision, resetCollisions) {
+        Tilemap.prototype.setCollisionByIndex = function (values, collision, resetCollisions, separateX, separateY) {
             if (typeof collision === "undefined") { collision = Phaser.Collision.ANY; }
             if (typeof resetCollisions === "undefined") { resetCollisions = false; }
+            if (typeof separateX === "undefined") { separateX = true; }
+            if (typeof separateY === "undefined") { separateY = true; }
             for(var i = 0; i < values.length; i++) {
-                this.tiles[values[i]].setCollision(collision, resetCollisions);
+                this.tiles[values[i]].setCollision(collision, resetCollisions, separateX, separateY);
             }
         };
-        Tilemap.prototype.getTile = //  Tile Management
-        function (x, y, layer) {
+        Tilemap.prototype.getTileByIndex = //  Tile Management
+        function (value) {
+            if(this.tiles[value]) {
+                return this.tiles[value];
+            }
+            return null;
+        };
+        Tilemap.prototype.getTile = function (x, y, layer) {
             if (typeof layer === "undefined") { layer = 0; }
             return this.tiles[this.layers[layer].getTileIndex(x, y)];
         };
@@ -11554,26 +11583,31 @@ var Phaser;
             return this.currentLayer.getTileOverlaps(object);
         };
         Tilemap.prototype.collide = //  COLLIDE
-        function (objectOrGroup, callback) {
+        function (objectOrGroup, callback, context) {
             if (typeof objectOrGroup === "undefined") { objectOrGroup = null; }
             if (typeof callback === "undefined") { callback = null; }
+            if (typeof context === "undefined") { context = null; }
+            if(callback !== null && context !== null) {
+                this.collisionCallback = callback;
+                this.collisionCallbackContext = context;
+            }
             if(objectOrGroup == null) {
                 objectOrGroup = this._game.world.group;
             }
             //  Group?
             if(objectOrGroup.isGroup == false) {
-                return this.collideGameObject(objectOrGroup);
+                this.collideGameObject(objectOrGroup);
             } else {
                 objectOrGroup.forEachAlive(this, this.collideGameObject, true);
             }
-            return true;
         };
         Tilemap.prototype.collideGameObject = function (object) {
-            if(object == this) {
-                return false;
-            }
-            if(object.immovable == false && object.exists == true && object.allowCollisions != Phaser.Collision.NONE) {
-                return this.collisionLayer.getTileOverlaps(object);
+            if(object !== this && object.immovable == false && object.exists == true && object.allowCollisions != Phaser.Collision.NONE) {
+                this._tempCollisionData = this.collisionLayer.getTileOverlaps(object);
+                if(this.collisionCallback !== null && this._tempCollisionData.length > 0) {
+                    this.collisionCallback.call(this.collisionCallbackContext, object, this._tempCollisionData);
+                }
+                return true;
             } else {
                 return false;
             }

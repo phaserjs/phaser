@@ -321,21 +321,21 @@ module Phaser {
         /**
          * Removes an object from the group.
          * 
-         * @param	Object	The <code>Basic</code> you want to remove.
-         * @param	Splice	Whether the object should be cut from the array entirely or not.
+         * @param	object	The <code>Basic</code> you want to remove.
+         * @param	splice	Whether the object should be cut from the array entirely or not.
          * 
          * @return	The removed object.
          */
-        public remove(Object: Basic, Splice: bool = false): Basic {
+        public remove(object: Basic, splice: bool = false): Basic {
 
-            var index: number = this.members.indexOf(Object);
+            var index: number = this.members.indexOf(object);
 
             if ((index < 0) || (index >= this.members.length))
             {
                 return null;
             }
 
-            if (Splice)
+            if (splice)
             {
                 this.members.splice(index, 1);
                 this.length--;
@@ -345,30 +345,30 @@ module Phaser {
                 this.members[index] = null;
             }
 
-            return Object;
+            return object;
 
         }
 
         /**
          * Replaces an existing <code>Basic</code> with a new one.
          * 
-         * @param	OldObject	The object you want to replace.
-         * @param	NewObject	The new object you want to use instead.
+         * @param	oldObject	The object you want to replace.
+         * @param	newObject	The new object you want to use instead.
          * 
          * @return	The new object.
          */
-        public replace(OldObject: Basic, NewObject: Basic): Basic {
+        public replace(oldObject: Basic, newObject: Basic): Basic {
 
-            var index: number = this.members.indexOf(OldObject);
+            var index: number = this.members.indexOf(oldObject);
 
             if ((index < 0) || (index >= this.members.length))
             {
                 return null;
             }
 
-            this.members[index] = NewObject;
+            this.members[index] = newObject;
 
-            return NewObject;
+            return newObject;
 
         }
 
@@ -379,13 +379,13 @@ module Phaser {
          * <code>State.update()</code> override.  To sort all existing objects after
          * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
          * 
-         * @param	Index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
-         * @param	Order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.  
+         * @param	index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
+         * @param	order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.  
          */
-        public sort(Index: string = "y", Order: number = Group.ASCENDING) {
+        public sort(index: string = "y", order: number = Group.ASCENDING) {
 
-            this._sortIndex = Index;
-            this._sortOrder = Order;
+            this._sortIndex = index;
+            this._sortOrder = order;
             this.members.sort(this.sortHandler);
 
         }

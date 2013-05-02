@@ -43,6 +43,8 @@ module Phaser {
 
         }
 
+        private _tempCollisionData;
+
         public static FORMAT_CSV: number = 0;
         public static FORMAT_TILED_JSON: number = 1;
 
@@ -50,6 +52,8 @@ module Phaser {
         public layers : TilemapLayer[];
         public currentLayer: TilemapLayer;
         public collisionLayer: TilemapLayer;
+        public collisionCallback = null;
+        public collisionCallbackContext;
         public mapFormat: number;
 
         public update() {
@@ -170,25 +174,43 @@ module Phaser {
 
         //  Tile Collision
 
-        public setCollisionRange(start: number, end: number, collision?:number = Collision.ANY, resetCollisions: bool = false) {
+        public setCollisionCallback(context, callback) {
+
+            this.collisionCallbackContext = context;
+            this.collisionCallback = callback;
+
+        }
+
+        public setCollisionRange(start: number, end: number, collision?:number = Collision.ANY, resetCollisions?: bool = false, separateX?: bool = true, separateY?: bool = true) {
 
             for (var i = start; i < end; i++)
             {
-                this.tiles[i].setCollision(collision, resetCollisions);
+                this.tiles[i].setCollision(collision, resetCollisions, separateX, separateY);
             }
 
         }
 
-        public setCollisionByIndex(values:number[], collision?:number = Collision.ANY, resetCollisions: bool = false) {
+        public setCollisionByIndex(values:number[], collision?:number = Collision.ANY, resetCollisions?: bool = false, separateX?: bool = true, separateY?: bool = true) {
 
             for (var i = 0; i < values.length; i++)
             {
-                this.tiles[values[i]].setCollision(collision, resetCollisions);
+                this.tiles[values[i]].setCollision(collision, resetCollisions, separateX, separateY);
             }
 
         }
 
         //  Tile Management
+
+        public getTileByIndex(value: number):Tile {
+
+            if (this.tiles[value])
+            {
+                return this.tiles[value];
+            }
+
+            return null;
+
+        }
 
         public getTile(x: number, y: number, layer?: number = 0):Tile {
 
@@ -215,7 +237,13 @@ module Phaser {
         }
 
         //  COLLIDE
-        public collide(objectOrGroup = null, callback = null): bool {
+        public collide(objectOrGroup = null, callback = null, context = null) {
+
+            if (callback !== null && context !== null)
+            {
+                this.collisionCallback = callback;
+                this.collisionCallbackContext = context;
+            }
 
             if (objectOrGroup == null)
             {
@@ -225,24 +253,27 @@ module Phaser {
             //  Group?
             if (objectOrGroup.isGroup == false)
             {
-                return this.collideGameObject(objectOrGroup);
+                this.collideGameObject(objectOrGroup);
             }
             else
             {
                 objectOrGroup.forEachAlive(this, this.collideGameObject, true);
             }
 
-            return true;
-
         }
 
         public collideGameObject(object: GameObject): bool {
 
-            if (object == this) { return false; }
-
-            if (object.immovable == false && object.exists == true && object.allowCollisions != Collision.NONE)
+            if (object !== this && object.immovable == false && object.exists == true && object.allowCollisions != Collision.NONE)
             {
-                return this.collisionLayer.getTileOverlaps(object);
+                this._tempCollisionData = this.collisionLayer.getTileOverlaps(object);
+
+                if (this.collisionCallback !== null && this._tempCollisionData.length > 0)
+                {
+                    this.collisionCallback.call(this.collisionCallbackContext, object, this._tempCollisionData);
+                }
+
+                return true;
             }
             else
             {
@@ -251,14 +282,12 @@ module Phaser {
 
         }
 
-
         //  Set current layer
         //  Set layer order?
         //  Get block of tiles
         //  Swap tiles around
         //  Delete tiles of certain type
         //  Erase tiles
-
 
     }
 

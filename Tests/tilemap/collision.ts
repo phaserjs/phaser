@@ -54,6 +54,12 @@
 
     function update() {
 
+        //  Collide everything with the map
+        map.collide();
+
+        //  And collide everything in the game :)
+        myGame.collide();
+
         car.velocity.x = 0;
         car.velocity.y = 0;
 
@@ -74,12 +80,6 @@
         {
             car.velocity.y = 200;
         }
-
-        //  Collide everything with the map
-        map.collide();
-
-        //  And collide everything in the game :)
-        myGame.collide();
 
     }
 

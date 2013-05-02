@@ -36,7 +36,13 @@ V0.9.5
 * Fixed offset values being ignored in GeomSprite.renderPoint (thanks bapuna).
 * Added new Mirror Camera FX. Can mirror the camera image horizontally, vertically or both with an optional fill color overlay.
 * Added Camera.disableClipping for when you don't care about things being drawn outside the edge (usful for some FX).
-
+* Updated TilemapLayer so that collision data is now stored in _tempTileBlock to avoid constant array creation during game loop.
+* TilemapLayer.getTileOverlaps() now returns all tiles the object overlapped with rather than just a boolean.
+* Tilemap.collide now optionally takes callback and context parameters which are used if collision occurs.
+* Added Tilemap.collisionCallback and Tilemap.collisionCallbackContext so you can set them once and not re-set them on every call to collide.
+* Collision.separateTile now has 2 extra parameters: separateX and separateY. If true the object will be separated on overlap, otherwise just the overlap boolean result is returned.
+* Added Tile.separateX and Tile.separateY (both true by default), if true an object will be separated from the tile on overlap. Set to false if you don't want a tile to stop an object from moving, you just want it to return collision data to your callback.
+* Added Tilemap.getTileByIndex(value) to access a specific type of tile, rather than by its map index.
 
 
 

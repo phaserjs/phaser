@@ -38,6 +38,9 @@ module Phaser {
         public collideUp: bool = false;
         public collideDown: bool = false;
 
+        public separateX: bool = true;
+        public separateY: bool = true;
+
         /**
          * A reference to the tilemap this tile object belongs to.
          */
@@ -59,12 +62,15 @@ module Phaser {
 
         }
 
-        public setCollision(collision: number, resetCollisions: bool) {
+        public setCollision(collision: number, resetCollisions: bool, separateX: bool, separateY: bool) {
 
             if (resetCollisions)
             {
                 this.resetCollision();
             }
+
+            this.separateX = separateX;
+            this.separateY = separateY;
 
             this.allowCollisions = collision;
 

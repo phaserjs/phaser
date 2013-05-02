@@ -23,6 +23,7 @@ module Phaser {
             //this.scrollFactor = new MicroPoint(1, 1);
 
             this.mapData = [];
+            this._tempTileBlock = [];
             this._texture = this._game.cache.getImage(key);
 
         }
@@ -47,6 +48,8 @@ module Phaser {
         private _tempTileY: number;
         private _tempTileW: number;
         private _tempTileH: number;
+        private _tempTileBlock;
+        private _tempBlockResults;
 
         public name: string;
         public alpha: number = 1;
@@ -95,20 +98,20 @@ module Phaser {
             this._tempTileW = (this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
             this._tempTileH = (this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
 
-            //  Loop through the tiles we've got and check overlaps accordingly
-            var tiles = this.getTileBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH);
+            //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
+            this.getTileBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH);
 
             Collision.TILE_OVERLAP = false;
 
-            for (var r = 0; r < tiles.length; r++)
+            for (var r = 0; r < this._tempTileBlock.length; r++)
             {
-                if (tiles[r].tile.allowCollisions != Collision.NONE)
+                if (Collision.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
                 {
-                    Collision.separateTile(object, tiles[r].x * this.tileWidth, tiles[r].y * this.tileHeight, this.tileWidth, this.tileHeight, tiles[r].tile.mass, tiles[r].tile.collideLeft, tiles[r].tile.collideRight, tiles[r].tile.collideUp, tiles[r].tile.collideDown);
+                    this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
                 }
             }
 
-            return Collision.TILE_OVERLAP;
+            return this._tempBlockResults;
 
         }
 
@@ -134,20 +137,20 @@ module Phaser {
                 height = this.heightInTiles;
             }
 
-            var output = [];
+            this._tempTileBlock = [];
+            this._tempBlockResults = [];
 
             for (var ty = y; ty < y + height; ty++)
             {
                 for (var tx = x; tx < x + width; tx++)
                 {
-                    if (this.mapData[ty] && this.mapData[ty][tx])
+                    //  We only want to consider the tile for checking if you can actually collide with it
+                    if (this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Collision.NONE)
                     {
-                        output.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                        this._tempTileBlock.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
                     }
                 }
             }
-
-            return output;
 
         }
 

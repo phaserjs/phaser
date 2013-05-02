@@ -66,8 +66,8 @@ module Phaser.FX.Camera {
 /**
 * Phaser - FX - Camera - Mirror
 *
-* A Template FX file you can use to create your own Camera FX.
-* If you don't use any of the methods below (i.e. preUpdate, render, etc) then DELETE THEM to avoid un-necessary calls by the FXManager.
+* Creates a mirror effect for a camera.
+* Can mirror the camera image horizontally, vertically or both with an optional fill color overlay.
 */
 module Phaser.FX.Camera {
     class Mirror {

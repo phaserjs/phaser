@@ -2476,21 +2476,21 @@ module Phaser {
         * @param tile The Tile to separate
         * @returns {boolean} Whether the objects in fact touched and were separated
         */
-        static separateTile(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool): bool;
+        static separateTile(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool, separateX: bool, separateY: bool): bool;
         /**
         * Separates the two objects on their x axis
         * @param object The GameObject to separate
         * @param tile The Tile to separate
         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
         */
-        static separateTileX(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool): bool;
+        static separateTileX(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool;
         /**
         * Separates the two objects on their y axis
         * @param object The first GameObject to separate
         * @param tile The second GameObject to separate
         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
         */
-        static separateTileY(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool): bool;
+        static separateTileY(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool;
         /**
         * Separates the two objects on their x axis
         * @param object1 The first GameObject to separate
@@ -3180,21 +3180,21 @@ module Phaser {
         /**
         * Removes an object from the group.
         *
-        * @param	Object	The <code>Basic</code> you want to remove.
-        * @param	Splice	Whether the object should be cut from the array entirely or not.
+        * @param	object	The <code>Basic</code> you want to remove.
+        * @param	splice	Whether the object should be cut from the array entirely or not.
         *
         * @return	The removed object.
         */
-        public remove(Object: Basic, Splice?: bool): Basic;
+        public remove(object: Basic, splice?: bool): Basic;
         /**
         * Replaces an existing <code>Basic</code> with a new one.
         *
-        * @param	OldObject	The object you want to replace.
-        * @param	NewObject	The new object you want to use instead.
+        * @param	oldObject	The object you want to replace.
+        * @param	newObject	The new object you want to use instead.
         *
         * @return	The new object.
         */
-        public replace(OldObject: Basic, NewObject: Basic): Basic;
+        public replace(oldObject: Basic, newObject: Basic): Basic;
         /**
         * Call this function to sort the group according to a particular value and order.
         * For example, to sort game objects for Zelda-style overlaps you might call
@@ -3202,10 +3202,10 @@ module Phaser {
         * <code>State.update()</code> override.  To sort all existing objects after
         * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
         *
-        * @param	Index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
-        * @param	Order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
+        * @param	index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
+        * @param	order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
         */
-        public sort(Index?: string, Order?: number): void;
+        public sort(index?: string, order?: number): void;
         /**
         * Go through and set the specified variable to the specified value on all members of the group.
         *
@@ -5344,6 +5344,8 @@ module Phaser {
         private _tempTileY;
         private _tempTileW;
         private _tempTileH;
+        private _tempTileBlock;
+        private _tempBlockResults;
         public name: string;
         public alpha: number;
         public exists: bool;
@@ -5362,8 +5364,8 @@ module Phaser {
         public tileMargin: number;
         public tileSpacing: number;
         public getTileFromWorldXY(x: number, y: number): number;
-        public getTileOverlaps(object: GameObject): bool;
-        public getTileBlock(x: number, y: number, width: number, height: number): any[];
+        public getTileOverlaps(object: GameObject);
+        public getTileBlock(x: number, y: number, width: number, height: number): void;
         public getTileIndex(x: number, y: number): number;
         public addColumn(column): void;
         public updateBounds(): void;
@@ -5390,6 +5392,8 @@ module Phaser {
         public collideRight: bool;
         public collideUp: bool;
         public collideDown: bool;
+        public separateX: bool;
+        public separateY: bool;
         /**
         * A reference to the tilemap this tile object belongs to.
         */
@@ -5404,7 +5408,7 @@ module Phaser {
         * Clean up memory.
         */
         public destroy(): void;
-        public setCollision(collision: number, resetCollisions: bool): void;
+        public setCollision(collision: number, resetCollisions: bool, separateX: bool, separateY: bool): void;
         public resetCollision(): void;
         /**
         * Returns a string representation of this object.
@@ -5423,12 +5427,15 @@ module Phaser {
 module Phaser {
     class Tilemap extends GameObject {
         constructor(game: Game, key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number);
+        private _tempCollisionData;
         static FORMAT_CSV: number;
         static FORMAT_TILED_JSON: number;
         public tiles: Tile[];
         public layers: TilemapLayer[];
         public currentLayer: TilemapLayer;
         public collisionLayer: TilemapLayer;
+        public collisionCallback;
+        public collisionCallbackContext;
         public mapFormat: number;
         public update(): void;
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): void;
@@ -5437,13 +5444,15 @@ module Phaser {
         private generateTiles(qty);
         public widthInPixels : number;
         public heightInPixels : number;
-        public setCollisionRange(start: number, end: number, collision?: number, resetCollisions?: bool): void;
-        public setCollisionByIndex(values: number[], collision?: number, resetCollisions?: bool): void;
+        public setCollisionCallback(context, callback): void;
+        public setCollisionRange(start: number, end: number, collision?: number, resetCollisions?: bool, separateX?: bool, separateY?: bool): void;
+        public setCollisionByIndex(values: number[], collision?: number, resetCollisions?: bool, separateX?: bool, separateY?: bool): void;
+        public getTileByIndex(value: number): Tile;
         public getTile(x: number, y: number, layer?: number): Tile;
         public getTileFromWorldXY(x: number, y: number, layer?: number): Tile;
         public getTileFromInputXY(layer?: number): Tile;
-        public getTileOverlaps(object: GameObject): bool;
-        public collide(objectOrGroup?, callback?): bool;
+        public getTileOverlaps(object: GameObject);
+        public collide(objectOrGroup?, callback?, context?): void;
         public collideGameObject(object: GameObject): bool;
     }
 }

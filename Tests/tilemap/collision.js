@@ -41,6 +41,10 @@
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
     }
     function update() {
+        //  Collide everything with the map
+        map.collide();
+        //  And collide everything in the game :)
+        myGame.collide();
         car.velocity.x = 0;
         car.velocity.y = 0;
         if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
@@ -53,9 +57,5 @@
         } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
             car.velocity.y = 200;
         }
-        //  Collide everything with the map
-        map.collide();
-        //  And collide everything in the game :)
-        myGame.collide();
     }
 })();
