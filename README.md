@@ -7,9 +7,9 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 Phaser is a 2D JavaScript/TypeScript HTML5 Game Framework based heavily on [Flixel](http://www.flixel.org).
 
-[Twitter](https://twitter.com/photonstorm)<br />
-[Development Blog](http://www.photonstorm.com)<br />
-[Support Forum](http://www.html5gamedevs.com/forum/14-phaser/)
+Follow on [Twitter](https://twitter.com/photonstorm)<br />
+Read the [Development Blog](http://www.photonstorm.com)<br />
+Join the [Support Forum](http://www.html5gamedevs.com/forum/14-phaser/)
 
 Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
@@ -35,7 +35,7 @@ V0.9.5
 * Added new Scanlines Camera FX.
 * Fixed offset values being ignored in GeomSprite.renderPoint (thanks bapuna).
 * Added new Mirror Camera FX. Can mirror the camera image horizontally, vertically or both with an optional fill color overlay.
-* Added Camera.disableClipping for when you don't care about things being drawn outside the edge (usful for some FX).
+* Added Camera.disableClipping for when you don't care about things being drawn outside the edge (useful for some FX).
 * Updated TilemapLayer so that collision data is now stored in _tempTileBlock to avoid constant array creation during game loop.
 * TilemapLayer.getTileOverlaps() now returns all tiles the object overlapped with rather than just a boolean.
 * Tilemap.collide now optionally takes callback and context parameters which are used if collision occurs.
@@ -49,8 +49,8 @@ V0.9.5
 * Added TilemapLayer.replaceTile - scans the given region of the map and replaces all instances of tileA with tileB. tileB is left unaffected.
 * Added TilemapLayer.fillTiles - fills the given region of the map with the tile specified.
 * Added TilemapLayer.randomiseTiles - fills the given region of the map with a random tile from the list specified.
-* Added fun new "map draw" test - reflect those carrots! :)
-* Changed SoundManager class to respect volume on first place (thanks initials and hackmaniac)
+* Added fun new "map draw" test - rebound those carrots! :)
+* Changed SoundManager class to respect volume on first play (thanks initials and hackmaniac)
 
 Requirements
 ------------
