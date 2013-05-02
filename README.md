@@ -49,8 +49,7 @@ V0.9.5
 * Added TilemapLayer.replaceTile - scans the given region of the map and replaces all instances of tileA with tileB. tileB is left unaffected.
 * Added TilemapLayer.fillTiles - fills the given region of the map with the tile specified.
 * Added TilemapLayer.randomiseTiles - fills the given region of the map with a random tile from the list specified.
-
-
+* Added fun new "map draw" test - reflect those carrots! :)
 
 Requirements
 ------------
