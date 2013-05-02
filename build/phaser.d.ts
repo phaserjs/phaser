@@ -564,6 +564,7 @@ module Phaser {
         public scroll: MicroPoint;
         public bounds: Rectangle;
         public deadzone: Rectangle;
+        public disableClipping: bool;
         public showBorder: bool;
         public borderColor: string;
         public opaque: bool;
@@ -5274,7 +5275,7 @@ module Phaser {
         public update(): void;
         public inCamera(camera: Rectangle): bool;
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): bool;
-        public renderPoint(offsetX, offsetY, point, size): void;
+        public renderPoint(point, offsetX?: number, offsetY?: number, size?: number): void;
         public renderDebugInfo(x: number, y: number, color?: string): void;
         public collide(source: GeomSprite): bool;
     }

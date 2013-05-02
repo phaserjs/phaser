@@ -925,6 +925,7 @@ var Phaser;
             this.bounds = null;
             this.deadzone = null;
             //  Camera Border
+            this.disableClipping = false;
             this.showBorder = false;
             this.borderColor = 'rgb(255,255,255)';
             //  Camera Background Color
@@ -1113,7 +1114,7 @@ var Phaser;
             }
             this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
             //  Clip the camera so we don't get sprites appearing outside the edges
-            if(this._clip) {
+            if(this._clip && this.disableClipping == false) {
                 this._game.stage.context.beginPath();
                 this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
                 this._game.stage.context.closePath();
@@ -1131,7 +1132,7 @@ var Phaser;
                 this._game.stage.context.scale(1, 1);
             }
             this.fx.postRender(this, this._sx, this._sy, this.worldView.width, this.worldView.height);
-            if(this._rotation !== 0 || this._clip) {
+            if(this._rotation !== 0 || (this._clip && this.disableClipping == false)) {
                 this._game.stage.context.translate(0, 0);
             }
             this._game.stage.context.restore();
@@ -10927,15 +10928,24 @@ var Phaser;
                 }
                 //  And now the edge points
                 this._game.stage.context.fillStyle = 'rgb(255,255,255)';
-                this.renderPoint(this._dx, this._dy, this.rect.topLeft, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.topCenter, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.topRight, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.leftCenter, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.center, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.rightCenter, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.bottomLeft, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.bottomCenter, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.bottomRight, 2);
+                //this.renderPoint(this.rect.topLeft, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.topCenter, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.topRight, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.leftCenter, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.center, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.rightCenter, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.bottomLeft, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.bottomCenter, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.bottomRight, this._dx, this._dy, 2);
+                this.renderPoint(this.rect.topLeft, 0, 0, 2);
+                this.renderPoint(this.rect.topCenter, 0, 0, 2);
+                this.renderPoint(this.rect.topRight, 0, 0, 2);
+                this.renderPoint(this.rect.leftCenter, 0, 0, 2);
+                this.renderPoint(this.rect.center, 0, 0, 2);
+                this.renderPoint(this.rect.rightCenter, 0, 0, 2);
+                this.renderPoint(this.rect.bottomLeft, 0, 0, 2);
+                this.renderPoint(this.rect.bottomCenter, 0, 0, 2);
+                this.renderPoint(this.rect.bottomRight, 0, 0, 2);
             }
             this._game.stage.restoreCanvasValues();
             if(this.rotation !== 0) {
@@ -10947,10 +10957,11 @@ var Phaser;
             }
             return true;
         };
-        GeomSprite.prototype.renderPoint = function (offsetX, offsetY, point, size) {
-            offsetX = 0;
-            offsetY = 0;
-            this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, 1, 1);
+        GeomSprite.prototype.renderPoint = function (point, offsetX, offsetY, size) {
+            if (typeof offsetX === "undefined") { offsetX = 0; }
+            if (typeof offsetY === "undefined") { offsetY = 0; }
+            if (typeof size === "undefined") { size = 1; }
+            this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, size, size);
         };
         GeomSprite.prototype.renderDebugInfo = function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }

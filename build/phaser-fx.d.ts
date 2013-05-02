@@ -64,6 +64,43 @@ module Phaser.FX.Camera {
     }
 }
 /**
+* Phaser - FX - Camera - Mirror
+*
+* A Template FX file you can use to create your own Camera FX.
+* If you don't use any of the methods below (i.e. preUpdate, render, etc) then DELETE THEM to avoid un-necessary calls by the FXManager.
+*/
+module Phaser.FX.Camera {
+    class Mirror {
+        constructor(game: Game, parent: Camera);
+        private _game;
+        private _parent;
+        private _canvas;
+        private _context;
+        private _sx;
+        private _sy;
+        private _mirrorX;
+        private _mirrorY;
+        private _mirrorWidth;
+        private _mirrorHeight;
+        private _mirrorColor;
+        public flipX: bool;
+        public flipY: bool;
+        public x: number;
+        public y: number;
+        public cls: bool;
+        /**
+        * This is the rectangular region to grab from the Camera used in the Mirror effect
+        * It is rendered to the Stage at Mirror.x/y (note the use of Stage coordinates, not World coordinates)
+        */
+        public start(x: number, y: number, region: Quad, fillColor?: string): void;
+        /**
+        * Post-render is called during the objects render cycle, after the children/image data has been rendered.
+        * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
+        */
+        public postRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
+    }
+}
+/**
 * Phaser - FX - Camera - Scanlines
 *
 * Give your game that classic retro feel!

@@ -135,6 +135,98 @@ var Phaser;
         /// <reference path="../../Phaser/system/Camera.d.ts" />
         /// <reference path="../../Phaser/FXManager.d.ts" />
         /**
+        * Phaser - FX - Camera - Mirror
+        *
+        * A Template FX file you can use to create your own Camera FX.
+        * If you don't use any of the methods below (i.e. preUpdate, render, etc) then DELETE THEM to avoid un-necessary calls by the FXManager.
+        */
+        (function (Camera) {
+            var Mirror = (function () {
+                function Mirror(game, parent) {
+                    this._mirrorColor = null;
+                    this.flipX = false;
+                    this.flipY = true;
+                    this.cls = false;
+                    this._game = game;
+                    this._parent = parent;
+                    this._canvas = document.createElement('canvas');
+                    this._canvas.width = parent.width;
+                    this._canvas.height = parent.height;
+                    this._context = this._canvas.getContext('2d');
+                }
+                Mirror.prototype.start = /**
+                * This is the rectangular region to grab from the Camera used in the Mirror effect
+                * It is rendered to the Stage at Mirror.x/y (note the use of Stage coordinates, not World coordinates)
+                */
+                function (x, y, region, fillColor) {
+                    if (typeof fillColor === "undefined") { fillColor = 'rgba(0,0,100,0.5)'; }
+                    this.x = x;
+                    this.y = y;
+                    this._mirrorX = region.x;
+                    this._mirrorY = region.y;
+                    this._mirrorWidth = region.width;
+                    this._mirrorHeight = region.height;
+                    if(fillColor) {
+                        this._mirrorColor = fillColor;
+                        this._context.fillStyle = this._mirrorColor;
+                    }
+                };
+                Mirror.prototype.postRender = /**
+                * Post-render is called during the objects render cycle, after the children/image data has been rendered.
+                * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
+                */
+                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                    if(this.cls) {
+                        this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
+                    }
+                    this._sx = cameraX + this._mirrorX;
+                    this._sy = cameraY + this._mirrorY;
+                    if(this.flipX == true && this.flipY == false) {
+                        this._sx = 0;
+                    } else if(this.flipY == true && this.flipX == false) {
+                        this._sy = 0;
+                    }
+                    this._context.drawImage(this._game.stage.canvas, //	Source Image
+                    this._sx, //	Source X (location within the source image)
+                    this._sy, //	Source Y
+                    this._mirrorWidth, //	Source Width
+                    this._mirrorHeight, //	Source Height
+                    0, //	Destination X (where on the canvas it'll be drawn)
+                    0, //	Destination Y
+                    this._mirrorWidth, //	Destination Width (always same as Source Width unless scaled)
+                    this._mirrorHeight);
+                    //	Destination Height (always same as Source Height unless scaled)
+                    if(this._mirrorColor) {
+                        this._context.fillRect(0, 0, this._mirrorWidth, this._mirrorHeight);
+                    }
+                    //this._game.stage.context.save();
+                    if(this.flipX && this.flipY) {
+                        this._game.stage.context.transform(-1, 0, 0, -1, this._mirrorWidth, this._mirrorHeight);
+                        this._game.stage.context.drawImage(this._canvas, -this.x, -this.y);
+                    } else if(this.flipX) {
+                        this._game.stage.context.transform(-1, 0, 0, 1, this._mirrorWidth, 0);
+                        this._game.stage.context.drawImage(this._canvas, -this.x, this.y);
+                    } else if(this.flipY) {
+                        this._game.stage.context.transform(1, 0, 0, -1, 0, this._mirrorHeight);
+                        this._game.stage.context.drawImage(this._canvas, this.x, -this.y);
+                    }
+                    //this._game.stage.context.restore();
+                                    };
+                return Mirror;
+            })();
+            Camera.Mirror = Mirror;            
+        })(FX.Camera || (FX.Camera = {}));
+        var Camera = FX.Camera;
+    })(Phaser.FX || (Phaser.FX = {}));
+    var FX = Phaser.FX;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (FX) {
+        /// <reference path="../../Phaser/Game.d.ts" />
+        /// <reference path="../../Phaser/system/Camera.d.ts" />
+        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /**
         * Phaser - FX - Camera - Scanlines
         *
         * Give your game that classic retro feel!

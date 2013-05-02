@@ -62,6 +62,7 @@ module Phaser {
         public deadzone: Rectangle = null;
 
         //  Camera Border
+        public disableClipping: bool = false;
         public showBorder: bool = false;
         public borderColor: string = 'rgb(255,255,255)';
 
@@ -317,7 +318,7 @@ module Phaser {
             this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
 
             //  Clip the camera so we don't get sprites appearing outside the edges
-            if (this._clip)
+            if (this._clip && this.disableClipping == false)
             {
                 this._game.stage.context.beginPath();
                 this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
@@ -343,7 +344,7 @@ module Phaser {
 
             this.fx.postRender(this, this._sx, this._sy, this.worldView.width, this.worldView.height);
 
-            if (this._rotation !== 0 || this._clip)
+            if (this._rotation !== 0 || (this._clip && this.disableClipping == false))
             {
                 this._game.stage.context.translate(0, 0);
             }

@@ -7,8 +7,8 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 Phaser is a 2D JavaScript/TypeScript HTML5 Game Framework based heavily on [Flixel](http://www.flixel.org).
 
-[Twitter](https://twitter.com/photonstorm)
-[Development Blog](http://www.photonstorm.com)
+[Twitter](https://twitter.com/photonstorm)<br />
+[Development Blog](http://www.photonstorm.com)<br />
 [Support Forum](http://www.html5gamedevs.com/forum/14-phaser/)
 
 Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
@@ -33,6 +33,11 @@ V0.9.5
 * Fixed a bug in Flash, Fade and Shake where the duration would fail on anything above 3 seconds.
 * Fixed a bug in Camera Shake that made it go a bit haywire, now shakes correctly.
 * Added new Scanlines Camera FX.
+* Fixed offset values being ignored in GeomSprite.renderPoint (thanks bapuna).
+* Added new Mirror Camera FX. Can mirror the camera image horizontally, vertically or both with an optional fill color overlay.
+* Added Camera.disableClipping for when you don't care about things being drawn outside the edge (usful for some FX).
+
+
 
 
 Requirements

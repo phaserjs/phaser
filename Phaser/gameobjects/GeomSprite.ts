@@ -301,15 +301,24 @@ module Phaser {
 
                 //  And now the edge points
                 this._game.stage.context.fillStyle = 'rgb(255,255,255)';
-                this.renderPoint(this._dx, this._dy, this.rect.topLeft, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.topCenter, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.topRight, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.leftCenter, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.center, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.rightCenter, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.bottomLeft, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.bottomCenter, 2);
-                this.renderPoint(this._dx, this._dy, this.rect.bottomRight, 2);
+                //this.renderPoint(this.rect.topLeft, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.topCenter, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.topRight, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.leftCenter, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.center, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.rightCenter, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.bottomLeft, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.bottomCenter, this._dx, this._dy, 2);
+                //this.renderPoint(this.rect.bottomRight, this._dx, this._dy, 2);
+                this.renderPoint(this.rect.topLeft, 0, 0, 2);
+                this.renderPoint(this.rect.topCenter, 0, 0, 2);
+                this.renderPoint(this.rect.topRight, 0, 0, 2);
+                this.renderPoint(this.rect.leftCenter, 0, 0, 2);
+                this.renderPoint(this.rect.center, 0, 0, 2);
+                this.renderPoint(this.rect.rightCenter, 0, 0, 2);
+                this.renderPoint(this.rect.bottomLeft, 0, 0, 2);
+                this.renderPoint(this.rect.bottomCenter, 0, 0, 2);
+                this.renderPoint(this.rect.bottomRight, 0, 0, 2);
 
             }
 
@@ -330,11 +339,9 @@ module Phaser {
 
         }
 
-        public renderPoint(offsetX, offsetY, point, size) {
+        public renderPoint(point, offsetX?: number = 0, offsetY?: number = 0, size?: number = 1) {
 
-            offsetX = 0;
-            offsetY = 0;
-            this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, 1, 1);
+            this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, size, size);
 
         }
 

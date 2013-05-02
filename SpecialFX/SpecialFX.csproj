@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -48,6 +48,7 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
     <TypeScriptOutFile>../build/phaser-fx.js</TypeScriptOutFile>
     <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
+    <TypeScriptIncludeDefaultLib>true</TypeScriptIncludeDefaultLib>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
@@ -55,6 +56,7 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
     <TypeScriptOutFile>../build/phaser-fx.js</TypeScriptOutFile>
     <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
+    <TypeScriptIncludeDefaultLib>true</TypeScriptIncludeDefaultLib>
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Camera\Flash.ts" />
@@ -64,6 +66,10 @@
       <DependentUpon>Fade.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Camera\Template.ts" />
+    <TypeScriptCompile Include="Camera\Mirror.ts" />
+    <Content Include="Camera\Mirror.js">
+      <DependentUpon>Mirror.ts</DependentUpon>
+    </Content>
     <Content Include="Camera\Template.js">
       <DependentUpon>Template.ts</DependentUpon>
     </Content>
@@ -79,6 +85,9 @@
     <Content Include="Camera\Flash.js">
       <DependentUpon>Flash.ts</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Textures\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
   <PropertyGroup>
