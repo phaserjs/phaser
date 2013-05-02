@@ -1,7 +1,7 @@
 Phaser
 ======
 
-Version: 0.9.5 - Released: 2nd May 2013
+Version: 0.9.6 - Released: In Progress
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -18,39 +18,9 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 Latest Update
 -------------
 
-V0.9.5
+V0.9.6
 
-* Moved the BootScreen and PauseScreen out of Stage into their own classes (system/screens/BootScreen and PauseScreen).
-* Updated the PauseScreen to show a subtle animation effect, making it easier to create your own interesting pause screens.
-* Modified Game so it splits into 3 loops - bootLoop, pauseLoop and loop (the core loop).
-* Updated the BootScreen with the new logo and new color cycle effect.
-* Added Game.isRunning - set to true once the Game.boot process is over IF you gave some functions to the constructor or a state.
-* Fixed small bug in Signal.removeAll where it could try to shorten the _bindings even if undefined.
-* Added the new FXManager which is used for handling all special effects on Cameras (and soon other game objects).
-* Removed Flash, Fade and Shake from the Camera class and moved to the new SpecialFX project.
-* SpecialFX compiles to phaser-fx.js in the build folder, which is copied over to Tests. If you don't need the FX, don't include the .js file.
-* The project is now generating TypeScript declaration files and all Tests were updated to use them in their references.
-* Fixed a bug in Flash, Fade and Shake where the duration would fail on anything above 3 seconds.
-* Fixed a bug in Camera Shake that made it go a bit haywire, now shakes correctly.
-* Added new Scanlines Camera FX.
-* Fixed offset values being ignored in GeomSprite.renderPoint (thanks bapuna).
-* Added new Mirror Camera FX. Can mirror the camera image horizontally, vertically or both with an optional fill color overlay.
-* Added Camera.disableClipping for when you don't care about things being drawn outside the edge (useful for some FX).
-* Updated TilemapLayer so that collision data is now stored in _tempTileBlock to avoid constant array creation during game loop.
-* TilemapLayer.getTileOverlaps() now returns all tiles the object overlapped with rather than just a boolean.
-* Tilemap.collide now optionally takes callback and context parameters which are used if collision occurs.
-* Added Tilemap.collisionCallback and Tilemap.collisionCallbackContext so you can set them once and not re-set them on every call to collide.
-* Collision.separateTile now has 2 extra parameters: separateX and separateY. If true the object will be separated on overlap, otherwise just the overlap boolean result is returned.
-* Added Tile.separateX and Tile.separateY (both true by default). Set to false if you don't want a tile to stop an object from moving, you just want it to return collision data to your callback.
-* Added Tilemap.getTileByIndex(value) to access a specific type of tile, rather than by its map index.
-* Added TilemapLayer.putTile(x,y,index) - allows you to insert new tile data into the map layer (create your own tile editor!).
-* TilemapLayer.getTileBlock now returns a unique Array of map data, not just a reference to the temporary block array
-* Added TilemapLayer.swapTile - scans the given region of the map for all instances of tileA and swaps them for tileB, and vice versa.
-* Added TilemapLayer.replaceTile - scans the given region of the map and replaces all instances of tileA with tileB. tileB is left unaffected.
-* Added TilemapLayer.fillTiles - fills the given region of the map with the tile specified.
-* Added TilemapLayer.randomiseTiles - fills the given region of the map with a random tile from the list specified.
-* Added fun new "map draw" test - rebound those carrots! :)
-* Changed SoundManager class to respect volume on first play (thanks initials and hackmaniac)
+* 
 
 Requirements
 ------------
@@ -189,6 +159,40 @@ Please add them to the [Issue Tracker][1] with as much info as possible.
 
 Change Log
 ----------
+
+V0.9.5
+
+* Moved the BootScreen and PauseScreen out of Stage into their own classes (system/screens/BootScreen and PauseScreen).
+* Updated the PauseScreen to show a subtle animation effect, making it easier to create your own interesting pause screens.
+* Modified Game so it splits into 3 loops - bootLoop, pauseLoop and loop (the core loop).
+* Updated the BootScreen with the new logo and new color cycle effect.
+* Added Game.isRunning - set to true once the Game.boot process is over IF you gave some functions to the constructor or a state.
+* Fixed small bug in Signal.removeAll where it could try to shorten the _bindings even if undefined.
+* Added the new FXManager which is used for handling all special effects on Cameras (and soon other game objects).
+* Removed Flash, Fade and Shake from the Camera class and moved to the new SpecialFX project.
+* SpecialFX compiles to phaser-fx.js in the build folder, which is copied over to Tests. If you don't need the FX, don't include the .js file.
+* The project is now generating TypeScript declaration files and all Tests were updated to use them in their references.
+* Fixed a bug in Flash, Fade and Shake where the duration would fail on anything above 3 seconds.
+* Fixed a bug in Camera Shake that made it go a bit haywire, now shakes correctly.
+* Added new Scanlines Camera FX.
+* Fixed offset values being ignored in GeomSprite.renderPoint (thanks bapuna).
+* Added new Mirror Camera FX. Can mirror the camera image horizontally, vertically or both with an optional fill color overlay.
+* Added Camera.disableClipping for when you don't care about things being drawn outside the edge (useful for some FX).
+* Updated TilemapLayer so that collision data is now stored in _tempTileBlock to avoid constant array creation during game loop.
+* TilemapLayer.getTileOverlaps() now returns all tiles the object overlapped with rather than just a boolean.
+* Tilemap.collide now optionally takes callback and context parameters which are used if collision occurs.
+* Added Tilemap.collisionCallback and Tilemap.collisionCallbackContext so you can set them once and not re-set them on every call to collide.
+* Collision.separateTile now has 2 extra parameters: separateX and separateY. If true the object will be separated on overlap, otherwise just the overlap boolean result is returned.
+* Added Tile.separateX and Tile.separateY (both true by default). Set to false if you don't want a tile to stop an object from moving, you just want it to return collision data to your callback.
+* Added Tilemap.getTileByIndex(value) to access a specific type of tile, rather than by its map index.
+* Added TilemapLayer.putTile(x,y,index) - allows you to insert new tile data into the map layer (create your own tile editor!).
+* TilemapLayer.getTileBlock now returns a unique Array of map data, not just a reference to the temporary block array
+* Added TilemapLayer.swapTile - scans the given region of the map for all instances of tileA and swaps them for tileB, and vice versa.
+* Added TilemapLayer.replaceTile - scans the given region of the map and replaces all instances of tileA with tileB. tileB is left unaffected.
+* Added TilemapLayer.fillTiles - fills the given region of the map with the tile specified.
+* Added TilemapLayer.randomiseTiles - fills the given region of the map with a random tile from the list specified.
+* Added fun new "map draw" test - rebound those carrots! :)
+* Changed SoundManager class to respect volume on first play (thanks initials and hackmaniac)
 
 V0.9.4
 
