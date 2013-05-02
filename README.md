@@ -152,7 +152,7 @@ We've a number of features that we know Phaser is lacking, here is our current p
 *	Text Rendering
 *	Buttons
 
-Beyond this there are lots of other things we plan to add such as WebGL support, Spline animation format support, sloped collision tiles, path finding and support for custom plugins. But the list above are priority items, and by no means exhaustive either! However we do feel that the core structure of Phaser is now tightly locked down, so safe to use for small scale production games.
+Beyond this there are lots of other things we plan to add such as WebGL support, Spine animation format support, sloped collision tiles, path finding and support for custom plugins. But the list above are priority items, and by no means exhaustive either! However we do feel that the core structure of Phaser is now tightly locked down, so safe to use for small scale production games.
 
 Test Suite
 ----------
