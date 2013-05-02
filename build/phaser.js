@@ -6012,25 +6012,23 @@ var Phaser;
         GameMath.prototype.getRandom = /**
         * Fetch a random entry from the given array.
         * Will return null if random selection is missing, or array has no entries.
-        * <code>G.getRandom()</code> is deterministic and safe for use with replays/recordings.
-        * HOWEVER, <code>U.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
         *
-        * @param	Objects		An array of objects.
-        * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-        * @param	Length		Optional restriction on the number of values you want to randomly select from.
+        * @param	objects		An array of objects.
+        * @param	startIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+        * @param	length		Optional restriction on the number of values you want to randomly select from.
         *
         * @return	The random object that was selected.
         */
-        function (Objects, StartIndex, Length) {
-            if (typeof StartIndex === "undefined") { StartIndex = 0; }
-            if (typeof Length === "undefined") { Length = 0; }
-            if(Objects != null) {
-                var l = Length;
-                if((l == 0) || (l > Objects.length - StartIndex)) {
-                    l = Objects.length - StartIndex;
+        function (objects, startIndex, length) {
+            if (typeof startIndex === "undefined") { startIndex = 0; }
+            if (typeof length === "undefined") { length = 0; }
+            if(objects != null) {
+                var l = length;
+                if((l == 0) || (l > objects.length - startIndex)) {
+                    l = objects.length - startIndex;
                 }
                 if(l > 0) {
-                    return Objects[StartIndex + Math.floor(Math.random() * l)];
+                    return objects[startIndex + Math.floor(Math.random() * l)];
                 }
             }
             return null;
@@ -11158,6 +11156,82 @@ var Phaser;
             this._tempTileBlock = [];
             this._texture = this._game.cache.getImage(key);
         }
+        TilemapLayer.prototype.putTile = function (x, y, index) {
+            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+            if(y >= 0 && y < this.mapData.length) {
+                if(x >= 0 && x < this.mapData[y].length) {
+                    this.mapData[y][x] = index;
+                }
+            }
+        };
+        TilemapLayer.prototype.swapTile = function (tileA, tileB, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = this.widthInTiles; }
+            if (typeof height === "undefined") { height = this.heightInTiles; }
+            this.getTempBlock(x, y, width, height);
+            for(var r = 0; r < this._tempTileBlock.length; r++) {
+                //  First sweep marking tileA as needing a new index
+                if(this._tempTileBlock[r].tile.index == tileA) {
+                    this._tempTileBlock[r].newIndex = true;
+                }
+                //  In the same pass we can swap tileB to tileA
+                if(this._tempTileBlock[r].tile.index == tileB) {
+                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileA;
+                }
+            }
+            for(var r = 0; r < this._tempTileBlock.length; r++) {
+                //  And now swap our newIndex tiles for tileB
+                if(this._tempTileBlock[r].newIndex == true) {
+                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
+                }
+            }
+        };
+        TilemapLayer.prototype.fillTile = function (index, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = this.widthInTiles; }
+            if (typeof height === "undefined") { height = this.heightInTiles; }
+            this.getTempBlock(x, y, width, height);
+            for(var r = 0; r < this._tempTileBlock.length; r++) {
+                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = index;
+            }
+        };
+        TilemapLayer.prototype.randomiseTiles = function (tiles, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = this.widthInTiles; }
+            if (typeof height === "undefined") { height = this.heightInTiles; }
+            this.getTempBlock(x, y, width, height);
+            for(var r = 0; r < this._tempTileBlock.length; r++) {
+                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this._game.math.getRandom(tiles);
+            }
+        };
+        TilemapLayer.prototype.replaceTile = function (tileA, tileB, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = this.widthInTiles; }
+            if (typeof height === "undefined") { height = this.heightInTiles; }
+            this.getTempBlock(x, y, width, height);
+            for(var r = 0; r < this._tempTileBlock.length; r++) {
+                if(this._tempTileBlock[r].tile.index == tileA) {
+                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
+                }
+            }
+        };
+        TilemapLayer.prototype.getTileBlock = function (x, y, width, height) {
+            var output = [];
+            this.getTempBlock(x, y, width, height);
+            for(var r = 0; r < this._tempTileBlock.length; r++) {
+                output.push({
+                    x: this._tempTileBlock[r].x,
+                    y: this._tempTileBlock[r].y,
+                    tile: this._tempTileBlock[r].tile
+                });
+            }
+            return output;
+        };
         TilemapLayer.prototype.getTileFromWorldXY = function (x, y) {
             x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
             y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
@@ -11174,7 +11248,8 @@ var Phaser;
             this._tempTileW = (this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
             this._tempTileH = (this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
             //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
-            this.getTileBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH);
+            this._tempBlockResults = [];
+            this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
             Phaser.Collision.TILE_OVERLAP = false;
             for(var r = 0; r < this._tempTileBlock.length; r++) {
                 if(Phaser.Collision.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true) {
@@ -11187,7 +11262,8 @@ var Phaser;
             }
             return this._tempBlockResults;
         };
-        TilemapLayer.prototype.getTileBlock = function (x, y, width, height) {
+        TilemapLayer.prototype.getTempBlock = function (x, y, width, height, collisionOnly) {
+            if (typeof collisionOnly === "undefined") { collisionOnly = false; }
             if(x < 0) {
                 x = 0;
             }
@@ -11201,16 +11277,25 @@ var Phaser;
                 height = this.heightInTiles;
             }
             this._tempTileBlock = [];
-            this._tempBlockResults = [];
             for(var ty = y; ty < y + height; ty++) {
                 for(var tx = x; tx < x + width; tx++) {
-                    //  We only want to consider the tile for checking if you can actually collide with it
-                    if(this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Phaser.Collision.NONE) {
-                        this._tempTileBlock.push({
-                            x: tx,
-                            y: ty,
-                            tile: this._parent.tiles[this.mapData[ty][tx]]
-                        });
+                    if(collisionOnly) {
+                        //  We only want to consider the tile for checking if you can actually collide with it
+                        if(this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Phaser.Collision.NONE) {
+                            this._tempTileBlock.push({
+                                x: tx,
+                                y: ty,
+                                tile: this._parent.tiles[this.mapData[ty][tx]]
+                            });
+                        }
+                    } else {
+                        if(this.mapData[ty] && this.mapData[ty][tx]) {
+                            this._tempTileBlock.push({
+                                x: tx,
+                                y: ty,
+                                tile: this._parent.tiles[this.mapData[ty][tx]]
+                            });
+                        }
                     }
                 }
             }
@@ -11238,8 +11323,7 @@ var Phaser;
         };
         TilemapLayer.prototype.updateBounds = function () {
             this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
-            //console.log('layer bounds', this.boundsInTiles);
-                    };
+        };
         TilemapLayer.prototype.parseTileOffsets = function () {
             this._tileOffsets = [];
             var i = 0;
@@ -11612,13 +11696,15 @@ var Phaser;
                 return false;
             }
         };
+        Tilemap.prototype.putTile = function (x, y, index, layer) {
+            if (typeof layer === "undefined") { layer = 0; }
+            this.layers[layer].putTile(x, y, index);
+        };
         return Tilemap;
     })(Phaser.GameObject);
     Phaser.Tilemap = Tilemap;    
     //  Set current layer
     //  Set layer order?
-    //  Get block of tiles
-    //  Swap tiles around
     //  Delete tiles of certain type
     //  Erase tiles
     })(Phaser || (Phaser = {}));

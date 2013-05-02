@@ -41,8 +41,14 @@ V0.9.5
 * Tilemap.collide now optionally takes callback and context parameters which are used if collision occurs.
 * Added Tilemap.collisionCallback and Tilemap.collisionCallbackContext so you can set them once and not re-set them on every call to collide.
 * Collision.separateTile now has 2 extra parameters: separateX and separateY. If true the object will be separated on overlap, otherwise just the overlap boolean result is returned.
-* Added Tile.separateX and Tile.separateY (both true by default), if true an object will be separated from the tile on overlap. Set to false if you don't want a tile to stop an object from moving, you just want it to return collision data to your callback.
+* Added Tile.separateX and Tile.separateY (both true by default). Set to false if you don't want a tile to stop an object from moving, you just want it to return collision data to your callback.
 * Added Tilemap.getTileByIndex(value) to access a specific type of tile, rather than by its map index.
+* Added TilemapLayer.putTile(x,y,index) - allows you to insert new tile data into the map layer (create your own tile editor!).
+* TilemapLayer.getTileBlock now returns a unique Array of map data, not just a reference to the temporary block array
+* Added TilemapLayer.swapTile - scans the given region of the map for all instances of tileA and swaps them for tileB, and vice versa.
+* Added TilemapLayer.replaceTile - scans the given region of the map and replaces all instances of tileA with tileB. tileB is left unaffected.
+* Added TilemapLayer.fillTiles - fills the given region of the map with the tile specified.
+* Added TilemapLayer.randomiseTiles - fills the given region of the map with a random tile from the list specified.
 
 
 

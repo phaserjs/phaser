@@ -282,10 +282,14 @@ module Phaser {
 
         }
 
+        public putTile(x: number, y: number, index: number, layer?: number = 0) {
+
+            this.layers[layer].putTile(x, y, index);
+
+        }
+
         //  Set current layer
         //  Set layer order?
-        //  Get block of tiles
-        //  Swap tiles around
         //  Delete tiles of certain type
         //  Erase tiles
 

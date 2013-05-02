@@ -3000,16 +3000,14 @@ module Phaser {
         /**
         * Fetch a random entry from the given array.
         * Will return null if random selection is missing, or array has no entries.
-        * <code>G.getRandom()</code> is deterministic and safe for use with replays/recordings.
-        * HOWEVER, <code>U.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
         *
-        * @param	Objects		An array of objects.
-        * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-        * @param	Length		Optional restriction on the number of values you want to randomly select from.
+        * @param	objects		An array of objects.
+        * @param	startIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+        * @param	length		Optional restriction on the number of values you want to randomly select from.
         *
         * @return	The random object that was selected.
         */
-        public getRandom(Objects, StartIndex?: number, Length?: number);
+        public getRandom(objects, startIndex?: number, length?: number);
         /**
         * Round down to the next whole number. E.g. floor(1.7) == 1, and floor(-2.7) == -2.
         *
@@ -5363,9 +5361,15 @@ module Phaser {
         public heightInPixels: number;
         public tileMargin: number;
         public tileSpacing: number;
+        public putTile(x: number, y: number, index: number): void;
+        public swapTile(tileA: number, tileB: number, x?: number, y?: number, width?: number, height?: number): void;
+        public fillTile(index: number, x?: number, y?: number, width?: number, height?: number): void;
+        public randomiseTiles(tiles: number[], x?: number, y?: number, width?: number, height?: number): void;
+        public replaceTile(tileA: number, tileB: number, x?: number, y?: number, width?: number, height?: number): void;
+        public getTileBlock(x: number, y: number, width: number, height: number): any[];
         public getTileFromWorldXY(x: number, y: number): number;
         public getTileOverlaps(object: GameObject);
-        public getTileBlock(x: number, y: number, width: number, height: number): void;
+        private getTempBlock(x, y, width, height, collisionOnly?);
         public getTileIndex(x: number, y: number): number;
         public addColumn(column): void;
         public updateBounds(): void;
@@ -5454,6 +5458,7 @@ module Phaser {
         public getTileOverlaps(object: GameObject);
         public collide(objectOrGroup?, callback?, context?): void;
         public collideGameObject(object: GameObject): bool;
+        public putTile(x: number, y: number, index: number, layer?: number): void;
     }
 }
 /**

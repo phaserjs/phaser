@@ -75,6 +75,102 @@ module Phaser {
         public tileMargin: number = 0;
         public tileSpacing: number = 0;
 
+        public putTile(x: number, y: number, index: number) {
+
+            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+
+            if (y >= 0 && y < this.mapData.length)
+            {
+                if (x >= 0 && x < this.mapData[y].length)
+                {
+                    this.mapData[y][x] = index;
+                }
+            }
+
+        }
+
+        public swapTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
+
+            this.getTempBlock(x, y, width, height);
+
+            for (var r = 0; r < this._tempTileBlock.length; r++)
+            {
+                //  First sweep marking tileA as needing a new index
+                if (this._tempTileBlock[r].tile.index == tileA)
+                {
+                    this._tempTileBlock[r].newIndex = true;
+                }
+
+                //  In the same pass we can swap tileB to tileA
+                if (this._tempTileBlock[r].tile.index == tileB)
+                {
+                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileA;
+                }
+            }
+
+            for (var r = 0; r < this._tempTileBlock.length; r++)
+            {
+                //  And now swap our newIndex tiles for tileB
+                if (this._tempTileBlock[r].newIndex == true)
+                {
+                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
+                }
+            }
+
+        }
+
+        public fillTile(index: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
+
+            this.getTempBlock(x, y, width, height);
+
+            for (var r = 0; r < this._tempTileBlock.length; r++)
+            {
+                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = index;
+            }
+
+        }
+
+        public randomiseTiles(tiles: number[], x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
+
+            this.getTempBlock(x, y, width, height);
+
+            for (var r = 0; r < this._tempTileBlock.length; r++)
+            {
+                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this._game.math.getRandom(tiles);
+            }
+
+        }
+
+        public replaceTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
+
+            this.getTempBlock(x, y, width, height);
+
+            for (var r = 0; r < this._tempTileBlock.length; r++)
+            {
+                if (this._tempTileBlock[r].tile.index == tileA)
+                {
+                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
+                }
+            }
+
+        }
+
+        public getTileBlock(x: number, y: number, width: number, height: number) {
+
+            var output = [];
+
+            this.getTempBlock(x, y, width, height);
+
+            for (var r = 0; r < this._tempTileBlock.length; r++)
+            {
+                output.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
+            }
+
+            return output;
+
+        }
+
         public getTileFromWorldXY(x: number, y: number): number {
 
             x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
@@ -99,7 +195,9 @@ module Phaser {
             this._tempTileH = (this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
 
             //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
-            this.getTileBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH);
+
+            this._tempBlockResults = [];
+            this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
 
             Collision.TILE_OVERLAP = false;
 
@@ -115,7 +213,7 @@ module Phaser {
 
         }
 
-        public getTileBlock(x: number, y: number, width: number, height: number) {
+        private getTempBlock(x: number, y: number, width: number, height: number, collisionOnly?: bool = false) {
 
             if (x < 0)
             {
@@ -138,16 +236,25 @@ module Phaser {
             }
 
             this._tempTileBlock = [];
-            this._tempBlockResults = [];
 
             for (var ty = y; ty < y + height; ty++)
             {
                 for (var tx = x; tx < x + width; tx++)
                 {
-                    //  We only want to consider the tile for checking if you can actually collide with it
-                    if (this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Collision.NONE)
+                    if (collisionOnly)
                     {
-                        this._tempTileBlock.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                        //  We only want to consider the tile for checking if you can actually collide with it
+                        if (this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Collision.NONE)
+                        {
+                            this._tempTileBlock.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                        }
+                    }
+                    else
+                    {
+                        if (this.mapData[ty] && this.mapData[ty][tx])
+                        {
+                            this._tempTileBlock.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                        }
                     }
                 }
             }
@@ -193,8 +300,6 @@ module Phaser {
         public updateBounds() {
 
             this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
-
-            //console.log('layer bounds', this.boundsInTiles);
 
         }
 

@@ -855,29 +855,27 @@ module Phaser {
         /**
         * Fetch a random entry from the given array.
         * Will return null if random selection is missing, or array has no entries.
-        * <code>G.getRandom()</code> is deterministic and safe for use with replays/recordings.
-        * HOWEVER, <code>U.getRandom()</code> is NOT deterministic and unsafe for use with replays/recordings.
         * 
-        * @param	Objects		An array of objects.
-        * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-        * @param	Length		Optional restriction on the number of values you want to randomly select from.
+        * @param	objects		An array of objects.
+        * @param	startIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+        * @param	length		Optional restriction on the number of values you want to randomly select from.
         * 
         * @return	The random object that was selected.
         */
-        public getRandom(Objects, StartIndex: number = 0, Length: number = 0) {
+        public getRandom(objects, startIndex: number = 0, length: number = 0) {
 
-            if (Objects != null)
+            if (objects != null)
             {
-                var l: number = Length;
+                var l: number = length;
 
-                if ((l == 0) || (l > Objects.length - StartIndex))
+                if ((l == 0) || (l > objects.length - startIndex))
                 {
-                    l = Objects.length - StartIndex;
+                    l = objects.length - startIndex;
                 }
 
                 if (l > 0)
                 {
-                    return Objects[StartIndex + Math.floor(Math.random() * l)];
+                    return objects[startIndex + Math.floor(Math.random() * l)];
                 }
             }
 

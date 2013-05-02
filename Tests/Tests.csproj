@@ -159,11 +159,39 @@
     <Content Include="tilemap\collision.js">
       <DependentUpon>collision.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="tilemap\fill tiles.ts" />
+    <Content Include="tilemap\fill tiles.js">
+      <DependentUpon>fill tiles.ts</DependentUpon>
+    </Content>
     <Content Include="tilemap\get tile.js">
       <DependentUpon>get tile.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="tilemap\put tile.ts" />
+    <TypeScriptCompile Include="tilemap\map draw.ts" />
+    <Content Include="tilemap\map draw.js">
+      <DependentUpon>map draw.ts</DependentUpon>
+    </Content>
+    <Content Include="tilemap\put tile.js">
+      <DependentUpon>put tile.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="tilemap\replace tiles.ts" />
+    <TypeScriptCompile Include="tilemap\random tiles.ts" />
+    <Content Include="tilemap\random tiles.js">
+      <DependentUpon>random tiles.ts</DependentUpon>
+    </Content>
+    <Content Include="tilemap\replace tiles.js">
+      <DependentUpon>replace tiles.ts</DependentUpon>
+    </Content>
     <Content Include="tilemap\small map.js">
       <DependentUpon>small map.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="tilemap\swap tiles.ts" />
+    <TypeScriptCompile Include="tilemap\sprite draw tiles.ts" />
+    <Content Include="tilemap\sprite draw tiles.js">
+      <DependentUpon>sprite draw tiles.ts</DependentUpon>
+    </Content>
+    <Content Include="tilemap\swap tiles.js">
+      <DependentUpon>swap tiles.ts</DependentUpon>
     </Content>
     <Content Include="tweens\bounce.js">
       <DependentUpon>bounce.ts</DependentUpon>
