@@ -34,7 +34,7 @@
 /**
 * Phaser - Game
 *
-* This is where the magic happens. The Game object is the heart of your game, 
+* This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
 *
 * "Hell, there are no rules here - we're trying to accomplish something."
@@ -45,6 +45,20 @@ module Phaser {
 
     export class Game {
 
+        /**
+         * Game constructor
+         *
+         * Instantiate a new <code>Game</code> object.
+         *
+         * @param   callbackContext Which context will the callbacks be called with.
+         * @param   parent          ID of its parent DOM element.
+         * @param   width           The width of your game in game pixels.
+         * @param   height          The height of your game in game pixels.
+         * @param   initCallback    Init callback invoked when init default screen.
+         * @param   createCallback  Create callback invoked when create default screen.
+         * @param   updateCallback  Update callback invoked when update default screen.
+         * @param   renderCallback  Render callback invoked when render default screen.
+         */
         constructor(callbackContext, parent?: string = '', width?: number = 800, height?: number = 600, initCallback = null, createCallback = null, updateCallback = null, renderCallback = null) {
 
             this.callbackContext = callbackContext;
@@ -65,39 +79,155 @@ module Phaser {
 
         }
 
+        /**
+         * Game loop trigger wrapper.
+         */
         private _raf: RequestAnimationFrame;
+        /**
+         * Max allowable accumulation.
+         * @type {number}
+         */
         private _maxAccumulation: number = 32;
+        /**
+         * Total number of milliseconds elapsed since last update loop.
+         * @type {number}
+         */
         private _accumulator: number = 0;
+        /**
+         * Milliseconds of time per step of the game loop.
+         * @type {number}
+         */
         private _step: number = 0;
+        /**
+         * Whether loader complete loading or not.
+         * @type {boolean}
+         */
         private _loadComplete: bool = false;
+        /**
+         * Game is paused?
+         * @type {boolean}
+         */
         private _paused: bool = false;
+        /**
+         * The state to be switched to in the next frame.
+         * @type {State}
+         */
         private _pendingState = null;
 
         //  Event callbacks
+        /**
+         * Context for calling the callbacks.
+         */
         public callbackContext;
+        /**
+         * This will be called when init states. (loading assets...)
+         * @type {function}
+         */
         public onInitCallback = null;
+        /**
+         * This will be called when create states. (setup states...)
+         * @type {function}
+         */
         public onCreateCallback = null;
+        /**
+         * This will be called when update states.
+         * @type {function}
+         */
         public onUpdateCallback = null;
+        /**
+         * This will be called when render states.
+         * @type {function}
+         */
         public onRenderCallback = null;
+        /**
+         * This will be called when states paused.
+         * @type {function}
+         */
         public onPausedCallback = null;
 
+        /**
+         * Reference to the assets cache.
+         * @type {Cache}
+         */
         public cache: Cache;
+        /**
+         * Reference to the collision helper.
+         * @type {Collision}
+         */
         public collision: Collision;
+        /**
+         * Reference to the input manager
+         * @type {Input}
+         */
         public input: Input;
+        /**
+         * Reference to the assets loader.
+         * @type {Loader}
+         */
         public loader: Loader;
+        /**
+         * Reference to the math helper.
+         * @type {GameMath}
+         */
         public math: GameMath;
+        /**
+         * Reference to the motion helper.
+         * @type {Motion}
+         */
         public motion: Motion;
+        /**
+         * Reference to the sound manager.
+         * @type {SoundManager}
+         */
         public sound: SoundManager;
+        /**
+         * Reference to the stage.
+         * @type {Stage}
+         */
         public stage: Stage;
+        /**
+         * Reference to game clock.
+         * @type {Time}
+         */
         public time: Time;
+        /**
+         * Reference to the tween manager.
+         * @type {TweenManager}
+         */
         public tweens: TweenManager;
+        /**
+         * Reference to the world.
+         * @type {World}
+         */
         public world: World;
+        /**
+         * Instance of repeatable random data generator helper.
+         * @type {RandomDataGenerator}
+         */
         public rnd: RandomDataGenerator;
+        /**
+         * Device detector.
+         * @type {Device}
+         */
         public device: Device;
 
+        /**
+         * Whether the game engine is booted, aka available.
+         * @type {boolean}
+         */
         public isBooted: bool = false;
+        /**
+         * Is game running or paused?
+         * @type {boolean}
+         */
         public isRunning: bool = false;
 
+        /**
+         * Initialize engine sub modules and start the game.
+         * @param   parent  ID of parent Dom element.
+         * @param   width   Width of the game screen.
+         * @param   height  Height of the game screen.
+         */
         private boot(parent: string, width: number, height: number) {
 
             if (this.isBooted == true)
@@ -155,13 +285,18 @@ module Phaser {
 
         }
 
+        /**
+         * Called when the loader has finished after init was run.
+         */
         private loadComplete() {
 
-            //  Called when the loader has finished after init was run
             this._loadComplete = true;
 
         }
 
+        /**
+         * Game loop method will be called when it's booting.
+         */
         private bootLoop() {
 
             this.time.update();
@@ -171,6 +306,9 @@ module Phaser {
 
         }
 
+        /**
+         * Game loop method will be called when it's paused.
+         */
         private pausedLoop() {
 
             this.time.update();
@@ -185,6 +323,9 @@ module Phaser {
 
         }
 
+       /**
+         * Game loop method will be called when it's running.
+         */
         private loop() {
 
             this.time.update();
@@ -220,6 +361,9 @@ module Phaser {
 
         }
 
+        /**
+         * Start current state.
+         */
         private startState() {
 
             if (this.onInitCallback !== null)
@@ -252,6 +396,13 @@ module Phaser {
 
         }
 
+        /**
+         * Set all state callbacks (init, create, update, render).
+         * @param   initCallback    Init callback invoked when init state.
+         * @param   createCallback  Create callback invoked when create state.
+         * @param   updateCallback  Update callback invoked when update state.
+         * @param   renderCallback  Render callback invoked when render state.
+         */
         public setCallbacks(initCallback = null, createCallback = null, updateCallback = null, renderCallback = null) {
 
             this.onInitCallback = initCallback;
@@ -261,6 +412,12 @@ module Phaser {
 
         }
 
+        /**
+         * Switch to a new State.
+         * @param   state       The state you want to switch to.
+         * @param   clearWorld  Optional, clear everything in the world? (Default to true)
+         * @param   clearCache  Optional, clear asset cache? (Default to false and ONLY available when clearWorld=true)
+         */
         public switchState(state, clearWorld: bool = true, clearCache: bool = false) {
 
             if (this.isBooted == false)
@@ -333,7 +490,9 @@ module Phaser {
 
         }
 
-        //  Nuke the whole game from orbit
+        /**
+         * Nuke the whole game from orbit
+         */
         public destroy() {
 
             this.callbackContext = null;
@@ -398,46 +557,127 @@ module Phaser {
 
         //  Handy Proxy methods
 
+        /**
+         * Create a new camera with specific position and size.
+         *
+         * @param   x       X position of the new camera.
+         * @param   y       Y position of the new camera.
+         * @param   width   Width of the new camera.
+         * @param   height  Height of the new camera.
+         * @returns {Camera=} The newly created camera object.
+         */
         public createCamera(x: number, y: number, width: number, height: number): Camera {
             return this.world.createCamera(x, y, width, height);
         }
 
+        /**
+         * Create a new GeomSprite with specific position.
+         *
+         * @param   x       X position of the new geom sprite.
+         * @param   y       Y position of the new geom sprite.
+         * @returns {GeomSprite=} The newly created geom sprite object.
+         */
         public createGeomSprite(x: number, y: number): GeomSprite {
             return this.world.createGeomSprite(x, y);
         }
 
+        /**
+         * Create a new Sprite with specific position and sprite sheet key.
+         *
+         * @param   x       X position of the new sprite.
+         * @param   y       Y position of the new sprite.
+         * @param   key     Optinal, key for the sprite sheet you want it to use.
+         * @returns {Sprite=} The newly created sprite object.
+         */
         public createSprite(x: number, y: number, key?: string = ''): Sprite {
             return this.world.createSprite(x, y, key);
         }
 
+        /**
+         * Create a new DynamicTexture with specific size.
+         *
+         * @param   width       Width of the texture.
+         * @param   height      Height of the texture.
+         * @returns {DynamicTexture=} The newly created dynamic texture object.
+         */
         public createDynamicTexture(width: number, height: number): DynamicTexture {
             return this.world.createDynamicTexture(width, height);
         }
 
+        /**
+         * Create a new object container.
+         *
+         * @param   MaxSize     Optinal, capacity of this group.
+         * @returns {Group=} The newly created group.
+         */
         public createGroup(MaxSize?: number = 0): Group {
             return this.world.createGroup(MaxSize);
         }
 
+        /**
+         * Create a new Particle.
+         *
+         * @return  {Particle=} The newly created particle object.
+         */
         public createParticle(): Particle {
             return this.world.createParticle();
         }
 
+        /**
+         * Create a new Emitter.
+         *
+         * @param   x       Optinal, x position of the emitter.
+         * @param   y       Optinal, y position of the emitter.
+         * @param   size    Optinal, size of this emitter.
+         * @return  {Emitter=} The newly created emitter object.
+         */
         public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
             return this.world.createEmitter(x, y, size);
         }
 
+        /**
+         * Create a new ScrollZone object with image key, position and size.
+         *
+         * @param   key     Key to a image you wish this object to use.
+         * @param   x       X position of this object.
+         * @param   y       Y position of this object.
+         * @param   width   Width of this object.
+         * @param   height  Heigth of this object.
+         * @returns {ScrollZone=} The newly created scroll zone object.
+         */
         public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
             return this.world.createScrollZone(key, x, y, width, height);
         }
 
+        /**
+         * Create a new Tilemap.
+         *
+         * @param   key         Key for tileset image.
+         * @param   mapData     Data of this tilemap.
+         * @param   format      Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+         * @param   resizeWorld Optinal, resize the world to make same as tilemap?
+         * @param   tileWidth   Optinal, width of each tile.
+         * @param   tileHeight  Optinal, height of each tile.
+         * @return  {Tilemap=} The newly created tilemap object.
+         */
         public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
             return this.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
         }
 
+        /**
+         * Create a tween object for a specific object.
+         *
+         * @param   obj  Object you wish the tween will affect.
+         * @return  {Phaser.Tween=} The newly created tween object.
+         */
         public createTween(obj): Tween {
             return this.tweens.create(obj);
         }
 
+        /**
+         * Call this method to see if one object collids another.
+         * @return {boolean} Whether the given objects or groups collids.
+         */
         public collide(objectOrGroup1: Basic = null, objectOrGroup2: Basic = null, notifyCallback = null): bool {
             return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate);
         }

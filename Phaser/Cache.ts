@@ -11,6 +11,9 @@ module Phaser {
 
     export class Cache {
 
+        /**
+         * Cache constructor
+         */
         constructor(game: Game) {
 
             this._game = game;
@@ -22,19 +25,53 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
 
+        /**
+         * Canvas key-value container.
+         * @type {object}
+         */
         private _canvases;
+        /**
+         * Image key-value container.
+         * @type {object}
+         */
         private _images;
+        /**
+         * Sound key-value container.
+         * @type {object}
+         */
         private _sounds;
+        /**
+         * Text key-value container.
+         * @type {object}
+         */
         private _text;
 
+        /**
+         * Add a new canvas.
+         * @param   key     Asset key for this canvas.
+         * @param   canvas  Canvas DOM element.
+         * @param   context Render context of this canvas.
+         */
         public addCanvas(key: string, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
 
             this._canvases[key] = { canvas: canvas, context: context };
 
         }
 
+        /**
+         * Add a new sprite sheet.
+         * @param   key         Asset key for the sprite sheet.
+         * @param   url         URL of this sprite sheet file.
+         * @param   data        Extra sprite sheet data.
+         * @param   frameWidth  Width of the sprite sheet.
+         * @param   frameHeight Height of the sprite sheet.
+         * @param   frameMax    How many frames stored in the sprite sheet.
+         */
         public addSpriteSheet(key: string, url: string, data, frameWidth: number, frameHeight: number, frameMax: number) {
 
             this._images[key] = { url: url, data: data, spriteSheet: true, frameWidth: frameWidth, frameHeight: frameHeight };
@@ -42,6 +79,13 @@ module Phaser {
 
         }
 
+        /**
+         * Add a new texture atlas.
+         * @param   key         Asset key for the texture atlas.
+         * @param   url         URL of this texture atlas file.
+         * @param   data        Extra texture atlas data.
+         * @param   data        Texture atlas frames data.
+         */
         public addTextureAtlas(key: string, url: string, data, jsonData) {
 
             this._images[key] = { url: url, data: data, spriteSheet: true };
@@ -49,18 +93,36 @@ module Phaser {
 
         }
 
+        /**
+         * Add a new image.
+         * @param   key     Asset key for the image.
+         * @param   url     URL of this image file.
+         * @param   data    Extra image data.
+         */
         public addImage(key: string, url: string, data) {
 
             this._images[key] = { url: url, data: data, spriteSheet: false };
 
         }
 
+        /**
+         * Add a new sound.
+         * @param   key     Asset key for the sound.
+         * @param   url     URL of this sound file.
+         * @param   data    Extra sound data.
+         */
         public addSound(key: string, url: string, data) {
 
             this._sounds[key] = { url: url, data: data, decoded: false };
 
         }
 
+        /**
+         * Add a new decoded sound.
+         * @param   key     Asset key for the sound.
+         * @param   url     URL of this sound file.
+         * @param   data    Extra sound data.
+         */
         public decodedSound(key: string, data) {
 
             this._sounds[key].data = data;
@@ -68,12 +130,23 @@ module Phaser {
 
         }
 
+        /**
+         * Add a new text data.
+         * @param   key     Asset key for the text data.
+         * @param   url     URL of this text data file.
+         * @param   data    Extra text data.
+         */
         public addText(key: string, url: string, data) {
 
             this._text[key] = { url: url, data: data };
 
         }
 
+        /**
+         * Get canvas by key.
+         * @param key Asset key of the canvas you want.
+         * @return {object} The canvas you want.
+         */
         public getCanvas(key: string) {
 
             if (this._canvases[key])
@@ -85,6 +158,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get image data by key.
+         * @param key Asset key of the image you want.
+         * @return {object} The image data you want.
+         */
         public getImage(key: string) {
 
             if (this._images[key])
@@ -96,6 +174,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get frame data by key.
+         * @param key Asset key of the frame data you want.
+         * @return {object} The frame data you want.
+         */
         public getFrameData(key: string): FrameData {
 
             if (this._images[key] && this._images[key].spriteSheet == true)
@@ -107,6 +190,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get sound data by key.
+         * @param key Asset key of the sound you want.
+         * @return {object} The sound data you want.
+         */
         public getSound(key: string) {
 
             if (this._sounds[key])
@@ -118,6 +206,11 @@ module Phaser {
 
         }
 
+        /**
+         * Check whether an asset is decoded sound.
+         * @param key Asset key of the sound you want.
+         * @return {object} The sound data you want.
+         */
         public isSoundDecoded(key: string): bool {
 
             if (this._sounds[key])
@@ -127,6 +220,11 @@ module Phaser {
 
         }
 
+        /**
+         * Check whether an asset is sprite sheet.
+         * @param key Asset key of the sprite sheet you want.
+         * @return {object} The sprite sheet data you want.
+         */
         public isSpriteSheet(key: string): bool {
 
             if (this._images[key])
@@ -136,6 +234,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get text data by key.
+         * @param key Asset key of the text data you want.
+         * @return {object} The text data you want.
+         */
         public getText(key: string) {
 
             if (this._text[key])
@@ -147,6 +250,9 @@ module Phaser {
 
         }
 
+        /**
+         * Clean up cache memory.
+         */
         public destroy() {
 
             for (var item in this._canvases)

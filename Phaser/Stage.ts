@@ -15,6 +15,15 @@ module Phaser {
 
     export class Stage {
 
+        /**
+         * Stage constructor
+         *
+         * Create a new <code>Stage</code> with specific width and height.
+         *
+         * @param parent    ID of parent DOM element.
+         * @param width     Width of the stage.
+         * @param height    Height of the stage.
+         */
         constructor(game: Game, parent: string, width: number, height: number) {
 
             this._game = game;
@@ -55,30 +64,116 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
+        /**
+         * Background color of the stage.
+         * @type {string}
+         */
         private _bgColor: string;
+        /**
+         * This will be displayed when Phaser is started without any default functions or State
+         * @type {BootScreen}
+         */
         private _bootScreen;
+        /**
+         * This will be displayed whenever the game loses focus or the player switches to another browser tab.
+         * @type {PauseScreen}
+         */
         private _pauseScreen;
 
+        /**
+         * Screen orientation enum: Landscape.
+         * @type {number}
+         */
         public static ORIENTATION_LANDSCAPE: number = 0;
+        /**
+         * Screen orientation enum: Portrait.
+         * @type {number}
+         */
         public static ORIENTATION_PORTRAIT: number = 1;
 
+        /**
+         * Bound of this stage.
+         * @type {Rectangle}
+         */
         public bounds: Rectangle;
+        /**
+         * Asperct ratio, thus: width / height.
+         * @type {number}
+         */
         public aspectRatio: number;
+        /**
+         * Clear the whole stage every frame? (Default to true)
+         * @type {boolean}
+         */
         public clear: bool = true;
+        /**
+         * Canvas element used by engine.
+         * @type {HTMLCanvasElement}
+         */
         public canvas: HTMLCanvasElement;
+        /**
+         * Render context of stage's canvas.
+         * @type {CanvasRenderingContext2D}
+         */
         public context: CanvasRenderingContext2D;
+        /**
+         * Do not use pause screen when game is paused?
+         * (Default to false, aka always use PauseScreen)
+         * @type {boolean}
+         */
         public disablePauseScreen: bool = false;
+        /**
+         * Do not use boot screen when engine starts?
+         * (Default to false, aka always use BootScreen)
+         * @type {boolean}
+         */
         public disableBootScreen: bool = false;
+        /**
+         * Offset from this stage to the canvas element.
+         * @type {Point}
+         */
         public offset: Point;
+        /**
+         * This object manages scaling of the game, see(StageScaleMode).
+         * @type {StageScaleMode}
+         */
         public scale: StageScaleMode;
+        /**
+         * Which mode will the game be scaled.
+         * Available: StageScaleMode.EXACT_FIT, StageScaleMode.NO_SCALE, StageScaleMode.SHOW_ALL.
+         * @type {number}
+         */
         public scaleMode: number;
 
+        /**
+         * Minimal scale factor of x-axis.
+         * @type {number}
+         */
         public minScaleX: number = null;
+        /**
+         * Maximal scale factor of x-axis.
+         * @type {number}
+         */
         public maxScaleX: number = null;
+        /**
+         * Minimal scale factor of y-axis.
+         * @type {number}
+         */
         public minScaleY: number = null;
+        /**
+         * Maximal scale factor of y-axis.
+         * @type {number}
+         */
         public maxScaleY: number = null;
 
+        /**
+         * Update stage for rendering. This will handle scaling, clearing
+         * and PauseScreen/BootScreen updating and rendering.
+         */
         public update() {
 
             this.scale.update();
@@ -103,6 +198,9 @@ module Phaser {
 
         }
 
+        /**
+         * This method will be called when canvas element's visibility changed.
+         */
         private visibilityChange(event) {
 
             if (this.disablePauseScreen)
@@ -144,10 +242,25 @@ module Phaser {
 
         }
 
+        /**
+         * Canvas strokeStyle.
+         * @type {string}
+         */
         public strokeStyle: string;
+        /**
+         * Canvas lineWidth.
+         * @type {number}
+         */
         public lineWidth: number;
+        /**
+         * Canvas fillStyle.
+         * @type {string}
+         */
         public fillStyle: string;
 
+        /**
+         * Save current canvas properties (strokeStyle, lineWidth and fillStyle) for later using.
+         */
         public saveCanvasValues() {
 
             this.strokeStyle = this.context.strokeStyle;
@@ -156,6 +269,9 @@ module Phaser {
 
         }
 
+        /**
+         * Restore current canvas values (strokeStyle, lineWidth and fillStyle) with saved values.
+         */
         public restoreCanvasValues() {
 
             this.context.strokeStyle = this.strokeStyle;
