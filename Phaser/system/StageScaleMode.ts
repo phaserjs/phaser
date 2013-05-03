@@ -12,6 +12,9 @@ module Phaser {
 
     export class StageScaleMode {
 
+        /**
+         * StageScaleMode constructor
+         */
         constructor(game: Game) {
 
             this._game = game;
@@ -22,23 +25,51 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
+        /**
+         * Stage height when start the game.
+         * @type {number}
+         */
         private _startHeight: number = 0;
         private _iterations: number;
         private _check;
 
-        //  Specifies that the game be visible in the specified area without trying to preserve the original aspect ratio.
+        /**
+         * Specifies that the game be visible in the specified area without trying to preserve the original aspect ratio.
+         * @type {number}
+         */
         public static EXACT_FIT: number = 0;
 
-        //  Specifies that the size of the game be fixed, so that it remains unchanged even if the size of the window changes.
+        /**
+         * Specifies that the size of the game be fixed, so that it remains unchanged even if the size of the window changes.
+         * @type {number}
+         */
         public static NO_SCALE: number = 1;
 
-        //  Specifies that the entire game be visible in the specified area without distortion while maintaining the original aspect ratio.
+        /**
+         * Specifies that the entire game be visible in the specified area without distortion while maintaining the original aspect ratio.
+         * @type {number}
+         */
         public static SHOW_ALL: number = 2;
 
+        /**
+         * Width of the stage after calculation.
+         * @type {number}
+         */
         public width: number = 0;
+        /**
+         * Height of the stage after calculation.
+         * @type {number}
+         */
         public height: number = 0;
 
+        /**
+         * Game orientation angel.
+         * @type {number}
+         */
         public orientation;
 
         public update() {
@@ -54,6 +85,9 @@ module Phaser {
             return window['orientation'] === 90 || window['orientation'] === -90;
         }
 
+        /**
+         * Check whether game orientation the same as window's. Update orientation if not equal.
+         */
         private checkOrientation(event) {
 
             if (window['orientation'] !== this.orientation)
@@ -64,6 +98,9 @@ module Phaser {
 
         }
 
+        /**
+         * Re-calculate scale mode and update screen size.
+         */
         private refresh() {
 
             //  We can't do anything about the status bars in iPads, web apps or desktops
@@ -91,6 +128,9 @@ module Phaser {
 
         }
 
+        /**
+         * Set screen size automatically based on stage's scaleMode.
+         */
         private setScreenSize() {
 
             if (this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false)

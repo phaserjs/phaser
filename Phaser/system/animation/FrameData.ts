@@ -10,6 +10,9 @@ module Phaser {
 
     export class FrameData {
 
+        /**
+         * FrameData constructor
+         */
         constructor() {
 
             this._frames = [];
@@ -17,13 +20,24 @@ module Phaser {
 
         }
 
+        /**
+         * Local frame container.
+         */
         private _frames: Frame[];
+        /**
+         * Local frameName<->index container.
+         */
         private _frameNames;
 
         public get total(): number {
             return this._frames.length;
         }
 
+        /**
+         * Add a new frame.
+         * @param frame The frame you want to add.
+         * @return {Frame=} The frame you just added.
+         */
         public addFrame(frame: Frame): Frame {
 
             frame.index = this._frames.length;
@@ -39,6 +53,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get a frame by its index.
+         * @param index Index of the frame you want to get.
+         * @return {Frame=} The frame you want.
+         */
         public getFrame(index: number): Frame {
 
             if (this._frames[index])
@@ -50,6 +69,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get a frame by its name.
+         * @param name Name of the frame you want to get.
+         * @return {Frame=} The frame you want.
+         */
         public getFrameByName(name: string): Frame {
 
             if (this._frameNames[name] >= 0)
@@ -61,6 +85,11 @@ module Phaser {
 
         }
 
+        /**
+         * Check whether there's a frame with given name.
+         * @param name Name of the frame you want to check.
+         * @return {boolean} True if frame with given name found, otherwise return false.
+         */
         public checkFrameName(name: string): bool {
 
             if (this._frameNames[name] >= 0)
@@ -72,6 +101,13 @@ module Phaser {
 
         }
 
+        /**
+         * Get ranges of frames in an array.
+         * @param start     Start index of frames you want.
+         * @param end       End index of frames you want.
+         * @param output    Optional, result will be added into this array.
+         * @return {array}  Ranges of specific frames in an array.
+         */
         public getFrameRange(start: number, end: number, output?: Frame[] = []): Frame[] {
 
             for (var i = start; i <= end; i++)
@@ -83,6 +119,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get all indexes of frames by giving their name.
+         * @param output Optional, result will be added into this array.
+         * @return {array} Indexes of specific frames in an array.
+         */
         public getFrameIndexes(output?: number[] = []): number[] {
 
             output.length = 0;
@@ -96,6 +137,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get all names of frames by giving their indexes.
+         * @param output Optional, result will be added into this array.
+         * @return {array} Names of specific frames in an array.
+         */
         public getFrameIndexesByName(input: string[]): number[] {
 
             var output: number[] = [];
@@ -112,10 +158,19 @@ module Phaser {
 
         }
 
+        /**
+         * Get all frames in this frame data.
+         * @return {array} All the frames in an array.
+         */
         public getAllFrames(): Frame[] {
             return this._frames;
         }
 
+        /**
+         * Get All frames with specific ranges.
+         * @param range Ranges in an array.
+         * @return All frames in an array.
+         */
         public getFrames(range: number[]) {
 
             var output: Frame[] = [];
