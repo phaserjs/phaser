@@ -11,6 +11,14 @@ module Phaser {
 
     export class Sound {
 
+        /**
+         * Sound constructor
+         * @param   context     The AudioContext instance.
+         * @param   gainNode    Gain node instance.
+         * @param   data        Sound data.
+         * @param   volume      Optional, volume of this sound when playing.
+         * @param   loop        Optional, loop this sound when playing? (Default to false)
+         */
         constructor(context, gainNode, data, volume?: number = 1, loop?: bool = false) {
 
             this._context = context;
@@ -38,11 +46,29 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to AudioContext.
+         */
         private _context;
+        /**
+         * Reference to gain node of SoundManager.
+         */
         private _gainNode;
+        /**
+         * GainNode of this sound.
+         */
         private _localGainNode;
+        /**
+         * Decoded data buffer.
+         */
         private _buffer;
+        /**
+         * Volume of this sound.
+         */
         private _volume: number;
+        /**
+         * The real sound object (buffer source).
+         */
         private _sound;
 
         loop: bool = false;
@@ -58,6 +84,9 @@ module Phaser {
 
         }
 
+        /**
+         * Play this sound.
+         */
         public play() {
 
             if (this._buffer === null || this.isDecoding === true)
@@ -81,6 +110,9 @@ module Phaser {
 
         }
 
+        /**
+         * Stop playing this sound.
+         */
         public stop() {
 
             if (this.isPlaying === true)
@@ -92,12 +124,18 @@ module Phaser {
 
         }
 
+        /**
+         * Mute the sound.
+         */
         public mute() {
 
             this._localGainNode.gain.value = 0;
 
         }
 
+        /**
+         * Enable the sound.
+         */
         public unmute() {
 
             this._localGainNode.gain.value = this._volume;

@@ -10,6 +10,13 @@ module Phaser {
 
     export class Animation {
 
+        /**
+         * Animation constructor
+         * Create a new <code>Animation</code>.
+         *
+         * @param width     Width of the world bound.
+         * @param height    Height of the world bound.
+         */
         constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool) {
 
             this._game = game;
