@@ -16,10 +16,10 @@ module Phaser {
         /**
          * Creates a new <code>Emitter</code> object at a specific position.
          * Does NOT automatically generate or attach particles!
-         * 
-         * @param	X		The X position of the emitter.
-         * @param	Y		The Y position of the emitter.
-         * @param	Size	Optional, specifies a maximum capacity for this emitter.
+         *
+         * @param X {number} The X position of the emitter.
+         * @param Y {number} The Y position of the emitter.
+         * @param Size {number} Optional, specifies a maximum capacity for this emitter.
          */
         constructor(game: Game, X: number = 0, Y: number = 0, Size: number = 0) {
             super(game, Size);
@@ -165,14 +165,14 @@ module Phaser {
 
         /**
          * This function generates a new array of particle sprites to attach to the emitter.
-         * 
-         * @param	Graphics		If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
-         * @param	Quantity		The number of particles to generate when using the "create from image" option.
-         * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
-         * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-         * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
-         * 
-         * @return	This Emitter instance (nice for chaining stuff together, if you're into that).
+         *
+         * @param Graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
+         * @param Quantity {number} The number of particles to generate when using the "create from image" option.
+         * @param BakedRotations {number} How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
+         * @param Multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+         * @param Collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+         *
+         * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
          */
         public makeParticles(Graphics, Quantity: number = 50, BakedRotations: number = 16, Multiple: bool = false, Collide: number = 0): Emitter {
 
@@ -182,7 +182,7 @@ module Phaser {
 
             /*
             if(Multiple)
-            { 
+            {
                 var sprite:Sprite = new Sprite(this._game);
                 sprite.loadGraphic(Graphics,true);
                 totalFrames = sprite.frames;
@@ -318,11 +318,11 @@ module Phaser {
 
         /**
          * Call this function to start emitting particles.
-         * 
-         * @param	Explode		Whether the particles should all burst out at once.
-         * @param	Lifespan	How long each particle lives once emitted. 0 = forever.
-         * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-         * @param	Quantity	How many particles to launch. 0 = "all of the particles".
+         *
+         * @param Explode {boolean} Whether the particles should all burst out at once.
+         * @param Lifespan {number} How long each particle lives once emitted. 0 = forever.
+         * @param Frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+         * @param Quantity {number} How many particles to launch. 0 = "all of the particles".
          */
         public start(Explode: bool = true, Lifespan: number = 0, Frequency: number = 0.1, Quantity: number = 0) {
 
@@ -395,9 +395,9 @@ module Phaser {
 
         /**
          * A more compact way of setting the width and height of the emitter.
-         * 
-         * @param	Width	The desired width of the emitter (particles are spawned randomly within these dimensions).
-         * @param	Height	The desired height of the emitter.
+         *
+         * @param Width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
+         * @param Height {number} The desired height of the emitter.
          */
         public setSize(Width: number, Height: number) {
             this.width = Width;
@@ -406,9 +406,9 @@ module Phaser {
 
         /**
          * A more compact way of setting the X velocity range of the emitter.
-         * 
-         * @param	Min		The minimum value for this range.
-         * @param	Max		The maximum value for this range.
+         *
+         * @param Min {number} The minimum value for this range.
+         * @param Max {number} The maximum value for this range.
          */
         public setXSpeed(Min: number = 0, Max: number = 0) {
             this.minParticleSpeed.x = Min;
@@ -417,9 +417,9 @@ module Phaser {
 
         /**
          * A more compact way of setting the Y velocity range of the emitter.
-         * 
-         * @param	Min		The minimum value for this range.
-         * @param	Max		The maximum value for this range.
+         *
+         * @param Min {number} The minimum value for this range.
+         * @param Max {number} The maximum value for this range.
          */
         public setYSpeed(Min: number = 0, Max: number = 0) {
             this.minParticleSpeed.y = Min;
@@ -428,9 +428,9 @@ module Phaser {
 
         /**
          * A more compact way of setting the angular velocity constraints of the emitter.
-         * 
-         * @param	Min		The minimum value for this range.
-         * @param	Max		The maximum value for this range.
+         *
+         * @param Min {number} The minimum value for this range.
+         * @param Max {number} The maximum value for this range.
          */
         public setRotation(Min: number = 0, Max: number = 0) {
             this.minRotation = Min;
@@ -439,8 +439,8 @@ module Phaser {
 
         /**
          * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
-         * 
-         * @param	Object		The <code>Object</code> that you want to sync up with.
+         *
+         * @param Object {object} The <code>Object</code> that you want to sync up with.
          */
         public at(Object) {
             Object.getMidpoint(this._point);
