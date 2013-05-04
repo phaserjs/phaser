@@ -12,11 +12,11 @@ module Phaser {
 
         /**
          * Parse a sprite sheet from asset data.
-         * @param key           Asset key for the sprite sheet data.
-         * @param frameWidth    Width of animation frame.
-         * @param frameHeight   Height of animation frame.
-         * @param frameMax      Number of animation frames.
-         * @return {FrameData=} Generated FrameData object.
+         * @param key {string} Asset key for the sprite sheet data.
+         * @param frameWidth {number} Width of animation frame.
+         * @param frameHeight {number} Height of animation frame.
+         * @param frameMax {number} Number of animation frames.
+         * @return {FrameData} Generated FrameData object.
          */
         public static parseSpriteSheet(game: Game, key: string, frameWidth: number, frameHeight: number, frameMax: number): FrameData {
 
@@ -73,8 +73,8 @@ module Phaser {
 
         /**
          * Parse frame datas from json.
-         * @param json Json data you want to parse.
-         * @return {FrameData=} Generated FrameData object.
+         * @param json {object} Json data you want to parse.
+         * @return {FrameData} Generated FrameData object.
          */
         public static parseJSONData(game: Game, json): FrameData {
 

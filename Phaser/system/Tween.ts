@@ -21,6 +21,13 @@ module Phaser {
 
     export class Tween {
 
+        /**
+         * Tween constructor
+         * Create a new <code>Tween</code>.
+         *
+         * @param object {object} Target object will be affected by this tween.
+         * @param game {Phaser.Game} Current game instance.
+         */
         constructor(object, game:Phaser.Game) {
 
             this._object = object;
@@ -37,24 +44,75 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Phaser.Game;
+        /**
+         * Manager of this tween.
+         * @type {Phaser.TweenManager}
+         */
         private _manager: Phaser.TweenManager;
+        /**
+         * Reference to the target object.
+         * @type {object}
+         */
 	    private _object = null;
         private _pausedTime: number = 0;
 
+        /**
+         * Start values container.
+         * @type {object}
+         */
 	    private _valuesStart = {};
+        /**
+         * End values container.
+         * @type {object}
+         */
 	    private _valuesEnd = {};
+	    /**
+	     * How long this tween will perform.
+	     * @type {number}
+	     */
 	    private _duration = 1000;
 	    private _delayTime = 0;
 	    private _startTime = null;
+	    /**
+	     * Easing function which actually updating this tween.
+	     * @type {function}
+	     */
 	    private _easingFunction;
 	    private _interpolationFunction;
+	    /**
+	     * Contains chained tweens.
+	     * @type {Tweens[]}
+	     */
 	    private _chainedTweens = [];
 
+	    /**
+	     * Signal to be dispatched when this tween start.
+	     * @type {Phaser.Signal}
+	     */
 	    public onStart: Phaser.Signal;
+	    /**
+	     * Signal to be dispatched when this tween updating.
+	     * @type {Phaser.Signal}
+	     */
 	    public onUpdate: Phaser.Signal;
+	    /**
+	     * Signal to be dispatched when this tween completed.
+	     * @type {Phaser.Signal}
+	     */
 	    public onComplete: Phaser.Signal;
 
+	    /**
+	     * Config the tween result.
+	     * @param properties {object} Propertis you want to tween.
+	     * @param duration {number} Optional, duration of this tween.
+	     * @param ease {any} Easing function.
+	     * @param autoStart {boolean} Whether this tween will start automatically or not.
+	     * @return {Tween} Itself.
+	     */
 	    public to(properties, duration?: number = 1000, ease?: any = null, autoStart?: bool = false) {
 
 	        this._duration = duration;
@@ -78,6 +136,9 @@ module Phaser {
 
 	    }
 
+	    /**
+	     * Start to tween.
+	     */
 	    public start() {
 
 	        if (this._game === null || this._object === null)
@@ -120,6 +181,9 @@ module Phaser {
 
 	    }
 
+	    /**
+	     * Stop tweening.
+	     */
 	    public stop() {
 
 	        if (this._manager !== null)
@@ -164,6 +228,11 @@ module Phaser {
 	        return this._interpolationFunction;
 	    }
 
+	    /**
+	     * Add another chained tween, which will start automatically when the one before it completes.
+	     * @param tween {Phaser.Tween} Tween object you want to chain with this.
+	     * @return {Phaser.Tween} Itselfe.
+	     */
 	    public chain(tween:Phaser.Tween) {
 
 	        this._chainedTweens.push(tween);
@@ -172,8 +241,16 @@ module Phaser {
 
 	    }
 
+	    /**
+	     * Debug value?
+	     */
 	    public debugValue;
 
+	    /**
+	     * Update tweening.
+	     * @param time {number} Current time from game clock.
+	     * @return {boolean} Return false if this completed and no need to update, otherwise return true.
+	     */
 	    public update(time) {
 
 	        if (this._game.paused == true)

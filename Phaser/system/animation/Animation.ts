@@ -14,8 +14,12 @@ module Phaser {
          * Animation constructor
          * Create a new <code>Animation</code>.
          *
-         * @param width     Width of the world bound.
-         * @param height    Height of the world bound.
+         * @param parent {Sprite} Owner sprite of this animation.
+         * @param frameData {FrameData} The FrameData object contains animation data.
+         * @param name {string} Unique name of this animation.
+         * @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
+         * @param delay {number} Time between frames in ms.
+         * @param looped {boolean} Whether or not the animation is looped or just plays once.
          */
         constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool) {
 
@@ -36,21 +40,72 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
+        /**
+         * Local private reference to its owner sprite.
+         * @type {Sprite}
+         */
         private _parent: Sprite;
+        /**
+         * Animation frame container.
+         * @type {number[]}
+         */
         private _frames: number[];
+        /**
+         * Frame data of this animation.(parsed from sprite sheet)
+         * @type {FrameData}
+         */
         private _frameData: FrameData;
+        /**
+         * Index of current frame.
+         * @type {number}
+         */
         private _frameIndex: number;
 
+        /**
+         * Time when switched to last frame (in ms).
+         * @type number
+         */
         private _timeLastFrame: number;
+        /**
+         * Time when this will switch to next frame (in ms).
+         * @type number
+         */
         private _timeNextFrame: number;
 
+        /**
+         * Name of this animation.
+         * @type {string}
+         */
         public name: string;
+        /**
+         * Currently played frame instance.
+         * @type {Frame}
+         */
         public currentFrame: Frame;
 
+        /**
+         * Whether or not this animation finished playing.
+         * @type {boolean}
+         */
         public isFinished: bool;
+        /**
+         * Whethor or not this animation is currently playing.
+         * @type {boolean}
+         */
         public isPlaying: bool;
+        /**
+         * Whether or not the animation is looped.
+         * @type {boolean}
+         */
         public looped: bool;
+        /**
+         * Time between frames in ms.
+         * @type {number}
+         */
         public delay: number;
 
         public get frameTotal(): number {
@@ -74,6 +129,11 @@ module Phaser {
 
         }
 
+        /**
+         * Play this animation.
+         * @param frameRate {number} FrameRate you want to specify instead of using default.
+         * @param loop {boolean} Whether or not the animation is looped or just plays once.
+         */
         public play(frameRate?: number = null, loop?: bool) {
 
             if (frameRate !== null)
@@ -97,6 +157,9 @@ module Phaser {
 
         }
 
+        /**
+         * Play this animation from the first frame.
+         */
         public restart() {
 
             this.isPlaying = true;
@@ -110,6 +173,9 @@ module Phaser {
 
         }
 
+        /**
+         * Stop playing animation and set it finished.
+         */
         public stop() {
 
             this.isPlaying = false;
@@ -117,6 +183,9 @@ module Phaser {
 
         }
 
+        /**
+         * Update animation frames.
+         */
         public update(): bool {
 
             if (this.isPlaying == true && this._game.time.now >= this._timeNextFrame)
@@ -150,6 +219,9 @@ module Phaser {
 
         }
 
+        /**
+         * Clean up animation memory.
+         */
         public destroy() {
 
             this._game = null;
@@ -161,6 +233,9 @@ module Phaser {
 
         }
 
+        /**
+         * Animation complete callback method.
+         */
         private onComplete() {
 
             this.isPlaying = false;
