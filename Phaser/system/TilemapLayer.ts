@@ -10,6 +10,18 @@ module Phaser {
 
     export class TilemapLayer {
 
+        /**
+         * TilemapLayer constructor
+         * Create a new <code>TilemapLayer</code>.
+         *
+         * @param game {Phaser.Game} Current game instance.
+         * @param parent {Tilemap} The tilemap that contains this layer.
+         * @param key {string} Asset key for this map.
+         * @param mapFormat {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+         * @param name {string} Name of this layer, so you can get this layer by its name.
+         * @param tileWidth {number} Width of tiles in this map.
+         * @param tileHeight {number} Height of tiles in this map.
+         */
         constructor(game: Game, parent:Tilemap, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number) {
 
             this._game = game;
@@ -28,8 +40,18 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
+        /**
+         * The tilemap that contains this layer.
+         * @type {Tilemap}
+         */
         private _parent: Tilemap;
+        /**
+         * Tileset of this layer.
+         */
         private _texture;
         private _tileOffsets;
         private _startX: number = 0;
@@ -51,30 +73,103 @@ module Phaser {
         private _tempTileBlock;
         private _tempBlockResults;
 
+        /**
+         * Name of this layer, so you can get this layer by its name.
+         * @type {string}
+         */
         public name: string;
+        /**
+         * Opacity of this layer.
+         * @type {number}
+         */
         public alpha: number = 1;
+        /**
+         * Controls whether update() and draw() are automatically called.
+         * @type {boolean}
+         */
         public exists: bool = true;
+        /**
+         * Controls whether draw() are automatically called.
+         * @type {boolean}
+         */
         public visible: bool = true;
         //public scrollFactor: MicroPoint;
+        /**
+         * @type {string}
+         */
         public orientation: string;
+        /**
+         * Properties of this map layer. (normally set by map editors)
+         */
         public properties: {};
 
+        /**
+         * Map data in a 2d array, its element is a index number for that tile.
+         * @type {number[][]}
+         */
         public mapData;
+        /**
+         * Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+         */
         public mapFormat: number;
+        /**
+         * It's width and height are in tiles instead of pixels.
+         * @type {Rectangle}
+         */
         public boundsInTiles: Rectangle;
 
+        /**
+         * Width of each tile.
+         * @type {number}
+         */
         public tileWidth: number;
+        /**
+         * Height of a single tile.
+         * @type {number}
+         */
         public tileHeight: number;
 
+        /**
+         * How many tiles in each row.
+         * Read-only variable, do NOT recommend changing after the map is loaded!
+         * @type {number}
+         */
         public widthInTiles: number = 0;
+        /**
+         * How many tiles in each column.
+         * Read-only variable, do NOT recommend changing after the map is loaded!
+         * @type {number}
+         */
         public heightInTiles: number = 0;
 
+        /**
+         * Read-only variable, do NOT recommend changing after the map is loaded!
+         * @type {number}
+         */
         public widthInPixels: number = 0;
+        /**
+         * Read-only variable, do NOT recommend changing after the map is loaded!
+         * @type {number}
+         */
         public heightInPixels: number = 0;
 
+        /**
+         * Distance between REAL tiles to the tileset texture bound.
+         * @type {number}
+         */
         public tileMargin: number = 0;
+        /**
+         * Distance between every 2 neighbor tile in the tileset texture.
+         * @type {number}
+         */
         public tileSpacing: number = 0;
 
+        /**
+         * Set a specific tile with its x and y in tiles.
+         * @param x {number} X position of this tile.
+         * @param y {number} Y position of this tile.
+         * @param index {number} The index of this tile type in the core map data.
+         */
         public putTile(x: number, y: number, index: number) {
 
             x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
@@ -90,6 +185,15 @@ module Phaser {
 
         }
 
+        /**
+         * Swap tiles with 2 kinds of indexes.
+         * @param tileA {number} First tile index.
+         * @param tileB {number} Second tile index.
+         * @param x {number} Optional, specify a rectangle of tiles to operate. The x position in tiles of rectangle's left-top corner.
+         * @param y {number} Optional, specify a rectangle of tiles to operate. The y position in tiles of rectangle's left-top corner.
+         * @param width {number} Optional, specify a rectangle of tiles to operate. The width in tiles.
+         * @param height {number} Optional, specify a rectangle of tiles to operate. The height in tiles.
+         */
         public swapTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 
             this.getTempBlock(x, y, width, height);
@@ -120,6 +224,14 @@ module Phaser {
 
         }
 
+        /**
+         * Fill a tile block with a specific tile index.
+         * @param index {number} Index of tiles you want to fill with.
+         * @param x {number} Optional, x position (in tiles) of block's left-top corner.
+         * @param y {number} Optional, y position (in tiles) of block's left-top corner.
+         * @param width {number} Optional, width of block.
+         * @param height {number} Optional, height of block.
+         */
         public fillTile(index: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 
             this.getTempBlock(x, y, width, height);
@@ -131,6 +243,14 @@ module Phaser {
 
         }
 
+        /**
+         * Set random tiles to a specific tile block.
+         * @param tiles {number[]} Tiles with indexes in this array will be randomly set to the given block.
+         * @param x {number} Optional, x position (in tiles) of block's left-top corner.
+         * @param y {number} Optional, y position (in tiles) of block's left-top corner.
+         * @param width {number} Optional, width of block.
+         * @param height {number} Optional, height of block.
+         */
         public randomiseTiles(tiles: number[], x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 
             this.getTempBlock(x, y, width, height);
@@ -142,6 +262,15 @@ module Phaser {
 
         }
 
+        /**
+         * Replace one kind of tiles to another kind.
+         * @param tileA {number} Index of tiles you want to replace.
+         * @param tileB {number} Index of tiles you want to set.
+         * @param x {number} Optional, x position (in tiles) of block's left-top corner.
+         * @param y {number} Optional, y position (in tiles) of block's left-top corner.
+         * @param width {number} Optional, width of block.
+         * @param height {number} Optional, height of block.
+         */
         public replaceTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 
             this.getTempBlock(x, y, width, height);
@@ -156,6 +285,13 @@ module Phaser {
 
         }
 
+        /**
+         * Get a tile block with specific position and size.(both are in tiles)
+         * @param x {number} X position of block's left-top corner.
+         * @param y {number} Y position of block's left-top corner.
+         * @param width {number} Width of block.
+         * @param height {number} Height of block.
+         */
         public getTileBlock(x: number, y: number, width: number, height: number) {
 
             var output = [];
@@ -171,6 +307,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get a tile with specific position (in world coordinate). (thus you give a position of a point which is within the tile)
+         * @param x {number} X position of the point in target tile.
+         * @param x {number} Y position of the point in target tile.
+         */
         public getTileFromWorldXY(x: number, y: number): number {
 
             x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
@@ -180,6 +321,11 @@ module Phaser {
 
         }
 
+        /**
+         * Get tiles overlaps the given object.
+         * @param object {GameObject} Tiles you want to get that overlaps this.
+         * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+         */
         public getTileOverlaps(object: GameObject) {
 
             //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
@@ -213,6 +359,14 @@ module Phaser {
 
         }
 
+        /**
+         * Get a tile block with its position and size. (This method does not return, it'll set result to _tempTileBlock)
+         * @param x {number} X position of block's left-top corner.
+         * @param y {number} Y position of block's left-top corner.
+         * @param width {number} Width of block.
+         * @param height {number} Height of block.
+         * @param collisionOnly {boolean} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
+         */
         private getTempBlock(x: number, y: number, width: number, height: number, collisionOnly?: bool = false) {
 
             if (x < 0)
@@ -261,6 +415,12 @@ module Phaser {
 
         }
 
+        /**
+         * Get the tile index of specific position (in tiles).
+         * @param x {number} X position of the tile.
+         * @param y {number} Y position of the tile.
+         * @return {number} Index of the tile at that position. Return null if there isn't a tile there.
+         */
         public getTileIndex(x: number, y: number): number {
 
             if (y >= 0 && y < this.mapData.length)
@@ -270,11 +430,15 @@ module Phaser {
                     return this.mapData[y][x];
                 }
             }
-            
+
             return null;
 
         }
 
+        /**
+         * Add a column of tiles into the layer.
+         * @param column {string[]/number[]} An array of tile indexes to be added.
+         */
         public addColumn(column) {
 
             var data = [];
@@ -297,12 +461,19 @@ module Phaser {
 
         }
 
+        /**
+         * Update boundsInTiles with widthInTiles and heightInTiles.
+         */
         public updateBounds() {
 
             this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
 
         }
 
+        /**
+         * Parse tile offsets from map data.
+         * @return {number} length of _tileOffsets array.
+         */
         public parseTileOffsets():number {
 
             this._tileOffsets = [];
@@ -339,6 +510,13 @@ module Phaser {
 
         }
 
+        /**
+         * Render this layer to a specific camera with offset to camera.
+         * @param camera {Camera} The camera the layer is going to be rendered.
+         * @param dx {number} X offset to the camera.
+         * @param dy {number} Y offset to the camera.
+         * @return {boolean} Return false if layer is invisible or has a too low opacity(will stop rendering), return true if succeed.
+         */
         public render(camera: Camera, dx, dy): bool {
 
             if (this.visible === false || this.alpha < 0.1)
@@ -430,7 +608,7 @@ module Phaser {
                             this.tileWidth, 	                            //	Destination Width (always same as Source Width unless scaled)
                             this.tileHeight	                                //	Destination Height (always same as Source Height unless scaled)
                         );
-                    
+
                     }
 
                     this._tx += this.tileWidth;
