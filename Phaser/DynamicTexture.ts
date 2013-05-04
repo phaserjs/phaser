@@ -13,6 +13,14 @@ module Phaser {
 
     export class DynamicTexture {
 
+        /**
+         * DynamicTexture constructor
+         * Create a new <code>DynamicTexture</code>.
+         *
+         * @param game {Phaser.Game} Current game instance.
+         * @param width {number} Init width of this texture.
+         * @param height {number} Init height of this texture.
+         */
         constructor(game: Game, width: number, height: number) {
 
             this._game = game;
@@ -26,6 +34,9 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
 
         private _sx: number = 0;
@@ -39,10 +50,28 @@ module Phaser {
 
         //  Input / Output nodes?
 
+        /**
+         * Bound of this texture with width and height info.
+         * @type {Rectangle}
+         */
         public bounds: Rectangle;
+        /**
+         * This class is actually a wrapper of canvas.
+         * @type {HTMLCanvasElement}
+         */
         public canvas: HTMLCanvasElement;
+        /**
+         * Canvas context of this object.
+         * @type {CanvasRenderingContext2D}
+         */
         public context: CanvasRenderingContext2D;
 
+        /**
+         * Get a color of a specific pixel.
+         * @param x {number} X position of the pixel in this texture.
+         * @param y {number} Y position of the pixel in this texture.
+         * @return {number} A native color value integer (format: 0xRRGGBB)
+         */
         public getPixel(x: number, y: number): number {
 
             //r = imageData.data[0];
@@ -55,6 +84,12 @@ module Phaser {
 
         }
 
+        /**
+         * Get a color of a specific pixel (including alpha value).
+         * @param x {number} X position of the pixel in this texture.
+         * @param y {number} Y position of the pixel in this texture.
+         * @return  A native color value integer (format: 0xAARRGGBB)
+         */
         public getPixel32(x: number, y: number) {
 
             var imageData = this.context.getImageData(x, y, 1, 1);
@@ -63,13 +98,23 @@ module Phaser {
 
         }
 
-        //  Returns a CanvasPixelArray
+        /**
+         * Get pixels in array in a specific rectangle.
+         * @param rect {Rectangle} The specific rectangle.
+         * @returns {array} CanvasPixelArray.
+         */
         public getPixels(rect: Rectangle) {
 
             return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
 
         }
 
+        /**
+         * Set color of a specific pixel.
+         * @param x {number} X position of the target pixel.
+         * @param y {number} Y position of the target pixel.
+         * @param color {number} Native integer with color value. (format: 0xRRGGBB)
+         */
         public setPixel(x: number, y: number, color: number) {
 
             this.context.fillStyle = color;
@@ -77,6 +122,12 @@ module Phaser {
 
         }
 
+        /**
+         * Set color (with alpha) of a specific pixel.
+         * @param x {number} X position of the target pixel.
+         * @param y {number} Y position of the target pixel.
+         * @param color {number} Native integer with color value. (format: 0xAARRGGBB)
+         */
         public setPixel32(x: number, y: number, color: number) {
 
             this.context.fillStyle = color;
@@ -84,12 +135,22 @@ module Phaser {
 
         }
 
+        /**
+         * Set image data to a specific rectangle.
+         * @param rect {Rectangle} Target rectangle.
+         * @param input {object} Source image data.
+         */
         public setPixels(rect: Rectangle, input) {
 
             this.context.putImageData(input, rect.x, rect.y);
 
         }
 
+        /**
+         * Fill a given rectangle with specific color.
+         * @param rect {Rectangle} Target rectangle you want to fill.
+         * @param color {number} A native number with color value. (format: 0xRRGGBB)
+         */
         public fillRect(rect: Rectangle, color: number) {
 
             this.context.fillStyle = color;
@@ -97,6 +158,9 @@ module Phaser {
 
         }
 
+        /**
+         *
+         */
         public pasteImage(key: string, frame?: number = -1, destX?: number = 0, destY?: number = 0, destWidth?: number = null, destHeight?: number = null) {
 
             var texture = null;
@@ -138,21 +202,27 @@ module Phaser {
             if (texture != null)
             {
                 this.context.drawImage(
-                    texture,	    //	Source Image
-                    this._sx,		//	Source X (location within the source image)
-                    this._sy,		//	Source Y
-                    this._sw,		//	Source Width
-                    this._sh,		//	Source Height
-                    this._dx,		//	Destination X (where on the canvas it'll be drawn)
-                    this._dy,		//	Destination Y
-                    this._dw,		//	Destination Width (always same as Source Width unless scaled)
-                    this._dh    	//	Destination Height (always same as Source Height unless scaled)
+                    texture,        //  Source Image
+                    this._sx,       //  Source X (location within the source image)
+                    this._sy,       //  Source Y
+                    this._sw,       //  Source Width
+                    this._sh,       //  Source Height
+                    this._dx,       //  Destination X (where on the canvas it'll be drawn)
+                    this._dy,       //  Destination Y
+                    this._dw,       //  Destination Width (always same as Source Width unless scaled)
+                    this._dh        //  Destination Height (always same as Source Height unless scaled)
                 );
             }
 
         }
 
         //  TODO - Add in support for: alphaBitmapData: BitmapData = null, alphaPoint: Point = null, mergeAlpha: bool = false
+        /**
+         * Copy pixel from another DynamicTexture to this texture.
+         * @param sourceTexture {DynamicTexture} Source texture object.
+         * @param sourceRect {Rectangle} The specific region rectangle to be copied to this in the source.
+         * @param destPoint {Point} Top-left point the target image data will be paste at.
+         */
         public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point) {
 
             //  Swap for drawImage if the sourceRect is the same size as the sourceTexture to avoid a costly getImageData call
@@ -167,6 +237,9 @@ module Phaser {
 
         }
 
+        /**
+         * Clear the whole canvas.
+         */
         public clear() {
 
             this.context.clearRect(0, 0, this.bounds.width, this.bounds.height);
@@ -183,13 +256,13 @@ module Phaser {
 
         /**
          * Given an alpha and 3 color values this will return an integer representation of it
-         * 
-         * @param	alpha	The Alpha value (between 0 and 255)
-         * @param	red		The Red channel value (between 0 and 255)
-         * @param	green	The Green channel value (between 0 and 255)
-         * @param	blue	The Blue channel value (between 0 and 255)
-         * 
-         * @return	A native color value integer (format: 0xAARRGGBB)
+         *
+         * @param alpha {number} The Alpha value (between 0 and 255)
+         * @param red   {number} The Red channel value (between 0 and 255)
+         * @param green {number} The Green channel value (between 0 and 255)
+         * @param blue  {number} The Blue channel value (between 0 and 255)
+         *
+         * @return  A native color value integer (format: 0xAARRGGBB)
          */
         private getColor32(alpha: number, red: number, green: number, blue: number): number {
 
@@ -199,12 +272,12 @@ module Phaser {
 
         /**
          * Given 3 color values this will return an integer representation of it
-         * 
-         * @param	red		The Red channel value (between 0 and 255)
-         * @param	green	The Green channel value (between 0 and 255)
-         * @param	blue	The Blue channel value (between 0 and 255)
-         * 
-         * @return	A native color value integer (format: 0xRRGGBB)
+         *
+         * @param red   {number} The Red channel value (between 0 and 255)
+         * @param green {number} The Green channel value (between 0 and 255)
+         * @param blue  {number} The Blue channel value (between 0 and 255)
+         *
+         * @return  A native color value integer (format: 0xRRGGBB)
          */
         private getColor(red: number, green: number, blue: number): number {
 

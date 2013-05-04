@@ -14,14 +14,16 @@ module Phaser {
     export class Camera {
 
         /**
-        * Instantiates a new camera at the specified location, with the specified size and zoom level.
-        * 
-        * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-        * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-        * @param Width		The width of the camera display in pixels.
-        * @param Height	The height of the camera display in pixels.
-        * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
-        */
+         *Sprite constructor
+         * Instantiates a new camera at the specified location, with the specified size and zoom level.
+         *
+         * @param game {Phaser.Game} Current game instance.
+         * @param id {number} Unique identity.
+         * @param x {number} X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+         * @param y {number} Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+         * @param width {number} The width of the camera display in pixels.
+         * @param height {number} The height of the camera display in pixels.
+         */
         constructor(game: Game, id: number, x: number, y: number, width: number, height: number) {
 
             this._game = game;
@@ -38,6 +40,9 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to Game.
+         */
         private _game: Game;
 
         private _clip: bool = false;
@@ -48,45 +53,151 @@ module Phaser {
         private _sx: number = 0;
         private _sy: number = 0;
 
+        /**
+         * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
+         * @type {number}
+         */
         public static STYLE_LOCKON: number = 0;
+        /**
+         * Camera "follow" style preset: camera deadzone is narrow but tall.
+         * @type {number}
+         */
         public static STYLE_PLATFORMER: number = 1;
+        /**
+         * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
+         * @type {number}
+         */
         public static STYLE_TOPDOWN: number = 2;
+        /**
+         * Camera "follow" style preset: camera deadzone is a small square around the focus object.
+         * @type {number}
+         */
         public static STYLE_TOPDOWN_TIGHT: number = 3;
 
+        /**
+         * Identity of this camera.
+         */
         public ID: number;
+        /**
+         * Camera view rectangle in world coordinate.
+         * @type {Rectangle}
+         */
         public worldView: Rectangle;
+        /**
+         * How many sprites will be rendered by this camera.
+         * @type {number}
+         */
         public totalSpritesRendered: number;
+        /**
+         * Scale factor of the camera.
+         * @type {MicroPoint}
+         */
         public scale: MicroPoint = new MicroPoint(1, 1);
+        /**
+         * Scrolling factor.
+         * @type {MicroPoint}
+         */
         public scroll: MicroPoint = new MicroPoint(0, 0);
+        /**
+         * Camera bounds.
+         * @type {Rectangle}
+         */
         public bounds: Rectangle = null;
+        /**
+         * Sprite moving inside this rectangle will not cause camera moving.
+         * @type {Rectangle}
+         */
         public deadzone: Rectangle = null;
 
         //  Camera Border
         public disableClipping: bool = false;
+        /**
+         * Whether render border of this camera or not. (default is false)
+         * @type {boolean}
+         */
         public showBorder: bool = false;
+        /**
+         * Color of border of this camera. (in css color string)
+         * @type {string}
+         */
         public borderColor: string = 'rgb(255,255,255)';
 
         //  Camera Background Color
+        /**
+         * Whethor camera background invisible or not.
+         * @type {boolean}
+         */
         public opaque: bool = true;
+        /**
+         * Background color in css color string.
+         * @type {string}
+         */
         private _bgColor: string = 'rgb(0,0,0)';
+        /**
+         * Background texture to be rendered if background is visible.
+         */
         private _bgTexture;
+        /**
+         * Background texture repeat style. (default is 'repeat')
+         * @type {string}
+         */
         private _bgTextureRepeat: string = 'repeat';
 
         //  Camera Shadow
+        /**
+         * Render camera shadow or not. (default is false)
+         * @type {boolean}
+         */
         public showShadow: bool = false;
+        /**
+         * Color of shadow, in css color string.
+         * @type {string}
+         */
         public shadowColor: string = 'rgb(0,0,0)';
+        /**
+         * Blur factor of shadow.
+         * @type {number}
+         */
         public shadowBlur: number = 10;
+        /**
+         * Offset of the shadow from camera's position.
+         * @type {MicroPoint}
+         */
         public shadowOffset: MicroPoint = new MicroPoint(4, 4);
 
+        /**
+         * Whether this camera visible or not. (default is true)
+         * @type {boolean}
+         */
         public visible: bool = true;
+        /**
+         * Alpha of the camera. (everything rendered to this camera will be affected)
+         * @type {number}
+         */
         public alpha: number = 1;
 
-        //  The x/y position of the current input event in world coordinates
+        /**
+         * The x position of the current input event in world coordinates.
+         * @type {number}
+         */
         public inputX: number = 0;
+        /**
+         * The y position of the current input event in world coordinates.
+         * @type {number}
+         */
         public inputY: number = 0;
 
+        /**
+         * Effects manager.
+         * @type {FXManager}
+         */
         public fx: FXManager;
 
+        /**
+         * Tells this camera object what sprite to track.
+         * @param target {Sprite} The object you want the camera to track. Set to null to not follow anything.
+         * @param style {number} Optional, Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+         */
         public follow(target: Sprite, style?: number = Camera.STYLE_LOCKON) {
 
             this._target = target;
@@ -116,6 +227,11 @@ module Phaser {
 
         }
 
+        /**
+         * Move the camera focus to this location instantly.
+         * @param x {number} X position.
+         * @param y {number} Y position.
+         */
         public focusOnXY(x: number, y: number) {
 
             x += (x > 0) ? 0.0000001 : -0.0000001;
@@ -126,6 +242,10 @@ module Phaser {
 
         }
 
+        /**
+         * Move the camera focus to this location instantly.
+         * @param point {any} Point you want to focus.
+         */
         public focusOn(point) {
 
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
@@ -138,11 +258,11 @@ module Phaser {
 
         /**
          * Specify the boundaries of the world or where the camera is allowed to move.
-         * 
-         * @param	x				The smallest X value of your world (usually 0).
-         * @param	y				The smallest Y value of your world (usually 0).
-         * @param	width			The largest X value of your world (usually the world width).
-         * @param	height			The largest Y value of your world (usually the world height).
+         *
+         * @param x      {number} The smallest X value of your world (usually 0).
+         * @param y      {number} The smallest Y value of your world (usually 0).
+         * @param width  {number} The largest X value of your world (usually the world width).
+         * @param height {number} The largest Y value of your world (usually the world height).
          */
         public setBounds(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
 
@@ -158,6 +278,9 @@ module Phaser {
             this.update();
         }
 
+        /**
+         * Update focusing and scrolling.
+         */
         public update() {
 
             this.fx.preUpdate();
@@ -240,6 +363,9 @@ module Phaser {
 
         }
 
+        /**
+         * Draw background, shadow, effects, and objects if this is visible.
+         */
         public render() {
 
             if (this.visible === false || this.alpha < 0.1)
@@ -368,6 +494,11 @@ module Phaser {
             return this._bgColor;
         }
 
+        /**
+         * Set camera background texture.
+         * @param key {string} Asset key of the texture.
+         * @param repeat {string} Optional, what kind of repeat will this texture used for background.
+         */
         public setTexture(key: string, repeat?: string = 'repeat') {
 
             this._bgTexture = this._game.stage.context.createPattern(this._game.cache.getImage(key), repeat);
@@ -375,6 +506,11 @@ module Phaser {
 
         }
 
+        /**
+         * Set position of this camera.
+         * @param x {number} X position.
+         * @param y {number} Y position.
+         */
         public setPosition(x: number, y: number) {
 
             this._stageX = x;
@@ -384,6 +520,11 @@ module Phaser {
 
         }
 
+        /**
+         * Give this camera a new size.
+         * @param width {number} Width of new size.
+         * @param height {number} Height of new size.
+         */
         public setSize(width: number, height: number) {
 
             this.worldView.width = width;
@@ -392,6 +533,12 @@ module Phaser {
 
         }
 
+        /**
+         * Render debug infos. (including id, position, rotation, scrolling factor, bounds and some other properties)
+         * @param x {number} X position of the debug info to be rendered.
+         * @param y {number} Y position of the debug info to be rendered.
+         * @param color {number} Optional, color of the debug info to be rendered. (format is css color string)
+         */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
             this._game.stage.context.fillStyle = color;
