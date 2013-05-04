@@ -13,7 +13,6 @@ module Phaser {
 
         /**
          * SoundManager constructor
-         *
          * Create a new <code>SoundManager</code>.
          */
         constructor(game: Game) {
@@ -91,9 +90,9 @@ module Phaser {
 
         /**
          * Decode a sound with its assets key.
-         * @param   key         Assets key of the sound to be decoded.
-         * @param   callback    This will be invoked when finished decoding.
-         * @param   sound       Optional, its bufer will be set to decoded data.
+         * @param key {string} Assets key of the sound to be decoded.
+         * @param callback {function} This will be invoked when finished decoding.
+         * @param sound {Sound} Optional, its bufer will be set to decoded data.
          */
         public decode(key: string, callback = null, sound?: Sound = null) {
 
@@ -122,10 +121,10 @@ module Phaser {
 
         /**
          * Play a sound with its assets key.
-         * @param   key     Assets key of the sound you want to play.
-         * @param   volume  Optional, volume of the sound you want to play.
-         * @param   loop    Optional, loop when it finished playing? (Default to false)
-         * @return  {Sound=} The playing sound object.
+         * @param key {string} Assets key of the sound you want to play.
+         * @param volume {number} Optional, volume of the sound you want to play.
+         * @param loop {boolean} Optional, loop when it finished playing? (Default to false)
+         * @return {Sound} The playing sound object.
          */
         public play(key: string, volume?: number = 1, loop?: bool = false): Sound {
 
