@@ -14,11 +14,11 @@ module Phaser {
          * Frame constructor
          * Create a new <code>Frame</code> with specific position, size and name.
          *
-         * @param x         X position within the image to cut from.
-         * @param y         Y position within the image to cut from.
-         * @param width     Width of the frame.
-         * @param height    Height of the frame.
-         * @param name      Name of this frame.
+         * @param x {number} X position within the image to cut from.
+         * @param y {number} Y position within the image to cut from.
+         * @param width {number} Width of the frame.
+         * @param height {number} Height of the frame.
+         * @param name {string} Name of this frame.
          */
         constructor(x: number, y: number, width: number, height: number, name: string) {
 
@@ -122,13 +122,13 @@ module Phaser {
 
         /**
          * Set trim of the frame.
-         * @param trimmed       Whether this frame trimmed or not.
-         * @param actualWidth   Actual width of this frame.
-         * @param actualHeight  Actual height of this frame.
-         * @param destX         Destiny x position.
-         * @param destY         Destiny y position.
-         * @param destWidth     Destiny draw width.
-         * @param destHeight    Destiny draw height.
+         * @param trimmed {boolean} Whether this frame trimmed or not.
+         * @param actualWidth {number} Actual width of this frame.
+         * @param actualHeight {number} Actual height of this frame.
+         * @param destX {number} Destiny x position.
+         * @param destY {number} Destiny y position.
+         * @param destWidth {number} Destiny draw width.
+         * @param destHeight {number} Destiny draw height.
          */
         public setTrim(trimmed: bool, actualWidth, actualHeight, destX, destY, destWidth, destHeight, ) {
 
