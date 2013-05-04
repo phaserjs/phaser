@@ -19,10 +19,10 @@ module Phaser {
          * CameraManager constructor
          * This will create a new <code>Camera</code> with position and size.
          *
-         * @param x         X Position of the created camera.
-         * @param y         y Position of the created camera.
-         * @param width     Width of the created camera.
-         * @param height    Height of the created camera.
+         * @param x {number} X Position of the created camera.
+         * @param y {number} y Position of the created camera.
+         * @param width {number} Width of the created camera.
+         * @param height {number} Height of the created camera.
          */
         constructor(game: Game, x: number, y: number, width: number, height: number) {
 
@@ -55,7 +55,7 @@ module Phaser {
         /**
          * Get all the cameras.
          *
-         * @returns {array} An array contains all the cameras.
+         * @returns {Camera[]} An array contains all the cameras.
          */
         public getAll(): Camera[] {
             return this._cameras;
@@ -78,11 +78,11 @@ module Phaser {
         /**
          * Create a new camera with specific position and size.
          *
-         * @param   x       X position of the new camera.
-         * @param   y       Y position of the new camera.
-         * @param   width   Width of the new camera.
-         * @param   height  Height of the new camera.
-         * @returns {Camera=} The newly created camera object.
+         * @param x {number} X position of the new camera.
+         * @param y {number} Y position of the new camera.
+         * @param width {number} Width of the new camera.
+         * @param height {number} Height of the new camera.
+         * @returns {Camera} The newly created camera object.
          */
         public addCamera(x: number, y: number, width: number, height: number): Camera {
 
@@ -99,7 +99,7 @@ module Phaser {
         /**
          * Remove a new camera with its id.
          *
-         * @param   id ID of the camera you want to remove.
+         * @param id {number} ID of the camera you want to remove.
          * @returns {boolean} True if successfully removed the camera, otherwise return false.
          */
         public removeCamera(id: number): bool {

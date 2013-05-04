@@ -53,9 +53,9 @@ module Phaser {
 
         /**
          * Add a new canvas.
-         * @param   key     Asset key for this canvas.
-         * @param   canvas  Canvas DOM element.
-         * @param   context Render context of this canvas.
+         * @param key {string} Asset key for this canvas.
+         * @param canvas {HTMLCanvasElement} Canvas DOM element.
+         * @param context {CanvasRenderingContext2D} Render context of this canvas.
          */
         public addCanvas(key: string, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
 
@@ -65,12 +65,12 @@ module Phaser {
 
         /**
          * Add a new sprite sheet.
-         * @param   key         Asset key for the sprite sheet.
-         * @param   url         URL of this sprite sheet file.
-         * @param   data        Extra sprite sheet data.
-         * @param   frameWidth  Width of the sprite sheet.
-         * @param   frameHeight Height of the sprite sheet.
-         * @param   frameMax    How many frames stored in the sprite sheet.
+         * @param key {string} Asset key for the sprite sheet.
+         * @param url {string} URL of this sprite sheet file.
+         * @param data {object} Extra sprite sheet data.
+         * @param frameWidth {number} Width of the sprite sheet.
+         * @param frameHeight {number} Height of the sprite sheet.
+         * @param frameMax {number} How many frames stored in the sprite sheet.
          */
         public addSpriteSheet(key: string, url: string, data, frameWidth: number, frameHeight: number, frameMax: number) {
 
@@ -81,10 +81,10 @@ module Phaser {
 
         /**
          * Add a new texture atlas.
-         * @param   key         Asset key for the texture atlas.
-         * @param   url         URL of this texture atlas file.
-         * @param   data        Extra texture atlas data.
-         * @param   data        Texture atlas frames data.
+         * @param key  {string} Asset key for the texture atlas.
+         * @param url  {string} URL of this texture atlas file.
+         * @param data {object} Extra texture atlas data.
+         * @param data {object} Texture atlas frames data.
          */
         public addTextureAtlas(key: string, url: string, data, jsonData) {
 
@@ -95,9 +95,9 @@ module Phaser {
 
         /**
          * Add a new image.
-         * @param   key     Asset key for the image.
-         * @param   url     URL of this image file.
-         * @param   data    Extra image data.
+         * @param key {string} Asset key for the image.
+         * @param url {string} URL of this image file.
+         * @param data {object} Extra image data.
          */
         public addImage(key: string, url: string, data) {
 
@@ -107,9 +107,9 @@ module Phaser {
 
         /**
          * Add a new sound.
-         * @param   key     Asset key for the sound.
-         * @param   url     URL of this sound file.
-         * @param   data    Extra sound data.
+         * @param key {string} Asset key for the sound.
+         * @param url {string} URL of this sound file.
+         * @param data {object} Extra sound data.
          */
         public addSound(key: string, url: string, data) {
 
@@ -119,9 +119,9 @@ module Phaser {
 
         /**
          * Add a new decoded sound.
-         * @param   key     Asset key for the sound.
-         * @param   url     URL of this sound file.
-         * @param   data    Extra sound data.
+         * @param key {string} Asset key for the sound.
+         * @param url {string} URL of this sound file.
+         * @param data {object} Extra sound data.
          */
         public decodedSound(key: string, data) {
 
@@ -132,9 +132,9 @@ module Phaser {
 
         /**
          * Add a new text data.
-         * @param   key     Asset key for the text data.
-         * @param   url     URL of this text data file.
-         * @param   data    Extra text data.
+         * @param key {string} Asset key for the text data.
+         * @param url {string} URL of this text data file.
+         * @param data {object} Extra text data.
          */
         public addText(key: string, url: string, data) {
 
