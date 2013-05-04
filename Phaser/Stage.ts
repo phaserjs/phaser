@@ -20,9 +20,9 @@ module Phaser {
          *
          * Create a new <code>Stage</code> with specific width and height.
          *
-         * @param parent    ID of parent DOM element.
-         * @param width     Width of the stage.
-         * @param height    Height of the stage.
+         * @param parent {number} ID of parent DOM element.
+         * @param width {number} Width of the stage.
+         * @param height {number} Height of the stage.
          */
         constructor(game: Game, parent: string, width: number, height: number) {
 

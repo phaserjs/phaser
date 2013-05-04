@@ -16,8 +16,8 @@ module Phaser {
          * World constructor
          * Create a new <code>World</code> with specific width and height.
          *
-         * @param width     Width of the world bound.
-         * @param height    Height of the world bound.
+         * @param width {number} Width of the world bound.
+         * @param height {number} Height of the world bound.
          */
         constructor(game: Game, width: number, height: number) {
 
@@ -100,9 +100,9 @@ module Phaser {
          * Update size of this world with specific width and height.
          * You can choose update camera bounds automatically or not.
          *
-         * @param   width               New width of the world.
-         * @param   height              New height of the world.
-         * @param   updateCameraBounds  Optinal, update camera bounds automatically or not. Default to true.
+         * @param width {number} New width of the world.
+         * @param height {number} New height of the world.
+         * @param updateCameraBounds {boolean} Optinal, update camera bounds automatically or not. Default to true.
          */
         public setSize(width: number, height: number, updateCameraBounds: bool = true) {
 
@@ -153,11 +153,11 @@ module Phaser {
         /**
          * Create a new camera with specific position and size.
          *
-         * @param   x       X position of the new camera.
-         * @param   y       Y position of the new camera.
-         * @param   width   Width of the new camera.
-         * @param   height  Height of the new camera.
-         * @returns {Camera=} The newly created camera object.
+         * @param x {number} X position of the new camera.
+         * @param y {number} Y position of the new camera.
+         * @param width {number} Width of the new camera.
+         * @param height {number} Height of the new camera.
+         * @returns {Camera} The newly created camera object.
          */
         public createCamera(x: number, y: number, width: number, height: number): Camera {
             return this.cameras.addCamera(x, y, width, height);
@@ -166,8 +166,8 @@ module Phaser {
         /**
          * Remove a new camera with its id.
          *
-         * @param   id ID of the camera you want to remove.
-         * @returns {boolean} True if successfully removed the camera, otherwise return false.
+         * @param id {number} ID of the camera you want to remove.
+         * @returns {boolean}   True if successfully removed the camera, otherwise return false.
          */
         public removeCamera(id: number): bool {
             return this.cameras.removeCamera(id);
@@ -187,10 +187,10 @@ module Phaser {
         /**
          * Create a new Sprite with specific position and sprite sheet key.
          *
-         * @param   x       X position of the new sprite.
-         * @param   y       Y position of the new sprite.
-         * @param   key     Optinal, key for the sprite sheet you want it to use.
-         * @returns {Sprite=} The newly created sprite object.
+         * @param x {number} X position of the new sprite.
+         * @param y {number} Y position of the new sprite.
+         * @param key {string} Optinal, key for the sprite sheet you want it to use.
+         * @returns {Sprite} The newly created sprite object.
          */
         public createSprite(x: number, y: number, key?: string = ''): Sprite {
             return <Sprite> this.group.add(new Sprite(this._game, x, y, key));
@@ -199,9 +199,9 @@ module Phaser {
         /**
          * Create a new GeomSprite with specific position.
          *
-         * @param   x       X position of the new geom sprite.
-         * @param   y       Y position of the new geom sprite.
-         * @returns {GeomSprite=} The newly created geom sprite object.
+         * @param x {number} X position of the new geom sprite.
+         * @param y {number} Y position of the new geom sprite.
+         * @returns {GeomSprite} The newly created geom sprite object.
          */
         public createGeomSprite(x: number, y: number): GeomSprite {
             return <GeomSprite> this.group.add(new GeomSprite(this._game, x, y));
@@ -210,9 +210,9 @@ module Phaser {
         /**
          * Create a new DynamicTexture with specific size.
          *
-         * @param   width       Width of the texture.
-         * @param   height      Height of the texture.
-         * @returns {DynamicTexture=} The newly created dynamic texture object.
+         * @param width {number} Width of the texture.
+         * @param height {number} Height of the texture.
+         * @returns {DynamicTexture} The newly created dynamic texture object.
          */
         public createDynamicTexture(width: number, height: number): DynamicTexture {
             return new DynamicTexture(this._game, width, height);
@@ -221,8 +221,8 @@ module Phaser {
         /**
          * Create a new object container.
          *
-         * @param   MaxSize     Optinal, capacity of this group.
-         * @returns {Group=} The newly created group.
+         * @param MaxSize {number} Optinal, capacity of this group.
+         * @returns {Group} The newly created group.
          */
         public createGroup(MaxSize?: number = 0): Group {
             return <Group> this.group.add(new Group(this._game, MaxSize));
@@ -231,12 +231,12 @@ module Phaser {
         /**
          * Create a new ScrollZone object with image key, position and size.
          *
-         * @param   key     Key to a image you wish this object to use.
-         * @param   x       X position of this object.
-         * @param   y       Y position of this object.
-         * @param   width   Width of this object.
-         * @param   height  Heigth of this object.
-         * @returns {ScrollZone=} The newly created scroll zone object.
+         * @param key {number} Key to a image you wish this object to use.
+         * @param x {number} X position of this object.
+         * @param y {number} Y position of this object.
+         * @param width {number} Width of this object.
+         * @param height {number} Heigth of this object.
+         * @returns {ScrollZone} The newly created scroll zone object.
          */
         public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
             return <ScrollZone> this.group.add(new ScrollZone(this._game, key, x, y, width, height));
@@ -245,13 +245,13 @@ module Phaser {
         /**
          * Create a new Tilemap.
          *
-         * @param   key         Key for tileset image.
-         * @param   mapData     Data of this tilemap.
-         * @param   format      Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-         * @param   resizeWorld Optinal, resize the world to make same as tilemap?
-         * @param   tileWidth   Optinal, width of each tile.
-         * @param   tileHeight  Optinal, height of each tile.
-         * @return  {Tilemap=} The newly created tilemap object.
+         * @param key {string} Key for tileset image.
+         * @param mapData {string} Data of this tilemap.
+         * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+         * @param resizeWorld {boolean} Optinal, resize the world to make same as tilemap?
+         * @param tileWidth {number} Optinal, width of each tile.
+         * @param tileHeight {number} Optinal, height of each tile.
+         * @return {Tilemap} The newly created tilemap object.
          */
         public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
             return <Tilemap> this.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
@@ -260,7 +260,7 @@ module Phaser {
         /**
          * Create a new Particle.
          *
-         * @return  {Particle=} The newly created particle object.
+         * @return {Particle} The newly created particle object.
          */
         public createParticle(): Particle {
             return new Particle(this._game);
@@ -269,10 +269,10 @@ module Phaser {
         /**
          * Create a new Emitter.
          *
-         * @param   x       Optinal, x position of the emitter.
-         * @param   y       Optinal, y position of the emitter.
-         * @param   size    Optinal, size of this emitter.
-         * @return  {Emitter=} The newly created emitter object.
+         * @param x {number} Optinal, x position of the emitter.
+         * @param y {number} Optinal, y position of the emitter.
+         * @param size {number} Optinal, size of this emitter.
+         * @return {Emitter} The newly created emitter object.
          */
         public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
             return <Emitter> this.group.add(new Emitter(this._game, x, y, size));

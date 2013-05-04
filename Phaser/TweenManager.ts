@@ -17,7 +17,7 @@ module Phaser {
 
         /**
          * TweenManager constructor
-         * @param game  A reference to the current Game.
+         * @param game {Game} A reference to the current Game.
          */
         constructor(game: Phaser.Game) {
 
@@ -37,7 +37,7 @@ module Phaser {
 
         /**
          * Get all the tween objects in an array.
-         * @return {array=} Array with all tween objects.
+         * @return {Phaser.Tween[]} Array with all tween objects.
          */
         public getAll() {
 
@@ -57,8 +57,8 @@ module Phaser {
         /**
          * Create a tween object for a specific object.
          *
-         * @param   object  Object you wish the tween will affect.
-         * @return  {Phaser.Tween=} The newly created tween object.
+         * @param object {object} Object you wish the tween will affect.
+         * @return {Phaser.Tween} The newly created tween object.
          */
         public create(object): Phaser.Tween {
 
@@ -69,7 +69,7 @@ module Phaser {
         /**
          * Add an exist tween object to the manager.
          *
-         * @param   tween   The tween object you want to add.
+         * @param tween {Phaser.Tween} The tween object you want to add.
          * @return {Phaser.Tween} The tween object you added to the manager.
          */
         public add(tween: Phaser.Tween) {
@@ -85,7 +85,7 @@ module Phaser {
         /**
          * Remove a tween from this manager.
          *
-         * @param   tween   The tween object you want to remove.
+         * @param tween {Phaser.Tween} The tween object you want to remove.
          */
         public remove(tween: Phaser.Tween) {
 
