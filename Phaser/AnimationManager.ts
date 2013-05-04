@@ -18,10 +18,9 @@ module Phaser {
 
         /**
          * AnimationManager constructor
-         *
          * Create a new <code>AnimationManager</code>.
          *
-         * @param parent Owner sprite of this manager.
+         * @param parent {Sprite} Owner sprite of this manager.
          */
         constructor(game: Game, parent: Sprite) {
 
@@ -78,11 +77,11 @@ module Phaser {
 
         /**
          * Add a new animation.
-         * @param name      What this animation should be called (e.g. "run").
-         * @param frames    An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
-         * @param frameRate The speed in frames per second that the animation should play at (e.g. 60 fps).
-         * @param loop      Whether or not the animation is looped or just plays once.
-         * @param useNumericIndex Use number indexes instead of string indexes?
+         * @param name {string} What this animation should be called (e.g. "run").
+         * @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
+         * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
+         * @param loop {boolean} Whether or not the animation is looped or just plays once.
+         * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
          */
         public add(name: string, frames: any[] = null, frameRate: number = 60, loop: bool = false, useNumericIndex: bool = true) {
 
@@ -116,6 +115,12 @@ module Phaser {
 
         }
 
+        /**
+         * Check whether the frames is valid.
+         * @param frames {any[]} Frames to be validated.
+         * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
+         * @return {boolean} True if they're valid, otherwise return false.
+         */
         private validateFrames(frames: any[], useNumericIndex: bool): bool {
 
             for (var i = 0; i < frames.length; i++)
@@ -142,9 +147,9 @@ module Phaser {
 
         /**
          * Play animation with specific name.
-         * @param name      The string name of the animation you want to play.
-         * @param frameRate FrameRate you want to specify instead of using default.
-         * @param loop      Whether or not the animation is looped or just plays once.
+         * @param name {string} The string name of the animation you want to play.
+         * @param frameRate {number} FrameRate you want to specify instead of using default.
+         * @param loop {boolean} Whether or not the animation is looped or just plays once.
          */
         public play(name: string, frameRate?: number = null, loop?: bool) {
 
