@@ -14,6 +14,15 @@ module Phaser {
 
     export class Sprite extends GameObject {
 
+        /**
+         * Sprite constructor
+         * Create a new <code>Sprite</code>.
+         *
+         * @param game {Phaser.Game} Current game instance.
+         * @param x {number} Optional, the initial x position of the sprite.
+         * @param y {number} Optional, the initial y position of the sprite.
+         * @param key {string} Optional, Key of the graphic you want to load for this sprite.
+         */
         constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null) {
 
             super(game, x, y);
@@ -34,7 +43,14 @@ module Phaser {
 
         }
 
+        /**
+         * Texture of this sprite to be rendered.
+         */
         private _texture;
+        /**
+         * Texture of this sprite is DynamicTexture? (default to false)
+         * @type {boolean}
+         */
         private _dynamicTexture: bool = false;
 
         //  local rendering related temp vars to help avoid gc spikes
@@ -47,13 +63,38 @@ module Phaser {
         private _dw: number = 0;
         private _dh: number = 0;
 
+        /**
+         * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
+         * @type AnimationManager
+         */
         public animations: AnimationManager;
 
+        /**
+         * Render bound of this sprite for debugging? (default to false)
+         * @type {boolean}
+         */
         public renderDebug: bool = false;
+        /**
+         * Color of bound when render debug. (see renderDebug) Format is a css color string.
+         * @type {string}
+         */
         public renderDebugColor: string = 'rgba(0,255,0,0.5)';
+        /**
+         * Color of points when render debug. (see renderDebug) Format is a css color string.
+         * @type {string}
+         */
         public renderDebugPointColor: string = 'rgba(255,255,255,1)';
+        /**
+         * Flip the graphic vertically? (default to false)
+         * @type {boolean}
+         */
         public flipped: bool = false;
 
+        /**
+         * Load graphic for this sprite. (graphic can be SpriteSheet of Texture)
+         * @param key {string} Key of the graphic you want to load for this sprite.
+         * @return {Sprite} Sprite instance itself.
+         */
         public loadGraphic(key: string): Sprite {
 
             if (this._game.cache.getImage(key) !== null)
@@ -77,6 +118,11 @@ module Phaser {
 
         }
 
+        /**
+         * Load a DynamicTexture as its texture.
+         * @param texture {DynamicTexture} The texture object to be used by this sprite.
+         * @return {Sprite} Sprite instance itself.
+         */
         public loadDynamicTexture(texture: DynamicTexture): Sprite {
 
             this._texture = texture;
@@ -90,6 +136,13 @@ module Phaser {
 
         }
 
+        /**
+         * This function creates a flat colored square image dynamically.
+         * @param width {number} The width of the sprite you want to generate.
+         * @param height {number} The height of the sprite you want to generate.
+         * @param color {number} Optional, specifies the color of the generated block. (format is 0xAARRGGBB)
+         * @return {Sprite} Sprite instance itself.
+         */
         public makeGraphic(width: number, height: number, color: number = 0xffffffff): Sprite {
 
             this._texture = null;
@@ -101,8 +154,13 @@ module Phaser {
             return this;
         }
 
+        /**
+         * Check whether this object is visible in a specific camera rectangle.
+         * @param camera {Rectangle} The rectangle you want to check.
+         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+         */
         public inCamera(camera: Rectangle): bool {
-            
+
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
             {
                 this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
@@ -119,6 +177,9 @@ module Phaser {
 
         }
 
+        /**
+         * Automatically called after update() by the game loop, this function just update animations.
+         */
         public postUpdate() {
 
             this.animations.update();
@@ -143,6 +204,13 @@ module Phaser {
             return this.animations.frameName;
         }
 
+        /**
+         * Render this sprite to specific camera. Called by game loop after update().
+         * @param camera {Camera} Camera this sprite will be rendered to.
+         * @cameraOffsetX {number} X offset to the camera.
+         * @cameraOffsetY {number} Y offset to the camera.
+         * @return {boolean} Return false if not rendered, otherwise return true.
+         */
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): bool {
 
             //  Render checks
@@ -309,7 +377,12 @@ module Phaser {
 
         }
 
-        // Renders the bounding box around this Sprite and the contact points. Useful for visually debugging.
+        /**
+         * Renders the bounding box around this Sprite and the contact points. Useful for visually debugging.
+         * @param camera {Camera} Camera the bound will be rendered to.
+         * @param cameraOffsetX {number} X offset of bound to the camera.
+         * @param cameraOffsetY {number} Y offset of bound to the camera.
+         */
         private renderBounds(camera:Camera, cameraOffsetX:number, cameraOffsetY:number) {
 
             this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
@@ -323,7 +396,7 @@ module Phaser {
             var hh = this.bounds.halfHeight * this.scale.y;
             var sw = (this.bounds.width * this.scale.x) - 1;
             var sh = (this.bounds.height * this.scale.y) - 1;
-            
+
             this._game.stage.context.fillRect(this._dx, this._dy, 1, 1);            //  top left
             this._game.stage.context.fillRect(this._dx + hw, this._dy, 1, 1);       //  top center
             this._game.stage.context.fillRect(this._dx + sw, this._dy, 1, 1);       //  top right
@@ -336,6 +409,12 @@ module Phaser {
 
         }
 
+        /**
+         * Render debug infos. (including name, bounds info, position and some other properties)
+         * @param x {number} X position of the debug info to be rendered.
+         * @param y {number} Y position of the debug info to be rendered.
+         * @param color {number} Optional, color of the debug info to be rendered. (format is css color string)
+         */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
             this._game.stage.context.fillStyle = color;

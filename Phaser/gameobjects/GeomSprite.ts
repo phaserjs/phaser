@@ -12,6 +12,14 @@ module Phaser {
 
     export class GeomSprite extends GameObject {
 
+        /**
+         * GeomSprite constructor
+         * Create a new <code>GeomSprite</code>.
+         *
+         * @param game {Phaser.Game} Current game instance.
+         * @param x {number} Optional, the initial x position of the sprite.
+         * @param y {number} Optional, the initial y position of the sprite.
+         */
         constructor(game: Game, x?: number = 0, y?: number = 0) {
 
             super(game, x, y);
@@ -28,26 +36,90 @@ module Phaser {
         private _dw: number = 0;
         private _dh: number = 0;
 
+        /**
+         * Geom type of this sprite. (available: UNASSIGNED, CIRCLE, LINE, POINT, RECTANGLE)
+         * @type {number}
+         */
         public type: number = 0;
 
+        /**
+         * Not completely set yet. (the default type)
+         */
         public static UNASSIGNED: number = 0;
+        /**
+         * Circle.
+         * @type {number}
+         */
         public static CIRCLE: number = 1;
+        /**
+         * Line.
+         * @type {number}
+         */
         public static LINE: number = 2;
+        /**
+         * Point.
+         * @type {number}
+         */
         public static POINT: number = 3;
+        /**
+         * Rectangle.
+         * @type {number}
+         */
         public static RECTANGLE: number = 4;
 
+        /**
+         * Circle shape container. A Circle instance.
+         * @type {Circle}
+         */
         public circle: Circle;
+        /**
+         * Line shape container. A Line instance.
+         * @type {Line}
+         */
         public line: Line;
+        /**
+         * Point shape container. A Point instance.
+         * @type {Point}
+         */
         public point: Point;
+        /**
+         * Rectangle shape container. A Rectangle instance.
+         * @type {Rectangle}
+         */
         public rect: Rectangle;
 
+        /**
+         * Render outline of this sprite or not. (default is true)
+         * @type {boolean}
+         */
         public renderOutline: bool = true;
+        /**
+         * Fill the shape or not. (default is true)
+         * @type {boolean}
+         */
         public renderFill: bool = true;
 
+        /**
+         * Width of outline. (default is 1)
+         * @type {number}
+         */
         public lineWidth: number = 1;
+        /**
+         * Width of outline. (default is 1)
+         * @type {number}
+         */
         public lineColor: string = 'rgb(0,255,0)';
+        /**
+         * Width of outline. (default is 1)
+         * @type {number}
+         */
         public fillColor: string = 'rgb(0,100,0)';
 
+        /**
+         * Just like Sprite.loadGraphic(), this will load a circle and set its shape to Circle.
+         * @param circle {Circle} Circle geometry define.
+         * @return {GeomSprite} GeomSprite instance itself.
+         */
         loadCircle(circle:Circle): GeomSprite {
 
             this.refresh();
@@ -57,7 +129,11 @@ module Phaser {
 
         }
 
-
+        /**
+         * Just like Sprite.loadGraphic(), this will load a line and set its shape to Line.
+         * @param line {Line} Line geometry define.
+         * @return {GeomSprite} GeomSprite instance itself.
+         */
         loadLine(line:Line): GeomSprite {
 
             this.refresh();
@@ -67,6 +143,11 @@ module Phaser {
 
         }
 
+        /**
+         * Just like Sprite.loadGraphic(), this will load a point and set its shape to Point.
+         * @param point {Point} Point geometry define.
+         * @return {GeomSprite} GeomSprite instance itself.
+         */
         loadPoint(point:Point): GeomSprite {
 
             this.refresh();
@@ -76,6 +157,11 @@ module Phaser {
 
         }
 
+        /**
+         * Just like Sprite.loadGraphic(), this will load a rect and set its shape to Rectangle.
+         * @param rect {Rectangle} Rectangle geometry define.
+         * @return {GeomSprite} GeomSprite instance itself.
+         */
         loadRectangle(rect:Rectangle): GeomSprite {
 
             this.refresh();
@@ -85,6 +171,11 @@ module Phaser {
 
         }
 
+        /**
+         * Create a circle shape with specific diameter.
+         * @param diameter {number} Diameter of the circle.
+         * @return {GeomSprite} GeomSprite instance itself.
+         */
         createCircle(diameter: number): GeomSprite {
 
             this.refresh();
@@ -95,6 +186,12 @@ module Phaser {
 
         }
 
+        /**
+         * Create a line shape with specific end point.
+         * @param x {number} X position of the end point.
+         * @param y {number} Y position of the end point.
+         * @return {GeomSprite} GeomSprite instance itself.
+         */
         createLine(x: number, y: number): GeomSprite {
 
             this.refresh();
@@ -105,6 +202,10 @@ module Phaser {
 
         }
 
+        /**
+         * Create a point shape at spriter's position.
+         * @return {GeomSprite} GeomSprite instance itself.
+         */
         createPoint(): GeomSprite {
 
             this.refresh();
@@ -116,6 +217,11 @@ module Phaser {
 
         }
 
+        /**
+         * Create a circle shape with specific diameter.
+         * @param diameter {number} Diameter of the circle.
+         * @return {GeomSprite} GeomSprite instance itself.
+         */
         createRectangle(width: number, height: number): GeomSprite {
 
             this.refresh();
@@ -126,6 +232,9 @@ module Phaser {
 
         }
 
+        /**
+         * Destroy all geom shapes of this sprite.
+         */
         refresh() {
 
             this.circle = null;
@@ -135,6 +244,9 @@ module Phaser {
 
         }
 
+        /**
+         * Update bounds.
+         */
         update() {
 
             //  Update bounds and position?
@@ -169,6 +281,11 @@ module Phaser {
 
         }
 
+        /**
+         * Check whether this object is visible in a specific camera rectangle.
+         * @param camera {Rectangle} The rectangle you want to check.
+         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+         */
         public inCamera(camera: Rectangle): bool {
 
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
@@ -187,6 +304,13 @@ module Phaser {
 
         }
 
+        /**
+         * Render this sprite to specific camera. Called by game loop after update().
+         * @param camera {Camera} Camera this sprite will be rendered to.
+         * @cameraOffsetX {number} X offset to the camera.
+         * @cameraOffsetY {number} Y offset to the camera.
+         * @return {boolean} Return false if not rendered, otherwise return true.
+         */
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): bool {
 
             //  Render checks
@@ -339,12 +463,25 @@ module Phaser {
 
         }
 
+        /**
+         * Render a point of geometry.
+         * @param point {Point} Position of the point.
+         * @param offsetX {number} X offset to its position.
+         * @param offsetY {number} Y offset to its position.
+         * @param size {number} Optional, point size.
+         */
         public renderPoint(point, offsetX?: number = 0, offsetY?: number = 0, size?: number = 1) {
 
             this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, size, size);
 
         }
 
+        /**
+         * Render debug infos. (this method does not work now)
+         * @param x {number} X position of the debug info to be rendered.
+         * @param y {number} Y position of the debug info to be rendered.
+         * @param color {number} Optional, color of the debug info to be rendered. (format is css color string)
+         */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
             //this._game.stage.context.fillStyle = color;
@@ -355,8 +492,12 @@ module Phaser {
 
         }
 
-        //  Gives a basic boolean response to a geometric collision.
-        //  If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
+        /**
+         * Gives a basic boolean response to a geometric collision.
+         * If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
+         * @param source {GeomSprite} Sprite you want to check.
+         * @return {boolean} Whether they overlaps or not.
+         */
         public collide(source: GeomSprite): bool {
 
             //  Circle vs. Circle

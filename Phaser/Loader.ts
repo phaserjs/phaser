@@ -11,6 +11,12 @@ module Phaser {
 
     export class Loader {
 
+        /**
+         * Loader constructor
+         *
+         * @param game {Phaser.Game} Current game instance.
+         * @param callback {function} This will be called when assets completely loaded.
+         */
         constructor(game: Game, callback) {
 
             this._game = game;
@@ -22,19 +28,50 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
+        /**
+         * Array stors assets keys. So you can get that asset by its unique key.
+         */
         private _keys: string[];
+        /**
+         * Contains all the assets file infos.
+         */
         private _fileList;
+        /**
+         * Game initialial assets loading callback.
+         */
         private _gameCreateComplete;
         private _onComplete;
         private _onFileLoad;
+        /**
+         * Indicates assets loading progress. (from 0 to 100)
+         * @type {number}
+         */
         private _progressChunk: number;
         private _xhr: XMLHttpRequest;
+        /**
+         * Length of assets queue.
+         * @type {number}
+         */
         private _queueSize: number;
 
+        /**
+         * True if game is completely loaded.
+         * @type {boolean}
+         */
         public hasLoaded: bool;
+        /**
+         * Loading progress (from 0 to 1)
+         * @type {number}
+         */
         public progress: number;
 
+        /**
+         * Reset loader, this will remove all loaded assets.
+         */
         public reset() {
             this._queueSize = 0;
         }
@@ -45,6 +82,11 @@ module Phaser {
 
         }
 
+        /**
+         * Add a new image asset loading request with key and url.
+         * @param key {string} Unique asset key of this image file.
+         * @param url {string} URL of image file.
+         */
         public addImageFile(key: string, url: string) {
 
             if (this.checkKeyExists(key) === false)
@@ -56,6 +98,14 @@ module Phaser {
 
         }
 
+        /**
+         * Add a new sprite sheet loading request.
+         * @param key {string} Unique asset key of the sheet file.
+         * @param url {string} URL of sheet file.
+         * @param frameWidth {number} Width of each single frame.
+         * @param frameHeight {number} Height of each single frame.
+         * @param frameMax {number} How many frames in this sprite sheet.
+         */
         public addSpriteSheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number = -1) {
 
             if (this.checkKeyExists(key) === false)
@@ -67,6 +117,13 @@ module Phaser {
 
         }
 
+        /**
+         * Add a new texture atlas loading request.
+         * @param key {string} Unique asset key of the texture atlas file.
+         * @param url {string} URL of texture atlas file.
+         * @param jsonURL {string} Optional, url of JSON data file.
+         * @param jsonData {object} Optional, JSON data object.
+         */
         public addTextureAtlas(key: string, url: string, jsonURL?: string = null, jsonData? = null) {
 
             if (this.checkKeyExists(key) === false)
@@ -109,6 +166,11 @@ module Phaser {
 
         }
 
+        /**
+         * Add a new audio file loading request.
+         * @param key {string} Unique asset key of the audio file.
+         * @param url {string} URL of audio file.
+         */
         public addAudioFile(key: string, url: string) {
 
             if (this.checkKeyExists(key) === false)
@@ -120,6 +182,11 @@ module Phaser {
 
         }
 
+        /**
+         * Add a new text file loading request.
+         * @param key {string} Unique asset key of the text file.
+         * @param url {string} URL of text file.
+         */
         public addTextFile(key: string, url: string) {
 
             if (this.checkKeyExists(key) === false)
@@ -131,18 +198,30 @@ module Phaser {
 
         }
 
+        /**
+         * Remove loading request of a file.
+         * @param key {string} Key of the file you want to remove.
+         */
         public removeFile(key: string) {
 
             delete this._fileList[key];
 
         }
 
+        /**
+         * Remove all file loading requests.
+         */
         public removeAll() {
 
             this._fileList = {};
 
         }
 
+        /**
+         * Load assets.
+         * @param onFileLoadCallback {function} Called when each file loaded successfully.
+         * @param onCompleteCallback {function} Called when all assets completely loaded.
+         */
         public load(onFileLoadCallback = null, onCompleteCallback = null) {
 
             this.progress = 0;
@@ -176,6 +255,9 @@ module Phaser {
 
         }
 
+        /**
+         * Load files. Private method ONLY used by loader.
+         */
         private loadFile() {
 
             var file = this._fileList[this._keys.pop()];
@@ -213,6 +295,10 @@ module Phaser {
 
         }
 
+        /**
+         * Error occured when load a file.
+         * @param key {string} Key of the error loading file.
+         */
         private fileError(key: string) {
 
             this._fileList[key].loaded = true;
@@ -222,6 +308,10 @@ module Phaser {
 
         }
 
+        /**
+         * Called when a file is successfully loaded.
+         * @param key {string} Key of the successfully loaded file.
+         */
         private fileComplete(key: string) {
 
             this._fileList[key].loaded = true;
@@ -274,6 +364,10 @@ module Phaser {
 
         }
 
+        /**
+         * Successfully loaded a JSON file.
+         * @param key {string} Key of the loaded JSON file.
+         */
         private jsonLoadComplete(key: string) {
 
             var data = JSON.parse(this._xhr.response);
@@ -289,6 +383,10 @@ module Phaser {
 
         }
 
+        /**
+         * Error occured when load a JSON.
+         * @param key {string} Key of the error loading JSON file.
+         */
         private jsonLoadError(key: string) {
 
             var file = this._fileList[key];
@@ -297,10 +395,15 @@ module Phaser {
 
         }
 
+        /**
+         * Handle loading next file.
+         * @param previousKey {string} Key of previous loaded asset.
+         * @param success {boolean} Whether the previous asset loaded successfully or not.
+         */
         private nextFile(previousKey: string, success: bool) {
 
             this.progress = Math.round(this.progress + this._progressChunk);
-            
+
             if (this.progress > 1)
             {
                 this.progress = 1;
@@ -329,6 +432,11 @@ module Phaser {
 
         }
 
+        /**
+         * Check whether asset exists with a specific key.
+         * @param key {string} Key of the asset you want to check.
+         * @return {boolean} Return true if exists, otherwise return false.
+         */
         private checkKeyExists(key: string): bool {
 
             if (this._fileList[key])
