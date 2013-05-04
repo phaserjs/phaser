@@ -19,10 +19,10 @@ module Phaser {
          * Create a new <code>GameObject</code> object at specific position with
          * specific width and height.
          *
-         * @param x {number} Optinal, the x position of the object.
-         * @param y {number} Optinal, the y position of the object.
-         * @param width {number} Optinal, the width of the object.
-         * @param height {number} Optinal, the height of the object.
+         * @param [x] {number} The x position of the object.
+         * @param [y] {number} The y position of the object.
+         * @param [width] {number} The width of the object.
+         * @param [height] {number} The height of the object.
          */
         constructor(game: Game, x?: number = 0, y?: number = 0, width?: number = 16, height?: number = 16) {
 

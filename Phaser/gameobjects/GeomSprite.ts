@@ -17,8 +17,8 @@ module Phaser {
          * Create a new <code>GeomSprite</code>.
          *
          * @param game {Phaser.Game} Current game instance.
-         * @param x {number} Optional, the initial x position of the sprite.
-         * @param y {number} Optional, the initial y position of the sprite.
+         * @param [x] {number} the initial x position of the sprite.
+         * @param [y] {number} the initial y position of the sprite.
          */
         constructor(game: Game, x?: number = 0, y?: number = 0) {
 
@@ -468,7 +468,7 @@ module Phaser {
          * @param point {Point} Position of the point.
          * @param offsetX {number} X offset to its position.
          * @param offsetY {number} Y offset to its position.
-         * @param size {number} Optional, point size.
+         * @param [size] {number} point size.
          */
         public renderPoint(point, offsetX?: number = 0, offsetY?: number = 0, size?: number = 1) {
 
@@ -480,7 +480,7 @@ module Phaser {
          * Render debug infos. (this method does not work now)
          * @param x {number} X position of the debug info to be rendered.
          * @param y {number} Y position of the debug info to be rendered.
-         * @param color {number} Optional, color of the debug info to be rendered. (format is css color string)
+         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 

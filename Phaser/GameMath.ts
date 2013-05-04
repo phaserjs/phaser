@@ -152,7 +152,7 @@ module Phaser {
 
         /**
          * force a value within the boundaries of two values
-         * 
+         *
          * if max < min, min is returned
          */
         public clamp(input: number, max: number, min: number = 0): number {
@@ -161,12 +161,12 @@ module Phaser {
 
         /**
          * Snap a value to nearest grid slice, using rounding.
-         * 
+         *
          * example if you have an interval gap of 5 and a position of 12... you will snap to 10. Where as 14 will snap to 15
-         * 
+         *
          * @param input - the value to snap
          * @param gap - the interval gap of the grid
-         * @param start - optional starting offset for gap
+         * @param [start] - optional starting offset for gap
          */
         public snapTo(input: number, gap: number, start: number = 0): number {
             if (gap == 0) return input;
@@ -178,12 +178,12 @@ module Phaser {
 
         /**
          * Snap a value to nearest grid slice, using floor.
-         * 
+         *
          * example if you have an interval gap of 5 and a position of 12... you will snap to 10. As will 14 snap to 10... but 16 will snap to 15
-         * 
+         *
          * @param input - the value to snap
          * @param gap - the interval gap of the grid
-         * @param start - optional starting offset for gap
+         * @param [start] - optional starting offset for gap
          */
         public snapToFloor(input: number, gap: number, start: number = 0): number {
             if (gap == 0) return input;
@@ -195,12 +195,12 @@ module Phaser {
 
         /**
          * Snap a value to nearest grid slice, using ceil.
-         * 
+         *
          * example if you have an interval gap of 5 and a position of 12... you will snap to 15. As will 14 will snap to 15... but 16 will snap to 20
-         * 
+         *
          * @param input - the value to snap
          * @param gap - the interval gap of the grid
-         * @param start - optional starting offset for gap
+         * @param [start] - optional starting offset for gap
          */
         public snapToCeil(input: number, gap: number, start: number = 0): number {
             if (gap == 0) return input;
@@ -231,17 +231,17 @@ module Phaser {
 
         /**
          * roundTo some place comparative to a 'base', default is 10 for decimal place
-         * 
+         *
          * 'place' is represented by the power applied to 'base' to get that place
-         * 
+         *
          * @param value - the value to round
          * @param place - the place to round to
          * @param base - the base to round in... default is 10 for decimal
-         * 
+         *
          * e.g.
-         * 
+         *
          * 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
-         * 
+         *
          * roundTo(2000/7,3) == 0
          * roundTo(2000/7,2) == 300
          * roundTo(2000/7,1) == 290
@@ -251,7 +251,7 @@ module Phaser {
          * roundTo(2000/7,-3) == 285.714
          * roundTo(2000/7,-4) == 285.7143
          * roundTo(2000/7,-5) == 285.71429
-         * 
+         *
          * roundTo(2000/7,3,2)  == 288       -- 100100000
          * roundTo(2000/7,2,2)  == 284       -- 100011100
          * roundTo(2000/7,1,2)  == 286       -- 100011110
@@ -261,8 +261,8 @@ module Phaser {
          * roundTo(2000/7,-3,2) == 285.75    -- 100011101.11
          * roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
          * roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
-         * 
-         * note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed 
+         *
+         * note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed
          * because we are rounding 100011.1011011011011011 which rounds up.
          */
         public roundTo(value: number, place: number = 0, base: number = 10): number {
@@ -336,7 +336,7 @@ module Phaser {
 
         /**
          * normalizes independent and then sets dep to the nearest value respective to independent
-         * 
+         *
          * for instance if dep=-170 and ind=170 then 190 will be returned as an alternative to -170
          */
         public normalizeAngleToAnother(dep: number, ind: number, radians: bool = true): number {
@@ -345,7 +345,7 @@ module Phaser {
 
         /**
          * normalize independent and dependent and then set dependent to an angle relative to 'after/clockwise' independent
-         * 
+         *
          * for instance dep=-170 and ind=170, then 190 will be reutrned as alternative to -170
          */
         public normalizeAngleAfterAnother(dep: number, ind: number, radians: bool = true): number {
@@ -356,7 +356,7 @@ module Phaser {
 
         /**
          * normalizes indendent and dependent and then sets dependent to an angle relative to 'before/counterclockwise' independent
-         * 
+         *
          * for instance dep = 190 and ind = 170, then -170 will be returned as an alternative to 190
          */
         public normalizeAngleBeforeAnother(dep: number, ind: number, radians: bool = true): number {
@@ -378,17 +378,17 @@ module Phaser {
 
         /**
          * Compute the logarithm of any value of any base
-         * 
-         * a logarithm is the exponent that some constant (base) would have to be raised to 
+         *
+         * a logarithm is the exponent that some constant (base) would have to be raised to
          * to be equal to value.
-         * 
+         *
          * i.e.
          * 4 ^ x = 16
          * can be rewritten as to solve for x
          * logB4(16) = x
-         * which with this function would be 
+         * which with this function would be
          * LoDMath.logBaseOf(16,4)
-         * 
+         *
          * which would return 2, because 4^2 = 16
          */
         public logBaseOf(value: number, base: number): number {
@@ -434,9 +434,9 @@ module Phaser {
 
         /**
          * Factorial - N!
-         * 
+         *
          * simple product series
-         * 
+         *
          * by definition:
          * 0! == 1
          */
@@ -455,7 +455,7 @@ module Phaser {
 
         /**
          * gamma function
-         * 
+         *
          * defined: gamma(N) == (N - 1)!
          */
         public gammaFunction(value: number): number {
@@ -464,9 +464,9 @@ module Phaser {
 
         /**
          * falling factorial
-         * 
+         *
          * defined: (N)! / (N - x)!
-         * 
+         *
          * written subscript: (N)x OR (base)exp
          */
         public fallingFactorial(base: number, exp: number): number {
@@ -475,9 +475,9 @@ module Phaser {
 
         /**
          * rising factorial
-         * 
+         *
          * defined: (N + x - 1)! / (N - 1)!
-         * 
+         *
          * written superscript N^(x) OR base^(exp)
          */
         public risingFactorial(base: number, exp: number): number {
@@ -487,7 +487,7 @@ module Phaser {
 
         /**
          * binomial coefficient
-         * 
+         *
          * defined: N! / (k!(N-k)!)
          * reduced: N! / (N-k)! == (N)k (fallingfactorial)
          * reduced: (N)k / k!
@@ -498,10 +498,10 @@ module Phaser {
 
         /**
          * rising binomial coefficient
-         * 
-         * as one can notice in the analysis of binCoef(...) that 
-         * binCoef is the (N)k divided by k!. Similarly rising binCoef 
-         * is merely N^(k) / k! 
+         *
+         * as one can notice in the analysis of binCoef(...) that
+         * binCoef is the (N)k divided by k!. Similarly rising binCoef
+         * is merely N^(k) / k!
          */
         public risingBinCoef(n: number, k: number): number {
             return this.risingFactorial(n, k) / this.factorial(k);
@@ -542,7 +542,7 @@ module Phaser {
 
         /**
          * Adds the given amount to the value, but never lets the value go over the specified maximum
-         * 
+         *
          * @param value The value to add the amount to
          * @param amount The amount to add to the value
          * @param max The maximum the value is allowed to be
@@ -563,7 +563,7 @@ module Phaser {
 
         /**
          * Subtracts the given amount from the value, but never lets the value go below the specified minimum
-         * 
+         *
          * @param value The base value
          * @param amount The amount to subtract from the base value
          * @param min The minimum the value is allowed to be
@@ -584,7 +584,7 @@ module Phaser {
         /**
          * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
          * <p>Values must be positive integers, and are passed through Math.abs</p>
-         * 
+         *
          * @param value The value to add the amount to
          * @param amount The amount to add to the value
          * @param max The maximum the value is allowed to be
@@ -606,7 +606,7 @@ module Phaser {
 
         /**
          * Randomly returns either a 1 or -1
-         * 
+         *
          * @return	1 or -1
          */
         public randomSign(): number {
@@ -615,9 +615,9 @@ module Phaser {
 
         /**
          * Returns true if the number given is odd.
-         * 
+         *
          * @param	n	The number to check
-         * 
+         *
          * @return	True if the given number is odd. False if the given number is even.
          */
         public isOdd(n: number): bool {
@@ -635,9 +635,9 @@ module Phaser {
 
         /**
          * Returns true if the number given is even.
-         * 
+         *
          * @param	n	The number to check
-         * 
+         *
          * @return	True if the given number is even. False if the given number is odd.
          */
         public isEven(n: number): bool {
@@ -656,9 +656,9 @@ module Phaser {
         /**
          * Keeps an angle value between -180 and +180<br>
          * Should be called whenever the angle is updated on the Sprite to stop it from going insane.
-         * 
+         *
          * @param	angle	The angle value to check
-         * 
+         *
          * @return	The new angle value, returns the same as the input angle if it was within bounds
          */
         public wrapAngle(angle: number): number {
@@ -685,11 +685,11 @@ module Phaser {
 
         /**
          * Keeps an angle value between the given min and max values
-         * 
+         *
          * @param	angle	The angle value to check. Must be between -180 and +180
          * @param	min		The minimum angle that is allowed (must be -180 or greater)
          * @param	max		The maximum angle that is allowed (must be 180 or less)
-         * 
+         *
          * @return	The new angle value, returns the same as the input angle if it was within bounds
          */
         public angleLimit(angle: number, min: number, max: number): number {
@@ -832,7 +832,7 @@ module Phaser {
         /**
         * Generates a random number.  Deterministic, meaning safe
         * to use if you want to record replays in random environments.
-        * 
+        *
         * @return	A <code>Number</code> between 0 and 1.
         */
         public random(): number {
@@ -841,9 +841,9 @@ module Phaser {
 
         /**
         * Generates a random number based on the seed provided.
-        * 
+        *
         * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
-        * 
+        *
         * @return	A <code>Number</code> between 0 and 1.
         */
         public srand(Seed: number): number {
@@ -855,11 +855,11 @@ module Phaser {
         /**
         * Fetch a random entry from the given array.
         * Will return null if random selection is missing, or array has no entries.
-        * 
+        *
         * @param	objects		An array of objects.
         * @param	startIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
         * @param	length		Optional restriction on the number of values you want to randomly select from.
-        * 
+        *
         * @return	The random object that was selected.
         */
         public getRandom(objects, startIndex: number = 0, length: number = 0) {
@@ -885,9 +885,9 @@ module Phaser {
 
         /**
          * Round down to the next whole number. E.g. floor(1.7) == 1, and floor(-2.7) == -2.
-         * 
+         *
          * @param	Value	Any number.
-         * 
+         *
          * @return	The rounded value of that number.
          */
         public floor(Value: number): number {
@@ -897,9 +897,9 @@ module Phaser {
 
         /**
          * Round up to the next whole number.  E.g. ceil(1.3) == 2, and ceil(-2.3) == -3.
-         * 
+         *
          * @param	Value	Any number.
-         * 
+         *
          * @return	The rounded value of that number.
          */
         public ceil(Value: number): number {
@@ -977,25 +977,25 @@ module Phaser {
 
 		/**
 		 * Finds the length of the given vector
-		 * 
+		 *
 		 * @param	dx
 		 * @param	dy
-		 * 
+		 *
 		 * @return
 		 */
         public vectorLength(dx:number, dy:number):number
         {
             return Math.sqrt(dx * dx + dy * dy);
         }
-		
+
 		/**
 		 * Finds the dot product value of two vectors
-		 * 
+		 *
 		 * @param	ax		Vector X
 		 * @param	ay		Vector Y
 		 * @param	bx		Vector X
 		 * @param	by		Vector Y
-		 * 
+		 *
 		 * @return	Dot product
 		 */
         public dotProduct(ax:number, ay:number, bx:number, by:number):number

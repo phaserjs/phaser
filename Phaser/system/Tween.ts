@@ -108,7 +108,7 @@ module Phaser {
 	    /**
 	     * Config the tween result.
 	     * @param properties {object} Propertis you want to tween.
-	     * @param duration {number} Optional, duration of this tween.
+	     * @param [duration] {number} duration of this tween.
 	     * @param ease {any} Easing function.
 	     * @param autoStart {boolean} Whether this tween will start automatically or not.
 	     * @return {Tween} Itself.

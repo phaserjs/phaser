@@ -23,8 +23,8 @@ module Phaser {
          * @param key {string} Asset key for image texture of this object.
          * @param x {number} X position in world coordinate.
          * @param y {number} Y position in world coordinate.
-         * @param width {number} Optional, width of this object.
-         * @param height {number} Optional, height of this object.
+         * @param [width] {number} width of this object.
+         * @param [height] {number} height of this object.
          */
         constructor(game: Game, key:string, x: number = 0, y: number = 0, width?: number = 0, height?: number = 0) {
 
@@ -113,8 +113,8 @@ module Phaser {
          * @param y {number} Y position of the new region.
          * @param width {number} Width of the new region.
          * @param height {number} Height of the new region.
-         * @param speedX {number} Optional, x-axis scrolling speed.
-         * @param speedY {number} Optional, y-axis scrolling speed.
+         * @param [speedX] {number} x-axis scrolling speed.
+         * @param [speedY] {number} y-axis scrolling speed.
          * @return {ScrollRegion} The newly added region.
          */
         public addRegion(x: number, y: number, width: number, height: number, speedX?:number = 0, speedY?:number = 0):ScrollRegion {

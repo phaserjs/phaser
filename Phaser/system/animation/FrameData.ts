@@ -105,7 +105,7 @@ module Phaser {
          * Get ranges of frames in an array.
          * @param start {number} Start index of frames you want.
          * @param end {number} End index of frames you want.
-         * @param output {Frame[]} Optional, result will be added into this array.
+         * @param [output] {Frame[]} result will be added into this array.
          * @return {Frame[]} Ranges of specific frames in an array.
          */
         public getFrameRange(start: number, end: number, output?: Frame[] = []): Frame[] {
@@ -121,7 +121,7 @@ module Phaser {
 
         /**
          * Get all indexes of frames by giving their name.
-         * @param output {number[]} Optional, result will be added into this array.
+         * @param [output] {number[]} result will be added into this array.
          * @return {number[]} Indexes of specific frames in an array.
          */
         public getFrameIndexes(output?: number[] = []): number[] {
@@ -139,7 +139,7 @@ module Phaser {
 
         /**
          * Get all names of frames by giving their indexes.
-         * @param output {number[]} Optional, result will be added into this array.
+         * @param [output] {number[]} result will be added into this array.
          * @return {number[]} Names of specific frames in an array.
          */
         public getFrameIndexesByName(input: string[]): number[] {

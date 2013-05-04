@@ -315,7 +315,7 @@ module Phaser {
          * Get the tile located at specific position and layer.
          * @param x {number} X position of this tile located.
          * @param y {number} Y position of this tile located.
-         * @param layer {number} Optional, layer of this tile located.
+         * @param [layer] {number} layer of this tile located.
          * @return {Tile} The tile with specific properties.
          */
         public getTile(x: number, y: number, layer?: number = 0):Tile {
@@ -328,7 +328,7 @@ module Phaser {
          * Get the tile located at specific position (in world coordinate) and layer. (thus you give a position of a point which is within the tile)
          * @param x {number} X position of the point in target tile.
          * @param x {number} Y position of the point in target tile.
-         * @param layer {number} Optional, layer of this tile located.
+         * @param [layer] {number} layer of this tile located.
          * @return {Tile} The tile with specific properties.
          */
         public getTileFromWorldXY(x: number, y: number, layer?: number = 0):Tile {
@@ -417,7 +417,7 @@ module Phaser {
          * @param x {number} X position of this tile.
          * @param y {number} Y position of this tile.
          * @param index {number} The index of this tile type in the core map data.
-         * @param layer {number} Optional, which layer you want to set the tile to.
+         * @param [layer] {number} which layer you want to set the tile to.
          */
         public putTile(x: number, y: number, index: number, layer?: number = 0) {
 

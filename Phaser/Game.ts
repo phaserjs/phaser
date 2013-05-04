@@ -415,8 +415,8 @@ module Phaser {
         /**
          * Switch to a new State.
          * @param state {State} The state you want to switch to.
-         * @param clearWorld {boolean} Optional, clear everything in the world? (Default to true)
-         * @param clearCache {boolean} Optional, clear asset cache? (Default to false and ONLY available when clearWorld=true)
+         * @param [clearWorld] {boolean} clear everything in the world? (Default to true)
+         * @param [clearCache] {boolean} clear asset cache? (Default to false and ONLY available when clearWorld=true)
          */
         public switchState(state, clearWorld: bool = true, clearCache: bool = false) {
 
@@ -655,9 +655,9 @@ module Phaser {
          * @param key {string} Key for tileset image.
          * @param mapData {string} Data of this tilemap.
          * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-         * @param resizeWorld {boolean} Optional, resize the world to make same as tilemap?
-         * @param tileWidth {number} Optional, width of each tile.
-         * @param tileHeight {number} Optional, height of each tile.
+         * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
+         * @param [tileWidth] {number} width of each tile.
+         * @param [tileHeight] {number} height of each tile.
          * @return {Tilemap} The newly created tilemap object.
          */
         public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
