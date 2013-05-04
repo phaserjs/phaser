@@ -19,10 +19,10 @@ module Phaser {
          * Create a new <code>GameObject</code> object at specific position with
          * specific width and height.
          *
-         * @param x      Optinal, the x position of the object.
-         * @param y      Optinal, the y position of the object.
-         * @param width  Optinal, the width of the object.
-         * @param height Optinal, the height of the object.
+         * @param x {number} Optinal, the x position of the object.
+         * @param y {number} Optinal, the y position of the object.
+         * @param width {number} Optinal, the width of the object.
+         * @param height {number} Optinal, the height of the object.
          */
         constructor(game: Game, x?: number = 0, y?: number = 0, width?: number = 16, height?: number = 16) {
 
@@ -421,11 +421,11 @@ module Phaser {
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param    ObjectOrGroup   The object or group being tested.
-        * @param    InScreenSpace   Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param    Camera          Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param ObjectOrGroup {object} The object or group being tested.
+        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return   Whether or not the two objects overlap.
+        * @return {boolean} Whether or not the objects overlap this.
         */
         public overlaps(ObjectOrGroup, InScreenSpace: bool = false, Camera: Camera = null): bool {
 
@@ -471,13 +471,13 @@ module Phaser {
         * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param    X               The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param    Y               The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param    ObjectOrGroup   The object or group being tested.
-        * @param    InScreenSpace   Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param    Camera          Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
+        * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
+        * @param ObjectOrGroup {object} The object or group being tested.
+        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return   Whether or not the two objects overlap.
+        * @return {boolean} Whether or not the two objects overlap.
         */
         public overlapsAt(X: number, Y: number, ObjectOrGroup, InScreenSpace: bool = false, Camera: Camera = null): bool {
 
@@ -524,9 +524,9 @@ module Phaser {
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *
-        * @param    Point           The point in world space you want to check.
-        * @param    InScreenSpace   Whether to take scroll factors into account when checking for overlap.
-        * @param    Camera          Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param point {Point} The point in world space you want to check.
+        * @param InScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return   Whether or not the point overlaps this object.
         */
@@ -554,9 +554,9 @@ module Phaser {
         /**
         * Check and see if this object is currently on screen.
         *
-        * @param    Camera      Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        * @param Camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
         *
-        * @return   Whether the object is on screen or not.
+        * @return {boolean} Whether the object is on screen or not.
         */
         public onScreen(Camera: Camera = null): bool {
 
@@ -574,10 +574,10 @@ module Phaser {
         /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param    Camera      Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        * @param    Point       Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param Point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return   The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+        * @return {MicroPoint} The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
         public getScreenXY(point: MicroPoint = null, Camera: Camera = null): MicroPoint {
 
@@ -625,9 +625,9 @@ module Phaser {
         /**
         * Retrieve the midpoint of this object in world coordinates.
         *
-        * @Point    Allows you to pass in an existing <code>Point</code> object if you're so inclined.  Otherwise a new one is created.
+        * @param point {Point} Allows you to pass in an existing <code>Point</code> object if you're so inclined.  Otherwise a new one is created.
         *
-        * @return   A <code>Point</code> object containing the midpoint of this object in world coordinates.
+        * @return {MicroPoint} A <code>Point</code> object containing the midpoint of this object in world coordinates.
         */
         public getMidpoint(point: MicroPoint = null): MicroPoint {
 
@@ -646,8 +646,8 @@ module Phaser {
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
-        * @param    X   The new X position of this object.
-        * @param    Y   The new Y position of this object.
+        * @param X {number} The new X position of this object.
+        * @param Y {number} The new Y position of this object.
         */
         public reset(X: number, Y: number) {
 
@@ -668,9 +668,9 @@ module Phaser {
         * For slightly better performance you can just &amp; the value directly numbero <code>touching</code>.
         * However, this method is good for readability and accessibility.
         *
-        * @param    Direction   Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
-        * @return   Whether the object is touching an object in (any of) the specified direction(s) this frame.
+        * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
         */
         public isTouching(Direction: number): bool {
             return (this.touching & Direction) > Collision.NONE;
@@ -679,17 +679,17 @@ module Phaser {
         /**
         * Handy for checking if this object is just landed on a particular surface.
         *
-        * @param    Direction   Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        * @param {number} Direction   Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
-        * @return   Whether the object just landed on (any of) the specified surface(s) this frame.
+        * @return {boolean} Whether the object just landed on (any of) the specified surface(s) this frame.
         */
 
         /**
         * Handy function for checking if this object is just landed on a particular surface.
         *
-        * @param    Direction   Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
-        * @returns  bool        Whether the object just landed on any specicied surfaces.
+        * @returns {boolean} Whether the object just landed on any specicied surfaces.
         */
         public justTouched(Direction: number): bool {
             return ((this.touching & Direction) > Collision.NONE) && ((this.wasTouching & Direction) <= Collision.NONE);
@@ -699,7 +699,7 @@ module Phaser {
         * Reduces the "health" variable of this sprite by the amount specified in Damage.
         * Calls kill() if health drops to or below zero.
         *
-        * @param    Damage      How much health to take away (use a negative number to give a health bonus).
+        * @param Damage {number} How much health to take away (use a negative number to give a health bonus).
         */
         public hurt(Damage: number) {
 
@@ -717,10 +717,10 @@ module Phaser {
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
         * it can be stopped from leaving the world, or a section of it.
         *
-        * @param    x       x position of the bound
-        * @param    y       y position of the bound
-        * @param    width   width of its bound
-        * @param    height  height of its bound
+        * @param x {number} x position of the bound
+        * @param y {number} y position of the bound
+        * @param width {number} width of its bound
+        * @param height {number} height of its bound
         */
         public setBounds(x: number, y: number, width: number, height: number) {
 
@@ -731,7 +731,7 @@ module Phaser {
         /**
         * If you do not wish this object to be visible to a specific camera, pass the camera here.
 
-        * @param    camera  The specific camera.
+        * @param camera {Camera} The specific camera.
         */
         public hideFromCamera(camera: Camera) {
 
@@ -746,7 +746,7 @@ module Phaser {
         /**
         * Make this object only visible to a specific camera.
         *
-        * @param    camera  The camera you wish it to be visible.
+        * @param camera {Camera} The camera you wish it to be visible.
         */
         public showToCamera(camera: Camera) {
 

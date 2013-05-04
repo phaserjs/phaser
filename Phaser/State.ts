@@ -12,7 +12,6 @@ module Phaser {
 
         /**
          * State constructor
-         *
          * Create a new <code>State</code>.
          */
         constructor(game: Game) {
@@ -130,11 +129,11 @@ module Phaser {
         /**
          * Create a new camera with specific position and size.
          *
-         * @param   x       X position of the new camera.
-         * @param   y       Y position of the new camera.
-         * @param   width   Width of the new camera.
-         * @param   height  Height of the new camera.
-         * @returns {Camera=} The newly created camera object.
+         * @param x {number} X position of the new camera.
+         * @param y {number} Y position of the new camera.
+         * @param width {number} Width of the new camera.
+         * @param height {number} Height of the new camera.
+         * @returns {Camera} The newly created camera object.
          */
         public createCamera(x: number, y: number, width: number, height: number): Camera {
             return this.game.world.createCamera(x, y, width, height);
@@ -143,9 +142,9 @@ module Phaser {
         /**
          * Create a new GeomSprite with specific position.
          *
-         * @param   x       X position of the new geom sprite.
-         * @param   y       Y position of the new geom sprite.
-         * @returns {GeomSprite=} The newly created geom sprite object.
+         * @param x {number} X position of the new geom sprite.
+         * @param y {number} Y position of the new geom sprite.
+         * @returns {GeomSprite} The newly created geom sprite object.
          */
         public createGeomSprite(x: number, y: number): GeomSprite {
             return this.world.createGeomSprite(x, y);
@@ -154,10 +153,10 @@ module Phaser {
         /**
          * Create a new Sprite with specific position and sprite sheet key.
          *
-         * @param   x       X position of the new sprite.
-         * @param   y       Y position of the new sprite.
-         * @param   key     Optinal, key for the sprite sheet you want it to use.
-         * @returns {Sprite=} The newly created sprite object.
+         * @param x {number} X position of the new sprite.
+         * @param y {number} Y position of the new sprite.
+         * @param key {string} Optinal, key for the sprite sheet you want it to use.
+         * @returns {Sprite} The newly created sprite object.
          */
         public createSprite(x: number, y: number, key?: string = ''): Sprite {
             return this.game.world.createSprite(x, y, key);
@@ -166,9 +165,9 @@ module Phaser {
         /**
          * Create a new DynamicTexture with specific size.
          *
-         * @param   width       Width of the texture.
-         * @param   height      Height of the texture.
-         * @returns {DynamicTexture=} The newly created dynamic texture object.
+         * @param width {number} Width of the texture.
+         * @param height {number} Height of the texture.
+         * @returns {DynamicTexture} The newly created dynamic texture object.
          */
         public createDynamicTexture(width: number, height: number): DynamicTexture {
             return this.game.world.createDynamicTexture(width, height);
@@ -177,8 +176,8 @@ module Phaser {
         /**
          * Create a new object container.
          *
-         * @param   MaxSize     Optinal, capacity of this group.
-         * @returns {Group=} The newly created group.
+         * @param MaxSize {number} Optinal, capacity of this group.
+         * @returns {Group} The newly created group.
          */
         public createGroup(MaxSize?: number = 0): Group {
             return this.game.world.createGroup(MaxSize);
@@ -187,7 +186,7 @@ module Phaser {
         /**
          * Create a new Particle.
          *
-         * @return  {Particle=} The newly created particle object.
+         * @return {Particle} The newly created particle object.
          */
         public createParticle(): Particle {
             return this.game.world.createParticle();
@@ -196,10 +195,10 @@ module Phaser {
         /**
          * Create a new Emitter.
          *
-         * @param   x       Optinal, x position of the emitter.
-         * @param   y       Optinal, y position of the emitter.
-         * @param   size    Optinal, size of this emitter.
-         * @return  {Emitter=} The newly created emitter object.
+         * @param x {number} Optinal, x position of the emitter.
+         * @param y {number} Optinal, y position of the emitter.
+         * @param size {number} Optinal, size of this emitter.
+         * @return {Emitter} The newly created emitter object.
          */
         public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
             return this.game.world.createEmitter(x, y, size);
@@ -208,12 +207,12 @@ module Phaser {
         /**
          * Create a new ScrollZone object with image key, position and size.
          *
-         * @param   key     Key to a image you wish this object to use.
-         * @param   x       X position of this object.
-         * @param   y       Y position of this object.
-         * @param   width   Width of this object.
-         * @param   height  Heigth of this object.
-         * @returns {ScrollZone=} The newly created scroll zone object.
+         * @param key {string} Key to a image you wish this object to use.
+         * @param x {number} X position of this object.
+         * @param y {number} Y position of this object.
+         * @param width {number} Width of this object.
+         * @param height {number} Heigth of this object.
+         * @returns {ScrollZone} The newly created scroll zone object.
          */
         public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
             return this.game.world.createScrollZone(key, x, y, width, height);
@@ -222,13 +221,13 @@ module Phaser {
         /**
          * Create a new Tilemap.
          *
-         * @param   key         Key for tileset image.
-         * @param   mapData     Data of this tilemap.
-         * @param   format      Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-         * @param   resizeWorld Optinal, resize the world to make same as tilemap?
-         * @param   tileWidth   Optinal, width of each tile.
-         * @param   tileHeight  Optinal, height of each tile.
-         * @return  {Tilemap=} The newly created tilemap object.
+         * @param key {string} Key for tileset image.
+         * @param mapData {string} Data of this tilemap.
+         * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+         * @param resizeWorld {boolean} Optinal, resize the world to make same as tilemap?
+         * @param tileWidth {number} Optinal, width of each tile.
+         * @param tileHeight number} Optinal, height of each tile.
+         * @return {Tilemap} The newly created tilemap object.
          */
         public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
             return this.game.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
@@ -237,8 +236,8 @@ module Phaser {
         /**
          * Create a tween object for a specific object.
          *
-         * @param   obj  Object you wish the tween will affect.
-         * @return  {Phaser.Tween=} The newly created tween object.
+         * @param obj Object you wish the tween will affect.
+         * @return {Phaser.Tween} The newly created tween object.
          */
         public createTween(obj): Tween {
             return this.game.tweens.create(obj);
