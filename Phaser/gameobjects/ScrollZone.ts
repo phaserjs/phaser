@@ -15,6 +15,17 @@ module Phaser {
 
     export class ScrollZone extends GameObject {
 
+        /**
+         * ScrollZone constructor
+         * Create a new <code>ScrollZone</code>.
+         *
+         * @param game {Phaser.Game} Current game instance.
+         * @param key {string} Asset key for image texture of this object.
+         * @param x {number} X position in world coordinate.
+         * @param y {number} Y position in world coordinate.
+         * @param width {number} Optional, width of this object.
+         * @param height {number} Optional, height of this object.
+         */
         constructor(game: Game, key:string, x: number = 0, y: number = 0, width?: number = 0, height?: number = 0) {
 
             super(game, x, y, width, height);
@@ -49,19 +60,63 @@ module Phaser {
 
         }
 
+        /**
+         * Texture of this object.
+         */
         private _texture;
+        /**
+         * If this zone is larger than texture image, this will be filled with a pattern of texture.
+         * @type {DynamicTexture}
+         */
         private _dynamicTexture: DynamicTexture = null;
 
-        //  local rendering related temp vars to help avoid gc spikes
+        /**
+         * Local rendering related temp vars to help avoid gc spikes.
+         * @type {number}
+         */
         private _dx: number = 0;
+        /**
+         * Local rendering related temp vars to help avoid gc spikes.
+         * @type {number}
+         */
         private _dy: number = 0;
+        /**
+         * Local rendering related temp vars to help avoid gc spikes.
+         * @type {number}
+         */
         private _dw: number = 0;
+        /**
+         * Local rendering related temp vars to help avoid gc spikes.
+         * @type {number}
+         */
         private _dh: number = 0;
 
+        /**
+         * Current region this zone is scrolling.
+         * @type {ScrollRegion}
+         */
         public currentRegion: ScrollRegion;
+        /**
+         * Array contains all added regions.
+         * @type {ScrollRegion[]}
+         */
         public regions: ScrollRegion[];
+        /**
+         * Flip this zone vertically? (default to false)
+         * @type {boolean}
+         */
         public flipped: bool = false;
 
+        /**
+         * Add a new region to this zone.
+         * @param x {number} X position of the new region.
+         * @param y {number} Y position of the new region.
+         * @param width {number} Width of the new region.
+         * @param height {number} Height of the new region.
+         * @param speedX {number} Optional, x-axis scrolling speed.
+         * @param speedY {number} Optional, y-axis scrolling speed.
+         * @return {ScrollRegion} The newly added region.
+         */
         public addRegion(x: number, y: number, width: number, height: number, speedX?:number = 0, speedY?:number = 0):ScrollRegion {
 
             if (x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height)
@@ -78,6 +133,11 @@ module Phaser {
 
         }
 
+        /**
+         * Set scrolling speed of current region.
+         * @param x {number} X speed of current region.
+         * @param y {number} Y speed of current region.
+         */
         public setSpeed(x: number, y: number) {
 
             if (this.currentRegion)
@@ -89,6 +149,9 @@ module Phaser {
 
         }
 
+        /**
+         * Update regions.
+         */
         public update() {
 
             for (var i = 0; i < this.regions.length; i++)
@@ -98,8 +161,13 @@ module Phaser {
 
         }
 
+        /**
+         * Check whether this zone is visible in a specific camera rectangle.
+         * @param camera {Rectangle} The rectangle you want to check.
+         * @return {boolean} Return true if bound of this zone intersects the given rectangle, otherwise return false.
+         */
         public inCamera(camera: Rectangle): bool {
-            
+
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
             {
                 this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
@@ -116,6 +184,13 @@ module Phaser {
 
         }
 
+        /**
+         * Render this zone object to a specific camera.
+         * @param camera {Camera} The camera this object will be render to.
+         * @param cameraOffsetX {number} X offset of camera.
+         * @param cameraOffsetY {number} Y offset of camera.
+         * @return Return false if not rendered, otherwise return true.
+         */
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number) {
 
             //  Render checks
@@ -189,6 +264,10 @@ module Phaser {
 
         }
 
+        /**
+         * Create repeating texture with _texture, and store it into the _dynamicTexture.
+         * Used to create texture when texture image is small than size of the zone.
+         */
         private createRepeatingTexture(regionWidth: number, regionHeight: number) {
 
             //	Work out how many we'll need of the source image to make it tile properly
