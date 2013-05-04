@@ -19,9 +19,9 @@ module Phaser {
          * Create a new <code>Sprite</code>.
          *
          * @param game {Phaser.Game} Current game instance.
-         * @param x {number} Optional, the initial x position of the sprite.
-         * @param y {number} Optional, the initial y position of the sprite.
-         * @param key {string} Optional, Key of the graphic you want to load for this sprite.
+         * @param [x] {number} the initial x position of the sprite.
+         * @param [y] {number} the initial y position of the sprite.
+         * @param [key] {string} Key of the graphic you want to load for this sprite.
          */
         constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null) {
 
@@ -140,7 +140,7 @@ module Phaser {
          * This function creates a flat colored square image dynamically.
          * @param width {number} The width of the sprite you want to generate.
          * @param height {number} The height of the sprite you want to generate.
-         * @param color {number} Optional, specifies the color of the generated block. (format is 0xAARRGGBB)
+         * @param [color] {number} specifies the color of the generated block. (format is 0xAARRGGBB)
          * @return {Sprite} Sprite instance itself.
          */
         public makeGraphic(width: number, height: number, color: number = 0xffffffff): Sprite {
@@ -413,7 +413,7 @@ module Phaser {
          * Render debug infos. (including name, bounds info, position and some other properties)
          * @param x {number} X position of the debug info to be rendered.
          * @param y {number} Y position of the debug info to be rendered.
-         * @param color {number} Optional, color of the debug info to be rendered. (format is css color string)
+         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 

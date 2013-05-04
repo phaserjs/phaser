@@ -19,7 +19,7 @@ module Phaser {
          *
          * @param X {number} The X position of the emitter.
          * @param Y {number} The Y position of the emitter.
-         * @param Size {number} Optional, specifies a maximum capacity for this emitter.
+         * @param [Size] {number} specifies a maximum capacity for this emitter.
          */
         constructor(game: Game, X: number = 0, Y: number = 0, Size: number = 0) {
             super(game, Size);

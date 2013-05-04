@@ -155,7 +155,7 @@ module Phaser {
          *
          * @param x {number} X position of the new sprite.
          * @param y {number} Y position of the new sprite.
-         * @param key {string} Optinal, key for the sprite sheet you want it to use.
+         * @param key {string} [optional] key for the sprite sheet you want it to use.
          * @returns {Sprite} The newly created sprite object.
          */
         public createSprite(x: number, y: number, key?: string = ''): Sprite {
@@ -176,7 +176,7 @@ module Phaser {
         /**
          * Create a new object container.
          *
-         * @param MaxSize {number} Optinal, capacity of this group.
+         * @param MaxSize {number} [optional] capacity of this group.
          * @returns {Group} The newly created group.
          */
         public createGroup(MaxSize?: number = 0): Group {
@@ -195,9 +195,9 @@ module Phaser {
         /**
          * Create a new Emitter.
          *
-         * @param x {number} Optinal, x position of the emitter.
-         * @param y {number} Optinal, y position of the emitter.
-         * @param size {number} Optinal, size of this emitter.
+         * @param x {number} [optional] x position of the emitter.
+         * @param y {number} [optional] y position of the emitter.
+         * @param size {number} [optional] size of this emitter.
          * @return {Emitter} The newly created emitter object.
          */
         public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
@@ -224,9 +224,9 @@ module Phaser {
          * @param key {string} Key for tileset image.
          * @param mapData {string} Data of this tilemap.
          * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-         * @param resizeWorld {boolean} Optinal, resize the world to make same as tilemap?
-         * @param tileWidth {number} Optinal, width of each tile.
-         * @param tileHeight number} Optinal, height of each tile.
+         * @param resizeWorld {boolean} [optional] resize the world to make same as tilemap?
+         * @param tileWidth {number} [optional] width of each tile.
+         * @param tileHeight number} [optional] height of each tile.
          * @return {Tilemap} The newly created tilemap object.
          */
         public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {

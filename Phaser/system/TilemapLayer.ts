@@ -189,10 +189,10 @@ module Phaser {
          * Swap tiles with 2 kinds of indexes.
          * @param tileA {number} First tile index.
          * @param tileB {number} Second tile index.
-         * @param x {number} Optional, specify a rectangle of tiles to operate. The x position in tiles of rectangle's left-top corner.
-         * @param y {number} Optional, specify a rectangle of tiles to operate. The y position in tiles of rectangle's left-top corner.
-         * @param width {number} Optional, specify a rectangle of tiles to operate. The width in tiles.
-         * @param height {number} Optional, specify a rectangle of tiles to operate. The height in tiles.
+         * @param [x] {number} specify a rectangle of tiles to operate. The x position in tiles of rectangle's left-top corner.
+         * @param [y] {number} specify a rectangle of tiles to operate. The y position in tiles of rectangle's left-top corner.
+         * @param [width] {number} specify a rectangle of tiles to operate. The width in tiles.
+         * @param [height] {number} specify a rectangle of tiles to operate. The height in tiles.
          */
         public swapTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 
@@ -227,10 +227,10 @@ module Phaser {
         /**
          * Fill a tile block with a specific tile index.
          * @param index {number} Index of tiles you want to fill with.
-         * @param x {number} Optional, x position (in tiles) of block's left-top corner.
-         * @param y {number} Optional, y position (in tiles) of block's left-top corner.
-         * @param width {number} Optional, width of block.
-         * @param height {number} Optional, height of block.
+         * @param [x] {number} x position (in tiles) of block's left-top corner.
+         * @param [y] {number} y position (in tiles) of block's left-top corner.
+         * @param [width] {number} width of block.
+         * @param [height] {number} height of block.
          */
         public fillTile(index: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 
@@ -246,10 +246,10 @@ module Phaser {
         /**
          * Set random tiles to a specific tile block.
          * @param tiles {number[]} Tiles with indexes in this array will be randomly set to the given block.
-         * @param x {number} Optional, x position (in tiles) of block's left-top corner.
-         * @param y {number} Optional, y position (in tiles) of block's left-top corner.
-         * @param width {number} Optional, width of block.
-         * @param height {number} Optional, height of block.
+         * @param [x] {number} x position (in tiles) of block's left-top corner.
+         * @param [y] {number} y position (in tiles) of block's left-top corner.
+         * @param [width] {number} width of block.
+         * @param [height] {number} height of block.
          */
         public randomiseTiles(tiles: number[], x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 
@@ -266,10 +266,10 @@ module Phaser {
          * Replace one kind of tiles to another kind.
          * @param tileA {number} Index of tiles you want to replace.
          * @param tileB {number} Index of tiles you want to set.
-         * @param x {number} Optional, x position (in tiles) of block's left-top corner.
-         * @param y {number} Optional, y position (in tiles) of block's left-top corner.
-         * @param width {number} Optional, width of block.
-         * @param height {number} Optional, height of block.
+         * @param [x] {number} x position (in tiles) of block's left-top corner.
+         * @param [y] {number} y position (in tiles) of block's left-top corner.
+         * @param [width] {number} width of block.
+         * @param [height] {number} height of block.
          */
         public replaceTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 

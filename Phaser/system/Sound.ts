@@ -16,8 +16,8 @@ module Phaser {
          * @param context {object} The AudioContext instance.
          * @param gainNode {object} Gain node instance.
          * @param data {object} Sound data.
-         * @param volume {number} Optional, volume of this sound when playing.
-         * @param loop {boolean} Optional, loop this sound when playing? (Default to false)
+         * @param [volume] {number} volume of this sound when playing.
+         * @param [loop] {boolean} loop this sound when playing? (Default to false)
          */
         constructor(context, gainNode, data, volume?: number = 1, loop?: bool = false) {
 

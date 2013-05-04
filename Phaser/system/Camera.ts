@@ -196,7 +196,7 @@ module Phaser {
         /**
          * Tells this camera object what sprite to track.
          * @param target {Sprite} The object you want the camera to track. Set to null to not follow anything.
-         * @param style {number} Optional, Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+         * @param [style] {number} Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
          */
         public follow(target: Sprite, style?: number = Camera.STYLE_LOCKON) {
 
@@ -497,7 +497,7 @@ module Phaser {
         /**
          * Set camera background texture.
          * @param key {string} Asset key of the texture.
-         * @param repeat {string} Optional, what kind of repeat will this texture used for background.
+         * @param [repeat] {string} what kind of repeat will this texture used for background.
          */
         public setTexture(key: string, repeat?: string = 'repeat') {
 
@@ -537,7 +537,7 @@ module Phaser {
          * Render debug infos. (including id, position, rotation, scrolling factor, bounds and some other properties)
          * @param x {number} X position of the debug info to be rendered.
          * @param y {number} Y position of the debug info to be rendered.
-         * @param color {number} Optional, color of the debug info to be rendered. (format is css color string)
+         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 

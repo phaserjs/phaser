@@ -108,7 +108,7 @@ module Phaser {
          * Checks for Line to Line intersection and returns an IntersectResult object containing the results of the intersection.
          * @param line1 The first Line object to check
          * @param line2 The second Line object to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineToLine(line1: Line, line2: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -129,7 +129,7 @@ module Phaser {
          * Checks for Line to Line Segment intersection and returns an IntersectResult object containing the results of the intersection.
          * @param line The Line object to check
          * @param seg The Line segment object to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineToLineSegment(line: Line, seg: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -164,7 +164,7 @@ module Phaser {
          * @param y1 The start y coordinate of the raw segment
          * @param x2 The end x coordinate of the raw segment
          * @param y2 The end y coordinate of the raw segment
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineToRawSegment(line: Line, x1: number, y1: number, x2: number, y2: number, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -196,7 +196,7 @@ module Phaser {
          * Checks for Line to Ray intersection and returns the result in an IntersectResult object.
          * @param line1 The Line object to check
          * @param ray The Ray object to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineToRay(line1: Line, ray: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -229,7 +229,7 @@ module Phaser {
          * Check if the Line and Circle objects intersect
          * @param line The Line object to check
          * @param circle The Circle object to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineToCircle(line: Line, circle: Circle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -248,7 +248,7 @@ module Phaser {
          * Check if the Line intersects each side of the Rectangle
          * @param line The Line object to check
          * @param rect The Rectangle object to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineToRectangle(line: Line, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -288,7 +288,7 @@ module Phaser {
          * Check if the two Line Segments intersect and returns the result in an IntersectResult object.
          * @param line1 The first Line Segment to check
          * @param line2 The second Line Segment to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineSegmentToLineSegment(line1: Line, line2: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -311,7 +311,7 @@ module Phaser {
          * Check if the Line Segment intersects with the Ray and returns the result in an IntersectResult object.
          * @param line The Line Segment to check.
          * @param ray The Ray to check.
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineSegmentToRay(line: Line, ray: Line, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -335,7 +335,7 @@ module Phaser {
          * Check if the Line Segment intersects with the Circle and returns the result in an IntersectResult object.
          * @param seg The Line Segment to check.
          * @param circle The Circle to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineSegmentToCircle(seg: Line, circle: Circle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -372,7 +372,7 @@ module Phaser {
          * Check if the Line Segment intersects with the Rectangle and returns the result in an IntersectResult object.
          * @param seg The Line Segment to check.
          * @param rect The Rectangle to check.
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static lineSegmentToRectangle(seg: Line, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -422,7 +422,7 @@ module Phaser {
          * Check for Ray to Rectangle intersection and returns the result in an IntersectResult object.
          * @param ray The Ray to check.
          * @param rect The Rectangle to check.
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static rayToRectangle(ray: Line, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -445,7 +445,7 @@ module Phaser {
          * @param lineY1
          * @param lineX2
          * @param lineY2
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static rayToLineSegment(rayX1, rayY1, rayX2, rayY2, lineX1, lineY1, lineX2, lineY2, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -484,7 +484,7 @@ module Phaser {
          * Determines whether the specified point is contained within the rectangular region defined by the Rectangle object and returns the result in an IntersectResult object.
          * @param point The Point or MicroPoint object to check, or any object with x and y properties.
          * @param rect The Rectangle object to check the point against
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static pointToRectangle(point, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -501,7 +501,7 @@ module Phaser {
          * Check whether two axis aligned Rectangles intersect and returns the intersecting rectangle dimensions in an IntersectResult object if they do.
          * @param rect1 The first Rectangle object.
          * @param rect2 The second Rectangle object.
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static rectangleToRectangle(rect1: Rectangle, rect2: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -529,7 +529,7 @@ module Phaser {
          * Checks if the Rectangle and Circle objects intersect and returns the result in an IntersectResult object.
          * @param rect The Rectangle object to check
          * @param circle The Circle object to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static rectangleToCircle(rect: Rectangle, circle: Circle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -542,7 +542,7 @@ module Phaser {
          * Checks if the two Circle objects intersect and returns the result in an IntersectResult object.
          * @param circle1 The first Circle object to check
          * @param circle2 The second Circle object to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static circleToCircle(circle1: Circle, circle2: Circle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -557,7 +557,7 @@ module Phaser {
          * Checks if the Circle object intersects with the Rectangle and returns the result in an IntersectResult object.
          * @param circle The Circle object to check
          * @param rect The Rectangle object to check
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static circleToRectangle(circle: Circle, rect: Rectangle, output?: IntersectResult = new IntersectResult): IntersectResult {
@@ -576,7 +576,7 @@ module Phaser {
          * Checks if the Point object is contained within the Circle and returns the result in an IntersectResult object.
          * @param circle The Circle object to check
          * @param point A Point or MicroPoint object to check, or any object with x and y properties
-         * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+         * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
         public static circleContainsPoint(circle: Circle, point, output?: IntersectResult = new IntersectResult): IntersectResult {

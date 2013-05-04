@@ -121,8 +121,8 @@ module Phaser {
          * Add a new texture atlas loading request.
          * @param key {string} Unique asset key of the texture atlas file.
          * @param url {string} URL of texture atlas file.
-         * @param jsonURL {string} Optional, url of JSON data file.
-         * @param jsonData {object} Optional, JSON data object.
+         * @param [jsonURL] {string} url of JSON data file.
+         * @param [jsonData] {object} JSON data object.
          */
         public addTextureAtlas(key: string, url: string, jsonURL?: string = null, jsonData? = null) {
 
