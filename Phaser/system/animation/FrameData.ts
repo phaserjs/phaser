@@ -35,8 +35,8 @@ module Phaser {
 
         /**
          * Add a new frame.
-         * @param frame The frame you want to add.
-         * @return {Frame=} The frame you just added.
+         * @param frame {Frame} The frame you want to add.
+         * @return {Frame} The frame you just added.
          */
         public addFrame(frame: Frame): Frame {
 
@@ -55,8 +55,8 @@ module Phaser {
 
         /**
          * Get a frame by its index.
-         * @param index Index of the frame you want to get.
-         * @return {Frame=} The frame you want.
+         * @param index {number} Index of the frame you want to get.
+         * @return {Frame} The frame you want.
          */
         public getFrame(index: number): Frame {
 
@@ -71,8 +71,8 @@ module Phaser {
 
         /**
          * Get a frame by its name.
-         * @param name Name of the frame you want to get.
-         * @return {Frame=} The frame you want.
+         * @param name {string} Name of the frame you want to get.
+         * @return {Frame} The frame you want.
          */
         public getFrameByName(name: string): Frame {
 
@@ -87,7 +87,7 @@ module Phaser {
 
         /**
          * Check whether there's a frame with given name.
-         * @param name Name of the frame you want to check.
+         * @param name {string} Name of the frame you want to check.
          * @return {boolean} True if frame with given name found, otherwise return false.
          */
         public checkFrameName(name: string): bool {
@@ -103,10 +103,10 @@ module Phaser {
 
         /**
          * Get ranges of frames in an array.
-         * @param start     Start index of frames you want.
-         * @param end       End index of frames you want.
-         * @param output    Optional, result will be added into this array.
-         * @return {array}  Ranges of specific frames in an array.
+         * @param start {number} Start index of frames you want.
+         * @param end {number} End index of frames you want.
+         * @param output {Frame[]} Optional, result will be added into this array.
+         * @return {Frame[]} Ranges of specific frames in an array.
          */
         public getFrameRange(start: number, end: number, output?: Frame[] = []): Frame[] {
 
@@ -121,8 +121,8 @@ module Phaser {
 
         /**
          * Get all indexes of frames by giving their name.
-         * @param output Optional, result will be added into this array.
-         * @return {array} Indexes of specific frames in an array.
+         * @param output {number[]} Optional, result will be added into this array.
+         * @return {number[]} Indexes of specific frames in an array.
          */
         public getFrameIndexes(output?: number[] = []): number[] {
 
@@ -139,8 +139,8 @@ module Phaser {
 
         /**
          * Get all names of frames by giving their indexes.
-         * @param output Optional, result will be added into this array.
-         * @return {array} Names of specific frames in an array.
+         * @param output {number[]} Optional, result will be added into this array.
+         * @return {number[]} Names of specific frames in an array.
          */
         public getFrameIndexesByName(input: string[]): number[] {
 
@@ -160,7 +160,7 @@ module Phaser {
 
         /**
          * Get all frames in this frame data.
-         * @return {array} All the frames in an array.
+         * @return {Frame[]} All the frames in an array.
          */
         public getAllFrames(): Frame[] {
             return this._frames;
@@ -168,8 +168,8 @@ module Phaser {
 
         /**
          * Get All frames with specific ranges.
-         * @param range Ranges in an array.
-         * @return All frames in an array.
+         * @param range {number[]} Ranges in an array.
+         * @return {Frame[]} All frames in an array.
          */
         public getFrames(range: number[]) {
 

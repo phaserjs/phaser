@@ -12,11 +12,10 @@ module Phaser {
 
         /**
          * PauseScreen constructor
-         *
          * Create a new <code>PauseScreen</code> with specific width and height.
          *
-         * @param width     Screen canvas width.
-         * @param height    Screen canvas height.
+         * @param width {number} Screen canvas width.
+         * @param height {number} Screen canvas height.
          */
         constructor(game: Game, width: number, height: number) {
 

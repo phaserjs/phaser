@@ -14,10 +14,10 @@ module Phaser {
          * Tile constructor
          * Create a new <code>Tile</code>.
          *
-         * @param tilemap   the tilemap this tile belongs to.
-         * @param index     The index of this tile type in the core map data.
-         * @param width     Width of the tile.
-         * @param height    Height of the tile.
+         * @param tilemap {Tilemap} the tilemap this tile belongs to.
+         * @param index {number} The index of this tile type in the core map data.
+         * @param width {number} Width of the tile.
+         * @param height number} Height of the tile.
          */
         constructor(game: Game, tilemap: Tilemap, index: number, width: number, height: number) {
 
@@ -121,10 +121,10 @@ module Phaser {
 
         /**
          * Set collision configs.
-         * @param   collision       Bit field of flags. (see Tile.allowCollision)
-         * @param   resetCollisions Reset collision flags before set.
-         * @param   separateX       Enable seprate at x-axis.
-         * @param   separateY       Enable seprate at y-axis.
+         * @param collision {number} Bit field of flags. (see Tile.allowCollision)
+         * @param resetCollisions {boolean} Reset collision flags before set.
+         * @param separateX {boolean} Enable seprate at x-axis.
+         * @param separateY {boolean} Enable seprate at y-axis.
          */
         public setCollision(collision: number, resetCollisions: bool, separateX: bool, separateY: bool) {
 
