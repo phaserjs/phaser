@@ -14,8 +14,9 @@ module Phaser {
         * Creates a new Circle object with the center coordinate specified by the x and y parameters and the diameter specified by the diameter parameter. If you call this function without parameters, a circle with x, y, diameter and radius properties set to 0 is created.
         * @class Circle
         * @constructor
-        * @param {Number} x The x coordinate of the center of the circle.
-        * @param {Number} y The y coordinate of the center of the circle.
+        * @param {Number} [x] The x coordinate of the center of the circle.
+        * @param {Number} [y] The y coordinate of the center of the circle.
+        * @param {Number} [diameter] The diameter of the circle.
         * @return {Circle} This circle object
         **/
         constructor(x: number = 0, y: number = 0, diameter: number = 0) {
@@ -27,14 +28,14 @@ module Phaser {
         private _diameter: number = 0;
         private _radius: number = 0;
 
-        /** 
+        /**
 	     * The x coordinate of the center of the circle
 	     * @property x
 	     * @type Number
 	     **/
         public x: number = 0;
 
-        /** 
+        /**
 	     * The y coordinate of the center of the circle
 	     * @property y
 	     * @type Number
@@ -287,7 +288,7 @@ module Phaser {
         /**
 	     * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
 	     * @method clone
-	     * @param {Circle} output Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+	     * @param {Circle} [optional] output Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
 	     * @return {Phaser.Circle}
 	     **/
         public clone(output?: Circle = new Circle): Circle {
@@ -364,7 +365,7 @@ module Phaser {
 	     * Returns the distance from the center of this Circle object to the given object (can be Circle, Point or anything with x/y values)
 	     * @method distanceFrom
 	     * @param {Circle/Point} target - The destination Point object.
-	     * @param {Boolean} round - Round the distance to the nearest integer (default false)
+	     * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
 	     * @return {Number} The distance between this Point object and the destination Point object.
 	     **/
         public distanceTo(target: any, round?: bool = false): number {
@@ -418,9 +419,9 @@ module Phaser {
         /**
 	     * Returns a Point object containing the coordinates of a point on the circumference of this Circle based on the given angle.
 	     * @method circumferencePoint
-	     * @param {Number} The angle in radians (unless asDegrees is true) to return the point from.
-	     * @param {Boolean} Is the given angle in radians (false) or degrees (true)?
-	     * @param {Phaser.Point} An optional Point object to put the result in to. If none specified a new Point object will be created.
+	     * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+	     * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+	     * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
 	     * @return {Phaser.Point} The Point object holding the result.
 	     **/
         public circumferencePoint(angle: number, asDegrees: bool = false, output?: Point = new Point): Point {

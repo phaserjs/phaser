@@ -11,6 +11,10 @@ module Phaser {
 
     export class SoundManager {
 
+        /**
+         * SoundManager constructor
+         * Create a new <code>SoundManager</code>.
+         */
         constructor(game: Game) {
 
             this._game = game;
@@ -36,18 +40,37 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
 
+        /**
+         * Reference to AudioContext instance.
+         */
         private _context = null;
+        /**
+         * Gain node created from audio context.
+         */
         private _gainNode;
+        /**
+         * Volume of sounds.
+         * @type {number}
+         */
         private _volume: number;
 
+        /**
+         * Mute sounds.
+         */
         public mute() {
 
             this._gainNode.gain.value = 0;
 
         }
 
+        /**
+         * Enable sounds.
+         */
         public unmute() {
 
             this._gainNode.gain.value = this._volume;
@@ -65,6 +88,12 @@ module Phaser {
             return this._volume;
         }
 
+        /**
+         * Decode a sound with its assets key.
+         * @param key {string} Assets key of the sound to be decoded.
+         * @param callback {function} This will be invoked when finished decoding.
+         * @param [sound] {Sound} its bufer will be set to decoded data.
+         */
         public decode(key: string, callback = null, sound?: Sound = null) {
 
             var soundData = this._game.cache.getSound(key);
@@ -90,6 +119,13 @@ module Phaser {
 
         }
 
+        /**
+         * Play a sound with its assets key.
+         * @param key {string} Assets key of the sound you want to play.
+         * @param [volume] {number} volume of the sound you want to play.
+         * @param [loop] {boolean} loop when it finished playing? (Default to false)
+         * @return {Sound} The playing sound object.
+         */
         public play(key: string, volume?: number = 1, loop?: bool = false): Sound {
 
             if (this._context === null)

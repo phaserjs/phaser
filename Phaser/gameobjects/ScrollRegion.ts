@@ -12,6 +12,17 @@ module Phaser {
 
     export class ScrollRegion{
 
+        /**
+         * ScrollRegion constructor
+         * Create a new <code>ScrollRegion</code>.
+         *
+         * @param x {number} X position in world coordinate.
+         * @param y {number} Y position in world coordinate.
+         * @param width {number} Width of this object.
+         * @param height {number} Height of this object.
+         * @param speedX {number} X-axis scrolling speed.
+         * @param speedY {number} Y-axis scrolling speed.
+         */
         constructor(x: number, y: number, width: number, height: number, speedX:number, speedY:number) {
 
 	        //	Our seamless scrolling quads
@@ -38,9 +49,21 @@ module Phaser {
         private _inverseWidth: number = 0;
         private _inverseHeight: number = 0;
 
+        /**
+         * Will this region be rendered? (default to true)
+         * @type {boolean}
+         */
         public visible: bool = true;
+        /**
+         * Region scrolling speed.
+         * @type {MicroPoint}
+         */
         public scrollSpeed: MicroPoint;
 
+        /**
+         * Update region scrolling with tick time.
+         * @param delta {number} Elapsed time since last update.
+         */
         public update(delta: number) {
 
 		    this._scroll.x += this.scrollSpeed.x;
@@ -102,6 +125,15 @@ module Phaser {
 
         }
 
+        /**
+         * Render this region to specific context.
+         * @param context {CanvasRenderingContext2D} Canvas context this region will be rendered to.
+         * @param texture {object} The texture to be rendered.
+         * @param dx {number} X position in world coordinate.
+         * @param dy {number} Y position in world coordinate.
+         * @param width {number} Width of this region to be rendered.
+         * @param height {number} Height of this region to be rendered.
+         */
         public render(context:CanvasRenderingContext2D, texture, dx: number, dy: number, dw: number, dh: number) {
 
             if (this.visible == false)
@@ -126,6 +158,21 @@ module Phaser {
 
         }
 
+        /**
+         * Crop part of the texture and render it to the given context.
+         * @param context {CanvasRenderingContext2D} Canvas context the texture will be rendered to.
+         * @param texture {object} Texture to be rendered.
+         * @param srcX {number} Target region top-left x coordinate in the texture.
+         * @param srcX {number} Target region top-left y coordinate in the texture.
+         * @param srcW {number} Target region width in the texture.
+         * @param srcH {number} Target region height in the texture.
+         * @param destX {number} Render region top-left x coordinate in the context.
+         * @param destX {number} Render region top-left y coordinate in the context.
+         * @param destW {number} Target region width in the context.
+         * @param destH {number} Target region height in the context.
+         * @param offsetX {number} X offset to the context.
+         * @param offsetY {number} Y offset to the context.
+         */
         private crop(context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
 
             offsetX += destX;
