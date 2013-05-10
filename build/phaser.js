@@ -7317,8 +7317,8 @@ var Phaser;
         Sound.prototype.setDecodedBuffer = function (data) {
             this._buffer = data;
             this.isDecoding = false;
-            this.play();
-        };
+            //this.play();
+                    };
         Sound.prototype.play = function () {
             if(this._buffer === null || this.isDecoding === true) {
                 return;
@@ -7424,7 +7424,6 @@ var Phaser;
         SoundManager.prototype.play = function (key, volume, loop) {
             if (typeof volume === "undefined") { volume = 1; }
             if (typeof loop === "undefined") { loop = false; }
-            var _this = this;
             if(this._context === null) {
                 return;
             }
@@ -7437,7 +7436,7 @@ var Phaser;
                     var tempSound = new Phaser.Sound(this._context, this._gainNode, null, volume, loop);
                     //  this is an async process, so we can return the Sound object anyway, it just won't be playing yet
                     this.decode(key, function () {
-                        return _this.play(key);
+                        return tempSound.play();
                     }, tempSound);
                     return tempSound;
                 }
