@@ -15,12 +15,12 @@ module Phaser {
 
         /**
          * Instantiate a new Quad Tree node.
-         * 
-         * @param	X			The X-coordinate of the point in space.
-         * @param	Y			The Y-coordinate of the point in space.
-         * @param	Width		Desired width of this node.
-         * @param	Height		Desired height of this node.
-         * @param	Parent		The parent branch or node.  Pass null to create a root.
+         *
+         * @param {Number} X			The X-coordinate of the point in space.
+         * @param {Number} Y			The Y-coordinate of the point in space.
+         * @param {Number} Width		Desired width of this node.
+         * @param {Number} Height		Desired height of this node.
+         * @param {Number} Parent		The parent branch or node.  Pass null to create a root.
          */
         constructor(X: number, Y: number, Width: number, Height: number, Parent: QuadTree = null) {
 
@@ -348,11 +348,11 @@ module Phaser {
 
         /**
          * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
-         * 
-         * @param ObjectOrGroup1	Any object that is or extends GameObject or Group.
-         * @param ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
-         * @param NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true. 
-         * @param ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate(). 
+         *
+         * @param {Basic} ObjectOrGroup1	Any object that is or extends GameObject or Group.
+         * @param {Basic} ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
+         * @param {Function} NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.
+         * @param {Function} ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate().
          */
         public load(ObjectOrGroup1: Basic, ObjectOrGroup2: Basic = null, NotifyCallback = null, ProcessCallback = null) {
 
@@ -382,9 +382,9 @@ module Phaser {
          * Call this function to add an object to the root of the tree.
          * This function will recursively add all group members, but
          * not the groups themselves.
-         * 
-         * @param	ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
-         * @param	List			A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
+         *
+         * @param {Basic} ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
+         * @param {Number} List	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
          */
         public add(ObjectOrGroup: Basic, List: number) {
 
@@ -628,7 +628,7 @@ module Phaser {
          * <code>QuadTree</code>'s other main function.  Call this after adding objects
          * using <code>QuadTree.load()</code> to compare the objects that you loaded.
          *
-         * @return	Whether or not any overlaps were found.
+         * @return {Boolean} Whether or not any overlaps were found.
          */
         public execute(): bool {
 
@@ -699,8 +699,8 @@ module Phaser {
 
         /**
          * An private for comparing an object against the contents of a node.
-         * 
-         * @return	Whether or not any overlaps were found.
+         *
+         * @return {Boolean} Whether or not any overlaps were found.
          */
         private overlapNode(): bool {
 

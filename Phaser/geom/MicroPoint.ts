@@ -33,10 +33,10 @@ module Phaser {
 
         public parent: any;
 
-        /** 
+        /**
         * The x coordinate of the top-left corner of the rectangle
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public get x(): number {
 
@@ -44,10 +44,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The y coordinate of the top-left corner of the rectangle
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public get y(): number {
 
@@ -55,10 +55,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The x coordinate of the top-left corner of the rectangle
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public set x(value: number) {
 
@@ -71,10 +71,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The y coordinate of the top-left corner of the rectangle
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public set y(value:number) {
 

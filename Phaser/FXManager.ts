@@ -55,6 +55,8 @@ module Phaser {
          * Adds a new FX to the FXManager.
          * The effect must be an object with at least one of the following methods: preUpdate, postUpdate, preRender, render or postRender.
          * A new instance of the effect will be created and a reference to Game will be passed to the object constructor.
+         * @param {object} effect
+         * @return {any}
          */
         public add(effect): any {
 
@@ -154,6 +156,11 @@ module Phaser {
         /**
          * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
          * It happens directly AFTER a canvas context.save has happened if added to a Camera.
+         * @param {Camera} camera
+         * @param {number} cameraX
+         * @param {number} cameraY
+         * @param {number} cameraWidth
+         * @param {number} cameraHeight
          */
         public preRender(camera:Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
 
@@ -172,6 +179,11 @@ module Phaser {
 
         /**
          * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
+         * @param {Camera} camera
+         * @param {number} cameraX
+         * @param {number} cameraY
+         * @param {number} cameraWidth
+         * @param {number} cameraHeight
          */
         public render(camera:Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
 

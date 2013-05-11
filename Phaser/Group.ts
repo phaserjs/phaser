@@ -187,9 +187,9 @@ module Phaser {
          * <p>WARNING: If the group has a maxSize that has already been met,
          * the object will NOT be added to the group!</p>
          *
-         * @param	Object		The object you want to add to the group.
+         * @param {Basic} Object The object you want to add to the group.
          *
-         * @return	The same <code>Basic</code> object that was passed in.
+         * @return {Basic} The same <code>Basic</code> object that was passed in.
          */
         public add(Object: Basic) {
 
@@ -269,9 +269,9 @@ module Phaser {
          * and no object class was provided, it will return null
          * instead of a valid object!</p>
          *
-         * @param	ObjectClass		The class type you want to recycle (e.g. Basic, EvilRobot, etc). Do NOT "new" the class in the parameter!
+         * @param {class} ObjectClass The class type you want to recycle (e.g. Basic, EvilRobot, etc). Do NOT "new" the class in the parameter!
          *
-         * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
+         * @return {any} A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
          */
         public recycle(ObjectClass = null) {
 
@@ -321,10 +321,10 @@ module Phaser {
         /**
          * Removes an object from the group.
          *
-         * @param	object	The <code>Basic</code> you want to remove.
-         * @param	splice	Whether the object should be cut from the array entirely or not.
+         * @param {Basic} object The <code>Basic</code> you want to remove.
+         * @param {boolean} splice Whether the object should be cut from the array entirely or not.
          *
-         * @return	The removed object.
+         * @return {Basic} The removed object.
          */
         public remove(object: Basic, splice: bool = false): Basic {
 
@@ -352,10 +352,10 @@ module Phaser {
         /**
          * Replaces an existing <code>Basic</code> with a new one.
          *
-         * @param	oldObject	The object you want to replace.
-         * @param	newObject	The new object you want to use instead.
+         * @param {Basic} oldObject	The object you want to replace.
+         * @param {Basic} newObject	The new object you want to use instead.
          *
-         * @return	The new object.
+         * @return {Basic} The new object.
          */
         public replace(oldObject: Basic, newObject: Basic): Basic {
 
@@ -379,8 +379,8 @@ module Phaser {
          * <code>State.update()</code> override.  To sort all existing objects after
          * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
          *
-         * @param	index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
-         * @param	order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
+         * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
+         * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
          */
         public sort(index: string = "y", order: number = Group.ASCENDING) {
 
@@ -393,9 +393,9 @@ module Phaser {
         /**
          * Go through and set the specified variable to the specified value on all members of the group.
          *
-         * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
-         * @param	Value			The value you want to assign to that variable.
-         * @param	Recurse			Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
+         * @param {string} VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
+         * @param {Object} Value The value you want to assign to that variable.
+         * @param {boolean} Recurse	Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
          */
         public setAll(VariableName: string, Value: Object, Recurse: bool = true) {
 
@@ -424,8 +424,8 @@ module Phaser {
          * Go through and call the specified function on all members of the group.
          * Currently only works on functions that have no required parameters.
          *
-         * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
-         * @param	Recurse			Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
+         * @param {string} FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
+         * @param {boolean} Recurse	Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
          */
         public callAll(FunctionName: string, Recurse: bool = true) {
 
@@ -450,6 +450,10 @@ module Phaser {
             }
         }
 
+        /**
+         * @param {function} callback
+         * @param {boolean} recursive
+         */
         public forEach(callback, recursive: bool = false) {
 
             var basic;
@@ -474,6 +478,11 @@ module Phaser {
 
         }
 
+        /**
+         * @param {any} context
+         * @param {function} callback
+         * @param {boolean} recursive
+         */
         public forEachAlive(context, callback, recursive: bool = false) {
 
             var basic;
@@ -502,9 +511,9 @@ module Phaser {
          * Call this function to retrieve the first object with exists == false in the group.
          * This is handy for recycling in general, e.g. respawning enemies.
          *
-         * @param [ObjectClass] An optional parameter that lets you narrow the results to instances of this particular class.
+         * @param {any} [ObjectClass] An optional parameter that lets you narrow the results to instances of this particular class.
          *
-         * @return A <code>Basic</code> currently flagged as not existing.
+         * @return {any} A <code>Basic</code> currently flagged as not existing.
          */
         public getFirstAvailable(ObjectClass = null) {
 
@@ -529,7 +538,7 @@ module Phaser {
          * Call this function to retrieve the first index set to 'null'.
          * Returns -1 if no index stores a null object.
          *
-         * @return	An <code>int</code> indicating the first null slot in the group.
+         * @return {number} An <code>int</code> indicating the first null slot in the group.
          */
         public getFirstNull(): number {
 
@@ -557,7 +566,7 @@ module Phaser {
          * Call this function to retrieve the first object with exists == true in the group.
          * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
          *
-         * @return	A <code>Basic</code> currently flagged as existing.
+         * @return {Basic} A <code>Basic</code> currently flagged as existing.
          */
         public getFirstExtant(): Basic {
 
@@ -582,7 +591,7 @@ module Phaser {
          * Call this function to retrieve the first object with dead == false in the group.
          * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
          *
-         * @return	A <code>Basic</code> currently flagged as not dead.
+         * @return {Basic} A <code>Basic</code> currently flagged as not dead.
          */
         public getFirstAlive(): Basic {
 
@@ -607,7 +616,7 @@ module Phaser {
          * Call this function to retrieve the first object with dead == true in the group.
          * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
          *
-         * @return	A <code>Basic</code> currently flagged as dead.
+         * @return {Basic} A <code>Basic</code> currently flagged as dead.
          */
         public getFirstDead(): Basic {
 
@@ -631,7 +640,7 @@ module Phaser {
         /**
          * Call this function to find out how many members of the group are not dead.
          *
-         * @return	The number of <code>Basic</code>s flagged as not dead.  Returns -1 if group is empty.
+         * @return {number} The number of <code>Basic</code>s flagged as not dead.  Returns -1 if group is empty.
          */
         public countLiving(): number {
 
@@ -664,7 +673,7 @@ module Phaser {
         /**
          * Call this function to find out how many members of the group are dead.
          *
-         * @return	The number of <code>Basic</code>s flagged as dead.  Returns -1 if group is empty.
+         * @return {number} The number of <code>Basic</code>s flagged as dead.  Returns -1 if group is empty.
          */
         public countDead(): number {
 
@@ -697,10 +706,10 @@ module Phaser {
         /**
          * Returns a member at random from the group.
          *
-         * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-         * @param	Length		Optional restriction on the number of values you want to randomly select from.
+         * @param {number} StartIndex Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+         * @param {number} Length Optional restriction on the number of values you want to randomly select from.
          *
-         * @return	A <code>Basic</code> from the members list.
+         * @return {Basic} A <code>Basic</code> from the members list.
          */
         public getRandom(StartIndex: number = 0, Length: number = 0): Basic {
 
@@ -744,10 +753,10 @@ module Phaser {
         /**
          * Helper function for the sort process.
          *
-         * @param 	Obj1	The first object being sorted.
-         * @param	Obj2	The second object being sorted.
+         * @param {Basic} Obj1 The first object being sorted.
+         * @param {Basic} Obj2 The second object being sorted.
          *
-         * @return	An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
+         * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
          */
         public sortHandler(Obj1: Basic, Obj2: Basic): number {
 

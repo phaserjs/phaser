@@ -10,7 +10,7 @@ module Phaser {
 
     export class Finger {
 
-        /** 
+        /**
         * Constructor
         * @param {Phaser.Game} game.
         * @return {Phaser.Finger} This object.
@@ -22,10 +22,10 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @property _game
-        * @type Phaser.Game
+        * @type {Phaser.Game}
         * @private
         **/
         private _game: Game;
@@ -33,154 +33,154 @@ module Phaser {
         /**
         * An identification number for each touch point. When a touch point becomes active, it must be assigned an identifier that is distinct from any other active touch point. While the touch point remains active, all events that refer to it must assign it the same identifier.
         * @property identifier
-        * @type Number
+        * @type {Number}
         */
         public identifier: number;
 
         /**
         *
         * @property active
-        * @type Boolean
+        * @type {Boolean}
         */
         public active: bool;
 
-        /** 
-        * 
+        /**
+        *
         * @property point
-        * @type Point
+        * @type {Point}
         **/
         public point: Point = null;
 
-        /** 
-        * 
+        /**
+        *
         * @property circle
-        * @type Circle
+        * @type {Circle}
         **/
         public circle: Circle = null;
 
         /**
         *
         * @property withinGame
-        * @type Boolean
+        * @type {Boolean}
         */
         public withinGame: bool = false;
 
         /**
         * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
         * @property clientX
-        * @type Number
+        * @type {Number}
         */
         public clientX: number = -1;
 
-        //  
+        //
         /**
         * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
         * @property clientY
-        * @type Number
+        * @type {Number}
         */
         public clientY: number = -1;
 
-        //  
+        //
         /**
         * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
         * @property pageX
-        * @type Number
+        * @type {Number}
         */
         public pageX: number = -1;
 
         /**
         * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
         * @property pageY
-        * @type Number
+        * @type {Number}
         */
         public pageY: number = -1;
 
         /**
         * The horizontal coordinate of point relative to the screen in pixels
         * @property screenX
-        * @type Number
+        * @type {Number}
         */
         public screenX: number = -1;
 
         /**
         * The vertical coordinate of point relative to the screen in pixels
         * @property screenY
-        * @type Number
+        * @type {Number}
         */
         public screenY: number = -1;
 
         /**
         * The horizontal coordinate of point relative to the game element
         * @property x
-        * @type Number
+        * @type {Number}
         */
         public x: number = -1;
 
         /**
         * The vertical coordinate of point relative to the game element
         * @property y
-        * @type Number
+        * @type {Number}
         */
         public y: number = -1;
 
         /**
         * The Element on which the touch point started when it was first placed on the surface, even if the touch point has since moved outside the interactive area of that element.
         * @property target
-        * @type Any
+        * @type {Any}
         */
         public target;
 
-        /** 
-        * 
+        /**
+        *
         * @property isDown
-        * @type Boolean
+        * @type {Boolean}
         **/
         public isDown: bool = false;
 
-        /** 
-        * 
+        /**
+        *
         * @property isUp
-        * @type Boolean
+        * @type {Boolean}
         **/
         public isUp: bool = false;
 
-        /** 
-        * 
+        /**
+        *
         * @property timeDown
-        * @type Number
+        * @type {Number}
         **/
         public timeDown: number = 0;
 
-        /** 
-        * 
+        /**
+        *
         * @property duration
-        * @type Number
+        * @type {Number}
         **/
         public duration: number = 0;
 
-        /** 
-        * 
+        /**
+        *
         * @property timeUp
-        * @type Number
+        * @type {Number}
         **/
         public timeUp: number = 0;
 
-        /** 
-        * 
+        /**
+        *
         * @property justPressedRate
-        * @type Number
+        * @type {Number}
         **/
         public justPressedRate: number = 200;
 
-        /** 
-        * 
+        /**
+        *
         * @property justReleasedRate
-        * @type Number
+        * @type {Number}
         **/
         public justReleasedRate: number = 200;
 
         /**
-        * 
+        *
         * @method start
         * @param {Any} event
         */
@@ -211,7 +211,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method move
         * @param {Any} event
         */
@@ -237,7 +237,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method leave
         * @param {Any} event
         */
@@ -249,7 +249,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method stop
         * @param {Any} event
         */
@@ -265,10 +265,10 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method justPressed
-        * @param {Number} [duration]. 
+        * @param {Number} [duration].
         * @return {Boolean}
         */
         public justPressed(duration?: number = this.justPressedRate): bool {
@@ -284,10 +284,10 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method justReleased
-        * @param {Number} [duration]. 
+        * @param {Number} [duration].
         * @return {Boolean}
         */
         public justReleased(duration?: number = this.justReleasedRate): bool {
@@ -306,7 +306,7 @@ module Phaser {
         /**
          * Returns a string representation of this object.
          * @method toString
-         * @return {string} a string representation of the instance.
+         * @return {String} a string representation of the instance.
          **/
         public toString(): string {
 

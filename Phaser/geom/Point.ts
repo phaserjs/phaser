@@ -23,17 +23,17 @@ module Phaser {
 
         }
 
-        /** 
+        /**
          * The horizontal position of this point (default 0)
          * @property x
-         * @type Number
+         * @type {Number}
          **/
         public x: number;
 
-        /** 
+        /**
          * The vertical position of this point (default 0)
          * @property y
-         * @type Number
+         * @type {Number}
          **/
         public y: number;
 

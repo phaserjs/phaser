@@ -21,7 +21,7 @@ module Phaser {
 
     export class Touch {
 
-        /** 
+        /**
         * Constructor
         * @param {Game} game.
         * @return {Touch} This object.
@@ -50,133 +50,133 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @property _game
-        * @type Game
+        * @type {Game}
         * @private
         **/
         private _game: Game;
 
-        /** 
-        * 
+        /**
+        *
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public x: number = 0;
 
-        /** 
-        * 
+        /**
+        *
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public y: number = 0;
 
-        /** 
-        * 
+        /**
+        *
         * @property _fingers
-        * @type Array
+        * @type {Array}
         * @private
         **/
         private _fingers: Finger[];
 
-        /** 
-        * 
+        /**
+        *
         * @property finger1
-        * @type Finger
+        * @type {Finger}
         **/
         public finger1: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger2
-        * @type Finger
+        * @type {Finger}
         **/
         public finger2: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger3
-        * @type Finger
+        * @type {Finger}
         **/
         public finger3: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger4
-        * @type Finger
+        * @type {Finger}
         **/
         public finger4: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger5
-        * @type Finger
+        * @type {Finger}
         **/
         public finger5: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger6
-        * @type Finger
+        * @type {Finger}
         **/
         public finger6: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger7
-        * @type Finger
+        * @type {Finger}
         **/
         public finger7: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger8
-        * @type Finger
+        * @type {Finger}
         **/
         public finger8: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger9
-        * @type Finger
+        * @type {Finger}
         **/
         public finger9: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property finger10
-        * @type Finger
+        * @type {Finger}
         **/
         public finger10: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property latestFinger
-        * @type Finger
+        * @type {Finger}
         **/
         public latestFinger: Finger;
 
-        /** 
-        * 
+        /**
+        *
         * @property isDown
-        * @type Boolean
+        * @type {Boolean}
         **/
         public isDown: bool = false;
 
-        /** 
-        * 
+        /**
+        *
         * @property isUp
-        * @type Boolean
+        * @type {Boolean}
         **/
         public isUp: bool = true;
 
         public touchDown: Signal;
         public touchUp: Signal;
 
-        /** 
-        * 
-        * @method start 
+        /**
+        *
+        * @method start
         */
         public start() {
 
@@ -191,7 +191,7 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * Prevent iOS bounce-back (doesn't work?)
         * @method consumeTouchMove
         * @param {Any} event
@@ -202,8 +202,8 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method onTouchStart
         * @param {Any} event
         **/
@@ -239,7 +239,7 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * Doesn't appear to be supported by most browsers yet
         * @method onTouchCancel
         * @param {Any} event
@@ -265,7 +265,7 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * Doesn't appear to be supported by most browsers yet
         * @method onTouchEnter
         * @param {Any} event
@@ -293,7 +293,7 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * Doesn't appear to be supported by most browsers yet
         * @method onTouchLeave
         * @param {Any} event
@@ -319,8 +319,8 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method onTouchMove
         * @param {Any} event
         **/
@@ -349,8 +349,8 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method onTouchEnd
         * @param {Any} event
         **/
@@ -384,8 +384,8 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method calculateDistance
         * @param {Finger} finger1
         * @param {Finger} finger2
@@ -393,8 +393,8 @@ module Phaser {
         public calculateDistance(finger1: Finger, finger2: Finger) {
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method calculateAngle
         * @param {Finger} finger1
         * @param {Finger} finger2
@@ -402,8 +402,8 @@ module Phaser {
         public calculateAngle(finger1: Finger, finger2: Finger) {
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method checkOverlap
         * @param {Finger} finger1
         * @param {Finger} finger2
@@ -411,18 +411,18 @@ module Phaser {
         public checkOverlap(finger1: Finger, finger2: Finger) {
         }
 
-        /** 
-        * 
-        * @method update 
+        /**
+        *
+        * @method update
         */
         public update() {
 
 
         }
 
-        /** 
-        * 
-        * @method stop 
+        /**
+        *
+        * @method stop
         */
         public stop() {
 
@@ -435,8 +435,8 @@ module Phaser {
 
         }
 
-        /** 
-        * 
+        /**
+        *
         * @method reset
         **/
         public reset() {

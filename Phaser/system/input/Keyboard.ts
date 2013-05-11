@@ -30,6 +30,9 @@ module Phaser {
 
         }
 
+        /**
+         * @param {Any} keycode
+         */
         public addKeyCapture(keycode) {
 
             if (typeof keycode === 'object')
@@ -46,6 +49,9 @@ module Phaser {
 
         }
 
+        /**
+         * @param {Number} keycode
+         */
         public removeKeyCapture(keycode: number) {
 
             delete this._capture[keycode];
@@ -58,6 +64,9 @@ module Phaser {
 
         }
 
+        /**
+         * @param {KeyboardEvent} event
+         */
         public onKeyDown(event: KeyboardEvent) {
 
             if (this._capture[event.keyCode])
@@ -77,6 +86,9 @@ module Phaser {
 
         }
 
+        /**
+         * @param {KeyboardEvent} event
+         */
         public onKeyUp(event: KeyboardEvent) {
 
             if (this._capture[event.keyCode])
@@ -105,6 +117,11 @@ module Phaser {
 
         }
 
+        /**
+         * @param {Number} keycode
+         * @param {Number} [duration]
+         * @return {Boolean}
+         */
         public justPressed(keycode: number, duration?: number = 250): bool {
 
             if (this._keys[keycode] && this._keys[keycode].isDown === true && (this._game.time.now - this._keys[keycode].timeDown < duration))
@@ -118,6 +135,11 @@ module Phaser {
 
         }
 
+        /**
+         * @param {Number} keycode
+         * @param {Number} [duration]
+         * @return {Boolean}
+         */
         public justReleased(keycode: number, duration?: number = 250): bool {
 
             if (this._keys[keycode] && this._keys[keycode].isDown === false && (this._game.time.now - this._keys[keycode].timeUp < duration))
@@ -131,6 +153,10 @@ module Phaser {
 
         }
 
+        /**
+         * @param {Number} keycode
+         * @return {Boolean}
+         */
         public isDown(keycode: number): bool {
 
             if (this._keys[keycode])

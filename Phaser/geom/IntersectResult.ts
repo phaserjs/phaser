@@ -13,55 +13,55 @@ module Phaser {
         /**
         * Did they intersect or not?
         * @property result
-        * @type Boolean
+        * @type {Boolean}
         */
         result: bool = false;
 
         /**
         * @property x
-        * @type Number
+        * @type {Number}
         */
         x: number;
 
         /**
         * @property y
-        * @type Number
+        * @type {Number}
         */
         y: number;
 
         /**
         * @property x1
-        * @type Number
+        * @type {Number}
         */
         x1: number;
 
         /**
         * @property y1
-        * @type Number
+        * @type {Number}
         */
         y1: number;
 
         /**
         * @property x2
-        * @type Number
+        * @type {Number}
         */
         x2: number;
 
         /**
         * @property y2
-        * @type Number
+        * @type {Number}
         */
         y2: number;
 
         /**
         * @property width
-        * @type Number
+        * @type {Number}
         */
         width: number;
 
         /**
         * @property height
-        * @type Number
+        * @type {Number}
         */
         height: number;
 
