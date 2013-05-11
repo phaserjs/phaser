@@ -11,7 +11,7 @@ module Phaser {
     export class Line {
 
         /**
-        * 
+        *
         * @constructor
         * @param {Number} x1
         * @param {Number} y1
@@ -26,35 +26,35 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @property x1
-        * @type Number
+        * @type {Number}
         */
         public x1: number = 0;
 
         /**
-        * 
+        *
         * @property y1
-        * @type Number
+        * @type {Number}
         */
         public y1: number = 0;
 
         /**
-        * 
+        *
         * @property x2
-        * @type Number
+        * @type {Number}
         */
         public x2: number = 0;
 
         /**
-        * 
+        *
         * @property y2
-        * @type Number
+        * @type {Number}
         */
         public y2: number = 0;
 
         /**
-        * 
+        *
         * @method clone
         * @param {Phaser.Line} [output]
         * @return {Phaser.Line}
@@ -66,7 +66,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method copyFrom
         * @param {Phaser.Line} source
         * @return {Phaser.Line}
@@ -78,7 +78,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method copyTo
         * @param {Phaser.Line} target
         * @return {Phaser.Line}
@@ -90,7 +90,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method setTo
         * @param {Number} x1
         * @param {Number} y1
@@ -122,7 +122,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method length
         * @return {Number}
         */
@@ -133,7 +133,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method getY
         * @param {Number} x
         * @return {Number}
@@ -145,7 +145,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method angle
         * @return {Number}
         */
@@ -156,7 +156,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method slope
         * @return {Number}
         */
@@ -167,7 +167,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method perpSlope
         * @return {Number}
         */
@@ -178,7 +178,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method yIntercept
         * @return {Number}
         */
@@ -189,7 +189,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method isPointOnLine
         * @param {Number} x
         * @param {Number} y
@@ -209,7 +209,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method isPointOnLineSegment
         * @param {Number} x
         * @param {Number} y
@@ -234,7 +234,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method intersectLineLine
         * @param {Any} line
         * @return {Any}
@@ -244,7 +244,7 @@ module Phaser {
         }
 
         /**
-        * 
+        *
         * @method perp
         * @param {Number} x
         * @param {Number} y
@@ -285,12 +285,12 @@ module Phaser {
         {
             var perp = this.perp()
             return Phaser.intersectLineCircle(this,circle);
-    
+
         }
         */
 
         /**
-        * 
+        *
         * @method toString
         * @return {String}
         */

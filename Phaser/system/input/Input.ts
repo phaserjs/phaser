@@ -26,20 +26,64 @@ module Phaser {
 
         private _game: Game;
 
+        /**
+         *
+         * @type {Mouse}
+         */
         public mouse: Mouse;
+        /**
+         *
+         * @type {Keyboard}
+         */
         public keyboard: Keyboard;
+        /**
+         *
+         * @type {Touch}
+         */
         public touch: Touch;
 
+        /**
+         *
+         * @type {Number}
+         */
         public x: number = 0;
+        /**
+         *
+         * @type {Number}
+         */
         public y: number = 0;
 
+        /**
+         *
+         * @type {Number}
+         */
         public scaleX: number = 1;
+        /**
+         *
+         * @type {Number}
+         */
         public scaleY: number = 1;
 
+        /**
+         *
+         * @type {Number}
+         */
         public worldX: number = 0;
+        /**
+         *
+         * @type {Number}
+         */
         public worldY: number = 0;
 
+        /**
+         *
+         * @type {Phaser.Signal}
+         */
         public onDown: Phaser.Signal;
+        /**
+         *
+         * @type {Phaser.Signal}
+         */
         public onUp: Phaser.Signal;
 
         public update() {
@@ -63,18 +107,29 @@ module Phaser {
 
         }
 
+        /**
+         * @param {Camera} [camera]
+         */
         public getWorldX(camera?: Camera = this._game.camera) {
 
             return camera.worldView.x + this.x;
 
         }
 
+        /**
+         * @param {Camera} [camera]
+         */
         public getWorldY(camera?: Camera = this._game.camera) {
 
             return camera.worldView.y + this.y;
 
         }
 
+        /**
+         * @param {Number} x
+         * @param {Number} y
+         * @param {String} [color]
+         */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
             this._game.stage.context.font = '14px Courier';

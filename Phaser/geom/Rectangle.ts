@@ -57,10 +57,10 @@ module Phaser {
         private _tempWidth: number = null;
         private _tempHeight: number = null;
 
-        /** 
+        /**
         * The x coordinate of the top-left corner of the rectangle
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public get x(): number {
 
@@ -68,10 +68,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The y coordinate of the top-left corner of the rectangle
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public get y(): number {
 
@@ -79,10 +79,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The x coordinate of the top-left corner of the rectangle
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public set x(value: number) {
 
@@ -90,10 +90,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The y coordinate of the top-left corner of the rectangle
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public set y(value:number) {
 
@@ -101,105 +101,105 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The x and y coordinate of the top-left corner of the rectangle (same as x/y)
         * @property topLeft
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public topLeft: MicroPoint;
 
-        /** 
+        /**
         * The x and y coordinate of the top-center of the rectangle
         * @property topCenter
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public topCenter: MicroPoint;
 
-        /** 
+        /**
         * The x and y coordinate of the top-right corner of the rectangle
         * @property topRight
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public topRight: MicroPoint;
 
-        /** 
+        /**
         * The x and y coordinate of the left-center of the rectangle
         * @property leftCenter
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public leftCenter: MicroPoint;
 
-        /** 
+        /**
         * The x and y coordinate of the center of the rectangle
         * @property center
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public center: MicroPoint;
 
-        /** 
+        /**
         * The x and y coordinate of the right-center of the rectangle
         * @property rightCenter
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public rightCenter: MicroPoint;
 
-        /** 
+        /**
         * The x and y coordinate of the bottom-left corner of the rectangle
         * @property bottomLeft
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public bottomLeft: MicroPoint;
 
-        /** 
+        /**
         * The x and y coordinate of the bottom-center of the rectangle
         * @property bottomCenter
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public bottomCenter: MicroPoint;
 
-        /** 
+        /**
         * The x and y coordinate of the bottom-right corner of the rectangle
         * @property bottomRight
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public bottomRight: MicroPoint;
 
-        /** 
+        /**
         * The width of the rectangle
         * @property width
-        * @type Number
+        * @type {Number}
         **/
         private _width: number = 0;
 
-        /** 
+        /**
         * The height of the rectangle
         * @property height
-        * @type Number
+        * @type {Number}
         **/
         private _height: number = 0;
 
-        /** 
+        /**
         * Half of the width of the rectangle
         * @property halfWidth
-        * @type Number
+        * @type {Number}
         **/
         private _halfWidth: number = 0;
 
-        /** 
+        /**
         * Half of the height of the rectangle
         * @property halfHeight
-        * @type Number
+        * @type {Number}
         **/
         private _halfHeight: number = 0;
 
-        /** 
+        /**
         * The size of the longest side (width or height)
         * @property length
-        * @type Number
+        * @type {Number}
         **/
         public length: number = 0;
 
-        /** 
+        /**
         * Updates all of the MicroPoints based on the values of width and height.
         * You should not normally call this directly.
         **/
@@ -264,10 +264,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The width of the rectangle
         * @property width
-        * @type Number
+        * @type {Number}
         **/
         public set width(value: number) {
 
@@ -277,10 +277,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The height of the rectangle
         * @property height
-        * @type Number
+        * @type {Number}
         **/
         public set height(value: number) {
 
@@ -290,10 +290,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The width of the rectangle
         * @property width
-        * @type Number
+        * @type {Number}
         **/
         public get width(): number {
 
@@ -301,10 +301,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * The height of the rectangle
         * @property height
-        * @type Number
+        * @type {Number}
         **/
         public get height(): number {
 
@@ -312,10 +312,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * Half of the width of the rectangle
         * @property halfWidth
-        * @type Number
+        * @type {Number}
         **/
         public get halfWidth(): number {
 
@@ -323,10 +323,10 @@ module Phaser {
 
         }
 
-        /** 
+        /**
         * Half of the height of the rectangle
         * @property halfHeight
-        * @type Number
+        * @type {Number}
         **/
         public get halfHeight(): number {
 
@@ -350,7 +350,7 @@ module Phaser {
         * The sum of the y and height properties.
         * Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
         * @method bottom
-        * @param {Number} value 
+        * @param {Number} value
         **/
         public set bottom(value: number) {
 
@@ -372,7 +372,7 @@ module Phaser {
         * Changing the left property of a Rectangle object has no effect on the y and height properties.
         * However it does affect the width property, whereas changing the x value does not affect the width property.
         * @method left
-        * @ return {number} 
+        * @ return {Number}
         **/
         public get left(): number {
 
@@ -385,7 +385,7 @@ module Phaser {
         * Changing the left property of a Rectangle object has no effect on the y and height properties.
         * However it does affect the width property, whereas changing the x value does not affect the width property.
         * @method left
-        * @param {Number} value 
+        * @param {Number} value
         **/
         public set left(value: number) {
 
@@ -411,7 +411,7 @@ module Phaser {
         * Changing the right property of a Rectangle object has no effect on the x, y and height properties.
         * However it does affect the width property.
         * @method right
-        * @return {Number} 
+        * @return {Number}
         **/
         public get right(): number {
 
@@ -424,7 +424,7 @@ module Phaser {
         * Changing the right property of a Rectangle object has no effect on the x, y and height properties.
         * However it does affect the width property.
         * @method right
-        * @param {Number} value 
+        * @param {Number} value
         **/
         public set right(value: number) {
 
@@ -456,7 +456,7 @@ module Phaser {
         /**
         * The volume of the Rectangle object in pixels, derived from width * height
         * @method volume
-        * @return {Number} 
+        * @return {Number}
         **/
         public get volume(): number {
 
@@ -467,7 +467,7 @@ module Phaser {
         /**
         * The perimeter size of the Rectangle object in pixels. This is the sum of all 4 sides.
         * @method perimeter
-        * @return {Number} 
+        * @return {Number}
         **/
         public get perimeter(): number {
 
@@ -480,7 +480,7 @@ module Phaser {
         * Changing the top property of a Rectangle object has no effect on the x and width properties.
         * However it does affect the height property, whereas changing the y value does not affect the height property.
         * @method top
-        * @return {Number} 
+        * @return {Number}
         **/
         public get top(): number {
 
@@ -626,7 +626,7 @@ module Phaser {
 
         /**
         * Increases the size of the Rectangle object by the specified amounts.
-        * The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, 
+        * The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value,
         * and to the top and the bottom by the dy value.
         * @method inflate
         * @param {Number} dx The amount to be added to the left side of this Rectangle.
@@ -661,7 +661,7 @@ module Phaser {
 
         /**
         * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object,
-        * returns the area of intersection as a Rectangle object. If the rectangles do not intersect, this method 
+        * returns the area of intersection as a Rectangle object. If the rectangles do not intersect, this method
         * returns an empty Rectangle object with its properties set to 0.
         * @method intersection
         * @param {Rectangle} toIntersect The Rectangle object to compare against to see if it intersects with this Rectangle object.
@@ -797,7 +797,7 @@ module Phaser {
         /**
         * Returns a string representation of this object.
         * @method toString
-        * @return {string} a string representation of the instance.
+        * @return {String} a string representation of the instance.
         **/
         public toString(): string {
 

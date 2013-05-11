@@ -28,10 +28,25 @@ module Phaser {
         public static MIDDLE_BUTTON: number = 1;
         public static RIGHT_BUTTON: number = 2;
 
+        /**
+         * @type {Boolean}
+         */
         public isDown: bool = false;
+        /**
+         * @type {Boolean}
+         */
         public isUp: bool = true;
+        /**
+         * @type {Number}
+         */
         public timeDown: number = 0;
+        /**
+         * @type {Number}
+         */
         public duration: number = 0;
+        /**
+         * @type {Number}
+         */
         public timeUp: number = 0;
 
         public start() {
@@ -49,6 +64,9 @@ module Phaser {
 
         }
 
+        /**
+         * @param {MouseEvent} event
+         */
         public onMouseDown(event: MouseEvent) {
 
             this.button = event.button;
@@ -79,6 +97,9 @@ module Phaser {
 
         }
 
+        /**
+         * @param {MouseEvent} event
+         */
         public onMouseMove(event: MouseEvent) {
 
             this.button = event.button;
@@ -91,6 +112,9 @@ module Phaser {
 
         }
 
+        /**
+         * @param {MouseEvent} event
+         */
         public onMouseUp(event: MouseEvent) {
 
             this.button = event.button;
