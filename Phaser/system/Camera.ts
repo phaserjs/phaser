@@ -58,16 +58,19 @@ module Phaser {
          * @type {number}
          */
         public static STYLE_LOCKON: number = 0;
+
         /**
          * Camera "follow" style preset: camera deadzone is narrow but tall.
          * @type {number}
          */
         public static STYLE_PLATFORMER: number = 1;
+
         /**
          * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
          * @type {number}
          */
         public static STYLE_TOPDOWN: number = 2;
+
         /**
          * Camera "follow" style preset: camera deadzone is a small square around the focus object.
          * @type {number}
@@ -78,31 +81,37 @@ module Phaser {
          * Identity of this camera.
          */
         public ID: number;
+
         /**
          * Camera view rectangle in world coordinate.
          * @type {Rectangle}
          */
         public worldView: Rectangle;
+
         /**
          * How many sprites will be rendered by this camera.
          * @type {number}
          */
         public totalSpritesRendered: number;
+
         /**
          * Scale factor of the camera.
          * @type {MicroPoint}
          */
         public scale: MicroPoint = new MicroPoint(1, 1);
+
         /**
          * Scrolling factor.
          * @type {MicroPoint}
          */
         public scroll: MicroPoint = new MicroPoint(0, 0);
+
         /**
          * Camera bounds.
          * @type {Rectangle}
          */
         public bounds: Rectangle = null;
+
         /**
          * Sprite moving inside this rectangle will not cause camera moving.
          * @type {Rectangle}
@@ -111,32 +120,47 @@ module Phaser {
 
         //  Camera Border
         public disableClipping: bool = false;
+
         /**
          * Whether render border of this camera or not. (default is false)
          * @type {boolean}
          */
         public showBorder: bool = false;
+
         /**
          * Color of border of this camera. (in css color string)
          * @type {string}
          */
         public borderColor: string = 'rgb(255,255,255)';
 
-        //  Camera Background Color
         /**
-         * Whethor camera background invisible or not.
+         * Whether the camera background is opaque or not. If set to true the Camera is filled with
+         * the value of Camera.backgroundColor every frame.
          * @type {boolean}
          */
-        public opaque: bool = true;
+        public opaque: bool = false;
+
+        /**
+         * Clears the camera every frame using a canvas clearRect call (default to true).
+         * Note that this erases anything below the camera as well, so do not use it in conjuction with a camera
+         * that uses alpha or that needs to be able to manage opacity. Equally if Camera.opaque is set to true
+         * then set Camera.clear to false to save rendering time.
+         * By default the Stage will clear itself every frame, so be sure not to double-up clear calls.
+         * @type {boolean}
+         */
+        public clear: bool = false;
+
         /**
          * Background color in css color string.
          * @type {string}
          */
         private _bgColor: string = 'rgb(0,0,0)';
+
         /**
          * Background texture to be rendered if background is visible.
          */
         private _bgTexture;
+
         /**
          * Background texture repeat style. (default is 'repeat')
          * @type {string}
@@ -149,16 +173,19 @@ module Phaser {
          * @type {boolean}
          */
         public showShadow: bool = false;
+
         /**
          * Color of shadow, in css color string.
          * @type {string}
          */
         public shadowColor: string = 'rgb(0,0,0)';
+
         /**
          * Blur factor of shadow.
          * @type {number}
          */
         public shadowBlur: number = 10;
+
         /**
          * Offset of the shadow from camera's position.
          * @type {MicroPoint}
@@ -170,6 +197,7 @@ module Phaser {
          * @type {boolean}
          */
         public visible: bool = true;
+
         /**
          * Alpha of the camera. (everything rendered to this camera will be affected)
          * @type {number}
@@ -181,6 +209,7 @@ module Phaser {
          * @type {number}
          */
         public inputX: number = 0;
+
         /**
          * The y position of the current input event in world coordinates.
          * @type {number}
@@ -373,13 +402,13 @@ module Phaser {
                 return;
             }
 
-            //if (this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1)
-            //{
-            //this._game.stage.context.save();
-            //}
+            if (this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1)
+            {
+                this._game.stage.context.save();
+            }
 
-            //  It may be safer/quicker to just save the context every frame regardless (needs testing on mobile)
-            this._game.stage.context.save();
+            //  It may be safer/quicker to just save the context every frame regardless (needs testing on mobile - sucked on Android 2.x)
+            //this._game.stage.context.save();
 
             this.fx.preRender(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
 
@@ -392,7 +421,7 @@ module Phaser {
             this._sy = this._stageY;
 
             //  Shadow
-            if (this.showShadow)
+            if (this.showShadow == true)
             {
                 this._game.stage.context.shadowColor = this.shadowColor;
                 this._game.stage.context.shadowBlur = this.shadowBlur;
@@ -418,6 +447,11 @@ module Phaser {
                 this._game.stage.context.translate(-(this._sx + this.worldView.halfWidth), -(this._sy + this.worldView.halfHeight));
             }
 
+            if (this.clear == true)
+            {
+                this._game.stage.context.clearRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
+            }
+
             //  Background
             if (this.opaque == true)
             {
@@ -434,7 +468,7 @@ module Phaser {
             }
 
             //  Shadow off
-            if (this.showShadow)
+            if (this.showShadow == true)
             {
                 this._game.stage.context.shadowBlur = 0;
                 this._game.stage.context.shadowOffsetX = 0;
@@ -444,7 +478,7 @@ module Phaser {
             this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
 
             //  Clip the camera so we don't get sprites appearing outside the edges
-            if (this._clip && this.disableClipping == false)
+            if (this._clip == true && this.disableClipping == false)
             {
                 this._game.stage.context.beginPath();
                 this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
@@ -454,7 +488,7 @@ module Phaser {
 
             this._game.world.group.render(this, this._sx, this._sy);
 
-            if (this.showBorder)
+            if (this.showBorder == true)
             {
                 this._game.stage.context.strokeStyle = this.borderColor;
                 this._game.stage.context.lineWidth = 1;
@@ -475,7 +509,10 @@ module Phaser {
                 this._game.stage.context.translate(0, 0);
             }
 
-            this._game.stage.context.restore();
+            if (this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1)
+            {
+                this._game.stage.context.restore();
+            }
 
             if (this.alpha !== 1)
             {

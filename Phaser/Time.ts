@@ -18,9 +18,10 @@ module Phaser {
          */
         constructor(game: Game) {
 
-            this._started = Date.now();
+            this._started = 0;
             this._timeLastSecond = this._started;
             this.time = this._started;
+            this._game = game;
 
         }
 
@@ -28,6 +29,7 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
+
         /**
          * Time when this object created.
          * @param {number}
@@ -40,6 +42,7 @@ module Phaser {
          * @type {number}
          */
         public timeScale: number = 1.0;
+
         /**
          * Elapsed since last frame.
          * @type {number}
@@ -83,26 +86,31 @@ module Phaser {
          * @type {number}
          */
         public fps: number = 0;
+
         /**
          * Minimal fps.
          * @type {number}
          */
         public fpsMin: number = 1000;
+
         /**
          * Maximal fps.
          * @type {number}
          */
         public fpsMax: number = 0;
+
         /**
          * Mininal duration between 2 frames.
          * @type {number}
          */
         public msMin: number = 1000;
+
         /**
          * Maximal duration between 2 frames.
          * @type {number}
          */
         public msMax: number = 0;
+
         /**
          * How many frames in last second.
          * @type {number}
@@ -116,13 +124,15 @@ module Phaser {
         private _timeLastSecond: number = 0;
 
         /**
-         * Update clock and calc fps.
+         * Update clock and calculate the fps.
+         * This is called automatically by Game._raf
          * @method update
+         * @param {number} raf The current timestamp, either performance.now or Date.now
          */
-        public update() {
+        public update(raf: number) {
 
-            // Can we use performance.now() ?
-            this.now = Date.now(); // mark
+            this.now = raf; // mark
+            //this.now = Date.now(); // mark
             this.delta = this.now - this.time; // elapsedMS
 
             this.msMin = Math.min(this.msMin, this.delta);
@@ -141,12 +151,6 @@ module Phaser {
             }
 
             this.time = this.now; // _total
-
-            ////  Lock the delta at 0.1 to minimise fps tunneling
-            //if (this.delta > 0.1)
-            //{
-            //    this.delta = 0.1;
-            //}
 
         }
 

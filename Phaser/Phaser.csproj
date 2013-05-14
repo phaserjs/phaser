@@ -133,6 +133,10 @@
     </Content>
     <TypeScriptCompile Include="system\screens\PauseScreen.ts" />
     <TypeScriptCompile Include="system\screens\BootScreen.ts" />
+    <TypeScriptCompile Include="system\input\MSPointer.ts" />
+    <Content Include="system\input\MSPointer.js">
+      <DependentUpon>MSPointer.ts</DependentUpon>
+    </Content>
     <Content Include="system\screens\BootScreen.js">
       <DependentUpon>BootScreen.ts</DependentUpon>
     </Content>

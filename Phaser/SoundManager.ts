@@ -49,10 +49,12 @@ module Phaser {
          * Reference to AudioContext instance.
          */
         private _context = null;
+
         /**
          * Gain node created from audio context.
          */
         private _gainNode;
+
         /**
          * Volume of sounds.
          * @type {number}

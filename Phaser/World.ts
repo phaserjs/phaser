@@ -25,8 +25,6 @@ module Phaser {
 
             this.cameras = new CameraManager(this._game, 0, 0, width, height);
 
-            this._game.camera = this.cameras.current;
-
             this.group = new Group(this._game, 0);
 
             this.bounds = new Rectangle(0, 0, width, height);
@@ -45,16 +43,19 @@ module Phaser {
          * @type {CameraManager}
          */
         public cameras: CameraManager;
+
         /**
          * Object container stores every object created with `create*` methods.
          * @type {Group}
          */
         public group: Group;
+
         /**
          * Bound of this world that objects can not escape from.
          * @type {Rectangle}
          */
         public bounds: Rectangle;
+
         /**
          * @type {number}
          */
@@ -235,7 +236,7 @@ module Phaser {
          * @param x {number} X position of this object.
          * @param y {number} Y position of this object.
          * @param width {number} Width of this object.
-         * @param height {number} Heigth of this object.
+         * @param height {number} Height of this object.
          * @returns {ScrollZone} The newly created scroll zone object.
          */
         public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {

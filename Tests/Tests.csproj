@@ -87,9 +87,7 @@
     <TypeScriptCompile Include="sprites\velocity.ts" />
     <TypeScriptCompile Include="tilemap\basic tilemap.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="mobile\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <TypeScriptCompile Include="sprites\dynamic texture 1.ts" />
   </ItemGroup>
@@ -117,8 +115,24 @@
     <Content Include="camera fx\shake.js">
       <DependentUpon>shake.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="input\multitouch.ts" />
+    <Content Include="input\multitouch.js">
+      <DependentUpon>multitouch.ts</DependentUpon>
+    </Content>
     <Content Include="misc\bootscreen.js">
       <DependentUpon>bootscreen.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="mobile\sprite test 1.ts" />
+    <TypeScriptCompile Include="mobile\bunny mobile.ts" />
+    <TypeScriptCompile Include="misc\time.ts" />
+    <Content Include="misc\time.js">
+      <DependentUpon>time.ts</DependentUpon>
+    </Content>
+    <Content Include="mobile\bunny mobile.js">
+      <DependentUpon>bunny mobile.ts</DependentUpon>
+    </Content>
+    <Content Include="mobile\sprite test 1.js">
+      <DependentUpon>sprite test 1.ts</DependentUpon>
     </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>

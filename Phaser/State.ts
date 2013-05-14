@@ -211,7 +211,7 @@ module Phaser {
          * @param x {number} X position of this object.
          * @param y {number} Y position of this object.
          * @param width {number} Width of this object.
-         * @param height {number} Heigth of this object.
+         * @param height {number} Height of this object.
          * @returns {ScrollZone} The newly created scroll zone object.
          */
         public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {

@@ -347,49 +347,243 @@ module Phaser {
 */
 module Phaser {
     class GameObject extends Basic {
+        /**
+        * GameObject constructor
+        *
+        * Create a new <code>GameObject</code> object at specific position with
+        * specific width and height.
+        *
+        * @param [x] {number} The x position of the object.
+        * @param [y] {number} The y position of the object.
+        * @param [width] {number} The width of the object.
+        * @param [height] {number} The height of the object.
+        */
         constructor(game: Game, x?: number, y?: number, width?: number, height?: number);
+        /**
+        * Angle of this object.
+        * @type {number}
+        */
         private _angle;
+        /**
+        * Pivot position enum: at the top-left corner.
+        * @type {number}
+        */
         static ALIGN_TOP_LEFT: number;
+        /**
+        * Pivot position enum: at the top-center corner.
+        * @type {number}
+        */
         static ALIGN_TOP_CENTER: number;
+        /**
+        * Pivot position enum: at the top-right corner.
+        * @type {number}
+        */
         static ALIGN_TOP_RIGHT: number;
+        /**
+        * Pivot position enum: at the center-left corner.
+        * @type {number}
+        */
         static ALIGN_CENTER_LEFT: number;
+        /**
+        * Pivot position enum: at the center corner.
+        * @type {number}
+        */
         static ALIGN_CENTER: number;
+        /**
+        * Pivot position enum: at the center-right corner.
+        * @type {number}
+        */
         static ALIGN_CENTER_RIGHT: number;
+        /**
+        * Pivot position enum: at the bottom-left corner.
+        * @type {number}
+        */
         static ALIGN_BOTTOM_LEFT: number;
+        /**
+        * Pivot position enum: at the bottom-center corner.
+        * @type {number}
+        */
         static ALIGN_BOTTOM_CENTER: number;
+        /**
+        * Pivot position enum: at the bottom-right corner.
+        * @type {number}
+        */
         static ALIGN_BOTTOM_RIGHT: number;
+        /**
+        * Enum value for outOfBoundsAction. Stop the object when is out of world bounds.
+        * @type {number}
+        */
         static OUT_OF_BOUNDS_STOP: number;
+        /**
+        * Enum value for outOfBoundsAction. Kill the object when is out of world bounds.
+        * @type {number}
+        */
         static OUT_OF_BOUNDS_KILL: number;
+        /**
+        * Position of this object after scrolling.
+        * @type {MicroPoint}
+        */
         public _point: MicroPoint;
         public cameraBlacklist: number[];
+        /**
+        * Rectangle container of this object.
+        * @type {Rectangle}
+        */
         public bounds: Rectangle;
+        /**
+        * Bound of world.
+        * @type {Quad}
+        */
         public worldBounds: Quad;
+        /**
+        * What action will be performed when object is out of bounds.
+        * This will default to GameObject.OUT_OF_BOUNDS_STOP.
+        * @type {number}
+        */
         public outOfBoundsAction: number;
+        /**
+        * At which point the graphic of this object will align to.
+        * Align of the object will default to GameObject.ALIGN_TOP_LEFT.
+        * @type {number}
+        */
         public align: number;
+        /**
+        * Oorientation of the object.
+        * @type {number}
+        */
         public facing: number;
+        /**
+        * Set alpha to a number between 0 and 1 to change the opacity.
+        * @type {number}
+        */
         public alpha: number;
+        /**
+        * Scale factor of the object.
+        * @type {MicroPoint}
+        */
         public scale: MicroPoint;
+        /**
+        * Origin is the anchor point that the object will rotate by.
+        * The origin will default to its center.
+        * @type {MicroPoint}
+        */
         public origin: MicroPoint;
+        /**
+        * Z-order value of the object.
+        */
         public z: number;
+        /**
+        * This value is added to the angle of the GameObject.
+        * For example if you had a sprite drawn facing straight up then you could set
+        * rotationOffset to 90 and it would correspond correctly with Phasers rotation system
+        * @type {number}
+        */
         public rotationOffset: number;
+        /**
+        * Render graphic based on its angle?
+        * @type {boolean}
+        */
         public renderRotation: bool;
+        /**
+        * Whether this object will be moved or not.
+        * @type {boolean}
+        */
         public immovable: bool;
+        /**
+        * Basic speed of this object.
+        *
+        * Velocity is given in pixels per second. Therefore a velocity of
+        * 100 will move at a rate of 100 pixels every 1000 ms (1sec). It's not balls-on
+        * accurate due to the way timers work, but it's pretty close. Expect tolerance
+        * of +- 10 px. Also that speed assumes no drag.
+        *
+        * @type {MicroPoint}
+        */
         public velocity: MicroPoint;
+        /**
+        * The virtual mass of the object.
+        * @type {number}
+        */
         public mass: number;
+        /**
+        * The bounciness of the object.
+        * @type {number}
+        */
         public elasticity: number;
+        /**
+        * How fast the speed of this object is changing.
+        * @type {number}
+        */
         public acceleration: MicroPoint;
+        /**
+        * This isn't drag exactly, more like deceleration that is only applied
+        * when acceleration is not affecting the sprite.
+        * @type {MicroPoint}
+        */
         public drag: MicroPoint;
+        /**
+        * It will cap the speed automatically if you use the acceleration
+        * to change its velocity.
+        * @type {MicroPoint}
+        */
         public maxVelocity: MicroPoint;
+        /**
+        * How fast this object is rotating.
+        * @type {number}
+        */
         public angularVelocity: number;
+        /**
+        * How fast angularVelocity of this object is changing.
+        * @type {number}
+        */
         public angularAcceleration: number;
+        /**
+        * Deacceleration of angularVelocity will be applied when it's rotating.
+        * @type {number}
+        */
         public angularDrag: number;
+        /**
+        * It will cap the rotate speed automatically if you use the angularAcceleration
+        * to change its angularVelocity.
+        * @type {number}
+        */
         public maxAngular: number;
+        /**
+        * A point that can store numbers from 0 to 1 (for X and Y independently)
+        * which governs how much this object is affected by the camera .
+        * @type {MicroPoint}
+        */
         public scrollFactor: MicroPoint;
+        /**
+        * Handy for storing health percentage or armor points or whatever.
+        * @type {number}
+        */
         public health: number;
+        /**
+        * Set this to false if you want to skip the automatic motion/movement stuff
+        * (see updateMotion()).
+        * @type {boolean}
+        */
         public moves: bool;
+        /**
+        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts.
+        * @type {number}
+        */
         public touching: number;
+        /**
+        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step.
+        * @type {number}
+        */
         public wasTouching: number;
+        /**
+        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions.
+        * @type {number}
+        */
         public allowCollisions: number;
+        /**
+        * Important variable for collision processing.
+        * @type {MicroPoint}
+        */
         public last: MicroPoint;
         public inputEnabled: bool;
         private _inputOver;
@@ -397,21 +591,36 @@ module Phaser {
         public onInputOut: Signal;
         public onInputDown: Signal;
         public onInputUp: Signal;
+        /**
+        * Pre-update is called right before update() on each object in the game loop.
+        */
         public preUpdate(): void;
+        /**
+        * Override this function to update your class's position and appearance.
+        */
         public update(): void;
+        /**
+        * Automatically called after update() by the game loop.
+        */
         public postUpdate(): void;
+        /**
+        * Update input.
+        */
         private updateInput();
+        /**
+        * Internal function for updating the position and speed of this object.
+        */
         private updateMotion();
         /**
         * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param	ObjectOrGroup	The object or group being tested.
-        * @param	InScreenSpace	Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param ObjectOrGroup {object} The object or group being tested.
+        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether or not the two objects overlap.
+        * @return {boolean} Whether or not the objects overlap this.
         */
         public overlaps(ObjectOrGroup, InScreenSpace?: bool, Camera?: Camera): bool;
         /**
@@ -419,40 +628,40 @@ module Phaser {
         * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param	X				The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param	Y				The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param	ObjectOrGroup	The object or group being tested.
-        * @param	InScreenSpace	Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
+        * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
+        * @param ObjectOrGroup {object} The object or group being tested.
+        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether or not the two objects overlap.
+        * @return {boolean} Whether or not the two objects overlap.
         */
         public overlapsAt(X: number, Y: number, ObjectOrGroup, InScreenSpace?: bool, Camera?: Camera): bool;
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *
-        * @param	Point			The point in world space you want to check.
-        * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-        * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param point {Point} The point in world space you want to check.
+        * @param InScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether or not the point overlaps this object.
+        * @return   Whether or not the point overlaps this object.
         */
         public overlapsPoint(point: Point, InScreenSpace?: bool, Camera?: Camera): bool;
         /**
         * Check and see if this object is currently on screen.
         *
-        * @param	Camera		Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        * @param Camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether the object is on screen or not.
+        * @return {boolean} Whether the object is on screen or not.
         */
         public onScreen(Camera?: Camera): bool;
         /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        * @param	Point		Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param Point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+        * @return {MicroPoint} The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
         public getScreenXY(point?: MicroPoint, Camera?: Camera): MicroPoint;
         /**
@@ -460,24 +669,21 @@ module Phaser {
         * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
         * to set the value of allowCollisions directly.
         */
-        /**
-        * @private
-        */
         public solid : bool;
         /**
         * Retrieve the midpoint of this object in world coordinates.
         *
-        * @Point	Allows you to pass in an existing <code>Point</code> object if you're so inclined.  Otherwise a new one is created.
+        * @param point {Point} Allows you to pass in an existing <code>Point</code> object if you're so inclined.  Otherwise a new one is created.
         *
-        * @return	A <code>Point</code> object containing the midpoint of this object in world coordinates.
+        * @return {MicroPoint} A <code>Point</code> object containing the midpoint of this object in world coordinates.
         */
         public getMidpoint(point?: MicroPoint): MicroPoint;
         /**
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
-        * @param	X	The new X position of this object.
-        * @param	Y	The new Y position of this object.
+        * @param X {number} The new X position of this object.
+        * @param Y {number} The new Y position of this object.
         */
         public reset(X: number, Y: number): void;
         /**
@@ -485,38 +691,56 @@ module Phaser {
         * For slightly better performance you can just &amp; the value directly numbero <code>touching</code>.
         * However, this method is good for readability and accessibility.
         *
-        * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
-        * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
+        * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
         */
         public isTouching(Direction: number): bool;
         /**
-        * Handy for checking if this object is just landed on a particular surface.
+        * Handy function for checking if this object is just landed on a particular surface.
         *
-        * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
-        * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
+        * @returns {boolean} Whether the object just landed on any specicied surfaces.
         */
         public justTouched(Direction: number): bool;
         /**
         * Reduces the "health" variable of this sprite by the amount specified in Damage.
         * Calls kill() if health drops to or below zero.
         *
-        * @param	Damage		How much health to take away (use a negative number to give a health bonus).
+        * @param Damage {number} How much health to take away (use a negative number to give a health bonus).
         */
         public hurt(Damage: number): void;
         /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
         * it can be stopped from leaving the world, or a section of it.
+        *
+        * @param x {number} x position of the bound
+        * @param y {number} y position of the bound
+        * @param width {number} width of its bound
+        * @param height {number} height of its bound
         */
         public setBounds(x: number, y: number, width: number, height: number): void;
         /**
         * If you do not wish this object to be visible to a specific camera, pass the camera here.
+        
+        * @param camera {Camera} The specific camera.
         */
         public hideFromCamera(camera: Camera): void;
+        /**
+        * Make this object only visible to a specific camera.
+        *
+        * @param camera {Camera} The camera you wish it to be visible.
+        */
         public showToCamera(camera: Camera): void;
+        /**
+        * This will make the object not visible to any cameras.
+        */
         public clearCameraList(): void;
+        /**
+        * Clean up memory.
+        */
         public destroy(): void;
         public x : number;
         public y : number;
@@ -536,15 +760,20 @@ module Phaser {
 module Phaser {
     class Camera {
         /**
+        *Sprite constructor
         * Instantiates a new camera at the specified location, with the specified size and zoom level.
         *
-        * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-        * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-        * @param Width		The width of the camera display in pixels.
-        * @param Height	The height of the camera display in pixels.
-        * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
+        * @param game {Phaser.Game} Current game instance.
+        * @param id {number} Unique identity.
+        * @param x {number} X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+        * @param y {number} Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+        * @param width {number} The width of the camera display in pixels.
+        * @param height {number} The height of the camera display in pixels.
         */
         constructor(game: Game, id: number, x: number, y: number, width: number, height: number);
+        /**
+        * Local private reference to Game.
+        */
         private _game;
         private _clip;
         private _stageX;
@@ -553,51 +782,204 @@ module Phaser {
         private _target;
         private _sx;
         private _sy;
+        /**
+        * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
+        * @type {number}
+        */
         static STYLE_LOCKON: number;
+        /**
+        * Camera "follow" style preset: camera deadzone is narrow but tall.
+        * @type {number}
+        */
         static STYLE_PLATFORMER: number;
+        /**
+        * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
+        * @type {number}
+        */
         static STYLE_TOPDOWN: number;
+        /**
+        * Camera "follow" style preset: camera deadzone is a small square around the focus object.
+        * @type {number}
+        */
         static STYLE_TOPDOWN_TIGHT: number;
+        /**
+        * Identity of this camera.
+        */
         public ID: number;
+        /**
+        * Camera view rectangle in world coordinate.
+        * @type {Rectangle}
+        */
         public worldView: Rectangle;
+        /**
+        * How many sprites will be rendered by this camera.
+        * @type {number}
+        */
         public totalSpritesRendered: number;
+        /**
+        * Scale factor of the camera.
+        * @type {MicroPoint}
+        */
         public scale: MicroPoint;
+        /**
+        * Scrolling factor.
+        * @type {MicroPoint}
+        */
         public scroll: MicroPoint;
+        /**
+        * Camera bounds.
+        * @type {Rectangle}
+        */
         public bounds: Rectangle;
+        /**
+        * Sprite moving inside this rectangle will not cause camera moving.
+        * @type {Rectangle}
+        */
         public deadzone: Rectangle;
         public disableClipping: bool;
+        /**
+        * Whether render border of this camera or not. (default is false)
+        * @type {boolean}
+        */
         public showBorder: bool;
+        /**
+        * Color of border of this camera. (in css color string)
+        * @type {string}
+        */
         public borderColor: string;
+        /**
+        * Whether the camera background is opaque or not. If set to true the Camera is filled with
+        * the value of Camera.backgroundColor every frame.
+        * @type {boolean}
+        */
         public opaque: bool;
+        /**
+        * Clears the camera every frame using a canvas clearRect call (default to true).
+        * Note that this erases anything below the camera as well, so do not use it in conjuction with a camera
+        * that uses alpha or that needs to be able to manage opacity. Equally if Camera.opaque is set to true
+        * then set Camera.clear to false to save rendering time.
+        * By default the Stage will clear itself every frame, so be sure not to double-up clear calls.
+        * @type {boolean}
+        */
+        public clear: bool;
+        /**
+        * Background color in css color string.
+        * @type {string}
+        */
         private _bgColor;
+        /**
+        * Background texture to be rendered if background is visible.
+        */
         private _bgTexture;
+        /**
+        * Background texture repeat style. (default is 'repeat')
+        * @type {string}
+        */
         private _bgTextureRepeat;
+        /**
+        * Render camera shadow or not. (default is false)
+        * @type {boolean}
+        */
         public showShadow: bool;
+        /**
+        * Color of shadow, in css color string.
+        * @type {string}
+        */
         public shadowColor: string;
+        /**
+        * Blur factor of shadow.
+        * @type {number}
+        */
         public shadowBlur: number;
+        /**
+        * Offset of the shadow from camera's position.
+        * @type {MicroPoint}
+        */
         public shadowOffset: MicroPoint;
+        /**
+        * Whether this camera visible or not. (default is true)
+        * @type {boolean}
+        */
         public visible: bool;
+        /**
+        * Alpha of the camera. (everything rendered to this camera will be affected)
+        * @type {number}
+        */
         public alpha: number;
+        /**
+        * The x position of the current input event in world coordinates.
+        * @type {number}
+        */
         public inputX: number;
+        /**
+        * The y position of the current input event in world coordinates.
+        * @type {number}
+        */
         public inputY: number;
+        /**
+        * Effects manager.
+        * @type {FXManager}
+        */
         public fx: FXManager;
+        /**
+        * Tells this camera object what sprite to track.
+        * @param target {Sprite} The object you want the camera to track. Set to null to not follow anything.
+        * @param [style] {number} Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+        */
         public follow(target: Sprite, style?: number): void;
+        /**
+        * Move the camera focus to this location instantly.
+        * @param x {number} X position.
+        * @param y {number} Y position.
+        */
         public focusOnXY(x: number, y: number): void;
+        /**
+        * Move the camera focus to this location instantly.
+        * @param point {any} Point you want to focus.
+        */
         public focusOn(point): void;
         /**
         * Specify the boundaries of the world or where the camera is allowed to move.
         *
-        * @param	x				The smallest X value of your world (usually 0).
-        * @param	y				The smallest Y value of your world (usually 0).
-        * @param	width			The largest X value of your world (usually the world width).
-        * @param	height			The largest Y value of your world (usually the world height).
+        * @param x      {number} The smallest X value of your world (usually 0).
+        * @param y      {number} The smallest Y value of your world (usually 0).
+        * @param width  {number} The largest X value of your world (usually the world width).
+        * @param height {number} The largest Y value of your world (usually the world height).
         */
         public setBounds(x?: number, y?: number, width?: number, height?: number): void;
+        /**
+        * Update focusing and scrolling.
+        */
         public update(): void;
+        /**
+        * Draw background, shadow, effects, and objects if this is visible.
+        */
         public render(): void;
         public backgroundColor : string;
+        /**
+        * Set camera background texture.
+        * @param key {string} Asset key of the texture.
+        * @param [repeat] {string} what kind of repeat will this texture used for background.
+        */
         public setTexture(key: string, repeat?: string): void;
+        /**
+        * Set position of this camera.
+        * @param x {number} X position.
+        * @param y {number} Y position.
+        */
         public setPosition(x: number, y: number): void;
+        /**
+        * Give this camera a new size.
+        * @param width {number} Width of new size.
+        * @param height {number} Height of new size.
+        */
         public setSize(width: number, height: number): void;
+        /**
+        * Render debug infos. (including id, position, rotation, scrolling factor, bounds and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
         public renderDebugInfo(x: number, y: number, color?: string): void;
         public x : number;
         public y : number;
@@ -615,8 +997,24 @@ module Phaser {
 */
 module Phaser {
     class Sprite extends GameObject {
+        /**
+        * Sprite constructor
+        * Create a new <code>Sprite</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param [x] {number} the initial x position of the sprite.
+        * @param [y] {number} the initial y position of the sprite.
+        * @param [key] {string} Key of the graphic you want to load for this sprite.
+        */
         constructor(game: Game, x?: number, y?: number, key?: string);
+        /**
+        * Texture of this sprite to be rendered.
+        */
         private _texture;
+        /**
+        * Texture of this sprite is DynamicTexture? (default to false)
+        * @type {boolean}
+        */
         private _dynamicTexture;
         private _sx;
         private _sy;
@@ -626,20 +1024,84 @@ module Phaser {
         private _dy;
         private _dw;
         private _dh;
+        /**
+        * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
+        * @type AnimationManager
+        */
         public animations: AnimationManager;
+        /**
+        * Render bound of this sprite for debugging? (default to false)
+        * @type {boolean}
+        */
         public renderDebug: bool;
+        /**
+        * Color of bound when render debug. (see renderDebug) Format is a css color string.
+        * @type {string}
+        */
         public renderDebugColor: string;
+        /**
+        * Color of points when render debug. (see renderDebug) Format is a css color string.
+        * @type {string}
+        */
         public renderDebugPointColor: string;
+        /**
+        * Flip the graphic vertically? (default to false)
+        * @type {boolean}
+        */
         public flipped: bool;
+        /**
+        * Load graphic for this sprite. (graphic can be SpriteSheet of Texture)
+        * @param key {string} Key of the graphic you want to load for this sprite.
+        * @return {Sprite} Sprite instance itself.
+        */
         public loadGraphic(key: string): Sprite;
+        /**
+        * Load a DynamicTexture as its texture.
+        * @param texture {DynamicTexture} The texture object to be used by this sprite.
+        * @return {Sprite} Sprite instance itself.
+        */
         public loadDynamicTexture(texture: DynamicTexture): Sprite;
+        /**
+        * This function creates a flat colored square image dynamically.
+        * @param width {number} The width of the sprite you want to generate.
+        * @param height {number} The height of the sprite you want to generate.
+        * @param [color] {number} specifies the color of the generated block. (format is 0xAARRGGBB)
+        * @return {Sprite} Sprite instance itself.
+        */
         public makeGraphic(width: number, height: number, color?: number): Sprite;
+        /**
+        * Check whether this object is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        */
         public inCamera(camera: Rectangle): bool;
+        /**
+        * Automatically called after update() by the game loop, this function just update animations.
+        */
         public postUpdate(): void;
         public frame : number;
         public frameName : string;
+        /**
+        * Render this sprite to specific camera. Called by game loop after update().
+        * @param camera {Camera} Camera this sprite will be rendered to.
+        * @cameraOffsetX {number} X offset to the camera.
+        * @cameraOffsetY {number} Y offset to the camera.
+        * @return {boolean} Return false if not rendered, otherwise return true.
+        */
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): bool;
+        /**
+        * Renders the bounding box around this Sprite and the contact points. Useful for visually debugging.
+        * @param camera {Camera} Camera the bound will be rendered to.
+        * @param cameraOffsetX {number} X offset of bound to the camera.
+        * @param cameraOffsetY {number} Y offset of bound to the camera.
+        */
         private renderBounds(camera, cameraOffsetX, cameraOffsetY);
+        /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
         public renderDebugInfo(x: number, y: number, color?: string): void;
     }
 }
@@ -650,27 +1112,109 @@ module Phaser {
 */
 module Phaser {
     class Animation {
+        /**
+        * Animation constructor
+        * Create a new <code>Animation</code>.
+        *
+        * @param parent {Sprite} Owner sprite of this animation.
+        * @param frameData {FrameData} The FrameData object contains animation data.
+        * @param name {string} Unique name of this animation.
+        * @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
+        * @param delay {number} Time between frames in ms.
+        * @param looped {boolean} Whether or not the animation is looped or just plays once.
+        */
         constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Local private reference to its owner sprite.
+        * @type {Sprite}
+        */
         private _parent;
+        /**
+        * Animation frame container.
+        * @type {number[]}
+        */
         private _frames;
+        /**
+        * Frame data of this animation.(parsed from sprite sheet)
+        * @type {FrameData}
+        */
         private _frameData;
+        /**
+        * Index of current frame.
+        * @type {number}
+        */
         private _frameIndex;
+        /**
+        * Time when switched to last frame (in ms).
+        * @type number
+        */
         private _timeLastFrame;
+        /**
+        * Time when this will switch to next frame (in ms).
+        * @type number
+        */
         private _timeNextFrame;
+        /**
+        * Name of this animation.
+        * @type {string}
+        */
         public name: string;
+        /**
+        * Currently played frame instance.
+        * @type {Frame}
+        */
         public currentFrame: Frame;
+        /**
+        * Whether or not this animation finished playing.
+        * @type {boolean}
+        */
         public isFinished: bool;
+        /**
+        * Whethor or not this animation is currently playing.
+        * @type {boolean}
+        */
         public isPlaying: bool;
+        /**
+        * Whether or not the animation is looped.
+        * @type {boolean}
+        */
         public looped: bool;
+        /**
+        * Time between frames in ms.
+        * @type {number}
+        */
         public delay: number;
         public frameTotal : number;
         public frame : number;
+        /**
+        * Play this animation.
+        * @param frameRate {number} FrameRate you want to specify instead of using default.
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        */
         public play(frameRate?: number, loop?: bool): void;
+        /**
+        * Play this animation from the first frame.
+        */
         public restart(): void;
+        /**
+        * Stop playing animation and set it finished.
+        */
         public stop(): void;
+        /**
+        * Update animation frames.
+        */
         public update(): bool;
+        /**
+        * Clean up animation memory.
+        */
         public destroy(): void;
+        /**
+        * Animation complete callback method.
+        */
         private onComplete();
     }
 }
@@ -681,7 +1225,20 @@ module Phaser {
 */
 module Phaser {
     class AnimationLoader {
+        /**
+        * Parse a sprite sheet from asset data.
+        * @param key {string} Asset key for the sprite sheet data.
+        * @param frameWidth {number} Width of animation frame.
+        * @param frameHeight {number} Height of animation frame.
+        * @param frameMax {number} Number of animation frames.
+        * @return {FrameData} Generated FrameData object.
+        */
         static parseSpriteSheet(game: Game, key: string, frameWidth: number, frameHeight: number, frameMax: number): FrameData;
+        /**
+        * Parse frame datas from json.
+        * @param json {object} Json data you want to parse.
+        * @return {FrameData} Generated FrameData object.
+        */
         static parseJSONData(game: Game, json): FrameData;
     }
 }
@@ -692,23 +1249,103 @@ module Phaser {
 */
 module Phaser {
     class Frame {
+        /**
+        * Frame constructor
+        * Create a new <code>Frame</code> with specific position, size and name.
+        *
+        * @param x {number} X position within the image to cut from.
+        * @param y {number} Y position within the image to cut from.
+        * @param width {number} Width of the frame.
+        * @param height {number} Height of the frame.
+        * @param name {string} Name of this frame.
+        */
         constructor(x: number, y: number, width: number, height: number, name: string);
+        /**
+        * X position within the image to cut from.
+        * @type {number}
+        */
         public x: number;
+        /**
+        * Y position within the image to cut from.
+        * @type {number}
+        */
         public y: number;
+        /**
+        * Width of the frame.
+        * @type {number}
+        */
         public width: number;
+        /**
+        * Height of the frame.
+        * @type {number}
+        */
         public height: number;
+        /**
+        * Useful for Sprite Sheets.
+        * @type {number}
+        */
         public index: number;
+        /**
+        * Useful for Texture Atlas files. (is set to the filename value)
+        */
         public name: string;
+        /**
+        * Rotated? (not yet implemented)
+        */
         public rotated: bool;
+        /**
+        * Either cw or ccw, rotation is always 90 degrees.
+        */
         public rotationDirection: string;
+        /**
+        * Was it trimmed when packed?
+        * @type {boolean}
+        */
         public trimmed: bool;
+        /**
+        * Width of the original sprite.
+        * @type {number}
+        */
         public sourceSizeW: number;
+        /**
+        * Height of the original sprite.
+        * @type {number}
+        */
         public sourceSizeH: number;
+        /**
+        * X position of the trimmed sprite inside original sprite.
+        * @type {number}
+        */
         public spriteSourceSizeX: number;
+        /**
+        * Y position of the trimmed sprite inside original sprite.
+        * @type {number}
+        */
         public spriteSourceSizeY: number;
+        /**
+        * Width of the trimmed sprite.
+        * @type {number}
+        */
         public spriteSourceSizeW: number;
+        /**
+        * Height of the trimmed sprite.
+        * @type {number}
+        */
         public spriteSourceSizeH: number;
+        /**
+        * Set rotation of this frame. (Not yet supported!)
+        */
         public setRotation(rotated: bool, rotationDirection: string): void;
+        /**
+        * Set trim of the frame.
+        * @param trimmed {boolean} Whether this frame trimmed or not.
+        * @param actualWidth {number} Actual width of this frame.
+        * @param actualHeight {number} Actual height of this frame.
+        * @param destX {number} Destiny x position.
+        * @param destY {number} Destiny y position.
+        * @param destWidth {number} Destiny draw width.
+        * @param destHeight {number} Destiny draw height.
+        */
         public setTrim(trimmed: bool, actualWidth, actualHeight, destX, destY, destWidth, destHeight): void;
     }
 }
@@ -719,18 +1356,73 @@ module Phaser {
 */
 module Phaser {
     class FrameData {
+        /**
+        * FrameData constructor
+        */
         constructor();
+        /**
+        * Local frame container.
+        */
         private _frames;
+        /**
+        * Local frameName<->index container.
+        */
         private _frameNames;
         public total : number;
+        /**
+        * Add a new frame.
+        * @param frame {Frame} The frame you want to add.
+        * @return {Frame} The frame you just added.
+        */
         public addFrame(frame: Frame): Frame;
+        /**
+        * Get a frame by its index.
+        * @param index {number} Index of the frame you want to get.
+        * @return {Frame} The frame you want.
+        */
         public getFrame(index: number): Frame;
+        /**
+        * Get a frame by its name.
+        * @param name {string} Name of the frame you want to get.
+        * @return {Frame} The frame you want.
+        */
         public getFrameByName(name: string): Frame;
+        /**
+        * Check whether there's a frame with given name.
+        * @param name {string} Name of the frame you want to check.
+        * @return {boolean} True if frame with given name found, otherwise return false.
+        */
         public checkFrameName(name: string): bool;
+        /**
+        * Get ranges of frames in an array.
+        * @param start {number} Start index of frames you want.
+        * @param end {number} End index of frames you want.
+        * @param [output] {Frame[]} result will be added into this array.
+        * @return {Frame[]} Ranges of specific frames in an array.
+        */
         public getFrameRange(start: number, end: number, output?: Frame[]): Frame[];
+        /**
+        * Get all indexes of frames by giving their name.
+        * @param [output] {number[]} result will be added into this array.
+        * @return {number[]} Indexes of specific frames in an array.
+        */
         public getFrameIndexes(output?: number[]): number[];
+        /**
+        * Get all names of frames by giving their indexes.
+        * @param [output] {number[]} result will be added into this array.
+        * @return {number[]} Names of specific frames in an array.
+        */
         public getFrameIndexesByName(input: string[]): number[];
+        /**
+        * Get all frames in this frame data.
+        * @return {Frame[]} All the frames in an array.
+        */
         public getAllFrames(): Frame[];
+        /**
+        * Get All frames with specific ranges.
+        * @param range {number[]} Ranges in an array.
+        * @return {Frame[]} All frames in an array.
+        */
         public getFrames(range: number[]): Frame[];
     }
 }
@@ -742,19 +1434,79 @@ module Phaser {
 */
 module Phaser {
     class AnimationManager {
+        /**
+        * AnimationManager constructor
+        * Create a new <code>AnimationManager</code>.
+        *
+        * @param parent {Sprite} Owner sprite of this manager.
+        */
         constructor(game: Game, parent: Sprite);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Local private reference to its owner sprite.
+        */
         private _parent;
+        /**
+        * Animation key-value container.
+        */
         private _anims;
+        /**
+        * Index of current frame.
+        * @type {number}
+        */
         private _frameIndex;
+        /**
+        * Data contains animation frames.
+        * @type {FrameData}
+        */
         private _frameData;
+        /**
+        * Keeps track of the current animation being played.
+        */
         public currentAnim: Animation;
+        /**
+        * Keeps track of the current frame of animation.
+        */
         public currentFrame: Frame;
+        /**
+        * Load animation frame data.
+        * @param frameData Data to be loaded.
+        */
         public loadFrameData(frameData: FrameData): void;
+        /**
+        * Add a new animation.
+        * @param name {string} What this animation should be called (e.g. "run").
+        * @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
+        * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+        */
         public add(name: string, frames?: any[], frameRate?: number, loop?: bool, useNumericIndex?: bool): void;
+        /**
+        * Check whether the frames is valid.
+        * @param frames {any[]} Frames to be validated.
+        * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
+        * @return {boolean} True if they're valid, otherwise return false.
+        */
         private validateFrames(frames, useNumericIndex);
+        /**
+        * Play animation with specific name.
+        * @param name {string} The string name of the animation you want to play.
+        * @param frameRate {number} FrameRate you want to specify instead of using default.
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        */
         public play(name: string, frameRate?: number, loop?: bool): void;
+        /**
+        * Stop animation by name.
+        * Current animation will be automatically set to the stopped one.
+        */
         public stop(name: string): void;
+        /**
+        * Update animation and parent sprite's bounds.
+        */
         public update(): void;
         public frameData : FrameData;
         public frameTotal : number;
@@ -770,26 +1522,132 @@ module Phaser {
 */
 module Phaser {
     class Cache {
+        /**
+        * Cache constructor
+        */
         constructor(game: Game);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Canvas key-value container.
+        * @type {object}
+        */
         private _canvases;
+        /**
+        * Image key-value container.
+        * @type {object}
+        */
         private _images;
+        /**
+        * Sound key-value container.
+        * @type {object}
+        */
         private _sounds;
+        /**
+        * Text key-value container.
+        * @type {object}
+        */
         private _text;
+        /**
+        * Add a new canvas.
+        * @param key {string} Asset key for this canvas.
+        * @param canvas {HTMLCanvasElement} Canvas DOM element.
+        * @param context {CanvasRenderingContext2D} Render context of this canvas.
+        */
         public addCanvas(key: string, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
+        /**
+        * Add a new sprite sheet.
+        * @param key {string} Asset key for the sprite sheet.
+        * @param url {string} URL of this sprite sheet file.
+        * @param data {object} Extra sprite sheet data.
+        * @param frameWidth {number} Width of the sprite sheet.
+        * @param frameHeight {number} Height of the sprite sheet.
+        * @param frameMax {number} How many frames stored in the sprite sheet.
+        */
         public addSpriteSheet(key: string, url: string, data, frameWidth: number, frameHeight: number, frameMax: number): void;
+        /**
+        * Add a new texture atlas.
+        * @param key  {string} Asset key for the texture atlas.
+        * @param url  {string} URL of this texture atlas file.
+        * @param data {object} Extra texture atlas data.
+        * @param data {object} Texture atlas frames data.
+        */
         public addTextureAtlas(key: string, url: string, data, jsonData): void;
+        /**
+        * Add a new image.
+        * @param key {string} Asset key for the image.
+        * @param url {string} URL of this image file.
+        * @param data {object} Extra image data.
+        */
         public addImage(key: string, url: string, data): void;
+        /**
+        * Add a new sound.
+        * @param key {string} Asset key for the sound.
+        * @param url {string} URL of this sound file.
+        * @param data {object} Extra sound data.
+        */
         public addSound(key: string, url: string, data): void;
+        /**
+        * Add a new decoded sound.
+        * @param key {string} Asset key for the sound.
+        * @param url {string} URL of this sound file.
+        * @param data {object} Extra sound data.
+        */
         public decodedSound(key: string, data): void;
+        /**
+        * Add a new text data.
+        * @param key {string} Asset key for the text data.
+        * @param url {string} URL of this text data file.
+        * @param data {object} Extra text data.
+        */
         public addText(key: string, url: string, data): void;
+        /**
+        * Get canvas by key.
+        * @param key Asset key of the canvas you want.
+        * @return {object} The canvas you want.
+        */
         public getCanvas(key: string);
+        /**
+        * Get image data by key.
+        * @param key Asset key of the image you want.
+        * @return {object} The image data you want.
+        */
         public getImage(key: string);
+        /**
+        * Get frame data by key.
+        * @param key Asset key of the frame data you want.
+        * @return {object} The frame data you want.
+        */
         public getFrameData(key: string): FrameData;
+        /**
+        * Get sound data by key.
+        * @param key Asset key of the sound you want.
+        * @return {object} The sound data you want.
+        */
         public getSound(key: string);
+        /**
+        * Check whether an asset is decoded sound.
+        * @param key Asset key of the sound you want.
+        * @return {object} The sound data you want.
+        */
         public isSoundDecoded(key: string): bool;
+        /**
+        * Check whether an asset is sprite sheet.
+        * @param key Asset key of the sprite sheet you want.
+        * @return {object} The sprite sheet data you want.
+        */
         public isSpriteSheet(key: string): bool;
+        /**
+        * Get text data by key.
+        * @param key Asset key of the text data you want.
+        * @return {object} The text data you want.
+        */
         public getText(key: string);
+        /**
+        * Clean up cache memory.
+        */
         public destroy(): void;
     }
 }
@@ -804,16 +1662,66 @@ module Phaser {
 */
 module Phaser {
     class CameraManager {
+        /**
+        * CameraManager constructor
+        * This will create a new <code>Camera</code> with position and size.
+        *
+        * @param x {number} X Position of the created camera.
+        * @param y {number} y Position of the created camera.
+        * @param width {number} Width of the created camera.
+        * @param height {number} Height of the created camera.
+        */
         constructor(game: Game, x: number, y: number, width: number, height: number);
+        /**
+        * Local private reference to Game.
+        */
         private _game;
+        /**
+        * Local container for storing camera.
+        */
         private _cameras;
+        /**
+        * Local helper stores index of next created camera.
+        */
         private _cameraInstance;
+        /**
+        * Currently used camera.
+        */
         public current: Camera;
+        /**
+        * Get all the cameras.
+        *
+        * @returns {Camera[]} An array contains all the cameras.
+        */
         public getAll(): Camera[];
+        /**
+        * Update cameras.
+        */
         public update(): void;
+        /**
+        * Render cameras.
+        */
         public render(): void;
+        /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
         public addCamera(x: number, y: number, width: number, height: number): Camera;
+        /**
+        * Remove a new camera with its id.
+        *
+        * @param id {number} ID of the camera you want to remove.
+        * @returns {boolean} True if successfully removed the camera, otherwise return false.
+        */
         public removeCamera(id: number): bool;
+        /**
+        * Clean up memory.
+        */
         public destroy(): void;
     }
 }
@@ -835,13 +1743,13 @@ module Phaser {
         /**
         * The horizontal position of this point (default 0)
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public x: number;
         /**
         * The vertical position of this point (default 0)
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public y: number;
         /**
@@ -1026,23 +1934,23 @@ module Phaser {
         /**
         * The x coordinate of the top-left corner of the rectangle
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         /**
         * The x coordinate of the top-left corner of the rectangle
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public x : number;
         /**
         * The y coordinate of the top-left corner of the rectangle
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         /**
         * The y coordinate of the top-left corner of the rectangle
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public y : number;
         /**
@@ -1108,107 +2016,107 @@ module Phaser {
         /**
         * The x coordinate of the top-left corner of the rectangle
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         /**
         * The x coordinate of the top-left corner of the rectangle
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public x : number;
         /**
         * The y coordinate of the top-left corner of the rectangle
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         /**
         * The y coordinate of the top-left corner of the rectangle
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public y : number;
         /**
         * The x and y coordinate of the top-left corner of the rectangle (same as x/y)
         * @property topLeft
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public topLeft: MicroPoint;
         /**
         * The x and y coordinate of the top-center of the rectangle
         * @property topCenter
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public topCenter: MicroPoint;
         /**
         * The x and y coordinate of the top-right corner of the rectangle
         * @property topRight
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public topRight: MicroPoint;
         /**
         * The x and y coordinate of the left-center of the rectangle
         * @property leftCenter
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public leftCenter: MicroPoint;
         /**
         * The x and y coordinate of the center of the rectangle
         * @property center
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public center: MicroPoint;
         /**
         * The x and y coordinate of the right-center of the rectangle
         * @property rightCenter
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public rightCenter: MicroPoint;
         /**
         * The x and y coordinate of the bottom-left corner of the rectangle
         * @property bottomLeft
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public bottomLeft: MicroPoint;
         /**
         * The x and y coordinate of the bottom-center of the rectangle
         * @property bottomCenter
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public bottomCenter: MicroPoint;
         /**
         * The x and y coordinate of the bottom-right corner of the rectangle
         * @property bottomRight
-        * @type MicroPoint
+        * @type {MicroPoint}
         **/
         public bottomRight: MicroPoint;
         /**
         * The width of the rectangle
         * @property width
-        * @type Number
+        * @type {Number}
         **/
         private _width;
         /**
         * The height of the rectangle
         * @property height
-        * @type Number
+        * @type {Number}
         **/
         private _height;
         /**
         * Half of the width of the rectangle
         * @property halfWidth
-        * @type Number
+        * @type {Number}
         **/
         private _halfWidth;
         /**
         * Half of the height of the rectangle
         * @property halfHeight
-        * @type Number
+        * @type {Number}
         **/
         private _halfHeight;
         /**
         * The size of the longest side (width or height)
         * @property length
-        * @type Number
+        * @type {Number}
         **/
         public length: number;
         /**
@@ -1219,35 +2127,35 @@ module Phaser {
         /**
         * The width of the rectangle
         * @property width
-        * @type Number
+        * @type {Number}
         **/
         /**
         * The width of the rectangle
         * @property width
-        * @type Number
+        * @type {Number}
         **/
         public width : number;
         /**
         * The height of the rectangle
         * @property height
-        * @type Number
+        * @type {Number}
         **/
         /**
         * The height of the rectangle
         * @property height
-        * @type Number
+        * @type {Number}
         **/
         public height : number;
         /**
         * Half of the width of the rectangle
         * @property halfWidth
-        * @type Number
+        * @type {Number}
         **/
         public halfWidth : number;
         /**
         * Half of the height of the rectangle
         * @property halfHeight
-        * @type Number
+        * @type {Number}
         **/
         public halfHeight : number;
         /**
@@ -1268,7 +2176,7 @@ module Phaser {
         * Changing the left property of a Rectangle object has no effect on the y and height properties.
         * However it does affect the width property, whereas changing the x value does not affect the width property.
         * @method left
-        * @ return {number}
+        * @ return {Number}
         **/
         /**
         * The x coordinate of the top-left corner of the rectangle.
@@ -1465,7 +2373,7 @@ module Phaser {
         /**
         * Returns a string representation of this object.
         * @method toString
-        * @return {string} a string representation of the instance.
+        * @return {String} a string representation of the instance.
         **/
         public toString(): string;
     }
@@ -1537,8 +2445,9 @@ module Phaser {
         * Creates a new Circle object with the center coordinate specified by the x and y parameters and the diameter specified by the diameter parameter. If you call this function without parameters, a circle with x, y, diameter and radius properties set to 0 is created.
         * @class Circle
         * @constructor
-        * @param {Number} x The x coordinate of the center of the circle.
-        * @param {Number} y The y coordinate of the center of the circle.
+        * @param {Number} [x] The x coordinate of the center of the circle.
+        * @param {Number} [y] The y coordinate of the center of the circle.
+        * @param {Number} [diameter] The diameter of the circle.
         * @return {Circle} This circle object
         **/
         constructor(x?: number, y?: number, diameter?: number);
@@ -1651,7 +2560,7 @@ module Phaser {
         /**
         * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
         * @method clone
-        * @param {Circle} output Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+        * @param {Circle} [optional] output Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
         * @return {Phaser.Circle}
         **/
         public clone(output?: Circle): Circle;
@@ -1698,7 +2607,7 @@ module Phaser {
         * Returns the distance from the center of this Circle object to the given object (can be Circle, Point or anything with x/y values)
         * @method distanceFrom
         * @param {Circle/Point} target - The destination Point object.
-        * @param {Boolean} round - Round the distance to the nearest integer (default false)
+        * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
         * @return {Number} The distance between this Point object and the destination Point object.
         **/
         public distanceTo(target: any, round?: bool): number;
@@ -1719,9 +2628,9 @@ module Phaser {
         /**
         * Returns a Point object containing the coordinates of a point on the circumference of this Circle based on the given angle.
         * @method circumferencePoint
-        * @param {Number} The angle in radians (unless asDegrees is true) to return the point from.
-        * @param {Boolean} Is the given angle in radians (false) or degrees (true)?
-        * @param {Phaser.Point} An optional Point object to put the result in to. If none specified a new Point object will be created.
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
         * @return {Phaser.Point} The Point object holding the result.
         **/
         public circumferencePoint(angle: number, asDegrees?: bool, output?: Point): Point;
@@ -1777,25 +2686,25 @@ module Phaser {
         /**
         *
         * @property x1
-        * @type Number
+        * @type {Number}
         */
         public x1: number;
         /**
         *
         * @property y1
-        * @type Number
+        * @type {Number}
         */
         public y1: number;
         /**
         *
         * @property x2
-        * @type Number
+        * @type {Number}
         */
         public x2: number;
         /**
         *
         * @property y2
-        * @type Number
+        * @type {Number}
         */
         public y2: number;
         /**
@@ -1918,47 +2827,47 @@ module Phaser {
         /**
         * Did they intersect or not?
         * @property result
-        * @type Boolean
+        * @type {Boolean}
         */
         public result: bool;
         /**
         * @property x
-        * @type Number
+        * @type {Number}
         */
         public x: number;
         /**
         * @property y
-        * @type Number
+        * @type {Number}
         */
         public y: number;
         /**
         * @property x1
-        * @type Number
+        * @type {Number}
         */
         public x1: number;
         /**
         * @property y1
-        * @type Number
+        * @type {Number}
         */
         public y1: number;
         /**
         * @property x2
-        * @type Number
+        * @type {Number}
         */
         public x2: number;
         /**
         * @property y2
-        * @type Number
+        * @type {Number}
         */
         public y2: number;
         /**
         * @property width
-        * @type Number
+        * @type {Number}
         */
         public width: number;
         /**
         * @property height
-        * @type Number
+        * @type {Number}
         */
         public height: number;
         /**
@@ -2011,11 +2920,11 @@ module Phaser {
         /**
         * Instantiate a new Quad Tree node.
         *
-        * @param	X			The X-coordinate of the point in space.
-        * @param	Y			The Y-coordinate of the point in space.
-        * @param	Width		Desired width of this node.
-        * @param	Height		Desired height of this node.
-        * @param	Parent		The parent branch or node.  Pass null to create a root.
+        * @param {Number} X			The X-coordinate of the point in space.
+        * @param {Number} Y			The Y-coordinate of the point in space.
+        * @param {Number} Width		Desired width of this node.
+        * @param {Number} Height		Desired height of this node.
+        * @param {Number} Parent		The parent branch or node.  Pass null to create a root.
         */
         constructor(X: number, Y: number, Width: number, Height: number, Parent?: QuadTree);
         /**
@@ -2185,10 +3094,10 @@ module Phaser {
         /**
         * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
         *
-        * @param ObjectOrGroup1	Any object that is or extends GameObject or Group.
-        * @param ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
-        * @param NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.
-        * @param ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate().
+        * @param {Basic} ObjectOrGroup1	Any object that is or extends GameObject or Group.
+        * @param {Basic} ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
+        * @param {Function} NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.
+        * @param {Function} ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate().
         */
         public load(ObjectOrGroup1: Basic, ObjectOrGroup2?: Basic, NotifyCallback?, ProcessCallback?): void;
         /**
@@ -2196,8 +3105,8 @@ module Phaser {
         * This function will recursively add all group members, but
         * not the groups themselves.
         *
-        * @param	ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
-        * @param	List			A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
+        * @param {Basic} ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
+        * @param {Number} List	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
         */
         public add(ObjectOrGroup: Basic, List: number): void;
         /**
@@ -2213,13 +3122,13 @@ module Phaser {
         * <code>QuadTree</code>'s other main function.  Call this after adding objects
         * using <code>QuadTree.load()</code> to compare the objects that you loaded.
         *
-        * @return	Whether or not any overlaps were found.
+        * @return {Boolean} Whether or not any overlaps were found.
         */
         public execute(): bool;
         /**
         * An private for comparing an object against the contents of a node.
         *
-        * @return	Whether or not any overlaps were found.
+        * @return {Boolean} Whether or not any overlaps were found.
         */
         private overlapNode();
     }
@@ -2304,7 +3213,7 @@ module Phaser {
         * Checks for Line to Line intersection and returns an IntersectResult object containing the results of the intersection.
         * @param line1 The first Line object to check
         * @param line2 The second Line object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineToLine(line1: Line, line2: Line, output?: IntersectResult): IntersectResult;
@@ -2312,7 +3221,7 @@ module Phaser {
         * Checks for Line to Line Segment intersection and returns an IntersectResult object containing the results of the intersection.
         * @param line The Line object to check
         * @param seg The Line segment object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineToLineSegment(line: Line, seg: Line, output?: IntersectResult): IntersectResult;
@@ -2323,7 +3232,7 @@ module Phaser {
         * @param y1 The start y coordinate of the raw segment
         * @param x2 The end x coordinate of the raw segment
         * @param y2 The end y coordinate of the raw segment
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineToRawSegment(line: Line, x1: number, y1: number, x2: number, y2: number, output?: IntersectResult): IntersectResult;
@@ -2331,7 +3240,7 @@ module Phaser {
         * Checks for Line to Ray intersection and returns the result in an IntersectResult object.
         * @param line1 The Line object to check
         * @param ray The Ray object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineToRay(line1: Line, ray: Line, output?: IntersectResult): IntersectResult;
@@ -2339,7 +3248,7 @@ module Phaser {
         * Check if the Line and Circle objects intersect
         * @param line The Line object to check
         * @param circle The Circle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineToCircle(line: Line, circle: Circle, output?: IntersectResult): IntersectResult;
@@ -2347,7 +3256,7 @@ module Phaser {
         * Check if the Line intersects each side of the Rectangle
         * @param line The Line object to check
         * @param rect The Rectangle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineToRectangle(line: Line, rect: Rectangle, output?: IntersectResult): IntersectResult;
@@ -2355,7 +3264,7 @@ module Phaser {
         * Check if the two Line Segments intersect and returns the result in an IntersectResult object.
         * @param line1 The first Line Segment to check
         * @param line2 The second Line Segment to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineSegmentToLineSegment(line1: Line, line2: Line, output?: IntersectResult): IntersectResult;
@@ -2363,7 +3272,7 @@ module Phaser {
         * Check if the Line Segment intersects with the Ray and returns the result in an IntersectResult object.
         * @param line The Line Segment to check.
         * @param ray The Ray to check.
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineSegmentToRay(line: Line, ray: Line, output?: IntersectResult): IntersectResult;
@@ -2371,7 +3280,7 @@ module Phaser {
         * Check if the Line Segment intersects with the Circle and returns the result in an IntersectResult object.
         * @param seg The Line Segment to check.
         * @param circle The Circle to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineSegmentToCircle(seg: Line, circle: Circle, output?: IntersectResult): IntersectResult;
@@ -2379,7 +3288,7 @@ module Phaser {
         * Check if the Line Segment intersects with the Rectangle and returns the result in an IntersectResult object.
         * @param seg The Line Segment to check.
         * @param rect The Rectangle to check.
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static lineSegmentToRectangle(seg: Line, rect: Rectangle, output?: IntersectResult): IntersectResult;
@@ -2387,7 +3296,7 @@ module Phaser {
         * Check for Ray to Rectangle intersection and returns the result in an IntersectResult object.
         * @param ray The Ray to check.
         * @param rect The Rectangle to check.
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static rayToRectangle(ray: Line, rect: Rectangle, output?: IntersectResult): IntersectResult;
@@ -2401,7 +3310,7 @@ module Phaser {
         * @param lineY1
         * @param lineX2
         * @param lineY2
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static rayToLineSegment(rayX1, rayY1, rayX2, rayY2, lineX1, lineY1, lineX2, lineY2, output?: IntersectResult): IntersectResult;
@@ -2409,7 +3318,7 @@ module Phaser {
         * Determines whether the specified point is contained within the rectangular region defined by the Rectangle object and returns the result in an IntersectResult object.
         * @param point The Point or MicroPoint object to check, or any object with x and y properties.
         * @param rect The Rectangle object to check the point against
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static pointToRectangle(point, rect: Rectangle, output?: IntersectResult): IntersectResult;
@@ -2417,7 +3326,7 @@ module Phaser {
         * Check whether two axis aligned Rectangles intersect and returns the intersecting rectangle dimensions in an IntersectResult object if they do.
         * @param rect1 The first Rectangle object.
         * @param rect2 The second Rectangle object.
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static rectangleToRectangle(rect1: Rectangle, rect2: Rectangle, output?: IntersectResult): IntersectResult;
@@ -2425,7 +3334,7 @@ module Phaser {
         * Checks if the Rectangle and Circle objects intersect and returns the result in an IntersectResult object.
         * @param rect The Rectangle object to check
         * @param circle The Circle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static rectangleToCircle(rect: Rectangle, circle: Circle, output?: IntersectResult): IntersectResult;
@@ -2433,7 +3342,7 @@ module Phaser {
         * Checks if the two Circle objects intersect and returns the result in an IntersectResult object.
         * @param circle1 The first Circle object to check
         * @param circle2 The second Circle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static circleToCircle(circle1: Circle, circle2: Circle, output?: IntersectResult): IntersectResult;
@@ -2441,7 +3350,7 @@ module Phaser {
         * Checks if the Circle object intersects with the Rectangle and returns the result in an IntersectResult object.
         * @param circle The Circle object to check
         * @param rect The Rectangle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static circleToRectangle(circle: Circle, rect: Rectangle, output?: IntersectResult): IntersectResult;
@@ -2449,7 +3358,7 @@ module Phaser {
         * Checks if the Point object is contained within the Circle and returns the result in an IntersectResult object.
         * @param circle The Circle object to check
         * @param point A Point or MicroPoint object to check, or any object with x and y properties
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         static circleContainsPoint(circle: Circle, point, output?: IntersectResult): IntersectResult;
@@ -2535,7 +3444,18 @@ module Phaser {
 */
 module Phaser {
     class DynamicTexture {
+        /**
+        * DynamicTexture constructor
+        * Create a new <code>DynamicTexture</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param width {number} Init width of this texture.
+        * @param height {number} Init height of this texture.
+        */
         constructor(game: Game, width: number, height: number);
+        /**
+        * Local private reference to game.
+        */
         private _game;
         private _sx;
         private _sy;
@@ -2545,40 +3465,103 @@ module Phaser {
         private _dy;
         private _dw;
         private _dh;
+        /**
+        * Bound of this texture with width and height info.
+        * @type {Rectangle}
+        */
         public bounds: Rectangle;
+        /**
+        * This class is actually a wrapper of canvas.
+        * @type {HTMLCanvasElement}
+        */
         public canvas: HTMLCanvasElement;
+        /**
+        * Canvas context of this object.
+        * @type {CanvasRenderingContext2D}
+        */
         public context: CanvasRenderingContext2D;
+        /**
+        * Get a color of a specific pixel.
+        * @param x {number} X position of the pixel in this texture.
+        * @param y {number} Y position of the pixel in this texture.
+        * @return {number} A native color value integer (format: 0xRRGGBB)
+        */
         public getPixel(x: number, y: number): number;
+        /**
+        * Get a color of a specific pixel (including alpha value).
+        * @param x {number} X position of the pixel in this texture.
+        * @param y {number} Y position of the pixel in this texture.
+        * @return  A native color value integer (format: 0xAARRGGBB)
+        */
         public getPixel32(x: number, y: number): number;
+        /**
+        * Get pixels in array in a specific rectangle.
+        * @param rect {Rectangle} The specific rectangle.
+        * @returns {array} CanvasPixelArray.
+        */
         public getPixels(rect: Rectangle): ImageData;
+        /**
+        * Set color of a specific pixel.
+        * @param x {number} X position of the target pixel.
+        * @param y {number} Y position of the target pixel.
+        * @param color {number} Native integer with color value. (format: 0xRRGGBB)
+        */
         public setPixel(x: number, y: number, color: number): void;
+        /**
+        * Set color (with alpha) of a specific pixel.
+        * @param x {number} X position of the target pixel.
+        * @param y {number} Y position of the target pixel.
+        * @param color {number} Native integer with color value. (format: 0xAARRGGBB)
+        */
         public setPixel32(x: number, y: number, color: number): void;
+        /**
+        * Set image data to a specific rectangle.
+        * @param rect {Rectangle} Target rectangle.
+        * @param input {object} Source image data.
+        */
         public setPixels(rect: Rectangle, input): void;
+        /**
+        * Fill a given rectangle with specific color.
+        * @param rect {Rectangle} Target rectangle you want to fill.
+        * @param color {number} A native number with color value. (format: 0xRRGGBB)
+        */
         public fillRect(rect: Rectangle, color: number): void;
+        /**
+        *
+        */
         public pasteImage(key: string, frame?: number, destX?: number, destY?: number, destWidth?: number, destHeight?: number): void;
+        /**
+        * Copy pixel from another DynamicTexture to this texture.
+        * @param sourceTexture {DynamicTexture} Source texture object.
+        * @param sourceRect {Rectangle} The specific region rectangle to be copied to this in the source.
+        * @param destPoint {Point} Top-left point the target image data will be paste at.
+        */
         public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point): void;
+        /**
+        * Clear the whole canvas.
+        */
         public clear(): void;
         public width : number;
         public height : number;
         /**
         * Given an alpha and 3 color values this will return an integer representation of it
         *
-        * @param	alpha	The Alpha value (between 0 and 255)
-        * @param	red		The Red channel value (between 0 and 255)
-        * @param	green	The Green channel value (between 0 and 255)
-        * @param	blue	The Blue channel value (between 0 and 255)
+        * @param alpha {number} The Alpha value (between 0 and 255)
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
         *
-        * @return	A native color value integer (format: 0xAARRGGBB)
+        * @return  A native color value integer (format: 0xAARRGGBB)
         */
         private getColor32(alpha, red, green, blue);
         /**
         * Given 3 color values this will return an integer representation of it
         *
-        * @param	red		The Red channel value (between 0 and 255)
-        * @param	green	The Green channel value (between 0 and 255)
-        * @param	blue	The Blue channel value (between 0 and 255)
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
         *
-        * @return	A native color value integer (format: 0xRRGGBB)
+        * @return  A native color value integer (format: 0xRRGGBB)
         */
         private getColor(red, green, blue);
     }
@@ -2668,7 +3651,7 @@ module Phaser {
         *
         * @param input - the value to snap
         * @param gap - the interval gap of the grid
-        * @param start - optional starting offset for gap
+        * @param [start] - optional starting offset for gap
         */
         public snapTo(input: number, gap: number, start?: number): number;
         /**
@@ -2678,7 +3661,7 @@ module Phaser {
         *
         * @param input - the value to snap
         * @param gap - the interval gap of the grid
-        * @param start - optional starting offset for gap
+        * @param [start] - optional starting offset for gap
         */
         public snapToFloor(input: number, gap: number, start?: number): number;
         /**
@@ -2688,7 +3671,7 @@ module Phaser {
         *
         * @param input - the value to snap
         * @param gap - the interval gap of the grid
-        * @param start - optional starting offset for gap
+        * @param [start] - optional starting offset for gap
         */
         public snapToCeil(input: number, gap: number, start?: number): number;
         /**
@@ -3146,9 +4129,9 @@ module Phaser {
         * <p>WARNING: If the group has a maxSize that has already been met,
         * the object will NOT be added to the group!</p>
         *
-        * @param	Object		The object you want to add to the group.
+        * @param {Basic} Object The object you want to add to the group.
         *
-        * @return	The same <code>Basic</code> object that was passed in.
+        * @return {Basic} The same <code>Basic</code> object that was passed in.
         */
         public add(Object: Basic): Basic;
         /**
@@ -3170,27 +4153,27 @@ module Phaser {
         * and no object class was provided, it will return null
         * instead of a valid object!</p>
         *
-        * @param	ObjectClass		The class type you want to recycle (e.g. Basic, EvilRobot, etc). Do NOT "new" the class in the parameter!
+        * @param {class} ObjectClass The class type you want to recycle (e.g. Basic, EvilRobot, etc). Do NOT "new" the class in the parameter!
         *
-        * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
+        * @return {any} A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
         */
         public recycle(ObjectClass?);
         /**
         * Removes an object from the group.
         *
-        * @param	object	The <code>Basic</code> you want to remove.
-        * @param	splice	Whether the object should be cut from the array entirely or not.
+        * @param {Basic} object The <code>Basic</code> you want to remove.
+        * @param {boolean} splice Whether the object should be cut from the array entirely or not.
         *
-        * @return	The removed object.
+        * @return {Basic} The removed object.
         */
         public remove(object: Basic, splice?: bool): Basic;
         /**
         * Replaces an existing <code>Basic</code> with a new one.
         *
-        * @param	oldObject	The object you want to replace.
-        * @param	newObject	The new object you want to use instead.
+        * @param {Basic} oldObject	The object you want to replace.
+        * @param {Basic} newObject	The new object you want to use instead.
         *
-        * @return	The new object.
+        * @return {Basic} The new object.
         */
         public replace(oldObject: Basic, newObject: Basic): Basic;
         /**
@@ -3200,84 +4183,93 @@ module Phaser {
         * <code>State.update()</code> override.  To sort all existing objects after
         * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
         *
-        * @param	index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
-        * @param	order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
+        * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
+        * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
         */
         public sort(index?: string, order?: number): void;
         /**
         * Go through and set the specified variable to the specified value on all members of the group.
         *
-        * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
-        * @param	Value			The value you want to assign to that variable.
-        * @param	Recurse			Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
+        * @param {string} VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
+        * @param {Object} Value The value you want to assign to that variable.
+        * @param {boolean} Recurse	Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
         */
         public setAll(VariableName: string, Value: Object, Recurse?: bool): void;
         /**
         * Go through and call the specified function on all members of the group.
         * Currently only works on functions that have no required parameters.
         *
-        * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
-        * @param	Recurse			Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
+        * @param {string} FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
+        * @param {boolean} Recurse	Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
         */
         public callAll(FunctionName: string, Recurse?: bool): void;
+        /**
+        * @param {function} callback
+        * @param {boolean} recursive
+        */
         public forEach(callback, recursive?: bool): void;
+        /**
+        * @param {any} context
+        * @param {function} callback
+        * @param {boolean} recursive
+        */
         public forEachAlive(context, callback, recursive?: bool): void;
         /**
         * Call this function to retrieve the first object with exists == false in the group.
         * This is handy for recycling in general, e.g. respawning enemies.
         *
-        * @param	ObjectClass		An optional parameter that lets you narrow the results to instances of this particular class.
+        * @param {any} [ObjectClass] An optional parameter that lets you narrow the results to instances of this particular class.
         *
-        * @return	A <code>Basic</code> currently flagged as not existing.
+        * @return {any} A <code>Basic</code> currently flagged as not existing.
         */
         public getFirstAvailable(ObjectClass?);
         /**
         * Call this function to retrieve the first index set to 'null'.
         * Returns -1 if no index stores a null object.
         *
-        * @return	An <code>int</code> indicating the first null slot in the group.
+        * @return {number} An <code>int</code> indicating the first null slot in the group.
         */
         public getFirstNull(): number;
         /**
         * Call this function to retrieve the first object with exists == true in the group.
         * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
         *
-        * @return	A <code>Basic</code> currently flagged as existing.
+        * @return {Basic} A <code>Basic</code> currently flagged as existing.
         */
         public getFirstExtant(): Basic;
         /**
         * Call this function to retrieve the first object with dead == false in the group.
         * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
         *
-        * @return	A <code>Basic</code> currently flagged as not dead.
+        * @return {Basic} A <code>Basic</code> currently flagged as not dead.
         */
         public getFirstAlive(): Basic;
         /**
         * Call this function to retrieve the first object with dead == true in the group.
         * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
         *
-        * @return	A <code>Basic</code> currently flagged as dead.
+        * @return {Basic} A <code>Basic</code> currently flagged as dead.
         */
         public getFirstDead(): Basic;
         /**
         * Call this function to find out how many members of the group are not dead.
         *
-        * @return	The number of <code>Basic</code>s flagged as not dead.  Returns -1 if group is empty.
+        * @return {number} The number of <code>Basic</code>s flagged as not dead.  Returns -1 if group is empty.
         */
         public countLiving(): number;
         /**
         * Call this function to find out how many members of the group are dead.
         *
-        * @return	The number of <code>Basic</code>s flagged as dead.  Returns -1 if group is empty.
+        * @return {number} The number of <code>Basic</code>s flagged as dead.  Returns -1 if group is empty.
         */
         public countDead(): number;
         /**
         * Returns a member at random from the group.
         *
-        * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-        * @param	Length		Optional restriction on the number of values you want to randomly select from.
+        * @param {number} StartIndex Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+        * @param {number} Length Optional restriction on the number of values you want to randomly select from.
         *
-        * @return	A <code>Basic</code> from the members list.
+        * @return {Basic} A <code>Basic</code> from the members list.
         */
         public getRandom(StartIndex?: number, Length?: number): Basic;
         /**
@@ -3292,10 +4284,10 @@ module Phaser {
         /**
         * Helper function for the sort process.
         *
-        * @param 	Obj1	The first object being sorted.
-        * @param	Obj2	The second object being sorted.
+        * @param {Basic} Obj1 The first object being sorted.
+        * @param {Basic} Obj2 The second object being sorted.
         *
-        * @return	An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
+        * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
         */
         public sortHandler(Obj1: Basic, Obj2: Basic): number;
     }
@@ -3308,34 +4300,142 @@ module Phaser {
 */
 module Phaser {
     class Loader {
+        /**
+        * Loader constructor
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param callback {function} This will be called when assets completely loaded.
+        */
         constructor(game: Game, callback);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Array stors assets keys. So you can get that asset by its unique key.
+        */
         private _keys;
+        /**
+        * Contains all the assets file infos.
+        */
         private _fileList;
+        /**
+        * Game initialial assets loading callback.
+        */
         private _gameCreateComplete;
         private _onComplete;
         private _onFileLoad;
+        /**
+        * Indicates assets loading progress. (from 0 to 100)
+        * @type {number}
+        */
         private _progressChunk;
         private _xhr;
+        /**
+        * Length of assets queue.
+        * @type {number}
+        */
         private _queueSize;
+        /**
+        * True if game is completely loaded.
+        * @type {boolean}
+        */
         public hasLoaded: bool;
+        /**
+        * Loading progress (from 0 to 1)
+        * @type {number}
+        */
         public progress: number;
+        /**
+        * Reset loader, this will remove all loaded assets.
+        */
         public reset(): void;
         public queueSize : number;
+        /**
+        * Add a new image asset loading request with key and url.
+        * @param key {string} Unique asset key of this image file.
+        * @param url {string} URL of image file.
+        */
         public addImageFile(key: string, url: string): void;
+        /**
+        * Add a new sprite sheet loading request.
+        * @param key {string} Unique asset key of the sheet file.
+        * @param url {string} URL of sheet file.
+        * @param frameWidth {number} Width of each single frame.
+        * @param frameHeight {number} Height of each single frame.
+        * @param frameMax {number} How many frames in this sprite sheet.
+        */
         public addSpriteSheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number): void;
+        /**
+        * Add a new texture atlas loading request.
+        * @param key {string} Unique asset key of the texture atlas file.
+        * @param url {string} URL of texture atlas file.
+        * @param [jsonURL] {string} url of JSON data file.
+        * @param [jsonData] {object} JSON data object.
+        */
         public addTextureAtlas(key: string, url: string, jsonURL?: string, jsonData?): void;
+        /**
+        * Add a new audio file loading request.
+        * @param key {string} Unique asset key of the audio file.
+        * @param url {string} URL of audio file.
+        */
         public addAudioFile(key: string, url: string): void;
+        /**
+        * Add a new text file loading request.
+        * @param key {string} Unique asset key of the text file.
+        * @param url {string} URL of text file.
+        */
         public addTextFile(key: string, url: string): void;
+        /**
+        * Remove loading request of a file.
+        * @param key {string} Key of the file you want to remove.
+        */
         public removeFile(key: string): void;
+        /**
+        * Remove all file loading requests.
+        */
         public removeAll(): void;
+        /**
+        * Load assets.
+        * @param onFileLoadCallback {function} Called when each file loaded successfully.
+        * @param onCompleteCallback {function} Called when all assets completely loaded.
+        */
         public load(onFileLoadCallback?, onCompleteCallback?): void;
+        /**
+        * Load files. Private method ONLY used by loader.
+        */
         private loadFile();
+        /**
+        * Error occured when load a file.
+        * @param key {string} Key of the error loading file.
+        */
         private fileError(key);
+        /**
+        * Called when a file is successfully loaded.
+        * @param key {string} Key of the successfully loaded file.
+        */
         private fileComplete(key);
+        /**
+        * Successfully loaded a JSON file.
+        * @param key {string} Key of the loaded JSON file.
+        */
         private jsonLoadComplete(key);
+        /**
+        * Error occured when load a JSON.
+        * @param key {string} Key of the error loading JSON file.
+        */
         private jsonLoadError(key);
+        /**
+        * Handle loading next file.
+        * @param previousKey {string} Key of previous loaded asset.
+        * @param success {boolean} Whether the previous asset loaded successfully or not.
+        */
         private nextFile(previousKey, success);
+        /**
+        * Check whether asset exists with a specific key.
+        * @param key {string} Key of the asset you want to check.
+        * @return {boolean} Return true if exists, otherwise return false.
+        */
         private checkKeyExists(key);
     }
 }
@@ -3351,21 +4451,21 @@ module Phaser {
         /**
         * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
         *
-        * @param	Velocity		Any component of velocity (e.g. 20).
-        * @param	Acceleration	Rate at which the velocity is changing.
-        * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-        * @param	Max				An absolute value cap for the velocity.
+        * @param {number} Velocity Any component of velocity (e.g. 20).
+        * @param {number} Acceleration Rate at which the velocity is changing.
+        * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+        * @param {number} Max An absolute value cap for the velocity.
         *
-        * @return	The altered Velocity value.
+        * @return {number} The altered Velocity value.
         */
         public computeVelocity(Velocity: number, Acceleration?: number, Drag?: number, Max?: number): number;
         /**
         * Given the angle and speed calculate the velocity and return it as a Point
         *
-        * @param	angle	The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-        * @param	speed	The speed it will move, in pixels per second sq
+        * @param {number} angle The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+        * @param {number} speed The speed it will move, in pixels per second sq
         *
-        * @return	A Point where Point.x contains the velocity x value and Point.y contains the velocity y value
+        * @return {Point} A Point where Point.x contains the velocity x value and Point.y contains the velocity y value
         */
         public velocityFromAngle(angle: number, speed: number): Point;
         /**
@@ -3376,10 +4476,10 @@ module Phaser {
         * If you need the object to accelerate, see accelerateTowardsObject() instead
         * Note: Doesn't take into account acceleration, maxVelocity or drag (if you set drag or acceleration too high this object may not move at all)
         *
-        * @param	source		The Sprite on which the velocity will be set
-        * @param	dest		The Sprite where the source object will move to
-        * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+        * @param {GameObject} source The Sprite on which the velocity will be set
+        * @param {GameObject} dest The Sprite where the source object will move to
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
         public moveTowardsObject(source: GameObject, dest: GameObject, speed?: number, maxTime?: number): void;
         /**
@@ -3387,11 +4487,11 @@ module Phaser {
         * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
         * If you don't need acceleration look at moveTowardsObject() instead.
         *
-        * @param	source			The Sprite on which the acceleration will be set
-        * @param	dest			The Sprite where the source object will move towards
-        * @param	speed			The speed it will accelerate in pixels per second
-        * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
+        * @param {GameObject} source The Sprite on which the acceleration will be set
+        * @param {GameObject} dest The Sprite where the source object will move towards
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
         public accelerateTowardsObject(source: GameObject, dest: GameObject, speed: number, xSpeedMax: number, ySpeedMax: number): void;
         /**
@@ -3400,9 +4500,9 @@ module Phaser {
         * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
         * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
         *
-        * @param	source		The Sprite to move
-        * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+        * @param {GameObject} source The Sprite to move
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
         public moveTowardsMouse(source: GameObject, speed?: number, maxTime?: number): void;
         /**
@@ -3410,10 +4510,10 @@ module Phaser {
         * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
         * If you don't need acceleration look at moveTowardsMouse() instead.
         *
-        * @param	source			The Sprite on which the acceleration will be set
-        * @param	speed			The speed it will accelerate in pixels per second
-        * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
+        * @param {GameObject} source The Sprite on which the acceleration will be set
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
         public accelerateTowardsMouse(source: GameObject, speed: number, xSpeedMax: number, ySpeedMax: number): void;
         /**
@@ -3422,10 +4522,10 @@ module Phaser {
         * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
         * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
         *
-        * @param	source		The Sprite to move
-        * @param	target		The Point coordinates to move the source Sprite towards
-        * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+        * @param {GameObject} source The Sprite to move
+        * @param {Point} target The Point coordinates to move the source Sprite towards
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
         public moveTowardsPoint(source: GameObject, target: Point, speed?: number, maxTime?: number): void;
         /**
@@ -3433,75 +4533,75 @@ module Phaser {
         * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
         * If you don't need acceleration look at moveTowardsPoint() instead.
         *
-        * @param	source			The Sprite on which the acceleration will be set
-        * @param	target			The Point coordinates to move the source Sprite towards
-        * @param	speed			The speed it will accelerate in pixels per second
-        * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
+        * @param {GameObject} source The Sprite on which the acceleration will be set
+        * @param {Point} target The Point coordinates to move the source Sprite towards
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
         public accelerateTowardsPoint(source: GameObject, target: Point, speed: number, xSpeedMax: number, ySpeedMax: number): void;
         /**
         * Find the distance (in pixels, rounded) between two Sprites, taking their origin into account
         *
-        * @param	a	The first Sprite
-        * @param	b	The second Sprite
-        * @return	int	Distance (in pixels)
+        * @param {GameObject} a The first Sprite
+        * @param {GameObject} b The second Sprite
+        * @return {number} int Distance (in pixels)
         */
         public distanceBetween(a: GameObject, b: GameObject): number;
         /**
         * Find the distance (in pixels, rounded) from an Sprite to the given Point, taking the source origin into account
         *
-        * @param	a		The Sprite
-        * @param	target	The Point
-        * @return	int		Distance (in pixels)
+        * @param {GameObject} a The Sprite
+        * @param {Point} target The Point
+        * @return {number} Distance (in pixels)
         */
         public distanceToPoint(a: GameObject, target: Point): number;
         /**
         * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
         *
-        * @param	a	The Sprite to test against
-        * @return	int	The distance between the given sprite and the mouse coordinates
+        * @param {GameObject} a  Sprite to test against
+        * @return {number} The distance between the given sprite and the mouse coordinates
         */
         public distanceToMouse(a: GameObject): number;
         /**
         * Find the angle (in radians) between an Sprite and an Point. The source sprite takes its x/y and origin into account.
         * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
         *
-        * @param	a			The Sprite to test from
-        * @param	target		The Point to angle the Sprite towards
-        * @param	asDegrees	If you need the value in degrees instead of radians, set to true
+        * @param {GameObject} a The Sprite to test from
+        * @param {Point} target The Point to angle the Sprite towards
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
         *
-        * @return	Number The angle (in radians unless asDegrees is true)
+        * @return {number} The angle (in radians unless asDegrees is true)
         */
         public angleBetweenPoint(a: GameObject, target: Point, asDegrees?: bool): number;
         /**
         * Find the angle (in radians) between the two Sprite, taking their x/y and origin into account.
         * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
         *
-        * @param	a			The Sprite to test from
-        * @param	b			The Sprite to test to
-        * @param	asDegrees	If you need the value in degrees instead of radians, set to true
+        * @param {GameObject} a The Sprite to test from
+        * @param {GameObject} b The Sprite to test to
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
         *
-        * @return	Number The angle (in radians unless asDegrees is true)
+        * @return {number} The angle (in radians unless asDegrees is true)
         */
         public angleBetween(a: GameObject, b: GameObject, asDegrees?: bool): number;
         /**
         * Given the GameObject and speed calculate the velocity and return it as an Point based on the direction the sprite is facing
         *
-        * @param	parent	The Sprite to get the facing value from
-        * @param	speed	The speed it will move, in pixels per second sq
+        * @param {GameObject} parent The Sprite to get the facing value from
+        * @param {number} speed The speed it will move, in pixels per second sq
         *
-        * @return	An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
+        * @return {Point} An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
         */
         public velocityFromFacing(parent: GameObject, speed: number): Point;
         /**
         * Find the angle (in radians) between an Sprite and the mouse, taking their x/y and origin into account.
         * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
         *
-        * @param	a			The Object to test from
-        * @param	asDegrees	If you need the value in degrees instead of radians, set to true
+        * @param {GameObject} a The Object to test from
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
         *
-        * @return	Number The angle (in radians unless asDegrees is true)
+        * @return {number} The angle (in radians unless asDegrees is true)
         */
         public angleBetweenMouse(a: GameObject, asDegrees?: bool): number;
     }
@@ -3513,21 +4613,59 @@ module Phaser {
 */
 module Phaser {
     class Sound {
+        /**
+        * Sound constructor
+        * @param context {object} The AudioContext instance.
+        * @param gainNode {object} Gain node instance.
+        * @param data {object} Sound data.
+        * @param [volume] {number} volume of this sound when playing.
+        * @param [loop] {boolean} loop this sound when playing? (Default to false)
+        */
         constructor(context, gainNode, data, volume?: number, loop?: bool);
+        /**
+        * Local private reference to AudioContext.
+        */
         private _context;
+        /**
+        * Reference to gain node of SoundManager.
+        */
         private _gainNode;
+        /**
+        * GainNode of this sound.
+        */
         private _localGainNode;
+        /**
+        * Decoded data buffer.
+        */
         private _buffer;
+        /**
+        * Volume of this sound.
+        */
         private _volume;
+        /**
+        * The real sound object (buffer source).
+        */
         private _sound;
         public loop: bool;
         public duration: number;
         public isPlaying: bool;
         public isDecoding: bool;
         public setDecodedBuffer(data): void;
+        /**
+        * Play this sound.
+        */
         public play(): void;
+        /**
+        * Stop playing this sound.
+        */
         public stop(): void;
+        /**
+        * Mute the sound.
+        */
         public mute(): void;
+        /**
+        * Enable the sound.
+        */
         public unmute(): void;
         public volume : number;
     }
@@ -3539,15 +4677,51 @@ module Phaser {
 */
 module Phaser {
     class SoundManager {
+        /**
+        * SoundManager constructor
+        * Create a new <code>SoundManager</code>.
+        */
         constructor(game: Game);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Reference to AudioContext instance.
+        */
         private _context;
+        /**
+        * Gain node created from audio context.
+        */
         private _gainNode;
+        /**
+        * Volume of sounds.
+        * @type {number}
+        */
         private _volume;
+        /**
+        * Mute sounds.
+        */
         public mute(): void;
+        /**
+        * Enable sounds.
+        */
         public unmute(): void;
         public volume : number;
+        /**
+        * Decode a sound with its assets key.
+        * @param key {string} Assets key of the sound to be decoded.
+        * @param callback {function} This will be invoked when finished decoding.
+        * @param [sound] {Sound} its bufer will be set to decoded data.
+        */
         public decode(key: string, callback?, sound?: Sound): void;
+        /**
+        * Play a sound with its assets key.
+        * @param key {string} Assets key of the sound you want to play.
+        * @param [volume] {number} volume of the sound you want to play.
+        * @param [loop] {boolean} loop when it finished playing? (Default to false)
+        * @return {Sound} The playing sound object.
+        */
         public play(key: string, volume?: number, loop?: bool): Sound;
     }
 }
@@ -3574,25 +4748,111 @@ module Phaser {
 *
 * This class controls the scaling of your game. On mobile devices it will also remove the URL bar and allow
 * you to maintain proportion and aspect ratio.
-* It is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
+* The resizing method is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
 */
 module Phaser {
     class StageScaleMode {
+        /**
+        * StageScaleMode constructor
+        */
         constructor(game: Game);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Stage height when start the game.
+        * @type {number}
+        */
         private _startHeight;
         private _iterations;
         private _check;
+        /**
+        * Specifies that the game be visible in the specified area without trying to preserve the original aspect ratio.
+        * @type {number}
+        */
         static EXACT_FIT: number;
+        /**
+        * Specifies that the size of the game be fixed, so that it remains unchanged even if the size of the window changes.
+        * @type {number}
+        */
         static NO_SCALE: number;
+        /**
+        * Specifies that the entire game be visible in the specified area without distortion while maintaining the original aspect ratio.
+        * @type {number}
+        */
         static SHOW_ALL: number;
+        /**
+        * Minimum width the canvas should be scaled to (in pixels)
+        * @type {number}
+        */
+        public minWidth: number;
+        /**
+        * Maximum width the canvas should be scaled to (in pixels).
+        * If null it will scale to whatever width the browser can handle.
+        * @type {number}
+        */
+        public maxWidth: number;
+        /**
+        * Minimum height the canvas should be scaled to (in pixels)
+        * @type {number}
+        */
+        public minHeight: number;
+        /**
+        * Maximum height the canvas should be scaled to (in pixels).
+        * If null it will scale to whatever height the browser can handle.
+        * @type {number}
+        */
+        public maxHeight: number;
+        /**
+        * Width of the stage after calculation.
+        * @type {number}
+        */
         public width: number;
+        /**
+        * Height of the stage after calculation.
+        * @type {number}
+        */
         public height: number;
-        public orientation;
+        /**
+        * Window orientation angle (90 and -90 are landscape, 0 is portrait)
+        * @type {number}
+        */
+        public orientation: number;
+        /**
+        * A Signal that is dispatched when the device enters landscape mode from portrait
+        * @type {Signal}
+        */
+        public enterLandscape: Signal;
+        /**
+        * A Signal that is dispatched when the device enters portrait mode from landscape
+        * @type {Signal}
+        */
+        public enterPortrait: Signal;
+        public isFullScreen : bool;
+        public startFullScreen(): void;
+        public stopFullScreen(): void;
+        /**
+        * The core update loop, called by Phaser.Stage
+        */
         public update(): void;
+        public isPortrait : bool;
         public isLandscape : bool;
+        /**
+        * Handle window.orientationchange events
+        */
         private checkOrientation(event);
+        /**
+        * Handle window.resize events
+        */
+        private checkResize(event);
+        /**
+        * Re-calculate scale mode and update screen size.
+        */
         private refresh();
+        /**
+        * Set screen size automatically based on the scaleMode.
+        */
         private setScreenSize();
     }
 }
@@ -3603,15 +4863,50 @@ module Phaser {
 */
 module Phaser {
     class BootScreen {
+        /**
+        * BootScreen constructor
+        * Create a new <code>BootScreen</code> with specific width and height.
+        *
+        * @param width {number} Screen canvas width.
+        * @param height {number} Screen canvas height.
+        */
         constructor(game: Game);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Engine logo.
+        */
         private _logo;
+        /**
+        * Engine logo image data.
+        */
         private _logoData;
+        /**
+        * Background gradient effect color 1.
+        */
         private _color1;
+        /**
+        * Background gradient effect color 2.
+        */
         private _color2;
+        /**
+        * Fade effect tween.
+        * @type {Phaser.Tween}
+        */
         private _fade;
+        /**
+        * Update color and fade.
+        */
         public update(): void;
+        /**
+        * Render BootScreen.
+        */
         public render(): void;
+        /**
+        * Start color fading cycle.
+        */
         private colorCycle();
     }
 }
@@ -3622,17 +4917,60 @@ module Phaser {
 */
 module Phaser {
     class PauseScreen {
+        /**
+        * PauseScreen constructor
+        * Create a new <code>PauseScreen</code> with specific width and height.
+        *
+        * @param width {number} Screen canvas width.
+        * @param height {number} Screen canvas height.
+        */
         constructor(game: Game, width: number, height: number);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Canvas element used by engine.
+        * @type {HTMLCanvasElement}
+        */
         private _canvas;
+        /**
+        * Render context of stage's canvas.
+        * @type {CanvasRenderingContext2D}
+        */
         private _context;
+        /**
+        * Background color.
+        */
         private _color;
+        /**
+        * Fade effect tween.
+        * @type {Phaser.Tween}
+        */
         private _fade;
+        /**
+        * Called when the game enters pause mode.
+        */
         public onPaused(): void;
+        /**
+        * Called when the game resume from pause mode.
+        */
         public onResume(): void;
+        /**
+        * Update background color.
+        */
         public update(): void;
+        /**
+        * Render PauseScreen.
+        */
         public render(): void;
+        /**
+        * Start fadeOut effect.
+        */
         private fadeOut();
+        /**
+        * Start fadeIn effect.
+        */
         private fadeIn();
     }
 }
@@ -3644,34 +4982,120 @@ module Phaser {
 */
 module Phaser {
     class Stage {
+        /**
+        * Stage constructor
+        *
+        * Create a new <code>Stage</code> with specific width and height.
+        *
+        * @param parent {number} ID of parent DOM element.
+        * @param width {number} Width of the stage.
+        * @param height {number} Height of the stage.
+        */
         constructor(game: Game, parent: string, width: number, height: number);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Background color of the stage (defaults to black)
+        * @type {string}
+        */
         private _bgColor;
+        /**
+        * This will be displayed when Phaser is started without any default functions or State
+        * @type {BootScreen}
+        */
         private _bootScreen;
+        /**
+        * This will be displayed whenever the game loses focus or the player switches to another browser tab.
+        * @type {PauseScreen}
+        */
         private _pauseScreen;
-        static ORIENTATION_LANDSCAPE: number;
-        static ORIENTATION_PORTRAIT: number;
+        /**
+        * Bound of this stage.
+        * @type {Rectangle}
+        */
         public bounds: Rectangle;
+        /**
+        * Asperct ratio, thus: width / height.
+        * @type {number}
+        */
         public aspectRatio: number;
+        /**
+        * Clear the whole stage every frame? (Default to true)
+        * @type {boolean}
+        */
         public clear: bool;
+        /**
+        * Canvas element used by engine.
+        * @type {HTMLCanvasElement}
+        */
         public canvas: HTMLCanvasElement;
+        /**
+        * Render context of stage's canvas.
+        * @type {CanvasRenderingContext2D}
+        */
         public context: CanvasRenderingContext2D;
+        /**
+        * Do not use pause screen when game is paused?
+        * (Default to false, aka always use PauseScreen)
+        * @type {boolean}
+        */
         public disablePauseScreen: bool;
+        /**
+        * Do not use boot screen when engine starts?
+        * (Default to false, aka always use BootScreen)
+        * @type {boolean}
+        */
         public disableBootScreen: bool;
+        /**
+        * Offset from this stage to the canvas element.
+        * @type {Point}
+        */
         public offset: Point;
+        /**
+        * This object manages scaling of the game, see(StageScaleMode).
+        * @type {StageScaleMode}
+        */
         public scale: StageScaleMode;
+        /**
+        * Which mode will the game be scaled.
+        * Available: StageScaleMode.EXACT_FIT, StageScaleMode.NO_SCALE, StageScaleMode.SHOW_ALL.
+        * @type {number}
+        */
         public scaleMode: number;
-        public minScaleX: number;
-        public maxScaleX: number;
-        public minScaleY: number;
-        public maxScaleY: number;
+        /**
+        * Update stage for rendering. This will handle scaling, clearing
+        * and PauseScreen/BootScreen updating and rendering.
+        */
         public update(): void;
+        /**
+        * This method is called when the canvas elements visibility is changed.
+        */
         private visibilityChange(event);
         private getOffset(element);
+        /**
+        * Canvas strokeStyle.
+        * @type {string}
+        */
         public strokeStyle: string;
+        /**
+        * Canvas lineWidth.
+        * @type {number}
+        */
         public lineWidth: number;
+        /**
+        * Canvas fillStyle.
+        * @type {string}
+        */
         public fillStyle: string;
+        /**
+        * Save current canvas properties (strokeStyle, lineWidth and fillStyle) for later using.
+        */
         public saveCanvasValues(): void;
+        /**
+        * Restore current canvas values (strokeStyle, lineWidth and fillStyle) with saved values.
+        */
         public restoreCanvasValues(): void;
         public backgroundColor : string;
         public x : number;
@@ -3691,27 +5115,49 @@ module Phaser {
 */
 module Phaser {
     class Time {
+        /**
+        * Time constructor
+        * Create a new <code>Time</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        */
         constructor(game: Game);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Time when this object created.
+        * @param {number}
+        */
         private _started;
+        /**
+        * Time scale factor.
+        * Set it to 0.5 for slow motion, to 2.0 makes game twice faster.
+        * @type {number}
+        */
         public timeScale: number;
+        /**
+        * Elapsed since last frame.
+        * @type {number}
+        */
         public elapsed: number;
         /**
-        *
+        * Game time counter.
         * @property time
-        * @type Number
+        * @type {number}
         */
         public time: number;
         /**
-        *
+        * Time of current frame.
         * @property now
-        * @type Number
+        * @type {number}
         */
         public now: number;
         /**
-        *
+        * Elapsed time since last frame.
         * @property delta
-        * @type Number
+        * @type {number}
         */
         public delta: number;
         /**
@@ -3720,34 +5166,64 @@ module Phaser {
         * @return {Number}
         */
         public totalElapsedSeconds : number;
+        /**
+        * Frames per second.
+        * @type {number}
+        */
         public fps: number;
+        /**
+        * Minimal fps.
+        * @type {number}
+        */
         public fpsMin: number;
+        /**
+        * Maximal fps.
+        * @type {number}
+        */
         public fpsMax: number;
+        /**
+        * Mininal duration between 2 frames.
+        * @type {number}
+        */
         public msMin: number;
+        /**
+        * Maximal duration between 2 frames.
+        * @type {number}
+        */
         public msMax: number;
+        /**
+        * How many frames in last second.
+        * @type {number}
+        */
         public frames: number;
+        /**
+        * Time of last second.
+        * @type {number}
+        */
         private _timeLastSecond;
         /**
-        *
+        * Update clock and calculate the fps.
+        * This is called automatically by Game._raf
         * @method update
+        * @param {number} raf The current timestamp, either performance.now or Date.now
         */
-        public update(): void;
+        public update(raf: number): void;
         /**
-        *
+        * How long has passed since given time.
         * @method elapsedSince
-        * @param {Number} since
-        * @return {Number}
+        * @param {number} since The time you want to measure.
+        * @return {number} Duration between given time and now.
         */
         public elapsedSince(since: number): number;
         /**
-        *
+        * How long has passed since give time (in seconds).
         * @method elapsedSecondsSince
-        * @param {Number} since
-        * @return {Number}
+        * @param {number} since The time you want to measure (in seconds).
+        * @return {number} Duration between given time and now (in seconds).
         */
         public elapsedSecondsSince(since: number): number;
         /**
-        *
+        * Set the start time to now.
         * @method reset
         */
         public reset(): void;
@@ -3890,31 +5366,108 @@ module Phaser.Easing {
 */
 module Phaser {
     class Tween {
+        /**
+        * Tween constructor
+        * Create a new <code>Tween</code>.
+        *
+        * @param object {object} Target object will be affected by this tween.
+        * @param game {Phaser.Game} Current game instance.
+        */
         constructor(object, game: Game);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Manager of this tween.
+        * @type {Phaser.TweenManager}
+        */
         private _manager;
+        /**
+        * Reference to the target object.
+        * @type {object}
+        */
         private _object;
         private _pausedTime;
+        /**
+        * Start values container.
+        * @type {object}
+        */
         private _valuesStart;
+        /**
+        * End values container.
+        * @type {object}
+        */
         private _valuesEnd;
+        /**
+        * How long this tween will perform.
+        * @type {number}
+        */
         private _duration;
         private _delayTime;
         private _startTime;
+        /**
+        * Easing function which actually updating this tween.
+        * @type {function}
+        */
         private _easingFunction;
         private _interpolationFunction;
+        /**
+        * Contains chained tweens.
+        * @type {Tweens[]}
+        */
         private _chainedTweens;
+        /**
+        * Signal to be dispatched when this tween start.
+        * @type {Phaser.Signal}
+        */
         public onStart: Signal;
+        /**
+        * Signal to be dispatched when this tween updating.
+        * @type {Phaser.Signal}
+        */
         public onUpdate: Signal;
+        /**
+        * Signal to be dispatched when this tween completed.
+        * @type {Phaser.Signal}
+        */
         public onComplete: Signal;
+        /**
+        * Config the tween result.
+        * @param properties {object} Propertis you want to tween.
+        * @param [duration] {number} duration of this tween.
+        * @param ease {any} Easing function.
+        * @param autoStart {boolean} Whether this tween will start automatically or not.
+        * @return {Tween} Itself.
+        */
         public to(properties, duration?: number, ease?: any, autoStart?: bool): Tween;
+        /**
+        * Start to tween.
+        */
         public start(): Tween;
+        /**
+        * Stop tweening.
+        */
         public stop(): Tween;
         public parent : Game;
         public delay : number;
         public easing : any;
         public interpolation : any;
+        /**
+        * Add another chained tween, which will start automatically when the one before it completes.
+        * @param tween {Phaser.Tween} Tween object you want to chain with this.
+        * @return {Phaser.Tween} Itselfe.
+        */
         public chain(tween: Tween): Tween;
+        /**
+        * Debug value?
+        */
         public debugValue;
+        /**
+        * Update tweening.
+        * @param time {number} Current time from game clock.
+        * @return {boolean} Return false if this completed and no need to update, otherwise return true.
+        */
         public update(time): bool;
     }
 }
@@ -3929,14 +5482,53 @@ module Phaser {
 */
 module Phaser {
     class TweenManager {
+        /**
+        * TweenManager constructor
+        * @param game {Game} A reference to the current Game.
+        */
         constructor(game: Game);
+        /**
+        * Local private reference to Game
+        */
         private _game;
+        /**
+        * Local private array which is the container of all tween objects.
+        */
         private _tweens;
+        /**
+        * Get all the tween objects in an array.
+        * @return {Phaser.Tween[]} Array with all tween objects.
+        */
         public getAll(): Tween[];
+        /**
+        * Remove all tween objects.
+        */
         public removeAll(): void;
+        /**
+        * Create a tween object for a specific object.
+        *
+        * @param object {object} Object you wish the tween will affect.
+        * @return {Phaser.Tween} The newly created tween object.
+        */
         public create(object): Tween;
+        /**
+        * Add an exist tween object to the manager.
+        *
+        * @param tween {Phaser.Tween} The tween object you want to add.
+        * @return {Phaser.Tween} The tween object you added to the manager.
+        */
         public add(tween: Tween): Tween;
+        /**
+        * Remove a tween from this manager.
+        *
+        * @param tween {Phaser.Tween} The tween object you want to remove.
+        */
         public remove(tween: Tween): void;
+        /**
+        * Update all the tween objects you added to this manager.
+        *
+        * @return {boolean} Return false if there's no tween to update, otherwise return true.
+        */
         public update(): bool;
     }
 }
@@ -3949,15 +5541,57 @@ module Phaser {
 */
 module Phaser {
     class World {
+        /**
+        * World constructor
+        * Create a new <code>World</code> with specific width and height.
+        *
+        * @param width {number} Width of the world bound.
+        * @param height {number} Height of the world bound.
+        */
         constructor(game: Game, width: number, height: number);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * Camera manager of this world.
+        * @type {CameraManager}
+        */
         public cameras: CameraManager;
+        /**
+        * Object container stores every object created with `create*` methods.
+        * @type {Group}
+        */
         public group: Group;
+        /**
+        * Bound of this world that objects can not escape from.
+        * @type {Rectangle}
+        */
         public bounds: Rectangle;
+        /**
+        * @type {number}
+        */
         public worldDivisions: number;
+        /**
+        * This is called automatically every frame, and is where main logic performs.
+        */
         public update(): void;
+        /**
+        * Render every thing to the screen, automatically called after update().
+        */
         public render(): void;
+        /**
+        * Clean up memory.
+        */
         public destroy(): void;
+        /**
+        * Update size of this world with specific width and height.
+        * You can choose update camera bounds automatically or not.
+        *
+        * @param width {number} New width of the world.
+        * @param height {number} New height of the world.
+        * @param [updateCameraBounds] {boolean} update camera bounds automatically or not. Default to true.
+        */
         public setSize(width: number, height: number, updateCameraBounds?: bool): void;
         public width : number;
         public height : number;
@@ -3965,16 +5599,98 @@ module Phaser {
         public centerY : number;
         public randomX : number;
         public randomY : number;
+        /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
         public createCamera(x: number, y: number, width: number, height: number): Camera;
+        /**
+        * Remove a new camera with its id.
+        *
+        * @param id {number} ID of the camera you want to remove.
+        * @returns {boolean}   True if successfully removed the camera, otherwise return false.
+        */
         public removeCamera(id: number): bool;
+        /**
+        * Get all the cameras.
+        *
+        * @returns {array} An array contains all the cameras.
+        */
         public getAllCameras(): Camera[];
+        /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param [key] {string} key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        */
         public createSprite(x: number, y: number, key?: string): Sprite;
+        /**
+        * Create a new GeomSprite with specific position.
+        *
+        * @param x {number} X position of the new geom sprite.
+        * @param y {number} Y position of the new geom sprite.
+        * @returns {GeomSprite} The newly created geom sprite object.
+        */
         public createGeomSprite(x: number, y: number): GeomSprite;
+        /**
+        * Create a new DynamicTexture with specific size.
+        *
+        * @param width {number} Width of the texture.
+        * @param height {number} Height of the texture.
+        * @returns {DynamicTexture} The newly created dynamic texture object.
+        */
         public createDynamicTexture(width: number, height: number): DynamicTexture;
+        /**
+        * Create a new object container.
+        *
+        * @param [MaxSize] {number} capacity of this group.
+        * @returns {Group} The newly created group.
+        */
         public createGroup(MaxSize?: number): Group;
+        /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {number} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width {number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
         public createScrollZone(key: string, x?: number, y?: number, width?: number, height?: number): ScrollZone;
+        /**
+        * Create a new Tilemap.
+        *
+        * @param key {string} Key for tileset image.
+        * @param mapData {string} Data of this tilemap.
+        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+        * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
+        * @param [tileWidth] {number} width of each tile.
+        * @param [tileHeight] {number} height of each tile.
+        * @return {Tilemap} The newly created tilemap object.
+        */
         public createTilemap(key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number): Tilemap;
+        /**
+        * Create a new Particle.
+        *
+        * @return {Particle} The newly created particle object.
+        */
         public createParticle(): Particle;
+        /**
+        * Create a new Emitter.
+        *
+        * @param [x] {number} x position of the emitter.
+        * @param [y] {number} y position of the emitter.
+        * @param [size] {number} size of this emitter.
+        * @return {Emitter} The newly created emitter object.
+        */
         public createEmitter(x?: number, y?: number, size?: number): Emitter;
     }
 }
@@ -3987,257 +5703,218 @@ module Phaser {
 module Phaser {
     class Device {
         /**
-        *
-        * @constructor
-        * @return {Device} This Object
+        * Device constructor
         */
         constructor();
+        /**
+        * Is running desktop?
+        * @type {boolean}
+        */
         public desktop: bool;
         /**
-        *
-        * @property iOS
-        * @type Boolean
+        * Is running on iOS?
+        * @type {boolean}
         */
         public iOS: bool;
         /**
-        *
-        * @property android
-        * @type Boolean
+        * Is running on android?
+        * @type {boolean}
         */
         public android: bool;
         /**
-        *
-        * @property chromeOS
-        * @type Boolean
+        * Is running on chromeOS?
+        * @type {boolean}
         */
         public chromeOS: bool;
         /**
-        *
-        * @property linux
-        * @type Boolean
+        * Is running on linux?
+        * @type {boolean}
         */
         public linux: bool;
         /**
-        *
-        * @property maxOS
-        * @type Boolean
+        * Is running on maxOS?
+        * @type {boolean}
         */
         public macOS: bool;
         /**
-        *
-        * @property windows
-        * @type Boolean
+        * Is running on windows?
+        * @type {boolean}
         */
         public windows: bool;
         /**
-        *
-        * @property canvas
-        * @type Boolean
+        * Is canvas available?
+        * @type {boolean}
         */
         public canvas: bool;
         /**
-        *
-        * @property file
-        * @type Boolean
+        * Is file available?
+        * @type {boolean}
         */
         public file: bool;
         /**
-        *
-        * @property fileSystem
-        * @type Boolean
+        * Is fileSystem available?
+        * @type {boolean}
         */
         public fileSystem: bool;
         /**
-        *
-        * @property localStorage
-        * @type Boolean
+        * Is localStorage available?
+        * @type {boolean}
         */
         public localStorage: bool;
         /**
-        *
-        * @property webGL
-        * @type Boolean
+        * Is webGL available?
+        * @type {boolean}
         */
         public webGL: bool;
         /**
-        *
-        * @property worker
-        * @type Boolean
+        * Is worker available?
+        * @type {boolean}
         */
         public worker: bool;
         /**
-        *
-        * @property touch
-        * @type Boolean
+        * Is touch available?
+        * @type {boolean}
         */
         public touch: bool;
         /**
-        *
-        * @property css3D
-        * @type Boolean
+        * Is css3D available?
+        * @type {boolean}
         */
         public css3D: bool;
         /**
-        *
-        * @property arora
-        * @type Boolean
+        * Is running in arora?
+        * @type {boolean}
         */
         public arora: bool;
         /**
-        *
-        * @property chrome
-        * @type Boolean
+        * Is running in chrome?
+        * @type {boolean}
         */
         public chrome: bool;
         /**
-        *
-        * @property epiphany
-        * @type Boolean
+        * Is running in epiphany?
+        * @type {boolean}
         */
         public epiphany: bool;
         /**
-        *
-        * @property firefox
-        * @type Boolean
+        * Is running in firefox?
+        * @type {boolean}
         */
         public firefox: bool;
         /**
-        *
-        * @property ie
-        * @type Boolean
+        * Is running in ie?
+        * @type {boolean}
         */
         public ie: bool;
         /**
-        *
-        * @property ieVersion
+        * Version of ie?
         * @type Number
         */
         public ieVersion: number;
         /**
-        *
-        * @property mobileSafari
-        * @type Boolean
+        * Is running in mobileSafari?
+        * @type {boolean}
         */
         public mobileSafari: bool;
         /**
-        *
-        * @property midori
-        * @type Boolean
+        * Is running in midori?
+        * @type {boolean}
         */
         public midori: bool;
         /**
-        *
-        * @property opera
-        * @type Boolean
+        * Is running in opera?
+        * @type {boolean}
         */
         public opera: bool;
         /**
-        *
-        * @property safari
-        * @type Boolean
+        * Is running in safari?
+        * @type {boolean}
         */
         public safari: bool;
         public webApp: bool;
         /**
-        *
-        * @property audioData
-        * @type Boolean
+        * Is audioData available?
+        * @type {boolean}
         */
         public audioData: bool;
         /**
-        *
-        * @property webaudio
-        * @type Boolean
+        * Is webaudio available?
+        * @type {boolean}
         */
         public webaudio: bool;
         /**
-        *
-        * @property ogg
-        * @type Boolean
+        * Is ogg available?
+        * @type {boolean}
         */
         public ogg: bool;
         /**
-        *
-        * @property mp3
-        * @type Boolean
+        * Is mp3 available?
+        * @type {boolean}
         */
         public mp3: bool;
         /**
-        *
-        * @property wav
-        * @type Boolean
+        * Is wav available?
+        * @type {boolean}
         */
         public wav: bool;
         /**
-        *
-        * @property m4a
-        * @type Boolean
+        * Is m4a available?
+        * @type {boolean}
         */
         public m4a: bool;
         /**
-        *
-        * @property iPhone
-        * @type Boolean
+        * Is running on iPhone?
+        * @type {boolean}
         */
         public iPhone: bool;
         /**
-        *
-        * @property iPhone4
-        * @type Boolean
+        * Is running on iPhone4?
+        * @type {boolean}
         */
         public iPhone4: bool;
         /**
-        *
-        * @property iPad
-        * @type Boolean
+        * Is running on iPad?
+        * @type {boolean}
         */
         public iPad: bool;
         /**
-        *
-        * @property pixelRatio
+        * PixelRatio of the host device?
         * @type Number
         */
         public pixelRatio: number;
         /**
-        *
-        * @method _checkOS
+        * Check which OS is game running on.
         * @private
         */
         private _checkOS();
         /**
-        *
-        * @method _checkFeatures
+        * Check HTML5 features of the host environment.
         * @private
         */
         private _checkFeatures();
         /**
-        *
-        * @method _checkBrowser
+        * Check what browser is game running in.
         * @private
         */
         private _checkBrowser();
         /**
-        *
-        * @method _checkAudio
+        * Check audio support.
         * @private
         */
         private _checkAudio();
         /**
-        *
-        * @method _checkDevice
+        * Check PixelRatio of devices.
         * @private
         */
         private _checkDevice();
         /**
-        *
-        * @method _checkCSS3D
+        * Check whether the host environment support 3D CSS.
         * @private
         */
         private _checkCSS3D();
         /**
-        *
-        * @method getAll
-        * @return {String}
+        * Get all informations of host device.
+        * @return {string} Informations in a string.
         */
         public getAll(): string;
     }
@@ -4392,21 +6069,17 @@ module Phaser {
         * @param {Any} callback
         * @return {RequestAnimationFrame} This object.
         */
-        constructor(callback, callbackContext);
+        constructor(game: Game, callback);
         /**
-        *
-        * @property _callback
+        * Local private reference to game.
+        */
+        private _game;
+        /**
+        * The function to be called each frame. Will be called in the context of _game
+        * @property callback
         * @type Any
-        * @private
         **/
-        private _callback;
-        private _callbackContext;
-        /**
-        *
-        * @method callback
-        * @param {Any} callback
-        **/
-        public setCallback(callback): void;
+        public callback;
         /**
         *
         * @property _timeOutID
@@ -4435,39 +6108,408 @@ module Phaser {
         public isUsingRAF(): bool;
         /**
         *
-        * @property lastTime
-        * @type Number
-        **/
-        public lastTime: number;
-        /**
-        *
-        * @property currentTime
-        * @type Number
-        **/
-        public currentTime: number;
-        /**
-        *
         * @property isRunning
         * @type Boolean
         **/
         public isRunning: bool;
         /**
-        *
+        * Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
         * @method start
         * @param {Any} [callback]
         **/
         public start(callback?): void;
         /**
-        *
+        * Stops the requestAnimationFrame from running
         * @method stop
         **/
         public stop(): void;
-        public RAFUpdate(): void;
         /**
-        *
+        * The update method for the requestAnimationFrame
+        * @method RAFUpdate
+        **/
+        public RAFUpdate(time: number): void;
+        /**
+        * The update method for the setTimeout
         * @method SetTimeoutUpdate
         **/
         public SetTimeoutUpdate(): void;
+    }
+}
+/**
+* Phaser - Finger
+*
+* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
+*/
+module Phaser {
+    class Finger {
+        /**
+        * Constructor
+        * @param {Phaser.Game} game.
+        * @return {Phaser.Finger} This object.
+        */
+        constructor(game: Game);
+        /**
+        *
+        * @property _game
+        * @type {Phaser.Game}
+        * @private
+        **/
+        private _game;
+        /**
+        * An identification number for each touch point. When a touch point becomes active, it must be assigned an identifier that is distinct from any other active touch point. While the touch point remains active, all events that refer to it must assign it the same identifier.
+        * @property identifier
+        * @type {Number}
+        */
+        public identifier: number;
+        /**
+        *
+        * @property active
+        * @type {Boolean}
+        */
+        public active: bool;
+        /**
+        *
+        * @property point
+        * @type {Point}
+        **/
+        public point: Point;
+        /**
+        *
+        * @property circle
+        * @type {Circle}
+        **/
+        public circle: Circle;
+        /**
+        *
+        * @property withinGame
+        * @type {Boolean}
+        */
+        public withinGame: bool;
+        /**
+        * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
+        * @property clientX
+        * @type {Number}
+        */
+        public clientX: number;
+        /**
+        * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
+        * @property clientY
+        * @type {Number}
+        */
+        public clientY: number;
+        /**
+        * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
+        * @property pageX
+        * @type {Number}
+        */
+        public pageX: number;
+        /**
+        * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
+        * @property pageY
+        * @type {Number}
+        */
+        public pageY: number;
+        /**
+        * The horizontal coordinate of point relative to the screen in pixels
+        * @property screenX
+        * @type {Number}
+        */
+        public screenX: number;
+        /**
+        * The vertical coordinate of point relative to the screen in pixels
+        * @property screenY
+        * @type {Number}
+        */
+        public screenY: number;
+        /**
+        * The horizontal coordinate of point relative to the game element
+        * @property x
+        * @type {Number}
+        */
+        public x: number;
+        /**
+        * The vertical coordinate of point relative to the game element
+        * @property y
+        * @type {Number}
+        */
+        public y: number;
+        /**
+        * The Element on which the touch point started when it was first placed on the surface, even if the touch point has since moved outside the interactive area of that element.
+        * @property target
+        * @type {Any}
+        */
+        public target;
+        /**
+        *
+        * @property isDown
+        * @type {Boolean}
+        **/
+        public isDown: bool;
+        /**
+        *
+        * @property isUp
+        * @type {Boolean}
+        **/
+        public isUp: bool;
+        /**
+        *
+        * @property timeDown
+        * @type {Number}
+        **/
+        public timeDown: number;
+        /**
+        *
+        * @property duration
+        * @type {Number}
+        **/
+        public duration: number;
+        /**
+        *
+        * @property timeUp
+        * @type {Number}
+        **/
+        public timeUp: number;
+        /**
+        *
+        * @property justPressedRate
+        * @type {Number}
+        **/
+        public justPressedRate: number;
+        /**
+        *
+        * @property justReleasedRate
+        * @type {Number}
+        **/
+        public justReleasedRate: number;
+        /**
+        *
+        * @method start
+        * @param {Any} event
+        */
+        public start(event): void;
+        /**
+        *
+        * @method move
+        * @param {Any} event
+        */
+        public move(event): void;
+        /**
+        *
+        * @method leave
+        * @param {Any} event
+        */
+        public leave(event): void;
+        /**
+        *
+        * @method stop
+        * @param {Any} event
+        */
+        public stop(event): void;
+        /**
+        *
+        * @method justPressed
+        * @param {Number} [duration].
+        * @return {Boolean}
+        */
+        public justPressed(duration?: number): bool;
+        /**
+        *
+        * @method justReleased
+        * @param {Number} [duration].
+        * @return {Boolean}
+        */
+        public justReleased(duration?: number): bool;
+        /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {String} a string representation of the instance.
+        **/
+        public toString(): string;
+    }
+}
+/**
+* Phaser - MSPointer
+*
+* The MSPointer class handles touch interactions with the game and the resulting Finger objects.
+* It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
+* http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
+*
+*
+*  @todo       Gestures (pinch, zoom, swipe)
+*/
+module Phaser {
+    class MSPointer {
+        /**
+        * Constructor
+        * @param {Game} game.
+        * @return {MSPointer} This object.
+        */
+        constructor(game: Game);
+        /**
+        *
+        * @property _game
+        * @type Game
+        * @private
+        **/
+        private _game;
+        /**
+        *
+        * @property x
+        * @type Number
+        **/
+        public x: number;
+        /**
+        *
+        * @property y
+        * @type Number
+        **/
+        public y: number;
+        /**
+        *
+        * @property _fingers
+        * @type Array
+        * @private
+        **/
+        private _fingers;
+        /**
+        *
+        * @property finger1
+        * @type Finger
+        **/
+        public finger1: Finger;
+        /**
+        *
+        * @property finger2
+        * @type Finger
+        **/
+        public finger2: Finger;
+        /**
+        *
+        * @property finger3
+        * @type Finger
+        **/
+        public finger3: Finger;
+        /**
+        *
+        * @property finger4
+        * @type Finger
+        **/
+        public finger4: Finger;
+        /**
+        *
+        * @property finger5
+        * @type Finger
+        **/
+        public finger5: Finger;
+        /**
+        *
+        * @property finger6
+        * @type Finger
+        **/
+        public finger6: Finger;
+        /**
+        *
+        * @property finger7
+        * @type Finger
+        **/
+        public finger7: Finger;
+        /**
+        *
+        * @property finger8
+        * @type Finger
+        **/
+        public finger8: Finger;
+        /**
+        *
+        * @property finger9
+        * @type Finger
+        **/
+        public finger9: Finger;
+        /**
+        *
+        * @property finger10
+        * @type Finger
+        **/
+        public finger10: Finger;
+        /**
+        *
+        * @property latestFinger
+        * @type Finger
+        **/
+        public latestFinger: Finger;
+        /**
+        *
+        * @property isDown
+        * @type Boolean
+        **/
+        public isDown: bool;
+        /**
+        *
+        * @property isUp
+        * @type Boolean
+        **/
+        public isUp: bool;
+        public touchDown: Signal;
+        public touchUp: Signal;
+        /**
+        *
+        * @method start
+        */
+        public start(): void;
+        /**
+        *
+        * @method onPointerDown
+        * @param {Any} event
+        **/
+        private onPointerDown(event);
+        /**
+        *
+        * @method onPointerMove
+        * @param {Any} event
+        **/
+        private onPointerMove(event);
+        /**
+        *
+        * @method onPointerUp
+        * @param {Any} event
+        **/
+        private onPointerUp(event);
+        /**
+        *
+        * @method calculateDistance
+        * @param {Finger} finger1
+        * @param {Finger} finger2
+        **/
+        public calculateDistance(finger1: Finger, finger2: Finger): void;
+        /**
+        *
+        * @method calculateAngle
+        * @param {Finger} finger1
+        * @param {Finger} finger2
+        **/
+        public calculateAngle(finger1: Finger, finger2: Finger): void;
+        /**
+        *
+        * @method checkOverlap
+        * @param {Finger} finger1
+        * @param {Finger} finger2
+        **/
+        public checkOverlap(finger1: Finger, finger2: Finger): void;
+        /**
+        *
+        * @method update
+        */
+        public update(): void;
+        /**
+        *
+        * @method stop
+        */
+        public stop(): void;
+        /**
+        *
+        * @method reset
+        **/
+        public reset(): void;
     }
 }
 /**
@@ -4479,21 +6521,81 @@ module Phaser {
     class Input {
         constructor(game: Game);
         private _game;
+        /**
+        *
+        * @type {Mouse}
+        */
         public mouse: Mouse;
+        /**
+        *
+        * @type {Keyboard}
+        */
         public keyboard: Keyboard;
+        /**
+        *
+        * @type {Touch}
+        */
         public touch: Touch;
+        /**
+        *
+        * @type {MSPointer}
+        */
+        public mspointer: MSPointer;
+        /**
+        *
+        * @type {Number}
+        */
         public x: number;
+        /**
+        *
+        * @type {Number}
+        */
         public y: number;
+        /**
+        *
+        * @type {Number}
+        */
         public scaleX: number;
+        /**
+        *
+        * @type {Number}
+        */
         public scaleY: number;
+        /**
+        *
+        * @type {Number}
+        */
         public worldX: number;
+        /**
+        *
+        * @type {Number}
+        */
         public worldY: number;
+        /**
+        *
+        * @type {Phaser.Signal}
+        */
         public onDown: Signal;
+        /**
+        *
+        * @type {Phaser.Signal}
+        */
         public onUp: Signal;
         public update(): void;
         public reset(): void;
+        /**
+        * @param {Camera} [camera]
+        */
         public getWorldX(camera?: Camera): number;
+        /**
+        * @param {Camera} [camera]
+        */
         public getWorldY(camera?: Camera): number;
+        /**
+        * @param {Number} x
+        * @param {Number} y
+        * @param {String} [color]
+        */
         public renderDebugInfo(x: number, y: number, color?: string): void;
     }
 }
@@ -4511,14 +6613,40 @@ module Phaser {
         private _keys;
         private _capture;
         public start(): void;
+        /**
+        * @param {Any} keycode
+        */
         public addKeyCapture(keycode): void;
+        /**
+        * @param {Number} keycode
+        */
         public removeKeyCapture(keycode: number): void;
         public clearCaptures(): void;
+        /**
+        * @param {KeyboardEvent} event
+        */
         public onKeyDown(event: KeyboardEvent): void;
+        /**
+        * @param {KeyboardEvent} event
+        */
         public onKeyUp(event: KeyboardEvent): void;
         public reset(): void;
+        /**
+        * @param {Number} keycode
+        * @param {Number} [duration]
+        * @return {Boolean}
+        */
         public justPressed(keycode: number, duration?: number): bool;
+        /**
+        * @param {Number} keycode
+        * @param {Number} [duration]
+        * @return {Boolean}
+        */
         public justReleased(keycode: number, duration?: number): bool;
+        /**
+        * @param {Number} keycode
+        * @return {Boolean}
+        */
         public isDown(keycode: number): bool;
         static A: number;
         static B: number;
@@ -4635,209 +6763,41 @@ module Phaser {
         static LEFT_BUTTON: number;
         static MIDDLE_BUTTON: number;
         static RIGHT_BUTTON: number;
+        /**
+        * @type {Boolean}
+        */
         public isDown: bool;
+        /**
+        * @type {Boolean}
+        */
         public isUp: bool;
+        /**
+        * @type {Number}
+        */
         public timeDown: number;
+        /**
+        * @type {Number}
+        */
         public duration: number;
+        /**
+        * @type {Number}
+        */
         public timeUp: number;
         public start(): void;
         public reset(): void;
+        /**
+        * @param {MouseEvent} event
+        */
         public onMouseDown(event: MouseEvent): void;
         public update(): void;
+        /**
+        * @param {MouseEvent} event
+        */
         public onMouseMove(event: MouseEvent): void;
+        /**
+        * @param {MouseEvent} event
+        */
         public onMouseUp(event: MouseEvent): void;
-    }
-}
-/**
-* Phaser - Finger
-*
-* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
-*/
-module Phaser {
-    class Finger {
-        /**
-        * Constructor
-        * @param {Phaser.Game} game.
-        * @return {Phaser.Finger} This object.
-        */
-        constructor(game: Game);
-        /**
-        *
-        * @property _game
-        * @type Phaser.Game
-        * @private
-        **/
-        private _game;
-        /**
-        * An identification number for each touch point. When a touch point becomes active, it must be assigned an identifier that is distinct from any other active touch point. While the touch point remains active, all events that refer to it must assign it the same identifier.
-        * @property identifier
-        * @type Number
-        */
-        public identifier: number;
-        /**
-        *
-        * @property active
-        * @type Boolean
-        */
-        public active: bool;
-        /**
-        *
-        * @property point
-        * @type Point
-        **/
-        public point: Point;
-        /**
-        *
-        * @property circle
-        * @type Circle
-        **/
-        public circle: Circle;
-        /**
-        *
-        * @property withinGame
-        * @type Boolean
-        */
-        public withinGame: bool;
-        /**
-        * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
-        * @property clientX
-        * @type Number
-        */
-        public clientX: number;
-        /**
-        * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
-        * @property clientY
-        * @type Number
-        */
-        public clientY: number;
-        /**
-        * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
-        * @property pageX
-        * @type Number
-        */
-        public pageX: number;
-        /**
-        * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
-        * @property pageY
-        * @type Number
-        */
-        public pageY: number;
-        /**
-        * The horizontal coordinate of point relative to the screen in pixels
-        * @property screenX
-        * @type Number
-        */
-        public screenX: number;
-        /**
-        * The vertical coordinate of point relative to the screen in pixels
-        * @property screenY
-        * @type Number
-        */
-        public screenY: number;
-        /**
-        * The horizontal coordinate of point relative to the game element
-        * @property x
-        * @type Number
-        */
-        public x: number;
-        /**
-        * The vertical coordinate of point relative to the game element
-        * @property y
-        * @type Number
-        */
-        public y: number;
-        /**
-        * The Element on which the touch point started when it was first placed on the surface, even if the touch point has since moved outside the interactive area of that element.
-        * @property target
-        * @type Any
-        */
-        public target;
-        /**
-        *
-        * @property isDown
-        * @type Boolean
-        **/
-        public isDown: bool;
-        /**
-        *
-        * @property isUp
-        * @type Boolean
-        **/
-        public isUp: bool;
-        /**
-        *
-        * @property timeDown
-        * @type Number
-        **/
-        public timeDown: number;
-        /**
-        *
-        * @property duration
-        * @type Number
-        **/
-        public duration: number;
-        /**
-        *
-        * @property timeUp
-        * @type Number
-        **/
-        public timeUp: number;
-        /**
-        *
-        * @property justPressedRate
-        * @type Number
-        **/
-        public justPressedRate: number;
-        /**
-        *
-        * @property justReleasedRate
-        * @type Number
-        **/
-        public justReleasedRate: number;
-        /**
-        *
-        * @method start
-        * @param {Any} event
-        */
-        public start(event): void;
-        /**
-        *
-        * @method move
-        * @param {Any} event
-        */
-        public move(event): void;
-        /**
-        *
-        * @method leave
-        * @param {Any} event
-        */
-        public leave(event): void;
-        /**
-        *
-        * @method stop
-        * @param {Any} event
-        */
-        public stop(event): void;
-        /**
-        *
-        * @method justPressed
-        * @param {Number} [duration].
-        * @return {Boolean}
-        */
-        public justPressed(duration?: number): bool;
-        /**
-        *
-        * @method justReleased
-        * @param {Number} [duration].
-        * @return {Boolean}
-        */
-        public justReleased(duration?: number): bool;
-        /**
-        * Returns a string representation of this object.
-        * @method toString
-        * @return {string} a string representation of the instance.
-        **/
-        public toString(): string;
     }
 }
 /**
@@ -4866,105 +6826,105 @@ module Phaser {
         /**
         *
         * @property _game
-        * @type Game
+        * @type {Game}
         * @private
         **/
         private _game;
         /**
         *
         * @property x
-        * @type Number
+        * @type {Number}
         **/
         public x: number;
         /**
         *
         * @property y
-        * @type Number
+        * @type {Number}
         **/
         public y: number;
         /**
         *
         * @property _fingers
-        * @type Array
+        * @type {Array}
         * @private
         **/
         private _fingers;
         /**
         *
         * @property finger1
-        * @type Finger
+        * @type {Finger}
         **/
         public finger1: Finger;
         /**
         *
         * @property finger2
-        * @type Finger
+        * @type {Finger}
         **/
         public finger2: Finger;
         /**
         *
         * @property finger3
-        * @type Finger
+        * @type {Finger}
         **/
         public finger3: Finger;
         /**
         *
         * @property finger4
-        * @type Finger
+        * @type {Finger}
         **/
         public finger4: Finger;
         /**
         *
         * @property finger5
-        * @type Finger
+        * @type {Finger}
         **/
         public finger5: Finger;
         /**
         *
         * @property finger6
-        * @type Finger
+        * @type {Finger}
         **/
         public finger6: Finger;
         /**
         *
         * @property finger7
-        * @type Finger
+        * @type {Finger}
         **/
         public finger7: Finger;
         /**
         *
         * @property finger8
-        * @type Finger
+        * @type {Finger}
         **/
         public finger8: Finger;
         /**
         *
         * @property finger9
-        * @type Finger
+        * @type {Finger}
         **/
         public finger9: Finger;
         /**
         *
         * @property finger10
-        * @type Finger
+        * @type {Finger}
         **/
         public finger10: Finger;
         /**
         *
         * @property latestFinger
-        * @type Finger
+        * @type {Finger}
         **/
         public latestFinger: Finger;
         /**
         *
         * @property isDown
-        * @type Boolean
+        * @type {Boolean}
         **/
         public isDown: bool;
         /**
         *
         * @property isUp
-        * @type Boolean
+        * @type {Boolean}
         **/
         public isUp: bool;
         public touchDown: Signal;
@@ -5067,9 +7027,9 @@ module Phaser {
         * Creates a new <code>Emitter</code> object at a specific position.
         * Does NOT automatically generate or attach particles!
         *
-        * @param	X		The X position of the emitter.
-        * @param	Y		The Y position of the emitter.
-        * @param	Size	Optional, specifies a maximum capacity for this emitter.
+        * @param X {number} The X position of the emitter.
+        * @param Y {number} The Y position of the emitter.
+        * @param [Size] {number} specifies a maximum capacity for this emitter.
         */
         constructor(game: Game, X?: number, Y?: number, Size?: number);
         /**
@@ -5166,13 +7126,13 @@ module Phaser {
         /**
         * This function generates a new array of particle sprites to attach to the emitter.
         *
-        * @param	Graphics		If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
-        * @param	Quantity		The number of particles to generate when using the "create from image" option.
-        * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
-        * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-        * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+        * @param Graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
+        * @param Quantity {number} The number of particles to generate when using the "create from image" option.
+        * @param BakedRotations {number} How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
+        * @param Multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+        * @param Collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
         *
-        * @return	This Emitter instance (nice for chaining stuff together, if you're into that).
+        * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
         */
         public makeParticles(Graphics, Quantity?: number, BakedRotations?: number, Multiple?: bool, Collide?: number): Emitter;
         /**
@@ -5186,10 +7146,10 @@ module Phaser {
         /**
         * Call this function to start emitting particles.
         *
-        * @param	Explode		Whether the particles should all burst out at once.
-        * @param	Lifespan	How long each particle lives once emitted. 0 = forever.
-        * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-        * @param	Quantity	How many particles to launch. 0 = "all of the particles".
+        * @param Explode {boolean} Whether the particles should all burst out at once.
+        * @param Lifespan {number} How long each particle lives once emitted. 0 = forever.
+        * @param Frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+        * @param Quantity {number} How many particles to launch. 0 = "all of the particles".
         */
         public start(Explode?: bool, Lifespan?: number, Frequency?: number, Quantity?: number): void;
         /**
@@ -5199,35 +7159,35 @@ module Phaser {
         /**
         * A more compact way of setting the width and height of the emitter.
         *
-        * @param	Width	The desired width of the emitter (particles are spawned randomly within these dimensions).
-        * @param	Height	The desired height of the emitter.
+        * @param Width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
+        * @param Height {number} The desired height of the emitter.
         */
         public setSize(Width: number, Height: number): void;
         /**
         * A more compact way of setting the X velocity range of the emitter.
         *
-        * @param	Min		The minimum value for this range.
-        * @param	Max		The maximum value for this range.
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
         */
         public setXSpeed(Min?: number, Max?: number): void;
         /**
         * A more compact way of setting the Y velocity range of the emitter.
         *
-        * @param	Min		The minimum value for this range.
-        * @param	Max		The maximum value for this range.
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
         */
         public setYSpeed(Min?: number, Max?: number): void;
         /**
         * A more compact way of setting the angular velocity constraints of the emitter.
         *
-        * @param	Min		The minimum value for this range.
-        * @param	Max		The maximum value for this range.
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
         */
         public setRotation(Min?: number, Max?: number): void;
         /**
         * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
         *
-        * @param	Object		The <code>Object</code> that you want to sync up with.
+        * @param Object {object} The <code>Object</code> that you want to sync up with.
         */
         public at(Object): void;
     }
@@ -5241,40 +7201,184 @@ module Phaser {
 */
 module Phaser {
     class GeomSprite extends GameObject {
+        /**
+        * GeomSprite constructor
+        * Create a new <code>GeomSprite</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param [x] {number} the initial x position of the sprite.
+        * @param [y] {number} the initial y position of the sprite.
+        */
         constructor(game: Game, x?: number, y?: number);
         private _dx;
         private _dy;
         private _dw;
         private _dh;
+        /**
+        * Geom type of this sprite. (available: UNASSIGNED, CIRCLE, LINE, POINT, RECTANGLE)
+        * @type {number}
+        */
         public type: number;
+        /**
+        * Not completely set yet. (the default type)
+        */
         static UNASSIGNED: number;
+        /**
+        * Circle.
+        * @type {number}
+        */
         static CIRCLE: number;
+        /**
+        * Line.
+        * @type {number}
+        */
         static LINE: number;
+        /**
+        * Point.
+        * @type {number}
+        */
         static POINT: number;
+        /**
+        * Rectangle.
+        * @type {number}
+        */
         static RECTANGLE: number;
+        /**
+        * Circle shape container. A Circle instance.
+        * @type {Circle}
+        */
         public circle: Circle;
+        /**
+        * Line shape container. A Line instance.
+        * @type {Line}
+        */
         public line: Line;
+        /**
+        * Point shape container. A Point instance.
+        * @type {Point}
+        */
         public point: Point;
+        /**
+        * Rectangle shape container. A Rectangle instance.
+        * @type {Rectangle}
+        */
         public rect: Rectangle;
+        /**
+        * Render outline of this sprite or not. (default is true)
+        * @type {boolean}
+        */
         public renderOutline: bool;
+        /**
+        * Fill the shape or not. (default is true)
+        * @type {boolean}
+        */
         public renderFill: bool;
+        /**
+        * Width of outline. (default is 1)
+        * @type {number}
+        */
         public lineWidth: number;
+        /**
+        * Width of outline. (default is 1)
+        * @type {number}
+        */
         public lineColor: string;
+        /**
+        * Width of outline. (default is 1)
+        * @type {number}
+        */
         public fillColor: string;
+        /**
+        * Just like Sprite.loadGraphic(), this will load a circle and set its shape to Circle.
+        * @param circle {Circle} Circle geometry define.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
         public loadCircle(circle: Circle): GeomSprite;
+        /**
+        * Just like Sprite.loadGraphic(), this will load a line and set its shape to Line.
+        * @param line {Line} Line geometry define.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
         public loadLine(line: Line): GeomSprite;
+        /**
+        * Just like Sprite.loadGraphic(), this will load a point and set its shape to Point.
+        * @param point {Point} Point geometry define.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
         public loadPoint(point: Point): GeomSprite;
+        /**
+        * Just like Sprite.loadGraphic(), this will load a rect and set its shape to Rectangle.
+        * @param rect {Rectangle} Rectangle geometry define.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
         public loadRectangle(rect: Rectangle): GeomSprite;
+        /**
+        * Create a circle shape with specific diameter.
+        * @param diameter {number} Diameter of the circle.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
         public createCircle(diameter: number): GeomSprite;
+        /**
+        * Create a line shape with specific end point.
+        * @param x {number} X position of the end point.
+        * @param y {number} Y position of the end point.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
         public createLine(x: number, y: number): GeomSprite;
+        /**
+        * Create a point shape at spriter's position.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
         public createPoint(): GeomSprite;
+        /**
+        * Create a circle shape with specific diameter.
+        * @param diameter {number} Diameter of the circle.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
         public createRectangle(width: number, height: number): GeomSprite;
+        /**
+        * Destroy all geom shapes of this sprite.
+        */
         public refresh(): void;
+        /**
+        * Update bounds.
+        */
         public update(): void;
+        /**
+        * Check whether this object is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        */
         public inCamera(camera: Rectangle): bool;
+        /**
+        * Render this sprite to specific camera. Called by game loop after update().
+        * @param camera {Camera} Camera this sprite will be rendered to.
+        * @cameraOffsetX {number} X offset to the camera.
+        * @cameraOffsetY {number} Y offset to the camera.
+        * @return {boolean} Return false if not rendered, otherwise return true.
+        */
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): bool;
+        /**
+        * Render a point of geometry.
+        * @param point {Point} Position of the point.
+        * @param offsetX {number} X offset to its position.
+        * @param offsetY {number} Y offset to its position.
+        * @param [size] {number} point size.
+        */
         public renderPoint(point, offsetX?: number, offsetY?: number, size?: number): void;
+        /**
+        * Render debug infos. (this method does not work now)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
         public renderDebugInfo(x: number, y: number, color?: string): void;
+        /**
+        * Gives a basic boolean response to a geometric collision.
+        * If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
+        * @param source {GeomSprite} Sprite you want to check.
+        * @return {boolean} Whether they overlaps or not.
+        */
         public collide(source: GeomSprite): bool;
     }
 }
@@ -5322,9 +7426,31 @@ module Phaser {
 */
 module Phaser {
     class TilemapLayer {
+        /**
+        * TilemapLayer constructor
+        * Create a new <code>TilemapLayer</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param parent {Tilemap} The tilemap that contains this layer.
+        * @param key {string} Asset key for this map.
+        * @param mapFormat {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+        * @param name {string} Name of this layer, so you can get this layer by its name.
+        * @param tileWidth {number} Width of tiles in this map.
+        * @param tileHeight {number} Height of tiles in this map.
+        */
         constructor(game: Game, parent: Tilemap, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * The tilemap that contains this layer.
+        * @type {Tilemap}
+        */
         private _parent;
+        /**
+        * Tileset of this layer.
+        */
         private _texture;
         private _tileOffsets;
         private _startX;
@@ -5344,37 +7470,193 @@ module Phaser {
         private _tempTileH;
         private _tempTileBlock;
         private _tempBlockResults;
+        /**
+        * Name of this layer, so you can get this layer by its name.
+        * @type {string}
+        */
         public name: string;
+        /**
+        * Opacity of this layer.
+        * @type {number}
+        */
         public alpha: number;
+        /**
+        * Controls whether update() and draw() are automatically called.
+        * @type {boolean}
+        */
         public exists: bool;
+        /**
+        * Controls whether draw() are automatically called.
+        * @type {boolean}
+        */
         public visible: bool;
+        /**
+        * @type {string}
+        */
         public orientation: string;
+        /**
+        * Properties of this map layer. (normally set by map editors)
+        */
         public properties: {};
+        /**
+        * Map data in a 2d array, its element is a index number for that tile.
+        * @type {number[][]}
+        */
         public mapData;
+        /**
+        * Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+        */
         public mapFormat: number;
+        /**
+        * It's width and height are in tiles instead of pixels.
+        * @type {Rectangle}
+        */
         public boundsInTiles: Rectangle;
+        /**
+        * Width of each tile.
+        * @type {number}
+        */
         public tileWidth: number;
+        /**
+        * Height of a single tile.
+        * @type {number}
+        */
         public tileHeight: number;
+        /**
+        * How many tiles in each row.
+        * Read-only variable, do NOT recommend changing after the map is loaded!
+        * @type {number}
+        */
         public widthInTiles: number;
+        /**
+        * How many tiles in each column.
+        * Read-only variable, do NOT recommend changing after the map is loaded!
+        * @type {number}
+        */
         public heightInTiles: number;
+        /**
+        * Read-only variable, do NOT recommend changing after the map is loaded!
+        * @type {number}
+        */
         public widthInPixels: number;
+        /**
+        * Read-only variable, do NOT recommend changing after the map is loaded!
+        * @type {number}
+        */
         public heightInPixels: number;
+        /**
+        * Distance between REAL tiles to the tileset texture bound.
+        * @type {number}
+        */
         public tileMargin: number;
+        /**
+        * Distance between every 2 neighbor tile in the tileset texture.
+        * @type {number}
+        */
         public tileSpacing: number;
+        /**
+        * Set a specific tile with its x and y in tiles.
+        * @param x {number} X position of this tile.
+        * @param y {number} Y position of this tile.
+        * @param index {number} The index of this tile type in the core map data.
+        */
         public putTile(x: number, y: number, index: number): void;
+        /**
+        * Swap tiles with 2 kinds of indexes.
+        * @param tileA {number} First tile index.
+        * @param tileB {number} Second tile index.
+        * @param [x] {number} specify a rectangle of tiles to operate. The x position in tiles of rectangle's left-top corner.
+        * @param [y] {number} specify a rectangle of tiles to operate. The y position in tiles of rectangle's left-top corner.
+        * @param [width] {number} specify a rectangle of tiles to operate. The width in tiles.
+        * @param [height] {number} specify a rectangle of tiles to operate. The height in tiles.
+        */
         public swapTile(tileA: number, tileB: number, x?: number, y?: number, width?: number, height?: number): void;
+        /**
+        * Fill a tile block with a specific tile index.
+        * @param index {number} Index of tiles you want to fill with.
+        * @param [x] {number} x position (in tiles) of block's left-top corner.
+        * @param [y] {number} y position (in tiles) of block's left-top corner.
+        * @param [width] {number} width of block.
+        * @param [height] {number} height of block.
+        */
         public fillTile(index: number, x?: number, y?: number, width?: number, height?: number): void;
+        /**
+        * Set random tiles to a specific tile block.
+        * @param tiles {number[]} Tiles with indexes in this array will be randomly set to the given block.
+        * @param [x] {number} x position (in tiles) of block's left-top corner.
+        * @param [y] {number} y position (in tiles) of block's left-top corner.
+        * @param [width] {number} width of block.
+        * @param [height] {number} height of block.
+        */
         public randomiseTiles(tiles: number[], x?: number, y?: number, width?: number, height?: number): void;
+        /**
+        * Replace one kind of tiles to another kind.
+        * @param tileA {number} Index of tiles you want to replace.
+        * @param tileB {number} Index of tiles you want to set.
+        * @param [x] {number} x position (in tiles) of block's left-top corner.
+        * @param [y] {number} y position (in tiles) of block's left-top corner.
+        * @param [width] {number} width of block.
+        * @param [height] {number} height of block.
+        */
         public replaceTile(tileA: number, tileB: number, x?: number, y?: number, width?: number, height?: number): void;
+        /**
+        * Get a tile block with specific position and size.(both are in tiles)
+        * @param x {number} X position of block's left-top corner.
+        * @param y {number} Y position of block's left-top corner.
+        * @param width {number} Width of block.
+        * @param height {number} Height of block.
+        */
         public getTileBlock(x: number, y: number, width: number, height: number): any[];
+        /**
+        * Get a tile with specific position (in world coordinate). (thus you give a position of a point which is within the tile)
+        * @param x {number} X position of the point in target tile.
+        * @param x {number} Y position of the point in target tile.
+        */
         public getTileFromWorldXY(x: number, y: number): number;
+        /**
+        * Get tiles overlaps the given object.
+        * @param object {GameObject} Tiles you want to get that overlaps this.
+        * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+        */
         public getTileOverlaps(object: GameObject);
+        /**
+        * Get a tile block with its position and size. (This method does not return, it'll set result to _tempTileBlock)
+        * @param x {number} X position of block's left-top corner.
+        * @param y {number} Y position of block's left-top corner.
+        * @param width {number} Width of block.
+        * @param height {number} Height of block.
+        * @param collisionOnly {boolean} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
+        */
         private getTempBlock(x, y, width, height, collisionOnly?);
+        /**
+        * Get the tile index of specific position (in tiles).
+        * @param x {number} X position of the tile.
+        * @param y {number} Y position of the tile.
+        * @return {number} Index of the tile at that position. Return null if there isn't a tile there.
+        */
         public getTileIndex(x: number, y: number): number;
+        /**
+        * Add a column of tiles into the layer.
+        * @param column {string[]/number[]} An array of tile indexes to be added.
+        */
         public addColumn(column): void;
+        /**
+        * Update boundsInTiles with widthInTiles and heightInTiles.
+        */
         public updateBounds(): void;
+        /**
+        * Parse tile offsets from map data.
+        * @return {number} length of _tileOffsets array.
+        */
         public parseTileOffsets(): number;
         public renderDebugInfo(x: number, y: number, color?: string): void;
+        /**
+        * Render this layer to a specific camera with offset to camera.
+        * @param camera {Camera} The camera the layer is going to be rendered.
+        * @param dx {number} X offset to the camera.
+        * @param dy {number} Y offset to the camera.
+        * @return {boolean} Return false if layer is invisible or has a too low opacity(will stop rendering), return true if succeed.
+        */
         public render(camera: Camera, dx, dy): bool;
     }
 }
@@ -5385,34 +7667,102 @@ module Phaser {
 */
 module Phaser {
     class Tile {
+        /**
+        * Tile constructor
+        * Create a new <code>Tile</code>.
+        *
+        * @param tilemap {Tilemap} the tilemap this tile belongs to.
+        * @param index {number} The index of this tile type in the core map data.
+        * @param width {number} Width of the tile.
+        * @param height number} Height of the tile.
+        */
         constructor(game: Game, tilemap: Tilemap, index: number, width: number, height: number);
+        /**
+        * Local private reference to game.
+        */
         private _game;
+        /**
+        * You can give this Tile a friendly name to help with debugging. Never used internally.
+        * @type {string}
+        */
         public name: string;
+        /**
+        * The virtual mass of the tile.
+        * @type {number}
+        */
         public mass: number;
+        /**
+        * Tile width.
+        * @type {number}
+        */
         public width: number;
+        /**
+        * Tile height.
+        * @type {number}
+        */
         public height: number;
+        /**
+        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions.
+        * @type {number}
+        */
         public allowCollisions: number;
+        /**
+        * Indicating collide with any object on the left.
+        * @type {boolean}
+        */
         public collideLeft: bool;
+        /**
+        * Indicating collide with any object on the right.
+        * @type {boolean}
+        */
         public collideRight: bool;
+        /**
+        * Indicating collide with any object on the top.
+        * @type {boolean}
+        */
         public collideUp: bool;
+        /**
+        * Indicating collide with any object on the bottom.
+        * @type {boolean}
+        */
         public collideDown: bool;
+        /**
+        * Enable separation at x-axis.
+        * @type {boolean}
+        */
         public separateX: bool;
+        /**
+        * Enable separation at y-axis.
+        * @type {boolean}
+        */
         public separateY: bool;
         /**
         * A reference to the tilemap this tile object belongs to.
+        * @type {Tilemap}
         */
         public tilemap: Tilemap;
         /**
         * The index of this tile type in the core map data.
         * For example, if your map only has 16 kinds of tiles in it,
         * this number is usually between 0 and 15.
+        * @type {number}
         */
         public index: number;
         /**
         * Clean up memory.
         */
         public destroy(): void;
+        /**
+        * Set collision configs.
+        * @param collision {number} Bit field of flags. (see Tile.allowCollision)
+        * @param resetCollisions {boolean} Reset collision flags before set.
+        * @param separateX {boolean} Enable seprate at x-axis.
+        * @param separateY {boolean} Enable seprate at y-axis.
+        */
         public setCollision(collision: number, resetCollisions: bool, separateX: bool, separateY: bool): void;
+        /**
+        * Reset collision status flags.
+        */
         public resetCollision(): void;
         /**
         * Returns a string representation of this object.
@@ -5430,34 +7780,171 @@ module Phaser {
 */
 module Phaser {
     class Tilemap extends GameObject {
+        /**
+        * Tilemap constructor
+        * Create a new <code>Tilemap</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param key {string} Asset key for this map.
+        * @param mapData {string} Data of this map. (a big 2d array, normally in csv)
+        * @param format {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+        * @param resizeWorld {boolean} Resize the world bound automatically based on this tilemap?
+        * @param tileWidth {number} Width of tiles in this map.
+        * @param tileHeight {number} Height of tiles in this map.
+        */
         constructor(game: Game, key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number);
         private _tempCollisionData;
+        /**
+        * Tilemap data format enum: CSV.
+        * @type {number}
+        */
         static FORMAT_CSV: number;
+        /**
+        * Tilemap data format enum: Tiled JSON.
+        * @type {number}
+        */
         static FORMAT_TILED_JSON: number;
+        /**
+        * Array contains tile objects of this map.
+        * @type {Tile[]}
+        */
         public tiles: Tile[];
+        /**
+        * Array contains tilemap layer objects of this map.
+        * @type {TilemapLayer[]}
+        */
         public layers: TilemapLayer[];
+        /**
+        * Current tilemap layer.
+        * @type {TilemapLayer}
+        */
         public currentLayer: TilemapLayer;
+        /**
+        * The tilemap layer for collision.
+        * @type {TilemapLayer}
+        */
         public collisionLayer: TilemapLayer;
+        /**
+        * Tilemap collision callback.
+        * @type {function}
+        */
         public collisionCallback;
+        /**
+        * Context for the collision callback called with.
+        */
         public collisionCallbackContext;
+        /**
+        * Format of this tilemap data. Available values: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+        * @type {number}
+        */
         public mapFormat: number;
+        /**
+        * Inherited update method.
+        */
         public update(): void;
+        /**
+        * Render this tilemap to a specific camera with specific offset.
+        * @param camera {Camera} The camera this tilemap will be rendered to.
+        * @param cameraOffsetX {number} X offset of the camera.
+        * @param cameraOffsetY {number} Y offset of the camera.
+        */
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): void;
+        /**
+        * Parset csv map data and generate tiles.
+        * @param data {string} CSV map data.
+        * @param key {string} Asset key for tileset image.
+        * @param tileWidth {number} Width of its tile.
+        * @param tileHeight {number} Height of its tile.
+        */
         private parseCSV(data, key, tileWidth, tileHeight);
+        /**
+        * Parset JSON map data and generate tiles.
+        * @param data {string} JSON map data.
+        * @param key {string} Asset key for tileset image.
+        */
         private parseTiledJSON(data, key);
+        /**
+        * Create tiles of given quantity.
+        * @param qty {number} Quentity of tiles to be generated.
+        */
         private generateTiles(qty);
         public widthInPixels : number;
         public heightInPixels : number;
+        /**
+        * Set callback to be called when this tilemap collides.
+        * @param context {object} Callback will be called with this context.
+        * @param callback {function} Callback function.
+        */
         public setCollisionCallback(context, callback): void;
+        /**
+        * Set collision configs of tiles in a range index.
+        * @param start {number} First index of tiles.
+        * @param end {number} Last index of tiles.
+        * @param collision {number} Bit field of flags. (see Tile.allowCollision)
+        * @param resetCollisions {boolean} Reset collision flags before set.
+        * @param separateX {boolean} Enable seprate at x-axis.
+        * @param separateY {boolean} Enable seprate at y-axis.
+        */
         public setCollisionRange(start: number, end: number, collision?: number, resetCollisions?: bool, separateX?: bool, separateY?: bool): void;
+        /**
+        * Set collision configs of tiles with given index.
+        * @param values {number[]} Index array which contains all tile indexes. The tiles with those indexes will be setup with rest parameters.
+        * @param collision {number} Bit field of flags. (see Tile.allowCollision)
+        * @param resetCollisions {boolean} Reset collision flags before set.
+        * @param separateX {boolean} Enable seprate at x-axis.
+        * @param separateY {boolean} Enable seprate at y-axis.
+        */
         public setCollisionByIndex(values: number[], collision?: number, resetCollisions?: bool, separateX?: bool, separateY?: bool): void;
+        /**
+        * Get the tile by its index.
+        * @param value {number} Index of the tile you want to get.
+        * @return {Tile} The tile with given index.
+        */
         public getTileByIndex(value: number): Tile;
+        /**
+        * Get the tile located at specific position and layer.
+        * @param x {number} X position of this tile located.
+        * @param y {number} Y position of this tile located.
+        * @param [layer] {number} layer of this tile located.
+        * @return {Tile} The tile with specific properties.
+        */
         public getTile(x: number, y: number, layer?: number): Tile;
+        /**
+        * Get the tile located at specific position (in world coordinate) and layer. (thus you give a position of a point which is within the tile)
+        * @param x {number} X position of the point in target tile.
+        * @param x {number} Y position of the point in target tile.
+        * @param [layer] {number} layer of this tile located.
+        * @return {Tile} The tile with specific properties.
+        */
         public getTileFromWorldXY(x: number, y: number, layer?: number): Tile;
         public getTileFromInputXY(layer?: number): Tile;
+        /**
+        * Get tiles overlaps the given object.
+        * @param object {GameObject} Tiles you want to get that overlaps this.
+        * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+        */
         public getTileOverlaps(object: GameObject);
+        /**
+        * Check whether this tilemap collides with the given game object or group of objects.
+        * @param objectOrGroup {function} Target object of group you want to check.
+        * @param callback {function} This is called if objectOrGroup collides the tilemap.
+        * @param context {object} Callback will be called with this context.
+        * @return {boolean} Return true if this collides with given object, otherwise return false.
+        */
         public collide(objectOrGroup?, callback?, context?): void;
+        /**
+        * Check whether this tilemap collides with the given game object.
+        * @param object {GameObject} Target object you want to check.
+        * @return {boolean} Return true if this collides with given object, otherwise return false.
+        */
         public collideGameObject(object: GameObject): bool;
+        /**
+        * Set a tile to a specific layer.
+        * @param x {number} X position of this tile.
+        * @param y {number} Y position of this tile.
+        * @param index {number} The index of this tile type in the core map data.
+        * @param [layer] {number} which layer you want to set the tile to.
+        */
         public putTile(x: number, y: number, index: number, layer?: number): void;
     }
 }
@@ -5469,6 +7956,17 @@ module Phaser {
 */
 module Phaser {
     class ScrollRegion {
+        /**
+        * ScrollRegion constructor
+        * Create a new <code>ScrollRegion</code>.
+        *
+        * @param x {number} X position in world coordinate.
+        * @param y {number} Y position in world coordinate.
+        * @param width {number} Width of this object.
+        * @param height {number} Height of this object.
+        * @param speedX {number} X-axis scrolling speed.
+        * @param speedY {number} Y-axis scrolling speed.
+        */
         constructor(x: number, y: number, width: number, height: number, speedX: number, speedY: number);
         private _A;
         private _B;
@@ -5480,10 +7978,46 @@ module Phaser {
         private _anchorHeight;
         private _inverseWidth;
         private _inverseHeight;
+        /**
+        * Will this region be rendered? (default to true)
+        * @type {boolean}
+        */
         public visible: bool;
+        /**
+        * Region scrolling speed.
+        * @type {MicroPoint}
+        */
         public scrollSpeed: MicroPoint;
+        /**
+        * Update region scrolling with tick time.
+        * @param delta {number} Elapsed time since last update.
+        */
         public update(delta: number): void;
+        /**
+        * Render this region to specific context.
+        * @param context {CanvasRenderingContext2D} Canvas context this region will be rendered to.
+        * @param texture {object} The texture to be rendered.
+        * @param dx {number} X position in world coordinate.
+        * @param dy {number} Y position in world coordinate.
+        * @param width {number} Width of this region to be rendered.
+        * @param height {number} Height of this region to be rendered.
+        */
         public render(context: CanvasRenderingContext2D, texture, dx: number, dy: number, dw: number, dh: number): void;
+        /**
+        * Crop part of the texture and render it to the given context.
+        * @param context {CanvasRenderingContext2D} Canvas context the texture will be rendered to.
+        * @param texture {object} Texture to be rendered.
+        * @param srcX {number} Target region top-left x coordinate in the texture.
+        * @param srcX {number} Target region top-left y coordinate in the texture.
+        * @param srcW {number} Target region width in the texture.
+        * @param srcH {number} Target region height in the texture.
+        * @param destX {number} Render region top-left x coordinate in the context.
+        * @param destX {number} Render region top-left y coordinate in the context.
+        * @param destW {number} Target region width in the context.
+        * @param destH {number} Target region height in the context.
+        * @param offsetX {number} X offset to the context.
+        * @param offsetY {number} Y offset to the context.
+        */
         private crop(context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY);
     }
 }
@@ -5497,21 +8031,101 @@ module Phaser {
 */
 module Phaser {
     class ScrollZone extends GameObject {
+        /**
+        * ScrollZone constructor
+        * Create a new <code>ScrollZone</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param key {string} Asset key for image texture of this object.
+        * @param x {number} X position in world coordinate.
+        * @param y {number} Y position in world coordinate.
+        * @param [width] {number} width of this object.
+        * @param [height] {number} height of this object.
+        */
         constructor(game: Game, key: string, x?: number, y?: number, width?: number, height?: number);
+        /**
+        * Texture of this object.
+        */
         private _texture;
+        /**
+        * If this zone is larger than texture image, this will be filled with a pattern of texture.
+        * @type {DynamicTexture}
+        */
         private _dynamicTexture;
+        /**
+        * Local rendering related temp vars to help avoid gc spikes.
+        * @type {number}
+        */
         private _dx;
+        /**
+        * Local rendering related temp vars to help avoid gc spikes.
+        * @type {number}
+        */
         private _dy;
+        /**
+        * Local rendering related temp vars to help avoid gc spikes.
+        * @type {number}
+        */
         private _dw;
+        /**
+        * Local rendering related temp vars to help avoid gc spikes.
+        * @type {number}
+        */
         private _dh;
+        /**
+        * Current region this zone is scrolling.
+        * @type {ScrollRegion}
+        */
         public currentRegion: ScrollRegion;
+        /**
+        * Array contains all added regions.
+        * @type {ScrollRegion[]}
+        */
         public regions: ScrollRegion[];
+        /**
+        * Flip this zone vertically? (default to false)
+        * @type {boolean}
+        */
         public flipped: bool;
+        /**
+        * Add a new region to this zone.
+        * @param x {number} X position of the new region.
+        * @param y {number} Y position of the new region.
+        * @param width {number} Width of the new region.
+        * @param height {number} Height of the new region.
+        * @param [speedX] {number} x-axis scrolling speed.
+        * @param [speedY] {number} y-axis scrolling speed.
+        * @return {ScrollRegion} The newly added region.
+        */
         public addRegion(x: number, y: number, width: number, height: number, speedX?: number, speedY?: number): ScrollRegion;
+        /**
+        * Set scrolling speed of current region.
+        * @param x {number} X speed of current region.
+        * @param y {number} Y speed of current region.
+        */
         public setSpeed(x: number, y: number): ScrollZone;
+        /**
+        * Update regions.
+        */
         public update(): void;
+        /**
+        * Check whether this zone is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bound of this zone intersects the given rectangle, otherwise return false.
+        */
         public inCamera(camera: Rectangle): bool;
+        /**
+        * Render this zone object to a specific camera.
+        * @param camera {Camera} The camera this object will be render to.
+        * @param cameraOffsetX {number} X offset of camera.
+        * @param cameraOffsetY {number} Y offset of camera.
+        * @return Return false if not rendered, otherwise return true.
+        */
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): bool;
+        /**
+        * Create repeating texture with _texture, and store it into the _dynamicTexture.
+        * Used to create texture when texture image is small than size of the zone.
+        */
         private createRepeatingTexture(regionWidth, regionHeight);
     }
 }
@@ -5526,56 +8140,298 @@ module Phaser {
 */
 module Phaser {
     class Game {
+        /**
+        * Game constructor
+        *
+        * Instantiate a new <code>Game</code> object.
+        *
+        * @param callbackContext Which context will the callbacks be called with.
+        * @param parent {string} ID of its parent DOM element.
+        * @param width {number} The width of your game in game pixels.
+        * @param height {number} The height of your game in game pixels.
+        * @param initCallback {function} Init callback invoked when init default screen.
+        * @param createCallback {function} Create callback invoked when create default screen.
+        * @param updateCallback {function} Update callback invoked when update default screen.
+        * @param renderCallback {function} Render callback invoked when render default screen.
+        */
         constructor(callbackContext, parent?: string, width?: number, height?: number, initCallback?, createCallback?, updateCallback?, renderCallback?);
-        private _raf;
+        /**
+        * Game loop trigger wrapper.
+        */
+        public _raf: RequestAnimationFrame;
+        /**
+        * Max allowable accumulation.
+        * @type {number}
+        */
         private _maxAccumulation;
+        /**
+        * Total number of milliseconds elapsed since last update loop.
+        * @type {number}
+        */
         private _accumulator;
+        /**
+        * Milliseconds of time per step of the game loop.
+        * @type {number}
+        */
         private _step;
+        /**
+        * Whether loader complete loading or not.
+        * @type {boolean}
+        */
         private _loadComplete;
+        /**
+        * Game is paused?
+        * @type {boolean}
+        */
         private _paused;
+        /**
+        * The state to be switched to in the next frame.
+        * @type {State}
+        */
         private _pendingState;
+        /**
+        * Context for calling the callbacks.
+        */
         public callbackContext;
+        /**
+        * This will be called when init states. (loading assets...)
+        * @type {function}
+        */
         public onInitCallback;
+        /**
+        * This will be called when create states. (setup states...)
+        * @type {function}
+        */
         public onCreateCallback;
+        /**
+        * This will be called when update states.
+        * @type {function}
+        */
         public onUpdateCallback;
+        /**
+        * This will be called when render states.
+        * @type {function}
+        */
         public onRenderCallback;
+        /**
+        * This will be called when states paused.
+        * @type {function}
+        */
         public onPausedCallback;
+        /**
+        * Reference to the assets cache.
+        * @type {Cache}
+        */
         public cache: Cache;
+        /**
+        * Reference to the collision helper.
+        * @type {Collision}
+        */
         public collision: Collision;
+        /**
+        * Reference to the input manager
+        * @type {Input}
+        */
         public input: Input;
+        /**
+        * Reference to the assets loader.
+        * @type {Loader}
+        */
         public loader: Loader;
+        /**
+        * Reference to the math helper.
+        * @type {GameMath}
+        */
         public math: GameMath;
+        /**
+        * Reference to the motion helper.
+        * @type {Motion}
+        */
         public motion: Motion;
+        /**
+        * Reference to the sound manager.
+        * @type {SoundManager}
+        */
         public sound: SoundManager;
+        /**
+        * Reference to the stage.
+        * @type {Stage}
+        */
         public stage: Stage;
+        /**
+        * Reference to game clock.
+        * @type {Time}
+        */
         public time: Time;
+        /**
+        * Reference to the tween manager.
+        * @type {TweenManager}
+        */
         public tweens: TweenManager;
+        /**
+        * Reference to the world.
+        * @type {World}
+        */
         public world: World;
+        /**
+        * Instance of repeatable random data generator helper.
+        * @type {RandomDataGenerator}
+        */
         public rnd: RandomDataGenerator;
+        /**
+        * Device detector.
+        * @type {Device}
+        */
         public device: Device;
+        /**
+        * Whether the game engine is booted, aka available.
+        * @type {boolean}
+        */
         public isBooted: bool;
+        /**
+        * Is game running or paused?
+        * @type {boolean}
+        */
         public isRunning: bool;
+        /**
+        * Initialize engine sub modules and start the game.
+        * @param parent {string} ID of parent Dom element.
+        * @param width {number} Width of the game screen.
+        * @param height {number} Height of the game screen.
+        */
         private boot(parent, width, height);
+        /**
+        * Called when the loader has finished after init was run.
+        */
         private loadComplete();
+        /**
+        * Game loop method will be called when it's booting.
+        */
         private bootLoop();
+        /**
+        * Game loop method will be called when it's paused.
+        */
         private pausedLoop();
+        /**
+        * Game loop method will be called when it's running.
+        */
         private loop();
+        /**
+        * Start current state.
+        */
         private startState();
+        /**
+        * Set all state callbacks (init, create, update, render).
+        * @param initCallback {function} Init callback invoked when init state.
+        * @param createCallback {function} Create callback invoked when create state.
+        * @param updateCallback {function} Update callback invoked when update state.
+        * @param renderCallback {function} Render callback invoked when render state.
+        */
         public setCallbacks(initCallback?, createCallback?, updateCallback?, renderCallback?): void;
+        /**
+        * Switch to a new State.
+        * @param state {State} The state you want to switch to.
+        * @param [clearWorld] {boolean} clear everything in the world? (Default to true)
+        * @param [clearCache] {boolean} clear asset cache? (Default to false and ONLY available when clearWorld=true)
+        */
         public switchState(state, clearWorld?: bool, clearCache?: bool): void;
+        /**
+        * Nuke the whole game from orbit
+        */
         public destroy(): void;
         public paused : bool;
         public framerate : number;
+        /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
         public createCamera(x: number, y: number, width: number, height: number): Camera;
+        /**
+        * Create a new GeomSprite with specific position.
+        *
+        * @param x {number} X position of the new geom sprite.
+        * @param y {number} Y position of the new geom sprite.
+        * @returns {GeomSprite} The newly created geom sprite object.
+        */
         public createGeomSprite(x: number, y: number): GeomSprite;
+        /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param key {string} Optional, key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        */
         public createSprite(x: number, y: number, key?: string): Sprite;
+        /**
+        * Create a new DynamicTexture with specific size.
+        *
+        * @param width {number} Width of the texture.
+        * @param height {number} Height of the texture.
+        * @returns {DynamicTexture} The newly created dynamic texture object.
+        */
         public createDynamicTexture(width: number, height: number): DynamicTexture;
+        /**
+        * Create a new object container.
+        *
+        * @param MaxSize {number} Optional, capacity of this group.
+        * @returns {Group} The newly created group.
+        */
         public createGroup(MaxSize?: number): Group;
+        /**
+        * Create a new Particle.
+        *
+        * @return {Particle} The newly created particle object.
+        */
         public createParticle(): Particle;
+        /**
+        * Create a new Emitter.
+        *
+        * @param x {number} Optional, x position of the emitter.
+        * @param y {number} Optional, y position of the emitter.
+        * @param size {number} Optional, size of this emitter.
+        * @return {Emitter} The newly created emitter object.
+        */
         public createEmitter(x?: number, y?: number, size?: number): Emitter;
+        /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {string} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
         public createScrollZone(key: string, x?: number, y?: number, width?: number, height?: number): ScrollZone;
+        /**
+        * Create a new Tilemap.
+        *
+        * @param key {string} Key for tileset image.
+        * @param mapData {string} Data of this tilemap.
+        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+        * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
+        * @param [tileWidth] {number} width of each tile.
+        * @param [tileHeight] {number} height of each tile.
+        * @return {Tilemap} The newly created tilemap object.
+        */
         public createTilemap(key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number): Tilemap;
+        /**
+        * Create a tween object for a specific object.
+        *
+        * @param obj Object you wish the tween will affect.
+        * @return {Phaser.Tween} The newly created tween object.
+        */
         public createTween(obj): Tween;
+        /**
+        * Call this method to see if one object collides with another.
+        * @return {boolean} Whether the given objects or groups collides.
+        */
         public collide(objectOrGroup1?: Basic, objectOrGroup2?: Basic, notifyCallback?): bool;
         public camera : Camera;
     }
@@ -5616,6 +8472,8 @@ module Phaser {
         * Adds a new FX to the FXManager.
         * The effect must be an object with at least one of the following methods: preUpdate, postUpdate, preRender, render or postRender.
         * A new instance of the effect will be created and a reference to Game will be passed to the object constructor.
+        * @param {object} effect
+        * @return {any}
         */
         public add(effect): any;
         /**
@@ -5629,10 +8487,20 @@ module Phaser {
         /**
         * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
         * It happens directly AFTER a canvas context.save has happened if added to a Camera.
+        * @param {Camera} camera
+        * @param {number} cameraX
+        * @param {number} cameraY
+        * @param {number} cameraWidth
+        * @param {number} cameraHeight
         */
         public preRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
         /**
         * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
+        * @param {Camera} camera
+        * @param {number} cameraX
+        * @param {number} cameraY
+        * @param {number} cameraWidth
+        * @param {number} cameraHeight
         */
         public render(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
         /**
@@ -5653,35 +8521,188 @@ module Phaser {
 */
 module Phaser {
     class State {
+        /**
+        * State constructor
+        * Create a new <code>State</code>.
+        */
         constructor(game: Game);
+        /**
+        * Reference to Game.
+        */
         public game: Game;
+        /**
+        * Currently used camera.
+        * @type {Camera}
+        */
         public camera: Camera;
+        /**
+        * Reference to the assets cache.
+        * @type {Cache}
+        */
         public cache: Cache;
+        /**
+        * Reference to the collision helper.
+        * @type {Collision}
+        */
         public collision: Collision;
+        /**
+        * Reference to the input manager
+        * @type {Input}
+        */
         public input: Input;
+        /**
+        * Reference to the assets loader.
+        * @type {Loader}
+        */
         public loader: Loader;
+        /**
+        * Reference to the math helper.
+        * @type {GameMath}
+        */
         public math: GameMath;
+        /**
+        * Reference to the motion helper.
+        * @type {Motion}
+        */
         public motion: Motion;
+        /**
+        * Reference to the sound manager.
+        * @type {SoundManager}
+        */
         public sound: SoundManager;
+        /**
+        * Reference to the stage.
+        * @type {Stage}
+        */
         public stage: Stage;
+        /**
+        * Reference to game clock.
+        * @type {Time}
+        */
         public time: Time;
+        /**
+        * Reference to the tween manager.
+        * @type {TweenManager}
+        */
         public tweens: TweenManager;
+        /**
+        * Reference to the world.
+        * @type {World}
+        */
         public world: World;
+        /**
+        * Override this method to add some load operations.
+        * If you need to use the loader, you may need to use them here.
+        */
         public init(): void;
+        /**
+        * This method is called after the game engine successfully switches states.
+        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+        */
         public create(): void;
+        /**
+        * Put update logic here.
+        */
         public update(): void;
+        /**
+        * Put render operations here.
+        */
         public render(): void;
+        /**
+        * This method will be called when game paused.
+        */
         public paused(): void;
+        /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
         public createCamera(x: number, y: number, width: number, height: number): Camera;
+        /**
+        * Create a new GeomSprite with specific position.
+        *
+        * @param x {number} X position of the new geom sprite.
+        * @param y {number} Y position of the new geom sprite.
+        * @returns {GeomSprite} The newly created geom sprite object.
+        */
         public createGeomSprite(x: number, y: number): GeomSprite;
+        /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param key {string} [optional] key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        */
         public createSprite(x: number, y: number, key?: string): Sprite;
+        /**
+        * Create a new DynamicTexture with specific size.
+        *
+        * @param width {number} Width of the texture.
+        * @param height {number} Height of the texture.
+        * @returns {DynamicTexture} The newly created dynamic texture object.
+        */
         public createDynamicTexture(width: number, height: number): DynamicTexture;
+        /**
+        * Create a new object container.
+        *
+        * @param MaxSize {number} [optional] capacity of this group.
+        * @returns {Group} The newly created group.
+        */
         public createGroup(MaxSize?: number): Group;
+        /**
+        * Create a new Particle.
+        *
+        * @return {Particle} The newly created particle object.
+        */
         public createParticle(): Particle;
+        /**
+        * Create a new Emitter.
+        *
+        * @param x {number} [optional] x position of the emitter.
+        * @param y {number} [optional] y position of the emitter.
+        * @param size {number} [optional] size of this emitter.
+        * @return {Emitter} The newly created emitter object.
+        */
         public createEmitter(x?: number, y?: number, size?: number): Emitter;
+        /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {string} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width {number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
         public createScrollZone(key: string, x?: number, y?: number, width?: number, height?: number): ScrollZone;
+        /**
+        * Create a new Tilemap.
+        *
+        * @param key {string} Key for tileset image.
+        * @param mapData {string} Data of this tilemap.
+        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+        * @param resizeWorld {boolean} [optional] resize the world to make same as tilemap?
+        * @param tileWidth {number} [optional] width of each tile.
+        * @param tileHeight number} [optional] height of each tile.
+        * @return {Tilemap} The newly created tilemap object.
+        */
         public createTilemap(key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number): Tilemap;
+        /**
+        * Create a tween object for a specific object.
+        *
+        * @param obj Object you wish the tween will affect.
+        * @return {Phaser.Tween} The newly created tween object.
+        */
         public createTween(obj): Tween;
+        /**
+        * Call this method to see if one object collids another.
+        * @return {boolean} Whether the given objects or groups collids.
+        */
         public collide(ObjectOrGroup1?: Basic, ObjectOrGroup2?: Basic, NotifyCallback?): bool;
     }
 }

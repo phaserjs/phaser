@@ -4,8 +4,8 @@
     var myGame = new Phaser.Game(this, 'game', 320, 240, init, create, update);
     function init() {
         //  This sets a limit on the up-scale
-        myGame.stage.maxScaleX = 640;
-        myGame.stage.maxScaleY = 480;
+        myGame.stage.scale.maxWidth = 640;
+        myGame.stage.scale.maxHeight = 480;
         //  Then we tell Phaser that we want it to scale up to whatever the browser can handle, but to do it proportionally
         myGame.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
         myGame.loader.addImageFile('melon', 'assets/sprites/melon.png');

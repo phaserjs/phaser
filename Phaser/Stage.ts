@@ -29,6 +29,7 @@ module Phaser {
             this._game = game;
 
             this.canvas = <HTMLCanvasElement> document.createElement('canvas');
+            this.canvas.id = 'bob';
             this.canvas.width = width;
             this.canvas.height = height;
 
@@ -45,6 +46,7 @@ module Phaser {
             //  Consume default actions on the canvas
             this.canvas.style.msTouchAction = 'none';
             this.canvas.style['touch-action'] = 'none';
+            this.canvas.style.backgroundColor = 'rgb(0,0,0)';
 
             this.context = this.canvas.getContext('2d');
 
@@ -70,10 +72,10 @@ module Phaser {
         private _game: Game;
 
         /**
-         * Background color of the stage.
+         * Background color of the stage (defaults to black)
          * @type {string}
          */
-        private _bgColor: string;
+        private _bgColor: string = 'rgb(0,0,0)';
 
         /**
          * This will be displayed when Phaser is started without any default functions or State
@@ -86,18 +88,6 @@ module Phaser {
          * @type {PauseScreen}
          */
         private _pauseScreen;
-
-        /**
-         * Screen orientation enum: Landscape.
-         * @type {number}
-         */
-        public static ORIENTATION_LANDSCAPE: number = 0;
-
-        /**
-         * Screen orientation enum: Portrait.
-         * @type {number}
-         */
-        public static ORIENTATION_PORTRAIT: number = 1;
 
         /**
          * Bound of this stage.
@@ -163,30 +153,6 @@ module Phaser {
         public scaleMode: number;
 
         /**
-         * Minimal scale factor of x-axis.
-         * @type {number}
-         */
-        public minScaleX: number = null;
-
-        /**
-         * Maximal scale factor of x-axis.
-         * @type {number}
-         */
-        public maxScaleX: number = null;
-
-        /**
-         * Minimal scale factor of y-axis.
-         * @type {number}
-         */
-        public minScaleY: number = null;
-
-        /**
-         * Maximal scale factor of y-axis.
-         * @type {number}
-         */
-        public maxScaleY: number = null;
-
-        /**
          * Update stage for rendering. This will handle scaling, clearing
          * and PauseScreen/BootScreen updating and rendering.
          */
@@ -215,7 +181,7 @@ module Phaser {
         }
 
         /**
-         * This method will be called when canvas element's visibility changed.
+         * This method is called when the canvas elements visibility is changed.
          */
         private visibilityChange(event) {
 
@@ -224,7 +190,7 @@ module Phaser {
                 return;
             }
 
-            if (event.type === 'blur' || document['hidden'] === true || document['webkitHidden'] === true)
+            if (event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
             {
                 if (this._game.paused == false)
                 {
@@ -233,7 +199,7 @@ module Phaser {
                     this._game.paused = true;
                 }
             }
-            else if (event.type == 'focus')
+            else
             {
                 if (this._game.paused == true)
                 {

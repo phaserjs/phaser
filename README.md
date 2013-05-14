@@ -20,7 +20,29 @@ Latest Update
 
 V0.9.6
 
-* 
+* Documentation! Every class now has documentation for nearly every single function - if you spot a typo, please shout! (thanks pixelpicosean)
+* Grunt file updated to produce the new Special FX JS file (thanks HackManiac)
+* Fixed issue stopping Phaser working on iOS 5 (i.e. iPad 1)
+* Created new mobile test folder, updated index.php to use mobile CSS and made some mobile specific tests
+* Fixed a few speed issues on Android 2.x stock browser, but it's still tricky to get a fast game out of it
+* Moved Camera context save/restore back inside parameter checks (sped-up Samsung S3 stock browser)
+* Fixed bug with StageScaleMode.checkOrientation not respecting the NO_SCALE value
+* Added MSPointer support (thanks Diego Bezerra)
+* Added Camera.clear to perform a clearRect instead of a fillRect if needed (default is false)
+* Swapped Camera.opaque default from true to false re: performance
+* Updated Stage.visibilityChange to avoid pause screen locking in certain situations
+* Added StageScaleMode.enterLandscape and enterPortrait signals for easier device orientation change checks
+* Added StageScaleMode.isPortrait
+* Updated StageScaleMode to check both window.orientationchange and window.resize events
+* Updated RequestAnimationFrame to use performance.now for sub-millisecond precision and to drive the Game.time.update loop
+* Updated RequestAnimationFrame setTimeout to use fixed timestep and re-ordered callback sequence. Android 2/iOS5 performance much better now
+* Removed Stage.ORIENTATION_LANDSCAPE statics because the values should be taken from Stage.scale.isPortrait / isLandscape
+* Removed Stage.maxScaleX/Y and moved them into StageScaleMode.minWidth, minHeight, maxWidth and maxHeight
+* Fixed Stage.scale so that it resizes without needing an orientation change
+* TODO: Check that tween pausing works with the new performance.now
+* TODO: Game.Time should monitor pause duration
+* Added StageScaleMode.startFullscreen(), stopFullScreen() and isFullScreen for making use of the FullScreen API on desktop browsers
+
 
 Requirements
 ------------
@@ -29,7 +51,7 @@ Games created with Phaser require a modern web browser that supports the canvas 
 
 For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/). We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
 
-If you are compiling via TypeScript from the command-line please use `--target ES5` and `--nolib`
+If you are compiling via TypeScript from the command-line please use `--target ES5`
 
 If you need it the included Grunt file will generate a RequireJS/CommonJS version of Phaser on build.
 

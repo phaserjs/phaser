@@ -15,10 +15,10 @@ module Phaser {
         * @param {Any} callback
         * @return {RequestAnimationFrame} This object.
         */
-        constructor(callback, callbackContext) {
+        constructor(game: Game, callback) {
 
-            this._callback = callback;
-            this._callbackContext = callbackContext;
+            this._game = game;
+            this.callback = callback;
 
             var vendors = ['ms', 'moz', 'webkit', 'o'];
 
@@ -33,24 +33,16 @@ module Phaser {
         }
 
         /**
-        * 
-        * @property _callback
-        * @type Any
-        * @private
-        **/
-        private _callback;
-        private _callbackContext;
+         * Local private reference to game.
+         */
+        private _game: Game;
 
         /**
-        * 
-        * @method callback
-        * @param {Any} callback
+        * The function to be called each frame. Will be called in the context of _game
+        * @property callback
+        * @type Any
         **/
-        public setCallback(callback) {
-
-            this._callback = callback;
-
-        }
+        public callback;
 
         /**
         * 
@@ -86,29 +78,9 @@ module Phaser {
         **/
         public isUsingRAF(): bool {
 
-            if (this._isSetTimeOut === true)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return this._isSetTimeOut === true;
+
         }
-
-        /**
-        * 
-        * @property lastTime
-        * @type Number
-        **/
-        public lastTime: number = 0;
-
-        /**
-        * 
-        * @property currentTime
-        * @type Number
-        **/
-        public currentTime: number = 0;
 
         /**
         * 
@@ -118,7 +90,7 @@ module Phaser {
         public isRunning: bool = false;
 
         /**
-        * 
+        * Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
         * @method start
         * @param {Any} [callback] 
         **/
@@ -126,7 +98,7 @@ module Phaser {
 
             if (callback)
             {
-                this._callback = callback;
+                this.callback = callback;
             }
 
             if (!window.requestAnimationFrame)
@@ -137,7 +109,7 @@ module Phaser {
             else
             {
                 this._isSetTimeOut = false;
-                window.requestAnimationFrame(() => this.RAFUpdate());
+                window.requestAnimationFrame(() => this.RAFUpdate(0));
             }
 
             this.isRunning = true;
@@ -145,7 +117,7 @@ module Phaser {
         }
 
         /**
-        * 
+        * Stops the requestAnimationFrame from running
         * @method stop 
         **/
         public stop() {
@@ -163,43 +135,37 @@ module Phaser {
 
         }
 
-        public RAFUpdate() {
+        /**
+        * The update method for the requestAnimationFrame
+        * @method RAFUpdate
+        **/
+        public RAFUpdate(time: number) {
 
-            //  Not in IE8 (but neither is RAF) also doesn't use a high performance timer (window.performance.now)
-            this.currentTime = Date.now();
+            this._game.time.update(time);
 
-            if (this._callback)
+            if (this.callback)
             {
-                this._callback.call(this._callbackContext);
+                this.callback.call(this._game);
             }
 
-            var timeToCall: number = Math.max(0, 16 - (this.currentTime - this.lastTime));
-
-            window.requestAnimationFrame(() => this.RAFUpdate());
-
-            this.lastTime = this.currentTime + timeToCall;
+            window.requestAnimationFrame((time) => this.RAFUpdate(time));
 
         }
 
         /**
-        * 
+        * The update method for the setTimeout
         * @method SetTimeoutUpdate 
         **/
         public SetTimeoutUpdate() {
 
-            //  Not in IE8
-            this.currentTime = Date.now();
+            this._game.time.update(Date.now());
 
-            if (this._callback)
+            this._timeOutID = window.setTimeout(() => this.SetTimeoutUpdate(), 16.7);
+
+            if (this.callback)
             {
-                this._callback.call(this._callbackContext);
+                this.callback.call(this._game);
             }
-
-            var timeToCall: number = Math.max(0, 16 - (this.currentTime - this.lastTime));
-
-            this._timeOutID = window.setTimeout(() => this.SetTimeoutUpdate(), timeToCall);
-
-            this.lastTime = this.currentTime + timeToCall;
 
         }
 

@@ -51,6 +51,14 @@
         //  We do this because the ship was drawn facing up, but 0 degrees is pointing to the right
         ship.rotationOffset = 90;
 
+        myGame.input.onDown.add(test, this);
+
+    }
+
+    function test(event) {
+
+        myGame.stage.scale.startFullScreen();
+
     }
 
     function update() {

@@ -25,6 +25,11 @@
     padding: 16px;
 }
 
+:-webkit-full-screen {
+	width: 100%;
+	height: 100%;
+}
+
 h1 {
     font-family: 'Arial', sans-serif;
     font-size: 30pt;

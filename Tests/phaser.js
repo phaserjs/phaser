@@ -460,20 +460,55 @@ var Phaser;
 (function (Phaser) {
     var GameObject = (function (_super) {
         __extends(GameObject, _super);
+        /**
+        * GameObject constructor
+        *
+        * Create a new <code>GameObject</code> object at specific position with
+        * specific width and height.
+        *
+        * @param [x] {number} The x position of the object.
+        * @param [y] {number} The y position of the object.
+        * @param [width] {number} The width of the object.
+        * @param [height] {number} The height of the object.
+        */
         function GameObject(game, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = 16; }
             if (typeof height === "undefined") { height = 16; }
                 _super.call(this, game);
+            /**
+            * Angle of this object.
+            * @type {number}
+            */
             this._angle = 0;
+            /**
+            * What action will be performed when object is out of bounds.
+            * This will default to GameObject.OUT_OF_BOUNDS_STOP.
+            * @type {number}
+            */
             this.outOfBoundsAction = 0;
+            /**
+            * Z-order value of the object.
+            */
             this.z = 0;
-            //  This value is added to the angle of the GameObject.
-            //  For example if you had a sprite drawn facing straight up then you could set
-            //  rotationOffset to 90 and it would correspond correctly with Phasers rotation system
+            /**
+            * This value is added to the angle of the GameObject.
+            * For example if you had a sprite drawn facing straight up then you could set
+            * rotationOffset to 90 and it would correspond correctly with Phasers rotation system
+            * @type {number}
+            */
             this.rotationOffset = 0;
+            /**
+            * Render graphic based on its angle?
+            * @type {boolean}
+            */
             this.renderRotation = true;
+            /**
+            * Set this to false if you want to skip the automatic motion/movement stuff
+            * (see updateMotion()).
+            * @type {boolean}
+            */
             this.moves = true;
             //  Input
             this.inputEnabled = false;
@@ -521,14 +556,23 @@ var Phaser;
         GameObject.ALIGN_BOTTOM_RIGHT = 8;
         GameObject.OUT_OF_BOUNDS_STOP = 0;
         GameObject.OUT_OF_BOUNDS_KILL = 1;
-        GameObject.prototype.preUpdate = function () {
+        GameObject.prototype.preUpdate = /**
+        * Pre-update is called right before update() on each object in the game loop.
+        */
+        function () {
             //  flicker time
             this.last.x = this.bounds.x;
             this.last.y = this.bounds.y;
         };
-        GameObject.prototype.update = function () {
+        GameObject.prototype.update = /**
+        * Override this function to update your class's position and appearance.
+        */
+        function () {
         };
-        GameObject.prototype.postUpdate = function () {
+        GameObject.prototype.postUpdate = /**
+        * Automatically called after update() by the game loop.
+        */
+        function () {
             if(this.moves) {
                 this.updateMotion();
             }
@@ -556,9 +600,15 @@ var Phaser;
             this.wasTouching = this.touching;
             this.touching = Phaser.Collision.NONE;
         };
-        GameObject.prototype.updateInput = function () {
+        GameObject.prototype.updateInput = /**
+        * Update input.
+        */
+        function () {
         };
-        GameObject.prototype.updateMotion = function () {
+        GameObject.prototype.updateMotion = /**
+        * Internal function for updating the position and speed of this object.
+        */
+        function () {
             var delta;
             var velocityDelta;
             velocityDelta = (this._game.motion.computeVelocity(this.angularVelocity, this.angularAcceleration, this.angularDrag, this.maxAngular) - this.angularVelocity) / 2;
@@ -581,11 +631,11 @@ var Phaser;
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param	ObjectOrGroup	The object or group being tested.
-        * @param	InScreenSpace	Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param ObjectOrGroup {object} The object or group being tested.
+        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether or not the two objects overlap.
+        * @return {boolean} Whether or not the objects overlap this.
         */
         function (ObjectOrGroup, InScreenSpace, Camera) {
             if (typeof InScreenSpace === "undefined") { InScreenSpace = false; }
@@ -616,13 +666,13 @@ var Phaser;
         * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param	X				The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param	Y				The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param	ObjectOrGroup	The object or group being tested.
-        * @param	InScreenSpace	Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
+        * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
+        * @param ObjectOrGroup {object} The object or group being tested.
+        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether or not the two objects overlap.
+        * @return {boolean} Whether or not the two objects overlap.
         */
         function (X, Y, ObjectOrGroup, InScreenSpace, Camera) {
             if (typeof InScreenSpace === "undefined") { InScreenSpace = false; }
@@ -656,11 +706,11 @@ var Phaser;
         GameObject.prototype.overlapsPoint = /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *
-        * @param	Point			The point in world space you want to check.
-        * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
-        * @param	Camera			Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param point {Point} The point in world space you want to check.
+        * @param InScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether or not the point overlaps this object.
+        * @return   Whether or not the point overlaps this object.
         */
         function (point, InScreenSpace, Camera) {
             if (typeof InScreenSpace === "undefined") { InScreenSpace = false; }
@@ -679,9 +729,9 @@ var Phaser;
         GameObject.prototype.onScreen = /**
         * Check and see if this object is currently on screen.
         *
-        * @param	Camera		Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        * @param Camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
         *
-        * @return	Whether the object is on screen or not.
+        * @return {boolean} Whether the object is on screen or not.
         */
         function (Camera) {
             if (typeof Camera === "undefined") { Camera = null; }
@@ -694,10 +744,10 @@ var Phaser;
         GameObject.prototype.getScreenXY = /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param	Camera		Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        * @param	Point		Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param Point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return	The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+        * @return {MicroPoint} The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
         function (point, Camera) {
             if (typeof point === "undefined") { point = null; }
@@ -723,10 +773,7 @@ var Phaser;
             function () {
                 return (this.allowCollisions & Phaser.Collision.ANY) > Phaser.Collision.NONE;
             },
-            set: /**
-            * @private
-            */
-            function (Solid) {
+            set: function (Solid) {
                 if(Solid) {
                     this.allowCollisions = Phaser.Collision.ANY;
                 } else {
@@ -739,9 +786,9 @@ var Phaser;
         GameObject.prototype.getMidpoint = /**
         * Retrieve the midpoint of this object in world coordinates.
         *
-        * @Point	Allows you to pass in an existing <code>Point</code> object if you're so inclined.  Otherwise a new one is created.
+        * @param point {Point} Allows you to pass in an existing <code>Point</code> object if you're so inclined.  Otherwise a new one is created.
         *
-        * @return	A <code>Point</code> object containing the midpoint of this object in world coordinates.
+        * @return {MicroPoint} A <code>Point</code> object containing the midpoint of this object in world coordinates.
         */
         function (point) {
             if (typeof point === "undefined") { point = null; }
@@ -755,8 +802,8 @@ var Phaser;
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
-        * @param	X	The new X position of this object.
-        * @param	Y	The new Y position of this object.
+        * @param X {number} The new X position of this object.
+        * @param Y {number} The new Y position of this object.
         */
         function (X, Y) {
             this.revive();
@@ -774,9 +821,9 @@ var Phaser;
         * For slightly better performance you can just &amp; the value directly numbero <code>touching</code>.
         * However, this method is good for readability and accessibility.
         *
-        * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
-        * @return	Whether the object is touching an object in (any of) the specified direction(s) this frame.
+        * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
         */
         function (Direction) {
             return (this.touching & Direction) > Phaser.Collision.NONE;
@@ -784,9 +831,16 @@ var Phaser;
         GameObject.prototype.justTouched = /**
         * Handy for checking if this object is just landed on a particular surface.
         *
-        * @param	Direction	Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        * @param {number} Direction   Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
-        * @return	Whether the object just landed on (any of) the specified surface(s) this frame.
+        * @return {boolean} Whether the object just landed on (any of) the specified surface(s) this frame.
+        */
+        /**
+        * Handy function for checking if this object is just landed on a particular surface.
+        *
+        * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        *
+        * @returns {boolean} Whether the object just landed on any specicied surfaces.
         */
         function (Direction) {
             return ((this.touching & Direction) > Phaser.Collision.NONE) && ((this.wasTouching & Direction) <= Phaser.Collision.NONE);
@@ -795,7 +849,7 @@ var Phaser;
         * Reduces the "health" variable of this sprite by the amount specified in Damage.
         * Calls kill() if health drops to or below zero.
         *
-        * @param	Damage		How much health to take away (use a negative number to give a health bonus).
+        * @param Damage {number} How much health to take away (use a negative number to give a health bonus).
         */
         function (Damage) {
             this.health = this.health - Damage;
@@ -807,27 +861,45 @@ var Phaser;
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
         * it can be stopped from leaving the world, or a section of it.
+        *
+        * @param x {number} x position of the bound
+        * @param y {number} y position of the bound
+        * @param width {number} width of its bound
+        * @param height {number} height of its bound
         */
         function (x, y, width, height) {
             this.worldBounds = new Phaser.Quad(x, y, width, height);
         };
         GameObject.prototype.hideFromCamera = /**
         * If you do not wish this object to be visible to a specific camera, pass the camera here.
+        
+        * @param camera {Camera} The specific camera.
         */
         function (camera) {
             if(this.cameraBlacklist.indexOf(camera.ID) == -1) {
                 this.cameraBlacklist.push(camera.ID);
             }
         };
-        GameObject.prototype.showToCamera = function (camera) {
+        GameObject.prototype.showToCamera = /**
+        * Make this object only visible to a specific camera.
+        *
+        * @param camera {Camera} The camera you wish it to be visible.
+        */
+        function (camera) {
             if(this.cameraBlacklist.indexOf(camera.ID) !== -1) {
                 this.cameraBlacklist.slice(this.cameraBlacklist.indexOf(camera.ID), 1);
             }
         };
-        GameObject.prototype.clearCameraList = function () {
+        GameObject.prototype.clearCameraList = /**
+        * This will make the object not visible to any cameras.
+        */
+        function () {
             this.cameraBlacklist.length = 0;
         };
-        GameObject.prototype.destroy = function () {
+        GameObject.prototype.destroy = /**
+        * Clean up memory.
+        */
+        function () {
         };
         Object.defineProperty(GameObject.prototype, "x", {
             get: function () {
@@ -906,13 +978,15 @@ var Phaser;
 (function (Phaser) {
     var Camera = (function () {
         /**
+        *Sprite constructor
         * Instantiates a new camera at the specified location, with the specified size and zoom level.
         *
-        * @param X			X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-        * @param Y			Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
-        * @param Width		The width of the camera display in pixels.
-        * @param Height	The height of the camera display in pixels.
-        * @param Zoom		The initial zoom level of the camera.  A zoom level of 2 will make all pixels display at 2x resolution.
+        * @param game {Phaser.Game} Current game instance.
+        * @param id {number} Unique identity.
+        * @param x {number} X location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+        * @param y {number} Y location of the camera's display in pixels. Uses native, 1:1 resolution, ignores zoom.
+        * @param width {number} The width of the camera display in pixels.
+        * @param height {number} The height of the camera display in pixels.
         */
         function Camera(game, id, x, y, width, height) {
             this._clip = false;
@@ -920,27 +994,103 @@ var Phaser;
             this._target = null;
             this._sx = 0;
             this._sy = 0;
+            /**
+            * Scale factor of the camera.
+            * @type {MicroPoint}
+            */
             this.scale = new Phaser.MicroPoint(1, 1);
+            /**
+            * Scrolling factor.
+            * @type {MicroPoint}
+            */
             this.scroll = new Phaser.MicroPoint(0, 0);
+            /**
+            * Camera bounds.
+            * @type {Rectangle}
+            */
             this.bounds = null;
+            /**
+            * Sprite moving inside this rectangle will not cause camera moving.
+            * @type {Rectangle}
+            */
             this.deadzone = null;
             //  Camera Border
             this.disableClipping = false;
+            /**
+            * Whether render border of this camera or not. (default is false)
+            * @type {boolean}
+            */
             this.showBorder = false;
+            /**
+            * Color of border of this camera. (in css color string)
+            * @type {string}
+            */
             this.borderColor = 'rgb(255,255,255)';
-            //  Camera Background Color
-            this.opaque = true;
+            /**
+            * Whether the camera background is opaque or not. If set to true the Camera is filled with
+            * the value of Camera.backgroundColor every frame.
+            * @type {boolean}
+            */
+            this.opaque = false;
+            /**
+            * Clears the camera every frame using a canvas clearRect call (default to true).
+            * Note that this erases anything below the camera as well, so do not use it in conjuction with a camera
+            * that uses alpha or that needs to be able to manage opacity. Equally if Camera.opaque is set to true
+            * then set Camera.clear to false to save rendering time.
+            * By default the Stage will clear itself every frame, so be sure not to double-up clear calls.
+            * @type {boolean}
+            */
+            this.clear = false;
+            /**
+            * Background color in css color string.
+            * @type {string}
+            */
             this._bgColor = 'rgb(0,0,0)';
+            /**
+            * Background texture repeat style. (default is 'repeat')
+            * @type {string}
+            */
             this._bgTextureRepeat = 'repeat';
             //  Camera Shadow
+            /**
+            * Render camera shadow or not. (default is false)
+            * @type {boolean}
+            */
             this.showShadow = false;
+            /**
+            * Color of shadow, in css color string.
+            * @type {string}
+            */
             this.shadowColor = 'rgb(0,0,0)';
+            /**
+            * Blur factor of shadow.
+            * @type {number}
+            */
             this.shadowBlur = 10;
+            /**
+            * Offset of the shadow from camera's position.
+            * @type {MicroPoint}
+            */
             this.shadowOffset = new Phaser.MicroPoint(4, 4);
+            /**
+            * Whether this camera visible or not. (default is true)
+            * @type {boolean}
+            */
             this.visible = true;
+            /**
+            * Alpha of the camera. (everything rendered to this camera will be affected)
+            * @type {number}
+            */
             this.alpha = 1;
-            //  The x/y position of the current input event in world coordinates
+            /**
+            * The x position of the current input event in world coordinates.
+            * @type {number}
+            */
             this.inputX = 0;
+            /**
+            * The y position of the current input event in world coordinates.
+            * @type {number}
+            */
             this.inputY = 0;
             this._game = game;
             this.ID = id;
@@ -955,7 +1105,12 @@ var Phaser;
         Camera.STYLE_PLATFORMER = 1;
         Camera.STYLE_TOPDOWN = 2;
         Camera.STYLE_TOPDOWN_TIGHT = 3;
-        Camera.prototype.follow = function (target, style) {
+        Camera.prototype.follow = /**
+        * Tells this camera object what sprite to track.
+        * @param target {Sprite} The object you want the camera to track. Set to null to not follow anything.
+        * @param [style] {number} Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+        */
+        function (target, style) {
             if (typeof style === "undefined") { style = Camera.STYLE_LOCKON; }
             this._target = target;
             var helper;
@@ -979,13 +1134,22 @@ var Phaser;
                     break;
             }
         };
-        Camera.prototype.focusOnXY = function (x, y) {
+        Camera.prototype.focusOnXY = /**
+        * Move the camera focus to this location instantly.
+        * @param x {number} X position.
+        * @param y {number} Y position.
+        */
+        function (x, y) {
             x += (x > 0) ? 0.0000001 : -0.0000001;
             y += (y > 0) ? 0.0000001 : -0.0000001;
             this.scroll.x = Math.round(x - this.worldView.halfWidth);
             this.scroll.y = Math.round(y - this.worldView.halfHeight);
         };
-        Camera.prototype.focusOn = function (point) {
+        Camera.prototype.focusOn = /**
+        * Move the camera focus to this location instantly.
+        * @param point {any} Point you want to focus.
+        */
+        function (point) {
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
             this.scroll.x = Math.round(point.x - this.worldView.halfWidth);
@@ -994,10 +1158,10 @@ var Phaser;
         Camera.prototype.setBounds = /**
         * Specify the boundaries of the world or where the camera is allowed to move.
         *
-        * @param	x				The smallest X value of your world (usually 0).
-        * @param	y				The smallest Y value of your world (usually 0).
-        * @param	width			The largest X value of your world (usually the world width).
-        * @param	height			The largest Y value of your world (usually the world height).
+        * @param x      {number} The smallest X value of your world (usually 0).
+        * @param y      {number} The smallest Y value of your world (usually 0).
+        * @param width  {number} The largest X value of your world (usually the world width).
+        * @param height {number} The largest Y value of your world (usually the world height).
         */
         function (x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
@@ -1011,7 +1175,10 @@ var Phaser;
             this.scroll.setTo(0, 0);
             this.update();
         };
-        Camera.prototype.update = function () {
+        Camera.prototype.update = /**
+        * Update focusing and scrolling.
+        */
+        function () {
             this.fx.preUpdate();
             if(this._target !== null) {
                 if(this.deadzone == null) {
@@ -1060,16 +1227,18 @@ var Phaser;
             this.inputY = this.worldView.y + this._game.input.y;
             this.fx.postUpdate();
         };
-        Camera.prototype.render = function () {
+        Camera.prototype.render = /**
+        * Draw background, shadow, effects, and objects if this is visible.
+        */
+        function () {
             if(this.visible === false || this.alpha < 0.1) {
                 return;
             }
-            //if (this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1)
-            //{
+            if(this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1) {
+                this._game.stage.context.save();
+            }
+            //  It may be safer/quicker to just save the context every frame regardless (needs testing on mobile - sucked on Android 2.x)
             //this._game.stage.context.save();
-            //}
-            //  It may be safer/quicker to just save the context every frame regardless (needs testing on mobile)
-            this._game.stage.context.save();
             this.fx.preRender(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
             if(this.alpha !== 1) {
                 this._game.stage.context.globalAlpha = this.alpha;
@@ -1077,7 +1246,7 @@ var Phaser;
             this._sx = this._stageX;
             this._sy = this._stageY;
             //  Shadow
-            if(this.showShadow) {
+            if(this.showShadow == true) {
                 this._game.stage.context.shadowColor = this.shadowColor;
                 this._game.stage.context.shadowBlur = this.shadowBlur;
                 this._game.stage.context.shadowOffsetX = this.shadowOffset.x;
@@ -1096,6 +1265,9 @@ var Phaser;
                 // now shift back to where that should actually render
                 this._game.stage.context.translate(-(this._sx + this.worldView.halfWidth), -(this._sy + this.worldView.halfHeight));
             }
+            if(this.clear == true) {
+                this._game.stage.context.clearRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
+            }
             //  Background
             if(this.opaque == true) {
                 if(this._bgTexture) {
@@ -1107,21 +1279,21 @@ var Phaser;
                 }
             }
             //  Shadow off
-            if(this.showShadow) {
+            if(this.showShadow == true) {
                 this._game.stage.context.shadowBlur = 0;
                 this._game.stage.context.shadowOffsetX = 0;
                 this._game.stage.context.shadowOffsetY = 0;
             }
             this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
             //  Clip the camera so we don't get sprites appearing outside the edges
-            if(this._clip && this.disableClipping == false) {
+            if(this._clip == true && this.disableClipping == false) {
                 this._game.stage.context.beginPath();
                 this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
                 this._game.stage.context.closePath();
                 this._game.stage.context.clip();
             }
             this._game.world.group.render(this, this._sx, this._sy);
-            if(this.showBorder) {
+            if(this.showBorder == true) {
                 this._game.stage.context.strokeStyle = this.borderColor;
                 this._game.stage.context.lineWidth = 1;
                 this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
@@ -1135,7 +1307,9 @@ var Phaser;
             if(this._rotation !== 0 || (this._clip && this.disableClipping == false)) {
                 this._game.stage.context.translate(0, 0);
             }
-            this._game.stage.context.restore();
+            if(this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1) {
+                this._game.stage.context.restore();
+            }
             if(this.alpha !== 1) {
                 this._game.stage.context.globalAlpha = 1;
             }
@@ -1150,22 +1324,43 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Camera.prototype.setTexture = function (key, repeat) {
+        Camera.prototype.setTexture = /**
+        * Set camera background texture.
+        * @param key {string} Asset key of the texture.
+        * @param [repeat] {string} what kind of repeat will this texture used for background.
+        */
+        function (key, repeat) {
             if (typeof repeat === "undefined") { repeat = 'repeat'; }
             this._bgTexture = this._game.stage.context.createPattern(this._game.cache.getImage(key), repeat);
             this._bgTextureRepeat = repeat;
         };
-        Camera.prototype.setPosition = function (x, y) {
+        Camera.prototype.setPosition = /**
+        * Set position of this camera.
+        * @param x {number} X position.
+        * @param y {number} Y position.
+        */
+        function (x, y) {
             this._stageX = x;
             this._stageY = y;
             this.checkClip();
         };
-        Camera.prototype.setSize = function (width, height) {
+        Camera.prototype.setSize = /**
+        * Give this camera a new size.
+        * @param width {number} Width of new size.
+        * @param height {number} Height of new size.
+        */
+        function (width, height) {
             this.worldView.width = width;
             this.worldView.height = height;
             this.checkClip();
         };
-        Camera.prototype.renderDebugInfo = function (x, y, color) {
+        Camera.prototype.renderDebugInfo = /**
+        * Render debug infos. (including id, position, rotation, scrolling factor, bounds and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Camera ID: ' + this.ID + ' (' + this.worldView.width + ' x ' + this.worldView.height + ')', x, y);
@@ -1260,11 +1455,24 @@ var Phaser;
 (function (Phaser) {
     var Sprite = (function (_super) {
         __extends(Sprite, _super);
+        /**
+        * Sprite constructor
+        * Create a new <code>Sprite</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param [x] {number} the initial x position of the sprite.
+        * @param [y] {number} the initial y position of the sprite.
+        * @param [key] {string} Key of the graphic you want to load for this sprite.
+        */
         function Sprite(game, x, y, key) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof key === "undefined") { key = null; }
                 _super.call(this, game, x, y);
+            /**
+            * Texture of this sprite is DynamicTexture? (default to false)
+            * @type {boolean}
+            */
             this._dynamicTexture = false;
             //  local rendering related temp vars to help avoid gc spikes
             this._sx = 0;
@@ -1275,9 +1483,25 @@ var Phaser;
             this._dy = 0;
             this._dw = 0;
             this._dh = 0;
+            /**
+            * Render bound of this sprite for debugging? (default to false)
+            * @type {boolean}
+            */
             this.renderDebug = false;
+            /**
+            * Color of bound when render debug. (see renderDebug) Format is a css color string.
+            * @type {string}
+            */
             this.renderDebugColor = 'rgba(0,255,0,0.5)';
+            /**
+            * Color of points when render debug. (see renderDebug) Format is a css color string.
+            * @type {string}
+            */
             this.renderDebugPointColor = 'rgba(255,255,255,1)';
+            /**
+            * Flip the graphic vertically? (default to false)
+            * @type {boolean}
+            */
             this.flipped = false;
             this._texture = null;
             this.animations = new Phaser.AnimationManager(this._game, this);
@@ -1288,7 +1512,12 @@ var Phaser;
                 this.bounds.height = 16;
             }
         }
-        Sprite.prototype.loadGraphic = function (key) {
+        Sprite.prototype.loadGraphic = /**
+        * Load graphic for this sprite. (graphic can be SpriteSheet of Texture)
+        * @param key {string} Key of the graphic you want to load for this sprite.
+        * @return {Sprite} Sprite instance itself.
+        */
+        function (key) {
             if(this._game.cache.getImage(key) !== null) {
                 if(this._game.cache.isSpriteSheet(key) == false) {
                     this._texture = this._game.cache.getImage(key);
@@ -1302,14 +1531,26 @@ var Phaser;
             }
             return this;
         };
-        Sprite.prototype.loadDynamicTexture = function (texture) {
+        Sprite.prototype.loadDynamicTexture = /**
+        * Load a DynamicTexture as its texture.
+        * @param texture {DynamicTexture} The texture object to be used by this sprite.
+        * @return {Sprite} Sprite instance itself.
+        */
+        function (texture) {
             this._texture = texture;
             this.bounds.width = this._texture.width;
             this.bounds.height = this._texture.height;
             this._dynamicTexture = true;
             return this;
         };
-        Sprite.prototype.makeGraphic = function (width, height, color) {
+        Sprite.prototype.makeGraphic = /**
+        * This function creates a flat colored square image dynamically.
+        * @param width {number} The width of the sprite you want to generate.
+        * @param height {number} The height of the sprite you want to generate.
+        * @param [color] {number} specifies the color of the generated block. (format is 0xAARRGGBB)
+        * @return {Sprite} Sprite instance itself.
+        */
+        function (width, height, color) {
             if (typeof color === "undefined") { color = 0xffffffff; }
             this._texture = null;
             this.width = width;
@@ -1317,7 +1558,12 @@ var Phaser;
             this._dynamicTexture = false;
             return this;
         };
-        Sprite.prototype.inCamera = function (camera) {
+        Sprite.prototype.inCamera = /**
+        * Check whether this object is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        */
+        function (camera) {
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
                 this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
                 this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
@@ -1328,7 +1574,10 @@ var Phaser;
                 return camera.intersects(this.bounds, this.bounds.length);
             }
         };
-        Sprite.prototype.postUpdate = function () {
+        Sprite.prototype.postUpdate = /**
+        * Automatically called after update() by the game loop, this function just update animations.
+        */
+        function () {
             this.animations.update();
             _super.prototype.postUpdate.call(this);
         };
@@ -1352,7 +1601,14 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Sprite.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
+        Sprite.prototype.render = /**
+        * Render this sprite to specific camera. Called by game loop after update().
+        * @param camera {Camera} Camera this sprite will be rendered to.
+        * @cameraOffsetX {number} X offset to the camera.
+        * @cameraOffsetY {number} Y offset to the camera.
+        * @return {boolean} Return false if not rendered, otherwise return true.
+        */
+        function (camera, cameraOffsetX, cameraOffsetY) {
             //  Render checks
             if(this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
                 return false;
@@ -1465,7 +1721,12 @@ var Phaser;
             }
             return true;
         };
-        Sprite.prototype.renderBounds = // Renders the bounding box around this Sprite and the contact points. Useful for visually debugging.
+        Sprite.prototype.renderBounds = /**
+        * Renders the bounding box around this Sprite and the contact points. Useful for visually debugging.
+        * @param camera {Camera} Camera the bound will be rendered to.
+        * @param cameraOffsetX {number} X offset of bound to the camera.
+        * @param cameraOffsetY {number} Y offset of bound to the camera.
+        */
         function (camera, cameraOffsetX, cameraOffsetY) {
             this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
             this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
@@ -1495,7 +1756,13 @@ var Phaser;
             this._game.stage.context.fillRect(this._dx + sw, this._dy + sh, 1, 1)//  bottom right
             ;
         };
-        Sprite.prototype.renderDebugInfo = function (x, y, color) {
+        Sprite.prototype.renderDebugInfo = /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
@@ -1516,6 +1783,17 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Animation = (function () {
+        /**
+        * Animation constructor
+        * Create a new <code>Animation</code>.
+        *
+        * @param parent {Sprite} Owner sprite of this animation.
+        * @param frameData {FrameData} The FrameData object contains animation data.
+        * @param name {string} Unique name of this animation.
+        * @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
+        * @param delay {number} Time between frames in ms.
+        * @param looped {boolean} Whether or not the animation is looped or just plays once.
+        */
         function Animation(game, parent, frameData, name, frames, delay, looped) {
             this._game = game;
             this._parent = parent;
@@ -1551,7 +1829,12 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Animation.prototype.play = function (frameRate, loop) {
+        Animation.prototype.play = /**
+        * Play this animation.
+        * @param frameRate {number} FrameRate you want to specify instead of using default.
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        */
+        function (frameRate, loop) {
             if (typeof frameRate === "undefined") { frameRate = null; }
             if(frameRate !== null) {
                 this.delay = 1000 / frameRate;
@@ -1566,7 +1849,10 @@ var Phaser;
             this._frameIndex = 0;
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
         };
-        Animation.prototype.restart = function () {
+        Animation.prototype.restart = /**
+        * Play this animation from the first frame.
+        */
+        function () {
             this.isPlaying = true;
             this.isFinished = false;
             this._timeLastFrame = this._game.time.now;
@@ -1574,11 +1860,17 @@ var Phaser;
             this._frameIndex = 0;
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
         };
-        Animation.prototype.stop = function () {
+        Animation.prototype.stop = /**
+        * Stop playing animation and set it finished.
+        */
+        function () {
             this.isPlaying = false;
             this.isFinished = true;
         };
-        Animation.prototype.update = function () {
+        Animation.prototype.update = /**
+        * Update animation frames.
+        */
+        function () {
             if(this.isPlaying == true && this._game.time.now >= this._timeNextFrame) {
                 this._frameIndex++;
                 if(this._frameIndex == this._frames.length) {
@@ -1597,7 +1889,10 @@ var Phaser;
             }
             return false;
         };
-        Animation.prototype.destroy = function () {
+        Animation.prototype.destroy = /**
+        * Clean up animation memory.
+        */
+        function () {
             this._game = null;
             this._parent = null;
             this._frames = null;
@@ -1605,7 +1900,10 @@ var Phaser;
             this.currentFrame = null;
             this.isPlaying = false;
         };
-        Animation.prototype.onComplete = function () {
+        Animation.prototype.onComplete = /**
+        * Animation complete callback method.
+        */
+        function () {
             this.isPlaying = false;
             this.isFinished = true;
             //  callback
@@ -1624,7 +1922,15 @@ var Phaser;
 (function (Phaser) {
     var AnimationLoader = (function () {
         function AnimationLoader() { }
-        AnimationLoader.parseSpriteSheet = function parseSpriteSheet(game, key, frameWidth, frameHeight, frameMax) {
+        AnimationLoader.parseSpriteSheet = /**
+        * Parse a sprite sheet from asset data.
+        * @param key {string} Asset key for the sprite sheet data.
+        * @param frameWidth {number} Width of animation frame.
+        * @param frameHeight {number} Height of animation frame.
+        * @param frameMax {number} Number of animation frames.
+        * @return {FrameData} Generated FrameData object.
+        */
+        function parseSpriteSheet(game, key, frameWidth, frameHeight, frameMax) {
             //  How big is our image?
             var img = game.cache.getImage(key);
             if(img == null) {
@@ -1656,7 +1962,12 @@ var Phaser;
             }
             return data;
         };
-        AnimationLoader.parseJSONData = function parseJSONData(game, json) {
+        AnimationLoader.parseJSONData = /**
+        * Parse frame datas from json.
+        * @param json {object} Json data you want to parse.
+        * @return {FrameData} Generated FrameData object.
+        */
+        function parseJSONData(game, json) {
             //  Let's create some frames then
             var data = new Phaser.FrameData();
             //  By this stage frames is a fully parsed array
@@ -1681,12 +1992,28 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Frame = (function () {
+        /**
+        * Frame constructor
+        * Create a new <code>Frame</code> with specific position, size and name.
+        *
+        * @param x {number} X position within the image to cut from.
+        * @param y {number} Y position within the image to cut from.
+        * @param width {number} Width of the frame.
+        * @param height {number} Height of the frame.
+        * @param name {string} Name of this frame.
+        */
         function Frame(x, y, width, height, name) {
-            //  Useful for Texture Atlas files (is set to the filename value)
+            /**
+            * Useful for Texture Atlas files. (is set to the filename value)
+            */
             this.name = '';
-            //  Rotated? (not yet implemented)
+            /**
+            * Rotated? (not yet implemented)
+            */
             this.rotated = false;
-            //  Either cw or ccw, rotation is always 90 degrees
+            /**
+            * Either cw or ccw, rotation is always 90 degrees.
+            */
             this.rotationDirection = 'cw';
             this.x = x;
             this.y = y;
@@ -1696,10 +2023,23 @@ var Phaser;
             this.rotated = false;
             this.trimmed = false;
         }
-        Frame.prototype.setRotation = function (rotated, rotationDirection) {
+        Frame.prototype.setRotation = /**
+        * Set rotation of this frame. (Not yet supported!)
+        */
+        function (rotated, rotationDirection) {
             //  Not yet supported
                     };
-        Frame.prototype.setTrim = function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
+        Frame.prototype.setTrim = /**
+        * Set trim of the frame.
+        * @param trimmed {boolean} Whether this frame trimmed or not.
+        * @param actualWidth {number} Actual width of this frame.
+        * @param actualHeight {number} Actual height of this frame.
+        * @param destX {number} Destiny x position.
+        * @param destY {number} Destiny y position.
+        * @param destWidth {number} Destiny draw width.
+        * @param destHeight {number} Destiny draw height.
+        */
+        function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
             this.trimmed = trimmed;
             this.sourceSizeW = actualWidth;
             this.sourceSizeH = actualHeight;
@@ -1721,6 +2061,9 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var FrameData = (function () {
+        /**
+        * FrameData constructor
+        */
         function FrameData() {
             this._frames = [];
             this._frameNames = [];
@@ -1732,7 +2075,12 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        FrameData.prototype.addFrame = function (frame) {
+        FrameData.prototype.addFrame = /**
+        * Add a new frame.
+        * @param frame {Frame} The frame you want to add.
+        * @return {Frame} The frame you just added.
+        */
+        function (frame) {
             frame.index = this._frames.length;
             this._frames.push(frame);
             if(frame.name !== '') {
@@ -1740,32 +2088,59 @@ var Phaser;
             }
             return frame;
         };
-        FrameData.prototype.getFrame = function (index) {
+        FrameData.prototype.getFrame = /**
+        * Get a frame by its index.
+        * @param index {number} Index of the frame you want to get.
+        * @return {Frame} The frame you want.
+        */
+        function (index) {
             if(this._frames[index]) {
                 return this._frames[index];
             }
             return null;
         };
-        FrameData.prototype.getFrameByName = function (name) {
+        FrameData.prototype.getFrameByName = /**
+        * Get a frame by its name.
+        * @param name {string} Name of the frame you want to get.
+        * @return {Frame} The frame you want.
+        */
+        function (name) {
             if(this._frameNames[name] >= 0) {
                 return this._frames[this._frameNames[name]];
             }
             return null;
         };
-        FrameData.prototype.checkFrameName = function (name) {
+        FrameData.prototype.checkFrameName = /**
+        * Check whether there's a frame with given name.
+        * @param name {string} Name of the frame you want to check.
+        * @return {boolean} True if frame with given name found, otherwise return false.
+        */
+        function (name) {
             if(this._frameNames[name] >= 0) {
                 return true;
             }
             return false;
         };
-        FrameData.prototype.getFrameRange = function (start, end, output) {
+        FrameData.prototype.getFrameRange = /**
+        * Get ranges of frames in an array.
+        * @param start {number} Start index of frames you want.
+        * @param end {number} End index of frames you want.
+        * @param [output] {Frame[]} result will be added into this array.
+        * @return {Frame[]} Ranges of specific frames in an array.
+        */
+        function (start, end, output) {
             if (typeof output === "undefined") { output = []; }
             for(var i = start; i <= end; i++) {
                 output.push(this._frames[i]);
             }
             return output;
         };
-        FrameData.prototype.getFrameIndexes = function (output) {
+        FrameData.prototype.getFrameIndexes = /**
+        * Get all indexes of frames by giving their name.
+        * @param [output] {number[]} result will be added into this array.
+        * @return {number[]} Indexes of specific frames in an array.
+        */
+        function (output) {
             if (typeof output === "undefined") { output = []; }
             output.length = 0;
             for(var i = 0; i < this._frames.length; i++) {
@@ -1773,7 +2148,12 @@ var Phaser;
             }
             return output;
         };
-        FrameData.prototype.getFrameIndexesByName = function (input) {
+        FrameData.prototype.getFrameIndexesByName = /**
+        * Get all names of frames by giving their indexes.
+        * @param [output] {number[]} result will be added into this array.
+        * @return {number[]} Names of specific frames in an array.
+        */
+        function (input) {
             var output = [];
             for(var i = 0; i < input.length; i++) {
                 if(this.getFrameByName(input[i])) {
@@ -1782,10 +2162,19 @@ var Phaser;
             }
             return output;
         };
-        FrameData.prototype.getAllFrames = function () {
+        FrameData.prototype.getAllFrames = /**
+        * Get all frames in this frame data.
+        * @return {Frame[]} All the frames in an array.
+        */
+        function () {
             return this._frames;
         };
-        FrameData.prototype.getFrames = function (range) {
+        FrameData.prototype.getFrames = /**
+        * Get All frames with specific ranges.
+        * @param range {number[]} Ranges in an array.
+        * @return {Frame[]} All frames in an array.
+        */
+        function (range) {
             var output = [];
             for(var i = 0; i < range.length; i++) {
                 output.push(this._frames[i]);
@@ -1811,19 +2200,44 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var AnimationManager = (function () {
+        /**
+        * AnimationManager constructor
+        * Create a new <code>AnimationManager</code>.
+        *
+        * @param parent {Sprite} Owner sprite of this manager.
+        */
         function AnimationManager(game, parent) {
+            /**
+            * Data contains animation frames.
+            * @type {FrameData}
+            */
             this._frameData = null;
+            /**
+            * Keeps track of the current frame of animation.
+            */
             this.currentFrame = null;
             this._game = game;
             this._parent = parent;
             this._anims = {
             };
         }
-        AnimationManager.prototype.loadFrameData = function (frameData) {
+        AnimationManager.prototype.loadFrameData = /**
+        * Load animation frame data.
+        * @param frameData Data to be loaded.
+        */
+        function (frameData) {
             this._frameData = frameData;
             this.frame = 0;
         };
-        AnimationManager.prototype.add = function (name, frames, frameRate, loop, useNumericIndex) {
+        AnimationManager.prototype.add = /**
+        * Add a new animation.
+        * @param name {string} What this animation should be called (e.g. "run").
+        * @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
+        * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+        */
+        function (name, frames, frameRate, loop, useNumericIndex) {
             if (typeof frames === "undefined") { frames = null; }
             if (typeof frameRate === "undefined") { frameRate = 60; }
             if (typeof loop === "undefined") { loop = false; }
@@ -1846,7 +2260,13 @@ var Phaser;
             this.currentAnim = this._anims[name];
             this.currentFrame = this.currentAnim.currentFrame;
         };
-        AnimationManager.prototype.validateFrames = function (frames, useNumericIndex) {
+        AnimationManager.prototype.validateFrames = /**
+        * Check whether the frames is valid.
+        * @param frames {any[]} Frames to be validated.
+        * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
+        * @return {boolean} True if they're valid, otherwise return false.
+        */
+        function (frames, useNumericIndex) {
             for(var i = 0; i < frames.length; i++) {
                 if(useNumericIndex == true) {
                     if(frames[i] > this._frameData.total) {
@@ -1860,7 +2280,13 @@ var Phaser;
             }
             return true;
         };
-        AnimationManager.prototype.play = function (name, frameRate, loop) {
+        AnimationManager.prototype.play = /**
+        * Play animation with specific name.
+        * @param name {string} The string name of the animation you want to play.
+        * @param frameRate {number} FrameRate you want to specify instead of using default.
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        */
+        function (name, frameRate, loop) {
             if (typeof frameRate === "undefined") { frameRate = null; }
             if(this._anims[name]) {
                 if(this.currentAnim == this._anims[name]) {
@@ -1873,13 +2299,20 @@ var Phaser;
                 }
             }
         };
-        AnimationManager.prototype.stop = function (name) {
+        AnimationManager.prototype.stop = /**
+        * Stop animation by name.
+        * Current animation will be automatically set to the stopped one.
+        */
+        function (name) {
             if(this._anims[name]) {
                 this.currentAnim = this._anims[name];
                 this.currentAnim.stop();
             }
         };
-        AnimationManager.prototype.update = function () {
+        AnimationManager.prototype.update = /**
+        * Update animation and parent sprite's bounds.
+        */
+        function () {
             if(this.currentAnim && this.currentAnim.update() == true) {
                 this.currentFrame = this.currentAnim.currentFrame;
                 this._parent.bounds.width = this.currentFrame.width;
@@ -1944,6 +2377,9 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Cache = (function () {
+        /**
+        * Cache constructor
+        */
         function Cache(game) {
             this._game = game;
             this._canvases = {
@@ -1955,13 +2391,28 @@ var Phaser;
             this._text = {
             };
         }
-        Cache.prototype.addCanvas = function (key, canvas, context) {
+        Cache.prototype.addCanvas = /**
+        * Add a new canvas.
+        * @param key {string} Asset key for this canvas.
+        * @param canvas {HTMLCanvasElement} Canvas DOM element.
+        * @param context {CanvasRenderingContext2D} Render context of this canvas.
+        */
+        function (key, canvas, context) {
             this._canvases[key] = {
                 canvas: canvas,
                 context: context
             };
         };
-        Cache.prototype.addSpriteSheet = function (key, url, data, frameWidth, frameHeight, frameMax) {
+        Cache.prototype.addSpriteSheet = /**
+        * Add a new sprite sheet.
+        * @param key {string} Asset key for the sprite sheet.
+        * @param url {string} URL of this sprite sheet file.
+        * @param data {object} Extra sprite sheet data.
+        * @param frameWidth {number} Width of the sprite sheet.
+        * @param frameHeight {number} Height of the sprite sheet.
+        * @param frameMax {number} How many frames stored in the sprite sheet.
+        */
+        function (key, url, data, frameWidth, frameHeight, frameMax) {
             this._images[key] = {
                 url: url,
                 data: data,
@@ -1971,7 +2422,14 @@ var Phaser;
             };
             this._images[key].frameData = Phaser.AnimationLoader.parseSpriteSheet(this._game, key, frameWidth, frameHeight, frameMax);
         };
-        Cache.prototype.addTextureAtlas = function (key, url, data, jsonData) {
+        Cache.prototype.addTextureAtlas = /**
+        * Add a new texture atlas.
+        * @param key  {string} Asset key for the texture atlas.
+        * @param url  {string} URL of this texture atlas file.
+        * @param data {object} Extra texture atlas data.
+        * @param data {object} Texture atlas frames data.
+        */
+        function (key, url, data, jsonData) {
             this._images[key] = {
                 url: url,
                 data: data,
@@ -1979,71 +2437,133 @@ var Phaser;
             };
             this._images[key].frameData = Phaser.AnimationLoader.parseJSONData(this._game, jsonData);
         };
-        Cache.prototype.addImage = function (key, url, data) {
+        Cache.prototype.addImage = /**
+        * Add a new image.
+        * @param key {string} Asset key for the image.
+        * @param url {string} URL of this image file.
+        * @param data {object} Extra image data.
+        */
+        function (key, url, data) {
             this._images[key] = {
                 url: url,
                 data: data,
                 spriteSheet: false
             };
         };
-        Cache.prototype.addSound = function (key, url, data) {
+        Cache.prototype.addSound = /**
+        * Add a new sound.
+        * @param key {string} Asset key for the sound.
+        * @param url {string} URL of this sound file.
+        * @param data {object} Extra sound data.
+        */
+        function (key, url, data) {
             this._sounds[key] = {
                 url: url,
                 data: data,
                 decoded: false
             };
         };
-        Cache.prototype.decodedSound = function (key, data) {
+        Cache.prototype.decodedSound = /**
+        * Add a new decoded sound.
+        * @param key {string} Asset key for the sound.
+        * @param url {string} URL of this sound file.
+        * @param data {object} Extra sound data.
+        */
+        function (key, data) {
             this._sounds[key].data = data;
             this._sounds[key].decoded = true;
         };
-        Cache.prototype.addText = function (key, url, data) {
+        Cache.prototype.addText = /**
+        * Add a new text data.
+        * @param key {string} Asset key for the text data.
+        * @param url {string} URL of this text data file.
+        * @param data {object} Extra text data.
+        */
+        function (key, url, data) {
             this._text[key] = {
                 url: url,
                 data: data
             };
         };
-        Cache.prototype.getCanvas = function (key) {
+        Cache.prototype.getCanvas = /**
+        * Get canvas by key.
+        * @param key Asset key of the canvas you want.
+        * @return {object} The canvas you want.
+        */
+        function (key) {
             if(this._canvases[key]) {
                 return this._canvases[key].canvas;
             }
             return null;
         };
-        Cache.prototype.getImage = function (key) {
+        Cache.prototype.getImage = /**
+        * Get image data by key.
+        * @param key Asset key of the image you want.
+        * @return {object} The image data you want.
+        */
+        function (key) {
             if(this._images[key]) {
                 return this._images[key].data;
             }
             return null;
         };
-        Cache.prototype.getFrameData = function (key) {
+        Cache.prototype.getFrameData = /**
+        * Get frame data by key.
+        * @param key Asset key of the frame data you want.
+        * @return {object} The frame data you want.
+        */
+        function (key) {
             if(this._images[key] && this._images[key].spriteSheet == true) {
                 return this._images[key].frameData;
             }
             return null;
         };
-        Cache.prototype.getSound = function (key) {
+        Cache.prototype.getSound = /**
+        * Get sound data by key.
+        * @param key Asset key of the sound you want.
+        * @return {object} The sound data you want.
+        */
+        function (key) {
             if(this._sounds[key]) {
                 return this._sounds[key].data;
             }
             return null;
         };
-        Cache.prototype.isSoundDecoded = function (key) {
+        Cache.prototype.isSoundDecoded = /**
+        * Check whether an asset is decoded sound.
+        * @param key Asset key of the sound you want.
+        * @return {object} The sound data you want.
+        */
+        function (key) {
             if(this._sounds[key]) {
                 return this._sounds[key].decoded;
             }
         };
-        Cache.prototype.isSpriteSheet = function (key) {
+        Cache.prototype.isSpriteSheet = /**
+        * Check whether an asset is sprite sheet.
+        * @param key Asset key of the sprite sheet you want.
+        * @return {object} The sprite sheet data you want.
+        */
+        function (key) {
             if(this._images[key]) {
                 return this._images[key].spriteSheet;
             }
         };
-        Cache.prototype.getText = function (key) {
+        Cache.prototype.getText = /**
+        * Get text data by key.
+        * @param key Asset key of the text data you want.
+        * @return {object} The text data you want.
+        */
+        function (key) {
             if(this._text[key]) {
                 return this._text[key].data;
             }
             return null;
         };
-        Cache.prototype.destroy = function () {
+        Cache.prototype.destroy = /**
+        * Clean up cache memory.
+        */
+        function () {
             for(var item in this._canvases) {
                 delete this._canvases[item['key']];
             }
@@ -2075,32 +2595,70 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var CameraManager = (function () {
+        /**
+        * CameraManager constructor
+        * This will create a new <code>Camera</code> with position and size.
+        *
+        * @param x {number} X Position of the created camera.
+        * @param y {number} y Position of the created camera.
+        * @param width {number} Width of the created camera.
+        * @param height {number} Height of the created camera.
+        */
         function CameraManager(game, x, y, width, height) {
+            /**
+            * Local helper stores index of next created camera.
+            */
             this._cameraInstance = 0;
             this._game = game;
             this._cameras = [];
             this.current = this.addCamera(x, y, width, height);
         }
-        CameraManager.prototype.getAll = function () {
+        CameraManager.prototype.getAll = /**
+        * Get all the cameras.
+        *
+        * @returns {Camera[]} An array contains all the cameras.
+        */
+        function () {
             return this._cameras;
         };
-        CameraManager.prototype.update = function () {
+        CameraManager.prototype.update = /**
+        * Update cameras.
+        */
+        function () {
             this._cameras.forEach(function (camera) {
                 return camera.update();
             });
         };
-        CameraManager.prototype.render = function () {
+        CameraManager.prototype.render = /**
+        * Render cameras.
+        */
+        function () {
             this._cameras.forEach(function (camera) {
                 return camera.render();
             });
         };
-        CameraManager.prototype.addCamera = function (x, y, width, height) {
+        CameraManager.prototype.addCamera = /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
+        function (x, y, width, height) {
             var newCam = new Phaser.Camera(this._game, this._cameraInstance, x, y, width, height);
             this._cameras.push(newCam);
             this._cameraInstance++;
             return newCam;
         };
-        CameraManager.prototype.removeCamera = function (id) {
+        CameraManager.prototype.removeCamera = /**
+        * Remove a new camera with its id.
+        *
+        * @param id {number} ID of the camera you want to remove.
+        * @returns {boolean} True if successfully removed the camera, otherwise return false.
+        */
+        function (id) {
             for(var c = 0; c < this._cameras.length; c++) {
                 if(this._cameras[c].ID == id) {
                     if(this.current.ID === this._cameras[c].ID) {
@@ -2112,7 +2670,10 @@ var Phaser;
             }
             return false;
         };
-        CameraManager.prototype.destroy = function () {
+        CameraManager.prototype.destroy = /**
+        * Clean up memory.
+        */
+        function () {
             this._cameras.length = 0;
             this.current = this.addCamera(0, 0, this._game.stage.width, this._game.stage.height);
         };
@@ -2408,7 +2969,7 @@ var Phaser;
             get: /**
             * The x coordinate of the top-left corner of the rectangle
             * @property x
-            * @type Number
+            * @type {Number}
             **/
             function () {
                 return this._x;
@@ -2416,7 +2977,7 @@ var Phaser;
             set: /**
             * The x coordinate of the top-left corner of the rectangle
             * @property x
-            * @type Number
+            * @type {Number}
             **/
             function (value) {
                 this._x = value;
@@ -2431,7 +2992,7 @@ var Phaser;
             get: /**
             * The y coordinate of the top-left corner of the rectangle
             * @property y
-            * @type Number
+            * @type {Number}
             **/
             function () {
                 return this._y;
@@ -2439,7 +3000,7 @@ var Phaser;
             set: /**
             * The y coordinate of the top-left corner of the rectangle
             * @property y
-            * @type Number
+            * @type {Number}
             **/
             function (value) {
                 this._y = value;
@@ -2544,31 +3105,31 @@ var Phaser;
             /**
             * The width of the rectangle
             * @property width
-            * @type Number
+            * @type {Number}
             **/
             this._width = 0;
             /**
             * The height of the rectangle
             * @property height
-            * @type Number
+            * @type {Number}
             **/
             this._height = 0;
             /**
             * Half of the width of the rectangle
             * @property halfWidth
-            * @type Number
+            * @type {Number}
             **/
             this._halfWidth = 0;
             /**
             * Half of the height of the rectangle
             * @property halfHeight
-            * @type Number
+            * @type {Number}
             **/
             this._halfHeight = 0;
             /**
             * The size of the longest side (width or height)
             * @property length
-            * @type Number
+            * @type {Number}
             **/
             this.length = 0;
             this._width = width;
@@ -2594,7 +3155,7 @@ var Phaser;
             get: /**
             * The x coordinate of the top-left corner of the rectangle
             * @property x
-            * @type Number
+            * @type {Number}
             **/
             function () {
                 return this.topLeft.x;
@@ -2602,7 +3163,7 @@ var Phaser;
             set: /**
             * The x coordinate of the top-left corner of the rectangle
             * @property x
-            * @type Number
+            * @type {Number}
             **/
             function (value) {
                 this.topLeft.x = value;
@@ -2614,7 +3175,7 @@ var Phaser;
             get: /**
             * The y coordinate of the top-left corner of the rectangle
             * @property y
-            * @type Number
+            * @type {Number}
             **/
             function () {
                 return this.topLeft.y;
@@ -2622,7 +3183,7 @@ var Phaser;
             set: /**
             * The y coordinate of the top-left corner of the rectangle
             * @property y
-            * @type Number
+            * @type {Number}
             **/
             function (value) {
                 this.topLeft.y = value;
@@ -2676,7 +3237,7 @@ var Phaser;
             get: /**
             * The width of the rectangle
             * @property width
-            * @type Number
+            * @type {Number}
             **/
             function () {
                 return this._width;
@@ -2684,7 +3245,7 @@ var Phaser;
             set: /**
             * The width of the rectangle
             * @property width
-            * @type Number
+            * @type {Number}
             **/
             function (value) {
                 this._width = value;
@@ -2698,7 +3259,7 @@ var Phaser;
             get: /**
             * The height of the rectangle
             * @property height
-            * @type Number
+            * @type {Number}
             **/
             function () {
                 return this._height;
@@ -2706,7 +3267,7 @@ var Phaser;
             set: /**
             * The height of the rectangle
             * @property height
-            * @type Number
+            * @type {Number}
             **/
             function (value) {
                 this._height = value;
@@ -2720,7 +3281,7 @@ var Phaser;
             get: /**
             * Half of the width of the rectangle
             * @property halfWidth
-            * @type Number
+            * @type {Number}
             **/
             function () {
                 return this._halfWidth;
@@ -2732,7 +3293,7 @@ var Phaser;
             get: /**
             * Half of the height of the rectangle
             * @property halfHeight
-            * @type Number
+            * @type {Number}
             **/
             function () {
                 return this._halfHeight;
@@ -2773,7 +3334,7 @@ var Phaser;
             * Changing the left property of a Rectangle object has no effect on the y and height properties.
             * However it does affect the width property, whereas changing the x value does not affect the width property.
             * @method left
-            * @ return {number}
+            * @ return {Number}
             **/
             function () {
                 return this.x;
@@ -3110,7 +3671,7 @@ var Phaser;
         Rectangle.prototype.toString = /**
         * Returns a string representation of this object.
         * @method toString
-        * @return {string} a string representation of the instance.
+        * @return {String} a string representation of the instance.
         **/
         function () {
             return "[{Rectangle (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + " empty=" + this.isEmpty + ")}]";
@@ -3241,8 +3802,9 @@ var Phaser;
         * Creates a new Circle object with the center coordinate specified by the x and y parameters and the diameter specified by the diameter parameter. If you call this function without parameters, a circle with x, y, diameter and radius properties set to 0 is created.
         * @class Circle
         * @constructor
-        * @param {Number} x The x coordinate of the center of the circle.
-        * @param {Number} y The y coordinate of the center of the circle.
+        * @param {Number} [x] The x coordinate of the center of the circle.
+        * @param {Number} [y] The y coordinate of the center of the circle.
+        * @param {Number} [diameter] The diameter of the circle.
         * @return {Circle} This circle object
         **/
         function Circle(x, y, diameter) {
@@ -3471,7 +4033,7 @@ var Phaser;
         Circle.prototype.clone = /**
         * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
         * @method clone
-        * @param {Circle} output Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+        * @param {Circle} [optional] output Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
         * @return {Phaser.Circle}
         **/
         function (output) {
@@ -3534,7 +4096,7 @@ var Phaser;
         * Returns the distance from the center of this Circle object to the given object (can be Circle, Point or anything with x/y values)
         * @method distanceFrom
         * @param {Circle/Point} target - The destination Point object.
-        * @param {Boolean} round - Round the distance to the nearest integer (default false)
+        * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
         * @return {Number} The distance between this Point object and the destination Point object.
         **/
         function (target, round) {
@@ -3574,9 +4136,9 @@ var Phaser;
         Circle.prototype.circumferencePoint = /**
         * Returns a Point object containing the coordinates of a point on the circumference of this Circle based on the given angle.
         * @method circumferencePoint
-        * @param {Number} The angle in radians (unless asDegrees is true) to return the point from.
-        * @param {Boolean} Is the given angle in radians (false) or degrees (true)?
-        * @param {Phaser.Point} An optional Point object to put the result in to. If none specified a new Point object will be created.
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
         * @return {Phaser.Point} The Point object holding the result.
         **/
         function (angle, asDegrees, output) {
@@ -3665,25 +4227,25 @@ var Phaser;
             /**
             *
             * @property x1
-            * @type Number
+            * @type {Number}
             */
             this.x1 = 0;
             /**
             *
             * @property y1
-            * @type Number
+            * @type {Number}
             */
             this.y1 = 0;
             /**
             *
             * @property x2
-            * @type Number
+            * @type {Number}
             */
             this.x2 = 0;
             /**
             *
             * @property y2
-            * @type Number
+            * @type {Number}
             */
             this.y2 = 0;
             this.setTo(x1, y1, x2, y2);
@@ -3922,7 +4484,7 @@ var Phaser;
             /**
             * Did they intersect or not?
             * @property result
-            * @type Boolean
+            * @type {Boolean}
             */
             this.result = false;
         }
@@ -4000,11 +4562,11 @@ var Phaser;
         /**
         * Instantiate a new Quad Tree node.
         *
-        * @param	X			The X-coordinate of the point in space.
-        * @param	Y			The Y-coordinate of the point in space.
-        * @param	Width		Desired width of this node.
-        * @param	Height		Desired height of this node.
-        * @param	Parent		The parent branch or node.  Pass null to create a root.
+        * @param {Number} X			The X-coordinate of the point in space.
+        * @param {Number} Y			The Y-coordinate of the point in space.
+        * @param {Number} Width		Desired width of this node.
+        * @param {Number} Height		Desired height of this node.
+        * @param {Number} Parent		The parent branch or node.  Pass null to create a root.
         */
         function QuadTree(X, Y, Width, Height, Parent) {
             if (typeof Parent === "undefined") { Parent = null; }
@@ -4099,10 +4661,10 @@ var Phaser;
         QuadTree.prototype.load = /**
         * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
         *
-        * @param ObjectOrGroup1	Any object that is or extends GameObject or Group.
-        * @param ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
-        * @param NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.
-        * @param ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate().
+        * @param {Basic} ObjectOrGroup1	Any object that is or extends GameObject or Group.
+        * @param {Basic} ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
+        * @param {Function} NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.
+        * @param {Function} ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate().
         */
         function (ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, ProcessCallback) {
             if (typeof ObjectOrGroup2 === "undefined") { ObjectOrGroup2 = null; }
@@ -4126,8 +4688,8 @@ var Phaser;
         * This function will recursively add all group members, but
         * not the groups themselves.
         *
-        * @param	ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
-        * @param	List			A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
+        * @param {Basic} ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
+        * @param {Number} List	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
         */
         function (ObjectOrGroup, List) {
             QuadTree._list = List;
@@ -4288,7 +4850,7 @@ var Phaser;
         * <code>QuadTree</code>'s other main function.  Call this after adding objects
         * using <code>QuadTree.load()</code> to compare the objects that you loaded.
         *
-        * @return	Whether or not any overlaps were found.
+        * @return {Boolean} Whether or not any overlaps were found.
         */
         function () {
             //console.log('quadtree execute');
@@ -4334,7 +4896,7 @@ var Phaser;
         QuadTree.prototype.overlapNode = /**
         * An private for comparing an object against the contents of a node.
         *
-        * @return	Whether or not any overlaps were found.
+        * @return {Boolean} Whether or not any overlaps were found.
         */
         function () {
             //Walk the list and check for overlaps
@@ -4422,7 +4984,7 @@ var Phaser;
         * Checks for Line to Line intersection and returns an IntersectResult object containing the results of the intersection.
         * @param line1 The first Line object to check
         * @param line2 The second Line object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineToLine(line1, line2, output) {
@@ -4439,7 +5001,7 @@ var Phaser;
         * Checks for Line to Line Segment intersection and returns an IntersectResult object containing the results of the intersection.
         * @param line The Line object to check
         * @param seg The Line segment object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineToLineSegment(line, seg, output) {
@@ -4465,7 +5027,7 @@ var Phaser;
         * @param y1 The start y coordinate of the raw segment
         * @param x2 The end x coordinate of the raw segment
         * @param y2 The end y coordinate of the raw segment
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineToRawSegment(line, x1, y1, x2, y2, output) {
@@ -4488,7 +5050,7 @@ var Phaser;
         * Checks for Line to Ray intersection and returns the result in an IntersectResult object.
         * @param line1 The Line object to check
         * @param ray The Ray object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineToRay(line1, ray, output) {
@@ -4512,7 +5074,7 @@ var Phaser;
         * Check if the Line and Circle objects intersect
         * @param line The Line object to check
         * @param circle The Circle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineToCircle(line, circle, output) {
@@ -4527,7 +5089,7 @@ var Phaser;
         * Check if the Line intersects each side of the Rectangle
         * @param line The Line object to check
         * @param rect The Rectangle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineToRectangle(line, rect, output) {
@@ -4555,7 +5117,7 @@ var Phaser;
         * Check if the two Line Segments intersect and returns the result in an IntersectResult object.
         * @param line1 The first Line Segment to check
         * @param line2 The second Line Segment to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineSegmentToLineSegment(line1, line2, output) {
@@ -4572,7 +5134,7 @@ var Phaser;
         * Check if the Line Segment intersects with the Ray and returns the result in an IntersectResult object.
         * @param line The Line Segment to check.
         * @param ray The Ray to check.
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineSegmentToRay(line, ray, output) {
@@ -4589,7 +5151,7 @@ var Phaser;
         * Check if the Line Segment intersects with the Circle and returns the result in an IntersectResult object.
         * @param seg The Line Segment to check.
         * @param circle The Circle to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineSegmentToCircle(seg, circle, output) {
@@ -4622,7 +5184,7 @@ var Phaser;
         * Check if the Line Segment intersects with the Rectangle and returns the result in an IntersectResult object.
         * @param seg The Line Segment to check.
         * @param rect The Rectangle to check.
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function lineSegmentToRectangle(seg, rect, output) {
@@ -4655,7 +5217,7 @@ var Phaser;
         * Check for Ray to Rectangle intersection and returns the result in an IntersectResult object.
         * @param ray The Ray to check.
         * @param rect The Rectangle to check.
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function rayToRectangle(ray, rect, output) {
@@ -4674,7 +5236,7 @@ var Phaser;
         * @param lineY1
         * @param lineX2
         * @param lineY2
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function rayToLineSegment(rayX1, rayY1, rayX2, rayY2, lineX1, lineY1, lineX2, lineY2, output) {
@@ -4703,7 +5265,7 @@ var Phaser;
         * Determines whether the specified point is contained within the rectangular region defined by the Rectangle object and returns the result in an IntersectResult object.
         * @param point The Point or MicroPoint object to check, or any object with x and y properties.
         * @param rect The Rectangle object to check the point against
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function pointToRectangle(point, rect, output) {
@@ -4716,7 +5278,7 @@ var Phaser;
         * Check whether two axis aligned Rectangles intersect and returns the intersecting rectangle dimensions in an IntersectResult object if they do.
         * @param rect1 The first Rectangle object.
         * @param rect2 The second Rectangle object.
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function rectangleToRectangle(rect1, rect2, output) {
@@ -4737,7 +5299,7 @@ var Phaser;
         * Checks if the Rectangle and Circle objects intersect and returns the result in an IntersectResult object.
         * @param rect The Rectangle object to check
         * @param circle The Circle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function rectangleToCircle(rect, circle, output) {
@@ -4748,7 +5310,7 @@ var Phaser;
         * Checks if the two Circle objects intersect and returns the result in an IntersectResult object.
         * @param circle1 The first Circle object to check
         * @param circle2 The second Circle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function circleToCircle(circle1, circle2, output) {
@@ -4760,7 +5322,7 @@ var Phaser;
         * Checks if the Circle object intersects with the Rectangle and returns the result in an IntersectResult object.
         * @param circle The Circle object to check
         * @param rect The Rectangle object to check
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function circleToRectangle(circle, rect, output) {
@@ -4774,7 +5336,7 @@ var Phaser;
         * Checks if the Point object is contained within the Circle and returns the result in an IntersectResult object.
         * @param circle The Circle object to check
         * @param point A Point or MicroPoint object to check, or any object with x and y properties
-        * @param output An optional IntersectResult object to store the intersection values in. One is created if none given.
+        * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
         * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
         */
         function circleContainsPoint(circle, point, output) {
@@ -5119,6 +5681,14 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var DynamicTexture = (function () {
+        /**
+        * DynamicTexture constructor
+        * Create a new <code>DynamicTexture</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param width {number} Init width of this texture.
+        * @param height {number} Init height of this texture.
+        */
         function DynamicTexture(game, width, height) {
             this._sx = 0;
             this._sy = 0;
@@ -5135,7 +5705,13 @@ var Phaser;
             this.context = this.canvas.getContext('2d');
             this.bounds = new Phaser.Rectangle(0, 0, width, height);
         }
-        DynamicTexture.prototype.getPixel = function (x, y) {
+        DynamicTexture.prototype.getPixel = /**
+        * Get a color of a specific pixel.
+        * @param x {number} X position of the pixel in this texture.
+        * @param y {number} Y position of the pixel in this texture.
+        * @return {number} A native color value integer (format: 0xRRGGBB)
+        */
+        function (x, y) {
             //r = imageData.data[0];
             //g = imageData.data[1];
             //b = imageData.data[2];
@@ -5143,30 +5719,65 @@ var Phaser;
             var imageData = this.context.getImageData(x, y, 1, 1);
             return this.getColor(imageData.data[0], imageData.data[1], imageData.data[2]);
         };
-        DynamicTexture.prototype.getPixel32 = function (x, y) {
+        DynamicTexture.prototype.getPixel32 = /**
+        * Get a color of a specific pixel (including alpha value).
+        * @param x {number} X position of the pixel in this texture.
+        * @param y {number} Y position of the pixel in this texture.
+        * @return  A native color value integer (format: 0xAARRGGBB)
+        */
+        function (x, y) {
             var imageData = this.context.getImageData(x, y, 1, 1);
             return this.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
         };
-        DynamicTexture.prototype.getPixels = //  Returns a CanvasPixelArray
+        DynamicTexture.prototype.getPixels = /**
+        * Get pixels in array in a specific rectangle.
+        * @param rect {Rectangle} The specific rectangle.
+        * @returns {array} CanvasPixelArray.
+        */
         function (rect) {
             return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
         };
-        DynamicTexture.prototype.setPixel = function (x, y, color) {
+        DynamicTexture.prototype.setPixel = /**
+        * Set color of a specific pixel.
+        * @param x {number} X position of the target pixel.
+        * @param y {number} Y position of the target pixel.
+        * @param color {number} Native integer with color value. (format: 0xRRGGBB)
+        */
+        function (x, y, color) {
             this.context.fillStyle = color;
             this.context.fillRect(x, y, 1, 1);
         };
-        DynamicTexture.prototype.setPixel32 = function (x, y, color) {
+        DynamicTexture.prototype.setPixel32 = /**
+        * Set color (with alpha) of a specific pixel.
+        * @param x {number} X position of the target pixel.
+        * @param y {number} Y position of the target pixel.
+        * @param color {number} Native integer with color value. (format: 0xAARRGGBB)
+        */
+        function (x, y, color) {
             this.context.fillStyle = color;
             this.context.fillRect(x, y, 1, 1);
         };
-        DynamicTexture.prototype.setPixels = function (rect, input) {
+        DynamicTexture.prototype.setPixels = /**
+        * Set image data to a specific rectangle.
+        * @param rect {Rectangle} Target rectangle.
+        * @param input {object} Source image data.
+        */
+        function (rect, input) {
             this.context.putImageData(input, rect.x, rect.y);
         };
-        DynamicTexture.prototype.fillRect = function (rect, color) {
+        DynamicTexture.prototype.fillRect = /**
+        * Fill a given rectangle with specific color.
+        * @param rect {Rectangle} Target rectangle you want to fill.
+        * @param color {number} A native number with color value. (format: 0xRRGGBB)
+        */
+        function (rect, color) {
             this.context.fillStyle = color;
             this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
         };
-        DynamicTexture.prototype.pasteImage = function (key, frame, destX, destY, destWidth, destHeight) {
+        DynamicTexture.prototype.pasteImage = /**
+        *
+        */
+        function (key, frame, destX, destY, destWidth, destHeight) {
             if (typeof frame === "undefined") { frame = -1; }
             if (typeof destX === "undefined") { destX = 0; }
             if (typeof destY === "undefined") { destY = 0; }
@@ -5199,19 +5810,25 @@ var Phaser;
                 this._dh = destHeight;
             }
             if(texture != null) {
-                this.context.drawImage(texture, //	Source Image
-                this._sx, //	Source X (location within the source image)
-                this._sy, //	Source Y
-                this._sw, //	Source Width
-                this._sh, //	Source Height
-                this._dx, //	Destination X (where on the canvas it'll be drawn)
-                this._dy, //	Destination Y
-                this._dw, //	Destination Width (always same as Source Width unless scaled)
+                this.context.drawImage(texture, //  Source Image
+                this._sx, //  Source X (location within the source image)
+                this._sy, //  Source Y
+                this._sw, //  Source Width
+                this._sh, //  Source Height
+                this._dx, //  Destination X (where on the canvas it'll be drawn)
+                this._dy, //  Destination Y
+                this._dw, //  Destination Width (always same as Source Width unless scaled)
                 this._dh);
-                //	Destination Height (always same as Source Height unless scaled)
+                //  Destination Height (always same as Source Height unless scaled)
                             }
         };
         DynamicTexture.prototype.copyPixels = //  TODO - Add in support for: alphaBitmapData: BitmapData = null, alphaPoint: Point = null, mergeAlpha: bool = false
+        /**
+        * Copy pixel from another DynamicTexture to this texture.
+        * @param sourceTexture {DynamicTexture} Source texture object.
+        * @param sourceRect {Rectangle} The specific region rectangle to be copied to this in the source.
+        * @param destPoint {Point} Top-left point the target image data will be paste at.
+        */
         function (sourceTexture, sourceRect, destPoint) {
             //  Swap for drawImage if the sourceRect is the same size as the sourceTexture to avoid a costly getImageData call
             if(sourceRect.equals(this.bounds) == true) {
@@ -5220,7 +5837,10 @@ var Phaser;
                 this.context.putImageData(sourceTexture.getPixels(sourceRect), destPoint.x, destPoint.y);
             }
         };
-        DynamicTexture.prototype.clear = function () {
+        DynamicTexture.prototype.clear = /**
+        * Clear the whole canvas.
+        */
+        function () {
             this.context.clearRect(0, 0, this.bounds.width, this.bounds.height);
         };
         Object.defineProperty(DynamicTexture.prototype, "width", {
@@ -5240,12 +5860,12 @@ var Phaser;
         DynamicTexture.prototype.getColor32 = /**
         * Given an alpha and 3 color values this will return an integer representation of it
         *
-        * @param	alpha	The Alpha value (between 0 and 255)
-        * @param	red		The Red channel value (between 0 and 255)
-        * @param	green	The Green channel value (between 0 and 255)
-        * @param	blue	The Blue channel value (between 0 and 255)
+        * @param alpha {number} The Alpha value (between 0 and 255)
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
         *
-        * @return	A native color value integer (format: 0xAARRGGBB)
+        * @return  A native color value integer (format: 0xAARRGGBB)
         */
         function (alpha, red, green, blue) {
             return alpha << 24 | red << 16 | green << 8 | blue;
@@ -5253,11 +5873,11 @@ var Phaser;
         DynamicTexture.prototype.getColor = /**
         * Given 3 color values this will return an integer representation of it
         *
-        * @param	red		The Red channel value (between 0 and 255)
-        * @param	green	The Green channel value (between 0 and 255)
-        * @param	blue	The Blue channel value (between 0 and 255)
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
         *
-        * @return	A native color value integer (format: 0xRRGGBB)
+        * @return  A native color value integer (format: 0xRRGGBB)
         */
         function (red, green, blue) {
             return red << 16 | green << 8 | blue;
@@ -5429,7 +6049,7 @@ var Phaser;
         *
         * @param input - the value to snap
         * @param gap - the interval gap of the grid
-        * @param start - optional starting offset for gap
+        * @param [start] - optional starting offset for gap
         */
         function (input, gap, start) {
             if (typeof start === "undefined") { start = 0; }
@@ -5447,7 +6067,7 @@ var Phaser;
         *
         * @param input - the value to snap
         * @param gap - the interval gap of the grid
-        * @param start - optional starting offset for gap
+        * @param [start] - optional starting offset for gap
         */
         function (input, gap, start) {
             if (typeof start === "undefined") { start = 0; }
@@ -5465,7 +6085,7 @@ var Phaser;
         *
         * @param input - the value to snap
         * @param gap - the interval gap of the grid
-        * @param start - optional starting offset for gap
+        * @param [start] - optional starting offset for gap
         */
         function (input, gap, start) {
             if (typeof start === "undefined") { start = 0; }
@@ -6250,9 +6870,9 @@ var Phaser;
         * <p>WARNING: If the group has a maxSize that has already been met,
         * the object will NOT be added to the group!</p>
         *
-        * @param	Object		The object you want to add to the group.
+        * @param {Basic} Object The object you want to add to the group.
         *
-        * @return	The same <code>Basic</code> object that was passed in.
+        * @return {Basic} The same <code>Basic</code> object that was passed in.
         */
         function (Object) {
             //Don't bother adding an object twice.
@@ -6309,9 +6929,9 @@ var Phaser;
         * and no object class was provided, it will return null
         * instead of a valid object!</p>
         *
-        * @param	ObjectClass		The class type you want to recycle (e.g. Basic, EvilRobot, etc). Do NOT "new" the class in the parameter!
+        * @param {class} ObjectClass The class type you want to recycle (e.g. Basic, EvilRobot, etc). Do NOT "new" the class in the parameter!
         *
-        * @return	A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
+        * @return {any} A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
         */
         function (ObjectClass) {
             if (typeof ObjectClass === "undefined") { ObjectClass = null; }
@@ -6343,10 +6963,10 @@ var Phaser;
         Group.prototype.remove = /**
         * Removes an object from the group.
         *
-        * @param	object	The <code>Basic</code> you want to remove.
-        * @param	splice	Whether the object should be cut from the array entirely or not.
+        * @param {Basic} object The <code>Basic</code> you want to remove.
+        * @param {boolean} splice Whether the object should be cut from the array entirely or not.
         *
-        * @return	The removed object.
+        * @return {Basic} The removed object.
         */
         function (object, splice) {
             if (typeof splice === "undefined") { splice = false; }
@@ -6365,10 +6985,10 @@ var Phaser;
         Group.prototype.replace = /**
         * Replaces an existing <code>Basic</code> with a new one.
         *
-        * @param	oldObject	The object you want to replace.
-        * @param	newObject	The new object you want to use instead.
+        * @param {Basic} oldObject	The object you want to replace.
+        * @param {Basic} newObject	The new object you want to use instead.
         *
-        * @return	The new object.
+        * @return {Basic} The new object.
         */
         function (oldObject, newObject) {
             var index = this.members.indexOf(oldObject);
@@ -6385,8 +7005,8 @@ var Phaser;
         * <code>State.update()</code> override.  To sort all existing objects after
         * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
         *
-        * @param	index	The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
-        * @param	order	A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
+        * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
+        * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
         */
         function (index, order) {
             if (typeof index === "undefined") { index = "y"; }
@@ -6398,9 +7018,9 @@ var Phaser;
         Group.prototype.setAll = /**
         * Go through and set the specified variable to the specified value on all members of the group.
         *
-        * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
-        * @param	Value			The value you want to assign to that variable.
-        * @param	Recurse			Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
+        * @param {string} VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
+        * @param {Object} Value The value you want to assign to that variable.
+        * @param {boolean} Recurse	Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
         */
         function (VariableName, Value, Recurse) {
             if (typeof Recurse === "undefined") { Recurse = true; }
@@ -6421,8 +7041,8 @@ var Phaser;
         * Go through and call the specified function on all members of the group.
         * Currently only works on functions that have no required parameters.
         *
-        * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
-        * @param	Recurse			Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
+        * @param {string} FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
+        * @param {boolean} Recurse	Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
         */
         function (FunctionName, Recurse) {
             if (typeof Recurse === "undefined") { Recurse = true; }
@@ -6439,7 +7059,11 @@ var Phaser;
                 }
             }
         };
-        Group.prototype.forEach = function (callback, recursive) {
+        Group.prototype.forEach = /**
+        * @param {function} callback
+        * @param {boolean} recursive
+        */
+        function (callback, recursive) {
             if (typeof recursive === "undefined") { recursive = false; }
             var basic;
             var i = 0;
@@ -6454,7 +7078,12 @@ var Phaser;
                 }
             }
         };
-        Group.prototype.forEachAlive = function (context, callback, recursive) {
+        Group.prototype.forEachAlive = /**
+        * @param {any} context
+        * @param {function} callback
+        * @param {boolean} recursive
+        */
+        function (context, callback, recursive) {
             if (typeof recursive === "undefined") { recursive = false; }
             var basic;
             var i = 0;
@@ -6473,9 +7102,9 @@ var Phaser;
         * Call this function to retrieve the first object with exists == false in the group.
         * This is handy for recycling in general, e.g. respawning enemies.
         *
-        * @param	ObjectClass		An optional parameter that lets you narrow the results to instances of this particular class.
+        * @param {any} [ObjectClass] An optional parameter that lets you narrow the results to instances of this particular class.
         *
-        * @return	A <code>Basic</code> currently flagged as not existing.
+        * @return {any} A <code>Basic</code> currently flagged as not existing.
         */
         function (ObjectClass) {
             if (typeof ObjectClass === "undefined") { ObjectClass = null; }
@@ -6493,7 +7122,7 @@ var Phaser;
         * Call this function to retrieve the first index set to 'null'.
         * Returns -1 if no index stores a null object.
         *
-        * @return	An <code>int</code> indicating the first null slot in the group.
+        * @return {number} An <code>int</code> indicating the first null slot in the group.
         */
         function () {
             var basic;
@@ -6512,7 +7141,7 @@ var Phaser;
         * Call this function to retrieve the first object with exists == true in the group.
         * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
         *
-        * @return	A <code>Basic</code> currently flagged as existing.
+        * @return {Basic} A <code>Basic</code> currently flagged as existing.
         */
         function () {
             var basic;
@@ -6529,7 +7158,7 @@ var Phaser;
         * Call this function to retrieve the first object with dead == false in the group.
         * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
         *
-        * @return	A <code>Basic</code> currently flagged as not dead.
+        * @return {Basic} A <code>Basic</code> currently flagged as not dead.
         */
         function () {
             var basic;
@@ -6546,7 +7175,7 @@ var Phaser;
         * Call this function to retrieve the first object with dead == true in the group.
         * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
         *
-        * @return	A <code>Basic</code> currently flagged as dead.
+        * @return {Basic} A <code>Basic</code> currently flagged as dead.
         */
         function () {
             var basic;
@@ -6562,7 +7191,7 @@ var Phaser;
         Group.prototype.countLiving = /**
         * Call this function to find out how many members of the group are not dead.
         *
-        * @return	The number of <code>Basic</code>s flagged as not dead.  Returns -1 if group is empty.
+        * @return {number} The number of <code>Basic</code>s flagged as not dead.  Returns -1 if group is empty.
         */
         function () {
             var count = -1;
@@ -6584,7 +7213,7 @@ var Phaser;
         Group.prototype.countDead = /**
         * Call this function to find out how many members of the group are dead.
         *
-        * @return	The number of <code>Basic</code>s flagged as dead.  Returns -1 if group is empty.
+        * @return {number} The number of <code>Basic</code>s flagged as dead.  Returns -1 if group is empty.
         */
         function () {
             var count = -1;
@@ -6606,10 +7235,10 @@ var Phaser;
         Group.prototype.getRandom = /**
         * Returns a member at random from the group.
         *
-        * @param	StartIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-        * @param	Length		Optional restriction on the number of values you want to randomly select from.
+        * @param {number} StartIndex Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+        * @param {number} Length Optional restriction on the number of values you want to randomly select from.
         *
-        * @return	A <code>Basic</code> from the members list.
+        * @return {Basic} A <code>Basic</code> from the members list.
         */
         function (StartIndex, Length) {
             if (typeof StartIndex === "undefined") { StartIndex = 0; }
@@ -6642,10 +7271,10 @@ var Phaser;
         Group.prototype.sortHandler = /**
         * Helper function for the sort process.
         *
-        * @param 	Obj1	The first object being sorted.
-        * @param	Obj2	The second object being sorted.
+        * @param {Basic} Obj1 The first object being sorted.
+        * @param {Basic} Obj2 The second object being sorted.
         *
-        * @return	An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
+        * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
         */
         function (Obj1, Obj2) {
             if(Obj1[this._sortIndex] < Obj2[this._sortIndex]) {
@@ -6669,6 +7298,12 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Loader = (function () {
+        /**
+        * Loader constructor
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param callback {function} This will be called when assets completely loaded.
+        */
         function Loader(game, callback) {
             this._game = game;
             this._gameCreateComplete = callback;
@@ -6678,7 +7313,10 @@ var Phaser;
             this._xhr = new XMLHttpRequest();
             this._queueSize = 0;
         }
-        Loader.prototype.reset = function () {
+        Loader.prototype.reset = /**
+        * Reset loader, this will remove all loaded assets.
+        */
+        function () {
             this._queueSize = 0;
         };
         Object.defineProperty(Loader.prototype, "queueSize", {
@@ -6688,7 +7326,12 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Loader.prototype.addImageFile = function (key, url) {
+        Loader.prototype.addImageFile = /**
+        * Add a new image asset loading request with key and url.
+        * @param key {string} Unique asset key of this image file.
+        * @param url {string} URL of image file.
+        */
+        function (key, url) {
             if(this.checkKeyExists(key) === false) {
                 this._queueSize++;
                 this._fileList[key] = {
@@ -6702,7 +7345,15 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addSpriteSheet = function (key, url, frameWidth, frameHeight, frameMax) {
+        Loader.prototype.addSpriteSheet = /**
+        * Add a new sprite sheet loading request.
+        * @param key {string} Unique asset key of the sheet file.
+        * @param url {string} URL of sheet file.
+        * @param frameWidth {number} Width of each single frame.
+        * @param frameHeight {number} Height of each single frame.
+        * @param frameMax {number} How many frames in this sprite sheet.
+        */
+        function (key, url, frameWidth, frameHeight, frameMax) {
             if (typeof frameMax === "undefined") { frameMax = -1; }
             if(this.checkKeyExists(key) === false) {
                 this._queueSize++;
@@ -6720,7 +7371,14 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addTextureAtlas = function (key, url, jsonURL, jsonData) {
+        Loader.prototype.addTextureAtlas = /**
+        * Add a new texture atlas loading request.
+        * @param key {string} Unique asset key of the texture atlas file.
+        * @param url {string} URL of texture atlas file.
+        * @param [jsonURL] {string} url of JSON data file.
+        * @param [jsonData] {object} JSON data object.
+        */
+        function (key, url, jsonURL, jsonData) {
             if (typeof jsonURL === "undefined") { jsonURL = null; }
             if (typeof jsonData === "undefined") { jsonData = null; }
             if(this.checkKeyExists(key) === false) {
@@ -6777,7 +7435,12 @@ var Phaser;
                 }
             }
         };
-        Loader.prototype.addAudioFile = function (key, url) {
+        Loader.prototype.addAudioFile = /**
+        * Add a new audio file loading request.
+        * @param key {string} Unique asset key of the audio file.
+        * @param url {string} URL of audio file.
+        */
+        function (key, url) {
             if(this.checkKeyExists(key) === false) {
                 this._queueSize++;
                 this._fileList[key] = {
@@ -6792,7 +7455,12 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addTextFile = function (key, url) {
+        Loader.prototype.addTextFile = /**
+        * Add a new text file loading request.
+        * @param key {string} Unique asset key of the text file.
+        * @param url {string} URL of text file.
+        */
+        function (key, url) {
             if(this.checkKeyExists(key) === false) {
                 this._queueSize++;
                 this._fileList[key] = {
@@ -6806,14 +7474,26 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.removeFile = function (key) {
+        Loader.prototype.removeFile = /**
+        * Remove loading request of a file.
+        * @param key {string} Key of the file you want to remove.
+        */
+        function (key) {
             delete this._fileList[key];
         };
-        Loader.prototype.removeAll = function () {
+        Loader.prototype.removeAll = /**
+        * Remove all file loading requests.
+        */
+        function () {
             this._fileList = {
             };
         };
-        Loader.prototype.load = function (onFileLoadCallback, onCompleteCallback) {
+        Loader.prototype.load = /**
+        * Load assets.
+        * @param onFileLoadCallback {function} Called when each file loaded successfully.
+        * @param onCompleteCallback {function} Called when all assets completely loaded.
+        */
+        function (onFileLoadCallback, onCompleteCallback) {
             if (typeof onFileLoadCallback === "undefined") { onFileLoadCallback = null; }
             if (typeof onCompleteCallback === "undefined") { onCompleteCallback = null; }
             this.progress = 0;
@@ -6835,7 +7515,10 @@ var Phaser;
                 }
             }
         };
-        Loader.prototype.loadFile = function () {
+        Loader.prototype.loadFile = /**
+        * Load files. Private method ONLY used by loader.
+        */
+        function () {
             var _this = this;
             var file = this._fileList[this._keys.pop()];
             //  Image or Data?
@@ -6877,12 +7560,20 @@ var Phaser;
                     break;
             }
         };
-        Loader.prototype.fileError = function (key) {
+        Loader.prototype.fileError = /**
+        * Error occured when load a file.
+        * @param key {string} Key of the error loading file.
+        */
+        function (key) {
             this._fileList[key].loaded = true;
             this._fileList[key].error = true;
             this.nextFile(key, false);
         };
-        Loader.prototype.fileComplete = function (key) {
+        Loader.prototype.fileComplete = /**
+        * Called when a file is successfully loaded.
+        * @param key {string} Key of the successfully loaded file.
+        */
+        function (key) {
             var _this = this;
             this._fileList[key].loaded = true;
             var file = this._fileList[key];
@@ -6924,7 +7615,11 @@ var Phaser;
                 this.nextFile(key, true);
             }
         };
-        Loader.prototype.jsonLoadComplete = function (key) {
+        Loader.prototype.jsonLoadComplete = /**
+        * Successfully loaded a JSON file.
+        * @param key {string} Key of the loaded JSON file.
+        */
+        function (key) {
             var data = JSON.parse(this._xhr.response);
             //  Malformed?
             if(data['frames']) {
@@ -6933,12 +7628,21 @@ var Phaser;
             }
             this.nextFile(key, true);
         };
-        Loader.prototype.jsonLoadError = function (key) {
+        Loader.prototype.jsonLoadError = /**
+        * Error occured when load a JSON.
+        * @param key {string} Key of the error loading JSON file.
+        */
+        function (key) {
             var file = this._fileList[key];
             file.error = true;
             this.nextFile(key, true);
         };
-        Loader.prototype.nextFile = function (previousKey, success) {
+        Loader.prototype.nextFile = /**
+        * Handle loading next file.
+        * @param previousKey {string} Key of previous loaded asset.
+        * @param success {boolean} Whether the previous asset loaded successfully or not.
+        */
+        function (previousKey, success) {
             this.progress = Math.round(this.progress + this._progressChunk);
             if(this.progress > 1) {
                 this.progress = 1;
@@ -6957,7 +7661,12 @@ var Phaser;
                 }
             }
         };
-        Loader.prototype.checkKeyExists = function (key) {
+        Loader.prototype.checkKeyExists = /**
+        * Check whether asset exists with a specific key.
+        * @param key {string} Key of the asset you want to check.
+        * @return {boolean} Return true if exists, otherwise return false.
+        */
+        function (key) {
             if(this._fileList[key]) {
                 return true;
             } else {
@@ -6984,12 +7693,12 @@ var Phaser;
         Motion.prototype.computeVelocity = /**
         * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
         *
-        * @param	Velocity		Any component of velocity (e.g. 20).
-        * @param	Acceleration	Rate at which the velocity is changing.
-        * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-        * @param	Max				An absolute value cap for the velocity.
+        * @param {number} Velocity Any component of velocity (e.g. 20).
+        * @param {number} Acceleration Rate at which the velocity is changing.
+        * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+        * @param {number} Max An absolute value cap for the velocity.
         *
-        * @return	The altered Velocity value.
+        * @return {number} The altered Velocity value.
         */
         function (Velocity, Acceleration, Drag, Max) {
             if (typeof Acceleration === "undefined") { Acceleration = 0; }
@@ -7019,10 +7728,10 @@ var Phaser;
         Motion.prototype.velocityFromAngle = /**
         * Given the angle and speed calculate the velocity and return it as a Point
         *
-        * @param	angle	The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-        * @param	speed	The speed it will move, in pixels per second sq
+        * @param {number} angle The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+        * @param {number} speed The speed it will move, in pixels per second sq
         *
-        * @return	A Point where Point.x contains the velocity x value and Point.y contains the velocity y value
+        * @return {Point} A Point where Point.x contains the velocity x value and Point.y contains the velocity y value
         */
         function (angle, speed) {
             if(isNaN(speed)) {
@@ -7039,10 +7748,10 @@ var Phaser;
         * If you need the object to accelerate, see accelerateTowardsObject() instead
         * Note: Doesn't take into account acceleration, maxVelocity or drag (if you set drag or acceleration too high this object may not move at all)
         *
-        * @param	source		The Sprite on which the velocity will be set
-        * @param	dest		The Sprite where the source object will move to
-        * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+        * @param {GameObject} source The Sprite on which the velocity will be set
+        * @param {GameObject} dest The Sprite where the source object will move to
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
         function (source, dest, speed, maxTime) {
             if (typeof speed === "undefined") { speed = 60; }
@@ -7061,11 +7770,11 @@ var Phaser;
         * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
         * If you don't need acceleration look at moveTowardsObject() instead.
         *
-        * @param	source			The Sprite on which the acceleration will be set
-        * @param	dest			The Sprite where the source object will move towards
-        * @param	speed			The speed it will accelerate in pixels per second
-        * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
+        * @param {GameObject} source The Sprite on which the acceleration will be set
+        * @param {GameObject} dest The Sprite where the source object will move towards
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
         function (source, dest, speed, xSpeedMax, ySpeedMax) {
             var a = this.angleBetween(source, dest);
@@ -7082,9 +7791,9 @@ var Phaser;
         * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
         * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
         *
-        * @param	source		The Sprite to move
-        * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+        * @param {GameObject} source The Sprite to move
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
         function (source, speed, maxTime) {
             if (typeof speed === "undefined") { speed = 60; }
@@ -7103,10 +7812,10 @@ var Phaser;
         * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
         * If you don't need acceleration look at moveTowardsMouse() instead.
         *
-        * @param	source			The Sprite on which the acceleration will be set
-        * @param	speed			The speed it will accelerate in pixels per second
-        * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
+        * @param {GameObject} source The Sprite on which the acceleration will be set
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
         function (source, speed, xSpeedMax, ySpeedMax) {
             var a = this.angleBetweenMouse(source);
@@ -7123,10 +7832,10 @@ var Phaser;
         * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
         * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
         *
-        * @param	source		The Sprite to move
-        * @param	target		The Point coordinates to move the source Sprite towards
-        * @param	speed		The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param	maxTime		Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+        * @param {GameObject} source The Sprite to move
+        * @param {Point} target The Point coordinates to move the source Sprite towards
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
         function (source, target, speed, maxTime) {
             if (typeof speed === "undefined") { speed = 60; }
@@ -7145,11 +7854,11 @@ var Phaser;
         * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
         * If you don't need acceleration look at moveTowardsPoint() instead.
         *
-        * @param	source			The Sprite on which the acceleration will be set
-        * @param	target			The Point coordinates to move the source Sprite towards
-        * @param	speed			The speed it will accelerate in pixels per second
-        * @param	xSpeedMax		The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param	ySpeedMax		The maximum speed in pixels per second in which the sprite can move vertically
+        * @param {GameObject} source The Sprite on which the acceleration will be set
+        * @param {Point} target The Point coordinates to move the source Sprite towards
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
         function (source, target, speed, xSpeedMax, ySpeedMax) {
             var a = this.angleBetweenPoint(source, target);
@@ -7163,9 +7872,9 @@ var Phaser;
         Motion.prototype.distanceBetween = /**
         * Find the distance (in pixels, rounded) between two Sprites, taking their origin into account
         *
-        * @param	a	The first Sprite
-        * @param	b	The second Sprite
-        * @return	int	Distance (in pixels)
+        * @param {GameObject} a The first Sprite
+        * @param {GameObject} b The second Sprite
+        * @return {number} int Distance (in pixels)
         */
         function (a, b) {
             var dx = (a.x + a.origin.x) - (b.x + b.origin.x);
@@ -7175,9 +7884,9 @@ var Phaser;
         Motion.prototype.distanceToPoint = /**
         * Find the distance (in pixels, rounded) from an Sprite to the given Point, taking the source origin into account
         *
-        * @param	a		The Sprite
-        * @param	target	The Point
-        * @return	int		Distance (in pixels)
+        * @param {GameObject} a The Sprite
+        * @param {Point} target The Point
+        * @return {number} Distance (in pixels)
         */
         function (a, target) {
             var dx = (a.x + a.origin.x) - (target.x);
@@ -7187,8 +7896,8 @@ var Phaser;
         Motion.prototype.distanceToMouse = /**
         * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
         *
-        * @param	a	The Sprite to test against
-        * @return	int	The distance between the given sprite and the mouse coordinates
+        * @param {GameObject} a  Sprite to test against
+        * @return {number} The distance between the given sprite and the mouse coordinates
         */
         function (a) {
             var dx = (a.x + a.origin.x) - this._game.input.x;
@@ -7199,11 +7908,11 @@ var Phaser;
         * Find the angle (in radians) between an Sprite and an Point. The source sprite takes its x/y and origin into account.
         * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
         *
-        * @param	a			The Sprite to test from
-        * @param	target		The Point to angle the Sprite towards
-        * @param	asDegrees	If you need the value in degrees instead of radians, set to true
+        * @param {GameObject} a The Sprite to test from
+        * @param {Point} target The Point to angle the Sprite towards
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
         *
-        * @return	Number The angle (in radians unless asDegrees is true)
+        * @return {number} The angle (in radians unless asDegrees is true)
         */
         function (a, target, asDegrees) {
             if (typeof asDegrees === "undefined") { asDegrees = false; }
@@ -7219,11 +7928,11 @@ var Phaser;
         * Find the angle (in radians) between the two Sprite, taking their x/y and origin into account.
         * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
         *
-        * @param	a			The Sprite to test from
-        * @param	b			The Sprite to test to
-        * @param	asDegrees	If you need the value in degrees instead of radians, set to true
+        * @param {GameObject} a The Sprite to test from
+        * @param {GameObject} b The Sprite to test to
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
         *
-        * @return	Number The angle (in radians unless asDegrees is true)
+        * @return {number} The angle (in radians unless asDegrees is true)
         */
         function (a, b, asDegrees) {
             if (typeof asDegrees === "undefined") { asDegrees = false; }
@@ -7238,10 +7947,10 @@ var Phaser;
         Motion.prototype.velocityFromFacing = /**
         * Given the GameObject and speed calculate the velocity and return it as an Point based on the direction the sprite is facing
         *
-        * @param	parent	The Sprite to get the facing value from
-        * @param	speed	The speed it will move, in pixels per second sq
+        * @param {GameObject} parent The Sprite to get the facing value from
+        * @param {number} speed The speed it will move, in pixels per second sq
         *
-        * @return	An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
+        * @return {Point} An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
         */
         function (parent, speed) {
             var a;
@@ -7260,10 +7969,10 @@ var Phaser;
         * Find the angle (in radians) between an Sprite and the mouse, taking their x/y and origin into account.
         * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
         *
-        * @param	a			The Object to test from
-        * @param	asDegrees	If you need the value in degrees instead of radians, set to true
+        * @param {GameObject} a The Object to test from
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
         *
-        * @return	Number The angle (in radians unless asDegrees is true)
+        * @return {number} The angle (in radians unless asDegrees is true)
         */
         function (a, asDegrees) {
             if (typeof asDegrees === "undefined") { asDegrees = false; }
@@ -7291,6 +8000,14 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Sound = (function () {
+        /**
+        * Sound constructor
+        * @param context {object} The AudioContext instance.
+        * @param gainNode {object} Gain node instance.
+        * @param data {object} Sound data.
+        * @param [volume] {number} volume of this sound when playing.
+        * @param [loop] {boolean} loop this sound when playing? (Default to false)
+        */
         function Sound(context, gainNode, data, volume, loop) {
             if (typeof volume === "undefined") { volume = 1; }
             if (typeof loop === "undefined") { loop = false; }
@@ -7317,9 +8034,12 @@ var Phaser;
         Sound.prototype.setDecodedBuffer = function (data) {
             this._buffer = data;
             this.isDecoding = false;
-            this.play();
-        };
-        Sound.prototype.play = function () {
+            //this.play();
+                    };
+        Sound.prototype.play = /**
+        * Play this sound.
+        */
+        function () {
             if(this._buffer === null || this.isDecoding === true) {
                 return;
             }
@@ -7334,16 +8054,25 @@ var Phaser;
             this.duration = this._sound.buffer.duration;
             this.isPlaying = true;
         };
-        Sound.prototype.stop = function () {
+        Sound.prototype.stop = /**
+        * Stop playing this sound.
+        */
+        function () {
             if(this.isPlaying === true) {
                 this.isPlaying = false;
                 this._sound.noteOff(0);
             }
         };
-        Sound.prototype.mute = function () {
+        Sound.prototype.mute = /**
+        * Mute the sound.
+        */
+        function () {
             this._localGainNode.gain.value = 0;
         };
-        Sound.prototype.unmute = function () {
+        Sound.prototype.unmute = /**
+        * Enable the sound.
+        */
+        function () {
             this._localGainNode.gain.value = this._volume;
         };
         Object.defineProperty(Sound.prototype, "volume", {
@@ -7371,7 +8100,14 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var SoundManager = (function () {
+        /**
+        * SoundManager constructor
+        * Create a new <code>SoundManager</code>.
+        */
         function SoundManager(game) {
+            /**
+            * Reference to AudioContext instance.
+            */
             this._context = null;
             this._game = game;
             if(game.device.webaudio == true) {
@@ -7387,10 +8123,16 @@ var Phaser;
                 }
             }
         }
-        SoundManager.prototype.mute = function () {
+        SoundManager.prototype.mute = /**
+        * Mute sounds.
+        */
+        function () {
             this._gainNode.gain.value = 0;
         };
-        SoundManager.prototype.unmute = function () {
+        SoundManager.prototype.unmute = /**
+        * Enable sounds.
+        */
+        function () {
             this._gainNode.gain.value = this._volume;
         };
         Object.defineProperty(SoundManager.prototype, "volume", {
@@ -7404,7 +8146,13 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        SoundManager.prototype.decode = function (key, callback, sound) {
+        SoundManager.prototype.decode = /**
+        * Decode a sound with its assets key.
+        * @param key {string} Assets key of the sound to be decoded.
+        * @param callback {function} This will be invoked when finished decoding.
+        * @param [sound] {Sound} its bufer will be set to decoded data.
+        */
+        function (key, callback, sound) {
             if (typeof callback === "undefined") { callback = null; }
             if (typeof sound === "undefined") { sound = null; }
             var soundData = this._game.cache.getSound(key);
@@ -7421,10 +8169,16 @@ var Phaser;
                 }
             }
         };
-        SoundManager.prototype.play = function (key, volume, loop) {
+        SoundManager.prototype.play = /**
+        * Play a sound with its assets key.
+        * @param key {string} Assets key of the sound you want to play.
+        * @param [volume] {number} volume of the sound you want to play.
+        * @param [loop] {boolean} loop when it finished playing? (Default to false)
+        * @return {Sound} The playing sound object.
+        */
+        function (key, volume, loop) {
             if (typeof volume === "undefined") { volume = 1; }
             if (typeof loop === "undefined") { loop = false; }
-            var _this = this;
             if(this._context === null) {
                 return;
             }
@@ -7437,7 +8191,7 @@ var Phaser;
                     var tempSound = new Phaser.Sound(this._context, this._gainNode, null, volume, loop);
                     //  this is an async process, so we can return the Sound object anyway, it just won't be playing yet
                     this.decode(key, function () {
-                        return _this.play(key);
+                        return tempSound.play();
                     }, tempSound);
                     return tempSound;
                 }
@@ -7472,44 +8226,165 @@ var Phaser;
 *
 * This class controls the scaling of your game. On mobile devices it will also remove the URL bar and allow
 * you to maintain proportion and aspect ratio.
-* It is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
+* The resizing method is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
 */
 var Phaser;
 (function (Phaser) {
     var StageScaleMode = (function () {
+        /**
+        * StageScaleMode constructor
+        */
         function StageScaleMode(game) {
             var _this = this;
+            /**
+            * Stage height when start the game.
+            * @type {number}
+            */
             this._startHeight = 0;
+            /**
+            * Minimum width the canvas should be scaled to (in pixels)
+            * @type {number}
+            */
+            this.minWidth = null;
+            /**
+            * Maximum width the canvas should be scaled to (in pixels).
+            * If null it will scale to whatever width the browser can handle.
+            * @type {number}
+            */
+            this.maxWidth = null;
+            /**
+            * Minimum height the canvas should be scaled to (in pixels)
+            * @type {number}
+            */
+            this.minHeight = null;
+            /**
+            * Maximum height the canvas should be scaled to (in pixels).
+            * If null it will scale to whatever height the browser can handle.
+            * @type {number}
+            */
+            this.maxHeight = null;
+            /**
+            * Width of the stage after calculation.
+            * @type {number}
+            */
             this.width = 0;
+            /**
+            * Height of the stage after calculation.
+            * @type {number}
+            */
             this.height = 0;
             this._game = game;
-            this.orientation = window['orientation'];
+            this.enterLandscape = new Phaser.Signal();
+            this.enterPortrait = new Phaser.Signal();
+            if(window['orientation']) {
+                this.orientation = window['orientation'];
+            } else {
+                if(window.outerWidth > window.outerHeight) {
+                    this.orientation = 90;
+                } else {
+                    this.orientation = 0;
+                }
+            }
             window.addEventListener('orientationchange', function (event) {
                 return _this.checkOrientation(event);
+            }, false);
+            window.addEventListener('resize', function (event) {
+                return _this.checkResize(event);
             }, false);
         }
         StageScaleMode.EXACT_FIT = 0;
         StageScaleMode.NO_SCALE = 1;
         StageScaleMode.SHOW_ALL = 2;
-        StageScaleMode.prototype.update = function () {
-            if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
-                this.refresh();
-            }
-        };
-        Object.defineProperty(StageScaleMode.prototype, "isLandscape", {
+        Object.defineProperty(StageScaleMode.prototype, "isFullScreen", {
             get: function () {
-                return window['orientation'] === 90 || window['orientation'] === -90;
+                if(document['fullscreenElement'] === null || document['mozFullScreenElement'] === null || document['webkitFullscreenElement'] === null) {
+                    return false;
+                }
+                return true;
             },
             enumerable: true,
             configurable: true
         });
-        StageScaleMode.prototype.checkOrientation = function (event) {
-            if(window['orientation'] !== this.orientation) {
-                this.refresh();
-                this.orientation = window['orientation'];
+        StageScaleMode.prototype.startFullScreen = function () {
+            if(this.isFullScreen) {
+                return;
+            }
+            var element = this._game.stage.canvas;
+            if(element['requestFullScreen']) {
+                element['requestFullScreen']();
+            } else if(element['mozRequestFullScreen']) {
+                element['mozRequestFullScreen']();
+            } else if(element['webkitRequestFullScreen']) {
+                element['webkitRequestFullScreen']();
             }
         };
-        StageScaleMode.prototype.refresh = function () {
+        StageScaleMode.prototype.stopFullScreen = function () {
+            if(document['cancelFullScreen']) {
+                document['cancelFullScreen']();
+            } else if(document['mozCancelFullScreen']) {
+                document['mozCancelFullScreen']();
+            } else if(document['webkitCancelFullScreen']) {
+                document['webkitCancelFullScreen']();
+            }
+        };
+        StageScaleMode.prototype.update = /**
+        * The core update loop, called by Phaser.Stage
+        */
+        function () {
+            if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
+                this.refresh();
+            }
+        };
+        Object.defineProperty(StageScaleMode.prototype, "isPortrait", {
+            get: function () {
+                return this.orientation == 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(StageScaleMode.prototype, "isLandscape", {
+            get: function () {
+                return this.orientation === 90 || this.orientation === -90;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        StageScaleMode.prototype.checkOrientation = /**
+        * Handle window.orientationchange events
+        */
+        function (event) {
+            this.orientation = window['orientation'];
+            if(this.isLandscape) {
+                this.enterLandscape.dispatch(this.orientation);
+            } else {
+                this.enterPortrait.dispatch(this.orientation);
+            }
+            if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE) {
+                this.refresh();
+            }
+        };
+        StageScaleMode.prototype.checkResize = /**
+        * Handle window.resize events
+        */
+        function (event) {
+            if(window.outerWidth > window.outerHeight) {
+                this.orientation = 90;
+            } else {
+                this.orientation = 0;
+            }
+            if(this.isLandscape) {
+                this.enterLandscape.dispatch(this.orientation);
+            } else {
+                this.enterPortrait.dispatch(this.orientation);
+            }
+            if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE) {
+                this.refresh();
+            }
+        };
+        StageScaleMode.prototype.refresh = /**
+        * Re-calculate scale mode and update screen size.
+        */
+        function () {
             var _this = this;
             //  We can't do anything about the status bars in iPads, web apps or desktops
             if(this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false) {
@@ -7528,7 +8403,10 @@ var Phaser;
                 }, 10);
             }
         };
-        StageScaleMode.prototype.setScreenSize = function () {
+        StageScaleMode.prototype.setScreenSize = /**
+        * Set screen size automatically based on the scaleMode.
+        */
+        function () {
             if(this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false) {
                 if(this._game.device.android && this._game.device.chrome == false) {
                     window.scrollTo(0, 1);
@@ -7541,13 +8419,13 @@ var Phaser;
                 // Set minimum height of content to new window height
                 document.documentElement.style.minHeight = window.innerHeight + 'px';
                 if(this._game.stage.scaleMode == StageScaleMode.EXACT_FIT) {
-                    if(this._game.stage.maxScaleX && window.innerWidth > this._game.stage.maxScaleX) {
-                        this.width = this._game.stage.maxScaleX;
+                    if(this.maxWidth && window.innerWidth > this.maxWidth) {
+                        this.width = this.maxWidth;
                     } else {
                         this.width = window.innerWidth;
                     }
-                    if(this._game.stage.maxScaleY && window.innerHeight > this._game.stage.maxScaleY) {
-                        this.height = this._game.stage.maxScaleY;
+                    if(this.maxHeight && window.innerHeight > this.maxHeight) {
+                        this.height = this.maxHeight;
                     } else {
                         this.height = window.innerHeight;
                     }
@@ -7555,11 +8433,11 @@ var Phaser;
                     var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
                     this.width = Math.round(this._game.stage.width * multiplier);
                     this.height = Math.round(this._game.stage.height * multiplier);
-                    if(this._game.stage.maxScaleX && this.width > this._game.stage.maxScaleX) {
-                        this.width = this._game.stage.maxScaleX;
+                    if(this.maxWidth && this.width > this.maxWidth) {
+                        this.width = this.maxWidth;
                     }
-                    if(this._game.stage.maxScaleY && this.height > this._game.stage.maxScaleY) {
-                        this.height = this._game.stage.maxScaleY;
+                    if(this.maxHeight && this.height > this.maxHeight) {
+                        this.height = this.maxHeight;
                     }
                 }
                 this._game.stage.canvas.style.width = this.width + 'px';
@@ -7583,24 +8461,47 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var BootScreen = (function () {
+        /**
+        * BootScreen constructor
+        * Create a new <code>BootScreen</code> with specific width and height.
+        *
+        * @param width {number} Screen canvas width.
+        * @param height {number} Screen canvas height.
+        */
         function BootScreen(game) {
+            /**
+            * Engine logo image data.
+            */
             this._logoData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAAAZCAYAAADdYmvFAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAstJREFUeNrsWlFuwjAMbavdZGcAcRm4AXzvCPuGG8BlEJxhZ+l4TJ48z3actGGthqUI1MaO/V6cmIT2/fW10eTt46NvKshtvDZlG31yfOL9a/ldU6x4IZ0GQs0gS217enMkJYr5ixXkYrFoVqtV1kDn8/n+KfXw/Hq9Nin7h8MhScB2u3Xtav2ivsNWrh7XLcWMYqA4eUZ1kj0MAifHJEeKFojWzyIH+rL/0Cwif2AX9nN1oQOgrTg8XcTFx+ScdEOJ4WBxXQ1EjRyrn0cOzzQLzFyQSQcgw/5Qkkr0JVEQpNIdhL4vm4DL5fLulNTHcy6Uxl4/6iMLiePx2KzX6/v30+n0aynUlrnSeNq2/VN9bgM4dFPdNPmsJnIg/PuQbJmLdFN3UNu0SzbyJ0GOWJVWZE/QMkY+owrqXxGEdZA37BVyX6lJTipT6J1lf7fbqc+xh8nYeIvikatP+PGW0nEJ4jOydHYOIcfKnmgWoZDQSIIeio4Sf1IthYWskCO4vqQ6lFYjl8tl9L1H67PZbMz3VO3t93uVXHofmUjReLyMwHi5eCb3ICwJj5ZU9nCg+SzUgPYyif+2epTk4pkkyDp+eXTlZu2BkUybEkklePZfK9lPuTnc07vbmt1bYulHBeNQgx18SsH4ni/cV2rSLtqNDNUH2JQ2SsXS57Y9PHlfumkwCdICt5rnkNdPjpMiIEWgRlAJSdF4SvCQMWj+VyfI0h8D/EgWSYKiJKXi8VrOhJUxaFiFCOKKUJAtR78k9eX4USLHXqLGXOIiWUT4Vj9JiP4W0io3VDz8AJXblNWQrOimLjIGy/9uLICH6mrVmFbxEFHauzmc0fGJJmPg/v+6D0oB7N2bj0FsNHtSWTQniWTR931QlHXvasDTHXLjqY0/1/8hSDxACD+lAGH8dKQbQk5N3TFtzDmLWutvV0+pL5FVoHvCNG35FGAAayS4KUoKC9QAAAAASUVORK5CYII=";
+            /**
+            * Background gradient effect color 1.
+            */
             this._color1 = {
                 r: 20,
                 g: 20,
                 b: 20
             };
+            /**
+            * Background gradient effect color 2.
+            */
             this._color2 = {
                 r: 200,
                 g: 200,
                 b: 200
             };
+            /**
+            * Fade effect tween.
+            * @type {Phaser.Tween}
+            */
             this._fade = null;
             this._game = game;
             this._logo = new Image();
             this._logo.src = this._logoData;
         }
-        BootScreen.prototype.update = function () {
+        BootScreen.prototype.update = /**
+        * Update color and fade.
+        */
+        function () {
             if(this._fade == null) {
                 this.colorCycle();
             }
@@ -7611,7 +8512,10 @@ var Phaser;
             this._color2.g = Math.round(this._color2.g);
             this._color2.b = Math.round(this._color2.b);
         };
-        BootScreen.prototype.render = function () {
+        BootScreen.prototype.render = /**
+        * Render BootScreen.
+        */
+        function () {
             var grd = this._game.stage.context.createLinearGradient(0, 0, 0, this._game.stage.height);
             grd.addColorStop(0, 'rgb(' + this._color1.r + ', ' + this._color1.g + ', ' + this._color1.b + ')');
             grd.addColorStop(0.5, 'rgb(' + this._color2.r + ', ' + this._color2.g + ', ' + this._color2.b + ')');
@@ -7637,7 +8541,10 @@ var Phaser;
             this._game.stage.context.fillText('You are seeing this screen because you didn\'t specify any default', 32, 64 + 160);
             this._game.stage.context.fillText('functions in the Game constructor or use Game.switchState()', 32, 64 + 184);
         };
-        BootScreen.prototype.colorCycle = function () {
+        BootScreen.prototype.colorCycle = /**
+        * Start color fading cycle.
+        */
+        function () {
             this._fade = this._game.createTween(this._color2);
             this._fade.to({
                 r: Math.random() * 250,
@@ -7660,6 +8567,13 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var PauseScreen = (function () {
+        /**
+        * PauseScreen constructor
+        * Create a new <code>PauseScreen</code> with specific width and height.
+        *
+        * @param width {number} Screen canvas width.
+        * @param height {number} Screen canvas height.
+        */
         function PauseScreen(game, width, height) {
             this._game = game;
             this._canvas = document.createElement('canvas');
@@ -7667,7 +8581,9 @@ var Phaser;
             this._canvas.height = height;
             this._context = this._canvas.getContext('2d');
         }
-        PauseScreen.prototype.onPaused = //  Called when the game enters pause mode
+        PauseScreen.prototype.onPaused = /**
+        * Called when the game enters pause mode.
+        */
         function () {
             //  Take a grab of the current canvas to our temporary one
             this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
@@ -7679,16 +8595,25 @@ var Phaser;
             };
             this.fadeOut();
         };
-        PauseScreen.prototype.onResume = function () {
+        PauseScreen.prototype.onResume = /**
+        * Called when the game resume from pause mode.
+        */
+        function () {
             this._fade.stop();
             this._game.tweens.remove(this._fade);
         };
-        PauseScreen.prototype.update = function () {
+        PauseScreen.prototype.update = /**
+        * Update background color.
+        */
+        function () {
             this._color.r = Math.round(this._color.r);
             this._color.g = Math.round(this._color.g);
             this._color.b = Math.round(this._color.b);
         };
-        PauseScreen.prototype.render = function () {
+        PauseScreen.prototype.render = /**
+        * Render PauseScreen.
+        */
+        function () {
             this._game.stage.context.drawImage(this._canvas, 0, 0);
             this._game.stage.context.fillStyle = 'rgba(0, 0, 0, 0.4)';
             this._game.stage.context.fillRect(0, 0, this._game.stage.width, this._game.stage.height);
@@ -7705,7 +8630,10 @@ var Phaser;
             this._game.stage.context.fill();
             this._game.stage.context.closePath();
         };
-        PauseScreen.prototype.fadeOut = function () {
+        PauseScreen.prototype.fadeOut = /**
+        * Start fadeOut effect.
+        */
+        function () {
             this._fade = this._game.createTween(this._color);
             this._fade.to({
                 r: 50,
@@ -7715,7 +8643,10 @@ var Phaser;
             this._fade.onComplete.add(this.fadeIn, this);
             this._fade.start();
         };
-        PauseScreen.prototype.fadeIn = function () {
+        PauseScreen.prototype.fadeIn = /**
+        * Start fadeIn effect.
+        */
+        function () {
             this._fade = this._game.createTween(this._color);
             this._fade.to({
                 r: 255,
@@ -7743,17 +8674,42 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Stage = (function () {
+        /**
+        * Stage constructor
+        *
+        * Create a new <code>Stage</code> with specific width and height.
+        *
+        * @param parent {number} ID of parent DOM element.
+        * @param width {number} Width of the stage.
+        * @param height {number} Height of the stage.
+        */
         function Stage(game, parent, width, height) {
             var _this = this;
+            /**
+            * Background color of the stage (defaults to black)
+            * @type {string}
+            */
+            this._bgColor = 'rgb(0,0,0)';
+            /**
+            * Clear the whole stage every frame? (Default to true)
+            * @type {boolean}
+            */
             this.clear = true;
+            /**
+            * Do not use pause screen when game is paused?
+            * (Default to false, aka always use PauseScreen)
+            * @type {boolean}
+            */
             this.disablePauseScreen = false;
+            /**
+            * Do not use boot screen when engine starts?
+            * (Default to false, aka always use BootScreen)
+            * @type {boolean}
+            */
             this.disableBootScreen = false;
-            this.minScaleX = null;
-            this.maxScaleX = null;
-            this.minScaleY = null;
-            this.maxScaleY = null;
             this._game = game;
             this.canvas = document.createElement('canvas');
+            this.canvas.id = 'bob';
             this.canvas.width = width;
             this.canvas.height = height;
             if(document.getElementById(parent)) {
@@ -7765,6 +8721,7 @@ var Phaser;
             //  Consume default actions on the canvas
             this.canvas.style.msTouchAction = 'none';
             this.canvas.style['touch-action'] = 'none';
+            this.canvas.style.backgroundColor = 'rgb(0,0,0)';
             this.context = this.canvas.getContext('2d');
             this.offset = this.getOffset(this.canvas);
             this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, width, height);
@@ -7786,9 +8743,11 @@ var Phaser;
                 return _this.visibilityChange(event);
             };
         }
-        Stage.ORIENTATION_LANDSCAPE = 0;
-        Stage.ORIENTATION_PORTRAIT = 1;
-        Stage.prototype.update = function () {
+        Stage.prototype.update = /**
+        * Update stage for rendering. This will handle scaling, clearing
+        * and PauseScreen/BootScreen updating and rendering.
+        */
+        function () {
             this.scale.update();
             if(this.clear) {
                 //  implement dirty rect? could take up more cpu time than it saves. needs benching.
@@ -7803,17 +8762,20 @@ var Phaser;
                 this._pauseScreen.render();
             }
         };
-        Stage.prototype.visibilityChange = function (event) {
+        Stage.prototype.visibilityChange = /**
+        * This method is called when the canvas elements visibility is changed.
+        */
+        function (event) {
             if(this.disablePauseScreen) {
                 return;
             }
-            if(event.type === 'blur' || document['hidden'] === true || document['webkitHidden'] === true) {
+            if(event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true) {
                 if(this._game.paused == false) {
                     this._pauseScreen.onPaused();
                     this.saveCanvasValues();
                     this._game.paused = true;
                 }
-            } else if(event.type == 'focus') {
+            } else {
                 if(this._game.paused == true) {
                     this._pauseScreen.onResume();
                     this._game.paused = false;
@@ -7829,12 +8791,18 @@ var Phaser;
             var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
             return new Phaser.Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
         };
-        Stage.prototype.saveCanvasValues = function () {
+        Stage.prototype.saveCanvasValues = /**
+        * Save current canvas properties (strokeStyle, lineWidth and fillStyle) for later using.
+        */
+        function () {
             this.strokeStyle = this.context.strokeStyle;
             this.lineWidth = this.context.lineWidth;
             this.fillStyle = this.context.fillStyle;
         };
-        Stage.prototype.restoreCanvasValues = function () {
+        Stage.prototype.restoreCanvasValues = /**
+        * Restore current canvas values (strokeStyle, lineWidth and fillStyle) with saved values.
+        */
+        function () {
             this.context.strokeStyle = this.strokeStyle;
             this.context.lineWidth = this.lineWidth;
             this.context.fillStyle = this.fillStyle;
@@ -7918,37 +8886,81 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Time = (function () {
+        /**
+        * Time constructor
+        * Create a new <code>Time</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        */
         function Time(game) {
+            /**
+            * Time scale factor.
+            * Set it to 0.5 for slow motion, to 2.0 makes game twice faster.
+            * @type {number}
+            */
             this.timeScale = 1.0;
+            /**
+            * Elapsed since last frame.
+            * @type {number}
+            */
             this.elapsed = 0;
             /**
-            *
+            * Game time counter.
             * @property time
-            * @type Number
+            * @type {number}
             */
             this.time = 0;
             /**
-            *
+            * Time of current frame.
             * @property now
-            * @type Number
+            * @type {number}
             */
             this.now = 0;
             /**
-            *
+            * Elapsed time since last frame.
             * @property delta
-            * @type Number
+            * @type {number}
             */
             this.delta = 0;
+            /**
+            * Frames per second.
+            * @type {number}
+            */
             this.fps = 0;
+            /**
+            * Minimal fps.
+            * @type {number}
+            */
             this.fpsMin = 1000;
+            /**
+            * Maximal fps.
+            * @type {number}
+            */
             this.fpsMax = 0;
+            /**
+            * Mininal duration between 2 frames.
+            * @type {number}
+            */
             this.msMin = 1000;
+            /**
+            * Maximal duration between 2 frames.
+            * @type {number}
+            */
             this.msMax = 0;
+            /**
+            * How many frames in last second.
+            * @type {number}
+            */
             this.frames = 0;
+            /**
+            * Time of last second.
+            * @type {number}
+            */
             this._timeLastSecond = 0;
-            this._started = Date.now();
+            this._started = 0;
             this._timeLastSecond = this._started;
             this.time = this._started;
+            this._game = game;
         }
         Object.defineProperty(Time.prototype, "totalElapsedSeconds", {
             get: /**
@@ -7963,13 +8975,15 @@ var Phaser;
             configurable: true
         });
         Time.prototype.update = /**
-        *
+        * Update clock and calculate the fps.
+        * This is called automatically by Game._raf
         * @method update
+        * @param {number} raf The current timestamp, either performance.now or Date.now
         */
-        function () {
-            // Can we use performance.now() ?
-            this.now = Date.now()// mark
+        function (raf) {
+            this.now = raf// mark
             ;
+            //this.now = Date.now(); // mark
             this.delta = this.now - this.time// elapsedMS
             ;
             this.msMin = Math.min(this.msMin, this.delta);
@@ -7984,32 +8998,27 @@ var Phaser;
             }
             this.time = this.now// _total
             ;
-            ////  Lock the delta at 0.1 to minimise fps tunneling
-            //if (this.delta > 0.1)
-            //{
-            //    this.delta = 0.1;
-            //}
-                    };
+        };
         Time.prototype.elapsedSince = /**
-        *
+        * How long has passed since given time.
         * @method elapsedSince
-        * @param {Number} since
-        * @return {Number}
+        * @param {number} since The time you want to measure.
+        * @return {number} Duration between given time and now.
         */
         function (since) {
             return this.now - since;
         };
         Time.prototype.elapsedSecondsSince = /**
-        *
+        * How long has passed since give time (in seconds).
         * @method elapsedSecondsSince
-        * @param {Number} since
-        * @return {Number}
+        * @param {number} since The time you want to measure (in seconds).
+        * @return {number} Duration between given time and now (in seconds).
         */
         function (since) {
             return (this.now - since) * 0.001;
         };
         Time.prototype.reset = /**
-        *
+        * Set the start time to now.
         * @method reset
         */
         function () {
@@ -8402,16 +9411,43 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Tween = (function () {
+        /**
+        * Tween constructor
+        * Create a new <code>Tween</code>.
+        *
+        * @param object {object} Target object will be affected by this tween.
+        * @param game {Phaser.Game} Current game instance.
+        */
         function Tween(object, game) {
+            /**
+            * Reference to the target object.
+            * @type {object}
+            */
             this._object = null;
             this._pausedTime = 0;
+            /**
+            * Start values container.
+            * @type {object}
+            */
             this._valuesStart = {
             };
+            /**
+            * End values container.
+            * @type {object}
+            */
             this._valuesEnd = {
             };
+            /**
+            * How long this tween will perform.
+            * @type {number}
+            */
             this._duration = 1000;
             this._delayTime = 0;
             this._startTime = null;
+            /**
+            * Contains chained tweens.
+            * @type {Tweens[]}
+            */
             this._chainedTweens = [];
             this._object = object;
             this._game = game;
@@ -8423,7 +9459,15 @@ var Phaser;
             this.onUpdate = new Phaser.Signal();
             this.onComplete = new Phaser.Signal();
         }
-        Tween.prototype.to = function (properties, duration, ease, autoStart) {
+        Tween.prototype.to = /**
+        * Config the tween result.
+        * @param properties {object} Propertis you want to tween.
+        * @param [duration] {number} duration of this tween.
+        * @param ease {any} Easing function.
+        * @param autoStart {boolean} Whether this tween will start automatically or not.
+        * @return {Tween} Itself.
+        */
+        function (properties, duration, ease, autoStart) {
             if (typeof duration === "undefined") { duration = 1000; }
             if (typeof ease === "undefined") { ease = null; }
             if (typeof autoStart === "undefined") { autoStart = false; }
@@ -8439,7 +9483,10 @@ var Phaser;
                 return this;
             }
         };
-        Tween.prototype.start = function () {
+        Tween.prototype.start = /**
+        * Start to tween.
+        */
+        function () {
             if(this._game === null || this._object === null) {
                 return;
             }
@@ -8466,7 +9513,10 @@ var Phaser;
             }
             return this;
         };
-        Tween.prototype.stop = function () {
+        Tween.prototype.stop = /**
+        * Stop tweening.
+        */
+        function () {
             if(this._manager !== null) {
                 this._manager.remove(this);
             }
@@ -8511,11 +9561,21 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Tween.prototype.chain = function (tween) {
+        Tween.prototype.chain = /**
+        * Add another chained tween, which will start automatically when the one before it completes.
+        * @param tween {Phaser.Tween} Tween object you want to chain with this.
+        * @return {Phaser.Tween} Itselfe.
+        */
+        function (tween) {
             this._chainedTweens.push(tween);
             return this;
         };
-        Tween.prototype.update = function (time) {
+        Tween.prototype.update = /**
+        * Update tweening.
+        * @param time {number} Current time from game clock.
+        * @return {boolean} Return false if this completed and no need to update, otherwise return true.
+        */
+        function (time) {
             if(this._game.paused == true) {
                 if(this._pausedTime == 0) {
                     this._pausedTime = time;
@@ -8569,31 +9629,64 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var TweenManager = (function () {
+        /**
+        * TweenManager constructor
+        * @param game {Game} A reference to the current Game.
+        */
         function TweenManager(game) {
             this._game = game;
             this._tweens = [];
         }
-        TweenManager.prototype.getAll = function () {
+        TweenManager.prototype.getAll = /**
+        * Get all the tween objects in an array.
+        * @return {Phaser.Tween[]} Array with all tween objects.
+        */
+        function () {
             return this._tweens;
         };
-        TweenManager.prototype.removeAll = function () {
+        TweenManager.prototype.removeAll = /**
+        * Remove all tween objects.
+        */
+        function () {
             this._tweens.length = 0;
         };
-        TweenManager.prototype.create = function (object) {
+        TweenManager.prototype.create = /**
+        * Create a tween object for a specific object.
+        *
+        * @param object {object} Object you wish the tween will affect.
+        * @return {Phaser.Tween} The newly created tween object.
+        */
+        function (object) {
             return new Phaser.Tween(object, this._game);
         };
-        TweenManager.prototype.add = function (tween) {
+        TweenManager.prototype.add = /**
+        * Add an exist tween object to the manager.
+        *
+        * @param tween {Phaser.Tween} The tween object you want to add.
+        * @return {Phaser.Tween} The tween object you added to the manager.
+        */
+        function (tween) {
             tween.parent = this._game;
             this._tweens.push(tween);
             return tween;
         };
-        TweenManager.prototype.remove = function (tween) {
+        TweenManager.prototype.remove = /**
+        * Remove a tween from this manager.
+        *
+        * @param tween {Phaser.Tween} The tween object you want to remove.
+        */
+        function (tween) {
             var i = this._tweens.indexOf(tween);
             if(i !== -1) {
                 this._tweens.splice(i, 1);
             }
         };
-        TweenManager.prototype.update = function () {
+        TweenManager.prototype.update = /**
+        * Update all the tween objects you added to this manager.
+        *
+        * @return {boolean} Return false if there's no tween to update, otherwise return true.
+        */
+        function () {
             if(this._tweens.length === 0) {
                 return false;
             }
@@ -8624,29 +9717,52 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var World = (function () {
+        /**
+        * World constructor
+        * Create a new <code>World</code> with specific width and height.
+        *
+        * @param width {number} Width of the world bound.
+        * @param height {number} Height of the world bound.
+        */
         function World(game, width, height) {
             this._game = game;
             this.cameras = new Phaser.CameraManager(this._game, 0, 0, width, height);
-            this._game.camera = this.cameras.current;
             this.group = new Phaser.Group(this._game, 0);
             this.bounds = new Phaser.Rectangle(0, 0, width, height);
             this.worldDivisions = 6;
         }
-        World.prototype.update = function () {
+        World.prototype.update = /**
+        * This is called automatically every frame, and is where main logic performs.
+        */
+        function () {
             this.group.preUpdate();
             this.group.update();
             this.group.postUpdate();
             this.cameras.update();
         };
-        World.prototype.render = function () {
+        World.prototype.render = /**
+        * Render every thing to the screen, automatically called after update().
+        */
+        function () {
             //  Unlike in flixel our render process is camera driven, not group driven
             this.cameras.render();
         };
-        World.prototype.destroy = function () {
+        World.prototype.destroy = /**
+        * Clean up memory.
+        */
+        function () {
             this.group.destroy();
             this.cameras.destroy();
         };
         World.prototype.setSize = //  World methods
+        /**
+        * Update size of this world with specific width and height.
+        * You can choose update camera bounds automatically or not.
+        *
+        * @param width {number} New width of the world.
+        * @param height {number} New height of the world.
+        * @param [updateCameraBounds] {boolean} update camera bounds automatically or not. Default to true.
+        */
         function (width, height, updateCameraBounds) {
             if (typeof updateCameraBounds === "undefined") { updateCameraBounds = true; }
             this.bounds.width = width;
@@ -8704,47 +9820,129 @@ var Phaser;
             configurable: true
         });
         World.prototype.createCamera = //  Cameras
+        /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
         function (x, y, width, height) {
             return this.cameras.addCamera(x, y, width, height);
         };
-        World.prototype.removeCamera = function (id) {
+        World.prototype.removeCamera = /**
+        * Remove a new camera with its id.
+        *
+        * @param id {number} ID of the camera you want to remove.
+        * @returns {boolean}   True if successfully removed the camera, otherwise return false.
+        */
+        function (id) {
             return this.cameras.removeCamera(id);
         };
-        World.prototype.getAllCameras = function () {
+        World.prototype.getAllCameras = /**
+        * Get all the cameras.
+        *
+        * @returns {array} An array contains all the cameras.
+        */
+        function () {
             return this.cameras.getAll();
         };
         World.prototype.createSprite = //  Game Objects
+        /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param [key] {string} key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        */
         function (x, y, key) {
             if (typeof key === "undefined") { key = ''; }
             return this.group.add(new Phaser.Sprite(this._game, x, y, key));
         };
-        World.prototype.createGeomSprite = function (x, y) {
+        World.prototype.createGeomSprite = /**
+        * Create a new GeomSprite with specific position.
+        *
+        * @param x {number} X position of the new geom sprite.
+        * @param y {number} Y position of the new geom sprite.
+        * @returns {GeomSprite} The newly created geom sprite object.
+        */
+        function (x, y) {
             return this.group.add(new Phaser.GeomSprite(this._game, x, y));
         };
-        World.prototype.createDynamicTexture = function (width, height) {
+        World.prototype.createDynamicTexture = /**
+        * Create a new DynamicTexture with specific size.
+        *
+        * @param width {number} Width of the texture.
+        * @param height {number} Height of the texture.
+        * @returns {DynamicTexture} The newly created dynamic texture object.
+        */
+        function (width, height) {
             return new Phaser.DynamicTexture(this._game, width, height);
         };
-        World.prototype.createGroup = function (MaxSize) {
+        World.prototype.createGroup = /**
+        * Create a new object container.
+        *
+        * @param [MaxSize] {number} capacity of this group.
+        * @returns {Group} The newly created group.
+        */
+        function (MaxSize) {
             if (typeof MaxSize === "undefined") { MaxSize = 0; }
             return this.group.add(new Phaser.Group(this._game, MaxSize));
         };
-        World.prototype.createScrollZone = function (key, x, y, width, height) {
+        World.prototype.createScrollZone = /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {number} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width {number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
+        function (key, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = 0; }
             if (typeof height === "undefined") { height = 0; }
             return this.group.add(new Phaser.ScrollZone(this._game, key, x, y, width, height));
         };
-        World.prototype.createTilemap = function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
+        World.prototype.createTilemap = /**
+        * Create a new Tilemap.
+        *
+        * @param key {string} Key for tileset image.
+        * @param mapData {string} Data of this tilemap.
+        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+        * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
+        * @param [tileWidth] {number} width of each tile.
+        * @param [tileHeight] {number} height of each tile.
+        * @return {Tilemap} The newly created tilemap object.
+        */
+        function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
             if (typeof resizeWorld === "undefined") { resizeWorld = true; }
             if (typeof tileWidth === "undefined") { tileWidth = 0; }
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
             return this.group.add(new Phaser.Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
         };
-        World.prototype.createParticle = function () {
+        World.prototype.createParticle = /**
+        * Create a new Particle.
+        *
+        * @return {Particle} The newly created particle object.
+        */
+        function () {
             return new Phaser.Particle(this._game);
         };
-        World.prototype.createEmitter = function (x, y, size) {
+        World.prototype.createEmitter = /**
+        * Create a new Emitter.
+        *
+        * @param [x] {number} x position of the emitter.
+        * @param [y] {number} y position of the emitter.
+        * @param [size] {number} size of this emitter.
+        * @return {Emitter} The newly created emitter object.
+        */
+        function (x, y, size) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof size === "undefined") { size = 0; }
@@ -8765,219 +9963,187 @@ var Phaser;
 (function (Phaser) {
     var Device = (function () {
         /**
-        *
-        * @constructor
-        * @return {Device} This Object
+        * Device constructor
         */
         function Device() {
             //  Operating System
+            /**
+            * Is running desktop?
+            * @type {boolean}
+            */
             this.desktop = false;
             /**
-            *
-            * @property iOS
-            * @type Boolean
+            * Is running on iOS?
+            * @type {boolean}
             */
             this.iOS = false;
             /**
-            *
-            * @property android
-            * @type Boolean
+            * Is running on android?
+            * @type {boolean}
             */
             this.android = false;
             /**
-            *
-            * @property chromeOS
-            * @type Boolean
+            * Is running on chromeOS?
+            * @type {boolean}
             */
             this.chromeOS = false;
             /**
-            *
-            * @property linux
-            * @type Boolean
+            * Is running on linux?
+            * @type {boolean}
             */
             this.linux = false;
             /**
-            *
-            * @property maxOS
-            * @type Boolean
+            * Is running on maxOS?
+            * @type {boolean}
             */
             this.macOS = false;
             /**
-            *
-            * @property windows
-            * @type Boolean
+            * Is running on windows?
+            * @type {boolean}
             */
             this.windows = false;
             //  Features
             /**
-            *
-            * @property canvas
-            * @type Boolean
+            * Is canvas available?
+            * @type {boolean}
             */
             this.canvas = false;
             /**
-            *
-            * @property file
-            * @type Boolean
+            * Is file available?
+            * @type {boolean}
             */
             this.file = false;
             /**
-            *
-            * @property fileSystem
-            * @type Boolean
+            * Is fileSystem available?
+            * @type {boolean}
             */
             this.fileSystem = false;
             /**
-            *
-            * @property localStorage
-            * @type Boolean
+            * Is localStorage available?
+            * @type {boolean}
             */
             this.localStorage = false;
             /**
-            *
-            * @property webGL
-            * @type Boolean
+            * Is webGL available?
+            * @type {boolean}
             */
             this.webGL = false;
             /**
-            *
-            * @property worker
-            * @type Boolean
+            * Is worker available?
+            * @type {boolean}
             */
             this.worker = false;
             /**
-            *
-            * @property touch
-            * @type Boolean
+            * Is touch available?
+            * @type {boolean}
             */
             this.touch = false;
             /**
-            *
-            * @property css3D
-            * @type Boolean
+            * Is css3D available?
+            * @type {boolean}
             */
             this.css3D = false;
             //  Browser
             /**
-            *
-            * @property arora
-            * @type Boolean
+            * Is running in arora?
+            * @type {boolean}
             */
             this.arora = false;
             /**
-            *
-            * @property chrome
-            * @type Boolean
+            * Is running in chrome?
+            * @type {boolean}
             */
             this.chrome = false;
             /**
-            *
-            * @property epiphany
-            * @type Boolean
+            * Is running in epiphany?
+            * @type {boolean}
             */
             this.epiphany = false;
             /**
-            *
-            * @property firefox
-            * @type Boolean
+            * Is running in firefox?
+            * @type {boolean}
             */
             this.firefox = false;
             /**
-            *
-            * @property ie
-            * @type Boolean
+            * Is running in ie?
+            * @type {boolean}
             */
             this.ie = false;
             /**
-            *
-            * @property ieVersion
+            * Version of ie?
             * @type Number
             */
             this.ieVersion = 0;
             /**
-            *
-            * @property mobileSafari
-            * @type Boolean
+            * Is running in mobileSafari?
+            * @type {boolean}
             */
             this.mobileSafari = false;
             /**
-            *
-            * @property midori
-            * @type Boolean
+            * Is running in midori?
+            * @type {boolean}
             */
             this.midori = false;
             /**
-            *
-            * @property opera
-            * @type Boolean
+            * Is running in opera?
+            * @type {boolean}
             */
             this.opera = false;
             /**
-            *
-            * @property safari
-            * @type Boolean
+            * Is running in safari?
+            * @type {boolean}
             */
             this.safari = false;
             this.webApp = false;
             //  Audio
             /**
-            *
-            * @property audioData
-            * @type Boolean
+            * Is audioData available?
+            * @type {boolean}
             */
             this.audioData = false;
             /**
-            *
-            * @property webaudio
-            * @type Boolean
+            * Is webaudio available?
+            * @type {boolean}
             */
             this.webaudio = false;
             /**
-            *
-            * @property ogg
-            * @type Boolean
+            * Is ogg available?
+            * @type {boolean}
             */
             this.ogg = false;
             /**
-            *
-            * @property mp3
-            * @type Boolean
+            * Is mp3 available?
+            * @type {boolean}
             */
             this.mp3 = false;
             /**
-            *
-            * @property wav
-            * @type Boolean
+            * Is wav available?
+            * @type {boolean}
             */
             this.wav = false;
             /**
-            *
-            * @property m4a
-            * @type Boolean
+            * Is m4a available?
+            * @type {boolean}
             */
             this.m4a = false;
             //  Device
             /**
-            *
-            * @property iPhone
-            * @type Boolean
+            * Is running on iPhone?
+            * @type {boolean}
             */
             this.iPhone = false;
             /**
-            *
-            * @property iPhone4
-            * @type Boolean
+            * Is running on iPhone4?
+            * @type {boolean}
             */
             this.iPhone4 = false;
             /**
-            *
-            * @property iPad
-            * @type Boolean
+            * Is running on iPad?
+            * @type {boolean}
             */
             this.iPad = false;
             /**
-            *
-            * @property pixelRatio
+            * PixelRatio of the host device?
             * @type Number
             */
             this.pixelRatio = 0;
@@ -8989,8 +10155,7 @@ var Phaser;
             this._checkOS();
         }
         Device.prototype._checkOS = /**
-        *
-        * @method _checkOS
+        * Check which OS is game running on.
         * @private
         */
         function () {
@@ -9013,8 +10178,7 @@ var Phaser;
             }
         };
         Device.prototype._checkFeatures = /**
-        *
-        * @method _checkFeatures
+        * Check HTML5 features of the host environment.
         * @private
         */
         function () {
@@ -9033,8 +10197,7 @@ var Phaser;
             }
         };
         Device.prototype._checkBrowser = /**
-        *
-        * @method _checkBrowser
+        * Check what browser is game running in.
         * @private
         */
         function () {
@@ -9065,8 +10228,7 @@ var Phaser;
             }
         };
         Device.prototype._checkAudio = /**
-        *
-        * @method _checkAudio
+        * Check audio support.
         * @private
         */
         function () {
@@ -9096,8 +10258,7 @@ var Phaser;
             }
         };
         Device.prototype._checkDevice = /**
-        *
-        * @method _checkDevice
+        * Check PixelRatio of devices.
         * @private
         */
         function () {
@@ -9107,8 +10268,7 @@ var Phaser;
             this.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
         };
         Device.prototype._checkCSS3D = /**
-        *
-        * @method _checkCSS3D
+        * Check whether the host environment support 3D CSS.
         * @private
         */
         function () {
@@ -9133,9 +10293,8 @@ var Phaser;
             this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
         };
         Device.prototype.getAll = /**
-        *
-        * @method getAll
-        * @return {String}
+        * Get all informations of host device.
+        * @return {string} Informations in a string.
         */
         function () {
             var output = '';
@@ -9427,7 +10586,7 @@ var Phaser;
         * @param {Any} callback
         * @return {RequestAnimationFrame} This object.
         */
-        function RequestAnimationFrame(callback, callbackContext) {
+        function RequestAnimationFrame(game, callback) {
             /**
             *
             * @property _isSetTimeOut
@@ -9437,24 +10596,12 @@ var Phaser;
             this._isSetTimeOut = false;
             /**
             *
-            * @property lastTime
-            * @type Number
-            **/
-            this.lastTime = 0;
-            /**
-            *
-            * @property currentTime
-            * @type Number
-            **/
-            this.currentTime = 0;
-            /**
-            *
             * @property isRunning
             * @type Boolean
             **/
             this.isRunning = false;
-            this._callback = callback;
-            this._callbackContext = callbackContext;
+            this._game = game;
+            this.callback = callback;
             var vendors = [
                 'ms', 
                 'moz', 
@@ -9467,14 +10614,6 @@ var Phaser;
             }
             this.start();
         }
-        RequestAnimationFrame.prototype.setCallback = /**
-        *
-        * @method callback
-        * @param {Any} callback
-        **/
-        function (callback) {
-            this._callback = callback;
-        };
         RequestAnimationFrame.prototype.isUsingSetTimeOut = /**
         *
         * @method usingSetTimeOut
@@ -9489,14 +10628,10 @@ var Phaser;
         * @return Boolean
         **/
         function () {
-            if(this._isSetTimeOut === true) {
-                return false;
-            } else {
-                return true;
-            }
+            return this._isSetTimeOut === true;
         };
         RequestAnimationFrame.prototype.start = /**
-        *
+        * Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
         * @method start
         * @param {Any} [callback]
         **/
@@ -9504,7 +10639,7 @@ var Phaser;
             if (typeof callback === "undefined") { callback = null; }
             var _this = this;
             if(callback) {
-                this._callback = callback;
+                this.callback = callback;
             }
             if(!window.requestAnimationFrame) {
                 this._isSetTimeOut = true;
@@ -9514,13 +10649,13 @@ var Phaser;
             } else {
                 this._isSetTimeOut = false;
                 window.requestAnimationFrame(function () {
-                    return _this.RAFUpdate();
+                    return _this.RAFUpdate(0);
                 });
             }
             this.isRunning = true;
         };
         RequestAnimationFrame.prototype.stop = /**
-        *
+        * Stops the requestAnimationFrame from running
         * @method stop
         **/
         function () {
@@ -9531,42 +10666,475 @@ var Phaser;
             }
             this.isRunning = false;
         };
-        RequestAnimationFrame.prototype.RAFUpdate = function () {
+        RequestAnimationFrame.prototype.RAFUpdate = /**
+        * The update method for the requestAnimationFrame
+        * @method RAFUpdate
+        **/
+        function (time) {
             var _this = this;
-            //  Not in IE8 (but neither is RAF) also doesn't use a high performance timer (window.performance.now)
-            this.currentTime = Date.now();
-            if(this._callback) {
-                this._callback.call(this._callbackContext);
+            this._game.time.update(time);
+            if(this.callback) {
+                this.callback.call(this._game);
             }
-            var timeToCall = Math.max(0, 16 - (this.currentTime - this.lastTime));
-            window.requestAnimationFrame(function () {
-                return _this.RAFUpdate();
+            window.requestAnimationFrame(function (time) {
+                return _this.RAFUpdate(time);
             });
-            this.lastTime = this.currentTime + timeToCall;
         };
         RequestAnimationFrame.prototype.SetTimeoutUpdate = /**
-        *
+        * The update method for the setTimeout
         * @method SetTimeoutUpdate
         **/
         function () {
             var _this = this;
-            //  Not in IE8
-            this.currentTime = Date.now();
-            if(this._callback) {
-                this._callback.call(this._callbackContext);
-            }
-            var timeToCall = Math.max(0, 16 - (this.currentTime - this.lastTime));
+            this._game.time.update(Date.now());
             this._timeOutID = window.setTimeout(function () {
                 return _this.SetTimeoutUpdate();
-            }, timeToCall);
-            this.lastTime = this.currentTime + timeToCall;
+            }, 16.7);
+            if(this.callback) {
+                this.callback.call(this._game);
+            }
         };
         return RequestAnimationFrame;
     })();
     Phaser.RequestAnimationFrame = RequestAnimationFrame;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
+/**
+* Phaser - Finger
+*
+* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
+*/
+var Phaser;
+(function (Phaser) {
+    var Finger = (function () {
+        /**
+        * Constructor
+        * @param {Phaser.Game} game.
+        * @return {Phaser.Finger} This object.
+        */
+        function Finger(game) {
+            /**
+            *
+            * @property point
+            * @type {Point}
+            **/
+            this.point = null;
+            /**
+            *
+            * @property circle
+            * @type {Circle}
+            **/
+            this.circle = null;
+            /**
+            *
+            * @property withinGame
+            * @type {Boolean}
+            */
+            this.withinGame = false;
+            /**
+            * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
+            * @property clientX
+            * @type {Number}
+            */
+            this.clientX = -1;
+            //
+            /**
+            * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
+            * @property clientY
+            * @type {Number}
+            */
+            this.clientY = -1;
+            //
+            /**
+            * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
+            * @property pageX
+            * @type {Number}
+            */
+            this.pageX = -1;
+            /**
+            * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
+            * @property pageY
+            * @type {Number}
+            */
+            this.pageY = -1;
+            /**
+            * The horizontal coordinate of point relative to the screen in pixels
+            * @property screenX
+            * @type {Number}
+            */
+            this.screenX = -1;
+            /**
+            * The vertical coordinate of point relative to the screen in pixels
+            * @property screenY
+            * @type {Number}
+            */
+            this.screenY = -1;
+            /**
+            * The horizontal coordinate of point relative to the game element
+            * @property x
+            * @type {Number}
+            */
+            this.x = -1;
+            /**
+            * The vertical coordinate of point relative to the game element
+            * @property y
+            * @type {Number}
+            */
+            this.y = -1;
+            /**
+            *
+            * @property isDown
+            * @type {Boolean}
+            **/
+            this.isDown = false;
+            /**
+            *
+            * @property isUp
+            * @type {Boolean}
+            **/
+            this.isUp = false;
+            /**
+            *
+            * @property timeDown
+            * @type {Number}
+            **/
+            this.timeDown = 0;
+            /**
+            *
+            * @property duration
+            * @type {Number}
+            **/
+            this.duration = 0;
+            /**
+            *
+            * @property timeUp
+            * @type {Number}
+            **/
+            this.timeUp = 0;
+            /**
+            *
+            * @property justPressedRate
+            * @type {Number}
+            **/
+            this.justPressedRate = 200;
+            /**
+            *
+            * @property justReleasedRate
+            * @type {Number}
+            **/
+            this.justReleasedRate = 200;
+            this._game = game;
+            this.active = false;
+        }
+        Finger.prototype.start = /**
+        *
+        * @method start
+        * @param {Any} event
+        */
+        function (event) {
+            this.identifier = event.identifier;
+            this.target = event.target;
+            //  populate geom objects
+            if(this.point === null) {
+                this.point = new Phaser.Point();
+            }
+            if(this.circle === null) {
+                this.circle = new Phaser.Circle(0, 0, 44);
+            }
+            this.move(event);
+            this.active = true;
+            this.withinGame = true;
+            this.isDown = true;
+            this.isUp = false;
+            this.timeDown = this._game.time.now;
+        };
+        Finger.prototype.move = /**
+        *
+        * @method move
+        * @param {Any} event
+        */
+        function (event) {
+            this.clientX = event.clientX;
+            this.clientY = event.clientY;
+            this.pageX = event.pageX;
+            this.pageY = event.pageY;
+            this.screenX = event.screenX;
+            this.screenY = event.screenY;
+            this.x = this.pageX - this._game.stage.offset.x;
+            this.y = this.pageY - this._game.stage.offset.y;
+            this.point.setTo(this.x, this.y);
+            this.circle.setTo(this.x, this.y, 44);
+            //  Droppings history (used for gestures and motion tracking)
+            this.duration = this._game.time.now - this.timeDown;
+        };
+        Finger.prototype.leave = /**
+        *
+        * @method leave
+        * @param {Any} event
+        */
+        function (event) {
+            this.withinGame = false;
+            this.move(event);
+        };
+        Finger.prototype.stop = /**
+        *
+        * @method stop
+        * @param {Any} event
+        */
+        function (event) {
+            this.active = false;
+            this.withinGame = false;
+            this.isDown = false;
+            this.isUp = true;
+            this.timeUp = this._game.time.now;
+            this.duration = this.timeUp - this.timeDown;
+        };
+        Finger.prototype.justPressed = /**
+        *
+        * @method justPressed
+        * @param {Number} [duration].
+        * @return {Boolean}
+        */
+        function (duration) {
+            if (typeof duration === "undefined") { duration = this.justPressedRate; }
+            if(this.isDown === true && (this.timeDown + duration) > this._game.time.now) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        Finger.prototype.justReleased = /**
+        *
+        * @method justReleased
+        * @param {Number} [duration].
+        * @return {Boolean}
+        */
+        function (duration) {
+            if (typeof duration === "undefined") { duration = this.justReleasedRate; }
+            if(this.isUp === true && (this.timeUp + duration) > this._game.time.now) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        Finger.prototype.toString = /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {String} a string representation of the instance.
+        **/
+        function () {
+            return "[{Finger (identifer=" + this.identifier + " active=" + this.active + " duration=" + this.duration + " withinGame=" + this.withinGame + " x=" + this.x + " y=" + this.y + " clientX=" + this.clientX + " clientY=" + this.clientY + " screenX=" + this.screenX + " screenY=" + this.screenY + " pageX=" + this.pageX + " pageY=" + this.pageY + ")}]";
+        };
+        return Finger;
+    })();
+    Phaser.Finger = Finger;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../../Game.ts" />
+/// <reference path="Finger.ts" />
+/**
+* Phaser - MSPointer
+*
+* The MSPointer class handles touch interactions with the game and the resulting Finger objects.
+* It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
+* http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
+*
+*
+*  @todo       Gestures (pinch, zoom, swipe)
+*/
+var Phaser;
+(function (Phaser) {
+    var MSPointer = (function () {
+        /**
+        * Constructor
+        * @param {Game} game.
+        * @return {MSPointer} This object.
+        */
+        function MSPointer(game) {
+            /**
+            *
+            * @property x
+            * @type Number
+            **/
+            this.x = 0;
+            /**
+            *
+            * @property y
+            * @type Number
+            **/
+            this.y = 0;
+            /**
+            *
+            * @property isDown
+            * @type Boolean
+            **/
+            this.isDown = false;
+            /**
+            *
+            * @property isUp
+            * @type Boolean
+            **/
+            this.isUp = true;
+            this._game = game;
+            this.finger1 = new Phaser.Finger(this._game);
+            this.finger2 = new Phaser.Finger(this._game);
+            this.finger3 = new Phaser.Finger(this._game);
+            this.finger4 = new Phaser.Finger(this._game);
+            this.finger5 = new Phaser.Finger(this._game);
+            this.finger6 = new Phaser.Finger(this._game);
+            this.finger7 = new Phaser.Finger(this._game);
+            this.finger8 = new Phaser.Finger(this._game);
+            this.finger9 = new Phaser.Finger(this._game);
+            this.finger10 = new Phaser.Finger(this._game);
+            this._fingers = [
+                this.finger1, 
+                this.finger2, 
+                this.finger3, 
+                this.finger4, 
+                this.finger5, 
+                this.finger6, 
+                this.finger7, 
+                this.finger8, 
+                this.finger9, 
+                this.finger10
+            ];
+            this.touchDown = new Phaser.Signal();
+            this.touchUp = new Phaser.Signal();
+            this.start();
+        }
+        MSPointer.prototype.start = /**
+        *
+        * @method start
+        */
+        function () {
+            var _this = this;
+            if(navigator.msMaxTouchPoints) {
+                this._game.stage.canvas.addEventListener('MSPointerDown', function (event) {
+                    return _this.onPointerDown(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('MSPointerMove', function (event) {
+                    return _this.onPointerMove(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('MSPointerUp', function (event) {
+                    return _this.onPointerUp(event);
+                }, false);
+            }
+        };
+        MSPointer.prototype.onPointerDown = /**
+        *
+        * @method onPointerDown
+        * @param {Any} event
+        **/
+        function (event) {
+            event.preventDefault();
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].active === false) {
+                    event.identifier = event.pointerId;
+                    this._fingers[f].start(event);
+                    this.x = this._fingers[f].x;
+                    this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
+                    this.touchDown.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
+                    this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeDown);
+                    this.isDown = true;
+                    this.isUp = false;
+                    break;
+                }
+            }
+        };
+        MSPointer.prototype.onPointerMove = /**
+        *
+        * @method onPointerMove
+        * @param {Any} event
+        **/
+        function (event) {
+            event.preventDefault();
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].identifier === event.pointerId && this._fingers[f].active === true) {
+                    event.identifier = event.pointerId;
+                    this._fingers[f].move(event);
+                    this.x = this._fingers[f].x;
+                    this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
+                    break;
+                }
+            }
+        };
+        MSPointer.prototype.onPointerUp = /**
+        *
+        * @method onPointerUp
+        * @param {Any} event
+        **/
+        function (event) {
+            event.preventDefault();
+            for(var f = 0; f < this._fingers.length; f++) {
+                if(this._fingers[f].identifier === event.pointerId) {
+                    event.identifier = event.pointerId;
+                    this._fingers[f].stop(event);
+                    this.x = this._fingers[f].x;
+                    this.y = this._fingers[f].y;
+                    this._game.input.x = this.x * this._game.input.scaleX;
+                    this._game.input.y = this.y * this._game.input.scaleY;
+                    this.touchUp.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
+                    this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeUp);
+                    this.isDown = false;
+                    this.isUp = true;
+                    break;
+                }
+            }
+        };
+        MSPointer.prototype.calculateDistance = /**
+        *
+        * @method calculateDistance
+        * @param {Finger} finger1
+        * @param {Finger} finger2
+        **/
+        function (finger1, finger2) {
+        };
+        MSPointer.prototype.calculateAngle = /**
+        *
+        * @method calculateAngle
+        * @param {Finger} finger1
+        * @param {Finger} finger2
+        **/
+        function (finger1, finger2) {
+        };
+        MSPointer.prototype.checkOverlap = /**
+        *
+        * @method checkOverlap
+        * @param {Finger} finger1
+        * @param {Finger} finger2
+        **/
+        function (finger1, finger2) {
+        };
+        MSPointer.prototype.update = /**
+        *
+        * @method update
+        */
+        function () {
+        };
+        MSPointer.prototype.stop = /**
+        *
+        * @method stop
+        */
+        function () {
+        };
+        MSPointer.prototype.reset = /**
+        *
+        * @method reset
+        **/
+        function () {
+            this.isDown = false;
+            this.isUp = false;
+        };
+        return MSPointer;
+    })();
+    Phaser.MSPointer = MSPointer;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../../Game.ts" />
 /// <reference path="../../Signal.ts" />
+/// <reference path="MSPointer.ts" />
 /**
 * Phaser - Input
 *
@@ -9576,16 +11144,41 @@ var Phaser;
 (function (Phaser) {
     var Input = (function () {
         function Input(game) {
+            /**
+            *
+            * @type {Number}
+            */
             this.x = 0;
+            /**
+            *
+            * @type {Number}
+            */
             this.y = 0;
+            /**
+            *
+            * @type {Number}
+            */
             this.scaleX = 1;
+            /**
+            *
+            * @type {Number}
+            */
             this.scaleY = 1;
+            /**
+            *
+            * @type {Number}
+            */
             this.worldX = 0;
+            /**
+            *
+            * @type {Number}
+            */
             this.worldY = 0;
             this._game = game;
             this.mouse = new Phaser.Mouse(this._game);
             this.keyboard = new Phaser.Keyboard(this._game);
             this.touch = new Phaser.Touch(this._game);
+            this.mspointer = new Phaser.MSPointer(this._game);
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
         }
@@ -9602,15 +11195,26 @@ var Phaser;
             this.keyboard.reset();
             this.touch.reset();
         };
-        Input.prototype.getWorldX = function (camera) {
+        Input.prototype.getWorldX = /**
+        * @param {Camera} [camera]
+        */
+        function (camera) {
             if (typeof camera === "undefined") { camera = this._game.camera; }
             return camera.worldView.x + this.x;
         };
-        Input.prototype.getWorldY = function (camera) {
+        Input.prototype.getWorldY = /**
+        * @param {Camera} [camera]
+        */
+        function (camera) {
             if (typeof camera === "undefined") { camera = this._game.camera; }
             return camera.worldView.y + this.y;
         };
-        Input.prototype.renderDebugInfo = function (x, y, color) {
+        Input.prototype.renderDebugInfo = /**
+        * @param {Number} x
+        * @param {Number} y
+        * @param {String} [color]
+        */
+        function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             this._game.stage.context.font = '14px Courier';
             this._game.stage.context.fillStyle = color;
@@ -9651,7 +11255,10 @@ var Phaser;
                 return _this.onKeyUp(event);
             }, false);
         };
-        Keyboard.prototype.addKeyCapture = function (keycode) {
+        Keyboard.prototype.addKeyCapture = /**
+        * @param {Any} keycode
+        */
+        function (keycode) {
             if(typeof keycode === 'object') {
                 for(var i = 0; i < keycode.length; i++) {
                     this._capture[keycode[i]] = true;
@@ -9660,14 +11267,20 @@ var Phaser;
                 this._capture[keycode] = true;
             }
         };
-        Keyboard.prototype.removeKeyCapture = function (keycode) {
+        Keyboard.prototype.removeKeyCapture = /**
+        * @param {Number} keycode
+        */
+        function (keycode) {
             delete this._capture[keycode];
         };
         Keyboard.prototype.clearCaptures = function () {
             this._capture = {
             };
         };
-        Keyboard.prototype.onKeyDown = function (event) {
+        Keyboard.prototype.onKeyDown = /**
+        * @param {KeyboardEvent} event
+        */
+        function (event) {
             if(this._capture[event.keyCode]) {
                 event.preventDefault();
             }
@@ -9682,7 +11295,10 @@ var Phaser;
                 this._keys[event.keyCode].timeDown = this._game.time.now;
             }
         };
-        Keyboard.prototype.onKeyUp = function (event) {
+        Keyboard.prototype.onKeyUp = /**
+        * @param {KeyboardEvent} event
+        */
+        function (event) {
             if(this._capture[event.keyCode]) {
                 event.preventDefault();
             }
@@ -9702,7 +11318,12 @@ var Phaser;
                 this._keys[key].isDown = false;
             }
         };
-        Keyboard.prototype.justPressed = function (keycode, duration) {
+        Keyboard.prototype.justPressed = /**
+        * @param {Number} keycode
+        * @param {Number} [duration]
+        * @return {Boolean}
+        */
+        function (keycode, duration) {
             if (typeof duration === "undefined") { duration = 250; }
             if(this._keys[keycode] && this._keys[keycode].isDown === true && (this._game.time.now - this._keys[keycode].timeDown < duration)) {
                 return true;
@@ -9710,7 +11331,12 @@ var Phaser;
                 return false;
             }
         };
-        Keyboard.prototype.justReleased = function (keycode, duration) {
+        Keyboard.prototype.justReleased = /**
+        * @param {Number} keycode
+        * @param {Number} [duration]
+        * @return {Boolean}
+        */
+        function (keycode, duration) {
             if (typeof duration === "undefined") { duration = 250; }
             if(this._keys[keycode] && this._keys[keycode].isDown === false && (this._game.time.now - this._keys[keycode].timeUp < duration)) {
                 return true;
@@ -9718,7 +11344,11 @@ var Phaser;
                 return false;
             }
         };
-        Keyboard.prototype.isDown = function (keycode) {
+        Keyboard.prototype.isDown = /**
+        * @param {Number} keycode
+        * @return {Boolean}
+        */
+        function (keycode) {
             if(this._keys[keycode]) {
                 return this._keys[keycode].isDown;
             } else {
@@ -9839,10 +11469,25 @@ var Phaser;
         function Mouse(game) {
             this._x = 0;
             this._y = 0;
+            /**
+            * @type {Boolean}
+            */
             this.isDown = false;
+            /**
+            * @type {Boolean}
+            */
             this.isUp = true;
+            /**
+            * @type {Number}
+            */
             this.timeDown = 0;
+            /**
+            * @type {Number}
+            */
             this.duration = 0;
+            /**
+            * @type {Number}
+            */
             this.timeUp = 0;
             this._game = game;
             this.start();
@@ -9866,7 +11511,10 @@ var Phaser;
             this.isDown = false;
             this.isUp = true;
         };
-        Mouse.prototype.onMouseDown = function (event) {
+        Mouse.prototype.onMouseDown = /**
+        * @param {MouseEvent} event
+        */
+        function (event) {
             this.button = event.button;
             this._x = event.clientX - this._game.stage.x;
             this._y = event.clientY - this._game.stage.y;
@@ -9884,14 +11532,20 @@ var Phaser;
                 this.duration = this._game.time.now - this.timeDown;
             }
         };
-        Mouse.prototype.onMouseMove = function (event) {
+        Mouse.prototype.onMouseMove = /**
+        * @param {MouseEvent} event
+        */
+        function (event) {
             this.button = event.button;
             this._x = event.clientX - this._game.stage.x;
             this._y = event.clientY - this._game.stage.y;
             this._game.input.x = this._x * this._game.input.scaleX;
             this._game.input.y = this._y * this._game.input.scaleY;
         };
-        Mouse.prototype.onMouseUp = function (event) {
+        Mouse.prototype.onMouseUp = /**
+        * @param {MouseEvent} event
+        */
+        function (event) {
             this.button = event.button;
             this.isDown = false;
             this.isUp = true;
@@ -9906,237 +11560,6 @@ var Phaser;
         return Mouse;
     })();
     Phaser.Mouse = Mouse;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../../Game.ts" />
-/**
-* Phaser - Finger
-*
-* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
-*/
-var Phaser;
-(function (Phaser) {
-    var Finger = (function () {
-        /**
-        * Constructor
-        * @param {Phaser.Game} game.
-        * @return {Phaser.Finger} This object.
-        */
-        function Finger(game) {
-            /**
-            *
-            * @property point
-            * @type Point
-            **/
-            this.point = null;
-            /**
-            *
-            * @property circle
-            * @type Circle
-            **/
-            this.circle = null;
-            /**
-            *
-            * @property withinGame
-            * @type Boolean
-            */
-            this.withinGame = false;
-            /**
-            * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
-            * @property clientX
-            * @type Number
-            */
-            this.clientX = -1;
-            //
-            /**
-            * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
-            * @property clientY
-            * @type Number
-            */
-            this.clientY = -1;
-            //
-            /**
-            * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
-            * @property pageX
-            * @type Number
-            */
-            this.pageX = -1;
-            /**
-            * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
-            * @property pageY
-            * @type Number
-            */
-            this.pageY = -1;
-            /**
-            * The horizontal coordinate of point relative to the screen in pixels
-            * @property screenX
-            * @type Number
-            */
-            this.screenX = -1;
-            /**
-            * The vertical coordinate of point relative to the screen in pixels
-            * @property screenY
-            * @type Number
-            */
-            this.screenY = -1;
-            /**
-            * The horizontal coordinate of point relative to the game element
-            * @property x
-            * @type Number
-            */
-            this.x = -1;
-            /**
-            * The vertical coordinate of point relative to the game element
-            * @property y
-            * @type Number
-            */
-            this.y = -1;
-            /**
-            *
-            * @property isDown
-            * @type Boolean
-            **/
-            this.isDown = false;
-            /**
-            *
-            * @property isUp
-            * @type Boolean
-            **/
-            this.isUp = false;
-            /**
-            *
-            * @property timeDown
-            * @type Number
-            **/
-            this.timeDown = 0;
-            /**
-            *
-            * @property duration
-            * @type Number
-            **/
-            this.duration = 0;
-            /**
-            *
-            * @property timeUp
-            * @type Number
-            **/
-            this.timeUp = 0;
-            /**
-            *
-            * @property justPressedRate
-            * @type Number
-            **/
-            this.justPressedRate = 200;
-            /**
-            *
-            * @property justReleasedRate
-            * @type Number
-            **/
-            this.justReleasedRate = 200;
-            this._game = game;
-            this.active = false;
-        }
-        Finger.prototype.start = /**
-        *
-        * @method start
-        * @param {Any} event
-        */
-        function (event) {
-            this.identifier = event.identifier;
-            this.target = event.target;
-            //  populate geom objects
-            if(this.point === null) {
-                this.point = new Phaser.Point();
-            }
-            if(this.circle === null) {
-                this.circle = new Phaser.Circle(0, 0, 44);
-            }
-            this.move(event);
-            this.active = true;
-            this.withinGame = true;
-            this.isDown = true;
-            this.isUp = false;
-            this.timeDown = this._game.time.now;
-        };
-        Finger.prototype.move = /**
-        *
-        * @method move
-        * @param {Any} event
-        */
-        function (event) {
-            this.clientX = event.clientX;
-            this.clientY = event.clientY;
-            this.pageX = event.pageX;
-            this.pageY = event.pageY;
-            this.screenX = event.screenX;
-            this.screenY = event.screenY;
-            this.x = this.pageX - this._game.stage.offset.x;
-            this.y = this.pageY - this._game.stage.offset.y;
-            this.point.setTo(this.x, this.y);
-            this.circle.setTo(this.x, this.y, 44);
-            //  Droppings history (used for gestures and motion tracking)
-            this.duration = this._game.time.now - this.timeDown;
-        };
-        Finger.prototype.leave = /**
-        *
-        * @method leave
-        * @param {Any} event
-        */
-        function (event) {
-            this.withinGame = false;
-            this.move(event);
-        };
-        Finger.prototype.stop = /**
-        *
-        * @method stop
-        * @param {Any} event
-        */
-        function (event) {
-            this.active = false;
-            this.withinGame = false;
-            this.isDown = false;
-            this.isUp = true;
-            this.timeUp = this._game.time.now;
-            this.duration = this.timeUp - this.timeDown;
-        };
-        Finger.prototype.justPressed = /**
-        *
-        * @method justPressed
-        * @param {Number} [duration].
-        * @return {Boolean}
-        */
-        function (duration) {
-            if (typeof duration === "undefined") { duration = this.justPressedRate; }
-            if(this.isDown === true && (this.timeDown + duration) > this._game.time.now) {
-                return true;
-            } else {
-                return false;
-            }
-        };
-        Finger.prototype.justReleased = /**
-        *
-        * @method justReleased
-        * @param {Number} [duration].
-        * @return {Boolean}
-        */
-        function (duration) {
-            if (typeof duration === "undefined") { duration = this.justReleasedRate; }
-            if(this.isUp === true && (this.timeUp + duration) > this._game.time.now) {
-                return true;
-            } else {
-                return false;
-            }
-        };
-        Finger.prototype.toString = /**
-        * Returns a string representation of this object.
-        * @method toString
-        * @return {string} a string representation of the instance.
-        **/
-        function () {
-            return "[{Finger (identifer=" + this.identifier + " active=" + this.active + " duration=" + this.duration + " withinGame=" + this.withinGame + " x=" + this.x + " y=" + this.y + " clientX=" + this.clientX + " clientY=" + this.clientY + " screenX=" + this.screenX + " screenY=" + this.screenY + " pageX=" + this.pageX + " pageY=" + this.pageY + ")}]";
-        };
-        return Finger;
-    })();
-    Phaser.Finger = Finger;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /// <reference path="Finger.ts" />
@@ -10167,25 +11590,25 @@ var Phaser;
             /**
             *
             * @property x
-            * @type Number
+            * @type {Number}
             **/
             this.x = 0;
             /**
             *
             * @property y
-            * @type Number
+            * @type {Number}
             **/
             this.y = 0;
             /**
             *
             * @property isDown
-            * @type Boolean
+            * @type {Boolean}
             **/
             this.isDown = false;
             /**
             *
             * @property isUp
-            * @type Boolean
+            * @type {Boolean}
             **/
             this.isUp = true;
             this._game = game;
@@ -10458,9 +11881,9 @@ var Phaser;
         * Creates a new <code>Emitter</code> object at a specific position.
         * Does NOT automatically generate or attach particles!
         *
-        * @param	X		The X position of the emitter.
-        * @param	Y		The Y position of the emitter.
-        * @param	Size	Optional, specifies a maximum capacity for this emitter.
+        * @param X {number} The X position of the emitter.
+        * @param Y {number} The Y position of the emitter.
+        * @param [Size] {number} specifies a maximum capacity for this emitter.
         */
         function Emitter(game, X, Y, Size) {
             if (typeof X === "undefined") { X = 0; }
@@ -10501,13 +11924,13 @@ var Phaser;
         Emitter.prototype.makeParticles = /**
         * This function generates a new array of particle sprites to attach to the emitter.
         *
-        * @param	Graphics		If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
-        * @param	Quantity		The number of particles to generate when using the "create from image" option.
-        * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
-        * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-        * @param	Collide			Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+        * @param Graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
+        * @param Quantity {number} The number of particles to generate when using the "create from image" option.
+        * @param BakedRotations {number} How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
+        * @param Multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+        * @param Collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
         *
-        * @return	This Emitter instance (nice for chaining stuff together, if you're into that).
+        * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
         */
         function (Graphics, Quantity, BakedRotations, Multiple, Collide) {
             if (typeof Quantity === "undefined") { Quantity = 50; }
@@ -10611,10 +12034,10 @@ var Phaser;
         Emitter.prototype.start = /**
         * Call this function to start emitting particles.
         *
-        * @param	Explode		Whether the particles should all burst out at once.
-        * @param	Lifespan	How long each particle lives once emitted. 0 = forever.
-        * @param	Frequency	Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-        * @param	Quantity	How many particles to launch. 0 = "all of the particles".
+        * @param Explode {boolean} Whether the particles should all burst out at once.
+        * @param Lifespan {number} How long each particle lives once emitted. 0 = forever.
+        * @param Frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+        * @param Quantity {number} How many particles to launch. 0 = "all of the particles".
         */
         function (Explode, Lifespan, Frequency, Quantity) {
             if (typeof Explode === "undefined") { Explode = true; }
@@ -10666,8 +12089,8 @@ var Phaser;
         Emitter.prototype.setSize = /**
         * A more compact way of setting the width and height of the emitter.
         *
-        * @param	Width	The desired width of the emitter (particles are spawned randomly within these dimensions).
-        * @param	Height	The desired height of the emitter.
+        * @param Width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
+        * @param Height {number} The desired height of the emitter.
         */
         function (Width, Height) {
             this.width = Width;
@@ -10676,8 +12099,8 @@ var Phaser;
         Emitter.prototype.setXSpeed = /**
         * A more compact way of setting the X velocity range of the emitter.
         *
-        * @param	Min		The minimum value for this range.
-        * @param	Max		The maximum value for this range.
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
         */
         function (Min, Max) {
             if (typeof Min === "undefined") { Min = 0; }
@@ -10688,8 +12111,8 @@ var Phaser;
         Emitter.prototype.setYSpeed = /**
         * A more compact way of setting the Y velocity range of the emitter.
         *
-        * @param	Min		The minimum value for this range.
-        * @param	Max		The maximum value for this range.
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
         */
         function (Min, Max) {
             if (typeof Min === "undefined") { Min = 0; }
@@ -10700,8 +12123,8 @@ var Phaser;
         Emitter.prototype.setRotation = /**
         * A more compact way of setting the angular velocity constraints of the emitter.
         *
-        * @param	Min		The minimum value for this range.
-        * @param	Max		The maximum value for this range.
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
         */
         function (Min, Max) {
             if (typeof Min === "undefined") { Min = 0; }
@@ -10712,7 +12135,7 @@ var Phaser;
         Emitter.prototype.at = /**
         * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
         *
-        * @param	Object		The <code>Object</code> that you want to sync up with.
+        * @param Object {object} The <code>Object</code> that you want to sync up with.
         */
         function (Object) {
             Object.getMidpoint(this._point);
@@ -10735,6 +12158,14 @@ var Phaser;
 (function (Phaser) {
     var GeomSprite = (function (_super) {
         __extends(GeomSprite, _super);
+        /**
+        * GeomSprite constructor
+        * Create a new <code>GeomSprite</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param [x] {number} the initial x position of the sprite.
+        * @param [y] {number} the initial y position of the sprite.
+        */
         function GeomSprite(game, x, y) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
@@ -10744,11 +12175,35 @@ var Phaser;
             this._dy = 0;
             this._dw = 0;
             this._dh = 0;
+            /**
+            * Geom type of this sprite. (available: UNASSIGNED, CIRCLE, LINE, POINT, RECTANGLE)
+            * @type {number}
+            */
             this.type = 0;
+            /**
+            * Render outline of this sprite or not. (default is true)
+            * @type {boolean}
+            */
             this.renderOutline = true;
+            /**
+            * Fill the shape or not. (default is true)
+            * @type {boolean}
+            */
             this.renderFill = true;
+            /**
+            * Width of outline. (default is 1)
+            * @type {number}
+            */
             this.lineWidth = 1;
+            /**
+            * Width of outline. (default is 1)
+            * @type {number}
+            */
             this.lineColor = 'rgb(0,255,0)';
+            /**
+            * Width of outline. (default is 1)
+            * @type {number}
+            */
             this.fillColor = 'rgb(0,100,0)';
             this.type = GeomSprite.UNASSIGNED;
             return this;
@@ -10758,45 +12213,80 @@ var Phaser;
         GeomSprite.LINE = 2;
         GeomSprite.POINT = 3;
         GeomSprite.RECTANGLE = 4;
-        GeomSprite.prototype.loadCircle = function (circle) {
+        GeomSprite.prototype.loadCircle = /**
+        * Just like Sprite.loadGraphic(), this will load a circle and set its shape to Circle.
+        * @param circle {Circle} Circle geometry define.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
+        function (circle) {
             this.refresh();
             this.circle = circle;
             this.type = GeomSprite.CIRCLE;
             return this;
         };
-        GeomSprite.prototype.loadLine = function (line) {
+        GeomSprite.prototype.loadLine = /**
+        * Just like Sprite.loadGraphic(), this will load a line and set its shape to Line.
+        * @param line {Line} Line geometry define.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
+        function (line) {
             this.refresh();
             this.line = line;
             this.type = GeomSprite.LINE;
             return this;
         };
-        GeomSprite.prototype.loadPoint = function (point) {
+        GeomSprite.prototype.loadPoint = /**
+        * Just like Sprite.loadGraphic(), this will load a point and set its shape to Point.
+        * @param point {Point} Point geometry define.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
+        function (point) {
             this.refresh();
             this.point = point;
             this.type = GeomSprite.POINT;
             return this;
         };
-        GeomSprite.prototype.loadRectangle = function (rect) {
+        GeomSprite.prototype.loadRectangle = /**
+        * Just like Sprite.loadGraphic(), this will load a rect and set its shape to Rectangle.
+        * @param rect {Rectangle} Rectangle geometry define.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
+        function (rect) {
             this.refresh();
             this.rect = rect;
             this.type = GeomSprite.RECTANGLE;
             return this;
         };
-        GeomSprite.prototype.createCircle = function (diameter) {
+        GeomSprite.prototype.createCircle = /**
+        * Create a circle shape with specific diameter.
+        * @param diameter {number} Diameter of the circle.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
+        function (diameter) {
             this.refresh();
             this.circle = new Phaser.Circle(this.x, this.y, diameter);
             this.type = GeomSprite.CIRCLE;
             this.bounds.setTo(this.circle.x - this.circle.radius, this.circle.y - this.circle.radius, this.circle.diameter, this.circle.diameter);
             return this;
         };
-        GeomSprite.prototype.createLine = function (x, y) {
+        GeomSprite.prototype.createLine = /**
+        * Create a line shape with specific end point.
+        * @param x {number} X position of the end point.
+        * @param y {number} Y position of the end point.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
+        function (x, y) {
             this.refresh();
             this.line = new Phaser.Line(this.x, this.y, x, y);
             this.type = GeomSprite.LINE;
             this.bounds.setTo(this.x, this.y, this.line.width, this.line.height);
             return this;
         };
-        GeomSprite.prototype.createPoint = function () {
+        GeomSprite.prototype.createPoint = /**
+        * Create a point shape at spriter's position.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
+        function () {
             this.refresh();
             this.point = new Phaser.Point(this.x, this.y);
             this.type = GeomSprite.POINT;
@@ -10804,20 +12294,31 @@ var Phaser;
             this.bounds.height = 1;
             return this;
         };
-        GeomSprite.prototype.createRectangle = function (width, height) {
+        GeomSprite.prototype.createRectangle = /**
+        * Create a circle shape with specific diameter.
+        * @param diameter {number} Diameter of the circle.
+        * @return {GeomSprite} GeomSprite instance itself.
+        */
+        function (width, height) {
             this.refresh();
             this.rect = new Phaser.Rectangle(this.x, this.y, width, height);
             this.type = GeomSprite.RECTANGLE;
             this.bounds.copyFrom(this.rect);
             return this;
         };
-        GeomSprite.prototype.refresh = function () {
+        GeomSprite.prototype.refresh = /**
+        * Destroy all geom shapes of this sprite.
+        */
+        function () {
             this.circle = null;
             this.line = null;
             this.point = null;
             this.rect = null;
         };
-        GeomSprite.prototype.update = function () {
+        GeomSprite.prototype.update = /**
+        * Update bounds.
+        */
+        function () {
             //  Update bounds and position?
             if(this.type == GeomSprite.UNASSIGNED) {
                 return;
@@ -10839,7 +12340,12 @@ var Phaser;
                 this.bounds.copyFrom(this.rect);
             }
         };
-        GeomSprite.prototype.inCamera = function (camera) {
+        GeomSprite.prototype.inCamera = /**
+        * Check whether this object is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        */
+        function (camera) {
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
                 this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
                 this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
@@ -10850,7 +12356,14 @@ var Phaser;
                 return camera.intersects(this.bounds);
             }
         };
-        GeomSprite.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
+        GeomSprite.prototype.render = /**
+        * Render this sprite to specific camera. Called by game loop after update().
+        * @param camera {Camera} Camera this sprite will be rendered to.
+        * @cameraOffsetX {number} X offset to the camera.
+        * @cameraOffsetY {number} Y offset to the camera.
+        * @return {boolean} Return false if not rendered, otherwise return true.
+        */
+        function (camera, cameraOffsetX, cameraOffsetY) {
             //  Render checks
             if(this.type == GeomSprite.UNASSIGNED || this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
                 return false;
@@ -10959,13 +12472,26 @@ var Phaser;
             }
             return true;
         };
-        GeomSprite.prototype.renderPoint = function (point, offsetX, offsetY, size) {
+        GeomSprite.prototype.renderPoint = /**
+        * Render a point of geometry.
+        * @param point {Point} Position of the point.
+        * @param offsetX {number} X offset to its position.
+        * @param offsetY {number} Y offset to its position.
+        * @param [size] {number} point size.
+        */
+        function (point, offsetX, offsetY, size) {
             if (typeof offsetX === "undefined") { offsetX = 0; }
             if (typeof offsetY === "undefined") { offsetY = 0; }
             if (typeof size === "undefined") { size = 1; }
             this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, size, size);
         };
-        GeomSprite.prototype.renderDebugInfo = function (x, y, color) {
+        GeomSprite.prototype.renderDebugInfo = /**
+        * Render debug infos. (this method does not work now)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             //this._game.stage.context.fillStyle = color;
             //this._game.stage.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
@@ -10973,8 +12499,12 @@ var Phaser;
             //this._game.stage.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
             //this._game.stage.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
                     };
-        GeomSprite.prototype.collide = //  Gives a basic boolean response to a geometric collision.
-        //  If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
+        GeomSprite.prototype.collide = /**
+        * Gives a basic boolean response to a geometric collision.
+        * If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
+        * @param source {GeomSprite} Sprite you want to check.
+        * @return {boolean} Whether they overlaps or not.
+        */
         function (source) {
             //  Circle vs. Circle
             if(this.type == GeomSprite.CIRCLE && source.type == GeomSprite.CIRCLE) {
@@ -11124,6 +12654,18 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var TilemapLayer = (function () {
+        /**
+        * TilemapLayer constructor
+        * Create a new <code>TilemapLayer</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param parent {Tilemap} The tilemap that contains this layer.
+        * @param key {string} Asset key for this map.
+        * @param mapFormat {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+        * @param name {string} Name of this layer, so you can get this layer by its name.
+        * @param tileWidth {number} Width of tiles in this map.
+        * @param tileHeight {number} Height of tiles in this map.
+        */
         function TilemapLayer(game, parent, key, mapFormat, name, tileWidth, tileHeight) {
             this._startX = 0;
             this._startY = 0;
@@ -11135,14 +12677,52 @@ var Phaser;
             this._dy = 0;
             this._oldCameraX = 0;
             this._oldCameraY = 0;
+            /**
+            * Opacity of this layer.
+            * @type {number}
+            */
             this.alpha = 1;
+            /**
+            * Controls whether update() and draw() are automatically called.
+            * @type {boolean}
+            */
             this.exists = true;
+            /**
+            * Controls whether draw() are automatically called.
+            * @type {boolean}
+            */
             this.visible = true;
+            /**
+            * How many tiles in each row.
+            * Read-only variable, do NOT recommend changing after the map is loaded!
+            * @type {number}
+            */
             this.widthInTiles = 0;
+            /**
+            * How many tiles in each column.
+            * Read-only variable, do NOT recommend changing after the map is loaded!
+            * @type {number}
+            */
             this.heightInTiles = 0;
+            /**
+            * Read-only variable, do NOT recommend changing after the map is loaded!
+            * @type {number}
+            */
             this.widthInPixels = 0;
+            /**
+            * Read-only variable, do NOT recommend changing after the map is loaded!
+            * @type {number}
+            */
             this.heightInPixels = 0;
+            /**
+            * Distance between REAL tiles to the tileset texture bound.
+            * @type {number}
+            */
             this.tileMargin = 0;
+            /**
+            * Distance between every 2 neighbor tile in the tileset texture.
+            * @type {number}
+            */
             this.tileSpacing = 0;
             this._game = game;
             this._parent = parent;
@@ -11156,7 +12736,13 @@ var Phaser;
             this._tempTileBlock = [];
             this._texture = this._game.cache.getImage(key);
         }
-        TilemapLayer.prototype.putTile = function (x, y, index) {
+        TilemapLayer.prototype.putTile = /**
+        * Set a specific tile with its x and y in tiles.
+        * @param x {number} X position of this tile.
+        * @param y {number} Y position of this tile.
+        * @param index {number} The index of this tile type in the core map data.
+        */
+        function (x, y, index) {
             x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
             y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
             if(y >= 0 && y < this.mapData.length) {
@@ -11165,7 +12751,16 @@ var Phaser;
                 }
             }
         };
-        TilemapLayer.prototype.swapTile = function (tileA, tileB, x, y, width, height) {
+        TilemapLayer.prototype.swapTile = /**
+        * Swap tiles with 2 kinds of indexes.
+        * @param tileA {number} First tile index.
+        * @param tileB {number} Second tile index.
+        * @param [x] {number} specify a rectangle of tiles to operate. The x position in tiles of rectangle's left-top corner.
+        * @param [y] {number} specify a rectangle of tiles to operate. The y position in tiles of rectangle's left-top corner.
+        * @param [width] {number} specify a rectangle of tiles to operate. The width in tiles.
+        * @param [height] {number} specify a rectangle of tiles to operate. The height in tiles.
+        */
+        function (tileA, tileB, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = this.widthInTiles; }
@@ -11188,7 +12783,15 @@ var Phaser;
                 }
             }
         };
-        TilemapLayer.prototype.fillTile = function (index, x, y, width, height) {
+        TilemapLayer.prototype.fillTile = /**
+        * Fill a tile block with a specific tile index.
+        * @param index {number} Index of tiles you want to fill with.
+        * @param [x] {number} x position (in tiles) of block's left-top corner.
+        * @param [y] {number} y position (in tiles) of block's left-top corner.
+        * @param [width] {number} width of block.
+        * @param [height] {number} height of block.
+        */
+        function (index, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = this.widthInTiles; }
@@ -11198,7 +12801,15 @@ var Phaser;
                 this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = index;
             }
         };
-        TilemapLayer.prototype.randomiseTiles = function (tiles, x, y, width, height) {
+        TilemapLayer.prototype.randomiseTiles = /**
+        * Set random tiles to a specific tile block.
+        * @param tiles {number[]} Tiles with indexes in this array will be randomly set to the given block.
+        * @param [x] {number} x position (in tiles) of block's left-top corner.
+        * @param [y] {number} y position (in tiles) of block's left-top corner.
+        * @param [width] {number} width of block.
+        * @param [height] {number} height of block.
+        */
+        function (tiles, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = this.widthInTiles; }
@@ -11208,7 +12819,16 @@ var Phaser;
                 this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this._game.math.getRandom(tiles);
             }
         };
-        TilemapLayer.prototype.replaceTile = function (tileA, tileB, x, y, width, height) {
+        TilemapLayer.prototype.replaceTile = /**
+        * Replace one kind of tiles to another kind.
+        * @param tileA {number} Index of tiles you want to replace.
+        * @param tileB {number} Index of tiles you want to set.
+        * @param [x] {number} x position (in tiles) of block's left-top corner.
+        * @param [y] {number} y position (in tiles) of block's left-top corner.
+        * @param [width] {number} width of block.
+        * @param [height] {number} height of block.
+        */
+        function (tileA, tileB, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = this.widthInTiles; }
@@ -11220,7 +12840,14 @@ var Phaser;
                 }
             }
         };
-        TilemapLayer.prototype.getTileBlock = function (x, y, width, height) {
+        TilemapLayer.prototype.getTileBlock = /**
+        * Get a tile block with specific position and size.(both are in tiles)
+        * @param x {number} X position of block's left-top corner.
+        * @param y {number} Y position of block's left-top corner.
+        * @param width {number} Width of block.
+        * @param height {number} Height of block.
+        */
+        function (x, y, width, height) {
             var output = [];
             this.getTempBlock(x, y, width, height);
             for(var r = 0; r < this._tempTileBlock.length; r++) {
@@ -11232,12 +12859,22 @@ var Phaser;
             }
             return output;
         };
-        TilemapLayer.prototype.getTileFromWorldXY = function (x, y) {
+        TilemapLayer.prototype.getTileFromWorldXY = /**
+        * Get a tile with specific position (in world coordinate). (thus you give a position of a point which is within the tile)
+        * @param x {number} X position of the point in target tile.
+        * @param x {number} Y position of the point in target tile.
+        */
+        function (x, y) {
             x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
             y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
             return this.getTileIndex(x, y);
         };
-        TilemapLayer.prototype.getTileOverlaps = function (object) {
+        TilemapLayer.prototype.getTileOverlaps = /**
+        * Get tiles overlaps the given object.
+        * @param object {GameObject} Tiles you want to get that overlaps this.
+        * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+        */
+        function (object) {
             //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
             if(object.bounds.x < 0 || object.bounds.x > this.widthInPixels || object.bounds.y < 0 || object.bounds.bottom > this.heightInPixels) {
                 return;
@@ -11262,7 +12899,15 @@ var Phaser;
             }
             return this._tempBlockResults;
         };
-        TilemapLayer.prototype.getTempBlock = function (x, y, width, height, collisionOnly) {
+        TilemapLayer.prototype.getTempBlock = /**
+        * Get a tile block with its position and size. (This method does not return, it'll set result to _tempTileBlock)
+        * @param x {number} X position of block's left-top corner.
+        * @param y {number} Y position of block's left-top corner.
+        * @param width {number} Width of block.
+        * @param height {number} Height of block.
+        * @param collisionOnly {boolean} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
+        */
+        function (x, y, width, height, collisionOnly) {
             if (typeof collisionOnly === "undefined") { collisionOnly = false; }
             if(x < 0) {
                 x = 0;
@@ -11300,7 +12945,13 @@ var Phaser;
                 }
             }
         };
-        TilemapLayer.prototype.getTileIndex = function (x, y) {
+        TilemapLayer.prototype.getTileIndex = /**
+        * Get the tile index of specific position (in tiles).
+        * @param x {number} X position of the tile.
+        * @param y {number} Y position of the tile.
+        * @return {number} Index of the tile at that position. Return null if there isn't a tile there.
+        */
+        function (x, y) {
             if(y >= 0 && y < this.mapData.length) {
                 if(x >= 0 && x < this.mapData[y].length) {
                     return this.mapData[y][x];
@@ -11308,7 +12959,11 @@ var Phaser;
             }
             return null;
         };
-        TilemapLayer.prototype.addColumn = function (column) {
+        TilemapLayer.prototype.addColumn = /**
+        * Add a column of tiles into the layer.
+        * @param column {string[]/number[]} An array of tile indexes to be added.
+        */
+        function (column) {
             var data = [];
             for(var c = 0; c < column.length; c++) {
                 data[c] = parseInt(column[c]);
@@ -11321,10 +12976,17 @@ var Phaser;
             this.heightInTiles++;
             this.heightInPixels += this.tileHeight;
         };
-        TilemapLayer.prototype.updateBounds = function () {
+        TilemapLayer.prototype.updateBounds = /**
+        * Update boundsInTiles with widthInTiles and heightInTiles.
+        */
+        function () {
             this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
         };
-        TilemapLayer.prototype.parseTileOffsets = function () {
+        TilemapLayer.prototype.parseTileOffsets = /**
+        * Parse tile offsets from map data.
+        * @return {number} length of _tileOffsets array.
+        */
+        function () {
             this._tileOffsets = [];
             var i = 0;
             if(this.mapFormat == Phaser.Tilemap.FORMAT_TILED_JSON) {
@@ -11351,7 +13013,14 @@ var Phaser;
             this._game.stage.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
             this._game.stage.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
         };
-        TilemapLayer.prototype.render = function (camera, dx, dy) {
+        TilemapLayer.prototype.render = /**
+        * Render this layer to a specific camera with offset to camera.
+        * @param camera {Camera} The camera the layer is going to be rendered.
+        * @param dx {number} X offset to the camera.
+        * @param dy {number} Y offset to the camera.
+        * @return {boolean} Return false if layer is invisible or has a too low opacity(will stop rendering), return true if succeed.
+        */
+        function (camera, dx, dy) {
             if(this.visible === false || this.alpha < 0.1) {
                 return false;
             }
@@ -11438,13 +13107,50 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Tile = (function () {
+        /**
+        * Tile constructor
+        * Create a new <code>Tile</code>.
+        *
+        * @param tilemap {Tilemap} the tilemap this tile belongs to.
+        * @param index {number} The index of this tile type in the core map data.
+        * @param width {number} Width of the tile.
+        * @param height number} Height of the tile.
+        */
         function Tile(game, tilemap, index, width, height) {
+            /**
+            * The virtual mass of the tile.
+            * @type {number}
+            */
             this.mass = 1.0;
+            /**
+            * Indicating collide with any object on the left.
+            * @type {boolean}
+            */
             this.collideLeft = false;
+            /**
+            * Indicating collide with any object on the right.
+            * @type {boolean}
+            */
             this.collideRight = false;
+            /**
+            * Indicating collide with any object on the top.
+            * @type {boolean}
+            */
             this.collideUp = false;
+            /**
+            * Indicating collide with any object on the bottom.
+            * @type {boolean}
+            */
             this.collideDown = false;
+            /**
+            * Enable separation at x-axis.
+            * @type {boolean}
+            */
             this.separateX = true;
+            /**
+            * Enable separation at y-axis.
+            * @type {boolean}
+            */
             this.separateY = true;
             this._game = game;
             this.tilemap = tilemap;
@@ -11459,7 +13165,14 @@ var Phaser;
         function () {
             this.tilemap = null;
         };
-        Tile.prototype.setCollision = function (collision, resetCollisions, separateX, separateY) {
+        Tile.prototype.setCollision = /**
+        * Set collision configs.
+        * @param collision {number} Bit field of flags. (see Tile.allowCollision)
+        * @param resetCollisions {boolean} Reset collision flags before set.
+        * @param separateX {boolean} Enable seprate at x-axis.
+        * @param separateY {boolean} Enable seprate at y-axis.
+        */
+        function (collision, resetCollisions, separateX, separateY) {
             if(resetCollisions) {
                 this.resetCollision();
             }
@@ -11486,7 +13199,10 @@ var Phaser;
                 this.collideDown = true;
             }
         };
-        Tile.prototype.resetCollision = function () {
+        Tile.prototype.resetCollision = /**
+        * Reset collision status flags.
+        */
+        function () {
             this.allowCollisions = Phaser.Collision.NONE;
             this.collideLeft = false;
             this.collideRight = false;
@@ -11519,11 +13235,27 @@ var Phaser;
 (function (Phaser) {
     var Tilemap = (function (_super) {
         __extends(Tilemap, _super);
+        /**
+        * Tilemap constructor
+        * Create a new <code>Tilemap</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param key {string} Asset key for this map.
+        * @param mapData {string} Data of this map. (a big 2d array, normally in csv)
+        * @param format {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+        * @param resizeWorld {boolean} Resize the world bound automatically based on this tilemap?
+        * @param tileWidth {number} Width of tiles in this map.
+        * @param tileHeight {number} Height of tiles in this map.
+        */
         function Tilemap(game, key, mapData, format, resizeWorld, tileWidth, tileHeight) {
             if (typeof resizeWorld === "undefined") { resizeWorld = true; }
             if (typeof tileWidth === "undefined") { tileWidth = 0; }
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
                 _super.call(this, game);
+            /**
+            * Tilemap collision callback.
+            * @type {function}
+            */
             this.collisionCallback = null;
             this.isGroup = false;
             this.tiles = [];
@@ -11543,9 +13275,18 @@ var Phaser;
         }
         Tilemap.FORMAT_CSV = 0;
         Tilemap.FORMAT_TILED_JSON = 1;
-        Tilemap.prototype.update = function () {
+        Tilemap.prototype.update = /**
+        * Inherited update method.
+        */
+        function () {
         };
-        Tilemap.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
+        Tilemap.prototype.render = /**
+        * Render this tilemap to a specific camera with specific offset.
+        * @param camera {Camera} The camera this tilemap will be rendered to.
+        * @param cameraOffsetX {number} X offset of the camera.
+        * @param cameraOffsetY {number} Y offset of the camera.
+        */
+        function (camera, cameraOffsetX, cameraOffsetY) {
             if(this.cameraBlacklist.indexOf(camera.ID) == -1) {
                 //  Loop through the layers
                 for(var i = 0; i < this.layers.length; i++) {
@@ -11553,7 +13294,14 @@ var Phaser;
                 }
             }
         };
-        Tilemap.prototype.parseCSV = function (data, key, tileWidth, tileHeight) {
+        Tilemap.prototype.parseCSV = /**
+        * Parset csv map data and generate tiles.
+        * @param data {string} CSV map data.
+        * @param key {string} Asset key for tileset image.
+        * @param tileWidth {number} Width of its tile.
+        * @param tileHeight {number} Height of its tile.
+        */
+        function (data, key, tileWidth, tileHeight) {
             var layer = new Phaser.TilemapLayer(this._game, this, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
             //  Trim any rogue whitespace from the data
             data = data.trim();
@@ -11571,7 +13319,12 @@ var Phaser;
             this.layers.push(layer);
             this.generateTiles(tileQuantity);
         };
-        Tilemap.prototype.parseTiledJSON = function (data, key) {
+        Tilemap.prototype.parseTiledJSON = /**
+        * Parset JSON map data and generate tiles.
+        * @param data {string} JSON map data.
+        * @param key {string} Asset key for tileset image.
+        */
+        function (data, key) {
             //  Trim any rogue whitespace from the data
             data = data.trim();
             var json = JSON.parse(data);
@@ -11602,7 +13355,11 @@ var Phaser;
             }
             this.generateTiles(tileQuantity);
         };
-        Tilemap.prototype.generateTiles = function (qty) {
+        Tilemap.prototype.generateTiles = /**
+        * Create tiles of given quantity.
+        * @param qty {number} Quentity of tiles to be generated.
+        */
+        function (qty) {
             for(var i = 0; i < qty; i++) {
                 this.tiles.push(new Phaser.Tile(this._game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
             }
@@ -11622,11 +13379,25 @@ var Phaser;
             configurable: true
         });
         Tilemap.prototype.setCollisionCallback = //  Tile Collision
+        /**
+        * Set callback to be called when this tilemap collides.
+        * @param context {object} Callback will be called with this context.
+        * @param callback {function} Callback function.
+        */
         function (context, callback) {
             this.collisionCallbackContext = context;
             this.collisionCallback = callback;
         };
-        Tilemap.prototype.setCollisionRange = function (start, end, collision, resetCollisions, separateX, separateY) {
+        Tilemap.prototype.setCollisionRange = /**
+        * Set collision configs of tiles in a range index.
+        * @param start {number} First index of tiles.
+        * @param end {number} Last index of tiles.
+        * @param collision {number} Bit field of flags. (see Tile.allowCollision)
+        * @param resetCollisions {boolean} Reset collision flags before set.
+        * @param separateX {boolean} Enable seprate at x-axis.
+        * @param separateY {boolean} Enable seprate at y-axis.
+        */
+        function (start, end, collision, resetCollisions, separateX, separateY) {
             if (typeof collision === "undefined") { collision = Phaser.Collision.ANY; }
             if (typeof resetCollisions === "undefined") { resetCollisions = false; }
             if (typeof separateX === "undefined") { separateX = true; }
@@ -11635,7 +13406,15 @@ var Phaser;
                 this.tiles[i].setCollision(collision, resetCollisions, separateX, separateY);
             }
         };
-        Tilemap.prototype.setCollisionByIndex = function (values, collision, resetCollisions, separateX, separateY) {
+        Tilemap.prototype.setCollisionByIndex = /**
+        * Set collision configs of tiles with given index.
+        * @param values {number[]} Index array which contains all tile indexes. The tiles with those indexes will be setup with rest parameters.
+        * @param collision {number} Bit field of flags. (see Tile.allowCollision)
+        * @param resetCollisions {boolean} Reset collision flags before set.
+        * @param separateX {boolean} Enable seprate at x-axis.
+        * @param separateY {boolean} Enable seprate at y-axis.
+        */
+        function (values, collision, resetCollisions, separateX, separateY) {
             if (typeof collision === "undefined") { collision = Phaser.Collision.ANY; }
             if (typeof resetCollisions === "undefined") { resetCollisions = false; }
             if (typeof separateX === "undefined") { separateX = true; }
@@ -11645,17 +13424,36 @@ var Phaser;
             }
         };
         Tilemap.prototype.getTileByIndex = //  Tile Management
+        /**
+        * Get the tile by its index.
+        * @param value {number} Index of the tile you want to get.
+        * @return {Tile} The tile with given index.
+        */
         function (value) {
             if(this.tiles[value]) {
                 return this.tiles[value];
             }
             return null;
         };
-        Tilemap.prototype.getTile = function (x, y, layer) {
+        Tilemap.prototype.getTile = /**
+        * Get the tile located at specific position and layer.
+        * @param x {number} X position of this tile located.
+        * @param y {number} Y position of this tile located.
+        * @param [layer] {number} layer of this tile located.
+        * @return {Tile} The tile with specific properties.
+        */
+        function (x, y, layer) {
             if (typeof layer === "undefined") { layer = 0; }
             return this.tiles[this.layers[layer].getTileIndex(x, y)];
         };
-        Tilemap.prototype.getTileFromWorldXY = function (x, y, layer) {
+        Tilemap.prototype.getTileFromWorldXY = /**
+        * Get the tile located at specific position (in world coordinate) and layer. (thus you give a position of a point which is within the tile)
+        * @param x {number} X position of the point in target tile.
+        * @param x {number} Y position of the point in target tile.
+        * @param [layer] {number} layer of this tile located.
+        * @return {Tile} The tile with specific properties.
+        */
+        function (x, y, layer) {
             if (typeof layer === "undefined") { layer = 0; }
             return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
         };
@@ -11663,10 +13461,22 @@ var Phaser;
             if (typeof layer === "undefined") { layer = 0; }
             return this.tiles[this.layers[layer].getTileFromWorldXY(this._game.input.worldX, this._game.input.worldY)];
         };
-        Tilemap.prototype.getTileOverlaps = function (object) {
+        Tilemap.prototype.getTileOverlaps = /**
+        * Get tiles overlaps the given object.
+        * @param object {GameObject} Tiles you want to get that overlaps this.
+        * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+        */
+        function (object) {
             return this.currentLayer.getTileOverlaps(object);
         };
         Tilemap.prototype.collide = //  COLLIDE
+        /**
+        * Check whether this tilemap collides with the given game object or group of objects.
+        * @param objectOrGroup {function} Target object of group you want to check.
+        * @param callback {function} This is called if objectOrGroup collides the tilemap.
+        * @param context {object} Callback will be called with this context.
+        * @return {boolean} Return true if this collides with given object, otherwise return false.
+        */
         function (objectOrGroup, callback, context) {
             if (typeof objectOrGroup === "undefined") { objectOrGroup = null; }
             if (typeof callback === "undefined") { callback = null; }
@@ -11685,7 +13495,12 @@ var Phaser;
                 objectOrGroup.forEachAlive(this, this.collideGameObject, true);
             }
         };
-        Tilemap.prototype.collideGameObject = function (object) {
+        Tilemap.prototype.collideGameObject = /**
+        * Check whether this tilemap collides with the given game object.
+        * @param object {GameObject} Target object you want to check.
+        * @return {boolean} Return true if this collides with given object, otherwise return false.
+        */
+        function (object) {
             if(object !== this && object.immovable == false && object.exists == true && object.allowCollisions != Phaser.Collision.NONE) {
                 this._tempCollisionData = this.collisionLayer.getTileOverlaps(object);
                 if(this.collisionCallback !== null && this._tempCollisionData.length > 0) {
@@ -11696,7 +13511,14 @@ var Phaser;
                 return false;
             }
         };
-        Tilemap.prototype.putTile = function (x, y, index, layer) {
+        Tilemap.prototype.putTile = /**
+        * Set a tile to a specific layer.
+        * @param x {number} X position of this tile.
+        * @param y {number} Y position of this tile.
+        * @param index {number} The index of this tile type in the core map data.
+        * @param [layer] {number} which layer you want to set the tile to.
+        */
+        function (x, y, index, layer) {
             if (typeof layer === "undefined") { layer = 0; }
             this.layers[layer].putTile(x, y, index);
         };
@@ -11719,11 +13541,26 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var ScrollRegion = (function () {
+        /**
+        * ScrollRegion constructor
+        * Create a new <code>ScrollRegion</code>.
+        *
+        * @param x {number} X position in world coordinate.
+        * @param y {number} Y position in world coordinate.
+        * @param width {number} Width of this object.
+        * @param height {number} Height of this object.
+        * @param speedX {number} X-axis scrolling speed.
+        * @param speedY {number} Y-axis scrolling speed.
+        */
         function ScrollRegion(x, y, width, height, speedX, speedY) {
             this._anchorWidth = 0;
             this._anchorHeight = 0;
             this._inverseWidth = 0;
             this._inverseHeight = 0;
+            /**
+            * Will this region be rendered? (default to true)
+            * @type {boolean}
+            */
             this.visible = true;
             //	Our seamless scrolling quads
             this._A = new Phaser.Quad(x, y, width, height);
@@ -11734,7 +13571,11 @@ var Phaser;
             this._bounds = new Phaser.Quad(x, y, width, height);
             this.scrollSpeed = new Phaser.MicroPoint(speedX, speedY);
         }
-        ScrollRegion.prototype.update = function (delta) {
+        ScrollRegion.prototype.update = /**
+        * Update region scrolling with tick time.
+        * @param delta {number} Elapsed time since last update.
+        */
+        function (delta) {
             this._scroll.x += this.scrollSpeed.x;
             this._scroll.y += this.scrollSpeed.y;
             if(this._scroll.x > this._bounds.right) {
@@ -11774,7 +13615,16 @@ var Phaser;
             this._D.width = this._inverseWidth;
             this._D.height = this._inverseHeight;
         };
-        ScrollRegion.prototype.render = function (context, texture, dx, dy, dw, dh) {
+        ScrollRegion.prototype.render = /**
+        * Render this region to specific context.
+        * @param context {CanvasRenderingContext2D} Canvas context this region will be rendered to.
+        * @param texture {object} The texture to be rendered.
+        * @param dx {number} X position in world coordinate.
+        * @param dy {number} Y position in world coordinate.
+        * @param width {number} Width of this region to be rendered.
+        * @param height {number} Height of this region to be rendered.
+        */
+        function (context, texture, dx, dy, dw, dh) {
             if(this.visible == false) {
                 return;
             }
@@ -11791,7 +13641,22 @@ var Phaser;
             //context.fillText('QuadC: ' + this._C.toString(), 32, 510);
             //context.fillText('QuadD: ' + this._D.toString(), 32, 540);
                     };
-        ScrollRegion.prototype.crop = function (context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
+        ScrollRegion.prototype.crop = /**
+        * Crop part of the texture and render it to the given context.
+        * @param context {CanvasRenderingContext2D} Canvas context the texture will be rendered to.
+        * @param texture {object} Texture to be rendered.
+        * @param srcX {number} Target region top-left x coordinate in the texture.
+        * @param srcX {number} Target region top-left y coordinate in the texture.
+        * @param srcW {number} Target region width in the texture.
+        * @param srcH {number} Target region height in the texture.
+        * @param destX {number} Render region top-left x coordinate in the context.
+        * @param destX {number} Render region top-left y coordinate in the context.
+        * @param destW {number} Target region width in the context.
+        * @param destH {number} Target region height in the context.
+        * @param offsetX {number} X offset to the context.
+        * @param offsetY {number} Y offset to the context.
+        */
+        function (context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
             offsetX += destX;
             offsetY += destY;
             if(srcW > (destX + destW) - offsetX) {
@@ -11829,18 +13694,52 @@ var Phaser;
 (function (Phaser) {
     var ScrollZone = (function (_super) {
         __extends(ScrollZone, _super);
+        /**
+        * ScrollZone constructor
+        * Create a new <code>ScrollZone</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param key {string} Asset key for image texture of this object.
+        * @param x {number} X position in world coordinate.
+        * @param y {number} Y position in world coordinate.
+        * @param [width] {number} width of this object.
+        * @param [height] {number} height of this object.
+        */
         function ScrollZone(game, key, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = 0; }
             if (typeof height === "undefined") { height = 0; }
                 _super.call(this, game, x, y, width, height);
+            /**
+            * If this zone is larger than texture image, this will be filled with a pattern of texture.
+            * @type {DynamicTexture}
+            */
             this._dynamicTexture = null;
-            //  local rendering related temp vars to help avoid gc spikes
+            /**
+            * Local rendering related temp vars to help avoid gc spikes.
+            * @type {number}
+            */
             this._dx = 0;
+            /**
+            * Local rendering related temp vars to help avoid gc spikes.
+            * @type {number}
+            */
             this._dy = 0;
+            /**
+            * Local rendering related temp vars to help avoid gc spikes.
+            * @type {number}
+            */
             this._dw = 0;
+            /**
+            * Local rendering related temp vars to help avoid gc spikes.
+            * @type {number}
+            */
             this._dh = 0;
+            /**
+            * Flip this zone vertically? (default to false)
+            * @type {boolean}
+            */
             this.flipped = false;
             this.regions = [];
             if(this._game.cache.getImage(key)) {
@@ -11862,7 +13761,17 @@ var Phaser;
                 }
             }
         }
-        ScrollZone.prototype.addRegion = function (x, y, width, height, speedX, speedY) {
+        ScrollZone.prototype.addRegion = /**
+        * Add a new region to this zone.
+        * @param x {number} X position of the new region.
+        * @param y {number} Y position of the new region.
+        * @param width {number} Width of the new region.
+        * @param height {number} Height of the new region.
+        * @param [speedX] {number} x-axis scrolling speed.
+        * @param [speedY] {number} y-axis scrolling speed.
+        * @return {ScrollRegion} The newly added region.
+        */
+        function (x, y, width, height, speedX, speedY) {
             if (typeof speedX === "undefined") { speedX = 0; }
             if (typeof speedY === "undefined") { speedY = 0; }
             if(x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height) {
@@ -11873,18 +13782,31 @@ var Phaser;
             this.regions.push(this.currentRegion);
             return this.currentRegion;
         };
-        ScrollZone.prototype.setSpeed = function (x, y) {
+        ScrollZone.prototype.setSpeed = /**
+        * Set scrolling speed of current region.
+        * @param x {number} X speed of current region.
+        * @param y {number} Y speed of current region.
+        */
+        function (x, y) {
             if(this.currentRegion) {
                 this.currentRegion.scrollSpeed.setTo(x, y);
             }
             return this;
         };
-        ScrollZone.prototype.update = function () {
+        ScrollZone.prototype.update = /**
+        * Update regions.
+        */
+        function () {
             for(var i = 0; i < this.regions.length; i++) {
                 this.regions[i].update(this._game.time.delta);
             }
         };
-        ScrollZone.prototype.inCamera = function (camera) {
+        ScrollZone.prototype.inCamera = /**
+        * Check whether this zone is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bound of this zone intersects the given rectangle, otherwise return false.
+        */
+        function (camera) {
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
                 this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
                 this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
@@ -11895,7 +13817,14 @@ var Phaser;
                 return camera.intersects(this.bounds, this.bounds.length);
             }
         };
-        ScrollZone.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
+        ScrollZone.prototype.render = /**
+        * Render this zone object to a specific camera.
+        * @param camera {Camera} The camera this object will be render to.
+        * @param cameraOffsetX {number} X offset of camera.
+        * @param cameraOffsetY {number} Y offset of camera.
+        * @return Return false if not rendered, otherwise return true.
+        */
+        function (camera, cameraOffsetX, cameraOffsetY) {
             //  Render checks
             if(this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
                 return false;
@@ -11943,7 +13872,11 @@ var Phaser;
             }
             return true;
         };
-        ScrollZone.prototype.createRepeatingTexture = function (regionWidth, regionHeight) {
+        ScrollZone.prototype.createRepeatingTexture = /**
+        * Create repeating texture with _texture, and store it into the _dynamicTexture.
+        * Used to create texture when texture image is small than size of the zone.
+        */
+        function (regionWidth, regionHeight) {
             //	Work out how many we'll need of the source image to make it tile properly
             var tileWidth = Math.ceil(this._texture.width / regionWidth) * regionWidth;
             var tileHeight = Math.ceil(this._texture.height / regionHeight) * regionHeight;
@@ -11980,6 +13913,7 @@ var Phaser;
 /// <reference path="system/input/Input.ts" />
 /// <reference path="system/input/Keyboard.ts" />
 /// <reference path="system/input/Mouse.ts" />
+/// <reference path="system/input/MSPointer.ts" />
 /// <reference path="system/input/Touch.ts" />
 /// <reference path="gameobjects/Emitter.ts" />
 /// <reference path="gameobjects/GameObject.ts" />
@@ -12000,6 +13934,20 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var Game = (function () {
+        /**
+        * Game constructor
+        *
+        * Instantiate a new <code>Game</code> object.
+        *
+        * @param callbackContext Which context will the callbacks be called with.
+        * @param parent {string} ID of its parent DOM element.
+        * @param width {number} The width of your game in game pixels.
+        * @param height {number} The height of your game in game pixels.
+        * @param initCallback {function} Init callback invoked when init default screen.
+        * @param createCallback {function} Create callback invoked when create default screen.
+        * @param updateCallback {function} Update callback invoked when update default screen.
+        * @param renderCallback {function} Render callback invoked when render default screen.
+        */
         function Game(callbackContext, parent, width, height, initCallback, createCallback, updateCallback, renderCallback) {
             if (typeof parent === "undefined") { parent = ''; }
             if (typeof width === "undefined") { width = 800; }
@@ -12009,18 +13957,70 @@ var Phaser;
             if (typeof updateCallback === "undefined") { updateCallback = null; }
             if (typeof renderCallback === "undefined") { renderCallback = null; }
             var _this = this;
+            /**
+            * Max allowable accumulation.
+            * @type {number}
+            */
             this._maxAccumulation = 32;
+            /**
+            * Total number of milliseconds elapsed since last update loop.
+            * @type {number}
+            */
             this._accumulator = 0;
+            /**
+            * Milliseconds of time per step of the game loop.
+            * @type {number}
+            */
             this._step = 0;
+            /**
+            * Whether loader complete loading or not.
+            * @type {boolean}
+            */
             this._loadComplete = false;
+            /**
+            * Game is paused?
+            * @type {boolean}
+            */
             this._paused = false;
+            /**
+            * The state to be switched to in the next frame.
+            * @type {State}
+            */
             this._pendingState = null;
+            /**
+            * This will be called when init states. (loading assets...)
+            * @type {function}
+            */
             this.onInitCallback = null;
+            /**
+            * This will be called when create states. (setup states...)
+            * @type {function}
+            */
             this.onCreateCallback = null;
+            /**
+            * This will be called when update states.
+            * @type {function}
+            */
             this.onUpdateCallback = null;
+            /**
+            * This will be called when render states.
+            * @type {function}
+            */
             this.onRenderCallback = null;
+            /**
+            * This will be called when states paused.
+            * @type {function}
+            */
             this.onPausedCallback = null;
+            /**
+            * Whether the game engine is booted, aka available.
+            * @type {boolean}
+            */
             this.isBooted = false;
+            /**
+            * Is game running or paused?
+            * @type {boolean}
+            */
             this.isRunning = false;
             this.callbackContext = callbackContext;
             this.onInitCallback = initCallback;
@@ -12040,7 +14040,13 @@ var Phaser;
                 }, false);
             }
         }
-        Game.prototype.boot = function (parent, width, height) {
+        Game.prototype.boot = /**
+        * Initialize engine sub modules and start the game.
+        * @param parent {string} ID of parent Dom element.
+        * @param width {number} Width of the game screen.
+        * @param height {number} Height of the game screen.
+        */
+        function (parent, width, height) {
             var _this = this;
             if(this.isBooted == true) {
                 return;
@@ -12069,11 +14075,11 @@ var Phaser;
                 this.isBooted = true;
                 //  Display the default game screen?
                 if(this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null) {
-                    this._raf = new Phaser.RequestAnimationFrame(this.bootLoop, this);
+                    this._raf = new Phaser.RequestAnimationFrame(this, this.bootLoop);
                 } else {
                     this.isRunning = true;
                     this._loadComplete = false;
-                    this._raf = new Phaser.RequestAnimationFrame(this.loop, this);
+                    this._raf = new Phaser.RequestAnimationFrame(this, this.loop);
                     if(this._pendingState) {
                         this.switchState(this._pendingState, false, false);
                     } else {
@@ -12082,18 +14088,24 @@ var Phaser;
                 }
             }
         };
-        Game.prototype.loadComplete = function () {
-            //  Called when the loader has finished after init was run
+        Game.prototype.loadComplete = /**
+        * Called when the loader has finished after init was run.
+        */
+        function () {
             this._loadComplete = true;
         };
-        Game.prototype.bootLoop = function () {
-            this.time.update();
+        Game.prototype.bootLoop = /**
+        * Game loop method will be called when it's booting.
+        */
+        function () {
             this.tweens.update();
             this.input.update();
             this.stage.update();
         };
-        Game.prototype.pausedLoop = function () {
-            this.time.update();
+        Game.prototype.pausedLoop = /**
+        * Game loop method will be called when it's paused.
+        */
+        function () {
             this.tweens.update();
             this.input.update();
             this.stage.update();
@@ -12101,8 +14113,10 @@ var Phaser;
                 this.onPausedCallback.call(this.callbackContext);
             }
         };
-        Game.prototype.loop = function () {
-            this.time.update();
+        Game.prototype.loop = /**
+        * Game loop method will be called when it's running.
+        */
+        function () {
             this.tweens.update();
             this.input.update();
             this.stage.update();
@@ -12123,7 +14137,10 @@ var Phaser;
                 this.onRenderCallback.call(this.callbackContext);
             }
         };
-        Game.prototype.startState = function () {
+        Game.prototype.startState = /**
+        * Start current state.
+        */
+        function () {
             if(this.onInitCallback !== null) {
                 this.loader.reset();
                 this.onInitCallback.call(this.callbackContext);
@@ -12142,7 +14159,14 @@ var Phaser;
                 this._loadComplete = true;
             }
         };
-        Game.prototype.setCallbacks = function (initCallback, createCallback, updateCallback, renderCallback) {
+        Game.prototype.setCallbacks = /**
+        * Set all state callbacks (init, create, update, render).
+        * @param initCallback {function} Init callback invoked when init state.
+        * @param createCallback {function} Create callback invoked when create state.
+        * @param updateCallback {function} Update callback invoked when update state.
+        * @param renderCallback {function} Render callback invoked when render state.
+        */
+        function (initCallback, createCallback, updateCallback, renderCallback) {
             if (typeof initCallback === "undefined") { initCallback = null; }
             if (typeof createCallback === "undefined") { createCallback = null; }
             if (typeof updateCallback === "undefined") { updateCallback = null; }
@@ -12152,7 +14176,13 @@ var Phaser;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
         };
-        Game.prototype.switchState = function (state, clearWorld, clearCache) {
+        Game.prototype.switchState = /**
+        * Switch to a new State.
+        * @param state {State} The state you want to switch to.
+        * @param [clearWorld] {boolean} clear everything in the world? (Default to true)
+        * @param [clearCache] {boolean} clear asset cache? (Default to false and ONLY available when clearWorld=true)
+        */
+        function (state, clearWorld, clearCache) {
             if (typeof clearWorld === "undefined") { clearWorld = true; }
             if (typeof clearCache === "undefined") { clearCache = false; }
             if(this.isBooted == false) {
@@ -12199,7 +14229,9 @@ var Phaser;
                 throw new Error("Invalid State object given. Must contain at least a create or update function.");
             }
         };
-        Game.prototype.destroy = //  Nuke the whole game from orbit
+        Game.prototype.destroy = /**
+        * Nuke the whole game from orbit
+        */
         function () {
             this.callbackContext = null;
             this.onInitCallback = null;
@@ -12223,15 +14255,15 @@ var Phaser;
             set: function (value) {
                 if(value == true && this._paused == false) {
                     this._paused = true;
-                    this._raf.setCallback(this.pausedLoop);
+                    this._raf.callback = this.pausedLoop;
                 } else if(value == false && this._paused == true) {
                     this._paused = false;
-                    this.time.time = Date.now();
+                    //this.time.time = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
                     this.input.reset();
                     if(this.isRunning == false) {
-                        this._raf.setCallback(this.bootLoop);
+                        this._raf.callback = this.bootLoop;
                     } else {
-                        this._raf.setCallback(this.loop);
+                        this._raf.callback = this.loop;
                     }
                 }
             },
@@ -12252,49 +14284,130 @@ var Phaser;
             configurable: true
         });
         Game.prototype.createCamera = //  Handy Proxy methods
+        /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
         function (x, y, width, height) {
             return this.world.createCamera(x, y, width, height);
         };
-        Game.prototype.createGeomSprite = function (x, y) {
+        Game.prototype.createGeomSprite = /**
+        * Create a new GeomSprite with specific position.
+        *
+        * @param x {number} X position of the new geom sprite.
+        * @param y {number} Y position of the new geom sprite.
+        * @returns {GeomSprite} The newly created geom sprite object.
+        */
+        function (x, y) {
             return this.world.createGeomSprite(x, y);
         };
-        Game.prototype.createSprite = function (x, y, key) {
+        Game.prototype.createSprite = /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param key {string} Optional, key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        */
+        function (x, y, key) {
             if (typeof key === "undefined") { key = ''; }
             return this.world.createSprite(x, y, key);
         };
-        Game.prototype.createDynamicTexture = function (width, height) {
+        Game.prototype.createDynamicTexture = /**
+        * Create a new DynamicTexture with specific size.
+        *
+        * @param width {number} Width of the texture.
+        * @param height {number} Height of the texture.
+        * @returns {DynamicTexture} The newly created dynamic texture object.
+        */
+        function (width, height) {
             return this.world.createDynamicTexture(width, height);
         };
-        Game.prototype.createGroup = function (MaxSize) {
+        Game.prototype.createGroup = /**
+        * Create a new object container.
+        *
+        * @param MaxSize {number} Optional, capacity of this group.
+        * @returns {Group} The newly created group.
+        */
+        function (MaxSize) {
             if (typeof MaxSize === "undefined") { MaxSize = 0; }
             return this.world.createGroup(MaxSize);
         };
-        Game.prototype.createParticle = function () {
+        Game.prototype.createParticle = /**
+        * Create a new Particle.
+        *
+        * @return {Particle} The newly created particle object.
+        */
+        function () {
             return this.world.createParticle();
         };
-        Game.prototype.createEmitter = function (x, y, size) {
+        Game.prototype.createEmitter = /**
+        * Create a new Emitter.
+        *
+        * @param x {number} Optional, x position of the emitter.
+        * @param y {number} Optional, y position of the emitter.
+        * @param size {number} Optional, size of this emitter.
+        * @return {Emitter} The newly created emitter object.
+        */
+        function (x, y, size) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof size === "undefined") { size = 0; }
             return this.world.createEmitter(x, y, size);
         };
-        Game.prototype.createScrollZone = function (key, x, y, width, height) {
+        Game.prototype.createScrollZone = /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {string} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
+        function (key, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = 0; }
             if (typeof height === "undefined") { height = 0; }
             return this.world.createScrollZone(key, x, y, width, height);
         };
-        Game.prototype.createTilemap = function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
+        Game.prototype.createTilemap = /**
+        * Create a new Tilemap.
+        *
+        * @param key {string} Key for tileset image.
+        * @param mapData {string} Data of this tilemap.
+        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+        * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
+        * @param [tileWidth] {number} width of each tile.
+        * @param [tileHeight] {number} height of each tile.
+        * @return {Tilemap} The newly created tilemap object.
+        */
+        function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
             if (typeof resizeWorld === "undefined") { resizeWorld = true; }
             if (typeof tileWidth === "undefined") { tileWidth = 0; }
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
             return this.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
         };
-        Game.prototype.createTween = function (obj) {
+        Game.prototype.createTween = /**
+        * Create a tween object for a specific object.
+        *
+        * @param obj Object you wish the tween will affect.
+        * @return {Phaser.Tween} The newly created tween object.
+        */
+        function (obj) {
             return this.tweens.create(obj);
         };
-        Game.prototype.collide = function (objectOrGroup1, objectOrGroup2, notifyCallback) {
+        Game.prototype.collide = /**
+        * Call this method to see if one object collides with another.
+        * @return {boolean} Whether the given objects or groups collides.
+        */
+        function (objectOrGroup1, objectOrGroup2, notifyCallback) {
             if (typeof objectOrGroup1 === "undefined") { objectOrGroup1 = null; }
             if (typeof objectOrGroup2 === "undefined") { objectOrGroup2 = null; }
             if (typeof notifyCallback === "undefined") { notifyCallback = null; }
@@ -12331,6 +14444,8 @@ var Phaser;
         * Adds a new FX to the FXManager.
         * The effect must be an object with at least one of the following methods: preUpdate, postUpdate, preRender, render or postRender.
         * A new instance of the effect will be created and a reference to Game will be passed to the object constructor.
+        * @param {object} effect
+        * @return {any}
         */
         function (effect) {
             var result = false;
@@ -12403,6 +14518,11 @@ var Phaser;
         FXManager.prototype.preRender = /**
         * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
         * It happens directly AFTER a canvas context.save has happened if added to a Camera.
+        * @param {Camera} camera
+        * @param {number} cameraX
+        * @param {number} cameraY
+        * @param {number} cameraWidth
+        * @param {number} cameraHeight
         */
         function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
             if(this.visible) {
@@ -12415,6 +14535,11 @@ var Phaser;
         };
         FXManager.prototype.render = /**
         * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
+        * @param {Camera} camera
+        * @param {number} cameraX
+        * @param {number} cameraY
+        * @param {number} cameraWidth
+        * @param {number} cameraHeight
         */
         function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
             if(this.visible) {
@@ -12458,6 +14583,10 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     var State = (function () {
+        /**
+        * State constructor
+        * Create a new <code>State</code>.
+        */
         function State(game) {
             this.game = game;
             this.camera = game.camera;
@@ -12474,60 +14603,158 @@ var Phaser;
             this.world = game.world;
         }
         State.prototype.init = //  Overload these in your own States
+        /**
+        * Override this method to add some load operations.
+        * If you need to use the loader, you may need to use them here.
+        */
         function () {
         };
-        State.prototype.create = function () {
+        State.prototype.create = /**
+        * This method is called after the game engine successfully switches states.
+        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+        */
+        function () {
         };
-        State.prototype.update = function () {
+        State.prototype.update = /**
+        * Put update logic here.
+        */
+        function () {
         };
-        State.prototype.render = function () {
+        State.prototype.render = /**
+        * Put render operations here.
+        */
+        function () {
         };
-        State.prototype.paused = function () {
+        State.prototype.paused = /**
+        * This method will be called when game paused.
+        */
+        function () {
         };
         State.prototype.createCamera = //  Handy Proxy methods
+        /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
         function (x, y, width, height) {
             return this.game.world.createCamera(x, y, width, height);
         };
-        State.prototype.createGeomSprite = function (x, y) {
+        State.prototype.createGeomSprite = /**
+        * Create a new GeomSprite with specific position.
+        *
+        * @param x {number} X position of the new geom sprite.
+        * @param y {number} Y position of the new geom sprite.
+        * @returns {GeomSprite} The newly created geom sprite object.
+        */
+        function (x, y) {
             return this.world.createGeomSprite(x, y);
         };
-        State.prototype.createSprite = function (x, y, key) {
+        State.prototype.createSprite = /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param key {string} [optional] key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        */
+        function (x, y, key) {
             if (typeof key === "undefined") { key = ''; }
             return this.game.world.createSprite(x, y, key);
         };
-        State.prototype.createDynamicTexture = function (width, height) {
+        State.prototype.createDynamicTexture = /**
+        * Create a new DynamicTexture with specific size.
+        *
+        * @param width {number} Width of the texture.
+        * @param height {number} Height of the texture.
+        * @returns {DynamicTexture} The newly created dynamic texture object.
+        */
+        function (width, height) {
             return this.game.world.createDynamicTexture(width, height);
         };
-        State.prototype.createGroup = function (MaxSize) {
+        State.prototype.createGroup = /**
+        * Create a new object container.
+        *
+        * @param MaxSize {number} [optional] capacity of this group.
+        * @returns {Group} The newly created group.
+        */
+        function (MaxSize) {
             if (typeof MaxSize === "undefined") { MaxSize = 0; }
             return this.game.world.createGroup(MaxSize);
         };
-        State.prototype.createParticle = function () {
+        State.prototype.createParticle = /**
+        * Create a new Particle.
+        *
+        * @return {Particle} The newly created particle object.
+        */
+        function () {
             return this.game.world.createParticle();
         };
-        State.prototype.createEmitter = function (x, y, size) {
+        State.prototype.createEmitter = /**
+        * Create a new Emitter.
+        *
+        * @param x {number} [optional] x position of the emitter.
+        * @param y {number} [optional] y position of the emitter.
+        * @param size {number} [optional] size of this emitter.
+        * @return {Emitter} The newly created emitter object.
+        */
+        function (x, y, size) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof size === "undefined") { size = 0; }
             return this.game.world.createEmitter(x, y, size);
         };
-        State.prototype.createScrollZone = function (key, x, y, width, height) {
+        State.prototype.createScrollZone = /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {string} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width {number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
+        function (key, x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = 0; }
             if (typeof height === "undefined") { height = 0; }
             return this.game.world.createScrollZone(key, x, y, width, height);
         };
-        State.prototype.createTilemap = function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
+        State.prototype.createTilemap = /**
+        * Create a new Tilemap.
+        *
+        * @param key {string} Key for tileset image.
+        * @param mapData {string} Data of this tilemap.
+        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+        * @param resizeWorld {boolean} [optional] resize the world to make same as tilemap?
+        * @param tileWidth {number} [optional] width of each tile.
+        * @param tileHeight number} [optional] height of each tile.
+        * @return {Tilemap} The newly created tilemap object.
+        */
+        function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
             if (typeof resizeWorld === "undefined") { resizeWorld = true; }
             if (typeof tileWidth === "undefined") { tileWidth = 0; }
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
             return this.game.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
         };
-        State.prototype.createTween = function (obj) {
+        State.prototype.createTween = /**
+        * Create a tween object for a specific object.
+        *
+        * @param obj Object you wish the tween will affect.
+        * @return {Phaser.Tween} The newly created tween object.
+        */
+        function (obj) {
             return this.game.tweens.create(obj);
         };
-        State.prototype.collide = function (ObjectOrGroup1, ObjectOrGroup2, NotifyCallback) {
+        State.prototype.collide = /**
+        * Call this method to see if one object collids another.
+        * @return {boolean} Whether the given objects or groups collids.
+        */
+        function (ObjectOrGroup1, ObjectOrGroup2, NotifyCallback) {
             if (typeof ObjectOrGroup1 === "undefined") { ObjectOrGroup1 = null; }
             if (typeof ObjectOrGroup2 === "undefined") { ObjectOrGroup2 = null; }
             if (typeof NotifyCallback === "undefined") { NotifyCallback = null; }

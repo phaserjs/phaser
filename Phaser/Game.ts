@@ -22,6 +22,7 @@
 /// <reference path="system/input/Input.ts" />
 /// <reference path="system/input/Keyboard.ts" />
 /// <reference path="system/input/Mouse.ts" />
+/// <reference path="system/input/MSPointer.ts" />
 /// <reference path="system/input/Touch.ts" />
 /// <reference path="gameobjects/Emitter.ts" />
 /// <reference path="gameobjects/GameObject.ts" />
@@ -82,63 +83,73 @@ module Phaser {
         /**
          * Game loop trigger wrapper.
          */
-        private _raf: RequestAnimationFrame;
+        public _raf: RequestAnimationFrame;
+
         /**
          * Max allowable accumulation.
          * @type {number}
          */
         private _maxAccumulation: number = 32;
+
         /**
          * Total number of milliseconds elapsed since last update loop.
          * @type {number}
          */
         private _accumulator: number = 0;
+
         /**
          * Milliseconds of time per step of the game loop.
          * @type {number}
          */
         private _step: number = 0;
+
         /**
          * Whether loader complete loading or not.
          * @type {boolean}
          */
         private _loadComplete: bool = false;
+
         /**
          * Game is paused?
          * @type {boolean}
          */
         private _paused: bool = false;
+
         /**
          * The state to be switched to in the next frame.
          * @type {State}
          */
         private _pendingState = null;
 
-        //  Event callbacks
         /**
          * Context for calling the callbacks.
          */
         public callbackContext;
+
         /**
          * This will be called when init states. (loading assets...)
          * @type {function}
          */
         public onInitCallback = null;
+
         /**
          * This will be called when create states. (setup states...)
          * @type {function}
          */
         public onCreateCallback = null;
+
         /**
          * This will be called when update states.
          * @type {function}
          */
         public onUpdateCallback = null;
+
         /**
          * This will be called when render states.
          * @type {function}
          */
         public onRenderCallback = null;
+
         /**
          * This will be called when states paused.
          * @type {function}
@@ -150,61 +161,73 @@ module Phaser {
          * @type {Cache}
          */
         public cache: Cache;
+
         /**
          * Reference to the collision helper.
          * @type {Collision}
          */
         public collision: Collision;
+
         /**
          * Reference to the input manager
          * @type {Input}
          */
         public input: Input;
+
         /**
          * Reference to the assets loader.
          * @type {Loader}
          */
         public loader: Loader;
+
         /**
          * Reference to the math helper.
          * @type {GameMath}
          */
         public math: GameMath;
+
         /**
          * Reference to the motion helper.
          * @type {Motion}
          */
         public motion: Motion;
+
         /**
          * Reference to the sound manager.
          * @type {SoundManager}
          */
         public sound: SoundManager;
+
         /**
          * Reference to the stage.
          * @type {Stage}
          */
         public stage: Stage;
+
         /**
          * Reference to game clock.
          * @type {Time}
          */
         public time: Time;
+
         /**
          * Reference to the tween manager.
          * @type {TweenManager}
          */
         public tweens: TweenManager;
+
         /**
          * Reference to the world.
          * @type {World}
          */
         public world: World;
+
         /**
          * Instance of repeatable random data generator helper.
          * @type {RandomDataGenerator}
          */
         public rnd: RandomDataGenerator;
+
         /**
          * Device detector.
          * @type {Device}
@@ -216,6 +239,7 @@ module Phaser {
          * @type {boolean}
          */
         public isBooted: bool = false;
+
         /**
          * Is game running or paused?
          * @type {boolean}
@@ -261,14 +285,14 @@ module Phaser {
                 //  Display the default game screen?
                 if (this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
                 {
-                    this._raf = new RequestAnimationFrame(this.bootLoop, this);
+                    this._raf = new RequestAnimationFrame(this, this.bootLoop);
                 }
                 else
                 {
                     this.isRunning = true;
                     this._loadComplete = false;
 
-                    this._raf = new RequestAnimationFrame(this.loop, this);
+                    this._raf = new RequestAnimationFrame(this, this.loop);
 
                     if (this._pendingState)
                     {
@@ -299,7 +323,6 @@ module Phaser {
          */
         private bootLoop() {
 
-            this.time.update();
             this.tweens.update();
             this.input.update();
             this.stage.update();
@@ -311,7 +334,6 @@ module Phaser {
          */
         private pausedLoop() {
 
-            this.time.update();
             this.tweens.update();
             this.input.update();
             this.stage.update();
@@ -328,7 +350,6 @@ module Phaser {
          */
         private loop() {
 
-            this.time.update();
             this.tweens.update();
             this.input.update();
             this.stage.update();
@@ -521,20 +542,21 @@ module Phaser {
             if (value == true && this._paused == false)
             {
                 this._paused = true;
-                this._raf.setCallback(this.pausedLoop);
+                this._raf.callback = this.pausedLoop;
             }
             else if (value == false && this._paused == true)
             {
                 this._paused = false;
-                this.time.time = Date.now();
+                //this.time.time = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
                 this.input.reset();
+
                 if (this.isRunning == false)
                 {
-                    this._raf.setCallback(this.bootLoop);
+                    this._raf.callback = this.bootLoop;
                 }
                 else
                 {
-                    this._raf.setCallback(this.loop);
+                    this._raf.callback = this.loop;
                 }
             }
 
@@ -586,7 +608,7 @@ module Phaser {
          *
          * @param x {number} X position of the new sprite.
          * @param y {number} Y position of the new sprite.
-         * @param key {string} Optinal, key for the sprite sheet you want it to use.
+         * @param key {string} Optional, key for the sprite sheet you want it to use.
          * @returns {Sprite} The newly created sprite object.
          */
         public createSprite(x: number, y: number, key?: string = ''): Sprite {
@@ -607,7 +629,7 @@ module Phaser {
         /**
          * Create a new object container.
          *
-         * @param MaxSize {number} Optinal, capacity of this group.
+         * @param MaxSize {number} Optional, capacity of this group.
          * @returns {Group} The newly created group.
          */
         public createGroup(MaxSize?: number = 0): Group {
@@ -626,9 +648,9 @@ module Phaser {
         /**
          * Create a new Emitter.
          *
-         * @param x {number} Optinal, x position of the emitter.
-         * @param y {number} Optinal, y position of the emitter.
-         * @param size {number} Optinal, size of this emitter.
+         * @param x {number} Optional, x position of the emitter.
+         * @param y {number} Optional, y position of the emitter.
+         * @param size {number} Optional, size of this emitter.
          * @return {Emitter} The newly created emitter object.
          */
         public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
@@ -642,7 +664,7 @@ module Phaser {
          * @param x {number} X position of this object.
          * @param y {number} Y position of this object.
          * @param width number} Width of this object.
-         * @param height {number} Heigth of this object.
+         * @param height {number} Height of this object.
          * @returns {ScrollZone} The newly created scroll zone object.
          */
         public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
@@ -675,8 +697,8 @@ module Phaser {
         }
 
         /**
-         * Call this method to see if one object collids another.
-         * @return {boolean} Whether the given objects or groups collids.
+         * Call this method to see if one object collides with another.
+         * @return {boolean} Whether the given objects or groups collides.
          */
         public collide(objectOrGroup1: Basic = null, objectOrGroup2: Basic = null, notifyCallback = null): bool {
             return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate);

@@ -55,11 +55,13 @@ module Phaser {
          * @type {Rectangle}
          */
         public bounds: Rectangle;
+
         /**
          * This class is actually a wrapper of canvas.
          * @type {HTMLCanvasElement}
          */
         public canvas: HTMLCanvasElement;
+
         /**
          * Canvas context of this object.
          * @type {CanvasRenderingContext2D}

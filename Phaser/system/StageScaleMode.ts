@@ -5,7 +5,7 @@
 *
 * This class controls the scaling of your game. On mobile devices it will also remove the URL bar and allow
 * you to maintain proportion and aspect ratio.
-* It is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
+* The resizing method is based on a technique taken from Viewporter v2.0 by Zynga Inc. http://github.com/zynga/viewporter
 */
 
 module Phaser {
@@ -19,9 +19,27 @@ module Phaser {
 
             this._game = game;
 
-            this.orientation = window['orientation'];
+            this.enterLandscape = new Phaser.Signal();
+            this.enterPortrait = new Phaser.Signal();
+
+            if (window['orientation'])
+            {
+                this.orientation = window['orientation'];
+            }
+            else
+            {
+                if (window.outerWidth > window.outerHeight)
+                {
+                    this.orientation = 90;
+                }
+                else
+                {
+                    this.orientation = 0;
+                }
+            }
 
             window.addEventListener('orientationchange', (event) => this.checkOrientation(event), false);
+            window.addEventListener('resize', (event) => this.checkResize(event), false);
 
         }
 
@@ -29,6 +47,7 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
+
         /**
          * Stage height when start the game.
          * @type {number}
@@ -56,10 +75,37 @@ module Phaser {
         public static SHOW_ALL: number = 2;
 
         /**
+         * Minimum width the canvas should be scaled to (in pixels)
+         * @type {number}
+         */
+        public minWidth: number = null;
+
+        /**
+         * Maximum width the canvas should be scaled to (in pixels).
+         * If null it will scale to whatever width the browser can handle.
+         * @type {number}
+         */
+        public maxWidth: number = null;
+
+        /**
+         * Minimum height the canvas should be scaled to (in pixels)
+         * @type {number}
+         */
+        public minHeight: number = null;
+
+        /**
+         * Maximum height the canvas should be scaled to (in pixels).
+         * If null it will scale to whatever height the browser can handle.
+         * @type {number}
+         */
+        public maxHeight: number = null;
+
+        /**
          * Width of the stage after calculation.
          * @type {number}
          */
         public width: number = 0;
+
         /**
          * Height of the stage after calculation.
          * @type {number}
@@ -67,11 +113,78 @@ module Phaser {
         public height: number = 0;
 
         /**
-         * Game orientation angel.
+         * Window orientation angle (90 and -90 are landscape, 0 is portrait)
          * @type {number}
          */
-        public orientation;
+        public orientation: number;
 
+        /**
+         * A Signal that is dispatched when the device enters landscape mode from portrait
+         * @type {Signal}
+         */
+        public enterLandscape: Phaser.Signal;
+
+        /**
+         * A Signal that is dispatched when the device enters portrait mode from landscape
+         * @type {Signal}
+         */
+        public enterPortrait: Phaser.Signal;
+
+        public get isFullScreen(): bool {
+
+            if (document['fullscreenElement'] === null|| document['mozFullScreenElement'] === null|| document['webkitFullscreenElement'] === null)
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+
+        public startFullScreen() {
+
+            if (this.isFullScreen)
+            {
+                return;
+            }
+
+            var element = this._game.stage.canvas;
+
+            if (element['requestFullScreen'])
+            {
+                element['requestFullScreen']();
+            }
+            else if(element['mozRequestFullScreen'])
+            {
+                element['mozRequestFullScreen']();
+            }
+            else if (element['webkitRequestFullScreen'])
+            {
+                element['webkitRequestFullScreen']();
+            }
+
+        }
+
+        public stopFullScreen() {
+
+            if (document['cancelFullScreen'])
+            {
+                document['cancelFullScreen']();
+            }
+            else if (document['mozCancelFullScreen'])
+            {
+                document['mozCancelFullScreen']();
+            }
+            else if (document['webkitCancelFullScreen'])
+            {
+                document['webkitCancelFullScreen']();
+            }
+
+        }
+
+        /**
+         * The core update loop, called by Phaser.Stage
+         */
         public update() {
 
             if (this._game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height))
@@ -81,19 +194,63 @@ module Phaser {
 
         }
 
+        public get isPortrait(): bool {
+            return this.orientation == 0;
+        }
+
         public get isLandscape(): bool {
-            return window['orientation'] === 90 || window['orientation'] === -90;
+            return this.orientation === 90 || this.orientation === -90;
         }
 
         /**
-         * Check whether game orientation the same as window's. Update orientation if not equal.
+         * Handle window.orientationchange events
          */
         private checkOrientation(event) {
 
-            if (window['orientation'] !== this.orientation)
+            this.orientation = window['orientation'];
+
+            if (this.isLandscape)
+            {
+                this.enterLandscape.dispatch(this.orientation);
+            }
+            else
+            {
+                this.enterPortrait.dispatch(this.orientation);
+            }
+
+            if (this._game.stage.scaleMode !== StageScaleMode.NO_SCALE)
             {
                 this.refresh();
-                this.orientation = window['orientation'];
+            }
+
+        }
+
+        /**
+         * Handle window.resize events
+         */
+        private checkResize(event) {
+
+            if (window.outerWidth > window.outerHeight)
+            {
+                this.orientation = 90;
+            }
+            else
+            {
+                this.orientation = 0;
+            }
+
+            if (this.isLandscape)
+            {
+                this.enterLandscape.dispatch(this.orientation);
+            }
+            else
+            {
+                this.enterPortrait.dispatch(this.orientation);
+            }
+
+            if (this._game.stage.scaleMode !== StageScaleMode.NO_SCALE)
+            {
+                this.refresh();
             }
 
         }
@@ -129,7 +286,7 @@ module Phaser {
         }
 
         /**
-         * Set screen size automatically based on stage's scaleMode.
+         * Set screen size automatically based on the scaleMode.
          */
         private setScreenSize() {
 
@@ -154,18 +311,18 @@ module Phaser {
 
                 if (this._game.stage.scaleMode == StageScaleMode.EXACT_FIT)
                 {
-                    if (this._game.stage.maxScaleX && window.innerWidth > this._game.stage.maxScaleX)
+                    if (this.maxWidth && window.innerWidth > this.maxWidth)
                     {
-                        this.width = this._game.stage.maxScaleX;
+                        this.width = this.maxWidth;
                     }
                     else
                     {
                         this.width = window.innerWidth;
                     }
 
-                    if (this._game.stage.maxScaleY && window.innerHeight > this._game.stage.maxScaleY)
+                    if (this.maxHeight && window.innerHeight > this.maxHeight)
                     {
-                        this.height = this._game.stage.maxScaleY;
+                        this.height = this.maxHeight;
                     }
                     else
                     {
@@ -173,20 +330,20 @@ module Phaser {
                     }
                 }
                 else if (this._game.stage.scaleMode == StageScaleMode.SHOW_ALL)
-                    {
+                {
                     var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
 
                     this.width = Math.round(this._game.stage.width * multiplier);
                     this.height = Math.round(this._game.stage.height * multiplier);
 
-                    if (this._game.stage.maxScaleX && this.width > this._game.stage.maxScaleX)
+                    if (this.maxWidth && this.width > this.maxWidth)
                     {
-                        this.width = this._game.stage.maxScaleX;
+                        this.width = this.maxWidth;
                     }
 
-                    if (this._game.stage.maxScaleY && this.height > this._game.stage.maxScaleY)
+                    if (this.maxHeight && this.height > this.maxHeight)
                     {
-                        this.height = this._game.stage.maxScaleY;
+                        this.height = this.maxHeight;
                     }
                 }
 

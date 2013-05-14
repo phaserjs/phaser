@@ -1,5 +1,6 @@
 /// <reference path="../../Game.ts" />
 /// <reference path="../../Signal.ts" />
+/// <reference path="MSPointer.ts" />
 
 /**
 * Phaser - Input
@@ -18,6 +19,7 @@ module Phaser {
             this.mouse = new Mouse(this._game);
             this.keyboard = new Keyboard(this._game);
             this.touch = new Touch(this._game);
+            this.mspointer = new MSPointer(this._game);
 
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
@@ -31,11 +33,13 @@ module Phaser {
          * @type {Mouse}
          */
         public mouse: Mouse;
+
         /**
          *
          * @type {Keyboard}
          */
         public keyboard: Keyboard;
+
         /**
          *
          * @type {Touch}
@@ -44,9 +48,16 @@ module Phaser {
 
         /**
          *
+         * @type {MSPointer}
+         */
+        public mspointer: MSPointer;
+
+        /**
+         *
          * @type {Number}
          */
         public x: number = 0;
+
         /**
          *
          * @type {Number}
@@ -58,6 +69,7 @@ module Phaser {
          * @type {Number}
          */
         public scaleX: number = 1;
+
         /**
          *
          * @type {Number}
@@ -69,6 +81,7 @@ module Phaser {
          * @type {Number}
          */
         public worldX: number = 0;
+
         /**
          *
          * @type {Number}
@@ -80,6 +93,7 @@ module Phaser {
          * @type {Phaser.Signal}
          */
         public onDown: Phaser.Signal;
+
         /**
          *
          * @type {Phaser.Signal}

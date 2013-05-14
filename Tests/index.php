@@ -33,6 +33,13 @@ if (isset($_GET['f']))
     $state = substr($_GET['f'], 0, -3);
 }
 
+$mobile = false;
+
+if (isset($_GET['m']))
+{
+    $mobile = true;
+}
+
 ?>
 <!DOCTYPE html>
 
@@ -41,7 +48,20 @@ if (isset($_GET['f']))
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
     <title>Phaser Test Runner: <?php echo $state?></title>
+<?php
+    if ($mobile)
+    {
+?>
+    <link rel="stylesheet" href="phaser-mobile.css" type="text/css" />
+<?php
+    }
+    else
+    {
+?>
     <link rel="stylesheet" href="phaser.css" type="text/css" />
+<?php
+    }
+?>
     <script src="phaser.js"></script>
     <script src="phaser-fx.js"></script>
 <?php
@@ -56,8 +76,16 @@ if (isset($_GET['f']))
 <body>
 
 <?php
+    if ($mobile)
+    {
+?>
 
-    if ($state)
+    <div id="game"></div>
+
+<?php
+    }
+
+    if ($state && $mobile == false)
     {
 ?>
 
@@ -84,13 +112,21 @@ function printJSLinks($dir, $files) {
     foreach ($files as $key => $value) {
 
         $value2 = substr($value, 0, -3);
-        echo "<a href=\"index.php?f=$value&amp;d=$dir\" class=\"button\">$value2</a>";
+
+        if ($dir == 'mobile')
+        {
+            echo "<a href=\"index.php?f=$value&amp;d=$dir&amp;m=1\" class=\"button\">$value2</a>";
+        }
+        else
+        {
+            echo "<a href=\"index.php?f=$value&amp;d=$dir\" class=\"button\">$value2</a>";
+        }
 
     }
 
 }
 
-if ($state == false)
+if ($state == false && $mobile == false)
 {
 ?>
 

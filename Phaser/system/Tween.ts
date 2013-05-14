@@ -48,11 +48,13 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Phaser.Game;
+
         /**
          * Manager of this tween.
          * @type {Phaser.TweenManager}
          */
         private _manager: Phaser.TweenManager;
+
         /**
          * Reference to the target object.
          * @type {object}
@@ -65,11 +67,13 @@ module Phaser {
          * @type {object}
          */
 	    private _valuesStart = {};
+
         /**
          * End values container.
          * @type {object}
          */
 	    private _valuesEnd = {};
+
 	    /**
 	     * How long this tween will perform.
 	     * @type {number}
@@ -77,12 +81,14 @@ module Phaser {
 	    private _duration = 1000;
 	    private _delayTime = 0;
 	    private _startTime = null;
+
 	    /**
 	     * Easing function which actually updating this tween.
 	     * @type {function}
 	     */
 	    private _easingFunction;
 	    private _interpolationFunction;
+
 	    /**
 	     * Contains chained tweens.
 	     * @type {Tweens[]}
@@ -94,11 +100,13 @@ module Phaser {
 	     * @type {Phaser.Signal}
 	     */
 	    public onStart: Phaser.Signal;
+
 	    /**
 	     * Signal to be dispatched when this tween updating.
 	     * @type {Phaser.Signal}
 	     */
 	    public onUpdate: Phaser.Signal;
+
 	    /**
 	     * Signal to be dispatched when this tween completed.
 	     * @type {Phaser.Signal}
