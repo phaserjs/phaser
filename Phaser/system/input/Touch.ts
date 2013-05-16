@@ -27,9 +27,9 @@ module Phaser {
         }
 
         /**
-        *
+        * Local private reference to game.
         * @property _game
-        * @type {Game}
+        * @type {Phaser.Game}
         * @private
         **/
         private _game: Game;
@@ -41,19 +41,22 @@ module Phaser {
         public disabled: bool = false;
 
         /**
-        *
+        * Starts the event listeners running
         * @method start
         */
         public start() {
 
-            this._game.stage.canvas.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
-            this._game.stage.canvas.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
-            this._game.stage.canvas.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
-            this._game.stage.canvas.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
-            this._game.stage.canvas.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
-            this._game.stage.canvas.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+            if (this._game.device.touch)
+            {
+                this._game.stage.canvas.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
+                this._game.stage.canvas.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
+                this._game.stage.canvas.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
+                this._game.stage.canvas.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
+                this._game.stage.canvas.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
+                this._game.stage.canvas.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
 
-            document.addEventListener('touchmove', (event) => this.consumeTouchMove(event), false);
+                document.addEventListener('touchmove', (event) => this.consumeTouchMove(event), false);
+            }
 
         }
 
@@ -192,17 +195,20 @@ module Phaser {
         }
 
         /**
-        *
+        * Stop the event listeners
         * @method stop
         */
         public stop() {
 
-            //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
-            //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
-            //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
-            //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
-            //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
-            //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+            if (this._game.device.touch)
+            {
+                //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
+                //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
+                //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
+                //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
+                //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
+                //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+            }
 
         }
 

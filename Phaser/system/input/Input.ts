@@ -19,6 +19,7 @@ module Phaser {
 
             this._game = game;
 
+            this.mousePointer = new Pointer(this._game, 0);
             this.pointer1 = new Pointer(this._game, 1);
             this.pointer2 = new Pointer(this._game, 2);
             this.pointer3 = new Pointer(this._game, 3);
@@ -38,6 +39,11 @@ module Phaser {
 
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
+            this.onTap = new Phaser.Signal();
+            this.onDoubleTap = new Phaser.Signal();
+            this.onHold = new Phaser.Signal();
+
+            this.currentPointers = 0;
 
         }
 
@@ -52,6 +58,29 @@ module Phaser {
         * @type {Boolean}
         */
         public disabled: bool = false;
+
+        /**
+         * Controls the expected behaviour when using a mouse and touch together on a multi-input device
+         */
+        public multiInputOverride: number = Input.MOUSE_TOUCH_COMBINE;
+
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it updates the Input.x/y globals regardless if another pointer is active or not
+        */
+        public static MOUSE_OVERRIDES_TOUCH: number = 0;
+
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it only updates the Input.x/y globals if no other pointer is active
+        */
+        public static TOUCH_OVERRIDES_MOUSE: number = 1;
+
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it updates the Input.x/y globals at the same time as any active Pointer objects might
+        */
+        public static MOUSE_TOUCH_COMBINE: number = 2;
 
         /**
         * Phaser.Mouse handler
@@ -110,23 +139,17 @@ module Phaser {
         public scaleY: number = 1;
 
         /**
-         *
-         * @type {Number}
-         */
-        public worldX: number = 0;
-
-        /**
-         *
-         * @type {Number}
-         */
-        public worldY: number = 0;
-
-        /**
         * The maximum number of Pointers allowed to be active at any one time.
         * For lots of games it's useful to set this to 1
         * @type {Number}
         */
         public maxPointers: number = 10;
+
+        /**
+        * The current number of active Pointers.
+        * @type {Number}
+        */
+        public currentPointers: number = 0;
 
         /**
         * A Signal dispatched when a mouse/Pointer object is pressed
@@ -157,6 +180,72 @@ module Phaser {
         * @type {Phaser.Signal}
         */
         public onHold: Phaser.Signal;
+
+        /**
+        * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or click
+        * @property tapRate
+        * @type {Number}
+        **/
+        public tapRate: number = 200;
+
+        /**
+        * The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click
+        * @property doubleTapRate
+        * @type {Number}
+        **/
+        public doubleTapRate: number = 250;
+
+        /**
+        * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
+        * @property holdRate
+        * @type {Number}
+        **/
+        public holdRate: number = 2000;
+
+        /**
+        * The number of milliseconds below which the Pointer is considered justPressed
+        * @property justPressedRate
+        * @type {Number}
+        **/
+        public justPressedRate: number = 200;
+
+        /**
+        * The number of milliseconds below which the Pointer is considered justReleased
+        * @property justReleasedRate
+        * @type {Number}
+        **/
+        public justReleasedRate: number = 200;
+
+        /**
+        * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
+        * The history is cleared each time the Pointer is pressed down.
+        * The history is updated at the rate specified in Input.pollRate
+        * @property recordPointerHistory
+        * @type {Boolean}
+        **/
+        public recordPointerHistory: bool = true;
+
+        /**
+        * The rate in milliseconds at which the Pointer objects should update their tracking history
+        * @property recordRate
+        * @type {Number}
+        */
+        public recordRate: number = 100;
+
+        /**
+        * The total number of entries that can be recorded into the Pointer objects tracking history.
+        * The the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
+        * @property recordLimit
+        * @type {Number}
+        */
+        public recordLimit: number = 100;
+
+        /**
+        * A Pointer object specifically used by the Mouse
+        * @property mousePointer
+        * @type {Pointer}
+        **/
+        public mousePointer: Pointer;
 
         /**
         * A Pointer object
@@ -274,16 +363,22 @@ module Phaser {
 
         public update() {
 
-            //this.worldX = this._game.camera.worldView.x + this.x;
-            //this.worldY = this._game.camera.worldView.y + this.y;
-
-            this.mouse.update();
+            this.mousePointer.update();
+            this.pointer1.update();
+            this.pointer2.update();
+            this.pointer3.update();
+            this.pointer4.update();
+            this.pointer5.update();
+            this.pointer6.update();
+            this.pointer7.update();
+            this.pointer8.update();
+            this.pointer9.update();
+            this.pointer10.update();
 
         }
 
         public reset() {
 
-            this.mouse.reset();
             this.keyboard.reset();
 
             this.pointer1.reset();
@@ -299,6 +394,11 @@ module Phaser {
 
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
+            this.onTap = new Phaser.Signal();
+            this.onDoubleTap = new Phaser.Signal();
+            this.onHold = new Phaser.Signal();
+
+            this.currentPointers = 0;
 
         }
 
@@ -309,61 +409,61 @@ module Phaser {
         **/
         public get totalInactivePointers(): number {
 
-            return 10 - this.totalActivePointers;
+            return 10 - this.currentPointers;
 
         }
 
         /**
-        * Get the total number of active Pointers
+        * Recalculates the total number of active Pointers
         * @method totalActivePointers
         * @return {Number} The number of Pointers currently active
         **/
         public get totalActivePointers(): number {
 
-            var result: number = 0;
+            this.currentPointers = 0;
 
             if (this.pointer1.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer2.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer3.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer4.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer5.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer6.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer7.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer8.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer9.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
             else if (this.pointer10.active == true)
             {
-                result++;
+                this.currentPointers++;
             }
 
-            return result;
+            return this.currentPointers;
 
         }
 
@@ -671,7 +771,7 @@ module Phaser {
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
             this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
-            this._game.stage.context.fillText('World X: ' + this.worldX + ' World Y: ' + this.worldY, x, y + 28);
+            this._game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
             this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
 
         }

@@ -5,7 +5,6 @@
 * Phaser - Group
 *
 * This class is used for organising, updating and sorting game objects.
-*
 */
 
 module Phaser {
@@ -179,7 +178,7 @@ module Phaser {
         }
 
         /**
-         * Adds a new <code>Basic</code> subclass (Basic, Basic, Enemy, etc) to the group.
+         * Adds a new <code>Basic</code> subclass (Basic, GameObject, Sprite, etc) to the group.
          * Group will try to replace a null member of the array first.
          * Failing that, Group will add it to the end of the member array,
          * assuming there is room for it, and doubling the size of the array if necessary.
@@ -188,7 +187,6 @@ module Phaser {
          * the object will NOT be added to the group!</p>
          *
          * @param {Basic} Object The object you want to add to the group.
-         *
          * @return {Basic} The same <code>Basic</code> object that was passed in.
          */
         public add(Object: Basic) {

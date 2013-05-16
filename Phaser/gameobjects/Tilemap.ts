@@ -339,7 +339,7 @@ module Phaser {
 
         public getTileFromInputXY(layer?: number = 0):Tile {
 
-            return this.tiles[this.layers[layer].getTileFromWorldXY(this._game.input.worldX, this._game.input.worldY)];
+            return this.tiles[this.layers[layer].getTileFromWorldXY(this._game.input.getWorldX(), this._game.input.getWorldY())];
 
         }
 

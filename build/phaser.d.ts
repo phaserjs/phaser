@@ -1681,7 +1681,7 @@ module Phaser {
         */
         private _game;
         /**
-        * Local container for storing camera.
+        * Local container for storing cameras.
         */
         private _cameras;
         /**
@@ -4064,7 +4064,6 @@ module Phaser {
 * Phaser - Group
 *
 * This class is used for organising, updating and sorting game objects.
-*
 */
 module Phaser {
     class Group extends Basic {
@@ -4125,7 +4124,7 @@ module Phaser {
         */
         public maxSize : number;
         /**
-        * Adds a new <code>Basic</code> subclass (Basic, Basic, Enemy, etc) to the group.
+        * Adds a new <code>Basic</code> subclass (Basic, GameObject, Sprite, etc) to the group.
         * Group will try to replace a null member of the array first.
         * Failing that, Group will add it to the end of the member array,
         * assuming there is room for it, and doubling the size of the array if necessary.
@@ -4134,7 +4133,6 @@ module Phaser {
         * the object will NOT be added to the group!</p>
         *
         * @param {Basic} Object The object you want to add to the group.
-        *
         * @return {Basic} The same <code>Basic</code> object that was passed in.
         */
         public add(Object: Basic): Basic;
@@ -6165,7 +6163,28 @@ module Phaser {
         **/
         private _game;
         /**
-        * The Pointer ID (a number between 1 and 10)
+        * Local private variable to store the status of dispatching a hold event
+        * @property _holdSent
+        * @type {Boolean}
+        * @private
+        */
+        private _holdSent;
+        /**
+        * Local private variable storing the short-term history of pointer movements
+        * @property _history
+        * @type {Array}
+        * @private
+        */
+        private _history;
+        /**
+        * Local private variable storing the time at which the next history drop should occur
+        * @property _lastDrop
+        * @type {Number}
+        * @private
+        */
+        private _nextDrop;
+        /**
+        * The Pointer ID (a number between 1 and 10, 0 is reserved for the mouse pointer specifically)
         * @property id
         * @type {Number}
         */
@@ -6209,6 +6228,12 @@ module Phaser {
         * @type {Boolean}
         */
         public withinGame: bool;
+        /**
+        * If this Pointer is a mouse the button property holds the value of which mouse button was pressed down
+        * @property button
+        * @type {Number}
+        */
+        public button: number;
         /**
         * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
         * @property clientX
@@ -6264,13 +6289,19 @@ module Phaser {
         */
         public target;
         /**
-        * If the Pointer is touching the touchscreen isDown is set to true
+        * If the Pointer is a mouse this is true, otherwise false
+        * @property isMouse
+        * @type {Boolean}
+        **/
+        public isMouse: bool;
+        /**
+        * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
         * @property isDown
         * @type {Boolean}
         **/
         public isDown: bool;
         /**
-        * If the Pointer is not touching the touchscreen isUp is set to true
+        * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
         * @property isUp
         * @type {Boolean}
         **/
@@ -6288,17 +6319,11 @@ module Phaser {
         **/
         public timeUp: number;
         /**
-        * The number of milliseconds below which the Pointer is considered justPressed
-        * @property justPressedRate
+        * A timestamp representing when the Pointer was last tapped or clicked
+        * @property previousTapTime
         * @type {Number}
         **/
-        public justPressedRate: number;
-        /**
-        * The number of milliseconds below which the Pointer is considered justReleased
-        * @property justReleasedRate
-        * @type {Number}
-        **/
-        public justReleasedRate: number;
+        public previousTapTime: number;
         /**
         * The total number of times this Pointer has been touched to the touchscreen
         * @property totalTouches
@@ -6306,7 +6331,7 @@ module Phaser {
         **/
         public totalTouches: number;
         /**
-        * How long the Pointer has been depressed on the touchscreen.
+        * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
         * @property duration
         * @type {Number}
         **/
@@ -6327,6 +6352,7 @@ module Phaser {
         * @param {Any} event
         */
         public start(event): Pointer;
+        public update(): void;
         /**
         * Called when the Pointer is moved on the touchscreen
         * @method move
@@ -6346,7 +6372,7 @@ module Phaser {
         */
         public stop(event): Pointer;
         /**
-        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen is less than justPressedRate
+        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate
         * @method justPressed
         * @param {Number} [duration].
         * @return {Boolean}
@@ -6359,6 +6385,10 @@ module Phaser {
         * @return {Boolean}
         */
         public justReleased(duration?: number): bool;
+        /**
+        * Resets the Pointer properties. Called by Input.reset when you perform a State change.
+        * @method reset
+        */
         public reset(): void;
         /**
         * Renders the Pointer.circle object onto the stage in green if down or red if up.
@@ -6389,7 +6419,7 @@ module Phaser {
         */
         constructor(game: Game);
         /**
-        *
+        * Local private reference to game.
         * @property _game
         * @type Game
         * @private
@@ -6401,7 +6431,7 @@ module Phaser {
         */
         public disabled: bool;
         /**
-        *
+        * Starts the event listeners running
         * @method start
         */
         public start(): void;
@@ -6424,7 +6454,7 @@ module Phaser {
         **/
         private onPointerUp(event);
         /**
-        *
+        * Stop the event listeners
         * @method stop
         */
         public stop(): void;
@@ -6484,6 +6514,25 @@ module Phaser {
         */
         public disabled: bool;
         /**
+        * Controls the expected behaviour when using a mouse and touch together on a multi-input device
+        */
+        public multiInputOverride: number;
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it updates the Input.x/y globals regardless if another pointer is active or not
+        */
+        static MOUSE_OVERRIDES_TOUCH: number;
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it only updates the Input.x/y globals if no other pointer is active
+        */
+        static TOUCH_OVERRIDES_MOUSE: number;
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it updates the Input.x/y globals at the same time as any active Pointer objects might
+        */
+        static MOUSE_TOUCH_COMBINE: number;
+        /**
         * Phaser.Mouse handler
         * @type {Mouse}
         */
@@ -6531,21 +6580,16 @@ module Phaser {
         */
         public scaleY: number;
         /**
-        *
-        * @type {Number}
-        */
-        public worldX: number;
-        /**
-        *
-        * @type {Number}
-        */
-        public worldY: number;
-        /**
         * The maximum number of Pointers allowed to be active at any one time.
         * For lots of games it's useful to set this to 1
         * @type {Number}
         */
         public maxPointers: number;
+        /**
+        * The current number of active Pointers.
+        * @type {Number}
+        */
+        public currentPointers: number;
         /**
         * A Signal dispatched when a mouse/Pointer object is pressed
         * @type {Phaser.Signal}
@@ -6571,6 +6615,63 @@ module Phaser {
         * @type {Phaser.Signal}
         */
         public onHold: Signal;
+        /**
+        * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or click
+        * @property tapRate
+        * @type {Number}
+        **/
+        public tapRate: number;
+        /**
+        * The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click
+        * @property doubleTapRate
+        * @type {Number}
+        **/
+        public doubleTapRate: number;
+        /**
+        * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
+        * @property holdRate
+        * @type {Number}
+        **/
+        public holdRate: number;
+        /**
+        * The number of milliseconds below which the Pointer is considered justPressed
+        * @property justPressedRate
+        * @type {Number}
+        **/
+        public justPressedRate: number;
+        /**
+        * The number of milliseconds below which the Pointer is considered justReleased
+        * @property justReleasedRate
+        * @type {Number}
+        **/
+        public justReleasedRate: number;
+        /**
+        * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
+        * The history is cleared each time the Pointer is pressed down.
+        * The history is updated at the rate specified in Input.pollRate
+        * @property recordPointerHistory
+        * @type {Boolean}
+        **/
+        public recordPointerHistory: bool;
+        /**
+        * The rate in milliseconds at which the Pointer objects should update their tracking history
+        * @property recordRate
+        * @type {Number}
+        */
+        public recordRate: number;
+        /**
+        * The total number of entries that can be recorded into the Pointer objects tracking history.
+        * The the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
+        * @property recordLimit
+        * @type {Number}
+        */
+        public recordLimit: number;
+        /**
+        * A Pointer object specifically used by the Mouse
+        * @property mousePointer
+        * @type {Pointer}
+        **/
+        public mousePointer: Pointer;
         /**
         * A Pointer object
         * @property pointer1
@@ -6653,7 +6754,7 @@ module Phaser {
         **/
         public totalInactivePointers : number;
         /**
-        * Get the total number of active Pointers
+        * Recalculates the total number of active Pointers
         * @method totalActivePointers
         * @return {Number} The number of Pointers currently active
         **/
@@ -6871,10 +6972,13 @@ module Phaser {
 module Phaser {
     class Mouse {
         constructor(game: Game);
+        /**
+        * Local private reference to game.
+        * @property _game
+        * @type {Phaser.Game}
+        * @private
+        **/
         private _game;
-        private _x;
-        private _y;
-        public button: number;
         static LEFT_BUTTON: number;
         static MIDDLE_BUTTON: number;
         static RIGHT_BUTTON: number;
@@ -6884,32 +6988,14 @@ module Phaser {
         */
         public disabled: bool;
         /**
-        * @type {Boolean}
+        * Starts the event listeners running
+        * @method start
         */
-        public isDown: bool;
-        /**
-        * @type {Boolean}
-        */
-        public isUp: bool;
-        /**
-        * @type {Number}
-        */
-        public timeDown: number;
-        /**
-        * @type {Number}
-        */
-        public duration: number;
-        /**
-        * @type {Number}
-        */
-        public timeUp: number;
         public start(): void;
-        public reset(): void;
         /**
         * @param {MouseEvent} event
         */
         public onMouseDown(event: MouseEvent): void;
-        public update(): void;
         /**
         * @param {MouseEvent} event
         */
@@ -6918,6 +7004,11 @@ module Phaser {
         * @param {MouseEvent} event
         */
         public onMouseUp(event: MouseEvent): void;
+        /**
+        * Stop the event listeners
+        * @method stop
+        */
+        public stop(): void;
     }
 }
 /**
@@ -6938,9 +7029,9 @@ module Phaser {
         */
         constructor(game: Game);
         /**
-        *
+        * Local private reference to game.
         * @property _game
-        * @type {Game}
+        * @type {Phaser.Game}
         * @private
         **/
         private _game;
@@ -6950,7 +7041,7 @@ module Phaser {
         */
         public disabled: bool;
         /**
-        *
+        * Starts the event listeners running
         * @method start
         */
         public start(): void;
@@ -7000,7 +7091,7 @@ module Phaser {
         **/
         private onTouchEnd(event);
         /**
-        *
+        * Stop the event listeners
         * @method stop
         */
         public stop(): void;

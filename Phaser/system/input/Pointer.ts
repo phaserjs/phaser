@@ -25,6 +25,11 @@ module Phaser {
             this.pointB = new Point();
             this.circle = new Circle(0, 0, 44);
 
+            if (id == 0)
+            {
+                this.isMouse = true;
+            }
+
         }
 
         /**
@@ -36,7 +41,31 @@ module Phaser {
         private _game: Game;
 
         /**
-        * The Pointer ID (a number between 1 and 10)
+        * Local private variable to store the status of dispatching a hold event
+        * @property _holdSent
+        * @type {Boolean}
+        * @private
+        */
+        private _holdSent: bool = false;
+
+        /**
+        * Local private variable storing the short-term history of pointer movements
+        * @property _history
+        * @type {Array}
+        * @private
+        */
+        private _history = [];
+
+        /**
+        * Local private variable storing the time at which the next history drop should occur
+        * @property _lastDrop
+        * @type {Number}
+        * @private
+        */
+        private _nextDrop: number = 0;
+
+        /**
+        * The Pointer ID (a number between 1 and 10, 0 is reserved for the mouse pointer specifically)
         * @property id
         * @type {Number}
         */
@@ -86,6 +115,13 @@ module Phaser {
         * @type {Boolean}
         */
         public withinGame: bool = false;
+
+        /**
+        * If this Pointer is a mouse the button property holds the value of which mouse button was pressed down
+        * @property button
+        * @type {Number}
+        */
+        public button: number;
 
         /**
         * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
@@ -151,14 +187,21 @@ module Phaser {
         public target;
 
         /**
-        * If the Pointer is touching the touchscreen isDown is set to true
+        * If the Pointer is a mouse this is true, otherwise false
+        * @property isMouse
+        * @type {Boolean}
+        **/
+        public isMouse: bool = false;
+
+        /**
+        * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
         * @property isDown
         * @type {Boolean}
         **/
         public isDown: bool = false;
 
         /**
-        * If the Pointer is not touching the touchscreen isUp is set to true
+        * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
         * @property isUp
         * @type {Boolean}
         **/
@@ -179,18 +222,11 @@ module Phaser {
         public timeUp: number = 0;
 
         /**
-        * The number of milliseconds below which the Pointer is considered justPressed
-        * @property justPressedRate
+        * A timestamp representing when the Pointer was last tapped or clicked
+        * @property previousTapTime
         * @type {Number}
         **/
-        public justPressedRate: number = 200;
-
-        /**
-        * The number of milliseconds below which the Pointer is considered justReleased
-        * @property justReleasedRate
-        * @type {Number}
-        **/
-        public justReleasedRate: number = 200;
+        public previousTapTime: number = 0;
 
         /**
         * The total number of times this Pointer has been touched to the touchscreen
@@ -200,11 +236,16 @@ module Phaser {
         public totalTouches: number = 0;
 
         /**
-        * How long the Pointer has been depressed on the touchscreen.
+        * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
         * @property duration
         * @type {Number}
         **/
         public get duration(): number {
+
+            if (this.isUp)
+            {
+                return -1;
+            }
 
             return this._game.time.now - this.timeDown;
 
@@ -240,6 +281,13 @@ module Phaser {
             this.identifier = event.identifier;
             this.target = event.target;
 
+            if (event.button)
+            {
+                this.button = event.button;
+            }
+
+            this._history.length = 0;
+
             this.move(event);
 
             this.pointA.setTo(this.x, this.y);
@@ -249,14 +297,53 @@ module Phaser {
             this.isDown = true;
             this.isUp = false;
             this.timeDown = this._game.time.now;
+            this._holdSent = false;
 
-            this._game.input.x = this.x * this._game.input.scaleX;
-            this._game.input.y = this.y * this._game.input.scaleY;
-            this._game.input.onDown.dispatch(this);
+            if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
+            {
+                this._game.input.x = this.x * this._game.input.scaleX;
+                this._game.input.y = this.y * this._game.input.scaleY;
+                this._game.input.onDown.dispatch(this);
+            }
 
             this.totalTouches++;
 
+            if (this.isMouse == false)
+            {
+                this._game.input.currentPointers++;
+            }
+
             return this;
+
+        }
+
+        public update() {
+
+            if (this.active)
+            {
+                if (this._holdSent == false && this.duration >= this._game.input.holdRate)
+                {
+                    if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
+                    {
+                        this._game.input.onHold.dispatch(this);
+                    }
+
+                    this._holdSent = true;
+                }
+
+                //  Update the droppings history
+                if (this._game.input.recordPointerHistory && this._game.time.now >= this._nextDrop)
+                {
+                    this._nextDrop = this._game.time.now + this._game.input.recordRate;
+                    this._history.push({ x: this.pointB.x, y: this.pointB.y });
+
+                    if (this._history.length > this._game.input.recordLimit)
+                    {
+                        this._history.shift();
+                    }
+                }
+
+            }
 
         }
 
@@ -266,6 +353,11 @@ module Phaser {
         * @param {Any} event
         */
         public move(event): Pointer {
+
+            if (event.button)
+            {
+                this.button = event.button;
+            }
 
             this.clientX = event.clientX;
             this.clientY = event.clientY;
@@ -280,10 +372,11 @@ module Phaser {
             this.pointB.setTo(this.x, this.y);
             this.circle.setTo(this.x, this.y, 44);
 
-            this._game.input.x = this.x * this._game.input.scaleX;
-            this._game.input.y = this.y * this._game.input.scaleY;
-
-            //  Droppings history (used for gestures and motion tracking)
+            if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
+            {
+                this._game.input.x = this.x * this._game.input.scaleX;
+                this._game.input.y = this.y * this._game.input.scaleY;
+            }
 
             return this;
 
@@ -308,6 +401,29 @@ module Phaser {
         */
         public stop(event): Pointer {
 
+            console.log('duration', this.duration);
+
+            if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
+            {
+                this._game.input.onUp.dispatch(this);
+
+                //  Was it a tap?
+                if (this.duration >= 0 && this.duration <= this._game.input.tapRate)
+                {
+                    //  Yes, let's dispatch the signal
+                    this._game.input.onTap.dispatch(this);
+
+                    //  Was it a double-tap?
+                    if (this.timeUp - this.previousTapTime < this._game.input.doubleTapRate)
+                    {
+                        this._game.input.onDoubleTap.dispatch(this);
+                    }
+
+                    this.previousTapTime = this.timeUp;
+                }
+
+            }
+
             this.active = false;
             this.withinGame = false;
 
@@ -315,19 +431,22 @@ module Phaser {
             this.isUp = true;
             this.timeUp = this._game.time.now;
 
-            this._game.input.onUp.dispatch(this);
+            if (this.isMouse == false)
+            {
+                this._game.input.currentPointers--;
+            }
 
             return this;
 
         }
 
         /**
-        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen is less than justPressedRate
+        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate
         * @method justPressed
         * @param {Number} [duration].
         * @return {Boolean}
         */
-        public justPressed(duration?: number = this.justPressedRate): bool {
+        public justPressed(duration?: number = this._game.input.justPressedRate): bool {
 
             if (this.isDown === true && (this.timeDown + duration) > this._game.time.now)
             {
@@ -346,7 +465,7 @@ module Phaser {
         * @param {Number} [duration].
         * @return {Boolean}
         */
-        public justReleased(duration?: number = this.justReleasedRate): bool {
+        public justReleased(duration?: number = this._game.input.justReleasedRate): bool {
 
             if (this.isUp === true && (this.timeUp + duration) > this._game.time.now)
             {
@@ -359,6 +478,10 @@ module Phaser {
 
         }
 
+        /**
+        * Resets the Pointer properties. Called by Input.reset when you perform a State change.
+        * @method reset
+        */
         public reset() {
 
             this.active = false;
@@ -366,6 +489,8 @@ module Phaser {
             this.isDown = false;
             this.isUp = true;
             this.totalTouches = 0;
+            this._holdSent = false;
+            this._history.length = 0;
 
         }
 

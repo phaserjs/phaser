@@ -48,7 +48,7 @@
         marker.x = myGame.math.snapToFloor(myGame.input.worldX, 16);
         marker.y = myGame.math.snapToFloor(myGame.input.worldY, 16);
 
-        if (myGame.input.mouse.isDown)
+        if (myGame.input.mousePointer.isDown)
         {
             map.putTile(marker.x, marker.y, 32);
         }

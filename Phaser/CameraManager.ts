@@ -38,10 +38,12 @@ module Phaser {
          * Local private reference to Game.
          */
         private _game: Game;
+
         /**
-         * Local container for storing camera.
+         * Local container for storing cameras.
          */
         private _cameras: Camera[];
+
         /**
          * Local helper stores index of next created camera.
          */

@@ -25,7 +25,7 @@ module Phaser {
         }
 
         /** 
-        * 
+        * Local private reference to game.
         * @property _game
         * @type Game
         * @private
@@ -39,7 +39,7 @@ module Phaser {
         public disabled: bool = false;
 
         /** 
-        * 
+        * Starts the event listeners running
         * @method start 
         */
         public start() {
@@ -111,10 +111,17 @@ module Phaser {
         }
 
         /** 
-        * 
+        * Stop the event listeners
         * @method stop 
         */
         public stop() {
+
+            if (this._game.device.mspointer == true)
+            {
+                //this._game.stage.canvas.addEventListener('MSPointerDown', (event) => this.onPointerDown(event), false);
+                //this._game.stage.canvas.addEventListener('MSPointerMove', (event) => this.onPointerMove(event), false);
+                //this._game.stage.canvas.addEventListener('MSPointerUp', (event) => this.onPointerUp(event), false);
+            }
 
         }
 

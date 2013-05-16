@@ -16,12 +16,14 @@ module Phaser {
 
         }
 
+        /**
+        * Local private reference to game.
+        * @property _game
+        * @type {Phaser.Game}
+        * @private
+        **/
         private _game: Game;
 
-        private _x: number = 0;
-        private _y: number = 0;
-
-        public button: number;
 
         public static LEFT_BUTTON: number = 0;
         public static MIDDLE_BUTTON: number = 1;
@@ -34,42 +36,14 @@ module Phaser {
         public disabled: bool = false;
 
         /**
-         * @type {Boolean}
-         */
-        public isDown: bool = false;
-
-        /**
-         * @type {Boolean}
-         */
-        public isUp: bool = true;
-
-        /**
-         * @type {Number}
-         */
-        public timeDown: number = 0;
-
-        /**
-         * @type {Number}
-         */
-        public duration: number = 0;
-
-        /**
-         * @type {Number}
-         */
-        public timeUp: number = 0;
-
+        * Starts the event listeners running
+        * @method start
+        */
         public start() {
 
             this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
             this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
             this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);
-
-        }
-
-        public reset() {
-
-            this.isDown = false;
-            this.isUp = true;
 
         }
 
@@ -83,31 +57,9 @@ module Phaser {
                 return;
             }
 
-            this.button = event.button;
+            event['identifier'] = 0;
 
-            this._x = event.clientX - this._game.stage.x;
-            this._y = event.clientY - this._game.stage.y;
-
-            this._game.input.x = this._x * this._game.input.scaleX;
-            this._game.input.y = this._y * this._game.input.scaleY;
-
-            this.isDown = true;
-            this.isUp = false;
-            this.timeDown = this._game.time.now;
-
-            this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this.timeDown);
-
-        }
-
-        public update() {
-
-            //this._game.input.x = this._x * this._game.input.scaleX;
-            //this._game.input.y = this._y * this._game.input.scaleY;
-
-            if (this.isDown)
-            {
-                this.duration = this._game.time.now - this.timeDown;
-            }
+            this._game.input.mousePointer.start(event);
 
         }
 
@@ -121,13 +73,9 @@ module Phaser {
                 return;
             }
 
-            this.button = event.button;
+            event['identifier'] = 0;
 
-            this._x = event.clientX - this._game.stage.x;
-            this._y = event.clientY - this._game.stage.y;
-
-            this._game.input.x = this._x * this._game.input.scaleX;
-            this._game.input.y = this._y * this._game.input.scaleY;
+            this._game.input.mousePointer.move(event);
 
         }
 
@@ -141,19 +89,21 @@ module Phaser {
                 return;
             }
 
-            this.button = event.button;
-            this.isDown = false;
-            this.isUp = true;
-            this.timeUp = this._game.time.now;
-            this.duration = this.timeUp - this.timeDown;
+            event['identifier'] = 0;
 
-            this._x = event.clientX - this._game.stage.x;
-            this._y = event.clientY - this._game.stage.y;
+            this._game.input.mousePointer.stop(event);
 
-            this._game.input.x = this._x * this._game.input.scaleX;
-            this._game.input.y = this._y * this._game.input.scaleY;
+        }
 
-            this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this.timeDown);
+        /**
+        * Stop the event listeners
+        * @method stop
+        */
+        public stop() {
+
+            //this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
+            //this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
+            //this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);
 
         }
 

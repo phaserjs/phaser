@@ -22,44 +22,47 @@ Latest Update
 
 V0.9.6
 
-* Virtually every class now has documentation - if you spot a typo or something missing please shout (thanks pixelpicosean)
-* Grunt file updated to produce the new Special FX JS file (thanks HackManiac)
-* Fixed issue stopping Phaser working on iOS 5 (iPad 1)
-* Created new mobile test folder, updated index.php to use mobile CSS and made some mobile specific tests
-* Fixed a few speed issues on Android 2.x stock browser
-* Moved Camera context save/restore back inside parameter checks (sped-up Samsung S3 stock browser)
-* Fixed bug with StageScaleMode.checkOrientation not respecting the NO_SCALE value
-* Added MSPointer support (thanks Diego Bezerra)
-* Added Camera.clear to perform a clearRect instead of a fillRect if needed (default is false)
-* Swapped Camera.opaque default from true to false re: performance
-* Updated Stage.visibilityChange to avoid pause screen locking in certain situations
-* Added StageScaleMode.enterLandscape and enterPortrait signals for easier device orientation change checks
-* Added StageScaleMode.isPortrait
-* Updated StageScaleMode to check both window.orientationchange and window.resize events
-* Updated RequestAnimationFrame to use performance.now for sub-millisecond precision and to drive the Game.time.update loop
-* Updated RequestAnimationFrame setTimeout to use fixed timestep and re-ordered callback sequence. Android 2/iOS5 performance much better now
-* Removed Stage.ORIENTATION_LANDSCAPE statics because the values should be taken from Stage.scale.isPortrait / isLandscape
-* Removed Stage.maxScaleX/Y and moved them into StageScaleMode.minWidth, minHeight, maxWidth and maxHeight
-* Fixed Stage.scale so that it resizes without needing an orientation change first
-* Added StageScaleMode.startFullscreen(), stopFullScreen() and isFullScreen for making use of the FullScreen API on desktop browsers
-* Swapped Stage.offset from Point to MicroPoint
-* Swapped Stage.bounds from Rectangle to Quad
-* Added State.destroy support. A states destroy function is called when you switch to a new state (thanks JesseFreeman)
-* Added Sprite.fillColor, used in the Sprite render if no image is loaded (set via the property or Sprite.makeGraphic) (thanks JesseFreeman)
-* Renamed Phaser.Finger to Phaser.Pointer
-* Updated all of the Input classes so they now use Input.pointers 1 through 10
-* Updated Touch and MSPointer to allow multi-touch support (when the hardware supports it) and created new tests to show this
-* Added Input.getPointer, Input.getPointerFromIdentifier, Input.totalActivePointers and Input.totalInactivePointers
-* Added Input.startPointer, Input.updatePointer and Input.stopPointer
-* Phaser Input now confirmed working on Windows Phone 8 (Nokia Lumia 920)
-* Added Input.maxPointers to allow you to limit the number of fingers your game will listen for on multi-touch systems
-* Pointer.totalTouches value keeps a running total of the number of times the Pointer has been pressed
-* Added Pointer.pointA and pointB - pointA is placed on touch, pointB is moved on update, useful for tracking distance/direction/gestures
-* Added Game.state - now contains a reference to the current state object (if any was given)
-* Moved the Input start events from the constructors to a single Input.start method
+* Virtually every class now has documentation - if you spot a typo or something missing please shout (thanks pixelpicosean).
+* Grunt file updated to produce the new Special FX JS file (thanks HackManiac).
+* Fixed issue stopping Phaser working on iOS 5 (iPad 1).
+* Created new mobile test folder, updated index.php to use mobile CSS and made some mobile specific tests.
+* Fixed a few speed issues on Android 2.x stock browser.
+* Moved Camera context save/restore back inside parameter checks (sped-up Samsung S3 stock browser).
+* Fixed bug with StageScaleMode.checkOrientation not respecting the NO_SCALE value.
+* Added MSPointer support (thanks Diego Bezerra).
+* Added Camera.clear to perform a clearRect instead of a fillRect if needed (default is false).
+* Swapped Camera.opaque default from true to false re: performance.
+* Updated Stage.visibilityChange to avoid pause screen locking in certain situations.
+* Added StageScaleMode.enterLandscape and enterPortrait signals for easier device orientation change checks.
+* Added StageScaleMode.isPortrait.
+* Updated StageScaleMode to check both window.orientationchange and window.resize events.
+* Updated RequestAnimationFrame to use performance.now for sub-millisecond precision and to drive the Game.time.update loop.
+* Updated RequestAnimationFrame setTimeout to use fixed timestep and re-ordered callback sequence. Android 2/iOS5 performance much better now.
+* Removed Stage.ORIENTATION_LANDSCAPE statics because the values should be taken from Stage.scale.isPortrait / isLandscape.
+* Removed Stage.maxScaleX/Y and moved them into StageScaleMode.minWidth, minHeight, maxWidth and maxHeight.
+* Fixed Stage.scale so that it resizes without needing an orientation change first.
+* Added StageScaleMode.startFullscreen(), stopFullScreen() and isFullScreen for making use of the FullScreen API on desktop browsers.
+* Swapped Stage.offset from Point to MicroPoint.
+* Swapped Stage.bounds from Rectangle to Quad.
+* Added State.destroy support. A states destroy function is called when you switch to a new state (thanks JesseFreeman).
+* Added Sprite.fillColor, used in the Sprite render if no image is loaded (set via the property or Sprite.makeGraphic) (thanks JesseFreeman).
+* Renamed Phaser.Finger to Phaser.Pointer.
+* Updated all of the Input classes so they now use Input.pointers 1 through 10.
+* Updated Touch and MSPointer to allow multi-touch support (when the hardware supports it) and created new tests to show this.
+* Added Input.getPointer, Input.getPointerFromIdentifier, Input.totalActivePointers and Input.totalInactivePointers.
+* Added Input.startPointer, Input.updatePointer and Input.stopPointer.
+* Phaser Input now confirmed working on Windows Phone 8 (Nokia Lumia 920).
+* Added Input.maxPointers to allow you to limit the number of fingers your game will listen for on multi-touch systems.
+* Pointer.totalTouches value keeps a running total of the number of times the Pointer has been pressed.
+* Added Pointer.pointA and pointB - pointA is placed on touch, pointB is moved on update, useful for tracking distance/direction/gestures.
+* Added Game.state - now contains a reference to the current state object (if any was given).
+* Moved the Input start events from the constructors to a single Input.start method.
 * Added Input.disabled boolean to globally turn off all input event processing.
-* Added Input.Mouse.disabled, Input.Touch.disabled, Input.MSPointer.disabled and Input.Keyboard.disabled
+* Added Input.Mouse.disabled, Input.Touch.disabled, Input.MSPointer.disabled and Input.Keyboard.disabled.
 * Added Device.mspointer boolean. true if MSPointer is available on the device.
+* Added Input.onDown, onUp, onTap, onDoubleTap and onHold signals - all fired by the mouse or touch.
+* Added Input.recordPointerHistory to record the x/y coordinates a Pointer tracks through. Also Input.recordRate and Input.recordLimit for fine control.
+* Added Input.multiInputOverride which can be MOUSE_OVERRIDES_TOUCH, TOUCH_OVERRIDES_MOUSE or MOUSE_TOUCH_COMBINE.
 
 
 * TODO: Check that tween pausing works with the new performance.now

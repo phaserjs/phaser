@@ -6769,7 +6769,6 @@ var Phaser;
 * Phaser - Group
 *
 * This class is used for organising, updating and sorting game objects.
-*
 */
 var Phaser;
 (function (Phaser) {
@@ -6867,7 +6866,7 @@ var Phaser;
             configurable: true
         });
         Group.prototype.add = /**
-        * Adds a new <code>Basic</code> subclass (Basic, Basic, Enemy, etc) to the group.
+        * Adds a new <code>Basic</code> subclass (Basic, GameObject, Sprite, etc) to the group.
         * Group will try to replace a null member of the array first.
         * Failing that, Group will add it to the end of the member array,
         * assuming there is room for it, and doubling the size of the array if necessary.
@@ -6876,7 +6875,6 @@ var Phaser;
         * the object will NOT be added to the group!</p>
         *
         * @param {Basic} Object The object you want to add to the group.
-        *
         * @return {Basic} The same <code>Basic</code> object that was passed in.
         */
         function (Object) {
@@ -10729,6 +10727,27 @@ var Phaser;
         */
         function Pointer(game, id) {
             /**
+            * Local private variable to store the status of dispatching a hold event
+            * @property _holdSent
+            * @type {Boolean}
+            * @private
+            */
+            this._holdSent = false;
+            /**
+            * Local private variable storing the short-term history of pointer movements
+            * @property _history
+            * @type {Array}
+            * @private
+            */
+            this._history = [];
+            /**
+            * Local private variable storing the time at which the next history drop should occur
+            * @property _lastDrop
+            * @type {Number}
+            * @private
+            */
+            this._nextDrop = 0;
+            /**
             * A Point object representing the x/y screen coordinates of the Pointer.
             * @property pointA
             * @type {Point}
@@ -10802,13 +10821,19 @@ var Phaser;
             */
             this.y = -1;
             /**
-            * If the Pointer is touching the touchscreen isDown is set to true
+            * If the Pointer is a mouse this is true, otherwise false
+            * @property isMouse
+            * @type {Boolean}
+            **/
+            this.isMouse = false;
+            /**
+            * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
             * @property isDown
             * @type {Boolean}
             **/
             this.isDown = false;
             /**
-            * If the Pointer is not touching the touchscreen isUp is set to true
+            * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
             * @property isUp
             * @type {Boolean}
             **/
@@ -10826,17 +10851,11 @@ var Phaser;
             **/
             this.timeUp = 0;
             /**
-            * The number of milliseconds below which the Pointer is considered justPressed
-            * @property justPressedRate
+            * A timestamp representing when the Pointer was last tapped or clicked
+            * @property previousTapTime
             * @type {Number}
             **/
-            this.justPressedRate = 200;
-            /**
-            * The number of milliseconds below which the Pointer is considered justReleased
-            * @property justReleasedRate
-            * @type {Number}
-            **/
-            this.justReleasedRate = 200;
+            this.previousTapTime = 0;
             /**
             * The total number of times this Pointer has been touched to the touchscreen
             * @property totalTouches
@@ -10849,14 +10868,20 @@ var Phaser;
             this.pointA = new Phaser.Point();
             this.pointB = new Phaser.Point();
             this.circle = new Phaser.Circle(0, 0, 44);
+            if(id == 0) {
+                this.isMouse = true;
+            }
         }
         Object.defineProperty(Pointer.prototype, "duration", {
             get: /**
-            * How long the Pointer has been depressed on the touchscreen.
+            * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
             * @property duration
             * @type {Number}
             **/
             function () {
+                if(this.isUp) {
+                    return -1;
+                }
                 return this._game.time.now - this.timeDown;
             },
             enumerable: true,
@@ -10886,6 +10911,10 @@ var Phaser;
         function (event) {
             this.identifier = event.identifier;
             this.target = event.target;
+            if(event.button) {
+                this.button = event.button;
+            }
+            this._history.length = 0;
             this.move(event);
             this.pointA.setTo(this.x, this.y);
             this.active = true;
@@ -10893,11 +10922,38 @@ var Phaser;
             this.isDown = true;
             this.isUp = false;
             this.timeDown = this._game.time.now;
-            this._game.input.x = this.x * this._game.input.scaleX;
-            this._game.input.y = this.y * this._game.input.scaleY;
-            this._game.input.onDown.dispatch(this);
+            this._holdSent = false;
+            if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
+                this._game.input.x = this.x * this._game.input.scaleX;
+                this._game.input.y = this.y * this._game.input.scaleY;
+                this._game.input.onDown.dispatch(this);
+            }
             this.totalTouches++;
+            if(this.isMouse == false) {
+                this._game.input.currentPointers++;
+            }
             return this;
+        };
+        Pointer.prototype.update = function () {
+            if(this.active) {
+                if(this._holdSent == false && this.duration >= this._game.input.holdRate) {
+                    if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
+                        this._game.input.onHold.dispatch(this);
+                    }
+                    this._holdSent = true;
+                }
+                //  Update the droppings history
+                if(this._game.input.recordPointerHistory && this._game.time.now >= this._nextDrop) {
+                    this._nextDrop = this._game.time.now + this._game.input.recordRate;
+                    this._history.push({
+                        x: this.pointB.x,
+                        y: this.pointB.y
+                    });
+                    if(this._history.length > this._game.input.recordLimit) {
+                        this._history.shift();
+                    }
+                }
+            }
         };
         Pointer.prototype.move = /**
         * Called when the Pointer is moved on the touchscreen
@@ -10905,6 +10961,9 @@ var Phaser;
         * @param {Any} event
         */
         function (event) {
+            if(event.button) {
+                this.button = event.button;
+            }
             this.clientX = event.clientX;
             this.clientY = event.clientY;
             this.pageX = event.pageX;
@@ -10915,9 +10974,10 @@ var Phaser;
             this.y = this.pageY - this._game.stage.offset.y;
             this.pointB.setTo(this.x, this.y);
             this.circle.setTo(this.x, this.y, 44);
-            this._game.input.x = this.x * this._game.input.scaleX;
-            this._game.input.y = this.y * this._game.input.scaleY;
-            //  Droppings history (used for gestures and motion tracking)
+            if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
+                this._game.input.x = this.x * this._game.input.scaleX;
+                this._game.input.y = this.y * this._game.input.scaleY;
+            }
             return this;
         };
         Pointer.prototype.leave = /**
@@ -10935,22 +10995,38 @@ var Phaser;
         * @param {Any} event
         */
         function (event) {
+            console.log('duration', this.duration);
+            if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
+                this._game.input.onUp.dispatch(this);
+                //  Was it a tap?
+                if(this.duration >= 0 && this.duration <= this._game.input.tapRate) {
+                    //  Yes, let's dispatch the signal
+                    this._game.input.onTap.dispatch(this);
+                    //  Was it a double-tap?
+                    if(this.timeUp - this.previousTapTime < this._game.input.doubleTapRate) {
+                        this._game.input.onDoubleTap.dispatch(this);
+                    }
+                    this.previousTapTime = this.timeUp;
+                }
+            }
             this.active = false;
             this.withinGame = false;
             this.isDown = false;
             this.isUp = true;
             this.timeUp = this._game.time.now;
-            this._game.input.onUp.dispatch(this);
+            if(this.isMouse == false) {
+                this._game.input.currentPointers--;
+            }
             return this;
         };
         Pointer.prototype.justPressed = /**
-        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen is less than justPressedRate
+        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate
         * @method justPressed
         * @param {Number} [duration].
         * @return {Boolean}
         */
         function (duration) {
-            if (typeof duration === "undefined") { duration = this.justPressedRate; }
+            if (typeof duration === "undefined") { duration = this._game.input.justPressedRate; }
             if(this.isDown === true && (this.timeDown + duration) > this._game.time.now) {
                 return true;
             } else {
@@ -10964,19 +11040,25 @@ var Phaser;
         * @return {Boolean}
         */
         function (duration) {
-            if (typeof duration === "undefined") { duration = this.justReleasedRate; }
+            if (typeof duration === "undefined") { duration = this._game.input.justReleasedRate; }
             if(this.isUp === true && (this.timeUp + duration) > this._game.time.now) {
                 return true;
             } else {
                 return false;
             }
         };
-        Pointer.prototype.reset = function () {
+        Pointer.prototype.reset = /**
+        * Resets the Pointer properties. Called by Input.reset when you perform a State change.
+        * @method reset
+        */
+        function () {
             this.active = false;
             this.identifier = null;
             this.isDown = false;
             this.isUp = true;
             this.totalTouches = 0;
+            this._holdSent = false;
+            this._history.length = 0;
         };
         Pointer.prototype.renderDebug = /**
         * Renders the Pointer.circle object onto the stage in green if down or red if up.
@@ -11050,7 +11132,7 @@ var Phaser;
             this._game = game;
         }
         MSPointer.prototype.start = /**
-        *
+        * Starts the event listeners running
         * @method start
         */
         function () {
@@ -11107,10 +11189,15 @@ var Phaser;
             this._game.input.stopPointer(event);
         };
         MSPointer.prototype.stop = /**
-        *
+        * Stop the event listeners
         * @method stop
         */
         function () {
+            if(this._game.device.mspointer == true) {
+                //this._game.stage.canvas.addEventListener('MSPointerDown', (event) => this.onPointerDown(event), false);
+                //this._game.stage.canvas.addEventListener('MSPointerMove', (event) => this.onPointerMove(event), false);
+                //this._game.stage.canvas.addEventListener('MSPointerUp', (event) => this.onPointerUp(event), false);
+                            }
         };
         return MSPointer;
     })();
@@ -11174,6 +11261,10 @@ var Phaser;
             */
             this.disabled = false;
             /**
+            * Controls the expected behaviour when using a mouse and touch together on a multi-input device
+            */
+            this.multiInputOverride = Input.MOUSE_TOUCH_COMBINE;
+            /**
             * X coordinate of the most recent Pointer event
             * @type {Number}
             * @private
@@ -11196,22 +11287,69 @@ var Phaser;
             */
             this.scaleY = 1;
             /**
-            *
-            * @type {Number}
-            */
-            this.worldX = 0;
-            /**
-            *
-            * @type {Number}
-            */
-            this.worldY = 0;
-            /**
             * The maximum number of Pointers allowed to be active at any one time.
             * For lots of games it's useful to set this to 1
             * @type {Number}
             */
             this.maxPointers = 10;
+            /**
+            * The current number of active Pointers.
+            * @type {Number}
+            */
+            this.currentPointers = 0;
+            /**
+            * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or click
+            * @property tapRate
+            * @type {Number}
+            **/
+            this.tapRate = 200;
+            /**
+            * The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click
+            * @property doubleTapRate
+            * @type {Number}
+            **/
+            this.doubleTapRate = 250;
+            /**
+            * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
+            * @property holdRate
+            * @type {Number}
+            **/
+            this.holdRate = 2000;
+            /**
+            * The number of milliseconds below which the Pointer is considered justPressed
+            * @property justPressedRate
+            * @type {Number}
+            **/
+            this.justPressedRate = 200;
+            /**
+            * The number of milliseconds below which the Pointer is considered justReleased
+            * @property justReleasedRate
+            * @type {Number}
+            **/
+            this.justReleasedRate = 200;
+            /**
+            * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
+            * The history is cleared each time the Pointer is pressed down.
+            * The history is updated at the rate specified in Input.pollRate
+            * @property recordPointerHistory
+            * @type {Boolean}
+            **/
+            this.recordPointerHistory = true;
+            /**
+            * The rate in milliseconds at which the Pointer objects should update their tracking history
+            * @property recordRate
+            * @type {Number}
+            */
+            this.recordRate = 100;
+            /**
+            * The total number of entries that can be recorded into the Pointer objects tracking history.
+            * The the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
+            * @property recordLimit
+            * @type {Number}
+            */
+            this.recordLimit = 100;
             this._game = game;
+            this.mousePointer = new Phaser.Pointer(this._game, 0);
             this.pointer1 = new Phaser.Pointer(this._game, 1);
             this.pointer2 = new Phaser.Pointer(this._game, 2);
             this.pointer3 = new Phaser.Pointer(this._game, 3);
@@ -11229,7 +11367,14 @@ var Phaser;
             this.gestures = new Phaser.Gestures(this._game);
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
+            this.onTap = new Phaser.Signal();
+            this.onDoubleTap = new Phaser.Signal();
+            this.onHold = new Phaser.Signal();
+            this.currentPointers = 0;
         }
+        Input.MOUSE_OVERRIDES_TOUCH = 0;
+        Input.TOUCH_OVERRIDES_MOUSE = 1;
+        Input.MOUSE_TOUCH_COMBINE = 2;
         Object.defineProperty(Input.prototype, "x", {
             get: /**
             * The screen X coordinate
@@ -11268,12 +11413,19 @@ var Phaser;
             this.gestures.start();
         };
         Input.prototype.update = function () {
-            //this.worldX = this._game.camera.worldView.x + this.x;
-            //this.worldY = this._game.camera.worldView.y + this.y;
-            this.mouse.update();
+            this.mousePointer.update();
+            this.pointer1.update();
+            this.pointer2.update();
+            this.pointer3.update();
+            this.pointer4.update();
+            this.pointer5.update();
+            this.pointer6.update();
+            this.pointer7.update();
+            this.pointer8.update();
+            this.pointer9.update();
+            this.pointer10.update();
         };
         Input.prototype.reset = function () {
-            this.mouse.reset();
             this.keyboard.reset();
             this.pointer1.reset();
             this.pointer2.reset();
@@ -11287,6 +11439,10 @@ var Phaser;
             this.pointer10.reset();
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
+            this.onTap = new Phaser.Signal();
+            this.onDoubleTap = new Phaser.Signal();
+            this.onHold = new Phaser.Signal();
+            this.currentPointers = 0;
         };
         Object.defineProperty(Input.prototype, "totalInactivePointers", {
             get: /**
@@ -11295,41 +11451,41 @@ var Phaser;
             * @return {Number} The number of Pointers currently inactive
             **/
             function () {
-                return 10 - this.totalActivePointers;
+                return 10 - this.currentPointers;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Input.prototype, "totalActivePointers", {
             get: /**
-            * Get the total number of active Pointers
+            * Recalculates the total number of active Pointers
             * @method totalActivePointers
             * @return {Number} The number of Pointers currently active
             **/
             function () {
-                var result = 0;
+                this.currentPointers = 0;
                 if(this.pointer1.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer2.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer3.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer4.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer5.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer6.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer7.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer8.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer9.active == true) {
-                    result++;
+                    this.currentPointers++;
                 } else if(this.pointer10.active == true) {
-                    result++;
+                    this.currentPointers++;
                 }
-                return result;
+                return this.currentPointers;
             },
             enumerable: true,
             configurable: true
@@ -11518,7 +11674,7 @@ var Phaser;
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
             this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
-            this._game.stage.context.fillText('World X: ' + this.worldX + ' World Y: ' + this.worldY, x, y + 28);
+            this._game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
             this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
         };
         return Input;
@@ -11799,39 +11955,21 @@ var Phaser;
 (function (Phaser) {
     var Mouse = (function () {
         function Mouse(game) {
-            this._x = 0;
-            this._y = 0;
             /**
             * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
             * @type {Boolean}
             */
             this.disabled = false;
-            /**
-            * @type {Boolean}
-            */
-            this.isDown = false;
-            /**
-            * @type {Boolean}
-            */
-            this.isUp = true;
-            /**
-            * @type {Number}
-            */
-            this.timeDown = 0;
-            /**
-            * @type {Number}
-            */
-            this.duration = 0;
-            /**
-            * @type {Number}
-            */
-            this.timeUp = 0;
             this._game = game;
         }
         Mouse.LEFT_BUTTON = 0;
         Mouse.MIDDLE_BUTTON = 1;
         Mouse.RIGHT_BUTTON = 2;
-        Mouse.prototype.start = function () {
+        Mouse.prototype.start = /**
+        * Starts the event listeners running
+        * @method start
+        */
+        function () {
             var _this = this;
             this._game.stage.canvas.addEventListener('mousedown', function (event) {
                 return _this.onMouseDown(event);
@@ -11843,10 +11981,6 @@ var Phaser;
                 return _this.onMouseUp(event);
             }, true);
         };
-        Mouse.prototype.reset = function () {
-            this.isDown = false;
-            this.isUp = true;
-        };
         Mouse.prototype.onMouseDown = /**
         * @param {MouseEvent} event
         */
@@ -11854,22 +11988,8 @@ var Phaser;
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
-            this.button = event.button;
-            this._x = event.clientX - this._game.stage.x;
-            this._y = event.clientY - this._game.stage.y;
-            this._game.input.x = this._x * this._game.input.scaleX;
-            this._game.input.y = this._y * this._game.input.scaleY;
-            this.isDown = true;
-            this.isUp = false;
-            this.timeDown = this._game.time.now;
-            this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this.timeDown);
-        };
-        Mouse.prototype.update = function () {
-            //this._game.input.x = this._x * this._game.input.scaleX;
-            //this._game.input.y = this._y * this._game.input.scaleY;
-            if(this.isDown) {
-                this.duration = this._game.time.now - this.timeDown;
-            }
+            event['identifier'] = 0;
+            this._game.input.mousePointer.start(event);
         };
         Mouse.prototype.onMouseMove = /**
         * @param {MouseEvent} event
@@ -11878,11 +11998,8 @@ var Phaser;
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
-            this.button = event.button;
-            this._x = event.clientX - this._game.stage.x;
-            this._y = event.clientY - this._game.stage.y;
-            this._game.input.x = this._x * this._game.input.scaleX;
-            this._game.input.y = this._y * this._game.input.scaleY;
+            event['identifier'] = 0;
+            this._game.input.mousePointer.move(event);
         };
         Mouse.prototype.onMouseUp = /**
         * @param {MouseEvent} event
@@ -11891,17 +12008,18 @@ var Phaser;
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
-            this.button = event.button;
-            this.isDown = false;
-            this.isUp = true;
-            this.timeUp = this._game.time.now;
-            this.duration = this.timeUp - this.timeDown;
-            this._x = event.clientX - this._game.stage.x;
-            this._y = event.clientY - this._game.stage.y;
-            this._game.input.x = this._x * this._game.input.scaleX;
-            this._game.input.y = this._y * this._game.input.scaleY;
-            this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this.timeDown);
+            event['identifier'] = 0;
+            this._game.input.mousePointer.stop(event);
         };
+        Mouse.prototype.stop = /**
+        * Stop the event listeners
+        * @method stop
+        */
+        function () {
+            //this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
+            //this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
+            //this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);
+                    };
         return Mouse;
     })();
     Phaser.Mouse = Mouse;    
@@ -11934,32 +12052,34 @@ var Phaser;
             this._game = game;
         }
         Touch.prototype.start = /**
-        *
+        * Starts the event listeners running
         * @method start
         */
         function () {
             var _this = this;
-            this._game.stage.canvas.addEventListener('touchstart', function (event) {
-                return _this.onTouchStart(event);
-            }, false);
-            this._game.stage.canvas.addEventListener('touchmove', function (event) {
-                return _this.onTouchMove(event);
-            }, false);
-            this._game.stage.canvas.addEventListener('touchend', function (event) {
-                return _this.onTouchEnd(event);
-            }, false);
-            this._game.stage.canvas.addEventListener('touchenter', function (event) {
-                return _this.onTouchEnter(event);
-            }, false);
-            this._game.stage.canvas.addEventListener('touchleave', function (event) {
-                return _this.onTouchLeave(event);
-            }, false);
-            this._game.stage.canvas.addEventListener('touchcancel', function (event) {
-                return _this.onTouchCancel(event);
-            }, false);
-            document.addEventListener('touchmove', function (event) {
-                return _this.consumeTouchMove(event);
-            }, false);
+            if(this._game.device.touch) {
+                this._game.stage.canvas.addEventListener('touchstart', function (event) {
+                    return _this.onTouchStart(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchmove', function (event) {
+                    return _this.onTouchMove(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchend', function (event) {
+                    return _this.onTouchEnd(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchenter', function (event) {
+                    return _this.onTouchEnter(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchleave', function (event) {
+                    return _this.onTouchLeave(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchcancel', function (event) {
+                    return _this.onTouchCancel(event);
+                }, false);
+                document.addEventListener('touchmove', function (event) {
+                    return _this.consumeTouchMove(event);
+                }, false);
+            }
         };
         Touch.prototype.consumeTouchMove = /**
         * Prevent iOS bounce-back (doesn't work?)
@@ -12056,17 +12176,19 @@ var Phaser;
             }
         };
         Touch.prototype.stop = /**
-        *
+        * Stop the event listeners
         * @method stop
         */
         function () {
-            //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
-            //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
-            //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
-            //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
-            //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
-            //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
-                    };
+            if(this._game.device.touch) {
+                //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
+                //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
+                //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
+                //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
+                //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
+                //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+                            }
+        };
         return Touch;
     })();
     Phaser.Touch = Touch;    
@@ -13666,7 +13788,7 @@ var Phaser;
         };
         Tilemap.prototype.getTileFromInputXY = function (layer) {
             if (typeof layer === "undefined") { layer = 0; }
-            return this.tiles[this.layers[layer].getTileFromWorldXY(this._game.input.worldX, this._game.input.worldY)];
+            return this.tiles[this.layers[layer].getTileFromWorldXY(this._game.input.getWorldX(), this._game.input.getWorldY())];
         };
         Tilemap.prototype.getTileOverlaps = /**
         * Get tiles overlaps the given object.
