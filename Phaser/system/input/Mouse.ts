@@ -13,7 +13,6 @@ module Phaser {
         constructor(game: Game) {
 
             this._game = game;
-            this.start();
 
         }
 
@@ -29,21 +28,31 @@ module Phaser {
         public static RIGHT_BUTTON: number = 2;
 
         /**
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool = false;
+
+        /**
          * @type {Boolean}
          */
         public isDown: bool = false;
+
         /**
          * @type {Boolean}
          */
         public isUp: bool = true;
+
         /**
          * @type {Number}
          */
         public timeDown: number = 0;
+
         /**
          * @type {Number}
          */
         public duration: number = 0;
+
         /**
          * @type {Number}
          */
@@ -68,6 +77,11 @@ module Phaser {
          * @param {MouseEvent} event
          */
         public onMouseDown(event: MouseEvent) {
+
+            if (this._game.input.disabled || this.disabled)
+            {
+                return;
+            }
 
             this.button = event.button;
 
@@ -102,6 +116,11 @@ module Phaser {
          */
         public onMouseMove(event: MouseEvent) {
 
+            if (this._game.input.disabled || this.disabled)
+            {
+                return;
+            }
+
             this.button = event.button;
 
             this._x = event.clientX - this._game.stage.x;
@@ -116,6 +135,11 @@ module Phaser {
          * @param {MouseEvent} event
          */
         public onMouseUp(event: MouseEvent) {
+
+            if (this._game.input.disabled || this.disabled)
+            {
+                return;
+            }
 
             this.button = event.button;
             this.isDown = false;

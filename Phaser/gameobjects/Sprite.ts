@@ -47,6 +47,7 @@ module Phaser {
          * Texture of this sprite to be rendered.
          */
         private _texture;
+
         /**
          * Texture of this sprite is DynamicTexture? (default to false)
          * @type {boolean}
@@ -74,16 +75,25 @@ module Phaser {
          * @type {boolean}
          */
         public renderDebug: bool = false;
+
+        /**
+         * Color of the Sprite when no image is present. Format is a css color string.
+         * @type {string}
+         */
+        public fillColor: string = 'rgb(255,255,255)';
+
         /**
          * Color of bound when render debug. (see renderDebug) Format is a css color string.
          * @type {string}
          */
         public renderDebugColor: string = 'rgba(0,255,0,0.5)';
+
         /**
          * Color of points when render debug. (see renderDebug) Format is a css color string.
          * @type {string}
          */
         public renderDebugPointColor: string = 'rgba(255,255,255,1)';
+
         /**
          * Flip the graphic vertically? (default to false)
          * @type {boolean}
@@ -143,12 +153,12 @@ module Phaser {
          * @param [color] {number} specifies the color of the generated block. (format is 0xAARRGGBB)
          * @return {Sprite} Sprite instance itself.
          */
-        public makeGraphic(width: number, height: number, color: number = 0xffffffff): Sprite {
+        public makeGraphic(width: number, height: number, color: string = 'rgb(255,255,255)'): Sprite {
 
             this._texture = null;
             this.width = width;
             this.height = height;
-
+            this.fillColor = color;
             this._dynamicTexture = false;
 
             return this;
@@ -178,7 +188,7 @@ module Phaser {
         }
 
         /**
-         * Automatically called after update() by the game loop, this function just update animations.
+         * Automatically called after update() by the game loop, this function just updates animations.
          */
         public postUpdate() {
 
@@ -353,7 +363,7 @@ module Phaser {
             }
             else
             {
-                this._game.stage.context.fillStyle = 'rgb(255,255,255)';
+                this._game.stage.context.fillStyle = this.fillColor;
                 this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
 

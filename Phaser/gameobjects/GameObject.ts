@@ -16,8 +16,7 @@ module Phaser {
         /**
          * GameObject constructor
          *
-         * Create a new <code>GameObject</code> object at specific position with
-         * specific width and height.
+         * Create a new <code>GameObject</code> object at specific position with specific width and height.
          *
          * @param [x] {number} The x position of the object.
          * @param [y] {number} The y position of the object.
@@ -78,52 +77,62 @@ module Phaser {
          * @type {number}
          */
         public static ALIGN_TOP_LEFT: number = 0;
+
         /**
          * Pivot position enum: at the top-center corner.
          * @type {number}
          */
         public static ALIGN_TOP_CENTER: number = 1;
+
         /**
          * Pivot position enum: at the top-right corner.
          * @type {number}
          */
         public static ALIGN_TOP_RIGHT: number = 2;
+
         /**
          * Pivot position enum: at the center-left corner.
          * @type {number}
          */
         public static ALIGN_CENTER_LEFT: number = 3;
+
         /**
          * Pivot position enum: at the center corner.
          * @type {number}
          */
         public static ALIGN_CENTER: number = 4;
+
         /**
          * Pivot position enum: at the center-right corner.
          * @type {number}
          */
         public static ALIGN_CENTER_RIGHT: number = 5;
+
         /**
          * Pivot position enum: at the bottom-left corner.
          * @type {number}
          */
         public static ALIGN_BOTTOM_LEFT: number = 6;
+
         /**
          * Pivot position enum: at the bottom-center corner.
          * @type {number}
          */
         public static ALIGN_BOTTOM_CENTER: number = 7;
+
         /**
          * Pivot position enum: at the bottom-right corner.
          * @type {number}
          */
         public static ALIGN_BOTTOM_RIGHT: number = 8;
 
+
         /**
          * Enum value for outOfBoundsAction. Stop the object when is out of world bounds.
          * @type {number}
          */
         public static OUT_OF_BOUNDS_STOP: number = 0;
+
         /**
          * Enum value for outOfBoundsAction. Kill the object when is out of world bounds.
          * @type {number}
@@ -137,49 +146,58 @@ module Phaser {
         public _point: MicroPoint;
 
         public cameraBlacklist: number[];
+
         /**
          * Rectangle container of this object.
          * @type {Rectangle}
          */
         public bounds: Rectangle;
+
         /**
          * Bound of world.
          * @type {Quad}
          */
         public worldBounds: Quad;
+
         /**
          * What action will be performed when object is out of bounds.
          * This will default to GameObject.OUT_OF_BOUNDS_STOP.
          * @type {number}
          */
         public outOfBoundsAction: number = 0;
+
         /**
          * At which point the graphic of this object will align to.
          * Align of the object will default to GameObject.ALIGN_TOP_LEFT.
          * @type {number}
          */
         public align: number;
+
         /**
-         * Oorientation of the object.
+         * Orientation of the object.
          * @type {number}
          */
         public facing: number;
+
         /**
          * Set alpha to a number between 0 and 1 to change the opacity.
          * @type {number}
          */
         public alpha: number;
+
         /**
          * Scale factor of the object.
          * @type {MicroPoint}
          */
         public scale: MicroPoint;
+
         /**
          * Origin is the anchor point that the object will rotate by.
          * The origin will default to its center.
          * @type {MicroPoint}
          */
         public origin: MicroPoint;
+
         /**
          * Z-order value of the object.
          */
@@ -218,54 +236,64 @@ module Phaser {
          * @type {MicroPoint}
          */
         public velocity: MicroPoint;
+
         /**
          * The virtual mass of the object.
          * @type {number}
          */
         public mass: number;
+
         /**
          * The bounciness of the object.
          * @type {number}
          */
         public elasticity: number;
+
         /**
          * How fast the speed of this object is changing.
          * @type {number}
          */
         public acceleration: MicroPoint;
+
         /**
          * This isn't drag exactly, more like deceleration that is only applied
          * when acceleration is not affecting the sprite.
          * @type {MicroPoint}
          */
         public drag: MicroPoint;
+
         /**
          * It will cap the speed automatically if you use the acceleration
          * to change its velocity.
          * @type {MicroPoint}
          */
         public maxVelocity: MicroPoint;
+
         /**
          * How fast this object is rotating.
          * @type {number}
          */
         public angularVelocity: number;
+
         /**
          * How fast angularVelocity of this object is changing.
          * @type {number}
          */
         public angularAcceleration: number;
+
         /**
          * Deacceleration of angularVelocity will be applied when it's rotating.
          * @type {number}
          */
         public angularDrag: number;
+
         /**
          * It will cap the rotate speed automatically if you use the angularAcceleration
          * to change its angularVelocity.
          * @type {number}
          */
         public maxAngular: number;
+
         /**
          * A point that can store numbers from 0 to 1 (for X and Y independently)
          * which governs how much this object is affected by the camera .
@@ -278,27 +306,32 @@ module Phaser {
          * @type {number}
          */
         public health: number;
+
         /**
          * Set this to false if you want to skip the automatic motion/movement stuff
          * (see updateMotion()).
          * @type {boolean}
          */
         public moves: bool = true;
+
         /**
          * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts.
          * @type {number}
          */
         public touching: number;
+
         /**
          * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step.
          * @type {number}
          */
         public wasTouching: number;
+
         /**
          * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions.
          * @type {number}
          */
         public allowCollisions: number;
+
         /**
          * Important variable for collision processing.
          * @type {MicroPoint}
@@ -665,7 +698,7 @@ module Phaser {
 
         /**
         * Handy for checking if this object is touching a particular surface.
-        * For slightly better performance you can just &amp; the value directly numbero <code>touching</code>.
+        * For slightly better performance you can just &amp; the value directly into <code>touching</code>.
         * However, this method is good for readability and accessibility.
         *
         * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
@@ -685,7 +718,7 @@ module Phaser {
         */
 
         /**
-        * Handy function for checking if this object is just landed on a particular surface.
+        * Handy function for checking if this object just landed on a particular surface.
         *
         * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
@@ -730,7 +763,7 @@ module Phaser {
 
         /**
         * If you do not wish this object to be visible to a specific camera, pass the camera here.
-
+        *
         * @param camera {Camera} The specific camera.
         */
         public hideFromCamera(camera: Camera) {
@@ -758,7 +791,7 @@ module Phaser {
         }
 
         /**
-         * This will make the object not visible to any cameras.
+         * This clears the camera black list, making the GameObject visible to all cameras.
          */
         public clearCameraList() {
 

@@ -114,6 +114,12 @@ module Phaser {
         public touch: bool = false;
 
         /**
+         * Is mspointer available?
+         * @type {boolean}
+         */
+        public mspointer: bool = false;
+
+        /**
          * Is css3D available?
          * @type {boolean}
          */
@@ -313,6 +319,11 @@ module Phaser {
                 this.touch = true;
             }
 
+            if (window.navigator.msPointerEnabled)
+            {
+                this.mspointer = true;
+            }
+
         }
 
         /**
@@ -502,6 +513,7 @@ module Phaser {
             output = output.concat('WebGL: ' + this.webGL + '\n');
             output = output.concat('Worker: ' + this.worker + '\n');
             output = output.concat('Touch: ' + this.touch + '\n');
+            output = output.concat('MSPointer: ' + this.mspointer + '\n');
             output = output.concat('CSS 3D: ' + this.css3D + '\n');
 
             output = output.concat('\n');

@@ -43,86 +43,106 @@ module Phaser {
          * @type {Camera}
          */
         public camera: Camera;
+
         /**
          * Reference to the assets cache.
          * @type {Cache}
          */
         public cache: Cache;
+
         /**
          * Reference to the collision helper.
          * @type {Collision}
          */
         public collision: Collision;
+
         /**
          * Reference to the input manager
          * @type {Input}
          */
         public input: Input;
+
         /**
          * Reference to the assets loader.
          * @type {Loader}
          */
         public loader: Loader;
+
         /**
          * Reference to the math helper.
          * @type {GameMath}
          */
         public math: GameMath;
+
         /**
          * Reference to the motion helper.
          * @type {Motion}
          */
         public motion: Motion;
+
         /**
          * Reference to the sound manager.
          * @type {SoundManager}
          */
         public sound: SoundManager;
+
         /**
          * Reference to the stage.
          * @type {Stage}
          */
         public stage: Stage;
+
         /**
          * Reference to game clock.
          * @type {Time}
          */
         public time: Time;
+
         /**
          * Reference to the tween manager.
          * @type {TweenManager}
          */
         public tweens: TweenManager;
+
         /**
          * Reference to the world.
          * @type {World}
          */
         public world: World;
 
+        //  Override these in your own States
 
-        //  Overload these in your own States
         /**
          * Override this method to add some load operations.
          * If you need to use the loader, you may need to use them here.
          */
         public init() { }
+
         /**
          * This method is called after the game engine successfully switches states.
          * Feel free to add any setup code here.(Do not load anything here, override init() instead)
          */
         public create() { }
+
         /**
          * Put update logic here.
          */
         public update() { }
+
         /**
          * Put render operations here.
          */
         public render() { }
+
         /**
          * This method will be called when game paused.
          */
         public paused() { }
+
+        /**
+         * This method will be called when the state is destroyed
+         */
+        public destroy() { }
 
         //  Handy Proxy methods
 

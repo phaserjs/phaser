@@ -3,7 +3,7 @@
 (function () {
 
     //  Here we create a quite tiny game (320x240 in size)
-    var myGame = new Phaser.Game(this, 'game', 320, 240, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 320, 240, init, create, update, render);
 
     function init() {
 
@@ -28,8 +28,6 @@
         {
             myGame.createSprite(myGame.world.randomX, myGame.world.randomY, 'melon');
         }
-
-        myGame.onRenderCallback = render;
 
     }
 

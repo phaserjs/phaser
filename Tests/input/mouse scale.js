@@ -1,7 +1,7 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
     //  Here we create a quite tiny game (320x240 in size)
-    var myGame = new Phaser.Game(this, 'game', 320, 240, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 320, 240, init, create, update, render);
     function init() {
         //  This sets a limit on the up-scale
         myGame.stage.scale.maxWidth = 640;
@@ -16,7 +16,6 @@
         for(var i = 0; i < 1000; i++) {
             myGame.createSprite(myGame.world.randomX, myGame.world.randomY, 'melon');
         }
-        myGame.onRenderCallback = render;
     }
     function update() {
         if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {

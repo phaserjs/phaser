@@ -1,6 +1,6 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var myGame = new Phaser.Game(this, 'game', 320, 460, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 320, 460, init, create, update, render);
     function init() {
         myGame.loader.addImageFile('bunny', 'assets/sprites/wabbit.png');
         myGame.loader.load();
@@ -15,12 +15,11 @@
         minY = 0;
         maxX = myGame.stage.width - 26;
         maxY = myGame.stage.height - 37;
-        myGame.input.touch.touchDown.add(addBunnies, this);
+        myGame.input.onDown.add(addBunnies, this);
         //  This will really help on slow Android phones
         myGame.framerate = 30;
         //  Make sure the camera doesn't clip anything
         myGame.camera.disableClipping = true;
-        myGame.onRenderCallback = render;
         myGame.stage.context.fillStyle = 'rgb(255,0,0)';
         myGame.stage.context.font = '20px Arial';
         addBunnies();

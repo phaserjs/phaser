@@ -134,8 +134,16 @@
     <TypeScriptCompile Include="system\screens\PauseScreen.ts" />
     <TypeScriptCompile Include="system\screens\BootScreen.ts" />
     <TypeScriptCompile Include="system\input\MSPointer.ts" />
+    <TypeScriptCompile Include="system\input\Gestures.ts" />
+    <Content Include="system\input\Gestures.js">
+      <DependentUpon>Gestures.ts</DependentUpon>
+    </Content>
     <Content Include="system\input\MSPointer.js">
       <DependentUpon>MSPointer.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="system\input\Pointer.ts" />
+    <Content Include="system\input\Pointer.js">
+      <DependentUpon>Pointer.ts</DependentUpon>
     </Content>
     <Content Include="system\screens\BootScreen.js">
       <DependentUpon>BootScreen.ts</DependentUpon>
@@ -233,9 +241,6 @@
     <Content Include="system\easing\Sinusoidal.js">
       <DependentUpon>Sinusoidal.ts</DependentUpon>
     </Content>
-    <Content Include="system\input\Finger.js">
-      <DependentUpon>Finger.ts</DependentUpon>
-    </Content>
     <Content Include="system\input\Input.js">
       <DependentUpon>Input.ts</DependentUpon>
     </Content>
@@ -252,7 +257,6 @@
     <TypeScriptCompile Include="system\input\Mouse.ts" />
     <TypeScriptCompile Include="system\input\Keyboard.ts" />
     <TypeScriptCompile Include="system\input\Input.ts" />
-    <TypeScriptCompile Include="system\input\Finger.ts" />
     <TypeScriptCompile Include="system\easing\Sinusoidal.ts" />
     <TypeScriptCompile Include="system\easing\Quintic.ts" />
     <TypeScriptCompile Include="system\easing\Quartic.ts" />

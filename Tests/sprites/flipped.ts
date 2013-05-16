@@ -7,12 +7,14 @@
     function init() {
 
         myGame.loader.addTextureAtlas('bot', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
+        myGame.loader.addTextureAtlas('atlas', 'assets/pics/texturepacker_test.png', 'assets/pics/texturepacker_test.json');
         myGame.loader.load();
 
     }
 
     var bot: Phaser.Sprite;
     var bot2: Phaser.Sprite;
+    var car: Phaser.Sprite;
 
     function create() {
 
@@ -27,6 +29,11 @@
         bot2.animations.add('run');
         bot2.animations.play('run', 10, true);
         bot2.velocity.x = -150;
+
+        //  Flip a static sprite (not an animation)
+        car = myGame.createSprite(100, 400, 'atlas');
+        car.frameName = 'supercars_parsec.png';
+        car.flipped = true;
 
     }
 

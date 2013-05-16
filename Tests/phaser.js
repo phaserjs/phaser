@@ -463,8 +463,7 @@ var Phaser;
         /**
         * GameObject constructor
         *
-        * Create a new <code>GameObject</code> object at specific position with
-        * specific width and height.
+        * Create a new <code>GameObject</code> object at specific position with specific width and height.
         *
         * @param [x] {number} The x position of the object.
         * @param [y] {number} The y position of the object.
@@ -818,7 +817,7 @@ var Phaser;
         };
         GameObject.prototype.isTouching = /**
         * Handy for checking if this object is touching a particular surface.
-        * For slightly better performance you can just &amp; the value directly numbero <code>touching</code>.
+        * For slightly better performance you can just &amp; the value directly into <code>touching</code>.
         * However, this method is good for readability and accessibility.
         *
         * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
@@ -836,7 +835,7 @@ var Phaser;
         * @return {boolean} Whether the object just landed on (any of) the specified surface(s) this frame.
         */
         /**
-        * Handy function for checking if this object is just landed on a particular surface.
+        * Handy function for checking if this object just landed on a particular surface.
         *
         * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
@@ -872,7 +871,7 @@ var Phaser;
         };
         GameObject.prototype.hideFromCamera = /**
         * If you do not wish this object to be visible to a specific camera, pass the camera here.
-        
+        *
         * @param camera {Camera} The specific camera.
         */
         function (camera) {
@@ -891,7 +890,7 @@ var Phaser;
             }
         };
         GameObject.prototype.clearCameraList = /**
-        * This will make the object not visible to any cameras.
+        * This clears the camera black list, making the GameObject visible to all cameras.
         */
         function () {
             this.cameraBlacklist.length = 0;
@@ -1489,6 +1488,11 @@ var Phaser;
             */
             this.renderDebug = false;
             /**
+            * Color of the Sprite when no image is present. Format is a css color string.
+            * @type {string}
+            */
+            this.fillColor = 'rgb(255,255,255)';
+            /**
             * Color of bound when render debug. (see renderDebug) Format is a css color string.
             * @type {string}
             */
@@ -1551,10 +1555,11 @@ var Phaser;
         * @return {Sprite} Sprite instance itself.
         */
         function (width, height, color) {
-            if (typeof color === "undefined") { color = 0xffffffff; }
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             this._texture = null;
             this.width = width;
             this.height = height;
+            this.fillColor = color;
             this._dynamicTexture = false;
             return this;
         };
@@ -1575,7 +1580,7 @@ var Phaser;
             }
         };
         Sprite.prototype.postUpdate = /**
-        * Automatically called after update() by the game loop, this function just update animations.
+        * Automatically called after update() by the game loop, this function just updates animations.
         */
         function () {
             this.animations.update();
@@ -1706,7 +1711,7 @@ var Phaser;
                     //	Destination Height (always same as Source Height unless scaled)
                                     }
             } else {
-                this._game.stage.context.fillStyle = 'rgb(255,255,255)';
+                this._game.stage.context.fillStyle = this.fillColor;
                 this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
             if(this.flipped === true || this.rotation !== 0 || this.rotationOffset !== 0) {
@@ -8720,11 +8725,12 @@ var Phaser;
             }
             //  Consume default actions on the canvas
             this.canvas.style.msTouchAction = 'none';
+            this.canvas.style['ms-touch-action'] = 'none';
             this.canvas.style['touch-action'] = 'none';
             this.canvas.style.backgroundColor = 'rgb(0,0,0)';
             this.context = this.canvas.getContext('2d');
             this.offset = this.getOffset(this.canvas);
-            this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, width, height);
+            this.bounds = new Phaser.Quad(this.offset.x, this.offset.y, width, height);
             this.aspectRatio = width / height;
             this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
             this.scale = new Phaser.StageScaleMode(this._game);
@@ -8789,7 +8795,7 @@ var Phaser;
             var clientLeft = element.clientLeft || document.body.clientLeft || 0;
             var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
             var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
-            return new Phaser.Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+            return new Phaser.MicroPoint(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
         };
         Stage.prototype.saveCanvasValues = /**
         * Save current canvas properties (strokeStyle, lineWidth and fillStyle) for later using.
@@ -10039,6 +10045,11 @@ var Phaser;
             */
             this.touch = false;
             /**
+            * Is mspointer available?
+            * @type {boolean}
+            */
+            this.mspointer = false;
+            /**
             * Is css3D available?
             * @type {boolean}
             */
@@ -10195,6 +10206,9 @@ var Phaser;
             if('ontouchstart' in document.documentElement || window.navigator.msPointerEnabled) {
                 this.touch = true;
             }
+            if(window.navigator.msPointerEnabled) {
+                this.mspointer = true;
+            }
         };
         Device.prototype._checkBrowser = /**
         * Check what browser is game running in.
@@ -10330,6 +10344,7 @@ var Phaser;
             output = output.concat('WebGL: ' + this.webGL + '\n');
             output = output.concat('Worker: ' + this.worker + '\n');
             output = output.concat('Touch: ' + this.touch + '\n');
+            output = output.concat('MSPointer: ' + this.mspointer + '\n');
             output = output.concat('CSS 3D: ' + this.css3D + '\n');
             output = output.concat('\n');
             output = output.concat('Audio\n');
@@ -10700,27 +10715,34 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
-* Phaser - Finger
+* Phaser - Pointer
 *
-* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
+* A Pointer object is used by the Touch and MSPoint managers and represents a single finger on the touch screen.
 */
 var Phaser;
 (function (Phaser) {
-    var Finger = (function () {
+    var Pointer = (function () {
         /**
         * Constructor
         * @param {Phaser.Game} game.
-        * @return {Phaser.Finger} This object.
+        * @return {Phaser.Pointer} This object.
         */
-        function Finger(game) {
+        function Pointer(game, id) {
             /**
-            *
-            * @property point
+            * A Point object representing the x/y screen coordinates of the Pointer.
+            * @property pointA
             * @type {Point}
             **/
-            this.point = null;
+            this.pointA = null;
             /**
-            *
+            * A Point object representing the x/y screen coordinates of the Pointer.
+            * @property pointB
+            * @type {Point}
+            **/
+            this.pointB = null;
+            /**
+            * A Circle object centered on the x/y screen coordinates of the Pointer.
+            * Default size of 44px (Apple's recommended "finger tip" size)
             * @property circle
             * @type {Circle}
             **/
@@ -10737,14 +10759,12 @@ var Phaser;
             * @type {Number}
             */
             this.clientX = -1;
-            //
             /**
             * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
             * @property clientY
             * @type {Number}
             */
             this.clientY = -1;
-            //
             /**
             * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
             * @property pageX
@@ -10782,74 +10802,105 @@ var Phaser;
             */
             this.y = -1;
             /**
-            *
+            * If the Pointer is touching the touchscreen isDown is set to true
             * @property isDown
             * @type {Boolean}
             **/
             this.isDown = false;
             /**
-            *
+            * If the Pointer is not touching the touchscreen isUp is set to true
             * @property isUp
             * @type {Boolean}
             **/
-            this.isUp = false;
+            this.isUp = true;
             /**
-            *
+            * A timestamp representing when the Pointer first touched the touchscreen.
             * @property timeDown
             * @type {Number}
             **/
             this.timeDown = 0;
             /**
-            *
-            * @property duration
-            * @type {Number}
-            **/
-            this.duration = 0;
-            /**
-            *
+            * A timestamp representing when the Pointer left the touchscreen.
             * @property timeUp
             * @type {Number}
             **/
             this.timeUp = 0;
             /**
-            *
+            * The number of milliseconds below which the Pointer is considered justPressed
             * @property justPressedRate
             * @type {Number}
             **/
             this.justPressedRate = 200;
             /**
-            *
+            * The number of milliseconds below which the Pointer is considered justReleased
             * @property justReleasedRate
             * @type {Number}
             **/
             this.justReleasedRate = 200;
+            /**
+            * The total number of times this Pointer has been touched to the touchscreen
+            * @property totalTouches
+            * @type {Number}
+            **/
+            this.totalTouches = 0;
             this._game = game;
+            this.id = id;
             this.active = false;
+            this.pointA = new Phaser.Point();
+            this.pointB = new Phaser.Point();
+            this.circle = new Phaser.Circle(0, 0, 44);
         }
-        Finger.prototype.start = /**
-        *
+        Object.defineProperty(Pointer.prototype, "duration", {
+            get: /**
+            * How long the Pointer has been depressed on the touchscreen.
+            * @property duration
+            * @type {Number}
+            **/
+            function () {
+                return this._game.time.now - this.timeDown;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Pointer.prototype.getWorldX = /**
+        * Gets the X value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        function (camera) {
+            if (typeof camera === "undefined") { camera = this._game.camera; }
+            return camera.worldView.x + this.x;
+        };
+        Pointer.prototype.getWorldY = /**
+        * Gets the Y value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        function (camera) {
+            if (typeof camera === "undefined") { camera = this._game.camera; }
+            return camera.worldView.y + this.y;
+        };
+        Pointer.prototype.start = /**
+        * Called when the Pointer is pressed onto the touchscreen
         * @method start
         * @param {Any} event
         */
         function (event) {
             this.identifier = event.identifier;
             this.target = event.target;
-            //  populate geom objects
-            if(this.point === null) {
-                this.point = new Phaser.Point();
-            }
-            if(this.circle === null) {
-                this.circle = new Phaser.Circle(0, 0, 44);
-            }
             this.move(event);
+            this.pointA.setTo(this.x, this.y);
             this.active = true;
             this.withinGame = true;
             this.isDown = true;
             this.isUp = false;
             this.timeDown = this._game.time.now;
+            this._game.input.x = this.x * this._game.input.scaleX;
+            this._game.input.y = this.y * this._game.input.scaleY;
+            this._game.input.onDown.dispatch(this);
+            this.totalTouches++;
+            return this;
         };
-        Finger.prototype.move = /**
-        *
+        Pointer.prototype.move = /**
+        * Called when the Pointer is moved on the touchscreen
         * @method move
         * @param {Any} event
         */
@@ -10862,13 +10913,15 @@ var Phaser;
             this.screenY = event.screenY;
             this.x = this.pageX - this._game.stage.offset.x;
             this.y = this.pageY - this._game.stage.offset.y;
-            this.point.setTo(this.x, this.y);
+            this.pointB.setTo(this.x, this.y);
             this.circle.setTo(this.x, this.y, 44);
+            this._game.input.x = this.x * this._game.input.scaleX;
+            this._game.input.y = this.y * this._game.input.scaleY;
             //  Droppings history (used for gestures and motion tracking)
-            this.duration = this._game.time.now - this.timeDown;
+            return this;
         };
-        Finger.prototype.leave = /**
-        *
+        Pointer.prototype.leave = /**
+        * Called when the Pointer leaves the target area
         * @method leave
         * @param {Any} event
         */
@@ -10876,8 +10929,8 @@ var Phaser;
             this.withinGame = false;
             this.move(event);
         };
-        Finger.prototype.stop = /**
-        *
+        Pointer.prototype.stop = /**
+        * Called when the Pointer leaves the touchscreen
         * @method stop
         * @param {Any} event
         */
@@ -10887,10 +10940,11 @@ var Phaser;
             this.isDown = false;
             this.isUp = true;
             this.timeUp = this._game.time.now;
-            this.duration = this.timeUp - this.timeDown;
+            this._game.input.onUp.dispatch(this);
+            return this;
         };
-        Finger.prototype.justPressed = /**
-        *
+        Pointer.prototype.justPressed = /**
+        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen is less than justPressedRate
         * @method justPressed
         * @param {Number} [duration].
         * @return {Boolean}
@@ -10903,8 +10957,8 @@ var Phaser;
                 return false;
             }
         };
-        Finger.prototype.justReleased = /**
-        *
+        Pointer.prototype.justReleased = /**
+        * The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate
         * @method justReleased
         * @param {Number} [duration].
         * @return {Boolean}
@@ -10917,29 +10971,67 @@ var Phaser;
                 return false;
             }
         };
-        Finger.prototype.toString = /**
+        Pointer.prototype.reset = function () {
+            this.active = false;
+            this.identifier = null;
+            this.isDown = false;
+            this.isUp = true;
+            this.totalTouches = 0;
+        };
+        Pointer.prototype.renderDebug = /**
+        * Renders the Pointer.circle object onto the stage in green if down or red if up.
+        * @method renderDebug
+        */
+        function (hideIfUp) {
+            if (typeof hideIfUp === "undefined") { hideIfUp = false; }
+            if(hideIfUp == true && this.isUp == true) {
+                return;
+            }
+            this._game.stage.context.beginPath();
+            this._game.stage.context.arc(this.x, this.y, this.circle.radius * 2, 0, Math.PI * 2);
+            if(this.active) {
+                this._game.stage.context.fillStyle = 'rgb(0,255,0)';
+                this._game.stage.context.strokeStyle = 'rgb(0,255,0)';
+            } else {
+                this._game.stage.context.fillStyle = 'rgb(100,0,0)';
+                this._game.stage.context.strokeStyle = 'rgb(100,0,0)';
+            }
+            this._game.stage.context.fill();
+            this._game.stage.context.closePath();
+            //  Render the points
+            this._game.stage.context.beginPath();
+            this._game.stage.context.moveTo(this.pointA.x, this.pointA.y);
+            this._game.stage.context.lineTo(this.pointB.x, this.pointB.y);
+            this._game.stage.context.lineWidth = 2;
+            this._game.stage.context.stroke();
+            this._game.stage.context.closePath();
+            //  Render the text
+            this._game.stage.context.fillStyle = 'rgb(255,255,255)';
+            this._game.stage.context.font = 'Arial 16px';
+            this._game.stage.context.fillText('ID: ' + this.id + " Active: " + this.active, this.x, this.y - 100);
+            this._game.stage.context.fillText('Screen X: ' + this.x + " Screen Y: " + this.y, this.x, this.y - 80);
+            this._game.stage.context.fillText('Duration: ' + this.duration + " ms", this.x, this.y - 60);
+        };
+        Pointer.prototype.toString = /**
         * Returns a string representation of this object.
         * @method toString
         * @return {String} a string representation of the instance.
         **/
         function () {
-            return "[{Finger (identifer=" + this.identifier + " active=" + this.active + " duration=" + this.duration + " withinGame=" + this.withinGame + " x=" + this.x + " y=" + this.y + " clientX=" + this.clientX + " clientY=" + this.clientY + " screenX=" + this.screenX + " screenY=" + this.screenY + " pageX=" + this.pageX + " pageY=" + this.pageY + ")}]";
+            return "[{Pointer (id=" + this.id + " identifer=" + this.identifier + " active=" + this.active + " duration=" + this.duration + " withinGame=" + this.withinGame + " x=" + this.x + " y=" + this.y + " clientX=" + this.clientX + " clientY=" + this.clientY + " screenX=" + this.screenX + " screenY=" + this.screenY + " pageX=" + this.pageX + " pageY=" + this.pageY + ")}]";
         };
-        return Finger;
+        return Pointer;
     })();
-    Phaser.Finger = Finger;    
+    Phaser.Pointer = Pointer;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
-/// <reference path="Finger.ts" />
+/// <reference path="Pointer.ts" />
 /**
 * Phaser - MSPointer
 *
-* The MSPointer class handles touch interactions with the game and the resulting Finger objects.
+* The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
 * It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
-*
-*
-*  @todo       Gestures (pinch, zoom, swipe)
 */
 var Phaser;
 (function (Phaser) {
@@ -10951,55 +11043,11 @@ var Phaser;
         */
         function MSPointer(game) {
             /**
-            *
-            * @property x
-            * @type Number
-            **/
-            this.x = 0;
-            /**
-            *
-            * @property y
-            * @type Number
-            **/
-            this.y = 0;
-            /**
-            *
-            * @property isDown
-            * @type Boolean
-            **/
-            this.isDown = false;
-            /**
-            *
-            * @property isUp
-            * @type Boolean
-            **/
-            this.isUp = true;
+            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+            * @type {Boolean}
+            */
+            this.disabled = false;
             this._game = game;
-            this.finger1 = new Phaser.Finger(this._game);
-            this.finger2 = new Phaser.Finger(this._game);
-            this.finger3 = new Phaser.Finger(this._game);
-            this.finger4 = new Phaser.Finger(this._game);
-            this.finger5 = new Phaser.Finger(this._game);
-            this.finger6 = new Phaser.Finger(this._game);
-            this.finger7 = new Phaser.Finger(this._game);
-            this.finger8 = new Phaser.Finger(this._game);
-            this.finger9 = new Phaser.Finger(this._game);
-            this.finger10 = new Phaser.Finger(this._game);
-            this._fingers = [
-                this.finger1, 
-                this.finger2, 
-                this.finger3, 
-                this.finger4, 
-                this.finger5, 
-                this.finger6, 
-                this.finger7, 
-                this.finger8, 
-                this.finger9, 
-                this.finger10
-            ];
-            this.touchDown = new Phaser.Signal();
-            this.touchUp = new Phaser.Signal();
-            this.start();
         }
         MSPointer.prototype.start = /**
         *
@@ -11007,7 +11055,7 @@ var Phaser;
         */
         function () {
             var _this = this;
-            if(navigator.msMaxTouchPoints) {
+            if(this._game.device.mspointer == true) {
                 this._game.stage.canvas.addEventListener('MSPointerDown', function (event) {
                     return _this.onPointerDown(event);
                 }, false);
@@ -11025,22 +11073,12 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
-            event.preventDefault();
-            for(var f = 0; f < this._fingers.length; f++) {
-                if(this._fingers[f].active === false) {
-                    event.identifier = event.pointerId;
-                    this._fingers[f].start(event);
-                    this.x = this._fingers[f].x;
-                    this.y = this._fingers[f].y;
-                    this._game.input.x = this.x * this._game.input.scaleX;
-                    this._game.input.y = this.y * this._game.input.scaleY;
-                    this.touchDown.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
-                    this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeDown);
-                    this.isDown = true;
-                    this.isUp = false;
-                    break;
-                }
+            if(this._game.input.disabled || this.disabled) {
+                return;
             }
+            event.preventDefault();
+            event.identifier = event.pointerId;
+            this._game.input.startPointer(event);
         };
         MSPointer.prototype.onPointerMove = /**
         *
@@ -11048,18 +11086,12 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
-            event.preventDefault();
-            for(var f = 0; f < this._fingers.length; f++) {
-                if(this._fingers[f].identifier === event.pointerId && this._fingers[f].active === true) {
-                    event.identifier = event.pointerId;
-                    this._fingers[f].move(event);
-                    this.x = this._fingers[f].x;
-                    this.y = this._fingers[f].y;
-                    this._game.input.x = this.x * this._game.input.scaleX;
-                    this._game.input.y = this.y * this._game.input.scaleY;
-                    break;
-                }
+            if(this._game.input.disabled || this.disabled) {
+                return;
             }
+            event.preventDefault();
+            event.identifier = event.pointerId;
+            this._game.input.updatePointer(event);
         };
         MSPointer.prototype.onPointerUp = /**
         *
@@ -11067,52 +11099,12 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
-            event.preventDefault();
-            for(var f = 0; f < this._fingers.length; f++) {
-                if(this._fingers[f].identifier === event.pointerId) {
-                    event.identifier = event.pointerId;
-                    this._fingers[f].stop(event);
-                    this.x = this._fingers[f].x;
-                    this.y = this._fingers[f].y;
-                    this._game.input.x = this.x * this._game.input.scaleX;
-                    this._game.input.y = this.y * this._game.input.scaleY;
-                    this.touchUp.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
-                    this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeUp);
-                    this.isDown = false;
-                    this.isUp = true;
-                    break;
-                }
+            if(this._game.input.disabled || this.disabled) {
+                return;
             }
-        };
-        MSPointer.prototype.calculateDistance = /**
-        *
-        * @method calculateDistance
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        function (finger1, finger2) {
-        };
-        MSPointer.prototype.calculateAngle = /**
-        *
-        * @method calculateAngle
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        function (finger1, finger2) {
-        };
-        MSPointer.prototype.checkOverlap = /**
-        *
-        * @method checkOverlap
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        function (finger1, finger2) {
-        };
-        MSPointer.prototype.update = /**
-        *
-        * @method update
-        */
-        function () {
+            event.preventDefault();
+            event.identifier = event.pointerId;
+            this._game.input.stopPointer(event);
         };
         MSPointer.prototype.stop = /**
         *
@@ -11120,40 +11112,79 @@ var Phaser;
         */
         function () {
         };
-        MSPointer.prototype.reset = /**
-        *
-        * @method reset
-        **/
-        function () {
-            this.isDown = false;
-            this.isUp = false;
-        };
         return MSPointer;
     })();
     Phaser.MSPointer = MSPointer;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
+/// <reference path="Pointer.ts" />
+/**
+* Phaser - Gestures
+*
+* The Gesture class monitors for gestures and dispatches the resulting signals when they occur.
+* Note: Android 2.x only supports 1 touch event at once, no multi-touch
+*/
+var Phaser;
+(function (Phaser) {
+    var Gestures = (function () {
+        /**
+        * Constructor
+        * @param {Game} game.
+        * @return {Touch} This object.
+        */
+        function Gestures(game) {
+            this._game = game;
+        }
+        Gestures.prototype.start = function () {
+            //  Local references to the Phaser.Input.pointer objects
+            this._p1 = this._game.input.pointer1;
+            this._p2 = this._game.input.pointer2;
+            this._p3 = this._game.input.pointer3;
+            this._p4 = this._game.input.pointer4;
+            this._p5 = this._game.input.pointer5;
+            this._p6 = this._game.input.pointer6;
+            this._p7 = this._game.input.pointer7;
+            this._p8 = this._game.input.pointer8;
+            this._p9 = this._game.input.pointer9;
+            this._p10 = this._game.input.pointer10;
+        };
+        return Gestures;
+    })();
+    Phaser.Gestures = Gestures;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../../Game.ts" />
 /// <reference path="../../Signal.ts" />
+/// <reference path="Pointer.ts" />
 /// <reference path="MSPointer.ts" />
+/// <reference path="Gestures.ts" />
 /**
 * Phaser - Input
 *
-* A game specific Input manager that looks after the mouse, keyboard and touch objects. This is updated by the core game loop.
+* A game specific Input manager that looks after the mouse, keyboard and touch objects.
+* This is updated by the core game loop.
 */
 var Phaser;
 (function (Phaser) {
     var Input = (function () {
         function Input(game) {
             /**
-            *
-            * @type {Number}
+            * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
+            * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
+            * @type {Boolean}
             */
-            this.x = 0;
+            this.disabled = false;
             /**
-            *
+            * X coordinate of the most recent Pointer event
             * @type {Number}
+            * @private
             */
-            this.y = 0;
+            this._x = 0;
+            /**
+            * X coordinate of the most recent Pointer event
+            * @type {Number}
+            * @private
+            */
+            this._y = 0;
             /**
             *
             * @type {Number}
@@ -11174,26 +11205,293 @@ var Phaser;
             * @type {Number}
             */
             this.worldY = 0;
+            /**
+            * The maximum number of Pointers allowed to be active at any one time.
+            * For lots of games it's useful to set this to 1
+            * @type {Number}
+            */
+            this.maxPointers = 10;
             this._game = game;
+            this.pointer1 = new Phaser.Pointer(this._game, 1);
+            this.pointer2 = new Phaser.Pointer(this._game, 2);
+            this.pointer3 = new Phaser.Pointer(this._game, 3);
+            this.pointer4 = new Phaser.Pointer(this._game, 4);
+            this.pointer5 = new Phaser.Pointer(this._game, 5);
+            this.pointer6 = new Phaser.Pointer(this._game, 6);
+            this.pointer7 = new Phaser.Pointer(this._game, 7);
+            this.pointer8 = new Phaser.Pointer(this._game, 8);
+            this.pointer9 = new Phaser.Pointer(this._game, 9);
+            this.pointer10 = new Phaser.Pointer(this._game, 10);
             this.mouse = new Phaser.Mouse(this._game);
             this.keyboard = new Phaser.Keyboard(this._game);
             this.touch = new Phaser.Touch(this._game);
             this.mspointer = new Phaser.MSPointer(this._game);
+            this.gestures = new Phaser.Gestures(this._game);
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
         }
+        Object.defineProperty(Input.prototype, "x", {
+            get: /**
+            * The screen X coordinate
+            * @property x
+            * @type {Number}
+            **/
+            function () {
+                return this._x;
+            },
+            set: function (value) {
+                this._x = Math.round(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Input.prototype, "y", {
+            get: /**
+            * The screen Y coordinate
+            * @property y
+            * @type {Number}
+            **/
+            function () {
+                return this._y;
+            },
+            set: function (value) {
+                this._y = Math.round(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Input.prototype.start = function () {
+            this.mouse.start();
+            this.keyboard.start();
+            this.touch.start();
+            this.mspointer.start();
+            this.gestures.start();
+        };
         Input.prototype.update = function () {
-            this.x = Math.round(this.x);
-            this.y = Math.round(this.y);
-            this.worldX = this._game.camera.worldView.x + this.x;
-            this.worldY = this._game.camera.worldView.y + this.y;
+            //this.worldX = this._game.camera.worldView.x + this.x;
+            //this.worldY = this._game.camera.worldView.y + this.y;
             this.mouse.update();
-            this.touch.update();
         };
         Input.prototype.reset = function () {
             this.mouse.reset();
             this.keyboard.reset();
-            this.touch.reset();
+            this.pointer1.reset();
+            this.pointer2.reset();
+            this.pointer3.reset();
+            this.pointer4.reset();
+            this.pointer5.reset();
+            this.pointer6.reset();
+            this.pointer7.reset();
+            this.pointer8.reset();
+            this.pointer9.reset();
+            this.pointer10.reset();
+            this.onDown = new Phaser.Signal();
+            this.onUp = new Phaser.Signal();
+        };
+        Object.defineProperty(Input.prototype, "totalInactivePointers", {
+            get: /**
+            * Get the total number of inactive Pointers
+            * @method totalInactivePointers
+            * @return {Number} The number of Pointers currently inactive
+            **/
+            function () {
+                return 10 - this.totalActivePointers;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Input.prototype, "totalActivePointers", {
+            get: /**
+            * Get the total number of active Pointers
+            * @method totalActivePointers
+            * @return {Number} The number of Pointers currently active
+            **/
+            function () {
+                var result = 0;
+                if(this.pointer1.active == true) {
+                    result++;
+                } else if(this.pointer2.active == true) {
+                    result++;
+                } else if(this.pointer3.active == true) {
+                    result++;
+                } else if(this.pointer4.active == true) {
+                    result++;
+                } else if(this.pointer5.active == true) {
+                    result++;
+                } else if(this.pointer6.active == true) {
+                    result++;
+                } else if(this.pointer7.active == true) {
+                    result++;
+                } else if(this.pointer8.active == true) {
+                    result++;
+                } else if(this.pointer9.active == true) {
+                    result++;
+                } else if(this.pointer10.active == true) {
+                    result++;
+                }
+                return result;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Input.prototype.startPointer = /**
+        * Find the first free Pointer object and start it, passing in the event data.
+        * @method startPointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was started or null if no Pointer object is available
+        **/
+        function (event) {
+            if(this.maxPointers < 10 && this.totalActivePointers == this.maxPointers) {
+                return null;
+            }
+            //  Unrolled for speed
+            if(this.pointer1.active == false) {
+                return this.pointer1.start(event);
+            } else if(this.pointer2.active == false) {
+                return this.pointer2.start(event);
+            } else if(this.pointer3.active == false) {
+                return this.pointer3.start(event);
+            } else if(this.pointer4.active == false) {
+                return this.pointer4.start(event);
+            } else if(this.pointer5.active == false) {
+                return this.pointer5.start(event);
+            } else if(this.pointer6.active == false) {
+                return this.pointer6.start(event);
+            } else if(this.pointer7.active == false) {
+                return this.pointer7.start(event);
+            } else if(this.pointer8.active == false) {
+                return this.pointer8.start(event);
+            } else if(this.pointer9.active == false) {
+                return this.pointer9.start(event);
+            } else if(this.pointer10.active == false) {
+                return this.pointer10.start(event);
+            }
+            return null;
+        };
+        Input.prototype.updatePointer = /**
+        * Updates the matching Pointer object, passing in the event data.
+        * @method updatePointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was updated or null if no Pointer object is available
+        **/
+        function (event) {
+            //  Unrolled for speed
+            if(this.pointer1.active == true && this.pointer1.identifier == event.identifier) {
+                return this.pointer1.move(event);
+            } else if(this.pointer2.active == true && this.pointer2.identifier == event.identifier) {
+                return this.pointer2.move(event);
+            } else if(this.pointer3.active == true && this.pointer3.identifier == event.identifier) {
+                return this.pointer3.move(event);
+            } else if(this.pointer4.active == true && this.pointer4.identifier == event.identifier) {
+                return this.pointer4.move(event);
+            } else if(this.pointer5.active == true && this.pointer5.identifier == event.identifier) {
+                return this.pointer5.move(event);
+            } else if(this.pointer6.active == true && this.pointer6.identifier == event.identifier) {
+                return this.pointer6.move(event);
+            } else if(this.pointer7.active == true && this.pointer7.identifier == event.identifier) {
+                return this.pointer7.move(event);
+            } else if(this.pointer8.active == true && this.pointer8.identifier == event.identifier) {
+                return this.pointer8.move(event);
+            } else if(this.pointer9.active == true && this.pointer9.identifier == event.identifier) {
+                return this.pointer9.move(event);
+            } else if(this.pointer10.active == true && this.pointer10.identifier == event.identifier) {
+                return this.pointer10.move(event);
+            }
+            return null;
+        };
+        Input.prototype.stopPointer = /**
+        * Stops the matching Pointer object, passing in the event data.
+        * @method stopPointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was stopped or null if no Pointer object is available
+        **/
+        function (event) {
+            //  Unrolled for speed
+            if(this.pointer1.active == true && this.pointer1.identifier == event.identifier) {
+                return this.pointer1.stop(event);
+            } else if(this.pointer2.active == true && this.pointer2.identifier == event.identifier) {
+                return this.pointer2.stop(event);
+            } else if(this.pointer3.active == true && this.pointer3.identifier == event.identifier) {
+                return this.pointer3.stop(event);
+            } else if(this.pointer4.active == true && this.pointer4.identifier == event.identifier) {
+                return this.pointer4.stop(event);
+            } else if(this.pointer5.active == true && this.pointer5.identifier == event.identifier) {
+                return this.pointer5.stop(event);
+            } else if(this.pointer6.active == true && this.pointer6.identifier == event.identifier) {
+                return this.pointer6.stop(event);
+            } else if(this.pointer7.active == true && this.pointer7.identifier == event.identifier) {
+                return this.pointer7.stop(event);
+            } else if(this.pointer8.active == true && this.pointer8.identifier == event.identifier) {
+                return this.pointer8.stop(event);
+            } else if(this.pointer9.active == true && this.pointer9.identifier == event.identifier) {
+                return this.pointer9.stop(event);
+            } else if(this.pointer10.active == true && this.pointer10.identifier == event.identifier) {
+                return this.pointer10.stop(event);
+            }
+            return null;
+        };
+        Input.prototype.getPointer = /**
+        * Get the next Pointer object whos active property matches the given state
+        * @method getPointer
+        * @param {Boolean} state The state the Pointer should be in (false for inactive, true for active)
+        * @return {Pointer} A Pointer object or null if no Pointer object matches the requested state.
+        **/
+        function (state) {
+            if (typeof state === "undefined") { state = false; }
+            //  Unrolled for speed
+            if(this.pointer1.active == state) {
+                return this.pointer1;
+            } else if(this.pointer2.active == state) {
+                return this.pointer2;
+            } else if(this.pointer3.active == state) {
+                return this.pointer3;
+            } else if(this.pointer4.active == state) {
+                return this.pointer4;
+            } else if(this.pointer5.active == state) {
+                return this.pointer5;
+            } else if(this.pointer6.active == state) {
+                return this.pointer6;
+            } else if(this.pointer7.active == state) {
+                return this.pointer7;
+            } else if(this.pointer8.active == state) {
+                return this.pointer8;
+            } else if(this.pointer9.active == state) {
+                return this.pointer9;
+            } else if(this.pointer10.active == state) {
+                return this.pointer10;
+            }
+            return null;
+        };
+        Input.prototype.getPointerFromIdentifier = /**
+        * Get the Pointer object whos identified property matches the given identifier value
+        * @method getPointerFromIdentifier
+        * @param {Number} identifier The Pointer.identifier value to search for
+        * @return {Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
+        **/
+        function (identifier) {
+            //  Unrolled for speed
+            if(this.pointer1.identifier == identifier) {
+                return this.pointer1;
+            } else if(this.pointer2.identifier == identifier) {
+                return this.pointer2;
+            } else if(this.pointer3.identifier == identifier) {
+                return this.pointer3;
+            } else if(this.pointer4.identifier == identifier) {
+                return this.pointer4;
+            } else if(this.pointer5.identifier == identifier) {
+                return this.pointer5;
+            } else if(this.pointer6.identifier == identifier) {
+                return this.pointer6;
+            } else if(this.pointer7.identifier == identifier) {
+                return this.pointer7;
+            } else if(this.pointer8.identifier == identifier) {
+                return this.pointer8;
+            } else if(this.pointer9.identifier == identifier) {
+                return this.pointer9;
+            } else if(this.pointer10.identifier == identifier) {
+                return this.pointer10;
+            }
+            return null;
         };
         Input.prototype.getWorldX = /**
         * @param {Camera} [camera]
@@ -11226,7 +11524,31 @@ var Phaser;
         return Input;
     })();
     Phaser.Input = Input;    
-})(Phaser || (Phaser = {}));
+    /**
+    *
+    * @method calculateDistance
+    * @param {Finger} finger1
+    * @param {Finger} finger2
+    **/
+    //public calculateDistance(finger1: Finger, finger2: Finger) {
+    //}
+    /**
+    *
+    * @method calculateAngle
+    * @param {Finger} finger1
+    * @param {Finger} finger2
+    **/
+    //public calculateAngle(finger1: Finger, finger2: Finger) {
+    //}
+    /**
+    *
+    * @method checkOverlap
+    * @param {Finger} finger1
+    * @param {Finger} finger2
+    **/
+    //public checkOverlap(finger1: Finger, finger2: Finger) {
+    //}
+    })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
 * Phaser - Keyboard
@@ -11243,8 +11565,12 @@ var Phaser;
             };
             this._capture = {
             };
+            /**
+            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+            * @type {Boolean}
+            */
+            this.disabled = false;
             this._game = game;
-            this.start();
         }
         Keyboard.prototype.start = function () {
             var _this = this;
@@ -11281,6 +11607,9 @@ var Phaser;
         * @param {KeyboardEvent} event
         */
         function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
             if(this._capture[event.keyCode]) {
                 event.preventDefault();
             }
@@ -11299,6 +11628,9 @@ var Phaser;
         * @param {KeyboardEvent} event
         */
         function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
             if(this._capture[event.keyCode]) {
                 event.preventDefault();
             }
@@ -11470,6 +11802,11 @@ var Phaser;
             this._x = 0;
             this._y = 0;
             /**
+            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+            * @type {Boolean}
+            */
+            this.disabled = false;
+            /**
             * @type {Boolean}
             */
             this.isDown = false;
@@ -11490,7 +11827,6 @@ var Phaser;
             */
             this.timeUp = 0;
             this._game = game;
-            this.start();
         }
         Mouse.LEFT_BUTTON = 0;
         Mouse.MIDDLE_BUTTON = 1;
@@ -11515,6 +11851,9 @@ var Phaser;
         * @param {MouseEvent} event
         */
         function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
             this.button = event.button;
             this._x = event.clientX - this._game.stage.x;
             this._y = event.clientY - this._game.stage.y;
@@ -11536,6 +11875,9 @@ var Phaser;
         * @param {MouseEvent} event
         */
         function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
             this.button = event.button;
             this._x = event.clientX - this._game.stage.x;
             this._y = event.clientY - this._game.stage.y;
@@ -11546,6 +11888,9 @@ var Phaser;
         * @param {MouseEvent} event
         */
         function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
             this.button = event.button;
             this.isDown = false;
             this.isUp = true;
@@ -11562,21 +11907,15 @@ var Phaser;
     Phaser.Mouse = Mouse;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
-/// <reference path="Finger.ts" />
+/// <reference path="Pointer.ts" />
 /**
 * Phaser - Touch
 *
-* The Touch class handles touch interactions with the game and the resulting Finger objects.
+* The Touch class handles touch interactions with the game and the resulting Pointer objects.
 * http://www.w3.org/TR/touch-events/
 * https://developer.mozilla.org/en-US/docs/DOM/TouchList
 * http://www.html5rocks.com/en/mobile/touchandmouse/
 * Note: Android 2.x only supports 1 touch event at once, no multi-touch
-*
-*  @todo       Try and resolve update lag in Chrome/Android
-*              Gestures (pinch, zoom, swipe)
-*              GameObject Touch
-*              Touch point within GameObject
-*              Input Zones (mouse and touch) - lock entities within them + axis aligned drags
 */
 var Phaser;
 (function (Phaser) {
@@ -11588,55 +11927,11 @@ var Phaser;
         */
         function Touch(game) {
             /**
-            *
-            * @property x
-            * @type {Number}
-            **/
-            this.x = 0;
-            /**
-            *
-            * @property y
-            * @type {Number}
-            **/
-            this.y = 0;
-            /**
-            *
-            * @property isDown
+            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
             * @type {Boolean}
-            **/
-            this.isDown = false;
-            /**
-            *
-            * @property isUp
-            * @type {Boolean}
-            **/
-            this.isUp = true;
+            */
+            this.disabled = false;
             this._game = game;
-            this.finger1 = new Phaser.Finger(this._game);
-            this.finger2 = new Phaser.Finger(this._game);
-            this.finger3 = new Phaser.Finger(this._game);
-            this.finger4 = new Phaser.Finger(this._game);
-            this.finger5 = new Phaser.Finger(this._game);
-            this.finger6 = new Phaser.Finger(this._game);
-            this.finger7 = new Phaser.Finger(this._game);
-            this.finger8 = new Phaser.Finger(this._game);
-            this.finger9 = new Phaser.Finger(this._game);
-            this.finger10 = new Phaser.Finger(this._game);
-            this._fingers = [
-                this.finger1, 
-                this.finger2, 
-                this.finger3, 
-                this.finger4, 
-                this.finger5, 
-                this.finger6, 
-                this.finger7, 
-                this.finger8, 
-                this.finger9, 
-                this.finger10
-            ];
-            this.touchDown = new Phaser.Signal();
-            this.touchUp = new Phaser.Signal();
-            this.start();
         }
         Touch.prototype.start = /**
         *
@@ -11680,84 +11975,59 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
             event.preventDefault();
-            //  A list of all the touch points that BECAME active with the current event
-            //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
             //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
             //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
             //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
             for(var i = 0; i < event.changedTouches.length; i++) {
-                for(var f = 0; f < this._fingers.length; f++) {
-                    if(this._fingers[f].active === false) {
-                        this._fingers[f].start(event.changedTouches[i]);
-                        this.x = this._fingers[f].x;
-                        this.y = this._fingers[f].y;
-                        this._game.input.x = this.x * this._game.input.scaleX;
-                        this._game.input.y = this.y * this._game.input.scaleY;
-                        this.touchDown.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
-                        this._game.input.onDown.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeDown);
-                        this.isDown = true;
-                        this.isUp = false;
-                        break;
-                    }
-                }
+                this._game.input.startPointer(event.changedTouches[i]);
             }
         };
         Touch.prototype.onTouchCancel = /**
-        * Doesn't appear to be supported by most browsers yet
+        * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
+        * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears
         * @method onTouchCancel
         * @param {Any} event
         **/
         function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
             event.preventDefault();
             //  Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
             //  http://www.w3.org/TR/touch-events/#dfn-touchcancel
-            //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
             for(var i = 0; i < event.changedTouches.length; i++) {
-                for(var f = 0; f < this._fingers.length; f++) {
-                    if(this._fingers[f].identifier === event.changedTouches[i].identifier) {
-                        this._fingers[f].stop(event.changedTouches[i]);
-                        break;
-                    }
-                }
+                this._game.input.stopPointer(event.changedTouches[i]);
             }
         };
         Touch.prototype.onTouchEnter = /**
+        * For touch enter and leave its a list of the touch points that have entered or left the target
         * Doesn't appear to be supported by most browsers yet
         * @method onTouchEnter
         * @param {Any} event
         **/
         function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
             event.preventDefault();
-            //  For touch enter and leave its a list of the touch points that have entered or left the target
-            //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
-            //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
-            //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
             for(var i = 0; i < event.changedTouches.length; i++) {
-                for(var f = 0; f < this._fingers.length; f++) {
-                    if(this._fingers[f].active === false) {
-                        this._fingers[f].start(event.changedTouches[i]);
-                        break;
-                    }
-                }
+                console.log('touch enter');
             }
         };
         Touch.prototype.onTouchLeave = /**
+        * For touch enter and leave its a list of the touch points that have entered or left the target
         * Doesn't appear to be supported by most browsers yet
         * @method onTouchLeave
         * @param {Any} event
         **/
         function (event) {
             event.preventDefault();
-            //  For touch enter and leave its a list of the touch points that have entered or left the target
-            //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
             for(var i = 0; i < event.changedTouches.length; i++) {
-                for(var f = 0; f < this._fingers.length; f++) {
-                    if(this._fingers[f].identifier === event.changedTouches[i].identifier) {
-                        this._fingers[f].leave(event.changedTouches[i]);
-                        break;
-                    }
-                }
+                console.log('touch leave');
             }
         };
         Touch.prototype.onTouchMove = /**
@@ -11767,20 +12037,8 @@ var Phaser;
         **/
         function (event) {
             event.preventDefault();
-            //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
-            //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
-            //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
             for(var i = 0; i < event.changedTouches.length; i++) {
-                for(var f = 0; f < this._fingers.length; f++) {
-                    if(this._fingers[f].identifier === event.changedTouches[i].identifier) {
-                        this._fingers[f].move(event.changedTouches[i]);
-                        this.x = this._fingers[f].x;
-                        this.y = this._fingers[f].y;
-                        this._game.input.x = this.x * this._game.input.scaleX;
-                        this._game.input.y = this.y * this._game.input.scaleY;
-                        break;
-                    }
-                }
+                this._game.input.updatePointer(event.changedTouches[i]);
             }
         };
         Touch.prototype.onTouchEnd = /**
@@ -11794,51 +12052,8 @@ var Phaser;
             //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
             //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
             for(var i = 0; i < event.changedTouches.length; i++) {
-                for(var f = 0; f < this._fingers.length; f++) {
-                    if(this._fingers[f].identifier === event.changedTouches[i].identifier) {
-                        this._fingers[f].stop(event.changedTouches[i]);
-                        this.x = this._fingers[f].x;
-                        this.y = this._fingers[f].y;
-                        this._game.input.x = this.x * this._game.input.scaleX;
-                        this._game.input.y = this.y * this._game.input.scaleY;
-                        this.touchUp.dispatch(this._fingers[f].x, this._fingers[f].y, this._fingers[f].timeDown, this._fingers[f].timeUp, this._fingers[f].duration);
-                        this._game.input.onUp.dispatch(this._game.input.x, this._game.input.y, this._fingers[f].timeUp);
-                        this.isDown = false;
-                        this.isUp = true;
-                        break;
-                    }
-                }
+                this._game.input.stopPointer(event.changedTouches[i]);
             }
-        };
-        Touch.prototype.calculateDistance = /**
-        *
-        * @method calculateDistance
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        function (finger1, finger2) {
-        };
-        Touch.prototype.calculateAngle = /**
-        *
-        * @method calculateAngle
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        function (finger1, finger2) {
-        };
-        Touch.prototype.checkOverlap = /**
-        *
-        * @method checkOverlap
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        function (finger1, finger2) {
-        };
-        Touch.prototype.update = /**
-        *
-        * @method update
-        */
-        function () {
         };
         Touch.prototype.stop = /**
         *
@@ -11852,14 +12067,6 @@ var Phaser;
             //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
             //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
                     };
-        Touch.prototype.reset = /**
-        *
-        * @method reset
-        **/
-        function () {
-            this.isDown = false;
-            this.isUp = false;
-        };
         return Touch;
     })();
     Phaser.Touch = Touch;    
@@ -13937,7 +14144,7 @@ var Phaser;
         /**
         * Game constructor
         *
-        * Instantiate a new <code>Game</code> object.
+        * Instantiate a new <code>Phaser.Game</code> object.
         *
         * @param callbackContext Which context will the callbacks be called with.
         * @param parent {string} ID of its parent DOM element.
@@ -13947,8 +14154,9 @@ var Phaser;
         * @param createCallback {function} Create callback invoked when create default screen.
         * @param updateCallback {function} Update callback invoked when update default screen.
         * @param renderCallback {function} Render callback invoked when render default screen.
+        * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
         */
-        function Game(callbackContext, parent, width, height, initCallback, createCallback, updateCallback, renderCallback) {
+        function Game(callbackContext, parent, width, height, initCallback, createCallback, updateCallback, renderCallback, destroyCallback) {
             if (typeof parent === "undefined") { parent = ''; }
             if (typeof width === "undefined") { width = 800; }
             if (typeof height === "undefined") { height = 600; }
@@ -13956,6 +14164,7 @@ var Phaser;
             if (typeof createCallback === "undefined") { createCallback = null; }
             if (typeof updateCallback === "undefined") { updateCallback = null; }
             if (typeof renderCallback === "undefined") { renderCallback = null; }
+            if (typeof destroyCallback === "undefined") { destroyCallback = null; }
             var _this = this;
             /**
             * Max allowable accumulation.
@@ -13988,6 +14197,11 @@ var Phaser;
             */
             this._pendingState = null;
             /**
+            * The current State object (defaults to null)
+            * @type {State}
+            */
+            this.state = null;
+            /**
             * This will be called when init states. (loading assets...)
             * @type {function}
             */
@@ -14013,6 +14227,11 @@ var Phaser;
             */
             this.onPausedCallback = null;
             /**
+            * This will be called when the state is destroyed (i.e. swapping to a new state)
+            * @type {function}
+            */
+            this.onDestroyCallback = null;
+            /**
             * Whether the game engine is booted, aka available.
             * @type {boolean}
             */
@@ -14027,6 +14246,7 @@ var Phaser;
             this.onCreateCallback = createCallback;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
+            this.onDestroyCallback = destroyCallback;
             if(document.readyState === 'complete' || document.readyState === 'interactive') {
                 setTimeout(function () {
                     return _this.boot(parent, width, height);
@@ -14073,6 +14293,7 @@ var Phaser;
                 ]);
                 this.framerate = 60;
                 this.isBooted = true;
+                this.input.start();
                 //  Display the default game screen?
                 if(this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null) {
                     this._raf = new Phaser.RequestAnimationFrame(this, this.bootLoop);
@@ -14165,16 +14386,19 @@ var Phaser;
         * @param createCallback {function} Create callback invoked when create state.
         * @param updateCallback {function} Update callback invoked when update state.
         * @param renderCallback {function} Render callback invoked when render state.
+        * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
         */
-        function (initCallback, createCallback, updateCallback, renderCallback) {
+        function (initCallback, createCallback, updateCallback, renderCallback, destroyCallback) {
             if (typeof initCallback === "undefined") { initCallback = null; }
             if (typeof createCallback === "undefined") { createCallback = null; }
             if (typeof updateCallback === "undefined") { updateCallback = null; }
             if (typeof renderCallback === "undefined") { renderCallback = null; }
+            if (typeof destroyCallback === "undefined") { destroyCallback = null; }
             this.onInitCallback = initCallback;
             this.onCreateCallback = createCallback;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
+            this.onDestroyCallback = destroyCallback;
         };
         Game.prototype.switchState = /**
         * Switch to a new State.
@@ -14189,33 +14413,42 @@ var Phaser;
                 this._pendingState = state;
                 return;
             }
+            //  Destroy current state?
+            if(this.onDestroyCallback !== null) {
+                this.onDestroyCallback.call(this.callbackContext);
+            }
+            this.input.reset();
             //  Prototype?
             if(typeof state === 'function') {
-                state = new state(this);
+                this.state = new state(this);
             }
             //  Ok, have we got the right functions?
-            if(state['create'] || state['update']) {
-                this.callbackContext = state;
+            if(this.state['create'] || this.state['update']) {
+                this.callbackContext = this.state;
                 this.onInitCallback = null;
                 this.onCreateCallback = null;
                 this.onUpdateCallback = null;
                 this.onRenderCallback = null;
                 this.onPausedCallback = null;
+                this.onDestroyCallback = null;
                 //  Bingo, let's set them up
-                if(state['init']) {
-                    this.onInitCallback = state['init'];
+                if(this.state['init']) {
+                    this.onInitCallback = this.state['init'];
                 }
-                if(state['create']) {
-                    this.onCreateCallback = state['create'];
+                if(this.state['create']) {
+                    this.onCreateCallback = this.state['create'];
                 }
-                if(state['update']) {
-                    this.onUpdateCallback = state['update'];
+                if(this.state['update']) {
+                    this.onUpdateCallback = this.state['update'];
                 }
-                if(state['render']) {
-                    this.onRenderCallback = state['render'];
+                if(this.state['render']) {
+                    this.onRenderCallback = this.state['render'];
                 }
-                if(state['paused']) {
-                    this.onPausedCallback = state['paused'];
+                if(this.state['paused']) {
+                    this.onPausedCallback = this.state['paused'];
+                }
+                if(this.state['destroy']) {
+                    this.onDestroyCallback = this.state['destroy'];
                 }
                 if(clearWorld) {
                     this.world.destroy();
@@ -14239,6 +14472,7 @@ var Phaser;
             this.onUpdateCallback = null;
             this.onRenderCallback = null;
             this.onPausedCallback = null;
+            this.onDestroyCallback = null;
             this.cache = null;
             this.input = null;
             this.loader = null;
@@ -14602,7 +14836,7 @@ var Phaser;
             this.tweens = game.tweens;
             this.world = game.world;
         }
-        State.prototype.init = //  Overload these in your own States
+        State.prototype.init = //  Override these in your own States
         /**
         * Override this method to add some load operations.
         * If you need to use the loader, you may need to use them here.
@@ -14627,6 +14861,11 @@ var Phaser;
         };
         State.prototype.paused = /**
         * This method will be called when game paused.
+        */
+        function () {
+        };
+        State.prototype.destroy = /**
+        * This method will be called when the state is destroyed
         */
         function () {
         };

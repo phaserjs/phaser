@@ -15,16 +15,18 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
 ![Blasteroids](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_blaster.png)
 
+"Being negative is not how we make progress" - Larry Page, Google
+
 Latest Update
 -------------
 
 V0.9.6
 
-* Documentation! Every class now has documentation for nearly every single function - if you spot a typo, please shout! (thanks pixelpicosean)
+* Virtually every class now has documentation - if you spot a typo or something missing please shout (thanks pixelpicosean)
 * Grunt file updated to produce the new Special FX JS file (thanks HackManiac)
-* Fixed issue stopping Phaser working on iOS 5 (i.e. iPad 1)
+* Fixed issue stopping Phaser working on iOS 5 (iPad 1)
 * Created new mobile test folder, updated index.php to use mobile CSS and made some mobile specific tests
-* Fixed a few speed issues on Android 2.x stock browser, but it's still tricky to get a fast game out of it
+* Fixed a few speed issues on Android 2.x stock browser
 * Moved Camera context save/restore back inside parameter checks (sped-up Samsung S3 stock browser)
 * Fixed bug with StageScaleMode.checkOrientation not respecting the NO_SCALE value
 * Added MSPointer support (thanks Diego Bezerra)
@@ -38,10 +40,32 @@ V0.9.6
 * Updated RequestAnimationFrame setTimeout to use fixed timestep and re-ordered callback sequence. Android 2/iOS5 performance much better now
 * Removed Stage.ORIENTATION_LANDSCAPE statics because the values should be taken from Stage.scale.isPortrait / isLandscape
 * Removed Stage.maxScaleX/Y and moved them into StageScaleMode.minWidth, minHeight, maxWidth and maxHeight
-* Fixed Stage.scale so that it resizes without needing an orientation change
+* Fixed Stage.scale so that it resizes without needing an orientation change first
+* Added StageScaleMode.startFullscreen(), stopFullScreen() and isFullScreen for making use of the FullScreen API on desktop browsers
+* Swapped Stage.offset from Point to MicroPoint
+* Swapped Stage.bounds from Rectangle to Quad
+* Added State.destroy support. A states destroy function is called when you switch to a new state (thanks JesseFreeman)
+* Added Sprite.fillColor, used in the Sprite render if no image is loaded (set via the property or Sprite.makeGraphic) (thanks JesseFreeman)
+* Renamed Phaser.Finger to Phaser.Pointer
+* Updated all of the Input classes so they now use Input.pointers 1 through 10
+* Updated Touch and MSPointer to allow multi-touch support (when the hardware supports it) and created new tests to show this
+* Added Input.getPointer, Input.getPointerFromIdentifier, Input.totalActivePointers and Input.totalInactivePointers
+* Added Input.startPointer, Input.updatePointer and Input.stopPointer
+* Phaser Input now confirmed working on Windows Phone 8 (Nokia Lumia 920)
+* Added Input.maxPointers to allow you to limit the number of fingers your game will listen for on multi-touch systems
+* Pointer.totalTouches value keeps a running total of the number of times the Pointer has been pressed
+* Added Pointer.pointA and pointB - pointA is placed on touch, pointB is moved on update, useful for tracking distance/direction/gestures
+* Added Game.state - now contains a reference to the current state object (if any was given)
+* Moved the Input start events from the constructors to a single Input.start method
+* Added Input.disabled boolean to globally turn off all input event processing.
+* Added Input.Mouse.disabled, Input.Touch.disabled, Input.MSPointer.disabled and Input.Keyboard.disabled
+* Added Device.mspointer boolean. true if MSPointer is available on the device.
+
+
 * TODO: Check that tween pausing works with the new performance.now
 * TODO: Game.Time should monitor pause duration
-* Added StageScaleMode.startFullscreen(), stopFullScreen() and isFullScreen for making use of the FullScreen API on desktop browsers
+* TODO: Investigate bug re: tilemap collision and animation frames
+* TODO: Update tests that use arrow keys and include touch/mouse support
 
 
 Requirements
@@ -140,9 +164,9 @@ Work in Progress
 We've a number of features that we know Phaser is lacking, here is our current priority list:
 
 *	Better sound controls
-*	MSPointer support
 *	Text Rendering
 *	Buttons
+*	Google Play Game Services
 
 Beyond this there are lots of other things we plan to add such as WebGL support, Spine animation format support, sloped collision tiles, path finding and support for custom plugins. But the list above are priority items, and by no means exhaustive either! However we do feel that the core structure of Phaser is now tightly locked down, so safe to use for small scale production games.
 

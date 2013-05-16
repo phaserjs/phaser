@@ -49,7 +49,7 @@ module Phaser {
         /**
          * Game constructor
          *
-         * Instantiate a new <code>Game</code> object.
+         * Instantiate a new <code>Phaser.Game</code> object.
          *
          * @param callbackContext Which context will the callbacks be called with.
          * @param parent {string} ID of its parent DOM element.
@@ -59,14 +59,16 @@ module Phaser {
          * @param createCallback {function} Create callback invoked when create default screen.
          * @param updateCallback {function} Update callback invoked when update default screen.
          * @param renderCallback {function} Render callback invoked when render default screen.
+         * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
          */
-        constructor(callbackContext, parent?: string = '', width?: number = 800, height?: number = 600, initCallback = null, createCallback = null, updateCallback = null, renderCallback = null) {
+        constructor(callbackContext, parent?: string = '', width?: number = 800, height?: number = 600, initCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
 
             this.callbackContext = callbackContext;
             this.onInitCallback = initCallback;
             this.onCreateCallback = createCallback;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
+            this.onDestroyCallback = destroyCallback;
 
             if (document.readyState === 'complete' || document.readyState === 'interactive')
             {
@@ -122,6 +124,12 @@ module Phaser {
         private _pendingState = null;
 
         /**
+         * The current State object (defaults to null)
+         * @type {State}
+         */
+        public state = null;
+
+        /**
          * Context for calling the callbacks.
          */
         public callbackContext;
@@ -155,6 +163,12 @@ module Phaser {
          * @type {function}
          */
         public onPausedCallback = null;
+
+        /**
+         * This will be called when the state is destroyed (i.e. swapping to a new state)
+         * @type {function}
+         */
+        public onDestroyCallback = null;
 
         /**
          * Reference to the assets cache.
@@ -281,6 +295,7 @@ module Phaser {
 
                 this.framerate = 60;
                 this.isBooted = true;
+                this.input.start();
 
                 //  Display the default game screen?
                 if (this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
@@ -423,13 +438,15 @@ module Phaser {
          * @param createCallback {function} Create callback invoked when create state.
          * @param updateCallback {function} Update callback invoked when update state.
          * @param renderCallback {function} Render callback invoked when render state.
+         * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
          */
-        public setCallbacks(initCallback = null, createCallback = null, updateCallback = null, renderCallback = null) {
+        public setCallbacks(initCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
 
             this.onInitCallback = initCallback;
             this.onCreateCallback = createCallback;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
+            this.onDestroyCallback = destroyCallback;
 
         }
 
@@ -447,47 +464,61 @@ module Phaser {
                 return;
             }
 
+            //  Destroy current state?
+            if (this.onDestroyCallback !== null)
+            {
+                this.onDestroyCallback.call(this.callbackContext);
+            }
+
+            this.input.reset();
+
             //  Prototype?
             if (typeof state === 'function')
             {
-                state = new state(this);
+                this.state = new state(this);
             }
 
             //  Ok, have we got the right functions?
-            if (state['create'] || state['update'])
+            if (this.state['create'] || this.state['update'])
             {
-                this.callbackContext = state;
+                this.callbackContext = this.state;
 
                 this.onInitCallback = null;
                 this.onCreateCallback = null;
                 this.onUpdateCallback = null;
                 this.onRenderCallback = null;
                 this.onPausedCallback = null;
+                this.onDestroyCallback = null;
 
                 //  Bingo, let's set them up
-                if (state['init'])
+                if (this.state['init'])
                 {
-                    this.onInitCallback = state['init'];
+                    this.onInitCallback = this.state['init'];
                 }
 
-                if (state['create'])
+                if (this.state['create'])
                 {
-                    this.onCreateCallback = state['create'];
+                    this.onCreateCallback = this.state['create'];
                 }
 
-                if (state['update'])
+                if (this.state['update'])
                 {
-                    this.onUpdateCallback = state['update'];
+                    this.onUpdateCallback = this.state['update'];
                 }
 
-                if (state['render'])
+                if (this.state['render'])
                 {
-                    this.onRenderCallback = state['render'];
+                    this.onRenderCallback = this.state['render'];
                 }
 
-                if (state['paused'])
+                if (this.state['paused'])
                 {
-                    this.onPausedCallback = state['paused'];
+                    this.onPausedCallback = this.state['paused'];
+                }
+
+                if (this.state['destroy'])
+                {
+                    this.onDestroyCallback = this.state['destroy'];
                 }
 
                 if (clearWorld)
@@ -522,6 +553,7 @@ module Phaser {
             this.onUpdateCallback = null;
             this.onRenderCallback = null;
             this.onPausedCallback = null;
+            this.onDestroyCallback = null;
             this.cache = null;
             this.input = null;
             this.loader = null;

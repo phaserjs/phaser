@@ -15,13 +15,18 @@ module Phaser {
         constructor(game: Game) {
 
             this._game = game;
-            this.start();
 
         }
 
         private _game: Game;
         private _keys = {};
         private _capture = {};
+
+        /**
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool = false;
 
         public start() {
 
@@ -69,6 +74,11 @@ module Phaser {
          */
         public onKeyDown(event: KeyboardEvent) {
 
+            if (this._game.input.disabled || this.disabled)
+            {
+                return;
+            }
+
             if (this._capture[event.keyCode])
             {
                 event.preventDefault();
@@ -90,6 +100,11 @@ module Phaser {
          * @param {KeyboardEvent} event
          */
         public onKeyUp(event: KeyboardEvent) {
+
+            if (this._game.input.disabled || this.disabled)
+            {
+                return;
+            }
 
             if (this._capture[event.keyCode])
             {

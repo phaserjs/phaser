@@ -45,13 +45,14 @@ module Phaser {
 
             //  Consume default actions on the canvas
             this.canvas.style.msTouchAction = 'none';
+            this.canvas.style['ms-touch-action'] = 'none';
             this.canvas.style['touch-action'] = 'none';
             this.canvas.style.backgroundColor = 'rgb(0,0,0)';
 
             this.context = this.canvas.getContext('2d');
 
             this.offset = this.getOffset(this.canvas);
-            this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
+            this.bounds = new Quad(this.offset.x, this.offset.y, width, height);
             this.aspectRatio = width / height;
             this.scaleMode = StageScaleMode.NO_SCALE;
             this.scale = new StageScaleMode(this._game);
@@ -91,9 +92,9 @@ module Phaser {
 
         /**
          * Bound of this stage.
-         * @type {Rectangle}
+         * @type {Quad}
          */
-        public bounds: Rectangle;
+        public bounds: Quad;
 
         /**
          * Asperct ratio, thus: width / height.
@@ -135,9 +136,9 @@ module Phaser {
 
         /**
          * Offset from this stage to the canvas element.
-         * @type {Point}
+         * @type {MicroPoint}
          */
-        public offset: Point;
+        public offset: MicroPoint;
 
         /**
          * This object manages scaling of the game, see(StageScaleMode).
@@ -211,7 +212,7 @@ module Phaser {
 
         }
 
-        private getOffset(element): Point {
+        private getOffset(element): MicroPoint {
 
             var box = element.getBoundingClientRect();
 
@@ -220,7 +221,7 @@ module Phaser {
             var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
             var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
 
-            return new Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+            return new MicroPoint(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
 
         }
 

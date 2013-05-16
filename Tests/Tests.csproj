@@ -119,6 +119,10 @@
     <Content Include="input\multitouch.js">
       <DependentUpon>multitouch.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="input\single touch.ts" />
+    <Content Include="input\single touch.js">
+      <DependentUpon>single touch.ts</DependentUpon>
+    </Content>
     <Content Include="misc\bootscreen.js">
       <DependentUpon>bootscreen.ts</DependentUpon>
     </Content>

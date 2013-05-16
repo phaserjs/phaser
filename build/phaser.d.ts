@@ -350,8 +350,7 @@ module Phaser {
         /**
         * GameObject constructor
         *
-        * Create a new <code>GameObject</code> object at specific position with
-        * specific width and height.
+        * Create a new <code>GameObject</code> object at specific position with specific width and height.
         *
         * @param [x] {number} The x position of the object.
         * @param [y] {number} The y position of the object.
@@ -448,7 +447,7 @@ module Phaser {
         */
         public align: number;
         /**
-        * Oorientation of the object.
+        * Orientation of the object.
         * @type {number}
         */
         public facing: number;
@@ -688,7 +687,7 @@ module Phaser {
         public reset(X: number, Y: number): void;
         /**
         * Handy for checking if this object is touching a particular surface.
-        * For slightly better performance you can just &amp; the value directly numbero <code>touching</code>.
+        * For slightly better performance you can just &amp; the value directly into <code>touching</code>.
         * However, this method is good for readability and accessibility.
         *
         * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
@@ -697,7 +696,7 @@ module Phaser {
         */
         public isTouching(Direction: number): bool;
         /**
-        * Handy function for checking if this object is just landed on a particular surface.
+        * Handy function for checking if this object just landed on a particular surface.
         *
         * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
@@ -724,7 +723,7 @@ module Phaser {
         public setBounds(x: number, y: number, width: number, height: number): void;
         /**
         * If you do not wish this object to be visible to a specific camera, pass the camera here.
-        
+        *
         * @param camera {Camera} The specific camera.
         */
         public hideFromCamera(camera: Camera): void;
@@ -735,7 +734,7 @@ module Phaser {
         */
         public showToCamera(camera: Camera): void;
         /**
-        * This will make the object not visible to any cameras.
+        * This clears the camera black list, making the GameObject visible to all cameras.
         */
         public clearCameraList(): void;
         /**
@@ -1035,6 +1034,11 @@ module Phaser {
         */
         public renderDebug: bool;
         /**
+        * Color of the Sprite when no image is present. Format is a css color string.
+        * @type {string}
+        */
+        public fillColor: string;
+        /**
         * Color of bound when render debug. (see renderDebug) Format is a css color string.
         * @type {string}
         */
@@ -1068,7 +1072,7 @@ module Phaser {
         * @param [color] {number} specifies the color of the generated block. (format is 0xAARRGGBB)
         * @return {Sprite} Sprite instance itself.
         */
-        public makeGraphic(width: number, height: number, color?: number): Sprite;
+        public makeGraphic(width: number, height: number, color?: string): Sprite;
         /**
         * Check whether this object is visible in a specific camera rectangle.
         * @param camera {Rectangle} The rectangle you want to check.
@@ -1076,7 +1080,7 @@ module Phaser {
         */
         public inCamera(camera: Rectangle): bool;
         /**
-        * Automatically called after update() by the game loop, this function just update animations.
+        * Automatically called after update() by the game loop, this function just updates animations.
         */
         public postUpdate(): void;
         public frame : number;
@@ -5013,9 +5017,9 @@ module Phaser {
         private _pauseScreen;
         /**
         * Bound of this stage.
-        * @type {Rectangle}
+        * @type {Quad}
         */
-        public bounds: Rectangle;
+        public bounds: Quad;
         /**
         * Asperct ratio, thus: width / height.
         * @type {number}
@@ -5050,9 +5054,9 @@ module Phaser {
         public disableBootScreen: bool;
         /**
         * Offset from this stage to the canvas element.
-        * @type {Point}
+        * @type {MicroPoint}
         */
-        public offset: Point;
+        public offset: MicroPoint;
         /**
         * This object manages scaling of the game, see(StageScaleMode).
         * @type {StageScaleMode}
@@ -5777,6 +5781,11 @@ module Phaser {
         */
         public touch: bool;
         /**
+        * Is mspointer available?
+        * @type {boolean}
+        */
+        public mspointer: bool;
+        /**
         * Is css3D available?
         * @type {boolean}
         */
@@ -6136,45 +6145,60 @@ module Phaser {
     }
 }
 /**
-* Phaser - Finger
+* Phaser - Pointer
 *
-* A Finger object is used by the Touch manager and represents a single finger on the touch screen.
+* A Pointer object is used by the Touch and MSPoint managers and represents a single finger on the touch screen.
 */
 module Phaser {
-    class Finger {
+    class Pointer {
         /**
         * Constructor
         * @param {Phaser.Game} game.
-        * @return {Phaser.Finger} This object.
+        * @return {Phaser.Pointer} This object.
         */
-        constructor(game: Game);
+        constructor(game: Game, id: number);
         /**
-        *
+        * Local private reference to game.
         * @property _game
         * @type {Phaser.Game}
         * @private
         **/
         private _game;
         /**
-        * An identification number for each touch point. When a touch point becomes active, it must be assigned an identifier that is distinct from any other active touch point. While the touch point remains active, all events that refer to it must assign it the same identifier.
+        * The Pointer ID (a number between 1 and 10)
+        * @property id
+        * @type {Number}
+        */
+        public id: number;
+        /**
+        * An identification number for each touch point.
+        * When a touch point becomes active, it is assigned an identifier that is distinct from any other active touch point.
+        * While the touch point remains active, all events that refer to it are assigned the same identifier.
         * @property identifier
         * @type {Number}
         */
         public identifier: number;
         /**
-        *
+        * Is this Pointer active or not? An active Pointer is one that is in contact with the touch screen.
         * @property active
         * @type {Boolean}
         */
         public active: bool;
         /**
-        *
-        * @property point
+        * A Point object representing the x/y screen coordinates of the Pointer.
+        * @property pointA
         * @type {Point}
         **/
-        public point: Point;
+        public pointA: Point;
         /**
-        *
+        * A Point object representing the x/y screen coordinates of the Pointer.
+        * @property pointB
+        * @type {Point}
+        **/
+        public pointB: Point;
+        /**
+        * A Circle object centered on the x/y screen coordinates of the Pointer.
+        * Default size of 44px (Apple's recommended "finger tip" size)
         * @property circle
         * @type {Circle}
         **/
@@ -6240,85 +6264,107 @@ module Phaser {
         */
         public target;
         /**
-        *
+        * If the Pointer is touching the touchscreen isDown is set to true
         * @property isDown
         * @type {Boolean}
         **/
         public isDown: bool;
         /**
-        *
+        * If the Pointer is not touching the touchscreen isUp is set to true
         * @property isUp
         * @type {Boolean}
         **/
         public isUp: bool;
         /**
-        *
+        * A timestamp representing when the Pointer first touched the touchscreen.
         * @property timeDown
         * @type {Number}
         **/
         public timeDown: number;
         /**
-        *
-        * @property duration
-        * @type {Number}
-        **/
-        public duration: number;
-        /**
-        *
+        * A timestamp representing when the Pointer left the touchscreen.
         * @property timeUp
         * @type {Number}
         **/
         public timeUp: number;
         /**
-        *
+        * The number of milliseconds below which the Pointer is considered justPressed
         * @property justPressedRate
         * @type {Number}
         **/
         public justPressedRate: number;
         /**
-        *
+        * The number of milliseconds below which the Pointer is considered justReleased
         * @property justReleasedRate
         * @type {Number}
         **/
         public justReleasedRate: number;
         /**
-        *
+        * The total number of times this Pointer has been touched to the touchscreen
+        * @property totalTouches
+        * @type {Number}
+        **/
+        public totalTouches: number;
+        /**
+        * How long the Pointer has been depressed on the touchscreen.
+        * @property duration
+        * @type {Number}
+        **/
+        public duration : number;
+        /**
+        * Gets the X value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        public getWorldX(camera?: Camera): number;
+        /**
+        * Gets the Y value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        public getWorldY(camera?: Camera): number;
+        /**
+        * Called when the Pointer is pressed onto the touchscreen
         * @method start
         * @param {Any} event
         */
-        public start(event): void;
+        public start(event): Pointer;
         /**
-        *
+        * Called when the Pointer is moved on the touchscreen
         * @method move
         * @param {Any} event
         */
-        public move(event): void;
+        public move(event): Pointer;
         /**
-        *
+        * Called when the Pointer leaves the target area
         * @method leave
         * @param {Any} event
         */
         public leave(event): void;
         /**
-        *
+        * Called when the Pointer leaves the touchscreen
         * @method stop
         * @param {Any} event
         */
-        public stop(event): void;
+        public stop(event): Pointer;
         /**
-        *
+        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen is less than justPressedRate
         * @method justPressed
         * @param {Number} [duration].
         * @return {Boolean}
         */
         public justPressed(duration?: number): bool;
         /**
-        *
+        * The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate
         * @method justReleased
         * @param {Number} [duration].
         * @return {Boolean}
         */
         public justReleased(duration?: number): bool;
+        public reset(): void;
+        /**
+        * Renders the Pointer.circle object onto the stage in green if down or red if up.
+        * @method renderDebug
+        */
+        public renderDebug(hideIfUp?: bool): void;
         /**
         * Returns a string representation of this object.
         * @method toString
@@ -6330,12 +6376,9 @@ module Phaser {
 /**
 * Phaser - MSPointer
 *
-* The MSPointer class handles touch interactions with the game and the resulting Finger objects.
+* The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
 * It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
-*
-*
-*  @todo       Gestures (pinch, zoom, swipe)
 */
 module Phaser {
     class MSPointer {
@@ -6353,104 +6396,10 @@ module Phaser {
         **/
         private _game;
         /**
-        *
-        * @property x
-        * @type Number
-        **/
-        public x: number;
-        /**
-        *
-        * @property y
-        * @type Number
-        **/
-        public y: number;
-        /**
-        *
-        * @property _fingers
-        * @type Array
-        * @private
-        **/
-        private _fingers;
-        /**
-        *
-        * @property finger1
-        * @type Finger
-        **/
-        public finger1: Finger;
-        /**
-        *
-        * @property finger2
-        * @type Finger
-        **/
-        public finger2: Finger;
-        /**
-        *
-        * @property finger3
-        * @type Finger
-        **/
-        public finger3: Finger;
-        /**
-        *
-        * @property finger4
-        * @type Finger
-        **/
-        public finger4: Finger;
-        /**
-        *
-        * @property finger5
-        * @type Finger
-        **/
-        public finger5: Finger;
-        /**
-        *
-        * @property finger6
-        * @type Finger
-        **/
-        public finger6: Finger;
-        /**
-        *
-        * @property finger7
-        * @type Finger
-        **/
-        public finger7: Finger;
-        /**
-        *
-        * @property finger8
-        * @type Finger
-        **/
-        public finger8: Finger;
-        /**
-        *
-        * @property finger9
-        * @type Finger
-        **/
-        public finger9: Finger;
-        /**
-        *
-        * @property finger10
-        * @type Finger
-        **/
-        public finger10: Finger;
-        /**
-        *
-        * @property latestFinger
-        * @type Finger
-        **/
-        public latestFinger: Finger;
-        /**
-        *
-        * @property isDown
-        * @type Boolean
-        **/
-        public isDown: bool;
-        /**
-        *
-        * @property isUp
-        * @type Boolean
-        **/
-        public isUp: bool;
-        public touchDown: Signal;
-        public touchUp: Signal;
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool;
         /**
         *
         * @method start
@@ -6476,81 +6425,101 @@ module Phaser {
         private onPointerUp(event);
         /**
         *
-        * @method calculateDistance
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        public calculateDistance(finger1: Finger, finger2: Finger): void;
-        /**
-        *
-        * @method calculateAngle
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        public calculateAngle(finger1: Finger, finger2: Finger): void;
-        /**
-        *
-        * @method checkOverlap
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        public checkOverlap(finger1: Finger, finger2: Finger): void;
-        /**
-        *
-        * @method update
-        */
-        public update(): void;
-        /**
-        *
         * @method stop
         */
         public stop(): void;
+    }
+}
+/**
+* Phaser - Gestures
+*
+* The Gesture class monitors for gestures and dispatches the resulting signals when they occur.
+* Note: Android 2.x only supports 1 touch event at once, no multi-touch
+*/
+module Phaser {
+    class Gestures {
         /**
-        *
-        * @method reset
+        * Constructor
+        * @param {Game} game.
+        * @return {Touch} This object.
+        */
+        constructor(game: Game);
+        /**
+        * Local private reference to game.
+        * @property _game
+        * @type {Game}
+        * @private
         **/
-        public reset(): void;
+        private _game;
+        private _p1;
+        private _p2;
+        private _p3;
+        private _p4;
+        private _p5;
+        private _p6;
+        private _p7;
+        private _p8;
+        private _p9;
+        private _p10;
+        public start(): void;
     }
 }
 /**
 * Phaser - Input
 *
-* A game specific Input manager that looks after the mouse, keyboard and touch objects. This is updated by the core game loop.
+* A game specific Input manager that looks after the mouse, keyboard and touch objects.
+* This is updated by the core game loop.
 */
 module Phaser {
     class Input {
         constructor(game: Game);
+        /**
+        * Local private reference to game.
+        */
         private _game;
         /**
-        *
+        * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
+        * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
+        * @type {Boolean}
+        */
+        public disabled: bool;
+        /**
+        * Phaser.Mouse handler
         * @type {Mouse}
         */
         public mouse: Mouse;
         /**
-        *
+        * Phaser.Keyboard handler
         * @type {Keyboard}
         */
         public keyboard: Keyboard;
         /**
-        *
+        * Phaser.Touch handler
         * @type {Touch}
         */
         public touch: Touch;
         /**
-        *
+        * Phaser.MSPointer handler
         * @type {MSPointer}
         */
         public mspointer: MSPointer;
         /**
-        *
-        * @type {Number}
+        * Phaser.Gestures handler
+        * @type {Gestures}
         */
-        public x: number;
+        public gestures: Gestures;
         /**
-        *
+        * X coordinate of the most recent Pointer event
         * @type {Number}
+        * @private
         */
-        public y: number;
+        private _x;
+        /**
+        * X coordinate of the most recent Pointer event
+        * @type {Number}
+        * @private
+        */
+        private _y;
         /**
         *
         * @type {Number}
@@ -6572,17 +6541,158 @@ module Phaser {
         */
         public worldY: number;
         /**
-        *
+        * The maximum number of Pointers allowed to be active at any one time.
+        * For lots of games it's useful to set this to 1
+        * @type {Number}
+        */
+        public maxPointers: number;
+        /**
+        * A Signal dispatched when a mouse/Pointer object is pressed
         * @type {Phaser.Signal}
         */
         public onDown: Signal;
         /**
-        *
+        * A Signal dispatched when a mouse/Pointer object is released
         * @type {Phaser.Signal}
         */
         public onUp: Signal;
+        /**
+        * A Signal dispatched when a Pointer object (including the mouse) is tapped: pressed and released quickly
+        * @type {Phaser.Signal}
+        */
+        public onTap: Signal;
+        /**
+        * A Signal dispatched when a Pointer object (including the mouse) is double tapped: pressed and released quickly twice in succession
+        * @type {Phaser.Signal}
+        */
+        public onDoubleTap: Signal;
+        /**
+        * A Signal dispatched when a Pointer object (including the mouse) is held down
+        * @type {Phaser.Signal}
+        */
+        public onHold: Signal;
+        /**
+        * A Pointer object
+        * @property pointer1
+        * @type {Pointer}
+        **/
+        public pointer1: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer2
+        * @type {Pointer}
+        **/
+        public pointer2: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer3
+        * @type {Pointer}
+        **/
+        public pointer3: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer4
+        * @type {Pointer}
+        **/
+        public pointer4: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer5
+        * @type {Pointer}
+        **/
+        public pointer5: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer6
+        * @type {Pointer}
+        **/
+        public pointer6: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer7
+        * @type {Pointer}
+        **/
+        public pointer7: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer8
+        * @type {Pointer}
+        **/
+        public pointer8: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer9
+        * @type {Pointer}
+        **/
+        public pointer9: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer10
+        * @type {Pointer}
+        **/
+        public pointer10: Pointer;
+        /**
+        * The screen X coordinate
+        * @property x
+        * @type {Number}
+        **/
+        public x : number;
+        /**
+        * The screen Y coordinate
+        * @property y
+        * @type {Number}
+        **/
+        public y : number;
+        public start(): void;
         public update(): void;
         public reset(): void;
+        /**
+        * Get the total number of inactive Pointers
+        * @method totalInactivePointers
+        * @return {Number} The number of Pointers currently inactive
+        **/
+        public totalInactivePointers : number;
+        /**
+        * Get the total number of active Pointers
+        * @method totalActivePointers
+        * @return {Number} The number of Pointers currently active
+        **/
+        public totalActivePointers : number;
+        /**
+        * Find the first free Pointer object and start it, passing in the event data.
+        * @method startPointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was started or null if no Pointer object is available
+        **/
+        public startPointer(event): Pointer;
+        /**
+        * Updates the matching Pointer object, passing in the event data.
+        * @method updatePointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was updated or null if no Pointer object is available
+        **/
+        public updatePointer(event): Pointer;
+        /**
+        * Stops the matching Pointer object, passing in the event data.
+        * @method stopPointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was stopped or null if no Pointer object is available
+        **/
+        public stopPointer(event): Pointer;
+        /**
+        * Get the next Pointer object whos active property matches the given state
+        * @method getPointer
+        * @param {Boolean} state The state the Pointer should be in (false for inactive, true for active)
+        * @return {Pointer} A Pointer object or null if no Pointer object matches the requested state.
+        **/
+        public getPointer(state?: bool): Pointer;
+        /**
+        * Get the Pointer object whos identified property matches the given identifier value
+        * @method getPointerFromIdentifier
+        * @param {Number} identifier The Pointer.identifier value to search for
+        * @return {Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
+        **/
+        public getPointerFromIdentifier(identifier: number): Pointer;
         /**
         * @param {Camera} [camera]
         */
@@ -6612,6 +6722,11 @@ module Phaser {
         private _game;
         private _keys;
         private _capture;
+        /**
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool;
         public start(): void;
         /**
         * @param {Any} keycode
@@ -6764,6 +6879,11 @@ module Phaser {
         static MIDDLE_BUTTON: number;
         static RIGHT_BUTTON: number;
         /**
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool;
+        /**
         * @type {Boolean}
         */
         public isDown: bool;
@@ -6803,17 +6923,11 @@ module Phaser {
 /**
 * Phaser - Touch
 *
-* The Touch class handles touch interactions with the game and the resulting Finger objects.
+* The Touch class handles touch interactions with the game and the resulting Pointer objects.
 * http://www.w3.org/TR/touch-events/
 * https://developer.mozilla.org/en-US/docs/DOM/TouchList
 * http://www.html5rocks.com/en/mobile/touchandmouse/
 * Note: Android 2.x only supports 1 touch event at once, no multi-touch
-*
-*  @todo       Try and resolve update lag in Chrome/Android
-*              Gestures (pinch, zoom, swipe)
-*              GameObject Touch
-*              Touch point within GameObject
-*              Input Zones (mouse and touch) - lock entities within them + axis aligned drags
 */
 module Phaser {
     class Touch {
@@ -6831,104 +6945,10 @@ module Phaser {
         **/
         private _game;
         /**
-        *
-        * @property x
-        * @type {Number}
-        **/
-        public x: number;
-        /**
-        *
-        * @property y
-        * @type {Number}
-        **/
-        public y: number;
-        /**
-        *
-        * @property _fingers
-        * @type {Array}
-        * @private
-        **/
-        private _fingers;
-        /**
-        *
-        * @property finger1
-        * @type {Finger}
-        **/
-        public finger1: Finger;
-        /**
-        *
-        * @property finger2
-        * @type {Finger}
-        **/
-        public finger2: Finger;
-        /**
-        *
-        * @property finger3
-        * @type {Finger}
-        **/
-        public finger3: Finger;
-        /**
-        *
-        * @property finger4
-        * @type {Finger}
-        **/
-        public finger4: Finger;
-        /**
-        *
-        * @property finger5
-        * @type {Finger}
-        **/
-        public finger5: Finger;
-        /**
-        *
-        * @property finger6
-        * @type {Finger}
-        **/
-        public finger6: Finger;
-        /**
-        *
-        * @property finger7
-        * @type {Finger}
-        **/
-        public finger7: Finger;
-        /**
-        *
-        * @property finger8
-        * @type {Finger}
-        **/
-        public finger8: Finger;
-        /**
-        *
-        * @property finger9
-        * @type {Finger}
-        **/
-        public finger9: Finger;
-        /**
-        *
-        * @property finger10
-        * @type {Finger}
-        **/
-        public finger10: Finger;
-        /**
-        *
-        * @property latestFinger
-        * @type {Finger}
-        **/
-        public latestFinger: Finger;
-        /**
-        *
-        * @property isDown
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
         * @type {Boolean}
-        **/
-        public isDown: bool;
-        /**
-        *
-        * @property isUp
-        * @type {Boolean}
-        **/
-        public isUp: bool;
-        public touchDown: Signal;
-        public touchUp: Signal;
+        */
+        public disabled: bool;
         /**
         *
         * @method start
@@ -6947,18 +6967,21 @@ module Phaser {
         **/
         private onTouchStart(event);
         /**
-        * Doesn't appear to be supported by most browsers yet
+        * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
+        * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears
         * @method onTouchCancel
         * @param {Any} event
         **/
         private onTouchCancel(event);
         /**
+        * For touch enter and leave its a list of the touch points that have entered or left the target
         * Doesn't appear to be supported by most browsers yet
         * @method onTouchEnter
         * @param {Any} event
         **/
         private onTouchEnter(event);
         /**
+        * For touch enter and leave its a list of the touch points that have entered or left the target
         * Doesn't appear to be supported by most browsers yet
         * @method onTouchLeave
         * @param {Any} event
@@ -6978,40 +7001,9 @@ module Phaser {
         private onTouchEnd(event);
         /**
         *
-        * @method calculateDistance
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        public calculateDistance(finger1: Finger, finger2: Finger): void;
-        /**
-        *
-        * @method calculateAngle
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        public calculateAngle(finger1: Finger, finger2: Finger): void;
-        /**
-        *
-        * @method checkOverlap
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        public checkOverlap(finger1: Finger, finger2: Finger): void;
-        /**
-        *
-        * @method update
-        */
-        public update(): void;
-        /**
-        *
         * @method stop
         */
         public stop(): void;
-        /**
-        *
-        * @method reset
-        **/
-        public reset(): void;
     }
 }
 /**
@@ -8143,7 +8135,7 @@ module Phaser {
         /**
         * Game constructor
         *
-        * Instantiate a new <code>Game</code> object.
+        * Instantiate a new <code>Phaser.Game</code> object.
         *
         * @param callbackContext Which context will the callbacks be called with.
         * @param parent {string} ID of its parent DOM element.
@@ -8153,8 +8145,9 @@ module Phaser {
         * @param createCallback {function} Create callback invoked when create default screen.
         * @param updateCallback {function} Update callback invoked when update default screen.
         * @param renderCallback {function} Render callback invoked when render default screen.
+        * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
         */
-        constructor(callbackContext, parent?: string, width?: number, height?: number, initCallback?, createCallback?, updateCallback?, renderCallback?);
+        constructor(callbackContext, parent?: string, width?: number, height?: number, initCallback?, createCallback?, updateCallback?, renderCallback?, destroyCallback?);
         /**
         * Game loop trigger wrapper.
         */
@@ -8190,6 +8183,11 @@ module Phaser {
         */
         private _pendingState;
         /**
+        * The current State object (defaults to null)
+        * @type {State}
+        */
+        public state;
+        /**
         * Context for calling the callbacks.
         */
         public callbackContext;
@@ -8218,6 +8216,11 @@ module Phaser {
         * @type {function}
         */
         public onPausedCallback;
+        /**
+        * This will be called when the state is destroyed (i.e. swapping to a new state)
+        * @type {function}
+        */
+        public onDestroyCallback;
         /**
         * Reference to the assets cache.
         * @type {Cache}
@@ -8326,8 +8329,9 @@ module Phaser {
         * @param createCallback {function} Create callback invoked when create state.
         * @param updateCallback {function} Update callback invoked when update state.
         * @param renderCallback {function} Render callback invoked when render state.
+        * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
         */
-        public setCallbacks(initCallback?, createCallback?, updateCallback?, renderCallback?): void;
+        public setCallbacks(initCallback?, createCallback?, updateCallback?, renderCallback?, destroyCallback?): void;
         /**
         * Switch to a new State.
         * @param state {State} The state you want to switch to.
@@ -8612,6 +8616,10 @@ module Phaser {
         * This method will be called when game paused.
         */
         public paused(): void;
+        /**
+        * This method will be called when the state is destroyed
+        */
+        public destroy(): void;
         /**
         * Create a new camera with specific position and size.
         *

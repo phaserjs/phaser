@@ -2,29 +2,38 @@
 
 (function () {
 
-    //  Here we create a quite tiny game (320x240 in size)
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
 
     function init() {
 
-        //  Tell Phaser that we want it to scale up to whatever the browser can handle, but to do it proportionally
-        myGame.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
+        myGame.loader.addImageFile('dragonsun', 'assets/pics/cougar_dragonsun.png');
+
+        myGame.loader.load();
 
     }
 
     function create() {
 
-        myGame.onRenderCallback = render;
+        console.log('dragons 8');
+
+        myGame.input.onDown.add(test1, this);
 
     }
 
-    function update() {
+    function test1() {
+        console.log('down');
+    }
 
+    function update() {
 
     }
 
     function render() {
 
+        myGame.input.pointer1.renderDebug();
+        myGame.input.pointer2.renderDebug();
+        myGame.input.pointer3.renderDebug();
+        myGame.input.pointer4.renderDebug();
 
     }
 
