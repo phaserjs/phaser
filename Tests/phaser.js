@@ -23,6 +23,8 @@ var Phaser;
             this.visible = true;
             this.alive = true;
             this.isGroup = false;
+            this.ignoreGlobalUpdate = false;
+            this.ignoreGlobalRender = false;
             this.ignoreDrawDebug = false;
         }
         Basic.prototype.destroy = /**
@@ -41,14 +43,16 @@ var Phaser;
         * Override this to update your class's position and appearance.
         * This is where most of your game rules and behavioral code will go.
         */
-        function () {
+        function (forceUpdate) {
+            if (typeof forceUpdate === "undefined") { forceUpdate = false; }
         };
         Basic.prototype.postUpdate = /**
         * Post-update is called right after <code>update()</code> on each object in the game loop.
         */
         function () {
         };
-        Basic.prototype.render = function (camera, cameraOffsetX, cameraOffsetY) {
+        Basic.prototype.render = function (camera, cameraOffsetX, cameraOffsetY, forceRender) {
+            if (typeof forceRender === "undefined") { forceRender = false; }
         };
         Basic.prototype.kill = /**
         * Handy for "killing" game objects.
@@ -512,6 +516,8 @@ var Phaser;
             //  Input
             this.inputEnabled = false;
             this._inputOver = false;
+            this.canvas = game.stage.canvas;
+            this.context = game.stage.context;
             this.bounds = new Phaser.Rectangle(x, y, width, height);
             this.exists = true;
             this.active = true;
@@ -559,7 +565,6 @@ var Phaser;
         * Pre-update is called right before update() on each object in the game loop.
         */
         function () {
-            //  flicker time
             this.last.x = this.bounds.x;
             this.last.y = this.bounds.y;
         };
@@ -868,6 +873,16 @@ var Phaser;
         */
         function (x, y, width, height) {
             this.worldBounds = new Phaser.Quad(x, y, width, height);
+        };
+        GameObject.prototype.setBoundsFromWorld = /**
+        * Set the world bounds that this GameObject can exist within based on the size of the current game world.
+        *
+        * @param action {number} The action to take if the object hits the world bounds, either OUT_OF_BOUNDS_KILL or OUT_OF_BOUNDS_STOP
+        */
+        function (action) {
+            if (typeof action === "undefined") { action = GameObject.OUT_OF_BOUNDS_STOP; }
+            this.setBounds(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
+            this.outOfBoundsAction = action;
         };
         GameObject.prototype.hideFromCamera = /**
         * If you do not wish this object to be visible to a specific camera, pass the camera here.
@@ -1620,8 +1635,8 @@ var Phaser;
             }
             //  Alpha
             if(this.alpha !== 1) {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
+                var globalAlpha = this.context.globalAlpha;
+                this.context.globalAlpha = this.alpha;
             }
             this._sx = 0;
             this._sy = 0;
@@ -1667,15 +1682,15 @@ var Phaser;
             }
             //	Rotation - needs to work from origin point really, but for now from center
             if(this.angle !== 0 || this.rotationOffset !== 0 || this.flipped == true) {
-                this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+                this.context.save();
+                this.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
                 if(this.renderRotation == true && (this.angle !== 0 || this.rotationOffset !== 0)) {
-                    this._game.stage.context.rotate((this.rotationOffset + this.angle) * (Math.PI / 180));
+                    this.context.rotate((this.rotationOffset + this.angle) * (Math.PI / 180));
                 }
                 this._dx = -(this._dw / 2);
                 this._dy = -(this._dh / 2);
                 if(this.flipped == true) {
-                    this._game.stage.context.scale(-1, 1);
+                    this.context.scale(-1, 1);
                 }
             }
             this._sx = Math.round(this._sx);
@@ -1688,7 +1703,7 @@ var Phaser;
             this._dh = Math.round(this._dh);
             if(this._texture != null) {
                 if(this._dynamicTexture) {
-                    this._game.stage.context.drawImage(this._texture.canvas, //	Source Image
+                    this.context.drawImage(this._texture.canvas, //	Source Image
                     this._sx, //	Source X (location within the source image)
                     this._sy, //	Source Y
                     this._sw, //	Source Width
@@ -1699,7 +1714,7 @@ var Phaser;
                     this._dh);
                     //	Destination Height (always same as Source Height unless scaled)
                                     } else {
-                    this._game.stage.context.drawImage(this._texture, //	Source Image
+                    this.context.drawImage(this._texture, //	Source Image
                     this._sx, //	Source X (location within the source image)
                     this._sy, //	Source Y
                     this._sw, //	Source Width
@@ -1711,18 +1726,18 @@ var Phaser;
                     //	Destination Height (always same as Source Height unless scaled)
                                     }
             } else {
-                this._game.stage.context.fillStyle = this.fillColor;
-                this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+                this.context.fillStyle = this.fillColor;
+                this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
             if(this.flipped === true || this.rotation !== 0 || this.rotationOffset !== 0) {
-                //this._game.stage.context.translate(0, 0);
-                this._game.stage.context.restore();
+                //this.context.translate(0, 0);
+                this.context.restore();
             }
             if(this.renderDebug) {
                 this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
             }
             if(globalAlpha > -1) {
-                this._game.stage.context.globalAlpha = globalAlpha;
+                this.context.globalAlpha = globalAlpha;
             }
             return true;
         };
@@ -1735,30 +1750,30 @@ var Phaser;
         function (camera, cameraOffsetX, cameraOffsetY) {
             this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
             this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
-            this._game.stage.context.fillStyle = this.renderDebugColor;
-            this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            this._game.stage.context.fillStyle = this.renderDebugPointColor;
+            this.context.fillStyle = this.renderDebugColor;
+            this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+            this.context.fillStyle = this.renderDebugPointColor;
             var hw = this.bounds.halfWidth * this.scale.x;
             var hh = this.bounds.halfHeight * this.scale.y;
             var sw = (this.bounds.width * this.scale.x) - 1;
             var sh = (this.bounds.height * this.scale.y) - 1;
-            this._game.stage.context.fillRect(this._dx, this._dy, 1, 1)//  top left
+            this.context.fillRect(this._dx, this._dy, 1, 1)//  top left
             ;
-            this._game.stage.context.fillRect(this._dx + hw, this._dy, 1, 1)//  top center
+            this.context.fillRect(this._dx + hw, this._dy, 1, 1)//  top center
             ;
-            this._game.stage.context.fillRect(this._dx + sw, this._dy, 1, 1)//  top right
+            this.context.fillRect(this._dx + sw, this._dy, 1, 1)//  top right
             ;
-            this._game.stage.context.fillRect(this._dx, this._dy + hh, 1, 1)//  left center
+            this.context.fillRect(this._dx, this._dy + hh, 1, 1)//  left center
             ;
-            this._game.stage.context.fillRect(this._dx + hw, this._dy + hh, 1, 1)//  center
+            this.context.fillRect(this._dx + hw, this._dy + hh, 1, 1)//  center
             ;
-            this._game.stage.context.fillRect(this._dx + sw, this._dy + hh, 1, 1)//  right center
+            this.context.fillRect(this._dx + sw, this._dy + hh, 1, 1)//  right center
             ;
-            this._game.stage.context.fillRect(this._dx, this._dy + sh, 1, 1)//  bottom left
+            this.context.fillRect(this._dx, this._dy + sh, 1, 1)//  bottom left
             ;
-            this._game.stage.context.fillRect(this._dx + hw, this._dy + sh, 1, 1)//  bottom center
+            this.context.fillRect(this._dx + hw, this._dy + sh, 1, 1)//  bottom center
             ;
-            this._game.stage.context.fillRect(this._dx + sw, this._dy + sh, 1, 1)//  bottom right
+            this.context.fillRect(this._dx + sw, this._dy + sh, 1, 1)//  bottom right
             ;
         };
         Sprite.prototype.renderDebugInfo = /**
@@ -1769,11 +1784,11 @@ var Phaser;
         */
         function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this._game.stage.context.fillStyle = color;
-            this._game.stage.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
-            this._game.stage.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
-            this._game.stage.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
-            this._game.stage.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
+            this.context.fillStyle = color;
+            this.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
+            this.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
+            this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
+            this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
         };
         return Sprite;
     })(Phaser.GameObject);
@@ -5842,11 +5857,32 @@ var Phaser;
                 this.context.putImageData(sourceTexture.getPixels(sourceRect), destPoint.x, destPoint.y);
             }
         };
+        DynamicTexture.prototype.assignCanvasToGameObjects = /**
+        * Given an array of GameObjects it will update each of them so that their canvas/contexts reference this DynamicTexture
+        * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
+        */
+        function (objects) {
+            for(var i = 0; i < objects.length; i++) {
+                objects[i].canvas = this.canvas;
+                objects[i].context = this.context;
+            }
+        };
         DynamicTexture.prototype.clear = /**
         * Clear the whole canvas.
         */
         function () {
             this.context.clearRect(0, 0, this.bounds.width, this.bounds.height);
+        };
+        DynamicTexture.prototype.render = /**
+        * Renders this DynamicTexture to the Stage at the given x/y coordinates
+        *
+        * @param x {number} The X coordinate to render on the stage to (given in screen coordinates, not world)
+        * @param y {number} The Y coordinate to render on the stage to (given in screen coordinates, not world)
+        */
+        function (x, y) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            this._game.stage.context.drawImage(this.canvas, x, y);
         };
         Object.defineProperty(DynamicTexture.prototype, "width", {
             get: function () {
@@ -6807,14 +6843,18 @@ var Phaser;
         Group.prototype.update = /**
         * Automatically goes through and calls update on everything you added.
         */
-        function () {
+        function (forceUpdate) {
+            if (typeof forceUpdate === "undefined") { forceUpdate = false; }
+            if(this.ignoreGlobalUpdate && forceUpdate == false) {
+                return;
+            }
             var basic;
             var i = 0;
             while(i < this.length) {
                 basic = this.members[i++];
-                if((basic != null) && basic.exists && basic.active) {
+                if((basic != null) && basic.exists && basic.active && basic.ignoreGlobalUpdate == false) {
                     basic.preUpdate();
-                    basic.update();
+                    basic.update(forceUpdate);
                     basic.postUpdate();
                 }
             }
@@ -6822,13 +6862,17 @@ var Phaser;
         Group.prototype.render = /**
         * Automatically goes through and calls render on everything you added.
         */
-        function (camera, cameraOffsetX, cameraOffsetY) {
+        function (camera, cameraOffsetX, cameraOffsetY, forceRender) {
+            if (typeof forceRender === "undefined") { forceRender = false; }
+            if(this.ignoreGlobalRender && forceRender == false) {
+                return;
+            }
             var basic;
             var i = 0;
             while(i < this.length) {
                 basic = this.members[i++];
-                if((basic != null) && basic.exists && basic.visible) {
-                    basic.render(camera, cameraOffsetX, cameraOffsetY);
+                if((basic != null) && basic.exists && basic.visible && basic.ignoreGlobalRender == false) {
+                    basic.render(camera, cameraOffsetX, cameraOffsetY, forceRender);
                 }
             }
         };
@@ -7508,6 +7552,7 @@ var Phaser;
             this._onFileLoad = onFileLoadCallback;
             if(this._keys.length > 0) {
                 this._progressChunk = 100 / this._keys.length;
+                console.log('prog chunk', this._progressChunk);
                 this.loadFile();
             } else {
                 this.progress = 1;
@@ -7647,8 +7692,10 @@ var Phaser;
         */
         function (previousKey, success) {
             this.progress = Math.round(this.progress + this._progressChunk);
-            if(this.progress > 1) {
-                this.progress = 1;
+            //this.progress = this.progress + this._progressChunk;
+            console.log('progress', this.progress);
+            if(this.progress > 100) {
+                this.progress = 100;
             }
             if(this._onFileLoad) {
                 this._onFileLoad.call(this._game.callbackContext, this.progress, previousKey, success);
@@ -9889,12 +9936,12 @@ var Phaser;
         World.prototype.createGroup = /**
         * Create a new object container.
         *
-        * @param [MaxSize] {number} capacity of this group.
+        * @param [maxSize] {number} capacity of this group.
         * @returns {Group} The newly created group.
         */
-        function (MaxSize) {
-            if (typeof MaxSize === "undefined") { MaxSize = 0; }
-            return this.group.add(new Phaser.Group(this._game, MaxSize));
+        function (maxSize) {
+            if (typeof maxSize === "undefined") { maxSize = 0; }
+            return this.group.add(new Phaser.Group(this._game, maxSize));
         };
         World.prototype.createScrollZone = /**
         * Create a new ScrollZone object with image key, position and size.
@@ -10995,16 +11042,18 @@ var Phaser;
         * @param {Any} event
         */
         function (event) {
-            console.log('duration', this.duration);
+            this.timeUp = this._game.time.now;
             if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
                 this._game.input.onUp.dispatch(this);
                 //  Was it a tap?
                 if(this.duration >= 0 && this.duration <= this._game.input.tapRate) {
-                    //  Yes, let's dispatch the signal
-                    this._game.input.onTap.dispatch(this);
                     //  Was it a double-tap?
                     if(this.timeUp - this.previousTapTime < this._game.input.doubleTapRate) {
-                        this._game.input.onDoubleTap.dispatch(this);
+                        //  Yes, let's dispatch the signal then with the 2nd parameter set to true
+                        this._game.input.onTap.dispatch(this, true);
+                    } else {
+                        //  Wasn't a double-tap, so dispatch a single tap signal
+                        this._game.input.onTap.dispatch(this, false);
                     }
                     this.previousTapTime = this.timeUp;
                 }
@@ -11013,7 +11062,6 @@ var Phaser;
             this.withinGame = false;
             this.isDown = false;
             this.isUp = true;
-            this.timeUp = this._game.time.now;
             if(this.isMouse == false) {
                 this._game.input.currentPointers--;
             }
@@ -11308,7 +11356,7 @@ var Phaser;
             * @property doubleTapRate
             * @type {Number}
             **/
-            this.doubleTapRate = 250;
+            this.doubleTapRate = 300;
             /**
             * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
             * @property holdRate
@@ -11368,7 +11416,6 @@ var Phaser;
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
-            this.onDoubleTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
             this.currentPointers = 0;
         }
@@ -11440,7 +11487,6 @@ var Phaser;
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
-            this.onDoubleTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
             this.currentPointers = 0;
         };
@@ -12210,17 +12256,17 @@ var Phaser;
         * Creates a new <code>Emitter</code> object at a specific position.
         * Does NOT automatically generate or attach particles!
         *
-        * @param X {number} The X position of the emitter.
-        * @param Y {number} The Y position of the emitter.
-        * @param [Size] {number} specifies a maximum capacity for this emitter.
+        * @param x {number} The X position of the emitter.
+        * @param y {number} The Y position of the emitter.
+        * @param [size] {number} Specifies a maximum capacity for this emitter.
         */
-        function Emitter(game, X, Y, Size) {
-            if (typeof X === "undefined") { X = 0; }
-            if (typeof Y === "undefined") { Y = 0; }
-            if (typeof Size === "undefined") { Size = 0; }
-                _super.call(this, game, Size);
-            this.x = X;
-            this.y = Y;
+        function Emitter(game, x, y, size) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof size === "undefined") { size = 0; }
+                _super.call(this, game, size);
+            this.x = x;
+            this.y = y;
             this.width = 0;
             this.height = 0;
             this.minParticleSpeed = new Phaser.MicroPoint(-100, -100);
@@ -12699,8 +12745,8 @@ var Phaser;
             }
             //  Alpha
             if(this.alpha !== 1) {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
+                var globalAlpha = this.context.globalAlpha;
+                this.context.globalAlpha = this.alpha;
             }
             this._dx = cameraOffsetX + (this.bounds.x - camera.worldView.x);
             this._dy = cameraOffsetY + (this.bounds.y - camera.worldView.y);
@@ -12720,9 +12766,9 @@ var Phaser;
             /*
             if (this.angle !== 0)
             {
-            this._game.stage.context.save();
-            this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
-            this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+            this.context.save();
+            this.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
+            this.context.rotate(this.angle * (Math.PI / 180));
             this._dx = -(this._dw / 2);
             this._dy = -(this._dh / 2);
             }
@@ -12733,45 +12779,45 @@ var Phaser;
             this._dh = Math.round(this._dh);
             this._game.stage.saveCanvasValues();
             //  Debug
-            //this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
-            //this._game.stage.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-            this._game.stage.context.lineWidth = this.lineWidth;
-            this._game.stage.context.strokeStyle = this.lineColor;
-            this._game.stage.context.fillStyle = this.fillColor;
+            //this.context.fillStyle = 'rgba(255,0,0,0.5)';
+            //this.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            this.context.lineWidth = this.lineWidth;
+            this.context.strokeStyle = this.lineColor;
+            this.context.fillStyle = this.fillColor;
             if(this._game.stage.fillStyle !== this.fillColor) {
             }
             //  Primitive Renderer
             if(this.type == GeomSprite.CIRCLE) {
-                this._game.stage.context.beginPath();
-                this._game.stage.context.arc(this._dx, this._dy, this.circle.radius, 0, Math.PI * 2);
-                this._game.stage.context.stroke();
+                this.context.beginPath();
+                this.context.arc(this._dx, this._dy, this.circle.radius, 0, Math.PI * 2);
+                this.context.stroke();
                 if(this.renderFill) {
-                    this._game.stage.context.fill();
+                    this.context.fill();
                 }
-                this._game.stage.context.closePath();
+                this.context.closePath();
             } else if(this.type == GeomSprite.LINE) {
-                this._game.stage.context.beginPath();
-                this._game.stage.context.moveTo(this._dx, this._dy);
-                this._game.stage.context.lineTo(this.line.x2, this.line.y2);
-                this._game.stage.context.stroke();
-                this._game.stage.context.closePath();
+                this.context.beginPath();
+                this.context.moveTo(this._dx, this._dy);
+                this.context.lineTo(this.line.x2, this.line.y2);
+                this.context.stroke();
+                this.context.closePath();
             } else if(this.type == GeomSprite.POINT) {
-                this._game.stage.context.fillRect(this._dx, this._dy, 2, 2);
+                this.context.fillRect(this._dx, this._dy, 2, 2);
             } else if(this.type == GeomSprite.RECTANGLE) {
                 //  We can use the faster fillRect if we don't need the outline
                 if(this.renderOutline == false) {
-                    this._game.stage.context.fillRect(this._dx, this._dy, this.rect.width, this.rect.height);
+                    this.context.fillRect(this._dx, this._dy, this.rect.width, this.rect.height);
                 } else {
-                    this._game.stage.context.beginPath();
-                    this._game.stage.context.rect(this._dx, this._dy, this.rect.width, this.rect.height);
-                    this._game.stage.context.stroke();
+                    this.context.beginPath();
+                    this.context.rect(this._dx, this._dy, this.rect.width, this.rect.height);
+                    this.context.stroke();
                     if(this.renderFill) {
-                        this._game.stage.context.fill();
+                        this.context.fill();
                     }
-                    this._game.stage.context.closePath();
+                    this.context.closePath();
                 }
                 //  And now the edge points
-                this._game.stage.context.fillStyle = 'rgb(255,255,255)';
+                this.context.fillStyle = 'rgb(255,255,255)';
                 //this.renderPoint(this.rect.topLeft, this._dx, this._dy, 2);
                 //this.renderPoint(this.rect.topCenter, this._dx, this._dy, 2);
                 //this.renderPoint(this.rect.topRight, this._dx, this._dy, 2);
@@ -12793,11 +12839,11 @@ var Phaser;
             }
             this._game.stage.restoreCanvasValues();
             if(this.rotation !== 0) {
-                this._game.stage.context.translate(0, 0);
-                this._game.stage.context.restore();
+                this.context.translate(0, 0);
+                this.context.restore();
             }
             if(globalAlpha > -1) {
-                this._game.stage.context.globalAlpha = globalAlpha;
+                this.context.globalAlpha = globalAlpha;
             }
             return true;
         };
@@ -12812,7 +12858,7 @@ var Phaser;
             if (typeof offsetX === "undefined") { offsetX = 0; }
             if (typeof offsetY === "undefined") { offsetY = 0; }
             if (typeof size === "undefined") { size = 1; }
-            this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, size, size);
+            this.context.fillRect(offsetX + point.x, offsetY + point.y, size, size);
         };
         GeomSprite.prototype.renderDebugInfo = /**
         * Render debug infos. (this method does not work now)
@@ -12822,11 +12868,11 @@ var Phaser;
         */
         function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            //this._game.stage.context.fillStyle = color;
-            //this._game.stage.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
-            //this._game.stage.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
-            //this._game.stage.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
-            //this._game.stage.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
+            //this.context.fillStyle = color;
+            //this.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
+            //this.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
+            //this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
+            //this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
                     };
         GeomSprite.prototype.collide = /**
         * Gives a basic boolean response to a geometric collision.
@@ -13061,6 +13107,8 @@ var Phaser;
             this.tileHeight = tileHeight;
             this.boundsInTiles = new Phaser.Rectangle();
             //this.scrollFactor = new MicroPoint(1, 1);
+            this.canvas = game.stage.canvas;
+            this.context = game.stage.context;
             this.mapData = [];
             this._tempTileBlock = [];
             this._texture = this._game.cache.getImage(key);
@@ -13336,11 +13384,11 @@ var Phaser;
         };
         TilemapLayer.prototype.renderDebugInfo = function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this._game.stage.context.fillStyle = color;
-            this._game.stage.context.fillText('TilemapLayer: ' + this.name, x, y);
-            this._game.stage.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
-            this._game.stage.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
-            this._game.stage.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
+            this.context.fillStyle = color;
+            this.context.fillText('TilemapLayer: ' + this.name, x, y);
+            this.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
+            this.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
+            this.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
         };
         TilemapLayer.prototype.render = /**
         * Render this layer to a specific camera with offset to camera.
@@ -13395,14 +13443,14 @@ var Phaser;
             */
             //  Alpha
             if(this.alpha !== 1) {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
+                var globalAlpha = this.context.globalAlpha;
+                this.context.globalAlpha = this.alpha;
             }
             for(var row = this._startY; row < this._startY + this._maxY; row++) {
                 this._columnData = this.mapData[row];
                 for(var tile = this._startX; tile < this._startX + this._maxX; tile++) {
                     if(this._tileOffsets[this._columnData[tile]]) {
-                        this._game.stage.context.drawImage(this._texture, //  Source Image
+                        this.context.drawImage(this._texture, //  Source Image
                         this._tileOffsets[this._columnData[tile]].x, //  Source X (location within the source image)
                         this._tileOffsets[this._columnData[tile]].y, //  Source Y
                         this.tileWidth, //	Source Width
@@ -13419,7 +13467,7 @@ var Phaser;
                 this._ty += this.tileHeight;
             }
             if(globalAlpha > -1) {
-                this._game.stage.context.globalAlpha = globalAlpha;
+                this.context.globalAlpha = globalAlpha;
             }
             return true;
         };
@@ -14160,8 +14208,8 @@ var Phaser;
             }
             //  Alpha
             if(this.alpha !== 1) {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
+                var globalAlpha = this.context.globalAlpha;
+                this.context.globalAlpha = this.alpha;
             }
             this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
             this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
@@ -14174,15 +14222,15 @@ var Phaser;
             }
             //	Rotation - needs to work from origin point really, but for now from center
             if(this.angle !== 0 || this.flipped == true) {
-                this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+                this.context.save();
+                this.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
                 if(this.angle !== 0) {
-                    this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+                    this.context.rotate(this.angle * (Math.PI / 180));
                 }
                 this._dx = -(this._dw / 2);
                 this._dy = -(this._dh / 2);
                 if(this.flipped == true) {
-                    this._game.stage.context.scale(-1, 1);
+                    this.context.scale(-1, 1);
                 }
             }
             this._dx = Math.round(this._dx);
@@ -14191,13 +14239,13 @@ var Phaser;
             this._dh = Math.round(this._dh);
             for(var i = 0; i < this.regions.length; i++) {
                 if(this._dynamicTexture) {
-                    this.regions[i].render(this._game.stage.context, this._dynamicTexture.canvas, this._dx, this._dy, this._dw, this._dh);
+                    this.regions[i].render(this.context, this._dynamicTexture.canvas, this._dx, this._dy, this._dw, this._dh);
                 } else {
-                    this.regions[i].render(this._game.stage.context, this._texture, this._dx, this._dy, this._dw, this._dh);
+                    this.regions[i].render(this.context, this._texture, this._dx, this._dy, this._dw, this._dh);
                 }
             }
             if(globalAlpha > -1) {
-                this._game.stage.context.globalAlpha = globalAlpha;
+                this.context.globalAlpha = globalAlpha;
             }
             return true;
         };
@@ -14687,12 +14735,12 @@ var Phaser;
         Game.prototype.createGroup = /**
         * Create a new object container.
         *
-        * @param MaxSize {number} Optional, capacity of this group.
+        * @param maxSize {number} Optional, capacity of this group.
         * @returns {Group} The newly created group.
         */
-        function (MaxSize) {
-            if (typeof MaxSize === "undefined") { MaxSize = 0; }
-            return this.world.createGroup(MaxSize);
+        function (maxSize) {
+            if (typeof maxSize === "undefined") { maxSize = 0; }
+            return this.world.createGroup(maxSize);
         };
         Game.prototype.createParticle = /**
         * Create a new Particle.
@@ -15039,12 +15087,12 @@ var Phaser;
         State.prototype.createGroup = /**
         * Create a new object container.
         *
-        * @param MaxSize {number} [optional] capacity of this group.
+        * @param maxSize {number} [optional] capacity of this group.
         * @returns {Group} The newly created group.
         */
-        function (MaxSize) {
-            if (typeof MaxSize === "undefined") { MaxSize = 0; }
-            return this.game.world.createGroup(MaxSize);
+        function (maxSize) {
+            if (typeof maxSize === "undefined") { maxSize = 0; }
+            return this.game.world.createGroup(maxSize);
         };
         State.prototype.createParticle = /**
         * Create a new Particle.

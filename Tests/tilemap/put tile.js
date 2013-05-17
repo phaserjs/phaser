@@ -28,8 +28,8 @@
         map.putTile(marker.x, marker.y, 32);
     }
     function update() {
-        marker.x = myGame.math.snapToFloor(myGame.input.worldX, 32);
-        marker.y = myGame.math.snapToFloor(myGame.input.worldY, 32);
+        marker.x = myGame.math.snapToFloor(myGame.input.getWorldX(), 32);
+        marker.y = myGame.math.snapToFloor(myGame.input.getWorldY(), 32);
         car.velocity.x = 0;
         car.velocity.y = 0;
         car.angularVelocity = 0;

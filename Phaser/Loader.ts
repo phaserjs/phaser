@@ -32,26 +32,32 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
+
         /**
          * Array stors assets keys. So you can get that asset by its unique key.
          */
         private _keys: string[];
+
         /**
          * Contains all the assets file infos.
          */
         private _fileList;
+
         /**
          * Game initialial assets loading callback.
          */
         private _gameCreateComplete;
         private _onComplete;
         private _onFileLoad;
+
         /**
          * Indicates assets loading progress. (from 0 to 100)
          * @type {number}
          */
         private _progressChunk: number;
+
         private _xhr: XMLHttpRequest;
+
         /**
          * Length of assets queue.
          * @type {number}
@@ -63,6 +69,7 @@ module Phaser {
          * @type {boolean}
          */
         public hasLoaded: bool;
+
         /**
          * Loading progress (from 0 to 1)
          * @type {number}
@@ -404,9 +411,9 @@ module Phaser {
 
             this.progress = Math.round(this.progress + this._progressChunk);
 
-            if (this.progress > 1)
+            if (this.progress > 100)
             {
-                this.progress = 1;
+                this.progress = 100;
             }
 
             if (this._onFileLoad)

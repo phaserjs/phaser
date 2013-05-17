@@ -34,6 +34,9 @@ module Phaser {
             this.boundsInTiles = new Rectangle();
             //this.scrollFactor = new MicroPoint(1, 1);
 
+            this.canvas = game.stage.canvas;
+            this.context = game.stage.context;
+
             this.mapData = [];
             this._tempTileBlock = [];
             this._texture = this._game.cache.getImage(key);
@@ -44,11 +47,13 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
+
         /**
          * The tilemap that contains this layer.
          * @type {Tilemap}
          */
         private _parent: Tilemap;
+
         /**
          * Tileset of this layer.
          */
@@ -78,26 +83,43 @@ module Phaser {
          * @type {string}
          */
         public name: string;
+
+        /**
+        * A reference to the Canvas this GameObject will render to
+        * @type {HTMLCanvasElement}
+        */
+        public canvas: HTMLCanvasElement;
+
+        /**
+        * A reference to the Canvas Context2D this GameObject will render to
+        * @type {CanvasRenderingContext2D}
+        */
+        public context: CanvasRenderingContext2D;
+
         /**
          * Opacity of this layer.
          * @type {number}
          */
         public alpha: number = 1;
+
         /**
          * Controls whether update() and draw() are automatically called.
          * @type {boolean}
          */
         public exists: bool = true;
+
         /**
          * Controls whether draw() are automatically called.
          * @type {boolean}
          */
         public visible: bool = true;
+
         //public scrollFactor: MicroPoint;
         /**
          * @type {string}
          */
         public orientation: string;
+
         /**
          * Properties of this map layer. (normally set by map editors)
          */
@@ -108,10 +130,12 @@ module Phaser {
          * @type {number[][]}
          */
         public mapData;
+
         /**
          * Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
          */
         public mapFormat: number;
+
         /**
          * It's width and height are in tiles instead of pixels.
          * @type {Rectangle}
@@ -123,6 +147,7 @@ module Phaser {
          * @type {number}
          */
         public tileWidth: number;
+
         /**
          * Height of a single tile.
          * @type {number}
@@ -135,6 +160,7 @@ module Phaser {
          * @type {number}
          */
         public widthInTiles: number = 0;
+
         /**
          * How many tiles in each column.
          * Read-only variable, do NOT recommend changing after the map is loaded!
@@ -147,6 +173,7 @@ module Phaser {
          * @type {number}
          */
         public widthInPixels: number = 0;
+
         /**
          * Read-only variable, do NOT recommend changing after the map is loaded!
          * @type {number}
@@ -158,6 +185,7 @@ module Phaser {
          * @type {number}
          */
         public tileMargin: number = 0;
+
         /**
          * Distance between every 2 neighbor tile in the tileset texture.
          * @type {number}
@@ -502,11 +530,11 @@ module Phaser {
 
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this._game.stage.context.fillStyle = color;
-            this._game.stage.context.fillText('TilemapLayer: ' + this.name, x, y);
-            this._game.stage.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
-            this._game.stage.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
-            this._game.stage.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
+            this.context.fillStyle = color;
+            this.context.fillText('TilemapLayer: ' + this.name, x, y);
+            this.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
+            this.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
+            this.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
 
         }
 
@@ -585,8 +613,8 @@ module Phaser {
             //  Alpha
             if (this.alpha !== 1)
             {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
+                var globalAlpha = this.context.globalAlpha;
+                this.context.globalAlpha = this.alpha;
             }
 
             for (var row = this._startY; row < this._startY + this._maxY; row++)
@@ -597,7 +625,7 @@ module Phaser {
                 {
                     if (this._tileOffsets[this._columnData[tile]])
                     {
-                        this._game.stage.context.drawImage(
+                        this.context.drawImage(
                             this._texture,	                                //  Source Image
                             this._tileOffsets[this._columnData[tile]].x,    //  Source X (location within the source image)
                             this._tileOffsets[this._columnData[tile]].y,    //  Source Y
@@ -622,13 +650,12 @@ module Phaser {
 
             if (globalAlpha > -1)
             {
-                this._game.stage.context.globalAlpha = globalAlpha;
+                this.context.globalAlpha = globalAlpha;
             }
 
             return true;
 
         }
-
 
     }
 }

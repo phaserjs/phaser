@@ -116,6 +116,10 @@
       <DependentUpon>shake.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="input\multitouch.ts" />
+    <TypeScriptCompile Include="groups\display order.ts" />
+    <Content Include="groups\display order.js">
+      <DependentUpon>display order.ts</DependentUpon>
+    </Content>
     <Content Include="input\multitouch.js">
       <DependentUpon>multitouch.ts</DependentUpon>
     </Content>

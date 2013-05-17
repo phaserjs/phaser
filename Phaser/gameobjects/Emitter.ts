@@ -17,14 +17,16 @@ module Phaser {
          * Creates a new <code>Emitter</code> object at a specific position.
          * Does NOT automatically generate or attach particles!
          *
-         * @param X {number} The X position of the emitter.
-         * @param Y {number} The Y position of the emitter.
-         * @param [Size] {number} specifies a maximum capacity for this emitter.
+         * @param x {number} The X position of the emitter.
+         * @param y {number} The Y position of the emitter.
+         * @param [size] {number} Specifies a maximum capacity for this emitter.
          */
-        constructor(game: Game, X: number = 0, Y: number = 0, Size: number = 0) {
-            super(game, Size);
-            this.x = X;
-            this.y = Y;
+        constructor(game: Game, x: number = 0, y: number = 0, size: number = 0) {
+
+            super(game, size);
+
+            this.x = x;
+            this.y = y;
             this.width = 0;
             this.height = 0;
             this.minParticleSpeed = new MicroPoint(-100, -100);
@@ -42,6 +44,7 @@ module Phaser {
             this._explode = true;
             this.on = false;
             this._point = new MicroPoint();
+
         }
 
         /**

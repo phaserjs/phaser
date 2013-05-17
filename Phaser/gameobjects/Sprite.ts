@@ -232,8 +232,8 @@ module Phaser {
             //  Alpha
             if (this.alpha !== 1)
             {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
+                var globalAlpha = this.context.globalAlpha;
+                this.context.globalAlpha = this.alpha;
             }
 
             this._sx = 0;
@@ -304,12 +304,12 @@ module Phaser {
             //	Rotation - needs to work from origin point really, but for now from center
             if (this.angle !== 0 || this.rotationOffset !== 0 || this.flipped == true)
             {
-                this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+                this.context.save();
+                this.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
 
                 if (this.renderRotation == true &&  (this.angle !== 0 || this.rotationOffset !== 0))
                 {
-                    this._game.stage.context.rotate((this.rotationOffset + this.angle) * (Math.PI / 180));
+                    this.context.rotate((this.rotationOffset + this.angle) * (Math.PI / 180));
                 }
 
                 this._dx = -(this._dw / 2);
@@ -317,7 +317,7 @@ module Phaser {
 
                 if (this.flipped == true)
                 {
-                	this._game.stage.context.scale(-1, 1);
+                	this.context.scale(-1, 1);
                 }
             }
 
@@ -334,7 +334,7 @@ module Phaser {
             {
                 if (this._dynamicTexture)
                 {
-                    this._game.stage.context.drawImage(
+                    this.context.drawImage(
                         this._texture.canvas,   //	Source Image
                         this._sx, 			    //	Source X (location within the source image)
                         this._sy, 			    //	Source Y
@@ -348,7 +348,7 @@ module Phaser {
                 }
                 else
                 {
-                    this._game.stage.context.drawImage(
+                    this.context.drawImage(
                         this._texture,	    //	Source Image
                         this._sx, 			//	Source X (location within the source image)
                         this._sy, 			//	Source Y
@@ -363,14 +363,14 @@ module Phaser {
             }
             else
             {
-                this._game.stage.context.fillStyle = this.fillColor;
-                this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+                this.context.fillStyle = this.fillColor;
+                this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
 
             if (this.flipped === true || this.rotation !== 0 || this.rotationOffset !== 0)
             {
-                //this._game.stage.context.translate(0, 0);
-                this._game.stage.context.restore();
+                //this.context.translate(0, 0);
+                this.context.restore();
             }
 
             if (this.renderDebug)
@@ -380,7 +380,7 @@ module Phaser {
 
             if (globalAlpha > -1)
             {
-                this._game.stage.context.globalAlpha = globalAlpha;
+                this.context.globalAlpha = globalAlpha;
             }
 
             return true;
@@ -398,24 +398,24 @@ module Phaser {
             this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
             this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
 
-            this._game.stage.context.fillStyle = this.renderDebugColor;
-            this._game.stage.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            this._game.stage.context.fillStyle = this.renderDebugPointColor;
+            this.context.fillStyle = this.renderDebugColor;
+            this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+            this.context.fillStyle = this.renderDebugPointColor;
 
             var hw = this.bounds.halfWidth * this.scale.x;
             var hh = this.bounds.halfHeight * this.scale.y;
             var sw = (this.bounds.width * this.scale.x) - 1;
             var sh = (this.bounds.height * this.scale.y) - 1;
 
-            this._game.stage.context.fillRect(this._dx, this._dy, 1, 1);            //  top left
-            this._game.stage.context.fillRect(this._dx + hw, this._dy, 1, 1);       //  top center
-            this._game.stage.context.fillRect(this._dx + sw, this._dy, 1, 1);       //  top right
-            this._game.stage.context.fillRect(this._dx, this._dy + hh, 1, 1);       //  left center
-            this._game.stage.context.fillRect(this._dx + hw, this._dy + hh, 1, 1);  //  center
-            this._game.stage.context.fillRect(this._dx + sw, this._dy + hh, 1, 1);  //  right center
-            this._game.stage.context.fillRect(this._dx, this._dy + sh, 1, 1);       //  bottom left
-            this._game.stage.context.fillRect(this._dx + hw, this._dy + sh, 1, 1);  //  bottom center
-            this._game.stage.context.fillRect(this._dx + sw, this._dy + sh, 1, 1);  //  bottom right
+            this.context.fillRect(this._dx, this._dy, 1, 1);            //  top left
+            this.context.fillRect(this._dx + hw, this._dy, 1, 1);       //  top center
+            this.context.fillRect(this._dx + sw, this._dy, 1, 1);       //  top right
+            this.context.fillRect(this._dx, this._dy + hh, 1, 1);       //  left center
+            this.context.fillRect(this._dx + hw, this._dy + hh, 1, 1);  //  center
+            this.context.fillRect(this._dx + sw, this._dy + hh, 1, 1);  //  right center
+            this.context.fillRect(this._dx, this._dy + sh, 1, 1);       //  bottom left
+            this.context.fillRect(this._dx + hw, this._dy + sh, 1, 1);  //  bottom center
+            this.context.fillRect(this._dx + sw, this._dy + sh, 1, 1);  //  bottom right
 
         }
 
@@ -427,11 +427,11 @@ module Phaser {
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this._game.stage.context.fillStyle = color;
-            this._game.stage.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
-            this._game.stage.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
-            this._game.stage.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
-            this._game.stage.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
+            this.context.fillStyle = color;
+            this.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
+            this.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
+            this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
+            this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
 
         }
 

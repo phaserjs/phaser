@@ -401,7 +401,7 @@ module Phaser {
         */
         public stop(event): Pointer {
 
-            console.log('duration', this.duration);
+            this.timeUp = this._game.time.now;
 
             if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
             {
@@ -410,13 +410,16 @@ module Phaser {
                 //  Was it a tap?
                 if (this.duration >= 0 && this.duration <= this._game.input.tapRate)
                 {
-                    //  Yes, let's dispatch the signal
-                    this._game.input.onTap.dispatch(this);
-
                     //  Was it a double-tap?
                     if (this.timeUp - this.previousTapTime < this._game.input.doubleTapRate)
                     {
-                        this._game.input.onDoubleTap.dispatch(this);
+                        //  Yes, let's dispatch the signal then with the 2nd parameter set to true
+                        this._game.input.onTap.dispatch(this, true);
+                    }
+                    else
+                    {
+                        //  Wasn't a double-tap, so dispatch a single tap signal
+                        this._game.input.onTap.dispatch(this, false);
                     }
 
                     this.previousTapTime = this.timeUp;
@@ -426,10 +429,8 @@ module Phaser {
 
             this.active = false;
             this.withinGame = false;
-
             this.isDown = false;
             this.isUp = true;
-            this.timeUp = this._game.time.now;
 
             if (this.isMouse == false)
             {

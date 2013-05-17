@@ -27,6 +27,9 @@ module Phaser {
 
             super(game);
 
+            this.canvas = game.stage.canvas;
+            this.context = game.stage.context;
+
             this.bounds = new Rectangle(x, y, width, height);
             this.exists = true;
             this.active = true;
@@ -126,7 +129,6 @@ module Phaser {
          */
         public static ALIGN_BOTTOM_RIGHT: number = 8;
 
-
         /**
          * Enum value for outOfBoundsAction. Stop the object when is out of world bounds.
          * @type {number}
@@ -140,11 +142,27 @@ module Phaser {
         public static OUT_OF_BOUNDS_KILL: number = 1;
 
         /**
+        * A reference to the Canvas this GameObject will render to
+        * @type {HTMLCanvasElement}
+        */
+        public canvas: HTMLCanvasElement;
+
+        /**
+        * A reference to the Canvas Context2D this GameObject will render to
+        * @type {CanvasRenderingContext2D}
+        */
+        public context: CanvasRenderingContext2D;
+
+        /**
          * Position of this object after scrolling.
          * @type {MicroPoint}
          */
         public _point: MicroPoint;
 
+        /**
+         * An Array of Cameras to which this GameObject won't render
+         * @type {Array}
+         */
         public cameraBlacklist: number[];
 
         /**
@@ -351,8 +369,6 @@ module Phaser {
          * Pre-update is called right before update() on each object in the game loop.
          */
         public preUpdate() {
-
-            //  flicker time
 
             this.last.x = this.bounds.x;
             this.last.y = this.bounds.y;
@@ -758,6 +774,18 @@ module Phaser {
         public setBounds(x: number, y: number, width: number, height: number) {
 
             this.worldBounds = new Quad(x, y, width, height);
+
+        }
+
+        /**
+        * Set the world bounds that this GameObject can exist within based on the size of the current game world.
+        *
+        * @param action {number} The action to take if the object hits the world bounds, either OUT_OF_BOUNDS_KILL or OUT_OF_BOUNDS_STOP
+        */
+        public setBoundsFromWorld(action?: number = GameObject.OUT_OF_BOUNDS_STOP) {
+
+            this.setBounds(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
+            this.outOfBoundsAction = action;
 
         }
 

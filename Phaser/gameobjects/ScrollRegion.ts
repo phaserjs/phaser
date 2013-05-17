@@ -10,7 +10,7 @@
 
 module Phaser {
 
-    export class ScrollRegion{
+    export class ScrollRegion {
 
         /**
          * ScrollRegion constructor
@@ -54,6 +54,7 @@ module Phaser {
          * @type {boolean}
          */
         public visible: bool = true;
+
         /**
          * Region scrolling speed.
          * @type {MicroPoint}

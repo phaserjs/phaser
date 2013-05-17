@@ -23,6 +23,8 @@ module Phaser {
             this.visible = true;
             this.alive = true;
             this.isGroup = false;
+            this.ignoreGlobalUpdate = false;
+            this.ignoreGlobalRender = false;
             this.ignoreDrawDebug = false;
 
         }
@@ -71,6 +73,16 @@ module Phaser {
         public alive: bool;
 
         /**
+         * Setting this to true will prevent the object from being updated during the main game loop (you will have to call update on it yourself)
+         */
+        public ignoreGlobalUpdate: bool;
+
+        /**
+         * Setting this to true will prevent the object from being rendered during the main game loop (you will have to call render on it yourself)
+         */
+        public ignoreGlobalRender: bool;
+
+        /**
          * Setting this to true will prevent the object from appearing
          * when the visual debug mode in the debugger overlay is toggled on.
          */
@@ -93,7 +105,7 @@ module Phaser {
          * Override this to update your class's position and appearance.
          * This is where most of your game rules and behavioral code will go.
          */
-        public update() {
+        public update(forceUpdate?: bool = false) {
         }
 
         /**
@@ -102,7 +114,7 @@ module Phaser {
         public postUpdate() {
         }
 
-        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number) {
+        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number, forceRender?: bool = false) {
         }
 
         /**

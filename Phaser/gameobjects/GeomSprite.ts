@@ -46,21 +46,25 @@ module Phaser {
          * Not completely set yet. (the default type)
          */
         public static UNASSIGNED: number = 0;
+
         /**
          * Circle.
          * @type {number}
          */
         public static CIRCLE: number = 1;
+
         /**
          * Line.
          * @type {number}
          */
         public static LINE: number = 2;
+
         /**
          * Point.
          * @type {number}
          */
         public static POINT: number = 3;
+
         /**
          * Rectangle.
          * @type {number}
@@ -72,16 +76,19 @@ module Phaser {
          * @type {Circle}
          */
         public circle: Circle;
+
         /**
          * Line shape container. A Line instance.
          * @type {Line}
          */
         public line: Line;
+
         /**
          * Point shape container. A Point instance.
          * @type {Point}
          */
         public point: Point;
+
         /**
          * Rectangle shape container. A Rectangle instance.
          * @type {Rectangle}
@@ -93,6 +100,7 @@ module Phaser {
          * @type {boolean}
          */
         public renderOutline: bool = true;
+
         /**
          * Fill the shape or not. (default is true)
          * @type {boolean}
@@ -104,11 +112,13 @@ module Phaser {
          * @type {number}
          */
         public lineWidth: number = 1;
+
         /**
          * Width of outline. (default is 1)
          * @type {number}
          */
         public lineColor: string = 'rgb(0,255,0)';
+
         /**
          * Width of outline. (default is 1)
          * @type {number}
@@ -322,8 +332,8 @@ module Phaser {
             //  Alpha
             if (this.alpha !== 1)
             {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
+                var globalAlpha = this.context.globalAlpha;
+                this.context.globalAlpha = this.alpha;
             }
 
             this._dx = cameraOffsetX + (this.bounds.x - camera.worldView.x);
@@ -349,9 +359,9 @@ module Phaser {
             /*
             if (this.angle !== 0)
             {
-                this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
-                this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+                this.context.save();
+                this.context.translate(this._dx + (this._dw / 2) - this.origin.x, this._dy + (this._dh / 2) - this.origin.y);
+                this.context.rotate(this.angle * (Math.PI / 180));
                 this._dx = -(this._dw / 2);
                 this._dy = -(this._dh / 2);
             }
@@ -365,12 +375,12 @@ module Phaser {
             this._game.stage.saveCanvasValues();
 
             //  Debug
-            //this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
-            //this._game.stage.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            //this.context.fillStyle = 'rgba(255,0,0,0.5)';
+            //this.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
-            this._game.stage.context.lineWidth = this.lineWidth;
-            this._game.stage.context.strokeStyle = this.lineColor;
-            this._game.stage.context.fillStyle = this.fillColor;
+            this.context.lineWidth = this.lineWidth;
+            this.context.strokeStyle = this.lineColor;
+            this.context.fillStyle = this.fillColor;
 
             if (this._game.stage.fillStyle !== this.fillColor)
             {
@@ -379,52 +389,52 @@ module Phaser {
             //  Primitive Renderer
             if (this.type == GeomSprite.CIRCLE)
             {
-                this._game.stage.context.beginPath();
-                this._game.stage.context.arc(this._dx, this._dy, this.circle.radius, 0, Math.PI * 2);
-                this._game.stage.context.stroke();
+                this.context.beginPath();
+                this.context.arc(this._dx, this._dy, this.circle.radius, 0, Math.PI * 2);
+                this.context.stroke();
 
                 if (this.renderFill)
                 {
-                    this._game.stage.context.fill();
+                    this.context.fill();
                 }
 
-                this._game.stage.context.closePath();
+                this.context.closePath();
             }
             else if (this.type == GeomSprite.LINE)
             {
-                this._game.stage.context.beginPath();
-                this._game.stage.context.moveTo(this._dx, this._dy);
-                this._game.stage.context.lineTo(this.line.x2, this.line.y2);
-                this._game.stage.context.stroke();
-                this._game.stage.context.closePath();
+                this.context.beginPath();
+                this.context.moveTo(this._dx, this._dy);
+                this.context.lineTo(this.line.x2, this.line.y2);
+                this.context.stroke();
+                this.context.closePath();
             }
             else if (this.type == GeomSprite.POINT)
             {
-                this._game.stage.context.fillRect(this._dx, this._dy, 2, 2);
+                this.context.fillRect(this._dx, this._dy, 2, 2);
             }
             else if (this.type == GeomSprite.RECTANGLE)
             {
                 //  We can use the faster fillRect if we don't need the outline
                 if (this.renderOutline == false)
                 {
-                    this._game.stage.context.fillRect(this._dx, this._dy, this.rect.width, this.rect.height);
+                    this.context.fillRect(this._dx, this._dy, this.rect.width, this.rect.height);
                 }
                 else
                 {
-                    this._game.stage.context.beginPath();
-                    this._game.stage.context.rect(this._dx, this._dy, this.rect.width, this.rect.height);
-                    this._game.stage.context.stroke();
+                    this.context.beginPath();
+                    this.context.rect(this._dx, this._dy, this.rect.width, this.rect.height);
+                    this.context.stroke();
 
                     if (this.renderFill)
                     {
-                        this._game.stage.context.fill();
+                        this.context.fill();
                     }
 
-                    this._game.stage.context.closePath();
+                    this.context.closePath();
                 }
 
                 //  And now the edge points
-                this._game.stage.context.fillStyle = 'rgb(255,255,255)';
+                this.context.fillStyle = 'rgb(255,255,255)';
                 //this.renderPoint(this.rect.topLeft, this._dx, this._dy, 2);
                 //this.renderPoint(this.rect.topCenter, this._dx, this._dy, 2);
                 //this.renderPoint(this.rect.topRight, this._dx, this._dy, 2);
@@ -450,13 +460,13 @@ module Phaser {
 
             if (this.rotation !== 0)
             {
-                this._game.stage.context.translate(0, 0);
-                this._game.stage.context.restore();
+                this.context.translate(0, 0);
+                this.context.restore();
             }
 
             if (globalAlpha > -1)
             {
-                this._game.stage.context.globalAlpha = globalAlpha;
+                this.context.globalAlpha = globalAlpha;
             }
 
             return true;
@@ -472,7 +482,7 @@ module Phaser {
          */
         public renderPoint(point, offsetX?: number = 0, offsetY?: number = 0, size?: number = 1) {
 
-            this._game.stage.context.fillRect(offsetX + point.x, offsetY + point.y, size, size);
+            this.context.fillRect(offsetX + point.x, offsetY + point.y, size, size);
 
         }
 
@@ -484,11 +494,11 @@ module Phaser {
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            //this._game.stage.context.fillStyle = color;
-            //this._game.stage.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
-            //this._game.stage.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
-            //this._game.stage.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
-            //this._game.stage.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
+            //this.context.fillStyle = color;
+            //this.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
+            //this.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
+            //this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
+            //this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
 
         }
 

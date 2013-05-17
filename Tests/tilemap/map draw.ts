@@ -45,8 +45,8 @@
         //  Collide everything with the map
         map.collide();
 
-        marker.x = myGame.math.snapToFloor(myGame.input.worldX, 16);
-        marker.y = myGame.math.snapToFloor(myGame.input.worldY, 16);
+        marker.x = myGame.math.snapToFloor(myGame.input.getWorldX(), 16);
+        marker.y = myGame.math.snapToFloor(myGame.input.getWorldY(), 16);
 
         if (myGame.input.mousePointer.isDown)
         {

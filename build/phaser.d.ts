@@ -46,6 +46,14 @@ module Phaser {
         */
         public alive: bool;
         /**
+        * Setting this to true will prevent the object from being updated during the main game loop (you will have to call update on it yourself)
+        */
+        public ignoreGlobalUpdate: bool;
+        /**
+        * Setting this to true will prevent the object from being rendered during the main game loop (you will have to call render on it yourself)
+        */
+        public ignoreGlobalRender: bool;
+        /**
         * Setting this to true will prevent the object from appearing
         * when the visual debug mode in the debugger overlay is toggled on.
         */
@@ -64,12 +72,12 @@ module Phaser {
         * Override this to update your class's position and appearance.
         * This is where most of your game rules and behavioral code will go.
         */
-        public update(): void;
+        public update(forceUpdate?: bool): void;
         /**
         * Post-update is called right after <code>update()</code> on each object in the game loop.
         */
         public postUpdate(): void;
-        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): void;
+        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number, forceRender?: bool): void;
         /**
         * Handy for "killing" game objects.
         * Default behavior is to flag them as nonexistent AND dead.
@@ -419,10 +427,24 @@ module Phaser {
         */
         static OUT_OF_BOUNDS_KILL: number;
         /**
+        * A reference to the Canvas this GameObject will render to
+        * @type {HTMLCanvasElement}
+        */
+        public canvas: HTMLCanvasElement;
+        /**
+        * A reference to the Canvas Context2D this GameObject will render to
+        * @type {CanvasRenderingContext2D}
+        */
+        public context: CanvasRenderingContext2D;
+        /**
         * Position of this object after scrolling.
         * @type {MicroPoint}
         */
         public _point: MicroPoint;
+        /**
+        * An Array of Cameras to which this GameObject won't render
+        * @type {Array}
+        */
         public cameraBlacklist: number[];
         /**
         * Rectangle container of this object.
@@ -721,6 +743,12 @@ module Phaser {
         * @param height {number} height of its bound
         */
         public setBounds(x: number, y: number, width: number, height: number): void;
+        /**
+        * Set the world bounds that this GameObject can exist within based on the size of the current game world.
+        *
+        * @param action {number} The action to take if the object hits the world bounds, either OUT_OF_BOUNDS_KILL or OUT_OF_BOUNDS_STOP
+        */
+        public setBoundsFromWorld(action?: number): void;
         /**
         * If you do not wish this object to be visible to a specific camera, pass the camera here.
         *
@@ -3542,9 +3570,21 @@ module Phaser {
         */
         public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point): void;
         /**
+        * Given an array of GameObjects it will update each of them so that their canvas/contexts reference this DynamicTexture
+        * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
+        */
+        public assignCanvasToGameObjects(objects: GameObject[]): void;
+        /**
         * Clear the whole canvas.
         */
         public clear(): void;
+        /**
+        * Renders this DynamicTexture to the Stage at the given x/y coordinates
+        *
+        * @param x {number} The X coordinate to render on the stage to (given in screen coordinates, not world)
+        * @param y {number} The Y coordinate to render on the stage to (given in screen coordinates, not world)
+        */
+        public render(x?: number, y?: number): void;
         public width : number;
         public height : number;
         /**
@@ -4111,11 +4151,11 @@ module Phaser {
         /**
         * Automatically goes through and calls update on everything you added.
         */
-        public update(): void;
+        public update(forceUpdate?: bool): void;
         /**
         * Automatically goes through and calls render on everything you added.
         */
-        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): void;
+        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number, forceRender?: bool): void;
         /**
         * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
         */
@@ -4135,7 +4175,7 @@ module Phaser {
         * @param {Basic} Object The object you want to add to the group.
         * @return {Basic} The same <code>Basic</code> object that was passed in.
         */
-        public add(Object: Basic): Basic;
+        public add(Object: Basic): any;
         /**
         * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
         *
@@ -5652,10 +5692,10 @@ module Phaser {
         /**
         * Create a new object container.
         *
-        * @param [MaxSize] {number} capacity of this group.
+        * @param [maxSize] {number} capacity of this group.
         * @returns {Group} The newly created group.
         */
-        public createGroup(MaxSize?: number): Group;
+        public createGroup(maxSize?: number): Group;
         /**
         * Create a new ScrollZone object with image key, position and size.
         *
@@ -6601,15 +6641,11 @@ module Phaser {
         */
         public onUp: Signal;
         /**
-        * A Signal dispatched when a Pointer object (including the mouse) is tapped: pressed and released quickly
+        * A Signal dispatched when a Pointer object (including the mouse) is tapped: pressed and released quickly.
+        * The signal sends 2 parameters. The Pointer that caused it and a boolean depending if the tap was a single tap or a double tap.
         * @type {Phaser.Signal}
         */
         public onTap: Signal;
-        /**
-        * A Signal dispatched when a Pointer object (including the mouse) is double tapped: pressed and released quickly twice in succession
-        * @type {Phaser.Signal}
-        */
-        public onDoubleTap: Signal;
         /**
         * A Signal dispatched when a Pointer object (including the mouse) is held down
         * @type {Phaser.Signal}
@@ -7110,11 +7146,11 @@ module Phaser {
         * Creates a new <code>Emitter</code> object at a specific position.
         * Does NOT automatically generate or attach particles!
         *
-        * @param X {number} The X position of the emitter.
-        * @param Y {number} The Y position of the emitter.
-        * @param [Size] {number} specifies a maximum capacity for this emitter.
+        * @param x {number} The X position of the emitter.
+        * @param y {number} The Y position of the emitter.
+        * @param [size] {number} Specifies a maximum capacity for this emitter.
         */
-        constructor(game: Game, X?: number, Y?: number, Size?: number);
+        constructor(game: Game, x?: number, y?: number, size?: number);
         /**
         * The X position of the top left corner of the emitter in world space.
         */
@@ -7558,6 +7594,16 @@ module Phaser {
         * @type {string}
         */
         public name: string;
+        /**
+        * A reference to the Canvas this GameObject will render to
+        * @type {HTMLCanvasElement}
+        */
+        public canvas: HTMLCanvasElement;
+        /**
+        * A reference to the Canvas Context2D this GameObject will render to
+        * @type {CanvasRenderingContext2D}
+        */
+        public context: CanvasRenderingContext2D;
         /**
         * Opacity of this layer.
         * @type {number}
@@ -8474,10 +8520,10 @@ module Phaser {
         /**
         * Create a new object container.
         *
-        * @param MaxSize {number} Optional, capacity of this group.
+        * @param maxSize {number} Optional, capacity of this group.
         * @returns {Group} The newly created group.
         */
-        public createGroup(MaxSize?: number): Group;
+        public createGroup(maxSize?: number): Group;
         /**
         * Create a new Particle.
         *
@@ -8749,10 +8795,10 @@ module Phaser {
         /**
         * Create a new object container.
         *
-        * @param MaxSize {number} [optional] capacity of this group.
+        * @param maxSize {number} [optional] capacity of this group.
         * @returns {Group} The newly created group.
         */
-        public createGroup(MaxSize?: number): Group;
+        public createGroup(maxSize?: number): Group;
         /**
         * Create a new Particle.
         *

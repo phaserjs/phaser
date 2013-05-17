@@ -222,11 +222,11 @@ module Phaser {
         /**
          * Create a new object container.
          *
-         * @param [MaxSize] {number} capacity of this group.
+         * @param [maxSize] {number} capacity of this group.
          * @returns {Group} The newly created group.
          */
-        public createGroup(MaxSize?: number = 0): Group {
-            return <Group> this.group.add(new Group(this._game, MaxSize));
+        public createGroup(maxSize?: number = 0): Group {
+            return <Group> this.group.add(new Group(this._game, maxSize));
         }
 
         /**

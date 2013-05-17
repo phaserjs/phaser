@@ -63,12 +63,21 @@ V0.9.6
 * Added Input.onDown, onUp, onTap, onDoubleTap and onHold signals - all fired by the mouse or touch.
 * Added Input.recordPointerHistory to record the x/y coordinates a Pointer tracks through. Also Input.recordRate and Input.recordLimit for fine control.
 * Added Input.multiInputOverride which can be MOUSE_OVERRIDES_TOUCH, TOUCH_OVERRIDES_MOUSE or MOUSE_TOUCH_COMBINE.
-
+* Added GameObject.setBoundsFromWorld to quickly set the bounds of a game object to match those of the current game world.
+* Added GameObject.canvas and GameObject.context. By default they reference Stage.canvas but can be changed to anything, i.e. a DynamicTexture
+* The new canvas and context references are applied to Sprite, GeomSprite and TilemapLayer
+* Added DynamicTexture.assignCanvasToGameObjects() to allow you to redirect GameObject rendering en-mass to a DynamicTexture
+* Added DynamicTexture.render(x,y) to render the texture to the Stage canvas
+* Added Basic.ignoreGlobalUpdate - stops the object being updated as part of the main game loop, you'll need to call update on it yourself
+* Added Basic.ignoreGlobalRender - stops the object being rendered as part of the main game loop, you'll need to call render on it yourself
+* Added forceUpdate and forceRender parameters to Group.update and Group.render respectively. Combined with ignoreGlobal you can create custom rendering set-ups
+* Fixed Loader.progress calculation so it now accurate passes a value between 0 and 100% to your loader callback
 
 * TODO: Check that tween pausing works with the new performance.now
 * TODO: Game.Time should monitor pause duration
 * TODO: Investigate bug re: tilemap collision and animation frames
 * TODO: Update tests that use arrow keys and include touch/mouse support
+* TODO: GameObject.clipRect
 
 
 Requirements

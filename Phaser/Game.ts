@@ -661,11 +661,11 @@ module Phaser {
         /**
          * Create a new object container.
          *
-         * @param MaxSize {number} Optional, capacity of this group.
+         * @param maxSize {number} Optional, capacity of this group.
          * @returns {Group} The newly created group.
          */
-        public createGroup(MaxSize?: number = 0): Group {
-            return this.world.createGroup(MaxSize);
+        public createGroup(maxSize?: number = 0): Group {
+            return this.world.createGroup(maxSize);
         }
 
         /**

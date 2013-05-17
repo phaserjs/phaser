@@ -24,28 +24,31 @@
         balls = myGame.createGroup();
 
         myGame.input.onTap.add(tapped, this);
-        myGame.input.onDoubleTap.add(doubleTapped, this);
 
     }
 
-    function doubleTapped(pointer: Phaser.Pointer) {
+    function tapped(pointer: Phaser.Pointer, doubleTap: bool) {
 
-        var tempBall: Phaser.Sprite = new Phaser.Sprite(myGame, pointer.x, pointer.y, 'ball' + Math.round(Math.random() * 5));
-        tempBall.outOfBoundsAction = Phaser.GameObject.OUT_OF_BOUNDS_KILL;
-        tempBall.velocity.y = 100 + Math.random() * 150;
-        tempBall.elasticity = 0.9;
-        tempBall.scale.setTo(4, 4);
-        balls.add(tempBall);
+        if (balls.countDead() > 0)
+        {
+            var tempBall: Phaser.Sprite = <Phaser.Sprite> balls.getFirstDead();
+            tempBall.revive();
+            tempBall.x = pointer.x;
+            tempBall.y = pointer.y;
+        }
+        else
+        {
+            var tempBall: Phaser.Sprite = new Phaser.Sprite(myGame, pointer.x, pointer.y, 'ball' + Math.round(Math.random() * 5));
+            tempBall.setBoundsFromWorld(Phaser.GameObject.OUT_OF_BOUNDS_KILL);
+            balls.add(tempBall);
+        }
 
-    }
+        tempBall.velocity.y = 150;
 
-    function tapped(pointer: Phaser.Pointer) {
-
-        var tempBall: Phaser.Sprite = new Phaser.Sprite(myGame, pointer.x, pointer.y, 'ball' + Math.round(Math.random() * 5));
-        tempBall.outOfBoundsAction = Phaser.GameObject.OUT_OF_BOUNDS_KILL;
-        tempBall.velocity.y = 100 + Math.random() * 150;
-        tempBall.elasticity = 0.9;
-        balls.add(tempBall);
+        if (doubleTap)
+        {
+            tempBall.scale.setTo(4, 4);
+        }
 
     }
 
@@ -55,10 +58,6 @@
     function render() {
 
         myGame.input.renderDebugInfo(16, 16);
-
-        //myGame.input.pointer1.renderDebug(true);
-        //myGame.input.pointer2.renderDebug(true);
-        //myGame.input.pointer3.renderDebug(true);
 
     }
 

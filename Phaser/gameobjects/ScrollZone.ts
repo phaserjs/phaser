@@ -202,8 +202,8 @@ module Phaser {
             //  Alpha
             if (this.alpha !== 1)
             {
-                var globalAlpha = this._game.stage.context.globalAlpha;
-                this._game.stage.context.globalAlpha = this.alpha;
+                var globalAlpha = this.context.globalAlpha;
+                this.context.globalAlpha = this.alpha;
             }
 
             this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
@@ -221,12 +221,12 @@ module Phaser {
             //	Rotation - needs to work from origin point really, but for now from center
             if (this.angle !== 0 || this.flipped == true)
             {
-                this._game.stage.context.save();
-                this._game.stage.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+                this.context.save();
+                this.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
 
                 if (this.angle !== 0)
                 {
-                    this._game.stage.context.rotate(this.angle * (Math.PI / 180));
+                    this.context.rotate(this.angle * (Math.PI / 180));
                 }
 
                 this._dx = -(this._dw / 2);
@@ -234,7 +234,7 @@ module Phaser {
 
                 if (this.flipped == true)
                 {
-                	this._game.stage.context.scale(-1, 1);
+                	this.context.scale(-1, 1);
                 }
             }
 
@@ -247,17 +247,17 @@ module Phaser {
             {
                 if (this._dynamicTexture)
                 {
-                    this.regions[i].render(this._game.stage.context, this._dynamicTexture.canvas, this._dx, this._dy, this._dw, this._dh);
+                    this.regions[i].render(this.context, this._dynamicTexture.canvas, this._dx, this._dy, this._dw, this._dh);
                 }
                 else
                 {
-                    this.regions[i].render(this._game.stage.context, this._texture, this._dx, this._dy, this._dw, this._dh);
+                    this.regions[i].render(this.context, this._texture, this._dx, this._dy, this._dw, this._dh);
                 }
             }
 
             if (globalAlpha > -1)
             {
-                this._game.stage.context.globalAlpha = globalAlpha;
+                this.context.globalAlpha = globalAlpha;
             }
 
             return true;

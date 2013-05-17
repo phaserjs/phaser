@@ -98,7 +98,12 @@ module Phaser {
         /**
          * Automatically goes through and calls update on everything you added.
          */
-        public update() {
+        public update(forceUpdate?: bool = false) {
+
+            if (this.ignoreGlobalUpdate && forceUpdate == false)
+            {
+                return;
+            }
 
             var basic: Basic;
             var i: number = 0;
@@ -107,10 +112,10 @@ module Phaser {
             {
                 basic = this.members[i++];
 
-                if ((basic != null) && basic.exists && basic.active)
+                if ((basic != null) && basic.exists && basic.active && basic.ignoreGlobalUpdate == false)
                 {
                     basic.preUpdate();
-                    basic.update();
+                    basic.update(forceUpdate);
                     basic.postUpdate();
                 }
             }
@@ -119,7 +124,12 @@ module Phaser {
         /**
          * Automatically goes through and calls render on everything you added.
          */
-        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number) {
+        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number, forceRender?: bool = false) {
+
+            if (this.ignoreGlobalRender && forceRender == false)
+            {
+                return;
+            }
 
             var basic: Basic;
             var i: number = 0;
@@ -128,9 +138,9 @@ module Phaser {
             {
                 basic = this.members[i++];
 
-                if ((basic != null) && basic.exists && basic.visible)
+                if ((basic != null) && basic.exists && basic.visible && basic.ignoreGlobalRender == false)
                 {
-                    basic.render(camera, cameraOffsetX, cameraOffsetY);
+                    basic.render(camera, cameraOffsetX, cameraOffsetY, forceRender);
                 }
             }
         }
@@ -189,7 +199,7 @@ module Phaser {
          * @param {Basic} Object The object you want to add to the group.
          * @return {Basic} The same <code>Basic</code> object that was passed in.
          */
-        public add(Object: Basic) {
+        public add(Object: Basic): any {
 
             //Don't bother adding an object twice.
             if (this.members.indexOf(Object) >= 0)

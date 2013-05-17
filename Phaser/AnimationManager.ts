@@ -34,6 +34,7 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
+
         /**
          * Local private reference to its owner sprite.
          */
@@ -43,11 +44,13 @@ module Phaser {
          * Animation key-value container.
          */
         private _anims: {};
+
         /**
          * Index of current frame.
          * @type {number}
          */
         private _frameIndex: number;
+
         /**
          * Data contains animation frames.
          * @type {FrameData}
@@ -58,6 +61,7 @@ module Phaser {
          * Keeps track of the current animation being played.
          */
         public currentAnim: Animation;
+
         /**
          * Keeps track of the current frame of animation.
          */

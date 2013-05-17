@@ -240,11 +240,37 @@ module Phaser {
         }
 
         /**
+         * Given an array of GameObjects it will update each of them so that their canvas/contexts reference this DynamicTexture
+         * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
+         */
+        public assignCanvasToGameObjects(objects: GameObject[]) {
+
+            for (var i = 0; i < objects.length; i++)
+            {
+                objects[i].canvas = this.canvas;
+                objects[i].context = this.context;
+            }
+
+        }
+
+        /**
          * Clear the whole canvas.
          */
         public clear() {
 
             this.context.clearRect(0, 0, this.bounds.width, this.bounds.height);
+
+        }
+
+        /**
+        * Renders this DynamicTexture to the Stage at the given x/y coordinates
+        *
+        * @param x {number} The X coordinate to render on the stage to (given in screen coordinates, not world)
+        * @param y {number} The Y coordinate to render on the stage to (given in screen coordinates, not world)
+        */
+        public render(x?: number = 0, y?: number = 0) {
+
+            this._game.stage.context.drawImage(this.canvas, x, y);
 
         }
 

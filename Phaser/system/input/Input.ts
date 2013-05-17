@@ -40,7 +40,6 @@ module Phaser {
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
-            this.onDoubleTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
 
             this.currentPointers = 0;
@@ -164,16 +163,11 @@ module Phaser {
         public onUp: Phaser.Signal;
 
         /**
-        * A Signal dispatched when a Pointer object (including the mouse) is tapped: pressed and released quickly
+        * A Signal dispatched when a Pointer object (including the mouse) is tapped: pressed and released quickly.
+        * The signal sends 2 parameters. The Pointer that caused it and a boolean depending if the tap was a single tap or a double tap.
         * @type {Phaser.Signal}
         */
         public onTap: Phaser.Signal;
-
-        /**
-        * A Signal dispatched when a Pointer object (including the mouse) is double tapped: pressed and released quickly twice in succession
-        * @type {Phaser.Signal}
-        */
-        public onDoubleTap: Phaser.Signal;
 
         /**
         * A Signal dispatched when a Pointer object (including the mouse) is held down
@@ -193,7 +187,7 @@ module Phaser {
         * @property doubleTapRate
         * @type {Number}
         **/
-        public doubleTapRate: number = 250;
+        public doubleTapRate: number = 300;
 
         /**
         * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
@@ -395,7 +389,6 @@ module Phaser {
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
-            this.onDoubleTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
 
             this.currentPointers = 0;
