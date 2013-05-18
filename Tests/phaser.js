@@ -1518,13 +1518,14 @@ var Phaser;
             */
             this.renderDebugPointColor = 'rgba(255,255,255,1)';
             /**
-            * Flip the graphic vertically? (default to false)
+            * Flip the graphic horizontally? (defaults to false)
             * @type {boolean}
             */
             this.flipped = false;
             this._texture = null;
             this.animations = new Phaser.AnimationManager(this._game, this);
             if(key !== null) {
+                this.cacheKey = key;
                 this.loadGraphic(key);
             } else {
                 this.bounds.width = 16;
@@ -6795,6 +6796,20 @@ var Phaser;
         function (ax, ay, bx, by) {
             return ax * bx + ay * by;
         };
+        GameMath.prototype.shuffleArray = /**
+        * Shuffles the data in the given array into a new order
+        * @param array The array to shuffle
+        * @return The array
+        */
+        function (array) {
+            for(var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return array;
+        };
         return GameMath;
     })();
     Phaser.GameMath = GameMath;    
@@ -7552,7 +7567,6 @@ var Phaser;
             this._onFileLoad = onFileLoadCallback;
             if(this._keys.length > 0) {
                 this._progressChunk = 100 / this._keys.length;
-                console.log('prog chunk', this._progressChunk);
                 this.loadFile();
             } else {
                 this.progress = 1;
@@ -7692,8 +7706,6 @@ var Phaser;
         */
         function (previousKey, success) {
             this.progress = Math.round(this.progress + this._progressChunk);
-            //this.progress = this.progress + this._progressChunk;
-            console.log('progress', this.progress);
             if(this.progress > 100) {
                 this.progress = 100;
             }
@@ -8759,7 +8771,6 @@ var Phaser;
             this.disableBootScreen = false;
             this._game = game;
             this.canvas = document.createElement('canvas');
-            this.canvas.id = 'bob';
             this.canvas.width = width;
             this.canvas.height = height;
             if(document.getElementById(parent)) {
@@ -8834,7 +8845,10 @@ var Phaser;
                 }
             }
         };
-        Stage.prototype.getOffset = function (element) {
+        Stage.prototype.getOffset = /**
+        * Get the DOM offset values of the given element
+        */
+        function (element) {
             var box = element.getBoundingClientRect();
             var clientTop = element.clientTop || document.body.clientTop || 0;
             var clientLeft = element.clientLeft || document.body.clientLeft || 0;
@@ -9511,22 +9525,27 @@ var Phaser;
             this.onComplete = new Phaser.Signal();
         }
         Tween.prototype.to = /**
-        * Config the tween result.
+        * Configure the Tween
         * @param properties {object} Propertis you want to tween.
         * @param [duration] {number} duration of this tween.
-        * @param ease {any} Easing function.
-        * @param autoStart {boolean} Whether this tween will start automatically or not.
+        * @param [ease] {any} Easing function.
+        * @param [autoStart] {boolean} Whether this tween will start automatically or not.
+        * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
         * @return {Tween} Itself.
         */
-        function (properties, duration, ease, autoStart) {
+        function (properties, duration, ease, autoStart, delay) {
             if (typeof duration === "undefined") { duration = 1000; }
             if (typeof ease === "undefined") { ease = null; }
             if (typeof autoStart === "undefined") { autoStart = false; }
+            if (typeof delay === "undefined") { delay = 0; }
             this._duration = duration;
             //  If properties isn't an object this will fail, sanity check it here somehow?
             this._valuesEnd = properties;
             if(ease !== null) {
                 this._easingFunction = ease;
+            }
+            if(delay > 0) {
+                this._delayTime = delay;
             }
             if(autoStart === true) {
                 return this.start();
@@ -10351,6 +10370,20 @@ var Phaser;
             document.body.removeChild(el);
             this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
         };
+        Device.prototype.isConsoleOpen = function () {
+            if(window.console && window.console['firebug']) {
+                return true;
+            }
+            if(window.console) {
+                console.profile();
+                console.profileEnd();
+                if(console.clear) {
+                    console.clear();
+                }
+                return console['profiles'].length > 0;
+            }
+            return false;
+        };
         Device.prototype.getAll = /**
         * Get all informations of host device.
         * @return {string} Informations in a string.
@@ -11020,10 +11053,14 @@ var Phaser;
             this.x = this.pageX - this._game.stage.offset.x;
             this.y = this.pageY - this._game.stage.offset.y;
             this.pointB.setTo(this.x, this.y);
-            this.circle.setTo(this.x, this.y, 44);
+            this.circle.x = this.x;
+            this.circle.y = this.y;
             if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
                 this._game.input.x = this.x * this._game.input.scaleX;
                 this._game.input.y = this.y * this._game.input.scaleY;
+                this._game.input.point.setTo(this._game.input.x, this._game.input.y);
+                this._game.input.circle.x = this._game.input.x;
+                this._game.input.circle.y = this._game.input.y;
             }
             return this;
         };
@@ -11118,12 +11155,12 @@ var Phaser;
                 return;
             }
             this._game.stage.context.beginPath();
-            this._game.stage.context.arc(this.x, this.y, this.circle.radius * 2, 0, Math.PI * 2);
+            this._game.stage.context.arc(this.x, this.y, this.circle.radius, 0, Math.PI * 2);
             if(this.active) {
-                this._game.stage.context.fillStyle = 'rgb(0,255,0)';
+                this._game.stage.context.fillStyle = 'rgba(0,255,0,0.5)';
                 this._game.stage.context.strokeStyle = 'rgb(0,255,0)';
             } else {
-                this._game.stage.context.fillStyle = 'rgb(100,0,0)';
+                this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
                 this._game.stage.context.strokeStyle = 'rgb(100,0,0)';
             }
             this._game.stage.context.fill();
@@ -11313,6 +11350,19 @@ var Phaser;
             */
             this.multiInputOverride = Input.MOUSE_TOUCH_COMBINE;
             /**
+            * A Point object representing the x/y screen coordinates of the Pointer.
+            * @property point
+            * @type {Point}
+            **/
+            this.point = null;
+            /**
+            * A Circle object centered on the x/y screen coordinates of the Input.
+            * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
+            * @property circle
+            * @type {Circle}
+            **/
+            this.circle = null;
+            /**
             * X coordinate of the most recent Pointer event
             * @type {Number}
             * @private
@@ -11417,6 +11467,8 @@ var Phaser;
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
+            this.point = new Phaser.Point();
+            this.circle = new Phaser.Circle(0, 0, 44);
             this.currentPointers = 0;
         }
         Input.MOUSE_OVERRIDES_TOUCH = 0;
@@ -11472,7 +11524,13 @@ var Phaser;
             this.pointer9.update();
             this.pointer10.update();
         };
-        Input.prototype.reset = function () {
+        Input.prototype.reset = /**
+        * Reset all of the Pointers and Input states
+        * @method reset
+        * @param hard {Boolean} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
+        **/
+        function (hard) {
+            if (typeof hard === "undefined") { hard = false; }
             this.keyboard.reset();
             this.pointer1.reset();
             this.pointer2.reset();
@@ -11484,11 +11542,13 @@ var Phaser;
             this.pointer8.reset();
             this.pointer9.reset();
             this.pointer10.reset();
-            this.onDown = new Phaser.Signal();
-            this.onUp = new Phaser.Signal();
-            this.onTap = new Phaser.Signal();
-            this.onHold = new Phaser.Signal();
             this.currentPointers = 0;
+            if(hard == true) {
+                this.onDown = new Phaser.Signal();
+                this.onUp = new Phaser.Signal();
+                this.onTap = new Phaser.Signal();
+                this.onHold = new Phaser.Signal();
+            }
         };
         Object.defineProperty(Input.prototype, "totalInactivePointers", {
             get: /**
@@ -12576,8 +12636,8 @@ var Phaser;
             */
             this.lineColor = 'rgb(0,255,0)';
             /**
-            * Width of outline. (default is 1)
-            * @type {number}
+            * The color of the filled area in rgb or rgba string format
+            * @type {string} Defaults to rgb(0,100,0) - a green color
             */
             this.fillColor = 'rgb(0,100,0)';
             this.type = GeomSprite.UNASSIGNED;
@@ -12752,11 +12812,6 @@ var Phaser;
             this._dy = cameraOffsetY + (this.bounds.y - camera.worldView.y);
             this._dw = this.bounds.width * this.scale.x;
             this._dh = this.bounds.height * this.scale.y;
-            //  Circles are drawn center based
-            if(this.type == GeomSprite.CIRCLE) {
-                this._dx += this.circle.radius;
-                this._dy += this.circle.radius;
-            }
             //	Apply camera difference
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
                 this._dx -= (camera.worldView.x * this.scrollFactor.x);
@@ -12790,7 +12845,9 @@ var Phaser;
             if(this.type == GeomSprite.CIRCLE) {
                 this.context.beginPath();
                 this.context.arc(this._dx, this._dy, this.circle.radius, 0, Math.PI * 2);
-                this.context.stroke();
+                if(this.renderOutline) {
+                    this.context.stroke();
+                }
                 if(this.renderFill) {
                     this.context.fill();
                 }
@@ -14587,7 +14644,7 @@ var Phaser;
             if(this.onDestroyCallback !== null) {
                 this.onDestroyCallback.call(this.callbackContext);
             }
-            this.input.reset();
+            this.input.reset(true);
             //  Prototype?
             if(typeof state === 'function') {
                 this.state = new state(this);

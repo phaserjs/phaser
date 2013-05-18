@@ -470,6 +470,27 @@ module Phaser {
 
         }
 
+        public isConsoleOpen(): bool {
+
+            if (window.console && window.console['firebug'])
+            {
+                return true;
+            }
+
+            if (window.console)
+            {
+                console.profile(); 
+                console.profileEnd(); 
+            
+                if (console.clear) console.clear();
+            
+                return console['profiles'].length > 0;
+            }
+
+            return false;
+
+        }
+
         /**
          * Get all informations of host device.
          * @return {string} Informations in a string.

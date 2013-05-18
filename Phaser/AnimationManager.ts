@@ -86,8 +86,9 @@ module Phaser {
          * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
          * @param loop {boolean} Whether or not the animation is looped or just plays once.
          * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+         * @return {Animation} The Animation that was created
          */
-        public add(name: string, frames: any[] = null, frameRate: number = 60, loop: bool = false, useNumericIndex: bool = true) {
+        public add(name: string, frames: any[] = null, frameRate: number = 60, loop: bool = false, useNumericIndex: bool = true): Animation {
 
             if (this._frameData == null)
             {
@@ -116,6 +117,8 @@ module Phaser {
 
             this.currentAnim = this._anims[name];
             this.currentFrame = this.currentAnim.currentFrame;
+
+            return this._anims[name];
 
         }
 

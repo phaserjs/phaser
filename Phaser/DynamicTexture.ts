@@ -117,7 +117,7 @@ module Phaser {
          * @param y {number} Y position of the target pixel.
          * @param color {number} Native integer with color value. (format: 0xRRGGBB)
          */
-        public setPixel(x: number, y: number, color: number) {
+        public setPixel(x: number, y: number, color: string) {
 
             this.context.fillStyle = color;
             this.context.fillRect(x, y, 1, 1);

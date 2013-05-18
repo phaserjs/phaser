@@ -470,7 +470,7 @@ module Phaser {
                 this.onDestroyCallback.call(this.callbackContext);
             }
 
-            this.input.reset();
+            this.input.reset(true);
 
             //  Prototype?
             if (typeof state === 'function')

@@ -29,7 +29,6 @@ module Phaser {
             this._game = game;
 
             this.canvas = <HTMLCanvasElement> document.createElement('canvas');
-            this.canvas.id = 'bob';
             this.canvas.width = width;
             this.canvas.height = height;
 
@@ -212,6 +211,9 @@ module Phaser {
 
         }
 
+        /**
+         * Get the DOM offset values of the given element
+         */
         private getOffset(element): MicroPoint {
 
             var box = element.getBoundingClientRect();

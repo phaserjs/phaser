@@ -42,6 +42,9 @@ module Phaser {
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
 
+            this.point = new Point();
+            this.circle = new Circle(0, 0, 44);
+
             this.currentPointers = 0;
 
         }
@@ -110,6 +113,21 @@ module Phaser {
         * @type {Gestures}
         */
         public gestures: Gestures;
+
+        /**
+        * A Point object representing the x/y screen coordinates of the Pointer.
+        * @property point
+        * @type {Point}
+        **/
+        public point: Point = null;
+
+        /**
+        * A Circle object centered on the x/y screen coordinates of the Input.
+        * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
+        * @property circle
+        * @type {Circle}
+        **/
+        public circle: Circle = null;
 
         /**
         * X coordinate of the most recent Pointer event
@@ -371,7 +389,12 @@ module Phaser {
 
         }
 
-        public reset() {
+        /**
+        * Reset all of the Pointers and Input states
+        * @method reset
+        * @param hard {Boolean} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
+        **/
+        public reset(hard?: bool = false) {
 
             this.keyboard.reset();
 
@@ -386,12 +409,16 @@ module Phaser {
             this.pointer9.reset();
             this.pointer10.reset();
 
-            this.onDown = new Phaser.Signal();
-            this.onUp = new Phaser.Signal();
-            this.onTap = new Phaser.Signal();
-            this.onHold = new Phaser.Signal();
-
             this.currentPointers = 0;
+
+            if (hard == true)
+            {
+                this.onDown = new Phaser.Signal();
+                this.onUp = new Phaser.Signal();
+                this.onTap = new Phaser.Signal();
+                this.onHold = new Phaser.Signal();
+
+            }
 
         }
 

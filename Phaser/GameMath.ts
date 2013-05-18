@@ -1003,6 +1003,24 @@ module Phaser {
             return ax * bx + ay * by;
         }
 
+        /**
+        * Shuffles the data in the given array into a new order
+	    * @param array The array to shuffle
+        * @return The array
+        */
+        public shuffleArray(array) {
+
+            for (var i = array.length - 1; i > 0; i--)
+            {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+
+            return array;
+
+        }
 
     }
 

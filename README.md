@@ -72,6 +72,16 @@ V0.9.6
 * Added Basic.ignoreGlobalRender - stops the object being rendered as part of the main game loop, you'll need to call render on it yourself
 * Added forceUpdate and forceRender parameters to Group.update and Group.render respectively. Combined with ignoreGlobal you can create custom rendering set-ups
 * Fixed Loader.progress calculation so it now accurate passes a value between 0 and 100% to your loader callback
+* Added a 'hard reset' parameter to Input.reset. A hard reset clears Input signals (such as on a state swap), a soft (such as on game pause) doesn't
+* Added Device.isConsoleOpen() to check if the browser console is open. Tested on Firefox with Firebug and Chrome with DevTools
+* Added delay parameter to Tween.to()
+* Fixed bug where GeomSprite.renderOutline was being ignored for Circle objects
+* Fixed bug with GeomSprite circles rendering at twice the size they should have been and offset from actual x/y values
+* Added Sprite.cacheKey which stores the key of the item from the cache that was used for its texture (if any)
+* Added GameMath.shuffleArray
+* Updated Animation.frame to return the index of the currentFrame if set
+
+
 
 * TODO: Check that tween pausing works with the new performance.now
 * TODO: Game.Time should monitor pause duration

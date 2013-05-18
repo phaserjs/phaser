@@ -44,21 +44,25 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
+
         /**
          * Local private reference to its owner sprite.
          * @type {Sprite}
          */
         private _parent: Sprite;
+
         /**
          * Animation frame container.
          * @type {number[]}
          */
         private _frames: number[];
+
         /**
          * Frame data of this animation.(parsed from sprite sheet)
          * @type {FrameData}
          */
         private _frameData: FrameData;
+
         /**
          * Index of current frame.
          * @type {number}
@@ -70,6 +74,7 @@ module Phaser {
          * @type number
          */
         private _timeLastFrame: number;
+
         /**
          * Time when this will switch to next frame (in ms).
          * @type number
@@ -81,6 +86,7 @@ module Phaser {
          * @type {string}
          */
         public name: string;
+
         /**
          * Currently played frame instance.
          * @type {Frame}
@@ -92,16 +98,19 @@ module Phaser {
          * @type {boolean}
          */
         public isFinished: bool;
+
         /**
          * Whethor or not this animation is currently playing.
          * @type {boolean}
          */
         public isPlaying: bool;
+
         /**
          * Whether or not the animation is looped.
          * @type {boolean}
          */
         public looped: bool;
+
         /**
          * Time between frames in ms.
          * @type {number}
@@ -113,7 +122,16 @@ module Phaser {
         }
 
         public get frame(): number {
-            return this._frameIndex;
+
+            if (this.currentFrame !== null)
+            {
+                return this.currentFrame.index;
+            }
+            else
+            {
+                return this._frameIndex;
+            }
+
         }
 
         public set frame(value: number) {

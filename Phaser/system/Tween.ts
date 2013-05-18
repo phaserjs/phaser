@@ -114,14 +114,15 @@ module Phaser {
 	    public onComplete: Phaser.Signal;
 
 	    /**
-	     * Config the tween result.
+	     * Configure the Tween
 	     * @param properties {object} Propertis you want to tween.
 	     * @param [duration] {number} duration of this tween.
-	     * @param ease {any} Easing function.
-	     * @param autoStart {boolean} Whether this tween will start automatically or not.
+	     * @param [ease] {any} Easing function.
+	     * @param [autoStart] {boolean} Whether this tween will start automatically or not.
+	     * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
 	     * @return {Tween} Itself.
 	     */
-	    public to(properties, duration?: number = 1000, ease?: any = null, autoStart?: bool = false) {
+	    public to(properties, duration?: number = 1000, ease?: any = null, autoStart?: bool = false, delay?:number = 0) {
 
 	        this._duration = duration;
 
@@ -131,6 +132,11 @@ module Phaser {
 	        if (ease !== null)
 	        {
 	            this._easingFunction = ease;
+	        }
+
+	        if (delay > 0)
+	        {
+	            this._delayTime = delay;
 	        }
 
 	        if (autoStart === true)

@@ -137,6 +137,10 @@
     <TypeScriptCompile Include="mobile\sprite test 1.ts" />
     <TypeScriptCompile Include="mobile\bunny mobile.ts" />
     <TypeScriptCompile Include="misc\time.ts" />
+    <TypeScriptCompile Include="misc\starfield.ts" />
+    <Content Include="misc\starfield.js">
+      <DependentUpon>starfield.ts</DependentUpon>
+    </Content>
     <Content Include="misc\time.js">
       <DependentUpon>time.ts</DependentUpon>
     </Content>
@@ -145,6 +149,10 @@
     </Content>
     <Content Include="mobile\sprite test 1.js">
       <DependentUpon>sprite test 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\mousetrail.ts" />
+    <Content Include="particles\mousetrail.js">
+      <DependentUpon>mousetrail.ts</DependentUpon>
     </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>

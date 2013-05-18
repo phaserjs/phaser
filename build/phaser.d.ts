@@ -1057,6 +1057,10 @@ module Phaser {
         */
         public animations: AnimationManager;
         /**
+        * The cache key that was used for this texture (if any)
+        */
+        public cacheKey: string;
+        /**
         * Render bound of this sprite for debugging? (default to false)
         * @type {boolean}
         */
@@ -1077,7 +1081,7 @@ module Phaser {
         */
         public renderDebugPointColor: string;
         /**
-        * Flip the graphic vertically? (default to false)
+        * Flip the graphic horizontally? (defaults to false)
         * @type {boolean}
         */
         public flipped: bool;
@@ -3538,7 +3542,7 @@ module Phaser {
         * @param y {number} Y position of the target pixel.
         * @param color {number} Native integer with color value. (format: 0xRRGGBB)
         */
-        public setPixel(x: number, y: number, color: number): void;
+        public setPixel(x: number, y: number, color: string): void;
         /**
         * Set color (with alpha) of a specific pixel.
         * @param x {number} X position of the target pixel.
@@ -4098,6 +4102,12 @@ module Phaser {
         * @return	Dot product
         */
         public dotProduct(ax: number, ay: number, bx: number, by: number): number;
+        /**
+        * Shuffles the data in the given array into a new order
+        * @param array The array to shuffle
+        * @return The array
+        */
+        public shuffleArray(array);
     }
 }
 /**
@@ -5115,6 +5125,9 @@ module Phaser {
         * This method is called when the canvas elements visibility is changed.
         */
         private visibilityChange(event);
+        /**
+        * Get the DOM offset values of the given element
+        */
         private getOffset(element);
         /**
         * Canvas strokeStyle.
@@ -5475,14 +5488,15 @@ module Phaser {
         */
         public onComplete: Signal;
         /**
-        * Config the tween result.
+        * Configure the Tween
         * @param properties {object} Propertis you want to tween.
         * @param [duration] {number} duration of this tween.
-        * @param ease {any} Easing function.
-        * @param autoStart {boolean} Whether this tween will start automatically or not.
+        * @param [ease] {any} Easing function.
+        * @param [autoStart] {boolean} Whether this tween will start automatically or not.
+        * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
         * @return {Tween} Itself.
         */
-        public to(properties, duration?: number, ease?: any, autoStart?: bool): Tween;
+        public to(properties, duration?: number, ease?: any, autoStart?: bool, delay?: number): Tween;
         /**
         * Start to tween.
         */
@@ -5959,6 +5973,7 @@ module Phaser {
         * @private
         */
         private _checkCSS3D();
+        public isConsoleOpen(): bool;
         /**
         * Get all informations of host device.
         * @return {string} Informations in a string.
@@ -6598,6 +6613,19 @@ module Phaser {
         */
         public gestures: Gestures;
         /**
+        * A Point object representing the x/y screen coordinates of the Pointer.
+        * @property point
+        * @type {Point}
+        **/
+        public point: Point;
+        /**
+        * A Circle object centered on the x/y screen coordinates of the Input.
+        * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
+        * @property circle
+        * @type {Circle}
+        **/
+        public circle: Circle;
+        /**
         * X coordinate of the most recent Pointer event
         * @type {Number}
         * @private
@@ -6782,7 +6810,12 @@ module Phaser {
         public y : number;
         public start(): void;
         public update(): void;
-        public reset(): void;
+        /**
+        * Reset all of the Pointers and Input states
+        * @method reset
+        * @param hard {Boolean} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
+        **/
+        public reset(hard?: bool): void;
         /**
         * Get the total number of inactive Pointers
         * @method totalInactivePointers
@@ -7403,8 +7436,8 @@ module Phaser {
         */
         public lineColor: string;
         /**
-        * Width of outline. (default is 1)
-        * @type {number}
+        * The color of the filled area in rgb or rgba string format
+        * @type {string} Defaults to rgb(0,100,0) - a green color
         */
         public fillColor: string;
         /**

@@ -120,8 +120,8 @@ module Phaser {
         public lineColor: string = 'rgb(0,255,0)';
 
         /**
-         * Width of outline. (default is 1)
-         * @type {number}
+         * The color of the filled area in rgb or rgba string format
+         * @type {string} Defaults to rgb(0,100,0) - a green color
          */
         public fillColor: string = 'rgb(0,100,0)';
 
@@ -341,13 +341,6 @@ module Phaser {
             this._dw = this.bounds.width * this.scale.x;
             this._dh = this.bounds.height * this.scale.y;
 
-            //  Circles are drawn center based
-            if (this.type == GeomSprite.CIRCLE)
-            {
-                this._dx += this.circle.radius;
-                this._dy += this.circle.radius;
-            }
-
             //	Apply camera difference
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
             {
@@ -391,7 +384,11 @@ module Phaser {
             {
                 this.context.beginPath();
                 this.context.arc(this._dx, this._dy, this.circle.radius, 0, Math.PI * 2);
-                this.context.stroke();
+
+                if (this.renderOutline)
+                {
+                    this.context.stroke();
+                }
 
                 if (this.renderFill)
                 {

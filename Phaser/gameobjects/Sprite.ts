@@ -33,6 +33,7 @@ module Phaser {
 
             if (key !== null)
             {
+                this.cacheKey = key;
                 this.loadGraphic(key);
             }
             else
@@ -71,6 +72,11 @@ module Phaser {
         public animations: AnimationManager;
 
         /**
+         * The cache key that was used for this texture (if any)
+         */
+        public cacheKey: string;
+
+        /**
          * Render bound of this sprite for debugging? (default to false)
          * @type {boolean}
          */
@@ -95,7 +101,7 @@ module Phaser {
         public renderDebugPointColor: string = 'rgba(255,255,255,1)';
 
         /**
-         * Flip the graphic vertically? (default to false)
+         * Flip the graphic horizontally? (defaults to false)
          * @type {boolean}
          */
         public flipped: bool = false;

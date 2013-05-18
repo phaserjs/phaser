@@ -370,12 +370,16 @@ module Phaser {
             this.y = this.pageY - this._game.stage.offset.y;
 
             this.pointB.setTo(this.x, this.y);
-            this.circle.setTo(this.x, this.y, 44);
+            this.circle.x = this.x;
+            this.circle.y = this.y;
 
             if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
             {
                 this._game.input.x = this.x * this._game.input.scaleX;
                 this._game.input.y = this.y * this._game.input.scaleY;
+                this._game.input.point.setTo(this._game.input.x, this._game.input.y);
+                this._game.input.circle.x = this._game.input.x;
+                this._game.input.circle.y = this._game.input.y;
             }
 
             return this;
@@ -507,16 +511,16 @@ module Phaser {
             }
 
             this._game.stage.context.beginPath();
-            this._game.stage.context.arc(this.x, this.y, this.circle.radius * 2, 0, Math.PI * 2);
+            this._game.stage.context.arc(this.x, this.y, this.circle.radius, 0, Math.PI * 2);
 
             if (this.active)
             {
-                this._game.stage.context.fillStyle = 'rgb(0,255,0)';
+                this._game.stage.context.fillStyle = 'rgba(0,255,0,0.5)';
                 this._game.stage.context.strokeStyle = 'rgb(0,255,0)';
             }
             else
             {
-                this._game.stage.context.fillStyle = 'rgb(100,0,0)';
+                this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
                 this._game.stage.context.strokeStyle = 'rgb(100,0,0)';
             }
 
