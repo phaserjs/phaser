@@ -1519,8 +1519,9 @@ module Phaser {
         * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
         * @param loop {boolean} Whether or not the animation is looped or just plays once.
         * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+        * @return {Animation} The Animation that was created
         */
-        public add(name: string, frames?: any[], frameRate?: number, loop?: bool, useNumericIndex?: bool): void;
+        public add(name: string, frames?: any[], frameRate?: number, loop?: bool, useNumericIndex?: bool): Animation;
         /**
         * Check whether the frames is valid.
         * @param frames {any[]} Frames to be validated.
@@ -8688,6 +8689,20 @@ module Phaser {
         public destroy(): void;
     }
 }
+interface IPoint {
+    getDist(): number;
+}
+module Shapes {
+    class Point implements IPoint {
+        public x: number;
+        public y: number;
+        constructor(x: number, y: number);
+        public getDist(): number;
+        static origin: Point;
+    }
+}
+var p: IPoint;
+var dist: number;
 /**
 * Phaser - State
 *

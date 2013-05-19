@@ -135,6 +135,10 @@
     <TypeScriptCompile Include="system\screens\BootScreen.ts" />
     <TypeScriptCompile Include="system\input\MSPointer.ts" />
     <TypeScriptCompile Include="system\input\Gestures.ts" />
+    <TypeScriptCompile Include="system\CollisionMask.ts" />
+    <Content Include="system\CollisionMask.js">
+      <DependentUpon>CollisionMask.ts</DependentUpon>
+    </Content>
     <Content Include="system\input\Gestures.js">
       <DependentUpon>Gestures.ts</DependentUpon>
     </Content>

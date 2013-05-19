@@ -80,6 +80,7 @@ V0.9.6
 * Added Sprite.cacheKey which stores the key of the item from the cache that was used for its texture (if any)
 * Added GameMath.shuffleArray
 * Updated Animation.frame to return the index of the currentFrame if set
+* Added Quad.copyTo and Quad.copyFrom
 
 
 
@@ -88,6 +89,10 @@ V0.9.6
 * TODO: Investigate bug re: tilemap collision and animation frames
 * TODO: Update tests that use arrow keys and include touch/mouse support
 * TODO: GameObject.clipRect
+* TODO: Use CollisionMask in Input instead of Circle?
+* TODO: Polygon geom primitive
+* TODO: Move GameObject transforms to a single matrix
+
 
 
 Requirements

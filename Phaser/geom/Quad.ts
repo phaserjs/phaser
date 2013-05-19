@@ -91,6 +91,30 @@ module Phaser {
         }
 
         /**
+        * Copies the x/y/width/height values from the source object into this Quad
+        * @method copyFrom
+        * @param {Any} source The source object to copy from. Can be a Quad, Rectangle or any object with exposed x/y/width/height properties
+        * @return {Quad} This object
+        **/
+        public copyFrom(source): Quad {
+
+            return this.setTo(source.x, source.y, source.width, source.height);
+
+        }
+
+        /**
+        * Copies the x/y/width/height values from this Quad into the given target object
+        * @method copyTo
+        * @param {Any} target The object to copy this quads values in to. Can be a Quad, Rectangle or any object with exposed x/y/width/height properties
+        * @return {Any} The target object
+        **/
+        public copyTo(target): any {
+
+            return target.copyFrom(this);
+
+        }
+
+        /**
         * Returns a string representation of this object.
         * @method toString
         * @return {string} a string representation of the object.

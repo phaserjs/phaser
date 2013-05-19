@@ -1837,7 +1837,11 @@ var Phaser;
         });
         Object.defineProperty(Animation.prototype, "frame", {
             get: function () {
-                return this._frameIndex;
+                if(this.currentFrame !== null) {
+                    return this.currentFrame.index;
+                } else {
+                    return this._frameIndex;
+                }
             },
             set: function (value) {
                 this.currentFrame = this._frameData.getFrame(value);
@@ -2257,6 +2261,7 @@ var Phaser;
         * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
         * @param loop {boolean} Whether or not the animation is looped or just plays once.
         * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+        * @return {Animation} The Animation that was created
         */
         function (name, frames, frameRate, loop, useNumericIndex) {
             if (typeof frames === "undefined") { frames = null; }
@@ -2280,6 +2285,7 @@ var Phaser;
             this._anims[name] = new Phaser.Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
             this.currentAnim = this._anims[name];
             this.currentFrame = this.currentAnim.currentFrame;
+            return this._anims[name];
         };
         AnimationManager.prototype.validateFrames = /**
         * Check whether the frames is valid.
@@ -15035,6 +15041,28 @@ var Phaser;
     })();
     Phaser.FXManager = FXManager;    
 })(Phaser || (Phaser = {}));
+// Module
+var Shapes;
+(function (Shapes) {
+    // Class
+    var Point = (function () {
+        // Constructor
+        function Point(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Point.prototype.getDist = // Instance member
+        function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        };
+        Point.origin = new Point(0, 0);
+        return Point;
+    })();
+    Shapes.Point = Point;    
+})(Shapes || (Shapes = {}));
+// Local variables
+var p = new Shapes.Point(3, 4);
+var dist = p.getDist();
 /// <reference path="Game.ts" />
 /**
 * Phaser - State

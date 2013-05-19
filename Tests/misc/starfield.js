@@ -25,8 +25,10 @@
             }
             xxx = (xx[i]) / (zz[i]);
             yyy = (yy[i]) / (zz[i])--;
-            var x = xxx + myGame.input.x;
-            var y = yyy + myGame.input.y;
+            //var x: number = xxx + myGame.input.x;
+            //var y: number = yyy + myGame.input.y;
+            var x = xxx + 400;
+            var y = yyy + 300;
             var c = '#ffffff';
             if(zz[i] > 80) {
                 c = '#666666';
@@ -35,7 +37,6 @@
             } else if(zz[i] > 40) {
                 c = '#aaaaaa';
             }
-            //else if (zz[i] > 20) c = '#ffffff';
             starfield.setPixel(x, y, c);
         }
     }

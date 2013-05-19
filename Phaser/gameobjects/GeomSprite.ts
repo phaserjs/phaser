@@ -228,9 +228,10 @@ module Phaser {
         }
 
         /**
-         * Create a circle shape with specific diameter.
-         * @param diameter {number} Diameter of the circle.
-         * @return {GeomSprite} GeomSprite instance itself.
+         * Create a rectangle shape of the given width and height size
+         * @param width {Number} Width of the rectangle
+         * @param height {Number} Height of the rectangle
+         * @return {GeomSprite} GeomSprite instance.
          */
         createRectangle(width: number, height: number): GeomSprite {
 
