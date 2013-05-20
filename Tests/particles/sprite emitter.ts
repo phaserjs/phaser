@@ -44,7 +44,7 @@ class customParticle extends Phaser.Particle {
         //  The customParticle needs to extend Particle and must take game:Game as the first constructor parameter, otherwise it's free as a bird
         emitter.particleClass = customParticle;
 
-        emitter.makeParticles(null, 500, 0, false, 0);
+        emitter.makeParticles(null, 500, false, 0);
         emitter.start(false, 10, 0.05);
 
     }

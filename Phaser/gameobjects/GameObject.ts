@@ -1,6 +1,7 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../Basic.ts" />
 /// <reference path="../Signal.ts" />
+/// <reference path="../system/CollisionMask.ts" />
 
 /**
 * Phaser - GameObject
@@ -30,7 +31,7 @@ module Phaser {
             this.canvas = game.stage.canvas;
             this.context = game.stage.context;
 
-            this.bounds = new Rectangle(x, y, width, height);
+            this.frameBounds = new Rectangle(x, y, width, height);
             this.exists = true;
             this.active = true;
             this.visible = true;
@@ -40,7 +41,7 @@ module Phaser {
             this.scale = new MicroPoint(1, 1);
 
             this.last = new MicroPoint(x, y);
-            this.origin = new MicroPoint(this.bounds.halfWidth, this.bounds.halfHeight);
+            //this.origin = new MicroPoint(this.frameBounds.halfWidth, this.frameBounds.halfHeight);
             this.align = GameObject.ALIGN_TOP_LEFT;
             this.mass = 1;
             this.elasticity = 0;
@@ -66,6 +67,7 @@ module Phaser {
 
             this.cameraBlacklist = [];
             this.scrollFactor = new MicroPoint(1, 1);
+            this.collisionMask = new CollisionMask(game, this, x, y, width, height);
 
         }
 
@@ -169,16 +171,22 @@ module Phaser {
          * Rectangle container of this object.
          * @type {Rectangle}
          */
-        public bounds: Rectangle;
+        public frameBounds: Rectangle;
 
         /**
-         * Bound of world.
+         * This objects CollisionMask
+         * @type {CollisionMask}
+         */
+        public collisionMask: CollisionMask;
+
+        /**
+         * A rectangular area which is object is allowed to exist within. If it travels outside of this area it will perform the outOfBoundsAction.
          * @type {Quad}
          */
         public worldBounds: Quad;
 
         /**
-         * What action will be performed when object is out of bounds.
+         * What action will be performed when object is out of the worldBounds.
          * This will default to GameObject.OUT_OF_BOUNDS_STOP.
          * @type {number}
          */
@@ -230,7 +238,8 @@ module Phaser {
         public rotationOffset: number = 0;
 
         /**
-         * Render graphic based on its angle?
+         * Controls if the GameObject is rendered rotated or not.
+        * If renderRotation is false then the object can still rotate but it will never be rendered rotated.
          * @type {boolean}
          */
         public renderRotation: bool = true;
@@ -238,7 +247,7 @@ module Phaser {
         //  Physics properties
 
         /**
-         * Whether this object will be moved or not.
+         * Whether this object will be moved by impacts with other objects or not.
          * @type {boolean}
          */
         public immovable: bool;
@@ -370,8 +379,10 @@ module Phaser {
          */
         public preUpdate() {
 
-            this.last.x = this.bounds.x;
-            this.last.y = this.bounds.y;
+            this.last.x = this.frameBounds.x;
+            this.last.y = this.frameBounds.y;
+
+            this.collisionMask.preUpdate();
 
         }
 
@@ -421,6 +432,8 @@ module Phaser {
                     }
                 }
             }
+                
+            this.collisionMask.update();
 
             if (this.inputEnabled)
             {
@@ -455,13 +468,13 @@ module Phaser {
             this.velocity.x += velocityDelta;
             delta = this.velocity.x * this._game.time.elapsed;
             this.velocity.x += velocityDelta;
-            this.bounds.x += delta;
+            this.frameBounds.x += delta;
 
             velocityDelta = (this._game.motion.computeVelocity(this.velocity.y, this.acceleration.y, this.drag.y, this.maxVelocity.y) - this.velocity.y) / 2;
             this.velocity.y += velocityDelta;
             delta = this.velocity.y * this._game.time.elapsed;
             this.velocity.y += velocityDelta;
-            this.bounds.y += delta;
+            this.frameBounds.y += delta;
 
         }
 
@@ -470,23 +483,23 @@ module Phaser {
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param ObjectOrGroup {object} The object or group being tested.
-        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param objectOrGroup {object} The object or group being tested.
+        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether or not the objects overlap this.
         */
-        public overlaps(ObjectOrGroup, InScreenSpace: bool = false, Camera: Camera = null): bool {
+        public overlaps(objectOrGroup, inScreenSpace: bool = false, camera: Camera = null): bool {
 
-            if (ObjectOrGroup.isGroup)
+            if (objectOrGroup.isGroup)
             {
                 var results: bool = false;
                 var i: number = 0;
-                var members = <Group> ObjectOrGroup.members;
+                var members = <Group> objectOrGroup.members;
 
                 while (i < length)
                 {
-                    if (this.overlaps(members[i++], InScreenSpace, Camera))
+                    if (this.overlaps(members[i++], inScreenSpace, camera))
                     {
                         results = true;
                     }
@@ -496,23 +509,23 @@ module Phaser {
 
             }
 
-            if (!InScreenSpace)
+            if (!inScreenSpace)
             {
-                return (ObjectOrGroup.x + ObjectOrGroup.width > this.x) && (ObjectOrGroup.x < this.x + this.width) &&
-                        (ObjectOrGroup.y + ObjectOrGroup.height > this.y) && (ObjectOrGroup.y < this.y + this.height);
+                return (objectOrGroup.x + objectOrGroup.width > this.x) && (objectOrGroup.x < this.x + this.width) &&
+                        (objectOrGroup.y + objectOrGroup.height > this.y) && (objectOrGroup.y < this.y + this.height);
             }
 
-            if (Camera == null)
+            if (camera == null)
             {
-                Camera = this._game.camera;
+                camera = this._game.camera;
             }
 
-            var objectScreenPos: Point = ObjectOrGroup.getScreenXY(null, Camera);
+            var objectScreenPos: Point = objectOrGroup.getScreenXY(null, camera);
 
-            this.getScreenXY(this._point, Camera);
+            this.getScreenXY(this._point, camera);
 
-            return (objectScreenPos.x + ObjectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) &&
-                    (objectScreenPos.y + ObjectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
+            return (objectScreenPos.x + objectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) &&
+                    (objectScreenPos.y + objectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
         }
 
         /**
@@ -522,24 +535,24 @@ module Phaser {
         *
         * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
         * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param ObjectOrGroup {object} The object or group being tested.
-        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param objectOrGroup {object} The object or group being tested.
+        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether or not the two objects overlap.
         */
-        public overlapsAt(X: number, Y: number, ObjectOrGroup, InScreenSpace: bool = false, Camera: Camera = null): bool {
+        public overlapsAt(X: number, Y: number, objectOrGroup, inScreenSpace: bool = false, camera: Camera = null): bool {
 
-            if (ObjectOrGroup.isGroup)
+            if (objectOrGroup.isGroup)
             {
                 var results: bool = false;
                 var basic;
                 var i: number = 0;
-                var members = ObjectOrGroup.members;
+                var members = objectOrGroup.members;
 
                 while (i < length)
                 {
-                    if (this.overlapsAt(X, Y, members[i++], InScreenSpace, Camera))
+                    if (this.overlapsAt(X, Y, members[i++], inScreenSpace, camera))
                     {
                         results = true;
                     }
@@ -548,53 +561,53 @@ module Phaser {
                 return results;
             }
 
-            if (!InScreenSpace)
+            if (!inScreenSpace)
             {
-                return (ObjectOrGroup.x + ObjectOrGroup.width > X) && (ObjectOrGroup.x < X + this.width) &&
-                        (ObjectOrGroup.y + ObjectOrGroup.height > Y) && (ObjectOrGroup.y < Y + this.height);
+                return (objectOrGroup.x + objectOrGroup.width > X) && (objectOrGroup.x < X + this.width) &&
+                        (objectOrGroup.y + objectOrGroup.height > Y) && (objectOrGroup.y < Y + this.height);
             }
 
-            if (Camera == null)
+            if (camera == null)
             {
-                Camera = this._game.camera;
+                camera = this._game.camera;
             }
 
-            var objectScreenPos: Point = ObjectOrGroup.getScreenXY(null, Camera);
+            var objectScreenPos: Point = objectOrGroup.getScreenXY(null, Camera);
 
-            this._point.x = X - Camera.scroll.x * this.scrollFactor.x; //copied from getScreenXY()
-            this._point.y = Y - Camera.scroll.y * this.scrollFactor.y;
+            this._point.x = X - camera.scroll.x * this.scrollFactor.x; //copied from getScreenXY()
+            this._point.y = Y - camera.scroll.y * this.scrollFactor.y;
             this._point.x += (this._point.x > 0) ? 0.0000001 : -0.0000001;
             this._point.y += (this._point.y > 0) ? 0.0000001 : -0.0000001;
 
-            return (objectScreenPos.x + ObjectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) &&
-                (objectScreenPos.y + ObjectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
+            return (objectScreenPos.x + objectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) &&
+                (objectScreenPos.y + objectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
         }
 
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *
         * @param point {Point} The point in world space you want to check.
-        * @param InScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return   Whether or not the point overlaps this object.
         */
-        public overlapsPoint(point: Point, InScreenSpace: bool = false, Camera: Camera = null): bool {
+        public overlapsPoint(point: Point, inScreenSpace: bool = false, camera: Camera = null): bool {
 
-            if (!InScreenSpace)
+            if (!inScreenSpace)
             {
                 return (point.x > this.x) && (point.x < this.x + this.width) && (point.y > this.y) && (point.y < this.y + this.height);
             }
 
-            if (Camera == null)
+            if (camera == null)
             {
-                Camera = this._game.camera;
+                camera = this._game.camera;
             }
 
-            var X: number = point.x - Camera.scroll.x;
-            var Y: number = point.y - Camera.scroll.y;
+            var X: number = point.x - camera.scroll.x;
+            var Y: number = point.y - camera.scroll.y;
 
-            this.getScreenXY(this._point, Camera);
+            this.getScreenXY(this._point, camera);
 
             return (X > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
 
@@ -603,45 +616,45 @@ module Phaser {
         /**
         * Check and see if this object is currently on screen.
         *
-        * @param Camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether the object is on screen or not.
         */
-        public onScreen(Camera: Camera = null): bool {
+        public onScreen(camera: Camera = null): bool {
 
-            if (Camera == null)
+            if (camera == null)
             {
-                Camera = this._game.camera;
+                camera = this._game.camera;
             }
 
-            this.getScreenXY(this._point, Camera);
+            this.getScreenXY(this._point, camera);
 
-            return (this._point.x + this.width > 0) && (this._point.x < Camera.width) && (this._point.y + this.height > 0) && (this._point.y < Camera.height);
+            return (this._point.x + this.width > 0) && (this._point.x < camera.width) && (this._point.y + this.height > 0) && (this._point.y < camera.height);
 
         }
 
         /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param Point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {MicroPoint} The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
-        public getScreenXY(point: MicroPoint = null, Camera: Camera = null): MicroPoint {
+        public getScreenXY(point: MicroPoint = null, camera: Camera = null): MicroPoint {
 
             if (point == null)
             {
                 point = new MicroPoint();
             }
 
-            if (Camera == null)
+            if (camera == null)
             {
-                Camera = this._game.camera;
+                camera = this._game.camera;
             }
 
-            point.x = this.x - Camera.scroll.x * this.scrollFactor.x;
-            point.y = this.y - Camera.scroll.y * this.scrollFactor.y;
+            point.x = this.x - camera.scroll.x * this.scrollFactor.x;
+            point.y = this.y - camera.scroll.y * this.scrollFactor.y;
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
 
@@ -658,9 +671,9 @@ module Phaser {
             return (this.allowCollisions & Collision.ANY) > Collision.NONE;
         }
 
-        public set solid(Solid: bool) {
+        public set solid(value: bool) {
 
-            if (Solid)
+            if (value)
             {
                 this.allowCollisions = Collision.ANY;
             }
@@ -685,7 +698,7 @@ module Phaser {
                 point = new MicroPoint();
             }
 
-            point.copyFrom(this.bounds.center);
+            point.copyFrom(this.frameBounds.center);
 
             return point;
 
@@ -695,18 +708,18 @@ module Phaser {
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
-        * @param X {number} The new X position of this object.
-        * @param Y {number} The new Y position of this object.
+        * @param x {number} The new X position of this object.
+        * @param y {number} The new Y position of this object.
         */
-        public reset(X: number, Y: number) {
+        public reset(x: number, y: number) {
 
             this.revive();
             this.touching = Collision.NONE;
             this.wasTouching = Collision.NONE;
-            this.x = X;
-            this.y = Y;
-            this.last.x = X;
-            this.last.y = Y;
+            this.x = x;
+            this.y = y;
+            this.last.x = x;
+            this.last.y = y;
             this.velocity.x = 0;
             this.velocity.y = 0;
 
@@ -721,17 +734,9 @@ module Phaser {
         *
         * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
         */
-        public isTouching(Direction: number): bool {
-            return (this.touching & Direction) > Collision.NONE;
+        public isTouching(direction: number): bool {
+            return (this.touching & direction) > Collision.NONE;
         }
-
-        /**
-        * Handy for checking if this object is just landed on a particular surface.
-        *
-        * @param {number} Direction   Any of the collision flags (e.g. LEFT, FLOOR, etc).
-        *
-        * @return {boolean} Whether the object just landed on (any of) the specified surface(s) this frame.
-        */
 
         /**
         * Handy function for checking if this object just landed on a particular surface.
@@ -740,8 +745,8 @@ module Phaser {
         *
         * @returns {boolean} Whether the object just landed on any specicied surfaces.
         */
-        public justTouched(Direction: number): bool {
-            return ((this.touching & Direction) > Collision.NONE) && ((this.wasTouching & Direction) <= Collision.NONE);
+        public justTouched(direction: number): bool {
+            return ((this.touching & direction) > Collision.NONE) && ((this.wasTouching & direction) <= Collision.NONE);
         }
 
         /**
@@ -750,9 +755,9 @@ module Phaser {
         *
         * @param Damage {number} How much health to take away (use a negative number to give a health bonus).
         */
-        public hurt(Damage: number) {
+        public hurt(damage: number) {
 
-            this.health = this.health - Damage;
+            this.health = this.health - damage;
 
             if (this.health <= 0)
             {
@@ -835,19 +840,19 @@ module Phaser {
         }
 
         public get x(): number {
-            return this.bounds.x;
+            return this.frameBounds.x;
         }
 
         public set x(value: number) {
-            this.bounds.x = value;
+            this.frameBounds.x = value;
         }
 
         public get y(): number {
-            return this.bounds.y;
+            return this.frameBounds.y;
         }
 
         public set y(value: number) {
-            this.bounds.y = value;
+            this.frameBounds.y = value;
         }
 
         public get rotation(): number {
@@ -867,19 +872,19 @@ module Phaser {
         }
 
         public set width(value:number) {
-            this.bounds.width = value;
+            this.frameBounds.width = value;
         }
 
         public set height(value:number) {
-            this.bounds.height = value;
+            this.frameBounds.height = value;
         }
 
         public get width(): number {
-            return this.bounds.width;
+            return this.frameBounds.width;
         }
 
         public get height(): number {
-            return this.bounds.height;
+            return this.frameBounds.height;
         }
 
     }

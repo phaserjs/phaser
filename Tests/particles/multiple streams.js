@@ -26,7 +26,7 @@
             emitter.setXSpeed(-200, -250);
         }
         emitter.setYSpeed(-50, -10);
-        emitter.makeParticles(graphic, 250, 0, false, 0);
+        emitter.makeParticles(graphic, 250, false, 0);
         return emitter;
     }
     function create() {

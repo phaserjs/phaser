@@ -64,6 +64,7 @@ module Phaser {
          * Texture of this object.
          */
         private _texture;
+
         /**
          * If this zone is larger than texture image, this will be filled with a pattern of texture.
          * @type {DynamicTexture}
@@ -75,16 +76,19 @@ module Phaser {
          * @type {number}
          */
         private _dx: number = 0;
+
         /**
          * Local rendering related temp vars to help avoid gc spikes.
          * @type {number}
          */
         private _dy: number = 0;
+
         /**
          * Local rendering related temp vars to help avoid gc spikes.
          * @type {number}
          */
         private _dw: number = 0;
+
         /**
          * Local rendering related temp vars to help avoid gc spikes.
          * @type {number}
@@ -96,11 +100,13 @@ module Phaser {
          * @type {ScrollRegion}
          */
         public currentRegion: ScrollRegion;
+
         /**
          * Array contains all added regions.
          * @type {ScrollRegion[]}
          */
         public regions: ScrollRegion[];
+
         /**
          * Flip this zone vertically? (default to false)
          * @type {boolean}
@@ -170,16 +176,16 @@ module Phaser {
 
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
             {
-                this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
-                this._dw = this.bounds.width * this.scale.x;
-                this._dh = this.bounds.height * this.scale.y;
+                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
+                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
+                this._dw = this.frameBounds.width * this.scale.x;
+                this._dh = this.frameBounds.height * this.scale.y;
 
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
             }
             else
             {
-                return camera.intersects(this.bounds, this.bounds.length);
+                return camera.intersects(this.frameBounds, this.frameBounds.length);
             }
 
         }
@@ -206,10 +212,10 @@ module Phaser {
                 this.context.globalAlpha = this.alpha;
             }
 
-            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
-            this._dw = this.bounds.width * this.scale.x;
-            this._dh = this.bounds.height * this.scale.y;
+            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+            this._dw = this.frameBounds.width * this.scale.x;
+            this._dh = this.frameBounds.height * this.scale.y;
 
             //	Apply camera difference
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)

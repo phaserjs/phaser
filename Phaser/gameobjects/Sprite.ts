@@ -38,8 +38,8 @@ module Phaser {
             }
             else
             {
-                this.bounds.width = 16;
-                this.bounds.height = 16;
+                this.frameBounds.width = 16;
+                this.frameBounds.height = 16;
             }
 
         }
@@ -107,7 +107,7 @@ module Phaser {
         public flipped: bool = false;
 
         /**
-         * Load graphic for this sprite. (graphic can be SpriteSheet of Texture)
+         * Load graphic for this sprite. (graphic can be SpriteSheet or Texture)
          * @param key {string} Key of the graphic you want to load for this sprite.
          * @return {Sprite} Sprite instance itself.
          */
@@ -118,13 +118,17 @@ module Phaser {
                 if (this._game.cache.isSpriteSheet(key) == false)
                 {
                     this._texture = this._game.cache.getImage(key);
-                    this.bounds.width = this._texture.width;
-                    this.bounds.height = this._texture.height;
+                    this.frameBounds.width = this._texture.width;
+                    this.frameBounds.height = this._texture.height;
+                    this.collisionMask.width = this._texture.width;
+                    this.collisionMask.height = this._texture.height;
                 }
                 else
                 {
                     this._texture = this._game.cache.getImage(key);
                     this.animations.loadFrameData(this._game.cache.getFrameData(key));
+                    //this.collisionMask.width = this._texture.width;
+                    //this.collisionMask.height = this._texture.height;
                 }
 
                 this._dynamicTexture = false;
@@ -143,8 +147,8 @@ module Phaser {
 
             this._texture = texture;
 
-            this.bounds.width = this._texture.width;
-            this.bounds.height = this._texture.height;
+            this.frameBounds.width = this._texture.width;
+            this.frameBounds.height = this._texture.height;
 
             this._dynamicTexture = true;
 
@@ -179,16 +183,16 @@ module Phaser {
 
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
             {
-                this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
-                this._dw = this.bounds.width * this.scale.x;
-                this._dh = this.bounds.height * this.scale.y;
+                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
+                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
+                this._dw = this.frameBounds.width * this.scale.x;
+                this._dh = this.frameBounds.height * this.scale.y;
 
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
             }
             else
             {
-                return camera.intersects(this.bounds, this.bounds.length);
+                return camera.intersects(this.frameBounds, this.frameBounds.length);
             }
 
         }
@@ -244,48 +248,48 @@ module Phaser {
 
             this._sx = 0;
             this._sy = 0;
-            this._sw = this.bounds.width;
-            this._sh = this.bounds.height;
-            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
-            this._dw = this.bounds.width * this.scale.x;
-            this._dh = this.bounds.height * this.scale.y;
+            this._sw = this.frameBounds.width;
+            this._sh = this.frameBounds.height;
+            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+            this._dw = this.frameBounds.width * this.scale.x;
+            this._dh = this.frameBounds.height * this.scale.y;
 
             if (this.align == GameObject.ALIGN_TOP_CENTER)
             {
-                this._dx -= this.bounds.halfWidth * this.scale.x;
+                this._dx -= this.frameBounds.halfWidth * this.scale.x;
             }
             else if (this.align == GameObject.ALIGN_TOP_RIGHT)
             {
-                this._dx -= this.bounds.width * this.scale.x;
+                this._dx -= this.frameBounds.width * this.scale.x;
             }
             else if (this.align == GameObject.ALIGN_CENTER_LEFT)
             {
-                this._dy -= this.bounds.halfHeight * this.scale.y;
+                this._dy -= this.frameBounds.halfHeight * this.scale.y;
             }
             else if (this.align == GameObject.ALIGN_CENTER)
             {
-                this._dx -= this.bounds.halfWidth * this.scale.x;
-                this._dy -= this.bounds.halfHeight * this.scale.y;
+                this._dx -= this.frameBounds.halfWidth * this.scale.x;
+                this._dy -= this.frameBounds.halfHeight * this.scale.y;
             }
             else if (this.align == GameObject.ALIGN_CENTER_RIGHT)
             {
-                this._dx -= this.bounds.width * this.scale.x;
-                this._dy -= this.bounds.halfHeight * this.scale.y;
+                this._dx -= this.frameBounds.width * this.scale.x;
+                this._dy -= this.frameBounds.halfHeight * this.scale.y;
             }
             else if (this.align == GameObject.ALIGN_BOTTOM_LEFT)
             {
-                this._dy -= this.bounds.height * this.scale.y;
+                this._dy -= this.frameBounds.height * this.scale.y;
             }
             else if (this.align == GameObject.ALIGN_BOTTOM_CENTER)
             {
-                this._dx -= this.bounds.halfWidth * this.scale.x;
-                this._dy -= this.bounds.height * this.scale.y;
+                this._dx -= this.frameBounds.halfWidth * this.scale.x;
+                this._dy -= this.frameBounds.height * this.scale.y;
             }
             else if (this.align == GameObject.ALIGN_BOTTOM_RIGHT)
             {
-                this._dx -= this.bounds.width * this.scale.x;
-                this._dy -= this.bounds.height * this.scale.y;
+                this._dx -= this.frameBounds.width * this.scale.x;
+                this._dy -= this.frameBounds.height * this.scale.y;
             }
 
             if (this._dynamicTexture == false && this.animations.currentFrame !== null)
@@ -381,7 +385,8 @@ module Phaser {
 
             if (this.renderDebug)
             {
-                this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
+                //this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
+                this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
             }
 
             if (globalAlpha > -1)
@@ -401,27 +406,31 @@ module Phaser {
          */
         private renderBounds(camera:Camera, cameraOffsetX:number, cameraOffsetY:number) {
 
-            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
+            //this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+            //this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+
+            this._dx = cameraOffsetX + (this.collisionMask.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.collisionMask.y - camera.worldView.y);
 
             this.context.fillStyle = this.renderDebugColor;
-            this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            this.context.fillStyle = this.renderDebugPointColor;
+            this.context.fillRect(this._dx, this._dy, this.collisionMask.width, this.collisionMask.height);
+            
+            //this.context.fillStyle = this.renderDebugPointColor;
 
-            var hw = this.bounds.halfWidth * this.scale.x;
-            var hh = this.bounds.halfHeight * this.scale.y;
-            var sw = (this.bounds.width * this.scale.x) - 1;
-            var sh = (this.bounds.height * this.scale.y) - 1;
+            //var hw = this.frameBounds.halfWidth * this.scale.x;
+            //var hh = this.frameBounds.halfHeight * this.scale.y;
+            //var sw = (this.frameBounds.width * this.scale.x) - 1;
+            //var sh = (this.frameBounds.height * this.scale.y) - 1;
 
-            this.context.fillRect(this._dx, this._dy, 1, 1);            //  top left
-            this.context.fillRect(this._dx + hw, this._dy, 1, 1);       //  top center
-            this.context.fillRect(this._dx + sw, this._dy, 1, 1);       //  top right
-            this.context.fillRect(this._dx, this._dy + hh, 1, 1);       //  left center
-            this.context.fillRect(this._dx + hw, this._dy + hh, 1, 1);  //  center
-            this.context.fillRect(this._dx + sw, this._dy + hh, 1, 1);  //  right center
-            this.context.fillRect(this._dx, this._dy + sh, 1, 1);       //  bottom left
-            this.context.fillRect(this._dx + hw, this._dy + sh, 1, 1);  //  bottom center
-            this.context.fillRect(this._dx + sw, this._dy + sh, 1, 1);  //  bottom right
+            //this.context.fillRect(this._dx, this._dy, 1, 1);            //  top left
+            //this.context.fillRect(this._dx + hw, this._dy, 1, 1);       //  top center
+            //this.context.fillRect(this._dx + sw, this._dy, 1, 1);       //  top right
+            //this.context.fillRect(this._dx, this._dy + hh, 1, 1);       //  left center
+            //this.context.fillRect(this._dx + hw, this._dy + hh, 1, 1);  //  center
+            //this.context.fillRect(this._dx + sw, this._dy + hh, 1, 1);  //  right center
+            //this.context.fillRect(this._dx, this._dy + sh, 1, 1);       //  bottom left
+            //this.context.fillRect(this._dx + hw, this._dy + sh, 1, 1);  //  bottom center
+            //this.context.fillRect(this._dx + sw, this._dy + sh, 1, 1);  //  bottom right
 
         }
 
@@ -434,8 +443,8 @@ module Phaser {
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
             this.context.fillStyle = color;
-            this.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
-            this.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
+            this.context.fillText('Sprite: ' + this.name + ' (' + this.frameBounds.width + ' x ' + this.frameBounds.height + ')', x, y);
+            this.context.fillText('x: ' + this.frameBounds.x.toFixed(1) + ' y: ' + this.frameBounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
             this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
             this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
 

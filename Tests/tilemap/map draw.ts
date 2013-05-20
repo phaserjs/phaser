@@ -34,7 +34,7 @@
 
         emitter = myGame.createEmitter(32, 80);
         emitter.width = 700;
-        emitter.makeParticles('carrot', 100, 0, false, 1);
+        emitter.makeParticles('carrot', 100, false, 1);
         emitter.gravity = 150;
         emitter.bounce = 0.8;
         emitter.start(false, 20, 0.05);

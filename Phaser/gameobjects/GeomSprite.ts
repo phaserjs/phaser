@@ -191,7 +191,7 @@ module Phaser {
             this.refresh();
             this.circle = new Circle(this.x, this.y, diameter);
             this.type = GeomSprite.CIRCLE;
-            this.bounds.setTo(this.circle.x - this.circle.radius, this.circle.y - this.circle.radius, this.circle.diameter, this.circle.diameter);
+            this.frameBounds.setTo(this.circle.x - this.circle.radius, this.circle.y - this.circle.radius, this.circle.diameter, this.circle.diameter);
             return this;
 
         }
@@ -207,7 +207,7 @@ module Phaser {
             this.refresh();
             this.line = new Line(this.x, this.y, x, y);
             this.type = GeomSprite.LINE;
-            this.bounds.setTo(this.x, this.y, this.line.width, this.line.height);
+            this.frameBounds.setTo(this.x, this.y, this.line.width, this.line.height);
             return this;
 
         }
@@ -221,8 +221,8 @@ module Phaser {
             this.refresh();
             this.point = new Point(this.x, this.y);
             this.type = GeomSprite.POINT;
-            this.bounds.width = 1;
-            this.bounds.height = 1;
+            this.frameBounds.width = 1;
+            this.frameBounds.height = 1;
             return this;
 
         }
@@ -238,7 +238,7 @@ module Phaser {
             this.refresh();
             this.rect = new Rectangle(this.x, this.y, width, height);
             this.type = GeomSprite.RECTANGLE;
-            this.bounds.copyFrom(this.rect);
+            this.frameBounds.copyFrom(this.rect);
             return this;
 
         }
@@ -269,14 +269,14 @@ module Phaser {
             {
                 this.circle.x = this.x;
                 this.circle.y = this.y;
-                this.bounds.width = this.circle.diameter;
-                this.bounds.height = this.circle.diameter;
+                this.frameBounds.width = this.circle.diameter;
+                this.frameBounds.height = this.circle.diameter;
             }
             else if (this.type == GeomSprite.LINE)
             {
                 this.line.x1 = this.x;
                 this.line.y1 = this.y;
-                this.bounds.setTo(this.x, this.y, this.line.width, this.line.height);
+                this.frameBounds.setTo(this.x, this.y, this.line.width, this.line.height);
             }
             else if (this.type == GeomSprite.POINT)
             {
@@ -287,7 +287,7 @@ module Phaser {
             {
                 this.rect.x = this.x;
                 this.rect.y = this.y;
-                this.bounds.copyFrom(this.rect);
+                this.frameBounds.copyFrom(this.rect);
             }
 
         }
@@ -301,16 +301,16 @@ module Phaser {
 
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
             {
-                this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
-                this._dw = this.bounds.width * this.scale.x;
-                this._dh = this.bounds.height * this.scale.y;
+                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
+                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
+                this._dw = this.frameBounds.width * this.scale.x;
+                this._dh = this.frameBounds.height * this.scale.y;
 
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
             }
             else
             {
-                return camera.intersects(this.bounds);
+                return camera.intersects(this.frameBounds);
             }
 
         }
@@ -337,10 +337,10 @@ module Phaser {
                 this.context.globalAlpha = this.alpha;
             }
 
-            this._dx = cameraOffsetX + (this.bounds.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.y - camera.worldView.y);
-            this._dw = this.bounds.width * this.scale.x;
-            this._dh = this.bounds.height * this.scale.y;
+            this._dx = cameraOffsetX + (this.frameBounds.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.frameBounds.y - camera.worldView.y);
+            this._dw = this.frameBounds.width * this.scale.x;
+            this._dh = this.frameBounds.height * this.scale.y;
 
             //	Apply camera difference
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
@@ -370,7 +370,7 @@ module Phaser {
 
             //  Debug
             //this.context.fillStyle = 'rgba(255,0,0,0.5)';
-            //this.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            //this.context.fillRect(this.frameBounds.x, this.frameBounds.y, this.frameBounds.width, this.frameBounds.height);
 
             this.context.lineWidth = this.lineWidth;
             this.context.strokeStyle = this.lineColor;
@@ -493,8 +493,8 @@ module Phaser {
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
             //this.context.fillStyle = color;
-            //this.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
-            //this.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
+            //this.context.fillText('Sprite: ' + this.name + ' (' + this.frameBounds.width + ' x ' + this.frameBounds.height + ')', x, y);
+            //this.context.fillText('x: ' + this.frameBounds.x.toFixed(1) + ' y: ' + this.frameBounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
             //this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
             //this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
 

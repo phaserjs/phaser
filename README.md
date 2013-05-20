@@ -81,6 +81,11 @@ V0.9.6
 * Added GameMath.shuffleArray
 * Updated Animation.frame to return the index of the currentFrame if set
 * Added Quad.copyTo and Quad.copyFrom
+* Removed the bakedRotations parameter from Emiter.makeParticles - update your code accordingly!
+* Updated various classes to remove the Flixel left-over CamelCase parameters
+* Updated QuadTree to use the new CollisionMask values and significantly optimised and reduced overall class size
+* Updated Collision.seperate to use the new CollisionMask
+* Added a callback context parameter to Game.collide, Collision.overlap and the QuadTree class
 
 
 

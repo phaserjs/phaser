@@ -28,7 +28,7 @@
         ]);
         emitter = myGame.createEmitter(32, 80);
         emitter.width = 700;
-        emitter.makeParticles('chunk', 100, 0, false, 1);
+        emitter.makeParticles('chunk', 100, false, 1);
         emitter.gravity = 200;
         emitter.bounce = 0.8;
         emitter.start(false, 10, 0.05);

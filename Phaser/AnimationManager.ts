@@ -200,8 +200,8 @@ module Phaser {
             if (this.currentAnim && this.currentAnim.update() == true)
             {
                 this.currentFrame = this.currentAnim.currentFrame;
-                this._parent.bounds.width = this.currentFrame.width;
-                this._parent.bounds.height = this.currentFrame.height;
+                this._parent.frameBounds.width = this.currentFrame.width;
+                this._parent.frameBounds.height = this.currentFrame.height;
             }
 
         }
@@ -224,8 +224,8 @@ module Phaser {
             {
                 this.currentFrame = this._frameData.getFrame(value);
 
-                this._parent.bounds.width = this.currentFrame.width;
-                this._parent.bounds.height = this.currentFrame.height;
+                this._parent.frameBounds.width = this.currentFrame.width;
+                this._parent.frameBounds.height = this.currentFrame.height;
                 this._frameIndex = value;
             }
 
@@ -241,8 +241,8 @@ module Phaser {
             {
                 this.currentFrame = this._frameData.getFrameByName(value);
 
-                this._parent.bounds.width = this.currentFrame.width;
-                this._parent.bounds.height = this.currentFrame.height;
+                this._parent.frameBounds.width = this.currentFrame.width;
+                this._parent.frameBounds.height = this.currentFrame.height;
                 this._frameIndex = this.currentFrame.index;
             }
 

@@ -21,7 +21,7 @@
         pic2 = myGame.createSprite(0, 0, 'backdrop2');
         //  Creates a basic emitter, bursting out 50 default sprites (i.e. 16x16 white boxes)
         emitter = myGame.createEmitter(myGame.stage.centerX, myGame.stage.centerY);
-        emitter.makeParticles('jet', 50, 0, false, 0);
+        emitter.makeParticles('jet', 50, false, 0);
         emitter.setRotation(0, 0);
         emitter.start(false, 10, 0.1);
         //  Make sure the camera doesn't clip anything

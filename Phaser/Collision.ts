@@ -553,6 +553,20 @@ module Phaser {
 
         }
 
+        /*
+        public static circleToQuad(circle: Circle, quad: Quad): bool {
+
+            //  Check if the center of the circle is within the Quad
+            if (quad.contains(circle.x, circle.y))
+            {
+                return true;
+            }
+
+            //  Failing that let's check each line of the quad against the circle
+            return false;
+        }
+        */
+
         /**
          * Checks if the Circle object intersects with the Rectangle and returns the result in an IntersectResult object.
          * @param circle The Circle object to check
@@ -594,9 +608,10 @@ module Phaser {
          * @param object2 The second GameObject or Group to check.
          * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
          * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+         * @param context The context in which the callbacks will be called
          * @returns {boolean} true if the objects overlap, otherwise false.
          */
-        public overlap(object1: Basic = null, object2: Basic = null, notifyCallback = null, processCallback = null): bool {
+        public overlap(object1: Basic = null, object2: Basic = null, notifyCallback = null, processCallback = null, context = null): bool {
 
             if (object1 == null)
             {
@@ -612,7 +627,7 @@ module Phaser {
 
             var quadTree: QuadTree = new QuadTree(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
 
-            quadTree.load(object1, object2, notifyCallback, processCallback);
+            quadTree.load(object1, object2, notifyCallback, processCallback, context);
 
             var result: bool = quadTree.execute();
 
@@ -631,6 +646,11 @@ module Phaser {
          * @returns {boolean} Returns true if the objects were separated, otherwise false.
          */
         public static separate(object1, object2): bool {
+
+            console.log('sep o');
+
+            object1.collisionMask.update();
+            object2.collisionMask.update();
 
             var separatedX: bool = Collision.separateX(object1, object2);
             var separatedY: bool = Collision.separateY(object1, object2);
@@ -827,6 +847,207 @@ module Phaser {
 
             //  First, get the two object deltas
             var overlap: number = 0;
+
+            if (object1.collisionMask.deltaX != object2.collisionMask.deltaX)
+            {
+                if (object1.collisionMask.intersects(object2.collisionMask))
+                {
+                    var maxOverlap: number = object1.collisionMask.deltaXAbs + object2.collisionMask.deltaXAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (object1.collisionMask.deltaX > object2.collisionMask.deltaX)
+                    {
+                        overlap = object1.collisionMask.right - object2.collisionMask.x;
+
+                        if ((overlap > maxOverlap) || !(object1.allowCollisions & Collision.RIGHT) || !(object2.allowCollisions & Collision.LEFT))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object1.touching |= Collision.RIGHT;
+                            object2.touching |= Collision.LEFT;
+                        }
+                    }
+                    else if (object1.collisionMask.deltaX < object2.collisionMask.deltaX)
+                    {
+                        overlap = object1.collisionMask.x - object2.collisionMask.width - object2.collisionMask.x;
+
+                        if ((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.LEFT) || !(object2.allowCollisions & Collision.RIGHT))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object1.touching |= Collision.LEFT;
+                            object2.touching |= Collision.RIGHT;
+                        }
+
+                    }
+
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                var obj1Velocity: number = object1.velocity.x;
+                var obj2Velocity: number = object2.velocity.x;
+
+                if (!object1.immovable && !object2.immovable)
+                {
+                    overlap *= 0.5;
+                    object1.x = object1.x - overlap;
+                    object2.x += overlap;
+
+                    var obj1NewVelocity: number = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
+                    var obj2NewVelocity: number = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
+                    var average: number = (obj1NewVelocity + obj2NewVelocity) * 0.5;
+                    obj1NewVelocity -= average;
+                    obj2NewVelocity -= average;
+                    object1.velocity.x = average + obj1NewVelocity * object1.elasticity;
+                    object2.velocity.x = average + obj2NewVelocity * object2.elasticity;
+                }
+                else if (!object1.immovable)
+                {
+                    object1.x = object1.x - overlap;
+                    object1.velocity.x = obj2Velocity - obj1Velocity * object1.elasticity;
+                }
+                else if (!object2.immovable)
+                {
+                    object2.x += overlap;
+                    object2.velocity.x = obj1Velocity - obj2Velocity * object2.elasticity;
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        /**
+         * Separates the two objects on their y axis
+         * @param object1 The first GameObject to separate
+         * @param object2 The second GameObject to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+         */
+        public static separateY(object1, object2): bool {
+
+            //  Can't separate two immovable objects
+            if (object1.immovable && object2.immovable) {
+                return false;
+            }
+
+            //  First, get the two object deltas
+            var overlap: number = 0;
+
+            if (object1.collisionMask.deltaY != object2.collisionMask.deltaY)
+            {
+                if (object1.collisionMask.intersects(object2.collisionMask))
+                {
+                    //  This is the only place to use the DeltaAbs values
+                    var maxOverlap: number = object1.collisionMask.deltaYAbs + object2.collisionMask.deltaYAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (object1.collisionMask.deltaY > object2.collisionMask.deltaY)
+                    {
+                        overlap = object1.collisionMask.bottom - object2.collisionMask.y;
+
+                        if ((overlap > maxOverlap) || !(object1.allowCollisions & Collision.DOWN) || !(object2.allowCollisions & Collision.UP))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object1.touching |= Collision.DOWN;
+                            object2.touching |= Collision.UP;
+                        }
+                    }
+                    else if (object1.collisionMask.deltaY < object2.collisionMask.deltaY)
+                    {
+                        overlap = object1.collisionMask.y - object2.collisionMask.height - object2.collisionMask.y;
+
+                        if ((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.UP) || !(object2.allowCollisions & Collision.DOWN))
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object1.touching |= Collision.UP;
+                            object2.touching |= Collision.DOWN;
+                        }
+                    }
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                var obj1Velocity: number = object1.velocity.y;
+                var obj2Velocity: number = object2.velocity.y;
+
+                if (!object1.immovable && !object2.immovable)
+                {
+                    overlap *= 0.5;
+                    object1.y = object1.y - overlap;
+                    object2.y += overlap;
+
+                    var obj1NewVelocity: number = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
+                    var obj2NewVelocity: number = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
+                    var average: number = (obj1NewVelocity + obj2NewVelocity) * 0.5;
+                    obj1NewVelocity -= average;
+                    obj2NewVelocity -= average;
+                    object1.velocity.y = average + obj1NewVelocity * object1.elasticity;
+                    object2.velocity.y = average + obj2NewVelocity * object2.elasticity;
+                }
+                else if (!object1.immovable)
+                {
+                    object1.y = object1.y - overlap;
+                    object1.velocity.y = obj2Velocity - obj1Velocity * object1.elasticity;
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (object2.active && object2.moves && (object1.collisionMask.deltaY > object2.collisionMask.deltaY))
+                    {
+                        object1.x += object2.x - object2.last.x;
+                    }
+                }
+                else if (!object2.immovable)
+                {
+                    object2.y += overlap;
+                    object2.velocity.y = obj1Velocity - obj2Velocity * object2.elasticity;
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (object1.active && object1.moves && (object1.collisionMask.deltaY < object2.collisionMask.deltaY))
+                    {
+                        object2.x += object1.x - object1.last.x;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /**
+         * Separates the two objects on their x axis
+         * @param object1 The first GameObject to separate
+         * @param object2 The second GameObject to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+         */
+        public static OLDseparateX(object1, object2): bool {
+
+            //  Can't separate two immovable objects
+            if (object1.immovable && object2.immovable)
+            {
+                return false;
+            }
+
+            //  First, get the two object deltas
+            var overlap: number = 0;
             var obj1Delta: number = object1.x - object1.last.x;
             var obj2Delta: number = object2.x - object2.last.x;
 
@@ -922,7 +1143,7 @@ module Phaser {
          * @param object2 The second GameObject to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
          */
-        public static separateY(object1, object2): bool {
+        public static OLDseparateY(object1, object2): bool {
 
             //  Can't separate two immovable objects
             if (object1.immovable && object2.immovable) {
@@ -942,9 +1163,12 @@ module Phaser {
                 var obj1Bounds: Quad = new Quad(object1.x, object1.y - ((obj1Delta > 0) ? obj1Delta : 0), object1.width, object1.height + obj1DeltaAbs);
                 var obj2Bounds: Quad = new Quad(object2.x, object2.y - ((obj2Delta > 0) ? obj2Delta : 0), object2.width, object2.height + obj2DeltaAbs);
 
+                console.log(obj1Bounds.toString(), obj2Bounds.toString());
+
                 if ((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height))
                 {
                     var maxOverlap: number = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
+                    console.log('max33', maxOverlap, obj1Delta, obj2Delta, obj1DeltaAbs, obj2DeltaAbs);
 
                     //  If they did overlap (and can), figure out by how much and flip the corresponding flags
                     if (obj1Delta > obj2Delta)
@@ -981,6 +1205,8 @@ module Phaser {
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (overlap != 0)
             {
+                console.log('y overlap', overlap);
+
                 var obj1Velocity: number = object1.velocity.y;
                 var obj2Velocity: number = object2.velocity.y;
 
@@ -1007,6 +1233,7 @@ module Phaser {
                     {
                         object1.x += object2.x - object2.last.x;
                     }
+                    console.log('y2', object1.y, object1.velocity.y);
                 }
                 else if (!object2.immovable)
                 {
@@ -1017,6 +1244,7 @@ module Phaser {
                     {
                         object2.x += object1.x - object1.last.x;
                     }
+                    console.log('y3', object2.y, object2.velocity.y);
                 }
 
                 return true;

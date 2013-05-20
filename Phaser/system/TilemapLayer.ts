@@ -357,16 +357,16 @@ module Phaser {
         public getTileOverlaps(object: GameObject) {
 
             //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
-            if (object.bounds.x < 0 || object.bounds.x > this.widthInPixels || object.bounds.y < 0 || object.bounds.bottom > this.heightInPixels)
+            if (object.collisionMask.x < 0 || object.collisionMask.x > this.widthInPixels || object.collisionMask.y < 0 || object.collisionMask.bottom > this.heightInPixels)
             {
                 return;
             }
 
             //  What tiles do we need to check against?
-            this._tempTileX = this._game.math.snapToFloor(object.bounds.x, this.tileWidth) / this.tileWidth;
-            this._tempTileY = this._game.math.snapToFloor(object.bounds.y, this.tileHeight) / this.tileHeight;
-            this._tempTileW = (this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-            this._tempTileH = (this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
+            this._tempTileX = this._game.math.snapToFloor(object.collisionMask.x, this.tileWidth) / this.tileWidth;
+            this._tempTileY = this._game.math.snapToFloor(object.collisionMask.y, this.tileHeight) / this.tileHeight;
+            this._tempTileW = (this._game.math.snapToCeil(object.collisionMask.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
+            this._tempTileH = (this._game.math.snapToCeil(object.collisionMask.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
 
             //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
 

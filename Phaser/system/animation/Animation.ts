@@ -140,8 +140,8 @@ module Phaser {
 
             if (this.currentFrame !== null)
             {
-                this._parent.bounds.width = this.currentFrame.width;
-                this._parent.bounds.height = this.currentFrame.height;
+                this._parent.frameBounds.width = this.currentFrame.width;
+                this._parent.frameBounds.height = this.currentFrame.height;
                 this._frameIndex = value;
             }
 

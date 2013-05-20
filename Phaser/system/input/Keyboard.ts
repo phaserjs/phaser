@@ -36,8 +36,12 @@ module Phaser {
         }
 
         /**
-         * @param {Any} keycode
-         */
+        * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
+        * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
+        * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
+        * Pass in either a single keycode or an array of keycodes.
+        * @param {Any} keycode
+        */
         public addKeyCapture(keycode) {
 
             if (typeof keycode === 'object')

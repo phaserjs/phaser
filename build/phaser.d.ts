@@ -348,6 +348,147 @@ module Phaser {
     }
 }
 /**
+* Phaser - CollisionMask
+*/
+module Phaser {
+    class CollisionMask {
+        /**
+        * CollisionMask constructor. Creates a new <code>CollisionMask</code> for the given GameObject.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param parent {Phaser.GameObject} The GameObject this CollisionMask belongs to.
+        * @param x {number} The initial x position of the CollisionMask.
+        * @param y {number} The initial y position of the CollisionMask.
+        * @param width {number} The width of the CollisionMask.
+        * @param height {number} The height of the CollisionMask.
+        */
+        constructor(game: Game, parent: GameObject, x: number, y: number, width: number, height: number);
+        private _game;
+        private _parent;
+        private _ref;
+        /**
+        * Geom type of this sprite. (available: QUAD, POINT, CIRCLE, LINE, RECTANGLE, POLYGON)
+        * @type {number}
+        */
+        public type: number;
+        /**
+        * Quad (a smaller version of Rectangle).
+        * @type {number}
+        */
+        static QUAD: number;
+        /**
+        * Point.
+        * @type {number}
+        */
+        static POINT: number;
+        /**
+        * Circle.
+        * @type {number}
+        */
+        static CIRCLE: number;
+        /**
+        * Line.
+        * @type {number}
+        */
+        static LINE: number;
+        /**
+        * Rectangle.
+        * @type {number}
+        */
+        static RECTANGLE: number;
+        /**
+        * Polygon.
+        * @type {number}
+        */
+        static POLYGON: number;
+        /**
+        * Rectangle shape container. A Rectangle instance.
+        * @type {Rectangle}
+        */
+        public quad: Quad;
+        /**
+        * Point shape container. A Point instance.
+        * @type {Point}
+        */
+        public point: Point;
+        /**
+        * Circle shape container. A Circle instance.
+        * @type {Circle}
+        */
+        public circle: Circle;
+        /**
+        * Line shape container. A Line instance.
+        * @type {Line}
+        */
+        public line: Line;
+        /**
+        * Rectangle shape container. A Rectangle instance.
+        * @type {Rectangle}
+        */
+        public rect: Rectangle;
+        /**
+        * A value from the top-left of the GameObject frame that this collisionMask is offset to.
+        * If the CollisionMask is a Quad/Rectangle the offset relates to the top-left of that Quad.
+        * If the CollisionMask is a Circle the offset relates to the center of the circle.
+        * @type {MicroPoint}
+        */
+        public offset: MicroPoint;
+        /**
+        * The previous x/y coordinates of the CollisionMask, used for hull calculations
+        * @type {MicroPoint}
+        */
+        public last: MicroPoint;
+        /**
+        * Create a circle shape with specific diameter.
+        * @param diameter {number} Diameter of the circle.
+        * @return {CollisionMask} This
+        */
+        public createCircle(diameter: number): CollisionMask;
+        /**
+        * Pre-update is called right before update() on each object in the game loop.
+        */
+        public preUpdate(): void;
+        public update(): void;
+        /**
+        * Renders the bounding box around this Sprite and the contact points. Useful for visually debugging.
+        * @param camera {Camera} Camera the bound will be rendered to.
+        * @param cameraOffsetX {number} X offset of bound to the camera.
+        * @param cameraOffsetY {number} Y offset of bound to the camera.
+        */
+        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): void;
+        /**
+        * Destroy all objects and references belonging to this CollisionMask
+        */
+        public destroy(): void;
+        /**
+        * Gives a basic boolean response to a geometric collision.
+        * If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
+        * @param source {GeomSprite} Sprite you want to check.
+        * @return {boolean} Whether they overlaps or not.
+        */
+        public intersects(source: CollisionMask): bool;
+        public checkHullIntersection(mask: CollisionMask): bool;
+        public hullWidth : number;
+        public hullHeight : number;
+        public hullX : number;
+        public hullY : number;
+        public deltaXAbs : number;
+        public deltaYAbs : number;
+        public deltaX : number;
+        public deltaY : number;
+        public x : number;
+        public y : number;
+        public width : number;
+        public height : number;
+        public left : number;
+        public right : number;
+        public top : number;
+        public bottom : number;
+        public halfWidth : number;
+        public halfHeight : number;
+    }
+}
+/**
 * Phaser - GameObject
 *
 * This is the base GameObject on which all other game objects are derived. It contains all the logic required for position,
@@ -450,14 +591,19 @@ module Phaser {
         * Rectangle container of this object.
         * @type {Rectangle}
         */
-        public bounds: Rectangle;
+        public frameBounds: Rectangle;
         /**
-        * Bound of world.
+        * This objects CollisionMask
+        * @type {CollisionMask}
+        */
+        public collisionMask: CollisionMask;
+        /**
+        * A rectangular area which is object is allowed to exist within. If it travels outside of this area it will perform the outOfBoundsAction.
         * @type {Quad}
         */
         public worldBounds: Quad;
         /**
-        * What action will be performed when object is out of bounds.
+        * What action will be performed when object is out of the worldBounds.
         * This will default to GameObject.OUT_OF_BOUNDS_STOP.
         * @type {number}
         */
@@ -501,12 +647,13 @@ module Phaser {
         */
         public rotationOffset: number;
         /**
-        * Render graphic based on its angle?
+        * Controls if the GameObject is rendered rotated or not.
+        * If renderRotation is false then the object can still rotate but it will never be rendered rotated.
         * @type {boolean}
         */
         public renderRotation: bool;
         /**
-        * Whether this object will be moved or not.
+        * Whether this object will be moved by impacts with other objects or not.
         * @type {boolean}
         */
         public immovable: bool;
@@ -637,13 +784,13 @@ module Phaser {
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param ObjectOrGroup {object} The object or group being tested.
-        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param objectOrGroup {object} The object or group being tested.
+        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether or not the objects overlap this.
         */
-        public overlaps(ObjectOrGroup, InScreenSpace?: bool, Camera?: Camera): bool;
+        public overlaps(objectOrGroup, inScreenSpace?: bool, camera?: Camera): bool;
         /**
         * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
         * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
@@ -651,40 +798,40 @@ module Phaser {
         *
         * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
         * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param ObjectOrGroup {object} The object or group being tested.
-        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param objectOrGroup {object} The object or group being tested.
+        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether or not the two objects overlap.
         */
-        public overlapsAt(X: number, Y: number, ObjectOrGroup, InScreenSpace?: bool, Camera?: Camera): bool;
+        public overlapsAt(X: number, Y: number, objectOrGroup, inScreenSpace?: bool, camera?: Camera): bool;
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *
         * @param point {Point} The point in world space you want to check.
-        * @param InScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return   Whether or not the point overlaps this object.
         */
-        public overlapsPoint(point: Point, InScreenSpace?: bool, Camera?: Camera): bool;
+        public overlapsPoint(point: Point, inScreenSpace?: bool, camera?: Camera): bool;
         /**
         * Check and see if this object is currently on screen.
         *
-        * @param Camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether the object is on screen or not.
         */
-        public onScreen(Camera?: Camera): bool;
+        public onScreen(camera?: Camera): bool;
         /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param Point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {MicroPoint} The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
-        public getScreenXY(point?: MicroPoint, Camera?: Camera): MicroPoint;
+        public getScreenXY(point?: MicroPoint, camera?: Camera): MicroPoint;
         /**
         * Whether the object collides or not.  For more control over what directions
         * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
@@ -703,10 +850,10 @@ module Phaser {
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
-        * @param X {number} The new X position of this object.
-        * @param Y {number} The new Y position of this object.
+        * @param x {number} The new X position of this object.
+        * @param y {number} The new Y position of this object.
         */
-        public reset(X: number, Y: number): void;
+        public reset(x: number, y: number): void;
         /**
         * Handy for checking if this object is touching a particular surface.
         * For slightly better performance you can just &amp; the value directly into <code>touching</code>.
@@ -716,7 +863,7 @@ module Phaser {
         *
         * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
         */
-        public isTouching(Direction: number): bool;
+        public isTouching(direction: number): bool;
         /**
         * Handy function for checking if this object just landed on a particular surface.
         *
@@ -724,14 +871,14 @@ module Phaser {
         *
         * @returns {boolean} Whether the object just landed on any specicied surfaces.
         */
-        public justTouched(Direction: number): bool;
+        public justTouched(direction: number): bool;
         /**
         * Reduces the "health" variable of this sprite by the amount specified in Damage.
         * Calls kill() if health drops to or below zero.
         *
         * @param Damage {number} How much health to take away (use a negative number to give a health bonus).
         */
-        public hurt(Damage: number): void;
+        public hurt(damage: number): void;
         /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
@@ -1086,7 +1233,7 @@ module Phaser {
         */
         public flipped: bool;
         /**
-        * Load graphic for this sprite. (graphic can be SpriteSheet of Texture)
+        * Load graphic for this sprite. (graphic can be SpriteSheet or Texture)
         * @param key {string} Key of the graphic you want to load for this sprite.
         * @return {Sprite} Sprite instance itself.
         */
@@ -2458,11 +2605,33 @@ module Phaser {
         * Determines whether the object specified intersects (overlaps) with this Quad object.
         * This method checks the x, y, width, and height properties of the specified Quad object to see if it intersects with this Quad object.
         * @method intersects
-        * @param {Object} q The object to check for intersection with this Quad. Must have left/right/top/bottom properties (Rectangle, Quad).
-        * @param {Number} t A tolerance value to allow for an intersection test with padding, default to 0
+        * @param {Object} quad The object to check for intersection with this Quad. Must have left/right/top/bottom properties (Rectangle, Quad).
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
         **/
-        public intersects(q, t?: number): bool;
+        public intersects(quad, tolerance?: number): bool;
+        /**
+        * Determines whether the specified coordinates are contained within the region defined by this Quad object.
+        * @method contains
+        * @param {Number} x The x coordinate of the point to test.
+        * @param {Number} y The y coordinate of the point to test.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        public contains(x: number, y: number): bool;
+        /**
+        * Copies the x/y/width/height values from the source object into this Quad
+        * @method copyFrom
+        * @param {Any} source The source object to copy from. Can be a Quad, Rectangle or any object with exposed x/y/width/height properties
+        * @return {Quad} This object
+        **/
+        public copyFrom(source): Quad;
+        /**
+        * Copies the x/y/width/height values from this Quad into the given target object
+        * @method copyTo
+        * @param {Any} target The object to copy this quads values in to. Can be a Quad, Rectangle or any object with exposed x/y/width/height properties
+        * @return {Any} The target object
+        **/
+        public copyTo(target): any;
         /**
         * Returns a string representation of this object.
         * @method toString
@@ -2957,13 +3126,13 @@ module Phaser {
         /**
         * Instantiate a new Quad Tree node.
         *
-        * @param {Number} X			The X-coordinate of the point in space.
-        * @param {Number} Y			The Y-coordinate of the point in space.
-        * @param {Number} Width		Desired width of this node.
-        * @param {Number} Height		Desired height of this node.
-        * @param {Number} Parent		The parent branch or node.  Pass null to create a root.
+        * @param {Number} x			The X-coordinate of the point in space.
+        * @param {Number} y			The Y-coordinate of the point in space.
+        * @param {Number} width		Desired width of this node.
+        * @param {Number} height		Desired height of this node.
+        * @param {Number} parent		The parent branch or node.  Pass null to create a root.
         */
-        constructor(X: number, Y: number, Width: number, Height: number, Parent?: QuadTree);
+        constructor(x: number, y: number, width: number, height: number, parent?: QuadTree);
         /**
         * Flag for specifying that you want to add an object to the A list.
         */
@@ -3057,22 +3226,6 @@ module Phaser {
         */
         private static _object;
         /**
-        * Internal, used to reduce recursive method parameters during object placement and tree formation.
-        */
-        private static _objectLeftEdge;
-        /**
-        * Internal, used to reduce recursive method parameters during object placement and tree formation.
-        */
-        private static _objectTopEdge;
-        /**
-        * Internal, used to reduce recursive method parameters during object placement and tree formation.
-        */
-        private static _objectRightEdge;
-        /**
-        * Internal, used to reduce recursive method parameters during object placement and tree formation.
-        */
-        private static _objectBottomEdge;
-        /**
         * Internal, used during tree processing and overlap checks.
         */
         private static _list;
@@ -3091,39 +3244,11 @@ module Phaser {
         /**
         * Internal, used during tree processing and overlap checks.
         */
+        private static _callbackContext;
+        /**
+        * Internal, used during tree processing and overlap checks.
+        */
         private static _iterator;
-        /**
-        * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-        */
-        private static _objectHullX;
-        /**
-        * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-        */
-        private static _objectHullY;
-        /**
-        * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-        */
-        private static _objectHullWidth;
-        /**
-        * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-        */
-        private static _objectHullHeight;
-        /**
-        * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-        */
-        private static _checkObjectHullX;
-        /**
-        * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-        */
-        private static _checkObjectHullY;
-        /**
-        * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-        */
-        private static _checkObjectHullWidth;
-        /**
-        * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-        */
-        private static _checkObjectHullHeight;
         /**
         * Clean up memory.
         */
@@ -3131,21 +3256,22 @@ module Phaser {
         /**
         * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
         *
-        * @param {Basic} ObjectOrGroup1	Any object that is or extends GameObject or Group.
-        * @param {Basic} ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
-        * @param {Function} NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.
-        * @param {Function} ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate().
+        * @param {Basic} objectOrGroup1	Any object that is or extends GameObject or Group.
+        * @param {Basic} objectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
+        * @param {Function} notifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no processCallback is specified, or the processCallback returns true.
+        * @param {Function} processCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The notifyCallback is only called if this function returns true.  See GameObject.separate().
+        * @param context The context in which the callbacks will be called
         */
-        public load(ObjectOrGroup1: Basic, ObjectOrGroup2?: Basic, NotifyCallback?, ProcessCallback?): void;
+        public load(objectOrGroup1: Basic, objectOrGroup2?: Basic, notifyCallback?, processCallback?, context?): void;
         /**
         * Call this function to add an object to the root of the tree.
         * This function will recursively add all group members, but
         * not the groups themselves.
         *
-        * @param {Basic} ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
-        * @param {Number} List	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
+        * @param {Basic} objectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
+        * @param {Number} list	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
         */
-        public add(ObjectOrGroup: Basic, List: number): void;
+        public add(objectOrGroup: Basic, list: number): void;
         /**
         * Internal function for recursively navigating and creating the tree
         * while adding objects to the appropriate nodes.
@@ -3163,7 +3289,7 @@ module Phaser {
         */
         public execute(): bool;
         /**
-        * An private for comparing an object against the contents of a node.
+        * A private for comparing an object against the contents of a node.
         *
         * @return {Boolean} Whether or not any overlaps were found.
         */
@@ -3406,9 +3532,10 @@ module Phaser {
         * @param object2 The second GameObject or Group to check.
         * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
         * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+        * @param context The context in which the callbacks will be called
         * @returns {boolean} true if the objects overlap, otherwise false.
         */
-        public overlap(object1?: Basic, object2?: Basic, notifyCallback?, processCallback?): bool;
+        public overlap(object1?: Basic, object2?: Basic, notifyCallback?, processCallback?, context?): bool;
         /**
         * The core Collision separation function used by Collision.overlap.
         * @param object1 The first GameObject to separate
@@ -3451,6 +3578,20 @@ module Phaser {
         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
         */
         static separateY(object1, object2): bool;
+        /**
+        * Separates the two objects on their x axis
+        * @param object1 The first GameObject to separate
+        * @param object2 The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        static OLDseparateX(object1, object2): bool;
+        /**
+        * Separates the two objects on their y axis
+        * @param object1 The first GameObject to separate
+        * @param object2 The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        static OLDseparateY(object1, object2): bool;
         /**
         * Returns the distance between the two given coordinates.
         * @param x1 The X value of the first coordinate
@@ -5592,6 +5733,8 @@ module Phaser {
 /**
 * Phaser - World
 *
+* "This world is but a canvas to our imagination." - Henry David Thoreau
+*
 * A game has only one world. The world is an abstract place in which all game objects live. It is not bound
 * by stage limits and can be any size or dimension. You look into the world via cameras and all game objects
 * live within the world at world-based coordinates. By default a world is created the same size as your Stage.
@@ -6900,6 +7043,10 @@ module Phaser {
         public disabled: bool;
         public start(): void;
         /**
+        * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
+        * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
+        * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
+        * Pass in either a single keycode or an array of keycodes.
         * @param {Any} keycode
         */
         public addKeyCapture(keycode): void;
@@ -7279,15 +7426,14 @@ module Phaser {
         /**
         * This function generates a new array of particle sprites to attach to the emitter.
         *
-        * @param Graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
-        * @param Quantity {number} The number of particles to generate when using the "create from image" option.
-        * @param BakedRotations {number} How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
-        * @param Multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-        * @param Collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+        * @param graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
+        * @param quantity {number} The number of particles to generate when using the "create from image" option.
+        * @param multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+        * @param collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
         *
         * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
         */
-        public makeParticles(Graphics, Quantity?: number, BakedRotations?: number, Multiple?: bool, Collide?: number): Emitter;
+        public makeParticles(graphics, quantity?: number, multiple?: bool, collide?: number): Emitter;
         /**
         * Called automatically by the game loop, decides when to launch particles and when to "die".
         */
@@ -7299,12 +7445,12 @@ module Phaser {
         /**
         * Call this function to start emitting particles.
         *
-        * @param Explode {boolean} Whether the particles should all burst out at once.
-        * @param Lifespan {number} How long each particle lives once emitted. 0 = forever.
-        * @param Frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-        * @param Quantity {number} How many particles to launch. 0 = "all of the particles".
+        * @param explode {boolean} Whether the particles should all burst out at once.
+        * @param lifespan {number} How long each particle lives once emitted. 0 = forever.
+        * @param frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+        * @param quantity {number} How many particles to launch. 0 = "all of the particles".
         */
-        public start(Explode?: bool, Lifespan?: number, Frequency?: number, Quantity?: number): void;
+        public start(explode?: bool, lifespan?: number, frequency?: number, quantity?: number): void;
         /**
         * This function can be used both internally and externally to emit the next particle.
         */
@@ -7312,37 +7458,37 @@ module Phaser {
         /**
         * A more compact way of setting the width and height of the emitter.
         *
-        * @param Width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
-        * @param Height {number} The desired height of the emitter.
+        * @param width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
+        * @param height {number} The desired height of the emitter.
         */
-        public setSize(Width: number, Height: number): void;
+        public setSize(width: number, height: number): void;
         /**
         * A more compact way of setting the X velocity range of the emitter.
         *
         * @param Min {number} The minimum value for this range.
         * @param Max {number} The maximum value for this range.
         */
-        public setXSpeed(Min?: number, Max?: number): void;
+        public setXSpeed(min?: number, max?: number): void;
         /**
         * A more compact way of setting the Y velocity range of the emitter.
         *
         * @param Min {number} The minimum value for this range.
         * @param Max {number} The maximum value for this range.
         */
-        public setYSpeed(Min?: number, Max?: number): void;
+        public setYSpeed(min?: number, max?: number): void;
         /**
         * A more compact way of setting the angular velocity constraints of the emitter.
         *
         * @param Min {number} The minimum value for this range.
         * @param Max {number} The maximum value for this range.
         */
-        public setRotation(Min?: number, Max?: number): void;
+        public setRotation(min?: number, max?: number): void;
         /**
         * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
         *
         * @param Object {object} The <code>Object</code> that you want to sync up with.
         */
-        public at(Object): void;
+        public at(object): void;
     }
 }
 /**
@@ -7484,9 +7630,10 @@ module Phaser {
         */
         public createPoint(): GeomSprite;
         /**
-        * Create a circle shape with specific diameter.
-        * @param diameter {number} Diameter of the circle.
-        * @return {GeomSprite} GeomSprite instance itself.
+        * Create a rectangle shape of the given width and height size
+        * @param width {Number} Width of the rectangle
+        * @param height {Number} Height of the rectangle
+        * @return {GeomSprite} GeomSprite instance.
         */
         public createRectangle(width: number, height: number): GeomSprite;
         /**
@@ -8604,10 +8751,16 @@ module Phaser {
         */
         public createTween(obj): Tween;
         /**
-        * Call this method to see if one object collides with another.
-        * @return {boolean} Whether the given objects or groups collides.
+        * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+        * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+        * @param object1 The first GameObject or Group to check. If null the world.group is used.
+        * @param object2 The second GameObject or Group to check.
+        * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+        * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+        * @param context The context in which the callbacks will be called
+        * @returns {boolean} true if the objects overlap, otherwise false.
         */
-        public collide(objectOrGroup1?: Basic, objectOrGroup2?: Basic, notifyCallback?): bool;
+        public collide(objectOrGroup1?: Basic, objectOrGroup2?: Basic, notifyCallback?, context?): bool;
         public camera : Camera;
     }
 }
@@ -8689,20 +8842,6 @@ module Phaser {
         public destroy(): void;
     }
 }
-interface IPoint {
-    getDist(): number;
-}
-module Shapes {
-    class Point implements IPoint {
-        public x: number;
-        public y: number;
-        constructor(x: number, y: number);
-        public getDist(): number;
-        static origin: Point;
-    }
-}
-var p: IPoint;
-var dist: number;
 /**
 * Phaser - State
 *

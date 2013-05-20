@@ -446,6 +446,366 @@ var Phaser;
     })();
     Phaser.Signal = Signal;    
 })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/**
+* Phaser - CollisionMask
+*/
+var Phaser;
+(function (Phaser) {
+    var CollisionMask = (function () {
+        /**
+        * CollisionMask constructor. Creates a new <code>CollisionMask</code> for the given GameObject.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param parent {Phaser.GameObject} The GameObject this CollisionMask belongs to.
+        * @param x {number} The initial x position of the CollisionMask.
+        * @param y {number} The initial y position of the CollisionMask.
+        * @param width {number} The width of the CollisionMask.
+        * @param height {number} The height of the CollisionMask.
+        */
+        function CollisionMask(game, parent, x, y, width, height) {
+            /**
+            * Geom type of this sprite. (available: QUAD, POINT, CIRCLE, LINE, RECTANGLE, POLYGON)
+            * @type {number}
+            */
+            this.type = 0;
+            this._game = game;
+            this._parent = parent;
+            //  By default the CollisionMask is a quad
+            this.type = CollisionMask.QUAD;
+            this.quad = new Phaser.Quad(this._parent.x, this._parent.y, this._parent.width, this._parent.height);
+            this.offset = new Phaser.MicroPoint(0, 0);
+            this.last = new Phaser.MicroPoint(0, 0);
+            this._ref = this.quad;
+            return this;
+        }
+        CollisionMask.QUAD = 0;
+        CollisionMask.POINT = 1;
+        CollisionMask.CIRCLE = 2;
+        CollisionMask.LINE = 3;
+        CollisionMask.RECTANGLE = 4;
+        CollisionMask.POLYGON = 5;
+        CollisionMask.prototype.createCircle = /**
+        * Create a circle shape with specific diameter.
+        * @param diameter {number} Diameter of the circle.
+        * @return {CollisionMask} This
+        */
+        function (diameter) {
+            this.type = CollisionMask.CIRCLE;
+            this.circle = new Phaser.Circle(this.last.x, this.last.y, diameter);
+            this._ref = this.circle;
+            return this;
+        };
+        CollisionMask.prototype.preUpdate = /**
+        * Pre-update is called right before update() on each object in the game loop.
+        */
+        function () {
+            this.last.x = this.x;
+            this.last.y = this.y;
+        };
+        CollisionMask.prototype.update = function () {
+            //this.quad.x = this._parent.x + this.offset.x;
+            //this.quad.y = this._parent.y + this.offset.y;
+            this._ref.x = this._parent.x + this.offset.x;
+            this._ref.y = this._parent.y + this.offset.y;
+        };
+        CollisionMask.prototype.render = /**
+        * Renders the bounding box around this Sprite and the contact points. Useful for visually debugging.
+        * @param camera {Camera} Camera the bound will be rendered to.
+        * @param cameraOffsetX {number} X offset of bound to the camera.
+        * @param cameraOffsetY {number} Y offset of bound to the camera.
+        */
+        function (camera, cameraOffsetX, cameraOffsetY) {
+            var _dx = cameraOffsetX + (this.x - camera.worldView.x);
+            var _dy = cameraOffsetY + (this.y - camera.worldView.y);
+            //this._parent.context.fillStyle = this._parent.renderDebugColor;
+            this._parent.context.fillStyle = 'rgba(255,0,0,0.4)';
+            if(this.type == CollisionMask.QUAD) {
+                this._parent.context.fillRect(_dx, _dy, this.width, this.height);
+            } else if(this.type == CollisionMask.CIRCLE) {
+                this._parent.context.beginPath();
+                this._parent.context.arc(_dx, _dy, this.circle.radius, 0, Math.PI * 2);
+                this._parent.context.fill();
+                this._parent.context.closePath();
+            }
+        };
+        CollisionMask.prototype.destroy = /**
+        * Destroy all objects and references belonging to this CollisionMask
+        */
+        function () {
+            this._game = null;
+            this._parent = null;
+            this._ref = null;
+            this.quad = null;
+            this.point = null;
+            this.circle = null;
+            this.rect = null;
+            this.line = null;
+            this.offset = null;
+        };
+        CollisionMask.prototype.intersects = /**
+        * Gives a basic boolean response to a geometric collision.
+        * If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
+        * @param source {GeomSprite} Sprite you want to check.
+        * @return {boolean} Whether they overlaps or not.
+        */
+        function (source) {
+            //  Quad vs. Quad
+            if(this.type == CollisionMask.QUAD && source.type == CollisionMask.QUAD) {
+                return this.quad.intersects(source.quad);
+            }
+            //  Circle vs. Circle
+            if(this.type == CollisionMask.CIRCLE && source.type == CollisionMask.CIRCLE) {
+                console.log('c vs c');
+                return Phaser.Collision.circleToCircle(this.circle, source.circle).result;
+            }
+            //  Circle vs. Rect
+            if(this.type == CollisionMask.CIRCLE && source.type == CollisionMask.RECTANGLE) {
+                return Phaser.Collision.circleToRectangle(this.circle, source.rect).result;
+            }
+            //  Circle vs. Point
+            if(this.type == CollisionMask.CIRCLE && source.type == CollisionMask.POINT) {
+                return Phaser.Collision.circleContainsPoint(this.circle, source.point).result;
+            }
+            //  Circle vs. Line
+            if(this.type == CollisionMask.CIRCLE && source.type == CollisionMask.LINE) {
+                return Phaser.Collision.lineToCircle(source.line, this.circle).result;
+            }
+            //  Rect vs. Rect
+            if(this.type == CollisionMask.RECTANGLE && source.type == CollisionMask.RECTANGLE) {
+                return Phaser.Collision.rectangleToRectangle(this.rect, source.rect).result;
+            }
+            //  Rect vs. Circle
+            if(this.type == CollisionMask.RECTANGLE && source.type == CollisionMask.CIRCLE) {
+                return Phaser.Collision.circleToRectangle(source.circle, this.rect).result;
+            }
+            //  Rect vs. Point
+            if(this.type == CollisionMask.RECTANGLE && source.type == CollisionMask.POINT) {
+                return Phaser.Collision.pointToRectangle(source.point, this.rect).result;
+            }
+            //  Rect vs. Line
+            if(this.type == CollisionMask.RECTANGLE && source.type == CollisionMask.LINE) {
+                return Phaser.Collision.lineToRectangle(source.line, this.rect).result;
+            }
+            //  Point vs. Point
+            if(this.type == CollisionMask.POINT && source.type == CollisionMask.POINT) {
+                return this.point.equals(source.point);
+            }
+            //  Point vs. Circle
+            if(this.type == CollisionMask.POINT && source.type == CollisionMask.CIRCLE) {
+                return Phaser.Collision.circleContainsPoint(source.circle, this.point).result;
+            }
+            //  Point vs. Rect
+            if(this.type == CollisionMask.POINT && source.type == CollisionMask.RECTANGLE) {
+                return Phaser.Collision.pointToRectangle(this.point, source.rect).result;
+            }
+            //  Point vs. Line
+            if(this.type == CollisionMask.POINT && source.type == CollisionMask.LINE) {
+                return source.line.isPointOnLine(this.point.x, this.point.y);
+            }
+            //  Line vs. Line
+            if(this.type == CollisionMask.LINE && source.type == CollisionMask.LINE) {
+                return Phaser.Collision.lineSegmentToLineSegment(this.line, source.line).result;
+            }
+            //  Line vs. Circle
+            if(this.type == CollisionMask.LINE && source.type == CollisionMask.CIRCLE) {
+                return Phaser.Collision.lineToCircle(this.line, source.circle).result;
+            }
+            //  Line vs. Rect
+            if(this.type == CollisionMask.LINE && source.type == CollisionMask.RECTANGLE) {
+                return Phaser.Collision.lineSegmentToRectangle(this.line, source.rect).result;
+            }
+            //  Line vs. Point
+            if(this.type == CollisionMask.LINE && source.type == CollisionMask.POINT) {
+                return this.line.isPointOnLine(source.point.x, source.point.y);
+            }
+            return false;
+        };
+        CollisionMask.prototype.checkHullIntersection = function (mask) {
+            if((this.hullX + this.hullWidth > mask.hullX) && (this.hullX < mask.hullX + mask.width) && (this.hullY + this.hullHeight > mask.hullY) && (this.hullY < mask.hullY + mask.hullHeight)) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        Object.defineProperty(CollisionMask.prototype, "hullWidth", {
+            get: function () {
+                if(this.deltaX > 0) {
+                    return this.width + this.deltaX;
+                } else {
+                    return this.width - this.deltaX;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "hullHeight", {
+            get: function () {
+                if(this.deltaY > 0) {
+                    return this.height + this.deltaY;
+                } else {
+                    return this.height - this.deltaY;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "hullX", {
+            get: function () {
+                if(this.x < this.last.x) {
+                    return this.x;
+                } else {
+                    return this.last.x;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "hullY", {
+            get: function () {
+                if(this.y < this.last.y) {
+                    return this.y;
+                } else {
+                    return this.last.y;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "deltaXAbs", {
+            get: function () {
+                return (this.deltaX > 0 ? this.deltaX : -this.deltaX);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "deltaYAbs", {
+            get: function () {
+                return (this.deltaY > 0 ? this.deltaY : -this.deltaY);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "deltaX", {
+            get: function () {
+                return this.x - this.last.x;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "deltaY", {
+            get: function () {
+                return this.y - this.last.y;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "x", {
+            get: function () {
+                return this._ref.x;
+                //return this.quad.x;
+                            },
+            set: function (value) {
+                this._ref.x = value;
+                //this.quad.x = value;
+                            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "y", {
+            get: function () {
+                return this._ref.y;
+                //return this.quad.y;
+                            },
+            set: function (value) {
+                this._ref.y = value;
+                //this.quad.y = value;
+                            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "width", {
+            get: function () {
+                //return this.quad.width;
+                return this._ref.width;
+            },
+            set: //public get rotation(): number {
+            //    return this._angle;
+            //}
+            //public set rotation(value: number) {
+            //    this._angle = this._game.math.wrap(value, 360, 0);
+            //}
+            //public get angle(): number {
+            //    return this._angle;
+            //}
+            //public set angle(value: number) {
+            //    this._angle = this._game.math.wrap(value, 360, 0);
+            //}
+            function (value) {
+                //this.quad.width = value;
+                this._ref.width = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "height", {
+            get: function () {
+                //return this.quad.height;
+                return this._ref.height;
+            },
+            set: function (value) {
+                //this.quad.height = value;
+                this._ref.height = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "left", {
+            get: function () {
+                return this.x;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "right", {
+            get: function () {
+                return this.x + this.width;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "top", {
+            get: function () {
+                return this.y;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "bottom", {
+            get: function () {
+                return this.y + this.height;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "halfWidth", {
+            get: function () {
+                return this.width / 2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CollisionMask.prototype, "halfHeight", {
+            get: function () {
+                return this.height / 2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return CollisionMask;
+    })();
+    Phaser.CollisionMask = CollisionMask;    
+})(Phaser || (Phaser = {}));
 var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -454,6 +814,7 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path="../Game.ts" />
 /// <reference path="../Basic.ts" />
 /// <reference path="../Signal.ts" />
+/// <reference path="../system/CollisionMask.ts" />
 /**
 * Phaser - GameObject
 *
@@ -486,7 +847,7 @@ var Phaser;
             */
             this._angle = 0;
             /**
-            * What action will be performed when object is out of bounds.
+            * What action will be performed when object is out of the worldBounds.
             * This will default to GameObject.OUT_OF_BOUNDS_STOP.
             * @type {number}
             */
@@ -503,7 +864,8 @@ var Phaser;
             */
             this.rotationOffset = 0;
             /**
-            * Render graphic based on its angle?
+            * Controls if the GameObject is rendered rotated or not.
+            * If renderRotation is false then the object can still rotate but it will never be rendered rotated.
             * @type {boolean}
             */
             this.renderRotation = true;
@@ -518,7 +880,7 @@ var Phaser;
             this._inputOver = false;
             this.canvas = game.stage.canvas;
             this.context = game.stage.context;
-            this.bounds = new Phaser.Rectangle(x, y, width, height);
+            this.frameBounds = new Phaser.Rectangle(x, y, width, height);
             this.exists = true;
             this.active = true;
             this.visible = true;
@@ -527,7 +889,7 @@ var Phaser;
             this.alpha = 1;
             this.scale = new Phaser.MicroPoint(1, 1);
             this.last = new Phaser.MicroPoint(x, y);
-            this.origin = new Phaser.MicroPoint(this.bounds.halfWidth, this.bounds.halfHeight);
+            //this.origin = new MicroPoint(this.frameBounds.halfWidth, this.frameBounds.halfHeight);
             this.align = GameObject.ALIGN_TOP_LEFT;
             this.mass = 1;
             this.elasticity = 0;
@@ -549,6 +911,7 @@ var Phaser;
             this.maxAngular = 10000;
             this.cameraBlacklist = [];
             this.scrollFactor = new Phaser.MicroPoint(1, 1);
+            this.collisionMask = new Phaser.CollisionMask(game, this, x, y, width, height);
         }
         GameObject.ALIGN_TOP_LEFT = 0;
         GameObject.ALIGN_TOP_CENTER = 1;
@@ -565,8 +928,9 @@ var Phaser;
         * Pre-update is called right before update() on each object in the game loop.
         */
         function () {
-            this.last.x = this.bounds.x;
-            this.last.y = this.bounds.y;
+            this.last.x = this.frameBounds.x;
+            this.last.y = this.frameBounds.y;
+            this.collisionMask.preUpdate();
         };
         GameObject.prototype.update = /**
         * Override this function to update your class's position and appearance.
@@ -598,6 +962,7 @@ var Phaser;
                     }
                 }
             }
+            this.collisionMask.update();
             if(this.inputEnabled) {
                 this.updateInput();
             }
@@ -623,47 +988,47 @@ var Phaser;
             this.velocity.x += velocityDelta;
             delta = this.velocity.x * this._game.time.elapsed;
             this.velocity.x += velocityDelta;
-            this.bounds.x += delta;
+            this.frameBounds.x += delta;
             velocityDelta = (this._game.motion.computeVelocity(this.velocity.y, this.acceleration.y, this.drag.y, this.maxVelocity.y) - this.velocity.y) / 2;
             this.velocity.y += velocityDelta;
             delta = this.velocity.y * this._game.time.elapsed;
             this.velocity.y += velocityDelta;
-            this.bounds.y += delta;
+            this.frameBounds.y += delta;
         };
         GameObject.prototype.overlaps = /**
         * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
-        * @param ObjectOrGroup {object} The object or group being tested.
-        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param objectOrGroup {object} The object or group being tested.
+        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether or not the objects overlap this.
         */
-        function (ObjectOrGroup, InScreenSpace, Camera) {
-            if (typeof InScreenSpace === "undefined") { InScreenSpace = false; }
-            if (typeof Camera === "undefined") { Camera = null; }
-            if(ObjectOrGroup.isGroup) {
+        function (objectOrGroup, inScreenSpace, camera) {
+            if (typeof inScreenSpace === "undefined") { inScreenSpace = false; }
+            if (typeof camera === "undefined") { camera = null; }
+            if(objectOrGroup.isGroup) {
                 var results = false;
                 var i = 0;
-                var members = ObjectOrGroup.members;
+                var members = objectOrGroup.members;
                 while(i < length) {
-                    if(this.overlaps(members[i++], InScreenSpace, Camera)) {
+                    if(this.overlaps(members[i++], inScreenSpace, camera)) {
                         results = true;
                     }
                 }
                 return results;
             }
-            if(!InScreenSpace) {
-                return (ObjectOrGroup.x + ObjectOrGroup.width > this.x) && (ObjectOrGroup.x < this.x + this.width) && (ObjectOrGroup.y + ObjectOrGroup.height > this.y) && (ObjectOrGroup.y < this.y + this.height);
+            if(!inScreenSpace) {
+                return (objectOrGroup.x + objectOrGroup.width > this.x) && (objectOrGroup.x < this.x + this.width) && (objectOrGroup.y + objectOrGroup.height > this.y) && (objectOrGroup.y < this.y + this.height);
             }
-            if(Camera == null) {
-                Camera = this._game.camera;
+            if(camera == null) {
+                camera = this._game.camera;
             }
-            var objectScreenPos = ObjectOrGroup.getScreenXY(null, Camera);
-            this.getScreenXY(this._point, Camera);
-            return (objectScreenPos.x + ObjectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) && (objectScreenPos.y + ObjectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
+            var objectScreenPos = objectOrGroup.getScreenXY(null, camera);
+            this.getScreenXY(this._point, camera);
+            return (objectScreenPos.x + objectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) && (objectScreenPos.y + objectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
         };
         GameObject.prototype.overlapsAt = /**
         * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
@@ -672,98 +1037,98 @@ var Phaser;
         *
         * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
         * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param ObjectOrGroup {object} The object or group being tested.
-        * @param InScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param objectOrGroup {object} The object or group being tested.
+        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether or not the two objects overlap.
         */
-        function (X, Y, ObjectOrGroup, InScreenSpace, Camera) {
-            if (typeof InScreenSpace === "undefined") { InScreenSpace = false; }
-            if (typeof Camera === "undefined") { Camera = null; }
-            if(ObjectOrGroup.isGroup) {
+        function (X, Y, objectOrGroup, inScreenSpace, camera) {
+            if (typeof inScreenSpace === "undefined") { inScreenSpace = false; }
+            if (typeof camera === "undefined") { camera = null; }
+            if(objectOrGroup.isGroup) {
                 var results = false;
                 var basic;
                 var i = 0;
-                var members = ObjectOrGroup.members;
+                var members = objectOrGroup.members;
                 while(i < length) {
-                    if(this.overlapsAt(X, Y, members[i++], InScreenSpace, Camera)) {
+                    if(this.overlapsAt(X, Y, members[i++], inScreenSpace, camera)) {
                         results = true;
                     }
                 }
                 return results;
             }
-            if(!InScreenSpace) {
-                return (ObjectOrGroup.x + ObjectOrGroup.width > X) && (ObjectOrGroup.x < X + this.width) && (ObjectOrGroup.y + ObjectOrGroup.height > Y) && (ObjectOrGroup.y < Y + this.height);
+            if(!inScreenSpace) {
+                return (objectOrGroup.x + objectOrGroup.width > X) && (objectOrGroup.x < X + this.width) && (objectOrGroup.y + objectOrGroup.height > Y) && (objectOrGroup.y < Y + this.height);
             }
-            if(Camera == null) {
-                Camera = this._game.camera;
+            if(camera == null) {
+                camera = this._game.camera;
             }
-            var objectScreenPos = ObjectOrGroup.getScreenXY(null, Camera);
-            this._point.x = X - Camera.scroll.x * this.scrollFactor.x//copied from getScreenXY()
+            var objectScreenPos = objectOrGroup.getScreenXY(null, Phaser.Camera);
+            this._point.x = X - camera.scroll.x * this.scrollFactor.x//copied from getScreenXY()
             ;
-            this._point.y = Y - Camera.scroll.y * this.scrollFactor.y;
+            this._point.y = Y - camera.scroll.y * this.scrollFactor.y;
             this._point.x += (this._point.x > 0) ? 0.0000001 : -0.0000001;
             this._point.y += (this._point.y > 0) ? 0.0000001 : -0.0000001;
-            return (objectScreenPos.x + ObjectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) && (objectScreenPos.y + ObjectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
+            return (objectScreenPos.x + objectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) && (objectScreenPos.y + objectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
         };
         GameObject.prototype.overlapsPoint = /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *
         * @param point {Point} The point in world space you want to check.
-        * @param InScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return   Whether or not the point overlaps this object.
         */
-        function (point, InScreenSpace, Camera) {
-            if (typeof InScreenSpace === "undefined") { InScreenSpace = false; }
-            if (typeof Camera === "undefined") { Camera = null; }
-            if(!InScreenSpace) {
+        function (point, inScreenSpace, camera) {
+            if (typeof inScreenSpace === "undefined") { inScreenSpace = false; }
+            if (typeof camera === "undefined") { camera = null; }
+            if(!inScreenSpace) {
                 return (point.x > this.x) && (point.x < this.x + this.width) && (point.y > this.y) && (point.y < this.y + this.height);
             }
-            if(Camera == null) {
-                Camera = this._game.camera;
+            if(camera == null) {
+                camera = this._game.camera;
             }
-            var X = point.x - Camera.scroll.x;
-            var Y = point.y - Camera.scroll.y;
-            this.getScreenXY(this._point, Camera);
+            var X = point.x - camera.scroll.x;
+            var Y = point.y - camera.scroll.y;
+            this.getScreenXY(this._point, camera);
             return (X > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
         };
         GameObject.prototype.onScreen = /**
         * Check and see if this object is currently on screen.
         *
-        * @param Camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
         *
         * @return {boolean} Whether the object is on screen or not.
         */
-        function (Camera) {
-            if (typeof Camera === "undefined") { Camera = null; }
-            if(Camera == null) {
-                Camera = this._game.camera;
+        function (camera) {
+            if (typeof camera === "undefined") { camera = null; }
+            if(camera == null) {
+                camera = this._game.camera;
             }
-            this.getScreenXY(this._point, Camera);
-            return (this._point.x + this.width > 0) && (this._point.x < Camera.width) && (this._point.y + this.height > 0) && (this._point.y < Camera.height);
+            this.getScreenXY(this._point, camera);
+            return (this._point.x + this.width > 0) && (this._point.x < camera.width) && (this._point.y + this.height > 0) && (this._point.y < camera.height);
         };
         GameObject.prototype.getScreenXY = /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param Point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
-        * @param Camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {MicroPoint} The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
-        function (point, Camera) {
+        function (point, camera) {
             if (typeof point === "undefined") { point = null; }
-            if (typeof Camera === "undefined") { Camera = null; }
+            if (typeof camera === "undefined") { camera = null; }
             if(point == null) {
                 point = new Phaser.MicroPoint();
             }
-            if(Camera == null) {
-                Camera = this._game.camera;
+            if(camera == null) {
+                camera = this._game.camera;
             }
-            point.x = this.x - Camera.scroll.x * this.scrollFactor.x;
-            point.y = this.y - Camera.scroll.y * this.scrollFactor.y;
+            point.x = this.x - camera.scroll.x * this.scrollFactor.x;
+            point.y = this.y - camera.scroll.y * this.scrollFactor.y;
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
             return point;
@@ -777,8 +1142,8 @@ var Phaser;
             function () {
                 return (this.allowCollisions & Phaser.Collision.ANY) > Phaser.Collision.NONE;
             },
-            set: function (Solid) {
-                if(Solid) {
+            set: function (value) {
+                if(value) {
                     this.allowCollisions = Phaser.Collision.ANY;
                 } else {
                     this.allowCollisions = Phaser.Collision.NONE;
@@ -799,24 +1164,24 @@ var Phaser;
             if(point == null) {
                 point = new Phaser.MicroPoint();
             }
-            point.copyFrom(this.bounds.center);
+            point.copyFrom(this.frameBounds.center);
             return point;
         };
         GameObject.prototype.reset = /**
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
-        * @param X {number} The new X position of this object.
-        * @param Y {number} The new Y position of this object.
+        * @param x {number} The new X position of this object.
+        * @param y {number} The new Y position of this object.
         */
-        function (X, Y) {
+        function (x, y) {
             this.revive();
             this.touching = Phaser.Collision.NONE;
             this.wasTouching = Phaser.Collision.NONE;
-            this.x = X;
-            this.y = Y;
-            this.last.x = X;
-            this.last.y = Y;
+            this.x = x;
+            this.y = y;
+            this.last.x = x;
+            this.last.y = y;
             this.velocity.x = 0;
             this.velocity.y = 0;
         };
@@ -829,25 +1194,18 @@ var Phaser;
         *
         * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
         */
-        function (Direction) {
-            return (this.touching & Direction) > Phaser.Collision.NONE;
+        function (direction) {
+            return (this.touching & direction) > Phaser.Collision.NONE;
         };
         GameObject.prototype.justTouched = /**
-        * Handy for checking if this object is just landed on a particular surface.
-        *
-        * @param {number} Direction   Any of the collision flags (e.g. LEFT, FLOOR, etc).
-        *
-        * @return {boolean} Whether the object just landed on (any of) the specified surface(s) this frame.
-        */
-        /**
         * Handy function for checking if this object just landed on a particular surface.
         *
         * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
         *
         * @returns {boolean} Whether the object just landed on any specicied surfaces.
         */
-        function (Direction) {
-            return ((this.touching & Direction) > Phaser.Collision.NONE) && ((this.wasTouching & Direction) <= Phaser.Collision.NONE);
+        function (direction) {
+            return ((this.touching & direction) > Phaser.Collision.NONE) && ((this.wasTouching & direction) <= Phaser.Collision.NONE);
         };
         GameObject.prototype.hurt = /**
         * Reduces the "health" variable of this sprite by the amount specified in Damage.
@@ -855,8 +1213,8 @@ var Phaser;
         *
         * @param Damage {number} How much health to take away (use a negative number to give a health bonus).
         */
-        function (Damage) {
-            this.health = this.health - Damage;
+        function (damage) {
+            this.health = this.health - damage;
             if(this.health <= 0) {
                 this.kill();
             }
@@ -917,20 +1275,20 @@ var Phaser;
         };
         Object.defineProperty(GameObject.prototype, "x", {
             get: function () {
-                return this.bounds.x;
+                return this.frameBounds.x;
             },
             set: function (value) {
-                this.bounds.x = value;
+                this.frameBounds.x = value;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(GameObject.prototype, "y", {
             get: function () {
-                return this.bounds.y;
+                return this.frameBounds.y;
             },
             set: function (value) {
-                this.bounds.y = value;
+                this.frameBounds.y = value;
             },
             enumerable: true,
             configurable: true
@@ -957,20 +1315,20 @@ var Phaser;
         });
         Object.defineProperty(GameObject.prototype, "width", {
             get: function () {
-                return this.bounds.width;
+                return this.frameBounds.width;
             },
             set: function (value) {
-                this.bounds.width = value;
+                this.frameBounds.width = value;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(GameObject.prototype, "height", {
             get: function () {
-                return this.bounds.height;
+                return this.frameBounds.height;
             },
             set: function (value) {
-                this.bounds.height = value;
+                this.frameBounds.height = value;
             },
             enumerable: true,
             configurable: true
@@ -1528,12 +1886,12 @@ var Phaser;
                 this.cacheKey = key;
                 this.loadGraphic(key);
             } else {
-                this.bounds.width = 16;
-                this.bounds.height = 16;
+                this.frameBounds.width = 16;
+                this.frameBounds.height = 16;
             }
         }
         Sprite.prototype.loadGraphic = /**
-        * Load graphic for this sprite. (graphic can be SpriteSheet of Texture)
+        * Load graphic for this sprite. (graphic can be SpriteSheet or Texture)
         * @param key {string} Key of the graphic you want to load for this sprite.
         * @return {Sprite} Sprite instance itself.
         */
@@ -1541,12 +1899,16 @@ var Phaser;
             if(this._game.cache.getImage(key) !== null) {
                 if(this._game.cache.isSpriteSheet(key) == false) {
                     this._texture = this._game.cache.getImage(key);
-                    this.bounds.width = this._texture.width;
-                    this.bounds.height = this._texture.height;
+                    this.frameBounds.width = this._texture.width;
+                    this.frameBounds.height = this._texture.height;
+                    this.collisionMask.width = this._texture.width;
+                    this.collisionMask.height = this._texture.height;
                 } else {
                     this._texture = this._game.cache.getImage(key);
                     this.animations.loadFrameData(this._game.cache.getFrameData(key));
-                }
+                    //this.collisionMask.width = this._texture.width;
+                    //this.collisionMask.height = this._texture.height;
+                                    }
                 this._dynamicTexture = false;
             }
             return this;
@@ -1558,8 +1920,8 @@ var Phaser;
         */
         function (texture) {
             this._texture = texture;
-            this.bounds.width = this._texture.width;
-            this.bounds.height = this._texture.height;
+            this.frameBounds.width = this._texture.width;
+            this.frameBounds.height = this._texture.height;
             this._dynamicTexture = true;
             return this;
         };
@@ -1586,13 +1948,13 @@ var Phaser;
         */
         function (camera) {
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
-                this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
-                this._dw = this.bounds.width * this.scale.x;
-                this._dh = this.bounds.height * this.scale.y;
+                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
+                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
+                this._dw = this.frameBounds.width * this.scale.x;
+                this._dh = this.frameBounds.height * this.scale.y;
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
             } else {
-                return camera.intersects(this.bounds, this.bounds.length);
+                return camera.intersects(this.frameBounds, this.frameBounds.length);
             }
         };
         Sprite.prototype.postUpdate = /**
@@ -1641,32 +2003,32 @@ var Phaser;
             }
             this._sx = 0;
             this._sy = 0;
-            this._sw = this.bounds.width;
-            this._sh = this.bounds.height;
-            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
-            this._dw = this.bounds.width * this.scale.x;
-            this._dh = this.bounds.height * this.scale.y;
+            this._sw = this.frameBounds.width;
+            this._sh = this.frameBounds.height;
+            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+            this._dw = this.frameBounds.width * this.scale.x;
+            this._dh = this.frameBounds.height * this.scale.y;
             if(this.align == Phaser.GameObject.ALIGN_TOP_CENTER) {
-                this._dx -= this.bounds.halfWidth * this.scale.x;
+                this._dx -= this.frameBounds.halfWidth * this.scale.x;
             } else if(this.align == Phaser.GameObject.ALIGN_TOP_RIGHT) {
-                this._dx -= this.bounds.width * this.scale.x;
+                this._dx -= this.frameBounds.width * this.scale.x;
             } else if(this.align == Phaser.GameObject.ALIGN_CENTER_LEFT) {
-                this._dy -= this.bounds.halfHeight * this.scale.y;
+                this._dy -= this.frameBounds.halfHeight * this.scale.y;
             } else if(this.align == Phaser.GameObject.ALIGN_CENTER) {
-                this._dx -= this.bounds.halfWidth * this.scale.x;
-                this._dy -= this.bounds.halfHeight * this.scale.y;
+                this._dx -= this.frameBounds.halfWidth * this.scale.x;
+                this._dy -= this.frameBounds.halfHeight * this.scale.y;
             } else if(this.align == Phaser.GameObject.ALIGN_CENTER_RIGHT) {
-                this._dx -= this.bounds.width * this.scale.x;
-                this._dy -= this.bounds.halfHeight * this.scale.y;
+                this._dx -= this.frameBounds.width * this.scale.x;
+                this._dy -= this.frameBounds.halfHeight * this.scale.y;
             } else if(this.align == Phaser.GameObject.ALIGN_BOTTOM_LEFT) {
-                this._dy -= this.bounds.height * this.scale.y;
+                this._dy -= this.frameBounds.height * this.scale.y;
             } else if(this.align == Phaser.GameObject.ALIGN_BOTTOM_CENTER) {
-                this._dx -= this.bounds.halfWidth * this.scale.x;
-                this._dy -= this.bounds.height * this.scale.y;
+                this._dx -= this.frameBounds.halfWidth * this.scale.x;
+                this._dy -= this.frameBounds.height * this.scale.y;
             } else if(this.align == Phaser.GameObject.ALIGN_BOTTOM_RIGHT) {
-                this._dx -= this.bounds.width * this.scale.x;
-                this._dy -= this.bounds.height * this.scale.y;
+                this._dx -= this.frameBounds.width * this.scale.x;
+                this._dy -= this.frameBounds.height * this.scale.y;
             }
             if(this._dynamicTexture == false && this.animations.currentFrame !== null) {
                 this._sx = this.animations.currentFrame.x;
@@ -1735,7 +2097,8 @@ var Phaser;
                 this.context.restore();
             }
             if(this.renderDebug) {
-                this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
+                //this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
+                this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
             }
             if(globalAlpha > -1) {
                 this.context.globalAlpha = globalAlpha;
@@ -1749,34 +2112,27 @@ var Phaser;
         * @param cameraOffsetY {number} Y offset of bound to the camera.
         */
         function (camera, cameraOffsetX, cameraOffsetY) {
-            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
+            //this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+            //this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+            this._dx = cameraOffsetX + (this.collisionMask.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.collisionMask.y - camera.worldView.y);
             this.context.fillStyle = this.renderDebugColor;
-            this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            this.context.fillStyle = this.renderDebugPointColor;
-            var hw = this.bounds.halfWidth * this.scale.x;
-            var hh = this.bounds.halfHeight * this.scale.y;
-            var sw = (this.bounds.width * this.scale.x) - 1;
-            var sh = (this.bounds.height * this.scale.y) - 1;
-            this.context.fillRect(this._dx, this._dy, 1, 1)//  top left
-            ;
-            this.context.fillRect(this._dx + hw, this._dy, 1, 1)//  top center
-            ;
-            this.context.fillRect(this._dx + sw, this._dy, 1, 1)//  top right
-            ;
-            this.context.fillRect(this._dx, this._dy + hh, 1, 1)//  left center
-            ;
-            this.context.fillRect(this._dx + hw, this._dy + hh, 1, 1)//  center
-            ;
-            this.context.fillRect(this._dx + sw, this._dy + hh, 1, 1)//  right center
-            ;
-            this.context.fillRect(this._dx, this._dy + sh, 1, 1)//  bottom left
-            ;
-            this.context.fillRect(this._dx + hw, this._dy + sh, 1, 1)//  bottom center
-            ;
-            this.context.fillRect(this._dx + sw, this._dy + sh, 1, 1)//  bottom right
-            ;
-        };
+            this.context.fillRect(this._dx, this._dy, this.collisionMask.width, this.collisionMask.height);
+            //this.context.fillStyle = this.renderDebugPointColor;
+            //var hw = this.frameBounds.halfWidth * this.scale.x;
+            //var hh = this.frameBounds.halfHeight * this.scale.y;
+            //var sw = (this.frameBounds.width * this.scale.x) - 1;
+            //var sh = (this.frameBounds.height * this.scale.y) - 1;
+            //this.context.fillRect(this._dx, this._dy, 1, 1);            //  top left
+            //this.context.fillRect(this._dx + hw, this._dy, 1, 1);       //  top center
+            //this.context.fillRect(this._dx + sw, this._dy, 1, 1);       //  top right
+            //this.context.fillRect(this._dx, this._dy + hh, 1, 1);       //  left center
+            //this.context.fillRect(this._dx + hw, this._dy + hh, 1, 1);  //  center
+            //this.context.fillRect(this._dx + sw, this._dy + hh, 1, 1);  //  right center
+            //this.context.fillRect(this._dx, this._dy + sh, 1, 1);       //  bottom left
+            //this.context.fillRect(this._dx + hw, this._dy + sh, 1, 1);  //  bottom center
+            //this.context.fillRect(this._dx + sw, this._dy + sh, 1, 1);  //  bottom right
+                    };
         Sprite.prototype.renderDebugInfo = /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.
@@ -1786,8 +2142,8 @@ var Phaser;
         function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             this.context.fillStyle = color;
-            this.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
-            this.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
+            this.context.fillText('Sprite: ' + this.name + ' (' + this.frameBounds.width + ' x ' + this.frameBounds.height + ')', x, y);
+            this.context.fillText('x: ' + this.frameBounds.x.toFixed(1) + ' y: ' + this.frameBounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
             this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
             this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
         };
@@ -1837,13 +2193,17 @@ var Phaser;
         });
         Object.defineProperty(Animation.prototype, "frame", {
             get: function () {
-                return this._frameIndex;
+                if(this.currentFrame !== null) {
+                    return this.currentFrame.index;
+                } else {
+                    return this._frameIndex;
+                }
             },
             set: function (value) {
                 this.currentFrame = this._frameData.getFrame(value);
                 if(this.currentFrame !== null) {
-                    this._parent.bounds.width = this.currentFrame.width;
-                    this._parent.bounds.height = this.currentFrame.height;
+                    this._parent.frameBounds.width = this.currentFrame.width;
+                    this._parent.frameBounds.height = this.currentFrame.height;
                     this._frameIndex = value;
                 }
             },
@@ -2257,6 +2617,7 @@ var Phaser;
         * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
         * @param loop {boolean} Whether or not the animation is looped or just plays once.
         * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+        * @return {Animation} The Animation that was created
         */
         function (name, frames, frameRate, loop, useNumericIndex) {
             if (typeof frames === "undefined") { frames = null; }
@@ -2280,6 +2641,7 @@ var Phaser;
             this._anims[name] = new Phaser.Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
             this.currentAnim = this._anims[name];
             this.currentFrame = this.currentAnim.currentFrame;
+            return this._anims[name];
         };
         AnimationManager.prototype.validateFrames = /**
         * Check whether the frames is valid.
@@ -2336,8 +2698,8 @@ var Phaser;
         function () {
             if(this.currentAnim && this.currentAnim.update() == true) {
                 this.currentFrame = this.currentAnim.currentFrame;
-                this._parent.bounds.width = this.currentFrame.width;
-                this._parent.bounds.height = this.currentFrame.height;
+                this._parent.frameBounds.width = this.currentFrame.width;
+                this._parent.frameBounds.height = this.currentFrame.height;
             }
         };
         Object.defineProperty(AnimationManager.prototype, "frameData", {
@@ -2361,8 +2723,8 @@ var Phaser;
             set: function (value) {
                 if(this._frameData.getFrame(value) !== null) {
                     this.currentFrame = this._frameData.getFrame(value);
-                    this._parent.bounds.width = this.currentFrame.width;
-                    this._parent.bounds.height = this.currentFrame.height;
+                    this._parent.frameBounds.width = this.currentFrame.width;
+                    this._parent.frameBounds.height = this.currentFrame.height;
                     this._frameIndex = value;
                 }
             },
@@ -2376,8 +2738,8 @@ var Phaser;
             set: function (value) {
                 if(this._frameData.getFrameByName(value) !== null) {
                     this.currentFrame = this._frameData.getFrameByName(value);
-                    this._parent.bounds.width = this.currentFrame.width;
-                    this._parent.bounds.height = this.currentFrame.height;
+                    this._parent.frameBounds.width = this.currentFrame.width;
+                    this._parent.frameBounds.height = this.currentFrame.height;
                     this._frameIndex = this.currentFrame.index;
                 }
             },
@@ -3790,13 +4152,44 @@ var Phaser;
         * Determines whether the object specified intersects (overlaps) with this Quad object.
         * This method checks the x, y, width, and height properties of the specified Quad object to see if it intersects with this Quad object.
         * @method intersects
-        * @param {Object} q The object to check for intersection with this Quad. Must have left/right/top/bottom properties (Rectangle, Quad).
-        * @param {Number} t A tolerance value to allow for an intersection test with padding, default to 0
+        * @param {Object} quad The object to check for intersection with this Quad. Must have left/right/top/bottom properties (Rectangle, Quad).
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
         **/
-        function (q, t) {
-            if (typeof t === "undefined") { t = 0; }
-            return !(q.left > this.right + t || q.right < this.left - t || q.top > this.bottom + t || q.bottom < this.top - t);
+        function (quad, tolerance) {
+            if (typeof tolerance === "undefined") { tolerance = 0; }
+            return !(quad.left > this.right + tolerance || quad.right < this.left - tolerance || quad.top > this.bottom + tolerance || quad.bottom < this.top - tolerance);
+        };
+        Quad.prototype.contains = /**
+        * Determines whether the specified coordinates are contained within the region defined by this Quad object.
+        * @method contains
+        * @param {Number} x The x coordinate of the point to test.
+        * @param {Number} y The y coordinate of the point to test.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        function (x, y) {
+            if(x >= this.x && x <= this.right && y >= this.y && y <= this.bottom) {
+                return true;
+            }
+            return false;
+        };
+        Quad.prototype.copyFrom = /**
+        * Copies the x/y/width/height values from the source object into this Quad
+        * @method copyFrom
+        * @param {Any} source The source object to copy from. Can be a Quad, Rectangle or any object with exposed x/y/width/height properties
+        * @return {Quad} This object
+        **/
+        function (source) {
+            return this.setTo(source.x, source.y, source.width, source.height);
+        };
+        Quad.prototype.copyTo = /**
+        * Copies the x/y/width/height values from this Quad into the given target object
+        * @method copyTo
+        * @param {Any} target The object to copy this quads values in to. Can be a Quad, Rectangle or any object with exposed x/y/width/height properties
+        * @return {Any} The target object
+        **/
+        function (target) {
+            return target.copyFrom(this);
         };
         Quad.prototype.toString = /**
         * Returns a string representation of this object.
@@ -4583,26 +4976,23 @@ var Phaser;
         /**
         * Instantiate a new Quad Tree node.
         *
-        * @param {Number} X			The X-coordinate of the point in space.
-        * @param {Number} Y			The Y-coordinate of the point in space.
-        * @param {Number} Width		Desired width of this node.
-        * @param {Number} Height		Desired height of this node.
-        * @param {Number} Parent		The parent branch or node.  Pass null to create a root.
+        * @param {Number} x			The X-coordinate of the point in space.
+        * @param {Number} y			The Y-coordinate of the point in space.
+        * @param {Number} width		Desired width of this node.
+        * @param {Number} height		Desired height of this node.
+        * @param {Number} parent		The parent branch or node.  Pass null to create a root.
         */
-        function QuadTree(X, Y, Width, Height, Parent) {
-            if (typeof Parent === "undefined") { Parent = null; }
-                _super.call(this, X, Y, Width, Height);
-            //console.log('-------- QuadTree',X,Y,Width,Height);
+        function QuadTree(x, y, width, height, parent) {
+            if (typeof parent === "undefined") { parent = null; }
+                _super.call(this, x, y, width, height);
             this._headA = this._tailA = new Phaser.LinkedList();
             this._headB = this._tailB = new Phaser.LinkedList();
             //Copy the parent's children (if there are any)
-            if(Parent != null) {
-                //console.log('Parent not null');
+            if(parent != null) {
                 var iterator;
                 var ot;
-                if(Parent._headA.object != null) {
-                    iterator = Parent._headA;
-                    //console.log('iterator set to parent headA');
+                if(parent._headA.object != null) {
+                    iterator = parent._headA;
                     while(iterator != null) {
                         if(this._tailA.object != null) {
                             ot = this._tailA;
@@ -4613,9 +5003,8 @@ var Phaser;
                         iterator = iterator.next;
                     }
                 }
-                if(Parent._headB.object != null) {
-                    iterator = Parent._headB;
-                    //console.log('iterator set to parent headB');
+                if(parent._headB.object != null) {
+                    iterator = parent._headB;
                     while(iterator != null) {
                         if(this._tailB.object != null) {
                             ot = this._tailB;
@@ -4630,7 +5019,6 @@ var Phaser;
                 QuadTree._min = (this.width + this.height) / (2 * QuadTree.divisions);
             }
             this._canSubdivide = (this.width > QuadTree._min) || (this.height > QuadTree._min);
-            //console.log('canSubdivided', this._canSubdivide);
             //Set up comparison/sort helpers
             this._northWestTree = null;
             this._northEastTree = null;
@@ -4682,69 +5070,59 @@ var Phaser;
         QuadTree.prototype.load = /**
         * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
         *
-        * @param {Basic} ObjectOrGroup1	Any object that is or extends GameObject or Group.
-        * @param {Basic} ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
-        * @param {Function} NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.
-        * @param {Function} ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate().
+        * @param {Basic} objectOrGroup1	Any object that is or extends GameObject or Group.
+        * @param {Basic} objectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
+        * @param {Function} notifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no processCallback is specified, or the processCallback returns true.
+        * @param {Function} processCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The notifyCallback is only called if this function returns true.  See GameObject.separate().
+        * @param context The context in which the callbacks will be called
         */
-        function (ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, ProcessCallback) {
-            if (typeof ObjectOrGroup2 === "undefined") { ObjectOrGroup2 = null; }
-            if (typeof NotifyCallback === "undefined") { NotifyCallback = null; }
-            if (typeof ProcessCallback === "undefined") { ProcessCallback = null; }
-            //console.log('quadtree load', QuadTree.divisions, ObjectOrGroup1, ObjectOrGroup2);
-            this.add(ObjectOrGroup1, QuadTree.A_LIST);
-            if(ObjectOrGroup2 != null) {
-                this.add(ObjectOrGroup2, QuadTree.B_LIST);
+        function (objectOrGroup1, objectOrGroup2, notifyCallback, processCallback, context) {
+            if (typeof objectOrGroup2 === "undefined") { objectOrGroup2 = null; }
+            if (typeof notifyCallback === "undefined") { notifyCallback = null; }
+            if (typeof processCallback === "undefined") { processCallback = null; }
+            if (typeof context === "undefined") { context = null; }
+            this.add(objectOrGroup1, QuadTree.A_LIST);
+            if(objectOrGroup2 != null) {
+                this.add(objectOrGroup2, QuadTree.B_LIST);
                 QuadTree._useBothLists = true;
             } else {
                 QuadTree._useBothLists = false;
             }
-            QuadTree._notifyCallback = NotifyCallback;
-            QuadTree._processingCallback = ProcessCallback;
-            //console.log('use both', QuadTree._useBothLists);
-            //console.log('------------ end of load');
-                    };
+            QuadTree._notifyCallback = notifyCallback;
+            QuadTree._processingCallback = processCallback;
+            QuadTree._callbackContext = context;
+        };
         QuadTree.prototype.add = /**
         * Call this function to add an object to the root of the tree.
         * This function will recursively add all group members, but
         * not the groups themselves.
         *
-        * @param {Basic} ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
-        * @param {Number} List	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
+        * @param {Basic} objectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
+        * @param {Number} list	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
         */
-        function (ObjectOrGroup, List) {
-            QuadTree._list = List;
-            if(ObjectOrGroup.isGroup == true) {
+        function (objectOrGroup, list) {
+            QuadTree._list = list;
+            if(objectOrGroup.isGroup == true) {
                 var i = 0;
                 var basic;
-                var members = ObjectOrGroup['members'];
-                var l = ObjectOrGroup['length'];
+                var members = objectOrGroup['members'];
+                var l = objectOrGroup['length'];
                 while(i < l) {
                     basic = members[i++];
                     if((basic != null) && basic.exists) {
                         if(basic.isGroup) {
-                            this.add(basic, List);
+                            this.add(basic, list);
                         } else {
                             QuadTree._object = basic;
                             if(QuadTree._object.exists && QuadTree._object.allowCollisions) {
-                                QuadTree._objectLeftEdge = QuadTree._object.x;
-                                QuadTree._objectTopEdge = QuadTree._object.y;
-                                QuadTree._objectRightEdge = QuadTree._object.x + QuadTree._object.width;
-                                QuadTree._objectBottomEdge = QuadTree._object.y + QuadTree._object.height;
                                 this.addObject();
                             }
                         }
                     }
                 }
             } else {
-                QuadTree._object = ObjectOrGroup;
-                //console.log('add - not group:', ObjectOrGroup.name);
+                QuadTree._object = objectOrGroup;
                 if(QuadTree._object.exists && QuadTree._object.allowCollisions) {
-                    QuadTree._objectLeftEdge = QuadTree._object.x;
-                    QuadTree._objectTopEdge = QuadTree._object.y;
-                    QuadTree._objectRightEdge = QuadTree._object.x + QuadTree._object.width;
-                    QuadTree._objectBottomEdge = QuadTree._object.y + QuadTree._object.height;
-                    //console.log('object properties', QuadTree._objectLeftEdge, QuadTree._objectTopEdge, QuadTree._objectRightEdge, QuadTree._objectBottomEdge);
                     this.addObject();
                 }
             }
@@ -4754,25 +5132,21 @@ var Phaser;
         * while adding objects to the appropriate nodes.
         */
         function () {
-            //console.log('addObject');
             //If this quad (not its children) lies entirely inside this object, add it here
-            if(!this._canSubdivide || ((this._leftEdge >= QuadTree._objectLeftEdge) && (this._rightEdge <= QuadTree._objectRightEdge) && (this._topEdge >= QuadTree._objectTopEdge) && (this._bottomEdge <= QuadTree._objectBottomEdge))) {
-                //console.log('add To List');
+            if(!this._canSubdivide || ((this._leftEdge >= QuadTree._object.collisionMask.x) && (this._rightEdge <= QuadTree._object.collisionMask.right) && (this._topEdge >= QuadTree._object.collisionMask.y) && (this._bottomEdge <= QuadTree._object.collisionMask.bottom))) {
                 this.addToList();
                 return;
             }
             //See if the selected object fits completely inside any of the quadrants
-            if((QuadTree._objectLeftEdge > this._leftEdge) && (QuadTree._objectRightEdge < this._midpointX)) {
-                if((QuadTree._objectTopEdge > this._topEdge) && (QuadTree._objectBottomEdge < this._midpointY)) {
-                    //console.log('Adding NW tree');
+            if((QuadTree._object.collisionMask.x > this._leftEdge) && (QuadTree._object.collisionMask.right < this._midpointX)) {
+                if((QuadTree._object.collisionMask.y > this._topEdge) && (QuadTree._object.collisionMask.bottom < this._midpointY)) {
                     if(this._northWestTree == null) {
                         this._northWestTree = new QuadTree(this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
                     }
                     this._northWestTree.addObject();
                     return;
                 }
-                if((QuadTree._objectTopEdge > this._midpointY) && (QuadTree._objectBottomEdge < this._bottomEdge)) {
-                    //console.log('Adding SW tree');
+                if((QuadTree._object.collisionMask.y > this._midpointY) && (QuadTree._object.collisionMask.bottom < this._bottomEdge)) {
                     if(this._southWestTree == null) {
                         this._southWestTree = new QuadTree(this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
                     }
@@ -4780,17 +5154,15 @@ var Phaser;
                     return;
                 }
             }
-            if((QuadTree._objectLeftEdge > this._midpointX) && (QuadTree._objectRightEdge < this._rightEdge)) {
-                if((QuadTree._objectTopEdge > this._topEdge) && (QuadTree._objectBottomEdge < this._midpointY)) {
-                    //console.log('Adding NE tree');
+            if((QuadTree._object.collisionMask.x > this._midpointX) && (QuadTree._object.collisionMask.right < this._rightEdge)) {
+                if((QuadTree._object.collisionMask.y > this._topEdge) && (QuadTree._object.collisionMask.bottom < this._midpointY)) {
                     if(this._northEastTree == null) {
                         this._northEastTree = new QuadTree(this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
                     }
                     this._northEastTree.addObject();
                     return;
                 }
-                if((QuadTree._objectTopEdge > this._midpointY) && (QuadTree._objectBottomEdge < this._bottomEdge)) {
-                    //console.log('Adding SE tree');
+                if((QuadTree._object.collisionMask.y > this._midpointY) && (QuadTree._object.collisionMask.bottom < this._bottomEdge)) {
                     if(this._southEastTree == null) {
                         this._southEastTree = new QuadTree(this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
                     }
@@ -4799,32 +5171,28 @@ var Phaser;
                 }
             }
             //If it wasn't completely contained we have to check out the partial overlaps
-            if((QuadTree._objectRightEdge > this._leftEdge) && (QuadTree._objectLeftEdge < this._midpointX) && (QuadTree._objectBottomEdge > this._topEdge) && (QuadTree._objectTopEdge < this._midpointY)) {
+            if((QuadTree._object.collisionMask.right > this._leftEdge) && (QuadTree._object.collisionMask.x < this._midpointX) && (QuadTree._object.collisionMask.bottom > this._topEdge) && (QuadTree._object.collisionMask.y < this._midpointY)) {
                 if(this._northWestTree == null) {
                     this._northWestTree = new QuadTree(this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
                 }
-                //console.log('added to north west partial tree');
                 this._northWestTree.addObject();
             }
-            if((QuadTree._objectRightEdge > this._midpointX) && (QuadTree._objectLeftEdge < this._rightEdge) && (QuadTree._objectBottomEdge > this._topEdge) && (QuadTree._objectTopEdge < this._midpointY)) {
+            if((QuadTree._object.collisionMask.right > this._midpointX) && (QuadTree._object.collisionMask.x < this._rightEdge) && (QuadTree._object.collisionMask.bottom > this._topEdge) && (QuadTree._object.collisionMask.y < this._midpointY)) {
                 if(this._northEastTree == null) {
                     this._northEastTree = new QuadTree(this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
                 }
-                //console.log('added to north east partial tree');
                 this._northEastTree.addObject();
             }
-            if((QuadTree._objectRightEdge > this._midpointX) && (QuadTree._objectLeftEdge < this._rightEdge) && (QuadTree._objectBottomEdge > this._midpointY) && (QuadTree._objectTopEdge < this._bottomEdge)) {
+            if((QuadTree._object.collisionMask.right > this._midpointX) && (QuadTree._object.collisionMask.x < this._rightEdge) && (QuadTree._object.collisionMask.bottom > this._midpointY) && (QuadTree._object.collisionMask.y < this._bottomEdge)) {
                 if(this._southEastTree == null) {
                     this._southEastTree = new QuadTree(this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
                 }
-                //console.log('added to south east partial tree');
                 this._southEastTree.addObject();
             }
-            if((QuadTree._objectRightEdge > this._leftEdge) && (QuadTree._objectLeftEdge < this._midpointX) && (QuadTree._objectBottomEdge > this._midpointY) && (QuadTree._objectTopEdge < this._bottomEdge)) {
+            if((QuadTree._object.collisionMask.right > this._leftEdge) && (QuadTree._object.collisionMask.x < this._midpointX) && (QuadTree._object.collisionMask.bottom > this._midpointY) && (QuadTree._object.collisionMask.y < this._bottomEdge)) {
                 if(this._southWestTree == null) {
                     this._southWestTree = new QuadTree(this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
                 }
-                //console.log('added to south west partial tree');
                 this._southWestTree.addObject();
             }
         };
@@ -4832,10 +5200,8 @@ var Phaser;
         * Internal function for recursively adding objects to leaf lists.
         */
         function () {
-            //console.log('Adding to List');
             var ot;
             if(QuadTree._list == QuadTree.A_LIST) {
-                //console.log('A LIST');
                 if(this._tailA.object != null) {
                     ot = this._tailA;
                     this._tailA = new Phaser.LinkedList();
@@ -4843,7 +5209,6 @@ var Phaser;
                 }
                 this._tailA.object = QuadTree._object;
             } else {
-                //console.log('B LIST');
                 if(this._tailB.object != null) {
                     ot = this._tailB;
                     this._tailB = new Phaser.LinkedList();
@@ -4874,12 +5239,9 @@ var Phaser;
         * @return {Boolean} Whether or not any overlaps were found.
         */
         function () {
-            //console.log('quadtree execute');
             var overlapProcessed = false;
             var iterator;
             if(this._headA.object != null) {
-                //console.log('---------------------------------------------------');
-                //console.log('headA iterator');
                 iterator = this._headA;
                 while(iterator != null) {
                     QuadTree._object = iterator.object;
@@ -4889,7 +5251,6 @@ var Phaser;
                         QuadTree._iterator = iterator.next;
                     }
                     if(QuadTree._object.exists && (QuadTree._object.allowCollisions > 0) && (QuadTree._iterator != null) && (QuadTree._iterator.object != null) && QuadTree._iterator.object.exists && this.overlapNode()) {
-                        //console.log('headA iterator overlapped true');
                         overlapProcessed = true;
                     }
                     iterator = iterator.next;
@@ -4897,25 +5258,21 @@ var Phaser;
             }
             //Advance through the tree by calling overlap on each child
             if((this._northWestTree != null) && this._northWestTree.execute()) {
-                //console.log('NW quadtree execute');
                 overlapProcessed = true;
             }
             if((this._northEastTree != null) && this._northEastTree.execute()) {
-                //console.log('NE quadtree execute');
                 overlapProcessed = true;
             }
             if((this._southEastTree != null) && this._southEastTree.execute()) {
-                //console.log('SE quadtree execute');
                 overlapProcessed = true;
             }
             if((this._southWestTree != null) && this._southWestTree.execute()) {
-                //console.log('SW quadtree execute');
                 overlapProcessed = true;
             }
             return overlapProcessed;
         };
         QuadTree.prototype.overlapNode = /**
-        * An private for comparing an object against the contents of a node.
+        * A private for comparing an object against the contents of a node.
         *
         * @return {Boolean} Whether or not any overlaps were found.
         */
@@ -4925,38 +5282,25 @@ var Phaser;
             var checkObject;
             while(QuadTree._iterator != null) {
                 if(!QuadTree._object.exists || (QuadTree._object.allowCollisions <= 0)) {
-                    //console.log('break 1');
                     break;
                 }
                 checkObject = QuadTree._iterator.object;
                 if((QuadTree._object === checkObject) || !checkObject.exists || (checkObject.allowCollisions <= 0)) {
-                    //console.log('break 2');
                     QuadTree._iterator = QuadTree._iterator.next;
                     continue;
                 }
-                //calculate bulk hull for QuadTree._object
-                QuadTree._objectHullX = (QuadTree._object.x < QuadTree._object.last.x) ? QuadTree._object.x : QuadTree._object.last.x;
-                QuadTree._objectHullY = (QuadTree._object.y < QuadTree._object.last.y) ? QuadTree._object.y : QuadTree._object.last.y;
-                QuadTree._objectHullWidth = QuadTree._object.x - QuadTree._object.last.x;
-                QuadTree._objectHullWidth = QuadTree._object.width + ((QuadTree._objectHullWidth > 0) ? QuadTree._objectHullWidth : -QuadTree._objectHullWidth);
-                QuadTree._objectHullHeight = QuadTree._object.y - QuadTree._object.last.y;
-                QuadTree._objectHullHeight = QuadTree._object.height + ((QuadTree._objectHullHeight > 0) ? QuadTree._objectHullHeight : -QuadTree._objectHullHeight);
-                //calculate bulk hull for checkObject
-                QuadTree._checkObjectHullX = (checkObject.x < checkObject.last.x) ? checkObject.x : checkObject.last.x;
-                QuadTree._checkObjectHullY = (checkObject.y < checkObject.last.y) ? checkObject.y : checkObject.last.y;
-                QuadTree._checkObjectHullWidth = checkObject.x - checkObject.last.x;
-                QuadTree._checkObjectHullWidth = checkObject.width + ((QuadTree._checkObjectHullWidth > 0) ? QuadTree._checkObjectHullWidth : -QuadTree._checkObjectHullWidth);
-                QuadTree._checkObjectHullHeight = checkObject.y - checkObject.last.y;
-                QuadTree._checkObjectHullHeight = checkObject.height + ((QuadTree._checkObjectHullHeight > 0) ? QuadTree._checkObjectHullHeight : -QuadTree._checkObjectHullHeight);
-                //check for intersection of the two hulls
-                if((QuadTree._objectHullX + QuadTree._objectHullWidth > QuadTree._checkObjectHullX) && (QuadTree._objectHullX < QuadTree._checkObjectHullX + QuadTree._checkObjectHullWidth) && (QuadTree._objectHullY + QuadTree._objectHullHeight > QuadTree._checkObjectHullY) && (QuadTree._objectHullY < QuadTree._checkObjectHullY + QuadTree._checkObjectHullHeight)) {
-                    //console.log('intersection!');
+                if(QuadTree._object.collisionMask.checkHullIntersection(checkObject.collisionMask)) {
+                    console.log('quad hull');
                     //Execute callback functions if they exist
                     if((QuadTree._processingCallback == null) || QuadTree._processingCallback(QuadTree._object, checkObject)) {
                         overlapProcessed = true;
                     }
                     if(overlapProcessed && (QuadTree._notifyCallback != null)) {
-                        QuadTree._notifyCallback(QuadTree._object, checkObject);
+                        if(QuadTree._callbackContext !== null) {
+                            QuadTree._notifyCallback.call(QuadTree._callbackContext, QuadTree._object, checkObject);
+                        } else {
+                            QuadTree._notifyCallback(QuadTree._object, checkObject);
+                        }
                     }
                 }
                 QuadTree._iterator = QuadTree._iterator.next;
@@ -5339,7 +5683,20 @@ var Phaser;
             output.result = ((circle1.radius + circle2.radius) * (circle1.radius + circle2.radius)) >= Collision.distanceSquared(circle1.x, circle1.y, circle2.x, circle2.y);
             return output;
         };
-        Collision.circleToRectangle = /**
+        Collision.circleToRectangle = /*
+        public static circleToQuad(circle: Circle, quad: Quad): bool {
+        
+        //  Check if the center of the circle is within the Quad
+        if (quad.contains(circle.x, circle.y))
+        {
+        return true;
+        }
+        
+        //  Failing that let's check each line of the quad against the circle
+        return false;
+        }
+        */
+        /**
         * Checks if the Circle object intersects with the Rectangle and returns the result in an IntersectResult object.
         * @param circle The Circle object to check
         * @param rect The Rectangle object to check
@@ -5372,13 +5729,15 @@ var Phaser;
         * @param object2 The second GameObject or Group to check.
         * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
         * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+        * @param context The context in which the callbacks will be called
         * @returns {boolean} true if the objects overlap, otherwise false.
         */
-        function (object1, object2, notifyCallback, processCallback) {
+        function (object1, object2, notifyCallback, processCallback, context) {
             if (typeof object1 === "undefined") { object1 = null; }
             if (typeof object2 === "undefined") { object2 = null; }
             if (typeof notifyCallback === "undefined") { notifyCallback = null; }
             if (typeof processCallback === "undefined") { processCallback = null; }
+            if (typeof context === "undefined") { context = null; }
             if(object1 == null) {
                 object1 = this._game.world.group;
             }
@@ -5387,7 +5746,7 @@ var Phaser;
             }
             Phaser.QuadTree.divisions = this._game.world.worldDivisions;
             var quadTree = new Phaser.QuadTree(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
-            quadTree.load(object1, object2, notifyCallback, processCallback);
+            quadTree.load(object1, object2, notifyCallback, processCallback, context);
             var result = quadTree.execute();
             quadTree.destroy();
             quadTree = null;
@@ -5400,6 +5759,9 @@ var Phaser;
         * @returns {boolean} Returns true if the objects were separated, otherwise false.
         */
         function separate(object1, object2) {
+            console.log('sep o');
+            object1.collisionMask.update();
+            object2.collisionMask.update();
             var separatedX = Collision.separateX(object1, object2);
             var separatedY = Collision.separateY(object1, object2);
             return separatedX || separatedY;
@@ -5529,6 +5891,141 @@ var Phaser;
             }
             //  First, get the two object deltas
             var overlap = 0;
+            if(object1.collisionMask.deltaX != object2.collisionMask.deltaX) {
+                if(object1.collisionMask.intersects(object2.collisionMask)) {
+                    var maxOverlap = object1.collisionMask.deltaXAbs + object2.collisionMask.deltaXAbs + Collision.OVERLAP_BIAS;
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if(object1.collisionMask.deltaX > object2.collisionMask.deltaX) {
+                        overlap = object1.collisionMask.right - object2.collisionMask.x;
+                        if((overlap > maxOverlap) || !(object1.allowCollisions & Collision.RIGHT) || !(object2.allowCollisions & Collision.LEFT)) {
+                            overlap = 0;
+                        } else {
+                            object1.touching |= Collision.RIGHT;
+                            object2.touching |= Collision.LEFT;
+                        }
+                    } else if(object1.collisionMask.deltaX < object2.collisionMask.deltaX) {
+                        overlap = object1.collisionMask.x - object2.collisionMask.width - object2.collisionMask.x;
+                        if((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.LEFT) || !(object2.allowCollisions & Collision.RIGHT)) {
+                            overlap = 0;
+                        } else {
+                            object1.touching |= Collision.LEFT;
+                            object2.touching |= Collision.RIGHT;
+                        }
+                    }
+                }
+            }
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if(overlap != 0) {
+                var obj1Velocity = object1.velocity.x;
+                var obj2Velocity = object2.velocity.x;
+                if(!object1.immovable && !object2.immovable) {
+                    overlap *= 0.5;
+                    object1.x = object1.x - overlap;
+                    object2.x += overlap;
+                    var obj1NewVelocity = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
+                    var obj2NewVelocity = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
+                    var average = (obj1NewVelocity + obj2NewVelocity) * 0.5;
+                    obj1NewVelocity -= average;
+                    obj2NewVelocity -= average;
+                    object1.velocity.x = average + obj1NewVelocity * object1.elasticity;
+                    object2.velocity.x = average + obj2NewVelocity * object2.elasticity;
+                } else if(!object1.immovable) {
+                    object1.x = object1.x - overlap;
+                    object1.velocity.x = obj2Velocity - obj1Velocity * object1.elasticity;
+                } else if(!object2.immovable) {
+                    object2.x += overlap;
+                    object2.velocity.x = obj1Velocity - obj2Velocity * object2.elasticity;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        };
+        Collision.separateY = /**
+        * Separates the two objects on their y axis
+        * @param object1 The first GameObject to separate
+        * @param object2 The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        function separateY(object1, object2) {
+            //  Can't separate two immovable objects
+            if(object1.immovable && object2.immovable) {
+                return false;
+            }
+            //  First, get the two object deltas
+            var overlap = 0;
+            if(object1.collisionMask.deltaY != object2.collisionMask.deltaY) {
+                if(object1.collisionMask.intersects(object2.collisionMask)) {
+                    //  This is the only place to use the DeltaAbs values
+                    var maxOverlap = object1.collisionMask.deltaYAbs + object2.collisionMask.deltaYAbs + Collision.OVERLAP_BIAS;
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if(object1.collisionMask.deltaY > object2.collisionMask.deltaY) {
+                        overlap = object1.collisionMask.bottom - object2.collisionMask.y;
+                        if((overlap > maxOverlap) || !(object1.allowCollisions & Collision.DOWN) || !(object2.allowCollisions & Collision.UP)) {
+                            overlap = 0;
+                        } else {
+                            object1.touching |= Collision.DOWN;
+                            object2.touching |= Collision.UP;
+                        }
+                    } else if(object1.collisionMask.deltaY < object2.collisionMask.deltaY) {
+                        overlap = object1.collisionMask.y - object2.collisionMask.height - object2.collisionMask.y;
+                        if((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.UP) || !(object2.allowCollisions & Collision.DOWN)) {
+                            overlap = 0;
+                        } else {
+                            object1.touching |= Collision.UP;
+                            object2.touching |= Collision.DOWN;
+                        }
+                    }
+                }
+            }
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if(overlap != 0) {
+                var obj1Velocity = object1.velocity.y;
+                var obj2Velocity = object2.velocity.y;
+                if(!object1.immovable && !object2.immovable) {
+                    overlap *= 0.5;
+                    object1.y = object1.y - overlap;
+                    object2.y += overlap;
+                    var obj1NewVelocity = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
+                    var obj2NewVelocity = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
+                    var average = (obj1NewVelocity + obj2NewVelocity) * 0.5;
+                    obj1NewVelocity -= average;
+                    obj2NewVelocity -= average;
+                    object1.velocity.y = average + obj1NewVelocity * object1.elasticity;
+                    object2.velocity.y = average + obj2NewVelocity * object2.elasticity;
+                } else if(!object1.immovable) {
+                    object1.y = object1.y - overlap;
+                    object1.velocity.y = obj2Velocity - obj1Velocity * object1.elasticity;
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if(object2.active && object2.moves && (object1.collisionMask.deltaY > object2.collisionMask.deltaY)) {
+                        object1.x += object2.x - object2.last.x;
+                    }
+                } else if(!object2.immovable) {
+                    object2.y += overlap;
+                    object2.velocity.y = obj1Velocity - obj2Velocity * object2.elasticity;
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if(object1.active && object1.moves && (object1.collisionMask.deltaY < object2.collisionMask.deltaY)) {
+                        object2.x += object1.x - object1.last.x;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        };
+        Collision.OLDseparateX = /**
+        * Separates the two objects on their x axis
+        * @param object1 The first GameObject to separate
+        * @param object2 The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        function OLDseparateX(object1, object2) {
+            //  Can't separate two immovable objects
+            if(object1.immovable && object2.immovable) {
+                return false;
+            }
+            //  First, get the two object deltas
+            var overlap = 0;
             var obj1Delta = object1.x - object1.last.x;
             var obj2Delta = object2.x - object2.last.x;
             if(obj1Delta != obj2Delta) {
@@ -5586,13 +6083,13 @@ var Phaser;
                 return false;
             }
         };
-        Collision.separateY = /**
+        Collision.OLDseparateY = /**
         * Separates the two objects on their y axis
         * @param object1 The first GameObject to separate
         * @param object2 The second GameObject to separate
         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
         */
-        function separateY(object1, object2) {
+        function OLDseparateY(object1, object2) {
             //  Can't separate two immovable objects
             if(object1.immovable && object2.immovable) {
                 return false;
@@ -5607,8 +6104,10 @@ var Phaser;
                 var obj2DeltaAbs = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
                 var obj1Bounds = new Phaser.Quad(object1.x, object1.y - ((obj1Delta > 0) ? obj1Delta : 0), object1.width, object1.height + obj1DeltaAbs);
                 var obj2Bounds = new Phaser.Quad(object2.x, object2.y - ((obj2Delta > 0) ? obj2Delta : 0), object2.width, object2.height + obj2DeltaAbs);
+                console.log(obj1Bounds.toString(), obj2Bounds.toString());
                 if((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height)) {
                     var maxOverlap = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
+                    console.log('max33', maxOverlap, obj1Delta, obj2Delta, obj1DeltaAbs, obj2DeltaAbs);
                     //  If they did overlap (and can), figure out by how much and flip the corresponding flags
                     if(obj1Delta > obj2Delta) {
                         overlap = object1.y + object1.height - object2.y;
@@ -5631,6 +6130,7 @@ var Phaser;
             }
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if(overlap != 0) {
+                console.log('y overlap', overlap);
                 var obj1Velocity = object1.velocity.y;
                 var obj2Velocity = object2.velocity.y;
                 if(!object1.immovable && !object2.immovable) {
@@ -5651,6 +6151,7 @@ var Phaser;
                     if(object2.active && object2.moves && (obj1Delta > obj2Delta)) {
                         object1.x += object2.x - object2.last.x;
                     }
+                    console.log('y2', object1.y, object1.velocity.y);
                 } else if(!object2.immovable) {
                     object2.y += overlap;
                     object2.velocity.y = obj1Velocity - obj2Velocity * object2.elasticity;
@@ -5658,6 +6159,7 @@ var Phaser;
                     if(object1.active && object1.moves && (obj1Delta < obj2Delta)) {
                         object2.x += object1.x - object1.last.x;
                     }
+                    console.log('y3', object2.y, object2.velocity.y);
                 }
                 return true;
             } else {
@@ -9780,6 +10282,8 @@ var Phaser;
 /**
 * Phaser - World
 *
+* "This world is but a canvas to our imagination." - Henry David Thoreau
+*
 * A game has only one world. The world is an abstract place in which all game objects live. It is not bound
 * by stage limits and can be any size or dimension. You look into the world via cameras and all game objects
 * live within the world at world-based coordinates. By default a world is created the same size as your Stage.
@@ -11844,6 +12348,10 @@ var Phaser;
             }, false);
         };
         Keyboard.prototype.addKeyCapture = /**
+        * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
+        * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
+        * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
+        * Pass in either a single keycode or an array of keycodes.
         * @param {Any} keycode
         */
         function (keycode) {
@@ -12359,20 +12867,18 @@ var Phaser;
         Emitter.prototype.makeParticles = /**
         * This function generates a new array of particle sprites to attach to the emitter.
         *
-        * @param Graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
-        * @param Quantity {number} The number of particles to generate when using the "create from image" option.
-        * @param BakedRotations {number} How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
-        * @param Multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-        * @param Collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+        * @param graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
+        * @param quantity {number} The number of particles to generate when using the "create from image" option.
+        * @param multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+        * @param collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
         *
         * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
         */
-        function (Graphics, Quantity, BakedRotations, Multiple, Collide) {
-            if (typeof Quantity === "undefined") { Quantity = 50; }
-            if (typeof BakedRotations === "undefined") { BakedRotations = 16; }
-            if (typeof Multiple === "undefined") { Multiple = false; }
-            if (typeof Collide === "undefined") { Collide = 0; }
-            this.maxSize = Quantity;
+        function (graphics, quantity, multiple, collide) {
+            if (typeof quantity === "undefined") { quantity = 50; }
+            if (typeof multiple === "undefined") { multiple = false; }
+            if (typeof collide === "undefined") { collide = 0; }
+            this.maxSize = quantity;
             var totalFrames = 1;
             /*
             if(Multiple)
@@ -12386,13 +12892,13 @@ var Phaser;
             var randomFrame;
             var particle;
             var i = 0;
-            while(i < Quantity) {
+            while(i < quantity) {
                 if(this.particleClass == null) {
                     particle = new Phaser.Particle(this._game);
                 } else {
                     particle = new this.particleClass(this._game);
                 }
-                if(Multiple) {
+                if(multiple) {
                     /*
                     randomFrame = this._game.math.random()*totalFrames;
                     if(BakedRotations > 0)
@@ -12410,14 +12916,14 @@ var Phaser;
                     else
                     particle.loadGraphic(Graphics);
                     */
-                    if(Graphics) {
-                        particle.loadGraphic(Graphics);
+                    if(graphics) {
+                        particle.loadGraphic(graphics);
                     }
                 }
-                if(Collide > 0) {
+                if(collide > 0) {
                     particle.allowCollisions = Phaser.Collision.ANY;
-                    particle.width *= Collide;
-                    particle.height *= Collide;
+                    particle.width *= collide;
+                    particle.height *= collide;
                     //particle.centerOffsets();
                                     } else {
                     particle.allowCollisions = Phaser.Collision.NONE;
@@ -12469,23 +12975,23 @@ var Phaser;
         Emitter.prototype.start = /**
         * Call this function to start emitting particles.
         *
-        * @param Explode {boolean} Whether the particles should all burst out at once.
-        * @param Lifespan {number} How long each particle lives once emitted. 0 = forever.
-        * @param Frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-        * @param Quantity {number} How many particles to launch. 0 = "all of the particles".
+        * @param explode {boolean} Whether the particles should all burst out at once.
+        * @param lifespan {number} How long each particle lives once emitted. 0 = forever.
+        * @param frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+        * @param quantity {number} How many particles to launch. 0 = "all of the particles".
         */
-        function (Explode, Lifespan, Frequency, Quantity) {
-            if (typeof Explode === "undefined") { Explode = true; }
-            if (typeof Lifespan === "undefined") { Lifespan = 0; }
-            if (typeof Frequency === "undefined") { Frequency = 0.1; }
-            if (typeof Quantity === "undefined") { Quantity = 0; }
+        function (explode, lifespan, frequency, quantity) {
+            if (typeof explode === "undefined") { explode = true; }
+            if (typeof lifespan === "undefined") { lifespan = 0; }
+            if (typeof frequency === "undefined") { frequency = 0.1; }
+            if (typeof quantity === "undefined") { quantity = 0; }
             this.revive();
             this.visible = true;
             this.on = true;
-            this._explode = Explode;
-            this.lifespan = Lifespan;
-            this.frequency = Frequency;
-            this._quantity += Quantity;
+            this._explode = explode;
+            this.lifespan = lifespan;
+            this.frequency = frequency;
+            this._quantity += quantity;
             this._counter = 0;
             this._timer = 0;
         };
@@ -12524,12 +13030,12 @@ var Phaser;
         Emitter.prototype.setSize = /**
         * A more compact way of setting the width and height of the emitter.
         *
-        * @param Width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
-        * @param Height {number} The desired height of the emitter.
+        * @param width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
+        * @param height {number} The desired height of the emitter.
         */
-        function (Width, Height) {
-            this.width = Width;
-            this.height = Height;
+        function (width, height) {
+            this.width = width;
+            this.height = height;
         };
         Emitter.prototype.setXSpeed = /**
         * A more compact way of setting the X velocity range of the emitter.
@@ -12537,11 +13043,11 @@ var Phaser;
         * @param Min {number} The minimum value for this range.
         * @param Max {number} The maximum value for this range.
         */
-        function (Min, Max) {
-            if (typeof Min === "undefined") { Min = 0; }
-            if (typeof Max === "undefined") { Max = 0; }
-            this.minParticleSpeed.x = Min;
-            this.maxParticleSpeed.x = Max;
+        function (min, max) {
+            if (typeof min === "undefined") { min = 0; }
+            if (typeof max === "undefined") { max = 0; }
+            this.minParticleSpeed.x = min;
+            this.maxParticleSpeed.x = max;
         };
         Emitter.prototype.setYSpeed = /**
         * A more compact way of setting the Y velocity range of the emitter.
@@ -12549,11 +13055,11 @@ var Phaser;
         * @param Min {number} The minimum value for this range.
         * @param Max {number} The maximum value for this range.
         */
-        function (Min, Max) {
-            if (typeof Min === "undefined") { Min = 0; }
-            if (typeof Max === "undefined") { Max = 0; }
-            this.minParticleSpeed.y = Min;
-            this.maxParticleSpeed.y = Max;
+        function (min, max) {
+            if (typeof min === "undefined") { min = 0; }
+            if (typeof max === "undefined") { max = 0; }
+            this.minParticleSpeed.y = min;
+            this.maxParticleSpeed.y = max;
         };
         Emitter.prototype.setRotation = /**
         * A more compact way of setting the angular velocity constraints of the emitter.
@@ -12561,19 +13067,19 @@ var Phaser;
         * @param Min {number} The minimum value for this range.
         * @param Max {number} The maximum value for this range.
         */
-        function (Min, Max) {
-            if (typeof Min === "undefined") { Min = 0; }
-            if (typeof Max === "undefined") { Max = 0; }
-            this.minRotation = Min;
-            this.maxRotation = Max;
+        function (min, max) {
+            if (typeof min === "undefined") { min = 0; }
+            if (typeof max === "undefined") { max = 0; }
+            this.minRotation = min;
+            this.maxRotation = max;
         };
         Emitter.prototype.at = /**
         * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
         *
         * @param Object {object} The <code>Object</code> that you want to sync up with.
         */
-        function (Object) {
-            Object.getMidpoint(this._point);
+        function (object) {
+            object.getMidpoint(this._point);
             this.x = this._point.x - (this.width >> 1);
             this.y = this._point.y - (this.height >> 1);
         };
@@ -12701,7 +13207,7 @@ var Phaser;
             this.refresh();
             this.circle = new Phaser.Circle(this.x, this.y, diameter);
             this.type = GeomSprite.CIRCLE;
-            this.bounds.setTo(this.circle.x - this.circle.radius, this.circle.y - this.circle.radius, this.circle.diameter, this.circle.diameter);
+            this.frameBounds.setTo(this.circle.x - this.circle.radius, this.circle.y - this.circle.radius, this.circle.diameter, this.circle.diameter);
             return this;
         };
         GeomSprite.prototype.createLine = /**
@@ -12714,7 +13220,7 @@ var Phaser;
             this.refresh();
             this.line = new Phaser.Line(this.x, this.y, x, y);
             this.type = GeomSprite.LINE;
-            this.bounds.setTo(this.x, this.y, this.line.width, this.line.height);
+            this.frameBounds.setTo(this.x, this.y, this.line.width, this.line.height);
             return this;
         };
         GeomSprite.prototype.createPoint = /**
@@ -12725,20 +13231,21 @@ var Phaser;
             this.refresh();
             this.point = new Phaser.Point(this.x, this.y);
             this.type = GeomSprite.POINT;
-            this.bounds.width = 1;
-            this.bounds.height = 1;
+            this.frameBounds.width = 1;
+            this.frameBounds.height = 1;
             return this;
         };
         GeomSprite.prototype.createRectangle = /**
-        * Create a circle shape with specific diameter.
-        * @param diameter {number} Diameter of the circle.
-        * @return {GeomSprite} GeomSprite instance itself.
+        * Create a rectangle shape of the given width and height size
+        * @param width {Number} Width of the rectangle
+        * @param height {Number} Height of the rectangle
+        * @return {GeomSprite} GeomSprite instance.
         */
         function (width, height) {
             this.refresh();
             this.rect = new Phaser.Rectangle(this.x, this.y, width, height);
             this.type = GeomSprite.RECTANGLE;
-            this.bounds.copyFrom(this.rect);
+            this.frameBounds.copyFrom(this.rect);
             return this;
         };
         GeomSprite.prototype.refresh = /**
@@ -12760,19 +13267,19 @@ var Phaser;
             } else if(this.type == GeomSprite.CIRCLE) {
                 this.circle.x = this.x;
                 this.circle.y = this.y;
-                this.bounds.width = this.circle.diameter;
-                this.bounds.height = this.circle.diameter;
+                this.frameBounds.width = this.circle.diameter;
+                this.frameBounds.height = this.circle.diameter;
             } else if(this.type == GeomSprite.LINE) {
                 this.line.x1 = this.x;
                 this.line.y1 = this.y;
-                this.bounds.setTo(this.x, this.y, this.line.width, this.line.height);
+                this.frameBounds.setTo(this.x, this.y, this.line.width, this.line.height);
             } else if(this.type == GeomSprite.POINT) {
                 this.point.x = this.x;
                 this.point.y = this.y;
             } else if(this.type == GeomSprite.RECTANGLE) {
                 this.rect.x = this.x;
                 this.rect.y = this.y;
-                this.bounds.copyFrom(this.rect);
+                this.frameBounds.copyFrom(this.rect);
             }
         };
         GeomSprite.prototype.inCamera = /**
@@ -12782,13 +13289,13 @@ var Phaser;
         */
         function (camera) {
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
-                this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
-                this._dw = this.bounds.width * this.scale.x;
-                this._dh = this.bounds.height * this.scale.y;
+                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
+                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
+                this._dw = this.frameBounds.width * this.scale.x;
+                this._dh = this.frameBounds.height * this.scale.y;
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
             } else {
-                return camera.intersects(this.bounds);
+                return camera.intersects(this.frameBounds);
             }
         };
         GeomSprite.prototype.render = /**
@@ -12808,10 +13315,10 @@ var Phaser;
                 var globalAlpha = this.context.globalAlpha;
                 this.context.globalAlpha = this.alpha;
             }
-            this._dx = cameraOffsetX + (this.bounds.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.y - camera.worldView.y);
-            this._dw = this.bounds.width * this.scale.x;
-            this._dh = this.bounds.height * this.scale.y;
+            this._dx = cameraOffsetX + (this.frameBounds.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.frameBounds.y - camera.worldView.y);
+            this._dw = this.frameBounds.width * this.scale.x;
+            this._dh = this.frameBounds.height * this.scale.y;
             //	Apply camera difference
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
                 this._dx -= (camera.worldView.x * this.scrollFactor.x);
@@ -12835,7 +13342,7 @@ var Phaser;
             this._game.stage.saveCanvasValues();
             //  Debug
             //this.context.fillStyle = 'rgba(255,0,0,0.5)';
-            //this.context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            //this.context.fillRect(this.frameBounds.x, this.frameBounds.y, this.frameBounds.width, this.frameBounds.height);
             this.context.lineWidth = this.lineWidth;
             this.context.strokeStyle = this.lineColor;
             this.context.fillStyle = this.fillColor;
@@ -12926,8 +13433,8 @@ var Phaser;
         function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             //this.context.fillStyle = color;
-            //this.context.fillText('Sprite: ' + this.name + ' (' + this.bounds.width + ' x ' + this.bounds.height + ')', x, y);
-            //this.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
+            //this.context.fillText('Sprite: ' + this.name + ' (' + this.frameBounds.width + ' x ' + this.frameBounds.height + ')', x, y);
+            //this.context.fillText('x: ' + this.frameBounds.x.toFixed(1) + ' y: ' + this.frameBounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
             //this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
             //this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
                     };
@@ -13310,14 +13817,14 @@ var Phaser;
         */
         function (object) {
             //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
-            if(object.bounds.x < 0 || object.bounds.x > this.widthInPixels || object.bounds.y < 0 || object.bounds.bottom > this.heightInPixels) {
+            if(object.collisionMask.x < 0 || object.collisionMask.x > this.widthInPixels || object.collisionMask.y < 0 || object.collisionMask.bottom > this.heightInPixels) {
                 return;
             }
             //  What tiles do we need to check against?
-            this._tempTileX = this._game.math.snapToFloor(object.bounds.x, this.tileWidth) / this.tileWidth;
-            this._tempTileY = this._game.math.snapToFloor(object.bounds.y, this.tileHeight) / this.tileHeight;
-            this._tempTileW = (this._game.math.snapToCeil(object.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-            this._tempTileH = (this._game.math.snapToCeil(object.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
+            this._tempTileX = this._game.math.snapToFloor(object.collisionMask.x, this.tileWidth) / this.tileWidth;
+            this._tempTileY = this._game.math.snapToFloor(object.collisionMask.y, this.tileHeight) / this.tileHeight;
+            this._tempTileW = (this._game.math.snapToCeil(object.collisionMask.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
+            this._tempTileH = (this._game.math.snapToCeil(object.collisionMask.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
             //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
             this._tempBlockResults = [];
             this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
@@ -14242,13 +14749,13 @@ var Phaser;
         */
         function (camera) {
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
-                this._dx = this.bounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.bounds.y - (camera.y * this.scrollFactor.x);
-                this._dw = this.bounds.width * this.scale.x;
-                this._dh = this.bounds.height * this.scale.y;
+                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
+                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
+                this._dw = this.frameBounds.width * this.scale.x;
+                this._dh = this.frameBounds.height * this.scale.y;
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
             } else {
-                return camera.intersects(this.bounds, this.bounds.length);
+                return camera.intersects(this.frameBounds, this.frameBounds.length);
             }
         };
         ScrollZone.prototype.render = /**
@@ -14268,10 +14775,10 @@ var Phaser;
                 var globalAlpha = this.context.globalAlpha;
                 this.context.globalAlpha = this.alpha;
             }
-            this._dx = cameraOffsetX + (this.bounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.bounds.topLeft.y - camera.worldView.y);
-            this._dw = this.bounds.width * this.scale.x;
-            this._dh = this.bounds.height * this.scale.y;
+            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+            this._dw = this.frameBounds.width * this.scale.x;
+            this._dh = this.frameBounds.height * this.scale.y;
             //	Apply camera difference
             if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
                 this._dx -= (camera.worldView.x * this.scrollFactor.x);
@@ -14865,14 +15372,21 @@ var Phaser;
             return this.tweens.create(obj);
         };
         Game.prototype.collide = /**
-        * Call this method to see if one object collides with another.
-        * @return {boolean} Whether the given objects or groups collides.
+        * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+        * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+        * @param object1 The first GameObject or Group to check. If null the world.group is used.
+        * @param object2 The second GameObject or Group to check.
+        * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+        * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+        * @param context The context in which the callbacks will be called
+        * @returns {boolean} true if the objects overlap, otherwise false.
         */
-        function (objectOrGroup1, objectOrGroup2, notifyCallback) {
+        function (objectOrGroup1, objectOrGroup2, notifyCallback, context) {
             if (typeof objectOrGroup1 === "undefined") { objectOrGroup1 = null; }
             if (typeof objectOrGroup2 === "undefined") { objectOrGroup2 = null; }
             if (typeof notifyCallback === "undefined") { notifyCallback = null; }
-            return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Phaser.Collision.separate);
+            if (typeof context === "undefined") { context = this.callbackContext; }
+            return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Phaser.Collision.separate, context);
         };
         Object.defineProperty(Game.prototype, "camera", {
             get: function () {

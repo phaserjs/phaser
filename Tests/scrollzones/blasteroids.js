@@ -19,7 +19,7 @@
     function create() {
         scroller = myGame.createScrollZone('starfield', 0, 0, 1024, 1024);
         emitter = myGame.createEmitter(myGame.stage.centerX + 16, myGame.stage.centerY + 12);
-        emitter.makeParticles('jet', 250, 0, false, 0);
+        emitter.makeParticles('jet', 250, false, 0);
         emitter.setRotation(0, 0);
         bullets = myGame.createGroup(50);
         //  Create our bullet pool

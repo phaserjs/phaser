@@ -169,17 +169,16 @@ module Phaser {
         /**
          * This function generates a new array of particle sprites to attach to the emitter.
          *
-         * @param Graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
-         * @param Quantity {number} The number of particles to generate when using the "create from image" option.
-         * @param BakedRotations {number} How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
-         * @param Multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-         * @param Collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+         * @param graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
+         * @param quantity {number} The number of particles to generate when using the "create from image" option.
+         * @param multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+         * @param collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
          *
          * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
          */
-        public makeParticles(Graphics, Quantity: number = 50, BakedRotations: number = 16, Multiple: bool = false, Collide: number = 0): Emitter {
+        public makeParticles(graphics, quantity: number = 50, multiple: bool = false, collide: number = 0): Emitter {
 
-            this.maxSize = Quantity;
+            this.maxSize = quantity;
 
             var totalFrames: number = 1;
 
@@ -197,7 +196,7 @@ module Phaser {
             var particle: Particle;
             var i: number = 0;
 
-            while (i < Quantity)
+            while (i < quantity)
             {
                 if (this.particleClass == null)
                 {
@@ -208,7 +207,7 @@ module Phaser {
                     particle = new this.particleClass(this._game);
                 }
 
-                if (Multiple)
+                if (multiple)
                 {
                     /*
                     randomFrame = this._game.math.random()*totalFrames;
@@ -230,18 +229,18 @@ module Phaser {
                         particle.loadGraphic(Graphics);
                     */
 
-                    if (Graphics)
+                    if (graphics)
                     {
-                        particle.loadGraphic(Graphics);
+                        particle.loadGraphic(graphics);
                     }
 
                 }
 
-                if (Collide > 0)
+                if (collide > 0)
                 {
                     particle.allowCollisions = Collision.ANY;
-                    particle.width *= Collide;
-                    particle.height *= Collide;
+                    particle.width *= collide;
+                    particle.height *= collide;
                     //particle.centerOffsets();
                 }
                 else
@@ -322,22 +321,22 @@ module Phaser {
         /**
          * Call this function to start emitting particles.
          *
-         * @param Explode {boolean} Whether the particles should all burst out at once.
-         * @param Lifespan {number} How long each particle lives once emitted. 0 = forever.
-         * @param Frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-         * @param Quantity {number} How many particles to launch. 0 = "all of the particles".
+         * @param explode {boolean} Whether the particles should all burst out at once.
+         * @param lifespan {number} How long each particle lives once emitted. 0 = forever.
+         * @param frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+         * @param quantity {number} How many particles to launch. 0 = "all of the particles".
          */
-        public start(Explode: bool = true, Lifespan: number = 0, Frequency: number = 0.1, Quantity: number = 0) {
+        public start(explode: bool = true, lifespan: number = 0, frequency: number = 0.1, quantity: number = 0) {
 
             this.revive();
 
             this.visible = true;
             this.on = true;
 
-            this._explode = Explode;
-            this.lifespan = Lifespan;
-            this.frequency = Frequency;
-            this._quantity += Quantity;
+            this._explode = explode;
+            this.lifespan = lifespan;
+            this.frequency = frequency;
+            this._quantity += quantity;
 
             this._counter = 0;
             this._timer = 0;
@@ -399,12 +398,12 @@ module Phaser {
         /**
          * A more compact way of setting the width and height of the emitter.
          *
-         * @param Width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
-         * @param Height {number} The desired height of the emitter.
+         * @param width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
+         * @param height {number} The desired height of the emitter.
          */
-        public setSize(Width: number, Height: number) {
-            this.width = Width;
-            this.height = Height;
+        public setSize(width: number, height: number) {
+            this.width = width;
+            this.height = height;
         }
 
         /**
@@ -413,9 +412,9 @@ module Phaser {
          * @param Min {number} The minimum value for this range.
          * @param Max {number} The maximum value for this range.
          */
-        public setXSpeed(Min: number = 0, Max: number = 0) {
-            this.minParticleSpeed.x = Min;
-            this.maxParticleSpeed.x = Max;
+        public setXSpeed(min: number = 0, max: number = 0) {
+            this.minParticleSpeed.x = min;
+            this.maxParticleSpeed.x = max;
         }
 
         /**
@@ -424,9 +423,9 @@ module Phaser {
          * @param Min {number} The minimum value for this range.
          * @param Max {number} The maximum value for this range.
          */
-        public setYSpeed(Min: number = 0, Max: number = 0) {
-            this.minParticleSpeed.y = Min;
-            this.maxParticleSpeed.y = Max;
+        public setYSpeed(min: number = 0, max: number = 0) {
+            this.minParticleSpeed.y = min;
+            this.maxParticleSpeed.y = max;
         }
 
         /**
@@ -435,9 +434,9 @@ module Phaser {
          * @param Min {number} The minimum value for this range.
          * @param Max {number} The maximum value for this range.
          */
-        public setRotation(Min: number = 0, Max: number = 0) {
-            this.minRotation = Min;
-            this.maxRotation = Max;
+        public setRotation(min: number = 0, max: number = 0) {
+            this.minRotation = min;
+            this.maxRotation = max;
         }
 
         /**
@@ -445,8 +444,8 @@ module Phaser {
          *
          * @param Object {object} The <code>Object</code> that you want to sync up with.
          */
-        public at(Object) {
-            Object.getMidpoint(this._point);
+        public at(object) {
+            object.getMidpoint(this._point);
             this.x = this._point.x - (this.width >> 1);
             this.y = this._point.y - (this.height >> 1);
         }

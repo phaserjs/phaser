@@ -16,32 +16,28 @@ module Phaser {
         /**
          * Instantiate a new Quad Tree node.
          *
-         * @param {Number} X			The X-coordinate of the point in space.
-         * @param {Number} Y			The Y-coordinate of the point in space.
-         * @param {Number} Width		Desired width of this node.
-         * @param {Number} Height		Desired height of this node.
-         * @param {Number} Parent		The parent branch or node.  Pass null to create a root.
+         * @param {Number} x			The X-coordinate of the point in space.
+         * @param {Number} y			The Y-coordinate of the point in space.
+         * @param {Number} width		Desired width of this node.
+         * @param {Number} height		Desired height of this node.
+         * @param {Number} parent		The parent branch or node.  Pass null to create a root.
          */
-        constructor(X: number, Y: number, Width: number, Height: number, Parent: QuadTree = null) {
+        constructor(x: number, y: number, width: number, height: number, parent: QuadTree = null) {
 
-            super(X, Y, Width, Height);
-
-            //console.log('-------- QuadTree',X,Y,Width,Height);
+            super(x, y, width, height);
 
             this._headA = this._tailA = new LinkedList();
             this._headB = this._tailB = new LinkedList();
 
             //Copy the parent's children (if there are any)
-            if (Parent != null)
+            if (parent != null)
             {
-                //console.log('Parent not null');
                 var iterator: LinkedList;
                 var ot: LinkedList;
 
-                if (Parent._headA.object != null)
+                if (parent._headA.object != null)
                 {
-                    iterator = Parent._headA;
-                    //console.log('iterator set to parent headA');
+                    iterator = parent._headA;
 
                     while (iterator != null)
                     {
@@ -57,10 +53,9 @@ module Phaser {
                     }
                 }
 
-                if (Parent._headB.object != null)
+                if (parent._headB.object != null)
                 {
-                    iterator = Parent._headB;
-                    //console.log('iterator set to parent headB');
+                    iterator = parent._headB;
 
                     while (iterator != null)
                     {
@@ -82,8 +77,6 @@ module Phaser {
             }
 
             this._canSubdivide = (this.width > QuadTree._min) || (this.height > QuadTree._min);
-
-            //console.log('canSubdivided', this._canSubdivide);
 
             //Set up comparison/sort helpers
             this._northWestTree = null;
@@ -216,26 +209,6 @@ module Phaser {
         private static _object;
 
         /**
-         * Internal, used to reduce recursive method parameters during object placement and tree formation.
-         */
-        private static _objectLeftEdge: number;
-
-        /**
-         * Internal, used to reduce recursive method parameters during object placement and tree formation.
-         */
-        private static _objectTopEdge: number;
-
-        /**
-         * Internal, used to reduce recursive method parameters during object placement and tree formation.
-         */
-        private static _objectRightEdge: number;
-
-        /**
-         * Internal, used to reduce recursive method parameters during object placement and tree formation.
-         */
-        private static _objectBottomEdge: number;
-
-        /**
          * Internal, used during tree processing and overlap checks.
          */
         private static _list: number;
@@ -258,47 +231,12 @@ module Phaser {
         /**
          * Internal, used during tree processing and overlap checks.
          */
+        private static _callbackContext;
+
+        /**
+         * Internal, used during tree processing and overlap checks.
+         */
         private static _iterator: LinkedList;
-
-        /**
-         * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-         */
-        private static _objectHullX: number;
-
-        /**
-         * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-         */
-        private static _objectHullY: number;
-
-        /**
-         * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-         */
-        private static _objectHullWidth: number;
-
-        /**
-         * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-         */
-        private static _objectHullHeight: number;
-
-        /**
-         * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-         */
-        private static _checkObjectHullX: number;
-
-        /**
-         * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-         */
-        private static _checkObjectHullY: number;
-
-        /**
-         * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-         */
-        private static _checkObjectHullWidth: number;
-
-        /**
-         * Internal, helpers for comparing actual object-to-object overlap - see <code>overlapNode()</code>.
-         */
-        private static _checkObjectHullHeight: number;
 
         /**
          * Clean up memory.
@@ -349,20 +287,19 @@ module Phaser {
         /**
          * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
          *
-         * @param {Basic} ObjectOrGroup1	Any object that is or extends GameObject or Group.
-         * @param {Basic} ObjectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
-         * @param {Function} NotifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no ProcessCallback is specified, or the ProcessCallback returns true.
-         * @param {Function} ProcessCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The NotifyCallback is only called if this function returns true.  See GameObject.separate().
+         * @param {Basic} objectOrGroup1	Any object that is or extends GameObject or Group.
+         * @param {Basic} objectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
+         * @param {Function} notifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no processCallback is specified, or the processCallback returns true.
+         * @param {Function} processCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The notifyCallback is only called if this function returns true.  See GameObject.separate().
+         * @param context The context in which the callbacks will be called
          */
-        public load(ObjectOrGroup1: Basic, ObjectOrGroup2: Basic = null, NotifyCallback = null, ProcessCallback = null) {
+        public load(objectOrGroup1: Basic, objectOrGroup2: Basic = null, notifyCallback = null, processCallback = null, context = null) {
 
-            //console.log('quadtree load', QuadTree.divisions, ObjectOrGroup1, ObjectOrGroup2);
+            this.add(objectOrGroup1, QuadTree.A_LIST);
 
-            this.add(ObjectOrGroup1, QuadTree.A_LIST);
-
-            if (ObjectOrGroup2 != null)
+            if (objectOrGroup2 != null)
             {
-                this.add(ObjectOrGroup2, QuadTree.B_LIST);
+                this.add(objectOrGroup2, QuadTree.B_LIST);
                 QuadTree._useBothLists = true;
             }
             else
@@ -370,11 +307,9 @@ module Phaser {
                 QuadTree._useBothLists = false;
             }
 
-            QuadTree._notifyCallback = NotifyCallback;
-            QuadTree._processingCallback = ProcessCallback;
-
-            //console.log('use both', QuadTree._useBothLists);
-            //console.log('------------ end of load');
+            QuadTree._notifyCallback = notifyCallback;
+            QuadTree._processingCallback = processCallback;
+            QuadTree._callbackContext = context;
 
         }
 
@@ -383,19 +318,19 @@ module Phaser {
          * This function will recursively add all group members, but
          * not the groups themselves.
          *
-         * @param {Basic} ObjectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
-         * @param {Number} List	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
+         * @param {Basic} objectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
+         * @param {Number} list	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
          */
-        public add(ObjectOrGroup: Basic, List: number) {
+        public add(objectOrGroup: Basic, list: number) {
 
-            QuadTree._list = List;
+            QuadTree._list = list;
 
-            if (ObjectOrGroup.isGroup == true)
+            if (objectOrGroup.isGroup == true)
             {
                 var i: number = 0;
                 var basic: Basic;
-                var members = <Group> ObjectOrGroup['members'];
-                var l: number = ObjectOrGroup['length'];
+                var members = <Group> objectOrGroup['members'];
+                var l: number = objectOrGroup['length'];
 
                 while (i < l)
                 {
@@ -405,7 +340,7 @@ module Phaser {
                     {
                         if (basic.isGroup)
                         {
-                            this.add(basic, List);
+                            this.add(basic, list);
                         }
                         else
                         {
@@ -413,10 +348,6 @@ module Phaser {
 
                             if (QuadTree._object.exists && QuadTree._object.allowCollisions)
                             {
-                                QuadTree._objectLeftEdge = QuadTree._object.x;
-                                QuadTree._objectTopEdge = QuadTree._object.y;
-                                QuadTree._objectRightEdge = QuadTree._object.x + QuadTree._object.width;
-                                QuadTree._objectBottomEdge = QuadTree._object.y + QuadTree._object.height;
                                 this.addObject();
                             }
                         }
@@ -425,17 +356,10 @@ module Phaser {
             }
             else
             {
-                QuadTree._object = ObjectOrGroup;
-
-                //console.log('add - not group:', ObjectOrGroup.name);
+                QuadTree._object = objectOrGroup;
 
                 if (QuadTree._object.exists && QuadTree._object.allowCollisions)
                 {
-                    QuadTree._objectLeftEdge = QuadTree._object.x;
-                    QuadTree._objectTopEdge = QuadTree._object.y;
-                    QuadTree._objectRightEdge = QuadTree._object.x + QuadTree._object.width;
-                    QuadTree._objectBottomEdge = QuadTree._object.y + QuadTree._object.height;
-                    //console.log('object properties', QuadTree._objectLeftEdge, QuadTree._objectTopEdge, QuadTree._objectRightEdge, QuadTree._objectBottomEdge);
                     this.addObject();
                 }
             }
@@ -447,23 +371,18 @@ module Phaser {
          */
         private addObject() {
 
-            //console.log('addObject');
-
             //If this quad (not its children) lies entirely inside this object, add it here
-            if (!this._canSubdivide || ((this._leftEdge >= QuadTree._objectLeftEdge) && (this._rightEdge <= QuadTree._objectRightEdge) && (this._topEdge >= QuadTree._objectTopEdge) && (this._bottomEdge <= QuadTree._objectBottomEdge)))
+            if (!this._canSubdivide || ((this._leftEdge >= QuadTree._object.collisionMask.x) && (this._rightEdge <= QuadTree._object.collisionMask.right) && (this._topEdge >= QuadTree._object.collisionMask.y) && (this._bottomEdge <= QuadTree._object.collisionMask.bottom)))
             {
-                //console.log('add To List');
                 this.addToList();
                 return;
             }
 
             //See if the selected object fits completely inside any of the quadrants
-            if ((QuadTree._objectLeftEdge > this._leftEdge) && (QuadTree._objectRightEdge < this._midpointX))
+            if ((QuadTree._object.collisionMask.x > this._leftEdge) && (QuadTree._object.collisionMask.right < this._midpointX))
             {
-                if ((QuadTree._objectTopEdge > this._topEdge) && (QuadTree._objectBottomEdge < this._midpointY))
+                if ((QuadTree._object.collisionMask.y > this._topEdge) && (QuadTree._object.collisionMask.bottom < this._midpointY))
                 {
-                    //console.log('Adding NW tree');
-
                     if (this._northWestTree == null)
                     {
                         this._northWestTree = new QuadTree(this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
@@ -473,10 +392,8 @@ module Phaser {
                     return;
                 }
 
-                if ((QuadTree._objectTopEdge > this._midpointY) && (QuadTree._objectBottomEdge < this._bottomEdge))
+                if ((QuadTree._object.collisionMask.y > this._midpointY) && (QuadTree._object.collisionMask.bottom < this._bottomEdge))
                 {
-                    //console.log('Adding SW tree');
-
                     if (this._southWestTree == null)
                     {
                         this._southWestTree = new QuadTree(this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
@@ -487,12 +404,10 @@ module Phaser {
                 }
             }
 
-            if ((QuadTree._objectLeftEdge > this._midpointX) && (QuadTree._objectRightEdge < this._rightEdge))
+            if ((QuadTree._object.collisionMask.x > this._midpointX) && (QuadTree._object.collisionMask.right < this._rightEdge))
             {
-                if ((QuadTree._objectTopEdge > this._topEdge) && (QuadTree._objectBottomEdge < this._midpointY))
+                if ((QuadTree._object.collisionMask.y > this._topEdge) && (QuadTree._object.collisionMask.bottom < this._midpointY))
                 {
-                    //console.log('Adding NE tree');
-
                     if (this._northEastTree == null)
                     {
                         this._northEastTree = new QuadTree(this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
@@ -502,10 +417,8 @@ module Phaser {
                     return;
                 }
 
-                if ((QuadTree._objectTopEdge > this._midpointY) && (QuadTree._objectBottomEdge < this._bottomEdge))
+                if ((QuadTree._object.collisionMask.y > this._midpointY) && (QuadTree._object.collisionMask.bottom < this._bottomEdge))
                 {
-                    //console.log('Adding SE tree');
-
                     if (this._southEastTree == null)
                     {
                         this._southEastTree = new QuadTree(this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
@@ -517,47 +430,43 @@ module Phaser {
             }
 
             //If it wasn't completely contained we have to check out the partial overlaps
-            if ((QuadTree._objectRightEdge > this._leftEdge) && (QuadTree._objectLeftEdge < this._midpointX) && (QuadTree._objectBottomEdge > this._topEdge) && (QuadTree._objectTopEdge < this._midpointY))
+            if ((QuadTree._object.collisionMask.right > this._leftEdge) && (QuadTree._object.collisionMask.x < this._midpointX) && (QuadTree._object.collisionMask.bottom > this._topEdge) && (QuadTree._object.collisionMask.y < this._midpointY))
             {
                 if (this._northWestTree == null)
                 {
                     this._northWestTree = new QuadTree(this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
                 }
 
-                //console.log('added to north west partial tree');
                 this._northWestTree.addObject();
             }
 
-            if ((QuadTree._objectRightEdge > this._midpointX) && (QuadTree._objectLeftEdge < this._rightEdge) && (QuadTree._objectBottomEdge > this._topEdge) && (QuadTree._objectTopEdge < this._midpointY))
+            if ((QuadTree._object.collisionMask.right > this._midpointX) && (QuadTree._object.collisionMask.x < this._rightEdge) && (QuadTree._object.collisionMask.bottom > this._topEdge) && (QuadTree._object.collisionMask.y < this._midpointY))
             {
                 if (this._northEastTree == null)
                 {
                     this._northEastTree = new QuadTree(this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
                 }
 
-                //console.log('added to north east partial tree');
                 this._northEastTree.addObject();
             }
 
-            if ((QuadTree._objectRightEdge > this._midpointX) && (QuadTree._objectLeftEdge < this._rightEdge) && (QuadTree._objectBottomEdge > this._midpointY) && (QuadTree._objectTopEdge < this._bottomEdge))
+            if ((QuadTree._object.collisionMask.right > this._midpointX) && (QuadTree._object.collisionMask.x < this._rightEdge) && (QuadTree._object.collisionMask.bottom > this._midpointY) && (QuadTree._object.collisionMask.y < this._bottomEdge))
             {
                 if (this._southEastTree == null)
                 {
                     this._southEastTree = new QuadTree(this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
                 }
 
-                //console.log('added to south east partial tree');
                 this._southEastTree.addObject();
             }
 
-            if ((QuadTree._objectRightEdge > this._leftEdge) && (QuadTree._objectLeftEdge < this._midpointX) && (QuadTree._objectBottomEdge > this._midpointY) && (QuadTree._objectTopEdge < this._bottomEdge))
+            if ((QuadTree._object.collisionMask.right > this._leftEdge) && (QuadTree._object.collisionMask.x < this._midpointX) && (QuadTree._object.collisionMask.bottom > this._midpointY) && (QuadTree._object.collisionMask.y < this._bottomEdge))
             {
                 if (this._southWestTree == null)
                 {
                     this._southWestTree = new QuadTree(this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
                 }
 
-                //console.log('added to south west partial tree');
                 this._southWestTree.addObject();
             }
 
@@ -568,13 +477,10 @@ module Phaser {
          */
         private addToList() {
 
-            //console.log('Adding to List');
-
             var ot: LinkedList;
 
             if (QuadTree._list == QuadTree.A_LIST)
             {
-                //console.log('A LIST');
                 if (this._tailA.object != null)
                 {
                     ot = this._tailA;
@@ -586,7 +492,6 @@ module Phaser {
             }
             else
             {
-                //console.log('B LIST');
                 if (this._tailB.object != null)
                 {
                     ot = this._tailB;
@@ -632,16 +537,11 @@ module Phaser {
          */
         public execute(): bool {
 
-            //console.log('quadtree execute');
-
             var overlapProcessed: bool = false;
             var iterator: LinkedList;
 
             if (this._headA.object != null)
             {
-                //console.log('---------------------------------------------------');
-                //console.log('headA iterator');
-
                 iterator = this._headA;
 
                 while (iterator != null)
@@ -659,7 +559,6 @@ module Phaser {
 
                     if (QuadTree._object.exists && (QuadTree._object.allowCollisions > 0) && (QuadTree._iterator != null) && (QuadTree._iterator.object != null) && QuadTree._iterator.object.exists && this.overlapNode())
                     {
-                        //console.log('headA iterator overlapped true');
                         overlapProcessed = true;
                     }
 
@@ -671,25 +570,21 @@ module Phaser {
             //Advance through the tree by calling overlap on each child
             if ((this._northWestTree != null) && this._northWestTree.execute())
             {
-                //console.log('NW quadtree execute');
                 overlapProcessed = true;
             }
 
             if ((this._northEastTree != null) && this._northEastTree.execute())
             {
-                //console.log('NE quadtree execute');
                 overlapProcessed = true;
             }
 
             if ((this._southEastTree != null) && this._southEastTree.execute())
             {
-                //console.log('SE quadtree execute');
                 overlapProcessed = true;
             }
 
             if ((this._southWestTree != null) && this._southWestTree.execute())
             {
-                //console.log('SW quadtree execute');
                 overlapProcessed = true;
             }
 
@@ -698,7 +593,7 @@ module Phaser {
         }
 
         /**
-         * An private for comparing an object against the contents of a node.
+         * A private for comparing an object against the contents of a node.
          *
          * @return {Boolean} Whether or not any overlaps were found.
          */
@@ -712,7 +607,6 @@ module Phaser {
             {
                 if (!QuadTree._object.exists || (QuadTree._object.allowCollisions <= 0))
                 {
-                    //console.log('break 1');
                     break;
                 }
 
@@ -720,32 +614,12 @@ module Phaser {
 
                 if ((QuadTree._object === checkObject) || !checkObject.exists || (checkObject.allowCollisions <= 0))
                 {
-                    //console.log('break 2');
                     QuadTree._iterator = QuadTree._iterator.next;
                     continue;
                 }
 
-                //calculate bulk hull for QuadTree._object
-                QuadTree._objectHullX = (QuadTree._object.x < QuadTree._object.last.x) ? QuadTree._object.x : QuadTree._object.last.x;
-                QuadTree._objectHullY = (QuadTree._object.y < QuadTree._object.last.y) ? QuadTree._object.y : QuadTree._object.last.y;
-                QuadTree._objectHullWidth = QuadTree._object.x - QuadTree._object.last.x;
-                QuadTree._objectHullWidth = QuadTree._object.width + ((QuadTree._objectHullWidth > 0) ? QuadTree._objectHullWidth : -QuadTree._objectHullWidth);
-                QuadTree._objectHullHeight = QuadTree._object.y - QuadTree._object.last.y;
-                QuadTree._objectHullHeight = QuadTree._object.height + ((QuadTree._objectHullHeight > 0) ? QuadTree._objectHullHeight : -QuadTree._objectHullHeight);
-
-                //calculate bulk hull for checkObject
-                QuadTree._checkObjectHullX = (checkObject.x < checkObject.last.x) ? checkObject.x : checkObject.last.x;
-                QuadTree._checkObjectHullY = (checkObject.y < checkObject.last.y) ? checkObject.y : checkObject.last.y;
-                QuadTree._checkObjectHullWidth = checkObject.x - checkObject.last.x;
-                QuadTree._checkObjectHullWidth = checkObject.width + ((QuadTree._checkObjectHullWidth > 0) ? QuadTree._checkObjectHullWidth : -QuadTree._checkObjectHullWidth);
-                QuadTree._checkObjectHullHeight = checkObject.y - checkObject.last.y;
-                QuadTree._checkObjectHullHeight = checkObject.height + ((QuadTree._checkObjectHullHeight > 0) ? QuadTree._checkObjectHullHeight : -QuadTree._checkObjectHullHeight);
-
-                //check for intersection of the two hulls
-                if ((QuadTree._objectHullX + QuadTree._objectHullWidth > QuadTree._checkObjectHullX) && (QuadTree._objectHullX < QuadTree._checkObjectHullX + QuadTree._checkObjectHullWidth) && (QuadTree._objectHullY + QuadTree._objectHullHeight > QuadTree._checkObjectHullY) && (QuadTree._objectHullY < QuadTree._checkObjectHullY + QuadTree._checkObjectHullHeight))
+                if (QuadTree._object.collisionMask.checkHullIntersection(checkObject.collisionMask))
                 {
-                    //console.log('intersection!');
-
                     //Execute callback functions if they exist
                     if ((QuadTree._processingCallback == null) || QuadTree._processingCallback(QuadTree._object, checkObject))
                     {
@@ -754,7 +628,14 @@ module Phaser {
 
                     if (overlapProcessed && (QuadTree._notifyCallback != null))
                     {
-                        QuadTree._notifyCallback(QuadTree._object, checkObject);
+                        if (QuadTree._callbackContext !== null)
+                        {
+                            QuadTree._notifyCallback.call(QuadTree._callbackContext, QuadTree._object, checkObject);
+                        }
+                        else
+                        {
+                            QuadTree._notifyCallback(QuadTree._object, checkObject);
+                        }
                     }
                 }
 

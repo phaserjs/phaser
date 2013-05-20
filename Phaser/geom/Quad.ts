@@ -80,15 +80,34 @@ module Phaser {
         * Determines whether the object specified intersects (overlaps) with this Quad object.
         * This method checks the x, y, width, and height properties of the specified Quad object to see if it intersects with this Quad object.
         * @method intersects
-        * @param {Object} q The object to check for intersection with this Quad. Must have left/right/top/bottom properties (Rectangle, Quad).
-        * @param {Number} t A tolerance value to allow for an intersection test with padding, default to 0
+        * @param {Object} quad The object to check for intersection with this Quad. Must have left/right/top/bottom properties (Rectangle, Quad).
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
         **/
-        public intersects(q, t?: number = 0): bool {
+        public intersects(quad, tolerance?: number = 0): bool {
 
-            return !(q.left > this.right + t || q.right < this.left - t || q.top > this.bottom + t || q.bottom < this.top - t);
+            return !(quad.left > this.right + tolerance || quad.right < this.left - tolerance || quad.top > this.bottom + tolerance || quad.bottom < this.top - tolerance);
 
         }
+
+        /**
+        * Determines whether the specified coordinates are contained within the region defined by this Quad object.
+        * @method contains
+        * @param {Number} x The x coordinate of the point to test.
+        * @param {Number} y The y coordinate of the point to test.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        public contains(x: number, y: number): bool {
+
+            if (x >= this.x && x <= this.right && y >= this.y && y <= this.bottom)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
 
         /**
         * Copies the x/y/width/height values from the source object into this Quad

@@ -117,6 +117,14 @@
     </Content>
     <TypeScriptCompile Include="input\multitouch.ts" />
     <TypeScriptCompile Include="groups\display order.ts" />
+    <TypeScriptCompile Include="collision\mask test 1.ts" />
+    <Content Include="collision\mask test 1.js">
+      <DependentUpon>mask test 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="collision\mask test 2.ts" />
+    <Content Include="collision\mask test 2.js">
+      <DependentUpon>mask test 2.ts</DependentUpon>
+    </Content>
     <Content Include="groups\display order.js">
       <DependentUpon>display order.ts</DependentUpon>
     </Content>
