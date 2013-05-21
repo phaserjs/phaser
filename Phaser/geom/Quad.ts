@@ -19,7 +19,7 @@ module Phaser {
         * @param {Number} y The y coordinate of the top-left corner of the quad.
         * @param {Number} width The width of the quad.
         * @param {Number} height The height of the quad.
-        * @return {Quad } This object
+        * @return {Quad} This object
         **/
         constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
 

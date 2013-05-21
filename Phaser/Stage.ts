@@ -47,6 +47,7 @@ module Phaser {
             this.canvas.style['ms-touch-action'] = 'none';
             this.canvas.style['touch-action'] = 'none';
             this.canvas.style.backgroundColor = 'rgb(0,0,0)';
+            this.canvas.oncontextmenu = function(event) { event.preventDefault(); };
 
             this.context = this.canvas.getContext('2d');
 

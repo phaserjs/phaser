@@ -21,8 +21,30 @@ module Phaser {
             this._maxSize = MaxSize;
             this._marker = 0;
             this._sortIndex = null;
+            this.cameraBlacklist = [];
 
         }
+
+        /**
+         * Internal tracker for the maximum capacity of the group.
+         * Default is 0, or no max capacity.
+         */
+        private _maxSize: number;
+
+        /**
+         * Internal helper variable for recycling objects a la <code>Emitter</code>.
+         */
+        private _marker: number;
+
+        /**
+         * Helper for sort.
+         */
+        private _sortIndex: string;
+
+        /**
+         * Helper for sort.
+         */
+        private _sortOrder: number;
 
         /**
          * Use with <code>sort()</code> to sort in ascending order.
@@ -47,25 +69,62 @@ module Phaser {
         public length: number;
 
         /**
-         * Internal tracker for the maximum capacity of the group.
-         * Default is 0, or no max capacity.
+         * You can set a globalCompositeOperation that will be applied before the render method is called on this Groups children.
+         * This is useful if you wish to apply an effect like 'lighten' to a whole group of children as it saves doing it one-by-one.
+         * If this value is set it will call a canvas context save and restore before and after the render pass.
+         * Set to null to disable.
          */
-        private _maxSize: number;
+        public globalCompositeOperation: string = null;
 
         /**
-         * Internal helper variable for recycling objects a la <code>Emitter</code>.
+         * You can set an alpha value on this Group that will be applied before the render method is called on this Groups children.
+         * This is useful if you wish to alpha a whole group of children as it saves doing it one-by-one.
+         * Set to 0 to disable.
          */
-        private _marker: number;
+        public alpha: number = 0;
 
         /**
-         * Helper for sort.
+         * An Array of Cameras to which this Group, or any of its children, won't render
+         * @type {Array}
          */
-        private _sortIndex: string;
+        public cameraBlacklist: number[];
 
         /**
-         * Helper for sort.
+        * If you do not wish this object to be visible to a specific camera, pass the camera here.
+        *
+        * @param camera {Camera} The specific camera.
+        */
+        public hideFromCamera(camera: Camera) {
+
+            if (this.cameraBlacklist.indexOf(camera.ID) == -1)
+            {
+                this.cameraBlacklist.push(camera.ID);
+            }
+
+        }
+
+        /**
+        * Make this object only visible to a specific camera.
+        *
+        * @param camera {Camera} The camera you wish it to be visible.
+        */
+        public showToCamera(camera: Camera) {
+
+            if (this.cameraBlacklist.indexOf(camera.ID) !== -1)
+            {
+                this.cameraBlacklist.slice(this.cameraBlacklist.indexOf(camera.ID), 1);
+            }
+
+        }
+
+        /**
+         * This clears the camera black list, making the GameObject visible to all cameras.
          */
-        private _sortOrder: number;
+        public clearCameraList() {
+
+            this.cameraBlacklist.length = 0;
+
+        }
 
         /**
          * Override this function to handle any deleting or "shutdown" type operations you might need,
@@ -126,9 +185,26 @@ module Phaser {
          */
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number, forceRender?: bool = false) {
 
+            if (this.cameraBlacklist.indexOf(camera.ID) !== -1)
+            {
+                return;
+            }
+
             if (this.ignoreGlobalRender && forceRender == false)
             {
                 return;
+            }
+
+            if (this.globalCompositeOperation)
+            {
+                this._game.stage.context.save();
+                this._game.stage.context.globalCompositeOperation = this.globalCompositeOperation;
+            }
+
+            if (this.alpha > 0)
+            {
+                var prevAlpha: number = this._game.stage.context.globalAlpha;
+                this._game.stage.context.globalAlpha = this.alpha;
             }
 
             var basic: Basic;
@@ -142,6 +218,16 @@ module Phaser {
                 {
                     basic.render(camera, cameraOffsetX, cameraOffsetY, forceRender);
                 }
+            }
+
+            if (this.alpha > 0)
+            {
+                this._game.stage.context.globalAlpha = prevAlpha;
+            }
+
+            if (this.globalCompositeOperation)
+            {
+                this._game.stage.context.restore();
             }
         }
 

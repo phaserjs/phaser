@@ -297,6 +297,32 @@ module Phaser {
         }
 
         /**
+        * Rotates the point around the x/y coordinates given to the desired angle
+	    * @param x {number} The x coordinate of the anchor point
+	    * @param y {number} The y coordinate of the anchor point
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+	    * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the point and the anchor
+        * @return The modified point object
+        */
+        public rotate(cx: number, cy: number, angle: number, asDegrees: bool = false, distance?:number = null) {
+
+            if (asDegrees)
+            {
+                angle = angle * GameMath.DEG_TO_RAD;
+            }
+
+            //  Get distance from origin (cx/cy) to this point
+            if (distance === null)
+            {
+                distance = Math.sqrt(((cx - this.x) * (cx - this.x)) + ((cy - this.y) * (cy - this.y)));
+            }
+
+            return this.setTo(cx + distance * Math.cos(angle), cy + distance * Math.sin(angle));
+
+        }
+
+        /**
          * Sets the x and y values of this Point object to the given coordinates.
          * @method setTo
          * @param {Number} x - The horizontal position of this point.

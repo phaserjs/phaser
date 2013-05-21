@@ -86,6 +86,11 @@ V0.9.6
 * Updated QuadTree to use the new CollisionMask values and significantly optimised and reduced overall class size
 * Updated Collision.seperate to use the new CollisionMask
 * Added a callback context parameter to Game.collide, Collision.overlap and the QuadTree class
+* Stage.canvas now calls preventDefault() when the context menu is activated (oncontextmenu)
+* Added Point.rotate to allow you to rotate a point around another point, with optional distance clamping. Also created test cases.
+* Added Group.alpha to apply a globalAlpha before the groups children are rendered. Useful to save on alpha calls.
+* Added Group.globalCompositeOperation to apply a composite operation before all of the groups children are rendered.
+* Added Camera black list support to Group along with Group.showToCamera, Group.hideFromCamera and Group.clearCameraList
 
 
 

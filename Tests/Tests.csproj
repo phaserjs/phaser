@@ -125,6 +125,34 @@
     <Content Include="collision\mask test 2.js">
       <DependentUpon>mask test 2.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="geometry\multi rotate.ts" />
+    <Content Include="geometry\multi rotate.js">
+      <DependentUpon>multi rotate.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geometry\rotate point 2.ts" />
+    <TypeScriptCompile Include="geometry\rotate point 1.ts" />
+    <Content Include="geometry\rotate point 1.js">
+      <DependentUpon>rotate point 1.ts</DependentUpon>
+    </Content>
+    <Content Include="geometry\rotate point 2.js">
+      <DependentUpon>rotate point 2.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geometry\rotate point 3.ts" />
+    <Content Include="geometry\rotate point 3.js">
+      <DependentUpon>rotate point 3.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geometry\verlet 1.ts" />
+    <TypeScriptCompile Include="geometry\rotate point 4.ts" />
+    <Content Include="geometry\rotate point 4.js">
+      <DependentUpon>rotate point 4.ts</DependentUpon>
+    </Content>
+    <Content Include="geometry\verlet 1.js">
+      <DependentUpon>verlet 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geometry\verlet sprites.ts" />
+    <Content Include="geometry\verlet sprites.js">
+      <DependentUpon>verlet sprites.ts</DependentUpon>
+    </Content>
     <Content Include="groups\display order.js">
       <DependentUpon>display order.ts</DependentUpon>
     </Content>

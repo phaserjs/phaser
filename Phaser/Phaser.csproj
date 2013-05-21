@@ -105,8 +105,24 @@
     <Content Include="gameobjects\Tilemap.js">
       <DependentUpon>Tilemap.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="verlet\AngleConstraint.ts" />
+    <TypeScriptCompile Include="VerletManager.ts" />
+    <Content Include="VerletManager.js">
+      <DependentUpon>VerletManager.ts</DependentUpon>
+    </Content>
+    <Content Include="verlet\AngleConstraint.js">
+      <DependentUpon>AngleConstraint.ts</DependentUpon>
+    </Content>
     <Content Include="geom\Circle.js">
       <DependentUpon>Circle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="verlet\DistanceConstraint.ts" />
+    <TypeScriptCompile Include="verlet\Composite.ts" />
+    <Content Include="verlet\Composite.js">
+      <DependentUpon>Composite.ts</DependentUpon>
+    </Content>
+    <Content Include="verlet\DistanceConstraint.js">
+      <DependentUpon>DistanceConstraint.ts</DependentUpon>
     </Content>
     <Content Include="geom\IntersectResult.js">
       <DependentUpon>IntersectResult.ts</DependentUpon>
@@ -118,6 +134,14 @@
     <Content Include="geom\MicroPoint.js">
       <DependentUpon>MicroPoint.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="verlet\PinConstraint.ts" />
+    <TypeScriptCompile Include="verlet\Particle.ts" />
+    <Content Include="verlet\Particle.js">
+      <DependentUpon>Particle.ts</DependentUpon>
+    </Content>
+    <Content Include="verlet\PinConstraint.js">
+      <DependentUpon>PinConstraint.ts</DependentUpon>
+    </Content>
     <Content Include="geom\Point.js">
       <DependentUpon>Point.ts</DependentUpon>
     </Content>
@@ -127,6 +151,10 @@
     </Content>
     <Content Include="geom\Rectangle.js">
       <DependentUpon>Rectangle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geom\Vector2.ts" />
+    <Content Include="geom\Vector2.js">
+      <DependentUpon>Vector2.ts</DependentUpon>
     </Content>
     <Content Include="SoundManager.js">
       <DependentUpon>SoundManager.ts</DependentUpon>

@@ -2071,6 +2071,16 @@ module Phaser {
         **/
         public polar(length, angle): void;
         /**
+        * Rotates the point around the x/y coordinates given to the desired angle
+        * @param x {number} The x coordinate of the anchor point
+        * @param y {number} The y coordinate of the anchor point
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the point and the anchor
+        * @return The modified point object
+        */
+        public rotate(cx: number, cy: number, angle: number, asDegrees?: bool, distance?: number): Point;
+        /**
         * Sets the x and y values of this Point object to the given coordinates.
         * @method setTo
         * @param {Number} x - The horizontal position of this point.
@@ -2578,7 +2588,7 @@ module Phaser {
         * @param {Number} y The y coordinate of the top-left corner of the quad.
         * @param {Number} width The width of the quad.
         * @param {Number} height The height of the quad.
-        * @return {Quad } This object
+        * @return {Quad} This object
         **/
         constructor(x?: number, y?: number, width?: number, height?: number);
         public x: number;
@@ -4250,6 +4260,23 @@ module Phaser {
         * @return The array
         */
         public shuffleArray(array);
+        /**
+        * Returns the distance from this Point object to the given Point object.
+        * @method distanceFrom
+        * @param {Point} target - The destination Point object.
+        * @param {Boolean} round - Round the distance to the nearest integer (default false)
+        * @return {Number} The distance between this Point object and the destination Point object.
+        **/
+        static distanceBetween(x1: number, y1: number, x2: number, y2: number): number;
+        /**
+        * Rotates a point around the x/y coordinates given to the desired angle
+        * @param x {number} The x coordinate of the anchor point
+        * @param y {number} The y coordinate of the anchor point
+        * @param angle {number} The angle of the rotation in radians
+        * @param point {Point} The point object to perform the rotation on
+        * @return The modified point object
+        */
+        public rotatePoint(x: number, y: number, angle: number, point);
     }
 }
 /**
@@ -4260,6 +4287,23 @@ module Phaser {
 module Phaser {
     class Group extends Basic {
         constructor(game: Game, MaxSize?: number);
+        /**
+        * Internal tracker for the maximum capacity of the group.
+        * Default is 0, or no max capacity.
+        */
+        private _maxSize;
+        /**
+        * Internal helper variable for recycling objects a la <code>Emitter</code>.
+        */
+        private _marker;
+        /**
+        * Helper for sort.
+        */
+        private _sortIndex;
+        /**
+        * Helper for sort.
+        */
+        private _sortOrder;
         /**
         * Use with <code>sort()</code> to sort in ascending order.
         */
@@ -4279,22 +4323,18 @@ module Phaser {
         */
         public length: number;
         /**
-        * Internal tracker for the maximum capacity of the group.
-        * Default is 0, or no max capacity.
+        * You can set a globalCompositeOperation that will be applied before the render method is called on this Groups children.
+        * This is useful if you wish to apply an effect like 'lighten' to a whole group of children as it saves doing it one-by-one.
+        * If this value is set it will call a canvas context save and restore before and after the render pass.
+        * Set to null to disable.
         */
-        private _maxSize;
+        public globalCompositeOperation: string;
         /**
-        * Internal helper variable for recycling objects a la <code>Emitter</code>.
+        * You can set an alpha value on this Group that will be applied before the render method is called on this Groups children.
+        * This is useful if you wish to alpha a whole group of children as it saves doing it one-by-one.
+        * Set to 0 to disable.
         */
-        private _marker;
-        /**
-        * Helper for sort.
-        */
-        private _sortIndex;
-        /**
-        * Helper for sort.
-        */
-        private _sortOrder;
+        public alpha: number;
         /**
         * Override this function to handle any deleting or "shutdown" type operations you might need,
         * such as removing traditional Flash children like Basic objects.
@@ -5728,6 +5768,235 @@ module Phaser {
         * @return {boolean} Return false if there's no tween to update, otherwise return true.
         */
         public update(): bool;
+    }
+}
+/**
+* Phaser - Vector2
+*
+* A simple 2-dimensional vector class. Based on the one included with verlet-js by Sub Protocol released under MIT
+*/
+module Phaser {
+    class Vector2 {
+        /**
+        * Creates a new Vector2 object.
+        * @class Vector2
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {Vector2} This object
+        **/
+        constructor(x?: number, y?: number);
+        public x: number;
+        public y: number;
+        public setTo(x: number, y: number): Vector2;
+        public add(v: Vector2, output?: Vector2): Vector2;
+        public sub(v: Vector2, output?: Vector2): Vector2;
+        public mul(v: Vector2, output?: Vector2): Vector2;
+        public div(v: Vector2, output?: Vector2): Vector2;
+        public scale(coef: number, output?: Vector2): Vector2;
+        public mutableSet(v: Vector2): Vector2;
+        public mutableAdd(v: Vector2): Vector2;
+        public mutableSub(v: Vector2): Vector2;
+        public mutableMul(v: Vector2): Vector2;
+        public mutableDiv(v: Vector2): Vector2;
+        public mutableScale(coef: number): Vector2;
+        public equals(v: Vector2): bool;
+        public epsilonEquals(v: Vector2, epsilon: number): bool;
+        public length(): number;
+        public length2(): number;
+        public dist(v: Vector2): number;
+        public dist2(v: Vector2): number;
+        public normal(output?: Vector2): Vector2;
+        public dot(v: Vector2): number;
+        public angle(v: Vector2): number;
+        public angle2(vLeft: Vector2, vRight: Vector2): number;
+        public rotate(origin, theta, output?: Vector2): Vector2;
+        /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        public toString(): string;
+    }
+}
+/**
+* Phaser - Verlet - Particle
+*
+*
+*/
+module Phaser.Verlet {
+    class Particle {
+        /**
+        * Creates a new Particle object.
+        * @class Particle
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {Particle} This object
+        **/
+        constructor(pos: Vector2);
+        public pos: Vector2;
+        public lastPos: Vector2;
+        public render(ctx): void;
+    }
+}
+/**
+* Phaser - PinConstraint
+*
+* Constrains to static / fixed point
+*/
+module Phaser.Verlet {
+    class PinConstraint {
+        /**
+        * Creates a new PinConstraint object.
+        * @class PinConstraint
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {PinConstraint} This object
+        **/
+        constructor(a: Particle, pos: Vector2);
+        public a: Particle;
+        public pos: Vector2;
+        public relax(): void;
+        public render(ctx): void;
+    }
+}
+/**
+* Phaser - Verlet - Composite
+*
+*
+*/
+module Phaser.Verlet {
+    class Composite {
+        /**
+        * Creates a new Composite object.
+        * @class Composite
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {Composite} This object
+        **/
+        constructor(game: Game);
+        private _game;
+        public particles: Particle[];
+        public constraints;
+        public drawParticles;
+        public drawConstraints;
+        public createDistanceConstraint(a: Particle, b: Particle, stiffness: number, distance?: number): DistanceConstraint;
+        public createAngleConstraint(a: Particle, b: Particle, c: Particle, stiffness: number): AngleConstraint;
+        public createPinConstraint(a: Particle, pos: Vector2): PinConstraint;
+        public pin(index, pos?): PinConstraint;
+    }
+}
+/**
+* Phaser - DistanceConstraint
+*
+* Constrains to initial distance
+*/
+module Phaser.Verlet {
+    class DistanceConstraint {
+        /**
+        * Creates a new DistanceConstraint object.
+        * @class DistanceConstraint
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {DistanceConstraint} This object
+        **/
+        constructor(a: Particle, b: Particle, stiffness: number, distance?: number);
+        public a: Particle;
+        public b: Particle;
+        public distance: number;
+        public stiffness: number;
+        public relax(stepCoef: number): void;
+        public render(ctx): void;
+    }
+}
+/**
+* Phaser - AngleConstraint
+*
+* constrains 3 particles to an angle
+*/
+module Phaser.Verlet {
+    class AngleConstraint {
+        /**
+        * Creates a new AngleConstraint object.
+        * @class AngleConstraint
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {AngleConstraint} This object
+        **/
+        constructor(a: Particle, b: Particle, c: Particle, stiffness: number);
+        public a: Particle;
+        public b: Particle;
+        public c: Particle;
+        public angle: number;
+        public stiffness: number;
+        public relax(stepCoef: number): void;
+        public render(ctx): void;
+    }
+}
+/**
+* Phaser - Verlet
+*
+* Based on verlet-js by Sub Protocol released under MIT
+*/
+module Phaser.Verlet {
+    class VerletManager {
+        /**
+        * Creates a new Vector2 object.
+        * @class Vector2
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {Vector2} This object
+        **/
+        constructor(game: Game, width: number, height: number);
+        private _game;
+        public composites: any[];
+        public width: number;
+        public height: number;
+        public step: number;
+        public gravity: Vector2;
+        public friction: number;
+        public groundFriction: number;
+        public selectionRadius: number;
+        public draggedEntity;
+        public highlightColor: string;
+        /**
+        * This class is actually a wrapper of canvas.
+        * @type {HTMLCanvasElement}
+        */
+        public canvas: HTMLCanvasElement;
+        /**
+        * Canvas context of this object.
+        * @type {CanvasRenderingContext2D}
+        */
+        public context: CanvasRenderingContext2D;
+        /**
+        * Computes time of intersection of a particle with a wall
+        *
+        * @param {Vec2} line    wall's root position
+        * @param {Vec2} p       particle's position
+        * @param {Vec2} dir     walls's direction
+        * @param {Vec2} v       particle's velocity
+        */
+        public intersectionTime(wall, p, dir, v): number;
+        public intersectionPoint(wall, p, dir, v): Vector2;
+        private v;
+        public bounds(particle: Particle): void;
+        public OLDbounds(particle: Particle): void;
+        public createPoint(pos: Vector2): Composite;
+        public createLineSegments(vertices, stiffness): Composite;
+        public createCloth(origin, width, height, segments, pinMod, stiffness): Composite;
+        public createTire(origin, radius, segments, spokeStiffness, treadStiffness): Composite;
+        public update(): void;
+        private mouseDownHandler();
+        private mouseUpHandler();
+        public nearestEntity();
+        public render(): void;
     }
 }
 /**
@@ -8589,6 +8858,11 @@ module Phaser {
         * @type {TweenManager}
         */
         public tweens: TweenManager;
+        /**
+        * Reference to the verlet manager.
+        * @type {VerletManager}
+        */
+        public verlet: Verlet.VerletManager;
         /**
         * Reference to the world.
         * @type {World}

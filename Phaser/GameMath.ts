@@ -1022,6 +1022,45 @@ module Phaser {
 
         }
 
+        /**
+         * Returns the distance from this Point object to the given Point object.
+         * @method distanceFrom
+         * @param {Point} target - The destination Point object.
+         * @param {Boolean} round - Round the distance to the nearest integer (default false)
+         * @return {Number} The distance between this Point object and the destination Point object.
+         **/
+        public static distanceBetween(x1: number, y1: number, x2: number, y2: number): number {
+
+            var dx = x1 - x2;
+            var dy = y1 - y2;
+
+            return Math.sqrt(dx * dx + dy * dy);
+
+        }
+
+        /**
+        * Rotates a point around the x/y coordinates given to the desired angle
+	    * @param x {number} The x coordinate of the anchor point
+	    * @param y {number} The y coordinate of the anchor point
+	    * @param angle {number} The angle of the rotation in radians
+	    * @param point {Point} The point object to perform the rotation on
+        * @return The modified point object
+        */
+        public rotatePoint(x: number, y: number, angle: number, point) {
+
+            var s: number = Math.sin(angle);
+            var c: number = Math.cos(angle);
+
+            point.x -= x;
+            point.y -= y;
+
+            var newX: number = point.x * c - point.y * s;
+            var newY: number = point.x * s - point.y * c;
+
+            return point.setTo(newX + x, newY + y);
+
+        }
+
     }
 
 }

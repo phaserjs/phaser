@@ -41,7 +41,6 @@ module Phaser {
             this.scale = new MicroPoint(1, 1);
 
             this.last = new MicroPoint(x, y);
-            //this.origin = new MicroPoint(this.frameBounds.halfWidth, this.frameBounds.halfHeight);
             this.align = GameObject.ALIGN_TOP_LEFT;
             this.mass = 1;
             this.elasticity = 0;

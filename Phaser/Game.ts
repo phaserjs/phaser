@@ -15,7 +15,9 @@
 /// <reference path="Stage.ts" />
 /// <reference path="Time.ts" />
 /// <reference path="TweenManager.ts" />
+/// <reference path="VerletManager.ts" />
 /// <reference path="World.ts" />
+/// <reference path="geom/Vector2.ts" />
 /// <reference path="system/Device.ts" />
 /// <reference path="system/RandomDataGenerator.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
@@ -231,6 +233,12 @@ module Phaser {
         public tweens: TweenManager;
 
         /**
+         * Reference to the verlet manager.
+         * @type {VerletManager}
+         */
+        public verlet: Phaser.Verlet.VerletManager;
+
+        /**
          * Reference to the world.
          * @type {World}
          */
@@ -292,6 +300,7 @@ module Phaser {
                 this.tweens = new TweenManager(this);
                 this.input = new Input(this);
                 this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
+                this.verlet = new Phaser.Verlet.VerletManager(this, width, height);
 
                 this.framerate = 60;
                 this.isBooted = true;
@@ -368,6 +377,7 @@ module Phaser {
             this.tweens.update();
             this.input.update();
             this.stage.update();
+            this.verlet.update();
 
             this._accumulator += this.time.delta;
 

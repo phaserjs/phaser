@@ -3286,6 +3286,27 @@ var Phaser;
         **/
         function (length, angle) {
         };
+        Point.prototype.rotate = /**
+        * Rotates the point around the x/y coordinates given to the desired angle
+        * @param x {number} The x coordinate of the anchor point
+        * @param y {number} The y coordinate of the anchor point
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the point and the anchor
+        * @return The modified point object
+        */
+        function (cx, cy, angle, asDegrees, distance) {
+            if (typeof asDegrees === "undefined") { asDegrees = false; }
+            if (typeof distance === "undefined") { distance = null; }
+            if(asDegrees) {
+                angle = angle * Phaser.GameMath.DEG_TO_RAD;
+            }
+            //  Get distance from origin (cx/cy) to this point
+            if(distance === null) {
+                distance = Math.sqrt(((cx - this.x) * (cx - this.x)) + ((cy - this.y) * (cy - this.y)));
+            }
+            return this.setTo(cx + distance * Math.cos(angle), cy + distance * Math.sin(angle));
+        };
         Point.prototype.setTo = /**
         * Sets the x and y values of this Point object to the given coordinates.
         * @method setTo
@@ -4081,7 +4102,7 @@ var Phaser;
         * @param {Number} y The y coordinate of the top-left corner of the quad.
         * @param {Number} width The width of the quad.
         * @param {Number} height The height of the quad.
-        * @return {Quad } This object
+        * @return {Quad} This object
         **/
         function Quad(x, y, width, height) {
             if (typeof x === "undefined") { x = 0; }
@@ -5290,7 +5311,6 @@ var Phaser;
                     continue;
                 }
                 if(QuadTree._object.collisionMask.checkHullIntersection(checkObject.collisionMask)) {
-                    console.log('quad hull');
                     //Execute callback functions if they exist
                     if((QuadTree._processingCallback == null) || QuadTree._processingCallback(QuadTree._object, checkObject)) {
                         overlapProcessed = true;
@@ -7312,6 +7332,35 @@ var Phaser;
             }
             return array;
         };
+        GameMath.distanceBetween = /**
+        * Returns the distance from this Point object to the given Point object.
+        * @method distanceFrom
+        * @param {Point} target - The destination Point object.
+        * @param {Boolean} round - Round the distance to the nearest integer (default false)
+        * @return {Number} The distance between this Point object and the destination Point object.
+        **/
+        function distanceBetween(x1, y1, x2, y2) {
+            var dx = x1 - x2;
+            var dy = y1 - y2;
+            return Math.sqrt(dx * dx + dy * dy);
+        };
+        GameMath.prototype.rotatePoint = /**
+        * Rotates a point around the x/y coordinates given to the desired angle
+        * @param x {number} The x coordinate of the anchor point
+        * @param y {number} The y coordinate of the anchor point
+        * @param angle {number} The angle of the rotation in radians
+        * @param point {Point} The point object to perform the rotation on
+        * @return The modified point object
+        */
+        function (x, y, angle, point) {
+            var s = Math.sin(angle);
+            var c = Math.cos(angle);
+            point.x -= x;
+            point.y -= y;
+            var newX = point.x * c - point.y * s;
+            var newY = point.x * s - point.y * c;
+            return point.setTo(newX + x, newY + y);
+        };
         return GameMath;
     })();
     Phaser.GameMath = GameMath;    
@@ -7330,6 +7379,19 @@ var Phaser;
         function Group(game, MaxSize) {
             if (typeof MaxSize === "undefined") { MaxSize = 0; }
                 _super.call(this, game);
+            /**
+            * You can set a globalCompositeOperation that will be applied before the render method is called on this Groups children.
+            * This is useful if you wish to apply an effect like 'lighten' to a whole group of children as it saves doing it one-by-one.
+            * If this value is set it will call a canvas context save and restore before and after the render pass.
+            * Set to null to disable.
+            */
+            this.globalCompositeOperation = null;
+            /**
+            * You can set an alpha value on this Group that will be applied before the render method is called on this Groups children.
+            * This is useful if you wish to alpha a whole group of children as it saves doing it one-by-one.
+            * Set to 0 to disable.
+            */
+            this.alpha = 0;
             this.isGroup = true;
             this.members = [];
             this.length = 0;
@@ -7384,6 +7446,14 @@ var Phaser;
             if(this.ignoreGlobalRender && forceRender == false) {
                 return;
             }
+            if(this.globalCompositeOperation) {
+                this._game.stage.context.save();
+                this._game.stage.context.globalCompositeOperation = this.globalCompositeOperation;
+            }
+            if(this.alpha > 0) {
+                var prevAlpha = this._game.stage.context.globalAlpha;
+                this._game.stage.context.globalAlpha = this.alpha;
+            }
             var basic;
             var i = 0;
             while(i < this.length) {
@@ -7391,6 +7461,12 @@ var Phaser;
                 if((basic != null) && basic.exists && basic.visible && basic.ignoreGlobalRender == false) {
                     basic.render(camera, cameraOffsetX, cameraOffsetY, forceRender);
                 }
+            }
+            if(this.alpha > 0) {
+                this._game.stage.context.globalAlpha = prevAlpha;
+            }
+            if(this.globalCompositeOperation) {
+                this._game.stage.context.restore();
             }
         };
         Object.defineProperty(Group.prototype, "maxSize", {
@@ -9286,6 +9362,9 @@ var Phaser;
             this.canvas.style['ms-touch-action'] = 'none';
             this.canvas.style['touch-action'] = 'none';
             this.canvas.style.backgroundColor = 'rgb(0,0,0)';
+            this.canvas.oncontextmenu = function (event) {
+                event.preventDefault();
+            };
             this.context = this.canvas.getContext('2d');
             this.offset = this.getOffset(this.canvas);
             this.bounds = new Phaser.Quad(this.offset.x, this.offset.y, width, height);
@@ -10277,6 +10356,661 @@ var Phaser;
         return TweenManager;
     })();
     Phaser.TweenManager = TweenManager;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/**
+* Phaser - Vector2
+*
+* A simple 2-dimensional vector class. Based on the one included with verlet-js by Sub Protocol released under MIT
+*/
+var Phaser;
+(function (Phaser) {
+    var Vector2 = (function () {
+        /**
+        * Creates a new Vector2 object.
+        * @class Vector2
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {Vector2} This object
+        **/
+        function Vector2(x, y) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            this.x = x;
+            this.y = y;
+        }
+        Vector2.prototype.setTo = function (x, y) {
+            this.x = x;
+            this.y = y;
+            return this;
+        };
+        Vector2.prototype.add = function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x + v.x, this.y + v.y);
+        };
+        Vector2.prototype.sub = function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x - v.x, this.y - v.y);
+        };
+        Vector2.prototype.mul = function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x * v.x, this.y * v.y);
+        };
+        Vector2.prototype.div = function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x / v.x, this.y / v.y);
+        };
+        Vector2.prototype.scale = function (coef, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x * coef, this.y * coef);
+        };
+        Vector2.prototype.mutableSet = function (v) {
+            this.x = v.x;
+            this.y = v.y;
+            return this;
+        };
+        Vector2.prototype.mutableAdd = function (v) {
+            this.x += v.x;
+            this.y += v.y;
+            return this;
+        };
+        Vector2.prototype.mutableSub = function (v) {
+            this.x -= v.x;
+            this.y -= v.y;
+            return this;
+        };
+        Vector2.prototype.mutableMul = function (v) {
+            this.x *= v.x;
+            this.y *= v.y;
+            return this;
+        };
+        Vector2.prototype.mutableDiv = function (v) {
+            this.x /= v.x;
+            this.y /= v.y;
+            return this;
+        };
+        Vector2.prototype.mutableScale = function (coef) {
+            this.x *= coef;
+            this.y *= coef;
+            return this;
+        };
+        Vector2.prototype.equals = function (v) {
+            return this.x == v.x && this.y == v.y;
+        };
+        Vector2.prototype.epsilonEquals = function (v, epsilon) {
+            return Math.abs(this.x - v.x) <= epsilon && Math.abs(this.y - v.y) <= epsilon;
+        };
+        Vector2.prototype.length = function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        };
+        Vector2.prototype.length2 = function () {
+            return this.x * this.x + this.y * this.y;
+        };
+        Vector2.prototype.dist = function (v) {
+            return Math.sqrt(this.dist2(v));
+        };
+        Vector2.prototype.dist2 = function (v) {
+            return ((v.x - this.x) * (v.x - this.x)) + ((v.y - this.y) * (v.y - this.y));
+        };
+        Vector2.prototype.normal = function (output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            var m = Math.sqrt(this.x * this.x + this.y * this.y);
+            return output.setTo(this.x / m, this.y / m);
+        };
+        Vector2.prototype.dot = function (v) {
+            return this.x * v.x + this.y * v.y;
+        };
+        Vector2.prototype.angle = function (v) {
+            return Math.atan2(this.x * v.y - this.y * v.x, this.x * v.x + this.y * v.y);
+        };
+        Vector2.prototype.angle2 = function (vLeft, vRight) {
+            return vLeft.sub(this).angle(vRight.sub(this));
+        };
+        Vector2.prototype.rotate = function (origin, theta, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            var x = this.x - origin.x;
+            var y = this.y - origin.y;
+            return output.setTo(x * Math.cos(theta) - y * Math.sin(theta) + origin.x, x * Math.sin(theta) + y * Math.cos(theta) + origin.y);
+        };
+        Vector2.prototype.toString = /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        function () {
+            return "[{Vector2 (x=" + this.x + " y=" + this.y + ")}]";
+        };
+        return Vector2;
+    })();
+    Phaser.Vector2 = Vector2;    
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="../geom/Vector2.ts" />
+    /**
+    * Phaser - Verlet - Particle
+    *
+    *
+    */
+    (function (Verlet) {
+        var Particle = (function () {
+            /**
+            * Creates a new Particle object.
+            * @class Particle
+            * @constructor
+            * @param {Number} x The x coordinate of vector2
+            * @param {Number} y The y coordinate of vector2
+            * @return {Particle} This object
+            **/
+            function Particle(pos) {
+                this.pos = (new Phaser.Vector2()).mutableSet(pos);
+                this.lastPos = (new Phaser.Vector2()).mutableSet(pos);
+            }
+            Particle.prototype.render = function (ctx) {
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, 2, 0, 2 * Math.PI);
+                ctx.fillStyle = "#2dad8f";
+                ctx.fill();
+            };
+            return Particle;
+        })();
+        Verlet.Particle = Particle;        
+    })(Phaser.Verlet || (Phaser.Verlet = {}));
+    var Verlet = Phaser.Verlet;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="Particle.ts" />
+    /// <reference path="../geom/Vector2.ts" />
+    /**
+    * Phaser - PinConstraint
+    *
+    * Constrains to static / fixed point
+    */
+    (function (Verlet) {
+        var PinConstraint = (function () {
+            /**
+            * Creates a new PinConstraint object.
+            * @class PinConstraint
+            * @constructor
+            * @param {Number} x The x coordinate of vector2
+            * @param {Number} y The y coordinate of vector2
+            * @return {PinConstraint} This object
+            **/
+            function PinConstraint(a, pos) {
+                this.a = a;
+                this.pos = (new Phaser.Vector2()).mutableSet(pos);
+            }
+            PinConstraint.prototype.relax = function () {
+                this.a.pos.mutableSet(this.pos);
+            };
+            PinConstraint.prototype.render = function (ctx) {
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, 6, 0, 2 * Math.PI);
+                ctx.fillStyle = "rgba(0,153,255,0.1)";
+                ctx.fill();
+            };
+            return PinConstraint;
+        })();
+        Verlet.PinConstraint = PinConstraint;        
+    })(Phaser.Verlet || (Phaser.Verlet = {}));
+    var Verlet = Phaser.Verlet;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="../geom/Vector2.ts" />
+    /// <reference path="Particle.ts" />
+    /// <reference path="PinConstraint.ts" />
+    /**
+    * Phaser - Verlet - Composite
+    *
+    *
+    */
+    (function (Verlet) {
+        var Composite = (function () {
+            /**
+            * Creates a new Composite object.
+            * @class Composite
+            * @constructor
+            * @param {Number} x The x coordinate of vector2
+            * @param {Number} y The y coordinate of vector2
+            * @return {Composite} This object
+            **/
+            function Composite(game) {
+                this.drawParticles = null;
+                this.drawConstraints = null;
+                this._game = game;
+                this.particles = [];
+                this.constraints = [];
+            }
+            Composite.prototype.createDistanceConstraint = //  Map sprites to particles
+            function (a, b, stiffness, distance) {
+                if (typeof distance === "undefined") { distance = null; }
+                this.constraints.push(new Phaser.Verlet.DistanceConstraint(a, b, stiffness, distance));
+                return this.constraints[this.constraints.length - 1];
+            };
+            Composite.prototype.createAngleConstraint = function (a, b, c, stiffness) {
+                this.constraints.push(new Phaser.Verlet.AngleConstraint(a, b, c, stiffness));
+                return this.constraints[this.constraints.length - 1];
+            };
+            Composite.prototype.createPinConstraint = function (a, pos) {
+                this.constraints.push(new Phaser.Verlet.PinConstraint(a, pos));
+                return this.constraints[this.constraints.length - 1];
+            };
+            Composite.prototype.pin = function (index, pos) {
+                if (typeof pos === "undefined") { pos = null; }
+                if(pos == null) {
+                    pos = this.particles[index].pos;
+                }
+                var pc = new Phaser.Verlet.PinConstraint(this.particles[index], pos);
+                this.constraints.push(pc);
+                return pc;
+            };
+            return Composite;
+        })();
+        Verlet.Composite = Composite;        
+    })(Phaser.Verlet || (Phaser.Verlet = {}));
+    var Verlet = Phaser.Verlet;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="Particle.ts" />
+    /// <reference path="../geom/Vector2.ts" />
+    /**
+    * Phaser - DistanceConstraint
+    *
+    * Constrains to initial distance
+    */
+    (function (Verlet) {
+        var DistanceConstraint = (function () {
+            /**
+            * Creates a new DistanceConstraint object.
+            * @class DistanceConstraint
+            * @constructor
+            * @param {Number} x The x coordinate of vector2
+            * @param {Number} y The y coordinate of vector2
+            * @return {DistanceConstraint} This object
+            **/
+            function DistanceConstraint(a, b, stiffness, distance) {
+                if (typeof distance === "undefined") { distance = null; }
+                this.a = a;
+                this.b = b;
+                if(distance === null) {
+                    this.distance = a.pos.sub(b.pos).length();
+                } else {
+                    this.distance = distance;
+                }
+                this.stiffness = stiffness;
+            }
+            DistanceConstraint.prototype.relax = function (stepCoef) {
+                var normal = this.a.pos.sub(this.b.pos);
+                var m = normal.length2();
+                normal.mutableScale(((this.distance * this.distance - m) / m) * this.stiffness * stepCoef);
+                this.a.pos.mutableAdd(normal);
+                this.b.pos.mutableSub(normal);
+            };
+            DistanceConstraint.prototype.render = function (ctx) {
+                ctx.beginPath();
+                ctx.moveTo(this.a.pos.x, this.a.pos.y);
+                ctx.lineTo(this.b.pos.x, this.b.pos.y);
+                ctx.strokeStyle = "#d8dde2";
+                ctx.stroke();
+            };
+            return DistanceConstraint;
+        })();
+        Verlet.DistanceConstraint = DistanceConstraint;        
+    })(Phaser.Verlet || (Phaser.Verlet = {}));
+    var Verlet = Phaser.Verlet;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="Particle.ts" />
+    /// <reference path="../geom/Vector2.ts" />
+    /**
+    * Phaser - AngleConstraint
+    *
+    * constrains 3 particles to an angle
+    */
+    (function (Verlet) {
+        var AngleConstraint = (function () {
+            /**
+            * Creates a new AngleConstraint object.
+            * @class AngleConstraint
+            * @constructor
+            * @param {Number} x The x coordinate of vector2
+            * @param {Number} y The y coordinate of vector2
+            * @return {AngleConstraint} This object
+            **/
+            function AngleConstraint(a, b, c, stiffness) {
+                this.a = a;
+                this.b = b;
+                this.c = c;
+                this.angle = this.b.pos.angle2(this.a.pos, this.c.pos);
+                this.stiffness = stiffness;
+            }
+            AngleConstraint.prototype.relax = function (stepCoef) {
+                var angle = this.b.pos.angle2(this.a.pos, this.c.pos);
+                var diff = angle - this.angle;
+                if(diff <= -Math.PI) {
+                    diff += 2 * Math.PI;
+                } else if(diff >= Math.PI) {
+                    diff -= 2 * Math.PI;
+                }
+                diff *= stepCoef * this.stiffness;
+                this.a.pos = this.a.pos.rotate(this.b.pos, diff);
+                this.c.pos = this.c.pos.rotate(this.b.pos, -diff);
+                this.b.pos = this.b.pos.rotate(this.a.pos, diff);
+                this.b.pos = this.b.pos.rotate(this.c.pos, -diff);
+            };
+            AngleConstraint.prototype.render = function (ctx) {
+                ctx.beginPath();
+                ctx.moveTo(this.a.pos.x, this.a.pos.y);
+                ctx.lineTo(this.b.pos.x, this.b.pos.y);
+                ctx.lineTo(this.c.pos.x, this.c.pos.y);
+                var tmp = ctx.lineWidth;
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = "rgba(255,255,0,0.2)";
+                ctx.stroke();
+                ctx.lineWidth = tmp;
+            };
+            return AngleConstraint;
+        })();
+        Verlet.AngleConstraint = AngleConstraint;        
+    })(Phaser.Verlet || (Phaser.Verlet = {}));
+    var Verlet = Phaser.Verlet;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="Game.ts" />
+    /// <reference path="geom/Vector2.ts" />
+    /// <reference path="verlet/Composite.ts" />
+    /// <reference path="verlet/Particle.ts" />
+    /// <reference path="verlet/DistanceConstraint.ts" />
+    /// <reference path="verlet/PinConstraint.ts" />
+    /// <reference path="verlet/AngleConstraint.ts" />
+    /**
+    * Phaser - Verlet
+    *
+    * Based on verlet-js by Sub Protocol released under MIT
+    */
+    (function (Verlet) {
+        var VerletManager = (function () {
+            /**
+            * Creates a new Vector2 object.
+            * @class Vector2
+            * @constructor
+            * @param {Number} x The x coordinate of vector2
+            * @param {Number} y The y coordinate of vector2
+            * @return {Vector2} This object
+            **/
+            function VerletManager(game, width, height) {
+                this.composites = [];
+                this.step = 32;
+                this.selectionRadius = 20;
+                this.draggedEntity = null;
+                this.highlightColor = '#4f545c';
+                this.v = new Phaser.Vector2();
+                this._game = game;
+                this.width = width;
+                this.height = height;
+                this.gravity = new Phaser.Vector2(0, 0.2);
+                this.friction = 0.99;
+                this.groundFriction = 0.8;
+                this.canvas = game.stage.canvas;
+                this.context = game.stage.context;
+                this._game.input.onDown.add(this.mouseDownHandler, this);
+                this._game.input.onUp.add(this.mouseUpHandler, this);
+            }
+            VerletManager.prototype.intersectionTime = /**
+            * Computes time of intersection of a particle with a wall
+            *
+            * @param {Vec2} line    wall's root position
+            * @param {Vec2} p       particle's position
+            * @param {Vec2} dir     walls's direction
+            * @param {Vec2} v       particle's velocity
+            */
+            function (wall, p, dir, v) {
+                if(dir.x != 0) {
+                    var denominator = v.y - dir.y * v.x / dir.x;
+                    if(denominator == 0) {
+                        return undefined;
+                    }// Movement is parallel to wall
+                    
+                    var numerator = wall.y + dir.y * (p.x - wall.x) / dir.x - p.y;
+                    return numerator / denominator;
+                } else {
+                    if(v.x == 0) {
+                        return undefined;
+                    }// parallel again
+                    
+                    var denominator = v.x;
+                    var numerator = wall.x - p.x;
+                    return numerator / denominator;
+                }
+            };
+            VerletManager.prototype.intersectionPoint = function (wall, p, dir, v) {
+                var t = this.intersectionTime(wall, p, dir, v);
+                return new Phaser.Vector2(p.x + v.x * t, p.y + v.y * t);
+            };
+            VerletManager.prototype.bounds = function (particle) {
+                this.v.mutableSet(particle.pos);
+                this.v.mutableSub(particle.lastPos);
+                if(particle.pos.y > this.height - 1) {
+                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(0, this.height - 1), particle.lastPos, new Phaser.Vector2(1, 0), this.v));
+                }
+                if(particle.pos.x < 0) {
+                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(0, 0), particle.pos, new Phaser.Vector2(0, 1), this.v));
+                }
+                if(particle.pos.x > this.width - 1) {
+                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(this.width - 1, 0), particle.pos, new Phaser.Vector2(0, 1), this.v));
+                }
+            };
+            VerletManager.prototype.OLDbounds = function (particle) {
+                if(particle.pos.y > this.height - 1) {
+                    particle.pos.y = this.height - 1;
+                }
+                if(particle.pos.x < 0) {
+                    var vx = particle.pos.x - particle.lastPos.x;
+                    var vy = particle.pos.y - particle.lastPos.y;
+                    if(vx == 0) {
+                        particle.pos.x = 0;
+                    } else {
+                        var t = -particle.lastPos.x / vx;
+                        particle.pos.x = particle.lastPos.x + t * vx;
+                        particle.pos.y = particle.lastPos.y + t * vy;
+                    }
+                }
+                if(particle.pos.x > this.width - 1) {
+                    particle.pos.x = this.width - 1;
+                }
+            };
+            VerletManager.prototype.createPoint = function (pos) {
+                var composite = new Phaser.Verlet.Composite(this._game);
+                composite.particles.push(new Phaser.Verlet.Particle(pos));
+                this.composites.push(composite);
+                return composite;
+            };
+            VerletManager.prototype.createLineSegments = function (vertices, stiffness) {
+                var i;
+                var composite = new Phaser.Verlet.Composite(this._game);
+                for(i in vertices) {
+                    composite.particles.push(new Phaser.Verlet.Particle(vertices[i]));
+                    if(i > 0) {
+                        composite.constraints.push(new Phaser.Verlet.DistanceConstraint(composite.particles[i], composite.particles[i - 1], stiffness));
+                    }
+                }
+                this.composites.push(composite);
+                return composite;
+            };
+            VerletManager.prototype.createCloth = function (origin, width, height, segments, pinMod, stiffness) {
+                var composite = new Phaser.Verlet.Composite(this._game);
+                var xStride = width / segments;
+                var yStride = height / segments;
+                var x, y;
+                for(y = 0; y < segments; ++y) {
+                    for(x = 0; x < segments; ++x) {
+                        var px = origin.x + x * xStride - width / 2 + xStride / 2;
+                        var py = origin.y + y * yStride - height / 2 + yStride / 2;
+                        composite.particles.push(new Phaser.Verlet.Particle(new Phaser.Vector2(px, py)));
+                        if(x > 0) {
+                            composite.constraints.push(new Phaser.Verlet.DistanceConstraint(composite.particles[y * segments + x], composite.particles[y * segments + x - 1], stiffness));
+                        }
+                        if(y > 0) {
+                            composite.constraints.push(new Phaser.Verlet.DistanceConstraint(composite.particles[y * segments + x], composite.particles[(y - 1) * segments + x], stiffness));
+                        }
+                    }
+                }
+                for(x = 0; x < segments; ++x) {
+                    if(x % pinMod == 0) {
+                        composite.pin(x);
+                    }
+                }
+                this.composites.push(composite);
+                return composite;
+            };
+            VerletManager.prototype.createTire = function (origin, radius, segments, spokeStiffness, treadStiffness) {
+                var stride = (2 * Math.PI) / segments;
+                var i;
+                var composite = new Phaser.Verlet.Composite(this._game);
+                // particles
+                for(i = 0; i < segments; ++i) {
+                    var theta = i * stride;
+                    composite.particles.push(new Verlet.Particle(new Phaser.Vector2(origin.x + Math.cos(theta) * radius, origin.y + Math.sin(theta) * radius)));
+                }
+                var center = new Verlet.Particle(origin);
+                composite.particles.push(center);
+                // constraints
+                for(i = 0; i < segments; ++i) {
+                    composite.constraints.push(new Verlet.DistanceConstraint(composite.particles[i], composite.particles[(i + 1) % segments], treadStiffness));
+                    composite.constraints.push(new Verlet.DistanceConstraint(composite.particles[i], center, spokeStiffness));
+                    composite.constraints.push(new Verlet.DistanceConstraint(composite.particles[i], composite.particles[(i + 5) % segments], treadStiffness));
+                }
+                this.composites.push(composite);
+                return composite;
+            };
+            VerletManager.prototype.update = function () {
+                if(this.composites.length == 0) {
+                    return;
+                }
+                var i, j, c;
+                for(c in this.composites) {
+                    for(i in this.composites[c].particles) {
+                        var particles = this.composites[c].particles;
+                        // calculate velocity
+                        var velocity = particles[i].pos.sub(particles[i].lastPos).scale(this.friction);
+                        // ground friction
+                        if(particles[i].pos.y >= this.height - 1 && velocity.length2() > 0.000001) {
+                            var m = velocity.length();
+                            velocity.x /= m;
+                            velocity.y /= m;
+                            velocity.mutableScale(m * this.groundFriction);
+                        }
+                        // save last good state
+                        particles[i].lastPos.mutableSet(particles[i].pos);
+                        // gravity
+                        particles[i].pos.mutableAdd(this.gravity);
+                        // inertia
+                        particles[i].pos.mutableAdd(velocity);
+                    }
+                }
+                // handle dragging of entities
+                if(this.draggedEntity) {
+                    this.draggedEntity.pos.mutableSet(new Phaser.Vector2(this._game.input.x, this._game.input.y));
+                }
+                // relax
+                var stepCoef = 1 / this.step;
+                for(c in this.composites) {
+                    var constraints = this.composites[c].constraints;
+                    for(i = 0; i < this.step; ++i) {
+                        for(j in constraints) {
+                            constraints[j].relax(stepCoef);
+                        }
+                    }
+                }
+                // bounds checking
+                for(c in this.composites) {
+                    var particles = this.composites[c].particles;
+                    for(i in particles) {
+                        this.bounds(particles[i]);
+                    }
+                }
+            };
+            VerletManager.prototype.mouseDownHandler = function () {
+                var nearest = this.nearestEntity();
+                if(nearest) {
+                    this.draggedEntity = nearest;
+                }
+            };
+            VerletManager.prototype.mouseUpHandler = function () {
+                this.draggedEntity = null;
+            };
+            VerletManager.prototype.nearestEntity = function () {
+                var c, i;
+                var d2Nearest = 0;
+                var entity = null;
+                var constraintsNearest = null;
+                // find nearest point
+                for(c in this.composites) {
+                    var particles = this.composites[c].particles;
+                    for(i in particles) {
+                        var d2 = particles[i].pos.dist2(new Phaser.Vector2(this._game.input.x, this._game.input.y));
+                        if(d2 <= this.selectionRadius * this.selectionRadius && (entity == null || d2 < d2Nearest)) {
+                            entity = particles[i];
+                            constraintsNearest = this.composites[c].constraints;
+                            d2Nearest = d2;
+                        }
+                    }
+                }
+                // search for pinned constraints for this entity
+                for(i in constraintsNearest) {
+                    if(constraintsNearest[i] instanceof Verlet.PinConstraint && constraintsNearest[i].a == entity) {
+                        entity = constraintsNearest[i];
+                    }
+                }
+                return entity;
+            };
+            VerletManager.prototype.render = function () {
+                var i, c;
+                for(c in this.composites) {
+                    // draw constraints
+                    if(this.composites[c].drawConstraints) {
+                        this.composites[c].drawConstraints(this.context, this.composites[c]);
+                    } else {
+                        var constraints = this.composites[c].constraints;
+                        for(i in constraints) {
+                            constraints[i].render(this.context);
+                        }
+                    }
+                    // draw particles
+                    if(this.composites[c].drawParticles) {
+                        this.composites[c].drawParticles(this.context, this.composites[c]);
+                    } else {
+                        var particles = this.composites[c].particles;
+                        for(i in particles) {
+                            particles[i].render(this.context);
+                        }
+                    }
+                }
+                // highlight nearest / dragged entity
+                var nearest = this.draggedEntity || this.nearestEntity();
+                if(nearest) {
+                    this.context.beginPath();
+                    this.context.arc(nearest.pos.x, nearest.pos.y, 8, 0, 2 * Math.PI);
+                    this.context.strokeStyle = this.highlightColor;
+                    this.context.stroke();
+                }
+            };
+            return VerletManager;
+        })();
+        Verlet.VerletManager = VerletManager;        
+    })(Phaser.Verlet || (Phaser.Verlet = {}));
+    var Verlet = Phaser.Verlet;
 })(Phaser || (Phaser = {}));
 /// <reference path="Game.ts" />
 /**
@@ -14847,7 +15581,9 @@ var Phaser;
 /// <reference path="Stage.ts" />
 /// <reference path="Time.ts" />
 /// <reference path="TweenManager.ts" />
+/// <reference path="VerletManager.ts" />
 /// <reference path="World.ts" />
+/// <reference path="geom/Vector2.ts" />
 /// <reference path="system/Device.ts" />
 /// <reference path="system/RandomDataGenerator.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
@@ -15025,6 +15761,7 @@ var Phaser;
                 this.rnd = new Phaser.RandomDataGenerator([
                     (Date.now() * Math.random()).toString()
                 ]);
+                this.verlet = new Phaser.Verlet.VerletManager(this, width, height);
                 this.framerate = 60;
                 this.isBooted = true;
                 this.input.start();
@@ -15075,6 +15812,7 @@ var Phaser;
             this.tweens.update();
             this.input.update();
             this.stage.update();
+            this.verlet.update();
             this._accumulator += this.time.delta;
             if(this._accumulator > this._maxAccumulation) {
                 this._accumulator = this._maxAccumulation;
