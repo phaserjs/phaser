@@ -21,12 +21,14 @@ module Phaser {
         **/
         constructor(x: number = 0, y: number = 0, diameter: number = 0) {
 
+            this._pos = new Vector2;
             this.setTo(x, y, diameter);
 
         }
 
         private _diameter: number = 0;
         private _radius: number = 0;
+        private _pos: Vector2;
 
         /**
 	     * The x coordinate of the center of the circle
@@ -43,14 +45,21 @@ module Phaser {
         public y: number = 0;
 
         /**
+	     * The position of this Circle object represented by a Vector2
+	     * @property pos
+	     * @type Vector2
+	     **/
+        public get pos(): Vector2 {
+            return this._pos.setTo(this.x, this.y);
+        }
+
+        /**
 	     * The diameter of the circle. The largest distance between any two points on the circle. The same as the radius * 2.
 	     * @method diameter
 	     * @return {Number}
 	     **/
         get diameter(): number {
-
             return this._diameter;
-
         }
 
         /**

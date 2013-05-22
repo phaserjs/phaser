@@ -79,6 +79,10 @@
     <Content Include="GameMath.js">
       <DependentUpon>GameMath.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="GameObjectFactory.ts" />
+    <Content Include="GameObjectFactory.js">
+      <DependentUpon>GameObjectFactory.ts</DependentUpon>
+    </Content>
     <Content Include="gameobjects\Emitter.js">
       <DependentUpon>Emitter.ts</DependentUpon>
     </Content>
@@ -107,6 +111,14 @@
     </Content>
     <TypeScriptCompile Include="verlet\AngleConstraint.ts" />
     <TypeScriptCompile Include="VerletManager.ts" />
+    <TypeScriptCompile Include="geom\Polygon.ts" />
+    <Content Include="geom\Polygon.js">
+      <DependentUpon>Polygon.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geom\Response.ts" />
+    <Content Include="geom\Response.js">
+      <DependentUpon>Response.ts</DependentUpon>
+    </Content>
     <Content Include="VerletManager.js">
       <DependentUpon>VerletManager.ts</DependentUpon>
     </Content>

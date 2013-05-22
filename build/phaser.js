@@ -504,8 +504,6 @@ var Phaser;
             this.last.y = this.y;
         };
         CollisionMask.prototype.update = function () {
-            //this.quad.x = this._parent.x + this.offset.x;
-            //this.quad.y = this._parent.y + this.offset.y;
             this._ref.x = this._parent.x + this.offset.x;
             this._ref.y = this._parent.y + this.offset.y;
         };
@@ -518,8 +516,7 @@ var Phaser;
         function (camera, cameraOffsetX, cameraOffsetY) {
             var _dx = cameraOffsetX + (this.x - camera.worldView.x);
             var _dy = cameraOffsetY + (this.y - camera.worldView.y);
-            //this._parent.context.fillStyle = this._parent.renderDebugColor;
-            this._parent.context.fillStyle = 'rgba(255,0,0,0.4)';
+            this._parent.context.fillStyle = this._parent.renderDebugColor;
             if(this.type == CollisionMask.QUAD) {
                 this._parent.context.fillRect(_dx, _dy, this.width, this.height);
             } else if(this.type == CollisionMask.CIRCLE) {
@@ -543,6 +540,15 @@ var Phaser;
             this.line = null;
             this.offset = null;
         };
+        CollisionMask.prototype.intersectsRaw = function (left, right, top, bottom) {
+            //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+            return true;
+        };
+        CollisionMask.prototype.intersectsVector = function (vector) {
+            if(this.type == CollisionMask.QUAD) {
+                return this.quad.contains(vector.x, vector.y);
+            }
+        };
         CollisionMask.prototype.intersects = /**
         * Gives a basic boolean response to a geometric collision.
         * If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
@@ -556,7 +562,6 @@ var Phaser;
             }
             //  Circle vs. Circle
             if(this.type == CollisionMask.CIRCLE && source.type == CollisionMask.CIRCLE) {
-                console.log('c vs c');
                 return Phaser.Collision.circleToCircle(this.circle, source.circle).result;
             }
             //  Circle vs. Rect
@@ -889,7 +894,6 @@ var Phaser;
             this.alpha = 1;
             this.scale = new Phaser.MicroPoint(1, 1);
             this.last = new Phaser.MicroPoint(x, y);
-            //this.origin = new MicroPoint(this.frameBounds.halfWidth, this.frameBounds.halfHeight);
             this.align = GameObject.ALIGN_TOP_LEFT;
             this.mass = 1;
             this.elasticity = 0;
@@ -1273,6 +1277,10 @@ var Phaser;
         */
         function () {
         };
+        GameObject.prototype.setPosition = function (x, y) {
+            this.x = x;
+            this.y = y;
+        };
         Object.defineProperty(GameObject.prototype, "x", {
             get: function () {
                 return this.frameBounds.x;
@@ -1554,7 +1562,7 @@ var Phaser;
             this.fx.preUpdate();
             if(this._target !== null) {
                 if(this.deadzone == null) {
-                    this.focusOnXY(this._target.x + this._target.origin.x, this._target.y + this._target.origin.y);
+                    this.focusOnXY(this._target.x, this._target.y);
                 } else {
                     var edge;
                     var targetX = this._target.x + ((this._target.x > 0) ? 0.0000001 : -0.0000001);
@@ -1893,9 +1901,14 @@ var Phaser;
         Sprite.prototype.loadGraphic = /**
         * Load graphic for this sprite. (graphic can be SpriteSheet or Texture)
         * @param key {string} Key of the graphic you want to load for this sprite.
+        * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
         * @return {Sprite} Sprite instance itself.
         */
-        function (key) {
+        function (key, clearAnimations) {
+            if (typeof clearAnimations === "undefined") { clearAnimations = true; }
+            if(clearAnimations && this.animations.frameData !== null) {
+                this.animations.destroy();
+            }
             if(this._game.cache.getImage(key) !== null) {
                 if(this._game.cache.isSpriteSheet(key) == false) {
                     this._texture = this._game.cache.getImage(key);
@@ -1906,9 +1919,9 @@ var Phaser;
                 } else {
                     this._texture = this._game.cache.getImage(key);
                     this.animations.loadFrameData(this._game.cache.getFrameData(key));
-                    //this.collisionMask.width = this._texture.width;
-                    //this.collisionMask.height = this._texture.height;
-                                    }
+                    this.collisionMask.width = this.animations.currentFrame.width;
+                    this.collisionMask.height = this.animations.currentFrame.height;
+                }
                 this._dynamicTexture = false;
             }
             return this;
@@ -1947,14 +1960,20 @@ var Phaser;
         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
         */
         function (camera) {
-            if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
-                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
+            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
+            if(this.scrollFactor.x == 0 && this.scrollFactor.y == 0) {
+                return true;
+            }
+            //  Otherwise, if it's scrolling perfectly in sync with the camera (1 to 1) then it's a simple bounds check on world coordinates
+            if(this.scrollFactor.x == 1 && this.scrollFactor.y == 1) {
+                return camera.intersects(this.frameBounds, this.frameBounds.length);
+            } else {
+                //  Else apply the offsets
+                this._dx = (this.frameBounds.x - camera.x) * this.scrollFactor.x;
+                this._dy = (this.frameBounds.y - camera.y) * this.scrollFactor.y;
                 this._dw = this.frameBounds.width * this.scale.x;
                 this._dh = this.frameBounds.height * this.scale.y;
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
-            } else {
-                return camera.intersects(this.frameBounds, this.frameBounds.length);
             }
         };
         Sprite.prototype.postUpdate = /**
@@ -2005,8 +2024,8 @@ var Phaser;
             this._sy = 0;
             this._sw = this.frameBounds.width;
             this._sh = this.frameBounds.height;
-            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+            this._dx = (cameraOffsetX * this.scrollFactor.x) + this.frameBounds.topLeft.x - (camera.worldView.x * this.scrollFactor.x);
+            this._dy = (cameraOffsetY * this.scrollFactor.y) + this.frameBounds.topLeft.y - (camera.worldView.y * this.scrollFactor.y);
             this._dw = this.frameBounds.width * this.scale.x;
             this._dh = this.frameBounds.height * this.scale.y;
             if(this.align == Phaser.GameObject.ALIGN_TOP_CENTER) {
@@ -2039,10 +2058,10 @@ var Phaser;
                 }
             }
             //	Apply camera difference
-            if(this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0) {
-                this._dx -= (camera.worldView.x * this.scrollFactor.x);
-                this._dy -= (camera.worldView.y * this.scrollFactor.y);
-            }
+            if(this.scrollFactor.x !== 1 || this.scrollFactor.y !== 1) {
+                //this._dx -= (camera.worldView.x * this.scrollFactor.x);
+                //this._dy -= (camera.worldView.y * this.scrollFactor.y);
+                            }
             //	Rotation - needs to work from origin point really, but for now from center
             if(this.angle !== 0 || this.rotationOffset !== 0 || this.flipped == true) {
                 this.context.save();
@@ -2711,7 +2730,11 @@ var Phaser;
         });
         Object.defineProperty(AnimationManager.prototype, "frameTotal", {
             get: function () {
-                return this._frameData.total;
+                if(this._frameData) {
+                    return this._frameData.total;
+                } else {
+                    return -1;
+                }
             },
             enumerable: true,
             configurable: true
@@ -2746,6 +2769,17 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
+        AnimationManager.prototype.destroy = /**
+        * Removes all related references
+        */
+        function () {
+            this._anims = {
+            };
+            this._frameData = null;
+            this._frameIndex = 0;
+            this.currentAnim = null;
+            this.currentFrame = null;
+        };
         return AnimationManager;
     })();
     Phaser.AnimationManager = AnimationManager;    
@@ -2971,9 +3005,6 @@ var Phaser;
 *
 * Your game only has one CameraManager instance and it's responsible for looking after, creating and destroying
 * all of the cameras in the world.
-*
-* TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
-* TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 */
 var Phaser;
 (function (Phaser) {
@@ -4086,6 +4117,54 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
+* Phaser - Polygon
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var Polygon = (function () {
+        /**
+        * A *convex* clockwise polygon
+        * @class Polygon
+        * @constructor
+        * @param {Vector2} pos A vector representing the origin of the polygon (all other points are relative to this one)
+        * @param {Array.<Vector2>} points An Array of vectors representing the points in the polygon, in clockwise order.
+        **/
+        function Polygon(pos, points, parent) {
+            if (typeof pos === "undefined") { pos = new Phaser.Vector2(); }
+            if (typeof points === "undefined") { points = []; }
+            if (typeof parent === "undefined") { parent = null; }
+            this.pos = pos;
+            this.points = points;
+            this.parent = parent;
+            this.recalc();
+        }
+        Polygon.prototype.recalc = /**
+        * Recalculate the edges and normals of the polygon.  This
+        * MUST be called if the points array is modified at all and
+        * the edges or normals are to be accessed.
+        */
+        function () {
+            var points = this.points;
+            var len = points.length;
+            this.edges = [];
+            this.normals = [];
+            for(var i = 0; i < len; i++) {
+                var p1 = points[i];
+                var p2 = i < len - 1 ? points[i + 1] : points[0];
+                var e = new Phaser.Vector2().copyFrom(p2).sub(p1);
+                var n = new Phaser.Vector2().copyFrom(e).perp().normalize();
+                this.edges.push(e);
+                this.normals.push(n);
+            }
+        };
+        return Polygon;
+    })();
+    Phaser.Polygon = Polygon;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="Polygon.ts" />
+/**
 * Phaser - Quad
 *
 * A Quad object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
@@ -4181,6 +4260,20 @@ var Phaser;
             if (typeof tolerance === "undefined") { tolerance = 0; }
             return !(quad.left > this.right + tolerance || quad.right < this.left - tolerance || quad.top > this.bottom + tolerance || quad.bottom < this.top - tolerance);
         };
+        Quad.prototype.intersectsRaw = /**
+        * Determines whether the object specified intersects (overlaps) with the given values.
+        * @method intersectsProps
+        * @param {Number} left
+        * @param {Number} right
+        * @param {Number} top
+        * @param {Number} bottomt
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
+        **/
+        function (left, right, top, bottom, tolerance) {
+            if (typeof tolerance === "undefined") { tolerance = 0; }
+            return !(left > this.right + tolerance || right < this.left - tolerance || top > this.bottom + tolerance || bottom < this.top - tolerance);
+        };
         Quad.prototype.contains = /**
         * Determines whether the specified coordinates are contained within the region defined by this Quad object.
         * @method contains
@@ -4211,6 +4304,19 @@ var Phaser;
         **/
         function (target) {
             return target.copyFrom(this);
+        };
+        Quad.prototype.toPolygon = /**
+        * Creates and returns a Polygon that is the same as this Quad.
+        * @method toPolygon
+        * @return {Polygon} A new Polygon that represents this quad.
+        **/
+        function () {
+            return new Phaser.Polygon(new Phaser.Vector2(this.x, this.y), [
+                new Phaser.Vector2(), 
+                new Phaser.Vector2(this.width, 0), 
+                new Phaser.Vector2(this.width, this.height), 
+                new Phaser.Vector2(0, this.height)
+            ]);
         };
         Quad.prototype.toString = /**
         * Returns a string representation of this object.
@@ -4260,8 +4366,21 @@ var Phaser;
             * @type Number
             **/
             this.y = 0;
+            this._pos = new Phaser.Vector2();
             this.setTo(x, y, diameter);
         }
+        Object.defineProperty(Circle.prototype, "pos", {
+            get: /**
+            * The position of this Circle object represented by a Vector2
+            * @property pos
+            * @type Vector2
+            **/
+            function () {
+                return this._pos.setTo(this.x, this.y);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Circle.prototype, "diameter", {
             get: /**
             * The diameter of the circle. The largest distance between any two points on the circle. The same as the radius * 2.
@@ -4952,6 +5071,414 @@ var Phaser;
     Phaser.IntersectResult = IntersectResult;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="Polygon.ts" />
+/**
+* Phaser - Response
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var Response = (function () {
+        /**
+        * An object representing the result of an intersection. Contain information about:
+        * - The two objects participating in the intersection
+        * - The vector representing the minimum change necessary to extract the first object
+        *   from the second one.
+        * - Whether the first object is entirely inside the second, or vice versa.
+        *
+        * @constructor
+        */
+        function Response() {
+            this.a = null;
+            this.b = null;
+            this.overlapN = new Phaser.Vector2();
+            this.overlapV = new Phaser.Vector2();
+            this.clear();
+        }
+        Response.prototype.clear = /**
+        * Set some values of the response back to their defaults.  Call this between tests if
+        * you are going to reuse a single Response object for multiple intersection tests (recommented)
+        *
+        * @return {Response} This for chaining
+        */
+        function () {
+            this.aInB = true;
+            this.bInA = true;
+            this.overlap = Number.MAX_VALUE;
+            return this;
+        };
+        return Response;
+    })();
+    Phaser.Response = Response;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/**
+* Phaser - Vector2
+*
+* A two dimensional vector.
+* Contains methods and ideas from verlet-js by Sub Protocol, SAT.js by Jim Riecken and N by Metanet Software.
+*/
+var Phaser;
+(function (Phaser) {
+    var Vector2 = (function () {
+        /**
+        * Creates a new Vector2 object.
+        * @class Vector2
+        * @constructor
+        * @param {Number} x The x position of the vector
+        * @param {Number} y The y position of the vector
+        * @return {Vector2} This object
+        **/
+        function Vector2(x, y) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            this.x = x;
+            this.y = y;
+        }
+        Vector2.prototype.setTo = function (x, y) {
+            this.x = x;
+            this.y = y;
+            return this;
+        };
+        Vector2.prototype.add = /**
+        * Add this vector to the given one and return the result.
+        *
+        * @param {Vector2} v The other Vector.
+        * @param {Vector2} The output Vector.
+        * @return {Vector2} The new Vector
+        */
+        function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x + v.x, this.y + v.y);
+        };
+        Vector2.prototype.sub = /**
+        * Subtract this vector to the given one and return the result.
+        *
+        * @param {Vector2} v The other Vector.
+        * @param {Vector2} The output Vector.
+        * @return {Vector2} The new Vector
+        */
+        function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x - v.x, this.y - v.y);
+        };
+        Vector2.prototype.mul = /**
+        * Multiply this vector with the given one and return the result.
+        *
+        * @param {Vector2} v The other Vector.
+        * @param {Vector2} The output Vector.
+        * @return {Vector2} The new Vector
+        */
+        function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x * v.x, this.y * v.y);
+        };
+        Vector2.prototype.div = /**
+        * Divide this vector by the given one and return the result.
+        *
+        * @param {Vector2} v The other Vector.
+        * @param {Vector2} The output Vector.
+        * @return {Vector2} The new Vector
+        */
+        function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x / v.x, this.y / v.y);
+        };
+        Vector2.prototype.scale = /**
+        * Scale this vector by the given values and return the result.
+        *
+        * @param {number} x The scaling factor in the x direction.
+        * @param {?number=} y The scaling factor in the y direction.  If this
+        *   is not specified, the x scaling factor will be used.
+        * @return {Vector} The new Vector
+        */
+        function (x, y, output) {
+            if (typeof y === "undefined") { y = null; }
+            if (typeof output === "undefined") { output = new Vector2(); }
+            if(y === null) {
+                y = x;
+            }
+            return output.setTo(this.x * x, this.y * y);
+        };
+        Vector2.prototype.perp = /**
+        * Rotate this vector by 90 degrees
+        *
+        * @return {Vector} This for chaining.
+        */
+        function (output) {
+            if (typeof output === "undefined") { output = this; }
+            var x = this.x;
+            return output.setTo(this.y, -x);
+        };
+        Vector2.prototype.mutableSet = //  Same as copyFrom, used by VerletManager
+        function (v) {
+            this.x = v.x;
+            this.y = v.y;
+            return this;
+        };
+        Vector2.prototype.mutableAdd = /**
+        * Add another vector to this one.
+        *
+        * @param {Vector} other The other Vector.
+        * @return {Vector} This for chaining.
+        */
+        function (v) {
+            this.x += v.x;
+            this.y += v.y;
+            return this;
+        };
+        Vector2.prototype.mutableSub = /**
+        * Subtract another vector from this one.
+        *
+        * @param {Vector} other The other Vector.
+        * @return {Vector} This for chaining.
+        */
+        function (v) {
+            this.x -= v.x;
+            this.y -= v.y;
+            return this;
+        };
+        Vector2.prototype.mutableMul = /**
+        * Multiply another vector with this one.
+        *
+        * @param {Vector} other The other Vector.
+        * @return {Vector} This for chaining.
+        */
+        function (v) {
+            this.x *= v.x;
+            this.y *= v.y;
+            return this;
+        };
+        Vector2.prototype.mutableDiv = /**
+        * Divide this vector by another one.
+        *
+        * @param {Vector} other The other Vector.
+        * @return {Vector} This for chaining.
+        */
+        function (v) {
+            this.x /= v.x;
+            this.y /= v.y;
+            return this;
+        };
+        Vector2.prototype.mutableScale = /**
+        * Scale this vector.
+        *
+        * @param {number} x The scaling factor in the x direction.
+        * @param {?number=} y The scaling factor in the y direction.  If this
+        *   is not specified, the x scaling factor will be used.
+        * @return {Vector} This for chaining.
+        */
+        function (x, y) {
+            this.x *= x;
+            this.y *= y || x;
+            return this;
+        };
+        Vector2.prototype.reverse = /**
+        * Reverse this vector.
+        *
+        * @return {Vector} This for chaining.
+        */
+        function () {
+            this.x = -this.x;
+            this.y = -this.y;
+            return this;
+        };
+        Vector2.prototype.edge = function (v, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return this.sub(v, output);
+        };
+        Vector2.prototype.equals = function (v) {
+            return this.x == v.x && this.y == v.y;
+        };
+        Vector2.prototype.epsilonEquals = function (v, epsilon) {
+            return Math.abs(this.x - v.x) <= epsilon && Math.abs(this.y - v.y) <= epsilon;
+        };
+        Vector2.prototype.length = /**
+        * Get the length of this vector.
+        *
+        * @return {number} The length of this vector.
+        */
+        function () {
+            return Math.sqrt((this.x * this.x) + (this.y * this.y));
+        };
+        Vector2.prototype.length2 = /**
+        * Get the length^2 of this vector.
+        *
+        * @return {number} The length^2 of this vector.
+        */
+        function () {
+            return (this.x * this.x) + (this.y * this.y);
+        };
+        Vector2.prototype.distance = /**
+        * Get the distance between this vector and the given vector.
+        *
+        * @return {Vector2} v The vector to check
+        */
+        function (v) {
+            return Math.sqrt(this.distance2(v));
+        };
+        Vector2.prototype.distance2 = /**
+        * Get the distance^2 between this vector and the given vector.
+        *
+        * @return {Vector2} v The vector to check
+        */
+        function (v) {
+            return ((v.x - this.x) * (v.x - this.x)) + ((v.y - this.y) * (v.y - this.y));
+        };
+        Vector2.prototype.project = /**
+        * Project this vector on to another vector.
+        *
+        * @param {Vector} other The vector to project onto.
+        * @return {Vector} This for chaining.
+        */
+        function (other) {
+            var amt = this.dot(other) / other.length2();
+            if(amt != 0) {
+                this.x = amt * other.x;
+                this.y = amt * other.y;
+            }
+            return this;
+        };
+        Vector2.prototype.projectN = /**
+        * Project this vector onto a vector of unit length.
+        *
+        * @param {Vector} other The unit vector to project onto.
+        * @return {Vector} This for chaining.
+        */
+        function (other) {
+            var amt = this.dot(other);
+            if(amt != 0) {
+                this.x = amt * other.x;
+                this.y = amt * other.y;
+            }
+            return this;
+        };
+        Vector2.prototype.reflect = /**
+        * Reflect this vector on an arbitrary axis.
+        *
+        * @param {Vector} axis The vector representing the axis.
+        * @return {Vector} This for chaining.
+        */
+        function (axis) {
+            var x = this.x;
+            var y = this.y;
+            this.project(axis).scale(2);
+            this.x -= x;
+            this.y -= y;
+            return this;
+        };
+        Vector2.prototype.reflectN = /**
+        * Reflect this vector on an arbitrary axis (represented by a unit vector)
+        *
+        * @param {Vector} axis The unit vector representing the axis.
+        * @return {Vector} This for chaining.
+        */
+        function (axis) {
+            var x = this.x;
+            var y = this.y;
+            this.projectN(axis).scale(2);
+            this.x -= x;
+            this.y -= y;
+            return this;
+        };
+        Vector2.prototype.getProjectionMagnitude = function (v) {
+            var den = v.dot(v);
+            if(den == 0) {
+                return 0;
+            } else {
+                return Math.abs(this.dot(v) / den);
+            }
+        };
+        Vector2.prototype.direction = function (output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            output.copyFrom(this);
+            return this.normalize(output);
+        };
+        Vector2.prototype.normalRightHand = function (output) {
+            if (typeof output === "undefined") { output = this; }
+            return output.setTo(this.y * -1, this.x);
+        };
+        Vector2.prototype.normalize = /**
+        * Normalize (make unit length) this vector.
+        *
+        * @return {Vector} This for chaining.
+        */
+        function (output) {
+            if (typeof output === "undefined") { output = this; }
+            var m = this.length();
+            if(m != 0) {
+                output.setTo(this.x / m, this.y / m);
+            }
+            return output;
+        };
+        Vector2.prototype.getMagnitude = function () {
+            return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+        };
+        Vector2.prototype.dot = /**
+        * Get the dot product of this vector against another.
+        *
+        * @param {Vector}  other The vector to dot this one against.
+        * @return {number} The dot product.
+        */
+        function (v) {
+            return ((this.x * v.x) + (this.y * v.y));
+        };
+        Vector2.prototype.cross = /**
+        * Get the cross product of this vector against another.
+        *
+        * @param {Vector}  other The vector to cross this one against.
+        * @return {number} The cross product.
+        */
+        function (v) {
+            return ((this.x * v.y) - (this.y * v.x));
+        };
+        Vector2.prototype.angle = /**
+        * Get the angle between this vector and the given vector.
+        *
+        * @return {Vector2} v The vector to check
+        */
+        function (v) {
+            return Math.atan2(this.x * v.y - this.y * v.x, this.x * v.x + this.y * v.y);
+        };
+        Vector2.prototype.angle2 = function (vLeft, vRight) {
+            return vLeft.sub(this).angle(vRight.sub(this));
+        };
+        Vector2.prototype.rotate = /**
+        * Rotate this vector around the origin to the given angle (theta) and return the result in a new Vector
+        *
+        * @return {Vector2} v The vector to check
+        */
+        function (origin, theta, output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            var x = this.x - origin.x;
+            var y = this.y - origin.y;
+            return output.setTo(x * Math.cos(theta) - y * Math.sin(theta) + origin.x, x * Math.sin(theta) + y * Math.cos(theta) + origin.y);
+        };
+        Vector2.prototype.clone = function (output) {
+            if (typeof output === "undefined") { output = new Vector2(); }
+            return output.setTo(this.x, this.y);
+        };
+        Vector2.prototype.copyFrom = function (v) {
+            this.x = v.x;
+            this.y = v.y;
+            return this;
+        };
+        Vector2.prototype.copyTo = function (v) {
+            return v.setTo(this.x, this.y);
+        };
+        Vector2.prototype.toString = /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        function () {
+            return "[{Vector2 (x=" + this.x + " y=" + this.y + ")}]";
+        };
+        return Vector2;
+    })();
+    Phaser.Vector2 = Vector2;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
 /**
 * Phaser - LinkedList
 *
@@ -5338,6 +5865,8 @@ var Phaser;
 /// <reference path="geom/Circle.ts" />
 /// <reference path="geom/Line.ts" />
 /// <reference path="geom/IntersectResult.ts" />
+/// <reference path="geom/Response.ts" />
+/// <reference path="geom/Vector2.ts" />
 /// <reference path="system/QuadTree.ts" />
 /**
 * Phaser - Collision
@@ -5353,6 +5882,14 @@ var Phaser;
         */
         function Collision(game) {
             this._game = game;
+            Collision.T_VECTORS = [];
+            for(var i = 0; i < 10; i++) {
+                Collision.T_VECTORS.push(new Phaser.Vector2());
+            }
+            Collision.T_ARRAYS = [];
+            for(var i = 0; i < 5; i++) {
+                Collision.T_ARRAYS.push([]);
+            }
         }
         Collision.LEFT = 0x0001;
         Collision.RIGHT = 0x0010;
@@ -5703,20 +6240,7 @@ var Phaser;
             output.result = ((circle1.radius + circle2.radius) * (circle1.radius + circle2.radius)) >= Collision.distanceSquared(circle1.x, circle1.y, circle2.x, circle2.y);
             return output;
         };
-        Collision.circleToRectangle = /*
-        public static circleToQuad(circle: Circle, quad: Quad): bool {
-        
-        //  Check if the center of the circle is within the Quad
-        if (quad.contains(circle.x, circle.y))
-        {
-        return true;
-        }
-        
-        //  Failing that let's check each line of the quad against the circle
-        return false;
-        }
-        */
-        /**
+        Collision.circleToRectangle = /**
         * Checks if the Circle object intersects with the Rectangle and returns the result in an IntersectResult object.
         * @param circle The Circle object to check
         * @param rect The Rectangle object to check
@@ -5779,7 +6303,6 @@ var Phaser;
         * @returns {boolean} Returns true if the objects were separated, otherwise false.
         */
         function separate(object1, object2) {
-            console.log('sep o');
             object1.collisionMask.update();
             object2.collisionMask.update();
             var separatedX = Collision.separateX(object1, object2);
@@ -5793,6 +6316,7 @@ var Phaser;
         * @returns {boolean} Whether the objects in fact touched and were separated
         */
         function separateTile(object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
+            object.collisionMask.update();
             var separatedX = Collision.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
             var separatedY = Collision.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
             return separatedX || separatedY;
@@ -5811,9 +6335,11 @@ var Phaser;
             //  First, get the object delta
             var overlap = 0;
             var objDelta = object.x - object.last.x;
+            //var objDelta: number = object.collisionMask.deltaX;
             if(objDelta != 0) {
                 //  Check if the X hulls actually overlap
                 var objDeltaAbs = (objDelta > 0) ? objDelta : -objDelta;
+                //var objDeltaAbs: number = object.collisionMask.deltaXAbs;
                 var objBounds = new Phaser.Quad(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
                 if((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height)) {
                     var maxOverlap = objDeltaAbs + Collision.OVERLAP_BIAS;
@@ -5838,6 +6364,7 @@ var Phaser;
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if(overlap != 0) {
                 if(separate == true) {
+                    //console.log('
                     object.x = object.x - overlap;
                     object.velocity.x = -(object.velocity.x * object.elasticity);
                 }
@@ -5877,6 +6404,113 @@ var Phaser;
                         }
                     } else if(objDelta < 0) {
                         overlap = object.y - height - y;
+                        if((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false) {
+                            overlap = 0;
+                        } else {
+                            object.touching |= Collision.UP;
+                        }
+                    }
+                }
+            }
+            // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if(overlap != 0) {
+                if(separate == true) {
+                    object.y = object.y - overlap;
+                    object.velocity.y = -(object.velocity.y * object.elasticity);
+                }
+                Collision.TILE_OVERLAP = true;
+                return true;
+            } else {
+                return false;
+            }
+        };
+        Collision.NEWseparateTileX = /**
+        * Separates the two objects on their x axis
+        * @param object The GameObject to separate
+        * @param tile The Tile to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        function NEWseparateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separate) {
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if(object.immovable) {
+                return false;
+            }
+            //  First, get the object delta
+            var overlap = 0;
+            if(object.collisionMask.deltaX != 0) {
+                //  Check if the X hulls actually overlap
+                //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                //var objBounds: Quad = new Quad(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+                //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+                if(object.collisionMask.intersectsRaw(x, x + width, y, y + height)) {
+                    var maxOverlap = object.collisionMask.deltaXAbs + Collision.OVERLAP_BIAS;
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if(object.collisionMask.deltaX > 0) {
+                        //overlap = object.x + object.width - x;
+                        overlap = object.collisionMask.right - x;
+                        if((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false) {
+                            overlap = 0;
+                        } else {
+                            object.touching |= Collision.RIGHT;
+                        }
+                    } else if(object.collisionMask.deltaX < 0) {
+                        //overlap = object.x - width - x;
+                        overlap = object.collisionMask.x - width - x;
+                        if((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false) {
+                            overlap = 0;
+                        } else {
+                            object.touching |= Collision.LEFT;
+                        }
+                    }
+                }
+            }
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if(overlap != 0) {
+                if(separate == true) {
+                    object.x = object.x - overlap;
+                    object.velocity.x = -(object.velocity.x * object.elasticity);
+                }
+                Collision.TILE_OVERLAP = true;
+                return true;
+            } else {
+                return false;
+            }
+        };
+        Collision.NEWseparateTileY = /**
+        * Separates the two objects on their y axis
+        * @param object The first GameObject to separate
+        * @param tile The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        function NEWseparateTileY(object, x, y, width, height, mass, collideUp, collideDown, separate) {
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if(object.immovable) {
+                return false;
+            }
+            //  First, get the two object deltas
+            var overlap = 0;
+            //var objDelta: number = object.y - object.last.y;
+            if(object.collisionMask.deltaY != 0) {
+                //  Check if the Y hulls actually overlap
+                //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                //var objBounds: Quad = new Quad(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+                //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+                if(object.collisionMask.intersectsRaw(x, x + width, y, y + height)) {
+                    //var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+                    var maxOverlap = object.collisionMask.deltaYAbs + Collision.OVERLAP_BIAS;
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if(object.collisionMask.deltaY > 0) {
+                        //overlap = object.y + object.height - y;
+                        overlap = object.collisionMask.bottom - y;
+                        if((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false) {
+                            overlap = 0;
+                        } else {
+                            object.touching |= Collision.DOWN;
+                        }
+                    } else if(object.collisionMask.deltaY < 0) {
+                        //overlap = object.y - height - y;
+                        overlap = object.collisionMask.y - height - y;
                         if((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false) {
                             overlap = 0;
                         } else {
@@ -6033,159 +6667,6 @@ var Phaser;
                 return false;
             }
         };
-        Collision.OLDseparateX = /**
-        * Separates the two objects on their x axis
-        * @param object1 The first GameObject to separate
-        * @param object2 The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-        */
-        function OLDseparateX(object1, object2) {
-            //  Can't separate two immovable objects
-            if(object1.immovable && object2.immovable) {
-                return false;
-            }
-            //  First, get the two object deltas
-            var overlap = 0;
-            var obj1Delta = object1.x - object1.last.x;
-            var obj2Delta = object2.x - object2.last.x;
-            if(obj1Delta != obj2Delta) {
-                //  Check if the X hulls actually overlap
-                var obj1DeltaAbs = (obj1Delta > 0) ? obj1Delta : -obj1Delta;
-                var obj2DeltaAbs = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
-                var obj1Bounds = new Phaser.Quad(object1.x - ((obj1Delta > 0) ? obj1Delta : 0), object1.last.y, object1.width + ((obj1Delta > 0) ? obj1Delta : -obj1Delta), object1.height);
-                var obj2Bounds = new Phaser.Quad(object2.x - ((obj2Delta > 0) ? obj2Delta : 0), object2.last.y, object2.width + ((obj2Delta > 0) ? obj2Delta : -obj2Delta), object2.height);
-                if((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height)) {
-                    var maxOverlap = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
-                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if(obj1Delta > obj2Delta) {
-                        overlap = object1.x + object1.width - object2.x;
-                        if((overlap > maxOverlap) || !(object1.allowCollisions & Collision.RIGHT) || !(object2.allowCollisions & Collision.LEFT)) {
-                            overlap = 0;
-                        } else {
-                            object1.touching |= Collision.RIGHT;
-                            object2.touching |= Collision.LEFT;
-                        }
-                    } else if(obj1Delta < obj2Delta) {
-                        overlap = object1.x - object2.width - object2.x;
-                        if((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.LEFT) || !(object2.allowCollisions & Collision.RIGHT)) {
-                            overlap = 0;
-                        } else {
-                            object1.touching |= Collision.LEFT;
-                            object2.touching |= Collision.RIGHT;
-                        }
-                    }
-                }
-            }
-            //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if(overlap != 0) {
-                var obj1Velocity = object1.velocity.x;
-                var obj2Velocity = object2.velocity.x;
-                if(!object1.immovable && !object2.immovable) {
-                    overlap *= 0.5;
-                    object1.x = object1.x - overlap;
-                    object2.x += overlap;
-                    var obj1NewVelocity = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
-                    var obj2NewVelocity = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
-                    var average = (obj1NewVelocity + obj2NewVelocity) * 0.5;
-                    obj1NewVelocity -= average;
-                    obj2NewVelocity -= average;
-                    object1.velocity.x = average + obj1NewVelocity * object1.elasticity;
-                    object2.velocity.x = average + obj2NewVelocity * object2.elasticity;
-                } else if(!object1.immovable) {
-                    object1.x = object1.x - overlap;
-                    object1.velocity.x = obj2Velocity - obj1Velocity * object1.elasticity;
-                } else if(!object2.immovable) {
-                    object2.x += overlap;
-                    object2.velocity.x = obj1Velocity - obj2Velocity * object2.elasticity;
-                }
-                return true;
-            } else {
-                return false;
-            }
-        };
-        Collision.OLDseparateY = /**
-        * Separates the two objects on their y axis
-        * @param object1 The first GameObject to separate
-        * @param object2 The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
-        */
-        function OLDseparateY(object1, object2) {
-            //  Can't separate two immovable objects
-            if(object1.immovable && object2.immovable) {
-                return false;
-            }
-            //  First, get the two object deltas
-            var overlap = 0;
-            var obj1Delta = object1.y - object1.last.y;
-            var obj2Delta = object2.y - object2.last.y;
-            if(obj1Delta != obj2Delta) {
-                //  Check if the Y hulls actually overlap
-                var obj1DeltaAbs = (obj1Delta > 0) ? obj1Delta : -obj1Delta;
-                var obj2DeltaAbs = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
-                var obj1Bounds = new Phaser.Quad(object1.x, object1.y - ((obj1Delta > 0) ? obj1Delta : 0), object1.width, object1.height + obj1DeltaAbs);
-                var obj2Bounds = new Phaser.Quad(object2.x, object2.y - ((obj2Delta > 0) ? obj2Delta : 0), object2.width, object2.height + obj2DeltaAbs);
-                console.log(obj1Bounds.toString(), obj2Bounds.toString());
-                if((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height)) {
-                    var maxOverlap = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
-                    console.log('max33', maxOverlap, obj1Delta, obj2Delta, obj1DeltaAbs, obj2DeltaAbs);
-                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if(obj1Delta > obj2Delta) {
-                        overlap = object1.y + object1.height - object2.y;
-                        if((overlap > maxOverlap) || !(object1.allowCollisions & Collision.DOWN) || !(object2.allowCollisions & Collision.UP)) {
-                            overlap = 0;
-                        } else {
-                            object1.touching |= Collision.DOWN;
-                            object2.touching |= Collision.UP;
-                        }
-                    } else if(obj1Delta < obj2Delta) {
-                        overlap = object1.y - object2.height - object2.y;
-                        if((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.UP) || !(object2.allowCollisions & Collision.DOWN)) {
-                            overlap = 0;
-                        } else {
-                            object1.touching |= Collision.UP;
-                            object2.touching |= Collision.DOWN;
-                        }
-                    }
-                }
-            }
-            //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if(overlap != 0) {
-                console.log('y overlap', overlap);
-                var obj1Velocity = object1.velocity.y;
-                var obj2Velocity = object2.velocity.y;
-                if(!object1.immovable && !object2.immovable) {
-                    overlap *= 0.5;
-                    object1.y = object1.y - overlap;
-                    object2.y += overlap;
-                    var obj1NewVelocity = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
-                    var obj2NewVelocity = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
-                    var average = (obj1NewVelocity + obj2NewVelocity) * 0.5;
-                    obj1NewVelocity -= average;
-                    obj2NewVelocity -= average;
-                    object1.velocity.y = average + obj1NewVelocity * object1.elasticity;
-                    object2.velocity.y = average + obj2NewVelocity * object2.elasticity;
-                } else if(!object1.immovable) {
-                    object1.y = object1.y - overlap;
-                    object1.velocity.y = obj2Velocity - obj1Velocity * object1.elasticity;
-                    //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if(object2.active && object2.moves && (obj1Delta > obj2Delta)) {
-                        object1.x += object2.x - object2.last.x;
-                    }
-                    console.log('y2', object1.y, object1.velocity.y);
-                } else if(!object2.immovable) {
-                    object2.y += overlap;
-                    object2.velocity.y = obj1Velocity - obj2Velocity * object2.elasticity;
-                    //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if(object1.active && object1.moves && (obj1Delta < obj2Delta)) {
-                        object2.x += object1.x - object1.last.x;
-                    }
-                    console.log('y3', object2.y, object2.velocity.y);
-                }
-                return true;
-            } else {
-                return false;
-            }
-        };
         Collision.distance = /**
         * Returns the distance between the two given coordinates.
         * @param x1 The X value of the first coordinate
@@ -6207,6 +6688,369 @@ var Phaser;
         */
         function distanceSquared(x1, y1, x2, y2) {
             return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+        };
+        Collision.flattenPointsOn = // SAT
+        /**
+        * Flattens the specified array of points onto a unit vector axis,
+        * resulting in a one dimensional range of the minimum and
+        * maximum value on that axis.
+        *
+        * @param {Array.<Vector>} points The points to flatten.
+        * @param {Vector} normal The unit vector axis to flatten on.
+        * @param {Array.<number>} result An array.  After calling this function,
+        *   result[0] will be the minimum value,
+        *   result[1] will be the maximum value.
+        */
+        function flattenPointsOn(points, normal, result) {
+            var min = Number.MAX_VALUE;
+            var max = -Number.MAX_VALUE;
+            var len = points.length;
+            for(var i = 0; i < len; i++) {
+                // Get the magnitude of the projection of the point onto the normal
+                var dot = points[i].dot(normal);
+                if(dot < min) {
+                    min = dot;
+                }
+                if(dot > max) {
+                    max = dot;
+                }
+            }
+            result[0] = min;
+            result[1] = max;
+        };
+        Collision.isSeparatingAxis = /**
+        * Check whether two convex clockwise polygons are separated by the specified
+        * axis (must be a unit vector).
+        *
+        * @param {Vector} aPos The position of the first polygon.
+        * @param {Vector} bPos The position of the second polygon.
+        * @param {Array.<Vector>} aPoints The points in the first polygon.
+        * @param {Array.<Vector>} bPoints The points in the second polygon.
+        * @param {Vector} axis The axis (unit sized) to test against.  The points of both polygons
+        *   will be projected onto this axis.
+        * @param {Response=} response A Response object (optional) which will be populated
+        *   if the axis is not a separating axis.
+        * @return {boolean} true if it is a separating axis, false otherwise.  If false,
+        *   and a response is passed in, information about how much overlap and
+        *   the direction of the overlap will be populated.
+        */
+        function isSeparatingAxis(aPos, bPos, aPoints, bPoints, axis, response) {
+            if (typeof response === "undefined") { response = null; }
+            var rangeA = Collision.T_ARRAYS.pop();
+            var rangeB = Collision.T_ARRAYS.pop();
+            // Get the magnitude of the offset between the two polygons
+            var offsetV = Collision.T_VECTORS.pop().copyFrom(bPos).sub(aPos);
+            var projectedOffset = offsetV.dot(axis);
+            // Project the polygons onto the axis.
+            Collision.flattenPointsOn(aPoints, axis, rangeA);
+            Collision.flattenPointsOn(bPoints, axis, rangeB);
+            // Move B's range to its position relative to A.
+            rangeB[0] += projectedOffset;
+            rangeB[1] += projectedOffset;
+            // Check if there is a gap. If there is, this is a separating axis and we can stop
+            if(rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1]) {
+                Collision.T_VECTORS.push(offsetV);
+                Collision.T_ARRAYS.push(rangeA);
+                Collision.T_ARRAYS.push(rangeB);
+                return true;
+            }
+            // If we're calculating a response, calculate the overlap.
+            if(response) {
+                var overlap = 0;
+                // A starts further left than B
+                if(rangeA[0] < rangeB[0]) {
+                    response.aInB = false;
+                    // A ends before B does. We have to pull A out of B
+                    if(rangeA[1] < rangeB[1]) {
+                        overlap = rangeA[1] - rangeB[0];
+                        response.bInA = false;
+                        // B is fully inside A.  Pick the shortest way out.
+                                            } else {
+                        var option1 = rangeA[1] - rangeB[0];
+                        var option2 = rangeB[1] - rangeA[0];
+                        overlap = option1 < option2 ? option1 : -option2;
+                    }
+                    // B starts further left than A
+                                    } else {
+                    response.bInA = false;
+                    // B ends before A ends. We have to push A out of B
+                    if(rangeA[1] > rangeB[1]) {
+                        overlap = rangeA[0] - rangeB[1];
+                        response.aInB = false;
+                        // A is fully inside B.  Pick the shortest way out.
+                                            } else {
+                        var option1 = rangeA[1] - rangeB[0];
+                        var option2 = rangeB[1] - rangeA[0];
+                        overlap = option1 < option2 ? option1 : -option2;
+                    }
+                }
+                // If this is the smallest amount of overlap we've seen so far, set it as the minimum overlap.
+                var absOverlap = Math.abs(overlap);
+                if(absOverlap < response.overlap) {
+                    response.overlap = absOverlap;
+                    response.overlapN.copyFrom(axis);
+                    if(overlap < 0) {
+                        response.overlapN.reverse();
+                    }
+                }
+            }
+            Collision.T_VECTORS.push(offsetV);
+            Collision.T_ARRAYS.push(rangeA);
+            Collision.T_ARRAYS.push(rangeB);
+            return false;
+        };
+        Collision.LEFT_VORNOI_REGION = -1;
+        Collision.MIDDLE_VORNOI_REGION = 0;
+        Collision.RIGHT_VORNOI_REGION = 1;
+        Collision.vornoiRegion = /**
+        * Calculates which Vornoi region a point is on a line segment.
+        * It is assumed that both the line and the point are relative to (0, 0)
+        *
+        *             |       (0)      |
+        *      (-1)  [0]--------------[1]  (1)
+        *             |       (0)      |
+        *
+        * @param {Vector} line The line segment.
+        * @param {Vector} point The point.
+        * @return  {number} LEFT_VORNOI_REGION (-1) if it is the left region,
+        *          MIDDLE_VORNOI_REGION (0) if it is the middle region,
+        *          RIGHT_VORNOI_REGION (1) if it is the right region.
+        */
+        function vornoiRegion(line, point) {
+            var len2 = line.length2();
+            var dp = point.dot(line);
+            if(dp < 0) {
+                return Collision.LEFT_VORNOI_REGION;
+            } else if(dp > len2) {
+                return Collision.RIGHT_VORNOI_REGION;
+            } else {
+                return Collision.MIDDLE_VORNOI_REGION;
+            }
+        };
+        Collision.testCircleCircle = /**
+        * Check if two circles intersect.
+        *
+        * @param {Circle} a The first circle.
+        * @param {Circle} b The second circle.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   the circles intersect.
+        * @return {boolean} true if the circles intersect, false if they don't.
+        */
+        function testCircleCircle(a, b, response) {
+            if (typeof response === "undefined") { response = null; }
+            var differenceV = Collision.T_VECTORS.pop().copyFrom(b.pos).sub(a.pos);
+            var totalRadius = a.radius + b.radius;
+            var totalRadiusSq = totalRadius * totalRadius;
+            var distanceSq = differenceV.length2();
+            if(distanceSq > totalRadiusSq) {
+                // They do not intersect
+                Collision.T_VECTORS.push(differenceV);
+                return false;
+            }
+            // They intersect.  If we're calculating a response, calculate the overlap.
+            if(response) {
+                var dist = Math.sqrt(distanceSq);
+                response.a = a;
+                response.b = b;
+                response.overlap = totalRadius - dist;
+                response.overlapN.copyFrom(differenceV.normalize());
+                response.overlapV.copyFrom(differenceV).scale(response.overlap);
+                response.aInB = a.radius <= b.radius && dist <= b.radius - a.radius;
+                response.bInA = b.radius <= a.radius && dist <= a.radius - b.radius;
+            }
+            Collision.T_VECTORS.push(differenceV);
+            return true;
+        };
+        Collision.testPolygonCircle = /**
+        * Check if a polygon and a circle intersect.
+        *
+        * @param {Polygon} polygon The polygon.
+        * @param {Circle} circle The circle.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        function testPolygonCircle(polygon, circle, response) {
+            if (typeof response === "undefined") { response = null; }
+            var circlePos = Collision.T_VECTORS.pop().copyFrom(circle.pos).sub(polygon.pos);
+            var radius = circle.radius;
+            var radius2 = radius * radius;
+            var points = polygon.points;
+            var len = points.length;
+            var edge = Collision.T_VECTORS.pop();
+            var point = Collision.T_VECTORS.pop();
+            // For each edge in the polygon
+            for(var i = 0; i < len; i++) {
+                var next = i === len - 1 ? 0 : i + 1;
+                var prev = i === 0 ? len - 1 : i - 1;
+                var overlap = 0;
+                var overlapN = null;
+                // Get the edge
+                edge.copyFrom(polygon.edges[i]);
+                // Calculate the center of the cirble relative to the starting point of the edge
+                point.copyFrom(circlePos).sub(points[i]);
+                // If the distance between the center of the circle and the point
+                // is bigger than the radius, the polygon is definitely not fully in
+                // the circle.
+                if(response && point.length2() > radius2) {
+                    response.aInB = false;
+                }
+                // Calculate which Vornoi region the center of the circle is in.
+                var region = Collision.vornoiRegion(edge, point);
+                if(region === Collision.LEFT_VORNOI_REGION) {
+                    // Need to make sure we're in the RIGHT_VORNOI_REGION of the previous edge.
+                    edge.copyFrom(polygon.edges[prev]);
+                    // Calculate the center of the circle relative the starting point of the previous edge
+                    var point2 = Collision.T_VECTORS.pop().copyFrom(circlePos).sub(points[prev]);
+                    region = Collision.vornoiRegion(edge, point2);
+                    if(region === Collision.RIGHT_VORNOI_REGION) {
+                        // It's in the region we want.  Check if the circle intersects the point.
+                        var dist = point.length2();
+                        if(dist > radius) {
+                            // No intersection
+                            Collision.T_VECTORS.push(circlePos);
+                            Collision.T_VECTORS.push(edge);
+                            Collision.T_VECTORS.push(point);
+                            Collision.T_VECTORS.push(point2);
+                            return false;
+                        } else if(response) {
+                            // It intersects, calculate the overlap
+                            response.bInA = false;
+                            overlapN = point.normalize();
+                            overlap = radius - dist;
+                        }
+                    }
+                    Collision.T_VECTORS.push(point2);
+                } else if(region === Collision.RIGHT_VORNOI_REGION) {
+                    // Need to make sure we're in the left region on the next edge
+                    edge.copyFrom(polygon.edges[next]);
+                    // Calculate the center of the circle relative to the starting point of the next edge
+                    point.copyFrom(circlePos).sub(points[next]);
+                    region = Collision.vornoiRegion(edge, point);
+                    if(region === Collision.LEFT_VORNOI_REGION) {
+                        // It's in the region we want.  Check if the circle intersects the point.
+                        var dist = point.length2();
+                        if(dist > radius) {
+                            // No intersection
+                            Collision.T_VECTORS.push(circlePos);
+                            Collision.T_VECTORS.push(edge);
+                            Collision.T_VECTORS.push(point);
+                            return false;
+                        } else if(response) {
+                            // It intersects, calculate the overlap
+                            response.bInA = false;
+                            overlapN = point.normalize();
+                            overlap = radius - dist;
+                        }
+                    }
+                    // MIDDLE_VORNOI_REGION
+                                    } else {
+                    // Need to check if the circle is intersecting the edge,
+                    // Change the edge into its "edge normal".
+                    var normal = edge.perp().normalize();
+                    // Find the perpendicular distance between the center of the
+                    // circle and the edge.
+                    var dist = point.dot(normal);
+                    var distAbs = Math.abs(dist);
+                    // If the circle is on the outside of the edge, there is no intersection
+                    if(dist > 0 && distAbs > radius) {
+                        Collision.T_VECTORS.push(circlePos);
+                        Collision.T_VECTORS.push(normal);
+                        Collision.T_VECTORS.push(point);
+                        return false;
+                    } else if(response) {
+                        // It intersects, calculate the overlap.
+                        overlapN = normal;
+                        overlap = radius - dist;
+                        // If the center of the circle is on the outside of the edge, or part of the
+                        // circle is on the outside, the circle is not fully inside the polygon.
+                        if(dist >= 0 || overlap < 2 * radius) {
+                            response.bInA = false;
+                        }
+                    }
+                }
+                // If this is the smallest overlap we've seen, keep it.
+                // (overlapN may be null if the circle was in the wrong Vornoi region)
+                if(overlapN && response && Math.abs(overlap) < Math.abs(response.overlap)) {
+                    response.overlap = overlap;
+                    response.overlapN.copyFrom(overlapN);
+                }
+            }
+            // Calculate the final overlap vector - based on the smallest overlap.
+            if(response) {
+                response.a = polygon;
+                response.b = circle;
+                response.overlapV.copyFrom(response.overlapN).scale(response.overlap);
+            }
+            Collision.T_VECTORS.push(circlePos);
+            Collision.T_VECTORS.push(edge);
+            Collision.T_VECTORS.push(point);
+            return true;
+        };
+        Collision.testCirclePolygon = /**
+        * Check if a circle and a polygon intersect.
+        *
+        * NOTE: This runs slightly slower than polygonCircle as it just
+        * runs polygonCircle and reverses everything at the end.
+        *
+        * @param {Circle} circle The circle.
+        * @param {Polygon} polygon The polygon.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        function testCirclePolygon(circle, polygon, response) {
+            if (typeof response === "undefined") { response = null; }
+            var result = Collision.testPolygonCircle(polygon, circle, response);
+            if(result && response) {
+                // Swap A and B in the response.
+                var a = response.a;
+                var aInB = response.aInB;
+                response.overlapN.reverse();
+                response.overlapV.reverse();
+                response.a = response.b;
+                response.b = a;
+                response.aInB = response.bInA;
+                response.bInA = aInB;
+            }
+            return result;
+        };
+        Collision.testPolygonPolygon = /**
+        * Checks whether two convex, clockwise polygons intersect.
+        *
+        * @param {Polygon} a The first polygon.
+        * @param {Polygon} b The second polygon.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        function testPolygonPolygon(a, b, response) {
+            if (typeof response === "undefined") { response = null; }
+            var aPoints = a.points;
+            var aLen = aPoints.length;
+            var bPoints = b.points;
+            var bLen = bPoints.length;
+            // If any of the edge normals of A is a separating axis, no intersection.
+            for(var i = 0; i < aLen; i++) {
+                if(Collision.isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, a.normals[i], response)) {
+                    return false;
+                }
+            }
+            // If any of the edge normals of B is a separating axis, no intersection.
+            for(var i = 0; i < bLen; i++) {
+                if(Collision.isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, b.normals[i], response)) {
+                    return false;
+                }
+            }
+            // Since none of the edge normals of A or B are a separating axis, there is an intersection
+            // and we've already calculated the smallest overlap (in isSeparatingAxis).  Calculate the
+            // final overlap vector.
+            if(response) {
+                response.a = a;
+                response.b = b;
+                response.overlapV.copyFrom(response.overlapN).scale(response.overlap);
+            }
+            return true;
         };
         return Collision;
     })();
@@ -7345,25 +8189,232 @@ var Phaser;
             return Math.sqrt(dx * dx + dy * dy);
         };
         GameMath.prototype.rotatePoint = /**
-        * Rotates a point around the x/y coordinates given to the desired angle
+        * Rotates the point around the x/y coordinates given to the desired angle and distance
+        * @param point {Object} Any object with exposed x and y properties
         * @param x {number} The x coordinate of the anchor point
         * @param y {number} The y coordinate of the anchor point
-        * @param angle {number} The angle of the rotation in radians
-        * @param point {Point} The point object to perform the rotation on
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the point and the anchor
         * @return The modified point object
         */
-        function (x, y, angle, point) {
-            var s = Math.sin(angle);
-            var c = Math.cos(angle);
-            point.x -= x;
-            point.y -= y;
-            var newX = point.x * c - point.y * s;
-            var newY = point.x * s - point.y * c;
-            return point.setTo(newX + x, newY + y);
+        function (point, x1, y1, angle, asDegrees, distance) {
+            if (typeof asDegrees === "undefined") { asDegrees = false; }
+            if (typeof distance === "undefined") { distance = null; }
+            if(asDegrees) {
+                angle = angle * GameMath.DEG_TO_RAD;
+            }
+            //  Get distance from origin to the point
+            if(distance === null) {
+                distance = Math.sqrt(((x1 - point.x) * (x1 - point.x)) + ((y1 - point.y) * (y1 - point.y)));
+            }
+            point.x = x1 + distance * Math.cos(angle);
+            point.y = y1 + distance * Math.sin(angle);
+            return point;
         };
         return GameMath;
     })();
     Phaser.GameMath = GameMath;    
+})(Phaser || (Phaser = {}));
+/// <reference path="Game.ts" />
+/**
+* Phaser - GameObjectFactory
+*
+* A quick way to create new world objects and add existing objects to the current world.
+*/
+var Phaser;
+(function (Phaser) {
+    var GameObjectFactory = (function () {
+        /**
+        * GameObjectFactory constructor
+        * @param game {Game} A reference to the current Game.
+        */
+        function GameObjectFactory(game) {
+            this._game = game;
+            this._world = this._game.world;
+        }
+        GameObjectFactory.prototype.camera = /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
+        function (x, y, width, height) {
+            return this._world.createCamera(x, y, width, height);
+        };
+        GameObjectFactory.prototype.geomSprite = /**
+        * Create a new GeomSprite with specific position.
+        *
+        * @param x {number} X position of the new geom sprite.
+        * @param y {number} Y position of the new geom sprite.
+        * @returns {GeomSprite} The newly created geom sprite object.
+        */
+        function (x, y) {
+            return this._world.createGeomSprite(x, y);
+        };
+        GameObjectFactory.prototype.sprite = /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param key {string} Optional, key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        */
+        function (x, y, key) {
+            if (typeof key === "undefined") { key = ''; }
+            return this._world.createSprite(x, y, key);
+        };
+        GameObjectFactory.prototype.dynamicTexture = /**
+        * Create a new DynamicTexture with specific size.
+        *
+        * @param width {number} Width of the texture.
+        * @param height {number} Height of the texture.
+        * @returns {DynamicTexture} The newly created dynamic texture object.
+        */
+        function (width, height) {
+            return this._world.createDynamicTexture(width, height);
+        };
+        GameObjectFactory.prototype.group = /**
+        * Create a new object container.
+        *
+        * @param maxSize {number} Optional, capacity of this group.
+        * @returns {Group} The newly created group.
+        */
+        function (maxSize) {
+            if (typeof maxSize === "undefined") { maxSize = 0; }
+            return this._world.createGroup(maxSize);
+        };
+        GameObjectFactory.prototype.particle = /**
+        * Create a new Particle.
+        *
+        * @return {Particle} The newly created particle object.
+        */
+        function () {
+            return this._world.createParticle();
+        };
+        GameObjectFactory.prototype.emitter = /**
+        * Create a new Emitter.
+        *
+        * @param x {number} Optional, x position of the emitter.
+        * @param y {number} Optional, y position of the emitter.
+        * @param size {number} Optional, size of this emitter.
+        * @return {Emitter} The newly created emitter object.
+        */
+        function (x, y, size) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof size === "undefined") { size = 0; }
+            return this._world.createEmitter(x, y, size);
+        };
+        GameObjectFactory.prototype.scrollZone = /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {string} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
+        function (key, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
+            return this._world.createScrollZone(key, x, y, width, height);
+        };
+        GameObjectFactory.prototype.tilemap = /**
+        * Create a new Tilemap.
+        *
+        * @param key {string} Key for tileset image.
+        * @param mapData {string} Data of this tilemap.
+        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+        * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
+        * @param [tileWidth] {number} width of each tile.
+        * @param [tileHeight] {number} height of each tile.
+        * @return {Tilemap} The newly created tilemap object.
+        */
+        function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
+            if (typeof resizeWorld === "undefined") { resizeWorld = true; }
+            if (typeof tileWidth === "undefined") { tileWidth = 0; }
+            if (typeof tileHeight === "undefined") { tileHeight = 0; }
+            return this._world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
+        };
+        GameObjectFactory.prototype.tween = /**
+        * Create a tween object for a specific object.
+        *
+        * @param obj Object you wish the tween will affect.
+        * @return {Phaser.Tween} The newly created tween object.
+        */
+        function (obj) {
+            return this._game.tweens.create(obj);
+        };
+        GameObjectFactory.prototype.existingSprite = /**
+        * Add an existing Sprite to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param sprite The Sprite to add to the Game World
+        * @return {Phaser.Sprite} The Sprite object
+        */
+        function (sprite) {
+            return this._world.group.add(sprite);
+        };
+        GameObjectFactory.prototype.existingGeomSprite = /**
+        * Add an existing GeomSprite to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param sprite The GeomSprite to add to the Game World
+        * @return {Phaser.GeomSprite} The GeomSprite object
+        */
+        function (sprite) {
+            return this._world.group.add(sprite);
+        };
+        GameObjectFactory.prototype.existingEmitter = /**
+        * Add an existing Emitter to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param emitter The Emitter to add to the Game World
+        * @return {Phaser.Emitter} The Emitter object
+        */
+        function (emitter) {
+            return this._world.group.add(emitter);
+        };
+        GameObjectFactory.prototype.existingScrollZone = /**
+        * Add an existing ScrollZone to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param scrollZone The ScrollZone to add to the Game World
+        * @return {Phaser.ScrollZone} The ScrollZone object
+        */
+        function (scrollZone) {
+            return this._world.group.add(scrollZone);
+        };
+        GameObjectFactory.prototype.existingTilemap = /**
+        * Add an existing Tilemap to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param tilemap The Tilemap to add to the Game World
+        * @return {Phaser.Tilemap} The Tilemap object
+        */
+        function (tilemap) {
+            return this._world.group.add(tilemap);
+        };
+        GameObjectFactory.prototype.existingTween = /**
+        * Add an existing Tween to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param tween The Tween to add to the Game World
+        * @return {Phaser.Tween} The Tween object
+        */
+        function (tween) {
+            return this._game.tweens.add(tween);
+        };
+        return GameObjectFactory;
+    })();
+    Phaser.GameObjectFactory = GameObjectFactory;    
 })(Phaser || (Phaser = {}));
 /// <reference path="Basic.ts" />
 /// <reference path="Game.ts" />
@@ -7398,9 +8449,36 @@ var Phaser;
             this._maxSize = MaxSize;
             this._marker = 0;
             this._sortIndex = null;
+            this.cameraBlacklist = [];
         }
         Group.ASCENDING = -1;
         Group.DESCENDING = 1;
+        Group.prototype.hideFromCamera = /**
+        * If you do not wish this object to be visible to a specific camera, pass the camera here.
+        *
+        * @param camera {Camera} The specific camera.
+        */
+        function (camera) {
+            if(this.cameraBlacklist.indexOf(camera.ID) == -1) {
+                this.cameraBlacklist.push(camera.ID);
+            }
+        };
+        Group.prototype.showToCamera = /**
+        * Make this object only visible to a specific camera.
+        *
+        * @param camera {Camera} The camera you wish it to be visible.
+        */
+        function (camera) {
+            if(this.cameraBlacklist.indexOf(camera.ID) !== -1) {
+                this.cameraBlacklist.slice(this.cameraBlacklist.indexOf(camera.ID), 1);
+            }
+        };
+        Group.prototype.clearCameraList = /**
+        * This clears the camera black list, making the GameObject visible to all cameras.
+        */
+        function () {
+            this.cameraBlacklist.length = 0;
+        };
         Group.prototype.destroy = /**
         * Override this function to handle any deleting or "shutdown" type operations you might need,
         * such as removing traditional Flash children like Basic objects.
@@ -7443,6 +8521,9 @@ var Phaser;
         */
         function (camera, cameraOffsetX, cameraOffsetY, forceRender) {
             if (typeof forceRender === "undefined") { forceRender = false; }
+            if(this.cameraBlacklist.indexOf(camera.ID) !== -1) {
+                return;
+            }
             if(this.ignoreGlobalRender && forceRender == false) {
                 return;
             }
@@ -7945,6 +9026,11 @@ var Phaser;
         * @param callback {function} This will be called when assets completely loaded.
         */
         function Loader(game, callback) {
+            /**
+            * The crossOrigin value applied to loaded images
+            * @type {string}
+            */
+            this.crossOrigin = '';
             this._game = game;
             this._gameCreateComplete = callback;
             this._keys = [];
@@ -8174,6 +9260,7 @@ var Phaser;
                     file.data.onerror = function () {
                         return _this.fileError(file.key);
                     };
+                    file.data.crossOrigin = this.crossOrigin;
                     file.data.src = file.url;
                     break;
                 case 'audio':
@@ -8844,7 +9931,7 @@ var Phaser;
 /**
 * Phaser
 *
-* v0.9.5 - April 28th 2013
+* v0.9.6 - May 21st 2013
 *
 * A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -8858,7 +9945,7 @@ var Phaser;
 */
 var Phaser;
 (function (Phaser) {
-    Phaser.VERSION = 'Phaser version 0.9.5';
+    Phaser.VERSION = 'Phaser version 0.9.6';
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
@@ -9185,7 +10272,7 @@ var Phaser;
         * Start color fading cycle.
         */
         function () {
-            this._fade = this._game.createTween(this._color2);
+            this._fade = this._game.add.tween(this._color2);
             this._fade.to({
                 r: Math.random() * 250,
                 g: Math.random() * 250,
@@ -9274,7 +10361,7 @@ var Phaser;
         * Start fadeOut effect.
         */
         function () {
-            this._fade = this._game.createTween(this._color);
+            this._fade = this._game.add.tween(this._color);
             this._fade.to({
                 r: 50,
                 g: 50,
@@ -9287,7 +10374,7 @@ var Phaser;
         * Start fadeIn effect.
         */
         function () {
-            this._fade = this._game.createTween(this._color);
+            this._fade = this._game.add.tween(this._color);
             this._fade.to({
                 r: 255,
                 g: 255,
@@ -9414,17 +10501,23 @@ var Phaser;
             }
             if(event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true) {
                 if(this._game.paused == false) {
-                    this._pauseScreen.onPaused();
-                    this.saveCanvasValues();
-                    this._game.paused = true;
+                    this.pauseGame();
                 }
             } else {
                 if(this._game.paused == true) {
-                    this._pauseScreen.onResume();
-                    this._game.paused = false;
-                    this.restoreCanvasValues();
+                    this.resumeGame();
                 }
             }
+        };
+        Stage.prototype.pauseGame = function () {
+            this._pauseScreen.onPaused();
+            this.saveCanvasValues();
+            this._game.paused = true;
+        };
+        Stage.prototype.resumeGame = function () {
+            this._pauseScreen.onResume();
+            this.restoreCanvasValues();
+            this._game.paused = false;
         };
         Stage.prototype.getOffset = /**
         * Get the DOM offset values of the given element
@@ -10357,134 +11450,6 @@ var Phaser;
     })();
     Phaser.TweenManager = TweenManager;    
 })(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
-* Phaser - Vector2
-*
-* A simple 2-dimensional vector class. Based on the one included with verlet-js by Sub Protocol released under MIT
-*/
-var Phaser;
-(function (Phaser) {
-    var Vector2 = (function () {
-        /**
-        * Creates a new Vector2 object.
-        * @class Vector2
-        * @constructor
-        * @param {Number} x The x coordinate of vector2
-        * @param {Number} y The y coordinate of vector2
-        * @return {Vector2} This object
-        **/
-        function Vector2(x, y) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            this.x = x;
-            this.y = y;
-        }
-        Vector2.prototype.setTo = function (x, y) {
-            this.x = x;
-            this.y = y;
-            return this;
-        };
-        Vector2.prototype.add = function (v, output) {
-            if (typeof output === "undefined") { output = new Vector2(); }
-            return output.setTo(this.x + v.x, this.y + v.y);
-        };
-        Vector2.prototype.sub = function (v, output) {
-            if (typeof output === "undefined") { output = new Vector2(); }
-            return output.setTo(this.x - v.x, this.y - v.y);
-        };
-        Vector2.prototype.mul = function (v, output) {
-            if (typeof output === "undefined") { output = new Vector2(); }
-            return output.setTo(this.x * v.x, this.y * v.y);
-        };
-        Vector2.prototype.div = function (v, output) {
-            if (typeof output === "undefined") { output = new Vector2(); }
-            return output.setTo(this.x / v.x, this.y / v.y);
-        };
-        Vector2.prototype.scale = function (coef, output) {
-            if (typeof output === "undefined") { output = new Vector2(); }
-            return output.setTo(this.x * coef, this.y * coef);
-        };
-        Vector2.prototype.mutableSet = function (v) {
-            this.x = v.x;
-            this.y = v.y;
-            return this;
-        };
-        Vector2.prototype.mutableAdd = function (v) {
-            this.x += v.x;
-            this.y += v.y;
-            return this;
-        };
-        Vector2.prototype.mutableSub = function (v) {
-            this.x -= v.x;
-            this.y -= v.y;
-            return this;
-        };
-        Vector2.prototype.mutableMul = function (v) {
-            this.x *= v.x;
-            this.y *= v.y;
-            return this;
-        };
-        Vector2.prototype.mutableDiv = function (v) {
-            this.x /= v.x;
-            this.y /= v.y;
-            return this;
-        };
-        Vector2.prototype.mutableScale = function (coef) {
-            this.x *= coef;
-            this.y *= coef;
-            return this;
-        };
-        Vector2.prototype.equals = function (v) {
-            return this.x == v.x && this.y == v.y;
-        };
-        Vector2.prototype.epsilonEquals = function (v, epsilon) {
-            return Math.abs(this.x - v.x) <= epsilon && Math.abs(this.y - v.y) <= epsilon;
-        };
-        Vector2.prototype.length = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y);
-        };
-        Vector2.prototype.length2 = function () {
-            return this.x * this.x + this.y * this.y;
-        };
-        Vector2.prototype.dist = function (v) {
-            return Math.sqrt(this.dist2(v));
-        };
-        Vector2.prototype.dist2 = function (v) {
-            return ((v.x - this.x) * (v.x - this.x)) + ((v.y - this.y) * (v.y - this.y));
-        };
-        Vector2.prototype.normal = function (output) {
-            if (typeof output === "undefined") { output = new Vector2(); }
-            var m = Math.sqrt(this.x * this.x + this.y * this.y);
-            return output.setTo(this.x / m, this.y / m);
-        };
-        Vector2.prototype.dot = function (v) {
-            return this.x * v.x + this.y * v.y;
-        };
-        Vector2.prototype.angle = function (v) {
-            return Math.atan2(this.x * v.y - this.y * v.x, this.x * v.x + this.y * v.y);
-        };
-        Vector2.prototype.angle2 = function (vLeft, vRight) {
-            return vLeft.sub(this).angle(vRight.sub(this));
-        };
-        Vector2.prototype.rotate = function (origin, theta, output) {
-            if (typeof output === "undefined") { output = new Vector2(); }
-            var x = this.x - origin.x;
-            var y = this.y - origin.y;
-            return output.setTo(x * Math.cos(theta) - y * Math.sin(theta) + origin.x, x * Math.sin(theta) + y * Math.cos(theta) + origin.y);
-        };
-        Vector2.prototype.toString = /**
-        * Returns a string representation of this object.
-        * @method toString
-        * @return {string} a string representation of the object.
-        **/
-        function () {
-            return "[{Vector2 (x=" + this.x + " y=" + this.y + ")}]";
-        };
-        return Vector2;
-    })();
-    Phaser.Vector2 = Vector2;    
-})(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
     /// <reference path="../Game.ts" />
@@ -10581,13 +11546,32 @@ var Phaser;
             * @return {Composite} This object
             **/
             function Composite(game) {
+                /**
+                * Texture of the particles to be rendered.
+                */
+                this._texture = null;
+                //  local rendering related temp vars to help avoid gc spikes
+                this._sx = 0;
+                this._sy = 0;
+                this._sw = 0;
+                this._sh = 0;
+                this._dx = 0;
+                this._dy = 0;
+                this._dw = 0;
+                this._dh = 0;
+                this._hw = 0;
+                this._hh = 0;
                 this.drawParticles = null;
                 this.drawConstraints = null;
+                this.hideConstraints = true;
+                this.constraintLineColor = 'rgba(200,200,200,1)';
                 this._game = game;
+                this.sprites = [];
                 this.particles = [];
                 this.constraints = [];
+                this.frameBounds = new Phaser.Quad();
             }
-            Composite.prototype.createDistanceConstraint = //  Map sprites to particles
+            Composite.prototype.createDistanceConstraint = //  Create Constraints
             function (a, b, stiffness, distance) {
                 if (typeof distance === "undefined") { distance = null; }
                 this.constraints.push(new Phaser.Verlet.DistanceConstraint(a, b, stiffness, distance));
@@ -10600,6 +11584,74 @@ var Phaser;
             Composite.prototype.createPinConstraint = function (a, pos) {
                 this.constraints.push(new Phaser.Verlet.PinConstraint(a, pos));
                 return this.constraints[this.constraints.length - 1];
+            };
+            Composite.prototype.loadGraphic = /**
+            * Load a graphic for this Composite. The graphic cannot be a SpriteSheet yet.
+            * @param key {string} Key of the graphic you want to load for this sprite.
+            * @return {Composite} This object
+            */
+            function (key) {
+                if(this._game.cache.getImage(key) !== null) {
+                    if(this._game.cache.isSpriteSheet(key) == false) {
+                        this._texture = this._game.cache.getImage(key);
+                        this.frameBounds.width = this._texture.width;
+                        this.frameBounds.height = this._texture.height;
+                        this._hw = Math.floor(this.frameBounds.width / 2);
+                        this._hh = Math.floor(this.frameBounds.width / 2);
+                        this.drawParticles = this.render;
+                        this.drawConstraints = this.renderConstraints;
+                    }
+                }
+                return this;
+            };
+            Composite.prototype.renderConstraints = function (context) {
+                if(this.hideConstraints == true || this.constraints.length == 0) {
+                    return;
+                }
+                var i;
+                context.beginPath();
+                for(i in this.constraints) {
+                    if(this.constraints[i].b) {
+                        context.moveTo(this.constraints[i].a.pos.x, this.constraints[i].a.pos.y);
+                        context.lineTo(this.constraints[i].b.pos.x, this.constraints[i].b.pos.y);
+                    }
+                }
+                context.strokeStyle = this.constraintLineColor;
+                context.stroke();
+                context.closePath();
+            };
+            Composite.prototype.render = function (context) {
+                this._sx = 0;
+                this._sy = 0;
+                this._sw = this.frameBounds.width;
+                this._sh = this.frameBounds.height;
+                this._dw = this.frameBounds.width;
+                this._dh = this.frameBounds.height;
+                this._sx = Math.round(this._sx);
+                this._sy = Math.round(this._sy);
+                this._sw = Math.round(this._sw);
+                this._sh = Math.round(this._sh);
+                this._dw = Math.round(this._dw);
+                this._dh = Math.round(this._dh);
+                var i;
+                for(i in this.particles) {
+                    //this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+                    //this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+                    this._dx = this.particles[i].pos.x - this._hw;
+                    this._dy = this.particles[i].pos.y - this._hh;
+                    this._dx = Math.round(this._dx);
+                    this._dy = Math.round(this._dy);
+                    context.drawImage(this._texture, //	Source Image
+                    this._sx, //	Source X (location within the source image)
+                    this._sy, //	Source Y
+                    this._sw, //	Source Width
+                    this._sh, //	Source Height
+                    this._dx, //	Destination X (where on the canvas it'll be drawn)
+                    this._dy, //	Destination Y
+                    this._dw, //	Destination Width (always same as Source Width unless scaled)
+                    this._dh);
+                    //	Destination Height (always same as Source Height unless scaled)
+                                    }
             };
             Composite.prototype.pin = function (index, pos) {
                 if (typeof pos === "undefined") { pos = null; }
@@ -10660,6 +11712,7 @@ var Phaser;
                 ctx.lineTo(this.b.pos.x, this.b.pos.y);
                 ctx.strokeStyle = "#d8dde2";
                 ctx.stroke();
+                ctx.closePath();
             };
             return DistanceConstraint;
         })();
@@ -10750,12 +11803,13 @@ var Phaser;
             * @return {Vector2} This object
             **/
             function VerletManager(game, width, height) {
+                this._v = new Phaser.Vector2();
                 this.composites = [];
-                this.step = 32;
+                this.step = 16;
                 this.selectionRadius = 20;
                 this.draggedEntity = null;
                 this.highlightColor = '#4f545c';
-                this.v = new Phaser.Vector2();
+                this.hideNearestEntityCircle = false;
                 this._game = game;
                 this.width = width;
                 this.height = height;
@@ -10770,10 +11824,10 @@ var Phaser;
             VerletManager.prototype.intersectionTime = /**
             * Computes time of intersection of a particle with a wall
             *
-            * @param {Vec2} line    wall's root position
-            * @param {Vec2} p       particle's position
-            * @param {Vec2} dir     walls's direction
-            * @param {Vec2} v       particle's velocity
+            * @param {Vec2} line    walls root position
+            * @param {Vec2} p       particle position
+            * @param {Vec2} dir     walls direction
+            * @param {Vec2} v       particles velocity
             */
             function (wall, p, dir, v) {
                 if(dir.x != 0) {
@@ -10799,35 +11853,16 @@ var Phaser;
                 return new Phaser.Vector2(p.x + v.x * t, p.y + v.y * t);
             };
             VerletManager.prototype.bounds = function (particle) {
-                this.v.mutableSet(particle.pos);
-                this.v.mutableSub(particle.lastPos);
+                this._v.mutableSet(particle.pos);
+                this._v.mutableSub(particle.lastPos);
                 if(particle.pos.y > this.height - 1) {
-                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(0, this.height - 1), particle.lastPos, new Phaser.Vector2(1, 0), this.v));
+                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(0, this.height - 1), particle.lastPos, new Phaser.Vector2(1, 0), this._v));
                 }
                 if(particle.pos.x < 0) {
-                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(0, 0), particle.pos, new Phaser.Vector2(0, 1), this.v));
+                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(0, 0), particle.pos, new Phaser.Vector2(0, 1), this._v));
                 }
                 if(particle.pos.x > this.width - 1) {
-                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(this.width - 1, 0), particle.pos, new Phaser.Vector2(0, 1), this.v));
-                }
-            };
-            VerletManager.prototype.OLDbounds = function (particle) {
-                if(particle.pos.y > this.height - 1) {
-                    particle.pos.y = this.height - 1;
-                }
-                if(particle.pos.x < 0) {
-                    var vx = particle.pos.x - particle.lastPos.x;
-                    var vy = particle.pos.y - particle.lastPos.y;
-                    if(vx == 0) {
-                        particle.pos.x = 0;
-                    } else {
-                        var t = -particle.lastPos.x / vx;
-                        particle.pos.x = particle.lastPos.x + t * vx;
-                        particle.pos.y = particle.lastPos.y + t * vy;
-                    }
-                }
-                if(particle.pos.x > this.width - 1) {
-                    particle.pos.x = this.width - 1;
+                    particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(this.width - 1, 0), particle.pos, new Phaser.Vector2(0, 1), this._v));
                 }
             };
             VerletManager.prototype.createPoint = function (pos) {
@@ -10837,8 +11872,8 @@ var Phaser;
                 return composite;
             };
             VerletManager.prototype.createLineSegments = function (vertices, stiffness) {
-                var i;
                 var composite = new Phaser.Verlet.Composite(this._game);
+                var i;
                 for(i in vertices) {
                     composite.particles.push(new Phaser.Verlet.Particle(vertices[i]));
                     if(i > 0) {
@@ -10852,7 +11887,8 @@ var Phaser;
                 var composite = new Phaser.Verlet.Composite(this._game);
                 var xStride = width / segments;
                 var yStride = height / segments;
-                var x, y;
+                var x;
+                var y;
                 for(y = 0; y < segments; ++y) {
                     for(x = 0; x < segments; ++x) {
                         var px = origin.x + x * xStride - width / 2 + xStride / 2;
@@ -10921,7 +11957,7 @@ var Phaser;
                 }
                 // handle dragging of entities
                 if(this.draggedEntity) {
-                    this.draggedEntity.pos.mutableSet(new Phaser.Vector2(this._game.input.x, this._game.input.y));
+                    this.draggedEntity.pos.mutableSet(this._game.input.position);
                 }
                 // relax
                 var stepCoef = 1 / this.step;
@@ -10959,7 +11995,7 @@ var Phaser;
                 for(c in this.composites) {
                     var particles = this.composites[c].particles;
                     for(i in particles) {
-                        var d2 = particles[i].pos.dist2(new Phaser.Vector2(this._game.input.x, this._game.input.y));
+                        var d2 = particles[i].pos.distance2(this._game.input.position);
                         if(d2 <= this.selectionRadius * this.selectionRadius && (entity == null || d2 < d2Nearest)) {
                             entity = particles[i];
                             constraintsNearest = this.composites[c].constraints;
@@ -10999,11 +12035,12 @@ var Phaser;
                 }
                 // highlight nearest / dragged entity
                 var nearest = this.draggedEntity || this.nearestEntity();
-                if(nearest) {
+                if(nearest && this.hideNearestEntityCircle == false) {
                     this.context.beginPath();
                     this.context.arc(nearest.pos.x, nearest.pos.y, 8, 0, 2 * Math.PI);
                     this.context.strokeStyle = this.highlightColor;
                     this.context.stroke();
+                    this.context.closePath();
                 }
             };
             return VerletManager;
@@ -11065,18 +12102,24 @@ var Phaser;
         World.prototype.setSize = //  World methods
         /**
         * Update size of this world with specific width and height.
-        * You can choose update camera bounds automatically or not.
+        * You can choose update camera bounds and verlet manager automatically or not.
         *
         * @param width {number} New width of the world.
         * @param height {number} New height of the world.
         * @param [updateCameraBounds] {boolean} update camera bounds automatically or not. Default to true.
+        * @param [updateVerletBounds] {boolean} update verlet bounds automatically or not. Default to true.
         */
-        function (width, height, updateCameraBounds) {
+        function (width, height, updateCameraBounds, updateVerletBounds) {
             if (typeof updateCameraBounds === "undefined") { updateCameraBounds = true; }
+            if (typeof updateVerletBounds === "undefined") { updateVerletBounds = true; }
             this.bounds.width = width;
             this.bounds.height = height;
             if(updateCameraBounds == true) {
                 this._game.camera.setBounds(0, 0, width, height);
+            }
+            if(updateVerletBounds == true) {
+                this._game.verlet.width = width;
+                this._game.verlet.height = height;
             }
         };
         Object.defineProperty(World.prototype, "width", {
@@ -12030,6 +13073,7 @@ var Phaser;
     Phaser.RequestAnimationFrame = RequestAnimationFrame;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
+/// <reference path="../../geom/Vector2.ts" />
 /**
 * Phaser - Pointer
 *
@@ -12066,17 +13110,17 @@ var Phaser;
             */
             this._nextDrop = 0;
             /**
-            * A Point object representing the x/y screen coordinates of the Pointer.
-            * @property pointA
-            * @type {Point}
+            * A Vector object containing the initial position when the Pointer was engaged with the screen.
+            * @property positionDown
+            * @type {Vector2}
             **/
-            this.pointA = null;
+            this.positionDown = null;
             /**
-            * A Point object representing the x/y screen coordinates of the Pointer.
-            * @property pointB
-            * @type {Point}
+            * A Vector object containing the current position of the Pointer on the screen.
+            * @property position
+            * @type {Vector2}
             **/
-            this.pointB = null;
+            this.position = null;
             /**
             * A Circle object centered on the x/y screen coordinates of the Pointer.
             * Default size of 44px (Apple's recommended "finger tip" size)
@@ -12183,8 +13227,8 @@ var Phaser;
             this._game = game;
             this.id = id;
             this.active = false;
-            this.pointA = new Phaser.Point();
-            this.pointB = new Phaser.Point();
+            this.position = new Phaser.Vector2();
+            this.positionDown = new Phaser.Vector2();
             this.circle = new Phaser.Circle(0, 0, 44);
             if(id == 0) {
                 this.isMouse = true;
@@ -12232,9 +13276,14 @@ var Phaser;
             if(event.button) {
                 this.button = event.button;
             }
+            //  Fix to stop rogue browser plugins from blocking the visibility state event
+            if(this._game.paused == true) {
+                this._game.stage.resumeGame();
+                return this;
+            }
             this._history.length = 0;
             this.move(event);
-            this.pointA.setTo(this.x, this.y);
+            this.positionDown.setTo(this.x, this.y);
             this.active = true;
             this.withinGame = true;
             this.isDown = true;
@@ -12264,8 +13313,8 @@ var Phaser;
                 if(this._game.input.recordPointerHistory && this._game.time.now >= this._nextDrop) {
                     this._nextDrop = this._game.time.now + this._game.input.recordRate;
                     this._history.push({
-                        x: this.pointB.x,
-                        y: this.pointB.y
+                        x: this.position.x,
+                        y: this.position.y
                     });
                     if(this._history.length > this._game.input.recordLimit) {
                         this._history.shift();
@@ -12290,13 +13339,13 @@ var Phaser;
             this.screenY = event.screenY;
             this.x = this.pageX - this._game.stage.offset.x;
             this.y = this.pageY - this._game.stage.offset.y;
-            this.pointB.setTo(this.x, this.y);
+            this.position.setTo(this.x, this.y);
             this.circle.x = this.x;
             this.circle.y = this.y;
             if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
                 this._game.input.x = this.x * this._game.input.scaleX;
                 this._game.input.y = this.y * this._game.input.scaleY;
-                this._game.input.point.setTo(this._game.input.x, this._game.input.y);
+                this._game.input.position.setTo(this._game.input.x, this._game.input.y);
                 this._game.input.circle.x = this._game.input.x;
                 this._game.input.circle.y = this._game.input.y;
             }
@@ -12405,8 +13454,8 @@ var Phaser;
             this._game.stage.context.closePath();
             //  Render the points
             this._game.stage.context.beginPath();
-            this._game.stage.context.moveTo(this.pointA.x, this.pointA.y);
-            this._game.stage.context.lineTo(this.pointB.x, this.pointB.y);
+            this._game.stage.context.moveTo(this.positionDown.x, this.positionDown.y);
+            this._game.stage.context.lineTo(this.position.x, this.position.y);
             this._game.stage.context.lineWidth = 2;
             this._game.stage.context.stroke();
             this._game.stage.context.closePath();
@@ -12588,11 +13637,11 @@ var Phaser;
             */
             this.multiInputOverride = Input.MOUSE_TOUCH_COMBINE;
             /**
-            * A Point object representing the x/y screen coordinates of the Pointer.
-            * @property point
-            * @type {Point}
+            * A vector object representing the current position of the Pointer.
+            * @property vector
+            * @type {Vector2}
             **/
-            this.point = null;
+            this.position = null;
             /**
             * A Circle object centered on the x/y screen coordinates of the Input.
             * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
@@ -12684,6 +13733,36 @@ var Phaser;
             * @type {Number}
             */
             this.recordLimit = 100;
+            /**
+            * A Pointer object
+            * @property pointer6
+            * @type {Pointer}
+            **/
+            this.pointer6 = null;
+            /**
+            * A Pointer object
+            * @property pointer7
+            * @type {Pointer}
+            **/
+            this.pointer7 = null;
+            /**
+            * A Pointer object
+            * @property pointer8
+            * @type {Pointer}
+            **/
+            this.pointer8 = null;
+            /**
+            * A Pointer object
+            * @property pointer9
+            * @type {Pointer}
+            **/
+            this.pointer9 = null;
+            /**
+            * A Pointer object
+            * @property pointer10
+            * @type {Pointer}
+            **/
+            this.pointer10 = null;
             this._game = game;
             this.mousePointer = new Phaser.Pointer(this._game, 0);
             this.pointer1 = new Phaser.Pointer(this._game, 1);
@@ -12691,11 +13770,6 @@ var Phaser;
             this.pointer3 = new Phaser.Pointer(this._game, 3);
             this.pointer4 = new Phaser.Pointer(this._game, 4);
             this.pointer5 = new Phaser.Pointer(this._game, 5);
-            this.pointer6 = new Phaser.Pointer(this._game, 6);
-            this.pointer7 = new Phaser.Pointer(this._game, 7);
-            this.pointer8 = new Phaser.Pointer(this._game, 8);
-            this.pointer9 = new Phaser.Pointer(this._game, 9);
-            this.pointer10 = new Phaser.Pointer(this._game, 10);
             this.mouse = new Phaser.Mouse(this._game);
             this.keyboard = new Phaser.Keyboard(this._game);
             this.touch = new Phaser.Touch(this._game);
@@ -12705,7 +13779,7 @@ var Phaser;
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
-            this.point = new Phaser.Point();
+            this.position = new Phaser.Vector2();
             this.circle = new Phaser.Circle(0, 0, 44);
             this.currentPointers = 0;
         }
@@ -12742,25 +13816,74 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Input.prototype.start = function () {
+        Input.prototype.addPointer = /**
+        * Add a new Pointer object to the Input Manager. By default Input creates 5 pointer objects for you. If you need more
+        * use this to create a new one, up to a maximum of 10.
+        * @method addPointer
+        * @return {Pointer} A reference to the new Pointer object
+        **/
+        function () {
+            var next = 0;
+            if(this.pointer10 === null) {
+                next = 10;
+            }
+            if(this.pointer9 === null) {
+                next = 9;
+            }
+            if(this.pointer8 === null) {
+                next = 8;
+            }
+            if(this.pointer7 === null) {
+                next = 7;
+            }
+            if(this.pointer6 === null) {
+                next = 6;
+            }
+            if(next == 0) {
+                throw new Error("You can only have 10 Pointer objects");
+                return null;
+            } else {
+                this['pointer' + next] = new Phaser.Pointer(this._game, next);
+                return this['pointer' + next];
+            }
+        };
+        Input.prototype.start = /**
+        * Starts the Input Manager running
+        * @method start
+        **/
+        function () {
             this.mouse.start();
             this.keyboard.start();
             this.touch.start();
             this.mspointer.start();
             this.gestures.start();
         };
-        Input.prototype.update = function () {
+        Input.prototype.update = /**
+        * Updates the Input Manager. Called by the core Game loop.
+        * @method update
+        **/
+        function () {
             this.mousePointer.update();
             this.pointer1.update();
             this.pointer2.update();
             this.pointer3.update();
             this.pointer4.update();
             this.pointer5.update();
-            this.pointer6.update();
-            this.pointer7.update();
-            this.pointer8.update();
-            this.pointer9.update();
-            this.pointer10.update();
+            if(this.pointer6) {
+                this.pointer6.update();
+            }
+            if(this.pointer7) {
+                this.pointer7.update();
+            }
+            if(this.pointer8) {
+                this.pointer8.update();
+            }
+            if(this.pointer9) {
+                this.pointer9.update();
+            }
+            if(this.pointer10) {
+                this.pointer10.update();
+            }
         };
         Input.prototype.reset = /**
         * Reset all of the Pointers and Input states
@@ -12775,11 +13898,21 @@ var Phaser;
             this.pointer3.reset();
             this.pointer4.reset();
             this.pointer5.reset();
-            this.pointer6.reset();
-            this.pointer7.reset();
-            this.pointer8.reset();
-            this.pointer9.reset();
-            this.pointer10.reset();
+            if(this.pointer6) {
+                this.pointer6.reset();
+            }
+            if(this.pointer7) {
+                this.pointer7.reset();
+            }
+            if(this.pointer8) {
+                this.pointer8.reset();
+            }
+            if(this.pointer9) {
+                this.pointer9.reset();
+            }
+            if(this.pointer10) {
+                this.pointer10.reset();
+            }
             this.currentPointers = 0;
             if(hard == true) {
                 this.onDown = new Phaser.Signal();
@@ -12818,15 +13951,15 @@ var Phaser;
                     this.currentPointers++;
                 } else if(this.pointer5.active == true) {
                     this.currentPointers++;
-                } else if(this.pointer6.active == true) {
+                } else if(this.pointer6 && this.pointer6.active == true) {
                     this.currentPointers++;
-                } else if(this.pointer7.active == true) {
+                } else if(this.pointer7 && this.pointer7.active == true) {
                     this.currentPointers++;
-                } else if(this.pointer8.active == true) {
+                } else if(this.pointer8 && this.pointer8.active == true) {
                     this.currentPointers++;
-                } else if(this.pointer9.active == true) {
+                } else if(this.pointer9 && this.pointer9.active == true) {
                     this.currentPointers++;
-                } else if(this.pointer10.active == true) {
+                } else if(this.pointer10 && this.pointer10.active == true) {
                     this.currentPointers++;
                 }
                 return this.currentPointers;
@@ -12855,15 +13988,15 @@ var Phaser;
                 return this.pointer4.start(event);
             } else if(this.pointer5.active == false) {
                 return this.pointer5.start(event);
-            } else if(this.pointer6.active == false) {
+            } else if(this.pointer6 && this.pointer6.active == false) {
                 return this.pointer6.start(event);
-            } else if(this.pointer7.active == false) {
+            } else if(this.pointer7 && this.pointer7.active == false) {
                 return this.pointer7.start(event);
-            } else if(this.pointer8.active == false) {
+            } else if(this.pointer8 && this.pointer8.active == false) {
                 return this.pointer8.start(event);
-            } else if(this.pointer9.active == false) {
+            } else if(this.pointer9 && this.pointer9.active == false) {
                 return this.pointer9.start(event);
-            } else if(this.pointer10.active == false) {
+            } else if(this.pointer10 && this.pointer10.active == false) {
                 return this.pointer10.start(event);
             }
             return null;
@@ -12886,15 +14019,15 @@ var Phaser;
                 return this.pointer4.move(event);
             } else if(this.pointer5.active == true && this.pointer5.identifier == event.identifier) {
                 return this.pointer5.move(event);
-            } else if(this.pointer6.active == true && this.pointer6.identifier == event.identifier) {
+            } else if(this.pointer6 && this.pointer6.active == true && this.pointer6.identifier == event.identifier) {
                 return this.pointer6.move(event);
-            } else if(this.pointer7.active == true && this.pointer7.identifier == event.identifier) {
+            } else if(this.pointer7 && this.pointer7.active == true && this.pointer7.identifier == event.identifier) {
                 return this.pointer7.move(event);
-            } else if(this.pointer8.active == true && this.pointer8.identifier == event.identifier) {
+            } else if(this.pointer8 && this.pointer8.active == true && this.pointer8.identifier == event.identifier) {
                 return this.pointer8.move(event);
-            } else if(this.pointer9.active == true && this.pointer9.identifier == event.identifier) {
+            } else if(this.pointer9 && this.pointer9.active == true && this.pointer9.identifier == event.identifier) {
                 return this.pointer9.move(event);
-            } else if(this.pointer10.active == true && this.pointer10.identifier == event.identifier) {
+            } else if(this.pointer10 && this.pointer10.active == true && this.pointer10.identifier == event.identifier) {
                 return this.pointer10.move(event);
             }
             return null;
@@ -12917,15 +14050,15 @@ var Phaser;
                 return this.pointer4.stop(event);
             } else if(this.pointer5.active == true && this.pointer5.identifier == event.identifier) {
                 return this.pointer5.stop(event);
-            } else if(this.pointer6.active == true && this.pointer6.identifier == event.identifier) {
+            } else if(this.pointer6 && this.pointer6.active == true && this.pointer6.identifier == event.identifier) {
                 return this.pointer6.stop(event);
-            } else if(this.pointer7.active == true && this.pointer7.identifier == event.identifier) {
+            } else if(this.pointer7 && this.pointer7.active == true && this.pointer7.identifier == event.identifier) {
                 return this.pointer7.stop(event);
-            } else if(this.pointer8.active == true && this.pointer8.identifier == event.identifier) {
+            } else if(this.pointer8 && this.pointer8.active == true && this.pointer8.identifier == event.identifier) {
                 return this.pointer8.stop(event);
-            } else if(this.pointer9.active == true && this.pointer9.identifier == event.identifier) {
+            } else if(this.pointer9 && this.pointer9.active == true && this.pointer9.identifier == event.identifier) {
                 return this.pointer9.stop(event);
-            } else if(this.pointer10.active == true && this.pointer10.identifier == event.identifier) {
+            } else if(this.pointer10 && this.pointer10.active == true && this.pointer10.identifier == event.identifier) {
                 return this.pointer10.stop(event);
             }
             return null;
@@ -12949,15 +14082,15 @@ var Phaser;
                 return this.pointer4;
             } else if(this.pointer5.active == state) {
                 return this.pointer5;
-            } else if(this.pointer6.active == state) {
+            } else if(this.pointer6 && this.pointer6.active == state) {
                 return this.pointer6;
-            } else if(this.pointer7.active == state) {
+            } else if(this.pointer7 && this.pointer7.active == state) {
                 return this.pointer7;
-            } else if(this.pointer8.active == state) {
+            } else if(this.pointer8 && this.pointer8.active == state) {
                 return this.pointer8;
-            } else if(this.pointer9.active == state) {
+            } else if(this.pointer9 && this.pointer9.active == state) {
                 return this.pointer9;
-            } else if(this.pointer10.active == state) {
+            } else if(this.pointer10 && this.pointer10.active == state) {
                 return this.pointer10;
             }
             return null;
@@ -12980,15 +14113,15 @@ var Phaser;
                 return this.pointer4;
             } else if(this.pointer5.identifier == identifier) {
                 return this.pointer5;
-            } else if(this.pointer6.identifier == identifier) {
+            } else if(this.pointer6 && this.pointer6.identifier == identifier) {
                 return this.pointer6;
-            } else if(this.pointer7.identifier == identifier) {
+            } else if(this.pointer7 && this.pointer7.identifier == identifier) {
                 return this.pointer7;
-            } else if(this.pointer8.identifier == identifier) {
+            } else if(this.pointer8 && this.pointer8.identifier == identifier) {
                 return this.pointer8;
-            } else if(this.pointer9.identifier == identifier) {
+            } else if(this.pointer9 && this.pointer9.identifier == identifier) {
                 return this.pointer9;
-            } else if(this.pointer10.identifier == identifier) {
+            } else if(this.pointer10 && this.pointer10.identifier == identifier) {
                 return this.pointer10;
             }
             return null;
@@ -13021,34 +14154,28 @@ var Phaser;
             this._game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
             this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
         };
+        Input.prototype.getDistance = /**
+        * Get the distance between two Pointer objects
+        * @method getDistance
+        * @param {Pointer} pointer1
+        * @param {Pointer} pointer2
+        **/
+        function (pointer1, pointer2) {
+            return pointer1.position.distance(pointer2.position);
+        };
+        Input.prototype.getAngle = /**
+        * Get the angle between two Pointer objects
+        * @method getAngle
+        * @param {Pointer} pointer1
+        * @param {Pointer} pointer2
+        **/
+        function (pointer1, pointer2) {
+            return pointer1.position.angle(pointer2.position);
+        };
         return Input;
     })();
     Phaser.Input = Input;    
-    /**
-    *
-    * @method calculateDistance
-    * @param {Finger} finger1
-    * @param {Finger} finger2
-    **/
-    //public calculateDistance(finger1: Finger, finger2: Finger) {
-    //}
-    /**
-    *
-    * @method calculateAngle
-    * @param {Finger} finger1
-    * @param {Finger} finger2
-    **/
-    //public calculateAngle(finger1: Finger, finger2: Finger) {
-    //}
-    /**
-    *
-    * @method checkOverlap
-    * @param {Finger} finger1
-    * @param {Finger} finger2
-    **/
-    //public checkOverlap(finger1: Finger, finger2: Finger) {
-    //}
-    })(Phaser || (Phaser = {}));
+})(Phaser || (Phaser = {}));
 /// <reference path="../../Game.ts" />
 /**
 * Phaser - Keyboard
@@ -13822,6 +14949,7 @@ var Phaser;
     Phaser.Emitter = Emitter;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="../geom/Polygon.ts" />
 /**
 * Phaser - GeomSprite
 *
@@ -13888,6 +15016,7 @@ var Phaser;
         GeomSprite.LINE = 2;
         GeomSprite.POINT = 3;
         GeomSprite.RECTANGLE = 4;
+        GeomSprite.POLYGON = 5;
         GeomSprite.prototype.loadCircle = /**
         * Just like Sprite.loadGraphic(), this will load a circle and set its shape to Circle.
         * @param circle {Circle} Circle geometry define.
@@ -13980,6 +15109,20 @@ var Phaser;
             this.rect = new Phaser.Rectangle(this.x, this.y, width, height);
             this.type = GeomSprite.RECTANGLE;
             this.frameBounds.copyFrom(this.rect);
+            return this;
+        };
+        GeomSprite.prototype.createPolygon = /**
+        * Create a polygon object
+        * @param width {Number} Width of the rectangle
+        * @param height {Number} Height of the rectangle
+        * @return {GeomSprite} GeomSprite instance.
+        */
+        function (points) {
+            if (typeof points === "undefined") { points = []; }
+            this.refresh();
+            this.polygon = new Phaser.Polygon(new Phaser.Vector2(this.x, this.y), points);
+            this.type = GeomSprite.POLYGON;
+            //this.frameBounds.copyFrom(this.rect);
             return this;
         };
         GeomSprite.prototype.refresh = /**
@@ -15572,6 +16715,7 @@ var Phaser;
 /// <reference path="DynamicTexture.ts" />
 /// <reference path="FXManager.ts" />
 /// <reference path="GameMath.ts" />
+/// <reference path="GameObjectFactory.ts" />
 /// <reference path="Group.ts" />
 /// <reference path="Loader.ts" />
 /// <reference path="Motion.ts" />
@@ -15751,6 +16895,7 @@ var Phaser;
                 this.math = new Phaser.GameMath(this);
                 this.stage = new Phaser.Stage(this, parent, width, height);
                 this.world = new Phaser.World(this, width, height);
+                this.add = new Phaser.GameObjectFactory(this);
                 this.sound = new Phaser.SoundManager(this);
                 this.cache = new Phaser.Cache(this);
                 this.collision = new Phaser.Collision(this);
@@ -15989,126 +17134,6 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Game.prototype.createCamera = //  Handy Proxy methods
-        /**
-        * Create a new camera with specific position and size.
-        *
-        * @param x {number} X position of the new camera.
-        * @param y {number} Y position of the new camera.
-        * @param width {number} Width of the new camera.
-        * @param height {number} Height of the new camera.
-        * @returns {Camera} The newly created camera object.
-        */
-        function (x, y, width, height) {
-            return this.world.createCamera(x, y, width, height);
-        };
-        Game.prototype.createGeomSprite = /**
-        * Create a new GeomSprite with specific position.
-        *
-        * @param x {number} X position of the new geom sprite.
-        * @param y {number} Y position of the new geom sprite.
-        * @returns {GeomSprite} The newly created geom sprite object.
-        */
-        function (x, y) {
-            return this.world.createGeomSprite(x, y);
-        };
-        Game.prototype.createSprite = /**
-        * Create a new Sprite with specific position and sprite sheet key.
-        *
-        * @param x {number} X position of the new sprite.
-        * @param y {number} Y position of the new sprite.
-        * @param key {string} Optional, key for the sprite sheet you want it to use.
-        * @returns {Sprite} The newly created sprite object.
-        */
-        function (x, y, key) {
-            if (typeof key === "undefined") { key = ''; }
-            return this.world.createSprite(x, y, key);
-        };
-        Game.prototype.createDynamicTexture = /**
-        * Create a new DynamicTexture with specific size.
-        *
-        * @param width {number} Width of the texture.
-        * @param height {number} Height of the texture.
-        * @returns {DynamicTexture} The newly created dynamic texture object.
-        */
-        function (width, height) {
-            return this.world.createDynamicTexture(width, height);
-        };
-        Game.prototype.createGroup = /**
-        * Create a new object container.
-        *
-        * @param maxSize {number} Optional, capacity of this group.
-        * @returns {Group} The newly created group.
-        */
-        function (maxSize) {
-            if (typeof maxSize === "undefined") { maxSize = 0; }
-            return this.world.createGroup(maxSize);
-        };
-        Game.prototype.createParticle = /**
-        * Create a new Particle.
-        *
-        * @return {Particle} The newly created particle object.
-        */
-        function () {
-            return this.world.createParticle();
-        };
-        Game.prototype.createEmitter = /**
-        * Create a new Emitter.
-        *
-        * @param x {number} Optional, x position of the emitter.
-        * @param y {number} Optional, y position of the emitter.
-        * @param size {number} Optional, size of this emitter.
-        * @return {Emitter} The newly created emitter object.
-        */
-        function (x, y, size) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof size === "undefined") { size = 0; }
-            return this.world.createEmitter(x, y, size);
-        };
-        Game.prototype.createScrollZone = /**
-        * Create a new ScrollZone object with image key, position and size.
-        *
-        * @param key {string} Key to a image you wish this object to use.
-        * @param x {number} X position of this object.
-        * @param y {number} Y position of this object.
-        * @param width number} Width of this object.
-        * @param height {number} Height of this object.
-        * @returns {ScrollZone} The newly created scroll zone object.
-        */
-        function (key, x, y, width, height) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof width === "undefined") { width = 0; }
-            if (typeof height === "undefined") { height = 0; }
-            return this.world.createScrollZone(key, x, y, width, height);
-        };
-        Game.prototype.createTilemap = /**
-        * Create a new Tilemap.
-        *
-        * @param key {string} Key for tileset image.
-        * @param mapData {string} Data of this tilemap.
-        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-        * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
-        * @param [tileWidth] {number} width of each tile.
-        * @param [tileHeight] {number} height of each tile.
-        * @return {Tilemap} The newly created tilemap object.
-        */
-        function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
-            if (typeof resizeWorld === "undefined") { resizeWorld = true; }
-            if (typeof tileWidth === "undefined") { tileWidth = 0; }
-            if (typeof tileHeight === "undefined") { tileHeight = 0; }
-            return this.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
-        };
-        Game.prototype.createTween = /**
-        * Create a tween object for a specific object.
-        *
-        * @param obj Object you wish the tween will affect.
-        * @return {Phaser.Tween} The newly created tween object.
-        */
-        function (obj) {
-            return this.tweens.create(obj);
-        };
         Game.prototype.collide = /**
         * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
         * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
@@ -16302,6 +17327,7 @@ var Phaser;
         */
         function State(game) {
             this.game = game;
+            this.add = game.add;
             this.camera = game.camera;
             this.cache = game.cache;
             this.collision = game.collision;
@@ -16347,126 +17373,6 @@ var Phaser;
         * This method will be called when the state is destroyed
         */
         function () {
-        };
-        State.prototype.createCamera = //  Handy Proxy methods
-        /**
-        * Create a new camera with specific position and size.
-        *
-        * @param x {number} X position of the new camera.
-        * @param y {number} Y position of the new camera.
-        * @param width {number} Width of the new camera.
-        * @param height {number} Height of the new camera.
-        * @returns {Camera} The newly created camera object.
-        */
-        function (x, y, width, height) {
-            return this.game.world.createCamera(x, y, width, height);
-        };
-        State.prototype.createGeomSprite = /**
-        * Create a new GeomSprite with specific position.
-        *
-        * @param x {number} X position of the new geom sprite.
-        * @param y {number} Y position of the new geom sprite.
-        * @returns {GeomSprite} The newly created geom sprite object.
-        */
-        function (x, y) {
-            return this.world.createGeomSprite(x, y);
-        };
-        State.prototype.createSprite = /**
-        * Create a new Sprite with specific position and sprite sheet key.
-        *
-        * @param x {number} X position of the new sprite.
-        * @param y {number} Y position of the new sprite.
-        * @param key {string} [optional] key for the sprite sheet you want it to use.
-        * @returns {Sprite} The newly created sprite object.
-        */
-        function (x, y, key) {
-            if (typeof key === "undefined") { key = ''; }
-            return this.game.world.createSprite(x, y, key);
-        };
-        State.prototype.createDynamicTexture = /**
-        * Create a new DynamicTexture with specific size.
-        *
-        * @param width {number} Width of the texture.
-        * @param height {number} Height of the texture.
-        * @returns {DynamicTexture} The newly created dynamic texture object.
-        */
-        function (width, height) {
-            return this.game.world.createDynamicTexture(width, height);
-        };
-        State.prototype.createGroup = /**
-        * Create a new object container.
-        *
-        * @param maxSize {number} [optional] capacity of this group.
-        * @returns {Group} The newly created group.
-        */
-        function (maxSize) {
-            if (typeof maxSize === "undefined") { maxSize = 0; }
-            return this.game.world.createGroup(maxSize);
-        };
-        State.prototype.createParticle = /**
-        * Create a new Particle.
-        *
-        * @return {Particle} The newly created particle object.
-        */
-        function () {
-            return this.game.world.createParticle();
-        };
-        State.prototype.createEmitter = /**
-        * Create a new Emitter.
-        *
-        * @param x {number} [optional] x position of the emitter.
-        * @param y {number} [optional] y position of the emitter.
-        * @param size {number} [optional] size of this emitter.
-        * @return {Emitter} The newly created emitter object.
-        */
-        function (x, y, size) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof size === "undefined") { size = 0; }
-            return this.game.world.createEmitter(x, y, size);
-        };
-        State.prototype.createScrollZone = /**
-        * Create a new ScrollZone object with image key, position and size.
-        *
-        * @param key {string} Key to a image you wish this object to use.
-        * @param x {number} X position of this object.
-        * @param y {number} Y position of this object.
-        * @param width {number} Width of this object.
-        * @param height {number} Height of this object.
-        * @returns {ScrollZone} The newly created scroll zone object.
-        */
-        function (key, x, y, width, height) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof width === "undefined") { width = 0; }
-            if (typeof height === "undefined") { height = 0; }
-            return this.game.world.createScrollZone(key, x, y, width, height);
-        };
-        State.prototype.createTilemap = /**
-        * Create a new Tilemap.
-        *
-        * @param key {string} Key for tileset image.
-        * @param mapData {string} Data of this tilemap.
-        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-        * @param resizeWorld {boolean} [optional] resize the world to make same as tilemap?
-        * @param tileWidth {number} [optional] width of each tile.
-        * @param tileHeight number} [optional] height of each tile.
-        * @return {Tilemap} The newly created tilemap object.
-        */
-        function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
-            if (typeof resizeWorld === "undefined") { resizeWorld = true; }
-            if (typeof tileWidth === "undefined") { tileWidth = 0; }
-            if (typeof tileHeight === "undefined") { tileHeight = 0; }
-            return this.game.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
-        };
-        State.prototype.createTween = /**
-        * Create a tween object for a specific object.
-        *
-        * @param obj Object you wish the tween will affect.
-        * @return {Phaser.Tween} The newly created tween object.
-        */
-        function (obj) {
-            return this.game.tweens.create(obj);
         };
         State.prototype.collide = /**
         * Call this method to see if one object collids another.

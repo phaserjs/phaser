@@ -195,20 +195,32 @@ module Phaser {
             {
                 if (this._game.paused == false)
                 {
-                    this._pauseScreen.onPaused();
-                    this.saveCanvasValues();
-                    this._game.paused = true;
+                    this.pauseGame();
                 }
             }
             else
             {
                 if (this._game.paused == true)
                 {
-                    this._pauseScreen.onResume();
-                    this._game.paused = false;
-                    this.restoreCanvasValues();
+                    this.resumeGame();
                 }
             }
+
+        }
+
+        public pauseGame() {
+
+            this._pauseScreen.onPaused();
+            this.saveCanvasValues();
+            this._game.paused = true;
+
+        }
+
+        public resumeGame() {
+
+            this._pauseScreen.onResume();
+            this.restoreCanvasValues();
+            this._game.paused = false;
 
         }
 

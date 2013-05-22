@@ -77,6 +77,12 @@ module Phaser {
         public progress: number;
 
         /**
+         * The crossOrigin value applied to loaded images
+         * @type {string}
+         */
+        public crossOrigin: string = '';
+
+        /**
          * Reset loader, this will remove all loaded assets.
          */
         public reset() {
@@ -280,6 +286,7 @@ module Phaser {
                     file.data.name = file.key;
                     file.data.onload = () => this.fileComplete(file.key);
                     file.data.onerror = () => this.fileError(file.key);
+                    file.data.crossOrigin = this.crossOrigin;
                     file.data.src = file.url;
                     break;
 

@@ -211,7 +211,15 @@ module Phaser {
         }
 
         public get frameTotal(): number {
-            return this._frameData.total;
+
+            if (this._frameData)
+            {
+                return this._frameData.total;
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         public get frame(): number {
@@ -245,6 +253,19 @@ module Phaser {
                 this._parent.frameBounds.height = this.currentFrame.height;
                 this._frameIndex = this.currentFrame.index;
             }
+
+        }
+
+        /**
+         * Removes all related references
+         */
+        public destroy() {
+
+            this._anims = {};
+            this._frameData = null;
+            this._frameIndex = 0;
+            this.currentAnim = null;
+            this.currentFrame = null;
 
         }
 

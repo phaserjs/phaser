@@ -42,12 +42,13 @@ module Phaser.Verlet {
         }
 
         private _game: Game;
+        private _v = new Phaser.Vector2;
 
         public composites = [];
 
         public width: number;
         public height: number;
-        public step: number = 32;
+        public step: number = 16;
         public gravity: Vector2;
         public friction: number;
         public groundFriction: number;
@@ -55,15 +56,14 @@ module Phaser.Verlet {
         public draggedEntity = null;
         public highlightColor = '#4f545c';
 
-
         /**
-         * This class is actually a wrapper of canvas.
+         * A reference to the canvas this renders to
          * @type {HTMLCanvasElement}
          */
         public canvas: HTMLCanvasElement;
 
         /**
-         * Canvas context of this object.
+         * A reference to the context this renders to
          * @type {CanvasRenderingContext2D}
          */
         public context: CanvasRenderingContext2D;
@@ -71,10 +71,10 @@ module Phaser.Verlet {
         /**
         * Computes time of intersection of a particle with a wall
         *
-        * @param {Vec2} line    wall's root position
-        * @param {Vec2} p       particle's position
-        * @param {Vec2} dir     walls's direction
-        * @param {Vec2} v       particle's velocity
+        * @param {Vec2} line    walls root position
+        * @param {Vec2} p       particle position
+        * @param {Vec2} dir     walls direction
+        * @param {Vec2} v       particles velocity
         */
         public intersectionTime(wall, p, dir, v) {
 
@@ -100,81 +100,56 @@ module Phaser.Verlet {
             return new Phaser.Vector2(p.x + v.x * t, p.y + v.y * t);
         }
 
-        private v = new Phaser.Vector2();
-
         public bounds(particle: Phaser.Verlet.Particle) {
 
-            this.v.mutableSet(particle.pos);
-            this.v.mutableSub(particle.lastPos);
+            this._v.mutableSet(particle.pos);
+            this._v.mutableSub(particle.lastPos);
 
             if (particle.pos.y > this.height - 1)
             {
-                particle.pos.mutableSet(
-                    this.intersectionPoint(new Phaser.Vector2(0, this.height - 1), particle.lastPos, new Phaser.Vector2(1, 0), this.v));
+                particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(0, this.height - 1), particle.lastPos, new Phaser.Vector2(1, 0), this._v));
             }
 
             if (particle.pos.x < 0)
             {
-                particle.pos.mutableSet(
-                    this.intersectionPoint(new Phaser.Vector2(0, 0), particle.pos, new Phaser.Vector2(0, 1), this.v));
+                particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(0, 0), particle.pos, new Phaser.Vector2(0, 1), this._v));
             }
 
             if (particle.pos.x > this.width - 1)
             {
-                particle.pos.mutableSet(
-                    this.intersectionPoint(new Phaser.Vector2(this.width - 1, 0), particle.pos, new Phaser.Vector2(0, 1), this.v));
+                particle.pos.mutableSet(this.intersectionPoint(new Phaser.Vector2(this.width - 1, 0), particle.pos, new Phaser.Vector2(0, 1), this._v));
             }
-        }
-
-        public OLDbounds(particle: Phaser.Verlet.Particle) {
-
-            if (particle.pos.y > this.height - 1)
-                particle.pos.y = this.height - 1;
-
-            if (particle.pos.x < 0)
-            {
-                var vx = particle.pos.x - particle.lastPos.x;
-                var vy = particle.pos.y - particle.lastPos.y;
-
-                if (vx == 0)
-                {
-                    particle.pos.x = 0;
-                }
-                else
-                {
-                    var t = -particle.lastPos.x / vx;
-                    particle.pos.x = particle.lastPos.x + t * vx;
-                    particle.pos.y = particle.lastPos.y + t * vy;
-                }
-            }
-
-            if (particle.pos.x > this.width - 1)
-                particle.pos.x = this.width - 1;
-
         }
 
         public createPoint(pos: Vector2) {
 
             var composite = new Phaser.Verlet.Composite(this._game);
+
             composite.particles.push(new Phaser.Verlet.Particle(pos));
+
             this.composites.push(composite);
+
             return composite;
 
         }
 
         public createLineSegments(vertices, stiffness) {
 
-            var i;
             var composite = new Phaser.Verlet.Composite(this._game);
+            var i;
 
             for (i in vertices)
             {
                 composite.particles.push(new Phaser.Verlet.Particle(vertices[i]));
+
                 if (i > 0)
+                {
                     composite.constraints.push(new Phaser.Verlet.DistanceConstraint(composite.particles[i], composite.particles[i - 1], stiffness));
+                }
             }
 
             this.composites.push(composite);
+
             return composite;
 
         }
@@ -186,30 +161,40 @@ module Phaser.Verlet {
             var xStride = width / segments;
             var yStride = height / segments;
 
-            var x, y;
+            var x;
+            var y;
+
             for (y = 0; y < segments; ++y)
             {
                 for (x = 0; x < segments; ++x)
                 {
                     var px = origin.x + x * xStride - width / 2 + xStride / 2;
                     var py = origin.y + y * yStride - height / 2 + yStride / 2;
+
                     composite.particles.push(new Phaser.Verlet.Particle(new Vector2(px, py)));
 
                     if (x > 0)
+                    {
                         composite.constraints.push(new Phaser.Verlet.DistanceConstraint(composite.particles[y * segments + x], composite.particles[y * segments + x - 1], stiffness));
+                    }
 
                     if (y > 0)
+                    {
                         composite.constraints.push(new Phaser.Verlet.DistanceConstraint(composite.particles[y * segments + x], composite.particles[(y - 1) * segments + x], stiffness));
+                    }
                 }
             }
 
             for (x = 0; x < segments; ++x)
             {
                 if (x % pinMod == 0)
+                {
                     composite.pin(x);
+                }
             }
 
             this.composites.push(composite);
+
             return composite;
 
         }
@@ -284,7 +269,9 @@ module Phaser.Verlet {
 
             // handle dragging of entities
             if (this.draggedEntity)
-                this.draggedEntity.pos.mutableSet(new Vector2(this._game.input.x, this._game.input.y));
+            {
+                this.draggedEntity.pos.mutableSet(this._game.input.position);
+            }
 
             // relax
             var stepCoef = 1 / this.step;
@@ -292,17 +279,25 @@ module Phaser.Verlet {
             for (c in this.composites)
             {
                 var constraints = this.composites[c].constraints;
+
                 for (i = 0; i < this.step; ++i)
+                {
                     for (j in constraints)
+                    {
                         constraints[j].relax(stepCoef);
+                    }
+                }
             }
 
             // bounds checking
             for (c in this.composites)
             {
                 var particles = this.composites[c].particles;
+
                 for (i in particles)
+                {
                     this.bounds(particles[i]);
+                }
             }
 
         }
@@ -335,7 +330,7 @@ module Phaser.Verlet {
 
                 for (i in particles)
                 {
-                    var d2 = particles[i].pos.dist2(new Vector2(this._game.input.x, this._game.input.y));
+                    var d2 = particles[i].pos.distance2(this._game.input.position);
 
                     if (d2 <= this.selectionRadius * this.selectionRadius && (entity == null || d2 < d2Nearest))
                     {
@@ -348,12 +343,18 @@ module Phaser.Verlet {
 
             // search for pinned constraints for this entity
             for (i in constraintsNearest)
+            {
                 if (constraintsNearest[i] instanceof PinConstraint && constraintsNearest[i].a == entity)
+                {
                     entity = constraintsNearest[i];
+                }
+            }
 
             return entity;
 
         }
+
+        public hideNearestEntityCircle: bool = false;
 
         public render() {
 
@@ -365,34 +366,43 @@ module Phaser.Verlet {
                 if (this.composites[c].drawConstraints)
                 {
                     this.composites[c].drawConstraints(this.context, this.composites[c]);
-                } else
+                }
+                else
                 {
                     var constraints = this.composites[c].constraints;
+
                     for (i in constraints)
+                    {
                         constraints[i].render(this.context);
+                    }
                 }
 
                 // draw particles
                 if (this.composites[c].drawParticles)
                 {
                     this.composites[c].drawParticles(this.context, this.composites[c]);
-                } else
+                }
+                else
                 {
                     var particles = this.composites[c].particles;
+
                     for (i in particles)
+                    {
                         particles[i].render(this.context);
+                    }
                 }
             }
 
             // highlight nearest / dragged entity
             var nearest = this.draggedEntity || this.nearestEntity();
 
-            if (nearest)
+            if (nearest && this.hideNearestEntityCircle == false)
             {
                 this.context.beginPath();
                 this.context.arc(nearest.pos.x, nearest.pos.y, 8, 0, 2 * Math.PI);
                 this.context.strokeStyle = this.highlightColor;
                 this.context.stroke();
+                this.context.closePath();
             }
         }
 

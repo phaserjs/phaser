@@ -1,4 +1,5 @@
 /// <reference path="../Game.ts" />
+/// <reference path="Polygon.ts" />
 
 /**
 * Phaser - Quad
@@ -91,6 +92,22 @@ module Phaser {
         }
 
         /**
+        * Determines whether the object specified intersects (overlaps) with the given values.
+        * @method intersectsProps
+        * @param {Number} left 
+        * @param {Number} right
+        * @param {Number} top
+        * @param {Number} bottomt
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
+        **/
+        public intersectsRaw(left: number, right: number, top: number, bottom: number, tolerance?: number = 0): bool {
+
+            return !(left > this.right + tolerance || right < this.left - tolerance || top > this.bottom + tolerance || bottom < this.top - tolerance);
+
+        }
+
+        /**
         * Determines whether the specified coordinates are contained within the region defined by this Quad object.
         * @method contains
         * @param {Number} x The x coordinate of the point to test.
@@ -130,6 +147,20 @@ module Phaser {
         public copyTo(target): any {
 
             return target.copyFrom(this);
+
+        }
+
+        /**
+        * Creates and returns a Polygon that is the same as this Quad.
+        * @method toPolygon
+        * @return {Polygon} A new Polygon that represents this quad.
+        **/
+        public toPolygon(): Polygon {
+
+            return new Polygon(new Vector2(this.x, this.y), [
+                new Vector2(), new Vector2(this.width, 0),
+                new Vector2(this.width, this.height), new Vector2(0, this.height)
+            ]);
 
         }
 

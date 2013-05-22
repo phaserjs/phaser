@@ -460,6 +460,8 @@ module Phaser {
         * Destroy all objects and references belonging to this CollisionMask
         */
         public destroy(): void;
+        public intersectsRaw(left: number, right: number, top: number, bottom: number): bool;
+        public intersectsVector(vector: Vector2): bool;
         /**
         * Gives a basic boolean response to a geometric collision.
         * If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
@@ -916,6 +918,7 @@ module Phaser {
         * Clean up memory.
         */
         public destroy(): void;
+        public setPosition(x: number, y: number): void;
         public x : number;
         public y : number;
         public rotation : number;
@@ -1235,9 +1238,10 @@ module Phaser {
         /**
         * Load graphic for this sprite. (graphic can be SpriteSheet or Texture)
         * @param key {string} Key of the graphic you want to load for this sprite.
+        * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
         * @return {Sprite} Sprite instance itself.
         */
-        public loadGraphic(key: string): Sprite;
+        public loadGraphic(key: string, clearAnimations?: bool): Sprite;
         /**
         * Load a DynamicTexture as its texture.
         * @param texture {DynamicTexture} The texture object to be used by this sprite.
@@ -1696,6 +1700,10 @@ module Phaser {
         public frameTotal : number;
         public frame : number;
         public frameName : string;
+        /**
+        * Removes all related references
+        */
+        public destroy(): void;
     }
 }
 /**
@@ -1840,9 +1848,6 @@ module Phaser {
 *
 * Your game only has one CameraManager instance and it's responsible for looking after, creating and destroying
 * all of the cameras in the world.
-*
-* TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
-* TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 */
 module Phaser {
     class CameraManager {
@@ -2573,6 +2578,33 @@ module Phaser {
     }
 }
 /**
+* Phaser - Polygon
+*
+*/
+module Phaser {
+    class Polygon {
+        /**
+        * A *convex* clockwise polygon
+        * @class Polygon
+        * @constructor
+        * @param {Vector2} pos A vector representing the origin of the polygon (all other points are relative to this one)
+        * @param {Array.<Vector2>} points An Array of vectors representing the points in the polygon, in clockwise order.
+        **/
+        constructor(pos?: Vector2, points?: Vector2[], parent?: any);
+        public parent: any;
+        public pos: Vector2;
+        public points: Vector2[];
+        public edges: Vector2[];
+        public normals: Vector2[];
+        /**
+        * Recalculate the edges and normals of the polygon.  This
+        * MUST be called if the points array is modified at all and
+        * the edges or normals are to be accessed.
+        */
+        public recalc(): void;
+    }
+}
+/**
 * Phaser - Quad
 *
 * A Quad object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
@@ -2621,6 +2653,17 @@ module Phaser {
         **/
         public intersects(quad, tolerance?: number): bool;
         /**
+        * Determines whether the object specified intersects (overlaps) with the given values.
+        * @method intersectsProps
+        * @param {Number} left
+        * @param {Number} right
+        * @param {Number} top
+        * @param {Number} bottomt
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with this Quad; otherwise false.
+        **/
+        public intersectsRaw(left: number, right: number, top: number, bottom: number, tolerance?: number): bool;
+        /**
         * Determines whether the specified coordinates are contained within the region defined by this Quad object.
         * @method contains
         * @param {Number} x The x coordinate of the point to test.
@@ -2642,6 +2685,12 @@ module Phaser {
         * @return {Any} The target object
         **/
         public copyTo(target): any;
+        /**
+        * Creates and returns a Polygon that is the same as this Quad.
+        * @method toPolygon
+        * @return {Polygon} A new Polygon that represents this quad.
+        **/
+        public toPolygon(): Polygon;
         /**
         * Returns a string representation of this object.
         * @method toString
@@ -2669,6 +2718,7 @@ module Phaser {
         constructor(x?: number, y?: number, diameter?: number);
         private _diameter;
         private _radius;
+        private _pos;
         /**
         * The x coordinate of the center of the circle
         * @property x
@@ -2681,6 +2731,12 @@ module Phaser {
         * @type Number
         **/
         public y: number;
+        /**
+        * The position of this Circle object represented by a Vector2
+        * @property pos
+        * @type Vector2
+        **/
+        public pos : Vector2;
         /**
         * The diameter of the circle. The largest distance between any two points on the circle. The same as the radius * 2.
         * @method diameter
@@ -3097,6 +3153,274 @@ module Phaser {
         * @param {Number} [height]
         */
         public setTo(x1: number, y1: number, x2?: number, y2?: number, width?: number, height?: number): void;
+    }
+}
+/**
+* Phaser - Response
+*
+*/
+module Phaser {
+    class Response {
+        /**
+        * An object representing the result of an intersection. Contain information about:
+        * - The two objects participating in the intersection
+        * - The vector representing the minimum change necessary to extract the first object
+        *   from the second one.
+        * - Whether the first object is entirely inside the second, or vice versa.
+        *
+        * @constructor
+        */ 
+        constructor();
+        /**
+        * The first object in the collision
+        */
+        public a;
+        /**
+        * The second object in the collision
+        */
+        public b;
+        /**
+        * The shortest colliding axis (unit-vector)
+        */
+        public overlapN: Vector2;
+        /**
+        * The overlap vector (i.e. overlapN.scale(overlap, overlap)).
+        * If this vector is subtracted from the position of `a`, `a` and `b` will no longer be colliding.
+        */
+        public overlapV: Vector2;
+        /**
+        * Whether the first object is completely inside the second.
+        */
+        public aInB: bool;
+        /**
+        * Whether the second object is completely inside the first.
+        */
+        public bInA: bool;
+        /**
+        * Magnitude of the overlap on the shortest colliding axis
+        */
+        public overlap: number;
+        /**
+        * Set some values of the response back to their defaults.  Call this between tests if
+        * you are going to reuse a single Response object for multiple intersection tests (recommented)
+        *
+        * @return {Response} This for chaining
+        */
+        public clear(): Response;
+    }
+}
+/**
+* Phaser - Vector2
+*
+* A two dimensional vector.
+* Contains methods and ideas from verlet-js by Sub Protocol, SAT.js by Jim Riecken and N by Metanet Software.
+*/
+module Phaser {
+    class Vector2 {
+        /**
+        * Creates a new Vector2 object.
+        * @class Vector2
+        * @constructor
+        * @param {Number} x The x position of the vector
+        * @param {Number} y The y position of the vector
+        * @return {Vector2} This object
+        **/
+        constructor(x?: number, y?: number);
+        public x: number;
+        public y: number;
+        public setTo(x: number, y: number): Vector2;
+        /**
+        * Add this vector to the given one and return the result.
+        *
+        * @param {Vector2} v The other Vector.
+        * @param {Vector2} The output Vector.
+        * @return {Vector2} The new Vector
+        */
+        public add(v: Vector2, output?: Vector2): Vector2;
+        /**
+        * Subtract this vector to the given one and return the result.
+        *
+        * @param {Vector2} v The other Vector.
+        * @param {Vector2} The output Vector.
+        * @return {Vector2} The new Vector
+        */
+        public sub(v: Vector2, output?: Vector2): Vector2;
+        /**
+        * Multiply this vector with the given one and return the result.
+        *
+        * @param {Vector2} v The other Vector.
+        * @param {Vector2} The output Vector.
+        * @return {Vector2} The new Vector
+        */
+        public mul(v: Vector2, output?: Vector2): Vector2;
+        /**
+        * Divide this vector by the given one and return the result.
+        *
+        * @param {Vector2} v The other Vector.
+        * @param {Vector2} The output Vector.
+        * @return {Vector2} The new Vector
+        */
+        public div(v: Vector2, output?: Vector2): Vector2;
+        /**
+        * Scale this vector by the given values and return the result.
+        *
+        * @param {number} x The scaling factor in the x direction.
+        * @param {?number=} y The scaling factor in the y direction.  If this
+        *   is not specified, the x scaling factor will be used.
+        * @return {Vector} The new Vector
+        */
+        public scale(x: number, y?: number, output?: Vector2): Vector2;
+        /**
+        * Rotate this vector by 90 degrees
+        *
+        * @return {Vector} This for chaining.
+        */
+        public perp(output?: Vector2): Vector2;
+        public mutableSet(v: Vector2): Vector2;
+        /**
+        * Add another vector to this one.
+        *
+        * @param {Vector} other The other Vector.
+        * @return {Vector} This for chaining.
+        */
+        public mutableAdd(v: Vector2): Vector2;
+        /**
+        * Subtract another vector from this one.
+        *
+        * @param {Vector} other The other Vector.
+        * @return {Vector} This for chaining.
+        */
+        public mutableSub(v: Vector2): Vector2;
+        /**
+        * Multiply another vector with this one.
+        *
+        * @param {Vector} other The other Vector.
+        * @return {Vector} This for chaining.
+        */
+        public mutableMul(v: Vector2): Vector2;
+        /**
+        * Divide this vector by another one.
+        *
+        * @param {Vector} other The other Vector.
+        * @return {Vector} This for chaining.
+        */
+        public mutableDiv(v: Vector2): Vector2;
+        /**
+        * Scale this vector.
+        *
+        * @param {number} x The scaling factor in the x direction.
+        * @param {?number=} y The scaling factor in the y direction.  If this
+        *   is not specified, the x scaling factor will be used.
+        * @return {Vector} This for chaining.
+        */
+        public mutableScale(x: number, y?: number): Vector2;
+        /**
+        * Reverse this vector.
+        *
+        * @return {Vector} This for chaining.
+        */
+        public reverse(): Vector2;
+        public edge(v: Vector2, output?: Vector2): Vector2;
+        public equals(v: Vector2): bool;
+        public epsilonEquals(v: Vector2, epsilon: number): bool;
+        /**
+        * Get the length of this vector.
+        *
+        * @return {number} The length of this vector.
+        */
+        public length(): number;
+        /**
+        * Get the length^2 of this vector.
+        *
+        * @return {number} The length^2 of this vector.
+        */
+        public length2(): number;
+        /**
+        * Get the distance between this vector and the given vector.
+        *
+        * @return {Vector2} v The vector to check
+        */
+        public distance(v: Vector2): number;
+        /**
+        * Get the distance^2 between this vector and the given vector.
+        *
+        * @return {Vector2} v The vector to check
+        */
+        public distance2(v: Vector2): number;
+        /**
+        * Project this vector on to another vector.
+        *
+        * @param {Vector} other The vector to project onto.
+        * @return {Vector} This for chaining.
+        */
+        public project(other: Vector2): Vector2;
+        /**
+        * Project this vector onto a vector of unit length.
+        *
+        * @param {Vector} other The unit vector to project onto.
+        * @return {Vector} This for chaining.
+        */
+        public projectN(other: Vector2): Vector2;
+        /**
+        * Reflect this vector on an arbitrary axis.
+        *
+        * @param {Vector} axis The vector representing the axis.
+        * @return {Vector} This for chaining.
+        */
+        public reflect(axis): Vector2;
+        /**
+        * Reflect this vector on an arbitrary axis (represented by a unit vector)
+        *
+        * @param {Vector} axis The unit vector representing the axis.
+        * @return {Vector} This for chaining.
+        */
+        public reflectN(axis): Vector2;
+        public getProjectionMagnitude(v: Vector2): number;
+        public direction(output?: Vector2): Vector2;
+        public normalRightHand(output?: Vector2): Vector2;
+        /**
+        * Normalize (make unit length) this vector.
+        *
+        * @return {Vector} This for chaining.
+        */
+        public normalize(output?: Vector2): Vector2;
+        public getMagnitude(): number;
+        /**
+        * Get the dot product of this vector against another.
+        *
+        * @param {Vector}  other The vector to dot this one against.
+        * @return {number} The dot product.
+        */
+        public dot(v: Vector2): number;
+        /**
+        * Get the cross product of this vector against another.
+        *
+        * @param {Vector}  other The vector to cross this one against.
+        * @return {number} The cross product.
+        */
+        public cross(v: Vector2): number;
+        /**
+        * Get the angle between this vector and the given vector.
+        *
+        * @return {Vector2} v The vector to check
+        */
+        public angle(v: Vector2): number;
+        public angle2(vLeft: Vector2, vRight: Vector2): number;
+        /**
+        * Rotate this vector around the origin to the given angle (theta) and return the result in a new Vector
+        *
+        * @return {Vector2} v The vector to check
+        */
+        public rotate(origin, theta, output?: Vector2): Vector2;
+        public clone(output?: Vector2): Vector2;
+        public copyFrom(v: Vector2): Vector2;
+        public copyTo(v: Vector2): Vector2;
+        /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        public toString(): string;
     }
 }
 /**
@@ -3576,6 +3900,20 @@ module Phaser {
         static separateTileY(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool;
         /**
         * Separates the two objects on their x axis
+        * @param object The GameObject to separate
+        * @param tile The Tile to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        static NEWseparateTileX(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool;
+        /**
+        * Separates the two objects on their y axis
+        * @param object The first GameObject to separate
+        * @param tile The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        static NEWseparateTileY(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool;
+        /**
+        * Separates the two objects on their x axis
         * @param object1 The first GameObject to separate
         * @param object2 The second GameObject to separate
         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
@@ -3588,20 +3926,6 @@ module Phaser {
         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
         */
         static separateY(object1, object2): bool;
-        /**
-        * Separates the two objects on their x axis
-        * @param object1 The first GameObject to separate
-        * @param object2 The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-        */
-        static OLDseparateX(object1, object2): bool;
-        /**
-        * Separates the two objects on their y axis
-        * @param object1 The first GameObject to separate
-        * @param object2 The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
-        */
-        static OLDseparateY(object1, object2): bool;
         /**
         * Returns the distance between the two given coordinates.
         * @param x1 The X value of the first coordinate
@@ -3620,6 +3944,108 @@ module Phaser {
         * @returns {number} The distance between the two coordinates
         */
         static distanceSquared(x1: number, y1: number, x2: number, y2: number): number;
+        /**
+        * Flattens the specified array of points onto a unit vector axis,
+        * resulting in a one dimensional range of the minimum and
+        * maximum value on that axis.
+        *
+        * @param {Array.<Vector>} points The points to flatten.
+        * @param {Vector} normal The unit vector axis to flatten on.
+        * @param {Array.<number>} result An array.  After calling this function,
+        *   result[0] will be the minimum value,
+        *   result[1] will be the maximum value.
+        */
+        static flattenPointsOn(points, normal, result): void;
+        /**
+        * Pool of Vectors used in calculations.
+        *
+        * @type {Array.<Vector>}
+        */
+        static T_VECTORS: Vector2[];
+        /**
+        * Pool of Arrays used in calculations.
+        *
+        * @type {Array.<Array.<*>>}
+        */
+        static T_ARRAYS;
+        /**
+        * Check whether two convex clockwise polygons are separated by the specified
+        * axis (must be a unit vector).
+        *
+        * @param {Vector} aPos The position of the first polygon.
+        * @param {Vector} bPos The position of the second polygon.
+        * @param {Array.<Vector>} aPoints The points in the first polygon.
+        * @param {Array.<Vector>} bPoints The points in the second polygon.
+        * @param {Vector} axis The axis (unit sized) to test against.  The points of both polygons
+        *   will be projected onto this axis.
+        * @param {Response=} response A Response object (optional) which will be populated
+        *   if the axis is not a separating axis.
+        * @return {boolean} true if it is a separating axis, false otherwise.  If false,
+        *   and a response is passed in, information about how much overlap and
+        *   the direction of the overlap will be populated.
+        */
+        static isSeparatingAxis(aPos, bPos, aPoints, bPoints, axis, response?: Response): bool;
+        static LEFT_VORNOI_REGION: number;
+        static MIDDLE_VORNOI_REGION: number;
+        static RIGHT_VORNOI_REGION: number;
+        /**
+        * Calculates which Vornoi region a point is on a line segment.
+        * It is assumed that both the line and the point are relative to (0, 0)
+        *
+        *             |       (0)      |
+        *      (-1)  [0]--------------[1]  (1)
+        *             |       (0)      |
+        *
+        * @param {Vector} line The line segment.
+        * @param {Vector} point The point.
+        * @return  {number} LEFT_VORNOI_REGION (-1) if it is the left region,
+        *          MIDDLE_VORNOI_REGION (0) if it is the middle region,
+        *          RIGHT_VORNOI_REGION (1) if it is the right region.
+        */
+        static vornoiRegion(line: Vector2, point: Vector2): number;
+        /**
+        * Check if two circles intersect.
+        *
+        * @param {Circle} a The first circle.
+        * @param {Circle} b The second circle.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   the circles intersect.
+        * @return {boolean} true if the circles intersect, false if they don't.
+        */
+        static testCircleCircle(a: Circle, b: Circle, response?: Response): bool;
+        /**
+        * Check if a polygon and a circle intersect.
+        *
+        * @param {Polygon} polygon The polygon.
+        * @param {Circle} circle The circle.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        static testPolygonCircle(polygon: Polygon, circle: Circle, response?: Response): bool;
+        /**
+        * Check if a circle and a polygon intersect.
+        *
+        * NOTE: This runs slightly slower than polygonCircle as it just
+        * runs polygonCircle and reverses everything at the end.
+        *
+        * @param {Circle} circle The circle.
+        * @param {Polygon} polygon The polygon.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        static testCirclePolygon(circle: Circle, polygon: Polygon, response?: Response): bool;
+        /**
+        * Checks whether two convex, clockwise polygons intersect.
+        *
+        * @param {Polygon} a The first polygon.
+        * @param {Polygon} b The second polygon.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        static testPolygonPolygon(a: Polygon, b: Polygon, response?: Response): bool;
     }
 }
 /**
@@ -4269,14 +4695,173 @@ module Phaser {
         **/
         static distanceBetween(x1: number, y1: number, x2: number, y2: number): number;
         /**
-        * Rotates a point around the x/y coordinates given to the desired angle
+        * Rotates the point around the x/y coordinates given to the desired angle and distance
+        * @param point {Object} Any object with exposed x and y properties
         * @param x {number} The x coordinate of the anchor point
         * @param y {number} The y coordinate of the anchor point
-        * @param angle {number} The angle of the rotation in radians
-        * @param point {Point} The point object to perform the rotation on
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the point and the anchor
         * @return The modified point object
         */
-        public rotatePoint(x: number, y: number, angle: number, point);
+        public rotatePoint(point, x1: number, y1: number, angle: number, asDegrees?: bool, distance?: number);
+    }
+}
+/**
+* Phaser - GameObjectFactory
+*
+* A quick way to create new world objects and add existing objects to the current world.
+*/
+module Phaser {
+    class GameObjectFactory {
+        /**
+        * GameObjectFactory constructor
+        * @param game {Game} A reference to the current Game.
+        */
+        constructor(game: Game);
+        /**
+        * Local private reference to Game
+        */
+        private _game;
+        /**
+        * Local private reference to World
+        */
+        private _world;
+        /**
+        * Create a new camera with specific position and size.
+        *
+        * @param x {number} X position of the new camera.
+        * @param y {number} Y position of the new camera.
+        * @param width {number} Width of the new camera.
+        * @param height {number} Height of the new camera.
+        * @returns {Camera} The newly created camera object.
+        */
+        public camera(x: number, y: number, width: number, height: number): Camera;
+        /**
+        * Create a new GeomSprite with specific position.
+        *
+        * @param x {number} X position of the new geom sprite.
+        * @param y {number} Y position of the new geom sprite.
+        * @returns {GeomSprite} The newly created geom sprite object.
+        */
+        public geomSprite(x: number, y: number): GeomSprite;
+        /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param key {string} Optional, key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        */
+        public sprite(x: number, y: number, key?: string): Sprite;
+        /**
+        * Create a new DynamicTexture with specific size.
+        *
+        * @param width {number} Width of the texture.
+        * @param height {number} Height of the texture.
+        * @returns {DynamicTexture} The newly created dynamic texture object.
+        */
+        public dynamicTexture(width: number, height: number): DynamicTexture;
+        /**
+        * Create a new object container.
+        *
+        * @param maxSize {number} Optional, capacity of this group.
+        * @returns {Group} The newly created group.
+        */
+        public group(maxSize?: number): Group;
+        /**
+        * Create a new Particle.
+        *
+        * @return {Particle} The newly created particle object.
+        */
+        public particle(): Particle;
+        /**
+        * Create a new Emitter.
+        *
+        * @param x {number} Optional, x position of the emitter.
+        * @param y {number} Optional, y position of the emitter.
+        * @param size {number} Optional, size of this emitter.
+        * @return {Emitter} The newly created emitter object.
+        */
+        public emitter(x?: number, y?: number, size?: number): Emitter;
+        /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {string} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
+        public scrollZone(key: string, x?: number, y?: number, width?: number, height?: number): ScrollZone;
+        /**
+        * Create a new Tilemap.
+        *
+        * @param key {string} Key for tileset image.
+        * @param mapData {string} Data of this tilemap.
+        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
+        * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
+        * @param [tileWidth] {number} width of each tile.
+        * @param [tileHeight] {number} height of each tile.
+        * @return {Tilemap} The newly created tilemap object.
+        */
+        public tilemap(key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number): Tilemap;
+        /**
+        * Create a tween object for a specific object.
+        *
+        * @param obj Object you wish the tween will affect.
+        * @return {Phaser.Tween} The newly created tween object.
+        */
+        public tween(obj): Tween;
+        /**
+        * Add an existing Sprite to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param sprite The Sprite to add to the Game World
+        * @return {Phaser.Sprite} The Sprite object
+        */
+        public existingSprite(sprite: Sprite): Sprite;
+        /**
+        * Add an existing GeomSprite to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param sprite The GeomSprite to add to the Game World
+        * @return {Phaser.GeomSprite} The GeomSprite object
+        */
+        public existingGeomSprite(sprite: GeomSprite): GeomSprite;
+        /**
+        * Add an existing Emitter to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param emitter The Emitter to add to the Game World
+        * @return {Phaser.Emitter} The Emitter object
+        */
+        public existingEmitter(emitter: Emitter): Emitter;
+        /**
+        * Add an existing ScrollZone to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param scrollZone The ScrollZone to add to the Game World
+        * @return {Phaser.ScrollZone} The ScrollZone object
+        */
+        public existingScrollZone(scrollZone: ScrollZone): ScrollZone;
+        /**
+        * Add an existing Tilemap to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param tilemap The Tilemap to add to the Game World
+        * @return {Phaser.Tilemap} The Tilemap object
+        */
+        public existingTilemap(tilemap: Tilemap): Tilemap;
+        /**
+        * Add an existing Tween to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param tween The Tween to add to the Game World
+        * @return {Phaser.Tween} The Tween object
+        */
+        public existingTween(tween: Tween): Tween;
     }
 }
 /**
@@ -4335,6 +4920,27 @@ module Phaser {
         * Set to 0 to disable.
         */
         public alpha: number;
+        /**
+        * An Array of Cameras to which this Group, or any of its children, won't render
+        * @type {Array}
+        */
+        public cameraBlacklist: number[];
+        /**
+        * If you do not wish this object to be visible to a specific camera, pass the camera here.
+        *
+        * @param camera {Camera} The specific camera.
+        */
+        public hideFromCamera(camera: Camera): void;
+        /**
+        * Make this object only visible to a specific camera.
+        *
+        * @param camera {Camera} The camera you wish it to be visible.
+        */
+        public showToCamera(camera: Camera): void;
+        /**
+        * This clears the camera black list, making the GameObject visible to all cameras.
+        */
+        public clearCameraList(): void;
         /**
         * Override this function to handle any deleting or "shutdown" type operations you might need,
         * such as removing traditional Flash children like Basic objects.
@@ -4580,6 +5186,11 @@ module Phaser {
         * @type {number}
         */
         public progress: number;
+        /**
+        * The crossOrigin value applied to loaded images
+        * @type {string}
+        */
+        public crossOrigin: string;
         /**
         * Reset loader, this will remove all loaded assets.
         */
@@ -4962,7 +5573,7 @@ module Phaser {
 /**
 * Phaser
 *
-* v0.9.5 - April 28th 2013
+* v0.9.6 - May 21st 2013
 *
 * A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
@@ -5307,6 +5918,8 @@ module Phaser {
         * This method is called when the canvas elements visibility is changed.
         */
         private visibilityChange(event);
+        public pauseGame(): void;
+        public resumeGame(): void;
         /**
         * Get the DOM offset values of the given element
         */
@@ -5771,55 +6384,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - Vector2
-*
-* A simple 2-dimensional vector class. Based on the one included with verlet-js by Sub Protocol released under MIT
-*/
-module Phaser {
-    class Vector2 {
-        /**
-        * Creates a new Vector2 object.
-        * @class Vector2
-        * @constructor
-        * @param {Number} x The x coordinate of vector2
-        * @param {Number} y The y coordinate of vector2
-        * @return {Vector2} This object
-        **/
-        constructor(x?: number, y?: number);
-        public x: number;
-        public y: number;
-        public setTo(x: number, y: number): Vector2;
-        public add(v: Vector2, output?: Vector2): Vector2;
-        public sub(v: Vector2, output?: Vector2): Vector2;
-        public mul(v: Vector2, output?: Vector2): Vector2;
-        public div(v: Vector2, output?: Vector2): Vector2;
-        public scale(coef: number, output?: Vector2): Vector2;
-        public mutableSet(v: Vector2): Vector2;
-        public mutableAdd(v: Vector2): Vector2;
-        public mutableSub(v: Vector2): Vector2;
-        public mutableMul(v: Vector2): Vector2;
-        public mutableDiv(v: Vector2): Vector2;
-        public mutableScale(coef: number): Vector2;
-        public equals(v: Vector2): bool;
-        public epsilonEquals(v: Vector2, epsilon: number): bool;
-        public length(): number;
-        public length2(): number;
-        public dist(v: Vector2): number;
-        public dist2(v: Vector2): number;
-        public normal(output?: Vector2): Vector2;
-        public dot(v: Vector2): number;
-        public angle(v: Vector2): number;
-        public angle2(vLeft: Vector2, vRight: Vector2): number;
-        public rotate(origin, theta, output?: Vector2): Vector2;
-        /**
-        * Returns a string representation of this object.
-        * @method toString
-        * @return {string} a string representation of the object.
-        **/
-        public toString(): string;
-    }
-}
-/**
 * Phaser - Verlet - Particle
 *
 *
@@ -5879,6 +6443,26 @@ module Phaser.Verlet {
         **/
         constructor(game: Game);
         private _game;
+        /**
+        * Texture of the particles to be rendered.
+        */
+        private _texture;
+        /**
+        * Rendering bounds for the texture
+        * @type {Quad}
+        */
+        private frameBounds;
+        private _sx;
+        private _sy;
+        private _sw;
+        private _sh;
+        private _dx;
+        private _dy;
+        private _dw;
+        private _dh;
+        private _hw;
+        private _hh;
+        public sprites: Sprite[];
         public particles: Particle[];
         public constraints;
         public drawParticles;
@@ -5886,6 +6470,16 @@ module Phaser.Verlet {
         public createDistanceConstraint(a: Particle, b: Particle, stiffness: number, distance?: number): DistanceConstraint;
         public createAngleConstraint(a: Particle, b: Particle, c: Particle, stiffness: number): AngleConstraint;
         public createPinConstraint(a: Particle, pos: Vector2): PinConstraint;
+        /**
+        * Load a graphic for this Composite. The graphic cannot be a SpriteSheet yet.
+        * @param key {string} Key of the graphic you want to load for this sprite.
+        * @return {Composite} This object
+        */
+        public loadGraphic(key: string): Composite;
+        public hideConstraints: bool;
+        public constraintLineColor: string;
+        private renderConstraints(context);
+        private render(context);
         public pin(index, pos?): PinConstraint;
     }
 }
@@ -5955,6 +6549,7 @@ module Phaser.Verlet {
         **/
         constructor(game: Game, width: number, height: number);
         private _game;
+        private _v;
         public composites: any[];
         public width: number;
         public height: number;
@@ -5966,28 +6561,26 @@ module Phaser.Verlet {
         public draggedEntity;
         public highlightColor: string;
         /**
-        * This class is actually a wrapper of canvas.
+        * A reference to the canvas this renders to
         * @type {HTMLCanvasElement}
         */
         public canvas: HTMLCanvasElement;
         /**
-        * Canvas context of this object.
+        * A reference to the context this renders to
         * @type {CanvasRenderingContext2D}
         */
         public context: CanvasRenderingContext2D;
         /**
         * Computes time of intersection of a particle with a wall
         *
-        * @param {Vec2} line    wall's root position
-        * @param {Vec2} p       particle's position
-        * @param {Vec2} dir     walls's direction
-        * @param {Vec2} v       particle's velocity
+        * @param {Vec2} line    walls root position
+        * @param {Vec2} p       particle position
+        * @param {Vec2} dir     walls direction
+        * @param {Vec2} v       particles velocity
         */
         public intersectionTime(wall, p, dir, v): number;
         public intersectionPoint(wall, p, dir, v): Vector2;
-        private v;
         public bounds(particle: Particle): void;
-        public OLDbounds(particle: Particle): void;
         public createPoint(pos: Vector2): Composite;
         public createLineSegments(vertices, stiffness): Composite;
         public createCloth(origin, width, height, segments, pinMod, stiffness): Composite;
@@ -5996,6 +6589,7 @@ module Phaser.Verlet {
         private mouseDownHandler();
         private mouseUpHandler();
         public nearestEntity();
+        public hideNearestEntityCircle: bool;
         public render(): void;
     }
 }
@@ -6055,13 +6649,14 @@ module Phaser {
         public destroy(): void;
         /**
         * Update size of this world with specific width and height.
-        * You can choose update camera bounds automatically or not.
+        * You can choose update camera bounds and verlet manager automatically or not.
         *
         * @param width {number} New width of the world.
         * @param height {number} New height of the world.
         * @param [updateCameraBounds] {boolean} update camera bounds automatically or not. Default to true.
+        * @param [updateVerletBounds] {boolean} update verlet bounds automatically or not. Default to true.
         */
-        public setSize(width: number, height: number, updateCameraBounds?: bool): void;
+        public setSize(width: number, height: number, updateCameraBounds?: bool, updateVerletBounds?: bool): void;
         public width : number;
         public height : number;
         public centerX : number;
@@ -6672,17 +7267,17 @@ module Phaser {
         */
         public active: bool;
         /**
-        * A Point object representing the x/y screen coordinates of the Pointer.
-        * @property pointA
-        * @type {Point}
+        * A Vector object containing the initial position when the Pointer was engaged with the screen.
+        * @property positionDown
+        * @type {Vector2}
         **/
-        public pointA: Point;
+        public positionDown: Vector2;
         /**
-        * A Point object representing the x/y screen coordinates of the Pointer.
-        * @property pointB
-        * @type {Point}
+        * A Vector object containing the current position of the Pointer on the screen.
+        * @property position
+        * @type {Vector2}
         **/
-        public pointB: Point;
+        public position: Vector2;
         /**
         * A Circle object centered on the x/y screen coordinates of the Pointer.
         * Default size of 44px (Apple's recommended "finger tip" size)
@@ -7026,11 +7621,11 @@ module Phaser {
         */
         public gestures: Gestures;
         /**
-        * A Point object representing the x/y screen coordinates of the Pointer.
-        * @property point
-        * @type {Point}
+        * A vector object representing the current position of the Pointer.
+        * @property vector
+        * @type {Vector2}
         **/
-        public point: Point;
+        public position: Vector2;
         /**
         * A Circle object centered on the x/y screen coordinates of the Input.
         * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
@@ -7221,7 +7816,22 @@ module Phaser {
         * @type {Number}
         **/
         public y : number;
+        /**
+        * Add a new Pointer object to the Input Manager. By default Input creates 5 pointer objects for you. If you need more
+        * use this to create a new one, up to a maximum of 10.
+        * @method addPointer
+        * @return {Pointer} A reference to the new Pointer object
+        **/
+        public addPointer(): Pointer;
+        /**
+        * Starts the Input Manager running
+        * @method start
+        **/
         public start(): void;
+        /**
+        * Updates the Input Manager. Called by the core Game loop.
+        * @method update
+        **/
         public update(): void;
         /**
         * Reset all of the Pointers and Input states
@@ -7290,6 +7900,20 @@ module Phaser {
         * @param {String} [color]
         */
         public renderDebugInfo(x: number, y: number, color?: string): void;
+        /**
+        * Get the distance between two Pointer objects
+        * @method getDistance
+        * @param {Pointer} pointer1
+        * @param {Pointer} pointer2
+        **/
+        public getDistance(pointer1: Pointer, pointer2: Pointer): number;
+        /**
+        * Get the angle between two Pointer objects
+        * @method getAngle
+        * @param {Pointer} pointer1
+        * @param {Pointer} pointer2
+        **/
+        public getAngle(pointer1: Pointer, pointer2: Pointer): number;
     }
 }
 /**
@@ -7812,6 +8436,11 @@ module Phaser {
         */
         static RECTANGLE: number;
         /**
+        * Polygon.
+        * @type {number}
+        */
+        static POLYGON: number;
+        /**
         * Circle shape container. A Circle instance.
         * @type {Circle}
         */
@@ -7831,6 +8460,11 @@ module Phaser {
         * @type {Rectangle}
         */
         public rect: Rectangle;
+        /**
+        * Polygon shape container. A Polygon instance.
+        * @type {Polygon}
+        */
+        public polygon: Polygon;
         /**
         * Render outline of this sprite or not. (default is true)
         * @type {boolean}
@@ -7905,6 +8539,13 @@ module Phaser {
         * @return {GeomSprite} GeomSprite instance.
         */
         public createRectangle(width: number, height: number): GeomSprite;
+        /**
+        * Create a polygon object
+        * @param width {Number} Width of the rectangle
+        * @param height {Number} Height of the rectangle
+        * @return {GeomSprite} GeomSprite instance.
+        */
+        public createPolygon(points?: Vector2[]): GeomSprite;
         /**
         * Destroy all geom shapes of this sprite.
         */
@@ -8809,6 +9450,11 @@ module Phaser {
         */
         public onDestroyCallback;
         /**
+        * Reference to the GameObject Factory.
+        * @type {GameObjectFactory}
+        */
+        public add: GameObjectFactory;
+        /**
         * Reference to the assets cache.
         * @type {Cache}
         */
@@ -8874,7 +9520,7 @@ module Phaser {
         */
         public rnd: RandomDataGenerator;
         /**
-        * Device detector.
+        * Contains device information and capabilities.
         * @type {Device}
         */
         public device: Device;
@@ -8937,93 +9583,6 @@ module Phaser {
         public destroy(): void;
         public paused : bool;
         public framerate : number;
-        /**
-        * Create a new camera with specific position and size.
-        *
-        * @param x {number} X position of the new camera.
-        * @param y {number} Y position of the new camera.
-        * @param width {number} Width of the new camera.
-        * @param height {number} Height of the new camera.
-        * @returns {Camera} The newly created camera object.
-        */
-        public createCamera(x: number, y: number, width: number, height: number): Camera;
-        /**
-        * Create a new GeomSprite with specific position.
-        *
-        * @param x {number} X position of the new geom sprite.
-        * @param y {number} Y position of the new geom sprite.
-        * @returns {GeomSprite} The newly created geom sprite object.
-        */
-        public createGeomSprite(x: number, y: number): GeomSprite;
-        /**
-        * Create a new Sprite with specific position and sprite sheet key.
-        *
-        * @param x {number} X position of the new sprite.
-        * @param y {number} Y position of the new sprite.
-        * @param key {string} Optional, key for the sprite sheet you want it to use.
-        * @returns {Sprite} The newly created sprite object.
-        */
-        public createSprite(x: number, y: number, key?: string): Sprite;
-        /**
-        * Create a new DynamicTexture with specific size.
-        *
-        * @param width {number} Width of the texture.
-        * @param height {number} Height of the texture.
-        * @returns {DynamicTexture} The newly created dynamic texture object.
-        */
-        public createDynamicTexture(width: number, height: number): DynamicTexture;
-        /**
-        * Create a new object container.
-        *
-        * @param maxSize {number} Optional, capacity of this group.
-        * @returns {Group} The newly created group.
-        */
-        public createGroup(maxSize?: number): Group;
-        /**
-        * Create a new Particle.
-        *
-        * @return {Particle} The newly created particle object.
-        */
-        public createParticle(): Particle;
-        /**
-        * Create a new Emitter.
-        *
-        * @param x {number} Optional, x position of the emitter.
-        * @param y {number} Optional, y position of the emitter.
-        * @param size {number} Optional, size of this emitter.
-        * @return {Emitter} The newly created emitter object.
-        */
-        public createEmitter(x?: number, y?: number, size?: number): Emitter;
-        /**
-        * Create a new ScrollZone object with image key, position and size.
-        *
-        * @param key {string} Key to a image you wish this object to use.
-        * @param x {number} X position of this object.
-        * @param y {number} Y position of this object.
-        * @param width number} Width of this object.
-        * @param height {number} Height of this object.
-        * @returns {ScrollZone} The newly created scroll zone object.
-        */
-        public createScrollZone(key: string, x?: number, y?: number, width?: number, height?: number): ScrollZone;
-        /**
-        * Create a new Tilemap.
-        *
-        * @param key {string} Key for tileset image.
-        * @param mapData {string} Data of this tilemap.
-        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-        * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
-        * @param [tileWidth] {number} width of each tile.
-        * @param [tileHeight] {number} height of each tile.
-        * @return {Tilemap} The newly created tilemap object.
-        */
-        public createTilemap(key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number): Tilemap;
-        /**
-        * Create a tween object for a specific object.
-        *
-        * @param obj Object you wish the tween will affect.
-        * @return {Phaser.Tween} The newly created tween object.
-        */
-        public createTween(obj): Tween;
         /**
         * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
         * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
@@ -9148,6 +9707,11 @@ module Phaser {
         */
         public collision: Collision;
         /**
+        * Reference to the GameObject Factory.
+        * @type {GameObjectFactory}
+        */
+        public add: GameObjectFactory;
+        /**
         * Reference to the input manager
         * @type {Input}
         */
@@ -9218,93 +9782,6 @@ module Phaser {
         * This method will be called when the state is destroyed
         */
         public destroy(): void;
-        /**
-        * Create a new camera with specific position and size.
-        *
-        * @param x {number} X position of the new camera.
-        * @param y {number} Y position of the new camera.
-        * @param width {number} Width of the new camera.
-        * @param height {number} Height of the new camera.
-        * @returns {Camera} The newly created camera object.
-        */
-        public createCamera(x: number, y: number, width: number, height: number): Camera;
-        /**
-        * Create a new GeomSprite with specific position.
-        *
-        * @param x {number} X position of the new geom sprite.
-        * @param y {number} Y position of the new geom sprite.
-        * @returns {GeomSprite} The newly created geom sprite object.
-        */
-        public createGeomSprite(x: number, y: number): GeomSprite;
-        /**
-        * Create a new Sprite with specific position and sprite sheet key.
-        *
-        * @param x {number} X position of the new sprite.
-        * @param y {number} Y position of the new sprite.
-        * @param key {string} [optional] key for the sprite sheet you want it to use.
-        * @returns {Sprite} The newly created sprite object.
-        */
-        public createSprite(x: number, y: number, key?: string): Sprite;
-        /**
-        * Create a new DynamicTexture with specific size.
-        *
-        * @param width {number} Width of the texture.
-        * @param height {number} Height of the texture.
-        * @returns {DynamicTexture} The newly created dynamic texture object.
-        */
-        public createDynamicTexture(width: number, height: number): DynamicTexture;
-        /**
-        * Create a new object container.
-        *
-        * @param maxSize {number} [optional] capacity of this group.
-        * @returns {Group} The newly created group.
-        */
-        public createGroup(maxSize?: number): Group;
-        /**
-        * Create a new Particle.
-        *
-        * @return {Particle} The newly created particle object.
-        */
-        public createParticle(): Particle;
-        /**
-        * Create a new Emitter.
-        *
-        * @param x {number} [optional] x position of the emitter.
-        * @param y {number} [optional] y position of the emitter.
-        * @param size {number} [optional] size of this emitter.
-        * @return {Emitter} The newly created emitter object.
-        */
-        public createEmitter(x?: number, y?: number, size?: number): Emitter;
-        /**
-        * Create a new ScrollZone object with image key, position and size.
-        *
-        * @param key {string} Key to a image you wish this object to use.
-        * @param x {number} X position of this object.
-        * @param y {number} Y position of this object.
-        * @param width {number} Width of this object.
-        * @param height {number} Height of this object.
-        * @returns {ScrollZone} The newly created scroll zone object.
-        */
-        public createScrollZone(key: string, x?: number, y?: number, width?: number, height?: number): ScrollZone;
-        /**
-        * Create a new Tilemap.
-        *
-        * @param key {string} Key for tileset image.
-        * @param mapData {string} Data of this tilemap.
-        * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-        * @param resizeWorld {boolean} [optional] resize the world to make same as tilemap?
-        * @param tileWidth {number} [optional] width of each tile.
-        * @param tileHeight number} [optional] height of each tile.
-        * @return {Tilemap} The newly created tilemap object.
-        */
-        public createTilemap(key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number): Tilemap;
-        /**
-        * Create a tween object for a specific object.
-        *
-        * @param obj Object you wish the tween will affect.
-        * @return {Phaser.Tween} The newly created tween object.
-        */
-        public createTween(obj): Tween;
         /**
         * Call this method to see if one object collids another.
         * @return {boolean} Whether the given objects or groups collids.

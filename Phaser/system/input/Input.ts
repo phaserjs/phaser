@@ -25,11 +25,6 @@ module Phaser {
             this.pointer3 = new Pointer(this._game, 3);
             this.pointer4 = new Pointer(this._game, 4);
             this.pointer5 = new Pointer(this._game, 5);
-            this.pointer6 = new Pointer(this._game, 6);
-            this.pointer7 = new Pointer(this._game, 7);
-            this.pointer8 = new Pointer(this._game, 8);
-            this.pointer9 = new Pointer(this._game, 9);
-            this.pointer10 = new Pointer(this._game, 10);
 
             this.mouse = new Mouse(this._game);
             this.keyboard = new Keyboard(this._game);
@@ -42,7 +37,7 @@ module Phaser {
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
 
-            this.point = new Point();
+            this.position = new Vector2;
             this.circle = new Circle(0, 0, 44);
 
             this.currentPointers = 0;
@@ -115,11 +110,11 @@ module Phaser {
         public gestures: Gestures;
 
         /**
-        * A Point object representing the x/y screen coordinates of the Pointer.
-        * @property point
-        * @type {Point}
+        * A vector object representing the current position of the Pointer.
+        * @property vector
+        * @type {Vector2}
         **/
-        public point: Point = null;
+        public position: Vector2 = null;
 
         /**
         * A Circle object centered on the x/y screen coordinates of the Input.
@@ -299,35 +294,35 @@ module Phaser {
         * @property pointer6
         * @type {Pointer}
         **/
-        public pointer6: Pointer;
+        public pointer6: Pointer = null;
 
         /**
         * A Pointer object
         * @property pointer7
         * @type {Pointer}
         **/
-        public pointer7: Pointer;
+        public pointer7: Pointer = null;
 
         /**
         * A Pointer object
         * @property pointer8
         * @type {Pointer}
         **/
-        public pointer8: Pointer;
+        public pointer8: Pointer = null;
 
         /**
         * A Pointer object
         * @property pointer9
         * @type {Pointer}
         **/
-        public pointer9: Pointer;
+        public pointer9: Pointer = null;
 
         /**
         * A Pointer object
         * @property pointer10
         * @type {Pointer}
         **/
-        public pointer10: Pointer;
+        public pointer10: Pointer = null;
 
         /**
         * The screen X coordinate
@@ -363,6 +358,58 @@ module Phaser {
 
         }
 
+        /**
+        * Add a new Pointer object to the Input Manager. By default Input creates 5 pointer objects for you. If you need more
+        * use this to create a new one, up to a maximum of 10.
+        * @method addPointer
+        * @return {Pointer} A reference to the new Pointer object
+        **/
+        public addPointer(): Pointer {
+
+            var next: number = 0;
+
+            if (this.pointer10 === null)
+            {
+                next = 10;
+            }
+
+            if (this.pointer9 === null)
+            {
+                next = 9;
+            }
+
+            if (this.pointer8 === null)
+            {
+                next = 8;
+            }
+
+            if (this.pointer7 === null)
+            {
+                next = 7;
+            }
+
+            if (this.pointer6 === null)
+            {
+                next = 6;
+            }
+
+            if (next == 0)
+            {
+                throw new Error("You can only have 10 Pointer objects");
+                return null;
+            }
+            else
+            {
+                this['pointer' + next] = new Pointer(this._game, next);
+                return this['pointer' + next];
+            }
+
+        }
+
+        /**
+        * Starts the Input Manager running
+        * @method start
+        **/
         public start() {
 
             this.mouse.start();
@@ -373,6 +420,10 @@ module Phaser {
 
         }
 
+        /**
+        * Updates the Input Manager. Called by the core Game loop.
+        * @method update
+        **/
         public update() {
 
             this.mousePointer.update();
@@ -381,11 +432,12 @@ module Phaser {
             this.pointer3.update();
             this.pointer4.update();
             this.pointer5.update();
-            this.pointer6.update();
-            this.pointer7.update();
-            this.pointer8.update();
-            this.pointer9.update();
-            this.pointer10.update();
+
+            if (this.pointer6) { this.pointer6.update(); }
+            if (this.pointer7) { this.pointer7.update(); }
+            if (this.pointer8) { this.pointer8.update(); }
+            if (this.pointer9) { this.pointer9.update(); }
+            if (this.pointer10) { this.pointer10.update(); }
 
         }
 
@@ -403,11 +455,12 @@ module Phaser {
             this.pointer3.reset();
             this.pointer4.reset();
             this.pointer5.reset();
-            this.pointer6.reset();
-            this.pointer7.reset();
-            this.pointer8.reset();
-            this.pointer9.reset();
-            this.pointer10.reset();
+
+            if (this.pointer6) { this.pointer6.reset(); }
+            if (this.pointer7) { this.pointer7.reset(); }
+            if (this.pointer8) { this.pointer8.reset(); }
+            if (this.pointer9) { this.pointer9.reset(); }
+            if (this.pointer10) { this.pointer10.reset(); }
 
             this.currentPointers = 0;
 
@@ -417,7 +470,6 @@ module Phaser {
                 this.onUp = new Phaser.Signal();
                 this.onTap = new Phaser.Signal();
                 this.onHold = new Phaser.Signal();
-
             }
 
         }
@@ -462,23 +514,23 @@ module Phaser {
             {
                 this.currentPointers++;
             }
-            else if (this.pointer6.active == true)
+            else if (this.pointer6 && this.pointer6.active == true)
             {
                 this.currentPointers++;
             }
-            else if (this.pointer7.active == true)
+            else if (this.pointer7 && this.pointer7.active == true)
             {
                 this.currentPointers++;
             }
-            else if (this.pointer8.active == true)
+            else if (this.pointer8 && this.pointer8.active == true)
             {
                 this.currentPointers++;
             }
-            else if (this.pointer9.active == true)
+            else if (this.pointer9 && this.pointer9.active == true)
             {
                 this.currentPointers++;
             }
-            else if (this.pointer10.active == true)
+            else if (this.pointer10 && this.pointer10.active == true)
             {
                 this.currentPointers++;
             }
@@ -521,23 +573,23 @@ module Phaser {
             {
                 return this.pointer5.start(event);
             }
-            else if (this.pointer6.active == false)
+            else if (this.pointer6 && this.pointer6.active == false)
             {
                 return this.pointer6.start(event);
             }
-            else if (this.pointer7.active == false)
+            else if (this.pointer7 && this.pointer7.active == false)
             {
                 return this.pointer7.start(event);
             }
-            else if (this.pointer8.active == false)
+            else if (this.pointer8 && this.pointer8.active == false)
             {
                 return this.pointer8.start(event);
             }
-            else if (this.pointer9.active == false)
+            else if (this.pointer9 && this.pointer9.active == false)
             {
                 return this.pointer9.start(event);
             }
-            else if (this.pointer10.active == false)
+            else if (this.pointer10 && this.pointer10.active == false)
             {
                 return this.pointer10.start(event);
             }
@@ -575,23 +627,23 @@ module Phaser {
             {
                 return this.pointer5.move(event);
             }
-            else if (this.pointer6.active == true && this.pointer6.identifier == event.identifier)
+            else if (this.pointer6 && this.pointer6.active == true && this.pointer6.identifier == event.identifier)
             {
                 return this.pointer6.move(event);
             }
-            else if (this.pointer7.active == true && this.pointer7.identifier == event.identifier)
+            else if (this.pointer7 && this.pointer7.active == true && this.pointer7.identifier == event.identifier)
             {
                 return this.pointer7.move(event);
             }
-            else if (this.pointer8.active == true && this.pointer8.identifier == event.identifier)
+            else if (this.pointer8 && this.pointer8.active == true && this.pointer8.identifier == event.identifier)
             {
                 return this.pointer8.move(event);
             }
-            else if (this.pointer9.active == true && this.pointer9.identifier == event.identifier)
+            else if (this.pointer9 && this.pointer9.active == true && this.pointer9.identifier == event.identifier)
             {
                 return this.pointer9.move(event);
             }
-            else if (this.pointer10.active == true && this.pointer10.identifier == event.identifier)
+            else if (this.pointer10 && this.pointer10.active == true && this.pointer10.identifier == event.identifier)
             {
                 return this.pointer10.move(event);
             }
@@ -629,23 +681,23 @@ module Phaser {
             {
                 return this.pointer5.stop(event);
             }
-            else if (this.pointer6.active == true && this.pointer6.identifier == event.identifier)
+            else if (this.pointer6 && this.pointer6.active == true && this.pointer6.identifier == event.identifier)
             {
                 return this.pointer6.stop(event);
             }
-            else if (this.pointer7.active == true && this.pointer7.identifier == event.identifier)
+            else if (this.pointer7 && this.pointer7.active == true && this.pointer7.identifier == event.identifier)
             {
                 return this.pointer7.stop(event);
             }
-            else if (this.pointer8.active == true && this.pointer8.identifier == event.identifier)
+            else if (this.pointer8 && this.pointer8.active == true && this.pointer8.identifier == event.identifier)
             {
                 return this.pointer8.stop(event);
             }
-            else if (this.pointer9.active == true && this.pointer9.identifier == event.identifier)
+            else if (this.pointer9 && this.pointer9.active == true && this.pointer9.identifier == event.identifier)
             {
                 return this.pointer9.stop(event);
             }
-            else if (this.pointer10.active == true && this.pointer10.identifier == event.identifier)
+            else if (this.pointer10 && this.pointer10.active == true && this.pointer10.identifier == event.identifier)
             {
                 return this.pointer10.stop(event);
             }
@@ -683,23 +735,23 @@ module Phaser {
             {
                 return this.pointer5;
             }
-            else if (this.pointer6.active == state)
+            else if (this.pointer6 && this.pointer6.active == state)
             {
                 return this.pointer6;
             }
-            else if (this.pointer7.active == state)
+            else if (this.pointer7 && this.pointer7.active == state)
             {
                 return this.pointer7;
             }
-            else if (this.pointer8.active == state)
+            else if (this.pointer8 && this.pointer8.active == state)
             {
                 return this.pointer8;
             }
-            else if (this.pointer9.active == state)
+            else if (this.pointer9 && this.pointer9.active == state)
             {
                 return this.pointer9;
             }
-            else if (this.pointer10.active == state)
+            else if (this.pointer10 && this.pointer10.active == state)
             {
                 return this.pointer10;
             }
@@ -737,23 +789,23 @@ module Phaser {
             {
                 return this.pointer5;
             }
-            else if (this.pointer6.identifier == identifier)
+            else if (this.pointer6 && this.pointer6.identifier == identifier)
             {
                 return this.pointer6;
             }
-            else if (this.pointer7.identifier == identifier)
+            else if (this.pointer7 && this.pointer7.identifier == identifier)
             {
                 return this.pointer7;
             }
-            else if (this.pointer8.identifier == identifier)
+            else if (this.pointer8 && this.pointer8.identifier == identifier)
             {
                 return this.pointer8;
             }
-            else if (this.pointer9.identifier == identifier)
+            else if (this.pointer9 && this.pointer9.identifier == identifier)
             {
                 return this.pointer9;
             }
-            else if (this.pointer10.identifier == identifier)
+            else if (this.pointer10 && this.pointer10.identifier == identifier)
             {
                 return this.pointer10;
             }
@@ -797,32 +849,24 @@ module Phaser {
         }
 
         /**
-        *
-        * @method calculateDistance
-        * @param {Finger} finger1
-        * @param {Finger} finger2
+        * Get the distance between two Pointer objects
+        * @method getDistance
+        * @param {Pointer} pointer1
+        * @param {Pointer} pointer2
         **/
-        //public calculateDistance(finger1: Finger, finger2: Finger) {
-        //}
+        public getDistance(pointer1: Pointer, pointer2: Pointer): number {
+            return pointer1.position.distance(pointer2.position);
+        }
 
         /**
-        *
-        * @method calculateAngle
-        * @param {Finger} finger1
-        * @param {Finger} finger2
+        * Get the angle between two Pointer objects
+        * @method getAngle
+        * @param {Pointer} pointer1
+        * @param {Pointer} pointer2
         **/
-        //public calculateAngle(finger1: Finger, finger2: Finger) {
-        //}
-
-        /**
-        *
-        * @method checkOverlap
-        * @param {Finger} finger1
-        * @param {Finger} finger2
-        **/
-        //public checkOverlap(finger1: Finger, finger2: Finger) {
-        //}
-
+        public getAngle(pointer1: Pointer, pointer2: Pointer): number {
+            return pointer1.position.angle(pointer2.position);
+        }
 
     }
 

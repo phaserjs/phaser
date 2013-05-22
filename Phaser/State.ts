@@ -18,6 +18,7 @@ module Phaser {
 
             this.game = game;
 
+            this.add = game.add;
             this.camera = game.camera;
             this.cache = game.cache;
             this.collision = game.collision;
@@ -55,6 +56,12 @@ module Phaser {
          * @type {Collision}
          */
         public collision: Collision;
+
+        /**
+         * Reference to the GameObject Factory.
+         * @type {GameObjectFactory}
+         */
+        public add: GameObjectFactory;
 
         /**
          * Reference to the input manager
@@ -143,125 +150,6 @@ module Phaser {
          * This method will be called when the state is destroyed
          */
         public destroy() { }
-
-        //  Handy Proxy methods
-
-        /**
-         * Create a new camera with specific position and size.
-         *
-         * @param x {number} X position of the new camera.
-         * @param y {number} Y position of the new camera.
-         * @param width {number} Width of the new camera.
-         * @param height {number} Height of the new camera.
-         * @returns {Camera} The newly created camera object.
-         */
-        public createCamera(x: number, y: number, width: number, height: number): Camera {
-            return this.game.world.createCamera(x, y, width, height);
-        }
-
-        /**
-         * Create a new GeomSprite with specific position.
-         *
-         * @param x {number} X position of the new geom sprite.
-         * @param y {number} Y position of the new geom sprite.
-         * @returns {GeomSprite} The newly created geom sprite object.
-         */
-        public createGeomSprite(x: number, y: number): GeomSprite {
-            return this.world.createGeomSprite(x, y);
-        }
-
-        /**
-         * Create a new Sprite with specific position and sprite sheet key.
-         *
-         * @param x {number} X position of the new sprite.
-         * @param y {number} Y position of the new sprite.
-         * @param key {string} [optional] key for the sprite sheet you want it to use.
-         * @returns {Sprite} The newly created sprite object.
-         */
-        public createSprite(x: number, y: number, key?: string = ''): Sprite {
-            return this.game.world.createSprite(x, y, key);
-        }
-
-        /**
-         * Create a new DynamicTexture with specific size.
-         *
-         * @param width {number} Width of the texture.
-         * @param height {number} Height of the texture.
-         * @returns {DynamicTexture} The newly created dynamic texture object.
-         */
-        public createDynamicTexture(width: number, height: number): DynamicTexture {
-            return this.game.world.createDynamicTexture(width, height);
-        }
-
-        /**
-         * Create a new object container.
-         *
-         * @param maxSize {number} [optional] capacity of this group.
-         * @returns {Group} The newly created group.
-         */
-        public createGroup(maxSize?: number = 0): Group {
-            return this.game.world.createGroup(maxSize);
-        }
-
-        /**
-         * Create a new Particle.
-         *
-         * @return {Particle} The newly created particle object.
-         */
-        public createParticle(): Particle {
-            return this.game.world.createParticle();
-        }
-
-        /**
-         * Create a new Emitter.
-         *
-         * @param x {number} [optional] x position of the emitter.
-         * @param y {number} [optional] y position of the emitter.
-         * @param size {number} [optional] size of this emitter.
-         * @return {Emitter} The newly created emitter object.
-         */
-        public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
-            return this.game.world.createEmitter(x, y, size);
-        }
-
-        /**
-         * Create a new ScrollZone object with image key, position and size.
-         *
-         * @param key {string} Key to a image you wish this object to use.
-         * @param x {number} X position of this object.
-         * @param y {number} Y position of this object.
-         * @param width {number} Width of this object.
-         * @param height {number} Height of this object.
-         * @returns {ScrollZone} The newly created scroll zone object.
-         */
-        public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
-            return this.game.world.createScrollZone(key, x, y, width, height);
-        }
-
-        /**
-         * Create a new Tilemap.
-         *
-         * @param key {string} Key for tileset image.
-         * @param mapData {string} Data of this tilemap.
-         * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-         * @param resizeWorld {boolean} [optional] resize the world to make same as tilemap?
-         * @param tileWidth {number} [optional] width of each tile.
-         * @param tileHeight number} [optional] height of each tile.
-         * @return {Tilemap} The newly created tilemap object.
-         */
-        public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
-            return this.game.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
-        }
-
-        /**
-         * Create a tween object for a specific object.
-         *
-         * @param obj Object you wish the tween will affect.
-         * @return {Phaser.Tween} The newly created tween object.
-         */
-        public createTween(obj): Tween {
-            return this.game.tweens.create(obj);
-        }
 
         /**
          * Call this method to see if one object collids another.

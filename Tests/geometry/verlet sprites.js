@@ -1,11 +1,6 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
     var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
-    var cube;
-    var b1;
-    var b2;
-    var b3;
-    var b4;
     function init() {
         myGame.loader.addImageFile('ball0', 'assets/sprites/yellow_ball.png');
         myGame.loader.addImageFile('ball1', 'assets/sprites/aqua_ball.png');
@@ -15,33 +10,23 @@
         myGame.loader.addImageFile('ball5', 'assets/sprites/purple_ball.png');
         myGame.loader.load();
     }
+    var wheel;
+    var diamond;
+    var triangle;
+    var cube;
     function create() {
         myGame.verlet.friction = 1;
         myGame.verlet.step = 32;
-        //var wheel = myGame.verlet.createTire(new Phaser.Vector2(200,50), 100, 30, 0.3, 0.9);
-        //var tire2 = myGame.verlet.createTire(new Phaser.Vector2(400,50), 70, 7, 0.1, 0.2);
-        cube = myGame.verlet.createTire(new Phaser.Vector2(300, 50), 100, 4, 1, 1);
-        //var tri = myGame.verlet.createTire(new Phaser.Vector2(700,50), 100, 3, 1, 1);
-        var dc = new Phaser.Verlet.DistanceConstraint(cube.particles[0], cube.particles[1], 1);
-        cube.constraints.push(dc);
-        var dc2 = new Phaser.Verlet.DistanceConstraint(cube.particles[1], cube.particles[2], 1);
-        cube.constraints.push(dc2);
-        var dc3 = new Phaser.Verlet.DistanceConstraint(cube.particles[2], cube.particles[3], 1);
-        cube.constraints.push(dc3);
-        b1 = myGame.createSprite(cube.particles[0].pos.x, cube.particles[0].pos.y, 'ball0');
-        b2 = myGame.createSprite(cube.particles[1].pos.x, cube.particles[1].pos.y, 'ball1');
-        b3 = myGame.createSprite(cube.particles[2].pos.x, cube.particles[2].pos.y, 'ball2');
-        b4 = myGame.createSprite(cube.particles[3].pos.x, cube.particles[3].pos.y, 'ball3');
+        wheel = myGame.verlet.createTire(new Phaser.Vector2(200, 50), 100, 30, 0.3, 0.9);
+        wheel.loadGraphic('ball0');
+        diamond = myGame.verlet.createTire(new Phaser.Vector2(400, 50), 70, 7, 0.1, 0.2);
+        diamond.loadGraphic('ball1');
+        triangle = myGame.verlet.createTire(new Phaser.Vector2(600, 50), 100, 3, 1, 1);
+        triangle.loadGraphic('ball2');
+        cube = myGame.verlet.createTire(new Phaser.Vector2(300, 50), 100, 4, 0.3, 0.9);
+        cube.loadGraphic('ball3');
     }
     function update() {
-        b1.x = cube.particles[0].pos.x - 8;
-        b1.y = cube.particles[0].pos.y - 8;
-        b2.x = cube.particles[1].pos.x - 8;
-        b2.y = cube.particles[1].pos.y - 8;
-        b3.x = cube.particles[2].pos.x - 8;
-        b3.y = cube.particles[2].pos.y - 8;
-        b4.x = cube.particles[3].pos.x - 8;
-        b4.y = cube.particles[3].pos.y - 8;
     }
     function render() {
         myGame.verlet.render();

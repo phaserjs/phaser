@@ -109,9 +109,15 @@ module Phaser {
         /**
          * Load graphic for this sprite. (graphic can be SpriteSheet or Texture)
          * @param key {string} Key of the graphic you want to load for this sprite.
+         * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
          * @return {Sprite} Sprite instance itself.
          */
-        public loadGraphic(key: string): Sprite {
+        public loadGraphic(key: string, clearAnimations: bool = true): Sprite {
+
+            if (clearAnimations && this.animations.frameData !== null)
+            {
+                this.animations.destroy();
+            }
 
             if (this._game.cache.getImage(key) !== null)
             {
@@ -127,8 +133,8 @@ module Phaser {
                 {
                     this._texture = this._game.cache.getImage(key);
                     this.animations.loadFrameData(this._game.cache.getFrameData(key));
-                    //this.collisionMask.width = this._texture.width;
-                    //this.collisionMask.height = this._texture.height;
+                    this.collisionMask.width = this.animations.currentFrame.width;
+                    this.collisionMask.height = this.animations.currentFrame.height;
                 }
 
                 this._dynamicTexture = false;
@@ -181,18 +187,26 @@ module Phaser {
          */
         public inCamera(camera: Rectangle): bool {
 
-            if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
+            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
+            if (this.scrollFactor.x == 0 && this.scrollFactor.y == 0)
             {
-                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
+                return true;
+            }
+
+            //  Otherwise, if it's scrolling perfectly in sync with the camera (1 to 1) then it's a simple bounds check on world coordinates
+            if (this.scrollFactor.x == 1 && this.scrollFactor.y == 1)
+            {
+                return camera.intersects(this.frameBounds, this.frameBounds.length);
+            }
+            else
+            {
+                //  Else apply the offsets
+                this._dx = (this.frameBounds.x - camera.x) * this.scrollFactor.x;
+                this._dy = (this.frameBounds.y - camera.y) * this.scrollFactor.y;
                 this._dw = this.frameBounds.width * this.scale.x;
                 this._dh = this.frameBounds.height * this.scale.y;
 
                 return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
-            }
-            else
-            {
-                return camera.intersects(this.frameBounds, this.frameBounds.length);
             }
 
         }
@@ -250,8 +264,9 @@ module Phaser {
             this._sy = 0;
             this._sw = this.frameBounds.width;
             this._sh = this.frameBounds.height;
-            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
+            
+            this._dx = (cameraOffsetX * this.scrollFactor.x) + this.frameBounds.topLeft.x - (camera.worldView.x * this.scrollFactor.x);
+            this._dy = (cameraOffsetY * this.scrollFactor.y) + this.frameBounds.topLeft.y - (camera.worldView.y * this.scrollFactor.y);
             this._dw = this.frameBounds.width * this.scale.x;
             this._dh = this.frameBounds.height * this.scale.y;
 
@@ -305,10 +320,10 @@ module Phaser {
             }
 
             //	Apply camera difference
-            if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
+            if (this.scrollFactor.x !== 1 || this.scrollFactor.y !== 1)
             {
-                this._dx -= (camera.worldView.x * this.scrollFactor.x);
-                this._dy -= (camera.worldView.y * this.scrollFactor.y);
+                //this._dx -= (camera.worldView.x * this.scrollFactor.x);
+                //this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
 
             //	Rotation - needs to work from origin point really, but for now from center

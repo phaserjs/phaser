@@ -34,6 +34,5 @@
         console.log('Collision!!!!!');
     }
     function render() {
-        //atari1.ren
-            }
+    }
 })();

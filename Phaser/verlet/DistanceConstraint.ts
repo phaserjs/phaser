@@ -62,6 +62,7 @@ module Phaser.Verlet {
 	        ctx.lineTo(this.b.pos.x, this.b.pos.y);
 	        ctx.strokeStyle = "#d8dde2";
 	        ctx.stroke();
+	        ctx.closePath();
         }
 
     }

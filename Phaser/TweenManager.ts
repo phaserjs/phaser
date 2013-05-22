@@ -30,6 +30,7 @@ module Phaser {
          * Local private reference to Game
          */
         private _game: Phaser.Game;
+
         /**
          * Local private array which is the container of all tween objects.
          */

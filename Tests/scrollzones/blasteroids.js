@@ -23,6 +23,7 @@
         emitter.setRotation(0, 0);
         //  Looks like a smoke trail!
         //emitter.globalCompositeOperation = 'xor';
+        //  Looks way cool :)
         emitter.globalCompositeOperation = 'lighter';
         bullets = myGame.createGroup(50);
         //  Create our bullet pool

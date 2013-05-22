@@ -1039,25 +1039,32 @@ module Phaser {
         }
 
         /**
-        * Rotates a point around the x/y coordinates given to the desired angle
+        * Rotates the point around the x/y coordinates given to the desired angle and distance
+	    * @param point {Object} Any object with exposed x and y properties
 	    * @param x {number} The x coordinate of the anchor point
 	    * @param y {number} The y coordinate of the anchor point
-	    * @param angle {number} The angle of the rotation in radians
-	    * @param point {Point} The point object to perform the rotation on
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+	    * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the point and the anchor
         * @return The modified point object
         */
-        public rotatePoint(x: number, y: number, angle: number, point) {
+        public rotatePoint(point, x1: number, y1: number, angle: number, asDegrees: bool = false, distance?:number = null) {
 
-            var s: number = Math.sin(angle);
-            var c: number = Math.cos(angle);
+            if (asDegrees)
+            {
+                angle = angle * GameMath.DEG_TO_RAD;
+            }
 
-            point.x -= x;
-            point.y -= y;
+            //  Get distance from origin to the point
+            if (distance === null)
+            {
+                distance = Math.sqrt(((x1 - point.x) * (x1 - point.x)) + ((y1 - point.y) * (y1 - point.y)));
+            }
 
-            var newX: number = point.x * c - point.y * s;
-            var newY: number = point.x * s - point.y * c;
+            point.x = x1 + distance * Math.cos(angle);
+            point.y = y1 + distance * Math.sin(angle);
 
-            return point.setTo(newX + x, newY + y);
+            return point;
 
         }
 

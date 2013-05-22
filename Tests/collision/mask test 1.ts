@@ -59,9 +59,6 @@
     }
 
     function render() {
-
-        //atari1.ren
-
     }
 
 })();

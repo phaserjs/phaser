@@ -5,6 +5,8 @@
 /// <reference path="geom/Circle.ts" />
 /// <reference path="geom/Line.ts" />
 /// <reference path="geom/IntersectResult.ts" />
+/// <reference path="geom/Response.ts" />
+/// <reference path="geom/Vector2.ts" />
 /// <reference path="system/QuadTree.ts" />
 
 /**
@@ -24,6 +26,20 @@ module Phaser {
         constructor(game: Game) {
 
             this._game = game;
+
+            Collision.T_VECTORS = [];
+
+            for (var i = 0; i < 10; i++)
+            {
+                Collision.T_VECTORS.push(new Vector2);
+            }
+
+            Collision.T_ARRAYS = [];
+
+            for (var i = 0; i < 5; i++)
+            {
+                Collision.T_ARRAYS.push([]);
+            }
 
         }
 
@@ -553,20 +569,6 @@ module Phaser {
 
         }
 
-        /*
-        public static circleToQuad(circle: Circle, quad: Quad): bool {
-
-            //  Check if the center of the circle is within the Quad
-            if (quad.contains(circle.x, circle.y))
-            {
-                return true;
-            }
-
-            //  Failing that let's check each line of the quad against the circle
-            return false;
-        }
-        */
-
         /**
          * Checks if the Circle object intersects with the Rectangle and returns the result in an IntersectResult object.
          * @param circle The Circle object to check
@@ -647,8 +649,6 @@ module Phaser {
          */
         public static separate(object1, object2): bool {
 
-            console.log('sep o');
-
             object1.collisionMask.update();
             object2.collisionMask.update();
 
@@ -666,6 +666,8 @@ module Phaser {
          * @returns {boolean} Whether the objects in fact touched and were separated
          */
         public static separateTile(object:GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool, separateX: bool, separateY: bool): bool {
+
+            object.collisionMask.update();
 
             var separatedX: bool = Collision.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
             var separatedY: bool = Collision.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
@@ -691,11 +693,13 @@ module Phaser {
             //  First, get the object delta
             var overlap: number = 0;
             var objDelta: number = object.x - object.last.x;
+            //var objDelta: number = object.collisionMask.deltaX;
 
             if (objDelta != 0)
             {
                 //  Check if the X hulls actually overlap
                 var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                //var objDeltaAbs: number = object.collisionMask.deltaXAbs;
                 var objBounds: Quad = new Quad(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
 
                 if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
@@ -739,6 +743,7 @@ module Phaser {
             {
                 if (separate == true)
                 {
+                    //console.log('
                     object.x = object.x - overlap;
                     object.velocity.x = -(object.velocity.x * object.elasticity);
                 }
@@ -798,6 +803,170 @@ module Phaser {
                     else if (objDelta < 0)
                     {
                         overlap = object.y - height - y;
+
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.UP;
+                        }
+                    }
+                }
+            }
+
+            // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                if (separate == true)
+                {
+                    object.y = object.y - overlap;
+                    object.velocity.y = -(object.velocity.y * object.elasticity);
+                }
+
+                Collision.TILE_OVERLAP = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        /**
+         * Separates the two objects on their x axis
+         * @param object The GameObject to separate
+         * @param tile The Tile to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+         */
+        public static NEWseparateTileX(object:GameObject, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if (object.immovable)
+            {
+                return false;
+            }
+
+            //  First, get the object delta
+            var overlap: number = 0;
+
+            if (object.collisionMask.deltaX != 0)
+            {
+                //  Check if the X hulls actually overlap
+                //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                //var objBounds: Quad = new Quad(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+
+                //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+                if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
+                {
+                    var maxOverlap: number = object.collisionMask.deltaXAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (object.collisionMask.deltaX > 0)
+                    {
+                        //overlap = object.x + object.width - x;
+                        overlap = object.collisionMask.right - x;
+
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.RIGHT;
+                        }
+                    }
+                    else if (object.collisionMask.deltaX < 0)
+                    {
+                        //overlap = object.x - width - x;
+                        overlap = object.collisionMask.x - width - x;
+
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.LEFT;
+                        }
+
+                    }
+
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                if (separate == true)
+                {
+                    object.x = object.x - overlap;
+                    object.velocity.x = -(object.velocity.x * object.elasticity);
+                }
+
+                Collision.TILE_OVERLAP = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        /**
+         * Separates the two objects on their y axis
+         * @param object The first GameObject to separate
+         * @param tile The second GameObject to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+         */
+        public static NEWseparateTileY(object: GameObject, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if (object.immovable)
+            {
+                return false;
+            }
+
+            //  First, get the two object deltas
+            var overlap: number = 0;
+            //var objDelta: number = object.y - object.last.y;
+
+            if (object.collisionMask.deltaY != 0)
+            {
+                //  Check if the Y hulls actually overlap
+                //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                //var objBounds: Quad = new Quad(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+
+                //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+                if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
+                {
+                    //var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+                    var maxOverlap: number = object.collisionMask.deltaYAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (object.collisionMask.deltaY > 0)
+                    {
+                        //overlap = object.y + object.height - y;
+                        overlap = object.collisionMask.bottom - y;
+
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.DOWN;
+                        }
+                    }
+                    else if (object.collisionMask.deltaY < 0)
+                    {
+                        //overlap = object.y - height - y;
+                        overlap = object.collisionMask.y - height - y;
 
                         if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
                         {
@@ -1033,229 +1202,6 @@ module Phaser {
         }
 
         /**
-         * Separates the two objects on their x axis
-         * @param object1 The first GameObject to separate
-         * @param object2 The second GameObject to separate
-         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-         */
-        public static OLDseparateX(object1, object2): bool {
-
-            //  Can't separate two immovable objects
-            if (object1.immovable && object2.immovable)
-            {
-                return false;
-            }
-
-            //  First, get the two object deltas
-            var overlap: number = 0;
-            var obj1Delta: number = object1.x - object1.last.x;
-            var obj2Delta: number = object2.x - object2.last.x;
-
-            if (obj1Delta != obj2Delta)
-            {
-                //  Check if the X hulls actually overlap
-                var obj1DeltaAbs: number = (obj1Delta > 0) ? obj1Delta : -obj1Delta;
-                var obj2DeltaAbs: number = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
-                var obj1Bounds: Quad = new Quad(object1.x - ((obj1Delta > 0) ? obj1Delta : 0), object1.last.y, object1.width + ((obj1Delta > 0) ? obj1Delta : -obj1Delta), object1.height);
-                var obj2Bounds: Quad = new Quad(object2.x - ((obj2Delta > 0) ? obj2Delta : 0), object2.last.y, object2.width + ((obj2Delta > 0) ? obj2Delta : -obj2Delta), object2.height);
-
-                if ((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height))
-                {
-                    var maxOverlap: number = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
-
-                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (obj1Delta > obj2Delta)
-                    {
-                        overlap = object1.x + object1.width - object2.x;
-
-                        if ((overlap > maxOverlap) || !(object1.allowCollisions & Collision.RIGHT) || !(object2.allowCollisions & Collision.LEFT))
-                        {
-                            overlap = 0;
-                        }
-                        else
-                        {
-                            object1.touching |= Collision.RIGHT;
-                            object2.touching |= Collision.LEFT;
-                        }
-                    }
-                    else if (obj1Delta < obj2Delta)
-                    {
-                        overlap = object1.x - object2.width - object2.x;
-
-                        if ((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.LEFT) || !(object2.allowCollisions & Collision.RIGHT))
-                        {
-                            overlap = 0;
-                        }
-                        else
-                        {
-                            object1.touching |= Collision.LEFT;
-                            object2.touching |= Collision.RIGHT;
-                        }
-
-                    }
-
-                }
-            }
-
-            //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (overlap != 0)
-            {
-                var obj1Velocity: number = object1.velocity.x;
-                var obj2Velocity: number = object2.velocity.x;
-
-                if (!object1.immovable && !object2.immovable)
-                {
-                    overlap *= 0.5;
-                    object1.x = object1.x - overlap;
-                    object2.x += overlap;
-
-                    var obj1NewVelocity: number = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
-                    var obj2NewVelocity: number = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
-                    var average: number = (obj1NewVelocity + obj2NewVelocity) * 0.5;
-                    obj1NewVelocity -= average;
-                    obj2NewVelocity -= average;
-                    object1.velocity.x = average + obj1NewVelocity * object1.elasticity;
-                    object2.velocity.x = average + obj2NewVelocity * object2.elasticity;
-                }
-                else if (!object1.immovable)
-                {
-                    object1.x = object1.x - overlap;
-                    object1.velocity.x = obj2Velocity - obj1Velocity * object1.elasticity;
-                }
-                else if (!object2.immovable)
-                {
-                    object2.x += overlap;
-                    object2.velocity.x = obj1Velocity - obj2Velocity * object2.elasticity;
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-
-        /**
-         * Separates the two objects on their y axis
-         * @param object1 The first GameObject to separate
-         * @param object2 The second GameObject to separate
-         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
-         */
-        public static OLDseparateY(object1, object2): bool {
-
-            //  Can't separate two immovable objects
-            if (object1.immovable && object2.immovable) {
-                return false;
-            }
-
-            //  First, get the two object deltas
-            var overlap: number = 0;
-            var obj1Delta: number = object1.y - object1.last.y;
-            var obj2Delta: number = object2.y - object2.last.y;
-
-            if (obj1Delta != obj2Delta)
-            {
-                //  Check if the Y hulls actually overlap
-                var obj1DeltaAbs: number = (obj1Delta > 0) ? obj1Delta : -obj1Delta;
-                var obj2DeltaAbs: number = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
-                var obj1Bounds: Quad = new Quad(object1.x, object1.y - ((obj1Delta > 0) ? obj1Delta : 0), object1.width, object1.height + obj1DeltaAbs);
-                var obj2Bounds: Quad = new Quad(object2.x, object2.y - ((obj2Delta > 0) ? obj2Delta : 0), object2.width, object2.height + obj2DeltaAbs);
-
-                console.log(obj1Bounds.toString(), obj2Bounds.toString());
-
-                if ((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height))
-                {
-                    var maxOverlap: number = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
-                    console.log('max33', maxOverlap, obj1Delta, obj2Delta, obj1DeltaAbs, obj2DeltaAbs);
-
-                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (obj1Delta > obj2Delta)
-                    {
-                        overlap = object1.y + object1.height - object2.y;
-
-                        if ((overlap > maxOverlap) || !(object1.allowCollisions & Collision.DOWN) || !(object2.allowCollisions & Collision.UP))
-                        {
-                            overlap = 0;
-                        }
-                        else
-                        {
-                            object1.touching |= Collision.DOWN;
-                            object2.touching |= Collision.UP;
-                        }
-                    }
-                    else if (obj1Delta < obj2Delta)
-                    {
-                        overlap = object1.y - object2.height - object2.y;
-
-                        if ((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.UP) || !(object2.allowCollisions & Collision.DOWN))
-                        {
-                            overlap = 0;
-                        }
-                        else
-                        {
-                            object1.touching |= Collision.UP;
-                            object2.touching |= Collision.DOWN;
-                        }
-                    }
-                }
-            }
-
-            //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (overlap != 0)
-            {
-                console.log('y overlap', overlap);
-
-                var obj1Velocity: number = object1.velocity.y;
-                var obj2Velocity: number = object2.velocity.y;
-
-                if (!object1.immovable && !object2.immovable)
-                {
-                    overlap *= 0.5;
-                    object1.y = object1.y - overlap;
-                    object2.y += overlap;
-
-                    var obj1NewVelocity: number = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
-                    var obj2NewVelocity: number = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
-                    var average: number = (obj1NewVelocity + obj2NewVelocity) * 0.5;
-                    obj1NewVelocity -= average;
-                    obj2NewVelocity -= average;
-                    object1.velocity.y = average + obj1NewVelocity * object1.elasticity;
-                    object2.velocity.y = average + obj2NewVelocity * object2.elasticity;
-                }
-                else if (!object1.immovable)
-                {
-                    object1.y = object1.y - overlap;
-                    object1.velocity.y = obj2Velocity - obj1Velocity * object1.elasticity;
-                    //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (object2.active && object2.moves && (obj1Delta > obj2Delta))
-                    {
-                        object1.x += object2.x - object2.last.x;
-                    }
-                    console.log('y2', object1.y, object1.velocity.y);
-                }
-                else if (!object2.immovable)
-                {
-                    object2.y += overlap;
-                    object2.velocity.y = obj1Velocity - obj2Velocity * object2.elasticity;
-                    //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (object1.active && object1.moves && (obj1Delta < obj2Delta))
-                    {
-                        object2.x += object1.x - object1.last.x;
-                    }
-                    console.log('y3', object2.y, object2.velocity.y);
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /**
          * Returns the distance between the two given coordinates.
          * @param x1 The X value of the first coordinate
          * @param y1 The Y value of the first coordinate
@@ -1277,6 +1223,478 @@ module Phaser {
          */
         public static distanceSquared(x1: number, y1: number, x2: number, y2: number) {
             return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+        }
+
+
+
+        // SAT
+
+        /**
+        * Flattens the specified array of points onto a unit vector axis,
+        * resulting in a one dimensional range of the minimum and 
+        * maximum value on that axis.
+        *
+        * @param {Array.<Vector>} points The points to flatten.
+        * @param {Vector} normal The unit vector axis to flatten on.
+        * @param {Array.<number>} result An array.  After calling this function,
+        *   result[0] will be the minimum value,
+        *   result[1] will be the maximum value.
+        */
+        public static flattenPointsOn(points, normal, result) {
+
+            var min = Number.MAX_VALUE;
+            var max = -Number.MAX_VALUE;
+            var len = points.length;
+
+            for (var i = 0; i < len; i++)
+            {
+                // Get the magnitude of the projection of the point onto the normal
+                var dot = points[i].dot(normal);
+                if (dot < min) { min = dot; }
+                if (dot > max) { max = dot; }
+            }
+
+            result[0] = min; result[1] = max;
+
+        }
+
+        /**
+        * Pool of Vectors used in calculations.
+        * 
+        * @type {Array.<Vector>}
+        */
+        public static T_VECTORS: Vector2[];
+
+        /**
+        * Pool of Arrays used in calculations.
+        * 
+        * @type {Array.<Array.<*>>}
+        */
+        public static T_ARRAYS;
+
+        /**
+        * Check whether two convex clockwise polygons are separated by the specified
+        * axis (must be a unit vector).
+        * 
+        * @param {Vector} aPos The position of the first polygon.
+        * @param {Vector} bPos The position of the second polygon.
+        * @param {Array.<Vector>} aPoints The points in the first polygon.
+        * @param {Array.<Vector>} bPoints The points in the second polygon.
+        * @param {Vector} axis The axis (unit sized) to test against.  The points of both polygons
+        *   will be projected onto this axis.
+        * @param {Response=} response A Response object (optional) which will be populated
+        *   if the axis is not a separating axis.
+        * @return {boolean} true if it is a separating axis, false otherwise.  If false,
+        *   and a response is passed in, information about how much overlap and
+        *   the direction of the overlap will be populated.
+        */
+        public static isSeparatingAxis(aPos, bPos, aPoints, bPoints, axis, response?:Response = null): bool {
+
+            var rangeA = Collision.T_ARRAYS.pop();
+            var rangeB = Collision.T_ARRAYS.pop();
+
+            // Get the magnitude of the offset between the two polygons
+            var offsetV = Collision.T_VECTORS.pop().copyFrom(bPos).sub(aPos);
+            var projectedOffset = offsetV.dot(axis);
+
+            // Project the polygons onto the axis.
+            Collision.flattenPointsOn(aPoints, axis, rangeA);
+            Collision.flattenPointsOn(bPoints, axis, rangeB);
+
+            // Move B's range to its position relative to A.
+            rangeB[0] += projectedOffset;
+            rangeB[1] += projectedOffset;
+
+            // Check if there is a gap. If there is, this is a separating axis and we can stop
+            if (rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1])
+            {
+                Collision.T_VECTORS.push(offsetV);
+                Collision.T_ARRAYS.push(rangeA);
+                Collision.T_ARRAYS.push(rangeB);
+                return true;
+            }
+
+            // If we're calculating a response, calculate the overlap.
+            if (response)
+            {
+                var overlap = 0;
+
+                // A starts further left than B
+                if (rangeA[0] < rangeB[0])
+                {
+                    response.aInB = false;
+
+                    // A ends before B does. We have to pull A out of B
+                    if (rangeA[1] < rangeB[1])
+                    {
+                        overlap = rangeA[1] - rangeB[0];
+                        response.bInA = false;
+                        // B is fully inside A.  Pick the shortest way out.
+                    }
+                    else
+                    {
+                        var option1 = rangeA[1] - rangeB[0];
+                        var option2 = rangeB[1] - rangeA[0];
+                        overlap = option1 < option2 ? option1 : -option2;
+                    }
+                    // B starts further left than A
+                }
+                else
+                {
+                    response.bInA = false;
+
+                    // B ends before A ends. We have to push A out of B
+                    if (rangeA[1] > rangeB[1])
+                    {
+                        overlap = rangeA[0] - rangeB[1];
+                        response.aInB = false;
+                        // A is fully inside B.  Pick the shortest way out.
+                    }
+                    else
+                    {
+                        var option1 = rangeA[1] - rangeB[0];
+                        var option2 = rangeB[1] - rangeA[0];
+                        overlap = option1 < option2 ? option1 : -option2;
+                    }
+                }
+
+                // If this is the smallest amount of overlap we've seen so far, set it as the minimum overlap.
+                var absOverlap = Math.abs(overlap);
+
+                if (absOverlap < response.overlap)
+                {
+                    response.overlap = absOverlap;
+                    response.overlapN.copyFrom(axis);
+
+                    if (overlap < 0)
+                    {
+                        response.overlapN.reverse();
+                    }
+                }
+            }
+
+            Collision.T_VECTORS.push(offsetV);
+            Collision.T_ARRAYS.push(rangeA);
+            Collision.T_ARRAYS.push(rangeB);
+
+            return false;
+
+        }
+
+        public static LEFT_VORNOI_REGION:number = -1;
+        public static MIDDLE_VORNOI_REGION:number = 0;
+        public static RIGHT_VORNOI_REGION:number = 1;
+
+        /**
+        * Calculates which Vornoi region a point is on a line segment.
+        * It is assumed that both the line and the point are relative to (0, 0)
+        * 
+        *             |       (0)      | 
+        *      (-1)  [0]--------------[1]  (1)
+        *             |       (0)      | 
+        * 
+        * @param {Vector} line The line segment.
+        * @param {Vector} point The point.
+        * @return  {number} LEFT_VORNOI_REGION (-1) if it is the left region, 
+        *          MIDDLE_VORNOI_REGION (0) if it is the middle region, 
+        *          RIGHT_VORNOI_REGION (1) if it is the right region.
+        */
+        public static vornoiRegion(line: Vector2, point: Vector2): number {
+
+            var len2 = line.length2();
+            var dp = point.dot(line);
+
+            if (dp < 0) { return Collision.LEFT_VORNOI_REGION; }
+            else if (dp > len2) { return Collision.RIGHT_VORNOI_REGION; }
+            else { return Collision.MIDDLE_VORNOI_REGION; }
+
+        }
+
+        /**
+        * Check if two circles intersect.
+        * 
+        * @param {Circle} a The first circle.
+        * @param {Circle} b The second circle.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   the circles intersect.
+        * @return {boolean} true if the circles intersect, false if they don't. 
+        */
+        public static testCircleCircle(a: Circle, b: Circle, response?: Response = null): bool {
+
+            var differenceV = Collision.T_VECTORS.pop().copyFrom(b.pos).sub(a.pos);
+            var totalRadius = a.radius + b.radius;
+            var totalRadiusSq = totalRadius * totalRadius;
+            var distanceSq = differenceV.length2();
+            
+            if (distanceSq > totalRadiusSq)
+            {
+                // They do not intersect 
+                Collision.T_VECTORS.push(differenceV);
+                return false;
+            }
+
+            // They intersect.  If we're calculating a response, calculate the overlap.
+            if (response)
+            {
+                var dist = Math.sqrt(distanceSq);
+                response.a = a;
+                response.b = b;
+                response.overlap = totalRadius - dist;
+                response.overlapN.copyFrom(differenceV.normalize());
+                response.overlapV.copyFrom(differenceV).scale(response.overlap);
+                response.aInB = a.radius <= b.radius && dist <= b.radius - a.radius;
+                response.bInA = b.radius <= a.radius && dist <= a.radius - b.radius;
+            }
+
+            Collision.T_VECTORS.push(differenceV);
+            return true;
+
+        }
+
+        /**
+        * Check if a polygon and a circle intersect.
+        * 
+        * @param {Polygon} polygon The polygon.
+        * @param {Circle} circle The circle.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        public static testPolygonCircle(polygon: Polygon, circle: Circle, response?: Response = null): bool {
+
+            var circlePos = Collision.T_VECTORS.pop().copyFrom(circle.pos).sub(polygon.pos);
+            var radius = circle.radius;
+            var radius2 = radius * radius;
+            var points = polygon.points;
+            var len = points.length;
+            var edge = T_VECTORS.pop();
+            var point = T_VECTORS.pop();
+
+            // For each edge in the polygon
+            for (var i = 0; i < len; i++)
+            {
+                var next = i === len - 1 ? 0 : i + 1;
+                var prev = i === 0 ? len - 1 : i - 1;
+                var overlap = 0;
+                var overlapN = null;
+
+                // Get the edge
+                edge.copyFrom(polygon.edges[i]);
+                // Calculate the center of the cirble relative to the starting point of the edge
+                point.copyFrom(circlePos).sub(points[i]);
+
+                // If the distance between the center of the circle and the point
+                // is bigger than the radius, the polygon is definitely not fully in
+                // the circle.
+                if (response && point.length2() > radius2)
+                {
+                    response.aInB = false;
+                }
+
+                // Calculate which Vornoi region the center of the circle is in.
+                var region = vornoiRegion(edge, point);
+
+                if (region === Collision.LEFT_VORNOI_REGION)
+                {
+                    // Need to make sure we're in the RIGHT_VORNOI_REGION of the previous edge.
+                    edge.copyFrom(polygon.edges[prev]);
+
+                    // Calculate the center of the circle relative the starting point of the previous edge
+                    var point2 = Collision.T_VECTORS.pop().copyFrom(circlePos).sub(points[prev]);
+                    region = vornoiRegion(edge, point2);
+
+                    if (region === Collision.RIGHT_VORNOI_REGION)
+                    {
+                        // It's in the region we want.  Check if the circle intersects the point.
+                        var dist = point.length2();
+
+                        if (dist > radius)
+                        {
+                            // No intersection
+                            Collision.T_VECTORS.push(circlePos);
+                            Collision.T_VECTORS.push(edge);
+                            Collision.T_VECTORS.push(point);
+                            Collision.T_VECTORS.push(point2);
+                            return false;
+                        }
+                        else if (response)
+                        {
+                            // It intersects, calculate the overlap
+                            response.bInA = false;
+                            overlapN = point.normalize();
+                            overlap = radius - dist;
+                        }
+                    }
+
+                    Collision.T_VECTORS.push(point2);
+
+                }
+                else if (region === Collision.RIGHT_VORNOI_REGION)
+                {
+                    // Need to make sure we're in the left region on the next edge
+                    edge.copyFrom(polygon.edges[next]);
+
+                    // Calculate the center of the circle relative to the starting point of the next edge
+                    point.copyFrom(circlePos).sub(points[next]);
+                    region = vornoiRegion(edge, point);
+
+                    if (region === Collision.LEFT_VORNOI_REGION)
+                    {
+                        // It's in the region we want.  Check if the circle intersects the point.
+                        var dist = point.length2();
+
+                        if (dist > radius)
+                        {
+                            // No intersection
+                            Collision.T_VECTORS.push(circlePos);
+                            Collision.T_VECTORS.push(edge);
+                            Collision.T_VECTORS.push(point);
+                            return false;
+                        }
+                        else if (response)
+                        {
+                            // It intersects, calculate the overlap
+                            response.bInA = false;
+                            overlapN = point.normalize();
+                            overlap = radius - dist;
+                        }
+                    }
+                    // MIDDLE_VORNOI_REGION
+                }
+                else
+                {
+                    // Need to check if the circle is intersecting the edge,
+                    // Change the edge into its "edge normal".
+                    var normal = edge.perp().normalize();
+
+                    // Find the perpendicular distance between the center of the 
+                    // circle and the edge.
+                    var dist = point.dot(normal);
+                    var distAbs = Math.abs(dist);
+
+                    // If the circle is on the outside of the edge, there is no intersection
+                    if (dist > 0 && distAbs > radius)
+                    {
+                        Collision.T_VECTORS.push(circlePos);
+                        Collision.T_VECTORS.push(normal);
+                        Collision.T_VECTORS.push(point);
+                        return false;
+                    }
+                    else if (response)
+                    {
+                        // It intersects, calculate the overlap.
+                        overlapN = normal;
+                        overlap = radius - dist;
+                        // If the center of the circle is on the outside of the edge, or part of the
+                        // circle is on the outside, the circle is not fully inside the polygon.
+                        if (dist >= 0 || overlap < 2 * radius)
+                        {
+                            response.bInA = false;
+                        }
+                    }
+                }
+
+                // If this is the smallest overlap we've seen, keep it. 
+                // (overlapN may be null if the circle was in the wrong Vornoi region)
+                if (overlapN && response && Math.abs(overlap) < Math.abs(response.overlap))
+                {
+                    response.overlap = overlap;
+                    response.overlapN.copyFrom(overlapN);
+                }
+            }
+
+            // Calculate the final overlap vector - based on the smallest overlap.
+            if (response)
+            {
+                response.a = polygon;
+                response.b = circle;
+                response.overlapV.copyFrom(response.overlapN).scale(response.overlap);
+            }
+            
+            Collision.T_VECTORS.push(circlePos);
+            Collision.T_VECTORS.push(edge);
+            Collision.T_VECTORS.push(point);
+
+            return true;
+        }
+
+        /**
+        * Check if a circle and a polygon intersect.
+        * 
+        * NOTE: This runs slightly slower than polygonCircle as it just
+        * runs polygonCircle and reverses everything at the end.
+        * 
+        * @param {Circle} circle The circle.
+        * @param {Polygon} polygon The polygon.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        public static testCirclePolygon(circle: Circle, polygon: Polygon, response?: Response = null): bool {
+            
+            var result = Collision.testPolygonCircle(polygon, circle, response);
+            
+            if (result && response)
+            {
+                // Swap A and B in the response.
+                var a = response.a;
+                var aInB = response.aInB;
+                response.overlapN.reverse();
+                response.overlapV.reverse();
+                response.a = response.b;
+                response.b = a;
+                response.aInB = response.bInA;
+                response.bInA = aInB;
+            }
+
+            return result;
+        }
+
+        /**
+        * Checks whether two convex, clockwise polygons intersect.
+        * 
+        * @param {Polygon} a The first polygon.
+        * @param {Polygon} b The second polygon.
+        * @param {Response=} response Response object (optional) that will be populated if
+        *   they interset.
+        * @return {boolean} true if they intersect, false if they don't.
+        */
+        public static testPolygonPolygon(a: Polygon, b: Polygon, response?: Response = null): bool {
+
+            var aPoints = a.points;
+            var aLen = aPoints.length;
+            var bPoints = b.points;
+            var bLen = bPoints.length;
+
+            // If any of the edge normals of A is a separating axis, no intersection.
+            for (var i = 0; i < aLen; i++)
+            {
+                if (Collision.isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, a.normals[i], response))
+                {
+                    return false;
+                }
+            }
+
+            // If any of the edge normals of B is a separating axis, no intersection.
+            for (var i = 0; i < bLen; i++)
+            {
+                if (Collision.isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, b.normals[i], response))
+                {
+                    return false;
+                }
+            }
+
+            // Since none of the edge normals of A or B are a separating axis, there is an intersection
+            // and we've already calculated the smallest overlap (in isSeparatingAxis).  Calculate the
+            // final overlap vector.
+            if (response)
+            {
+                response.a = a;
+                response.b = b;
+                response.overlapV.copyFrom(response.overlapN).scale(response.overlap);
+            }
+
+            return true;
         }
 
     }

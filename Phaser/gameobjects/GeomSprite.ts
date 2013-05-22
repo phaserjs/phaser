@@ -1,4 +1,5 @@
 /// <reference path="../Game.ts" />
+/// <reference path="../geom/Polygon.ts" />
 
 /**
 * Phaser - GeomSprite
@@ -72,6 +73,12 @@ module Phaser {
         public static RECTANGLE: number = 4;
 
         /**
+         * Polygon.
+         * @type {number}
+         */
+        public static POLYGON: number = 5;
+
+        /**
          * Circle shape container. A Circle instance.
          * @type {Circle}
          */
@@ -94,6 +101,12 @@ module Phaser {
          * @type {Rectangle}
          */
         public rect: Rectangle;
+
+        /**
+         * Polygon shape container. A Polygon instance.
+         * @type {Polygon}
+         */
+        public polygon: Polygon;
 
         /**
          * Render outline of this sprite or not. (default is true)
@@ -239,6 +252,22 @@ module Phaser {
             this.rect = new Rectangle(this.x, this.y, width, height);
             this.type = GeomSprite.RECTANGLE;
             this.frameBounds.copyFrom(this.rect);
+            return this;
+
+        }
+
+        /**
+         * Create a polygon object
+         * @param width {Number} Width of the rectangle
+         * @param height {Number} Height of the rectangle
+         * @return {GeomSprite} GeomSprite instance.
+         */
+        createPolygon(points?: Vector2[] = []): GeomSprite {
+
+            this.refresh();
+            this.polygon = new Polygon(new Vector2(this.x, this.y), points);
+            this.type = GeomSprite.POLYGON;
+            //this.frameBounds.copyFrom(this.rect);
             return this;
 
         }

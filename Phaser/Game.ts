@@ -6,6 +6,7 @@
 /// <reference path="DynamicTexture.ts" />
 /// <reference path="FXManager.ts" />
 /// <reference path="GameMath.ts" />
+/// <reference path="GameObjectFactory.ts" />
 /// <reference path="Group.ts" />
 /// <reference path="Loader.ts" />
 /// <reference path="Motion.ts" />
@@ -173,6 +174,12 @@ module Phaser {
         public onDestroyCallback = null;
 
         /**
+         * Reference to the GameObject Factory.
+         * @type {GameObjectFactory}
+         */
+        public add: GameObjectFactory;
+
+        /**
          * Reference to the assets cache.
          * @type {Cache}
          */
@@ -251,7 +258,7 @@ module Phaser {
         public rnd: RandomDataGenerator;
 
         /**
-         * Device detector.
+         * Contains device information and capabilities.
          * @type {Device}
          */
         public device: Device;
@@ -292,6 +299,7 @@ module Phaser {
                 this.math = new GameMath(this);
                 this.stage = new Stage(this, parent, width, height);
                 this.world = new World(this, width, height);
+                this.add = new GameObjectFactory(this);
                 this.sound = new SoundManager(this);
                 this.cache = new Cache(this);
                 this.collision = new Collision(this);
@@ -617,125 +625,6 @@ module Phaser {
                 this._maxAccumulation = this._step;
             }
 
-        }
-
-        //  Handy Proxy methods
-
-        /**
-         * Create a new camera with specific position and size.
-         *
-         * @param x {number} X position of the new camera.
-         * @param y {number} Y position of the new camera.
-         * @param width {number} Width of the new camera.
-         * @param height {number} Height of the new camera.
-         * @returns {Camera} The newly created camera object.
-         */
-        public createCamera(x: number, y: number, width: number, height: number): Camera {
-            return this.world.createCamera(x, y, width, height);
-        }
-
-        /**
-         * Create a new GeomSprite with specific position.
-         *
-         * @param x {number} X position of the new geom sprite.
-         * @param y {number} Y position of the new geom sprite.
-         * @returns {GeomSprite} The newly created geom sprite object.
-         */
-        public createGeomSprite(x: number, y: number): GeomSprite {
-            return this.world.createGeomSprite(x, y);
-        }
-
-        /**
-         * Create a new Sprite with specific position and sprite sheet key.
-         *
-         * @param x {number} X position of the new sprite.
-         * @param y {number} Y position of the new sprite.
-         * @param key {string} Optional, key for the sprite sheet you want it to use.
-         * @returns {Sprite} The newly created sprite object.
-         */
-        public createSprite(x: number, y: number, key?: string = ''): Sprite {
-            return this.world.createSprite(x, y, key);
-        }
-
-        /**
-         * Create a new DynamicTexture with specific size.
-         *
-         * @param width {number} Width of the texture.
-         * @param height {number} Height of the texture.
-         * @returns {DynamicTexture} The newly created dynamic texture object.
-         */
-        public createDynamicTexture(width: number, height: number): DynamicTexture {
-            return this.world.createDynamicTexture(width, height);
-        }
-
-        /**
-         * Create a new object container.
-         *
-         * @param maxSize {number} Optional, capacity of this group.
-         * @returns {Group} The newly created group.
-         */
-        public createGroup(maxSize?: number = 0): Group {
-            return this.world.createGroup(maxSize);
-        }
-
-        /**
-         * Create a new Particle.
-         *
-         * @return {Particle} The newly created particle object.
-         */
-        public createParticle(): Particle {
-            return this.world.createParticle();
-        }
-
-        /**
-         * Create a new Emitter.
-         *
-         * @param x {number} Optional, x position of the emitter.
-         * @param y {number} Optional, y position of the emitter.
-         * @param size {number} Optional, size of this emitter.
-         * @return {Emitter} The newly created emitter object.
-         */
-        public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
-            return this.world.createEmitter(x, y, size);
-        }
-
-        /**
-         * Create a new ScrollZone object with image key, position and size.
-         *
-         * @param key {string} Key to a image you wish this object to use.
-         * @param x {number} X position of this object.
-         * @param y {number} Y position of this object.
-         * @param width number} Width of this object.
-         * @param height {number} Height of this object.
-         * @returns {ScrollZone} The newly created scroll zone object.
-         */
-        public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
-            return this.world.createScrollZone(key, x, y, width, height);
-        }
-
-        /**
-         * Create a new Tilemap.
-         *
-         * @param key {string} Key for tileset image.
-         * @param mapData {string} Data of this tilemap.
-         * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-         * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
-         * @param [tileWidth] {number} width of each tile.
-         * @param [tileHeight] {number} height of each tile.
-         * @return {Tilemap} The newly created tilemap object.
-         */
-        public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
-            return this.world.createTilemap(key, mapData, format, resizeWorld, tileWidth, tileHeight);
-        }
-
-        /**
-         * Create a tween object for a specific object.
-         *
-         * @param obj Object you wish the tween will affect.
-         * @return {Phaser.Tween} The newly created tween object.
-         */
-        public createTween(obj): Tween {
-            return this.tweens.create(obj);
         }
 
         /**

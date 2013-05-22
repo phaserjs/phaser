@@ -28,12 +28,6 @@
 
         myGame.verlet.render();
 
-        //myGame.stage.context.fillStyle = 'rgb(255,255,0)';
-        //myGame.stage.context.fillRect(p1.x, p1.y, 4, 4);
-
-        //myGame.stage.context.fillStyle = 'rgb(255,0,0)';
-        //myGame.stage.context.fillRect(p2.x, p2.y, 4, 4);
-
     }
 
 })();

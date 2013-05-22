@@ -53,8 +53,12 @@ V0.9.6
 * Added Input.startPointer, Input.updatePointer and Input.stopPointer.
 * Phaser Input now confirmed working on Windows Phone 8 (Nokia Lumia 920).
 * Added Input.maxPointers to allow you to limit the number of fingers your game will listen for on multi-touch systems.
+* Added Input.addPointer. By default Input will create 5 pointers (+1 for the mouse). Use addPointer() to add up to a maximum of 10.
+* Added Input.position - a Vector2 object containing the most recent position of the most recently active Pointer.
+* Added Input.getDistance. Find the distance between the two given Pointer objects.
+* Added Input.getAngle. Find the angle between the two given Pointer objects.
 * Pointer.totalTouches value keeps a running total of the number of times the Pointer has been pressed.
-* Added Pointer.pointA and pointB - pointA is placed on touch, pointB is moved on update, useful for tracking distance/direction/gestures.
+* Added Pointer.position and positionDown. positionDown is placed on touch and position is update on move, useful for tracking distance/direction/gestures.
 * Added Game.state - now contains a reference to the current state object (if any was given).
 * Moved the Input start events from the constructors to a single Input.start method.
 * Added Input.disabled boolean to globally turn off all input event processing.
@@ -71,7 +75,7 @@ V0.9.6
 * Added Basic.ignoreGlobalUpdate - stops the object being updated as part of the main game loop, you'll need to call update on it yourself
 * Added Basic.ignoreGlobalRender - stops the object being rendered as part of the main game loop, you'll need to call render on it yourself
 * Added forceUpdate and forceRender parameters to Group.update and Group.render respectively. Combined with ignoreGlobal you can create custom rendering set-ups
-* Fixed Loader.progress calculation so it now accurate passes a value between 0 and 100% to your loader callback
+* Fixed Loader.progress calculation so it now accurately passes a value between 0 and 100 to your loader callback
 * Added a 'hard reset' parameter to Input.reset. A hard reset clears Input signals (such as on a state swap), a soft (such as on game pause) doesn't
 * Added Device.isConsoleOpen() to check if the browser console is open. Tested on Firefox with Firebug and Chrome with DevTools
 * Added delay parameter to Tween.to()
@@ -91,19 +95,29 @@ V0.9.6
 * Added Group.alpha to apply a globalAlpha before the groups children are rendered. Useful to save on alpha calls.
 * Added Group.globalCompositeOperation to apply a composite operation before all of the groups children are rendered.
 * Added Camera black list support to Group along with Group.showToCamera, Group.hideFromCamera and Group.clearCameraList
-
-
+* Added GameMath.rotatePoint to allow for point rotation at any angle around a given anchor and distance
+* Updated World.setSize() to optionally update the VerletManager dimensions as well
+* Added GameObject.setPosition(x, y)
+* Added Quad.intersectsRaw(left, right, top, bottom, tolerance)
+* Updated Sprite.inCamera to correctly apply the scrollFactor to the camera bounds check
+* Added Loader.crossOrigin property which is applied to loaded Images
+* Added AnimationManager.destroy() to clear out all local references and objects
+* Added the clearAnimations parameter to Sprite.loadGraphic(). Allows you to change animation textures but retain the frame data.
+* Added the GameObjectFactory to Game. You now make Sprites like this: game.add.sprite(). Much better separation of game object creation methods now. But you'll have to update ALL code, sorry!
+* Added GameObjectFactory methods to add existing objects to the game world, such as existingSprite(), existingTween(), etc.
+* Added the GameObjectFactory to Phaser.State
 
 * TODO: Check that tween pausing works with the new performance.now
 * TODO: Game.Time should monitor pause duration
 * TODO: Investigate bug re: tilemap collision and animation frames
 * TODO: Update tests that use arrow keys and include touch/mouse support
 * TODO: GameObject.clipRect
-* TODO: Use CollisionMask in Input instead of Circle?
 * TODO: Polygon geom primitive
 * TODO: Move GameObject transforms to a single matrix
-
-
+* TODO: this.target.view.style.cursor = "pointer"; ("default")
+* TODO: Fix bug in scrollFactor inCamera check where the scrollFactor > 0 and < 1
+* TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
+* TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 
 Requirements
 ------------

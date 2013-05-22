@@ -318,7 +318,7 @@ module Phaser {
             {
                 if (this.deadzone == null)
                 {
-                    this.focusOnXY(this._target.x + this._target.origin.x, this._target.y + this._target.origin.y);
+                    this.focusOnXY(this._target.x, this._target.y);
                 }
                 else
                 {

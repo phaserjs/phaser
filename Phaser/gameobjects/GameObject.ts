@@ -835,6 +835,12 @@ module Phaser {
          * Clean up memory.
          */
         public destroy() {
+        }
+
+        public setPosition(x: number, y: number) {
+
+            this.x = x;
+            this.y = y;
 
         }
 

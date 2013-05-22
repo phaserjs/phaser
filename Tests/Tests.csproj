@@ -118,6 +118,10 @@
     <TypeScriptCompile Include="input\multitouch.ts" />
     <TypeScriptCompile Include="groups\display order.ts" />
     <TypeScriptCompile Include="collision\mask test 1.ts" />
+    <TypeScriptCompile Include="collision\mask animation 1.ts" />
+    <Content Include="collision\mask animation 1.js">
+      <DependentUpon>mask animation 1.ts</DependentUpon>
+    </Content>
     <Content Include="collision\mask test 1.js">
       <DependentUpon>mask test 1.ts</DependentUpon>
     </Content>
@@ -131,6 +135,10 @@
     </Content>
     <TypeScriptCompile Include="geometry\rotate point 2.ts" />
     <TypeScriptCompile Include="geometry\rotate point 1.ts" />
+    <TypeScriptCompile Include="geometry\rope bridge.ts" />
+    <Content Include="geometry\rope bridge.js">
+      <DependentUpon>rope bridge.ts</DependentUpon>
+    </Content>
     <Content Include="geometry\rotate point 1.js">
       <DependentUpon>rotate point 1.ts</DependentUpon>
     </Content>
@@ -189,6 +197,14 @@
     <TypeScriptCompile Include="particles\mousetrail.ts" />
     <Content Include="particles\mousetrail.js">
       <DependentUpon>mousetrail.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\temp1.ts" />
+    <Content Include="physics\temp1.js">
+      <DependentUpon>temp1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\temp2.ts" />
+    <Content Include="physics\temp2.js">
+      <DependentUpon>temp2.ts</DependentUpon>
     </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>

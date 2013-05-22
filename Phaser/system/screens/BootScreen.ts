@@ -112,7 +112,7 @@ module Phaser {
          */
         private colorCycle() {
 
-            this._fade = this._game.createTween(this._color2);
+            this._fade = this._game.add.tween(this._color2);
 
             this._fade.to({ r: Math.random() * 250, g: Math.random() * 250, b: Math.random() * 250 }, 3000, Phaser.Easing.Linear.None);
             this._fade.onComplete.add(this.colorCycle, this);

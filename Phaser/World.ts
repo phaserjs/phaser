@@ -101,13 +101,14 @@ module Phaser {
 
         /**
          * Update size of this world with specific width and height.
-         * You can choose update camera bounds automatically or not.
+         * You can choose update camera bounds and verlet manager automatically or not.
          *
          * @param width {number} New width of the world.
          * @param height {number} New height of the world.
          * @param [updateCameraBounds] {boolean} update camera bounds automatically or not. Default to true.
+         * @param [updateVerletBounds] {boolean} update verlet bounds automatically or not. Default to true.
          */
-        public setSize(width: number, height: number, updateCameraBounds: bool = true) {
+        public setSize(width: number, height: number, updateCameraBounds: bool = true, updateVerletBounds: bool = true) {
 
             this.bounds.width = width;
             this.bounds.height = height;
@@ -115,6 +116,12 @@ module Phaser {
             if (updateCameraBounds == true)
             {
                 this._game.camera.setBounds(0, 0, width, height);
+            }
+
+            if (updateVerletBounds == true)
+            {
+                this._game.verlet.width = width;
+                this._game.verlet.height = height;
             }
 
         }

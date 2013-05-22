@@ -155,8 +155,6 @@ module Phaser {
 
         public update() {
 
-            //this.quad.x = this._parent.x + this.offset.x;
-            //this.quad.y = this._parent.y + this.offset.y;
             this._ref.x = this._parent.x + this.offset.x;
             this._ref.y = this._parent.y + this.offset.y;
 
@@ -173,8 +171,7 @@ module Phaser {
             var _dx = cameraOffsetX + (this.x - camera.worldView.x);
             var _dy = cameraOffsetY + (this.y - camera.worldView.y);
 
-            //this._parent.context.fillStyle = this._parent.renderDebugColor;
-            this._parent.context.fillStyle = 'rgba(255,0,0,0.4)';
+            this._parent.context.fillStyle = this._parent.renderDebugColor;
 
             if (this.type == CollisionMask.QUAD)
             {
@@ -207,6 +204,23 @@ module Phaser {
 
         }
 
+        public intersectsRaw(left: number, right: number, top: number, bottom: number): bool {
+
+//if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+
+            return true;
+
+        }
+
+        public intersectsVector(vector: Phaser.Vector2): bool {
+
+            if (this.type == CollisionMask.QUAD)
+            {
+                return this.quad.contains(vector.x, vector.y);
+            }
+
+        }
+
         /**
          * Gives a basic boolean response to a geometric collision.
          * If you need the details of the collision use the Collision functions instead and inspect the IntersectResult object.
@@ -224,7 +238,6 @@ module Phaser {
             //  Circle vs. Circle
             if (this.type == CollisionMask.CIRCLE && source.type == CollisionMask.CIRCLE)
             {
-                console.log('c vs c');
                 return Collision.circleToCircle(this.circle, source.circle).result;
             }
 

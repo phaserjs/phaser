@@ -1,4 +1,5 @@
 /// <reference path="../../Game.ts" />
+/// <reference path="../../geom/Vector2.ts" />
 
 /**
 * Phaser - Pointer
@@ -21,8 +22,8 @@ module Phaser {
 
             this.id = id;
             this.active = false;
-            this.pointA = new Point();
-            this.pointB = new Point();
+            this.position = new Vector2;
+            this.positionDown = new Vector2;
             this.circle = new Circle(0, 0, 44);
 
             if (id == 0)
@@ -88,18 +89,18 @@ module Phaser {
         public active: bool;
 
         /**
-        * A Point object representing the x/y screen coordinates of the Pointer.
-        * @property pointA
-        * @type {Point}
+        * A Vector object containing the initial position when the Pointer was engaged with the screen.
+        * @property positionDown
+        * @type {Vector2}
         **/
-        public pointA: Point = null;
+        public positionDown: Vector2 = null;
 
         /**
-        * A Point object representing the x/y screen coordinates of the Pointer.
-        * @property pointB
-        * @type {Point}
+        * A Vector object containing the current position of the Pointer on the screen.
+        * @property position
+        * @type {Vector2}
         **/
-        public pointB: Point = null;
+        public position: Vector2 = null;
 
         /**
         * A Circle object centered on the x/y screen coordinates of the Pointer.
@@ -286,11 +287,18 @@ module Phaser {
                 this.button = event.button;
             }
 
+            //  Fix to stop rogue browser plugins from blocking the visibility state event
+            if (this._game.paused == true)
+            {
+                this._game.stage.resumeGame();
+                return this;
+            }
+
             this._history.length = 0;
 
             this.move(event);
 
-            this.pointA.setTo(this.x, this.y);
+            this.positionDown.setTo(this.x, this.y);
 
             this.active = true;
             this.withinGame = true;
@@ -335,7 +343,7 @@ module Phaser {
                 if (this._game.input.recordPointerHistory && this._game.time.now >= this._nextDrop)
                 {
                     this._nextDrop = this._game.time.now + this._game.input.recordRate;
-                    this._history.push({ x: this.pointB.x, y: this.pointB.y });
+                    this._history.push({ x: this.position.x, y: this.position.y });
 
                     if (this._history.length > this._game.input.recordLimit)
                     {
@@ -369,7 +377,7 @@ module Phaser {
             this.x = this.pageX - this._game.stage.offset.x;
             this.y = this.pageY - this._game.stage.offset.y;
 
-            this.pointB.setTo(this.x, this.y);
+            this.position.setTo(this.x, this.y);
             this.circle.x = this.x;
             this.circle.y = this.y;
 
@@ -377,7 +385,7 @@ module Phaser {
             {
                 this._game.input.x = this.x * this._game.input.scaleX;
                 this._game.input.y = this.y * this._game.input.scaleY;
-                this._game.input.point.setTo(this._game.input.x, this._game.input.y);
+                this._game.input.position.setTo(this._game.input.x, this._game.input.y);
                 this._game.input.circle.x = this._game.input.x;
                 this._game.input.circle.y = this._game.input.y;
             }
@@ -529,8 +537,8 @@ module Phaser {
 
             //  Render the points
             this._game.stage.context.beginPath();
-            this._game.stage.context.moveTo(this.pointA.x, this.pointA.y);
-            this._game.stage.context.lineTo(this.pointB.x, this.pointB.y);
+            this._game.stage.context.moveTo(this.positionDown.x, this.positionDown.y);
+            this._game.stage.context.lineTo(this.position.x, this.position.y);
             this._game.stage.context.lineWidth = 2;
             this._game.stage.context.stroke();
             this._game.stage.context.closePath();

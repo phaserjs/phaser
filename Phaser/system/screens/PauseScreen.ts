@@ -31,11 +31,13 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
+
         /**
          * Canvas element used by engine.
          * @type {HTMLCanvasElement}
          */
         private _canvas: HTMLCanvasElement;
+
         /**
          * Render context of stage's canvas.
          * @type {CanvasRenderingContext2D}
@@ -46,6 +48,7 @@ module Phaser {
          * Background color.
          */
         private _color;
+
         /**
          * Fade effect tween.
          * @type {Phaser.Tween}
@@ -114,7 +117,7 @@ module Phaser {
          */
         private fadeOut() {
 
-            this._fade = this._game.createTween(this._color);
+            this._fade = this._game.add.tween(this._color);
 
             this._fade.to({ r: 50, g: 50, b: 50 }, 1000, Phaser.Easing.Linear.None);
             this._fade.onComplete.add(this.fadeIn, this);
@@ -127,7 +130,7 @@ module Phaser {
          */
         private fadeIn() {
 
-            this._fade = this._game.createTween(this._color);
+            this._fade = this._game.add.tween(this._color);
 
             this._fade.to({ r: 255, g: 255, b: 255 }, 1000, Phaser.Easing.Linear.None);
             this._fade.onComplete.add(this.fadeOut, this);
