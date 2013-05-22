@@ -23,7 +23,7 @@
         //  for rendering.
 
         //  We've rounded the height up to 612 because in order to have a seamless pattern it needs to be a multiple of 17 (the height of the source image)
-        scroller = myGame.createScrollZone('balls', 0, 0, 800, 612);
+        scroller = myGame.add.scrollZone('balls', 0, 0, 800, 612);
 
         //  Some sin/cos data for the movement
 		myGame.math.sinCosGenerator(256, 4, 4, 2);

@@ -12,7 +12,7 @@
     }
     var balls;
     function create() {
-        balls = myGame.createGroup();
+        balls = myGame.add.group();
         myGame.input.onTap.add(tapped, this);
     }
     function tapped(pointer, doubleTap) {

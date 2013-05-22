@@ -16,7 +16,7 @@
 
     function create() {
 
-        teddy = myGame.createSprite(0, 0, 'teddy');
+        teddy = myGame.add.sprite(0, 0, 'teddy');
 
         teddy.x = myGame.stage.centerX - teddy.width / 2;
         teddy.y = myGame.stage.centerY - teddy.height / 2;

@@ -18,7 +18,7 @@
     function create() {
 
         //  This creates our ScrollZone centered in the middle of the stage.
-        scroller = myGame.createScrollZone('angelDawn', myGame.stage.centerX - 320, 100);
+        scroller = myGame.add.scrollZone('angelDawn', myGame.stage.centerX - 320, 100);
 
         //  By default we won't scroll the full image, but we will create 3 ScrollRegions within it:
 

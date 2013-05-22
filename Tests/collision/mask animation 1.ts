@@ -17,9 +17,9 @@
 
     function create() {
 
-        card = myGame.createSprite(200, 220, 'card');
+        card = myGame.add.sprite(200, 220, 'card');
 
-        bot = myGame.createSprite(myGame.stage.width - 100, 300, 'bot');
+        bot = myGame.add.sprite(myGame.stage.width - 100, 300, 'bot');
 
         //  The collision mask is much thinner than the animated sprite
         bot.collisionMask.offset.x = 16;

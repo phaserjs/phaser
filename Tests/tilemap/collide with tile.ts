@@ -25,7 +25,7 @@
 
     function create() {
 
-        map = myGame.createTilemap('tiles', 'desert', Phaser.Tilemap.FORMAT_TILED_JSON);
+        map = myGame.add.tilemap('tiles', 'desert', Phaser.Tilemap.FORMAT_TILED_JSON);
 
         //  When the car collides with the cactus tile we'll flash the screen red briefly, 
         //  but it won't stop the car (the separateX/Y values are set to false)
@@ -40,7 +40,7 @@
         //  This is the context in which the callback is called (usually 'this' if you want to be able to access local vars)
         map.collisionCallbackContext = this;
 
-        car = myGame.createSprite(250, 200, 'car');
+        car = myGame.add.sprite(250, 200, 'car');
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
 
         myGame.camera.follow(car);

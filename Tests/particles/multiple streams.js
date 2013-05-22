@@ -17,7 +17,7 @@
         myGame.loader.load();
     }
     function makeEmitter(emitter, x, y, graphic) {
-        emitter = myGame.createEmitter(x, y);
+        emitter = myGame.add.emitter(x, y);
         emitter.gravity = 100;
         emitter.bounce = 0.5;
         if(x == 0) {

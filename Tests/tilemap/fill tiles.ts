@@ -23,12 +23,12 @@
 
     function create() {
 
-        map = myGame.createTilemap('tiles', 'desert', Phaser.Tilemap.FORMAT_TILED_JSON);
+        map = myGame.add.tilemap('tiles', 'desert', Phaser.Tilemap.FORMAT_TILED_JSON);
 
-        car = myGame.createSprite(250, 200, 'car');
+        car = myGame.add.sprite(250, 200, 'car');
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
 
-        marker = myGame.createGeomSprite(0, 0);
+        marker = myGame.add.geomSprite(0, 0);
         marker.createRectangle(32, 32);
         marker.renderFill = false;
         marker.lineColor = 'rgb(0,0,0)';

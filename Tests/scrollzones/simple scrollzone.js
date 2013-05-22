@@ -11,6 +11,6 @@
         //  the 'crystal' image from the cache.
         //  The default is for the scroll zone to create 1 new scrolling region the size of the whole image you gave it.
         //  For this example we'll keep that, but look at the other tests to see reasons why you may not want to.
-        myGame.createScrollZone('crystal').setSpeed(4, 2);
+        myGame.add.scrollZone('crystal').setSpeed(4, 2);
     }
 })();

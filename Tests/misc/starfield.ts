@@ -24,7 +24,7 @@
             zz[i] = Math.floor(Math.random() * 160) + 1;
         }
 
-        starfield = myGame.createDynamicTexture(800, 600);
+        starfield = myGame.add.dynamicTexture(800, 600);
 
     }
 

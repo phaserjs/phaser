@@ -11,12 +11,12 @@
     var melon;
     function create() {
         //  scrolls in time with the camera
-        myGame.createSprite(0, 0, 'backdrop');
-        melon = myGame.createSprite(600, 650, 'melon');
+        myGame.add.sprite(0, 0, 'backdrop');
+        melon = myGame.add.sprite(600, 650, 'melon');
         melon.scrollFactor.setTo(1.5, 1.5);
         //  scrolls x2 camera speed
         for(var i = 0; i < 100; i++) {
-            var tempSprite = myGame.createSprite(Math.random() * myGame.world.width, Math.random() * myGame.world.height, 'carrot');
+            var tempSprite = myGame.add.sprite(Math.random() * myGame.world.width, Math.random() * myGame.world.height, 'carrot');
             tempSprite.scrollFactor.setTo(2, 2);
         }
     }

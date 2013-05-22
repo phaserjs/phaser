@@ -21,18 +21,18 @@
 
     function create() {
 
-        map = myGame.createTilemap('tiles', 'platform', Phaser.Tilemap.FORMAT_TILED_JSON);
+        map = myGame.add.tilemap('tiles', 'platform', Phaser.Tilemap.FORMAT_TILED_JSON);
         map.setCollisionRange(21,53);
         map.setCollisionRange(105,109);
 
         myGame.camera.backgroundColor = 'rgb(47,154,204)';
 
-        marker = myGame.createGeomSprite(0, 0);
+        marker = myGame.add.geomSprite(0, 0);
         marker.createRectangle(16, 16);
         marker.renderFill = false;
         marker.lineColor = 'rgb(0,0,0)';
 
-        emitter = myGame.createEmitter(32, 80);
+        emitter = myGame.add.emitter(32, 80);
         emitter.width = 700;
         emitter.makeParticles('carrot', 100, false, 1);
         emitter.gravity = 150;

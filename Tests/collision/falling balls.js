@@ -14,9 +14,9 @@
     var atari;
     var balls;
     function create() {
-        atari = myGame.createSprite(300, 450, 'atari');
+        atari = myGame.add.sprite(300, 450, 'atari');
         atari.immovable = true;
-        balls = myGame.createGroup();
+        balls = myGame.add.group();
         for(var i = 0; i < 100; i++) {
             var tempBall = new Phaser.Sprite(myGame, Math.random() * myGame.stage.width, -32, 'ball' + Math.round(Math.random() * 5));
             tempBall.velocity.y = 100 + Math.random() * 150;

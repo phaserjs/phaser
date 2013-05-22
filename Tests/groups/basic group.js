@@ -11,14 +11,14 @@
     var car;
     var melons;
     function create() {
-        myGame.createSprite(0, 0, 'grid');
-        melons = myGame.createGroup();
+        myGame.add.sprite(0, 0, 'grid');
+        melons = myGame.add.group();
         for(var i = 0; i < 100; i++) {
-            var tempSprite = myGame.createSprite(Math.random() * myGame.world.width, Math.random() * myGame.world.height, 'melon');
+            var tempSprite = myGame.add.sprite(Math.random() * myGame.world.width, Math.random() * myGame.world.height, 'melon');
             tempSprite.scrollFactor.setTo(1.2, 1.2);
             melons.add(tempSprite);
         }
-        car = myGame.createSprite(400, 300, 'car');
+        car = myGame.add.sprite(400, 300, 'car');
         myGame.camera.follow(car);
     }
     function update() {

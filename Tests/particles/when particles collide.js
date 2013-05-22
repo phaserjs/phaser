@@ -9,13 +9,13 @@
         myGame.loader.load();
     }
     function create() {
-        leftEmitter = myGame.createEmitter(0, myGame.stage.centerY - 200);
+        leftEmitter = myGame.add.emitter(0, myGame.stage.centerY - 200);
         leftEmitter.gravity = 100;
         leftEmitter.bounce = 0.5;
         leftEmitter.setXSpeed(100, 200);
         leftEmitter.setYSpeed(-50, 50);
         leftEmitter.makeParticles('ball1', 250, false, 1);
-        rightEmitter = myGame.createEmitter(myGame.stage.width, myGame.stage.centerY - 200);
+        rightEmitter = myGame.add.emitter(myGame.stage.width, myGame.stage.centerY - 200);
         rightEmitter.gravity = 100;
         rightEmitter.bounce = 0.5;
         rightEmitter.setXSpeed(-100, -200);

@@ -7,7 +7,7 @@
         myGame.loader.load();
     }
     function create() {
-        var zone = myGame.createScrollZone('starray');
+        var zone = myGame.add.scrollZone('starray');
         //  Hide the default region (the full image)
         zone.currentRegion.visible = false;
         var y = 0;

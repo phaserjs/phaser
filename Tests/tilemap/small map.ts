@@ -23,20 +23,20 @@
 
     function create() {
 
-        map = myGame.createTilemap('jsontiles', 'jsontest', Phaser.Tilemap.FORMAT_TILED_JSON);
+        map = myGame.add.tilemap('jsontiles', 'jsontest', Phaser.Tilemap.FORMAT_TILED_JSON);
 
-        car = myGame.createSprite(300, 100, 'car');
+        car = myGame.add.sprite(300, 100, 'car');
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
 
         //  Hide the tilemap and car sprite from the main camera (it will still be seen by the smallCam)
         map.hideFromCamera(myGame.camera);
         car.hideFromCamera(myGame.camera);
 
-        smallCam = myGame.world.createCamera(32, 32, 352, 240);
+        smallCam = myGame.add.camera(32, 32, 352, 240);
         smallCam.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         smallCam.follow(car);
 
-        overlay = myGame.createSprite(0, 0, 'overlay');
+        overlay = myGame.add.sprite(0, 0, 'overlay');
         overlay.hideFromCamera(smallCam);
 
     }

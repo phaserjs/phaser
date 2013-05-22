@@ -22,14 +22,14 @@
         myGame.camera.backgroundColor = 'rgb(82,154,206)';
 
         //  Create our DynamicTexture
-        wobble = myGame.createDynamicTexture(48, 100);
+        wobble = myGame.add.dynamicTexture(48, 100);
 
-        slime = myGame.createSprite(200, 300);
+        slime = myGame.add.sprite(200, 300);
         slime.width = 48;
         slime.height = 100;
         slime.loadDynamicTexture(wobble);
 
-        eyes = myGame.createSprite(210, 326, 'eyes');
+        eyes = myGame.add.sprite(210, 326, 'eyes');
 
         //  Populate the wave with some data
 		waveData = myGame.math.sinCosGenerator(32, 8, 8, 2);

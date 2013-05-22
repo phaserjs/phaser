@@ -7,12 +7,12 @@
     }
     var atari;
     function create() {
-        atari = myGame.createSprite(300, 0, 'atari');
+        atari = myGame.add.sprite(300, 0, 'atari');
         startBounceTween();
     }
     function startBounceTween() {
         atari.y = 0;
-        var bounce = myGame.createTween(atari);
+        var bounce = myGame.add.tween(atari);
         bounce.to({
             y: 500
         }, 1000 + Math.random() * 3000, Phaser.Easing.Bounce.Out);

@@ -19,13 +19,13 @@
 
     function create() {
 
-        items = myGame.createGroup();
+        items = myGame.add.group();
 
         //  Items are rendered in the depth order in which they are added to the Group
 
-        items.add(myGame.createSprite(64, 100, 'atari1'));
-        card = <Phaser.Sprite> items.add(myGame.createSprite(240, 80, 'card'));
-        items.add(myGame.createSprite(280, 100, 'atari2'));
+        items.add(myGame.add.sprite(64, 100, 'atari1'));
+        card = <Phaser.Sprite> items.add(myGame.add.sprite(240, 80, 'card'));
+        items.add(myGame.add.sprite(280, 100, 'atari2'));
 
         myGame.input.onTap.addOnce(removeCard, this);
 

@@ -27,9 +27,9 @@
 
     function create() {
 
-        scroller = myGame.createScrollZone('starfield', 0, 0, 1024, 1024);
+        scroller = myGame.add.scrollZone('starfield', 0, 0, 1024, 1024);
 
-        emitter = myGame.createEmitter(myGame.stage.centerX + 16, myGame.stage.centerY + 12);
+        emitter = myGame.add.emitter(myGame.stage.centerX + 16, myGame.stage.centerY + 12);
         emitter.makeParticles('jet', 250, false, 0);
         emitter.setRotation(0, 0);
 
@@ -39,7 +39,7 @@
         //  Looks way cool :)
         emitter.globalCompositeOperation = 'lighter';
 
-        bullets = myGame.createGroup(50);
+        bullets = myGame.add.group(50);
 
         //  Create our bullet pool
         for (var i = 0; i < 50; i++)
@@ -52,7 +52,7 @@
             bullets.add(tempBullet);
         }
 
-        ship = myGame.createSprite(myGame.stage.centerX, myGame.stage.centerY, 'nashwan');
+        ship = myGame.add.sprite(myGame.stage.centerX, myGame.stage.centerY, 'nashwan');
 
         //  We do this because the ship was drawn facing up, but 0 degrees is pointing to the right
         ship.rotationOffset = 90;

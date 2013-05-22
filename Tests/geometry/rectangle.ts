@@ -8,7 +8,7 @@
 
     function create() {
 
-        box = myGame.createGeomSprite(0, 0);
+        box = myGame.add.geomSprite(0, 0);
 
         box.createRectangle(64, 64);
         box.renderOutline = false;

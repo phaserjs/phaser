@@ -16,7 +16,7 @@
 
     function create() {
 
-        emitter = myGame.createEmitter(myGame.stage.centerX, myGame.stage.centerY);
+        emitter = myGame.add.emitter(myGame.stage.centerX, myGame.stage.centerY);
         emitter.makeParticles('jet', 100);
 
         emitter.gravity = 200;

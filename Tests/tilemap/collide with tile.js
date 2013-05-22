@@ -10,26 +10,28 @@
         myGame.loader.addImageFile('car', 'assets/sprites/car90.png');
         myGame.loader.load();
     }
+    var CACTUS = 31;
+    var SIGN_POST = 46;
     var map;
     var car;
     var tile;
     var flash;
     function create() {
-        map = myGame.createTilemap('tiles', 'desert', Phaser.Tilemap.FORMAT_TILED_JSON);
+        map = myGame.add.tilemap('tiles', 'desert', Phaser.Tilemap.FORMAT_TILED_JSON);
         //  When the car collides with the cactus tile we'll flash the screen red briefly,
         //  but it won't stop the car (the separateX/Y values are set to false)
         map.setCollisionByIndex([
-            31
+            CACTUS
         ], Phaser.Collision.ANY, true, false, false);
         //  When the car collides with the sign post tile we'll stop the car moving (separation is set to true)
         map.setCollisionByIndex([
-            46
+            SIGN_POST
         ], Phaser.Collision.ANY, true, true, true);
         //  This is the callback that will be called every time map.collide() returns true
         map.collisionCallback = collide;
         //  This is the context in which the callback is called (usually 'this' if you want to be able to access local vars)
         map.collisionCallbackContext = this;
-        car = myGame.createSprite(250, 200, 'car');
+        car = myGame.add.sprite(250, 200, 'car');
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
         myGame.camera.follow(car);
         flash = myGame.camera.fx.add(Phaser.FX.Camera.Flash);
@@ -53,10 +55,10 @@
     function collide(object, collisionData) {
         //  collisionData is an array containing all of the tiles the object overlapped with (can be more than 1)
         for(var i = 0; i < collisionData.length; i++) {
-            if(collisionData[i].tile.index == 31) {
+            if(collisionData[i].tile.index == CACTUS) {
                 console.log('you hit a cactus!');
                 flash.start(0xff0000, 1);
-            } else if(collisionData[i].tile.index == 31) {
+            } else if(collisionData[i].tile.index == SIGN_POST) {
                 console.log('you hit a sign post!');
             }
         }

@@ -19,13 +19,13 @@
     function create() {
 
         myGame.camera.setBounds(0, 0, myGame.stage.width, myGame.stage.height);
-        myGame.createSprite(0, 0, 'track');
+        myGame.add.sprite(0, 0, 'track');
 
-        car = myGame.createSprite(180, 298, 'car');
+        car = myGame.add.sprite(180, 298, 'car');
         car.rotation = 180;
         car.maxVelocity.setTo(150, 150);
 
-        bigCam = myGame.createCamera(640, 0, 100, 200);
+        bigCam = myGame.add.camera(640, 0, 100, 200);
         bigCam.follow(car, Phaser.Camera.STYLE_LOCKON);
         bigCam.setBounds(0, 0, myGame.stage.width, myGame.stage.height);
         bigCam.showBorder = true;

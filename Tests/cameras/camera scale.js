@@ -11,17 +11,17 @@
     var miniCam;
     var bigCam;
     function create() {
-        myGame.createSprite(0, 0, 'grid');
-        car = myGame.createSprite(400, 300, 'car');
+        myGame.add.sprite(0, 0, 'grid');
+        car = myGame.add.sprite(400, 300, 'car');
         myGame.camera.follow(car);
         myGame.camera.deadzone = new Phaser.Rectangle(64, 64, myGame.stage.width - 128, myGame.stage.height - 128);
         myGame.camera.setBounds(0, 0, myGame.world.width, myGame.world.height);
-        miniCam = myGame.createCamera(600, 32, 200, 200);
+        miniCam = myGame.add.camera(600, 32, 200, 200);
         miniCam.follow(car, Phaser.Camera.STYLE_LOCKON);
         miniCam.setBounds(0, 0, myGame.world.width, myGame.world.height);
         miniCam.showBorder = true;
         miniCam.scale.setTo(0.5, 0.5);
-        bigCam = myGame.createCamera(32, 32, 200, 200);
+        bigCam = myGame.add.camera(32, 32, 200, 200);
         bigCam.follow(car, Phaser.Camera.STYLE_LOCKON);
         bigCam.setBounds(0, 0, myGame.world.width, myGame.world.height);
         bigCam.showBorder = true;

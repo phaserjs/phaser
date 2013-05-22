@@ -26,7 +26,7 @@
 
         for (var i = 0; i < 1000; i++)
         {
-            myGame.createSprite(myGame.world.randomX, myGame.world.randomY, 'melon');
+            myGame.add.sprite(myGame.world.randomX, myGame.world.randomY, 'melon');
         }
 
     }

@@ -18,11 +18,11 @@
 
     function create() {
 
-        myGame.createSprite(0, 0, 'backdrop');
+        myGame.add.sprite(0, 0, 'backdrop');
 
         for (var i = 0; i < 100; i++)
         {
-            myGame.createSprite(Math.random() * myGame.world.width, Math.random() * myGame.world.height, 'melon');
+            myGame.add.sprite(Math.random() * myGame.world.width, Math.random() * myGame.world.height, 'melon');
         }
 
         myGame.onRenderCallback = render;

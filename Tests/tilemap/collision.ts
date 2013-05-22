@@ -25,7 +25,7 @@
 
     function create() {
 
-        map = myGame.createTilemap('tiles', 'platform', Phaser.Tilemap.FORMAT_TILED_JSON);
+        map = myGame.add.tilemap('tiles', 'platform', Phaser.Tilemap.FORMAT_TILED_JSON);
         map.setCollisionRange(21,53);
         map.setCollisionRange(105,109);
 
@@ -34,18 +34,18 @@
 
         myGame.input.keyboard.addKeyCapture([Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.UP, Phaser.Keyboard.DOWN]);
 
-        //emitter = myGame.createEmitter(32, 80);
+        //emitter = myGame.add.emitter(32, 80);
         //emitter.width = 700;
         //emitter.makeParticles('chunk', 100, false, 1);
         //emitter.gravity = 200;
         //emitter.bounce = 0.8;
         //emitter.start(false, 10, 0.05);
 
-        ufo = myGame.createSprite(250, 64, 'ufo');
+        ufo = myGame.add.sprite(250, 64, 'ufo');
         ufo.renderDebug = true;
         ufo.renderRotation = false;
 
-        test = myGame.createSprite(200, 64, 'ufo');
+        test = myGame.add.sprite(200, 64, 'ufo');
         test.elasticity = 1;
         test.velocity.x = 50;
         test.velocity.y = 100;

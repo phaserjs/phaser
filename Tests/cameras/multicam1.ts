@@ -22,7 +22,7 @@
 
         for (var i = 0; i < 1000; i++)
         {
-            myGame.createSprite(Math.random() * 3000, Math.random() * 3000, 'melon');
+            myGame.add.sprite(Math.random() * 3000, Math.random() * 3000, 'melon');
         }
 
         myGame.camera.setPosition(16, 80);
@@ -30,7 +30,7 @@
         myGame.camera.showBorder = true;
         myGame.camera.borderColor = 'rgb(255,0,0)';
 
-        cam2 = myGame.createCamera(380, 100, 400, 400);
+        cam2 = myGame.add.camera(380, 100, 400, 400);
         //cam2.transparent = false;
         //cam2.backgroundColor = 'rgb(20,20,20)';
         cam2.showBorder = true;

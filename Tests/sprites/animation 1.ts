@@ -18,7 +18,7 @@
 
     function create() {
 
-        car = myGame.createSprite(200, 300, 'monster');
+        car = myGame.add.sprite(200, 300, 'monster');
 
         car.animations.add('spin', null, 30, true);
 

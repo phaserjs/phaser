@@ -15,7 +15,7 @@
             yy[i] = Math.floor(Math.random() * star_w * 2) - star_w;
             zz[i] = Math.floor(Math.random() * 160) + 1;
         }
-        starfield = myGame.createDynamicTexture(800, 600);
+        starfield = myGame.add.dynamicTexture(800, 600);
     }
     function update() {
         starfield.clear();

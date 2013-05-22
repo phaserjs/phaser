@@ -9,8 +9,8 @@
     var car;
     var melon;
     function create() {
-        car = myGame.createSprite(100, 300, 'car');
-        melon = myGame.createSprite(200, 310, 'melon');
+        car = myGame.add.sprite(100, 300, 'car');
+        melon = myGame.add.sprite(200, 310, 'melon');
         car.name = 'car';
         melon.name = 'melon';
     }

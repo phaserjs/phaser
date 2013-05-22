@@ -3,7 +3,7 @@
     var myGame = new Phaser.Game(this, 'game', 800, 600, null, create, update);
     var box;
     function create() {
-        box = myGame.createGeomSprite(0, 0);
+        box = myGame.add.geomSprite(0, 0);
         box.createRectangle(64, 64);
         box.renderOutline = false;
     }

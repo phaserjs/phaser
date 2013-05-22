@@ -20,11 +20,11 @@
 
         //  This creates our ScrollZone. It is positioned at x32 y32 (world coodinates)
         //  and is a size of 352x240 (which matches the window in our overlay image)
-        scroller = myGame.createScrollZone('dragonsun', 32, 32, 352, 240);
+        scroller = myGame.add.scrollZone('dragonsun', 32, 32, 352, 240);
 
         scroller.setSpeed(2, 2);
 
-        myGame.createSprite(0, 0, 'overlay');
+        myGame.add.sprite(0, 0, 'overlay');
 
     }
 

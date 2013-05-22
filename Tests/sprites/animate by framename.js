@@ -7,7 +7,7 @@
     }
     var bot;
     function create() {
-        bot = myGame.createSprite(myGame.stage.width, 300, 'bot');
+        bot = myGame.add.sprite(myGame.stage.width, 300, 'bot');
         //  If you are using a Texture Atlas and want to specify the frames of an animation by their name rather than frame index
         //  then you can use this format:
         bot.animations.add('run', [

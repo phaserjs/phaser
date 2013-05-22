@@ -15,7 +15,7 @@
 
     function create() {
 
-        var zone: Phaser.ScrollZone = myGame.createScrollZone('starray');
+        var zone: Phaser.ScrollZone = myGame.add.scrollZone('starray');
 
         //  Hide the default region (the full image)
         zone.currentRegion.visible = false;

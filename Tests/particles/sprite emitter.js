@@ -35,7 +35,7 @@ var customParticle = (function (_super) {
         myGame.loader.load();
     }
     function create() {
-        emitter = myGame.createEmitter(myGame.stage.centerX, 50);
+        emitter = myGame.add.emitter(myGame.stage.centerX, 50);
         emitter.gravity = 100;
         //  Here we tell the emitter to use our customParticle class
         //  The customParticle needs to extend Particle and must take game:Game as the first constructor parameter, otherwise it's free as a bird

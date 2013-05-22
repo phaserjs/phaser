@@ -16,7 +16,7 @@
 
     function create() {
 
-        car = myGame.createSprite(200, 300, 'car');
+        car = myGame.add.sprite(200, 300, 'car');
 
         myGame.onRenderCallback = render;
 

@@ -7,7 +7,7 @@
     }
     var car;
     function create() {
-        car = myGame.createSprite(200, 300, 'car');
+        car = myGame.add.sprite(200, 300, 'car');
         myGame.onRenderCallback = render;
         myGame.stage.context.font = '16px Arial';
         myGame.stage.context.fillStyle = 'rgb(255,255,255)';

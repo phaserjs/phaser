@@ -19,9 +19,9 @@
 
     function create() {
 
-        atari1 = myGame.createSprite(270, 100, 'atari1');
-        atari2 = myGame.createSprite(400, 400, 'atari2');
-        atari3 = myGame.createSprite(0, 440, 'atari1');
+        atari1 = myGame.add.sprite(270, 100, 'atari1');
+        atari2 = myGame.add.sprite(400, 400, 'atari2');
+        atari3 = myGame.add.sprite(0, 440, 'atari1');
 
         atari1.collisionMask.height = 16;
         atari3.collisionMask.width = 16;

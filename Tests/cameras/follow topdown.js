@@ -9,8 +9,8 @@
     }
     var car;
     function create() {
-        myGame.createSprite(0, 0, 'grid');
-        car = myGame.createSprite(400, 300, 'car');
+        myGame.add.sprite(0, 0, 'grid');
+        car = myGame.add.sprite(400, 300, 'car');
         myGame.camera.follow(car, Phaser.Camera.STYLE_TOPDOWN);
         myGame.camera.setBounds(0, 0, myGame.world.width, myGame.world.height);
     }

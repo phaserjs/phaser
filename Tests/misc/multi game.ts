@@ -24,7 +24,7 @@
 
         for (var i = 0; i < 1000; i++)
         {
-            myGame.createSprite(myGame.world.randomX, myGame.world.randomY, 'melon');
+            myGame.add.sprite(myGame.world.randomX, myGame.world.randomY, 'melon');
         }
 
     }
@@ -70,9 +70,9 @@
 
         myGame2.camera.setBounds(0, 0, myGame.world.width, myGame.world.height);
 
-        myGame2.createSprite(0, 0, 'grid');
+        myGame2.add.sprite(0, 0, 'grid');
 
-        car = myGame2.createSprite(400, 300, 'car');
+        car = myGame2.add.sprite(400, 300, 'car');
 
         myGame2.camera.follow(car);
 

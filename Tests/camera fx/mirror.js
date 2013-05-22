@@ -24,7 +24,7 @@
         //  Experiment with variations on these to see the different mirror effects that can be achieved.
         //mirror.flipX = true;
         //mirror.flipY = true;
-        myGame.createSprite(0, 0, 'backdrop');
+        myGame.add.sprite(0, 0, 'backdrop');
     }
     function update() {
         if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {

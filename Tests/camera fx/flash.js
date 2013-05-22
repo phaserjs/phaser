@@ -10,8 +10,8 @@
     var car;
     var flash;
     function create() {
-        myGame.createSprite(0, 0, 'background');
-        car = myGame.createSprite(400, 300, 'car');
+        myGame.add.sprite(0, 0, 'background');
+        car = myGame.add.sprite(400, 300, 'car');
         //  Add our effect to the camera
         flash = myGame.camera.fx.add(Phaser.FX.Camera.Flash);
     }

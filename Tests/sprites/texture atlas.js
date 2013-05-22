@@ -11,7 +11,7 @@
     }
     var bot;
     function create() {
-        bot = myGame.createSprite(myGame.stage.width, 300, 'bot');
+        bot = myGame.add.sprite(myGame.stage.width, 300, 'bot');
         bot.animations.add('run');
         bot.animations.play('run', 10, true);
         bot.velocity.x = -100;

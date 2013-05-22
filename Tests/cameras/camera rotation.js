@@ -10,9 +10,9 @@
     function create() {
         for(var i = 0; i < 1000; i++) {
             if(Math.random() > 0.5) {
-                myGame.createSprite(Math.random() * 3000, Math.random() * 3000, 'car');
+                myGame.add.sprite(Math.random() * 3000, Math.random() * 3000, 'car');
             } else {
-                myGame.createSprite(Math.random() * 3000, Math.random() * 3000, 'melon');
+                myGame.add.sprite(Math.random() * 3000, Math.random() * 3000, 'melon');
             }
         }
         myGame.camera.setPosition(100, 100);

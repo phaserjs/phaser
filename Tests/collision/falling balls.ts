@@ -23,10 +23,10 @@
 
     function create() {
 
-        atari = myGame.createSprite(300, 450, 'atari');
+        atari = myGame.add.sprite(300, 450, 'atari');
         atari.immovable = true;
 
-        balls = myGame.createGroup();
+        balls = myGame.add.group();
 
         for (var i = 0; i < 100; i++)
         {

@@ -3,7 +3,7 @@
     var myGame = new Phaser.Game(this, 'game', 800, 600, null, create, update);
     var line;
     function create() {
-        line = myGame.createGeomSprite(200, 200);
+        line = myGame.add.geomSprite(200, 200);
         line.createLine(400, 400);
     }
     function update() {

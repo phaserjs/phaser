@@ -39,7 +39,7 @@
         //mirror.flipX = true;
         //mirror.flipY = true;
 
-        myGame.createSprite(0, 0, 'backdrop');
+        myGame.add.sprite(0, 0, 'backdrop');
 
     }
 

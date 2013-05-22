@@ -21,12 +21,12 @@
 
     function create() {
 
-        map = myGame.createTilemap('tiles', 'desert', Phaser.Tilemap.FORMAT_TILED_JSON);
+        map = myGame.add.tilemap('tiles', 'desert', Phaser.Tilemap.FORMAT_TILED_JSON);
 
         //  Fills the whole map to one tile
         map.currentLayer.fillTile(30);
 
-        car = myGame.createSprite(250, 200, 'car');
+        car = myGame.add.sprite(250, 200, 'car');
         car.setBounds(0, 0, map.widthInPixels - 32, map.heightInPixels - 32);
 
         myGame.camera.follow(car);

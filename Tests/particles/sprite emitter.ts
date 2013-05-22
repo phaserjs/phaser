@@ -37,7 +37,7 @@ class customParticle extends Phaser.Particle {
 
     function create() {
 
-        emitter = myGame.createEmitter(myGame.stage.centerX, 50);
+        emitter = myGame.add.emitter(myGame.stage.centerX, 50);
         emitter.gravity = 100;
 
         //  Here we tell the emitter to use our customParticle class

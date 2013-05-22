@@ -19,9 +19,9 @@
 
     function create() {
 
-        myGame.createSprite(0, 0, 'background');
+        myGame.add.sprite(0, 0, 'background');
 
-        car = myGame.createSprite(400, 300, 'car');
+        car = myGame.add.sprite(400, 300, 'car');
 
         //  Add our effect to the camera
         shake = <Phaser.FX.Camera.Shake> myGame.camera.fx.add(Phaser.FX.Camera.Shake);

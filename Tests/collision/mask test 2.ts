@@ -18,8 +18,8 @@
 
     function create() {
 
-        atari1 = myGame.createSprite(400, 100, 'atari1');
-        atari2 = myGame.createSprite(400, 400, 'atari2');
+        atari1 = myGame.add.sprite(400, 100, 'atari1');
+        atari2 = myGame.add.sprite(400, 400, 'atari2');
 
         //atari1.collisionMask.createCircle(64);
         //atari1.rotation = 45;

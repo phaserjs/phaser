@@ -9,13 +9,13 @@
     var cam2;
     function create() {
         for(var i = 0; i < 1000; i++) {
-            myGame.createSprite(Math.random() * 3000, Math.random() * 3000, 'melon');
+            myGame.add.sprite(Math.random() * 3000, Math.random() * 3000, 'melon');
         }
         myGame.camera.setPosition(16, 80);
         myGame.camera.setSize(320, 320);
         myGame.camera.showBorder = true;
         myGame.camera.borderColor = 'rgb(255,0,0)';
-        cam2 = myGame.createCamera(380, 100, 400, 400);
+        cam2 = myGame.add.camera(380, 100, 400, 400);
         cam2.showBorder = true;
         cam2.borderColor = 'rgb(255,255,0)';
     }

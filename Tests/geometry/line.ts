@@ -8,7 +8,7 @@
 
     function create() {
 
-        line = myGame.createGeomSprite(200, 200);
+        line = myGame.add.geomSprite(200, 200);
 
         line.createLine(400, 400);
 

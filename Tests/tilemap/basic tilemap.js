@@ -18,12 +18,12 @@
     var bigCam;
     function create() {
         myGame.camera.deadzone = new Phaser.Rectangle(64, 64, myGame.stage.width - 128, myGame.stage.height - 128);
-        //bigCam = myGame.createCamera(30, 30, 200, 200);
+        //bigCam = myGame.add.camera(30, 30, 200, 200);
         //bigCam.showBorder = true;
         //bigCam.scale.setTo(1.5, 1.5);
-        //map = myGame.createTilemap('jsontiles', 'jsontest', Phaser.Tilemap.FORMAT_TILED_JSON);
-        map = myGame.createTilemap('csvtiles', 'csvtest', Phaser.Tilemap.FORMAT_CSV, true, 16, 16);
-        car = myGame.createSprite(300, 100, 'car');
+        //map = myGame.add.tilemap('jsontiles', 'jsontest', Phaser.Tilemap.FORMAT_TILED_JSON);
+        map = myGame.add.tilemap('csvtiles', 'csvtest', Phaser.Tilemap.FORMAT_CSV, true, 16, 16);
+        car = myGame.add.sprite(300, 100, 'car');
         myGame.camera.follow(car);
         //bigCam.follow(car, Phaser.Camera.STYLE_LOCKON);
         myGame.onRenderCallback = render;
