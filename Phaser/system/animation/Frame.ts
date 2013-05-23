@@ -38,16 +38,19 @@ module Phaser {
          * @type {number}
          */
         public x: number;
+
         /**
          * Y position within the image to cut from.
          * @type {number}
          */
         public y: number;
+
         /**
          * Width of the frame.
          * @type {number}
          */
         public width: number;
+
         /**
          * Height of the frame.
          * @type {number}
@@ -82,31 +85,37 @@ module Phaser {
         public trimmed: bool;
 
         //  The coordinates of the trimmed sprite inside the original sprite
+
         /**
          * Width of the original sprite.
          * @type {number}
          */
         public sourceSizeW: number;
+
         /**
          * Height of the original sprite.
          * @type {number}
          */
         public sourceSizeH: number;
+
         /**
          * X position of the trimmed sprite inside original sprite.
          * @type {number}
          */
         public spriteSourceSizeX: number;
+
         /**
          * Y position of the trimmed sprite inside original sprite.
          * @type {number}
          */
         public spriteSourceSizeY: number;
+
         /**
          * Width of the trimmed sprite.
          * @type {number}
          */
         public spriteSourceSizeW: number;
+
         /**
          * Height of the trimmed sprite.
          * @type {number}
@@ -130,7 +139,7 @@ module Phaser {
          * @param destWidth {number} Destiny draw width.
          * @param destHeight {number} Destiny draw height.
          */
-        public setTrim(trimmed: bool, actualWidth, actualHeight, destX, destY, destWidth, destHeight, ) {
+        public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number) {
 
             this.trimmed = trimmed;
 

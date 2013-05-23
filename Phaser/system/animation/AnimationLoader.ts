@@ -96,6 +96,32 @@ module Phaser {
 
         }
 
+        public static parseXMLData(game: Game, xml, format: number): FrameData {
+
+            //  Let's create some frames then
+            var data: FrameData = new FrameData();
+
+            var frames = xml.getElementsByTagName('SubTexture');
+
+            var newFrame: Frame;
+
+            for (var i = 0; i < frames.length; i++)
+            {
+                var frame = frames[i].attributes;
+
+                newFrame = data.addFrame(new Frame(frame.x.nodeValue, frame.y.nodeValue, frame.width.nodeValue, frame.height.nodeValue, frame.name.nodeValue));
+
+                //  Trimmed?
+                if (frame.frameX.nodeValue != '-0' || frame.frameY.nodeValue != '-0')
+                {
+                    newFrame.setTrim(true, frame.width.nodeValue, frame.height.nodeValue, Math.abs(frame.frameX.nodeValue), Math.abs(frame.frameY.nodeValue), frame.frameWidth.nodeValue, frame.frameHeight.nodeValue);
+                }
+
+            }
+
+            return data;
+        }
+
     }
 
 }

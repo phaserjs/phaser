@@ -239,6 +239,10 @@
     <TypeScriptCompile Include="tilemap\get tile.ts" />
     <TypeScriptCompile Include="tilemap\collision.ts" />
     <TypeScriptCompile Include="tilemap\collide with tile.ts" />
+    <TypeScriptCompile Include="sprites\starling texture atlas 1.ts" />
+    <Content Include="sprites\starling texture atlas 1.js">
+      <DependentUpon>starling texture atlas 1.ts</DependentUpon>
+    </Content>
     <Content Include="tilemap\collide with tile.js">
       <DependentUpon>collide with tile.ts</DependentUpon>
     </Content>

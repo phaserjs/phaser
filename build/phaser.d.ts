@@ -1427,6 +1427,7 @@ module Phaser {
         * @return {FrameData} Generated FrameData object.
         */
         static parseJSONData(game: Game, json): FrameData;
+        static parseXMLData(game: Game, xml, format: number): FrameData;
     }
 }
 /**
@@ -1533,7 +1534,7 @@ module Phaser {
         * @param destWidth {number} Destiny draw width.
         * @param destHeight {number} Destiny draw height.
         */
-        public setTrim(trimmed: bool, actualWidth, actualHeight, destX, destY, destWidth, destHeight): void;
+        public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number): void;
     }
 }
 /**
@@ -1764,9 +1765,9 @@ module Phaser {
         * @param key  {string} Asset key for the texture atlas.
         * @param url  {string} URL of this texture atlas file.
         * @param data {object} Extra texture atlas data.
-        * @param data {object} Texture atlas frames data.
+        * @param atlasData {object} Texture atlas frames data.
         */
-        public addTextureAtlas(key: string, url: string, data, jsonData): void;
+        public addTextureAtlas(key: string, url: string, data, atlasData, format): void;
         /**
         * Add a new image.
         * @param key {string} Asset key for the image.
@@ -5192,6 +5193,12 @@ module Phaser {
         */
         public crossOrigin: string;
         /**
+        * TextureAtlas data format constants
+        */
+        static TEXTURE_ATLAS_JSON_ARRAY: number;
+        static TEXTURE_ATLAS_JSON_HASH: number;
+        static TEXTURE_ATLAS_XML_STARLING: number;
+        /**
         * Reset loader, this will remove all loaded assets.
         */
         public reset(): void;
@@ -5214,11 +5221,12 @@ module Phaser {
         /**
         * Add a new texture atlas loading request.
         * @param key {string} Unique asset key of the texture atlas file.
-        * @param url {string} URL of texture atlas file.
-        * @param [jsonURL] {string} url of JSON data file.
-        * @param [jsonData] {object} JSON data object.
+        * @param textureURL {string} The url of the texture atlas image file.
+        * @param [atlasURL] {string} The url of the texture atlas data file (json/xml)
+        * @param [atlasData] {object} A JSON or XML data object.
+        * @param [format] {number} A value describing the format of the data.
         */
-        public addTextureAtlas(key: string, url: string, jsonURL?: string, jsonData?): void;
+        public addTextureAtlas(key: string, textureURL: string, atlasURL?: string, atlasData?, format?: number): void;
         /**
         * Add a new audio file loading request.
         * @param key {string} Unique asset key of the audio file.
@@ -5269,7 +5277,8 @@ module Phaser {
         * Error occured when load a JSON.
         * @param key {string} Key of the error loading JSON file.
         */
-        private jsonLoadError(key);
+        private dataLoadError(key);
+        private xmlLoadComplete(key);
         /**
         * Handle loading next file.
         * @param previousKey {string} Key of previous loaded asset.
@@ -9783,9 +9792,15 @@ module Phaser {
         */
         public destroy(): void;
         /**
-        * Call this method to see if one object collids another.
-        * @return {boolean} Whether the given objects or groups collids.
+        * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+        * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+        * @param object1 The first GameObject or Group to check. If null the world.group is used.
+        * @param object2 The second GameObject or Group to check.
+        * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+        * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+        * @param context The context in which the callbacks will be called
+        * @returns {boolean} true if the objects overlap, otherwise false.
         */
-        public collide(ObjectOrGroup1?: Basic, ObjectOrGroup2?: Basic, NotifyCallback?): bool;
+        public collide(objectOrGroup1?: Basic, objectOrGroup2?: Basic, notifyCallback?, context?): bool;
     }
 }

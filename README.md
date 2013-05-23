@@ -106,11 +106,12 @@ V0.9.6
 * Added the GameObjectFactory to Game. You now make Sprites like this: game.add.sprite(). Much better separation of game object creation methods now. But you'll have to update ALL code, sorry!
 * Added GameObjectFactory methods to add existing objects to the game world, such as existingSprite(), existingTween(), etc.
 * Added the GameObjectFactory to Phaser.State
+* Added new format parameter to Loader.addTextureAtlas defining the format. Currently supported: JSON Array and Starling/Sparrow XML.
 
 * TODO: Check that tween pausing works with the new performance.now
 * TODO: Game.Time should monitor pause duration
 * TODO: Investigate bug re: tilemap collision and animation frames
-* TODO: Update tests that use arrow keys and include touch/mouse support
+* TODO: Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
 * TODO: GameObject.clipRect
 * TODO: Polygon geom primitive
 * TODO: Move GameObject transforms to a single matrix

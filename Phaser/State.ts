@@ -152,11 +152,17 @@ module Phaser {
         public destroy() { }
 
         /**
-         * Call this method to see if one object collids another.
-         * @return {boolean} Whether the given objects or groups collids.
+         * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+         * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+         * @param object1 The first GameObject or Group to check. If null the world.group is used.
+         * @param object2 The second GameObject or Group to check.
+         * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+         * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+         * @param context The context in which the callbacks will be called
+         * @returns {boolean} true if the objects overlap, otherwise false.
          */
-        public collide(ObjectOrGroup1: Basic = null, ObjectOrGroup2: Basic = null, NotifyCallback = null): bool {
-            return this.collision.overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, Collision.separate);
+        public collide(objectOrGroup1: Basic = null, objectOrGroup2: Basic = null, notifyCallback = null, context? = this.game.callbackContext): bool {
+            return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
         }
 
     }

@@ -84,12 +84,20 @@ module Phaser {
          * @param key  {string} Asset key for the texture atlas.
          * @param url  {string} URL of this texture atlas file.
          * @param data {object} Extra texture atlas data.
-         * @param data {object} Texture atlas frames data.
+         * @param atlasData {object} Texture atlas frames data.
          */
-        public addTextureAtlas(key: string, url: string, data, jsonData) {
+        public addTextureAtlas(key: string, url: string, data, atlasData, format) {
 
             this._images[key] = { url: url, data: data, spriteSheet: true };
-            this._images[key].frameData = AnimationLoader.parseJSONData(this._game, jsonData);
+
+            if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
+            {
+                this._images[key].frameData = AnimationLoader.parseJSONData(this._game, atlasData);
+            }
+            else if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
+            {
+                this._images[key].frameData = AnimationLoader.parseXMLData(this._game, atlasData, format);
+            }
 
         }
 
