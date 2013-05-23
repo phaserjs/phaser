@@ -258,7 +258,7 @@ module Phaser {
 
             this.isPlaying = false;
             this.isFinished = true;
-            //  callback
+            //  callback goes here
 
         }
 

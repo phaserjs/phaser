@@ -178,6 +178,31 @@ module Phaser {
         }
 
         /**
+        * Multiply this vector by the given scalar.
+        * 
+        * @param {number} scalar
+        * @return {Vector2} This for chaining.
+        */
+        public mutableMultiplyByScalar(scalar: number): Vector2 {
+            this.x *= scalar;
+            this.y *= scalar;
+            return this;
+        }
+
+        /**
+        * Divide this vector by the given scalar.
+        * 
+        * @param {number} scalar
+        * @return {Vector2} This for chaining.
+        */
+        public mutableDivideByScalar(scalar: number): Vector2 {
+            this.x /= scalar;
+            this.y /= scalar;
+            return this;
+        }
+
+
+        /**
         * Reverse this vector.
         * 
         * @return {Vector} This for chaining.
