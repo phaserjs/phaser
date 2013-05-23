@@ -1261,7 +1261,7 @@ module Phaser {
         * @param camera {Rectangle} The rectangle you want to check.
         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
         */
-        public inCamera(camera: Rectangle): bool;
+        public inCamera(camera: Rectangle, cameraOffsetX: number, cameraOffsetY: number): bool;
         /**
         * Automatically called after update() by the game loop, this function just updates animations.
         */

@@ -1959,22 +1959,16 @@ var Phaser;
         * @param camera {Rectangle} The rectangle you want to check.
         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
         */
-        function (camera) {
+        function (camera, cameraOffsetX, cameraOffsetY) {
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
             if(this.scrollFactor.x == 0 && this.scrollFactor.y == 0) {
                 return true;
             }
-            //  Otherwise, if it's scrolling perfectly in sync with the camera (1 to 1) then it's a simple bounds check on world coordinates
-            if(this.scrollFactor.x == 1 && this.scrollFactor.y == 1) {
-                return camera.intersects(this.frameBounds, this.frameBounds.length);
-            } else {
-                //  Else apply the offsets
-                this._dx = (this.frameBounds.x - camera.x) * this.scrollFactor.x;
-                this._dy = (this.frameBounds.y - camera.y) * this.scrollFactor.y;
-                this._dw = this.frameBounds.width * this.scale.x;
-                this._dh = this.frameBounds.height * this.scale.y;
-                return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
-            }
+            this._dx = (this.frameBounds.x - camera.x);
+            this._dy = (this.frameBounds.y - camera.y);
+            this._dw = this.frameBounds.width * this.scale.x;
+            this._dh = this.frameBounds.height * this.scale.y;
+            return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
         };
         Sprite.prototype.postUpdate = /**
         * Automatically called after update() by the game loop, this function just updates animations.
@@ -2012,7 +2006,7 @@ var Phaser;
         */
         function (camera, cameraOffsetX, cameraOffsetY) {
             //  Render checks
-            if(this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false) {
+            if(this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView, cameraOffsetX, cameraOffsetY) == false) {
                 return false;
             }
             //  Alpha
@@ -2116,9 +2110,9 @@ var Phaser;
                 this.context.restore();
             }
             if(this.renderDebug) {
-                //this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
-                this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
-            }
+                this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
+                //this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
+                            }
             if(globalAlpha > -1) {
                 this.context.globalAlpha = globalAlpha;
             }
@@ -2131,12 +2125,10 @@ var Phaser;
         * @param cameraOffsetY {number} Y offset of bound to the camera.
         */
         function (camera, cameraOffsetX, cameraOffsetY) {
-            //this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
-            //this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
-            this._dx = cameraOffsetX + (this.collisionMask.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.collisionMask.y - camera.worldView.y);
+            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
             this.context.fillStyle = this.renderDebugColor;
-            this.context.fillRect(this._dx, this._dy, this.collisionMask.width, this.collisionMask.height);
+            this.context.fillRect(this._dx, this._dy, this.frameBounds.width, this.frameBounds.height);
             //this.context.fillStyle = this.renderDebugPointColor;
             //var hw = this.frameBounds.halfWidth * this.scale.x;
             //var hh = this.frameBounds.halfHeight * this.scale.y;
@@ -2368,6 +2360,10 @@ var Phaser;
         * @return {FrameData} Generated FrameData object.
         */
         function parseJSONData(game, json) {
+            //  Malformed?
+            if(!json['frames']) {
+                throw new Error("Phaser.AnimationLoader.parseJSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
+            }
             //  Let's create some frames then
             var data = new Phaser.FrameData();
             //  By this stage frames is a fully parsed array
@@ -2380,6 +2376,10 @@ var Phaser;
             return data;
         };
         AnimationLoader.parseXMLData = function parseXMLData(game, xml, format) {
+            //  Malformed?
+            if(!xml.getElementsByTagName('TextureAtlas')) {
+                throw new Error("Phaser.AnimationLoader.parseXMLData: Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
+            }
             //  Let's create some frames then
             var data = new Phaser.FrameData();
             var frames = xml.getElementsByTagName('SubTexture');
@@ -2455,7 +2455,6 @@ var Phaser;
         * @param destHeight {number} Destiny draw height.
         */
         function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
-            console.log('setTrim', actualWidth, actualHeight, destX, destY, destWidth, destHeight);
             this.trimmed = trimmed;
             this.sourceSizeW = actualWidth;
             this.sourceSizeH = actualHeight;
@@ -9132,7 +9131,6 @@ var Phaser;
             if (typeof atlasURL === "undefined") { atlasURL = null; }
             if (typeof atlasData === "undefined") { atlasData = null; }
             if (typeof format === "undefined") { format = Loader.TEXTURE_ATLAS_JSON_ARRAY; }
-            console.log('addTextureAtlas', key, textureURL, atlasURL, atlasData, format);
             if(this.checkKeyExists(key) === false) {
                 if(atlasURL !== null) {
                     //  A URL to a json/xml file has been given
@@ -9154,33 +9152,27 @@ var Phaser;
                         if(typeof atlasData === 'string') {
                             atlasData = JSON.parse(atlasData);
                         }
-                        //  Malformed?
-                        if(atlasData['frames']) {
-                            this._queueSize++;
-                            this._fileList[key] = {
-                                type: 'textureatlas',
-                                key: key,
-                                url: textureURL,
-                                data: null,
-                                atlasURL: null,
-                                atlasData: atlasData['frames'],
-                                format: format,
-                                error: false,
-                                loaded: false
-                            };
-                            this._keys.push(key);
-                        } else {
-                            throw new Error("Phaser.Loader. Invalid Texture Atlas JSON given, missing frames block");
-                        }
+                        this._queueSize++;
+                        this._fileList[key] = {
+                            type: 'textureatlas',
+                            key: key,
+                            url: textureURL,
+                            data: null,
+                            atlasURL: null,
+                            atlasData: atlasData['frames'],
+                            format: format,
+                            error: false,
+                            loaded: false
+                        };
+                        this._keys.push(key);
                     } else if(format == Loader.TEXTURE_ATLAS_XML_STARLING) {
                         //  An xml string or object has been given
                         if(typeof atlasData === 'string') {
-                            var tmp;
                             var xml;
                             try  {
                                 if(window['DOMParser']) {
-                                    tmp = new DOMParser();
-                                    xml = tmp.parseFromString(atlasData, "text/xml");
+                                    var domparser = new DOMParser();
+                                    xml = domparser.parseFromString(atlasData, "text/xml");
                                 } else {
                                     xml = new ActiveXObject("Microsoft.XMLDOM");
                                     xml.async = 'false';
@@ -9195,24 +9187,19 @@ var Phaser;
                                 atlasData = xml;
                             }
                         }
-                        //  Malformed?
-                        if(atlasData.getElementsByTagName('TextureAtlas')) {
-                            this._queueSize++;
-                            this._fileList[key] = {
-                                type: 'textureatlas',
-                                key: key,
-                                url: textureURL,
-                                data: null,
-                                atlasURL: null,
-                                atlasData: atlasData,
-                                format: format,
-                                error: false,
-                                loaded: false
-                            };
-                            this._keys.push(key);
-                        } else {
-                            throw new Error("Phaser.Loader. Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
-                        }
+                        this._queueSize++;
+                        this._fileList[key] = {
+                            type: 'textureatlas',
+                            key: key,
+                            url: textureURL,
+                            data: null,
+                            atlasURL: null,
+                            atlasData: atlasData,
+                            format: format,
+                            error: false,
+                            loaded: false
+                        };
+                        this._keys.push(key);
                     }
                 }
             }
@@ -9410,11 +9397,8 @@ var Phaser;
         */
         function (key) {
             var data = JSON.parse(this._xhr.response);
-            //  Malformed?
-            if(data['frames']) {
-                var file = this._fileList[key];
-                this._game.cache.addTextureAtlas(file.key, file.url, file.data, data['frames'], file.format);
-            }
+            var file = this._fileList[key];
+            this._game.cache.addTextureAtlas(file.key, file.url, file.data, data['frames'], file.format);
             this.nextFile(key, true);
         };
         Loader.prototype.dataLoadError = /**
@@ -9427,14 +9411,12 @@ var Phaser;
             this.nextFile(key, true);
         };
         Loader.prototype.xmlLoadComplete = function (key) {
-            var atlasData = this._xhr.response;// xml?
-            
-            var tmp;
+            var atlasData = this._xhr.response;
             var xml;
             try  {
                 if(window['DOMParser']) {
-                    tmp = new DOMParser();
-                    xml = tmp.parseFromString(atlasData, "text/xml");
+                    var domparser = new DOMParser();
+                    xml = domparser.parseFromString(atlasData, "text/xml");
                 } else {
                     xml = new ActiveXObject("Microsoft.XMLDOM");
                     xml.async = 'false';
@@ -9446,13 +9428,8 @@ var Phaser;
             if(!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length) {
                 throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
             }
-            //  Malformed?
-            if(xml.getElementsByTagName('TextureAtlas')) {
-                var file = this._fileList[key];
-                this._game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
-            } else {
-                throw new Error("Phaser.Loader. Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
-            }
+            var file = this._fileList[key];
+            this._game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
             this.nextFile(key, true);
         };
         Loader.prototype.nextFile = /**

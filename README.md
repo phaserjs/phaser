@@ -103,7 +103,7 @@ V0.9.6
 * Added Loader.crossOrigin property which is applied to loaded Images
 * Added AnimationManager.destroy() to clear out all local references and objects
 * Added the clearAnimations parameter to Sprite.loadGraphic(). Allows you to change animation textures but retain the frame data.
-* Added the GameObjectFactory to Game. You now make Sprites like this: game.add.sprite(). Much better separation of game object creation methods now. But you'll have to update ALL code, sorry!
+* Added the GameObjectFactory to Game. You now make Sprites like this: game.add.sprite(). Much better separation of game object creation methods now. But you'll have to update ALL code, sorry! (blame JesseFreeman for breaking your code and coming up with the idea :)
 * Added GameObjectFactory methods to add existing objects to the game world, such as existingSprite(), existingTween(), etc.
 * Added the GameObjectFactory to Phaser.State
 * Added new format parameter to Loader.addTextureAtlas defining the format. Currently supported: JSON Array and Starling/Sparrow XML.
@@ -112,11 +112,10 @@ V0.9.6
 * TODO: Game.Time should monitor pause duration
 * TODO: Investigate bug re: tilemap collision and animation frames
 * TODO: Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
-* TODO: GameObject.clipRect
+* TODO: GameObject.clipRect - won't work with rotation :( have to use context.clip which is crazy expensive, damnit
 * TODO: Polygon geom primitive
 * TODO: Move GameObject transforms to a single matrix
 * TODO: this.target.view.style.cursor = "pointer"; ("default")
-* TODO: Fix bug in scrollFactor inCamera check where the scrollFactor > 0 and < 1
 * TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
 * TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 

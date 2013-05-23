@@ -166,32 +166,23 @@ module Phaser {
                             atlasData = JSON.parse(atlasData);
                         }
 
-                        //  Malformed?
-                        if (atlasData['frames'])
-                        {
-                            this._queueSize++;
-                            this._fileList[key] = { type: 'textureatlas', key: key, url: textureURL, data: null, atlasURL: null, atlasData: atlasData['frames'], format: format, error: false, loaded: false };
-                            this._keys.push(key);
-                        }
-                        else
-                        {
-                            throw new Error("Phaser.Loader. Invalid Texture Atlas JSON given, missing frames block");
-                        }
+                        this._queueSize++;
+                        this._fileList[key] = { type: 'textureatlas', key: key, url: textureURL, data: null, atlasURL: null, atlasData: atlasData['frames'], format: format, error: false, loaded: false };
+                        this._keys.push(key);
                     }
                     else if (format == Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
                         //  An xml string or object has been given
                         if (typeof atlasData === 'string')
                         {
-                            var tmp;
                             var xml;
 
                             try
                             {
                                 if (window['DOMParser'])
                                 {
-                                    tmp = new DOMParser();
-                                    xml = tmp.parseFromString(atlasData, "text/xml");
+                                    var domparser = new DOMParser();
+                                    xml = domparser.parseFromString(atlasData, "text/xml");
                                 }
                                 else
                                 {
@@ -215,17 +206,9 @@ module Phaser {
                             }
                         }
 
-                        //  Malformed?
-                        if (atlasData.getElementsByTagName('TextureAtlas'))
-                        {
-                            this._queueSize++;
-                            this._fileList[key] = { type: 'textureatlas', key: key, url: textureURL, data: null, atlasURL: null, atlasData: atlasData, format: format, error: false, loaded: false };
-                            this._keys.push(key);
-                        }
-                        else
-                        {
-                            throw new Error("Phaser.Loader. Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
-                        }
+                        this._queueSize++;
+                        this._fileList[key] = { type: 'textureatlas', key: key, url: textureURL, data: null, atlasURL: null, atlasData: atlasData, format: format, error: false, loaded: false };
+                        this._keys.push(key);
                     }
 
                 }
@@ -449,13 +432,9 @@ module Phaser {
         private jsonLoadComplete(key: string) {
 
             var data = JSON.parse(this._xhr.response);
+            var file = this._fileList[key];
 
-            //  Malformed?
-            if (data['frames'])
-            {
-                var file = this._fileList[key];
-                this._game.cache.addTextureAtlas(file.key, file.url, file.data, data['frames'], file.format);
-            }
+            this._game.cache.addTextureAtlas(file.key, file.url, file.data, data['frames'], file.format);
 
             this.nextFile(key, true);
 
@@ -468,23 +447,24 @@ module Phaser {
         private dataLoadError(key: string) {
 
             var file = this._fileList[key];
+
             file.error = true;
+
             this.nextFile(key, true);
 
         }
 
         private xmlLoadComplete(key: string) {
 
-            var atlasData = this._xhr.response; // xml?
-            var tmp;
+            var atlasData = this._xhr.response;
             var xml;
 
             try
             {
                 if (window['DOMParser'])
                 {
-                    tmp = new DOMParser();
-                    xml = tmp.parseFromString(atlasData, "text/xml");
+                    var domparser = new DOMParser();
+                    xml = domparser.parseFromString(atlasData, "text/xml");
                 }
                 else
                 {
@@ -503,16 +483,8 @@ module Phaser {
                 throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
             }
 
-            //  Malformed?
-            if (xml.getElementsByTagName('TextureAtlas'))
-            {
-                var file = this._fileList[key];
-                this._game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
-            }
-            else
-            {
-                throw new Error("Phaser.Loader. Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
-            }
+            var file = this._fileList[key];
+            this._game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
 
             this.nextFile(key, true);
 

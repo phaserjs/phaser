@@ -78,6 +78,12 @@ module Phaser {
          */
         public static parseJSONData(game: Game, json): FrameData {
 
+            //  Malformed?
+            if (!json['frames'])
+            {
+                throw new Error("Phaser.AnimationLoader.parseJSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
+            }
+
             //  Let's create some frames then
             var data: FrameData = new FrameData();
 
@@ -97,6 +103,12 @@ module Phaser {
         }
 
         public static parseXMLData(game: Game, xml, format: number): FrameData {
+
+            //  Malformed?
+            if (!xml.getElementsByTagName('TextureAtlas'))
+            {
+                throw new Error("Phaser.AnimationLoader.parseXMLData: Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
+            }
 
             //  Let's create some frames then
             var data: FrameData = new FrameData();

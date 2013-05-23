@@ -27,13 +27,176 @@ var NPhysics = (function () {
     return NPhysics;
 })();
 var AABB = (function () {
-    function AABB(pos, xw, yw) {
+    function AABB(x, y, xw, yw) {
         this.type = 0;
-        this.pos = pos.clone();
-        this.oldpos = pos.clone();
+        this.pos = new Phaser.Vector2(x, y);
+        this.oldpos = this.pos.clone();
         this.xw = Math.abs(xw);
         this.yw = Math.abs(yw);
+        this.aabbTileProjections = {
+        }//hash object to hold tile-specific collision functions
+        ;
+        this.aabbTileProjections[TileMapCell.CTYPE_FULL] = this.ProjAABB_Full;
     }
+    AABB.COL_NONE = 0;
+    AABB.COL_AXIS = 1;
+    AABB.COL_OTHER = 2;
+    AABB.prototype.IntegrateVerlet = function () {
+        //var d = DRAG;
+        //var g = GRAV;
+        var d = 1;
+        var g = 0.2;
+        var p = this.pos;
+        var o = this.oldpos;
+        var px, py;
+        var ox = o.x;//we can't swap buffers since mcs/sticks point directly to vector2s..
+        
+        var oy = o.y;
+        o.x = px = p.x//get vector values
+        ;
+        o.y = py = p.y//p = position
+        ;
+        //o = oldposition
+        //integrate
+        p.x += (d * px) - (d * ox);
+        p.y += (d * py) - (d * oy) + g;
+    };
+    AABB.prototype.ReportCollisionVsWorld = function (px, py, dx, dy, obj) {
+        var p = this.pos;
+        var o = this.oldpos;
+        //calc velocity
+        var vx = p.x - o.x;
+        var vy = p.y - o.y;
+        //find component of velocity parallel to collision normal
+        var dp = (vx * dx + vy * dy);
+        var nx = dp * dx;//project velocity onto collision normal
+        
+        var ny = dp * dy;//nx,ny is normal velocity
+        
+        var tx = vx - nx;//px,py is tangent velocity
+        
+        var ty = vy - ny;
+        //we only want to apply collision response forces if the object is travelling into, and not out of, the collision
+                var b, bx, by, f, fx, fy;
+        if(dp < 0) {
+            //f = FRICTION;
+            f = 0.05;
+            fx = tx * f;
+            fy = ty * f;
+            //b = 1 + BOUNCE;//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
+            b = 1 + 0.3//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
+            ;
+            bx = (nx * b);
+            by = (ny * b);
+        } else {
+            //moving out of collision, do not apply forces
+            bx = by = fx = fy = 0;
+        }
+        p.x += px//project object out of collision
+        ;
+        p.y += py;
+        o.x += px + bx + fx//apply bounce+friction impulses which alter velocity
+        ;
+        o.y += py + by + fy;
+    };
+    AABB.prototype.CollideAABBVsWorldBounds = function () {
+        var p = this.pos;
+        var xw = this.xw;
+        var yw = this.yw;
+        var XMIN = 0;
+        var XMAX = 800;
+        var YMIN = 0;
+        var YMAX = 600;
+        //collide vs. x-bounds
+        //test XMIN
+        var dx = XMIN - (p.x - xw);
+        if(0 < dx) {
+            //object is colliding with XMIN
+            this.ReportCollisionVsWorld(dx, 0, 1, 0, null);
+        } else {
+            //test XMAX
+            dx = (p.x + xw) - XMAX;
+            if(0 < dx) {
+                //object is colliding with XMAX
+                this.ReportCollisionVsWorld(-dx, 0, -1, 0, null);
+            }
+        }
+        //collide vs. y-bounds
+        //test YMIN
+        var dy = YMIN - (p.y - yw);
+        if(0 < dy) {
+            //object is colliding with YMIN
+            this.ReportCollisionVsWorld(0, dy, 0, 1, null);
+        } else {
+            //test YMAX
+            dy = (p.y + yw) - YMAX;
+            if(0 < dy) {
+                //object is colliding with YMAX
+                this.ReportCollisionVsWorld(0, -dy, 0, -1, null);
+            }
+        }
+    };
+    AABB.prototype.render = function (context) {
+        context.beginPath();
+        context.strokeStyle = 'rgb(0,255,0)';
+        context.strokeRect(this.pos.x - this.xw, this.pos.y - this.yw, this.xw * 2, this.yw * 2);
+        context.stroke();
+        context.closePath();
+        context.fillStyle = 'rgb(0,255,0)';
+        context.fillRect(this.pos.x, this.pos.y, 2, 2);
+        /*
+        if (this.oH == 1)
+        {
+        context.beginPath();
+        context.strokeStyle = 'rgb(255,0,0)';
+        context.moveTo(this.pos.x - this.radius, this.pos.y - this.radius);
+        context.lineTo(this.pos.x - this.radius, this.pos.y + this.radius);
+        context.stroke();
+        context.closePath();
+        }
+        else if (this.oH == -1)
+        {
+        context.beginPath();
+        context.strokeStyle = 'rgb(255,0,0)';
+        context.moveTo(this.pos.x + this.radius, this.pos.y - this.radius);
+        context.lineTo(this.pos.x + this.radius, this.pos.y + this.radius);
+        context.stroke();
+        context.closePath();
+        }
+        
+        if (this.oV == 1)
+        {
+        context.beginPath();
+        context.strokeStyle = 'rgb(255,0,0)';
+        context.moveTo(this.pos.x - this.radius, this.pos.y - this.radius);
+        context.lineTo(this.pos.x + this.radius, this.pos.y - this.radius);
+        context.stroke();
+        context.closePath();
+        }
+        else if (this.oV == -1)
+        {
+        context.beginPath();
+        context.strokeStyle = 'rgb(255,0,0)';
+        context.moveTo(this.pos.x - this.radius, this.pos.y + this.radius);
+        context.lineTo(this.pos.x + this.radius, this.pos.y + this.radius);
+        context.stroke();
+        context.closePath();
+        }
+        */
+            };
+    AABB.prototype.ResolveBoxTile = function (x, y, box, t) {
+        if(0 < t.ID) {
+            return this.aabbTileProjections[t.CTYPE](x, y, box, t);
+        } else {
+            //trace("ResolveBoxTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " ("+ t.i + "," + t.j + ")");
+            return false;
+        }
+    };
+    AABB.prototype.ProjAABB_Full = function (x, y, obj, t) {
+        var l = Math.sqrt(x * x + y * y);
+        obj.ReportCollisionVsWorld(x, y, x / l, y / l, t);
+        return AABB.COL_AXIS;
+    };
     return AABB;
 })();
 var TileMapCell = (function () {
@@ -111,6 +274,7 @@ var TileMapCell = (function () {
             this.UpdateType();
             //this.Draw();
                     }
+        return this;
     };
     TileMapCell.prototype.Clear = function () {
         //tile was on, turn it off
@@ -408,6 +572,9 @@ var Circle = (function () {
         //Proj_CircleTile[CTYPE_67DEGb] = ProjCircle_67DegB;
         //Proj_CircleTile[CTYPE_HALF] = ProjCircle_Half;
             }
+    Circle.COL_NONE = 0;
+    Circle.COL_AXIS = 1;
+    Circle.COL_OTHER = 2;
     Circle.prototype.IntegrateVerlet = function () {
         //var d = DRAG;
         //var g = GRAV;
@@ -587,9 +754,6 @@ var Circle = (function () {
             return false;
         }
     };
-    Circle.COL_NONE = 0;
-    Circle.COL_AXIS = 1;
-    Circle.COL_OTHER = 2;
     Circle.prototype.ProjCircle_Full = function (x, y, oH, oV, obj, t) {
         //if we're colliding vs. the current cell, we need to project along the
         //smallest penetration vector.
@@ -1170,22 +1334,35 @@ var Circle = (function () {
         myGame.loader.addImageFile('atari1', 'assets/sprites/atari130xe.png');
         myGame.loader.load();
     }
-    physics:
-NPhysics
-    c:
-Circle
-    t:
-TileMapCell
+    var cells;
+    var physics;
+    var b;
+    var c;
+    var t;
     function create() {
         this.physics = new NPhysics();
         this.c = new Circle(200, 100, 25);
+        this.b = new AABB(200, 200, 50, 50);
         //  pos is center, not upper-left
-        this.t = new TileMapCell(200, 500, 100, 100);
+        this.cells = [];
+        var tid;
+        for(var i = 0; i < 10; i++) {
+            if(i % 2 == 0) {
+                console.log('pn');
+                tid = TileMapCell.TID_CONCAVEpn;
+            } else {
+                console.log('nn');
+                tid = TileMapCell.TID_CONCAVEnn;
+            }
+            //this.cells.push(new TileMapCell(100 + (i * 100), 500, 50, 50).SetState(tid));
+            this.cells.push(new TileMapCell(100 + (i * 100), 500, 50, 50).SetState(TileMapCell.TID_FULL));
+        }
+        //this.t = new TileMapCell(200, 500, 100, 100);
         //this.t.SetState(TileMapCell.TID_FULL);
         //this.t.SetState(TileMapCell.TID_45DEGpn);
         //this.t.SetState(TileMapCell.TID_CONCAVEpn);
-        this.t.SetState(TileMapCell.TID_CONVEXpn);
-    }
+        //this.t.SetState(TileMapCell.TID_CONVEXpn);
+            }
     function update() {
         var fx = 0;
         var fy = 0;
@@ -1199,6 +1376,7 @@ TileMapCell
         } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
             fy += 0.2;
         }
+        //  update circle
         var p = this.c.pos;
         var o = this.c.oldpos;
         var vx = p.x - o.x;
@@ -1208,11 +1386,28 @@ TileMapCell
         p.x = o.x + newx;
         p.y = o.y + newy;
         this.c.IntegrateVerlet();
-        this.c.CollideCircleVsTile(this.t);
+        //  update box
+        var p = this.b.pos;
+        var o = this.b.oldpos;
+        var vx = p.x - o.x;
+        var vy = p.y - o.y;
+        var newx = Math.min(20, Math.max(-20, vx + fx));
+        var newy = Math.min(20, Math.max(-20, vy + fy));
+        p.x = o.x + newx;
+        p.y = o.y + newy;
+        this.b.IntegrateVerlet();
+        for(var i = 0; i < this.cells.length; i++) {
+            this.c.CollideCircleVsTile(this.cells[i]);
+            //this.cells[i].render(myGame.stage.context);
+                    }
         this.c.CollideCircleVsWorldBounds();
+        this.b.CollideAABBVsWorldBounds();
     }
     function render() {
         this.c.render(myGame.stage.context);
-        this.t.render(myGame.stage.context);
+        this.b.render(myGame.stage.context);
+        for(var i = 0; i < this.cells.length; i++) {
+            this.cells[i].render(myGame.stage.context);
+        }
     }
 })();

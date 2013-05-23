@@ -185,7 +185,7 @@ module Phaser {
          * @param camera {Rectangle} The rectangle you want to check.
          * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
          */
-        public inCamera(camera: Rectangle): bool {
+        public inCamera(camera: Rectangle, cameraOffsetX: number, cameraOffsetY: number): bool {
 
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
             if (this.scrollFactor.x == 0 && this.scrollFactor.y == 0)
@@ -193,21 +193,12 @@ module Phaser {
                 return true;
             }
 
-            //  Otherwise, if it's scrolling perfectly in sync with the camera (1 to 1) then it's a simple bounds check on world coordinates
-            if (this.scrollFactor.x == 1 && this.scrollFactor.y == 1)
-            {
-                return camera.intersects(this.frameBounds, this.frameBounds.length);
-            }
-            else
-            {
-                //  Else apply the offsets
-                this._dx = (this.frameBounds.x - camera.x) * this.scrollFactor.x;
-                this._dy = (this.frameBounds.y - camera.y) * this.scrollFactor.y;
-                this._dw = this.frameBounds.width * this.scale.x;
-                this._dh = this.frameBounds.height * this.scale.y;
+            this._dx = (this.frameBounds.x - camera.x);
+            this._dy = (this.frameBounds.y - camera.y);
+            this._dw = this.frameBounds.width * this.scale.x;
+            this._dh = this.frameBounds.height * this.scale.y;
 
-                return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
-            }
+            return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
 
         }
 
@@ -248,7 +239,7 @@ module Phaser {
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): bool {
 
             //  Render checks
-            if (this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false)
+            if (this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView, cameraOffsetX, cameraOffsetY) == false)
             {
                 return false;
             }
@@ -400,8 +391,8 @@ module Phaser {
 
             if (this.renderDebug)
             {
-                //this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
-                this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
+                this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
+                //this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
             }
 
             if (globalAlpha > -1)
@@ -421,14 +412,11 @@ module Phaser {
          */
         private renderBounds(camera:Camera, cameraOffsetX:number, cameraOffsetY:number) {
 
-            //this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
-            //this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
-
-            this._dx = cameraOffsetX + (this.collisionMask.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.collisionMask.y - camera.worldView.y);
+            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
+            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
 
             this.context.fillStyle = this.renderDebugColor;
-            this.context.fillRect(this._dx, this._dy, this.collisionMask.width, this.collisionMask.height);
+            this.context.fillRect(this._dx, this._dy, this.frameBounds.width, this.frameBounds.height);
             
             //this.context.fillStyle = this.renderDebugPointColor;
 
