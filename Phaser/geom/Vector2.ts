@@ -4,7 +4,7 @@
 * Phaser - Vector2
 *
 * A two dimensional vector.
-* Contains methods and ideas from verlet-js by Sub Protocol, SAT.js by Jim Riecken and N by Metanet Software.
+* Contains methods and ideas from verlet-js by Sub Protocol, SAT.js by Jim Riecken and N by Metanet Software. Brandon Jones, Colin MacKenzie IV
 */
 
 module Phaser {
@@ -21,6 +21,7 @@ module Phaser {
         **/
         constructor(x: number = 0, y: number = 0) {
 
+            //var GLMAT_ARRAY_TYPE = (typeof Float32Array !== 'undefined') ? Float32Array : Array;            
             this.x = x;
             this.y = y;
 
