@@ -1293,328 +1293,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - Animation
-*
-* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
-*/
-module Phaser {
-    class Animation {
-        /**
-        * Animation constructor
-        * Create a new <code>Animation</code>.
-        *
-        * @param parent {Sprite} Owner sprite of this animation.
-        * @param frameData {FrameData} The FrameData object contains animation data.
-        * @param name {string} Unique name of this animation.
-        * @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
-        * @param delay {number} Time between frames in ms.
-        * @param looped {boolean} Whether or not the animation is looped or just plays once.
-        */
-        constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool);
-        /**
-        * Local private reference to game.
-        */
-        private _game;
-        /**
-        * Local private reference to its owner sprite.
-        * @type {Sprite}
-        */
-        private _parent;
-        /**
-        * Animation frame container.
-        * @type {number[]}
-        */
-        private _frames;
-        /**
-        * Frame data of this animation.(parsed from sprite sheet)
-        * @type {FrameData}
-        */
-        private _frameData;
-        /**
-        * Index of current frame.
-        * @type {number}
-        */
-        private _frameIndex;
-        /**
-        * Time when switched to last frame (in ms).
-        * @type number
-        */
-        private _timeLastFrame;
-        /**
-        * Time when this will switch to next frame (in ms).
-        * @type number
-        */
-        private _timeNextFrame;
-        /**
-        * Name of this animation.
-        * @type {string}
-        */
-        public name: string;
-        /**
-        * Currently played frame instance.
-        * @type {Frame}
-        */
-        public currentFrame: Frame;
-        /**
-        * Whether or not this animation finished playing.
-        * @type {boolean}
-        */
-        public isFinished: bool;
-        /**
-        * Whethor or not this animation is currently playing.
-        * @type {boolean}
-        */
-        public isPlaying: bool;
-        /**
-        * Whether or not the animation is looped.
-        * @type {boolean}
-        */
-        public looped: bool;
-        /**
-        * Time between frames in ms.
-        * @type {number}
-        */
-        public delay: number;
-        public frameTotal : number;
-        public frame : number;
-        /**
-        * Play this animation.
-        * @param frameRate {number} FrameRate you want to specify instead of using default.
-        * @param loop {boolean} Whether or not the animation is looped or just plays once.
-        */
-        public play(frameRate?: number, loop?: bool): void;
-        /**
-        * Play this animation from the first frame.
-        */
-        public restart(): void;
-        /**
-        * Stop playing animation and set it finished.
-        */
-        public stop(): void;
-        /**
-        * Update animation frames.
-        */
-        public update(): bool;
-        /**
-        * Clean up animation memory.
-        */
-        public destroy(): void;
-        /**
-        * Animation complete callback method.
-        */
-        private onComplete();
-    }
-}
-/**
-* Phaser - AnimationLoader
-*
-* Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
-*/
-module Phaser {
-    class AnimationLoader {
-        /**
-        * Parse a sprite sheet from asset data.
-        * @param key {string} Asset key for the sprite sheet data.
-        * @param frameWidth {number} Width of animation frame.
-        * @param frameHeight {number} Height of animation frame.
-        * @param frameMax {number} Number of animation frames.
-        * @return {FrameData} Generated FrameData object.
-        */
-        static parseSpriteSheet(game: Game, key: string, frameWidth: number, frameHeight: number, frameMax: number): FrameData;
-        /**
-        * Parse frame datas from json.
-        * @param json {object} Json data you want to parse.
-        * @return {FrameData} Generated FrameData object.
-        */
-        static parseJSONData(game: Game, json): FrameData;
-        static parseXMLData(game: Game, xml, format: number): FrameData;
-    }
-}
-/**
-* Phaser - Frame
-*
-* A Frame is a single frame of an animation and is part of a FrameData collection.
-*/
-module Phaser {
-    class Frame {
-        /**
-        * Frame constructor
-        * Create a new <code>Frame</code> with specific position, size and name.
-        *
-        * @param x {number} X position within the image to cut from.
-        * @param y {number} Y position within the image to cut from.
-        * @param width {number} Width of the frame.
-        * @param height {number} Height of the frame.
-        * @param name {string} Name of this frame.
-        */
-        constructor(x: number, y: number, width: number, height: number, name: string);
-        /**
-        * X position within the image to cut from.
-        * @type {number}
-        */
-        public x: number;
-        /**
-        * Y position within the image to cut from.
-        * @type {number}
-        */
-        public y: number;
-        /**
-        * Width of the frame.
-        * @type {number}
-        */
-        public width: number;
-        /**
-        * Height of the frame.
-        * @type {number}
-        */
-        public height: number;
-        /**
-        * Useful for Sprite Sheets.
-        * @type {number}
-        */
-        public index: number;
-        /**
-        * Useful for Texture Atlas files. (is set to the filename value)
-        */
-        public name: string;
-        /**
-        * Rotated? (not yet implemented)
-        */
-        public rotated: bool;
-        /**
-        * Either cw or ccw, rotation is always 90 degrees.
-        */
-        public rotationDirection: string;
-        /**
-        * Was it trimmed when packed?
-        * @type {boolean}
-        */
-        public trimmed: bool;
-        /**
-        * Width of the original sprite.
-        * @type {number}
-        */
-        public sourceSizeW: number;
-        /**
-        * Height of the original sprite.
-        * @type {number}
-        */
-        public sourceSizeH: number;
-        /**
-        * X position of the trimmed sprite inside original sprite.
-        * @type {number}
-        */
-        public spriteSourceSizeX: number;
-        /**
-        * Y position of the trimmed sprite inside original sprite.
-        * @type {number}
-        */
-        public spriteSourceSizeY: number;
-        /**
-        * Width of the trimmed sprite.
-        * @type {number}
-        */
-        public spriteSourceSizeW: number;
-        /**
-        * Height of the trimmed sprite.
-        * @type {number}
-        */
-        public spriteSourceSizeH: number;
-        /**
-        * Set rotation of this frame. (Not yet supported!)
-        */
-        public setRotation(rotated: bool, rotationDirection: string): void;
-        /**
-        * Set trim of the frame.
-        * @param trimmed {boolean} Whether this frame trimmed or not.
-        * @param actualWidth {number} Actual width of this frame.
-        * @param actualHeight {number} Actual height of this frame.
-        * @param destX {number} Destiny x position.
-        * @param destY {number} Destiny y position.
-        * @param destWidth {number} Destiny draw width.
-        * @param destHeight {number} Destiny draw height.
-        */
-        public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number): void;
-    }
-}
-/**
-* Phaser - FrameData
-*
-* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
-*/
-module Phaser {
-    class FrameData {
-        /**
-        * FrameData constructor
-        */
-        constructor();
-        /**
-        * Local frame container.
-        */
-        private _frames;
-        /**
-        * Local frameName<->index container.
-        */
-        private _frameNames;
-        public total : number;
-        /**
-        * Add a new frame.
-        * @param frame {Frame} The frame you want to add.
-        * @return {Frame} The frame you just added.
-        */
-        public addFrame(frame: Frame): Frame;
-        /**
-        * Get a frame by its index.
-        * @param index {number} Index of the frame you want to get.
-        * @return {Frame} The frame you want.
-        */
-        public getFrame(index: number): Frame;
-        /**
-        * Get a frame by its name.
-        * @param name {string} Name of the frame you want to get.
-        * @return {Frame} The frame you want.
-        */
-        public getFrameByName(name: string): Frame;
-        /**
-        * Check whether there's a frame with given name.
-        * @param name {string} Name of the frame you want to check.
-        * @return {boolean} True if frame with given name found, otherwise return false.
-        */
-        public checkFrameName(name: string): bool;
-        /**
-        * Get ranges of frames in an array.
-        * @param start {number} Start index of frames you want.
-        * @param end {number} End index of frames you want.
-        * @param [output] {Frame[]} result will be added into this array.
-        * @return {Frame[]} Ranges of specific frames in an array.
-        */
-        public getFrameRange(start: number, end: number, output?: Frame[]): Frame[];
-        /**
-        * Get all indexes of frames by giving their name.
-        * @param [output] {number[]} result will be added into this array.
-        * @return {number[]} Indexes of specific frames in an array.
-        */
-        public getFrameIndexes(output?: number[]): number[];
-        /**
-        * Get all names of frames by giving their indexes.
-        * @param [output] {number[]} result will be added into this array.
-        * @return {number[]} Names of specific frames in an array.
-        */
-        public getFrameIndexesByName(input: string[]): number[];
-        /**
-        * Get all frames in this frame data.
-        * @return {Frame[]} All the frames in an array.
-        */
-        public getAllFrames(): Frame[];
-        /**
-        * Get All frames with specific ranges.
-        * @param range {number[]} Ranges in an array.
-        * @return {Frame[]} All frames in an array.
-        */
-        public getFrames(range: number[]): Frame[];
-    }
-}
-/**
 * Phaser - AnimationManager
 *
 * Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
@@ -3214,7 +2892,7 @@ module Phaser {
 * Phaser - Vector2
 *
 * A two dimensional vector.
-* Contains methods and ideas from verlet-js by Sub Protocol, SAT.js by Jim Riecken and N by Metanet Software.
+* Contains methods and ideas from verlet-js by Sub Protocol, SAT.js by Jim Riecken and N by Metanet Software. Brandon Jones, Colin MacKenzie IV
 */
 module Phaser {
     class Vector2 {
@@ -3315,6 +2993,20 @@ module Phaser {
         * @return {Vector} This for chaining.
         */
         public mutableScale(x: number, y?: number): Vector2;
+        /**
+        * Multiply this vector by the given scalar.
+        *
+        * @param {number} scalar
+        * @return {Vector2} This for chaining.
+        */
+        public mutableMultiplyByScalar(scalar: number): Vector2;
+        /**
+        * Divide this vector by the given scalar.
+        *
+        * @param {number} scalar
+        * @return {Vector2} This for chaining.
+        */
+        public mutableDivideByScalar(scalar: number): Vector2;
         /**
         * Reverse this vector.
         *
@@ -6393,155 +6085,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - Verlet - Particle
-*
-*
-*/
-module Phaser.Verlet {
-    class Particle {
-        /**
-        * Creates a new Particle object.
-        * @class Particle
-        * @constructor
-        * @param {Number} x The x coordinate of vector2
-        * @param {Number} y The y coordinate of vector2
-        * @return {Particle} This object
-        **/
-        constructor(pos: Vector2);
-        public pos: Vector2;
-        public lastPos: Vector2;
-        public render(ctx): void;
-    }
-}
-/**
-* Phaser - PinConstraint
-*
-* Constrains to static / fixed point
-*/
-module Phaser.Verlet {
-    class PinConstraint {
-        /**
-        * Creates a new PinConstraint object.
-        * @class PinConstraint
-        * @constructor
-        * @param {Number} x The x coordinate of vector2
-        * @param {Number} y The y coordinate of vector2
-        * @return {PinConstraint} This object
-        **/
-        constructor(a: Particle, pos: Vector2);
-        public a: Particle;
-        public pos: Vector2;
-        public relax(): void;
-        public render(ctx): void;
-    }
-}
-/**
-* Phaser - Verlet - Composite
-*
-*
-*/
-module Phaser.Verlet {
-    class Composite {
-        /**
-        * Creates a new Composite object.
-        * @class Composite
-        * @constructor
-        * @param {Number} x The x coordinate of vector2
-        * @param {Number} y The y coordinate of vector2
-        * @return {Composite} This object
-        **/
-        constructor(game: Game);
-        private _game;
-        /**
-        * Texture of the particles to be rendered.
-        */
-        private _texture;
-        /**
-        * Rendering bounds for the texture
-        * @type {Quad}
-        */
-        private frameBounds;
-        private _sx;
-        private _sy;
-        private _sw;
-        private _sh;
-        private _dx;
-        private _dy;
-        private _dw;
-        private _dh;
-        private _hw;
-        private _hh;
-        public sprites: Sprite[];
-        public particles: Particle[];
-        public constraints;
-        public drawParticles;
-        public drawConstraints;
-        public createDistanceConstraint(a: Particle, b: Particle, stiffness: number, distance?: number): DistanceConstraint;
-        public createAngleConstraint(a: Particle, b: Particle, c: Particle, stiffness: number): AngleConstraint;
-        public createPinConstraint(a: Particle, pos: Vector2): PinConstraint;
-        /**
-        * Load a graphic for this Composite. The graphic cannot be a SpriteSheet yet.
-        * @param key {string} Key of the graphic you want to load for this sprite.
-        * @return {Composite} This object
-        */
-        public loadGraphic(key: string): Composite;
-        public hideConstraints: bool;
-        public constraintLineColor: string;
-        private renderConstraints(context);
-        private render(context);
-        public pin(index, pos?): PinConstraint;
-    }
-}
-/**
-* Phaser - DistanceConstraint
-*
-* Constrains to initial distance
-*/
-module Phaser.Verlet {
-    class DistanceConstraint {
-        /**
-        * Creates a new DistanceConstraint object.
-        * @class DistanceConstraint
-        * @constructor
-        * @param {Number} x The x coordinate of vector2
-        * @param {Number} y The y coordinate of vector2
-        * @return {DistanceConstraint} This object
-        **/
-        constructor(a: Particle, b: Particle, stiffness: number, distance?: number);
-        public a: Particle;
-        public b: Particle;
-        public distance: number;
-        public stiffness: number;
-        public relax(stepCoef: number): void;
-        public render(ctx): void;
-    }
-}
-/**
-* Phaser - AngleConstraint
-*
-* constrains 3 particles to an angle
-*/
-module Phaser.Verlet {
-    class AngleConstraint {
-        /**
-        * Creates a new AngleConstraint object.
-        * @class AngleConstraint
-        * @constructor
-        * @param {Number} x The x coordinate of vector2
-        * @param {Number} y The y coordinate of vector2
-        * @return {AngleConstraint} This object
-        **/
-        constructor(a: Particle, b: Particle, c: Particle, stiffness: number);
-        public a: Particle;
-        public b: Particle;
-        public c: Particle;
-        public angle: number;
-        public stiffness: number;
-        public relax(stepCoef: number): void;
-        public render(ctx): void;
-    }
-}
-/**
 * Phaser - Verlet
 *
 * Based on verlet-js by Sub Protocol released under MIT
@@ -7212,1008 +6755,6 @@ module Phaser {
         * @method SetTimeoutUpdate
         **/
         public SetTimeoutUpdate(): void;
-    }
-}
-/**
-* Phaser - Pointer
-*
-* A Pointer object is used by the Touch and MSPoint managers and represents a single finger on the touch screen.
-*/
-module Phaser {
-    class Pointer {
-        /**
-        * Constructor
-        * @param {Phaser.Game} game.
-        * @return {Phaser.Pointer} This object.
-        */
-        constructor(game: Game, id: number);
-        /**
-        * Local private reference to game.
-        * @property _game
-        * @type {Phaser.Game}
-        * @private
-        **/
-        private _game;
-        /**
-        * Local private variable to store the status of dispatching a hold event
-        * @property _holdSent
-        * @type {Boolean}
-        * @private
-        */
-        private _holdSent;
-        /**
-        * Local private variable storing the short-term history of pointer movements
-        * @property _history
-        * @type {Array}
-        * @private
-        */
-        private _history;
-        /**
-        * Local private variable storing the time at which the next history drop should occur
-        * @property _lastDrop
-        * @type {Number}
-        * @private
-        */
-        private _nextDrop;
-        /**
-        * The Pointer ID (a number between 1 and 10, 0 is reserved for the mouse pointer specifically)
-        * @property id
-        * @type {Number}
-        */
-        public id: number;
-        /**
-        * An identification number for each touch point.
-        * When a touch point becomes active, it is assigned an identifier that is distinct from any other active touch point.
-        * While the touch point remains active, all events that refer to it are assigned the same identifier.
-        * @property identifier
-        * @type {Number}
-        */
-        public identifier: number;
-        /**
-        * Is this Pointer active or not? An active Pointer is one that is in contact with the touch screen.
-        * @property active
-        * @type {Boolean}
-        */
-        public active: bool;
-        /**
-        * A Vector object containing the initial position when the Pointer was engaged with the screen.
-        * @property positionDown
-        * @type {Vector2}
-        **/
-        public positionDown: Vector2;
-        /**
-        * A Vector object containing the current position of the Pointer on the screen.
-        * @property position
-        * @type {Vector2}
-        **/
-        public position: Vector2;
-        /**
-        * A Circle object centered on the x/y screen coordinates of the Pointer.
-        * Default size of 44px (Apple's recommended "finger tip" size)
-        * @property circle
-        * @type {Circle}
-        **/
-        public circle: Circle;
-        /**
-        *
-        * @property withinGame
-        * @type {Boolean}
-        */
-        public withinGame: bool;
-        /**
-        * If this Pointer is a mouse the button property holds the value of which mouse button was pressed down
-        * @property button
-        * @type {Number}
-        */
-        public button: number;
-        /**
-        * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
-        * @property clientX
-        * @type {Number}
-        */
-        public clientX: number;
-        /**
-        * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
-        * @property clientY
-        * @type {Number}
-        */
-        public clientY: number;
-        /**
-        * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
-        * @property pageX
-        * @type {Number}
-        */
-        public pageX: number;
-        /**
-        * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
-        * @property pageY
-        * @type {Number}
-        */
-        public pageY: number;
-        /**
-        * The horizontal coordinate of point relative to the screen in pixels
-        * @property screenX
-        * @type {Number}
-        */
-        public screenX: number;
-        /**
-        * The vertical coordinate of point relative to the screen in pixels
-        * @property screenY
-        * @type {Number}
-        */
-        public screenY: number;
-        /**
-        * The horizontal coordinate of point relative to the game element
-        * @property x
-        * @type {Number}
-        */
-        public x: number;
-        /**
-        * The vertical coordinate of point relative to the game element
-        * @property y
-        * @type {Number}
-        */
-        public y: number;
-        /**
-        * The Element on which the touch point started when it was first placed on the surface, even if the touch point has since moved outside the interactive area of that element.
-        * @property target
-        * @type {Any}
-        */
-        public target;
-        /**
-        * If the Pointer is a mouse this is true, otherwise false
-        * @property isMouse
-        * @type {Boolean}
-        **/
-        public isMouse: bool;
-        /**
-        * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
-        * @property isDown
-        * @type {Boolean}
-        **/
-        public isDown: bool;
-        /**
-        * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
-        * @property isUp
-        * @type {Boolean}
-        **/
-        public isUp: bool;
-        /**
-        * A timestamp representing when the Pointer first touched the touchscreen.
-        * @property timeDown
-        * @type {Number}
-        **/
-        public timeDown: number;
-        /**
-        * A timestamp representing when the Pointer left the touchscreen.
-        * @property timeUp
-        * @type {Number}
-        **/
-        public timeUp: number;
-        /**
-        * A timestamp representing when the Pointer was last tapped or clicked
-        * @property previousTapTime
-        * @type {Number}
-        **/
-        public previousTapTime: number;
-        /**
-        * The total number of times this Pointer has been touched to the touchscreen
-        * @property totalTouches
-        * @type {Number}
-        **/
-        public totalTouches: number;
-        /**
-        * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
-        * @property duration
-        * @type {Number}
-        **/
-        public duration : number;
-        /**
-        * Gets the X value of this Pointer in world coordinate space
-        * @param {Camera} [camera]
-        */
-        public getWorldX(camera?: Camera): number;
-        /**
-        * Gets the Y value of this Pointer in world coordinate space
-        * @param {Camera} [camera]
-        */
-        public getWorldY(camera?: Camera): number;
-        /**
-        * Called when the Pointer is pressed onto the touchscreen
-        * @method start
-        * @param {Any} event
-        */
-        public start(event): Pointer;
-        public update(): void;
-        /**
-        * Called when the Pointer is moved on the touchscreen
-        * @method move
-        * @param {Any} event
-        */
-        public move(event): Pointer;
-        /**
-        * Called when the Pointer leaves the target area
-        * @method leave
-        * @param {Any} event
-        */
-        public leave(event): void;
-        /**
-        * Called when the Pointer leaves the touchscreen
-        * @method stop
-        * @param {Any} event
-        */
-        public stop(event): Pointer;
-        /**
-        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate
-        * @method justPressed
-        * @param {Number} [duration].
-        * @return {Boolean}
-        */
-        public justPressed(duration?: number): bool;
-        /**
-        * The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate
-        * @method justReleased
-        * @param {Number} [duration].
-        * @return {Boolean}
-        */
-        public justReleased(duration?: number): bool;
-        /**
-        * Resets the Pointer properties. Called by Input.reset when you perform a State change.
-        * @method reset
-        */
-        public reset(): void;
-        /**
-        * Renders the Pointer.circle object onto the stage in green if down or red if up.
-        * @method renderDebug
-        */
-        public renderDebug(hideIfUp?: bool): void;
-        /**
-        * Returns a string representation of this object.
-        * @method toString
-        * @return {String} a string representation of the instance.
-        **/
-        public toString(): string;
-    }
-}
-/**
-* Phaser - MSPointer
-*
-* The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
-* It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
-* http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
-*/
-module Phaser {
-    class MSPointer {
-        /**
-        * Constructor
-        * @param {Game} game.
-        * @return {MSPointer} This object.
-        */
-        constructor(game: Game);
-        /**
-        * Local private reference to game.
-        * @property _game
-        * @type Game
-        * @private
-        **/
-        private _game;
-        /**
-        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-        * @type {Boolean}
-        */
-        public disabled: bool;
-        /**
-        * Starts the event listeners running
-        * @method start
-        */
-        public start(): void;
-        /**
-        *
-        * @method onPointerDown
-        * @param {Any} event
-        **/
-        private onPointerDown(event);
-        /**
-        *
-        * @method onPointerMove
-        * @param {Any} event
-        **/
-        private onPointerMove(event);
-        /**
-        *
-        * @method onPointerUp
-        * @param {Any} event
-        **/
-        private onPointerUp(event);
-        /**
-        * Stop the event listeners
-        * @method stop
-        */
-        public stop(): void;
-    }
-}
-/**
-* Phaser - Gestures
-*
-* The Gesture class monitors for gestures and dispatches the resulting signals when they occur.
-* Note: Android 2.x only supports 1 touch event at once, no multi-touch
-*/
-module Phaser {
-    class Gestures {
-        /**
-        * Constructor
-        * @param {Game} game.
-        * @return {Touch} This object.
-        */
-        constructor(game: Game);
-        /**
-        * Local private reference to game.
-        * @property _game
-        * @type {Game}
-        * @private
-        **/
-        private _game;
-        private _p1;
-        private _p2;
-        private _p3;
-        private _p4;
-        private _p5;
-        private _p6;
-        private _p7;
-        private _p8;
-        private _p9;
-        private _p10;
-        public start(): void;
-    }
-}
-/**
-* Phaser - Input
-*
-* A game specific Input manager that looks after the mouse, keyboard and touch objects.
-* This is updated by the core game loop.
-*/
-module Phaser {
-    class Input {
-        constructor(game: Game);
-        /**
-        * Local private reference to game.
-        */
-        private _game;
-        /**
-        * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
-        * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
-        * @type {Boolean}
-        */
-        public disabled: bool;
-        /**
-        * Controls the expected behaviour when using a mouse and touch together on a multi-input device
-        */
-        public multiInputOverride: number;
-        /**
-        * Static defining the behaviour expected on a multi-input device system.
-        * With this setting when the mouse is used it updates the Input.x/y globals regardless if another pointer is active or not
-        */
-        static MOUSE_OVERRIDES_TOUCH: number;
-        /**
-        * Static defining the behaviour expected on a multi-input device system.
-        * With this setting when the mouse is used it only updates the Input.x/y globals if no other pointer is active
-        */
-        static TOUCH_OVERRIDES_MOUSE: number;
-        /**
-        * Static defining the behaviour expected on a multi-input device system.
-        * With this setting when the mouse is used it updates the Input.x/y globals at the same time as any active Pointer objects might
-        */
-        static MOUSE_TOUCH_COMBINE: number;
-        /**
-        * Phaser.Mouse handler
-        * @type {Mouse}
-        */
-        public mouse: Mouse;
-        /**
-        * Phaser.Keyboard handler
-        * @type {Keyboard}
-        */
-        public keyboard: Keyboard;
-        /**
-        * Phaser.Touch handler
-        * @type {Touch}
-        */
-        public touch: Touch;
-        /**
-        * Phaser.MSPointer handler
-        * @type {MSPointer}
-        */
-        public mspointer: MSPointer;
-        /**
-        * Phaser.Gestures handler
-        * @type {Gestures}
-        */
-        public gestures: Gestures;
-        /**
-        * A vector object representing the current position of the Pointer.
-        * @property vector
-        * @type {Vector2}
-        **/
-        public position: Vector2;
-        /**
-        * A Circle object centered on the x/y screen coordinates of the Input.
-        * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
-        * @property circle
-        * @type {Circle}
-        **/
-        public circle: Circle;
-        /**
-        * X coordinate of the most recent Pointer event
-        * @type {Number}
-        * @private
-        */
-        private _x;
-        /**
-        * X coordinate of the most recent Pointer event
-        * @type {Number}
-        * @private
-        */
-        private _y;
-        /**
-        *
-        * @type {Number}
-        */
-        public scaleX: number;
-        /**
-        *
-        * @type {Number}
-        */
-        public scaleY: number;
-        /**
-        * The maximum number of Pointers allowed to be active at any one time.
-        * For lots of games it's useful to set this to 1
-        * @type {Number}
-        */
-        public maxPointers: number;
-        /**
-        * The current number of active Pointers.
-        * @type {Number}
-        */
-        public currentPointers: number;
-        /**
-        * A Signal dispatched when a mouse/Pointer object is pressed
-        * @type {Phaser.Signal}
-        */
-        public onDown: Signal;
-        /**
-        * A Signal dispatched when a mouse/Pointer object is released
-        * @type {Phaser.Signal}
-        */
-        public onUp: Signal;
-        /**
-        * A Signal dispatched when a Pointer object (including the mouse) is tapped: pressed and released quickly.
-        * The signal sends 2 parameters. The Pointer that caused it and a boolean depending if the tap was a single tap or a double tap.
-        * @type {Phaser.Signal}
-        */
-        public onTap: Signal;
-        /**
-        * A Signal dispatched when a Pointer object (including the mouse) is held down
-        * @type {Phaser.Signal}
-        */
-        public onHold: Signal;
-        /**
-        * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or click
-        * @property tapRate
-        * @type {Number}
-        **/
-        public tapRate: number;
-        /**
-        * The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click
-        * @property doubleTapRate
-        * @type {Number}
-        **/
-        public doubleTapRate: number;
-        /**
-        * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
-        * @property holdRate
-        * @type {Number}
-        **/
-        public holdRate: number;
-        /**
-        * The number of milliseconds below which the Pointer is considered justPressed
-        * @property justPressedRate
-        * @type {Number}
-        **/
-        public justPressedRate: number;
-        /**
-        * The number of milliseconds below which the Pointer is considered justReleased
-        * @property justReleasedRate
-        * @type {Number}
-        **/
-        public justReleasedRate: number;
-        /**
-        * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
-        * The history is cleared each time the Pointer is pressed down.
-        * The history is updated at the rate specified in Input.pollRate
-        * @property recordPointerHistory
-        * @type {Boolean}
-        **/
-        public recordPointerHistory: bool;
-        /**
-        * The rate in milliseconds at which the Pointer objects should update their tracking history
-        * @property recordRate
-        * @type {Number}
-        */
-        public recordRate: number;
-        /**
-        * The total number of entries that can be recorded into the Pointer objects tracking history.
-        * The the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
-        * @property recordLimit
-        * @type {Number}
-        */
-        public recordLimit: number;
-        /**
-        * A Pointer object specifically used by the Mouse
-        * @property mousePointer
-        * @type {Pointer}
-        **/
-        public mousePointer: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer1
-        * @type {Pointer}
-        **/
-        public pointer1: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer2
-        * @type {Pointer}
-        **/
-        public pointer2: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer3
-        * @type {Pointer}
-        **/
-        public pointer3: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer4
-        * @type {Pointer}
-        **/
-        public pointer4: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer5
-        * @type {Pointer}
-        **/
-        public pointer5: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer6
-        * @type {Pointer}
-        **/
-        public pointer6: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer7
-        * @type {Pointer}
-        **/
-        public pointer7: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer8
-        * @type {Pointer}
-        **/
-        public pointer8: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer9
-        * @type {Pointer}
-        **/
-        public pointer9: Pointer;
-        /**
-        * A Pointer object
-        * @property pointer10
-        * @type {Pointer}
-        **/
-        public pointer10: Pointer;
-        /**
-        * The screen X coordinate
-        * @property x
-        * @type {Number}
-        **/
-        public x : number;
-        /**
-        * The screen Y coordinate
-        * @property y
-        * @type {Number}
-        **/
-        public y : number;
-        /**
-        * Add a new Pointer object to the Input Manager. By default Input creates 5 pointer objects for you. If you need more
-        * use this to create a new one, up to a maximum of 10.
-        * @method addPointer
-        * @return {Pointer} A reference to the new Pointer object
-        **/
-        public addPointer(): Pointer;
-        /**
-        * Starts the Input Manager running
-        * @method start
-        **/
-        public start(): void;
-        /**
-        * Updates the Input Manager. Called by the core Game loop.
-        * @method update
-        **/
-        public update(): void;
-        /**
-        * Reset all of the Pointers and Input states
-        * @method reset
-        * @param hard {Boolean} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
-        **/
-        public reset(hard?: bool): void;
-        /**
-        * Get the total number of inactive Pointers
-        * @method totalInactivePointers
-        * @return {Number} The number of Pointers currently inactive
-        **/
-        public totalInactivePointers : number;
-        /**
-        * Recalculates the total number of active Pointers
-        * @method totalActivePointers
-        * @return {Number} The number of Pointers currently active
-        **/
-        public totalActivePointers : number;
-        /**
-        * Find the first free Pointer object and start it, passing in the event data.
-        * @method startPointer
-        * @param {Any} event The event data from the Touch event
-        * @return {Pointer} The Pointer object that was started or null if no Pointer object is available
-        **/
-        public startPointer(event): Pointer;
-        /**
-        * Updates the matching Pointer object, passing in the event data.
-        * @method updatePointer
-        * @param {Any} event The event data from the Touch event
-        * @return {Pointer} The Pointer object that was updated or null if no Pointer object is available
-        **/
-        public updatePointer(event): Pointer;
-        /**
-        * Stops the matching Pointer object, passing in the event data.
-        * @method stopPointer
-        * @param {Any} event The event data from the Touch event
-        * @return {Pointer} The Pointer object that was stopped or null if no Pointer object is available
-        **/
-        public stopPointer(event): Pointer;
-        /**
-        * Get the next Pointer object whos active property matches the given state
-        * @method getPointer
-        * @param {Boolean} state The state the Pointer should be in (false for inactive, true for active)
-        * @return {Pointer} A Pointer object or null if no Pointer object matches the requested state.
-        **/
-        public getPointer(state?: bool): Pointer;
-        /**
-        * Get the Pointer object whos identified property matches the given identifier value
-        * @method getPointerFromIdentifier
-        * @param {Number} identifier The Pointer.identifier value to search for
-        * @return {Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
-        **/
-        public getPointerFromIdentifier(identifier: number): Pointer;
-        /**
-        * @param {Camera} [camera]
-        */
-        public getWorldX(camera?: Camera): number;
-        /**
-        * @param {Camera} [camera]
-        */
-        public getWorldY(camera?: Camera): number;
-        /**
-        * @param {Number} x
-        * @param {Number} y
-        * @param {String} [color]
-        */
-        public renderDebugInfo(x: number, y: number, color?: string): void;
-        /**
-        * Get the distance between two Pointer objects
-        * @method getDistance
-        * @param {Pointer} pointer1
-        * @param {Pointer} pointer2
-        **/
-        public getDistance(pointer1: Pointer, pointer2: Pointer): number;
-        /**
-        * Get the angle between two Pointer objects
-        * @method getAngle
-        * @param {Pointer} pointer1
-        * @param {Pointer} pointer2
-        **/
-        public getAngle(pointer1: Pointer, pointer2: Pointer): number;
-    }
-}
-/**
-* Phaser - Keyboard
-*
-* The Keyboard class handles keyboard interactions with the game and the resulting events.
-* The avoid stealing all browser input we don't use event.preventDefault. If you would like to trap a specific key however
-* then use the addKeyCapture() method.
-*/
-module Phaser {
-    class Keyboard {
-        constructor(game: Game);
-        private _game;
-        private _keys;
-        private _capture;
-        /**
-        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-        * @type {Boolean}
-        */
-        public disabled: bool;
-        public start(): void;
-        /**
-        * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
-        * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
-        * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
-        * Pass in either a single keycode or an array of keycodes.
-        * @param {Any} keycode
-        */
-        public addKeyCapture(keycode): void;
-        /**
-        * @param {Number} keycode
-        */
-        public removeKeyCapture(keycode: number): void;
-        public clearCaptures(): void;
-        /**
-        * @param {KeyboardEvent} event
-        */
-        public onKeyDown(event: KeyboardEvent): void;
-        /**
-        * @param {KeyboardEvent} event
-        */
-        public onKeyUp(event: KeyboardEvent): void;
-        public reset(): void;
-        /**
-        * @param {Number} keycode
-        * @param {Number} [duration]
-        * @return {Boolean}
-        */
-        public justPressed(keycode: number, duration?: number): bool;
-        /**
-        * @param {Number} keycode
-        * @param {Number} [duration]
-        * @return {Boolean}
-        */
-        public justReleased(keycode: number, duration?: number): bool;
-        /**
-        * @param {Number} keycode
-        * @return {Boolean}
-        */
-        public isDown(keycode: number): bool;
-        static A: number;
-        static B: number;
-        static C: number;
-        static D: number;
-        static E: number;
-        static F: number;
-        static G: number;
-        static H: number;
-        static I: number;
-        static J: number;
-        static K: number;
-        static L: number;
-        static M: number;
-        static N: number;
-        static O: number;
-        static P: number;
-        static Q: number;
-        static R: number;
-        static S: number;
-        static T: number;
-        static U: number;
-        static V: number;
-        static W: number;
-        static X: number;
-        static Y: number;
-        static Z: number;
-        static ZERO: number;
-        static ONE: number;
-        static TWO: number;
-        static THREE: number;
-        static FOUR: number;
-        static FIVE: number;
-        static SIX: number;
-        static SEVEN: number;
-        static EIGHT: number;
-        static NINE: number;
-        static NUMPAD_0: number;
-        static NUMPAD_1: number;
-        static NUMPAD_2: number;
-        static NUMPAD_3: number;
-        static NUMPAD_4: number;
-        static NUMPAD_5: number;
-        static NUMPAD_6: number;
-        static NUMPAD_7: number;
-        static NUMPAD_8: number;
-        static NUMPAD_9: number;
-        static NUMPAD_MULTIPLY: number;
-        static NUMPAD_ADD: number;
-        static NUMPAD_ENTER: number;
-        static NUMPAD_SUBTRACT: number;
-        static NUMPAD_DECIMAL: number;
-        static NUMPAD_DIVIDE: number;
-        static F1: number;
-        static F2: number;
-        static F3: number;
-        static F4: number;
-        static F5: number;
-        static F6: number;
-        static F7: number;
-        static F8: number;
-        static F9: number;
-        static F10: number;
-        static F11: number;
-        static F12: number;
-        static F13: number;
-        static F14: number;
-        static F15: number;
-        static COLON: number;
-        static EQUALS: number;
-        static UNDERSCORE: number;
-        static QUESTION_MARK: number;
-        static TILDE: number;
-        static OPEN_BRACKET: number;
-        static BACKWARD_SLASH: number;
-        static CLOSED_BRACKET: number;
-        static QUOTES: number;
-        static BACKSPACE: number;
-        static TAB: number;
-        static CLEAR: number;
-        static ENTER: number;
-        static SHIFT: number;
-        static CONTROL: number;
-        static ALT: number;
-        static CAPS_LOCK: number;
-        static ESC: number;
-        static SPACEBAR: number;
-        static PAGE_UP: number;
-        static PAGE_DOWN: number;
-        static END: number;
-        static HOME: number;
-        static LEFT: number;
-        static UP: number;
-        static RIGHT: number;
-        static DOWN: number;
-        static INSERT: number;
-        static DELETE: number;
-        static HELP: number;
-        static NUM_LOCK: number;
-    }
-}
-/**
-* Phaser - Mouse
-*
-* The Mouse class handles mouse interactions with the game and the resulting events.
-*/
-module Phaser {
-    class Mouse {
-        constructor(game: Game);
-        /**
-        * Local private reference to game.
-        * @property _game
-        * @type {Phaser.Game}
-        * @private
-        **/
-        private _game;
-        static LEFT_BUTTON: number;
-        static MIDDLE_BUTTON: number;
-        static RIGHT_BUTTON: number;
-        /**
-        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-        * @type {Boolean}
-        */
-        public disabled: bool;
-        /**
-        * Starts the event listeners running
-        * @method start
-        */
-        public start(): void;
-        /**
-        * @param {MouseEvent} event
-        */
-        public onMouseDown(event: MouseEvent): void;
-        /**
-        * @param {MouseEvent} event
-        */
-        public onMouseMove(event: MouseEvent): void;
-        /**
-        * @param {MouseEvent} event
-        */
-        public onMouseUp(event: MouseEvent): void;
-        /**
-        * Stop the event listeners
-        * @method stop
-        */
-        public stop(): void;
-    }
-}
-/**
-* Phaser - Touch
-*
-* The Touch class handles touch interactions with the game and the resulting Pointer objects.
-* http://www.w3.org/TR/touch-events/
-* https://developer.mozilla.org/en-US/docs/DOM/TouchList
-* http://www.html5rocks.com/en/mobile/touchandmouse/
-* Note: Android 2.x only supports 1 touch event at once, no multi-touch
-*/
-module Phaser {
-    class Touch {
-        /**
-        * Constructor
-        * @param {Game} game.
-        * @return {Touch} This object.
-        */
-        constructor(game: Game);
-        /**
-        * Local private reference to game.
-        * @property _game
-        * @type {Phaser.Game}
-        * @private
-        **/
-        private _game;
-        /**
-        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-        * @type {Boolean}
-        */
-        public disabled: bool;
-        /**
-        * Starts the event listeners running
-        * @method start
-        */
-        public start(): void;
-        /**
-        * Prevent iOS bounce-back (doesn't work?)
-        * @method consumeTouchMove
-        * @param {Any} event
-        **/
-        private consumeTouchMove(event);
-        /**
-        *
-        * @method onTouchStart
-        * @param {Any} event
-        **/
-        private onTouchStart(event);
-        /**
-        * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
-        * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears
-        * @method onTouchCancel
-        * @param {Any} event
-        **/
-        private onTouchCancel(event);
-        /**
-        * For touch enter and leave its a list of the touch points that have entered or left the target
-        * Doesn't appear to be supported by most browsers yet
-        * @method onTouchEnter
-        * @param {Any} event
-        **/
-        private onTouchEnter(event);
-        /**
-        * For touch enter and leave its a list of the touch points that have entered or left the target
-        * Doesn't appear to be supported by most browsers yet
-        * @method onTouchLeave
-        * @param {Any} event
-        **/
-        private onTouchLeave(event);
-        /**
-        *
-        * @method onTouchMove
-        * @param {Any} event
-        **/
-        private onTouchMove(event);
-        /**
-        *
-        * @method onTouchEnd
-        * @param {Any} event
-        **/
-        private onTouchEnd(event);
-        /**
-        * Stop the event listeners
-        * @method stop
-        */
-        public stop(): void;
     }
 }
 /**
@@ -9682,6 +8223,1479 @@ module Phaser {
         * Clear down this FXManager and null out references
         */
         public destroy(): void;
+    }
+}
+/**
+* Phaser - Verlet - Particle
+*
+*
+*/
+module Phaser.Verlet {
+    class Particle {
+        /**
+        * Creates a new Particle object.
+        * @class Particle
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {Particle} This object
+        **/
+        constructor(pos: Vector2);
+        public pos: Vector2;
+        public lastPos: Vector2;
+        public render(ctx): void;
+    }
+}
+/**
+* Phaser - AngleConstraint
+*
+* constrains 3 particles to an angle
+*/
+module Phaser.Verlet {
+    class AngleConstraint {
+        /**
+        * Creates a new AngleConstraint object.
+        * @class AngleConstraint
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {AngleConstraint} This object
+        **/
+        constructor(a: Particle, b: Particle, c: Particle, stiffness: number);
+        public a: Particle;
+        public b: Particle;
+        public c: Particle;
+        public angle: number;
+        public stiffness: number;
+        public relax(stepCoef: number): void;
+        public render(ctx): void;
+    }
+}
+/**
+* Phaser - DistanceConstraint
+*
+* Constrains to initial distance
+*/
+module Phaser.Verlet {
+    class DistanceConstraint {
+        /**
+        * Creates a new DistanceConstraint object.
+        * @class DistanceConstraint
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {DistanceConstraint} This object
+        **/
+        constructor(a: Particle, b: Particle, stiffness: number, distance?: number);
+        public a: Particle;
+        public b: Particle;
+        public distance: number;
+        public stiffness: number;
+        public relax(stepCoef: number): void;
+        public render(ctx): void;
+    }
+}
+/**
+* Phaser - PinConstraint
+*
+* Constrains to static / fixed point
+*/
+module Phaser.Verlet {
+    class PinConstraint {
+        /**
+        * Creates a new PinConstraint object.
+        * @class PinConstraint
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {PinConstraint} This object
+        **/
+        constructor(a: Particle, pos: Vector2);
+        public a: Particle;
+        public pos: Vector2;
+        public relax(): void;
+        public render(ctx): void;
+    }
+}
+/**
+* Phaser - Verlet - Composite
+*
+*
+*/
+module Phaser.Verlet {
+    class Composite {
+        /**
+        * Creates a new Composite object.
+        * @class Composite
+        * @constructor
+        * @param {Number} x The x coordinate of vector2
+        * @param {Number} y The y coordinate of vector2
+        * @return {Composite} This object
+        **/
+        constructor(game: Game);
+        private _game;
+        /**
+        * Texture of the particles to be rendered.
+        */
+        private _texture;
+        /**
+        * Rendering bounds for the texture
+        * @type {Quad}
+        */
+        private frameBounds;
+        private _sx;
+        private _sy;
+        private _sw;
+        private _sh;
+        private _dx;
+        private _dy;
+        private _dw;
+        private _dh;
+        private _hw;
+        private _hh;
+        public sprites: Sprite[];
+        public particles: Particle[];
+        public constraints;
+        public drawParticles;
+        public drawConstraints;
+        public createDistanceConstraint(a: Particle, b: Particle, stiffness: number, distance?: number): DistanceConstraint;
+        public createAngleConstraint(a: Particle, b: Particle, c: Particle, stiffness: number): AngleConstraint;
+        public createPinConstraint(a: Particle, pos: Vector2): PinConstraint;
+        /**
+        * Load a graphic for this Composite. The graphic cannot be a SpriteSheet yet.
+        * @param key {string} Key of the graphic you want to load for this sprite.
+        * @return {Composite} This object
+        */
+        public loadGraphic(key: string): Composite;
+        public hideConstraints: bool;
+        public constraintLineColor: string;
+        private renderConstraints(context);
+        private render(context);
+        public pin(index, pos?): PinConstraint;
+    }
+}
+/**
+* Phaser - Pointer
+*
+* A Pointer object is used by the Touch and MSPoint managers and represents a single finger on the touch screen.
+*/
+module Phaser {
+    class Pointer {
+        /**
+        * Constructor
+        * @param {Phaser.Game} game.
+        * @return {Phaser.Pointer} This object.
+        */
+        constructor(game: Game, id: number);
+        /**
+        * Local private reference to game.
+        * @property _game
+        * @type {Phaser.Game}
+        * @private
+        **/
+        private _game;
+        /**
+        * Local private variable to store the status of dispatching a hold event
+        * @property _holdSent
+        * @type {Boolean}
+        * @private
+        */
+        private _holdSent;
+        /**
+        * Local private variable storing the short-term history of pointer movements
+        * @property _history
+        * @type {Array}
+        * @private
+        */
+        private _history;
+        /**
+        * Local private variable storing the time at which the next history drop should occur
+        * @property _lastDrop
+        * @type {Number}
+        * @private
+        */
+        private _nextDrop;
+        /**
+        * The Pointer ID (a number between 1 and 10, 0 is reserved for the mouse pointer specifically)
+        * @property id
+        * @type {Number}
+        */
+        public id: number;
+        /**
+        * An identification number for each touch point.
+        * When a touch point becomes active, it is assigned an identifier that is distinct from any other active touch point.
+        * While the touch point remains active, all events that refer to it are assigned the same identifier.
+        * @property identifier
+        * @type {Number}
+        */
+        public identifier: number;
+        /**
+        * Is this Pointer active or not? An active Pointer is one that is in contact with the touch screen.
+        * @property active
+        * @type {Boolean}
+        */
+        public active: bool;
+        /**
+        * A Vector object containing the initial position when the Pointer was engaged with the screen.
+        * @property positionDown
+        * @type {Vector2}
+        **/
+        public positionDown: Vector2;
+        /**
+        * A Vector object containing the current position of the Pointer on the screen.
+        * @property position
+        * @type {Vector2}
+        **/
+        public position: Vector2;
+        /**
+        * A Circle object centered on the x/y screen coordinates of the Pointer.
+        * Default size of 44px (Apple's recommended "finger tip" size)
+        * @property circle
+        * @type {Circle}
+        **/
+        public circle: Circle;
+        /**
+        *
+        * @property withinGame
+        * @type {Boolean}
+        */
+        public withinGame: bool;
+        /**
+        * If this Pointer is a mouse the button property holds the value of which mouse button was pressed down
+        * @property button
+        * @type {Number}
+        */
+        public button: number;
+        /**
+        * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
+        * @property clientX
+        * @type {Number}
+        */
+        public clientX: number;
+        /**
+        * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
+        * @property clientY
+        * @type {Number}
+        */
+        public clientY: number;
+        /**
+        * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
+        * @property pageX
+        * @type {Number}
+        */
+        public pageX: number;
+        /**
+        * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
+        * @property pageY
+        * @type {Number}
+        */
+        public pageY: number;
+        /**
+        * The horizontal coordinate of point relative to the screen in pixels
+        * @property screenX
+        * @type {Number}
+        */
+        public screenX: number;
+        /**
+        * The vertical coordinate of point relative to the screen in pixels
+        * @property screenY
+        * @type {Number}
+        */
+        public screenY: number;
+        /**
+        * The horizontal coordinate of point relative to the game element
+        * @property x
+        * @type {Number}
+        */
+        public x: number;
+        /**
+        * The vertical coordinate of point relative to the game element
+        * @property y
+        * @type {Number}
+        */
+        public y: number;
+        /**
+        * The Element on which the touch point started when it was first placed on the surface, even if the touch point has since moved outside the interactive area of that element.
+        * @property target
+        * @type {Any}
+        */
+        public target;
+        /**
+        * If the Pointer is a mouse this is true, otherwise false
+        * @property isMouse
+        * @type {Boolean}
+        **/
+        public isMouse: bool;
+        /**
+        * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
+        * @property isDown
+        * @type {Boolean}
+        **/
+        public isDown: bool;
+        /**
+        * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
+        * @property isUp
+        * @type {Boolean}
+        **/
+        public isUp: bool;
+        /**
+        * A timestamp representing when the Pointer first touched the touchscreen.
+        * @property timeDown
+        * @type {Number}
+        **/
+        public timeDown: number;
+        /**
+        * A timestamp representing when the Pointer left the touchscreen.
+        * @property timeUp
+        * @type {Number}
+        **/
+        public timeUp: number;
+        /**
+        * A timestamp representing when the Pointer was last tapped or clicked
+        * @property previousTapTime
+        * @type {Number}
+        **/
+        public previousTapTime: number;
+        /**
+        * The total number of times this Pointer has been touched to the touchscreen
+        * @property totalTouches
+        * @type {Number}
+        **/
+        public totalTouches: number;
+        /**
+        * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
+        * @property duration
+        * @type {Number}
+        **/
+        public duration : number;
+        /**
+        * Gets the X value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        public getWorldX(camera?: Camera): number;
+        /**
+        * Gets the Y value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        public getWorldY(camera?: Camera): number;
+        /**
+        * Called when the Pointer is pressed onto the touchscreen
+        * @method start
+        * @param {Any} event
+        */
+        public start(event): Pointer;
+        public update(): void;
+        /**
+        * Called when the Pointer is moved on the touchscreen
+        * @method move
+        * @param {Any} event
+        */
+        public move(event): Pointer;
+        /**
+        * Called when the Pointer leaves the target area
+        * @method leave
+        * @param {Any} event
+        */
+        public leave(event): void;
+        /**
+        * Called when the Pointer leaves the touchscreen
+        * @method stop
+        * @param {Any} event
+        */
+        public stop(event): Pointer;
+        /**
+        * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate
+        * @method justPressed
+        * @param {Number} [duration].
+        * @return {Boolean}
+        */
+        public justPressed(duration?: number): bool;
+        /**
+        * The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate
+        * @method justReleased
+        * @param {Number} [duration].
+        * @return {Boolean}
+        */
+        public justReleased(duration?: number): bool;
+        /**
+        * Resets the Pointer properties. Called by Input.reset when you perform a State change.
+        * @method reset
+        */
+        public reset(): void;
+        /**
+        * Renders the Pointer.circle object onto the stage in green if down or red if up.
+        * @method renderDebug
+        */
+        public renderDebug(hideIfUp?: bool): void;
+        /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {String} a string representation of the instance.
+        **/
+        public toString(): string;
+    }
+}
+/**
+* Phaser - MSPointer
+*
+* The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
+* It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
+* http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
+*/
+module Phaser {
+    class MSPointer {
+        /**
+        * Constructor
+        * @param {Game} game.
+        * @return {MSPointer} This object.
+        */
+        constructor(game: Game);
+        /**
+        * Local private reference to game.
+        * @property _game
+        * @type Game
+        * @private
+        **/
+        private _game;
+        /**
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool;
+        /**
+        * Starts the event listeners running
+        * @method start
+        */
+        public start(): void;
+        /**
+        *
+        * @method onPointerDown
+        * @param {Any} event
+        **/
+        private onPointerDown(event);
+        /**
+        *
+        * @method onPointerMove
+        * @param {Any} event
+        **/
+        private onPointerMove(event);
+        /**
+        *
+        * @method onPointerUp
+        * @param {Any} event
+        **/
+        private onPointerUp(event);
+        /**
+        * Stop the event listeners
+        * @method stop
+        */
+        public stop(): void;
+    }
+}
+/**
+* Phaser - Gestures
+*
+* The Gesture class monitors for gestures and dispatches the resulting signals when they occur.
+* Note: Android 2.x only supports 1 touch event at once, no multi-touch
+*/
+module Phaser {
+    class Gestures {
+        /**
+        * Constructor
+        * @param {Game} game.
+        * @return {Touch} This object.
+        */
+        constructor(game: Game);
+        /**
+        * Local private reference to game.
+        * @property _game
+        * @type {Game}
+        * @private
+        **/
+        private _game;
+        private _p1;
+        private _p2;
+        private _p3;
+        private _p4;
+        private _p5;
+        private _p6;
+        private _p7;
+        private _p8;
+        private _p9;
+        private _p10;
+        public start(): void;
+    }
+}
+/**
+* Phaser - Touch
+*
+* The Touch class handles touch interactions with the game and the resulting Pointer objects.
+* http://www.w3.org/TR/touch-events/
+* https://developer.mozilla.org/en-US/docs/DOM/TouchList
+* http://www.html5rocks.com/en/mobile/touchandmouse/
+* Note: Android 2.x only supports 1 touch event at once, no multi-touch
+*/
+module Phaser {
+    class Touch {
+        /**
+        * Constructor
+        * @param {Game} game.
+        * @return {Touch} This object.
+        */
+        constructor(game: Game);
+        /**
+        * Local private reference to game.
+        * @property _game
+        * @type {Phaser.Game}
+        * @private
+        **/
+        private _game;
+        /**
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool;
+        /**
+        * Starts the event listeners running
+        * @method start
+        */
+        public start(): void;
+        /**
+        * Prevent iOS bounce-back (doesn't work?)
+        * @method consumeTouchMove
+        * @param {Any} event
+        **/
+        private consumeTouchMove(event);
+        /**
+        *
+        * @method onTouchStart
+        * @param {Any} event
+        **/
+        private onTouchStart(event);
+        /**
+        * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
+        * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears
+        * @method onTouchCancel
+        * @param {Any} event
+        **/
+        private onTouchCancel(event);
+        /**
+        * For touch enter and leave its a list of the touch points that have entered or left the target
+        * Doesn't appear to be supported by most browsers yet
+        * @method onTouchEnter
+        * @param {Any} event
+        **/
+        private onTouchEnter(event);
+        /**
+        * For touch enter and leave its a list of the touch points that have entered or left the target
+        * Doesn't appear to be supported by most browsers yet
+        * @method onTouchLeave
+        * @param {Any} event
+        **/
+        private onTouchLeave(event);
+        /**
+        *
+        * @method onTouchMove
+        * @param {Any} event
+        **/
+        private onTouchMove(event);
+        /**
+        *
+        * @method onTouchEnd
+        * @param {Any} event
+        **/
+        private onTouchEnd(event);
+        /**
+        * Stop the event listeners
+        * @method stop
+        */
+        public stop(): void;
+    }
+}
+/**
+* Phaser - Mouse
+*
+* The Mouse class handles mouse interactions with the game and the resulting events.
+*/
+module Phaser {
+    class Mouse {
+        constructor(game: Game);
+        /**
+        * Local private reference to game.
+        * @property _game
+        * @type {Phaser.Game}
+        * @private
+        **/
+        private _game;
+        static LEFT_BUTTON: number;
+        static MIDDLE_BUTTON: number;
+        static RIGHT_BUTTON: number;
+        /**
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool;
+        /**
+        * Starts the event listeners running
+        * @method start
+        */
+        public start(): void;
+        /**
+        * @param {MouseEvent} event
+        */
+        public onMouseDown(event: MouseEvent): void;
+        /**
+        * @param {MouseEvent} event
+        */
+        public onMouseMove(event: MouseEvent): void;
+        /**
+        * @param {MouseEvent} event
+        */
+        public onMouseUp(event: MouseEvent): void;
+        /**
+        * Stop the event listeners
+        * @method stop
+        */
+        public stop(): void;
+    }
+}
+/**
+* Phaser - Keyboard
+*
+* The Keyboard class handles keyboard interactions with the game and the resulting events.
+* The avoid stealing all browser input we don't use event.preventDefault. If you would like to trap a specific key however
+* then use the addKeyCapture() method.
+*/
+module Phaser {
+    class Keyboard {
+        constructor(game: Game);
+        private _game;
+        private _keys;
+        private _capture;
+        /**
+        * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+        * @type {Boolean}
+        */
+        public disabled: bool;
+        public start(): void;
+        /**
+        * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
+        * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
+        * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
+        * Pass in either a single keycode or an array of keycodes.
+        * @param {Any} keycode
+        */
+        public addKeyCapture(keycode): void;
+        /**
+        * @param {Number} keycode
+        */
+        public removeKeyCapture(keycode: number): void;
+        public clearCaptures(): void;
+        /**
+        * @param {KeyboardEvent} event
+        */
+        public onKeyDown(event: KeyboardEvent): void;
+        /**
+        * @param {KeyboardEvent} event
+        */
+        public onKeyUp(event: KeyboardEvent): void;
+        public reset(): void;
+        /**
+        * @param {Number} keycode
+        * @param {Number} [duration]
+        * @return {Boolean}
+        */
+        public justPressed(keycode: number, duration?: number): bool;
+        /**
+        * @param {Number} keycode
+        * @param {Number} [duration]
+        * @return {Boolean}
+        */
+        public justReleased(keycode: number, duration?: number): bool;
+        /**
+        * @param {Number} keycode
+        * @return {Boolean}
+        */
+        public isDown(keycode: number): bool;
+        static A: number;
+        static B: number;
+        static C: number;
+        static D: number;
+        static E: number;
+        static F: number;
+        static G: number;
+        static H: number;
+        static I: number;
+        static J: number;
+        static K: number;
+        static L: number;
+        static M: number;
+        static N: number;
+        static O: number;
+        static P: number;
+        static Q: number;
+        static R: number;
+        static S: number;
+        static T: number;
+        static U: number;
+        static V: number;
+        static W: number;
+        static X: number;
+        static Y: number;
+        static Z: number;
+        static ZERO: number;
+        static ONE: number;
+        static TWO: number;
+        static THREE: number;
+        static FOUR: number;
+        static FIVE: number;
+        static SIX: number;
+        static SEVEN: number;
+        static EIGHT: number;
+        static NINE: number;
+        static NUMPAD_0: number;
+        static NUMPAD_1: number;
+        static NUMPAD_2: number;
+        static NUMPAD_3: number;
+        static NUMPAD_4: number;
+        static NUMPAD_5: number;
+        static NUMPAD_6: number;
+        static NUMPAD_7: number;
+        static NUMPAD_8: number;
+        static NUMPAD_9: number;
+        static NUMPAD_MULTIPLY: number;
+        static NUMPAD_ADD: number;
+        static NUMPAD_ENTER: number;
+        static NUMPAD_SUBTRACT: number;
+        static NUMPAD_DECIMAL: number;
+        static NUMPAD_DIVIDE: number;
+        static F1: number;
+        static F2: number;
+        static F3: number;
+        static F4: number;
+        static F5: number;
+        static F6: number;
+        static F7: number;
+        static F8: number;
+        static F9: number;
+        static F10: number;
+        static F11: number;
+        static F12: number;
+        static F13: number;
+        static F14: number;
+        static F15: number;
+        static COLON: number;
+        static EQUALS: number;
+        static UNDERSCORE: number;
+        static QUESTION_MARK: number;
+        static TILDE: number;
+        static OPEN_BRACKET: number;
+        static BACKWARD_SLASH: number;
+        static CLOSED_BRACKET: number;
+        static QUOTES: number;
+        static BACKSPACE: number;
+        static TAB: number;
+        static CLEAR: number;
+        static ENTER: number;
+        static SHIFT: number;
+        static CONTROL: number;
+        static ALT: number;
+        static CAPS_LOCK: number;
+        static ESC: number;
+        static SPACEBAR: number;
+        static PAGE_UP: number;
+        static PAGE_DOWN: number;
+        static END: number;
+        static HOME: number;
+        static LEFT: number;
+        static UP: number;
+        static RIGHT: number;
+        static DOWN: number;
+        static INSERT: number;
+        static DELETE: number;
+        static HELP: number;
+        static NUM_LOCK: number;
+    }
+}
+/**
+* Phaser - Input
+*
+* A game specific Input manager that looks after the mouse, keyboard and touch objects.
+* This is updated by the core game loop.
+*/
+module Phaser {
+    class Input {
+        constructor(game: Game);
+        /**
+        * Local private reference to game.
+        */
+        private _game;
+        /**
+        * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
+        * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
+        * @type {Boolean}
+        */
+        public disabled: bool;
+        /**
+        * Controls the expected behaviour when using a mouse and touch together on a multi-input device
+        */
+        public multiInputOverride: number;
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it updates the Input.x/y globals regardless if another pointer is active or not
+        */
+        static MOUSE_OVERRIDES_TOUCH: number;
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it only updates the Input.x/y globals if no other pointer is active
+        */
+        static TOUCH_OVERRIDES_MOUSE: number;
+        /**
+        * Static defining the behaviour expected on a multi-input device system.
+        * With this setting when the mouse is used it updates the Input.x/y globals at the same time as any active Pointer objects might
+        */
+        static MOUSE_TOUCH_COMBINE: number;
+        /**
+        * Phaser.Mouse handler
+        * @type {Mouse}
+        */
+        public mouse: Mouse;
+        /**
+        * Phaser.Keyboard handler
+        * @type {Keyboard}
+        */
+        public keyboard: Keyboard;
+        /**
+        * Phaser.Touch handler
+        * @type {Touch}
+        */
+        public touch: Touch;
+        /**
+        * Phaser.MSPointer handler
+        * @type {MSPointer}
+        */
+        public mspointer: MSPointer;
+        /**
+        * Phaser.Gestures handler
+        * @type {Gestures}
+        */
+        public gestures: Gestures;
+        /**
+        * A vector object representing the current position of the Pointer.
+        * @property vector
+        * @type {Vector2}
+        **/
+        public position: Vector2;
+        /**
+        * A Circle object centered on the x/y screen coordinates of the Input.
+        * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
+        * @property circle
+        * @type {Circle}
+        **/
+        public circle: Circle;
+        /**
+        * X coordinate of the most recent Pointer event
+        * @type {Number}
+        * @private
+        */
+        private _x;
+        /**
+        * X coordinate of the most recent Pointer event
+        * @type {Number}
+        * @private
+        */
+        private _y;
+        /**
+        *
+        * @type {Number}
+        */
+        public scaleX: number;
+        /**
+        *
+        * @type {Number}
+        */
+        public scaleY: number;
+        /**
+        * The maximum number of Pointers allowed to be active at any one time.
+        * For lots of games it's useful to set this to 1
+        * @type {Number}
+        */
+        public maxPointers: number;
+        /**
+        * The current number of active Pointers.
+        * @type {Number}
+        */
+        public currentPointers: number;
+        /**
+        * A Signal dispatched when a mouse/Pointer object is pressed
+        * @type {Phaser.Signal}
+        */
+        public onDown: Signal;
+        /**
+        * A Signal dispatched when a mouse/Pointer object is released
+        * @type {Phaser.Signal}
+        */
+        public onUp: Signal;
+        /**
+        * A Signal dispatched when a Pointer object (including the mouse) is tapped: pressed and released quickly.
+        * The signal sends 2 parameters. The Pointer that caused it and a boolean depending if the tap was a single tap or a double tap.
+        * @type {Phaser.Signal}
+        */
+        public onTap: Signal;
+        /**
+        * A Signal dispatched when a Pointer object (including the mouse) is held down
+        * @type {Phaser.Signal}
+        */
+        public onHold: Signal;
+        /**
+        * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or click
+        * @property tapRate
+        * @type {Number}
+        **/
+        public tapRate: number;
+        /**
+        * The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click
+        * @property doubleTapRate
+        * @type {Number}
+        **/
+        public doubleTapRate: number;
+        /**
+        * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
+        * @property holdRate
+        * @type {Number}
+        **/
+        public holdRate: number;
+        /**
+        * The number of milliseconds below which the Pointer is considered justPressed
+        * @property justPressedRate
+        * @type {Number}
+        **/
+        public justPressedRate: number;
+        /**
+        * The number of milliseconds below which the Pointer is considered justReleased
+        * @property justReleasedRate
+        * @type {Number}
+        **/
+        public justReleasedRate: number;
+        /**
+        * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
+        * The history is cleared each time the Pointer is pressed down.
+        * The history is updated at the rate specified in Input.pollRate
+        * @property recordPointerHistory
+        * @type {Boolean}
+        **/
+        public recordPointerHistory: bool;
+        /**
+        * The rate in milliseconds at which the Pointer objects should update their tracking history
+        * @property recordRate
+        * @type {Number}
+        */
+        public recordRate: number;
+        /**
+        * The total number of entries that can be recorded into the Pointer objects tracking history.
+        * The the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
+        * @property recordLimit
+        * @type {Number}
+        */
+        public recordLimit: number;
+        /**
+        * A Pointer object specifically used by the Mouse
+        * @property mousePointer
+        * @type {Pointer}
+        **/
+        public mousePointer: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer1
+        * @type {Pointer}
+        **/
+        public pointer1: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer2
+        * @type {Pointer}
+        **/
+        public pointer2: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer3
+        * @type {Pointer}
+        **/
+        public pointer3: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer4
+        * @type {Pointer}
+        **/
+        public pointer4: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer5
+        * @type {Pointer}
+        **/
+        public pointer5: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer6
+        * @type {Pointer}
+        **/
+        public pointer6: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer7
+        * @type {Pointer}
+        **/
+        public pointer7: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer8
+        * @type {Pointer}
+        **/
+        public pointer8: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer9
+        * @type {Pointer}
+        **/
+        public pointer9: Pointer;
+        /**
+        * A Pointer object
+        * @property pointer10
+        * @type {Pointer}
+        **/
+        public pointer10: Pointer;
+        /**
+        * The screen X coordinate
+        * @property x
+        * @type {Number}
+        **/
+        public x : number;
+        /**
+        * The screen Y coordinate
+        * @property y
+        * @type {Number}
+        **/
+        public y : number;
+        /**
+        * Add a new Pointer object to the Input Manager. By default Input creates 5 pointer objects for you. If you need more
+        * use this to create a new one, up to a maximum of 10.
+        * @method addPointer
+        * @return {Pointer} A reference to the new Pointer object
+        **/
+        public addPointer(): Pointer;
+        /**
+        * Starts the Input Manager running
+        * @method start
+        **/
+        public start(): void;
+        /**
+        * Updates the Input Manager. Called by the core Game loop.
+        * @method update
+        **/
+        public update(): void;
+        /**
+        * Reset all of the Pointers and Input states
+        * @method reset
+        * @param hard {Boolean} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
+        **/
+        public reset(hard?: bool): void;
+        /**
+        * Get the total number of inactive Pointers
+        * @method totalInactivePointers
+        * @return {Number} The number of Pointers currently inactive
+        **/
+        public totalInactivePointers : number;
+        /**
+        * Recalculates the total number of active Pointers
+        * @method totalActivePointers
+        * @return {Number} The number of Pointers currently active
+        **/
+        public totalActivePointers : number;
+        /**
+        * Find the first free Pointer object and start it, passing in the event data.
+        * @method startPointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was started or null if no Pointer object is available
+        **/
+        public startPointer(event): Pointer;
+        /**
+        * Updates the matching Pointer object, passing in the event data.
+        * @method updatePointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was updated or null if no Pointer object is available
+        **/
+        public updatePointer(event): Pointer;
+        /**
+        * Stops the matching Pointer object, passing in the event data.
+        * @method stopPointer
+        * @param {Any} event The event data from the Touch event
+        * @return {Pointer} The Pointer object that was stopped or null if no Pointer object is available
+        **/
+        public stopPointer(event): Pointer;
+        /**
+        * Get the next Pointer object whos active property matches the given state
+        * @method getPointer
+        * @param {Boolean} state The state the Pointer should be in (false for inactive, true for active)
+        * @return {Pointer} A Pointer object or null if no Pointer object matches the requested state.
+        **/
+        public getPointer(state?: bool): Pointer;
+        /**
+        * Get the Pointer object whos identified property matches the given identifier value
+        * @method getPointerFromIdentifier
+        * @param {Number} identifier The Pointer.identifier value to search for
+        * @return {Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
+        **/
+        public getPointerFromIdentifier(identifier: number): Pointer;
+        /**
+        * @param {Camera} [camera]
+        */
+        public getWorldX(camera?: Camera): number;
+        /**
+        * @param {Camera} [camera]
+        */
+        public getWorldY(camera?: Camera): number;
+        /**
+        * @param {Number} x
+        * @param {Number} y
+        * @param {String} [color]
+        */
+        public renderDebugInfo(x: number, y: number, color?: string): void;
+        /**
+        * Get the distance between two Pointer objects
+        * @method getDistance
+        * @param {Pointer} pointer1
+        * @param {Pointer} pointer2
+        **/
+        public getDistance(pointer1: Pointer, pointer2: Pointer): number;
+        /**
+        * Get the angle between two Pointer objects
+        * @method getAngle
+        * @param {Pointer} pointer1
+        * @param {Pointer} pointer2
+        **/
+        public getAngle(pointer1: Pointer, pointer2: Pointer): number;
+    }
+}
+/**
+* Phaser - FrameData
+*
+* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
+*/
+module Phaser {
+    class FrameData {
+        /**
+        * FrameData constructor
+        */
+        constructor();
+        /**
+        * Local frame container.
+        */
+        private _frames;
+        /**
+        * Local frameName<->index container.
+        */
+        private _frameNames;
+        public total : number;
+        /**
+        * Add a new frame.
+        * @param frame {Frame} The frame you want to add.
+        * @return {Frame} The frame you just added.
+        */
+        public addFrame(frame: Frame): Frame;
+        /**
+        * Get a frame by its index.
+        * @param index {number} Index of the frame you want to get.
+        * @return {Frame} The frame you want.
+        */
+        public getFrame(index: number): Frame;
+        /**
+        * Get a frame by its name.
+        * @param name {string} Name of the frame you want to get.
+        * @return {Frame} The frame you want.
+        */
+        public getFrameByName(name: string): Frame;
+        /**
+        * Check whether there's a frame with given name.
+        * @param name {string} Name of the frame you want to check.
+        * @return {boolean} True if frame with given name found, otherwise return false.
+        */
+        public checkFrameName(name: string): bool;
+        /**
+        * Get ranges of frames in an array.
+        * @param start {number} Start index of frames you want.
+        * @param end {number} End index of frames you want.
+        * @param [output] {Frame[]} result will be added into this array.
+        * @return {Frame[]} Ranges of specific frames in an array.
+        */
+        public getFrameRange(start: number, end: number, output?: Frame[]): Frame[];
+        /**
+        * Get all indexes of frames by giving their name.
+        * @param [output] {number[]} result will be added into this array.
+        * @return {number[]} Indexes of specific frames in an array.
+        */
+        public getFrameIndexes(output?: number[]): number[];
+        /**
+        * Get all names of frames by giving their indexes.
+        * @param [output] {number[]} result will be added into this array.
+        * @return {number[]} Names of specific frames in an array.
+        */
+        public getFrameIndexesByName(input: string[]): number[];
+        /**
+        * Get all frames in this frame data.
+        * @return {Frame[]} All the frames in an array.
+        */
+        public getAllFrames(): Frame[];
+        /**
+        * Get All frames with specific ranges.
+        * @param range {number[]} Ranges in an array.
+        * @return {Frame[]} All frames in an array.
+        */
+        public getFrames(range: number[]): Frame[];
+    }
+}
+/**
+* Phaser - Frame
+*
+* A Frame is a single frame of an animation and is part of a FrameData collection.
+*/
+module Phaser {
+    class Frame {
+        /**
+        * Frame constructor
+        * Create a new <code>Frame</code> with specific position, size and name.
+        *
+        * @param x {number} X position within the image to cut from.
+        * @param y {number} Y position within the image to cut from.
+        * @param width {number} Width of the frame.
+        * @param height {number} Height of the frame.
+        * @param name {string} Name of this frame.
+        */
+        constructor(x: number, y: number, width: number, height: number, name: string);
+        /**
+        * X position within the image to cut from.
+        * @type {number}
+        */
+        public x: number;
+        /**
+        * Y position within the image to cut from.
+        * @type {number}
+        */
+        public y: number;
+        /**
+        * Width of the frame.
+        * @type {number}
+        */
+        public width: number;
+        /**
+        * Height of the frame.
+        * @type {number}
+        */
+        public height: number;
+        /**
+        * Useful for Sprite Sheets.
+        * @type {number}
+        */
+        public index: number;
+        /**
+        * Useful for Texture Atlas files. (is set to the filename value)
+        */
+        public name: string;
+        /**
+        * Rotated? (not yet implemented)
+        */
+        public rotated: bool;
+        /**
+        * Either cw or ccw, rotation is always 90 degrees.
+        */
+        public rotationDirection: string;
+        /**
+        * Was it trimmed when packed?
+        * @type {boolean}
+        */
+        public trimmed: bool;
+        /**
+        * Width of the original sprite.
+        * @type {number}
+        */
+        public sourceSizeW: number;
+        /**
+        * Height of the original sprite.
+        * @type {number}
+        */
+        public sourceSizeH: number;
+        /**
+        * X position of the trimmed sprite inside original sprite.
+        * @type {number}
+        */
+        public spriteSourceSizeX: number;
+        /**
+        * Y position of the trimmed sprite inside original sprite.
+        * @type {number}
+        */
+        public spriteSourceSizeY: number;
+        /**
+        * Width of the trimmed sprite.
+        * @type {number}
+        */
+        public spriteSourceSizeW: number;
+        /**
+        * Height of the trimmed sprite.
+        * @type {number}
+        */
+        public spriteSourceSizeH: number;
+        /**
+        * Set rotation of this frame. (Not yet supported!)
+        */
+        public setRotation(rotated: bool, rotationDirection: string): void;
+        /**
+        * Set trim of the frame.
+        * @param trimmed {boolean} Whether this frame trimmed or not.
+        * @param actualWidth {number} Actual width of this frame.
+        * @param actualHeight {number} Actual height of this frame.
+        * @param destX {number} Destiny x position.
+        * @param destY {number} Destiny y position.
+        * @param destWidth {number} Destiny draw width.
+        * @param destHeight {number} Destiny draw height.
+        */
+        public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number): void;
+    }
+}
+/**
+* Phaser - AnimationLoader
+*
+* Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
+*/
+module Phaser {
+    class AnimationLoader {
+        /**
+        * Parse a sprite sheet from asset data.
+        * @param key {string} Asset key for the sprite sheet data.
+        * @param frameWidth {number} Width of animation frame.
+        * @param frameHeight {number} Height of animation frame.
+        * @param frameMax {number} Number of animation frames.
+        * @return {FrameData} Generated FrameData object.
+        */
+        static parseSpriteSheet(game: Game, key: string, frameWidth: number, frameHeight: number, frameMax: number): FrameData;
+        /**
+        * Parse frame datas from json.
+        * @param json {object} Json data you want to parse.
+        * @return {FrameData} Generated FrameData object.
+        */
+        static parseJSONData(game: Game, json): FrameData;
+        static parseXMLData(game: Game, xml, format: number): FrameData;
+    }
+}
+/**
+* Phaser - Animation
+*
+* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
+*/
+module Phaser {
+    class Animation {
+        /**
+        * Animation constructor
+        * Create a new <code>Animation</code>.
+        *
+        * @param parent {Sprite} Owner sprite of this animation.
+        * @param frameData {FrameData} The FrameData object contains animation data.
+        * @param name {string} Unique name of this animation.
+        * @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
+        * @param delay {number} Time between frames in ms.
+        * @param looped {boolean} Whether or not the animation is looped or just plays once.
+        */
+        constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool);
+        /**
+        * Local private reference to game.
+        */
+        private _game;
+        /**
+        * Local private reference to its owner sprite.
+        * @type {Sprite}
+        */
+        private _parent;
+        /**
+        * Animation frame container.
+        * @type {number[]}
+        */
+        private _frames;
+        /**
+        * Frame data of this animation.(parsed from sprite sheet)
+        * @type {FrameData}
+        */
+        private _frameData;
+        /**
+        * Index of current frame.
+        * @type {number}
+        */
+        private _frameIndex;
+        /**
+        * Time when switched to last frame (in ms).
+        * @type number
+        */
+        private _timeLastFrame;
+        /**
+        * Time when this will switch to next frame (in ms).
+        * @type number
+        */
+        private _timeNextFrame;
+        /**
+        * Name of this animation.
+        * @type {string}
+        */
+        public name: string;
+        /**
+        * Currently played frame instance.
+        * @type {Frame}
+        */
+        public currentFrame: Frame;
+        /**
+        * Whether or not this animation finished playing.
+        * @type {boolean}
+        */
+        public isFinished: bool;
+        /**
+        * Whethor or not this animation is currently playing.
+        * @type {boolean}
+        */
+        public isPlaying: bool;
+        /**
+        * Whether or not the animation is looped.
+        * @type {boolean}
+        */
+        public looped: bool;
+        /**
+        * Time between frames in ms.
+        * @type {number}
+        */
+        public delay: number;
+        public frameTotal : number;
+        public frame : number;
+        /**
+        * Play this animation.
+        * @param frameRate {number} FrameRate you want to specify instead of using default.
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        */
+        public play(frameRate?: number, loop?: bool): void;
+        /**
+        * Play this animation from the first frame.
+        */
+        public restart(): void;
+        /**
+        * Stop playing animation and set it finished.
+        */
+        public stop(): void;
+        /**
+        * Update animation frames.
+        */
+        public update(): bool;
+        /**
+        * Clean up animation memory.
+        */
+        public destroy(): void;
+        /**
+        * Animation complete callback method.
+        */
+        private onComplete();
     }
 }
 /**

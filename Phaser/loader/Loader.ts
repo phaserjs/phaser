@@ -1,4 +1,4 @@
-/// <reference path="Game.ts" />
+/// <reference path="../Game.ts" />
 
 /**
 * Phaser - Loader
@@ -480,7 +480,7 @@ module Phaser {
 
             if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
             {
-                throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
+                throw new Error("Phaser.Loader. Invalid XML given");
             }
 
             var file = this._fileList[key];

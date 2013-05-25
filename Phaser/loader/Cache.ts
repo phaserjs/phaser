@@ -1,4 +1,4 @@
-/// <reference path="Game.ts" />
+/// <reference path="../Game.ts" />
 
 /**
 * Phaser - Cache
@@ -35,16 +35,19 @@ module Phaser {
          * @type {object}
          */
         private _canvases;
+
         /**
          * Image key-value container.
          * @type {object}
          */
         private _images;
+
         /**
          * Sound key-value container.
          * @type {object}
          */
         private _sounds;
+
         /**
          * Text key-value container.
          * @type {object}

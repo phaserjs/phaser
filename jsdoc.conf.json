@@ -1,0 +1,21 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": [ "Phaser" ],
+        "exclude": [],
+        "includePattern": ".+\\.js(doc)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [],
+    "opts": {
+        "encoding": "utf8",
+        "destination": "Docs",
+        "recurse": true,
+        "query": "value",
+        "private": true,
+        "lenient": true
+    },
+    "jsVersion": 180
+}

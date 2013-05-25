@@ -7,9 +7,9 @@
 * Contains methods and ideas from verlet-js by Sub Protocol, SAT.js by Jim Riecken and N by Metanet Software. Brandon Jones, Colin MacKenzie IV
 */
 
-module Phaser {
+module Phaser.Math {
 
-    export class Vector2 {
+    export class Vec2 {
 
         /**
         * Creates a new Vector2 object.
