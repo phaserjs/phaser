@@ -13800,6 +13800,7 @@ var Phaser;
 (function (Phaser) {
     var Camera = (function () {
         /**
+        
         *Sprite constructor
         * Instantiates a new camera at the specified location, with the specified size and zoom level.
         *
@@ -14059,8 +14060,6 @@ var Phaser;
             if(this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1) {
                 this._game.stage.context.save();
             }
-            //  It may be safer/quicker to just save the context every frame regardless (needs testing on mobile - sucked on Android 2.x)
-            //this._game.stage.context.save();
             this.fx.preRender(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
             if(this.alpha !== 1) {
                 this._game.stage.context.globalAlpha = this.alpha;
@@ -14114,6 +14113,7 @@ var Phaser;
                 this._game.stage.context.closePath();
                 this._game.stage.context.clip();
             }
+            //  Render all the Sprites
             this._game.world.group.render(this, this._sx, this._sy);
             if(this.showBorder == true) {
                 this._game.stage.context.strokeStyle = this.borderColor;
