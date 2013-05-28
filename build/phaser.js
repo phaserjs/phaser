@@ -10788,6 +10788,44 @@ var Phaser;
     })();
     Phaser.Rectangle = Rectangle;    
 })(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /**
+    * Phaser - Components - Texture
+    *
+    * The Sprite GameObject is an extension of the core GameObject that includes support for animation and dynamic textures.
+    */
+    (function (Components) {
+        var Texture = (function () {
+            function Texture() { }
+            return Texture;
+        })();
+        Components.Texture = Texture;        
+    })(Phaser.Components || (Phaser.Components = {}));
+    var Components = Phaser.Components;
+})(Phaser || (Phaser = {}));
+// Module
+var Shapes;
+(function (Shapes) {
+    // Class
+    var Point = (function () {
+        // Constructor
+        function Point(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Point.prototype.getDist = // Instance member
+        function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        };
+        Point.origin = new Point(0, 0);
+        return Point;
+    })();
+    Shapes.Point = Point;    
+})(Shapes || (Shapes = {}));
+// Local variables
+var p = new Shapes.Point(3, 4);
+var dist = p.getDist();
 /// <reference path="../Game.ts" />
 /**
 * Phaser - Vec2
@@ -12445,6 +12483,28 @@ var Phaser;
     })(Phaser.Math || (Phaser.Math = {}));
     var Math = Phaser.Math;
 })(Phaser || (Phaser = {}));
+// Module
+var Shapes;
+(function (Shapes) {
+    // Class
+    var Point = (function () {
+        // Constructor
+        function Point(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Point.prototype.getDist = // Instance member
+        function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+        };
+        Point.origin = new Shapes.Point(0, 0);
+        return Point;
+    })();
+    Shapes.Point = Point;    
+})(Shapes || (Shapes = {}));
+// Local variables
+var p = new Shapes.Point(3, 4);
+var dist = p.getDist();
 /// <reference path="../../Game.ts" />
 /// <reference path="../../geom/Vector2.ts" />
 /**
@@ -13787,6 +13847,9 @@ var Phaser;
     })();
     Phaser.Tween = Tween;    
 })(Phaser || (Phaser = {}));
+/// <reference path="../core/Point.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../core/Vec2.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="../Game.ts" />
 /**
@@ -13819,14 +13882,14 @@ var Phaser;
             this._sy = 0;
             /**
             * Scale factor of the camera.
-            * @type {MicroPoint}
+            * @type {Vec2}
             */
-            this.scale = new Phaser.MicroPoint(1, 1);
+            this.scale = new Phaser.Vec2(1, 1);
             /**
             * Scrolling factor.
             * @type {MicroPoint}
             */
-            this.scroll = new Phaser.MicroPoint(0, 0);
+            this.scroll = new Phaser.Vec2(0, 0);
             /**
             * Camera bounds.
             * @type {Rectangle}
@@ -13837,64 +13900,25 @@ var Phaser;
             * @type {Rectangle}
             */
             this.deadzone = null;
-            //  Camera Border
+            /**
+            * Disable the automatic camera canvas clipping when Camera is non-Stage sized.
+            * @type {Boolean}
+            */
             this.disableClipping = false;
             /**
-            * Whether render border of this camera or not. (default is false)
-            * @type {boolean}
-            */
-            this.showBorder = false;
-            /**
-            * Color of border of this camera. (in css color string)
-            * @type {string}
-            */
-            this.borderColor = 'rgb(255,255,255)';
-            /**
             * Whether the camera background is opaque or not. If set to true the Camera is filled with
-            * the value of Camera.backgroundColor every frame.
+            * the value of Camera.backgroundColor every frame. Normally you wouldn't enable this if the
+            * Camera is the full Stage size, as the Stage.backgroundColor has the same effect. But for
+            * multiple or mini cameras it can be very useful.
             * @type {boolean}
             */
             this.opaque = false;
             /**
-            * Clears the camera every frame using a canvas clearRect call (default to true).
-            * Note that this erases anything below the camera as well, so do not use it in conjuction with a camera
-            * that uses alpha or that needs to be able to manage opacity. Equally if Camera.opaque is set to true
-            * then set Camera.clear to false to save rendering time.
-            * By default the Stage will clear itself every frame, so be sure not to double-up clear calls.
-            * @type {boolean}
-            */
-            this.clear = false;
-            /**
-            * Background color in css color string.
+            * The Background Color of the camera in css color string format, i.e. 'rgb(0,0,0)' or '#ff0000'.
+            * Not used if the Camera.opaque property is false.
             * @type {string}
             */
-            this._bgColor = 'rgb(0,0,0)';
-            /**
-            * Background texture repeat style. (default is 'repeat')
-            * @type {string}
-            */
-            this._bgTextureRepeat = 'repeat';
-            //  Camera Shadow
-            /**
-            * Render camera shadow or not. (default is false)
-            * @type {boolean}
-            */
-            this.showShadow = false;
-            /**
-            * Color of shadow, in css color string.
-            * @type {string}
-            */
-            this.shadowColor = 'rgb(0,0,0)';
-            /**
-            * Blur factor of shadow.
-            * @type {number}
-            */
-            this.shadowBlur = 10;
-            /**
-            * Offset of the shadow from camera's position.
-            * @type {MicroPoint}
-            */
-            this.shadowOffset = new Phaser.MicroPoint(4, 4);
+            this.backgroundColor = 'rgb(0,0,0)';
             /**
             * Whether this camera visible or not. (default is true)
             * @type {boolean}
@@ -14066,13 +14090,6 @@ var Phaser;
             }
             this._sx = this._stageX;
             this._sy = this._stageY;
-            //  Shadow
-            if(this.showShadow == true) {
-                this._game.stage.context.shadowColor = this.shadowColor;
-                this._game.stage.context.shadowBlur = this.shadowBlur;
-                this._game.stage.context.shadowOffsetX = this.shadowOffset.x;
-                this._game.stage.context.shadowOffsetY = this.shadowOffset.y;
-            }
             //  Scale on
             if(this.scale.x !== 1 || this.scale.y !== 1) {
                 this._game.stage.context.scale(this.scale.x, this.scale.y);
@@ -14086,24 +14103,10 @@ var Phaser;
                 // now shift back to where that should actually render
                 this._game.stage.context.translate(-(this._sx + this.worldView.halfWidth), -(this._sy + this.worldView.halfHeight));
             }
-            if(this.clear == true) {
-                this._game.stage.context.clearRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-            }
             //  Background
-            if(this.opaque == true) {
-                if(this._bgTexture) {
-                    this._game.stage.context.fillStyle = this._bgTexture;
-                    this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-                } else {
-                    this._game.stage.context.fillStyle = this._bgColor;
-                    this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-                }
-            }
-            //  Shadow off
-            if(this.showShadow == true) {
-                this._game.stage.context.shadowBlur = 0;
-                this._game.stage.context.shadowOffsetX = 0;
-                this._game.stage.context.shadowOffsetY = 0;
+            if(this.opaque) {
+                this._game.stage.context.fillStyle = this.backgroundColor;
+                this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
             }
             this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
             //  Clip the camera so we don't get sprites appearing outside the edges
@@ -14115,12 +14118,6 @@ var Phaser;
             }
             //  Render all the Sprites
             this._game.world.group.render(this, this._sx, this._sy);
-            if(this.showBorder == true) {
-                this._game.stage.context.strokeStyle = this.borderColor;
-                this._game.stage.context.lineWidth = 1;
-                this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-                this._game.stage.context.stroke();
-            }
             //  Scale off
             if(this.scale.x !== 1 || this.scale.y !== 1) {
                 this._game.stage.context.scale(1, 1);
@@ -14135,26 +14132,6 @@ var Phaser;
             if(this.alpha !== 1) {
                 this._game.stage.context.globalAlpha = 1;
             }
-        };
-        Object.defineProperty(Camera.prototype, "backgroundColor", {
-            get: function () {
-                return this._bgColor;
-            },
-            set: function (color) {
-                this._bgColor = color;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Camera.prototype.setTexture = /**
-        * Set camera background texture.
-        * @param key {string} Asset key of the texture.
-        * @param [repeat] {string} what kind of repeat will this texture used for background.
-        */
-        function (key, repeat) {
-            if (typeof repeat === "undefined") { repeat = 'repeat'; }
-            this._bgTexture = this._game.stage.context.createPattern(this._game.cache.getImage(key), repeat);
-            this._bgTextureRepeat = repeat;
         };
         Camera.prototype.setPosition = /**
         * Set position of this camera.

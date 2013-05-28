@@ -1,3 +1,6 @@
+/// <reference path="../core/Point.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../core/Vec2.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="../Game.ts" />
 
@@ -90,22 +93,16 @@ module Phaser {
         public worldView: Rectangle;
 
         /**
-         * How many sprites will be rendered by this camera.
-         * @type {number}
-         */
-        public totalSpritesRendered: number;
-
-        /**
          * Scale factor of the camera.
-         * @type {MicroPoint}
+         * @type {Vec2}
          */
-        public scale: MicroPoint = new MicroPoint(1, 1);
+        public scale: Vec2 = new Vec2(1, 1);
 
         /**
          * Scrolling factor.
          * @type {MicroPoint}
          */
-        public scroll: MicroPoint = new MicroPoint(0, 0);
+        public scroll: Vec2 = new Vec2(0, 0);
 
         /**
          * Camera bounds.
@@ -119,79 +116,27 @@ module Phaser {
          */
         public deadzone: Rectangle = null;
 
-        //  Camera Border
+        /**
+         * Disable the automatic camera canvas clipping when Camera is non-Stage sized.
+         * @type {Boolean}
+         */
         public disableClipping: bool = false;
 
         /**
-         * Whether render border of this camera or not. (default is false)
-         * @type {boolean}
-         */
-        public showBorder: bool = false;
-
-        /**
-         * Color of border of this camera. (in css color string)
-         * @type {string}
-         */
-        public borderColor: string = 'rgb(255,255,255)';
-
-        /**
          * Whether the camera background is opaque or not. If set to true the Camera is filled with
-         * the value of Camera.backgroundColor every frame.
+         * the value of Camera.backgroundColor every frame. Normally you wouldn't enable this if the
+         * Camera is the full Stage size, as the Stage.backgroundColor has the same effect. But for
+         * multiple or mini cameras it can be very useful.
          * @type {boolean}
          */
         public opaque: bool = false;
 
         /**
-         * Clears the camera every frame using a canvas clearRect call (default to true).
-         * Note that this erases anything below the camera as well, so do not use it in conjuction with a camera
-         * that uses alpha or that needs to be able to manage opacity. Equally if Camera.opaque is set to true
-         * then set Camera.clear to false to save rendering time.
-         * By default the Stage will clear itself every frame, so be sure not to double-up clear calls.
-         * @type {boolean}
-         */
-        public clear: bool = false;
-
-        /**
-         * Background color in css color string.
+         * The Background Color of the camera in css color string format, i.e. 'rgb(0,0,0)' or '#ff0000'.
+         * Not used if the Camera.opaque property is false.
          * @type {string}
          */
-        private _bgColor: string = 'rgb(0,0,0)';
-
-        /**
-         * Background texture to be rendered if background is visible.
-         */
-        private _bgTexture;
-
-        /**
-         * Background texture repeat style. (default is 'repeat')
-         * @type {string}
-         */
-        private _bgTextureRepeat: string = 'repeat';
-
-        //  Camera Shadow
-        /**
-         * Render camera shadow or not. (default is false)
-         * @type {boolean}
-         */
-        public showShadow: bool = false;
-
-        /**
-         * Color of shadow, in css color string.
-         * @type {string}
-         */
-        public shadowColor: string = 'rgb(0,0,0)';
-
-        /**
-         * Blur factor of shadow.
-         * @type {number}
-         */
-        public shadowBlur: number = 10;
-
-        /**
-         * Offset of the shadow from camera's position.
-         * @type {MicroPoint}
-         */
-        public shadowOffset: MicroPoint = new MicroPoint(4, 4);
+        public backgroundColor: string = 'rgb(0,0,0)';
 
         /**
          * Whether this camera visible or not. (default is true)
@@ -418,15 +363,6 @@ module Phaser {
             this._sx = this._stageX;
             this._sy = this._stageY;
 
-            //  Shadow
-            if (this.showShadow == true)
-            {
-                this._game.stage.context.shadowColor = this.shadowColor;
-                this._game.stage.context.shadowBlur = this.shadowBlur;
-                this._game.stage.context.shadowOffsetX = this.shadowOffset.x;
-                this._game.stage.context.shadowOffsetY = this.shadowOffset.y;
-            }
-
             //  Scale on
             if (this.scale.x !== 1 || this.scale.y !== 1)
             {
@@ -445,32 +381,11 @@ module Phaser {
                 this._game.stage.context.translate(-(this._sx + this.worldView.halfWidth), -(this._sy + this.worldView.halfHeight));
             }
 
-            if (this.clear == true)
-            {
-                this._game.stage.context.clearRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-            }
-
             //  Background
-            if (this.opaque == true)
+            if (this.opaque)
             {
-                if (this._bgTexture)
-                {
-                    this._game.stage.context.fillStyle = this._bgTexture;
-                    this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-                }
-                else
-                {
-                    this._game.stage.context.fillStyle = this._bgColor;
-                    this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-                }
-            }
-
-            //  Shadow off
-            if (this.showShadow == true)
-            {
-                this._game.stage.context.shadowBlur = 0;
-                this._game.stage.context.shadowOffsetX = 0;
-                this._game.stage.context.shadowOffsetY = 0;
+                this._game.stage.context.fillStyle = this.backgroundColor;
+                this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
             }
 
             this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
@@ -486,14 +401,6 @@ module Phaser {
 
             //  Render all the Sprites
             this._game.world.group.render(this, this._sx, this._sy);
-
-            if (this.showBorder == true)
-            {
-                this._game.stage.context.strokeStyle = this.borderColor;
-                this._game.stage.context.lineWidth = 1;
-                this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
-                this._game.stage.context.stroke();
-            }
 
             //  Scale off
             if (this.scale.x !== 1 || this.scale.y !== 1)
@@ -517,28 +424,6 @@ module Phaser {
             {
                 this._game.stage.context.globalAlpha = 1;
             }
-
-        }
-
-        public set backgroundColor(color: string) {
-
-            this._bgColor = color;
-
-        }
-
-        public get backgroundColor(): string {
-            return this._bgColor;
-        }
-
-        /**
-         * Set camera background texture.
-         * @param key {string} Asset key of the texture.
-         * @param [repeat] {string} what kind of repeat will this texture used for background.
-         */
-        public setTexture(key: string, repeat?: string = 'repeat') {
-
-            this._bgTexture = this._game.stage.context.createPattern(this._game.cache.getImage(key), repeat);
-            this._bgTextureRepeat = repeat;
 
         }
 

@@ -77,6 +77,58 @@ var Phaser;
         /// <reference path="../../Phaser/system/Camera.d.ts" />
         /// <reference path="../../Phaser/FXManager.d.ts" />
         /**
+        * Phaser - FX - Camera - Border
+        *
+        * Creates a border around a camera.
+        */
+        (function (Camera) {
+            var Border = (function () {
+                function Border(game, parent) {
+                    /**
+                    * Whether render border of this camera or not. (default is false)
+                    * @type {boolean}
+                    */
+                    this.showBorder = false;
+                    /**
+                    * Color of border of this camera. (in css color string)
+                    * @type {string}
+                    */
+                    this.borderColor = 'rgb(255,255,255)';
+                    this._game = game;
+                    this._parent = parent;
+                }
+                Border.prototype.start = /**
+                * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
+                */
+                function () {
+                };
+                Border.prototype.postRender = /**
+                * Post-render is called during the objects render cycle, after the children/image data has been rendered.
+                * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
+                */
+                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                    if(this.showBorder == true) {
+                        this._game.stage.context.strokeStyle = this.borderColor;
+                        this._game.stage.context.lineWidth = 1;
+                        this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
+                        this._game.stage.context.stroke();
+                    }
+                };
+                return Border;
+            })();
+            Camera.Border = Border;            
+        })(FX.Camera || (FX.Camera = {}));
+        var Camera = FX.Camera;
+    })(Phaser.FX || (Phaser.FX = {}));
+    var FX = Phaser.FX;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (FX) {
+        /// <reference path="../../Phaser/Game.d.ts" />
+        /// <reference path="../../Phaser/system/Camera.d.ts" />
+        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /**
         * Phaser - FX - Camera - Template
         *
         * A Template FX file you can use to create your own Camera FX.
@@ -213,6 +265,80 @@ var Phaser;
                 return Mirror;
             })();
             Camera.Mirror = Mirror;            
+        })(FX.Camera || (FX.Camera = {}));
+        var Camera = FX.Camera;
+    })(Phaser.FX || (Phaser.FX = {}));
+    var FX = Phaser.FX;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (FX) {
+        /// <reference path="../../Phaser/Game.d.ts" />
+        /// <reference path="../../Phaser/system/Camera.d.ts" />
+        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /**
+        * Phaser - FX - Camera - Shadow
+        *
+        * Creates a drop-shadow effect on the camera window.
+        */
+        (function (Camera) {
+            var Shadow = (function () {
+                function Shadow(game, parent) {
+                    /**
+                    * Render camera shadow or not. (default is false)
+                    * @type {boolean}
+                    */
+                    this.showShadow = false;
+                    /**
+                    * Color of shadow, in css color string.
+                    * @type {string}
+                    */
+                    this.shadowColor = 'rgb(0,0,0)';
+                    /**
+                    * Blur factor of shadow.
+                    * @type {number}
+                    */
+                    this.shadowBlur = 10;
+                    /**
+                    * Offset of the shadow from camera's position.
+                    * @type {MicroPoint}
+                    */
+                    this.shadowOffset = new Phaser.MicroPoint(4, 4);
+                    this._game = game;
+                    this._parent = parent;
+                }
+                Shadow.prototype.start = /**
+                * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
+                */
+                function () {
+                };
+                Shadow.prototype.preRender = /**
+                * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
+                * It happens directly AFTER a canvas context.save has happened if added to a Camera.
+                */
+                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                    //  Shadow
+                    if(this.showShadow == true) {
+                        this._game.stage.context.shadowColor = this.shadowColor;
+                        this._game.stage.context.shadowBlur = this.shadowBlur;
+                        this._game.stage.context.shadowOffsetX = this.shadowOffset.x;
+                        this._game.stage.context.shadowOffsetY = this.shadowOffset.y;
+                    }
+                };
+                Shadow.prototype.render = /**
+                * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
+                */
+                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                    //  Shadow off
+                    if(this.showShadow == true) {
+                        this._game.stage.context.shadowBlur = 0;
+                        this._game.stage.context.shadowOffsetX = 0;
+                        this._game.stage.context.shadowOffsetY = 0;
+                    }
+                };
+                return Shadow;
+            })();
+            Camera.Shadow = Shadow;            
         })(FX.Camera || (FX.Camera = {}));
         var Camera = FX.Camera;
     })(Phaser.FX || (Phaser.FX = {}));
