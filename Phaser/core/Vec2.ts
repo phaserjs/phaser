@@ -40,6 +40,16 @@ module Phaser {
         public y: number;
 
         /**
+         * Copies the x and y properties from any given object to this Vec2.
+         * @method copyFrom
+         * @param {any} source - The object to copy from.
+         * @return {Vec2} This Vec2 object.
+         **/
+        public copyFrom(source: any): Vec2 {
+            return this.setTo(source.x, source.y);
+        }
+
+        /**
         * Sets the x and y properties of the Vector.
         * @param {Number} x The x position of the vector
         * @param {Number} y The y position of the vector

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -15,32 +15,6 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="verlet\AngleConstraint.js">
-      <DependentUpon>AngleConstraint.ts</DependentUpon>
-    </Content>
-    <Content Include="verlet\Composite.js">
-      <DependentUpon>Composite.ts</DependentUpon>
-    </Content>
-    <Content Include="verlet\DistanceConstraint.js">
-      <DependentUpon>DistanceConstraint.ts</DependentUpon>
-    </Content>
-    <Content Include="verlet\Particle.js">
-      <DependentUpon>Particle.ts</DependentUpon>
-    </Content>
-    <Content Include="verlet\PinConstraint.js">
-      <DependentUpon>PinConstraint.ts</DependentUpon>
-    </Content>
-    <Content Include="verlet\VerletManager.js">
-      <DependentUpon>VerletManager.ts</DependentUpon>
-    </Content>
-    <XamlAppDef Include="verlet\VerletManager.ts" />
-    <XamlAppDef Include="verlet\PinConstraint.ts" />
-    <XamlAppDef Include="verlet\Particle.ts" />
-    <XamlAppDef Include="verlet\DistanceConstraint.ts" />
-    <XamlAppDef Include="verlet\Composite.ts" />
-    <XamlAppDef Include="verlet\AngleConstraint.ts" />
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -69,16 +43,14 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptTarget>ES3</TypeScriptTarget>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
-    <TypeScriptSourceMap>true</TypeScriptSourceMap>
-    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <TypeScriptTarget>ES3</TypeScriptTarget>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
-    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

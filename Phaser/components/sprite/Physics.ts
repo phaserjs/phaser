@@ -1,3 +1,6 @@
+/// <reference path="../../core/Vec2.ts" />
+/// <reference path="../../core/Point.ts" />
+
 /**
 * Phaser - Components - Physics
 *
@@ -22,9 +25,9 @@ module Phaser.Components {
          * accurate due to the way timers work, but it's pretty close. Expect tolerance
          * of +- 10 px. Also that speed assumes no drag.
          *
-         * @type {MicroPoint}
+         * @type {Vec2}
          */
-        public velocity: MicroPoint;
+        public velocity: Vec2;
 
         /**
          * The virtual mass of the object.
@@ -42,21 +45,21 @@ module Phaser.Components {
          * How fast the speed of this object is changing.
          * @type {number}
          */
-        public acceleration: MicroPoint;
+        public acceleration: Vec2;
 
         /**
          * This isn't drag exactly, more like deceleration that is only applied
          * when acceleration is not affecting the sprite.
-         * @type {MicroPoint}
+         * @type {Vec2}
          */
-        public drag: MicroPoint;
+        public drag: Vec2;
 
         /**
          * It will cap the speed automatically if you use the acceleration
          * to change its velocity.
-         * @type {MicroPoint}
+         * @type {Vec2}
          */
-        public maxVelocity: MicroPoint;
+        public maxVelocity: Vec2;
 
         /**
          * How fast this object is rotating.
@@ -110,15 +113,41 @@ module Phaser.Components {
 
         /**
          * Important variable for collision processing.
-         * @type {MicroPoint}
+         * @type {Vec2}
          */
-        public last: MicroPoint;
+        public last: Vec2;
+
+        /**
+        * Handy for checking if this object is touching a particular surface.
+        * For slightly better performance you can just &amp; the value directly into <code>touching</code>.
+        * However, this method is good for readability and accessibility.
+        *
+        * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        *
+        * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
+        */
+        public isTouching(direction: number): bool {
+            return (this.touching & direction) > Collision.NONE;
+        }
+
+        /**
+        * Handy function for checking if this object just landed on a particular surface.
+        *
+        * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
+        *
+        * @returns {boolean} Whether the object just landed on any specicied surfaces.
+        */
+        public justTouched(direction: number): bool {
+            return ((this.touching & direction) > Collision.NONE) && ((this.wasTouching & direction) <= Collision.NONE);
+        }
+
 
         /**
          * Internal function for updating the position and speed of this object.
          */
         public update() {
 
+/*
             var delta: number;
             var velocityDelta: number;
 
@@ -138,9 +167,31 @@ module Phaser.Components {
             delta = this.velocity.y * this._game.time.elapsed;
             this.velocity.y += velocityDelta;
             this.frameBounds.y += delta;
+*/
 
         }
 
+        /**
+        * Whether the object collides or not.  For more control over what directions
+        * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
+        * to set the value of allowCollisions directly.
+        */
+        public get solid(): bool {
+            return (this.allowCollisions & Collision.ANY) > Collision.NONE;
+        }
+
+        public set solid(value: bool) {
+
+            if (value)
+            {
+                this.allowCollisions = Collision.ANY;
+            }
+            else
+            {
+                this.allowCollisions = Collision.NONE;
+            }
+
+        }
 
     }
 

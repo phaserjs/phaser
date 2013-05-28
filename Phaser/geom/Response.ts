@@ -23,8 +23,8 @@ module Phaser {
 
             this.a = null;
             this.b = null;
-            this.overlapN = new Vector2;
-            this.overlapV = new Vector2;
+            this.overlapN = new Vec2;
+            this.overlapV = new Vec2;
 
             this.clear();
 
@@ -43,13 +43,13 @@ module Phaser {
         /**
         * The shortest colliding axis (unit-vector)
         */
-        public overlapN: Vector2;
+        public overlapN: Vec2;
 
         /**
         * The overlap vector (i.e. overlapN.scale(overlap, overlap)).
         * If this vector is subtracted from the position of `a`, `a` and `b` will no longer be colliding.
         */
-        public overlapV: Vector2;
+        public overlapV: Vec2;
 
         /**
         * Whether the first object is completely inside the second.

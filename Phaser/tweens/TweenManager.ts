@@ -1,5 +1,5 @@
-/// <reference path="Game.ts" />
-/// <reference path="system/Tween.ts" />
+/// <reference path="../Game.ts" />
+/// <reference path="Tween.ts" />
 
 /**
 * Phaser - TweenManager

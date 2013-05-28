@@ -52,7 +52,7 @@ module Phaser {
             this.context = this.canvas.getContext('2d');
 
             this.offset = this.getOffset(this.canvas);
-            this.bounds = new Quad(this.offset.x, this.offset.y, width, height);
+            this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
             this.aspectRatio = width / height;
             this.scaleMode = StageScaleMode.NO_SCALE;
             this.scale = new StageScaleMode(this._game);
@@ -92,9 +92,9 @@ module Phaser {
 
         /**
          * Bound of this stage.
-         * @type {Quad}
+         * @type {Rectangle}
          */
-        public bounds: Quad;
+        public bounds: Rectangle;
 
         /**
          * Asperct ratio, thus: width / height.
@@ -138,7 +138,7 @@ module Phaser {
          * Offset from this stage to the canvas element.
          * @type {MicroPoint}
          */
-        public offset: MicroPoint;
+        public offset: Point;
 
         /**
          * This object manages scaling of the game, see(StageScaleMode).
@@ -227,7 +227,7 @@ module Phaser {
         /**
          * Get the DOM offset values of the given element
          */
-        private getOffset(element): MicroPoint {
+        private getOffset(element): Point {
 
             var box = element.getBoundingClientRect();
 
@@ -236,7 +236,7 @@ module Phaser {
             var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
             var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
 
-            return new MicroPoint(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+            return new Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
 
         }
 

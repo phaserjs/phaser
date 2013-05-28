@@ -301,6 +301,16 @@ module Phaser {
         }
 
         /**
+         * Copies the x, y, width and height properties from any given object to this Rectangle.
+         * @method copyFrom
+         * @param {any} source - The object to copy from.
+         * @return {Rectangle} This Rectangle object.
+         **/
+        public copyFrom(source: any): Rectangle {
+            return this.setTo(source.x, source.y, source.width, source.height);
+        }
+
+        /**
         * Returns a string representation of this object.
         * @method toString
         * @return {string} a string representation of the instance.

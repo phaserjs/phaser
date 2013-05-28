@@ -27,7 +27,7 @@ module Phaser {
 
         private _diameter: number = 0;
         private _radius: number = 0;
-        private _pos: Vector2;
+        //private _pos: Vec2;
 
         /**
 	     * The x coordinate of the center of the circle
@@ -247,6 +247,16 @@ module Phaser {
 
             return this;
 
+        }
+
+        /**
+         * Copies the x, y and diameter properties from any given object to this Circle.
+         * @method copyFrom
+         * @param {any} source - The object to copy from.
+         * @return {Circle} This Circle object.
+         **/
+        public copyFrom(source: any): Circle {
+            return this.setTo(source.x, source.y, source.diameter);
         }
 
         /**

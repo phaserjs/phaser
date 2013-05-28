@@ -1,5 +1,5 @@
-/// <reference path="Game.ts" />
-/// <reference path="system/Sound.ts" />
+/// <reference path="../Game.ts" />
+/// <reference path="Sound.ts" />
 
 /**
 * Phaser - SoundManager

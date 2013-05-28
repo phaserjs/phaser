@@ -1,8 +1,10 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../Signal.ts" />
+/// <reference path="../Game.ts" />
+/// <reference path="../Signal.ts" />
 /// <reference path="Pointer.ts" />
 /// <reference path="MSPointer.ts" />
 /// <reference path="Gestures.ts" />
+/// <reference path="../utils/PointUtils.ts" />
+/// <reference path="../math/Vec2Utils.ts" />
 
 /**
 * Phaser - Input
@@ -37,7 +39,7 @@ module Phaser {
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
 
-            this.position = new Vector2;
+            this.position = new Vec2;
             this.circle = new Circle(0, 0, 44);
 
             this.currentPointers = 0;
@@ -112,9 +114,9 @@ module Phaser {
         /**
         * A vector object representing the current position of the Pointer.
         * @property vector
-        * @type {Vector2}
+        * @type {Vec2}
         **/
-        public position: Vector2 = null;
+        public position: Vec2 = null;
 
         /**
         * A Circle object centered on the x/y screen coordinates of the Input.
@@ -855,7 +857,7 @@ module Phaser {
         * @param {Pointer} pointer2
         **/
         public getDistance(pointer1: Pointer, pointer2: Pointer): number {
-            return pointer1.position.distance(pointer2.position);
+            return Vec2Utils.distance(pointer1.position, pointer2.position);
         }
 
         /**
@@ -865,7 +867,7 @@ module Phaser {
         * @param {Pointer} pointer2
         **/
         public getAngle(pointer1: Pointer, pointer2: Pointer): number {
-            return pointer1.position.angle(pointer2.position);
+            return Vec2Utils.angle(pointer1.position, pointer2.position);
         }
 
     }

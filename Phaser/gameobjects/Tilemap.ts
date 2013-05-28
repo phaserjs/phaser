@@ -1,7 +1,6 @@
 /// <reference path="../Game.ts" />
-/// <reference path="GameObject.ts" />
-/// <reference path="../system/TilemapLayer.ts" />
-/// <reference path="../system/Tile.ts" />
+/// <reference path="../components/TilemapLayer.ts" />
+/// <reference path="../components/Tile.ts" />
 
 /**
 * Phaser - Tilemap
@@ -12,7 +11,7 @@
 
 module Phaser {
 
-    export class Tilemap extends GameObject {
+    export class Tilemap {
 
         /**
          * Tilemap constructor
@@ -28,7 +27,7 @@ module Phaser {
          */
         constructor(game: Game, key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0) {
 
-            super(game);
+            //super(game);
 
             this.isGroup = false;
 

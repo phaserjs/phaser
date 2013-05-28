@@ -1,6 +1,6 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../geom/Quad.ts" />
-/// <reference path="ScrollRegion.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../components/ScrollRegion.ts" />
 
 /**
 * Phaser - ScrollZone
@@ -13,7 +13,7 @@
 
 module Phaser {
 
-    export class ScrollZone extends GameObject {
+    export class ScrollZone extends Sprite {
 
         /**
          * ScrollZone constructor

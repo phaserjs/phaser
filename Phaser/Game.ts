@@ -1,39 +1,23 @@
-/// <reference path="AnimationManager.ts" />
-/// <reference path="Basic.ts" />
-/// <reference path="Cache.ts" />
-/// <reference path="CameraManager.ts" />
-/// <reference path="Collision.ts" />
-/// <reference path="DynamicTexture.ts" />
-/// <reference path="FXManager.ts" />
-/// <reference path="GameMath.ts" />
-/// <reference path="GameObjectFactory.ts" />
-/// <reference path="Group.ts" />
-/// <reference path="Loader.ts" />
-/// <reference path="Motion.ts" />
-/// <reference path="Signal.ts" />
-/// <reference path="SignalBinding.ts" />
-/// <reference path="SoundManager.ts" />
+/// <reference path="loader/Loader.ts" />
+/// <reference path="loader/Cache.ts" />
+/// <reference path="math/GameMath.ts" />
+/// <reference path="math/RandomDataGenerator.ts" />
+/// <reference path="cameras/CameraManager.ts" />
+/// <reference path="gameobjects/GameObjectFactory.ts" />
+/// <reference path="core/Group.ts" />
+/// <reference path="core/Signal.ts" />
+/// <reference path="core/SignalBinding.ts" />
+/// <reference path="sound/SoundManager.ts" />
 /// <reference path="Stage.ts" />
 /// <reference path="Time.ts" />
-/// <reference path="TweenManager.ts" />
-/// <reference path="VerletManager.ts" />
+/// <reference path="tweens/TweenManager.ts" />
 /// <reference path="World.ts" />
-/// <reference path="geom/Vector2.ts" />
 /// <reference path="system/Device.ts" />
-/// <reference path="system/RandomDataGenerator.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
-/// <reference path="system/input/Input.ts" />
-/// <reference path="system/input/Keyboard.ts" />
-/// <reference path="system/input/Mouse.ts" />
-/// <reference path="system/input/MSPointer.ts" />
-/// <reference path="system/input/Touch.ts" />
-/// <reference path="gameobjects/Emitter.ts" />
-/// <reference path="gameobjects/GameObject.ts" />
-/// <reference path="gameobjects/GeomSprite.ts" />
-/// <reference path="gameobjects/Particle.ts" />
-/// <reference path="gameobjects/Sprite.ts" />
-/// <reference path="gameobjects/Tilemap.ts" />
-/// <reference path="gameobjects/ScrollZone.ts" />
+/// <reference path="input/Input.ts" />
+/// <reference path="renderers/IRenderer.ts" />
+/// <reference path="renderers/HeadlessRenderer.ts" />
+/// <reference path="renderers/CanvasRenderer.ts" />
 
 /**
 * Phaser - Game
@@ -189,7 +173,7 @@ module Phaser {
          * Reference to the collision helper.
          * @type {Collision}
          */
-        public collision: Collision;
+        //public collision: Collision;
 
         /**
          * Reference to the input manager
@@ -213,7 +197,7 @@ module Phaser {
          * Reference to the motion helper.
          * @type {Motion}
          */
-        public motion: Motion;
+        //public motion: Motion;
 
         /**
          * Reference to the sound manager.
@@ -240,12 +224,6 @@ module Phaser {
         public tweens: TweenManager;
 
         /**
-         * Reference to the verlet manager.
-         * @type {VerletManager}
-         */
-        public verlet: Phaser.Verlet.VerletManager;
-
-        /**
          * Reference to the world.
          * @type {World}
          */
@@ -262,6 +240,12 @@ module Phaser {
          * @type {Device}
          */
         public device: Device;
+
+        /**
+         * Reference to the render manager
+         * @type {RenderManager}
+         */
+        public renderer: IRenderer;
 
         /**
          * Whether the game engine is booted, aka available.
@@ -295,20 +279,21 @@ module Phaser {
             else
             {
                 this.device = new Device();
-                this.motion = new Motion(this);
+                //this.motion = new Motion(this);
                 this.math = new GameMath(this);
                 this.stage = new Stage(this, parent, width, height);
                 this.world = new World(this, width, height);
                 this.add = new GameObjectFactory(this);
                 this.sound = new SoundManager(this);
                 this.cache = new Cache(this);
-                this.collision = new Collision(this);
+                //this.collision = new Collision(this);
                 this.loader = new Loader(this, this.loadComplete);
                 this.time = new Time(this);
                 this.tweens = new TweenManager(this);
                 this.input = new Input(this);
                 this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
-                this.verlet = new Phaser.Verlet.VerletManager(this, width, height);
+
+                this.setRenderer(Phaser.Types.RENDERER_CANVAS);
 
                 this.framerate = 60;
                 this.isBooted = true;
@@ -337,6 +322,24 @@ module Phaser {
 
                 }
 
+            }
+
+        }
+
+        public setRenderer(type: number) {
+
+            switch (type)
+            {
+                case Phaser.Types.RENDERER_AUTO_DETECT:
+                    this.renderer = new Phaser.HeadlessRenderer(this);
+                    break;
+
+                case Phaser.Types.RENDERER_AUTO_DETECT:
+                case Phaser.Types.RENDERER_CANVAS:
+                    this.renderer = new Phaser.CanvasRenderer(this);
+                    break;
+
+                // WebGL coming soon :)
             }
 
         }
@@ -385,7 +388,6 @@ module Phaser {
             this.tweens.update();
             this.input.update();
             this.stage.update();
-            this.verlet.update();
 
             this._accumulator += this.time.delta;
 
@@ -406,7 +408,7 @@ module Phaser {
                 this.onUpdateCallback.call(this.callbackContext);
             }
 
-            this.world.render();
+            this.renderer.render();
 
             if (this._loadComplete && this.onRenderCallback)
             {
@@ -637,9 +639,9 @@ module Phaser {
          * @param context The context in which the callbacks will be called
          * @returns {boolean} true if the objects overlap, otherwise false.
          */
-        public collide(objectOrGroup1: Basic = null, objectOrGroup2: Basic = null, notifyCallback = null, context? = this.callbackContext): bool {
-            return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
-        }
+        //public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.callbackContext): bool {
+        //    return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
+        //}
 
         public get camera(): Camera {
             return this.world.cameras.current;

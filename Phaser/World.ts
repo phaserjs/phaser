@@ -1,4 +1,7 @@
 /// <reference path="Game.ts" />
+/// <reference path="cameras/CameraManager.ts" />
+/// <reference path="core/Group.ts" />
+/// <reference path="core/Rectangle.ts" />
 
 /**
 * Phaser - World
@@ -64,25 +67,12 @@ module Phaser {
         public worldDivisions: number;
 
         /**
-         * This is called automatically every frame, and is where main logic performs.
+         * This is called automatically every frame, and is where main logic happens.
          */
         public update() {
 
-            this.group.preUpdate();
             this.group.update();
-            this.group.postUpdate();
-
             this.cameras.update();
-
-        }
-
-        /**
-         * Render every thing to the screen, automatically called after update().
-         */
-        public render() {
-
-            //  Unlike in flixel our render process is camera driven, not group driven
-            this.cameras.render();
 
         }
 
@@ -97,18 +87,14 @@ module Phaser {
 
         }
 
-        //  World methods
-
         /**
-         * Update size of this world with specific width and height.
-         * You can choose update camera bounds and verlet manager automatically or not.
+         * Updates the size of this world.
          *
          * @param width {number} New width of the world.
          * @param height {number} New height of the world.
-         * @param [updateCameraBounds] {boolean} update camera bounds automatically or not. Default to true.
-         * @param [updateVerletBounds] {boolean} update verlet bounds automatically or not. Default to true.
+         * @param [updateCameraBounds] {boolean} Update camera bounds automatically or not. Default to true.
          */
-        public setSize(width: number, height: number, updateCameraBounds: bool = true, updateVerletBounds: bool = true) {
+        public setSize(width: number, height: number, updateCameraBounds: bool = true) {
 
             this.bounds.width = width;
             this.bounds.height = height;
@@ -118,11 +104,7 @@ module Phaser {
                 this._game.camera.setBounds(0, 0, width, height);
             }
 
-            if (updateVerletBounds == true)
-            {
-                this._game.verlet.width = width;
-                this._game.verlet.height = height;
-            }
+            // dispatch world resize event
 
         }
 
@@ -158,31 +140,6 @@ module Phaser {
             return Math.round(Math.random() * this.bounds.height);
         }
 
-        //  Cameras
-
-        /**
-         * Create a new camera with specific position and size.
-         *
-         * @param x {number} X position of the new camera.
-         * @param y {number} Y position of the new camera.
-         * @param width {number} Width of the new camera.
-         * @param height {number} Height of the new camera.
-         * @returns {Camera} The newly created camera object.
-         */
-        public createCamera(x: number, y: number, width: number, height: number): Camera {
-            return this.cameras.addCamera(x, y, width, height);
-        }
-
-        /**
-         * Remove a new camera with its id.
-         *
-         * @param id {number} ID of the camera you want to remove.
-         * @returns {boolean}   True if successfully removed the camera, otherwise return false.
-         */
-        public removeCamera(id: number): bool {
-            return this.cameras.removeCamera(id);
-        }
-
         /**
          * Get all the cameras.
          *
@@ -190,102 +147,6 @@ module Phaser {
          */
         public getAllCameras(): Camera[] {
             return this.cameras.getAll();
-        }
-
-        //  Game Objects
-
-        /**
-         * Create a new Sprite with specific position and sprite sheet key.
-         *
-         * @param x {number} X position of the new sprite.
-         * @param y {number} Y position of the new sprite.
-         * @param [key] {string} key for the sprite sheet you want it to use.
-         * @returns {Sprite} The newly created sprite object.
-         */
-        public createSprite(x: number, y: number, key?: string = ''): Sprite {
-            return <Sprite> this.group.add(new Sprite(this._game, x, y, key));
-        }
-
-        /**
-         * Create a new GeomSprite with specific position.
-         *
-         * @param x {number} X position of the new geom sprite.
-         * @param y {number} Y position of the new geom sprite.
-         * @returns {GeomSprite} The newly created geom sprite object.
-         */
-        public createGeomSprite(x: number, y: number): GeomSprite {
-            return <GeomSprite> this.group.add(new GeomSprite(this._game, x, y));
-        }
-
-        /**
-         * Create a new DynamicTexture with specific size.
-         *
-         * @param width {number} Width of the texture.
-         * @param height {number} Height of the texture.
-         * @returns {DynamicTexture} The newly created dynamic texture object.
-         */
-        public createDynamicTexture(width: number, height: number): DynamicTexture {
-            return new DynamicTexture(this._game, width, height);
-        }
-
-        /**
-         * Create a new object container.
-         *
-         * @param [maxSize] {number} capacity of this group.
-         * @returns {Group} The newly created group.
-         */
-        public createGroup(maxSize?: number = 0): Group {
-            return <Group> this.group.add(new Group(this._game, maxSize));
-        }
-
-        /**
-         * Create a new ScrollZone object with image key, position and size.
-         *
-         * @param key {number} Key to a image you wish this object to use.
-         * @param x {number} X position of this object.
-         * @param y {number} Y position of this object.
-         * @param width {number} Width of this object.
-         * @param height {number} Height of this object.
-         * @returns {ScrollZone} The newly created scroll zone object.
-         */
-        public createScrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
-            return <ScrollZone> this.group.add(new ScrollZone(this._game, key, x, y, width, height));
-        }
-
-        /**
-         * Create a new Tilemap.
-         *
-         * @param key {string} Key for tileset image.
-         * @param mapData {string} Data of this tilemap.
-         * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-         * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
-         * @param [tileWidth] {number} width of each tile.
-         * @param [tileHeight] {number} height of each tile.
-         * @return {Tilemap} The newly created tilemap object.
-         */
-        public createTilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
-            return <Tilemap> this.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
-        }
-
-        /**
-         * Create a new Particle.
-         *
-         * @return {Particle} The newly created particle object.
-         */
-        public createParticle(): Particle {
-            return new Particle(this._game);
-        }
-
-        /**
-         * Create a new Emitter.
-         *
-         * @param [x] {number} x position of the emitter.
-         * @param [y] {number} y position of the emitter.
-         * @param [size] {number} size of this emitter.
-         * @return {Emitter} The newly created emitter object.
-         */
-        public createEmitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
-            return <Emitter> this.group.add(new Emitter(this._game, x, y, size));
         }
 
     }

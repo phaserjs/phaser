@@ -1,5 +1,5 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../geom/Vector2.ts" />
+/// <reference path="../Game.ts" />
+/// <reference path="../core/Vec2.ts" />
 
 /**
 * Phaser - Pointer
@@ -22,8 +22,8 @@ module Phaser {
 
             this.id = id;
             this.active = false;
-            this.position = new Vector2;
-            this.positionDown = new Vector2;
+            this.position = new Vec2;
+            this.positionDown = new Vec2;
             this.circle = new Circle(0, 0, 44);
 
             if (id == 0)
@@ -91,16 +91,16 @@ module Phaser {
         /**
         * A Vector object containing the initial position when the Pointer was engaged with the screen.
         * @property positionDown
-        * @type {Vector2}
+        * @type {Vec2}
         **/
-        public positionDown: Vector2 = null;
+        public positionDown: Vec2 = null;
 
         /**
         * A Vector object containing the current position of the Pointer on the screen.
         * @property position
-        * @type {Vector2}
+        * @type {Vec2}
         **/
-        public position: Vector2 = null;
+        public position: Vec2 = null;
 
         /**
         * A Circle object centered on the x/y screen coordinates of the Pointer.

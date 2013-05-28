@@ -1,13 +1,12 @@
 /// <reference path="Game.ts" />
-/// <reference path="geom/Point.ts" />
-/// <reference path="geom/Rectangle.ts" />
-/// <reference path="geom/Quad.ts" />
-/// <reference path="geom/Circle.ts" />
+/// <reference path="core/Point.ts" />
+/// <reference path="core/Rectangle.ts" />
+/// <reference path="core/Circle.ts" />
 /// <reference path="geom/Line.ts" />
 /// <reference path="geom/IntersectResult.ts" />
 /// <reference path="geom/Response.ts" />
-/// <reference path="geom/Vector2.ts" />
-/// <reference path="system/QuadTree.ts" />
+/// <reference path="core/Vec2.ts" />
+/// <reference path="math/QuadTree.ts" />
 
 /**
 * Phaser - Collision
@@ -31,7 +30,7 @@ module Phaser {
 
             for (var i = 0; i < 10; i++)
             {
-                Collision.T_VECTORS.push(new Vector2);
+                Collision.T_VECTORS.push(new Vec2);
             }
 
             Collision.T_ARRAYS = [];
@@ -115,10 +114,10 @@ module Phaser {
         public static TILE_OVERLAP: bool = false;
 
         /**
-         * A temporary Quad used in the separation process to help avoid gc spikes
-         * @type {Quad}
+         * A temporary Rectangle used in the separation process to help avoid gc spikes
+         * @type {Rectangle}
          */
-        public static _tempBounds: Quad;
+        public static _tempBounds: Rectangle;
 
         /**
          * Checks for Line to Line intersection and returns an IntersectResult object containing the results of the intersection.
@@ -498,7 +497,7 @@ module Phaser {
 
         /**
          * Determines whether the specified point is contained within the rectangular region defined by the Rectangle object and returns the result in an IntersectResult object.
-         * @param point The Point or MicroPoint object to check, or any object with x and y properties.
+         * @param point The Point or Point object to check, or any object with x and y properties.
          * @param rect The Rectangle object to check the point against
          * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
@@ -507,7 +506,8 @@ module Phaser {
 
             output.setTo(point.x, point.y);
 
-            output.result = rect.containsPoint(point);
+            //output.result = rect.containsPoint(point);
+
 
             return output;
 
@@ -591,7 +591,7 @@ module Phaser {
         /**
          * Checks if the Point object is contained within the Circle and returns the result in an IntersectResult object.
          * @param circle The Circle object to check
-         * @param point A Point or MicroPoint object to check, or any object with x and y properties
+         * @param point A Point or Point object to check, or any object with x and y properties
          * @param [output] An optional IntersectResult object to store the intersection values in. One is created if none given.
          * @returns {IntersectResult=} An IntersectResult object containing the results of the intersection
          */
@@ -700,7 +700,7 @@ module Phaser {
                 //  Check if the X hulls actually overlap
                 var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
                 //var objDeltaAbs: number = object.collisionMask.deltaXAbs;
-                var objBounds: Quad = new Quad(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+                var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
 
                 if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
                 {
@@ -780,7 +780,7 @@ module Phaser {
             {
                 //  Check if the Y hulls actually overlap
                 var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-                var objBounds: Quad = new Quad(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+                var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
 
                 if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
                 {
@@ -858,7 +858,7 @@ module Phaser {
             {
                 //  Check if the X hulls actually overlap
                 //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-                //var objBounds: Quad = new Quad(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+                //var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
 
                 //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
                 if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
@@ -940,7 +940,7 @@ module Phaser {
             {
                 //  Check if the Y hulls actually overlap
                 //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-                //var objBounds: Quad = new Quad(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+                //var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
 
                 //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
                 if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
@@ -1263,7 +1263,7 @@ module Phaser {
         * 
         * @type {Array.<Vector>}
         */
-        public static T_VECTORS: Vector2[];
+        public static T_VECTORS: Vec2[];
 
         /**
         * Pool of Arrays used in calculations.
@@ -1399,7 +1399,7 @@ module Phaser {
         *          MIDDLE_VORNOI_REGION (0) if it is the middle region, 
         *          RIGHT_VORNOI_REGION (1) if it is the right region.
         */
-        public static vornoiRegion(line: Vector2, point: Vector2): number {
+        public static vornoiRegion(line: Vec2, point: Vec2): number {
 
             var len2 = line.length2();
             var dp = point.dot(line);

@@ -1,4 +1,4 @@
-/// <reference path="../../Game.ts" />
+/// <reference path="../Game.ts" />
 /// <reference path="Pointer.ts" />
 
 /**

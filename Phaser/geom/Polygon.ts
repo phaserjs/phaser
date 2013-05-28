@@ -13,10 +13,10 @@ module Phaser {
         * A *convex* clockwise polygon
         * @class Polygon
         * @constructor
-        * @param {Vector2} pos A vector representing the origin of the polygon (all other points are relative to this one)
-        * @param {Array.<Vector2>} points An Array of vectors representing the points in the polygon, in clockwise order.
+        * @param {Vec2} pos A vector representing the origin of the polygon (all other points are relative to this one)
+        * @param {Array.<Vec2>} points An Array of vectors representing the points in the polygon, in clockwise order.
         **/
-        constructor(pos?: Vector2 = new Vector2, points?: Vector2[] = [], parent?:any = null) {
+        constructor(pos?: Vec2 = new Vec2, points?: Vec2[] = [], parent?:any = null) {
 
             this.pos = pos;
             this.points = points;
@@ -26,10 +26,10 @@ module Phaser {
         }
 
         public parent: any;
-        public pos: Vector2;
-        public points: Vector2[];
-        public edges: Vector2[];
-        public normals: Vector2[];
+        public pos: Vec2;
+        public points: Vec2[];
+        public edges: Vec2[];
+        public normals: Vec2[];
 
         /**
         * Recalculate the edges and normals of the polygon.  This
@@ -48,8 +48,8 @@ module Phaser {
             {
                 var p1 = points[i];
                 var p2 = i < len - 1 ? points[i + 1] : points[0];
-                var e = new Vector2().copyFrom(p2).sub(p1);
-                var n = new Vector2().copyFrom(e).perp().normalize();
+                var e = new Vec2().copyFrom(p2).sub(p1);
+                var n = new Vec2().copyFrom(e).perp().normalize();
                 this.edges.push(e);
                 this.normals.push(n);
             }

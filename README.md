@@ -1,7 +1,7 @@
 Phaser
 ======
 
-Version: 0.9.6 - Released: In Progress
+Version: 1.0.0 - Released: In Progress
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -19,6 +19,27 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
 Latest Update
 -------------
+
+TODO:
+
+* Dispatch world resize event
+* Removed ignoreGlobalUpdate because it checks exists etc in the Group update, so remove those checks from Sprite.update (same for render)
+
+
+
+V1.0.0
+
+* Massive refactoring across the entire codebase.
+* Removed Basic and GameObject and put Sprite on a diet. 127 properties and methods, now down to < 30.
+* Added a new headless renderer for non-display related performance testing.
+* Added camera type to the CameraManager for future non-orthographic cameras.
+* Added Camera.destroy - now clears down the FX and unregisters itself from the CameraManager.
+* Added Camera.hide/show to hide Sprites or Groups from rendering (and removed corresponding hideFromCamera methods from Sprites/Groups)
+* Heavily optimised Group so it no longer creates any temporary variables in any methods.
+* Added Game.renderer which can be HEADLESS, CANVAS or WEBGL (coming soon)
+* Added Sprite.render which is a reference to IRenderer.renderSprite, but can be overridden for custom handling.
+
+
 
 V0.9.6
 

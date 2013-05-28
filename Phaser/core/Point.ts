@@ -38,21 +38,6 @@ module Phaser {
         }
 
         /**
-         * Copies the x and y values from this Point to any given object.
-         * @method copyTo
-         * @param {any} target - The object to copy to.
-         * @return {any} The target object.
-         **/
-        public copyTo(target: any): Point {
-
-            target.x = this.x;
-            target.y = this.y;
-
-            return target;
-
-        }
-
-        /**
         * Inverts the x and y values of this Point
         * @method invert
         * @return {Point} This Point object.

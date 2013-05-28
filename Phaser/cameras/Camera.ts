@@ -3,6 +3,7 @@
 /// <reference path="../core/Vec2.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="../Game.ts" />
+/// <reference path="../components/camera/CameraFX.ts" />
 
 /**
 * Phaser - Camera
@@ -17,8 +18,6 @@ module Phaser {
     export class Camera {
 
         /**
-
-         *Sprite constructor
          * Instantiates a new camera at the specified location, with the specified size and zoom level.
          *
          * @param game {Phaser.Game} Current game instance.
@@ -35,7 +34,9 @@ module Phaser {
             this.ID = id;
             this._stageX = x;
             this._stageY = y;
-            this.fx = new FXManager(this._game, this);
+            this.scaledX = x;
+            this.scaledY = x;
+            this.fx = new CameraFX(this._game, this);
 
             //  The view into the world canvas we wish to render
             this.worldView = new Rectangle(0, 0, width, height);
@@ -54,8 +55,11 @@ module Phaser {
         private _stageY: number;
         private _rotation: number = 0;
         private _target: Sprite = null;
-        private _sx: number = 0;
-        private _sy: number = 0;
+        //private _sx: number = 0;
+        //private _sy: number = 0;
+
+        public scaledX: number;
+        public scaledY: number;
 
         /**
          * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
@@ -164,9 +168,55 @@ module Phaser {
 
         /**
          * Effects manager.
-         * @type {FXManager}
+         * @type {CameraFX}
          */
-        public fx: FXManager;
+        public fx: CameraFX;
+
+        /**
+        * Hides an object from this Camera. Hidden objects are not rendered.
+        * The object must implement a public cameraBlacklist property.
+        *
+        * @param object {Sprite/Group} The object this camera should ignore.
+        */
+        public hide(object) {
+
+            if (this.isHidden(object) == false)
+            {
+                object['cameraBlacklist'].push(this.ID);
+            }
+
+        }
+
+        /**
+        * Returns true if the object is hidden from this Camera.
+        *
+        * @param object {Sprite/Group} The object to check.
+        */
+        public isHidden(object): bool {
+
+            if (object['cameraBlacklist'] && object['cameraBlacklist'].length > 0 && object['cameraBlacklist'].indexOf(this.ID) == -1)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+        /**
+        * Un-hides an object previously hidden to this Camera.
+        * The object must implement a public cameraBlacklist property.
+        *
+        * @param object {Sprite/Group} The object this camera should display.
+        */
+        public show(object) {
+
+            if (this.isHidden(object) == true)
+            {
+                object['cameraBlacklist'].slice(object['cameraBlacklist'].indexOf(this.ID), 1);
+            }
+
+        }
 
         /**
          * Tells this camera object what sprite to track.
@@ -339,9 +389,9 @@ module Phaser {
         }
 
         /**
-         * Draw background, shadow, effects, and objects if this is visible.
+         * Camera preRender
          */
-        public render() {
+        public preRender() {
 
             if (this.visible === false || this.alpha < 0.1)
             {
@@ -360,32 +410,32 @@ module Phaser {
                 this._game.stage.context.globalAlpha = this.alpha;
             }
 
-            this._sx = this._stageX;
-            this._sy = this._stageY;
+            this.scaledX = this._stageX;
+            this.scaledY = this._stageY;
 
             //  Scale on
             if (this.scale.x !== 1 || this.scale.y !== 1)
             {
                 this._game.stage.context.scale(this.scale.x, this.scale.y);
-                this._sx = this._sx / this.scale.x;
-                this._sy = this._sy / this.scale.y;
+                this.scaledX = this.scaledX / this.scale.x;
+                this.scaledY = this.scaledY / this.scale.y;
             }
 
             //  Rotation - translate to the mid-point of the camera
             if (this._rotation !== 0)
             {
-                this._game.stage.context.translate(this._sx + this.worldView.halfWidth, this._sy + this.worldView.halfHeight);
+                this._game.stage.context.translate(this.scaledX + this.worldView.halfWidth, this.scaledY + this.worldView.halfHeight);
                 this._game.stage.context.rotate(this._rotation * (Math.PI / 180));
 
                 // now shift back to where that should actually render
-                this._game.stage.context.translate(-(this._sx + this.worldView.halfWidth), -(this._sy + this.worldView.halfHeight));
+                this._game.stage.context.translate(-(this.scaledX + this.worldView.halfWidth), -(this.scaledY + this.worldView.halfHeight));
             }
 
             //  Background
             if (this.opaque)
             {
                 this._game.stage.context.fillStyle = this.backgroundColor;
-                this._game.stage.context.fillRect(this._sx, this._sy, this.worldView.width, this.worldView.height);
+                this._game.stage.context.fillRect(this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
             }
 
             this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
@@ -394,13 +444,17 @@ module Phaser {
             if (this._clip == true && this.disableClipping == false)
             {
                 this._game.stage.context.beginPath();
-                this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
+                this._game.stage.context.rect(this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
                 this._game.stage.context.closePath();
                 this._game.stage.context.clip();
             }
 
-            //  Render all the Sprites
-            this._game.world.group.render(this, this._sx, this._sy);
+        }
+
+        /**
+         * Camera postRender
+         */
+        public postRender() {
 
             //  Scale off
             if (this.scale.x !== 1 || this.scale.y !== 1)
@@ -408,7 +462,7 @@ module Phaser {
                 this._game.stage.context.scale(1, 1);
             }
 
-            this.fx.postRender(this, this._sx, this._sy, this.worldView.width, this.worldView.height);
+            this.fx.postRender(this, this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
 
             if (this._rotation !== 0 || (this._clip && this.disableClipping == false))
             {
@@ -472,6 +526,15 @@ module Phaser {
                 this._game.stage.context.fillText('Bounds: ' + this.bounds.width + ' x ' + this.bounds.height, x, y + 56);
             }
 
+        }
+
+        /**
+         * Destroys this camera, associated FX and removes itself from the CameraManager.
+         */
+        public destroy() {
+
+            this._game.world.cameras.removeCamera(this.ID);
+            this.fx.destroy();
         }
 
         public get x(): number {

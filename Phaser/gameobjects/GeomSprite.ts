@@ -1,5 +1,6 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../geom/Polygon.ts" />
+/// <reference path="../utils/RectangleUtils.ts" />
 
 /**
 * Phaser - GeomSprite
@@ -11,7 +12,7 @@
 
 module Phaser {
 
-    export class GeomSprite extends GameObject {
+    export class GeomSprite extends Sprite {
 
         /**
          * GeomSprite constructor
@@ -262,11 +263,11 @@ module Phaser {
          * @param height {Number} Height of the rectangle
          * @return {GeomSprite} GeomSprite instance.
          */
-        createPolygon(points?: Vector2[] = []): GeomSprite {
+        createPolygon(points?: Vec2[] = []): GeomSprite {
 
-            this.refresh();
-            this.polygon = new Polygon(new Vector2(this.x, this.y), points);
-            this.type = GeomSprite.POLYGON;
+            //this.refresh();
+            //this.polygon = new Polygon(new Vec2(this.x, this.y), points);
+            //this.type = GeomSprite.POLYGON;
             //this.frameBounds.copyFrom(this.rect);
             return this;
 
@@ -326,6 +327,7 @@ module Phaser {
          * @param camera {Rectangle} The rectangle you want to check.
          * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
          */
+        /*
         public inCamera(camera: Rectangle): bool {
 
             if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
@@ -343,6 +345,7 @@ module Phaser {
             }
 
         }
+        */
 
         /**
          * Render this sprite to specific camera. Called by game loop after update().
@@ -354,10 +357,10 @@ module Phaser {
         public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): bool {
 
             //  Render checks
-            if (this.type == GeomSprite.UNASSIGNED || this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false)
-            {
-                return false;
-            }
+            //if (this.type == GeomSprite.UNASSIGNED || this.visible === false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false)
+            //{
+            //    return false;
+            //}
 
             //  Alpha
             if (this.alpha !== 1)

@@ -1,5 +1,5 @@
-/// <reference path="Game.ts" />
-/// <reference path="system/Camera.ts" />
+/// <reference path="../Game.ts" />
+/// <reference path="Camera.ts" />
 
 /**
 * Phaser - CameraManager
@@ -46,6 +46,9 @@ module Phaser {
          */
         private _cameraInstance: number = 0;
 
+        public static CAMERA_TYPE_ORTHOGRAPHIC: number = 0;
+        public static CAMERA_TYPE_ISOMETRIC: number = 1;
+
         /**
          * Currently used camera.
          */
@@ -68,13 +71,6 @@ module Phaser {
         }
 
         /**
-         * Render cameras.
-         */
-        public render() {
-            this._cameras.forEach((camera) => camera.render());
-        }
-
-        /**
          * Create a new camera with specific position and size.
          *
          * @param x {number} X position of the new camera.
@@ -83,7 +79,7 @@ module Phaser {
          * @param height {number} Height of the new camera.
          * @returns {Camera} The newly created camera object.
          */
-        public addCamera(x: number, y: number, width: number, height: number): Camera {
+        public addCamera(x: number, y: number, width: number, height: number, type: number = CameraManager.CAMERA_TYPE_ORTHOGRAPHIC): Camera {
 
             var newCam: Camera = new Camera(this._game, this._cameraInstance, x, y, width, height);
 
