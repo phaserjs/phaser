@@ -5811,6 +5811,7 @@ module Phaser {
         * The essential reference to the main game object
         */
         private _game;
+        private _wibble;
         private _sx;
         private _sy;
         private _sw;

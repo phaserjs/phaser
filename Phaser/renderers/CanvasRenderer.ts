@@ -16,6 +16,8 @@ module Phaser {
          */
         private _game: Phaser.Game;
 
+        private _wibble = 123;
+
         //  local rendering related temp vars to help avoid gc spikes with var creation
         private _sx: number = 0;
         private _sy: number = 0;
@@ -72,22 +74,22 @@ module Phaser {
                 sprite.texture.context.globalAlpha = sprite.texture.alpha;
             }
 
-            this._fx = sprite.scale.x;
-            this._fy = sprite.scale.y;
+            this._fx = 1;
+            this._fy = 1;
             this._sx = 0;
             this._sy = 0;
             this._sw = sprite.frameBounds.width;
             this._sh = sprite.frameBounds.height;
 
-            //if (sprite.texture.flippedX)
-            //{
-            //    this._fx = -1;
-            //}
+            if (sprite.texture.flippedX)
+            {
+                this._fx = -1;
+            }
 
-            //if (sprite.texture.flippedY)
-            //{
-            //    this._fy = -1;
-            //}
+            if (sprite.texture.flippedY)
+            {
+                this._fy = -1;
+            }
 
             this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
             this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
@@ -120,25 +122,81 @@ module Phaser {
             //  Apply origin / alignment
             if (sprite.origin.x != 0 || sprite.origin.y != 0)
             {
+                //sprite.origin.x *= sprite.scale.x;
+                //sprite.origin.y *= sprite.scale.y;
                 //this._dx += (sprite.origin.x * sprite.scale.x);
                 //this._dy += (sprite.origin.y * sprite.scale.y);
             }
 
+
+            //  this relates to the SPRITE! not the CanvasRenderer, because of the way sprite.render bound itself to this function
+            //console.log(this);
+
+            //  no rotation
+            var sin = Math.sin(sprite.game.math.degreesToRadians(sprite.position.rotation));
+            var cos = Math.cos(sprite.game.math.degreesToRadians(sprite.position.rotation));
+
+            var ssx = sprite.scale.x;
+            var ssy = sprite.scale.y;
+
+            if (sprite.texture.flippedX)
+            {
+                //sin = -sin;
+                ssx = -ssx;
+            }
+
+            if (sprite.texture.flippedY)
+            {
+                //this._dy += this._dh;
+                ssy = -ssy;
+            }
+
+            //  setTransform(a, b, c, d, e, f);
+            //  a = scale x
+            //  b = skew x
+            //  c = skew y
+            //  d = scale y
+            //  e = translate x
+            //  f = translate y
+
+            sprite.texture.context.save();
+            sprite.texture.context.setTransform(cos * ssx, sin * ssx, -sin * ssy, cos * ssy, this._dx, this._dy);
+
+            this._dx = -sprite.origin.x;
+            this._dy = -sprite.origin.y;
+            //this._dx = -(sprite.origin.x * sprite.scale.x);
+            //this._dy = -(sprite.origin.y * sprite.scale.y);
+
+            //  If scaled
+            if (sprite.scale.x != 1 || sprite.scale.y != 1)
+            {
+                //  Adjust along x/y based on origin
+                //console.log('scale adjust 1', this._dx, this._dw);
+                //this._dx += (this._dw - sprite.origin.x) * sprite.scale.x;
+                //this._dx += (sprite.origin.x * sprite.scale.x);
+                //console.log('scale adjust 2', this._dx, sprite.origin.x * sprite.scale.x);
+            }
+
+            //this._dw = sprite.frameBounds.width * sprite.scale.x;
+            //this._dh = sprite.frameBounds.height * sprite.scale.y;
+
+
+            /*
             //	Rotation and Flipped
-            if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
-            //if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+            //if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+            if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
             {
                 sprite.texture.context.save();
 
-                if (sprite.texture.flippedX)
-                {
-                    this._dx += this._dw * sprite.scale.x;
-                }
+                //if (sprite.texture.flippedX)
+                //{
+                //    this._dx += this._dw * sprite.scale.x;
+                //}
 
-                if (sprite.texture.flippedY)
-                {
-                    this._dy += this._dh * sprite.scale.y;
-                }
+                //if (sprite.texture.flippedY)
+                //{
+                //    this._dy += this._dh * sprite.scale.y;
+                //}
 
                 sprite.texture.context.translate(this._dx, this._dy);
 
@@ -150,20 +208,21 @@ module Phaser {
                 if (sprite.texture.renderRotation == true && (sprite.position.rotation !== 0 || sprite.position.rotationOffset !== 0))
                 {
                     //  Apply point of rotation here
-                    sprite.texture.context.rotate((sprite.position.rotationOffset + sprite.position.rotation) * (Math.PI / 180));
+                    //sprite.texture.context.rotate((sprite.position.rotationOffset + sprite.position.rotation) * (Math.PI / 180));
                 }
 
-                if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.texture.flippedX || sprite.texture.flippedY)
+                //if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.texture.flippedX || sprite.texture.flippedY)
+                if (sprite.texture.flippedX || sprite.texture.flippedY)
                 {
-                    if (sprite.texture.flippedX)
-                    {
-                        this._fx = -sprite.scale.x;
-                    }
+                    //if (sprite.texture.flippedX)
+                    //{
+                    //    this._fx = -sprite.scale.x;
+                    //}
 
-                    if (sprite.texture.flippedY)
-                    {
-                        this._fy = -sprite.scale.y;
-                    }
+                    //if (sprite.texture.flippedY)
+                    //{
+                    //    this._fy = -sprite.scale.y;
+                    //}
 
                     sprite.texture.context.scale(this._fx, this._fy);
 
@@ -174,8 +233,8 @@ module Phaser {
                 //    sprite.texture.context.scale(this._fx, this._fy);
                 //}
 
-                this._dx = -(sprite.origin.x * sprite.scale.x);
-                this._dy = -(sprite.origin.y * sprite.scale.y);
+                this._dx = -sprite.origin.x;
+                this._dy = -sprite.origin.y;
                 //this._dx = -(sprite.origin.x * sprite.scale.x);
                 //this._dy = -(sprite.origin.y * sprite.scale.y);
                 //this._dx = -(this._dw / 2) * sprite.scale.x;
@@ -191,6 +250,7 @@ module Phaser {
                     //this._dy -= (sprite.origin.y * sprite.scale.y);
                 }
             }
+            */
 
             this._sx = Math.round(this._sx);
             this._sy = Math.round(this._sy);
@@ -225,8 +285,10 @@ module Phaser {
             //if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
             {
                 //this.context.translate(0, 0);
-                sprite.texture.context.restore();
+                //sprite.texture.context.restore();
             }
+
+            sprite.texture.context.restore();
 
             //if (this.renderDebug)
             //{

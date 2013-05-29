@@ -22,15 +22,18 @@
 
         //  Here we'll assign the new sprite to the local fuji variable
         //fuji = game.add.sprite(game.stage.centerX - 160, game.stage.centerY - 100, 'fuji');
-        fuji = game.add.sprite(100, game.stage.centerY - 100, 'fuji');
+        fuji = game.add.sprite(200, 200, 'fuji');
 
-        //fuji.scale.x = 2;
-        //fuji.scale.y = 2;
+        //  sets origin to the center of the sprite (half the width and half the height)
+        fuji.origin.setTo(160, 100);
+
+        fuji.scale.x = 2;
+        fuji.scale.y = 2;
         //fuji.texture.flippedX = true;
         fuji.texture.flippedY = true;
-
-        //fuji.origin.setTo(160, 100);
         //fuji.rotation = 45;
+
+        //game.add.tween(fuji.scale).to({ x: 0 }, 3000).start();
         game.add.tween(fuji.position).to({ rotation: 360 }, 3000).start();
 
         //  We set the origin of the Sprite to be the center so that the scaling happens around the center, not the left-hand side
