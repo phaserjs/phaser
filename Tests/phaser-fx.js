@@ -1,8 +1,7 @@
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Flash
         *
@@ -73,9 +72,57 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/system/Camera.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
+        /**
+        * Phaser - FX - Camera - Border
+        *
+        * Creates a border around a camera.
+        */
+        (function (Camera) {
+            var Border = (function () {
+                function Border(game, parent) {
+                    /**
+                    * Whether render border of this camera or not. (default is false)
+                    * @type {boolean}
+                    */
+                    this.showBorder = false;
+                    /**
+                    * Color of border of this camera. (in css color string)
+                    * @type {string}
+                    */
+                    this.borderColor = 'rgb(255,255,255)';
+                    this._game = game;
+                    this._parent = parent;
+                }
+                Border.prototype.start = /**
+                * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
+                */
+                function () {
+                };
+                Border.prototype.postRender = /**
+                * Post-render is called during the objects render cycle, after the children/image data has been rendered.
+                * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
+                */
+                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                    if(this.showBorder == true) {
+                        this._game.stage.context.strokeStyle = this.borderColor;
+                        this._game.stage.context.lineWidth = 1;
+                        this._game.stage.context.rect(camera.scaledX, camera.scaledY, camera.worldView.width, camera.worldView.height);
+                        this._game.stage.context.stroke();
+                    }
+                };
+                return Border;
+            })();
+            Camera.Border = Border;            
+        })(FX.Camera || (FX.Camera = {}));
+        var Camera = FX.Camera;
+    })(Phaser.FX || (Phaser.FX = {}));
+    var FX = Phaser.FX;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (FX) {
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Template
         *
@@ -131,9 +178,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/system/Camera.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Mirror
         *
@@ -176,9 +221,10 @@ var Phaser;
                 * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
                 */
                 function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
-                    if(this.cls) {
-                        this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
-                    }
+                    //if (this.cls)
+                    //{
+                    //    this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
+                    //}
                     this._sx = cameraX + this._mirrorX;
                     this._sy = cameraY + this._mirrorY;
                     if(this.flipX == true && this.flipY == false) {
@@ -221,9 +267,79 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/system/Camera.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
+        /**
+        * Phaser - FX - Camera - Shadow
+        *
+        * Creates a drop-shadow effect on the camera window.
+        */
+        (function (Camera) {
+            var Shadow = (function () {
+                function Shadow(game, parent) {
+                    /**
+                    * Render camera shadow or not. (default is false)
+                    * @type {boolean}
+                    */
+                    this.showShadow = false;
+                    /**
+                    * Color of shadow, in css color string.
+                    * @type {string}
+                    */
+                    this.shadowColor = 'rgb(0,0,0)';
+                    /**
+                    * Blur factor of shadow.
+                    * @type {number}
+                    */
+                    this.shadowBlur = 10;
+                    /**
+                    * Offset of the shadow from camera's position.
+                    * @type {Point}
+                    */
+                    this.shadowOffset = new Phaser.Point(4, 4);
+                    this._game = game;
+                    this._parent = parent;
+                }
+                Shadow.prototype.start = /**
+                * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
+                */
+                function () {
+                };
+                Shadow.prototype.preRender = /**
+                * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
+                * It happens directly AFTER a canvas context.save has happened if added to a Camera.
+                */
+                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                    //  Shadow
+                    if(this.showShadow == true) {
+                        this._game.stage.context.shadowColor = this.shadowColor;
+                        this._game.stage.context.shadowBlur = this.shadowBlur;
+                        this._game.stage.context.shadowOffsetX = this.shadowOffset.x;
+                        this._game.stage.context.shadowOffsetY = this.shadowOffset.y;
+                    }
+                };
+                Shadow.prototype.render = /**
+                * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
+                */
+                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                    //  Shadow off
+                    if(this.showShadow == true) {
+                        this._game.stage.context.shadowBlur = 0;
+                        this._game.stage.context.shadowOffsetX = 0;
+                        this._game.stage.context.shadowOffsetY = 0;
+                    }
+                };
+                return Shadow;
+            })();
+            Camera.Shadow = Shadow;            
+        })(FX.Camera || (FX.Camera = {}));
+        var Camera = FX.Camera;
+    })(Phaser.FX || (Phaser.FX = {}));
+    var FX = Phaser.FX;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (FX) {
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Scanlines
         *
@@ -254,8 +370,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Shake
         *
@@ -267,7 +382,7 @@ var Phaser;
                     this._fxShakeIntensity = 0;
                     this._fxShakeDuration = 0;
                     this._fxShakeComplete = null;
-                    this._fxShakeOffset = new Phaser.MicroPoint(0, 0);
+                    this._fxShakeOffset = new Phaser.Point(0, 0);
                     this._fxShakeDirection = 0;
                     this._fxShakePrevX = 0;
                     this._fxShakePrevY = 0;
@@ -347,8 +462,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Fade
         *

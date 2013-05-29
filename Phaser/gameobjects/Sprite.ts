@@ -11,7 +11,7 @@
 
 module Phaser {
 
-    export class Sprite {
+    export class Sprite implements IGameObject {
 
         /**
          * Create a new <code>Sprite</code>.
@@ -34,11 +34,17 @@ module Phaser {
             this.visible = true;
             this.alive = true;
 
+            this.frameBounds = new Rectangle(x, y, width, height);
+            this.origin = new Phaser.Vec2(0, 0);
             this.scrollFactor = new Phaser.Vec2(1, 1);
             this.scale = new Phaser.Vec2(1, 1);
 
             this.position = new Phaser.Components.Position(this, x, y);
             this.texture = new Phaser.Components.Texture(this, key, game.stage.canvas, game.stage.context);
+
+            this.width = this.frameBounds.width;
+            this.height = this.frameBounds.height;
+            this.rotation = this.position.rotation;
 
         }
 
@@ -77,6 +83,10 @@ module Phaser {
          */
         public alive: bool;
 
+        //  Getters only, don't over-write these values
+        public width: number;
+        public height: number;
+
         /**
          * The position of the Sprite in world and screen coordinates.
          */
@@ -94,8 +104,101 @@ module Phaser {
          */
         public frameBounds: Phaser.Rectangle;
 
+        /**
+         * Scale of the Sprite. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
+         */
         public scale: Phaser.Vec2;
+
+        /**
+         * The influence of camera movement upon the Sprite.
+         */
         public scrollFactor: Phaser.Vec2;
+
+        /**
+         * The Sprite origin is the point around which scale and rotation transforms take place.
+         */
+        public origin: Phaser.Vec2;
+
+        /**
+         * Pre-update is called right before update() on each object in the game loop.
+         */
+        public preUpdate() {
+
+            //this.last.x = this.frameBounds.x;
+            //this.last.y = this.frameBounds.y;
+
+            //this.collisionMask.preUpdate();
+
+        }
+
+        /**
+         * Override this function to update your class's position and appearance.
+         */
+        public update() {
+        }
+
+        /**
+         * Automatically called after update() by the game loop.
+         */
+        public postUpdate() {
+
+            /*
+            this.animations.update();
+
+            if (this.moves)
+            {
+                this.updateMotion();
+            }
+
+            if (this.worldBounds != null)
+            {
+                if (this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL)
+                {
+                    if (this.x < this.worldBounds.x || this.x > this.worldBounds.right || this.y < this.worldBounds.y || this.y > this.worldBounds.bottom)
+                    {
+                        this.kill();
+                    }
+                }
+                else
+                {
+                    if (this.x < this.worldBounds.x)
+                    {
+                        this.x = this.worldBounds.x;
+                    }
+                    else if (this.x > this.worldBounds.right)
+                    {
+                        this.x = this.worldBounds.right;
+                    }
+
+                    if (this.y < this.worldBounds.y)
+                    {
+                        this.y = this.worldBounds.y;
+                    }
+                    else if (this.y > this.worldBounds.bottom)
+                    {
+                        this.y = this.worldBounds.bottom;
+                    }
+                }
+            }
+                
+            this.collisionMask.update();
+
+            if (this.inputEnabled)
+            {
+                this.updateInput();
+            }
+
+            this.wasTouching = this.touching;
+            this.touching = Collision.NONE;
+            */
+
+        }
+
+        /**
+         * Clean up memory.
+         */
+        public destroy() {
+        }
 
         /**
          * x value of the object.
@@ -128,6 +231,17 @@ module Phaser {
 
         public set z(value: number) {
             this.position.z = value;
+        }
+
+        /**
+         * rotation value of the object.
+         */
+        public get rotation(): number {
+            return this.position.rotation;
+        }
+
+        public set rotation(value: number) {
+            this.position.rotation = value;
         }
 
     }

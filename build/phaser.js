@@ -2685,6 +2685,206 @@ var Phaser;
     var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="../core/Point.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/**
+* Phaser - RectangleUtils
+*
+* A collection of methods useful for manipulating and comparing Rectangle objects.
+*
+* TODO: Check docs + overlap + intersect + toPolygon?
+*/
+var Phaser;
+(function (Phaser) {
+    var RectangleUtils = (function () {
+        function RectangleUtils() { }
+        RectangleUtils.getTopLeftAsPoint = /**
+        * Get the location of the Rectangles top-left corner as a Point object.
+        * @method getTopLeftAsPoint
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        function getTopLeftAsPoint(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Point(); }
+            return out.setTo(a.x, a.y);
+        };
+        RectangleUtils.getBottomRightAsPoint = /**
+        * Get the location of the Rectangles bottom-right corner as a Point object.
+        * @method getTopLeftAsPoint
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        function getBottomRightAsPoint(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Point(); }
+            return out.setTo(a.right, a.bottom);
+        };
+        RectangleUtils.inflate = /**
+        * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
+        * @method inflate
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Number} dx The amount to be added to the left side of the Rectangle.
+        * @param {Number} dy The amount to be added to the bottom side of the Rectangle.
+        * @return {Rectangle} This Rectangle object.
+        **/
+        function inflate(a, dx, dy) {
+            a.x -= dx;
+            a.width += 2 * dx;
+            a.y -= dy;
+            a.height += 2 * dy;
+            return a;
+        };
+        RectangleUtils.inflatePoint = /**
+        * Increases the size of the Rectangle object. This method is similar to the Rectangle.inflate() method except it takes a Point object as a parameter.
+        * @method inflatePoint
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} point The x property of this Point object is used to increase the horizontal dimension of the Rectangle object. The y property is used to increase the vertical dimension of the Rectangle object.
+        * @return {Rectangle} The Rectangle object.
+        **/
+        function inflatePoint(a, point) {
+            return RectangleUtils.inflate(a, point.x, point.y);
+        };
+        RectangleUtils.size = /**
+        * The size of the Rectangle object, expressed as a Point object with the values of the width and height properties.
+        * @method size
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} output Optional Point object. If given the values will be set into the object, otherwise a brand new Point object will be created and returned.
+        * @return {Point} The size of the Rectangle object
+        **/
+        function size(a, output) {
+            if (typeof output === "undefined") { output = new Phaser.Point(); }
+            return output.setTo(a.width, a.height);
+        };
+        RectangleUtils.clone = /**
+        * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
+        * @method clone
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Rectangle} output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Rectangle}
+        **/
+        function clone(a, output) {
+            if (typeof output === "undefined") { output = new Phaser.Rectangle(); }
+            return output.setTo(a.x, a.y, a.width, a.height);
+        };
+        RectangleUtils.contains = /**
+        * Determines whether the specified coordinates are contained within the region defined by this Rectangle object.
+        * @method contains
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Number} x The x coordinate of the point to test.
+        * @param {Number} y The y coordinate of the point to test.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        function contains(a, x, y) {
+            return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
+        };
+        RectangleUtils.containsPoint = /**
+        * Determines whether the specified point is contained within the rectangular region defined by this Rectangle object. This method is similar to the Rectangle.contains() method, except that it takes a Point object as a parameter.
+        * @method containsPoint
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} point The point object being checked. Can be Point or any object with .x and .y values.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        function containsPoint(a, point) {
+            return RectangleUtils.contains(a, point.x, point.y);
+        };
+        RectangleUtils.containsRect = /**
+        * Determines whether the first Rectangle object is fully contained within the second Rectangle object.
+        * A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
+        * @method containsRect
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        function containsRect(a, b) {
+            //	If the given rect has a larger volume than this one then it can never contain it
+            if(a.volume > b.volume) {
+                return false;
+            }
+            return (a.x >= b.x && a.y >= b.y && a.right <= b.right && a.bottom <= b.bottom);
+        };
+        RectangleUtils.equals = /**
+        * Determines whether the two Rectangles are equal.
+        * This method compares the x, y, width and height properties of each Rectangle.
+        * @method equals
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @return {Boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
+        **/
+        function equals(a, b) {
+            return (a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height);
+        };
+        RectangleUtils.intersection = /**
+        * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
+        * @method intersection
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Rectangle} A Rectangle object that equals the area of intersection. If the rectangles do not intersect, this method returns an empty Rectangle object; that is, a rectangle with its x, y, width, and height properties set to 0.
+        **/
+        function intersection(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
+            if(RectangleUtils.intersects(a, b)) {
+                out.x = Math.max(a.x, b.x);
+                out.y = Math.max(a.y, b.y);
+                out.width = Math.min(a.right, b.right) - out.x;
+                out.height = Math.min(a.bottom, b.bottom) - out.y;
+            }
+            return out;
+        };
+        RectangleUtils.intersects = /**
+        * Determines whether the two Rectangles intersect with each other.
+        * This method checks the x, y, width, and height properties of the Rectangles.
+        * @method intersects
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
+        **/
+        function intersects(a, b, tolerance) {
+            if (typeof tolerance === "undefined") { tolerance = 0; }
+            // ?
+            //return (a.right > b.x) && (a.x < b.right) && (a.bottom > b.y) && (a.y < b.bottom);
+            return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
+            //if (a.x >= b.right || a.right <= b.x || a.bottom <= b.y || a.y >= b.bottom)
+            //{
+            //    return false;
+            //}
+            //return true;
+                    };
+        RectangleUtils.intersectsRaw = /**
+        * Determines whether the object specified intersects (overlaps) with the given values.
+        * @method intersectsRaw
+        * @param {Number} left
+        * @param {Number} right
+        * @param {Number} top
+        * @param {Number} bottomt
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
+        **/
+        function intersectsRaw(a, left, right, top, bottom, tolerance) {
+            if (typeof tolerance === "undefined") { tolerance = 0; }
+            return !(left > a.right + tolerance || right < a.left - tolerance || top > a.bottom + tolerance || bottom < a.top - tolerance);
+        };
+        RectangleUtils.union = /**
+        * Adds two rectangles together to create a new Rectangle object, by filling in the horizontal and vertical space between the two rectangles.
+        * @method union
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Rectangle} A Rectangle object that is the union of the two rectangles.
+        **/
+        function union(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
+            return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
+        };
+        return RectangleUtils;
+    })();
+    Phaser.RectangleUtils = RectangleUtils;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../utils/RectangleUtils.ts" />
+/// <reference path="IGameObject.ts" />
 /**
 * Phaser - DynamicTexture
 *
@@ -2847,20 +3047,20 @@ var Phaser;
         */
         function (sourceTexture, sourceRect, destPoint) {
             //  Swap for drawImage if the sourceRect is the same size as the sourceTexture to avoid a costly getImageData call
-            if(sourceRect.equals(this.bounds) == true) {
+            if(Phaser.RectangleUtils.equals(sourceRect, this.bounds) == true) {
                 this.context.drawImage(sourceTexture.canvas, destPoint.x, destPoint.y);
             } else {
                 this.context.putImageData(sourceTexture.getPixels(sourceRect), destPoint.x, destPoint.y);
             }
         };
         DynamicTexture.prototype.assignCanvasToGameObjects = /**
-        * Given an array of GameObjects it will update each of them so that their canvas/contexts reference this DynamicTexture
+        * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
         * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
         */
         function (objects) {
             for(var i = 0; i < objects.length; i++) {
-                objects[i].canvas = this.canvas;
-                objects[i].context = this.context;
+                objects[i].texture.canvas = this.canvas;
+                objects[i].texture.context = this.context;
             }
         };
         DynamicTexture.prototype.clear = /**
@@ -3494,50 +3694,6 @@ var Phaser;
         function setBounds(x, y, width, height) {
             //this.worldBounds = new Quad(x, y, width, height);
                     };
-        SpriteUtils.loadTexture = /**
-        * Load graphic for this sprite. (graphic can be SpriteSheet or Texture)
-        * @param key {string} Key of the graphic you want to load for this sprite.
-        * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
-        * @return {Sprite} Sprite instance itself.
-        */
-        function loadTexture(sprite, key, clearAnimations) {
-            if (typeof clearAnimations === "undefined") { clearAnimations = true; }
-            //if (clearAnimations && sprite.animations.frameData !== null)
-            //{
-            //    sprite.animations.destroy();
-            //}
-            if(sprite.game.cache.getImage(key) !== null) {
-                if(sprite.game.cache.isSpriteSheet(key)) {
-                    sprite.texture.setTo(null, sprite.game.cache.getImage(key));
-                    //sprite.animations.loadFrameData(sprite._game.cache.getFrameData(key));
-                    //sprite.collisionMask.width = sprite.animations.currentFrame.width;
-                    //sprite.collisionMask.height = sprite.animations.currentFrame.height;
-                                    } else {
-                    sprite.texture.setTo(sprite.game.cache.getImage(key), null);
-                    sprite.frameBounds.width = sprite.texture.width;
-                    sprite.frameBounds.height = sprite.texture.height;
-                    //sprite.collisionMask.width = sprite._texture.width;
-                    //sprite.collisionMask.height = sprite._texture.height;
-                                    }
-            }
-            return sprite;
-        };
-        SpriteUtils.loadDynamicTexture = /**
-        * Load a DynamicTexture as its texture.
-        * @param texture {DynamicTexture} The texture object to be used by this sprite.
-        * @return {Sprite} Sprite instance itself.
-        */
-        function loadDynamicTexture(sprite, texture) {
-            //if (sprite.animations.frameData !== null)
-            //{
-            //    sprite.animations.destroy();
-            //}
-            //sprite._texture = texture;
-            //sprite.frameBounds.width = sprite._texture.width;
-            //sprite.frameBounds.height = sprite._texture.height;
-            //sprite._dynamicTexture = true;
-            return sprite;
-        };
         return SpriteUtils;
     })();
     Phaser.SpriteUtils = SpriteUtils;    
@@ -3602,6 +3758,7 @@ var Phaser;
                 * @type {boolean}
                 */
                 this.flippedY = false;
+                this._game = parent.game;
                 this._sprite = parent;
                 this.canvas = canvas;
                 this.context = context;
@@ -3638,7 +3795,23 @@ var Phaser;
             */
             function (key, clearAnimations) {
                 if (typeof clearAnimations === "undefined") { clearAnimations = true; }
-                return Phaser.SpriteUtils.loadTexture(this._sprite, key, clearAnimations);
+                //if (clearAnimations && sprite.animations.frameData !== null)
+                //{
+                //    sprite.animations.destroy();
+                //}
+                if(this._game.cache.getImage(key) !== null) {
+                    this.setTo(this._game.cache.getImage(key), null);
+                    if(this._game.cache.isSpriteSheet(key)) {
+                        //sprite.animations.loadFrameData(sprite._game.cache.getFrameData(key));
+                        //sprite.collisionMask.width = sprite.animations.currentFrame.width;
+                        //sprite.collisionMask.height = sprite.animations.currentFrame.height;
+                                            } else {
+                        this._sprite.frameBounds.width = this.width;
+                        this._sprite.frameBounds.height = this.height;
+                        //sprite.collisionMask.width = sprite._texture.width;
+                        //sprite.collisionMask.height = sprite._texture.height;
+                                            }
+                }
             };
             Texture.prototype.loadDynamicTexture = /**
             * Load a DynamicTexture as its texture.
@@ -3646,7 +3819,13 @@ var Phaser;
             * @return {Sprite} Sprite instance itself.
             */
             function (texture) {
-                return Phaser.SpriteUtils.loadDynamicTexture(this._sprite, texture);
+                //if (sprite.animations.frameData !== null)
+                //{
+                //    sprite.animations.destroy();
+                //}
+                this.setTo(null, texture);
+                this._sprite.frameBounds.width = this.width;
+                this._sprite.frameBounds.height = this.height;
             };
             Object.defineProperty(Texture.prototype, "width", {
                 get: /**
@@ -3719,11 +3898,88 @@ var Phaser;
             this.active = true;
             this.visible = true;
             this.alive = true;
+            this.frameBounds = new Phaser.Rectangle(x, y, width, height);
+            this.origin = new Phaser.Vec2(0, 0);
             this.scrollFactor = new Phaser.Vec2(1, 1);
             this.scale = new Phaser.Vec2(1, 1);
             this.position = new Phaser.Components.Position(this, x, y);
             this.texture = new Phaser.Components.Texture(this, key, game.stage.canvas, game.stage.context);
+            this.width = this.frameBounds.width;
+            this.height = this.frameBounds.height;
+            this.rotation = this.position.rotation;
         }
+        Sprite.prototype.preUpdate = /**
+        * Pre-update is called right before update() on each object in the game loop.
+        */
+        function () {
+            //this.last.x = this.frameBounds.x;
+            //this.last.y = this.frameBounds.y;
+            //this.collisionMask.preUpdate();
+                    };
+        Sprite.prototype.update = /**
+        * Override this function to update your class's position and appearance.
+        */
+        function () {
+        };
+        Sprite.prototype.postUpdate = /**
+        * Automatically called after update() by the game loop.
+        */
+        function () {
+            /*
+            this.animations.update();
+            
+            if (this.moves)
+            {
+            this.updateMotion();
+            }
+            
+            if (this.worldBounds != null)
+            {
+            if (this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL)
+            {
+            if (this.x < this.worldBounds.x || this.x > this.worldBounds.right || this.y < this.worldBounds.y || this.y > this.worldBounds.bottom)
+            {
+            this.kill();
+            }
+            }
+            else
+            {
+            if (this.x < this.worldBounds.x)
+            {
+            this.x = this.worldBounds.x;
+            }
+            else if (this.x > this.worldBounds.right)
+            {
+            this.x = this.worldBounds.right;
+            }
+            
+            if (this.y < this.worldBounds.y)
+            {
+            this.y = this.worldBounds.y;
+            }
+            else if (this.y > this.worldBounds.bottom)
+            {
+            this.y = this.worldBounds.bottom;
+            }
+            }
+            }
+            
+            this.collisionMask.update();
+            
+            if (this.inputEnabled)
+            {
+            this.updateInput();
+            }
+            
+            this.wasTouching = this.touching;
+            this.touching = Collision.NONE;
+            */
+                    };
+        Sprite.prototype.destroy = /**
+        * Clean up memory.
+        */
+        function () {
+        };
         Object.defineProperty(Sprite.prototype, "x", {
             get: /**
             * x value of the object.
@@ -3759,6 +4015,19 @@ var Phaser;
             },
             set: function (value) {
                 this.position.z = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Sprite.prototype, "rotation", {
+            get: /**
+            * rotation value of the object.
+            */
+            function () {
+                return this.position.rotation;
+            },
+            set: function (value) {
+                this.position.rotation = value;
             },
             enumerable: true,
             configurable: true
@@ -4935,6 +5204,13 @@ var Phaser;
             }
             return this;
         };
+        Tween.prototype.clear = function () {
+            this._chainedTweens = [];
+            this.onStart.removeAll();
+            this.onUpdate.removeAll();
+            this.onComplete.removeAll();
+            return this;
+        };
         Tween.prototype.stop = /**
         * Stop tweening.
         */
@@ -5109,7 +5385,7 @@ var Phaser;
             if (typeof maxSize === "undefined") { maxSize = 0; }
             return this._world.group.add(new Phaser.Group(this._game, maxSize));
         };
-        GameObjectFactory.prototype.tilemap = /**
+        GameObjectFactory.prototype.tween = /**
         * Create a new Particle.
         *
         * @return {Particle} The newly created particle object.
@@ -5152,13 +5428,10 @@ var Phaser;
         * @param [tileHeight] {number} height of each tile.
         * @return {Tilemap} The newly created tilemap object.
         */
-        function (key, mapData, format, resizeWorld, tileWidth, tileHeight) {
-            if (typeof resizeWorld === "undefined") { resizeWorld = true; }
-            if (typeof tileWidth === "undefined") { tileWidth = 0; }
-            if (typeof tileHeight === "undefined") { tileHeight = 0; }
-            return this._world.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
-        };
-        GameObjectFactory.prototype.tween = /**
+        //public tilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
+        //    return <Tilemap> this._world.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
+        //}
+        /**
         * Create a tween object for a specific object.
         *
         * @param obj Object you wish the tween will affect.
@@ -5177,7 +5450,7 @@ var Phaser;
         function (sprite) {
             return this._world.group.add(sprite);
         };
-        GameObjectFactory.prototype.existingTilemap = /**
+        GameObjectFactory.prototype.existingTween = /**
         * Add an existing GeomSprite to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
         *
@@ -5214,10 +5487,10 @@ var Phaser;
         * @param tilemap The Tilemap to add to the Game World
         * @return {Phaser.Tilemap} The Tilemap object
         */
-        function (tilemap) {
-            return this._world.group.add(tilemap);
-        };
-        GameObjectFactory.prototype.existingTween = /**
+        //public existingTilemap(tilemap: Tilemap): Tilemap {
+        //    return this._world.group.add(tilemap);
+        //}
+        /**
         * Add an existing Tween to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
         *
@@ -7971,6 +8244,497 @@ var Phaser;
     Phaser.RequestAnimationFrame = RequestAnimationFrame;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="../core/Point.ts" />
+/**
+* Phaser - PointUtils
+*
+* A collection of methods useful for manipulating and comparing Point objects.
+*
+* TODO: interpolate & polar
+*/
+var Phaser;
+(function (Phaser) {
+    var PointUtils = (function () {
+        function PointUtils() { }
+        PointUtils.add = /**
+        * Adds the coordinates of two points together to create a new point.
+        * @method add
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        function add(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Point(); }
+            return out.setTo(a.x + b.x, a.y + b.y);
+        };
+        PointUtils.subtract = /**
+        * Subtracts the coordinates of two points to create a new point.
+        * @method subtract
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        function subtract(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Point(); }
+            return out.setTo(a.x - b.x, a.y - b.y);
+        };
+        PointUtils.multiply = /**
+        * Multiplies the coordinates of two points to create a new point.
+        * @method subtract
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        function multiply(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Point(); }
+            return out.setTo(a.x * b.x, a.y * b.y);
+        };
+        PointUtils.divide = /**
+        * Divides the coordinates of two points to create a new point.
+        * @method subtract
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        function divide(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Point(); }
+            return out.setTo(a.x / b.x, a.y / b.y);
+        };
+        PointUtils.clamp = /**
+        * Clamps the Point object values to be between the given min and max
+        * @method clamp
+        * @param {Point} a - The point.
+        * @param {number} The minimum value to clamp this Point to
+        * @param {number} The maximum value to clamp this Point to
+        * @return {Point} This Point object.
+        **/
+        function clamp(a, min, max) {
+            PointUtils.clampX(a, min, max);
+            PointUtils.clampY(a, min, max);
+            return a;
+        };
+        PointUtils.clampX = /**
+        * Clamps the x value of the given Point object to be between the min and max values.
+        * @method clampX
+        * @param {Point} a - The point.
+        * @param {number} The minimum value to clamp this Point to
+        * @param {number} The maximum value to clamp this Point to
+        * @return {Point} This Point object.
+        **/
+        function clampX(a, min, max) {
+            a.x = Math.max(Math.min(a.x, max), min);
+            return a;
+        };
+        PointUtils.clampY = /**
+        * Clamps the y value of the given Point object to be between the min and max values.
+        * @method clampY
+        * @param {Point} a - The point.
+        * @param {number} The minimum value to clamp this Point to
+        * @param {number} The maximum value to clamp this Point to
+        * @return {Point} This Point object.
+        **/
+        function clampY(a, min, max) {
+            a.y = Math.max(Math.min(a.y, max), min);
+            return a;
+        };
+        PointUtils.clone = /**
+        * Creates a copy of the given Point.
+        * @method clone
+        * @param {Point} output Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
+        * @return {Point} The new Point object.
+        **/
+        function clone(a, output) {
+            if (typeof output === "undefined") { output = new Phaser.Point(); }
+            return output.setTo(a.x, a.y);
+        };
+        PointUtils.distanceBetween = /**
+        * Returns the distance between the two given Point objects.
+        * @method distanceBetween
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Boolean} round - Round the distance to the nearest integer (default false)
+        * @return {Number} The distance between the two Point objects.
+        **/
+        function distanceBetween(a, b, round) {
+            if (typeof round === "undefined") { round = false; }
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            if(round === true) {
+                return Math.round(Math.sqrt(dx * dx + dy * dy));
+            } else {
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+        };
+        PointUtils.equals = /**
+        * Determines whether the two given Point objects are equal. They are considered equal if they have the same x and y values.
+        * @method equals
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @return {Boolean} A value of true if the Points are equal, otherwise false.
+        **/
+        function equals(a, b) {
+            return (a.x == b.x && a.y == b.y);
+        };
+        PointUtils.rotate = /**
+        * Determines a point between two specified points. The parameter f determines where the new interpolated point is located relative to the two end points specified by parameters pt1 and pt2.
+        * The closer the value of the parameter f is to 1.0, the closer the interpolated point is to the first point (parameter pt1). The closer the value of the parameter f is to 0, the closer the interpolated point is to the second point (parameter pt2).
+        * @method interpolate
+        * @param {Point} pointA - The first Point object.
+        * @param {Point} pointB - The second Point object.
+        * @param {Number} f - The level of interpolation between the two points. Indicates where the new point will be, along the line between pt1 and pt2. If f=1, pt1 is returned; if f=0, pt2 is returned.
+        * @return {Point} The new interpolated Point object.
+        **/
+        //static interpolate(pointA, pointB, f) {
+        //}
+        /**
+        * Converts a pair of polar coordinates to a Cartesian point coordinate.
+        * @method polar
+        * @param {Number} length - The length coordinate of the polar pair.
+        * @param {Number} angle - The angle, in radians, of the polar pair.
+        * @return {Point} The new Cartesian Point object.
+        **/
+        //static polar(length, angle) {
+        //}
+        /**
+        * Rotates a Point around the x/y coordinates given to the desired angle.
+        * @param a {Point} The Point object to rotate.
+        * @param x {number} The x coordinate of the anchor point
+        * @param y {number} The y coordinate of the anchor point
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the Point and the anchor.
+        * @return The modified point object
+        */
+        function rotate(a, x, y, angle, asDegrees, distance) {
+            if (typeof asDegrees === "undefined") { asDegrees = false; }
+            if (typeof distance === "undefined") { distance = null; }
+            if(asDegrees) {
+                angle = angle * Phaser.GameMath.DEG_TO_RAD;
+            }
+            //  Get distance from origin (cx/cy) to this point
+            if(distance === null) {
+                distance = Math.sqrt(((x - a.x) * (x - a.x)) + ((y - a.y) * (y - a.y)));
+            }
+            return a.setTo(x + distance * Math.cos(angle), y + distance * Math.sin(angle));
+        };
+        PointUtils.rotateAroundPoint = /**
+        * Rotates a Point around the given Point to the desired angle.
+        * @param a {Point} The Point object to rotate.
+        * @param b {Point} The Point object to serve as point of rotation.
+        * @param x {number} The x coordinate of the anchor point
+        * @param y {number} The y coordinate of the anchor point
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the Point and the anchor.
+        * @return The modified point object
+        */
+        function rotateAroundPoint(a, b, angle, asDegrees, distance) {
+            if (typeof asDegrees === "undefined") { asDegrees = false; }
+            if (typeof distance === "undefined") { distance = null; }
+            return PointUtils.rotate(a, b.x, b.y, angle, asDegrees, distance);
+        };
+        return PointUtils;
+    })();    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../core/Vec2.ts" />
+/**
+* Phaser - Vec2Utils
+*
+* A collection of methods useful for manipulating and performing operations on 2D vectors.
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var Vec2Utils = (function () {
+        function Vec2Utils() { }
+        Vec2Utils.add = /**
+        * Adds two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors.
+        */
+        function add(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x + b.x, a.y + b.y);
+        };
+        Vec2Utils.subtract = /**
+        * Subtracts two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the difference of the two vectors.
+        */
+        function subtract(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x - b.x, a.y - b.y);
+        };
+        Vec2Utils.multiply = /**
+        * Multiplies two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
+        */
+        function multiply(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x * b.x, a.y * b.y);
+        };
+        Vec2Utils.divide = /**
+        * Divides two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
+        */
+        function divide(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x / b.x, a.y / b.y);
+        };
+        Vec2Utils.scale = /**
+        * Scales a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {number} s Scaling value.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        function scale(a, s, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x * s, a.y * s);
+        };
+        Vec2Utils.perp = /**
+        * Rotate a 2D vector by 90 degrees.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        function perp(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.y, -a.x);
+        };
+        Vec2Utils.equals = /**
+        * Checks if two 2D vectors are equal.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Boolean}
+        */
+        function equals(a, b) {
+            return a.x == b.x && a.y == b.y;
+        };
+        Vec2Utils.epsilonEquals = /**
+        *
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} epsilon
+        * @return {Boolean}
+        */
+        function epsilonEquals(a, b, epsilon) {
+            return Math.abs(a.x - b.x) <= epsilon && Math.abs(a.y - b.y) <= epsilon;
+        };
+        Vec2Utils.distance = /**
+        * Get the distance between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function distance(a, b) {
+            return Math.sqrt(Vec2Utils.distanceSq(a, b));
+        };
+        Vec2Utils.distanceSq = /**
+        * Get the distance squared between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function distanceSq(a, b) {
+            return ((a.x - b.x) * (a.x - b.x)) + ((a.y - b.y) * (a.y - b.y));
+        };
+        Vec2Utils.project = /**
+        * Project two 2D vectors onto another vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function project(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var amt = a.dot(b) / b.lengthSq();
+            if(amt != 0) {
+                out.setTo(amt * b.x, amt * b.y);
+            }
+            return out;
+        };
+        Vec2Utils.projectUnit = /**
+        * Project this vector onto a vector of unit length.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function projectUnit(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var amt = a.dot(b);
+            if(amt != 0) {
+                out.setTo(amt * b.x, amt * b.y);
+            }
+            return out;
+        };
+        Vec2Utils.normalRightHand = /**
+        * Right-hand normalize (make unit length) a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function normalRightHand(a, out) {
+            if (typeof out === "undefined") { out = this; }
+            return out.setTo(a.y * -1, a.x);
+        };
+        Vec2Utils.normalize = /**
+        * Normalize (make unit length) a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function normalize(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var m = a.length();
+            if(m != 0) {
+                out.setTo(a.x / m, a.y / m);
+            }
+            return out;
+        };
+        Vec2Utils.dot = /**
+        * The dot product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function dot(a, b) {
+            return ((a.x * b.x) + (a.y * b.y));
+        };
+        Vec2Utils.cross = /**
+        * The cross product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function cross(a, b) {
+            return ((a.x * b.y) - (a.y * b.x));
+        };
+        Vec2Utils.angle = /**
+        * The angle between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function angle(a, b) {
+            return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
+        };
+        Vec2Utils.angleSq = /**
+        * The angle squared between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function angleSq(a, b) {
+            return a.subtract(b).angle(b.subtract(a));
+        };
+        Vec2Utils.rotate = /**
+        * Rotate a 2D vector around the origin to the given angle (theta).
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Number} theta The angle of rotation in radians.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function rotate(a, b, theta, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var x = a.x - b.x;
+            var y = a.y - b.y;
+            return out.setTo(x * Math.cos(theta) - y * Math.sin(theta) + b.x, x * Math.sin(theta) + y * Math.cos(theta) + b.y);
+        };
+        Vec2Utils.clone = /**
+        * Clone a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is a copy of the source Vec2.
+        */
+        function clone(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x, a.y);
+        };
+        return Vec2Utils;
+    })();
+    Phaser.Vec2Utils = Vec2Utils;    
+    /**
+    * Reflect this vector on an arbitrary axis.
+    *
+    * @param {Vec2} axis The vector representing the axis.
+    * @return {Vec2} This for chaining.
+    */
+    /*
+    static reflect(axis): Vec2 {
+    
+    var x = this.x;
+    var y = this.y;
+    this.project(axis).scale(2);
+    this.x -= x;
+    this.y -= y;
+    
+    return this;
+    
+    }
+    */
+    /**
+    * Reflect this vector on an arbitrary axis (represented by a unit vector)
+    *
+    * @param {Vec2} axis The unit vector representing the axis.
+    * @return {Vec2} This for chaining.
+    */
+    /*
+    static reflectN(axis): Vec2 {
+    
+    var x = this.x;
+    var y = this.y;
+    this.projectN(axis).scale(2);
+    this.x -= x;
+    this.y -= y;
+    
+    return this;
+    
+    }
+    
+    static getMagnitude(): number {
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    }
+    */
+    })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
 /// <reference path="../core/Vec2.ts" />
 /**
 * Phaser - Pointer
@@ -8510,503 +9274,507 @@ var Phaser;
     Phaser.Gestures = Gestures;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
 /**
-* Phaser - PointUtils
+* Phaser - Mouse
 *
-* A collection of methods useful for manipulating and comparing Point objects.
-*
-* TODO: interpolate & polar
+* The Mouse class handles mouse interactions with the game and the resulting events.
 */
 var Phaser;
 (function (Phaser) {
-    var PointUtils = (function () {
-        function PointUtils() { }
-        PointUtils.add = /**
-        * Adds the coordinates of two points together to create a new point.
-        * @method add
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
-        function add(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Point(); }
-            return out.setTo(a.x + b.x, a.y + b.y);
-        };
-        PointUtils.subtract = /**
-        * Subtracts the coordinates of two points to create a new point.
-        * @method subtract
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
-        function subtract(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Point(); }
-            return out.setTo(a.x - b.x, a.y - b.y);
-        };
-        PointUtils.multiply = /**
-        * Multiplies the coordinates of two points to create a new point.
-        * @method subtract
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
-        function multiply(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Point(); }
-            return out.setTo(a.x * b.x, a.y * b.y);
-        };
-        PointUtils.divide = /**
-        * Divides the coordinates of two points to create a new point.
-        * @method subtract
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
-        function divide(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Point(); }
-            return out.setTo(a.x / b.x, a.y / b.y);
-        };
-        PointUtils.clamp = /**
-        * Clamps the Point object values to be between the given min and max
-        * @method clamp
-        * @param {Point} a - The point.
-        * @param {number} The minimum value to clamp this Point to
-        * @param {number} The maximum value to clamp this Point to
-        * @return {Point} This Point object.
-        **/
-        function clamp(a, min, max) {
-            PointUtils.clampX(a, min, max);
-            PointUtils.clampY(a, min, max);
-            return a;
-        };
-        PointUtils.clampX = /**
-        * Clamps the x value of the given Point object to be between the min and max values.
-        * @method clampX
-        * @param {Point} a - The point.
-        * @param {number} The minimum value to clamp this Point to
-        * @param {number} The maximum value to clamp this Point to
-        * @return {Point} This Point object.
-        **/
-        function clampX(a, min, max) {
-            a.x = Math.max(Math.min(a.x, max), min);
-            return a;
-        };
-        PointUtils.clampY = /**
-        * Clamps the y value of the given Point object to be between the min and max values.
-        * @method clampY
-        * @param {Point} a - The point.
-        * @param {number} The minimum value to clamp this Point to
-        * @param {number} The maximum value to clamp this Point to
-        * @return {Point} This Point object.
-        **/
-        function clampY(a, min, max) {
-            a.y = Math.max(Math.min(a.y, max), min);
-            return a;
-        };
-        PointUtils.clone = /**
-        * Creates a copy of the given Point.
-        * @method clone
-        * @param {Point} output Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
-        * @return {Point} The new Point object.
-        **/
-        function clone(a, output) {
-            if (typeof output === "undefined") { output = new Phaser.Point(); }
-            return output.setTo(a.x, a.y);
-        };
-        PointUtils.distanceBetween = /**
-        * Returns the distance between the two given Point objects.
-        * @method distanceBetween
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Boolean} round - Round the distance to the nearest integer (default false)
-        * @return {Number} The distance between the two Point objects.
-        **/
-        function distanceBetween(a, b, round) {
-            if (typeof round === "undefined") { round = false; }
-            var dx = a.x - b.x;
-            var dy = a.y - b.y;
-            if(round === true) {
-                return Math.round(Math.sqrt(dx * dx + dy * dy));
-            } else {
-                return Math.sqrt(dx * dx + dy * dy);
-            }
-        };
-        PointUtils.equals = /**
-        * Determines whether the two given Point objects are equal. They are considered equal if they have the same x and y values.
-        * @method equals
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @return {Boolean} A value of true if the Points are equal, otherwise false.
-        **/
-        function equals(a, b) {
-            return (a.x == b.x && a.y == b.y);
-        };
-        PointUtils.rotate = /**
-        * Determines a point between two specified points. The parameter f determines where the new interpolated point is located relative to the two end points specified by parameters pt1 and pt2.
-        * The closer the value of the parameter f is to 1.0, the closer the interpolated point is to the first point (parameter pt1). The closer the value of the parameter f is to 0, the closer the interpolated point is to the second point (parameter pt2).
-        * @method interpolate
-        * @param {Point} pointA - The first Point object.
-        * @param {Point} pointB - The second Point object.
-        * @param {Number} f - The level of interpolation between the two points. Indicates where the new point will be, along the line between pt1 and pt2. If f=1, pt1 is returned; if f=0, pt2 is returned.
-        * @return {Point} The new interpolated Point object.
-        **/
-        //static interpolate(pointA, pointB, f) {
-        //}
-        /**
-        * Converts a pair of polar coordinates to a Cartesian point coordinate.
-        * @method polar
-        * @param {Number} length - The length coordinate of the polar pair.
-        * @param {Number} angle - The angle, in radians, of the polar pair.
-        * @return {Point} The new Cartesian Point object.
-        **/
-        //static polar(length, angle) {
-        //}
-        /**
-        * Rotates a Point around the x/y coordinates given to the desired angle.
-        * @param a {Point} The Point object to rotate.
-        * @param x {number} The x coordinate of the anchor point
-        * @param y {number} The y coordinate of the anchor point
-        * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
-        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
-        * @param {Number} distance An optional distance constraint between the Point and the anchor.
-        * @return The modified point object
+    var Mouse = (function () {
+        function Mouse(game) {
+            /**
+            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+            * @type {Boolean}
+            */
+            this.disabled = false;
+            this._game = game;
+        }
+        Mouse.LEFT_BUTTON = 0;
+        Mouse.MIDDLE_BUTTON = 1;
+        Mouse.RIGHT_BUTTON = 2;
+        Mouse.prototype.start = /**
+        * Starts the event listeners running
+        * @method start
         */
-        function rotate(a, x, y, angle, asDegrees, distance) {
-            if (typeof asDegrees === "undefined") { asDegrees = false; }
-            if (typeof distance === "undefined") { distance = null; }
-            if(asDegrees) {
-                angle = angle * Phaser.GameMath.DEG_TO_RAD;
-            }
-            //  Get distance from origin (cx/cy) to this point
-            if(distance === null) {
-                distance = Math.sqrt(((x - a.x) * (x - a.x)) + ((y - a.y) * (y - a.y)));
-            }
-            return a.setTo(x + distance * Math.cos(angle), y + distance * Math.sin(angle));
+        function () {
+            var _this = this;
+            this._game.stage.canvas.addEventListener('mousedown', function (event) {
+                return _this.onMouseDown(event);
+            }, true);
+            this._game.stage.canvas.addEventListener('mousemove', function (event) {
+                return _this.onMouseMove(event);
+            }, true);
+            this._game.stage.canvas.addEventListener('mouseup', function (event) {
+                return _this.onMouseUp(event);
+            }, true);
         };
-        PointUtils.rotateAroundPoint = /**
-        * Rotates a Point around the given Point to the desired angle.
-        * @param a {Point} The Point object to rotate.
-        * @param b {Point} The Point object to serve as point of rotation.
-        * @param x {number} The x coordinate of the anchor point
-        * @param y {number} The y coordinate of the anchor point
-        * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
-        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
-        * @param {Number} distance An optional distance constraint between the Point and the anchor.
-        * @return The modified point object
+        Mouse.prototype.onMouseDown = /**
+        * @param {MouseEvent} event
         */
-        function rotateAroundPoint(a, b, angle, asDegrees, distance) {
-            if (typeof asDegrees === "undefined") { asDegrees = false; }
-            if (typeof distance === "undefined") { distance = null; }
-            return PointUtils.rotate(a, b.x, b.y, angle, asDegrees, distance);
+        function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
+            event['identifier'] = 0;
+            this._game.input.mousePointer.start(event);
         };
-        return PointUtils;
-    })();    
+        Mouse.prototype.onMouseMove = /**
+        * @param {MouseEvent} event
+        */
+        function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
+            event['identifier'] = 0;
+            this._game.input.mousePointer.move(event);
+        };
+        Mouse.prototype.onMouseUp = /**
+        * @param {MouseEvent} event
+        */
+        function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
+            event['identifier'] = 0;
+            this._game.input.mousePointer.stop(event);
+        };
+        Mouse.prototype.stop = /**
+        * Stop the event listeners
+        * @method stop
+        */
+        function () {
+            //this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
+            //this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
+            //this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);
+                    };
+        return Mouse;
+    })();
+    Phaser.Mouse = Mouse;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Vec2.ts" />
 /**
-* Phaser - Vec2Utils
+* Phaser - Keyboard
 *
-* A collection of methods useful for manipulating and performing operations on 2D vectors.
-*
+* The Keyboard class handles keyboard interactions with the game and the resulting events.
+* The avoid stealing all browser input we don't use event.preventDefault. If you would like to trap a specific key however
+* then use the addKeyCapture() method.
 */
 var Phaser;
 (function (Phaser) {
-    var Vec2Utils = (function () {
-        function Vec2Utils() { }
-        Vec2Utils.add = /**
-        * Adds two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors.
-        */
-        function add(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x + b.x, a.y + b.y);
+    var Keyboard = (function () {
+        function Keyboard(game) {
+            this._keys = {
+            };
+            this._capture = {
+            };
+            /**
+            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+            * @type {Boolean}
+            */
+            this.disabled = false;
+            this._game = game;
+        }
+        Keyboard.prototype.start = function () {
+            var _this = this;
+            document.body.addEventListener('keydown', function (event) {
+                return _this.onKeyDown(event);
+            }, false);
+            document.body.addEventListener('keyup', function (event) {
+                return _this.onKeyUp(event);
+            }, false);
         };
-        Vec2Utils.subtract = /**
-        * Subtracts two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the difference of the two vectors.
+        Keyboard.prototype.addKeyCapture = /**
+        * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
+        * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
+        * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
+        * Pass in either a single keycode or an array of keycodes.
+        * @param {Any} keycode
         */
-        function subtract(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x - b.x, a.y - b.y);
+        function (keycode) {
+            if(typeof keycode === 'object') {
+                for(var i = 0; i < keycode.length; i++) {
+                    this._capture[keycode[i]] = true;
+                }
+            } else {
+                this._capture[keycode] = true;
+            }
         };
-        Vec2Utils.multiply = /**
-        * Multiplies two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
+        Keyboard.prototype.removeKeyCapture = /**
+        * @param {Number} keycode
         */
-        function multiply(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x * b.x, a.y * b.y);
+        function (keycode) {
+            delete this._capture[keycode];
         };
-        Vec2Utils.divide = /**
-        * Divides two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
+        Keyboard.prototype.clearCaptures = function () {
+            this._capture = {
+            };
+        };
+        Keyboard.prototype.onKeyDown = /**
+        * @param {KeyboardEvent} event
         */
-        function divide(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x / b.x, a.y / b.y);
+        function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
+            if(this._capture[event.keyCode]) {
+                event.preventDefault();
+            }
+            if(!this._keys[event.keyCode]) {
+                this._keys[event.keyCode] = {
+                    isDown: true,
+                    timeDown: this._game.time.now,
+                    timeUp: 0
+                };
+            } else {
+                this._keys[event.keyCode].isDown = true;
+                this._keys[event.keyCode].timeDown = this._game.time.now;
+            }
         };
-        Vec2Utils.scale = /**
-        * Scales a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {number} s Scaling value.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the scaled vector.
+        Keyboard.prototype.onKeyUp = /**
+        * @param {KeyboardEvent} event
         */
-        function scale(a, s, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x * s, a.y * s);
+        function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
+            if(this._capture[event.keyCode]) {
+                event.preventDefault();
+            }
+            if(!this._keys[event.keyCode]) {
+                this._keys[event.keyCode] = {
+                    isDown: false,
+                    timeDown: 0,
+                    timeUp: this._game.time.now
+                };
+            } else {
+                this._keys[event.keyCode].isDown = false;
+                this._keys[event.keyCode].timeUp = this._game.time.now;
+            }
         };
-        Vec2Utils.perp = /**
-        * Rotate a 2D vector by 90 degrees.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the scaled vector.
-        */
-        function perp(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.y, -a.x);
+        Keyboard.prototype.reset = function () {
+            for(var key in this._keys) {
+                this._keys[key].isDown = false;
+            }
         };
-        Vec2Utils.equals = /**
-        * Checks if two 2D vectors are equal.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
+        Keyboard.prototype.justPressed = /**
+        * @param {Number} keycode
+        * @param {Number} [duration]
         * @return {Boolean}
         */
-        function equals(a, b) {
-            return a.x == b.x && a.y == b.y;
+        function (keycode, duration) {
+            if (typeof duration === "undefined") { duration = 250; }
+            if(this._keys[keycode] && this._keys[keycode].isDown === true && (this._game.time.now - this._keys[keycode].timeDown < duration)) {
+                return true;
+            } else {
+                return false;
+            }
         };
-        Vec2Utils.epsilonEquals = /**
-        *
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} epsilon
+        Keyboard.prototype.justReleased = /**
+        * @param {Number} keycode
+        * @param {Number} [duration]
         * @return {Boolean}
         */
-        function epsilonEquals(a, b, epsilon) {
-            return Math.abs(a.x - b.x) <= epsilon && Math.abs(a.y - b.y) <= epsilon;
-        };
-        Vec2Utils.distance = /**
-        * Get the distance between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function distance(a, b) {
-            return Math.sqrt(Vec2Utils.distanceSq(a, b));
-        };
-        Vec2Utils.distanceSq = /**
-        * Get the distance squared between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function distanceSq(a, b) {
-            return ((a.x - b.x) * (a.x - b.x)) + ((a.y - b.y) * (a.y - b.y));
-        };
-        Vec2Utils.project = /**
-        * Project two 2D vectors onto another vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function project(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var amt = a.dot(b) / b.lengthSq();
-            if(amt != 0) {
-                out.setTo(amt * b.x, amt * b.y);
+        function (keycode, duration) {
+            if (typeof duration === "undefined") { duration = 250; }
+            if(this._keys[keycode] && this._keys[keycode].isDown === false && (this._game.time.now - this._keys[keycode].timeUp < duration)) {
+                return true;
+            } else {
+                return false;
             }
-            return out;
         };
-        Vec2Utils.projectUnit = /**
-        * Project this vector onto a vector of unit length.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
+        Keyboard.prototype.isDown = /**
+        * @param {Number} keycode
+        * @return {Boolean}
         */
-        function projectUnit(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var amt = a.dot(b);
-            if(amt != 0) {
-                out.setTo(amt * b.x, amt * b.y);
+        function (keycode) {
+            if(this._keys[keycode]) {
+                return this._keys[keycode].isDown;
+            } else {
+                return false;
             }
-            return out;
         };
-        Vec2Utils.normalRightHand = /**
-        * Right-hand normalize (make unit length) a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function normalRightHand(a, out) {
-            if (typeof out === "undefined") { out = this; }
-            return out.setTo(a.y * -1, a.x);
-        };
-        Vec2Utils.normalize = /**
-        * Normalize (make unit length) a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function normalize(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var m = a.length();
-            if(m != 0) {
-                out.setTo(a.x / m, a.y / m);
-            }
-            return out;
-        };
-        Vec2Utils.dot = /**
-        * The dot product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function dot(a, b) {
-            return ((a.x * b.x) + (a.y * b.y));
-        };
-        Vec2Utils.cross = /**
-        * The cross product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function cross(a, b) {
-            return ((a.x * b.y) - (a.y * b.x));
-        };
-        Vec2Utils.angle = /**
-        * The angle between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function angle(a, b) {
-            return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
-        };
-        Vec2Utils.angleSq = /**
-        * The angle squared between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function angleSq(a, b) {
-            return a.subtract(b).angle(b.subtract(a));
-        };
-        Vec2Utils.rotate = /**
-        * Rotate a 2D vector around the origin to the given angle (theta).
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Number} theta The angle of rotation in radians.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function rotate(a, b, theta, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var x = a.x - b.x;
-            var y = a.y - b.y;
-            return out.setTo(x * Math.cos(theta) - y * Math.sin(theta) + b.x, x * Math.sin(theta) + y * Math.cos(theta) + b.y);
-        };
-        Vec2Utils.clone = /**
-        * Clone a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is a copy of the source Vec2.
-        */
-        function clone(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x, a.y);
-        };
-        return Vec2Utils;
+        Keyboard.A = "A".charCodeAt(0);
+        Keyboard.B = "B".charCodeAt(0);
+        Keyboard.C = "C".charCodeAt(0);
+        Keyboard.D = "D".charCodeAt(0);
+        Keyboard.E = "E".charCodeAt(0);
+        Keyboard.F = "F".charCodeAt(0);
+        Keyboard.G = "G".charCodeAt(0);
+        Keyboard.H = "H".charCodeAt(0);
+        Keyboard.I = "I".charCodeAt(0);
+        Keyboard.J = "J".charCodeAt(0);
+        Keyboard.K = "K".charCodeAt(0);
+        Keyboard.L = "L".charCodeAt(0);
+        Keyboard.M = "M".charCodeAt(0);
+        Keyboard.N = "N".charCodeAt(0);
+        Keyboard.O = "O".charCodeAt(0);
+        Keyboard.P = "P".charCodeAt(0);
+        Keyboard.Q = "Q".charCodeAt(0);
+        Keyboard.R = "R".charCodeAt(0);
+        Keyboard.S = "S".charCodeAt(0);
+        Keyboard.T = "T".charCodeAt(0);
+        Keyboard.U = "U".charCodeAt(0);
+        Keyboard.V = "V".charCodeAt(0);
+        Keyboard.W = "W".charCodeAt(0);
+        Keyboard.X = "X".charCodeAt(0);
+        Keyboard.Y = "Y".charCodeAt(0);
+        Keyboard.Z = "Z".charCodeAt(0);
+        Keyboard.ZERO = "0".charCodeAt(0);
+        Keyboard.ONE = "1".charCodeAt(0);
+        Keyboard.TWO = "2".charCodeAt(0);
+        Keyboard.THREE = "3".charCodeAt(0);
+        Keyboard.FOUR = "4".charCodeAt(0);
+        Keyboard.FIVE = "5".charCodeAt(0);
+        Keyboard.SIX = "6".charCodeAt(0);
+        Keyboard.SEVEN = "7".charCodeAt(0);
+        Keyboard.EIGHT = "8".charCodeAt(0);
+        Keyboard.NINE = "9".charCodeAt(0);
+        Keyboard.NUMPAD_0 = 96;
+        Keyboard.NUMPAD_1 = 97;
+        Keyboard.NUMPAD_2 = 98;
+        Keyboard.NUMPAD_3 = 99;
+        Keyboard.NUMPAD_4 = 100;
+        Keyboard.NUMPAD_5 = 101;
+        Keyboard.NUMPAD_6 = 102;
+        Keyboard.NUMPAD_7 = 103;
+        Keyboard.NUMPAD_8 = 104;
+        Keyboard.NUMPAD_9 = 105;
+        Keyboard.NUMPAD_MULTIPLY = 106;
+        Keyboard.NUMPAD_ADD = 107;
+        Keyboard.NUMPAD_ENTER = 108;
+        Keyboard.NUMPAD_SUBTRACT = 109;
+        Keyboard.NUMPAD_DECIMAL = 110;
+        Keyboard.NUMPAD_DIVIDE = 111;
+        Keyboard.F1 = 112;
+        Keyboard.F2 = 113;
+        Keyboard.F3 = 114;
+        Keyboard.F4 = 115;
+        Keyboard.F5 = 116;
+        Keyboard.F6 = 117;
+        Keyboard.F7 = 118;
+        Keyboard.F8 = 119;
+        Keyboard.F9 = 120;
+        Keyboard.F10 = 121;
+        Keyboard.F11 = 122;
+        Keyboard.F12 = 123;
+        Keyboard.F13 = 124;
+        Keyboard.F14 = 125;
+        Keyboard.F15 = 126;
+        Keyboard.COLON = 186;
+        Keyboard.EQUALS = 187;
+        Keyboard.UNDERSCORE = 189;
+        Keyboard.QUESTION_MARK = 191;
+        Keyboard.TILDE = 192;
+        Keyboard.OPEN_BRACKET = 219;
+        Keyboard.BACKWARD_SLASH = 220;
+        Keyboard.CLOSED_BRACKET = 221;
+        Keyboard.QUOTES = 222;
+        Keyboard.BACKSPACE = 8;
+        Keyboard.TAB = 9;
+        Keyboard.CLEAR = 12;
+        Keyboard.ENTER = 13;
+        Keyboard.SHIFT = 16;
+        Keyboard.CONTROL = 17;
+        Keyboard.ALT = 18;
+        Keyboard.CAPS_LOCK = 20;
+        Keyboard.ESC = 27;
+        Keyboard.SPACEBAR = 32;
+        Keyboard.PAGE_UP = 33;
+        Keyboard.PAGE_DOWN = 34;
+        Keyboard.END = 35;
+        Keyboard.HOME = 36;
+        Keyboard.LEFT = 37;
+        Keyboard.UP = 38;
+        Keyboard.RIGHT = 39;
+        Keyboard.DOWN = 40;
+        Keyboard.INSERT = 45;
+        Keyboard.DELETE = 46;
+        Keyboard.HELP = 47;
+        Keyboard.NUM_LOCK = 144;
+        return Keyboard;
     })();
-    Phaser.Vec2Utils = Vec2Utils;    
-    /**
-    * Reflect this vector on an arbitrary axis.
-    *
-    * @param {Vec2} axis The vector representing the axis.
-    * @return {Vec2} This for chaining.
-    */
-    /*
-    static reflect(axis): Vec2 {
-    
-    var x = this.x;
-    var y = this.y;
-    this.project(axis).scale(2);
-    this.x -= x;
-    this.y -= y;
-    
-    return this;
-    
-    }
-    */
-    /**
-    * Reflect this vector on an arbitrary axis (represented by a unit vector)
-    *
-    * @param {Vec2} axis The unit vector representing the axis.
-    * @return {Vec2} This for chaining.
-    */
-    /*
-    static reflectN(axis): Vec2 {
-    
-    var x = this.x;
-    var y = this.y;
-    this.projectN(axis).scale(2);
-    this.x -= x;
-    this.y -= y;
-    
-    return this;
-    
-    }
-    
-    static getMagnitude(): number {
-    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
-    }
-    */
-    })(Phaser || (Phaser = {}));
+    Phaser.Keyboard = Keyboard;    
+})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../Signal.ts" />
+/// <reference path="Pointer.ts" />
+/**
+* Phaser - Touch
+*
+* The Touch class handles touch interactions with the game and the resulting Pointer objects.
+* http://www.w3.org/TR/touch-events/
+* https://developer.mozilla.org/en-US/docs/DOM/TouchList
+* http://www.html5rocks.com/en/mobile/touchandmouse/
+* Note: Android 2.x only supports 1 touch event at once, no multi-touch
+*/
+var Phaser;
+(function (Phaser) {
+    var Touch = (function () {
+        /**
+        * Constructor
+        * @param {Game} game.
+        * @return {Touch} This object.
+        */
+        function Touch(game) {
+            /**
+            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+            * @type {Boolean}
+            */
+            this.disabled = false;
+            this._game = game;
+        }
+        Touch.prototype.start = /**
+        * Starts the event listeners running
+        * @method start
+        */
+        function () {
+            var _this = this;
+            if(this._game.device.touch) {
+                this._game.stage.canvas.addEventListener('touchstart', function (event) {
+                    return _this.onTouchStart(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchmove', function (event) {
+                    return _this.onTouchMove(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchend', function (event) {
+                    return _this.onTouchEnd(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchenter', function (event) {
+                    return _this.onTouchEnter(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchleave', function (event) {
+                    return _this.onTouchLeave(event);
+                }, false);
+                this._game.stage.canvas.addEventListener('touchcancel', function (event) {
+                    return _this.onTouchCancel(event);
+                }, false);
+                document.addEventListener('touchmove', function (event) {
+                    return _this.consumeTouchMove(event);
+                }, false);
+            }
+        };
+        Touch.prototype.consumeTouchMove = /**
+        * Prevent iOS bounce-back (doesn't work?)
+        * @method consumeTouchMove
+        * @param {Any} event
+        **/
+        function (event) {
+            event.preventDefault();
+        };
+        Touch.prototype.onTouchStart = /**
+        *
+        * @method onTouchStart
+        * @param {Any} event
+        **/
+        function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
+            event.preventDefault();
+            //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
+            //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
+            //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+            for(var i = 0; i < event.changedTouches.length; i++) {
+                this._game.input.startPointer(event.changedTouches[i]);
+            }
+        };
+        Touch.prototype.onTouchCancel = /**
+        * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
+        * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears
+        * @method onTouchCancel
+        * @param {Any} event
+        **/
+        function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
+            event.preventDefault();
+            //  Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
+            //  http://www.w3.org/TR/touch-events/#dfn-touchcancel
+            for(var i = 0; i < event.changedTouches.length; i++) {
+                this._game.input.stopPointer(event.changedTouches[i]);
+            }
+        };
+        Touch.prototype.onTouchEnter = /**
+        * For touch enter and leave its a list of the touch points that have entered or left the target
+        * Doesn't appear to be supported by most browsers yet
+        * @method onTouchEnter
+        * @param {Any} event
+        **/
+        function (event) {
+            if(this._game.input.disabled || this.disabled) {
+                return;
+            }
+            event.preventDefault();
+            for(var i = 0; i < event.changedTouches.length; i++) {
+                console.log('touch enter');
+            }
+        };
+        Touch.prototype.onTouchLeave = /**
+        * For touch enter and leave its a list of the touch points that have entered or left the target
+        * Doesn't appear to be supported by most browsers yet
+        * @method onTouchLeave
+        * @param {Any} event
+        **/
+        function (event) {
+            event.preventDefault();
+            for(var i = 0; i < event.changedTouches.length; i++) {
+                console.log('touch leave');
+            }
+        };
+        Touch.prototype.onTouchMove = /**
+        *
+        * @method onTouchMove
+        * @param {Any} event
+        **/
+        function (event) {
+            event.preventDefault();
+            for(var i = 0; i < event.changedTouches.length; i++) {
+                this._game.input.updatePointer(event.changedTouches[i]);
+            }
+        };
+        Touch.prototype.onTouchEnd = /**
+        *
+        * @method onTouchEnd
+        * @param {Any} event
+        **/
+        function (event) {
+            event.preventDefault();
+            //  For touch end its a list of the touch points that have been removed from the surface
+            //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
+            //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+            for(var i = 0; i < event.changedTouches.length; i++) {
+                this._game.input.stopPointer(event.changedTouches[i]);
+            }
+        };
+        Touch.prototype.stop = /**
+        * Stop the event listeners
+        * @method stop
+        */
+        function () {
+            if(this._game.device.touch) {
+                //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
+                //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
+                //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
+                //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
+                //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
+                //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+                            }
+        };
+        return Touch;
+    })();
+    Phaser.Touch = Touch;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../core/Signal.ts" />
+/// <reference path="../utils/PointUtils.ts" />
+/// <reference path="../math/Vec2Utils.ts" />
 /// <reference path="Pointer.ts" />
 /// <reference path="MSPointer.ts" />
 /// <reference path="Gestures.ts" />
-/// <reference path="../utils/PointUtils.ts" />
-/// <reference path="../math/Vec2Utils.ts" />
+/// <reference path="Mouse.ts" />
+/// <reference path="Keyboard.ts" />
+/// <reference path="Touch.ts" />
 /**
 * Phaser - Input
 *
@@ -9591,7 +10359,6 @@ var Phaser;
     //  Add Tilemap, ScrollZone, etc?
     })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../RenderManager.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="../cameras/Camera.ts" />
 /// <reference path="IRenderer.ts" />
@@ -9608,6 +10375,8 @@ var Phaser;
             this._dy = 0;
             this._dw = 0;
             this._dh = 0;
+            this._fx = 1;
+            this._fy = 1;
             this._game = game;
         }
         CanvasRenderer.prototype.render = function () {
@@ -9636,14 +10405,26 @@ var Phaser;
                 var globalAlpha = sprite.texture.context.globalAlpha;
                 sprite.texture.context.globalAlpha = sprite.texture.alpha;
             }
+            this._fx = sprite.scale.x;
+            this._fy = sprite.scale.y;
             this._sx = 0;
             this._sy = 0;
             this._sw = sprite.frameBounds.width;
             this._sh = sprite.frameBounds.height;
+            //if (sprite.texture.flippedX)
+            //{
+            //    this._fx = -1;
+            //}
+            //if (sprite.texture.flippedY)
+            //{
+            //    this._fy = -1;
+            //}
             this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
             this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            this._dw = sprite.frameBounds.width * sprite.scale.x;
-            this._dh = sprite.frameBounds.height * sprite.scale.y;
+            //this._dw = sprite.frameBounds.width * sprite.scale.x;
+            //this._dh = sprite.frameBounds.height * sprite.scale.y;
+            this._dw = sprite.frameBounds.width;
+            this._dh = sprite.frameBounds.height;
             /*
             if (this._dynamicTexture == false && this.animations.currentFrame !== null)
             {
@@ -9662,21 +10443,56 @@ var Phaser;
                 //this._dx -= (camera.worldView.x * this.scrollFactor.x);
                 //this._dy -= (camera.worldView.y * this.scrollFactor.y);
                             }
+            //  Apply origin / alignment
+            if(sprite.origin.x != 0 || sprite.origin.y != 0) {
+                //this._dx += (sprite.origin.x * sprite.scale.x);
+                //this._dy += (sprite.origin.y * sprite.scale.y);
+                            }
             //	Rotation and Flipped
-            if(sprite.position.rotation !== 0 || sprite.position.rotationOffset !== 0 || sprite.texture.flippedX || sprite.texture.flippedY) {
+            if(sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)//if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+             {
                 sprite.texture.context.save();
-                sprite.texture.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+                if(sprite.texture.flippedX) {
+                    this._dx += this._dw * sprite.scale.x;
+                }
+                if(sprite.texture.flippedY) {
+                    this._dy += this._dh * sprite.scale.y;
+                }
+                sprite.texture.context.translate(this._dx, this._dy);
+                //sprite.texture.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+                //sprite.texture.context.translate(this._dx + (sprite.origin.x * sprite.scale.x), this._dy + (sprite.origin.y * sprite.scale.y));
+                //sprite.texture.context.translate(this._dx + sprite.origin.x, this._dy + sprite.origin.y);
+                //sprite.texture.context.translate(this._dx + sprite.origin.x - (this._dw / 2), this._dy + sprite.origin.y - (this._dh / 2));
                 if(sprite.texture.renderRotation == true && (sprite.position.rotation !== 0 || sprite.position.rotationOffset !== 0)) {
                     //  Apply point of rotation here
                     sprite.texture.context.rotate((sprite.position.rotationOffset + sprite.position.rotation) * (Math.PI / 180));
                 }
-                this._dx = -(this._dw / 2);
-                this._dy = -(this._dh / 2);
-                if(sprite.texture.flippedX || sprite.texture.flippedY) {
+                if(sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.texture.flippedX || sprite.texture.flippedY) {
                     if(sprite.texture.flippedX) {
-                        sprite.texture.context.scale(-1, 1);
+                        this._fx = -sprite.scale.x;
                     }
+                    if(sprite.texture.flippedY) {
+                        this._fy = -sprite.scale.y;
+                    }
+                    sprite.texture.context.scale(this._fx, this._fy);
                 }
+                //if (sprite.texture.flippedX || sprite.texture.flippedY)
+                //{
+                //    sprite.texture.context.scale(this._fx, this._fy);
+                //}
+                this._dx = -(sprite.origin.x * sprite.scale.x);
+                this._dy = -(sprite.origin.y * sprite.scale.y);
+                //this._dx = -(sprite.origin.x * sprite.scale.x);
+                //this._dy = -(sprite.origin.y * sprite.scale.y);
+                //this._dx = -(this._dw / 2) * sprite.scale.x;
+                //this._dy = -(this._dh / 2) * sprite.scale.y;
+                //this._dx = 0;
+                //this._dy = 0;
+                            } else {
+                if(sprite.origin.x != 0 || sprite.origin.y != 0) {
+                    //this._dx -= (sprite.origin.x * sprite.scale.x);
+                    //this._dy -= (sprite.origin.y * sprite.scale.y);
+                                    }
             }
             this._sx = Math.round(this._sx);
             this._sy = Math.round(this._sy);
@@ -9704,7 +10520,8 @@ var Phaser;
             //    this.context.fillStyle = this.fillColor;
             //    this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             //}
-            if(sprite.position.rotation !== 0 || sprite.position.rotationOffset !== 0 || sprite.texture.flippedX || sprite.texture.flippedY) {
+            if(sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)//if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+             {
                 //this.context.translate(0, 0);
                 sprite.texture.context.restore();
             }
@@ -10519,203 +11336,6 @@ var Phaser;
     Phaser.Rectangle = Rectangle;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Vec2.ts" />
-/**
-* Phaser - ScrollRegion
-*
-* Creates a scrolling region within a ScrollZone.
-* It is scrolled via the scrollSpeed.x/y properties.
-*/
-var Phaser;
-(function (Phaser) {
-    var ScrollRegion = (function () {
-        /**
-        * ScrollRegion constructor
-        * Create a new <code>ScrollRegion</code>.
-        *
-        * @param x {number} X position in world coordinate.
-        * @param y {number} Y position in world coordinate.
-        * @param width {number} Width of this object.
-        * @param height {number} Height of this object.
-        * @param speedX {number} X-axis scrolling speed.
-        * @param speedY {number} Y-axis scrolling speed.
-        */
-        function ScrollRegion(x, y, width, height, speedX, speedY) {
-            this._anchorWidth = 0;
-            this._anchorHeight = 0;
-            this._inverseWidth = 0;
-            this._inverseHeight = 0;
-            /**
-            * Will this region be rendered? (default to true)
-            * @type {boolean}
-            */
-            this.visible = true;
-            //	Our seamless scrolling quads
-            this._A = new Phaser.Rectangle(x, y, width, height);
-            this._B = new Phaser.Rectangle(x, y, width, height);
-            this._C = new Phaser.Rectangle(x, y, width, height);
-            this._D = new Phaser.Rectangle(x, y, width, height);
-            this._scroll = new Phaser.Vec2();
-            this._bounds = new Phaser.Rectangle(x, y, width, height);
-            this.scrollSpeed = new Phaser.Vec2(speedX, speedY);
-        }
-        ScrollRegion.prototype.update = /**
-        * Update region scrolling with tick time.
-        * @param delta {number} Elapsed time since last update.
-        */
-        function (delta) {
-            this._scroll.x += this.scrollSpeed.x;
-            this._scroll.y += this.scrollSpeed.y;
-            if(this._scroll.x > this._bounds.right) {
-                this._scroll.x = this._bounds.x;
-            }
-            if(this._scroll.x < this._bounds.x) {
-                this._scroll.x = this._bounds.right;
-            }
-            if(this._scroll.y > this._bounds.bottom) {
-                this._scroll.y = this._bounds.y;
-            }
-            if(this._scroll.y < this._bounds.y) {
-                this._scroll.y = this._bounds.bottom;
-            }
-            //	Anchor Dimensions
-            this._anchorWidth = (this._bounds.width - this._scroll.x) + this._bounds.x;
-            this._anchorHeight = (this._bounds.height - this._scroll.y) + this._bounds.y;
-            if(this._anchorWidth > this._bounds.width) {
-                this._anchorWidth = this._bounds.width;
-            }
-            if(this._anchorHeight > this._bounds.height) {
-                this._anchorHeight = this._bounds.height;
-            }
-            this._inverseWidth = this._bounds.width - this._anchorWidth;
-            this._inverseHeight = this._bounds.height - this._anchorHeight;
-            //	Rectangle A
-            this._A.setTo(this._scroll.x, this._scroll.y, this._anchorWidth, this._anchorHeight);
-            //	Rectangle B
-            this._B.y = this._scroll.y;
-            this._B.width = this._inverseWidth;
-            this._B.height = this._anchorHeight;
-            //	Rectangle C
-            this._C.x = this._scroll.x;
-            this._C.width = this._anchorWidth;
-            this._C.height = this._inverseHeight;
-            //	Rectangle D
-            this._D.width = this._inverseWidth;
-            this._D.height = this._inverseHeight;
-        };
-        ScrollRegion.prototype.render = /**
-        * Render this region to specific context.
-        * @param context {CanvasRenderingContext2D} Canvas context this region will be rendered to.
-        * @param texture {object} The texture to be rendered.
-        * @param dx {number} X position in world coordinate.
-        * @param dy {number} Y position in world coordinate.
-        * @param width {number} Width of this region to be rendered.
-        * @param height {number} Height of this region to be rendered.
-        */
-        function (context, texture, dx, dy, dw, dh) {
-            if(this.visible == false) {
-                return;
-            }
-            //  dx/dy are the world coordinates to render the FULL ScrollZone into.
-            //  This ScrollRegion may be smaller than that and offset from the dx/dy coordinates.
-            this.crop(context, texture, this._A.x, this._A.y, this._A.width, this._A.height, dx, dy, dw, dh, 0, 0);
-            this.crop(context, texture, this._B.x, this._B.y, this._B.width, this._B.height, dx, dy, dw, dh, this._A.width, 0);
-            this.crop(context, texture, this._C.x, this._C.y, this._C.width, this._C.height, dx, dy, dw, dh, 0, this._A.height);
-            this.crop(context, texture, this._D.x, this._D.y, this._D.width, this._D.height, dx, dy, dw, dh, this._C.width, this._A.height);
-            //context.fillStyle = 'rgb(255,255,255)';
-            //context.font = '18px Arial';
-            //context.fillText('RectangleA: ' + this._A.toString(), 32, 450);
-            //context.fillText('RectangleB: ' + this._B.toString(), 32, 480);
-            //context.fillText('RectangleC: ' + this._C.toString(), 32, 510);
-            //context.fillText('RectangleD: ' + this._D.toString(), 32, 540);
-                    };
-        ScrollRegion.prototype.crop = /**
-        * Crop part of the texture and render it to the given context.
-        * @param context {CanvasRenderingContext2D} Canvas context the texture will be rendered to.
-        * @param texture {object} Texture to be rendered.
-        * @param srcX {number} Target region top-left x coordinate in the texture.
-        * @param srcX {number} Target region top-left y coordinate in the texture.
-        * @param srcW {number} Target region width in the texture.
-        * @param srcH {number} Target region height in the texture.
-        * @param destX {number} Render region top-left x coordinate in the context.
-        * @param destX {number} Render region top-left y coordinate in the context.
-        * @param destW {number} Target region width in the context.
-        * @param destH {number} Target region height in the context.
-        * @param offsetX {number} X offset to the context.
-        * @param offsetY {number} Y offset to the context.
-        */
-        function (context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
-            offsetX += destX;
-            offsetY += destY;
-            if(srcW > (destX + destW) - offsetX) {
-                srcW = (destX + destW) - offsetX;
-            }
-            if(srcH > (destY + destH) - offsetY) {
-                srcH = (destY + destH) - offsetY;
-            }
-            srcX = Math.floor(srcX);
-            srcY = Math.floor(srcY);
-            srcW = Math.floor(srcW);
-            srcH = Math.floor(srcH);
-            offsetX = Math.floor(offsetX + this._bounds.x);
-            offsetY = Math.floor(offsetY + this._bounds.y);
-            if(srcW > 0 && srcH > 0) {
-                context.drawImage(texture, srcX, srcY, srcW, srcH, offsetX, offsetY, srcW, srcH);
-            }
-        };
-        return ScrollRegion;
-    })();
-    Phaser.ScrollRegion = ScrollRegion;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
-* Phaser - Polygon
-*
-*/
-var Phaser;
-(function (Phaser) {
-    var Polygon = (function () {
-        /**
-        * A *convex* clockwise polygon
-        * @class Polygon
-        * @constructor
-        * @param {Vec2} pos A vector representing the origin of the polygon (all other points are relative to this one)
-        * @param {Array.<Vec2>} points An Array of vectors representing the points in the polygon, in clockwise order.
-        **/
-        function Polygon(pos, points, parent) {
-            if (typeof pos === "undefined") { pos = new Phaser.Vec2(); }
-            if (typeof points === "undefined") { points = []; }
-            if (typeof parent === "undefined") { parent = null; }
-            this.pos = pos;
-            this.points = points;
-            this.parent = parent;
-            this.recalc();
-        }
-        Polygon.prototype.recalc = /**
-        * Recalculate the edges and normals of the polygon.  This
-        * MUST be called if the points array is modified at all and
-        * the edges or normals are to be accessed.
-        */
-        function () {
-            var points = this.points;
-            var len = points.length;
-            this.edges = [];
-            this.normals = [];
-            for(var i = 0; i < len; i++) {
-                var p1 = points[i];
-                var p2 = i < len - 1 ? points[i + 1] : points[0];
-                var e = new Phaser.Vec2().copyFrom(p2).sub(p1);
-                var n = new Phaser.Vec2().copyFrom(e).perp().normalize();
-                this.edges.push(e);
-                this.normals.push(n);
-            }
-        };
-        return Polygon;
-    })();
-    Phaser.Polygon = Polygon;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
 /// <reference path="../core/Point.ts" />
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../core/Circle.ts" />
@@ -10751,7 +11371,8 @@ var Phaser;
         * @return {Boolean} True if the coordinates are within this circle, otherwise false.
         **/
         function contains(a, x, y) {
-            return (a.radius * a.radius >= Collision.distanceSquared(a.x, a.y, x, y));
+            //return (a.radius * a.radius >= Collision.distanceSquared(a.x, a.y, x, y));
+            return true;
         };
         CircleUtils.containsPoint = /**
         * Return true if the coordinates of the given Point object are within this Circle object.
@@ -10772,7 +11393,8 @@ var Phaser;
         * @return {Boolean} True if the coordinates are within this circle, otherwise false.
         **/
         function containsCircle(a, b) {
-            return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
+            //return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
+            return true;
         };
         CircleUtils.distanceBetween = /**
         * Returns the distance from the center of the Circle object to the given object (can be Circle, Point or anything with x/y properties)
@@ -10835,823 +11457,7 @@ var Phaser;
     Phaser.CircleUtils = CircleUtils;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="Polygon.ts" />
-/**
-* Phaser - Response
-*
-*/
-var Phaser;
-(function (Phaser) {
-    var Response = (function () {
-        /**
-        * An object representing the result of an intersection. Contain information about:
-        * - The two objects participating in the intersection
-        * - The vector representing the minimum change necessary to extract the first object
-        *   from the second one.
-        * - Whether the first object is entirely inside the second, or vice versa.
-        *
-        * @constructor
-        */
-        function Response() {
-            this.a = null;
-            this.b = null;
-            this.overlapN = new Phaser.Vec2();
-            this.overlapV = new Phaser.Vec2();
-            this.clear();
-        }
-        Response.prototype.clear = /**
-        * Set some values of the response back to their defaults.  Call this between tests if
-        * you are going to reuse a single Response object for multiple intersection tests (recommented)
-        *
-        * @return {Response} This for chaining
-        */
-        function () {
-            this.aInB = true;
-            this.bInA = true;
-            this.overlap = Number.MAX_VALUE;
-            return this;
-        };
-        return Response;
-    })();
-    Phaser.Response = Response;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/**
-* Phaser - RectangleUtils
-*
-* A collection of methods useful for manipulating and comparing Rectangle objects.
-*
-* TODO: Check docs + overlap + intersect + toPolygon?
-*/
-var Phaser;
-(function (Phaser) {
-    var RectangleUtils = (function () {
-        function RectangleUtils() { }
-        RectangleUtils.getTopLeftAsPoint = /**
-        * Get the location of the Rectangles top-left corner as a Point object.
-        * @method getTopLeftAsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
-        function getTopLeftAsPoint(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Point(); }
-            return out.setTo(a.x, a.y);
-        };
-        RectangleUtils.getBottomRightAsPoint = /**
-        * Get the location of the Rectangles bottom-right corner as a Point object.
-        * @method getTopLeftAsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
-        function getBottomRightAsPoint(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Point(); }
-            return out.setTo(a.right, a.bottom);
-        };
-        RectangleUtils.inflate = /**
-        * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
-        * @method inflate
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Number} dx The amount to be added to the left side of the Rectangle.
-        * @param {Number} dy The amount to be added to the bottom side of the Rectangle.
-        * @return {Rectangle} This Rectangle object.
-        **/
-        function inflate(a, dx, dy) {
-            a.x -= dx;
-            a.width += 2 * dx;
-            a.y -= dy;
-            a.height += 2 * dy;
-            return a;
-        };
-        RectangleUtils.inflatePoint = /**
-        * Increases the size of the Rectangle object. This method is similar to the Rectangle.inflate() method except it takes a Point object as a parameter.
-        * @method inflatePoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} point The x property of this Point object is used to increase the horizontal dimension of the Rectangle object. The y property is used to increase the vertical dimension of the Rectangle object.
-        * @return {Rectangle} The Rectangle object.
-        **/
-        function inflatePoint(a, point) {
-            return RectangleUtils.inflate(a, point.x, point.y);
-        };
-        RectangleUtils.size = /**
-        * The size of the Rectangle object, expressed as a Point object with the values of the width and height properties.
-        * @method size
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} output Optional Point object. If given the values will be set into the object, otherwise a brand new Point object will be created and returned.
-        * @return {Point} The size of the Rectangle object
-        **/
-        function size(a, output) {
-            if (typeof output === "undefined") { output = new Phaser.Point(); }
-            return output.setTo(a.width, a.height);
-        };
-        RectangleUtils.clone = /**
-        * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
-        * @method clone
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle}
-        **/
-        function clone(a, output) {
-            if (typeof output === "undefined") { output = new Phaser.Rectangle(); }
-            return output.setTo(a.x, a.y, a.width, a.height);
-        };
-        RectangleUtils.contains = /**
-        * Determines whether the specified coordinates are contained within the region defined by this Rectangle object.
-        * @method contains
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Number} x The x coordinate of the point to test.
-        * @param {Number} y The y coordinate of the point to test.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
-        function contains(a, x, y) {
-            return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
-        };
-        RectangleUtils.containsPoint = /**
-        * Determines whether the specified point is contained within the rectangular region defined by this Rectangle object. This method is similar to the Rectangle.contains() method, except that it takes a Point object as a parameter.
-        * @method containsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} point The point object being checked. Can be Point or any object with .x and .y values.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
-        function containsPoint(a, point) {
-            return RectangleUtils.contains(a, point.x, point.y);
-        };
-        RectangleUtils.containsRect = /**
-        * Determines whether the first Rectangle object is fully contained within the second Rectangle object.
-        * A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
-        * @method containsRect
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
-        function containsRect(a, b) {
-            //	If the given rect has a larger volume than this one then it can never contain it
-            if(a.volume > b.volume) {
-                return false;
-            }
-            return (a.x >= b.x && a.y >= b.y && a.right <= b.right && a.bottom <= b.bottom);
-        };
-        RectangleUtils.equals = /**
-        * Determines whether the two Rectangles are equal.
-        * This method compares the x, y, width and height properties of each Rectangle.
-        * @method equals
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @return {Boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
-        **/
-        function equals(a, b) {
-            return (a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height);
-        };
-        RectangleUtils.intersection = /**
-        * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
-        * @method intersection
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle} A Rectangle object that equals the area of intersection. If the rectangles do not intersect, this method returns an empty Rectangle object; that is, a rectangle with its x, y, width, and height properties set to 0.
-        **/
-        function intersection(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
-            if(RectangleUtils.intersects(a, b)) {
-                out.x = Math.max(a.x, b.x);
-                out.y = Math.max(a.y, b.y);
-                out.width = Math.min(a.right, b.right) - out.x;
-                out.height = Math.min(a.bottom, b.bottom) - out.y;
-            }
-            return out;
-        };
-        RectangleUtils.intersects = /**
-        * Determines whether the two Rectangles intersect with each other.
-        * This method checks the x, y, width, and height properties of the Rectangles.
-        * @method intersects
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
-        * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
-        **/
-        function intersects(a, b, tolerance) {
-            if (typeof tolerance === "undefined") { tolerance = 0; }
-            // ?
-            //return (a.right > b.x) && (a.x < b.right) && (a.bottom > b.y) && (a.y < b.bottom);
-            return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
-            //if (a.x >= b.right || a.right <= b.x || a.bottom <= b.y || a.y >= b.bottom)
-            //{
-            //    return false;
-            //}
-            //return true;
-                    };
-        RectangleUtils.intersectsRaw = /**
-        * Determines whether the object specified intersects (overlaps) with the given values.
-        * @method intersectsRaw
-        * @param {Number} left
-        * @param {Number} right
-        * @param {Number} top
-        * @param {Number} bottomt
-        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
-        * @return {Boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
-        **/
-        function intersectsRaw(a, left, right, top, bottom, tolerance) {
-            if (typeof tolerance === "undefined") { tolerance = 0; }
-            return !(left > a.right + tolerance || right < a.left - tolerance || top > a.bottom + tolerance || bottom < a.top - tolerance);
-        };
-        RectangleUtils.union = /**
-        * Adds two rectangles together to create a new Rectangle object, by filling in the horizontal and vertical space between the two rectangles.
-        * @method union
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle} A Rectangle object that is the union of the two rectangles.
-        **/
-        function union(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
-            return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
-        };
-        return RectangleUtils;
-    })();
-    Phaser.RectangleUtils = RectangleUtils;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
-* Phaser - TilemapLayer
-*
-* A Tilemap Layer. Tiled format maps can have multiple overlapping layers.
-*/
-var Phaser;
-(function (Phaser) {
-    var TilemapLayer = (function () {
-        /**
-        * TilemapLayer constructor
-        * Create a new <code>TilemapLayer</code>.
-        *
-        * @param game {Phaser.Game} Current game instance.
-        * @param parent {Tilemap} The tilemap that contains this layer.
-        * @param key {string} Asset key for this map.
-        * @param mapFormat {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
-        * @param name {string} Name of this layer, so you can get this layer by its name.
-        * @param tileWidth {number} Width of tiles in this map.
-        * @param tileHeight {number} Height of tiles in this map.
-        */
-        function TilemapLayer(game, parent, key, mapFormat, name, tileWidth, tileHeight) {
-            this._startX = 0;
-            this._startY = 0;
-            this._maxX = 0;
-            this._maxY = 0;
-            this._tx = 0;
-            this._ty = 0;
-            this._dx = 0;
-            this._dy = 0;
-            this._oldCameraX = 0;
-            this._oldCameraY = 0;
-            /**
-            * Opacity of this layer.
-            * @type {number}
-            */
-            this.alpha = 1;
-            /**
-            * Controls whether update() and draw() are automatically called.
-            * @type {boolean}
-            */
-            this.exists = true;
-            /**
-            * Controls whether draw() are automatically called.
-            * @type {boolean}
-            */
-            this.visible = true;
-            /**
-            * How many tiles in each row.
-            * Read-only variable, do NOT recommend changing after the map is loaded!
-            * @type {number}
-            */
-            this.widthInTiles = 0;
-            /**
-            * How many tiles in each column.
-            * Read-only variable, do NOT recommend changing after the map is loaded!
-            * @type {number}
-            */
-            this.heightInTiles = 0;
-            /**
-            * Read-only variable, do NOT recommend changing after the map is loaded!
-            * @type {number}
-            */
-            this.widthInPixels = 0;
-            /**
-            * Read-only variable, do NOT recommend changing after the map is loaded!
-            * @type {number}
-            */
-            this.heightInPixels = 0;
-            /**
-            * Distance between REAL tiles to the tileset texture bound.
-            * @type {number}
-            */
-            this.tileMargin = 0;
-            /**
-            * Distance between every 2 neighbor tile in the tileset texture.
-            * @type {number}
-            */
-            this.tileSpacing = 0;
-            this._game = game;
-            this._parent = parent;
-            this.name = name;
-            this.mapFormat = mapFormat;
-            this.tileWidth = tileWidth;
-            this.tileHeight = tileHeight;
-            this.boundsInTiles = new Phaser.Rectangle();
-            //this.scrollFactor = new MicroPoint(1, 1);
-            this.canvas = game.stage.canvas;
-            this.context = game.stage.context;
-            this.mapData = [];
-            this._tempTileBlock = [];
-            this._texture = this._game.cache.getImage(key);
-        }
-        TilemapLayer.prototype.putTile = /**
-        * Set a specific tile with its x and y in tiles.
-        * @param x {number} X position of this tile.
-        * @param y {number} Y position of this tile.
-        * @param index {number} The index of this tile type in the core map data.
-        */
-        function (x, y, index) {
-            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
-            if(y >= 0 && y < this.mapData.length) {
-                if(x >= 0 && x < this.mapData[y].length) {
-                    this.mapData[y][x] = index;
-                }
-            }
-        };
-        TilemapLayer.prototype.swapTile = /**
-        * Swap tiles with 2 kinds of indexes.
-        * @param tileA {number} First tile index.
-        * @param tileB {number} Second tile index.
-        * @param [x] {number} specify a rectangle of tiles to operate. The x position in tiles of rectangle's left-top corner.
-        * @param [y] {number} specify a rectangle of tiles to operate. The y position in tiles of rectangle's left-top corner.
-        * @param [width] {number} specify a rectangle of tiles to operate. The width in tiles.
-        * @param [height] {number} specify a rectangle of tiles to operate. The height in tiles.
-        */
-        function (tileA, tileB, x, y, width, height) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof width === "undefined") { width = this.widthInTiles; }
-            if (typeof height === "undefined") { height = this.heightInTiles; }
-            this.getTempBlock(x, y, width, height);
-            for(var r = 0; r < this._tempTileBlock.length; r++) {
-                //  First sweep marking tileA as needing a new index
-                if(this._tempTileBlock[r].tile.index == tileA) {
-                    this._tempTileBlock[r].newIndex = true;
-                }
-                //  In the same pass we can swap tileB to tileA
-                if(this._tempTileBlock[r].tile.index == tileB) {
-                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileA;
-                }
-            }
-            for(var r = 0; r < this._tempTileBlock.length; r++) {
-                //  And now swap our newIndex tiles for tileB
-                if(this._tempTileBlock[r].newIndex == true) {
-                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
-                }
-            }
-        };
-        TilemapLayer.prototype.fillTile = /**
-        * Fill a tile block with a specific tile index.
-        * @param index {number} Index of tiles you want to fill with.
-        * @param [x] {number} x position (in tiles) of block's left-top corner.
-        * @param [y] {number} y position (in tiles) of block's left-top corner.
-        * @param [width] {number} width of block.
-        * @param [height] {number} height of block.
-        */
-        function (index, x, y, width, height) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof width === "undefined") { width = this.widthInTiles; }
-            if (typeof height === "undefined") { height = this.heightInTiles; }
-            this.getTempBlock(x, y, width, height);
-            for(var r = 0; r < this._tempTileBlock.length; r++) {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = index;
-            }
-        };
-        TilemapLayer.prototype.randomiseTiles = /**
-        * Set random tiles to a specific tile block.
-        * @param tiles {number[]} Tiles with indexes in this array will be randomly set to the given block.
-        * @param [x] {number} x position (in tiles) of block's left-top corner.
-        * @param [y] {number} y position (in tiles) of block's left-top corner.
-        * @param [width] {number} width of block.
-        * @param [height] {number} height of block.
-        */
-        function (tiles, x, y, width, height) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof width === "undefined") { width = this.widthInTiles; }
-            if (typeof height === "undefined") { height = this.heightInTiles; }
-            this.getTempBlock(x, y, width, height);
-            for(var r = 0; r < this._tempTileBlock.length; r++) {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this._game.math.getRandom(tiles);
-            }
-        };
-        TilemapLayer.prototype.replaceTile = /**
-        * Replace one kind of tiles to another kind.
-        * @param tileA {number} Index of tiles you want to replace.
-        * @param tileB {number} Index of tiles you want to set.
-        * @param [x] {number} x position (in tiles) of block's left-top corner.
-        * @param [y] {number} y position (in tiles) of block's left-top corner.
-        * @param [width] {number} width of block.
-        * @param [height] {number} height of block.
-        */
-        function (tileA, tileB, x, y, width, height) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof width === "undefined") { width = this.widthInTiles; }
-            if (typeof height === "undefined") { height = this.heightInTiles; }
-            this.getTempBlock(x, y, width, height);
-            for(var r = 0; r < this._tempTileBlock.length; r++) {
-                if(this._tempTileBlock[r].tile.index == tileA) {
-                    this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
-                }
-            }
-        };
-        TilemapLayer.prototype.getTileBlock = /**
-        * Get a tile block with specific position and size.(both are in tiles)
-        * @param x {number} X position of block's left-top corner.
-        * @param y {number} Y position of block's left-top corner.
-        * @param width {number} Width of block.
-        * @param height {number} Height of block.
-        */
-        function (x, y, width, height) {
-            var output = [];
-            this.getTempBlock(x, y, width, height);
-            for(var r = 0; r < this._tempTileBlock.length; r++) {
-                output.push({
-                    x: this._tempTileBlock[r].x,
-                    y: this._tempTileBlock[r].y,
-                    tile: this._tempTileBlock[r].tile
-                });
-            }
-            return output;
-        };
-        TilemapLayer.prototype.getTileFromWorldXY = /**
-        * Get a tile with specific position (in world coordinate). (thus you give a position of a point which is within the tile)
-        * @param x {number} X position of the point in target tile.
-        * @param x {number} Y position of the point in target tile.
-        */
-        function (x, y) {
-            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
-            return this.getTileIndex(x, y);
-        };
-        TilemapLayer.prototype.getTileOverlaps = /**
-        * Get tiles overlaps the given object.
-        * @param object {GameObject} Tiles you want to get that overlaps this.
-        * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
-        */
-        function (object) {
-            //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
-            if(object.collisionMask.x < 0 || object.collisionMask.x > this.widthInPixels || object.collisionMask.y < 0 || object.collisionMask.bottom > this.heightInPixels) {
-                return;
-            }
-            //  What tiles do we need to check against?
-            this._tempTileX = this._game.math.snapToFloor(object.collisionMask.x, this.tileWidth) / this.tileWidth;
-            this._tempTileY = this._game.math.snapToFloor(object.collisionMask.y, this.tileHeight) / this.tileHeight;
-            this._tempTileW = (this._game.math.snapToCeil(object.collisionMask.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-            this._tempTileH = (this._game.math.snapToCeil(object.collisionMask.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
-            //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
-            this._tempBlockResults = [];
-            this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
-            Collision.TILE_OVERLAP = false;
-            for(var r = 0; r < this._tempTileBlock.length; r++) {
-                if(Collision.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true) {
-                    this._tempBlockResults.push({
-                        x: this._tempTileBlock[r].x,
-                        y: this._tempTileBlock[r].y,
-                        tile: this._tempTileBlock[r].tile
-                    });
-                }
-            }
-            return this._tempBlockResults;
-        };
-        TilemapLayer.prototype.getTempBlock = /**
-        * Get a tile block with its position and size. (This method does not return, it'll set result to _tempTileBlock)
-        * @param x {number} X position of block's left-top corner.
-        * @param y {number} Y position of block's left-top corner.
-        * @param width {number} Width of block.
-        * @param height {number} Height of block.
-        * @param collisionOnly {boolean} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
-        */
-        function (x, y, width, height, collisionOnly) {
-            if (typeof collisionOnly === "undefined") { collisionOnly = false; }
-            if(x < 0) {
-                x = 0;
-            }
-            if(y < 0) {
-                y = 0;
-            }
-            if(width > this.widthInTiles) {
-                width = this.widthInTiles;
-            }
-            if(height > this.heightInTiles) {
-                height = this.heightInTiles;
-            }
-            this._tempTileBlock = [];
-            for(var ty = y; ty < y + height; ty++) {
-                for(var tx = x; tx < x + width; tx++) {
-                    if(collisionOnly) {
-                        //  We only want to consider the tile for checking if you can actually collide with it
-                        if(this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Collision.NONE) {
-                            this._tempTileBlock.push({
-                                x: tx,
-                                y: ty,
-                                tile: this._parent.tiles[this.mapData[ty][tx]]
-                            });
-                        }
-                    } else {
-                        if(this.mapData[ty] && this.mapData[ty][tx]) {
-                            this._tempTileBlock.push({
-                                x: tx,
-                                y: ty,
-                                tile: this._parent.tiles[this.mapData[ty][tx]]
-                            });
-                        }
-                    }
-                }
-            }
-        };
-        TilemapLayer.prototype.getTileIndex = /**
-        * Get the tile index of specific position (in tiles).
-        * @param x {number} X position of the tile.
-        * @param y {number} Y position of the tile.
-        * @return {number} Index of the tile at that position. Return null if there isn't a tile there.
-        */
-        function (x, y) {
-            if(y >= 0 && y < this.mapData.length) {
-                if(x >= 0 && x < this.mapData[y].length) {
-                    return this.mapData[y][x];
-                }
-            }
-            return null;
-        };
-        TilemapLayer.prototype.addColumn = /**
-        * Add a column of tiles into the layer.
-        * @param column {string[]/number[]} An array of tile indexes to be added.
-        */
-        function (column) {
-            var data = [];
-            for(var c = 0; c < column.length; c++) {
-                data[c] = parseInt(column[c]);
-            }
-            if(this.widthInTiles == 0) {
-                this.widthInTiles = data.length;
-                this.widthInPixels = this.widthInTiles * this.tileWidth;
-            }
-            this.mapData.push(data);
-            this.heightInTiles++;
-            this.heightInPixels += this.tileHeight;
-        };
-        TilemapLayer.prototype.updateBounds = /**
-        * Update boundsInTiles with widthInTiles and heightInTiles.
-        */
-        function () {
-            this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
-        };
-        TilemapLayer.prototype.parseTileOffsets = /**
-        * Parse tile offsets from map data.
-        * @return {number} length of _tileOffsets array.
-        */
-        function () {
-            this._tileOffsets = [];
-            var i = 0;
-            if(this.mapFormat == Tilemap.FORMAT_TILED_JSON) {
-                //  For some reason Tiled counts from 1 not 0
-                this._tileOffsets[0] = null;
-                i = 1;
-            }
-            for(var ty = this.tileMargin; ty < this._texture.height; ty += (this.tileHeight + this.tileSpacing)) {
-                for(var tx = this.tileMargin; tx < this._texture.width; tx += (this.tileWidth + this.tileSpacing)) {
-                    this._tileOffsets[i] = {
-                        x: tx,
-                        y: ty
-                    };
-                    i++;
-                }
-            }
-            return this._tileOffsets.length;
-        };
-        TilemapLayer.prototype.renderDebugInfo = function (x, y, color) {
-            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this.context.fillStyle = color;
-            this.context.fillText('TilemapLayer: ' + this.name, x, y);
-            this.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
-            this.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
-            this.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
-        };
-        TilemapLayer.prototype.render = /**
-        * Render this layer to a specific camera with offset to camera.
-        * @param camera {Camera} The camera the layer is going to be rendered.
-        * @param dx {number} X offset to the camera.
-        * @param dy {number} Y offset to the camera.
-        * @return {boolean} Return false if layer is invisible or has a too low opacity(will stop rendering), return true if succeed.
-        */
-        function (camera, dx, dy) {
-            if(this.visible === false || this.alpha < 0.1) {
-                return false;
-            }
-            //  Work out how many tiles we can fit into our camera and round it up for the edges
-            this._maxX = this._game.math.ceil(camera.width / this.tileWidth) + 1;
-            this._maxY = this._game.math.ceil(camera.height / this.tileHeight) + 1;
-            //  And now work out where in the tilemap the camera actually is
-            this._startX = this._game.math.floor(camera.worldView.x / this.tileWidth);
-            this._startY = this._game.math.floor(camera.worldView.y / this.tileHeight);
-            //  Tilemap bounds check
-            if(this._startX < 0) {
-                this._startX = 0;
-            }
-            if(this._startY < 0) {
-                this._startY = 0;
-            }
-            if(this._maxX > this.widthInTiles) {
-                this._maxX = this.widthInTiles;
-            }
-            if(this._maxY > this.heightInTiles) {
-                this._maxY = this.heightInTiles;
-            }
-            if(this._startX + this._maxX > this.widthInTiles) {
-                this._startX = this.widthInTiles - this._maxX;
-            }
-            if(this._startY + this._maxY > this.heightInTiles) {
-                this._startY = this.heightInTiles - this._maxY;
-            }
-            //  Finally get the offset to avoid the blocky movement
-            this._dx = dx;
-            this._dy = dy;
-            this._dx += -(camera.worldView.x - (this._startX * this.tileWidth));
-            this._dy += -(camera.worldView.y - (this._startY * this.tileHeight));
-            this._tx = this._dx;
-            this._ty = this._dy;
-            //	Apply camera difference
-            /*
-            if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
-            {
-            this._dx -= (camera.worldView.x * this.scrollFactor.x);
-            this._dy -= (camera.worldView.y * this.scrollFactor.y);
-            }
-            */
-            //  Alpha
-            if(this.alpha !== 1) {
-                var globalAlpha = this.context.globalAlpha;
-                this.context.globalAlpha = this.alpha;
-            }
-            for(var row = this._startY; row < this._startY + this._maxY; row++) {
-                this._columnData = this.mapData[row];
-                for(var tile = this._startX; tile < this._startX + this._maxX; tile++) {
-                    if(this._tileOffsets[this._columnData[tile]]) {
-                        this.context.drawImage(this._texture, //  Source Image
-                        this._tileOffsets[this._columnData[tile]].x, //  Source X (location within the source image)
-                        this._tileOffsets[this._columnData[tile]].y, //  Source Y
-                        this.tileWidth, //	Source Width
-                        this.tileHeight, //	Source Height
-                        this._tx, //	Destination X (where on the canvas it'll be drawn)
-                        this._ty, //	Destination Y
-                        this.tileWidth, //	Destination Width (always same as Source Width unless scaled)
-                        this.tileHeight);
-                        //	Destination Height (always same as Source Height unless scaled)
-                                            }
-                    this._tx += this.tileWidth;
-                }
-                this._tx = this._dx;
-                this._ty += this.tileHeight;
-            }
-            if(globalAlpha > -1) {
-                this.context.globalAlpha = globalAlpha;
-            }
-            return true;
-        };
-        return TilemapLayer;
-    })();
-    Phaser.TilemapLayer = TilemapLayer;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
-* Phaser - Tile
-*
-* A Tile is a single representation of a tile within a Tilemap
-*/
-var Phaser;
-(function (Phaser) {
-    var Tile = (function () {
-        /**
-        * Tile constructor
-        * Create a new <code>Tile</code>.
-        *
-        * @param tilemap {Tilemap} the tilemap this tile belongs to.
-        * @param index {number} The index of this tile type in the core map data.
-        * @param width {number} Width of the tile.
-        * @param height number} Height of the tile.
-        */
-        function Tile(game, tilemap, index, width, height) {
-            /**
-            * The virtual mass of the tile.
-            * @type {number}
-            */
-            this.mass = 1.0;
-            /**
-            * Indicating collide with any object on the left.
-            * @type {boolean}
-            */
-            this.collideLeft = false;
-            /**
-            * Indicating collide with any object on the right.
-            * @type {boolean}
-            */
-            this.collideRight = false;
-            /**
-            * Indicating collide with any object on the top.
-            * @type {boolean}
-            */
-            this.collideUp = false;
-            /**
-            * Indicating collide with any object on the bottom.
-            * @type {boolean}
-            */
-            this.collideDown = false;
-            /**
-            * Enable separation at x-axis.
-            * @type {boolean}
-            */
-            this.separateX = true;
-            /**
-            * Enable separation at y-axis.
-            * @type {boolean}
-            */
-            this.separateY = true;
-            this._game = game;
-            this.tilemap = tilemap;
-            this.index = index;
-            this.width = width;
-            this.height = height;
-            this.allowCollisions = Collision.NONE;
-        }
-        Tile.prototype.destroy = /**
-        * Clean up memory.
-        */
-        function () {
-            this.tilemap = null;
-        };
-        Tile.prototype.setCollision = /**
-        * Set collision configs.
-        * @param collision {number} Bit field of flags. (see Tile.allowCollision)
-        * @param resetCollisions {boolean} Reset collision flags before set.
-        * @param separateX {boolean} Enable seprate at x-axis.
-        * @param separateY {boolean} Enable seprate at y-axis.
-        */
-        function (collision, resetCollisions, separateX, separateY) {
-            if(resetCollisions) {
-                this.resetCollision();
-            }
-            this.separateX = separateX;
-            this.separateY = separateY;
-            this.allowCollisions = collision;
-            if(collision & Collision.ANY) {
-                this.collideLeft = true;
-                this.collideRight = true;
-                this.collideUp = true;
-                this.collideDown = true;
-                return;
-            }
-            if(collision & Collision.LEFT || collision & Collision.WALL) {
-                this.collideLeft = true;
-            }
-            if(collision & Collision.RIGHT || collision & Collision.WALL) {
-                this.collideRight = true;
-            }
-            if(collision & Collision.UP || collision & Collision.CEILING) {
-                this.collideUp = true;
-            }
-            if(collision & Collision.DOWN || collision & Collision.CEILING) {
-                this.collideDown = true;
-            }
-        };
-        Tile.prototype.resetCollision = /**
-        * Reset collision status flags.
-        */
-        function () {
-            this.allowCollisions = Collision.NONE;
-            this.collideLeft = false;
-            this.collideRight = false;
-            this.collideUp = false;
-            this.collideDown = false;
-        };
-        Tile.prototype.toString = /**
-        * Returns a string representation of this object.
-        * @method toString
-        * @return {string} a string representation of the object.
-        **/
-        function () {
-            return "[{Tiled (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
-        };
-        return Tile;
-    })();
-    Phaser.Tile = Tile;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
+/// <reference path="../gameobjects/IGameObject.ts" />
 /**
 * Phaser - LinkedList
 *
@@ -11688,6 +11494,7 @@ var __extends = this.__extends || function (d, b) {
 };
 /// <reference path="../Game.ts" />
 /// <reference path="LinkedList.ts" />
+/// <reference path="../gameobjects/IGameObject.ts" />
 /**
 * Phaser - QuadTree
 *
@@ -11715,30 +11522,28 @@ var Phaser;
             this._headB = this._tailB = new Phaser.LinkedList();
             //Copy the parent's children (if there are any)
             if(parent != null) {
-                var iterator;
-                var ot;
                 if(parent._headA.object != null) {
-                    iterator = parent._headA;
-                    while(iterator != null) {
+                    this._iterator = parent._headA;
+                    while(this._iterator != null) {
                         if(this._tailA.object != null) {
-                            ot = this._tailA;
+                            this._ot = this._tailA;
                             this._tailA = new Phaser.LinkedList();
-                            ot.next = this._tailA;
+                            this._ot.next = this._tailA;
                         }
-                        this._tailA.object = iterator.object;
-                        iterator = iterator.next;
+                        this._tailA.object = this._iterator.object;
+                        this._iterator = this._iterator.next;
                     }
                 }
                 if(parent._headB.object != null) {
-                    iterator = parent._headB;
-                    while(iterator != null) {
+                    this._iterator = parent._headB;
+                    while(this._iterator != null) {
                         if(this._tailB.object != null) {
-                            ot = this._tailB;
+                            this._ot = this._tailB;
                             this._tailB = new Phaser.LinkedList();
-                            ot.next = this._tailB;
+                            this._ot.next = this._tailB;
                         }
-                        this._tailB.object = iterator.object;
-                        iterator = iterator.next;
+                        this._tailB.object = this._iterator.object;
+                        this._iterator = this._iterator.next;
                     }
                 }
             } else {
@@ -11796,8 +11601,8 @@ var Phaser;
         QuadTree.prototype.load = /**
         * Load objects and/or groups into the quad tree, and register notify and processing callbacks.
         *
-        * @param {Basic} objectOrGroup1	Any object that is or extends GameObject or Group.
-        * @param {Basic} objectOrGroup2	Any object that is or extends GameObject or Group.  If null, the first parameter will be checked against itself.
+        * @param {} objectOrGroup1	Any object that is or extends IGameObject or Group.
+        * @param {} objectOrGroup2	Any object that is or extends IGameObject or Group.  If null, the first parameter will be checked against itself.
         * @param {Function} notifyCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject)</code> that is called whenever two objects are found to overlap in world space, and either no processCallback is specified, or the processCallback returns true.
         * @param {Function} processCallback	A function with the form <code>myFunction(Object1:GameObject,Object2:GameObject):bool</code> that is called whenever two objects are found to overlap in world space.  The notifyCallback is only called if this function returns true.  See GameObject.separate().
         * @param context The context in which the callbacks will be called
@@ -11823,23 +11628,22 @@ var Phaser;
         * This function will recursively add all group members, but
         * not the groups themselves.
         *
-        * @param {Basic} objectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
+        * @param {} objectOrGroup	GameObjects are just added, Groups are recursed and their applicable members added accordingly.
         * @param {Number} list	A <code>uint</code> flag indicating the list to which you want to add the objects.  Options are <code>QuadTree.A_LIST</code> and <code>QuadTree.B_LIST</code>.
         */
         function (objectOrGroup, list) {
             QuadTree._list = list;
             if(objectOrGroup.isGroup == true) {
-                var i = 0;
-                var basic;
-                var members = objectOrGroup['members'];
-                var l = objectOrGroup['length'];
-                while(i < l) {
-                    basic = members[i++];
-                    if((basic != null) && basic.exists) {
-                        if(basic.isGroup) {
-                            this.add(basic, list);
+                this._i = 0;
+                this._members = objectOrGroup['members'];
+                this._l = objectOrGroup['length'];
+                while(this._i < this._l) {
+                    this._basic = this._members[this._i++];
+                    if(this._basic != null && this._basic.exists) {
+                        if(this._basic.type == Phaser.Types.GROUP) {
+                            this.add(this._basic, list);
                         } else {
-                            QuadTree._object = basic;
+                            QuadTree._object = this._basic;
                             if(QuadTree._object.exists && QuadTree._object.allowCollisions) {
                                 this.addObject();
                             }
@@ -11926,19 +11730,18 @@ var Phaser;
         * Internal function for recursively adding objects to leaf lists.
         */
         function () {
-            var ot;
             if(QuadTree._list == QuadTree.A_LIST) {
                 if(this._tailA.object != null) {
-                    ot = this._tailA;
+                    this._ot = this._tailA;
                     this._tailA = new Phaser.LinkedList();
-                    ot.next = this._tailA;
+                    this._ot.next = this._tailA;
                 }
                 this._tailA.object = QuadTree._object;
             } else {
                 if(this._tailB.object != null) {
-                    ot = this._tailB;
+                    this._ot = this._tailB;
                     this._tailB = new Phaser.LinkedList();
-                    ot.next = this._tailB;
+                    this._ot.next = this._tailB;
                 }
                 this._tailB.object = QuadTree._object;
             }
@@ -11965,37 +11768,36 @@ var Phaser;
         * @return {Boolean} Whether or not any overlaps were found.
         */
         function () {
-            var overlapProcessed = false;
-            var iterator;
+            this._overlapProcessed = false;
             if(this._headA.object != null) {
-                iterator = this._headA;
-                while(iterator != null) {
-                    QuadTree._object = iterator.object;
+                this._iterator = this._headA;
+                while(this._iterator != null) {
+                    QuadTree._object = this._iterator.object;
                     if(QuadTree._useBothLists) {
                         QuadTree._iterator = this._headB;
                     } else {
-                        QuadTree._iterator = iterator.next;
+                        QuadTree._iterator = this._iterator.next;
                     }
                     if(QuadTree._object.exists && (QuadTree._object.allowCollisions > 0) && (QuadTree._iterator != null) && (QuadTree._iterator.object != null) && QuadTree._iterator.object.exists && this.overlapNode()) {
-                        overlapProcessed = true;
+                        this._overlapProcessed = true;
                     }
-                    iterator = iterator.next;
+                    this._iterator = this._iterator.next;
                 }
             }
             //Advance through the tree by calling overlap on each child
             if((this._northWestTree != null) && this._northWestTree.execute()) {
-                overlapProcessed = true;
+                this._overlapProcessed = true;
             }
             if((this._northEastTree != null) && this._northEastTree.execute()) {
-                overlapProcessed = true;
+                this._overlapProcessed = true;
             }
             if((this._southEastTree != null) && this._southEastTree.execute()) {
-                overlapProcessed = true;
+                this._overlapProcessed = true;
             }
             if((this._southWestTree != null) && this._southWestTree.execute()) {
-                overlapProcessed = true;
+                this._overlapProcessed = true;
             }
-            return overlapProcessed;
+            return this._overlapProcessed;
         };
         QuadTree.prototype.overlapNode = /**
         * A private for comparing an object against the contents of a node.
@@ -12004,529 +11806,36 @@ var Phaser;
         */
         function () {
             //Walk the list and check for overlaps
-            var overlapProcessed = false;
-            var checkObject;
+            this._overlapProcessed = false;
             while(QuadTree._iterator != null) {
                 if(!QuadTree._object.exists || (QuadTree._object.allowCollisions <= 0)) {
                     break;
                 }
-                checkObject = QuadTree._iterator.object;
-                if((QuadTree._object === checkObject) || !checkObject.exists || (checkObject.allowCollisions <= 0)) {
+                this._checkObject = QuadTree._iterator.object;
+                if((QuadTree._object === this._checkObject) || !this._checkObject.exists || (this._checkObject.allowCollisions <= 0)) {
                     QuadTree._iterator = QuadTree._iterator.next;
                     continue;
                 }
-                if(QuadTree._object.collisionMask.checkHullIntersection(checkObject.collisionMask)) {
+                if(QuadTree._object.collisionMask.checkHullIntersection(this._checkObject.collisionMask)) {
                     //Execute callback functions if they exist
-                    if((QuadTree._processingCallback == null) || QuadTree._processingCallback(QuadTree._object, checkObject)) {
-                        overlapProcessed = true;
+                    if((QuadTree._processingCallback == null) || QuadTree._processingCallback(QuadTree._object, this._checkObject)) {
+                        this._overlapProcessed = true;
                     }
-                    if(overlapProcessed && (QuadTree._notifyCallback != null)) {
+                    if(this._overlapProcessed && (QuadTree._notifyCallback != null)) {
                         if(QuadTree._callbackContext !== null) {
-                            QuadTree._notifyCallback.call(QuadTree._callbackContext, QuadTree._object, checkObject);
+                            QuadTree._notifyCallback.call(QuadTree._callbackContext, QuadTree._object, this._checkObject);
                         } else {
-                            QuadTree._notifyCallback(QuadTree._object, checkObject);
+                            QuadTree._notifyCallback(QuadTree._object, this._checkObject);
                         }
                     }
                 }
                 QuadTree._iterator = QuadTree._iterator.next;
             }
-            return overlapProcessed;
+            return this._overlapProcessed;
         };
         return QuadTree;
     })(Phaser.Rectangle);
     Phaser.QuadTree = QuadTree;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="Pointer.ts" />
-/**
-* Phaser - Touch
-*
-* The Touch class handles touch interactions with the game and the resulting Pointer objects.
-* http://www.w3.org/TR/touch-events/
-* https://developer.mozilla.org/en-US/docs/DOM/TouchList
-* http://www.html5rocks.com/en/mobile/touchandmouse/
-* Note: Android 2.x only supports 1 touch event at once, no multi-touch
-*/
-var Phaser;
-(function (Phaser) {
-    var Touch = (function () {
-        /**
-        * Constructor
-        * @param {Game} game.
-        * @return {Touch} This object.
-        */
-        function Touch(game) {
-            /**
-            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-            * @type {Boolean}
-            */
-            this.disabled = false;
-            this._game = game;
-        }
-        Touch.prototype.start = /**
-        * Starts the event listeners running
-        * @method start
-        */
-        function () {
-            var _this = this;
-            if(this._game.device.touch) {
-                this._game.stage.canvas.addEventListener('touchstart', function (event) {
-                    return _this.onTouchStart(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchmove', function (event) {
-                    return _this.onTouchMove(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchend', function (event) {
-                    return _this.onTouchEnd(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchenter', function (event) {
-                    return _this.onTouchEnter(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchleave', function (event) {
-                    return _this.onTouchLeave(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchcancel', function (event) {
-                    return _this.onTouchCancel(event);
-                }, false);
-                document.addEventListener('touchmove', function (event) {
-                    return _this.consumeTouchMove(event);
-                }, false);
-            }
-        };
-        Touch.prototype.consumeTouchMove = /**
-        * Prevent iOS bounce-back (doesn't work?)
-        * @method consumeTouchMove
-        * @param {Any} event
-        **/
-        function (event) {
-            event.preventDefault();
-        };
-        Touch.prototype.onTouchStart = /**
-        *
-        * @method onTouchStart
-        * @param {Any} event
-        **/
-        function (event) {
-            if(this._game.input.disabled || this.disabled) {
-                return;
-            }
-            event.preventDefault();
-            //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
-            //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
-            //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
-            for(var i = 0; i < event.changedTouches.length; i++) {
-                this._game.input.startPointer(event.changedTouches[i]);
-            }
-        };
-        Touch.prototype.onTouchCancel = /**
-        * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
-        * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears
-        * @method onTouchCancel
-        * @param {Any} event
-        **/
-        function (event) {
-            if(this._game.input.disabled || this.disabled) {
-                return;
-            }
-            event.preventDefault();
-            //  Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
-            //  http://www.w3.org/TR/touch-events/#dfn-touchcancel
-            for(var i = 0; i < event.changedTouches.length; i++) {
-                this._game.input.stopPointer(event.changedTouches[i]);
-            }
-        };
-        Touch.prototype.onTouchEnter = /**
-        * For touch enter and leave its a list of the touch points that have entered or left the target
-        * Doesn't appear to be supported by most browsers yet
-        * @method onTouchEnter
-        * @param {Any} event
-        **/
-        function (event) {
-            if(this._game.input.disabled || this.disabled) {
-                return;
-            }
-            event.preventDefault();
-            for(var i = 0; i < event.changedTouches.length; i++) {
-                console.log('touch enter');
-            }
-        };
-        Touch.prototype.onTouchLeave = /**
-        * For touch enter and leave its a list of the touch points that have entered or left the target
-        * Doesn't appear to be supported by most browsers yet
-        * @method onTouchLeave
-        * @param {Any} event
-        **/
-        function (event) {
-            event.preventDefault();
-            for(var i = 0; i < event.changedTouches.length; i++) {
-                console.log('touch leave');
-            }
-        };
-        Touch.prototype.onTouchMove = /**
-        *
-        * @method onTouchMove
-        * @param {Any} event
-        **/
-        function (event) {
-            event.preventDefault();
-            for(var i = 0; i < event.changedTouches.length; i++) {
-                this._game.input.updatePointer(event.changedTouches[i]);
-            }
-        };
-        Touch.prototype.onTouchEnd = /**
-        *
-        * @method onTouchEnd
-        * @param {Any} event
-        **/
-        function (event) {
-            event.preventDefault();
-            //  For touch end its a list of the touch points that have been removed from the surface
-            //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
-            //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
-            for(var i = 0; i < event.changedTouches.length; i++) {
-                this._game.input.stopPointer(event.changedTouches[i]);
-            }
-        };
-        Touch.prototype.stop = /**
-        * Stop the event listeners
-        * @method stop
-        */
-        function () {
-            if(this._game.device.touch) {
-                //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
-                //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
-                //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
-                //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
-                //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
-                //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
-                            }
-        };
-        return Touch;
-    })();
-    Phaser.Touch = Touch;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
-* Phaser - Mouse
-*
-* The Mouse class handles mouse interactions with the game and the resulting events.
-*/
-var Phaser;
-(function (Phaser) {
-    var Mouse = (function () {
-        function Mouse(game) {
-            /**
-            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-            * @type {Boolean}
-            */
-            this.disabled = false;
-            this._game = game;
-        }
-        Mouse.LEFT_BUTTON = 0;
-        Mouse.MIDDLE_BUTTON = 1;
-        Mouse.RIGHT_BUTTON = 2;
-        Mouse.prototype.start = /**
-        * Starts the event listeners running
-        * @method start
-        */
-        function () {
-            var _this = this;
-            this._game.stage.canvas.addEventListener('mousedown', function (event) {
-                return _this.onMouseDown(event);
-            }, true);
-            this._game.stage.canvas.addEventListener('mousemove', function (event) {
-                return _this.onMouseMove(event);
-            }, true);
-            this._game.stage.canvas.addEventListener('mouseup', function (event) {
-                return _this.onMouseUp(event);
-            }, true);
-        };
-        Mouse.prototype.onMouseDown = /**
-        * @param {MouseEvent} event
-        */
-        function (event) {
-            if(this._game.input.disabled || this.disabled) {
-                return;
-            }
-            event['identifier'] = 0;
-            this._game.input.mousePointer.start(event);
-        };
-        Mouse.prototype.onMouseMove = /**
-        * @param {MouseEvent} event
-        */
-        function (event) {
-            if(this._game.input.disabled || this.disabled) {
-                return;
-            }
-            event['identifier'] = 0;
-            this._game.input.mousePointer.move(event);
-        };
-        Mouse.prototype.onMouseUp = /**
-        * @param {MouseEvent} event
-        */
-        function (event) {
-            if(this._game.input.disabled || this.disabled) {
-                return;
-            }
-            event['identifier'] = 0;
-            this._game.input.mousePointer.stop(event);
-        };
-        Mouse.prototype.stop = /**
-        * Stop the event listeners
-        * @method stop
-        */
-        function () {
-            //this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
-            //this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
-            //this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);
-                    };
-        return Mouse;
-    })();
-    Phaser.Mouse = Mouse;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
-* Phaser - Keyboard
-*
-* The Keyboard class handles keyboard interactions with the game and the resulting events.
-* The avoid stealing all browser input we don't use event.preventDefault. If you would like to trap a specific key however
-* then use the addKeyCapture() method.
-*/
-var Phaser;
-(function (Phaser) {
-    var Keyboard = (function () {
-        function Keyboard(game) {
-            this._keys = {
-            };
-            this._capture = {
-            };
-            /**
-            * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-            * @type {Boolean}
-            */
-            this.disabled = false;
-            this._game = game;
-        }
-        Keyboard.prototype.start = function () {
-            var _this = this;
-            document.body.addEventListener('keydown', function (event) {
-                return _this.onKeyDown(event);
-            }, false);
-            document.body.addEventListener('keyup', function (event) {
-                return _this.onKeyUp(event);
-            }, false);
-        };
-        Keyboard.prototype.addKeyCapture = /**
-        * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
-        * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
-        * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
-        * Pass in either a single keycode or an array of keycodes.
-        * @param {Any} keycode
-        */
-        function (keycode) {
-            if(typeof keycode === 'object') {
-                for(var i = 0; i < keycode.length; i++) {
-                    this._capture[keycode[i]] = true;
-                }
-            } else {
-                this._capture[keycode] = true;
-            }
-        };
-        Keyboard.prototype.removeKeyCapture = /**
-        * @param {Number} keycode
-        */
-        function (keycode) {
-            delete this._capture[keycode];
-        };
-        Keyboard.prototype.clearCaptures = function () {
-            this._capture = {
-            };
-        };
-        Keyboard.prototype.onKeyDown = /**
-        * @param {KeyboardEvent} event
-        */
-        function (event) {
-            if(this._game.input.disabled || this.disabled) {
-                return;
-            }
-            if(this._capture[event.keyCode]) {
-                event.preventDefault();
-            }
-            if(!this._keys[event.keyCode]) {
-                this._keys[event.keyCode] = {
-                    isDown: true,
-                    timeDown: this._game.time.now,
-                    timeUp: 0
-                };
-            } else {
-                this._keys[event.keyCode].isDown = true;
-                this._keys[event.keyCode].timeDown = this._game.time.now;
-            }
-        };
-        Keyboard.prototype.onKeyUp = /**
-        * @param {KeyboardEvent} event
-        */
-        function (event) {
-            if(this._game.input.disabled || this.disabled) {
-                return;
-            }
-            if(this._capture[event.keyCode]) {
-                event.preventDefault();
-            }
-            if(!this._keys[event.keyCode]) {
-                this._keys[event.keyCode] = {
-                    isDown: false,
-                    timeDown: 0,
-                    timeUp: this._game.time.now
-                };
-            } else {
-                this._keys[event.keyCode].isDown = false;
-                this._keys[event.keyCode].timeUp = this._game.time.now;
-            }
-        };
-        Keyboard.prototype.reset = function () {
-            for(var key in this._keys) {
-                this._keys[key].isDown = false;
-            }
-        };
-        Keyboard.prototype.justPressed = /**
-        * @param {Number} keycode
-        * @param {Number} [duration]
-        * @return {Boolean}
-        */
-        function (keycode, duration) {
-            if (typeof duration === "undefined") { duration = 250; }
-            if(this._keys[keycode] && this._keys[keycode].isDown === true && (this._game.time.now - this._keys[keycode].timeDown < duration)) {
-                return true;
-            } else {
-                return false;
-            }
-        };
-        Keyboard.prototype.justReleased = /**
-        * @param {Number} keycode
-        * @param {Number} [duration]
-        * @return {Boolean}
-        */
-        function (keycode, duration) {
-            if (typeof duration === "undefined") { duration = 250; }
-            if(this._keys[keycode] && this._keys[keycode].isDown === false && (this._game.time.now - this._keys[keycode].timeUp < duration)) {
-                return true;
-            } else {
-                return false;
-            }
-        };
-        Keyboard.prototype.isDown = /**
-        * @param {Number} keycode
-        * @return {Boolean}
-        */
-        function (keycode) {
-            if(this._keys[keycode]) {
-                return this._keys[keycode].isDown;
-            } else {
-                return false;
-            }
-        };
-        Keyboard.A = "A".charCodeAt(0);
-        Keyboard.B = "B".charCodeAt(0);
-        Keyboard.C = "C".charCodeAt(0);
-        Keyboard.D = "D".charCodeAt(0);
-        Keyboard.E = "E".charCodeAt(0);
-        Keyboard.F = "F".charCodeAt(0);
-        Keyboard.G = "G".charCodeAt(0);
-        Keyboard.H = "H".charCodeAt(0);
-        Keyboard.I = "I".charCodeAt(0);
-        Keyboard.J = "J".charCodeAt(0);
-        Keyboard.K = "K".charCodeAt(0);
-        Keyboard.L = "L".charCodeAt(0);
-        Keyboard.M = "M".charCodeAt(0);
-        Keyboard.N = "N".charCodeAt(0);
-        Keyboard.O = "O".charCodeAt(0);
-        Keyboard.P = "P".charCodeAt(0);
-        Keyboard.Q = "Q".charCodeAt(0);
-        Keyboard.R = "R".charCodeAt(0);
-        Keyboard.S = "S".charCodeAt(0);
-        Keyboard.T = "T".charCodeAt(0);
-        Keyboard.U = "U".charCodeAt(0);
-        Keyboard.V = "V".charCodeAt(0);
-        Keyboard.W = "W".charCodeAt(0);
-        Keyboard.X = "X".charCodeAt(0);
-        Keyboard.Y = "Y".charCodeAt(0);
-        Keyboard.Z = "Z".charCodeAt(0);
-        Keyboard.ZERO = "0".charCodeAt(0);
-        Keyboard.ONE = "1".charCodeAt(0);
-        Keyboard.TWO = "2".charCodeAt(0);
-        Keyboard.THREE = "3".charCodeAt(0);
-        Keyboard.FOUR = "4".charCodeAt(0);
-        Keyboard.FIVE = "5".charCodeAt(0);
-        Keyboard.SIX = "6".charCodeAt(0);
-        Keyboard.SEVEN = "7".charCodeAt(0);
-        Keyboard.EIGHT = "8".charCodeAt(0);
-        Keyboard.NINE = "9".charCodeAt(0);
-        Keyboard.NUMPAD_0 = 96;
-        Keyboard.NUMPAD_1 = 97;
-        Keyboard.NUMPAD_2 = 98;
-        Keyboard.NUMPAD_3 = 99;
-        Keyboard.NUMPAD_4 = 100;
-        Keyboard.NUMPAD_5 = 101;
-        Keyboard.NUMPAD_6 = 102;
-        Keyboard.NUMPAD_7 = 103;
-        Keyboard.NUMPAD_8 = 104;
-        Keyboard.NUMPAD_9 = 105;
-        Keyboard.NUMPAD_MULTIPLY = 106;
-        Keyboard.NUMPAD_ADD = 107;
-        Keyboard.NUMPAD_ENTER = 108;
-        Keyboard.NUMPAD_SUBTRACT = 109;
-        Keyboard.NUMPAD_DECIMAL = 110;
-        Keyboard.NUMPAD_DIVIDE = 111;
-        Keyboard.F1 = 112;
-        Keyboard.F2 = 113;
-        Keyboard.F3 = 114;
-        Keyboard.F4 = 115;
-        Keyboard.F5 = 116;
-        Keyboard.F6 = 117;
-        Keyboard.F7 = 118;
-        Keyboard.F8 = 119;
-        Keyboard.F9 = 120;
-        Keyboard.F10 = 121;
-        Keyboard.F11 = 122;
-        Keyboard.F12 = 123;
-        Keyboard.F13 = 124;
-        Keyboard.F14 = 125;
-        Keyboard.F15 = 126;
-        Keyboard.COLON = 186;
-        Keyboard.EQUALS = 187;
-        Keyboard.UNDERSCORE = 189;
-        Keyboard.QUESTION_MARK = 191;
-        Keyboard.TILDE = 192;
-        Keyboard.OPEN_BRACKET = 219;
-        Keyboard.BACKWARD_SLASH = 220;
-        Keyboard.CLOSED_BRACKET = 221;
-        Keyboard.QUOTES = 222;
-        Keyboard.BACKSPACE = 8;
-        Keyboard.TAB = 9;
-        Keyboard.CLEAR = 12;
-        Keyboard.ENTER = 13;
-        Keyboard.SHIFT = 16;
-        Keyboard.CONTROL = 17;
-        Keyboard.ALT = 18;
-        Keyboard.CAPS_LOCK = 20;
-        Keyboard.ESC = 27;
-        Keyboard.SPACEBAR = 32;
-        Keyboard.PAGE_UP = 33;
-        Keyboard.PAGE_DOWN = 34;
-        Keyboard.END = 35;
-        Keyboard.HOME = 36;
-        Keyboard.LEFT = 37;
-        Keyboard.UP = 38;
-        Keyboard.RIGHT = 39;
-        Keyboard.DOWN = 40;
-        Keyboard.INSERT = 45;
-        Keyboard.DELETE = 46;
-        Keyboard.HELP = 47;
-        Keyboard.NUM_LOCK = 144;
-        return Keyboard;
-    })();
-    Phaser.Keyboard = Keyboard;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
@@ -12861,11 +12170,11 @@ var Phaser;
             this.add = game.add;
             this.camera = game.camera;
             this.cache = game.cache;
-            this.collision = game.collision;
+            //this.collision = game.collision;
             this.input = game.input;
             this.loader = game.loader;
             this.math = game.math;
-            this.motion = game.motion;
+            //this.motion = game.motion;
             this.sound = game.sound;
             this.stage = game.stage;
             this.time = game.time;
@@ -12905,24 +12214,20 @@ var Phaser;
         */
         function () {
         };
-        State.prototype.collide = /**
-        * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
-        * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-        * @param object1 The first GameObject or Group to check. If null the world.group is used.
-        * @param object2 The second GameObject or Group to check.
-        * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-        * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-        * @param context The context in which the callbacks will be called
-        * @returns {boolean} true if the objects overlap, otherwise false.
-        */
-        function (objectOrGroup1, objectOrGroup2, notifyCallback, context) {
-            if (typeof objectOrGroup1 === "undefined") { objectOrGroup1 = null; }
-            if (typeof objectOrGroup2 === "undefined") { objectOrGroup2 = null; }
-            if (typeof notifyCallback === "undefined") { notifyCallback = null; }
-            if (typeof context === "undefined") { context = this.game.callbackContext; }
-            return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
-        };
         return State;
     })();
     Phaser.State = State;    
-})(Phaser || (Phaser = {}));
+    /**
+    * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+    * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+    * @param object1 The first GameObject or Group to check. If null the world.group is used.
+    * @param object2 The second GameObject or Group to check.
+    * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+    * @param context The context in which the callbacks will be called
+    * @returns {boolean} true if the objects overlap, otherwise false.
+    */
+    //public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.game.callbackContext): bool {
+    //    return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
+    //}
+    })(Phaser || (Phaser = {}));

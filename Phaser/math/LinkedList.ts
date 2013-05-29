@@ -1,4 +1,5 @@
 /// <reference path="../Game.ts" />
+/// <reference path="../gameobjects/IGameObject.ts" />
 
 /**
 * Phaser - LinkedList
@@ -21,9 +22,9 @@ module Phaser {
         }
 
         /**
-         * Stores a reference to an <code>Basic</code>.
+         * Stores a reference to an <code>IGameObject</code>.
          */
-        public object: Basic;
+        public object: IGameObject;
 
         /**
          * Stores a reference to the next link in the list.

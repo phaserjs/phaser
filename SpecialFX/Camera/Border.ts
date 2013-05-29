@@ -1,6 +1,4 @@
-/// <reference path="../../Phaser/Game.d.ts" />
-/// <reference path="../../Phaser/system/Camera.d.ts" />
-/// <reference path="../../Phaser/FXManager.d.ts" />
+/// <reference path="../../build/phaser.d.ts" />
 
 /**
 * Phaser - FX - Camera - Border
@@ -44,13 +42,13 @@ module Phaser.FX.Camera {
          * Post-render is called during the objects render cycle, after the children/image data has been rendered.
          * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
          */
-        public postRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public postRender(camera: Phaser.Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
 
             if (this.showBorder == true)
             {
                 this._game.stage.context.strokeStyle = this.borderColor;
                 this._game.stage.context.lineWidth = 1;
-                this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
+                this._game.stage.context.rect(camera.scaledX, camera.scaledY, camera.worldView.width, camera.worldView.height);
                 this._game.stage.context.stroke();
             }
 

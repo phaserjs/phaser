@@ -25,6 +25,37 @@ module Phaser.FX.Camera {
     }
 }
 /**
+* Phaser - FX - Camera - Border
+*
+* Creates a border around a camera.
+*/
+module Phaser.FX.Camera {
+    class Border {
+        constructor(game: Game, parent: Camera);
+        private _game;
+        private _parent;
+        /**
+        * Whether render border of this camera or not. (default is false)
+        * @type {boolean}
+        */
+        public showBorder: bool;
+        /**
+        * Color of border of this camera. (in css color string)
+        * @type {string}
+        */
+        public borderColor: string;
+        /**
+        * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
+        */
+        public start(): void;
+        /**
+        * Post-render is called during the objects render cycle, after the children/image data has been rendered.
+        * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
+        */
+        public postRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
+    }
+}
+/**
 * Phaser - FX - Camera - Template
 *
 * A Template FX file you can use to create your own Camera FX.
@@ -92,12 +123,57 @@ module Phaser.FX.Camera {
         * This is the rectangular region to grab from the Camera used in the Mirror effect
         * It is rendered to the Stage at Mirror.x/y (note the use of Stage coordinates, not World coordinates)
         */
-        public start(x: number, y: number, region: Quad, fillColor?: string): void;
+        public start(x: number, y: number, region: Rectangle, fillColor?: string): void;
         /**
         * Post-render is called during the objects render cycle, after the children/image data has been rendered.
         * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
         */
         public postRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
+    }
+}
+/**
+* Phaser - FX - Camera - Shadow
+*
+* Creates a drop-shadow effect on the camera window.
+*/
+module Phaser.FX.Camera {
+    class Shadow {
+        constructor(game: Game, parent: Camera);
+        private _game;
+        private _parent;
+        /**
+        * Render camera shadow or not. (default is false)
+        * @type {boolean}
+        */
+        public showShadow: bool;
+        /**
+        * Color of shadow, in css color string.
+        * @type {string}
+        */
+        public shadowColor: string;
+        /**
+        * Blur factor of shadow.
+        * @type {number}
+        */
+        public shadowBlur: number;
+        /**
+        * Offset of the shadow from camera's position.
+        * @type {Point}
+        */
+        public shadowOffset: Point;
+        /**
+        * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
+        */
+        public start(): void;
+        /**
+        * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
+        * It happens directly AFTER a canvas context.save has happened if added to a Camera.
+        */
+        public preRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
+        /**
+        * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
+        */
+        public render(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
     }
 }
 /**

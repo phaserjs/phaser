@@ -195,6 +195,18 @@ module Phaser {
 
 	    }
 
+	    public clear() {
+
+            this._chainedTweens = [];
+
+            this.onStart.removeAll();
+            this.onUpdate.removeAll();
+	        this.onComplete.removeAll();
+
+	        return this;
+
+	    }
+
 	    /**
 	     * Stop tweening.
 	     */

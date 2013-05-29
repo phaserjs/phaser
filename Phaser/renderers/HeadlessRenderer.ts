@@ -6,14 +6,14 @@ module Phaser {
 
     export class HeadlessRenderer implements Phaser.IRenderer {
 
-        constructor(game: Game) {
+        constructor(game: Phaser.Game) {
             this._game = game;
         }
 
         /**
          * The essential reference to the main game object
          */
-        private _game: Game;
+        private _game: Phaser.Game;
 
         public render() {}
 

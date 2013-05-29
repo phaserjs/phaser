@@ -14,6 +14,7 @@ module Phaser.Components {
 
         constructor(parent: Sprite, key?: string = '', canvas?: HTMLCanvasElement = null, context?: CanvasRenderingContext2D = null) {
 
+            this._game = parent.game;
             this._sprite = parent;
 
             this.canvas = canvas;
@@ -29,6 +30,11 @@ module Phaser.Components {
             }
 
         }
+
+        /**
+         * 
+         */
+        private _game: Game;
 
         /**
          * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
@@ -121,8 +127,32 @@ module Phaser.Components {
          * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
          * @return {Sprite} Sprite instance itself.
          */
-        public loadImage(key: string, clearAnimations: bool = true): Sprite {
-            return Phaser.SpriteUtils.loadTexture(this._sprite, key, clearAnimations);
+        public loadImage(key: string, clearAnimations: bool = true) {
+
+            //if (clearAnimations && sprite.animations.frameData !== null)
+            //{
+            //    sprite.animations.destroy();
+            //}
+
+            if (this._game.cache.getImage(key) !== null)
+            {
+                this.setTo(this._game.cache.getImage(key), null);
+
+                if (this._game.cache.isSpriteSheet(key))
+                {
+                    //sprite.animations.loadFrameData(sprite._game.cache.getFrameData(key));
+                    //sprite.collisionMask.width = sprite.animations.currentFrame.width;
+                    //sprite.collisionMask.height = sprite.animations.currentFrame.height;
+                }
+                else
+                {
+                    this._sprite.frameBounds.width = this.width;
+                    this._sprite.frameBounds.height = this.height;
+                    //sprite.collisionMask.width = sprite._texture.width;
+                    //sprite.collisionMask.height = sprite._texture.height;
+                }
+            }
+
         }
 
         /**
@@ -130,8 +160,17 @@ module Phaser.Components {
          * @param texture {DynamicTexture} The texture object to be used by this sprite.
          * @return {Sprite} Sprite instance itself.
          */
-        public loadDynamicTexture(texture: DynamicTexture): Sprite {
-            return Phaser.SpriteUtils.loadDynamicTexture(this._sprite, texture);
+        public loadDynamicTexture(texture: DynamicTexture) {
+
+            //if (sprite.animations.frameData !== null)
+            //{
+            //    sprite.animations.destroy();
+            //}
+
+            this.setTo(null, texture);
+            this._sprite.frameBounds.width = this.width;
+            this._sprite.frameBounds.height = this.height;
+
         }
 
         /**

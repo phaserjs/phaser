@@ -1,10 +1,13 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../Signal.ts" />
+/// <reference path="../core/Signal.ts" />
+/// <reference path="../utils/PointUtils.ts" />
+/// <reference path="../math/Vec2Utils.ts" />
 /// <reference path="Pointer.ts" />
 /// <reference path="MSPointer.ts" />
 /// <reference path="Gestures.ts" />
-/// <reference path="../utils/PointUtils.ts" />
-/// <reference path="../math/Vec2Utils.ts" />
+/// <reference path="Mouse.ts" />
+/// <reference path="Keyboard.ts" />
+/// <reference path="Touch.ts" />
 
 /**
 * Phaser - Input

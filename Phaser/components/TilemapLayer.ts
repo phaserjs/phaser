@@ -1,4 +1,6 @@
 /// <reference path="../Game.ts" />
+/// <reference path="../gameobjects/Tilemap.ts" />
+/// <reference path="../gameobjects/IGameObject.ts" />
 
 /**
 * Phaser - TilemapLayer
@@ -354,7 +356,7 @@ module Phaser {
          * @param object {GameObject} Tiles you want to get that overlaps this.
          * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
          */
-        public getTileOverlaps(object: GameObject) {
+        public getTileOverlaps(object: IGameObject) {
 
             //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
             if (object.collisionMask.x < 0 || object.collisionMask.x > this.widthInPixels || object.collisionMask.y < 0 || object.collisionMask.bottom > this.heightInPixels)

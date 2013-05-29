@@ -1,4 +1,6 @@
 /// <reference path="../Game.ts" />
+/// <reference path="../utils/RectangleUtils.ts" />
+/// <reference path="IGameObject.ts" />
 
 /**
 * Phaser - DynamicTexture
@@ -234,7 +236,7 @@ module Phaser {
         public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point) {
 
             //  Swap for drawImage if the sourceRect is the same size as the sourceTexture to avoid a costly getImageData call
-            if (sourceRect.equals(this.bounds) == true)
+            if (Phaser.RectangleUtils.equals(sourceRect, this.bounds) == true)
             {
                 this.context.drawImage(sourceTexture.canvas, destPoint.x, destPoint.y);
             }
@@ -246,15 +248,15 @@ module Phaser {
         }
 
         /**
-         * Given an array of GameObjects it will update each of them so that their canvas/contexts reference this DynamicTexture
+         * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
          * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
          */
-        public assignCanvasToGameObjects(objects: GameObject[]) {
+        public assignCanvasToGameObjects(objects: IGameObject[]) {
 
             for (var i = 0; i < objects.length; i++)
             {
-                objects[i].canvas = this.canvas;
-                objects[i].context = this.context;
+                objects[i].texture.canvas = this.canvas;
+                objects[i].texture.context = this.context;
             }
 
         }
@@ -275,9 +277,7 @@ module Phaser {
         * @param y {number} The Y coordinate to render on the stage to (given in screen coordinates, not world)
         */
         public render(x?: number = 0, y?: number = 0) {
-
             this.game.stage.context.drawImage(this.canvas, x, y);
-
         }
 
         public get width(): number {

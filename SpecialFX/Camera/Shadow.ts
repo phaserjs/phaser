@@ -1,6 +1,4 @@
-/// <reference path="../../Phaser/Game.d.ts" />
-/// <reference path="../../Phaser/system/Camera.d.ts" />
-/// <reference path="../../Phaser/FXManager.d.ts" />
+/// <reference path="../../build/phaser.d.ts" />
 
 /**
 * Phaser - FX - Camera - Shadow
@@ -42,9 +40,9 @@ module Phaser.FX.Camera {
 
         /**
          * Offset of the shadow from camera's position.
-         * @type {MicroPoint}
+         * @type {Point}
          */
-        public shadowOffset: MicroPoint = new MicroPoint(4, 4);
+        public shadowOffset: Point = new Point(4, 4);
 
         /**
         * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.

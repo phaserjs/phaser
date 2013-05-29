@@ -1,8 +1,7 @@
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Flash
         *
@@ -73,9 +72,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/system/Camera.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Border
         *
@@ -110,7 +107,7 @@ var Phaser;
                     if(this.showBorder == true) {
                         this._game.stage.context.strokeStyle = this.borderColor;
                         this._game.stage.context.lineWidth = 1;
-                        this._game.stage.context.rect(this._sx, this._sy, this.worldView.width, this.worldView.height);
+                        this._game.stage.context.rect(camera.scaledX, camera.scaledY, camera.worldView.width, camera.worldView.height);
                         this._game.stage.context.stroke();
                     }
                 };
@@ -125,9 +122,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/system/Camera.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Template
         *
@@ -183,9 +178,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/system/Camera.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Mirror
         *
@@ -228,9 +221,10 @@ var Phaser;
                 * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
                 */
                 function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
-                    if(this.cls) {
-                        this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
-                    }
+                    //if (this.cls)
+                    //{
+                    //    this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
+                    //}
                     this._sx = cameraX + this._mirrorX;
                     this._sy = cameraY + this._mirrorY;
                     if(this.flipX == true && this.flipY == false) {
@@ -273,9 +267,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/system/Camera.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Shadow
         *
@@ -301,9 +293,9 @@ var Phaser;
                     this.shadowBlur = 10;
                     /**
                     * Offset of the shadow from camera's position.
-                    * @type {MicroPoint}
+                    * @type {Point}
                     */
-                    this.shadowOffset = new Phaser.MicroPoint(4, 4);
+                    this.shadowOffset = new Phaser.Point(4, 4);
                     this._game = game;
                     this._parent = parent;
                 }
@@ -347,9 +339,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/system/Camera.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Scanlines
         *
@@ -380,8 +370,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Shake
         *
@@ -393,7 +382,7 @@ var Phaser;
                     this._fxShakeIntensity = 0;
                     this._fxShakeDuration = 0;
                     this._fxShakeComplete = null;
-                    this._fxShakeOffset = new Phaser.MicroPoint(0, 0);
+                    this._fxShakeOffset = new Phaser.Point(0, 0);
                     this._fxShakeDirection = 0;
                     this._fxShakePrevX = 0;
                     this._fxShakePrevY = 0;
@@ -473,8 +462,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../Phaser/Game.d.ts" />
-        /// <reference path="../../Phaser/FXManager.d.ts" />
+        /// <reference path="../../build/phaser.d.ts" />
         /**
         * Phaser - FX - Camera - Fade
         *

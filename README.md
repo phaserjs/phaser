@@ -38,7 +38,7 @@ V1.0.0
 * Heavily optimised Group so it no longer creates any temporary variables in any methods.
 * Added Game.renderer which can be HEADLESS, CANVAS or WEBGL (coming soon)
 * Added Sprite.render which is a reference to IRenderer.renderSprite, but can be overridden for custom handling.
-
+* Refactored QuadTree so it no longer creates any temporary variables in any methods.
 
 
 V0.9.6

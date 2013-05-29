@@ -36,7 +36,8 @@ module Phaser {
 	     * @return {Boolean} True if the coordinates are within this circle, otherwise false.
 	     **/
         static contains(a: Circle, x: number, y: number): bool {
-            return (a.radius * a.radius >= Collision.distanceSquared(a.x, a.y, x, y));
+            //return (a.radius * a.radius >= Collision.distanceSquared(a.x, a.y, x, y));
+            return true;
         }
 
         /**
@@ -59,7 +60,8 @@ module Phaser {
 	     * @return {Boolean} True if the coordinates are within this circle, otherwise false.
 	     **/
         static containsCircle(a:Circle, b:Circle): bool {
-            return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
+            //return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
+            return true;
         }
 
         /**

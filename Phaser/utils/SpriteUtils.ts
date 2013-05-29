@@ -342,65 +342,6 @@ module Phaser {
         }
 
         /**
-         * Load graphic for this sprite. (graphic can be SpriteSheet or Texture)
-         * @param key {string} Key of the graphic you want to load for this sprite.
-         * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
-         * @return {Sprite} Sprite instance itself.
-         */
-        static loadTexture(sprite: Phaser.Sprite, key: string, clearAnimations: bool = true): Sprite {
-
-            //if (clearAnimations && sprite.animations.frameData !== null)
-            //{
-            //    sprite.animations.destroy();
-            //}
-
-            if (sprite.game.cache.getImage(key) !== null)
-            {
-                if (sprite.game.cache.isSpriteSheet(key))
-                {
-                    sprite.texture.setTo(null, sprite.game.cache.getImage(key));
-                    //sprite.animations.loadFrameData(sprite._game.cache.getFrameData(key));
-                    //sprite.collisionMask.width = sprite.animations.currentFrame.width;
-                    //sprite.collisionMask.height = sprite.animations.currentFrame.height;
-                }
-                else
-                {
-                    sprite.texture.setTo(sprite.game.cache.getImage(key), null);
-                    sprite.frameBounds.width = sprite.texture.width;
-                    sprite.frameBounds.height = sprite.texture.height;
-                    //sprite.collisionMask.width = sprite._texture.width;
-                    //sprite.collisionMask.height = sprite._texture.height;
-                }
-            }
-
-            return sprite;
-
-        }
-
-        /**
-         * Load a DynamicTexture as its texture.
-         * @param texture {DynamicTexture} The texture object to be used by this sprite.
-         * @return {Sprite} Sprite instance itself.
-         */
-        static loadDynamicTexture(sprite: Phaser.Sprite, texture: DynamicTexture): Sprite {
-
-            //if (sprite.animations.frameData !== null)
-            //{
-            //    sprite.animations.destroy();
-            //}
-
-            //sprite._texture = texture;
-
-            //sprite.frameBounds.width = sprite._texture.width;
-            //sprite.frameBounds.height = sprite._texture.height;
-
-            //sprite._dynamicTexture = true;
-
-            return sprite;
-
-        }
-
-        /**
          * This function creates a flat colored square image dynamically.
          * @param width {number} The width of the sprite you want to generate.
          * @param height {number} The height of the sprite you want to generate.

@@ -1,5 +1,4 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../RenderManager.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="../cameras/Camera.ts" />
 /// <reference path="IRenderer.ts" />
@@ -8,16 +7,14 @@ module Phaser {
 
     export class CanvasRenderer implements Phaser.IRenderer {
 
-        constructor(game: Game) {
-
+        constructor(game: Phaser.Game) {
             this._game = game;
-
         }
 
         /**
          * The essential reference to the main game object
          */
-        private _game: Game;
+        private _game: Phaser.Game;
 
         //  local rendering related temp vars to help avoid gc spikes with var creation
         private _sx: number = 0;
@@ -28,6 +25,8 @@ module Phaser {
         private _dy: number = 0;
         private _dw: number = 0;
         private _dh: number = 0;
+        private _fx: number = 1;
+        private _fy: number = 1;
 
         private _cameraList;
         private _camera: Camera;
@@ -73,15 +72,29 @@ module Phaser {
                 sprite.texture.context.globalAlpha = sprite.texture.alpha;
             }
 
+            this._fx = sprite.scale.x;
+            this._fy = sprite.scale.y;
             this._sx = 0;
             this._sy = 0;
             this._sw = sprite.frameBounds.width;
             this._sh = sprite.frameBounds.height;
 
+            //if (sprite.texture.flippedX)
+            //{
+            //    this._fx = -1;
+            //}
+
+            //if (sprite.texture.flippedY)
+            //{
+            //    this._fy = -1;
+            //}
+
             this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
             this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            this._dw = sprite.frameBounds.width * sprite.scale.x;
-            this._dh = sprite.frameBounds.height * sprite.scale.y;
+            //this._dw = sprite.frameBounds.width * sprite.scale.x;
+            //this._dh = sprite.frameBounds.height * sprite.scale.y;
+            this._dw = sprite.frameBounds.width;
+            this._dh = sprite.frameBounds.height;
 
             /*
             if (this._dynamicTexture == false && this.animations.currentFrame !== null)
@@ -104,11 +117,35 @@ module Phaser {
                 //this._dy -= (camera.worldView.y * this.scrollFactor.y);
             }
 
+            //  Apply origin / alignment
+            if (sprite.origin.x != 0 || sprite.origin.y != 0)
+            {
+                //this._dx += (sprite.origin.x * sprite.scale.x);
+                //this._dy += (sprite.origin.y * sprite.scale.y);
+            }
+
             //	Rotation and Flipped
-            if (sprite.position.rotation !== 0 || sprite.position.rotationOffset !== 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+            if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+            //if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
             {
                 sprite.texture.context.save();
-                sprite.texture.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+
+                if (sprite.texture.flippedX)
+                {
+                    this._dx += this._dw * sprite.scale.x;
+                }
+
+                if (sprite.texture.flippedY)
+                {
+                    this._dy += this._dh * sprite.scale.y;
+                }
+
+                sprite.texture.context.translate(this._dx, this._dy);
+
+                //sprite.texture.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
+                //sprite.texture.context.translate(this._dx + (sprite.origin.x * sprite.scale.x), this._dy + (sprite.origin.y * sprite.scale.y));
+                //sprite.texture.context.translate(this._dx + sprite.origin.x, this._dy + sprite.origin.y);
+                //sprite.texture.context.translate(this._dx + sprite.origin.x - (this._dw / 2), this._dy + sprite.origin.y - (this._dh / 2));
 
                 if (sprite.texture.renderRotation == true && (sprite.position.rotation !== 0 || sprite.position.rotationOffset !== 0))
                 {
@@ -116,15 +153,42 @@ module Phaser {
                     sprite.texture.context.rotate((sprite.position.rotationOffset + sprite.position.rotation) * (Math.PI / 180));
                 }
 
-                this._dx = -(this._dw / 2);
-                this._dy = -(this._dh / 2);
-
-                if (sprite.texture.flippedX || sprite.texture.flippedY)
+                if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.texture.flippedX || sprite.texture.flippedY)
                 {
                     if (sprite.texture.flippedX)
                     {
-                        sprite.texture.context.scale(-1, 1);
+                        this._fx = -sprite.scale.x;
                     }
+
+                    if (sprite.texture.flippedY)
+                    {
+                        this._fy = -sprite.scale.y;
+                    }
+
+                    sprite.texture.context.scale(this._fx, this._fy);
+
+                }
+
+                //if (sprite.texture.flippedX || sprite.texture.flippedY)
+                //{
+                //    sprite.texture.context.scale(this._fx, this._fy);
+                //}
+
+                this._dx = -(sprite.origin.x * sprite.scale.x);
+                this._dy = -(sprite.origin.y * sprite.scale.y);
+                //this._dx = -(sprite.origin.x * sprite.scale.x);
+                //this._dy = -(sprite.origin.y * sprite.scale.y);
+                //this._dx = -(this._dw / 2) * sprite.scale.x;
+                //this._dy = -(this._dh / 2) * sprite.scale.y;
+                //this._dx = 0;
+                //this._dy = 0;
+            }
+            else
+            {
+                if (sprite.origin.x != 0 || sprite.origin.y != 0)
+                {
+                    //this._dx -= (sprite.origin.x * sprite.scale.x);
+                    //this._dy -= (sprite.origin.y * sprite.scale.y);
                 }
             }
 
@@ -157,7 +221,8 @@ module Phaser {
             //    this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             //}
 
-            if (sprite.position.rotation !== 0 || sprite.position.rotationOffset !== 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+            if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+            //if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
             {
                 //this.context.translate(0, 0);
                 sprite.texture.context.restore();

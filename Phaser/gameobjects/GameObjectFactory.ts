@@ -135,9 +135,9 @@ module Phaser {
          * @param [tileHeight] {number} height of each tile.
          * @return {Tilemap} The newly created tilemap object.
          */
-        public tilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
-            return <Tilemap> this._world.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
-        }
+        //public tilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
+        //    return <Tilemap> this._world.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
+        //}
 
         /**
          * Create a tween object for a specific object.
@@ -200,9 +200,9 @@ module Phaser {
          * @param tilemap The Tilemap to add to the Game World
          * @return {Phaser.Tilemap} The Tilemap object
          */
-        public existingTilemap(tilemap: Tilemap): Tilemap {
-            return this._world.group.add(tilemap);
-        }
+        //public existingTilemap(tilemap: Tilemap): Tilemap {
+        //    return this._world.group.add(tilemap);
+        //}
 
         /**
          * Add an existing Tween to the current world.

@@ -1,5 +1,4 @@
-/// <reference path="../../Phaser/Game.d.ts" />
-/// <reference path="../../Phaser/FXManager.d.ts" />
+/// <reference path="../../build/phaser.d.ts" />
 
 /**
 * Phaser - FX - Camera - Shake
@@ -24,7 +23,7 @@ module Phaser.FX.Camera {
         private _fxShakeIntensity: number = 0;
         private _fxShakeDuration: number = 0;
         private _fxShakeComplete = null;
-        private _fxShakeOffset: MicroPoint = new MicroPoint(0, 0);
+        private _fxShakeOffset: Point = new Point(0, 0);
         private _fxShakeDirection: number = 0;
         private _fxShakePrevX: number = 0;
         private _fxShakePrevY: number = 0;
