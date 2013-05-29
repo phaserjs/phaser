@@ -2635,55 +2635,6 @@ var Phaser;
     })();
     Phaser.AnimationManager = AnimationManager;    
 })(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../core/Vec2.ts" />
-    /**
-    * Phaser - Components - Position
-    *
-    * Sprite position, both world and screen, and rotation values and methods.
-    */
-    (function (Components) {
-        var Position = (function () {
-            function Position(parent, x, y) {
-                /**
-                * Rotation angle of this object.
-                * @type {number}
-                */
-                this._rotation = 0;
-                /**
-                * Z-order value of the object.
-                */
-                this.z = 0;
-                /**
-                * This value is added to the rotation of the Sprite.
-                * For example if you had a sprite graphic drawn facing straight up then you could set
-                * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
-                * @type {number}
-                */
-                this.rotationOffset = 0;
-                this._sprite = parent;
-                this.world = new Phaser.Vec2(x, y);
-                this.screen = new Phaser.Vec2(x, y);
-                this.offset = new Phaser.Vec2(0, 0);
-                this.midpoint = new Phaser.Vec2(0, 0);
-            }
-            Object.defineProperty(Position.prototype, "rotation", {
-                get: function () {
-                    return this._rotation;
-                },
-                set: function (value) {
-                    this._rotation = this._sprite.game.math.wrap(value, 360, 0);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return Position;
-        })();
-        Components.Position = Position;        
-    })(Phaser.Components || (Phaser.Components = {}));
-    var Components = Phaser.Components;
-})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../core/Point.ts" />
 /// <reference path="../core/Rectangle.ts" />
@@ -3743,6 +3694,11 @@ var Phaser;
                 */
                 this._dynamicTexture = null;
                 /**
+                * The status of the texture image.
+                * @type {boolean}
+                */
+                this.loaded = false;
+                /**
                 * Controls if the Sprite is rendered rotated or not.
                 * If renderRotation is false then the object can still rotate but it will never be rendered rotated.
                 * @type {boolean}
@@ -3784,6 +3740,7 @@ var Phaser;
                     this._imageTexture = image;
                     this.texture = this._imageTexture;
                 }
+                this.loaded = true;
                 return this._sprite;
             };
             Texture.prototype.loadImage = /**
@@ -3866,7 +3823,6 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
-/// <reference path="../components/sprite/Position.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
 /**
 * Phaser - Sprite
@@ -3891,6 +3847,30 @@ var Phaser;
             if (typeof key === "undefined") { key = null; }
             if (typeof width === "undefined") { width = 16; }
             if (typeof height === "undefined") { height = 16; }
+            /**
+            * Rotation angle of this object.
+            * @type {number}
+            */
+            this._rotation = 0;
+            /**
+            * x value of the object.
+            */
+            this.x = 0;
+            /**
+            * y value of the object.
+            */
+            this.y = 0;
+            /**
+            * z order value of the object.
+            */
+            this.z = 0;
+            /**
+            * This value is added to the rotation of the Sprite.
+            * For example if you had a sprite graphic drawn facing straight up then you could set
+            * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
+            * @type {number}
+            */
+            this.rotationOffset = 0;
             this.game = game;
             this.type = Phaser.Types.SPRITE;
             this.render = game.renderer.renderSprite;
@@ -3902,12 +3882,30 @@ var Phaser;
             this.origin = new Phaser.Vec2(0, 0);
             this.scrollFactor = new Phaser.Vec2(1, 1);
             this.scale = new Phaser.Vec2(1, 1);
-            this.position = new Phaser.Components.Position(this, x, y);
+            this.x = x;
+            this.y = y;
+            this.z = 0;
             this.texture = new Phaser.Components.Texture(this, key, game.stage.canvas, game.stage.context);
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
-            this.rotation = this.position.rotation;
         }
+        Object.defineProperty(Sprite.prototype, "rotation", {
+            get: /**
+            * The rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+            */
+            function () {
+                return this._rotation;
+            },
+            set: /**
+            * Set the rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+            * The value is automatically wrapped to be between 0 and 360.
+            */
+            function (value) {
+                this._rotation = this.game.math.wrap(value, 360, 0);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Sprite.prototype.preUpdate = /**
         * Pre-update is called right before update() on each object in the game loop.
         */
@@ -3980,58 +3978,6 @@ var Phaser;
         */
         function () {
         };
-        Object.defineProperty(Sprite.prototype, "x", {
-            get: /**
-            * x value of the object.
-            */
-            function () {
-                return this.position.world.x;
-            },
-            set: function (value) {
-                this.position.world.x = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Sprite.prototype, "y", {
-            get: /**
-            * y value of the object.
-            */
-            function () {
-                return this.position.world.y;
-            },
-            set: function (value) {
-                this.position.world.y = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Sprite.prototype, "z", {
-            get: /**
-            * z value of the object.
-            */
-            function () {
-                return this.position.z;
-            },
-            set: function (value) {
-                this.position.z = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Sprite.prototype, "rotation", {
-            get: /**
-            * rotation value of the object.
-            */
-            function () {
-                return this.position.rotation;
-            },
-            set: function (value) {
-                this.position.rotation = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
         return Sprite;
     })();
     Phaser.Sprite = Sprite;    
@@ -5606,7 +5552,7 @@ var Phaser;
         * Calls render on all members of this Group who have a status of visible=true and exists=true
         * You can also call Object.render directly, which will bypass the visible/exists check.
         */
-        function (camera) {
+        function (renderer, camera) {
             if(camera.isHidden(this) == true) {
                 return;
             }
@@ -5622,7 +5568,7 @@ var Phaser;
             while(this._i < this.length) {
                 this._member = this.members[this._i++];
                 if(this._member != null && this._member.exists && this._member.visible && camera.isHidden(this._member) == false) {
-                    this._member.render(camera, this._member);
+                    this._member.render.call(renderer, camera, this._member);
                 }
             }
             if(this.alpha > 0) {
@@ -10366,8 +10312,8 @@ var Phaser;
 (function (Phaser) {
     var CanvasRenderer = (function () {
         function CanvasRenderer(game) {
-            this._wibble = 123;
             //  local rendering related temp vars to help avoid gc spikes with var creation
+            this._ga = 1;
             this._sx = 0;
             this._sy = 0;
             this._sw = 0;
@@ -10378,6 +10324,8 @@ var Phaser;
             this._dh = 0;
             this._fx = 1;
             this._fy = 1;
+            this._sin = 0;
+            this._cos = 1;
             this._game = game;
         }
         CanvasRenderer.prototype.render = function () {
@@ -10387,7 +10335,7 @@ var Phaser;
             for(var c = 0; c < this._cameraList.length; c++) {
                 this._camera = this._cameraList[c];
                 this._camera.preRender();
-                this._game.world.group.render(this._camera);
+                this._game.world.group.render(this, this._camera);
                 this._camera.postRender();
             }
         };
@@ -10401,27 +10349,31 @@ var Phaser;
             if(sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1) {
                 return false;
             }
-            //  Alpha
-            if(sprite.texture.alpha !== 1) {
-                var globalAlpha = sprite.texture.context.globalAlpha;
-                sprite.texture.context.globalAlpha = sprite.texture.alpha;
-            }
-            this._fx = 1;
-            this._fy = 1;
+            //  Reset our temp vars
+            this._ga = -1;
             this._sx = 0;
             this._sy = 0;
             this._sw = sprite.frameBounds.width;
             this._sh = sprite.frameBounds.height;
-            if(sprite.texture.flippedX) {
-                this._fx = -1;
+            this._fx = sprite.scale.x;
+            this._fy = sprite.scale.y;
+            this._sin = 0;
+            this._cos = 1;
+            //  Alpha
+            if(sprite.texture.alpha !== 1) {
+                this._ga = sprite.texture.context.globalAlpha;
+                sprite.texture.context.globalAlpha = sprite.texture.alpha;
             }
+            //  Sprite Flip X
+            if(sprite.texture.flippedX) {
+                this._fx = -sprite.scale.x;
+            }
+            //  Sprite Flip Y
             if(sprite.texture.flippedY) {
-                this._fy = -1;
+                this._fy = -sprite.scale.y;
             }
             this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
             this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            //this._dw = sprite.frameBounds.width * sprite.scale.x;
-            //this._dh = sprite.frameBounds.height * sprite.scale.y;
             this._dw = sprite.frameBounds.width;
             this._dh = sprite.frameBounds.height;
             /*
@@ -10436,127 +10388,35 @@ var Phaser;
             this._dy += this.animations.currentFrame.spriteSourceSizeY;
             }
             }
+            
+            //	Apply camera difference - looks like this is already applied?
+            if (sprite.scrollFactor.x !== 1 || sprite.scrollFactor.y !== 1)
+            {
+            //this._dx -= (camera.worldView.x * this.scrollFactor.x);
+            //this._dy -= (camera.worldView.y * this.scrollFactor.y);
+            }
             */
-            //	Apply camera difference
-            if(sprite.scrollFactor.x !== 1 || sprite.scrollFactor.y !== 1) {
-                //this._dx -= (camera.worldView.x * this.scrollFactor.x);
-                //this._dy -= (camera.worldView.y * this.scrollFactor.y);
-                            }
-            //  Apply origin / alignment
-            if(sprite.origin.x != 0 || sprite.origin.y != 0) {
-                //sprite.origin.x *= sprite.scale.x;
-                //sprite.origin.y *= sprite.scale.y;
-                //this._dx += (sprite.origin.x * sprite.scale.x);
-                //this._dy += (sprite.origin.y * sprite.scale.y);
-                            }
-            //  this relates to the SPRITE! not the CanvasRenderer, because of the way sprite.render bound itself to this function
-            //console.log(this);
-            //  no rotation
-            var sin = Math.sin(sprite.game.math.degreesToRadians(sprite.position.rotation));
-            var cos = Math.cos(sprite.game.math.degreesToRadians(sprite.position.rotation));
-            var ssx = sprite.scale.x;
-            var ssy = sprite.scale.y;
-            if(sprite.texture.flippedX) {
-                //sin = -sin;
-                ssx = -ssx;
-            }
-            if(sprite.texture.flippedY) {
-                //this._dy += this._dh;
-                ssy = -ssy;
-            }
-            //  setTransform(a, b, c, d, e, f);
-            //  a = scale x
-            //  b = skew x
-            //  c = skew y
-            //  d = scale y
-            //  e = translate x
-            //  f = translate y
-            sprite.texture.context.save();
-            sprite.texture.context.setTransform(cos * ssx, sin * ssx, -sin * ssy, cos * ssy, this._dx, this._dy);
-            this._dx = -sprite.origin.x;
-            this._dy = -sprite.origin.y;
-            //this._dx = -(sprite.origin.x * sprite.scale.x);
-            //this._dy = -(sprite.origin.y * sprite.scale.y);
-            //  If scaled
-            if(sprite.scale.x != 1 || sprite.scale.y != 1) {
-                //  Adjust along x/y based on origin
-                //console.log('scale adjust 1', this._dx, this._dw);
-                //this._dx += (this._dw - sprite.origin.x) * sprite.scale.x;
-                //this._dx += (sprite.origin.x * sprite.scale.x);
-                //console.log('scale adjust 2', this._dx, sprite.origin.x * sprite.scale.x);
-                            }
-            //this._dw = sprite.frameBounds.width * sprite.scale.x;
-            //this._dh = sprite.frameBounds.height * sprite.scale.y;
-            /*
             //	Rotation and Flipped
-            //if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
-            if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
-            {
-            sprite.texture.context.save();
-            
-            //if (sprite.texture.flippedX)
-            //{
-            //    this._dx += this._dw * sprite.scale.x;
-            //}
-            
-            //if (sprite.texture.flippedY)
-            //{
-            //    this._dy += this._dh * sprite.scale.y;
-            //}
-            
-            sprite.texture.context.translate(this._dx, this._dy);
-            
-            //sprite.texture.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
-            //sprite.texture.context.translate(this._dx + (sprite.origin.x * sprite.scale.x), this._dy + (sprite.origin.y * sprite.scale.y));
-            //sprite.texture.context.translate(this._dx + sprite.origin.x, this._dy + sprite.origin.y);
-            //sprite.texture.context.translate(this._dx + sprite.origin.x - (this._dw / 2), this._dy + sprite.origin.y - (this._dh / 2));
-            
-            if (sprite.texture.renderRotation == true && (sprite.position.rotation !== 0 || sprite.position.rotationOffset !== 0))
-            {
-            //  Apply point of rotation here
-            //sprite.texture.context.rotate((sprite.position.rotationOffset + sprite.position.rotation) * (Math.PI / 180));
+            if(sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.rotation != 0 || sprite.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY) {
+                if(sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.rotationOffset !== 0)) {
+                    this._sin = Math.sin(sprite.game.math.degreesToRadians(sprite.rotationOffset + sprite.rotation));
+                    this._cos = Math.cos(sprite.game.math.degreesToRadians(sprite.rotationOffset + sprite.rotation));
+                }
+                //  setTransform(a, b, c, d, e, f);
+                //  a = scale x
+                //  b = skew x
+                //  c = skew y
+                //  d = scale y
+                //  e = translate x
+                //  f = translate y
+                sprite.texture.context.save();
+                sprite.texture.context.setTransform(this._cos * this._fx, this._sin * this._fx, -this._sin * this._fy, this._cos * this._fy, this._dx, this._dy);
+                this._dx = -sprite.origin.x;
+                this._dy = -sprite.origin.y;
+            } else {
+                this._dw = sprite.frameBounds.width * sprite.scale.x;
+                this._dh = sprite.frameBounds.height * sprite.scale.y;
             }
-            
-            //if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.texture.flippedX || sprite.texture.flippedY)
-            if (sprite.texture.flippedX || sprite.texture.flippedY)
-            {
-            //if (sprite.texture.flippedX)
-            //{
-            //    this._fx = -sprite.scale.x;
-            //}
-            
-            //if (sprite.texture.flippedY)
-            //{
-            //    this._fy = -sprite.scale.y;
-            //}
-            
-            sprite.texture.context.scale(this._fx, this._fy);
-            
-            }
-            
-            //if (sprite.texture.flippedX || sprite.texture.flippedY)
-            //{
-            //    sprite.texture.context.scale(this._fx, this._fy);
-            //}
-            
-            this._dx = -sprite.origin.x;
-            this._dy = -sprite.origin.y;
-            //this._dx = -(sprite.origin.x * sprite.scale.x);
-            //this._dy = -(sprite.origin.y * sprite.scale.y);
-            //this._dx = -(this._dw / 2) * sprite.scale.x;
-            //this._dy = -(this._dh / 2) * sprite.scale.y;
-            //this._dx = 0;
-            //this._dy = 0;
-            }
-            else
-            {
-            if (sprite.origin.x != 0 || sprite.origin.y != 0)
-            {
-            //this._dx -= (sprite.origin.x * sprite.scale.x);
-            //this._dy -= (sprite.origin.y * sprite.scale.y);
-            }
-            }
-            */
             this._sx = Math.round(this._sx);
             this._sy = Math.round(this._sy);
             this._sw = Math.round(this._sw);
@@ -10565,37 +10425,32 @@ var Phaser;
             this._dy = Math.round(this._dy);
             this._dw = Math.round(this._dw);
             this._dh = Math.round(this._dh);
-            //if (this._texture != null)
-            //{
-            sprite.texture.context.drawImage(sprite.texture.texture, //	Source Image
-            this._sx, //	Source X (location within the source image)
-            this._sy, //	Source Y
-            this._sw, //	Source Width
-            this._sh, //	Source Height
-            this._dx, //	Destination X (where on the canvas it'll be drawn)
-            this._dy, //	Destination Y
-            this._dw, //	Destination Width (always same as Source Width unless scaled)
-            this._dh);
-            //	Destination Height (always same as Source Height unless scaled)
-            //}
-            //else
-            //{
-            //    this.context.fillStyle = this.fillColor;
-            //    this.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            //}
-            if(sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)//if (sprite.position.rotation != 0 || sprite.position.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
-             {
-                //this.context.translate(0, 0);
-                //sprite.texture.context.restore();
-                            }
-            sprite.texture.context.restore();
+            if(sprite.texture.loaded) {
+                sprite.texture.context.drawImage(sprite.texture.texture, //	Source Image
+                this._sx, //	Source X (location within the source image)
+                this._sy, //	Source Y
+                this._sw, //	Source Width
+                this._sh, //	Source Height
+                this._dx, //	Destination X (where on the canvas it'll be drawn)
+                this._dy, //	Destination Y
+                this._dw, //	Destination Width (always same as Source Width unless scaled)
+                this._dh);
+                //	Destination Height (always same as Source Height unless scaled)
+                            } else {
+                //sprite.texture.context.fillStyle = this.fillColor;
+                sprite.texture.context.fillStyle = 'rgb(255,255,255)';
+                sprite.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+            }
+            if(sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.rotation != 0 || sprite.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY) {
+                sprite.texture.context.restore();
+            }
             //if (this.renderDebug)
             //{
             //    this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
             //this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
             //}
-            if(globalAlpha > -1) {
-                sprite.texture.context.globalAlpha = globalAlpha;
+            if(this._ga > -1) {
+                sprite.texture.context.globalAlpha = this._ga;
             }
             return true;
         };

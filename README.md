@@ -39,6 +39,7 @@ V1.0.0
 * Added Game.renderer which can be HEADLESS, CANVAS or WEBGL (coming soon)
 * Added Sprite.render which is a reference to IRenderer.renderSprite, but can be overridden for custom handling.
 * Refactored QuadTree so it no longer creates any temporary variables in any methods.
+* The Sprite Renderer now uses a single setTransform for scale, rotation and translation that respects the Sprite.origin value in all cases.
 
 
 V0.9.6

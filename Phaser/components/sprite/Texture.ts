@@ -53,6 +53,12 @@ module Phaser.Components {
         private _dynamicTexture: DynamicTexture = null;
 
         /**
+        * The status of the texture image.
+        * @type {boolean}
+        */
+        public loaded: bool = false;
+
+        /**
         * Opacity of the Sprite texture where 1 is opaque and 0 is fully transparent.
         * @type {number}
         */
@@ -115,6 +121,8 @@ module Phaser.Components {
                 this._imageTexture = image;
                 this.texture = this._imageTexture;
             }
+
+            this.loaded = true;
 
             return this._sprite;
 

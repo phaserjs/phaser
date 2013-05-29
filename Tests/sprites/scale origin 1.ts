@@ -31,8 +31,8 @@
         //fuji.origin.setTo(260, 100);
         fuji.scale.x = 2;
         fuji.scale.y = 0.5;
-        //fuji.position.rotation = 45;
-        game.add.tween(fuji.position).to({ rotation: 360 }, 3000).start();
+        //fuji.rotation = 45;
+        game.add.tween(fuji).to({ rotation: 360 }, 3000).start();
 
         //  Create our tween
         //tween = game.add.tween(fuji.scale);

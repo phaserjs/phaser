@@ -21,32 +21,19 @@
 
 
         //  Here we'll assign the new sprite to the local fuji variable
-        //fuji = game.add.sprite(game.stage.centerX - 160, game.stage.centerY - 100, 'fuji');
-        fuji = game.add.sprite(200, 200, 'fuji');
+        fuji = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji');
 
         //  sets origin to the center of the sprite (half the width and half the height)
         fuji.origin.setTo(160, 100);
-
-        fuji.scale.x = 2;
-        fuji.scale.y = 2;
-        //fuji.texture.flippedX = true;
-        fuji.texture.flippedY = true;
-        //fuji.rotation = 45;
-
-        //game.add.tween(fuji.scale).to({ x: 0 }, 3000).start();
-        game.add.tween(fuji.position).to({ rotation: 360 }, 3000).start();
-
-        //  We set the origin of the Sprite to be the center so that the scaling happens around the center, not the left-hand side
-        //fuji.origin.setTo(160, 100);
 
         //  We'll tween the scale down to zero (which will make the sprite invisible) and then flip it
         //  The end result should look like turning over a card
 
         //  Create our tween
-        //tween = game.add.tween(fuji.scale);
+        tween = game.add.tween(fuji.scale);
 
         //  Start it going
-        //scaleLeft();
+        scaleLeft();
 
     }
 

@@ -1503,41 +1503,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - Components - Position
-*
-* Sprite position, both world and screen, and rotation values and methods.
-*/
-module Phaser.Components {
-    class Position {
-        constructor(parent: Sprite, x: number, y: number);
-        /**
-        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
-        */
-        private _sprite;
-        public world: Vec2;
-        public screen: Vec2;
-        public offset: Vec2;
-        public midpoint: Vec2;
-        /**
-        * Rotation angle of this object.
-        * @type {number}
-        */
-        private _rotation;
-        /**
-        * Z-order value of the object.
-        */
-        public z: number;
-        /**
-        * This value is added to the rotation of the Sprite.
-        * For example if you had a sprite graphic drawn facing straight up then you could set
-        * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
-        * @type {number}
-        */
-        public rotationOffset: number;
-        public rotation : number;
-    }
-}
-/**
 * Phaser - RectangleUtils
 *
 * A collection of methods useful for manipulating and comparing Rectangle objects.
@@ -1678,6 +1643,18 @@ module Phaser {
         */
         game: Game;
         /**
+        * x value of the object.
+        */
+        x: number;
+        /**
+        * y value of the object.
+        */
+        y: number;
+        /**
+        * Z-order value of the object.
+        */
+        z: number;
+        /**
         * The type of game object.
         */
         type: number;
@@ -1697,10 +1674,6 @@ module Phaser {
         * Controls if this Sprite is rendered or skipped during the core game loop.
         */
         visible: bool;
-        /**
-        * The position of the Sprite in world and screen coordinates.
-        */
-        position: Components.Position;
         /**
         * The texture used to render the Sprite.
         */
@@ -2115,6 +2088,11 @@ module Phaser.Components {
         */
         private _dynamicTexture;
         /**
+        * The status of the texture image.
+        * @type {boolean}
+        */
+        public loaded: bool;
+        /**
         * Opacity of the Sprite texture where 1 is opaque and 0 is fully transparent.
         * @type {number}
         */
@@ -2202,6 +2180,11 @@ module Phaser {
         */
         constructor(game: Game, x?: number, y?: number, key?: string, width?: number, height?: number);
         /**
+        * Rotation angle of this object.
+        * @type {number}
+        */
+        private _rotation;
+        /**
         * Reference to the main game object
         */
         public game: Game;
@@ -2232,10 +2215,6 @@ module Phaser {
         public width: number;
         public height: number;
         /**
-        * The position of the Sprite in world and screen coordinates.
-        */
-        public position: Components.Position;
-        /**
         * The texture used to render the Sprite.
         */
         public texture: Components.Texture;
@@ -2254,9 +2233,36 @@ module Phaser {
         */
         public scrollFactor: Vec2;
         /**
-        * The Sprite origin is the point around which scale and rotation transforms take place.
+        * The Sprite origin is the point around which scale and rotation takes place.
         */
         public origin: Vec2;
+        /**
+        * x value of the object.
+        */
+        public x: number;
+        /**
+        * y value of the object.
+        */
+        public y: number;
+        /**
+        * z order value of the object.
+        */
+        public z: number;
+        /**
+        * This value is added to the rotation of the Sprite.
+        * For example if you had a sprite graphic drawn facing straight up then you could set
+        * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
+        * @type {number}
+        */
+        public rotationOffset: number;
+        /**
+        * The rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        /**
+        * Set the rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The value is automatically wrapped to be between 0 and 360.
+        */
+        public rotation : number;
         /**
         * Pre-update is called right before update() on each object in the game loop.
         */
@@ -2273,22 +2279,6 @@ module Phaser {
         * Clean up memory.
         */
         public destroy(): void;
-        /**
-        * x value of the object.
-        */
-        public x : number;
-        /**
-        * y value of the object.
-        */
-        public y : number;
-        /**
-        * z value of the object.
-        */
-        public z : number;
-        /**
-        * rotation value of the object.
-        */
-        public rotation : number;
     }
 }
 /**
@@ -3096,7 +3086,7 @@ module Phaser {
         * Calls render on all members of this Group who have a status of visible=true and exists=true
         * You can also call Object.render directly, which will bypass the visible/exists check.
         */
-        public render(camera: Camera): void;
+        public render(renderer: IRenderer, camera: Camera): void;
         /**
         * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
         */
@@ -5811,7 +5801,7 @@ module Phaser {
         * The essential reference to the main game object
         */
         private _game;
-        private _wibble;
+        private _ga;
         private _sx;
         private _sy;
         private _sw;
@@ -5822,6 +5812,8 @@ module Phaser {
         private _dh;
         private _fx;
         private _fy;
+        private _sin;
+        private _cos;
         private _cameraList;
         private _camera;
         private _groupLength;

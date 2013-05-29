@@ -64,13 +64,9 @@
     <TypeScriptCompile Include="core\Rectangle.ts" />
     <TypeScriptCompile Include="core\Point.ts" />
     <TypeScriptCompile Include="components\sprite\Texture.ts" />
-    <TypeScriptCompile Include="components\sprite\Position.ts" />
     <TypeScriptCompile Include="components\camera\CameraFX.ts" />
     <Content Include="components\camera\CameraFX.js">
       <DependentUpon>CameraFX.ts</DependentUpon>
-    </Content>
-    <Content Include="components\sprite\Position.js">
-      <DependentUpon>Position.ts</DependentUpon>
     </Content>
     <Content Include="components\sprite\Texture.js">
       <DependentUpon>Texture.ts</DependentUpon>

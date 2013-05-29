@@ -10,6 +10,21 @@ module Phaser {
         game: Game;
 
         /**
+         * x value of the object.
+         */
+        x: number;
+
+        /**
+         * y value of the object.
+         */
+        y: number;
+
+        /**
+         * Z-order value of the object.
+         */
+        z: number;
+
+        /**
          * The type of game object.
          */
         type: number;
@@ -33,11 +48,6 @@ module Phaser {
          * Controls if this Sprite is rendered or skipped during the core game loop.
          */
         visible: bool;
-
-        /**
-         * The position of the Sprite in world and screen coordinates.
-         */
-        position: Phaser.Components.Position;
 
         /**
          * The texture used to render the Sprite.

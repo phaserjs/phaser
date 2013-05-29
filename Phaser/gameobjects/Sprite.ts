@@ -1,7 +1,6 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
-/// <reference path="../components/sprite/Position.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
 
 /**
@@ -39,14 +38,22 @@ module Phaser {
             this.scrollFactor = new Phaser.Vec2(1, 1);
             this.scale = new Phaser.Vec2(1, 1);
 
-            this.position = new Phaser.Components.Position(this, x, y);
+            this.x = x;
+            this.y = y;
+            this.z = 0;
+
             this.texture = new Phaser.Components.Texture(this, key, game.stage.canvas, game.stage.context);
 
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
-            this.rotation = this.position.rotation;
 
         }
+
+        /**
+          * Rotation angle of this object.
+          * @type {number}
+          */
+        private _rotation: number = 0;
 
         /**
          * Reference to the main game object
@@ -88,11 +95,6 @@ module Phaser {
         public height: number;
 
         /**
-         * The position of the Sprite in world and screen coordinates.
-         */
-        public position: Phaser.Components.Position;
-
-        /**
          * The texture used to render the Sprite.
          */
         public texture: Phaser.Components.Texture;
@@ -115,9 +117,47 @@ module Phaser {
         public scrollFactor: Phaser.Vec2;
 
         /**
-         * The Sprite origin is the point around which scale and rotation transforms take place.
+         * The Sprite origin is the point around which scale and rotation takes place.
          */
         public origin: Phaser.Vec2;
+
+        /**
+         * x value of the object.
+         */
+        public x: number = 0;
+
+        /**
+         * y value of the object.
+         */
+        public y: number = 0;
+
+        /**
+         * z order value of the object.
+         */
+        public z: number = 0;
+
+        /**
+         * This value is added to the rotation of the Sprite.
+         * For example if you had a sprite graphic drawn facing straight up then you could set
+         * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
+         * @type {number}
+         */
+        public rotationOffset: number = 0;
+
+        /**
+        * The rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        public get rotation(): number {
+            return this._rotation;
+        }
+
+        /**
+        * Set the rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The value is automatically wrapped to be between 0 and 360.
+        */
+        public set rotation(value: number) {
+            this._rotation = this.game.math.wrap(value, 360, 0);
+        }
 
         /**
          * Pre-update is called right before update() on each object in the game loop.
@@ -198,50 +238,6 @@ module Phaser {
          * Clean up memory.
          */
         public destroy() {
-        }
-
-        /**
-         * x value of the object.
-         */
-        public get x(): number {
-            return this.position.world.x;
-        }
-
-        public set x(value: number) {
-            this.position.world.x = value;
-        }
-
-        /**
-         * y value of the object.
-         */
-        public get y(): number {
-            return this.position.world.y;
-        }
-
-        public set y(value: number) {
-            this.position.world.y = value;
-        }
-
-        /**
-         * z value of the object.
-         */
-        public get z(): number {
-            return this.position.z;
-        }
-
-        public set z(value: number) {
-            this.position.z = value;
-        }
-
-        /**
-         * rotation value of the object.
-         */
-        public get rotation(): number {
-            return this.position.rotation;
-        }
-
-        public set rotation(value: number) {
-            this.position.rotation = value;
         }
 
     }
