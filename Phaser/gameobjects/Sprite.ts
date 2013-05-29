@@ -3,6 +3,7 @@
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
+/// <reference path="../components/sprite/Physics.ts" />
 
 /**
 * Phaser - Sprite
@@ -46,6 +47,8 @@ module Phaser {
 
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
+
+            this.physics = new Phaser.Components.Physics(this);
 
             //  Transform related (if we add any more then move to a component)
             this.origin = new Phaser.Vec2(0, 0);
@@ -98,6 +101,11 @@ module Phaser {
         //  Getters only, don't over-write these values
         public width: number;
         public height: number;
+
+        /**
+         * Sprite physics.
+         */
+        public physics: Phaser.Components.Physics;
 
         /**
          * The texture used to render the Sprite.
@@ -213,10 +221,8 @@ module Phaser {
          */
         public preUpdate() {
 
-            //this.last.x = this.frameBounds.x;
-            //this.last.y = this.frameBounds.y;
-
-            //this.collisionMask.preUpdate();
+            this.frameBounds.x = this.x;
+            this.frameBounds.y = this.y;
 
             if (this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.rotation != 0 || this.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY))
             {
@@ -237,13 +243,9 @@ module Phaser {
         public postUpdate() {
 
             this.animations.update();
+            this.physics.update();
 
             /*
-            if (this.moves)
-            {
-                this.updateMotion();
-            }
-
             if (this.worldBounds != null)
             {
                 if (this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL)

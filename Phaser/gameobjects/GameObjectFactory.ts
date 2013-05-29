@@ -1,5 +1,6 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../tweens/Tween.ts" />
+/// <reference path="../physics/AABB.ts" />
 
 /**
 * Phaser - GameObjectFactory
@@ -87,6 +88,19 @@ module Phaser {
          */
         public group(maxSize?: number = 0): Group {
             return <Group> this._world.group.add(new Group(this._game, maxSize));
+        }
+
+        /**
+         * Create a new Sprite with specific position and sprite sheet key.
+         *
+         * @param x {number} X position of the new sprite.
+         * @param y {number} Y position of the new sprite.
+         * @param key {string} Optional, key for the sprite sheet you want it to use.
+         * @returns {Sprite} The newly created sprite object.
+         * WILL NEED TO TRACK A SPRITE
+         */
+        public physicsAABB(x: number, y: number, width: number, height: number): Physics.AABB {
+            return <Physics.AABB> this._world.physics.add(new Physics.AABB(this._game, null, x, y, width, height));
         }
 
         /**

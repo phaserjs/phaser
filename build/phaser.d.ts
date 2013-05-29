@@ -949,146 +949,228 @@ module Phaser {
     }
 }
 /**
-* Phaser - Vec2
+* Phaser - Point
 *
-* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
+* The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
 */
 module Phaser {
-    class Vec2 {
+    class Point {
         /**
-        * Creates a new Vec2 object.
-        * @class Vec2
+        * Creates a new Point. If you pass no parameters a Point is created set to (0,0).
+        * @class Point
         * @constructor
-        * @param {Number} x The x position of the vector
-        * @param {Number} y The y position of the vector
-        * @return {Vec2} This object
+        * @param {Number} x The horizontal position of this Point (default 0)
+        * @param {Number} y The vertical position of this Point (default 0)
         **/
         constructor(x?: number, y?: number);
+        public x: number;
+        public y: number;
         /**
-        * The x coordinate of the vector
+        * Copies the x and y properties from any given object to this Point.
+        * @method copyFrom
+        * @param {any} source - The object to copy from.
+        * @return {Point} This Point object.
+        **/
+        public copyFrom(source: any): Point;
+        /**
+        * Inverts the x and y values of this Point
+        * @method invert
+        * @return {Point} This Point object.
+        **/
+        public invert(): Point;
+        /**
+        * Sets the x and y values of this MicroPoint object to the given coordinates.
+        * @method setTo
+        * @param {Number} x - The horizontal position of this point.
+        * @param {Number} y - The vertical position of this point.
+        * @return {MicroPoint} This MicroPoint object. Useful for chaining method calls.
+        **/
+        public setTo(x: number, y: number): Point;
+        /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the instance.
+        **/
+        public toString(): string;
+    }
+}
+/**
+*	Rectangle
+*
+*	@desc 		A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
+*
+*	@version 	1.6 - 24th May 2013
+*	@author 	Richard Davey
+*/
+module Phaser {
+    class Rectangle {
+        /**
+        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a rectangle with x, y, width, and height properties set to 0 is created.
+        * @class Rectangle
+        * @constructor
+        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
+        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
+        * @param {Number} width The width of the rectangle in pixels.
+        * @param {Number} height The height of the rectangle in pixels.
+        * @return {Rectangle} This rectangle object
+        **/
+        constructor(x?: number, y?: number, width?: number, height?: number);
+        /**
+        * The x coordinate of the top-left corner of the rectangle
         * @property x
         * @type Number
         **/
         public x: number;
         /**
-        * The y coordinate of the vector
+        * The y coordinate of the top-left corner of the rectangle
         * @property y
         * @type Number
         **/
         public y: number;
         /**
-        * Copies the x and y properties from any given object to this Vec2.
+        * The width of the rectangle in pixels
+        * @property width
+        * @type Number
+        **/
+        public width: number;
+        /**
+        * The height of the rectangle in pixels
+        * @property height
+        * @type Number
+        **/
+        public height: number;
+        /**
+        * Half of the width of the rectangle
+        * @property halfWidth
+        * @type Number
+        **/
+        public halfWidth : number;
+        /**
+        * Half of the height of the rectangle
+        * @property halfHeight
+        * @type Number
+        **/
+        public halfHeight : number;
+        /**
+        * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+        * @method bottom
+        * @return {Number}
+        **/
+        /**
+        * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+        * @method bottom
+        * @param {Number} value
+        **/
+        public bottom : number;
+        /**
+        * Sets the bottom-right corner of the Rectangle, determined by the values of the given Point object.
+        * @method bottomRight
+        * @param {Point} value
+        **/
+        public bottomRight : Point;
+        /**
+        * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
+        * @method left
+        * @ return {number}
+        **/
+        /**
+        * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties.
+        * However it does affect the width, whereas changing the x value does not affect the width property.
+        * @method left
+        * @param {Number} value
+        **/
+        public left : number;
+        /**
+        * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+        * However it does affect the width property.
+        * @method right
+        * @return {Number}
+        **/
+        /**
+        * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+        * However it does affect the width property.
+        * @method right
+        * @param {Number} value
+        **/
+        public right : number;
+        /**
+        * The volume of the Rectangle derived from width * height
+        * @method volume
+        * @return {Number}
+        **/
+        public volume : number;
+        /**
+        * The perimeter size of the Rectangle. This is the sum of all 4 sides.
+        * @method perimeter
+        * @return {Number}
+        **/
+        public perimeter : number;
+        /**
+        * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+        * However it does affect the height property, whereas changing the y value does not affect the height property.
+        * @method top
+        * @return {Number}
+        **/
+        /**
+        * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+        * However it does affect the height property, whereas changing the y value does not affect the height property.
+        * @method top
+        * @param {Number} value
+        **/
+        public top : number;
+        /**
+        * The location of the Rectangles top-left corner, determined by the x and y coordinates of the Point.
+        * @method topLeft
+        * @param {Point} value
+        **/
+        public topLeft : Point;
+        /**
+        * Determines whether or not this Rectangle object is empty.
+        * @method isEmpty
+        * @return {Boolean} A value of true if the Rectangle object's width or height is less than or equal to 0; otherwise false.
+        **/
+        /**
+        * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
+        * @method setEmpty
+        * @return {Rectangle} This rectangle object
+        **/
+        public empty : bool;
+        /**
+        * Adjusts the location of the Rectangle object, as determined by its top-left corner, by the specified amounts.
+        * @method offset
+        * @param {Number} dx Moves the x value of the Rectangle object by this amount.
+        * @param {Number} dy Moves the y value of the Rectangle object by this amount.
+        * @return {Rectangle} This Rectangle object.
+        **/
+        public offset(dx: number, dy: number): Rectangle;
+        /**
+        * Adjusts the location of the Rectangle object using a Point object as a parameter. This method is similar to the Rectangle.offset() method, except that it takes a Point object as a parameter.
+        * @method offsetPoint
+        * @param {Point} point A Point object to use to offset this Rectangle object.
+        * @return {Rectangle} This Rectangle object.
+        **/
+        public offsetPoint(point: Point): Rectangle;
+        /**
+        * Sets the members of Rectangle to the specified values.
+        * @method setTo
+        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
+        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
+        * @param {Number} width The width of the rectangle in pixels.
+        * @param {Number} height The height of the rectangle in pixels.
+        * @return {Rectangle} This rectangle object
+        **/
+        public setTo(x: number, y: number, width: number, height: number): Rectangle;
+        /**
+        * Copies the x, y, width and height properties from any given object to this Rectangle.
         * @method copyFrom
         * @param {any} source - The object to copy from.
-        * @return {Vec2} This Vec2 object.
+        * @return {Rectangle} This Rectangle object.
         **/
-        public copyFrom(source: any): Vec2;
-        /**
-        * Sets the x and y properties of the Vector.
-        * @param {Number} x The x position of the vector
-        * @param {Number} y The y position of the vector
-        * @return {Vec2} This object
-        **/
-        public setTo(x: number, y: number): Vec2;
-        /**
-        * Add another vector to this one.
-        *
-        * @param {Vec2} other The other Vector.
-        * @return {Vec2} This for chaining.
-        */
-        public add(a: Vec2): Vec2;
-        /**
-        * Subtract another vector from this one.
-        *
-        * @param {Vec2} other The other Vector.
-        * @return {Vec2} This for chaining.
-        */
-        public subtract(v: Vec2): Vec2;
-        /**
-        * Multiply another vector with this one.
-        *
-        * @param {Vec2} other The other Vector.
-        * @return {Vec2} This for chaining.
-        */
-        public multiply(v: Vec2): Vec2;
-        /**
-        * Divide this vector by another one.
-        *
-        * @param {Vec2} other The other Vector.
-        * @return {Vec2} This for chaining.
-        */
-        public divide(v: Vec2): Vec2;
-        /**
-        * Get the length of this vector.
-        *
-        * @return {number} The length of this vector.
-        */
-        public length(): number;
-        /**
-        * Get the length squared of this vector.
-        *
-        * @return {number} The length^2 of this vector.
-        */
-        public lengthSq(): number;
-        /**
-        * The dot product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        public dot(a: Vec2): number;
-        /**
-        * The cross product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        public cross(a: Vec2): number;
-        /**
-        * The projection magnitude of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        public projectionLength(a: Vec2): number;
-        /**
-        * The angle between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        public angle(a: Vec2): number;
-        /**
-        * Scale this vector.
-        *
-        * @param {number} x The scaling factor in the x direction.
-        * @param {?number=} y The scaling factor in the y direction.  If this is not specified, the x scaling factor will be used.
-        * @return {Vec2} This for chaining.
-        */
-        public scale(x: number, y?: number): Vec2;
-        /**
-        * Divide this vector by the given scalar.
-        *
-        * @param {number} scalar
-        * @return {Vec2} This for chaining.
-        */
-        public divideByScalar(scalar: number): Vec2;
-        /**
-        * Reverse this vector.
-        *
-        * @return {Vec2} This for chaining.
-        */
-        public reverse(): Vec2;
-        /**
-        * Check if both the x and y of this vector equal the given value.
-        *
-        * @return {Boolean}
-        */
-        public equals(value): bool;
+        public copyFrom(source: any): Rectangle;
         /**
         * Returns a string representation of this object.
         * @method toString
-        * @return {string} a string representation of the object.
+        * @return {string} a string representation of the instance.
         **/
         public toString(): string;
     }
@@ -2221,6 +2303,10 @@ module Phaser {
         public width: number;
         public height: number;
         /**
+        * Sprite physics.
+        */
+        public physics: Components.Physics;
+        /**
         * The texture used to render the Sprite.
         */
         public texture: Components.Texture;
@@ -2933,6 +3019,63 @@ module Phaser {
     }
 }
 /**
+* Phaser - PhysicsManager
+*
+* Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
+* all of the physics objects in the world.
+*/
+module Phaser.Physics {
+    class PhysicsManager {
+        constructor(game: Game, width: number, height: number);
+        /**
+        * Local private reference to Game.
+        */
+        private _game;
+        private _objects;
+        public bounds: Rectangle;
+        public gravity: Vec2;
+        public drag: Vec2;
+        public bounce: Vec2;
+        public friction: Vec2;
+        private minFriction;
+        private maxFriction;
+        private minBounce;
+        private maxBounce;
+        private minGravity;
+        private maxGravity;
+        private _i;
+        private _length;
+        public add(o);
+        public update(): void;
+        public render(): void;
+    }
+}
+/**
+* Phaser - Physics - AABB
+*/
+module Phaser.Physics {
+    class AABB {
+        constructor(game: Game, sprite: Sprite, x: number, y: number, width: number, height: number);
+        /**
+        * Local private reference to Game.
+        */
+        public game: Game;
+        public world: PhysicsManager;
+        public sprite: Sprite;
+        public position: Vec2;
+        public oldPosition: Vec2;
+        public width: number;
+        public height: number;
+        public halfWidth: number;
+        public halfHeight: number;
+        public update(): void;
+        private integrate();
+        private collideWorld();
+        private processWorld(px, py, dx, dy, tile);
+        public render(context: CanvasRenderingContext2D): void;
+    }
+}
+/**
 * Phaser - GameObjectFactory
 *
 * A quick way to create new world objects and add existing objects to the current world.
@@ -2986,6 +3129,16 @@ module Phaser {
         * @returns {Group} The newly created group.
         */
         public group(maxSize?: number): Group;
+        /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param key {string} Optional, key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        * WILL NEED TO TRACK A SPRITE
+        */
+        public physicsAABB(x: number, y: number, width: number, height: number): Physics.AABB;
         /**
         * Create a tween object for a specific object.
         *
@@ -4291,6 +4444,11 @@ module Phaser {
         */
         public bounds: Rectangle;
         /**
+        * Reference to the physics manager.
+        * @type {Physics.PhysicsManager}
+        */
+        public physics: Physics.PhysicsManager;
+        /**
         * @type {number}
         */
         public worldDivisions: number;
@@ -4309,7 +4467,7 @@ module Phaser {
         * @param height {number} New height of the world.
         * @param [updateCameraBounds] {boolean} Update camera bounds automatically or not. Default to true.
         */
-        public setSize(width: number, height: number, updateCameraBounds?: bool): void;
+        public setSize(width: number, height: number, updateCameraBounds?: bool, updatePhysicsBounds?: bool): void;
         public width : number;
         public height : number;
         public centerX : number;
@@ -6102,230 +6260,262 @@ module Phaser {
     }
 }
 /**
-* Phaser - Point
+* Phaser - Vec2
 *
-* The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
+* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
 */
 module Phaser {
-    class Point {
+    class Vec2 {
         /**
-        * Creates a new Point. If you pass no parameters a Point is created set to (0,0).
-        * @class Point
+        * Creates a new Vec2 object.
+        * @class Vec2
         * @constructor
-        * @param {Number} x The horizontal position of this Point (default 0)
-        * @param {Number} y The vertical position of this Point (default 0)
+        * @param {Number} x The x position of the vector
+        * @param {Number} y The y position of the vector
+        * @return {Vec2} This object
         **/
         constructor(x?: number, y?: number);
-        public x: number;
-        public y: number;
         /**
-        * Copies the x and y properties from any given object to this Point.
-        * @method copyFrom
-        * @param {any} source - The object to copy from.
-        * @return {Point} This Point object.
-        **/
-        public copyFrom(source: any): Point;
-        /**
-        * Inverts the x and y values of this Point
-        * @method invert
-        * @return {Point} This Point object.
-        **/
-        public invert(): Point;
-        /**
-        * Sets the x and y values of this MicroPoint object to the given coordinates.
-        * @method setTo
-        * @param {Number} x - The horizontal position of this point.
-        * @param {Number} y - The vertical position of this point.
-        * @return {MicroPoint} This MicroPoint object. Useful for chaining method calls.
-        **/
-        public setTo(x: number, y: number): Point;
-        /**
-        * Returns a string representation of this object.
-        * @method toString
-        * @return {string} a string representation of the instance.
-        **/
-        public toString(): string;
-    }
-}
-/**
-*	Rectangle
-*
-*	@desc 		A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
-*
-*	@version 	1.6 - 24th May 2013
-*	@author 	Richard Davey
-*/
-module Phaser {
-    class Rectangle {
-        /**
-        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a rectangle with x, y, width, and height properties set to 0 is created.
-        * @class Rectangle
-        * @constructor
-        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
-        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
-        * @return {Rectangle} This rectangle object
-        **/
-        constructor(x?: number, y?: number, width?: number, height?: number);
-        /**
-        * The x coordinate of the top-left corner of the rectangle
+        * The x coordinate of the vector
         * @property x
         * @type Number
         **/
         public x: number;
         /**
-        * The y coordinate of the top-left corner of the rectangle
+        * The y coordinate of the vector
         * @property y
         * @type Number
         **/
         public y: number;
         /**
-        * The width of the rectangle in pixels
-        * @property width
-        * @type Number
-        **/
-        public width: number;
-        /**
-        * The height of the rectangle in pixels
-        * @property height
-        * @type Number
-        **/
-        public height: number;
-        /**
-        * Half of the width of the rectangle
-        * @property halfWidth
-        * @type Number
-        **/
-        public halfWidth : number;
-        /**
-        * Half of the height of the rectangle
-        * @property halfHeight
-        * @type Number
-        **/
-        public halfHeight : number;
-        /**
-        * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-        * @method bottom
-        * @return {Number}
-        **/
-        /**
-        * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-        * @method bottom
-        * @param {Number} value
-        **/
-        public bottom : number;
-        /**
-        * Sets the bottom-right corner of the Rectangle, determined by the values of the given Point object.
-        * @method bottomRight
-        * @param {Point} value
-        **/
-        public bottomRight : Point;
-        /**
-        * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
-        * @method left
-        * @ return {number}
-        **/
-        /**
-        * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties.
-        * However it does affect the width, whereas changing the x value does not affect the width property.
-        * @method left
-        * @param {Number} value
-        **/
-        public left : number;
-        /**
-        * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
-        * However it does affect the width property.
-        * @method right
-        * @return {Number}
-        **/
-        /**
-        * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
-        * However it does affect the width property.
-        * @method right
-        * @param {Number} value
-        **/
-        public right : number;
-        /**
-        * The volume of the Rectangle derived from width * height
-        * @method volume
-        * @return {Number}
-        **/
-        public volume : number;
-        /**
-        * The perimeter size of the Rectangle. This is the sum of all 4 sides.
-        * @method perimeter
-        * @return {Number}
-        **/
-        public perimeter : number;
-        /**
-        * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
-        * However it does affect the height property, whereas changing the y value does not affect the height property.
-        * @method top
-        * @return {Number}
-        **/
-        /**
-        * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
-        * However it does affect the height property, whereas changing the y value does not affect the height property.
-        * @method top
-        * @param {Number} value
-        **/
-        public top : number;
-        /**
-        * The location of the Rectangles top-left corner, determined by the x and y coordinates of the Point.
-        * @method topLeft
-        * @param {Point} value
-        **/
-        public topLeft : Point;
-        /**
-        * Determines whether or not this Rectangle object is empty.
-        * @method isEmpty
-        * @return {Boolean} A value of true if the Rectangle object's width or height is less than or equal to 0; otherwise false.
-        **/
-        /**
-        * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
-        * @method setEmpty
-        * @return {Rectangle} This rectangle object
-        **/
-        public empty : bool;
-        /**
-        * Adjusts the location of the Rectangle object, as determined by its top-left corner, by the specified amounts.
-        * @method offset
-        * @param {Number} dx Moves the x value of the Rectangle object by this amount.
-        * @param {Number} dy Moves the y value of the Rectangle object by this amount.
-        * @return {Rectangle} This Rectangle object.
-        **/
-        public offset(dx: number, dy: number): Rectangle;
-        /**
-        * Adjusts the location of the Rectangle object using a Point object as a parameter. This method is similar to the Rectangle.offset() method, except that it takes a Point object as a parameter.
-        * @method offsetPoint
-        * @param {Point} point A Point object to use to offset this Rectangle object.
-        * @return {Rectangle} This Rectangle object.
-        **/
-        public offsetPoint(point: Point): Rectangle;
-        /**
-        * Sets the members of Rectangle to the specified values.
-        * @method setTo
-        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
-        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
-        * @return {Rectangle} This rectangle object
-        **/
-        public setTo(x: number, y: number, width: number, height: number): Rectangle;
-        /**
-        * Copies the x, y, width and height properties from any given object to this Rectangle.
+        * Copies the x and y properties from any given object to this Vec2.
         * @method copyFrom
         * @param {any} source - The object to copy from.
-        * @return {Rectangle} This Rectangle object.
+        * @return {Vec2} This Vec2 object.
         **/
-        public copyFrom(source: any): Rectangle;
+        public copyFrom(source: any): Vec2;
+        /**
+        * Sets the x and y properties of the Vector.
+        * @param {Number} x The x position of the vector
+        * @param {Number} y The y position of the vector
+        * @return {Vec2} This object
+        **/
+        public setTo(x: number, y: number): Vec2;
+        /**
+        * Add another vector to this one.
+        *
+        * @param {Vec2} other The other Vector.
+        * @return {Vec2} This for chaining.
+        */
+        public add(a: Vec2): Vec2;
+        /**
+        * Subtract another vector from this one.
+        *
+        * @param {Vec2} other The other Vector.
+        * @return {Vec2} This for chaining.
+        */
+        public subtract(v: Vec2): Vec2;
+        /**
+        * Multiply another vector with this one.
+        *
+        * @param {Vec2} other The other Vector.
+        * @return {Vec2} This for chaining.
+        */
+        public multiply(v: Vec2): Vec2;
+        /**
+        * Divide this vector by another one.
+        *
+        * @param {Vec2} other The other Vector.
+        * @return {Vec2} This for chaining.
+        */
+        public divide(v: Vec2): Vec2;
+        /**
+        * Get the length of this vector.
+        *
+        * @return {number} The length of this vector.
+        */
+        public length(): number;
+        /**
+        * Get the length squared of this vector.
+        *
+        * @return {number} The length^2 of this vector.
+        */
+        public lengthSq(): number;
+        /**
+        * The dot product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        public dot(a: Vec2): number;
+        /**
+        * The cross product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        public cross(a: Vec2): number;
+        /**
+        * The projection magnitude of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        public projectionLength(a: Vec2): number;
+        /**
+        * The angle between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        public angle(a: Vec2): number;
+        /**
+        * Scale this vector.
+        *
+        * @param {number} x The scaling factor in the x direction.
+        * @param {?number=} y The scaling factor in the y direction.  If this is not specified, the x scaling factor will be used.
+        * @return {Vec2} This for chaining.
+        */
+        public scale(x: number, y?: number): Vec2;
+        /**
+        * Divide this vector by the given scalar.
+        *
+        * @param {number} scalar
+        * @return {Vec2} This for chaining.
+        */
+        public divideByScalar(scalar: number): Vec2;
+        /**
+        * Reverse this vector.
+        *
+        * @return {Vec2} This for chaining.
+        */
+        public reverse(): Vec2;
+        /**
+        * Check if both the x and y of this vector equal the given value.
+        *
+        * @return {Boolean}
+        */
+        public equals(value): bool;
         /**
         * Returns a string representation of this object.
         * @method toString
-        * @return {string} a string representation of the instance.
+        * @return {string} a string representation of the object.
         **/
         public toString(): string;
+    }
+}
+/**
+* Phaser - Components - Physics
+*
+*
+*/
+module Phaser.Components {
+    class Physics {
+        constructor(parent: Sprite);
+        /**
+        *
+        */
+        private _game;
+        /**
+        *
+        */
+        private _sprite;
+        public AABB: Physics.AABB;
+        /**
+        * Whether this object will be moved by impacts with other objects or not.
+        * @type {boolean}
+        */
+        public immovable: bool;
+        /**
+        * Basic speed of this object.
+        *
+        * Velocity is given in pixels per second. Therefore a velocity of
+        * 100 will move at a rate of 100 pixels every 1000 ms (1sec). It's not balls-on
+        * accurate due to the way timers work, but it's pretty close. Expect tolerance
+        * of +- 10 px. Also that speed assumes no drag.
+        *
+        * @type {Vec2}
+        */
+        public velocity: Vec2;
+        /**
+        * The virtual mass of the object.
+        * @type {number}
+        */
+        public mass: number;
+        /**
+        * The bounciness of the object.
+        * @type {number}
+        */
+        public elasticity: number;
+        /**
+        * How fast the speed of this object is changing.
+        * @type {number}
+        */
+        public acceleration: Vec2;
+        /**
+        * This isn't drag exactly, more like deceleration that is only applied
+        * when acceleration is not affecting the sprite.
+        * @type {Vec2}
+        */
+        public drag: Vec2;
+        /**
+        * It will cap the speed automatically if you use the acceleration
+        * to change its velocity.
+        * @type {Vec2}
+        */
+        public maxVelocity: Vec2;
+        /**
+        * How fast this object is rotating.
+        * @type {number}
+        */
+        public angularVelocity: number;
+        /**
+        * How fast angularVelocity of this object is changing.
+        * @type {number}
+        */
+        public angularAcceleration: number;
+        /**
+        * Deacceleration of angularVelocity will be applied when it's rotating.
+        * @type {number}
+        */
+        public angularDrag: number;
+        /**
+        * It will cap the rotate speed automatically if you use the angularAcceleration
+        * to change its angularVelocity.
+        * @type {number}
+        */
+        public maxAngular: number;
+        /**
+        * Set this to false if you want to skip the automatic motion/movement stuff
+        * (see updateMotion()).
+        * @type {boolean}
+        */
+        public moves: bool;
+        /**
+        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts.
+        * @type {number}
+        */
+        public touching: number;
+        /**
+        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step.
+        * @type {number}
+        */
+        public wasTouching: number;
+        /**
+        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions.
+        * @type {number}
+        */
+        public allowCollisions: number;
+        /**
+        * Important variable for collision processing.
+        * @type {Vec2}
+        */
+        public last: Vec2;
+        /**
+        * Internal function for updating the position and speed of this object.
+        */
+        public update(): void;
+        public solid : bool;
     }
 }
 /**

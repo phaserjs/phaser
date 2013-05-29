@@ -53,6 +53,9 @@ module Phaser {
                 this._camera.postRender();
             }
 
+            //  Physics Debug layer
+            this._game.world.physics.render();
+
         }
 
         /**

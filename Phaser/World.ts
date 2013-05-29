@@ -2,6 +2,7 @@
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="core/Group.ts" />
 /// <reference path="core/Rectangle.ts" />
+/// <reference path="physics/PhysicsManager.ts" />
 
 /**
 * Phaser - World
@@ -34,6 +35,8 @@ module Phaser {
 
             this.bounds = new Rectangle(0, 0, width, height);
 
+            this.physics = new Physics.PhysicsManager(this._game, width, height);
+
             this.worldDivisions = 6;
 
         }
@@ -62,6 +65,12 @@ module Phaser {
         public bounds: Rectangle;
 
         /**
+         * Reference to the physics manager.
+         * @type {Physics.PhysicsManager}
+         */
+        public physics: Physics.PhysicsManager;
+
+        /**
          * @type {number}
          */
         public worldDivisions: number;
@@ -71,6 +80,7 @@ module Phaser {
          */
         public update() {
 
+            this.physics.update();
             this.group.update();
             this.cameras.update();
 
@@ -81,8 +91,8 @@ module Phaser {
          */
         public destroy() {
 
+            //this.physics.destroy();
             this.group.destroy();
-
             this.cameras.destroy();
 
         }
@@ -94,7 +104,7 @@ module Phaser {
          * @param height {number} New height of the world.
          * @param [updateCameraBounds] {boolean} Update camera bounds automatically or not. Default to true.
          */
-        public setSize(width: number, height: number, updateCameraBounds: bool = true) {
+        public setSize(width: number, height: number, updateCameraBounds: bool = true, updatePhysicsBounds: bool = true) {
 
             this.bounds.width = width;
             this.bounds.height = height;
@@ -102,6 +112,11 @@ module Phaser {
             if (updateCameraBounds == true)
             {
                 this._game.camera.setBounds(0, 0, width, height);
+            }
+
+            if (updatePhysicsBounds == true)
+            {
+                //this.physics.bounds.copyFrom(this.bounds);
             }
 
             // dispatch world resize event

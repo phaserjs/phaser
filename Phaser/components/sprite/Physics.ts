@@ -1,5 +1,6 @@
 /// <reference path="../../core/Vec2.ts" />
 /// <reference path="../../core/Point.ts" />
+/// <reference path="../../physics/AABB.ts" />
 
 /**
 * Phaser - Components - Physics
@@ -10,6 +11,28 @@
 module Phaser.Components {
 
     export class Physics {
+
+        constructor(parent: Sprite) {
+
+            this._game = parent.game;
+            this._sprite = parent;
+
+            //this.AABB = new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height);
+            this.AABB = this._game.world.physics.add(new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
+
+        }
+
+        /**
+         * 
+         */
+        private _game: Game;
+
+        /**
+         * 
+         */
+        private _sprite: Sprite;
+
+        public AABB: Phaser.Physics.AABB;
 
         /**
          * Whether this object will be moved by impacts with other objects or not.
@@ -126,9 +149,9 @@ module Phaser.Components {
         *
         * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
         */
-        public isTouching(direction: number): bool {
-            return (this.touching & direction) > Collision.NONE;
-        }
+        //public isTouching(direction: number): bool {
+        //    return (this.touching & direction) > Collision.NONE;
+        //}
 
         /**
         * Handy function for checking if this object just landed on a particular surface.
@@ -137,15 +160,21 @@ module Phaser.Components {
         *
         * @returns {boolean} Whether the object just landed on any specicied surfaces.
         */
-        public justTouched(direction: number): bool {
-            return ((this.touching & direction) > Collision.NONE) && ((this.wasTouching & direction) <= Collision.NONE);
-        }
+        //public justTouched(direction: number): bool {
+        //    return ((this.touching & direction) > Collision.NONE) && ((this.wasTouching & direction) <= Collision.NONE);
+        //}
 
 
         /**
          * Internal function for updating the position and speed of this object.
          */
         public update() {
+
+            if (this.moves)
+            {
+                this._sprite.x = this.AABB.position.x - this.AABB.halfWidth;
+                this._sprite.y = this.AABB.position.y - this.AABB.halfHeight;
+            }
 
 /*
             var delta: number;
@@ -176,20 +205,20 @@ module Phaser.Components {
         * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
         * to set the value of allowCollisions directly.
         */
-        public get solid(): bool {
-            return (this.allowCollisions & Collision.ANY) > Collision.NONE;
-        }
+        //public get solid(): bool {
+        //    return (this.allowCollisions & Collision.ANY) > Collision.NONE;
+        //}
 
         public set solid(value: bool) {
 
-            if (value)
-            {
-                this.allowCollisions = Collision.ANY;
-            }
-            else
-            {
-                this.allowCollisions = Collision.NONE;
-            }
+            //if (value)
+            //{
+            //    this.allowCollisions = Collision.ANY;
+            //}
+            //else
+            //{
+            //    this.allowCollisions = Collision.NONE;
+            //}
 
         }
 

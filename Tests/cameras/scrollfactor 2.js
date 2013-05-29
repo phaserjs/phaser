@@ -11,8 +11,7 @@
             var temp = game.add.sprite(600 + (10 * i), 200 + (10 * i), 'disk');
             temp.scrollFactor.setTo(i / 2, i / 2);
         }
-        //game.camera.focusOnXY(800, 200);
-            }
+    }
     function update() {
         if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             game.camera.scroll.x -= 4;

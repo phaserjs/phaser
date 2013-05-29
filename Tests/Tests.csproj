@@ -65,6 +65,10 @@
     <Content Include="cameras\scrollfactor 2.js">
       <DependentUpon>scrollfactor 2.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="physics\aabb 1.ts" />
+    <Content Include="physics\aabb 1.js">
+      <DependentUpon>aabb 1.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\tween loop 1.js">
       <DependentUpon>tween loop 1.ts</DependentUpon>
     </Content>

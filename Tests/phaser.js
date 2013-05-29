@@ -1811,200 +1811,353 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* Phaser - Vec2
+* Phaser - Point
 *
-* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
+* The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
 */
 var Phaser;
 (function (Phaser) {
-    var Vec2 = (function () {
+    var Point = (function () {
         /**
-        * Creates a new Vec2 object.
-        * @class Vec2
+        * Creates a new Point. If you pass no parameters a Point is created set to (0,0).
+        * @class Point
         * @constructor
-        * @param {Number} x The x position of the vector
-        * @param {Number} y The y position of the vector
-        * @return {Vec2} This object
+        * @param {Number} x The horizontal position of this Point (default 0)
+        * @param {Number} y The vertical position of this Point (default 0)
         **/
-        function Vec2(x, y) {
+        function Point(x, y) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             this.x = x;
             this.y = y;
         }
-        Vec2.prototype.copyFrom = /**
-        * Copies the x and y properties from any given object to this Vec2.
+        Point.prototype.copyFrom = /**
+        * Copies the x and y properties from any given object to this Point.
         * @method copyFrom
         * @param {any} source - The object to copy from.
-        * @return {Vec2} This Vec2 object.
+        * @return {Point} This Point object.
         **/
         function (source) {
             return this.setTo(source.x, source.y);
         };
-        Vec2.prototype.setTo = /**
-        * Sets the x and y properties of the Vector.
-        * @param {Number} x The x position of the vector
-        * @param {Number} y The y position of the vector
-        * @return {Vec2} This object
+        Point.prototype.invert = /**
+        * Inverts the x and y values of this Point
+        * @method invert
+        * @return {Point} This Point object.
+        **/
+        function () {
+            return this.setTo(this.y, this.x);
+        };
+        Point.prototype.setTo = /**
+        * Sets the x and y values of this MicroPoint object to the given coordinates.
+        * @method setTo
+        * @param {Number} x - The horizontal position of this point.
+        * @param {Number} y - The vertical position of this point.
+        * @return {MicroPoint} This MicroPoint object. Useful for chaining method calls.
         **/
         function (x, y) {
             this.x = x;
             this.y = y;
             return this;
         };
-        Vec2.prototype.add = /**
-        * Add another vector to this one.
-        *
-        * @param {Vec2} other The other Vector.
-        * @return {Vec2} This for chaining.
-        */
-        function (a) {
-            this.x += a.x;
-            this.y += a.y;
-            return this;
-        };
-        Vec2.prototype.subtract = /**
-        * Subtract another vector from this one.
-        *
-        * @param {Vec2} other The other Vector.
-        * @return {Vec2} This for chaining.
-        */
-        function (v) {
-            this.x -= v.x;
-            this.y -= v.y;
-            return this;
-        };
-        Vec2.prototype.multiply = /**
-        * Multiply another vector with this one.
-        *
-        * @param {Vec2} other The other Vector.
-        * @return {Vec2} This for chaining.
-        */
-        function (v) {
-            this.x *= v.x;
-            this.y *= v.y;
-            return this;
-        };
-        Vec2.prototype.divide = /**
-        * Divide this vector by another one.
-        *
-        * @param {Vec2} other The other Vector.
-        * @return {Vec2} This for chaining.
-        */
-        function (v) {
-            this.x /= v.x;
-            this.y /= v.y;
-            return this;
-        };
-        Vec2.prototype.length = /**
-        * Get the length of this vector.
-        *
-        * @return {number} The length of this vector.
-        */
-        function () {
-            return Math.sqrt((this.x * this.x) + (this.y * this.y));
-        };
-        Vec2.prototype.lengthSq = /**
-        * Get the length squared of this vector.
-        *
-        * @return {number} The length^2 of this vector.
-        */
-        function () {
-            return (this.x * this.x) + (this.y * this.y);
-        };
-        Vec2.prototype.dot = /**
-        * The dot product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function (a) {
-            return ((this.x * a.x) + (this.y * a.y));
-        };
-        Vec2.prototype.cross = /**
-        * The cross product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function (a) {
-            return ((this.x * a.y) - (this.y * a.x));
-        };
-        Vec2.prototype.projectionLength = /**
-        * The projection magnitude of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function (a) {
-            var den = a.dot(a);
-            if(den == 0) {
-                return 0;
-            } else {
-                return Math.abs(this.dot(a) / den);
-            }
-        };
-        Vec2.prototype.angle = /**
-        * The angle between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function (a) {
-            return Math.atan2(a.x * this.y - a.y * this.x, a.x * this.x + a.y * this.y);
-        };
-        Vec2.prototype.scale = /**
-        * Scale this vector.
-        *
-        * @param {number} x The scaling factor in the x direction.
-        * @param {?number=} y The scaling factor in the y direction.  If this is not specified, the x scaling factor will be used.
-        * @return {Vec2} This for chaining.
-        */
-        function (x, y) {
-            this.x *= x;
-            this.y *= y || x;
-            return this;
-        };
-        Vec2.prototype.divideByScalar = /**
-        * Divide this vector by the given scalar.
-        *
-        * @param {number} scalar
-        * @return {Vec2} This for chaining.
-        */
-        function (scalar) {
-            this.x /= scalar;
-            this.y /= scalar;
-            return this;
-        };
-        Vec2.prototype.reverse = /**
-        * Reverse this vector.
-        *
-        * @return {Vec2} This for chaining.
-        */
-        function () {
-            this.x = -this.x;
-            this.y = -this.y;
-            return this;
-        };
-        Vec2.prototype.equals = /**
-        * Check if both the x and y of this vector equal the given value.
-        *
-        * @return {Boolean}
-        */
-        function (value) {
-            return (this.x == value && this.y == value);
-        };
-        Vec2.prototype.toString = /**
+        Point.prototype.toString = /**
         * Returns a string representation of this object.
         * @method toString
-        * @return {string} a string representation of the object.
+        * @return {string} a string representation of the instance.
         **/
         function () {
-            return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
+            return '[{Point (x=' + this.x + ' y=' + this.y + ')}]';
         };
-        return Vec2;
+        return Point;
     })();
-    Phaser.Vec2 = Vec2;    
+    Phaser.Point = Point;    
+})(Phaser || (Phaser = {}));
+/// <reference path="Point.ts" />
+/**
+*	Rectangle
+*
+*	@desc 		A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
+*
+*	@version 	1.6 - 24th May 2013
+*	@author 	Richard Davey
+*/
+var Phaser;
+(function (Phaser) {
+    var Rectangle = (function () {
+        /**
+        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a rectangle with x, y, width, and height properties set to 0 is created.
+        * @class Rectangle
+        * @constructor
+        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
+        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
+        * @param {Number} width The width of the rectangle in pixels.
+        * @param {Number} height The height of the rectangle in pixels.
+        * @return {Rectangle} This rectangle object
+        **/
+        function Rectangle(x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+        Object.defineProperty(Rectangle.prototype, "halfWidth", {
+            get: /**
+            * Half of the width of the rectangle
+            * @property halfWidth
+            * @type Number
+            **/
+            function () {
+                return Math.round(this.width / 2);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "halfHeight", {
+            get: /**
+            * Half of the height of the rectangle
+            * @property halfHeight
+            * @type Number
+            **/
+            function () {
+                return Math.round(this.height / 2);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "bottom", {
+            get: /**
+            * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+            * @method bottom
+            * @return {Number}
+            **/
+            function () {
+                return this.y + this.height;
+            },
+            set: /**
+            * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+            * @method bottom
+            * @param {Number} value
+            **/
+            function (value) {
+                if(value <= this.y) {
+                    this.height = 0;
+                } else {
+                    this.height = (this.y - value);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "bottomRight", {
+            set: /**
+            * Sets the bottom-right corner of the Rectangle, determined by the values of the given Point object.
+            * @method bottomRight
+            * @param {Point} value
+            **/
+            function (value) {
+                this.right = value.x;
+                this.bottom = value.y;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "left", {
+            get: /**
+            * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
+            * @method left
+            * @ return {number}
+            **/
+            function () {
+                return this.x;
+            },
+            set: /**
+            * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties.
+            * However it does affect the width, whereas changing the x value does not affect the width property.
+            * @method left
+            * @param {Number} value
+            **/
+            function (value) {
+                if(value >= this.right) {
+                    this.width = 0;
+                } else {
+                    this.width = this.right - value;
+                }
+                this.x = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "right", {
+            get: /**
+            * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+            * However it does affect the width property.
+            * @method right
+            * @return {Number}
+            **/
+            function () {
+                return this.x + this.width;
+            },
+            set: /**
+            * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+            * However it does affect the width property.
+            * @method right
+            * @param {Number} value
+            **/
+            function (value) {
+                if(value <= this.x) {
+                    this.width = 0;
+                } else {
+                    this.width = this.x + value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "volume", {
+            get: /**
+            * The volume of the Rectangle derived from width * height
+            * @method volume
+            * @return {Number}
+            **/
+            function () {
+                return this.width * this.height;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "perimeter", {
+            get: /**
+            * The perimeter size of the Rectangle. This is the sum of all 4 sides.
+            * @method perimeter
+            * @return {Number}
+            **/
+            function () {
+                return (this.width * 2) + (this.height * 2);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "top", {
+            get: /**
+            * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+            * However it does affect the height property, whereas changing the y value does not affect the height property.
+            * @method top
+            * @return {Number}
+            **/
+            function () {
+                return this.y;
+            },
+            set: /**
+            * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+            * However it does affect the height property, whereas changing the y value does not affect the height property.
+            * @method top
+            * @param {Number} value
+            **/
+            function (value) {
+                if(value >= this.bottom) {
+                    this.height = 0;
+                    this.y = value;
+                } else {
+                    this.height = (this.bottom - value);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "topLeft", {
+            set: /**
+            * The location of the Rectangles top-left corner, determined by the x and y coordinates of the Point.
+            * @method topLeft
+            * @param {Point} value
+            **/
+            function (value) {
+                this.x = value.x;
+                this.y = value.y;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rectangle.prototype, "empty", {
+            get: /**
+            * Determines whether or not this Rectangle object is empty.
+            * @method isEmpty
+            * @return {Boolean} A value of true if the Rectangle object's width or height is less than or equal to 0; otherwise false.
+            **/
+            function () {
+                return (!this.width || !this.height);
+            },
+            set: /**
+            * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
+            * @method setEmpty
+            * @return {Rectangle} This rectangle object
+            **/
+            function (value) {
+                return this.setTo(0, 0, 0, 0);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Rectangle.prototype.offset = /**
+        * Adjusts the location of the Rectangle object, as determined by its top-left corner, by the specified amounts.
+        * @method offset
+        * @param {Number} dx Moves the x value of the Rectangle object by this amount.
+        * @param {Number} dy Moves the y value of the Rectangle object by this amount.
+        * @return {Rectangle} This Rectangle object.
+        **/
+        function (dx, dy) {
+            this.x += dx;
+            this.y += dy;
+            return this;
+        };
+        Rectangle.prototype.offsetPoint = /**
+        * Adjusts the location of the Rectangle object using a Point object as a parameter. This method is similar to the Rectangle.offset() method, except that it takes a Point object as a parameter.
+        * @method offsetPoint
+        * @param {Point} point A Point object to use to offset this Rectangle object.
+        * @return {Rectangle} This Rectangle object.
+        **/
+        function (point) {
+            return this.offset(point.x, point.y);
+        };
+        Rectangle.prototype.setTo = /**
+        * Sets the members of Rectangle to the specified values.
+        * @method setTo
+        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
+        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
+        * @param {Number} width The width of the rectangle in pixels.
+        * @param {Number} height The height of the rectangle in pixels.
+        * @return {Rectangle} This rectangle object
+        **/
+        function (x, y, width, height) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            return this;
+        };
+        Rectangle.prototype.copyFrom = /**
+        * Copies the x, y, width and height properties from any given object to this Rectangle.
+        * @method copyFrom
+        * @param {any} source - The object to copy from.
+        * @return {Rectangle} This Rectangle object.
+        **/
+        function (source) {
+            return this.setTo(source.x, source.y, source.width, source.height);
+        };
+        Rectangle.prototype.toString = /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the instance.
+        **/
+        function () {
+            return "[{Rectangle (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + " empty=" + this.empty + ")}]";
+        };
+        return Rectangle;
+    })();
+    Phaser.Rectangle = Rectangle;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
@@ -3828,6 +3981,7 @@ var Phaser;
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
+/// <reference path="../components/sprite/Physics.ts" />
 /**
 * Phaser - Sprite
 *
@@ -3896,8 +4050,8 @@ var Phaser;
             this.texture = new Phaser.Components.Texture(this, key);
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
+            this.physics = new Phaser.Components.Physics(this);
             //  Transform related (if we add any more then move to a component)
-            //this.origin = new Phaser.Vec2(this.width / 2, this.height / 2);
             this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
             this.skew = new Phaser.Vec2(0, 0);
@@ -3955,9 +4109,8 @@ var Phaser;
         * Pre-update is called right before update() on each object in the game loop.
         */
         function () {
-            //this.last.x = this.frameBounds.x;
-            //this.last.y = this.frameBounds.y;
-            //this.collisionMask.preUpdate();
+            this.frameBounds.x = this.x;
+            this.frameBounds.y = this.y;
             if(this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.rotation != 0 || this.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
                 this.modified = true;
             }
@@ -3972,12 +4125,8 @@ var Phaser;
         */
         function () {
             this.animations.update();
+            this.physics.update();
             /*
-            if (this.moves)
-            {
-            this.updateMotion();
-            }
-            
             if (this.worldBounds != null)
             {
             if (this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL)
@@ -5382,8 +5531,157 @@ var Phaser;
     })();
     Phaser.Tween = Tween;    
 })(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /**
+    * Phaser - PhysicsManager
+    *
+    * Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
+    * all of the physics objects in the world.
+    */
+    (function (Physics) {
+        var PhysicsManager = (function () {
+            function PhysicsManager(game, width, height) {
+                this.minFriction = 0;
+                this.maxFriction = 1;
+                this.minBounce = 0;
+                this.maxBounce = 1;
+                this.minGravity = 0;
+                this.maxGravity = 1;
+                this._i = 0;
+                this._length = 0;
+                this._game = game;
+                this.gravity = new Phaser.Vec2(0, 0.2);
+                this.drag = new Phaser.Vec2(1, 1);
+                this.bounce = new Phaser.Vec2(0.3, 0.9);
+                this.friction = new Phaser.Vec2(0.05, 0.05);
+                this.bounds = new Phaser.Rectangle(0, 0, width, height);
+                this._objects = [];
+            }
+            PhysicsManager.prototype.add = function (o) {
+                this._objects.push(o);
+                this._length++;
+                return o;
+            };
+            PhysicsManager.prototype.update = function () {
+                //  iterate through the objects here, updating and colliding
+                for(this._i = 0; this._i < this._length; this._i++) {
+                    this._objects[this._i].update();
+                }
+            };
+            PhysicsManager.prototype.render = function () {
+                //  iterate through the objects here, updating and colliding
+                for(this._i = 0; this._i < this._length; this._i++) {
+                    this._objects[this._i].render(this._game.stage.context);
+                }
+            };
+            return PhysicsManager;
+        })();
+        Physics.PhysicsManager = PhysicsManager;        
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="PhysicsManager.ts" />
+    /**
+    * Phaser - Physics - AABB
+    */
+    (function (Physics) {
+        var AABB = (function () {
+            function AABB(game, sprite, x, y, width, height) {
+                this.game = game;
+                this.world = game.world.physics;
+                this.sprite = sprite;
+                this.width = width;
+                this.height = height;
+                this.halfWidth = Math.round(width / 2);
+                this.halfHeight = Math.round(height / 2);
+                this.position = new Phaser.Vec2(x + this.halfWidth, y + this.halfHeight);
+                this.oldPosition = new Phaser.Vec2(x + this.halfWidth, y + this.halfHeight);
+            }
+            AABB.prototype.update = function () {
+                if(this.sprite.physics.moves) {
+                    this.integrate();
+                    this.collideWorld();
+                }
+            };
+            AABB.prototype.integrate = function () {
+                var ox = this.oldPosition.x;
+                var oy = this.oldPosition.y;
+                this.oldPosition.x = this.position.x;
+                this.oldPosition.y = this.position.y;
+                //this.position.x += (this.world.drag.x * this.position.x + this.halfWidth) - (this.world.drag.x * ox) + this.world.gravity.x;
+                //this.position.y += (this.world.drag.y * this.position.y + this.halfHeight) - (this.world.drag.y * oy) + this.world.gravity.y;
+                this.position.x += (this.world.drag.x * this.position.x) - (this.world.drag.x * ox) + this.world.gravity.x;
+                this.position.y += (this.world.drag.y * this.position.y) - (this.world.drag.y * oy) + this.world.gravity.y;
+            };
+            AABB.prototype.collideWorld = function () {
+                //  Collide on the x-axis
+                var dx = this.world.bounds.x - (this.position.x - this.halfWidth);
+                if(0 < dx) {
+                    this.processWorld(dx, 0, 1, 0, null);
+                } else {
+                    dx = (this.position.x + this.halfWidth) - this.world.bounds.right;
+                    if(0 < dx) {
+                        this.processWorld(-dx, 0, -1, 0, null);
+                    }
+                }
+                //  Collide on the y-axis
+                var dy = this.world.bounds.y - (this.position.y - this.halfHeight);
+                if(0 < dy) {
+                    this.processWorld(0, dy, 0, 1, null);
+                } else {
+                    dy = (this.position.y + this.halfHeight) - this.world.bounds.bottom;
+                    if(0 < dy) {
+                        this.processWorld(0, -dy, 0, -1, null);
+                    }
+                }
+            };
+            AABB.prototype.processWorld = function (px, py, dx, dy, tile) {
+                //  Velocity
+                var vx = this.position.x - this.oldPosition.x;
+                var vy = this.position.y - this.oldPosition.y;
+                var dp = (vx * dx + vy * dy);
+                var nx = dp * dx;
+                var ny = dp * dy;
+                var tx = vx - nx;
+                var ty = vy - ny;
+                var b, bx, by, f, fx, fy;
+                if(dp < 0) {
+                    fx = tx * this.world.friction.x;
+                    fy = ty * this.world.friction.y;
+                    bx = (nx * (1 + this.world.bounce.x));
+                    by = (ny * (1 + this.world.bounce.y));
+                } else {
+                    bx = by = fx = fy = 0;
+                }
+                this.position.x += px;
+                this.position.y += py;
+                this.oldPosition.x += px + bx + fx;
+                this.oldPosition.y += py + by + fy;
+            };
+            AABB.prototype.render = function (context) {
+                context.beginPath();
+                context.strokeStyle = 'rgb(0,255,0)';
+                context.strokeRect(this.position.x - this.halfWidth, this.position.y - this.halfHeight, this.width, this.height);
+                context.stroke();
+                context.closePath();
+                //  center point
+                context.fillStyle = 'rgb(0,255,0)';
+                context.fillRect(this.position.x, this.position.y, 2, 2);
+            };
+            return AABB;
+        })();
+        Physics.AABB = AABB;        
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../tweens/Tween.ts" />
+/// <reference path="../physics/AABB.ts" />
 /**
 * Phaser - GameObjectFactory
 *
@@ -5453,6 +5751,18 @@ var Phaser;
         function (maxSize) {
             if (typeof maxSize === "undefined") { maxSize = 0; }
             return this._world.group.add(new Phaser.Group(this._game, maxSize));
+        };
+        GameObjectFactory.prototype.physicsAABB = /**
+        * Create a new Sprite with specific position and sprite sheet key.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param key {string} Optional, key for the sprite sheet you want it to use.
+        * @returns {Sprite} The newly created sprite object.
+        * WILL NEED TO TRACK A SPRITE
+        */
+        function (x, y, width, height) {
+            return this._world.physics.add(new Phaser.Physics.AABB(this._game, null, x, y, width, height));
         };
         GameObjectFactory.prototype.tween = /**
         * Create a new Particle.
@@ -7654,6 +7964,7 @@ var Phaser;
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="core/Group.ts" />
 /// <reference path="core/Rectangle.ts" />
+/// <reference path="physics/PhysicsManager.ts" />
 /**
 * Phaser - World
 *
@@ -7678,12 +7989,14 @@ var Phaser;
             this.cameras = new Phaser.CameraManager(this._game, 0, 0, width, height);
             this.group = new Phaser.Group(this._game, 0);
             this.bounds = new Phaser.Rectangle(0, 0, width, height);
+            this.physics = new Phaser.Physics.PhysicsManager(this._game, width, height);
             this.worldDivisions = 6;
         }
         World.prototype.update = /**
         * This is called automatically every frame, and is where main logic happens.
         */
         function () {
+            this.physics.update();
             this.group.update();
             this.cameras.update();
         };
@@ -7691,6 +8004,7 @@ var Phaser;
         * Clean up memory.
         */
         function () {
+            //this.physics.destroy();
             this.group.destroy();
             this.cameras.destroy();
         };
@@ -7701,13 +8015,17 @@ var Phaser;
         * @param height {number} New height of the world.
         * @param [updateCameraBounds] {boolean} Update camera bounds automatically or not. Default to true.
         */
-        function (width, height, updateCameraBounds) {
+        function (width, height, updateCameraBounds, updatePhysicsBounds) {
             if (typeof updateCameraBounds === "undefined") { updateCameraBounds = true; }
+            if (typeof updatePhysicsBounds === "undefined") { updatePhysicsBounds = true; }
             this.bounds.width = width;
             this.bounds.height = height;
             if(updateCameraBounds == true) {
                 this._game.camera.setBounds(0, 0, width, height);
             }
+            if(updatePhysicsBounds == true) {
+                //this.physics.bounds.copyFrom(this.bounds);
+                            }
             // dispatch world resize event
                     };
         Object.defineProperty(World.prototype, "width", {
@@ -10461,6 +10779,8 @@ var Phaser;
                 this._game.world.group.render(this, this._camera);
                 this._camera.postRender();
             }
+            //  Physics Debug layer
+            this._game.world.physics.render();
         };
         CanvasRenderer.prototype.renderSprite = /**
         * Render this sprite to specific camera. Called by game loop after update().
@@ -10507,14 +10827,6 @@ var Phaser;
                     this._dy += sprite.animations.currentFrame.spriteSourceSizeY;
                 }
             }
-            //	Apply camera difference - looks like this is already applied?
-            /*
-            if (sprite.scrollFactor.x !== 1 || sprite.scrollFactor.y !== 1)
-            {
-            //this._dx -= (camera.worldView.x * this.scrollFactor.x);
-            //this._dy -= (camera.worldView.y * this.scrollFactor.y);
-            }
-            */
             //	Rotation and Flipped
             if(sprite.modified) {
                 if(sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.rotationOffset !== 0)) {
@@ -11027,353 +11339,304 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* Phaser - Point
+* Phaser - Vec2
 *
-* The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
+* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
 */
 var Phaser;
 (function (Phaser) {
-    var Point = (function () {
+    var Vec2 = (function () {
         /**
-        * Creates a new Point. If you pass no parameters a Point is created set to (0,0).
-        * @class Point
+        * Creates a new Vec2 object.
+        * @class Vec2
         * @constructor
-        * @param {Number} x The horizontal position of this Point (default 0)
-        * @param {Number} y The vertical position of this Point (default 0)
+        * @param {Number} x The x position of the vector
+        * @param {Number} y The y position of the vector
+        * @return {Vec2} This object
         **/
-        function Point(x, y) {
+        function Vec2(x, y) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             this.x = x;
             this.y = y;
         }
-        Point.prototype.copyFrom = /**
-        * Copies the x and y properties from any given object to this Point.
+        Vec2.prototype.copyFrom = /**
+        * Copies the x and y properties from any given object to this Vec2.
         * @method copyFrom
         * @param {any} source - The object to copy from.
-        * @return {Point} This Point object.
+        * @return {Vec2} This Vec2 object.
         **/
         function (source) {
             return this.setTo(source.x, source.y);
         };
-        Point.prototype.invert = /**
-        * Inverts the x and y values of this Point
-        * @method invert
-        * @return {Point} This Point object.
-        **/
-        function () {
-            return this.setTo(this.y, this.x);
-        };
-        Point.prototype.setTo = /**
-        * Sets the x and y values of this MicroPoint object to the given coordinates.
-        * @method setTo
-        * @param {Number} x - The horizontal position of this point.
-        * @param {Number} y - The vertical position of this point.
-        * @return {MicroPoint} This MicroPoint object. Useful for chaining method calls.
+        Vec2.prototype.setTo = /**
+        * Sets the x and y properties of the Vector.
+        * @param {Number} x The x position of the vector
+        * @param {Number} y The y position of the vector
+        * @return {Vec2} This object
         **/
         function (x, y) {
             this.x = x;
             this.y = y;
             return this;
         };
-        Point.prototype.toString = /**
+        Vec2.prototype.add = /**
+        * Add another vector to this one.
+        *
+        * @param {Vec2} other The other Vector.
+        * @return {Vec2} This for chaining.
+        */
+        function (a) {
+            this.x += a.x;
+            this.y += a.y;
+            return this;
+        };
+        Vec2.prototype.subtract = /**
+        * Subtract another vector from this one.
+        *
+        * @param {Vec2} other The other Vector.
+        * @return {Vec2} This for chaining.
+        */
+        function (v) {
+            this.x -= v.x;
+            this.y -= v.y;
+            return this;
+        };
+        Vec2.prototype.multiply = /**
+        * Multiply another vector with this one.
+        *
+        * @param {Vec2} other The other Vector.
+        * @return {Vec2} This for chaining.
+        */
+        function (v) {
+            this.x *= v.x;
+            this.y *= v.y;
+            return this;
+        };
+        Vec2.prototype.divide = /**
+        * Divide this vector by another one.
+        *
+        * @param {Vec2} other The other Vector.
+        * @return {Vec2} This for chaining.
+        */
+        function (v) {
+            this.x /= v.x;
+            this.y /= v.y;
+            return this;
+        };
+        Vec2.prototype.length = /**
+        * Get the length of this vector.
+        *
+        * @return {number} The length of this vector.
+        */
+        function () {
+            return Math.sqrt((this.x * this.x) + (this.y * this.y));
+        };
+        Vec2.prototype.lengthSq = /**
+        * Get the length squared of this vector.
+        *
+        * @return {number} The length^2 of this vector.
+        */
+        function () {
+            return (this.x * this.x) + (this.y * this.y);
+        };
+        Vec2.prototype.dot = /**
+        * The dot product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function (a) {
+            return ((this.x * a.x) + (this.y * a.y));
+        };
+        Vec2.prototype.cross = /**
+        * The cross product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function (a) {
+            return ((this.x * a.y) - (this.y * a.x));
+        };
+        Vec2.prototype.projectionLength = /**
+        * The projection magnitude of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function (a) {
+            var den = a.dot(a);
+            if(den == 0) {
+                return 0;
+            } else {
+                return Math.abs(this.dot(a) / den);
+            }
+        };
+        Vec2.prototype.angle = /**
+        * The angle between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function (a) {
+            return Math.atan2(a.x * this.y - a.y * this.x, a.x * this.x + a.y * this.y);
+        };
+        Vec2.prototype.scale = /**
+        * Scale this vector.
+        *
+        * @param {number} x The scaling factor in the x direction.
+        * @param {?number=} y The scaling factor in the y direction.  If this is not specified, the x scaling factor will be used.
+        * @return {Vec2} This for chaining.
+        */
+        function (x, y) {
+            this.x *= x;
+            this.y *= y || x;
+            return this;
+        };
+        Vec2.prototype.divideByScalar = /**
+        * Divide this vector by the given scalar.
+        *
+        * @param {number} scalar
+        * @return {Vec2} This for chaining.
+        */
+        function (scalar) {
+            this.x /= scalar;
+            this.y /= scalar;
+            return this;
+        };
+        Vec2.prototype.reverse = /**
+        * Reverse this vector.
+        *
+        * @return {Vec2} This for chaining.
+        */
+        function () {
+            this.x = -this.x;
+            this.y = -this.y;
+            return this;
+        };
+        Vec2.prototype.equals = /**
+        * Check if both the x and y of this vector equal the given value.
+        *
+        * @return {Boolean}
+        */
+        function (value) {
+            return (this.x == value && this.y == value);
+        };
+        Vec2.prototype.toString = /**
         * Returns a string representation of this object.
         * @method toString
-        * @return {string} a string representation of the instance.
+        * @return {string} a string representation of the object.
         **/
         function () {
-            return '[{Point (x=' + this.x + ' y=' + this.y + ')}]';
+            return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
         };
-        return Point;
+        return Vec2;
     })();
-    Phaser.Point = Point;    
+    Phaser.Vec2 = Vec2;    
 })(Phaser || (Phaser = {}));
-/// <reference path="Point.ts" />
-/**
-*	Rectangle
-*
-*	@desc 		A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
-*
-*	@version 	1.6 - 24th May 2013
-*	@author 	Richard Davey
-*/
 var Phaser;
 (function (Phaser) {
-    var Rectangle = (function () {
-        /**
-        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a rectangle with x, y, width, and height properties set to 0 is created.
-        * @class Rectangle
-        * @constructor
-        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
-        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
-        * @return {Rectangle} This rectangle object
-        **/
-        function Rectangle(x, y, width, height) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof width === "undefined") { width = 0; }
-            if (typeof height === "undefined") { height = 0; }
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-        }
-        Object.defineProperty(Rectangle.prototype, "halfWidth", {
-            get: /**
-            * Half of the width of the rectangle
-            * @property halfWidth
-            * @type Number
-            **/
+    /// <reference path="../../core/Vec2.ts" />
+    /// <reference path="../../core/Point.ts" />
+    /// <reference path="../../physics/AABB.ts" />
+    /**
+    * Phaser - Components - Physics
+    *
+    *
+    */
+    (function (Components) {
+        var Physics = (function () {
+            function Physics(parent) {
+                /**
+                * Set this to false if you want to skip the automatic motion/movement stuff
+                * (see updateMotion()).
+                * @type {boolean}
+                */
+                this.moves = true;
+                this._game = parent.game;
+                this._sprite = parent;
+                //this.AABB = new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height);
+                this.AABB = this._game.world.physics.add(new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
+            }
+            Physics.prototype.update = /**
+            * Handy for checking if this object is touching a particular surface.
+            * For slightly better performance you can just &amp; the value directly into <code>touching</code>.
+            * However, this method is good for readability and accessibility.
+            *
+            * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
+            *
+            * @return {boolean} Whether the object is touching an object in (any of) the specified direction(s) this frame.
+            */
+            //public isTouching(direction: number): bool {
+            //    return (this.touching & direction) > Collision.NONE;
+            //}
+            /**
+            * Handy function for checking if this object just landed on a particular surface.
+            *
+            * @param Direction {number} Any of the collision flags (e.g. LEFT, FLOOR, etc).
+            *
+            * @returns {boolean} Whether the object just landed on any specicied surfaces.
+            */
+            //public justTouched(direction: number): bool {
+            //    return ((this.touching & direction) > Collision.NONE) && ((this.wasTouching & direction) <= Collision.NONE);
+            //}
+            /**
+            * Internal function for updating the position and speed of this object.
+            */
             function () {
-                return Math.round(this.width / 2);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "halfHeight", {
-            get: /**
-            * Half of the height of the rectangle
-            * @property halfHeight
-            * @type Number
-            **/
-            function () {
-                return Math.round(this.height / 2);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "bottom", {
-            get: /**
-            * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-            * @method bottom
-            * @return {Number}
-            **/
-            function () {
-                return this.y + this.height;
-            },
-            set: /**
-            * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-            * @method bottom
-            * @param {Number} value
-            **/
-            function (value) {
-                if(value <= this.y) {
-                    this.height = 0;
-                } else {
-                    this.height = (this.y - value);
+                if(this.moves) {
+                    this._sprite.x = this.AABB.position.x - this.AABB.halfWidth;
+                    this._sprite.y = this.AABB.position.y - this.AABB.halfHeight;
                 }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "bottomRight", {
-            set: /**
-            * Sets the bottom-right corner of the Rectangle, determined by the values of the given Point object.
-            * @method bottomRight
-            * @param {Point} value
-            **/
-            function (value) {
-                this.right = value.x;
-                this.bottom = value.y;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "left", {
-            get: /**
-            * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
-            * @method left
-            * @ return {number}
-            **/
-            function () {
-                return this.x;
-            },
-            set: /**
-            * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties.
-            * However it does affect the width, whereas changing the x value does not affect the width property.
-            * @method left
-            * @param {Number} value
-            **/
-            function (value) {
-                if(value >= this.right) {
-                    this.width = 0;
-                } else {
-                    this.width = this.right - value;
-                }
-                this.x = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "right", {
-            get: /**
-            * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
-            * However it does affect the width property.
-            * @method right
-            * @return {Number}
-            **/
-            function () {
-                return this.x + this.width;
-            },
-            set: /**
-            * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
-            * However it does affect the width property.
-            * @method right
-            * @param {Number} value
-            **/
-            function (value) {
-                if(value <= this.x) {
-                    this.width = 0;
-                } else {
-                    this.width = this.x + value;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "volume", {
-            get: /**
-            * The volume of the Rectangle derived from width * height
-            * @method volume
-            * @return {Number}
-            **/
-            function () {
-                return this.width * this.height;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "perimeter", {
-            get: /**
-            * The perimeter size of the Rectangle. This is the sum of all 4 sides.
-            * @method perimeter
-            * @return {Number}
-            **/
-            function () {
-                return (this.width * 2) + (this.height * 2);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "top", {
-            get: /**
-            * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
-            * However it does affect the height property, whereas changing the y value does not affect the height property.
-            * @method top
-            * @return {Number}
-            **/
-            function () {
-                return this.y;
-            },
-            set: /**
-            * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
-            * However it does affect the height property, whereas changing the y value does not affect the height property.
-            * @method top
-            * @param {Number} value
-            **/
-            function (value) {
-                if(value >= this.bottom) {
-                    this.height = 0;
-                    this.y = value;
-                } else {
-                    this.height = (this.bottom - value);
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "topLeft", {
-            set: /**
-            * The location of the Rectangles top-left corner, determined by the x and y coordinates of the Point.
-            * @method topLeft
-            * @param {Point} value
-            **/
-            function (value) {
-                this.x = value.x;
-                this.y = value.y;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Rectangle.prototype, "empty", {
-            get: /**
-            * Determines whether or not this Rectangle object is empty.
-            * @method isEmpty
-            * @return {Boolean} A value of true if the Rectangle object's width or height is less than or equal to 0; otherwise false.
-            **/
-            function () {
-                return (!this.width || !this.height);
-            },
-            set: /**
-            * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
-            * @method setEmpty
-            * @return {Rectangle} This rectangle object
-            **/
-            function (value) {
-                return this.setTo(0, 0, 0, 0);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Rectangle.prototype.offset = /**
-        * Adjusts the location of the Rectangle object, as determined by its top-left corner, by the specified amounts.
-        * @method offset
-        * @param {Number} dx Moves the x value of the Rectangle object by this amount.
-        * @param {Number} dy Moves the y value of the Rectangle object by this amount.
-        * @return {Rectangle} This Rectangle object.
-        **/
-        function (dx, dy) {
-            this.x += dx;
-            this.y += dy;
-            return this;
-        };
-        Rectangle.prototype.offsetPoint = /**
-        * Adjusts the location of the Rectangle object using a Point object as a parameter. This method is similar to the Rectangle.offset() method, except that it takes a Point object as a parameter.
-        * @method offsetPoint
-        * @param {Point} point A Point object to use to offset this Rectangle object.
-        * @return {Rectangle} This Rectangle object.
-        **/
-        function (point) {
-            return this.offset(point.x, point.y);
-        };
-        Rectangle.prototype.setTo = /**
-        * Sets the members of Rectangle to the specified values.
-        * @method setTo
-        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
-        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
-        * @return {Rectangle} This rectangle object
-        **/
-        function (x, y, width, height) {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-            return this;
-        };
-        Rectangle.prototype.copyFrom = /**
-        * Copies the x, y, width and height properties from any given object to this Rectangle.
-        * @method copyFrom
-        * @param {any} source - The object to copy from.
-        * @return {Rectangle} This Rectangle object.
-        **/
-        function (source) {
-            return this.setTo(source.x, source.y, source.width, source.height);
-        };
-        Rectangle.prototype.toString = /**
-        * Returns a string representation of this object.
-        * @method toString
-        * @return {string} a string representation of the instance.
-        **/
-        function () {
-            return "[{Rectangle (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + " empty=" + this.empty + ")}]";
-        };
-        return Rectangle;
-    })();
-    Phaser.Rectangle = Rectangle;    
+                /*
+                var delta: number;
+                var velocityDelta: number;
+                
+                velocityDelta = (this._game.motion.computeVelocity(this.angularVelocity, this.angularAcceleration, this.angularDrag, this.maxAngular) - this.angularVelocity) / 2;
+                this.angularVelocity += velocityDelta;
+                this._angle += this.angularVelocity * this._game.time.elapsed;
+                this.angularVelocity += velocityDelta;
+                
+                velocityDelta = (this._game.motion.computeVelocity(this.velocity.x, this.acceleration.x, this.drag.x, this.maxVelocity.x) - this.velocity.x) / 2;
+                this.velocity.x += velocityDelta;
+                delta = this.velocity.x * this._game.time.elapsed;
+                this.velocity.x += velocityDelta;
+                this.frameBounds.x += delta;
+                
+                velocityDelta = (this._game.motion.computeVelocity(this.velocity.y, this.acceleration.y, this.drag.y, this.maxVelocity.y) - this.velocity.y) / 2;
+                this.velocity.y += velocityDelta;
+                delta = this.velocity.y * this._game.time.elapsed;
+                this.velocity.y += velocityDelta;
+                this.frameBounds.y += delta;
+                */
+                            };
+            Object.defineProperty(Physics.prototype, "solid", {
+                set: /**
+                * Whether the object collides or not.  For more control over what directions
+                * the object will collide from, use collision constants (like LEFT, FLOOR, etc)
+                * to set the value of allowCollisions directly.
+                */
+                //public get solid(): bool {
+                //    return (this.allowCollisions & Collision.ANY) > Collision.NONE;
+                //}
+                function (value) {
+                    //if (value)
+                    //{
+                    //    this.allowCollisions = Collision.ANY;
+                    //}
+                    //else
+                    //{
+                    //    this.allowCollisions = Collision.NONE;
+                    //}
+                                    },
+                enumerable: true,
+                configurable: true
+            });
+            return Physics;
+        })();
+        Components.Physics = Physics;        
+    })(Phaser.Components || (Phaser.Components = {}));
+    var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../core/Point.ts" />

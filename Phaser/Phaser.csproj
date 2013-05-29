@@ -61,6 +61,7 @@
     <Content Include="components\animation\AnimationManager.js">
       <DependentUpon>AnimationManager.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="components\sprite\Physics.ts" />
     <TypeScriptCompile Include="core\Rectangle.ts" />
     <TypeScriptCompile Include="core\Point.ts" />
     <TypeScriptCompile Include="components\sprite\Texture.ts" />
@@ -107,6 +108,14 @@
     <TypeScriptCompile Include="renderers\CanvasRenderer.ts" />
     <TypeScriptCompile Include="Statics.ts" />
     <TypeScriptCompile Include="renderers\HeadlessRenderer.ts" />
+    <TypeScriptCompile Include="physics\PhysicsManager.ts" />
+    <TypeScriptCompile Include="physics\AABB.ts" />
+    <Content Include="physics\AABB.js">
+      <DependentUpon>AABB.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\PhysicsManager.js">
+      <DependentUpon>PhysicsManager.ts</DependentUpon>
+    </Content>
     <Content Include="renderers\HeadlessRenderer.js">
       <DependentUpon>HeadlessRenderer.ts</DependentUpon>
     </Content>
