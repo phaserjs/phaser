@@ -82,6 +82,23 @@ module Phaser {
 	    private _delayTime = 0;
 	    private _startTime = null;
 
+        //  Temp vars to avoid gc spikes
+	    private _tempElapsed: number;
+	    private _tempValue;
+
+        /**
+         * Will this tween automatically restart when it completes?
+         * @type {boolean}
+         */
+	    private _loop: bool = false;
+
+        /**
+         * A yoyo tween is one that plays once fully, then reverses back to the original tween values before completing.
+         * @type {boolean}
+         */
+	    private _yoyo: bool = false;
+	    private _yoyoCount: number = 0;
+
 	    /**
 	     * Easing function which actually updating this tween.
 	     * @type {function}
@@ -120,9 +137,10 @@ module Phaser {
 	     * @param [ease] {any} Easing function.
 	     * @param [autoStart] {boolean} Whether this tween will start automatically or not.
 	     * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
+	     * @param [loop] {boolean} Should the tween automatically restart once complete? (ignores any chained tweens)
 	     * @return {Tween} Itself.
 	     */
-	    public to(properties, duration?: number = 1000, ease?: any = null, autoStart?: bool = false, delay?:number = 0) {
+	    public to(properties, duration?: number = 1000, ease?: any = null, autoStart?: bool = false, delay?:number = 0, loop?:bool = false, yoyo?:bool = false): Tween {
 
 	        this._duration = duration;
 
@@ -139,6 +157,10 @@ module Phaser {
 	            this._delayTime = delay;
 	        }
 
+	        this._loop = loop;
+	        this._yoyo = yoyo;
+	        this._yoyoCount = 0;
+
 	        if (autoStart === true)
 	        {
 	            return this.start();
@@ -150,19 +172,37 @@ module Phaser {
 
 	    }
 
+	    public loop(value: bool): Tween {
+
+	        this._loop = value;
+	        return this;
+
+	    }
+
+	    public yoyo(value: bool): Tween {
+
+	        this._yoyo = value;
+	        this._yoyoCount = 0;
+	        return this;
+
+	    }
+
 	    /**
 	     * Start to tween.
 	     */
-	    public start() {
+	    public start(looped: bool = false): Tween {
 
 	        if (this._game === null || this._object === null)
 	        {
 	            return;
 	        }
 
-	        this._manager.add(this);
+	        if (looped == false)
+	        {
+	            this._manager.add(this);
 
-	        this.onStart.dispatch(this._object);
+	            this.onStart.dispatch(this._object);
+	        }
 
 	        this._startTime = this._game.time.now + this._delayTime;
 
@@ -187,7 +227,10 @@ module Phaser {
 	                this._valuesEnd[property] = [this._object[property]].concat(this._valuesEnd[property]);
 	            }
 
-	            this._valuesStart[property] = this._object[property];
+	            if (looped == false)
+	            {
+	                this._valuesStart[property] = this._object[property];
+	            }
 
 	        }
 
@@ -195,7 +238,36 @@ module Phaser {
 
 	    }
 
-	    public clear() {
+	    public reverse() {
+            
+	        var tempObj = {};
+
+	        for (var property in this._valuesStart)
+	        {
+	            tempObj[property] = this._valuesStart[property];
+	            this._valuesStart[property] = this._valuesEnd[property];
+	            this._valuesEnd[property] = tempObj[property];
+	        }
+
+	        this._yoyoCount++;
+
+	        return this.start(true);
+
+	    }
+
+	    public reset(): Tween {
+
+            //  Reset the properties back to what they were before
+	        for (var property in this._valuesStart)
+	        {
+	            this._object[property] = this._valuesStart[property];
+	        }
+
+	        return this.start(true);
+
+	    }
+
+	    public clear(): Tween {
 
             this._chainedTweens = [];
 
@@ -210,7 +282,7 @@ module Phaser {
 	    /**
 	     * Stop tweening.
 	     */
-	    public stop() {
+	    public stop(): Tween {
 
 	        if (this._manager !== null)
 	        {
@@ -259,18 +331,13 @@ module Phaser {
 	     * @param tween {Phaser.Tween} Tween object you want to chain with this.
 	     * @return {Phaser.Tween} Itselfe.
 	     */
-	    public chain(tween:Phaser.Tween) {
+	    public chain(tween:Phaser.Tween): Tween {
 
 	        this._chainedTweens.push(tween);
 
 	        return this;
 
 	    }
-
-	    /**
-	     * Debug value?
-	     */
-	    public debugValue;
 
 	    /**
 	     * Update tweening.
@@ -301,36 +368,72 @@ module Phaser {
 	            return true;
 	        }
 
-	        var elapsed = (time - this._startTime) / this._duration;
-	        elapsed = elapsed > 1 ? 1 : elapsed;
+	        this._tempElapsed = (time - this._startTime) / this._duration;
+	        this._tempElapsed = this._tempElapsed > 1 ? 1 : this._tempElapsed;
 
-	        var value = this._easingFunction(elapsed);
+	        this._tempValue = this._easingFunction(this._tempElapsed);
 
 	        for (var property in this._valuesStart)
 	        {
                 //  Add checks for object, array, numeric up front
 	            if (this._valuesEnd[property] instanceof Array)
 	            {
-	                this._object[property] = this._interpolationFunction(this._valuesEnd[property], value);
+	                this._object[property] = this._interpolationFunction(this._valuesEnd[property], this._tempValue);
 	            }
                 else
 	            {
-	                this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * value;
+	                this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * this._tempValue;
 	            }
 	        }
 
-	        this.onUpdate.dispatch(this._object, value);
+	        this.onUpdate.dispatch(this._object, this._tempValue);
 
-	        if (elapsed == 1)
+	        if (this._tempElapsed == 1)
 	        {
-    	        this.onComplete.dispatch(this._object);
-
-	            for (var i = 0; i < this._chainedTweens.length; i++)
+                //  Yoyo?
+	            if (this._yoyo)
 	            {
-	                this._chainedTweens[i].start();
+	                if (this._yoyoCount == 0)
+	                {
+                        //  Reverse the tween
+	                    this.reverse();
+	                    return true;
+	                }
+	                else
+	                {
+                        //  We've yoyo'd once already, quit?
+	                    if (this._loop == false)
+	                    {
+    	                    this.onComplete.dispatch(this._object);
+
+	                        for (var i = 0; i < this._chainedTweens.length; i++)
+	                        {
+	                            this._chainedTweens[i].start();
+	                        }
+
+	                        return false;
+	                    }
+	                }
 	            }
 
-	            return false;
+                //  Loop?
+	            if (this._loop)
+	            {
+	                this._yoyoCount = 0;
+	                this.reset();
+	                return true;
+	            }
+	            else
+	            {
+    	            this.onComplete.dispatch(this._object);
+
+	                for (var i = 0; i < this._chainedTweens.length; i++)
+	                {
+	                    this._chainedTweens[i].start();
+	                }
+
+	                return false;
+	            }
 
 	        }
 

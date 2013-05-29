@@ -1986,6 +1986,14 @@ var Phaser;
             this.y = -this.y;
             return this;
         };
+        Vec2.prototype.equals = /**
+        * Check if both the x and y of this vector equal the given value.
+        *
+        * @return {Boolean}
+        */
+        function (value) {
+            return (this.x == value && this.y == value);
+        };
         Vec2.prototype.toString = /**
         * Returns a string representation of this object.
         * @method toString
@@ -2436,204 +2444,207 @@ var Phaser;
     })();
     Phaser.FrameData = FrameData;    
 })(Phaser || (Phaser = {}));
-/// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/Sprite.ts" />
-/// <reference path="../../loader/AnimationLoader.ts" />
-/// <reference path="Animation.ts" />
-/// <reference path="Frame.ts" />
-/// <reference path="FrameData.ts" />
-/**
-* Phaser - AnimationManager
-*
-* Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
-* sprite specific animations.
-*/
 var Phaser;
 (function (Phaser) {
-    var AnimationManager = (function () {
-        /**
-        * AnimationManager constructor
-        * Create a new <code>AnimationManager</code>.
-        *
-        * @param parent {Sprite} Owner sprite of this manager.
-        */
-        function AnimationManager(game, parent) {
+    /// <reference path="../../Game.ts" />
+    /// <reference path="../../gameobjects/Sprite.ts" />
+    /// <reference path="../../loader/AnimationLoader.ts" />
+    /// <reference path="Animation.ts" />
+    /// <reference path="Frame.ts" />
+    /// <reference path="FrameData.ts" />
+    /**
+    * Phaser - AnimationManager
+    *
+    * Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
+    * sprite specific animations.
+    */
+    (function (Components) {
+        var AnimationManager = (function () {
             /**
-            * Data contains animation frames.
-            * @type {FrameData}
+            * AnimationManager constructor
+            * Create a new <code>AnimationManager</code>.
+            *
+            * @param parent {Sprite} Owner sprite of this manager.
             */
-            this._frameData = null;
-            /**
-            * Keeps track of the current frame of animation.
-            */
-            this.currentFrame = null;
-            this._game = game;
-            this._parent = parent;
-            this._anims = {
-            };
-        }
-        AnimationManager.prototype.loadFrameData = /**
-        * Load animation frame data.
-        * @param frameData Data to be loaded.
-        */
-        function (frameData) {
-            this._frameData = frameData;
-            this.frame = 0;
-        };
-        AnimationManager.prototype.add = /**
-        * Add a new animation.
-        * @param name {string} What this animation should be called (e.g. "run").
-        * @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
-        * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
-        * @param loop {boolean} Whether or not the animation is looped or just plays once.
-        * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
-        * @return {Animation} The Animation that was created
-        */
-        function (name, frames, frameRate, loop, useNumericIndex) {
-            if (typeof frames === "undefined") { frames = null; }
-            if (typeof frameRate === "undefined") { frameRate = 60; }
-            if (typeof loop === "undefined") { loop = false; }
-            if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
-            if(this._frameData == null) {
-                return;
+            function AnimationManager(parent) {
+                /**
+                * Data contains animation frames.
+                * @type {FrameData}
+                */
+                this._frameData = null;
+                /**
+                * Keeps track of the current frame of animation.
+                */
+                this.currentFrame = null;
+                this._parent = parent;
+                this._game = parent.game;
+                this._anims = {
+                };
             }
-            if(frames == null) {
-                frames = this._frameData.getFrameIndexes();
-            } else {
-                if(this.validateFrames(frames, useNumericIndex) == false) {
-                    throw Error('Invalid frames given to Animation ' + name);
+            AnimationManager.prototype.loadFrameData = /**
+            * Load animation frame data.
+            * @param frameData Data to be loaded.
+            */
+            function (frameData) {
+                this._frameData = frameData;
+                this.frame = 0;
+            };
+            AnimationManager.prototype.add = /**
+            * Add a new animation.
+            * @param name {string} What this animation should be called (e.g. "run").
+            * @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
+            * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
+            * @param loop {boolean} Whether or not the animation is looped or just plays once.
+            * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+            * @return {Animation} The Animation that was created
+            */
+            function (name, frames, frameRate, loop, useNumericIndex) {
+                if (typeof frames === "undefined") { frames = null; }
+                if (typeof frameRate === "undefined") { frameRate = 60; }
+                if (typeof loop === "undefined") { loop = false; }
+                if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
+                if(this._frameData == null) {
                     return;
                 }
-            }
-            if(useNumericIndex == false) {
-                frames = this._frameData.getFrameIndexesByName(frames);
-            }
-            this._anims[name] = new Phaser.Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
-            this.currentAnim = this._anims[name];
-            this.currentFrame = this.currentAnim.currentFrame;
-            return this._anims[name];
-        };
-        AnimationManager.prototype.validateFrames = /**
-        * Check whether the frames is valid.
-        * @param frames {any[]} Frames to be validated.
-        * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
-        * @return {boolean} True if they're valid, otherwise return false.
-        */
-        function (frames, useNumericIndex) {
-            for(var i = 0; i < frames.length; i++) {
-                if(useNumericIndex == true) {
-                    if(frames[i] > this._frameData.total) {
-                        return false;
-                    }
+                if(frames == null) {
+                    frames = this._frameData.getFrameIndexes();
                 } else {
-                    if(this._frameData.checkFrameName(frames[i]) == false) {
-                        return false;
+                    if(this.validateFrames(frames, useNumericIndex) == false) {
+                        throw Error('Invalid frames given to Animation ' + name);
+                        return;
                     }
                 }
-            }
-            return true;
-        };
-        AnimationManager.prototype.play = /**
-        * Play animation with specific name.
-        * @param name {string} The string name of the animation you want to play.
-        * @param frameRate {number} FrameRate you want to specify instead of using default.
-        * @param loop {boolean} Whether or not the animation is looped or just plays once.
-        */
-        function (name, frameRate, loop) {
-            if (typeof frameRate === "undefined") { frameRate = null; }
-            if(this._anims[name]) {
-                if(this.currentAnim == this._anims[name]) {
-                    if(this.currentAnim.isPlaying == false) {
+                if(useNumericIndex == false) {
+                    frames = this._frameData.getFrameIndexesByName(frames);
+                }
+                this._anims[name] = new Phaser.Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
+                this.currentAnim = this._anims[name];
+                this.currentFrame = this.currentAnim.currentFrame;
+                return this._anims[name];
+            };
+            AnimationManager.prototype.validateFrames = /**
+            * Check whether the frames is valid.
+            * @param frames {any[]} Frames to be validated.
+            * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
+            * @return {boolean} True if they're valid, otherwise return false.
+            */
+            function (frames, useNumericIndex) {
+                for(var i = 0; i < frames.length; i++) {
+                    if(useNumericIndex == true) {
+                        if(frames[i] > this._frameData.total) {
+                            return false;
+                        }
+                    } else {
+                        if(this._frameData.checkFrameName(frames[i]) == false) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            };
+            AnimationManager.prototype.play = /**
+            * Play animation with specific name.
+            * @param name {string} The string name of the animation you want to play.
+            * @param frameRate {number} FrameRate you want to specify instead of using default.
+            * @param loop {boolean} Whether or not the animation is looped or just plays once.
+            */
+            function (name, frameRate, loop) {
+                if (typeof frameRate === "undefined") { frameRate = null; }
+                if(this._anims[name]) {
+                    if(this.currentAnim == this._anims[name]) {
+                        if(this.currentAnim.isPlaying == false) {
+                            this.currentAnim.play(frameRate, loop);
+                        }
+                    } else {
+                        this.currentAnim = this._anims[name];
                         this.currentAnim.play(frameRate, loop);
                     }
-                } else {
-                    this.currentAnim = this._anims[name];
-                    this.currentAnim.play(frameRate, loop);
                 }
-            }
-        };
-        AnimationManager.prototype.stop = /**
-        * Stop animation by name.
-        * Current animation will be automatically set to the stopped one.
-        */
-        function (name) {
-            if(this._anims[name]) {
-                this.currentAnim = this._anims[name];
-                this.currentAnim.stop();
-            }
-        };
-        AnimationManager.prototype.update = /**
-        * Update animation and parent sprite's bounds.
-        */
-        function () {
-            if(this.currentAnim && this.currentAnim.update() == true) {
-                this.currentFrame = this.currentAnim.currentFrame;
-                this._parent.frameBounds.width = this.currentFrame.width;
-                this._parent.frameBounds.height = this.currentFrame.height;
-            }
-        };
-        Object.defineProperty(AnimationManager.prototype, "frameData", {
-            get: function () {
-                return this._frameData;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(AnimationManager.prototype, "frameTotal", {
-            get: function () {
-                if(this._frameData) {
-                    return this._frameData.total;
-                } else {
-                    return -1;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(AnimationManager.prototype, "frame", {
-            get: function () {
-                return this._frameIndex;
-            },
-            set: function (value) {
-                if(this._frameData.getFrame(value) !== null) {
-                    this.currentFrame = this._frameData.getFrame(value);
-                    this._parent.frameBounds.width = this.currentFrame.width;
-                    this._parent.frameBounds.height = this.currentFrame.height;
-                    this._frameIndex = value;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(AnimationManager.prototype, "frameName", {
-            get: function () {
-                return this.currentFrame.name;
-            },
-            set: function (value) {
-                if(this._frameData.getFrameByName(value) !== null) {
-                    this.currentFrame = this._frameData.getFrameByName(value);
-                    this._parent.frameBounds.width = this.currentFrame.width;
-                    this._parent.frameBounds.height = this.currentFrame.height;
-                    this._frameIndex = this.currentFrame.index;
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        AnimationManager.prototype.destroy = /**
-        * Removes all related references
-        */
-        function () {
-            this._anims = {
             };
-            this._frameData = null;
-            this._frameIndex = 0;
-            this.currentAnim = null;
-            this.currentFrame = null;
-        };
-        return AnimationManager;
-    })();
-    Phaser.AnimationManager = AnimationManager;    
+            AnimationManager.prototype.stop = /**
+            * Stop animation by name.
+            * Current animation will be automatically set to the stopped one.
+            */
+            function (name) {
+                if(this._anims[name]) {
+                    this.currentAnim = this._anims[name];
+                    this.currentAnim.stop();
+                }
+            };
+            AnimationManager.prototype.update = /**
+            * Update animation and parent sprite's bounds.
+            */
+            function () {
+                if(this.currentAnim && this.currentAnim.update() == true) {
+                    this.currentFrame = this.currentAnim.currentFrame;
+                    this._parent.frameBounds.width = this.currentFrame.width;
+                    this._parent.frameBounds.height = this.currentFrame.height;
+                }
+            };
+            Object.defineProperty(AnimationManager.prototype, "frameData", {
+                get: function () {
+                    return this._frameData;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(AnimationManager.prototype, "frameTotal", {
+                get: function () {
+                    if(this._frameData) {
+                        return this._frameData.total;
+                    } else {
+                        return -1;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(AnimationManager.prototype, "frame", {
+                get: function () {
+                    return this._frameIndex;
+                },
+                set: function (value) {
+                    if(this._frameData.getFrame(value) !== null) {
+                        this.currentFrame = this._frameData.getFrame(value);
+                        this._parent.frameBounds.width = this.currentFrame.width;
+                        this._parent.frameBounds.height = this.currentFrame.height;
+                        this._frameIndex = value;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(AnimationManager.prototype, "frameName", {
+                get: function () {
+                    return this.currentFrame.name;
+                },
+                set: function (value) {
+                    if(this._frameData.getFrameByName(value) !== null) {
+                        this.currentFrame = this._frameData.getFrameByName(value);
+                        this._parent.frameBounds.width = this.currentFrame.width;
+                        this._parent.frameBounds.height = this.currentFrame.height;
+                        this._frameIndex = this.currentFrame.index;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            AnimationManager.prototype.destroy = /**
+            * Removes all related references
+            */
+            function () {
+                this._anims = {
+                };
+                this._frameData = null;
+                this._frameIndex = 0;
+                this.currentAnim = null;
+                this.currentFrame = null;
+            };
+            return AnimationManager;
+        })();
+        Components.AnimationManager = AnimationManager;        
+    })(Phaser.Components || (Phaser.Components = {}));
+    var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../core/Point.ts" />
@@ -3680,10 +3691,8 @@ var Phaser;
     */
     (function (Components) {
         var Texture = (function () {
-            function Texture(parent, key, canvas, context) {
+            function Texture(parent, key) {
                 if (typeof key === "undefined") { key = ''; }
-                if (typeof canvas === "undefined") { canvas = null; }
-                if (typeof context === "undefined") { context = null; }
                 /**
                 * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
                 */
@@ -3716,8 +3725,8 @@ var Phaser;
                 this.flippedY = false;
                 this._game = parent.game;
                 this._sprite = parent;
-                this.canvas = canvas;
-                this.context = context;
+                this.canvas = parent.game.stage.canvas;
+                this.context = parent.game.stage.context;
                 this.alpha = 1;
                 this.flippedX = false;
                 this.flippedY = false;
@@ -3752,22 +3761,17 @@ var Phaser;
             */
             function (key, clearAnimations) {
                 if (typeof clearAnimations === "undefined") { clearAnimations = true; }
-                //if (clearAnimations && sprite.animations.frameData !== null)
-                //{
-                //    sprite.animations.destroy();
-                //}
+                if(clearAnimations && this._sprite.animations.frameData !== null) {
+                    this._sprite.animations.destroy();
+                }
                 if(this._game.cache.getImage(key) !== null) {
                     this.setTo(this._game.cache.getImage(key), null);
                     if(this._game.cache.isSpriteSheet(key)) {
-                        //sprite.animations.loadFrameData(sprite._game.cache.getFrameData(key));
-                        //sprite.collisionMask.width = sprite.animations.currentFrame.width;
-                        //sprite.collisionMask.height = sprite.animations.currentFrame.height;
-                                            } else {
+                        this._sprite.animations.loadFrameData(this._sprite.game.cache.getFrameData(key));
+                    } else {
                         this._sprite.frameBounds.width = this.width;
                         this._sprite.frameBounds.height = this.height;
-                        //sprite.collisionMask.width = sprite._texture.width;
-                        //sprite.collisionMask.height = sprite._texture.height;
-                                            }
+                    }
                 }
             };
             Texture.prototype.loadDynamicTexture = /**
@@ -3776,10 +3780,9 @@ var Phaser;
             * @return {Sprite} Sprite instance itself.
             */
             function (texture) {
-                //if (sprite.animations.frameData !== null)
-                //{
-                //    sprite.animations.destroy();
-                //}
+                if(this._sprite.animations.frameData !== null) {
+                    this._sprite.animations.destroy();
+                }
                 this.setTo(null, texture);
                 this._sprite.frameBounds.width = this.width;
                 this._sprite.frameBounds.height = this.height;
@@ -3821,6 +3824,7 @@ var Phaser;
     var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="../core/Vec2.ts" />
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
@@ -3853,6 +3857,10 @@ var Phaser;
             */
             this._rotation = 0;
             /**
+            * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
+            */
+            this.modified = false;
+            /**
             * x value of the object.
             */
             this.x = 0;
@@ -3879,15 +3887,19 @@ var Phaser;
             this.visible = true;
             this.alive = true;
             this.frameBounds = new Phaser.Rectangle(x, y, width, height);
-            this.origin = new Phaser.Vec2(0, 0);
             this.scrollFactor = new Phaser.Vec2(1, 1);
-            this.scale = new Phaser.Vec2(1, 1);
             this.x = x;
             this.y = y;
-            this.z = 0;
-            this.texture = new Phaser.Components.Texture(this, key, game.stage.canvas, game.stage.context);
+            this.z = 0// not used yet
+            ;
+            this.animations = new Phaser.Components.AnimationManager(this);
+            this.texture = new Phaser.Components.Texture(this, key);
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
+            //  Transform related (if we add any more then move to a component)
+            this.origin = new Phaser.Vec2(this.width / 2, this.height / 2);
+            this.scale = new Phaser.Vec2(1, 1);
+            this.skew = new Phaser.Vec2(0, 0);
         }
         Object.defineProperty(Sprite.prototype, "rotation", {
             get: /**
@@ -3906,6 +3918,38 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Sprite.prototype, "frame", {
+            get: /**
+            * Get the animation frame number.
+            */
+            function () {
+                return this.animations.frame;
+            },
+            set: /**
+            * Set the animation frame by frame number.
+            */
+            function (value) {
+                this.animations.frame = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Sprite.prototype, "frameName", {
+            get: /**
+            * Get the animation frame name.
+            */
+            function () {
+                return this.animations.frameName;
+            },
+            set: /**
+            * Set the animation frame by frame name.
+            */
+            function (value) {
+                this.animations.frameName = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Sprite.prototype.preUpdate = /**
         * Pre-update is called right before update() on each object in the game loop.
         */
@@ -3913,7 +3957,10 @@ var Phaser;
             //this.last.x = this.frameBounds.x;
             //this.last.y = this.frameBounds.y;
             //this.collisionMask.preUpdate();
-                    };
+            if(this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.rotation != 0 || this.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
+                this.modified = true;
+            }
+        };
         Sprite.prototype.update = /**
         * Override this function to update your class's position and appearance.
         */
@@ -3923,9 +3970,8 @@ var Phaser;
         * Automatically called after update() by the game loop.
         */
         function () {
-            /*
             this.animations.update();
-            
+            /*
             if (this.moves)
             {
             this.updateMotion();
@@ -3972,7 +4018,10 @@ var Phaser;
             this.wasTouching = this.touching;
             this.touching = Collision.NONE;
             */
-                    };
+            if(this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.rotation == 0 && this.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
+                this.modified = false;
+            }
+        };
         Sprite.prototype.destroy = /**
         * Clean up memory.
         */
@@ -5077,6 +5126,17 @@ var Phaser;
             this._delayTime = 0;
             this._startTime = null;
             /**
+            * Will this tween automatically restart when it completes?
+            * @type {boolean}
+            */
+            this._loop = false;
+            /**
+            * A yoyo tween is one that plays once fully, then reverses back to the original tween values before completing.
+            * @type {boolean}
+            */
+            this._yoyo = false;
+            this._yoyoCount = 0;
+            /**
             * Contains chained tweens.
             * @type {Tweens[]}
             */
@@ -5098,13 +5158,16 @@ var Phaser;
         * @param [ease] {any} Easing function.
         * @param [autoStart] {boolean} Whether this tween will start automatically or not.
         * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
+        * @param [loop] {boolean} Should the tween automatically restart once complete? (ignores any chained tweens)
         * @return {Tween} Itself.
         */
-        function (properties, duration, ease, autoStart, delay) {
+        function (properties, duration, ease, autoStart, delay, loop, yoyo) {
             if (typeof duration === "undefined") { duration = 1000; }
             if (typeof ease === "undefined") { ease = null; }
             if (typeof autoStart === "undefined") { autoStart = false; }
             if (typeof delay === "undefined") { delay = 0; }
+            if (typeof loop === "undefined") { loop = false; }
+            if (typeof yoyo === "undefined") { yoyo = false; }
             this._duration = duration;
             //  If properties isn't an object this will fail, sanity check it here somehow?
             this._valuesEnd = properties;
@@ -5114,21 +5177,36 @@ var Phaser;
             if(delay > 0) {
                 this._delayTime = delay;
             }
+            this._loop = loop;
+            this._yoyo = yoyo;
+            this._yoyoCount = 0;
             if(autoStart === true) {
                 return this.start();
             } else {
                 return this;
             }
         };
+        Tween.prototype.loop = function (value) {
+            this._loop = value;
+            return this;
+        };
+        Tween.prototype.yoyo = function (value) {
+            this._yoyo = value;
+            this._yoyoCount = 0;
+            return this;
+        };
         Tween.prototype.start = /**
         * Start to tween.
         */
-        function () {
+        function (looped) {
+            if (typeof looped === "undefined") { looped = false; }
             if(this._game === null || this._object === null) {
                 return;
             }
-            this._manager.add(this);
-            this.onStart.dispatch(this._object);
+            if(looped == false) {
+                this._manager.add(this);
+                this.onStart.dispatch(this._object);
+            }
             this._startTime = this._game.time.now + this._delayTime;
             for(var property in this._valuesEnd) {
                 // This prevents the interpolation of null values or of non-existing properties
@@ -5146,9 +5224,29 @@ var Phaser;
                         this._object[property]
                     ].concat(this._valuesEnd[property]);
                 }
-                this._valuesStart[property] = this._object[property];
+                if(looped == false) {
+                    this._valuesStart[property] = this._object[property];
+                }
             }
             return this;
+        };
+        Tween.prototype.reverse = function () {
+            var tempObj = {
+            };
+            for(var property in this._valuesStart) {
+                tempObj[property] = this._valuesStart[property];
+                this._valuesStart[property] = this._valuesEnd[property];
+                this._valuesEnd[property] = tempObj[property];
+            }
+            this._yoyoCount++;
+            return this.start(true);
+        };
+        Tween.prototype.reset = function () {
+            //  Reset the properties back to what they were before
+            for(var property in this._valuesStart) {
+                this._object[property] = this._valuesStart[property];
+            }
+            return this.start(true);
         };
         Tween.prototype.clear = function () {
             this._chainedTweens = [];
@@ -5234,24 +5332,48 @@ var Phaser;
             if(time < this._startTime) {
                 return true;
             }
-            var elapsed = (time - this._startTime) / this._duration;
-            elapsed = elapsed > 1 ? 1 : elapsed;
-            var value = this._easingFunction(elapsed);
+            this._tempElapsed = (time - this._startTime) / this._duration;
+            this._tempElapsed = this._tempElapsed > 1 ? 1 : this._tempElapsed;
+            this._tempValue = this._easingFunction(this._tempElapsed);
             for(var property in this._valuesStart) {
                 //  Add checks for object, array, numeric up front
                 if(this._valuesEnd[property] instanceof Array) {
-                    this._object[property] = this._interpolationFunction(this._valuesEnd[property], value);
+                    this._object[property] = this._interpolationFunction(this._valuesEnd[property], this._tempValue);
                 } else {
-                    this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * value;
+                    this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * this._tempValue;
                 }
             }
-            this.onUpdate.dispatch(this._object, value);
-            if(elapsed == 1) {
-                this.onComplete.dispatch(this._object);
-                for(var i = 0; i < this._chainedTweens.length; i++) {
-                    this._chainedTweens[i].start();
+            this.onUpdate.dispatch(this._object, this._tempValue);
+            if(this._tempElapsed == 1) {
+                //  Yoyo?
+                if(this._yoyo) {
+                    if(this._yoyoCount == 0) {
+                        //  Reverse the tween
+                        this.reverse();
+                        return true;
+                    } else {
+                        //  We've yoyo'd once already, quit?
+                        if(this._loop == false) {
+                            this.onComplete.dispatch(this._object);
+                            for(var i = 0; i < this._chainedTweens.length; i++) {
+                                this._chainedTweens[i].start();
+                            }
+                            return false;
+                        }
+                    }
                 }
-                return false;
+                //  Loop?
+                if(this._loop) {
+                    this._yoyoCount = 0;
+                    this.reset();
+                    return true;
+                } else {
+                    this.onComplete.dispatch(this._object);
+                    for(var i = 0; i < this._chainedTweens.length; i++) {
+                        this._chainedTweens[i].start();
+                    }
+                    return false;
+                }
             }
             return true;
         };
@@ -10376,20 +10498,16 @@ var Phaser;
             this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
             this._dw = sprite.frameBounds.width;
             this._dh = sprite.frameBounds.height;
-            /*
-            if (this._dynamicTexture == false && this.animations.currentFrame !== null)
-            {
-            this._sx = this.animations.currentFrame.x;
-            this._sy = this.animations.currentFrame.y;
-            
-            if (this.animations.currentFrame.trimmed)
-            {
-            this._dx += this.animations.currentFrame.spriteSourceSizeX;
-            this._dy += this.animations.currentFrame.spriteSourceSizeY;
+            if(sprite.animations.currentFrame !== null) {
+                this._sx = sprite.animations.currentFrame.x;
+                this._sy = sprite.animations.currentFrame.y;
+                if(sprite.animations.currentFrame.trimmed) {
+                    this._dx += sprite.animations.currentFrame.spriteSourceSizeX;
+                    this._dy += sprite.animations.currentFrame.spriteSourceSizeY;
+                }
             }
-            }
-            
             //	Apply camera difference - looks like this is already applied?
+            /*
             if (sprite.scrollFactor.x !== 1 || sprite.scrollFactor.y !== 1)
             {
             //this._dx -= (camera.worldView.x * this.scrollFactor.x);
@@ -10397,7 +10515,7 @@ var Phaser;
             }
             */
             //	Rotation and Flipped
-            if(sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.rotation != 0 || sprite.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY) {
+            if(sprite.modified) {
                 if(sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.rotationOffset !== 0)) {
                     this._sin = Math.sin(sprite.game.math.degreesToRadians(sprite.rotationOffset + sprite.rotation));
                     this._cos = Math.cos(sprite.game.math.degreesToRadians(sprite.rotationOffset + sprite.rotation));
@@ -10410,13 +10528,15 @@ var Phaser;
                 //  e = translate x
                 //  f = translate y
                 sprite.texture.context.save();
-                sprite.texture.context.setTransform(this._cos * this._fx, this._sin * this._fx, -this._sin * this._fy, this._cos * this._fy, this._dx, this._dy);
+                sprite.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + sprite.skew.x, -(this._sin * this._fy) + sprite.skew.y, this._cos * this._fy, this._dx, this._dy);
                 this._dx = -sprite.origin.x;
                 this._dy = -sprite.origin.y;
             } else {
-                this._dw = sprite.frameBounds.width * sprite.scale.x;
-                this._dh = sprite.frameBounds.height * sprite.scale.y;
-            }
+                this._dx -= sprite.origin.x;
+                this._dy -= sprite.origin.y;
+                //this._dw = sprite.frameBounds.width * sprite.scale.x;
+                //this._dh = sprite.frameBounds.height * sprite.scale.y;
+                            }
             this._sx = Math.round(this._sx);
             this._sy = Math.round(this._sy);
             this._sw = Math.round(this._sw);
@@ -10441,7 +10561,7 @@ var Phaser;
                 sprite.texture.context.fillStyle = 'rgb(255,255,255)';
                 sprite.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
-            if(sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.rotation != 0 || sprite.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY) {
+            if(sprite.modified) {
                 sprite.texture.context.restore();
             }
             //if (this.renderDebug)

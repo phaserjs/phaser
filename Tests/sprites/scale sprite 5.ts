@@ -19,7 +19,6 @@
 
         game.stage.backgroundColor = 'rgb(0,0,100)';
 
-
         //  Here we'll assign the new sprite to the local fuji variable
         fuji = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji');
 

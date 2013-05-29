@@ -1080,6 +1080,12 @@ module Phaser {
         */
         public reverse(): Vec2;
         /**
+        * Check if both the x and y of this vector equal the given value.
+        *
+        * @return {Boolean}
+        */
+        public equals(value): bool;
+        /**
         * Returns a string representation of this object.
         * @method toString
         * @return {string} a string representation of the object.
@@ -1415,7 +1421,7 @@ module Phaser {
 * Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
 * sprite specific animations.
 */
-module Phaser {
+module Phaser.Components {
     class AnimationManager {
         /**
         * AnimationManager constructor
@@ -1423,7 +1429,7 @@ module Phaser {
         *
         * @param parent {Sprite} Owner sprite of this manager.
         */
-        constructor(game: Game, parent: Sprite);
+        constructor(parent: Sprite);
         /**
         * Local private reference to game.
         */
@@ -2069,7 +2075,7 @@ module Phaser {
 */
 module Phaser.Components {
     class Texture {
-        constructor(parent: Sprite, key?: string, canvas?: HTMLCanvasElement, context?: CanvasRenderingContext2D);
+        constructor(parent: Sprite, key?: string);
         /**
         *
         */
@@ -2219,6 +2225,11 @@ module Phaser {
         */
         public texture: Components.Texture;
         /**
+        * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
+        * @type AnimationManager
+        */
+        public animations: Components.AnimationManager;
+        /**
         * The frame boundary around this Sprite.
         * For non-animated sprites this matches the loaded texture dimensions.
         * For animated sprites it will be updated as part of the animation loop, changing to the dimensions of the current animation frame.
@@ -2228,6 +2239,14 @@ module Phaser {
         * Scale of the Sprite. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
         */
         public scale: Vec2;
+        /**
+        * Skew the Sprite along the x and y axis. A skew value of 0 is no skew.
+        */
+        public skew: Vec2;
+        /**
+        * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
+        */
+        public modified: bool;
         /**
         * The influence of camera movement upon the Sprite.
         */
@@ -2263,6 +2282,20 @@ module Phaser {
         * The value is automatically wrapped to be between 0 and 360.
         */
         public rotation : number;
+        /**
+        * Get the animation frame number.
+        */
+        /**
+        * Set the animation frame by frame number.
+        */
+        public frame : number;
+        /**
+        * Get the animation frame name.
+        */
+        /**
+        * Set the animation frame by frame name.
+        */
+        public frameName : string;
         /**
         * Pre-update is called right before update() on each object in the game loop.
         */
@@ -2818,6 +2851,19 @@ module Phaser {
         private _duration;
         private _delayTime;
         private _startTime;
+        private _tempElapsed;
+        private _tempValue;
+        /**
+        * Will this tween automatically restart when it completes?
+        * @type {boolean}
+        */
+        private _loop;
+        /**
+        * A yoyo tween is one that plays once fully, then reverses back to the original tween values before completing.
+        * @type {boolean}
+        */
+        private _yoyo;
+        private _yoyoCount;
         /**
         * Easing function which actually updating this tween.
         * @type {function}
@@ -2851,13 +2897,18 @@ module Phaser {
         * @param [ease] {any} Easing function.
         * @param [autoStart] {boolean} Whether this tween will start automatically or not.
         * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
+        * @param [loop] {boolean} Should the tween automatically restart once complete? (ignores any chained tweens)
         * @return {Tween} Itself.
         */
-        public to(properties, duration?: number, ease?: any, autoStart?: bool, delay?: number): Tween;
+        public to(properties, duration?: number, ease?: any, autoStart?: bool, delay?: number, loop?: bool, yoyo?: bool): Tween;
+        public loop(value: bool): Tween;
+        public yoyo(value: bool): Tween;
         /**
         * Start to tween.
         */
-        public start(): Tween;
+        public start(looped?: bool): Tween;
+        public reverse(): Tween;
+        public reset(): Tween;
         public clear(): Tween;
         /**
         * Stop tweening.
@@ -2873,10 +2924,6 @@ module Phaser {
         * @return {Phaser.Tween} Itselfe.
         */
         public chain(tween: Tween): Tween;
-        /**
-        * Debug value?
-        */
-        public debugValue;
         /**
         * Update tweening.
         * @param time {number} Current time from game clock.

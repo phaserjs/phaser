@@ -103,20 +103,20 @@ module Phaser {
             this._dw = sprite.frameBounds.width;
             this._dh = sprite.frameBounds.height;
 
-            /*
-            if (this._dynamicTexture == false && this.animations.currentFrame !== null)
+            if (sprite.animations.currentFrame !== null)
             {
-                this._sx = this.animations.currentFrame.x;
-                this._sy = this.animations.currentFrame.y;
+                this._sx = sprite.animations.currentFrame.x;
+                this._sy = sprite.animations.currentFrame.y;
 
-                if (this.animations.currentFrame.trimmed)
+                if (sprite.animations.currentFrame.trimmed)
                 {
-                    this._dx += this.animations.currentFrame.spriteSourceSizeX;
-                    this._dy += this.animations.currentFrame.spriteSourceSizeY;
+                    this._dx += sprite.animations.currentFrame.spriteSourceSizeX;
+                    this._dy += sprite.animations.currentFrame.spriteSourceSizeY;
                 }
             }
 
             //	Apply camera difference - looks like this is already applied?
+            /*
             if (sprite.scrollFactor.x !== 1 || sprite.scrollFactor.y !== 1)
             {
                 //this._dx -= (camera.worldView.x * this.scrollFactor.x);
@@ -125,7 +125,7 @@ module Phaser {
             */
 
             //	Rotation and Flipped
-            if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.rotation != 0 || sprite.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+            if (sprite.modified)
             {
                 if (sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.rotationOffset !== 0))
                 {
@@ -142,15 +142,17 @@ module Phaser {
                 //  f = translate y
 
                 sprite.texture.context.save();
-                sprite.texture.context.setTransform(this._cos * this._fx, this._sin * this._fx, -this._sin * this._fy, this._cos * this._fy, this._dx, this._dy);
+                sprite.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + sprite.skew.x, -(this._sin * this._fy) + sprite.skew.y, this._cos * this._fy, this._dx, this._dy);
 
                 this._dx = -sprite.origin.x;
                 this._dy = -sprite.origin.y;
             }
             else
             {
-                this._dw = sprite.frameBounds.width * sprite.scale.x;
-                this._dh = sprite.frameBounds.height * sprite.scale.y;
+                this._dx -= sprite.origin.x;
+                this._dy -= sprite.origin.y;
+                //this._dw = sprite.frameBounds.width * sprite.scale.x;
+                //this._dh = sprite.frameBounds.height * sprite.scale.y;
             }
 
             this._sx = Math.round(this._sx);
@@ -183,7 +185,7 @@ module Phaser {
                 sprite.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
 
-            if (sprite.scale.x != 1 || sprite.scale.y != 1 || sprite.rotation != 0 || sprite.rotationOffset != 0 || sprite.texture.flippedX || sprite.texture.flippedY)
+            if (sprite.modified)
             {
                 sprite.texture.context.restore();
             }

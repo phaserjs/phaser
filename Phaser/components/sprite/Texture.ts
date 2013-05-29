@@ -12,13 +12,13 @@ module Phaser.Components {
 
     export class Texture {
 
-        constructor(parent: Sprite, key?: string = '', canvas?: HTMLCanvasElement = null, context?: CanvasRenderingContext2D = null) {
+        constructor(parent: Sprite, key?: string = '') {
 
             this._game = parent.game;
             this._sprite = parent;
 
-            this.canvas = canvas;
-            this.context = context;
+            this.canvas = parent.game.stage.canvas;
+            this.context = parent.game.stage.context;
             this.alpha = 1;
             this.flippedX = false;
             this.flippedY = false;
@@ -137,10 +137,10 @@ module Phaser.Components {
          */
         public loadImage(key: string, clearAnimations: bool = true) {
 
-            //if (clearAnimations && sprite.animations.frameData !== null)
-            //{
-            //    sprite.animations.destroy();
-            //}
+            if (clearAnimations && this._sprite.animations.frameData !== null)
+            {
+                this._sprite.animations.destroy();
+            }
 
             if (this._game.cache.getImage(key) !== null)
             {
@@ -148,16 +148,12 @@ module Phaser.Components {
 
                 if (this._game.cache.isSpriteSheet(key))
                 {
-                    //sprite.animations.loadFrameData(sprite._game.cache.getFrameData(key));
-                    //sprite.collisionMask.width = sprite.animations.currentFrame.width;
-                    //sprite.collisionMask.height = sprite.animations.currentFrame.height;
+                    this._sprite.animations.loadFrameData(this._sprite.game.cache.getFrameData(key));
                 }
                 else
                 {
                     this._sprite.frameBounds.width = this.width;
                     this._sprite.frameBounds.height = this.height;
-                    //sprite.collisionMask.width = sprite._texture.width;
-                    //sprite.collisionMask.height = sprite._texture.height;
                 }
             }
 
@@ -170,10 +166,10 @@ module Phaser.Components {
          */
         public loadDynamicTexture(texture: DynamicTexture) {
 
-            //if (sprite.animations.frameData !== null)
-            //{
-            //    sprite.animations.destroy();
-            //}
+            if (this._sprite.animations.frameData !== null)
+            {
+                this._sprite.animations.destroy();
+            }
 
             this.setTo(null, texture);
             this._sprite.frameBounds.width = this.width;

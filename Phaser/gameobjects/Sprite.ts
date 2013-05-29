@@ -1,4 +1,5 @@
 /// <reference path="../Game.ts" />
+/// <reference path="../core/Vec2.ts" />
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
@@ -34,18 +35,22 @@ module Phaser {
             this.alive = true;
 
             this.frameBounds = new Rectangle(x, y, width, height);
-            this.origin = new Phaser.Vec2(0, 0);
             this.scrollFactor = new Phaser.Vec2(1, 1);
-            this.scale = new Phaser.Vec2(1, 1);
 
             this.x = x;
             this.y = y;
-            this.z = 0;
+            this.z = 0; // not used yet
 
-            this.texture = new Phaser.Components.Texture(this, key, game.stage.canvas, game.stage.context);
+            this.animations = new Phaser.Components.AnimationManager(this);
+            this.texture = new Phaser.Components.Texture(this, key);
 
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
+
+            //  Transform related (if we add any more then move to a component)
+            this.origin = new Phaser.Vec2(this.width / 2, this.height / 2);
+            this.scale = new Phaser.Vec2(1, 1);
+            this.skew = new Phaser.Vec2(0, 0);
 
         }
 
@@ -100,6 +105,12 @@ module Phaser {
         public texture: Phaser.Components.Texture;
 
         /**
+         * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
+         * @type AnimationManager
+         */
+        public animations: Phaser.Components.AnimationManager;
+
+        /**
          * The frame boundary around this Sprite.
          * For non-animated sprites this matches the loaded texture dimensions.
          * For animated sprites it will be updated as part of the animation loop, changing to the dimensions of the current animation frame.
@@ -110,6 +121,16 @@ module Phaser {
          * Scale of the Sprite. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
          */
         public scale: Phaser.Vec2;
+
+        /**
+         * Skew the Sprite along the x and y axis. A skew value of 0 is no skew.
+         */
+        public skew: Phaser.Vec2;
+
+        /**
+         * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
+         */
+        public modified: bool = false;
 
         /**
          * The influence of camera movement upon the Sprite.
@@ -160,6 +181,34 @@ module Phaser {
         }
 
         /**
+        * Set the animation frame by frame number.
+        */
+        public set frame(value: number) {
+            this.animations.frame = value;
+        }
+
+        /**
+        * Get the animation frame number.
+        */
+        public get frame(): number {
+            return this.animations.frame;
+        }
+
+        /**
+        * Set the animation frame by frame name.
+        */
+        public set frameName(value: string) {
+            this.animations.frameName = value;
+        }
+
+        /**
+        * Get the animation frame name.
+        */
+        public get frameName(): string {
+            return this.animations.frameName;
+        }
+
+        /**
          * Pre-update is called right before update() on each object in the game loop.
          */
         public preUpdate() {
@@ -168,6 +217,11 @@ module Phaser {
             //this.last.y = this.frameBounds.y;
 
             //this.collisionMask.preUpdate();
+
+            if (this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.rotation != 0 || this.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY))
+            {
+                this.modified = true;
+            }
 
         }
 
@@ -182,9 +236,9 @@ module Phaser {
          */
         public postUpdate() {
 
-            /*
             this.animations.update();
 
+            /*
             if (this.moves)
             {
                 this.updateMotion();
@@ -231,6 +285,11 @@ module Phaser {
             this.wasTouching = this.touching;
             this.touching = Collision.NONE;
             */
+
+            if (this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.rotation == 0 && this.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
+            {
+                this.modified = false;
+            }
 
         }
 

@@ -12,7 +12,7 @@
 * sprite specific animations.
 */
 
-module Phaser {
+module Phaser.Components {
 
     export class AnimationManager {
 
@@ -22,10 +22,10 @@ module Phaser {
          *
          * @param parent {Sprite} Owner sprite of this manager.
          */
-        constructor(game: Game, parent: Sprite) {
+        constructor(parent: Sprite) {
 
-            this._game = game;
             this._parent = parent;
+            this._game = parent.game;
             this._anims = {};
 
         }

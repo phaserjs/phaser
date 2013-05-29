@@ -53,13 +53,41 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="tweens\tween loop 1.js">
+      <DependentUpon>tween loop 1.ts</DependentUpon>
+    </Content>
+    <Content Include="tweens\tween loop 2.js">
+      <DependentUpon>tween loop 2.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="tweens\tween loop 2.ts" />
+    <TypeScriptCompile Include="tweens\tween loop 1.ts" />
+    <TypeScriptCompile Include="sprites\animation 1.ts" />
+    <Content Include="sprites\animation 1.js">
+      <DependentUpon>animation 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="sprites\animation 2.ts" />
+    <Content Include="sprites\animation 2.js">
+      <DependentUpon>animation 2.ts</DependentUpon>
+    </Content>
     <Content Include="sprites\create sprite 1.js">
       <DependentUpon>create sprite 1.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="sprites\scale origin 1.ts" />
-    <Content Include="sprites\scale origin 1.js">
-      <DependentUpon>scale origin 1.ts</DependentUpon>
+    <Content Include="sprites\sprite origin 1.js">
+      <DependentUpon>sprite origin 1.ts</DependentUpon>
     </Content>
+    <Content Include="sprites\sprite origin 2.js">
+      <DependentUpon>sprite origin 2.ts</DependentUpon>
+    </Content>
+    <Content Include="sprites\sprite origin 3.js">
+      <DependentUpon>sprite origin 3.ts</DependentUpon>
+    </Content>
+    <Content Include="sprites\sprite origin 4.js">
+      <DependentUpon>sprite origin 4.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="sprites\sprite origin 4.ts" />
+    <TypeScriptCompile Include="sprites\sprite origin 3.ts" />
+    <TypeScriptCompile Include="sprites\sprite origin 2.ts" />
+    <TypeScriptCompile Include="sprites\sprite origin 1.ts" />
     <Content Include="sprites\scale sprite 1.js">
       <DependentUpon>scale sprite 1.ts</DependentUpon>
     </Content>
@@ -86,5 +114,6 @@
       <DependentUpon>boot screen.ts</DependentUpon>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>
