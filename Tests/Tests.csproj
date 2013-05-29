@@ -53,6 +53,18 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="cameras\basic camera 1.ts" />
+    <Content Include="cameras\basic camera 1.js">
+      <DependentUpon>basic camera 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="cameras\scrollfactor 1.ts" />
+    <Content Include="cameras\scrollfactor 1.js">
+      <DependentUpon>scrollfactor 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="cameras\scrollfactor 2.ts" />
+    <Content Include="cameras\scrollfactor 2.js">
+      <DependentUpon>scrollfactor 2.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\tween loop 1.js">
       <DependentUpon>tween loop 1.ts</DependentUpon>
     </Content>

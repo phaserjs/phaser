@@ -523,7 +523,7 @@ module Phaser {
 
             if (this.bounds)
             {
-                this._game.stage.context.fillText('Bounds: ' + this.bounds.width + ' x ' + this.bounds.height, x, y + 56);
+                this._game.stage.context.fillText('Bounds: ' + this.bounds.width + ' x ' + this.bounds.height, x, y + 42);
             }
 
         }

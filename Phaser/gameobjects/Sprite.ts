@@ -48,7 +48,7 @@ module Phaser {
             this.height = this.frameBounds.height;
 
             //  Transform related (if we add any more then move to a component)
-            this.origin = new Phaser.Vec2(this.width / 2, this.height / 2);
+            this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
             this.skew = new Phaser.Vec2(0, 0);
 

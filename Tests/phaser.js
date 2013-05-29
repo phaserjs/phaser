@@ -3897,7 +3897,8 @@ var Phaser;
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
             //  Transform related (if we add any more then move to a component)
-            this.origin = new Phaser.Vec2(this.width / 2, this.height / 2);
+            //this.origin = new Phaser.Vec2(this.width / 2, this.height / 2);
+            this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
             this.skew = new Phaser.Vec2(0, 0);
         }
@@ -4536,7 +4537,7 @@ var Phaser;
             this._game.stage.context.fillText('X: ' + this._stageX + ' Y: ' + this._stageY + ' Rotation: ' + this._rotation, x, y + 14);
             this._game.stage.context.fillText('World X: ' + this.scroll.x.toFixed(1) + ' World Y: ' + this.scroll.y.toFixed(1), x, y + 28);
             if(this.bounds) {
-                this._game.stage.context.fillText('Bounds: ' + this.bounds.width + ' x ' + this.bounds.height, x, y + 56);
+                this._game.stage.context.fillText('Bounds: ' + this.bounds.width + ' x ' + this.bounds.height, x, y + 42);
             }
         };
         Camera.prototype.destroy = /**
@@ -10481,6 +10482,10 @@ var Phaser;
             this._fy = sprite.scale.y;
             this._sin = 0;
             this._cos = 1;
+            this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
+            this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
+            this._dw = sprite.frameBounds.width;
+            this._dh = sprite.frameBounds.height;
             //  Alpha
             if(sprite.texture.alpha !== 1) {
                 this._ga = sprite.texture.context.globalAlpha;
@@ -10494,10 +10499,6 @@ var Phaser;
             if(sprite.texture.flippedY) {
                 this._fy = -sprite.scale.y;
             }
-            this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
-            this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            this._dw = sprite.frameBounds.width;
-            this._dh = sprite.frameBounds.height;
             if(sprite.animations.currentFrame !== null) {
                 this._sx = sprite.animations.currentFrame.x;
                 this._sy = sprite.animations.currentFrame.y;
@@ -10532,11 +10533,11 @@ var Phaser;
                 this._dx = -sprite.origin.x;
                 this._dy = -sprite.origin.y;
             } else {
-                this._dx -= sprite.origin.x;
-                this._dy -= sprite.origin.y;
-                //this._dw = sprite.frameBounds.width * sprite.scale.x;
-                //this._dh = sprite.frameBounds.height * sprite.scale.y;
-                            }
+                if(!sprite.origin.equals(0)) {
+                    this._dx -= sprite.origin.x;
+                    this._dy -= sprite.origin.y;
+                }
+            }
             this._sx = Math.round(this._sx);
             this._sy = Math.round(this._sy);
             this._sw = Math.round(this._sw);

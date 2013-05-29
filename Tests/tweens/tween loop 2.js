@@ -13,9 +13,7 @@
         //  Increase the size of the sprite a little so it covers the edges of the stage
         swirl.scale.setTo(1.4, 1.4);
         //  Create a tween that rotates a full 306 degrees and then repeats (loop set to true)
-        game.add.tween(swirl).to({
-            rotation: 360
-        }, 2000, Phaser.Easing.Linear.None, true, 0, true);
+        //game.add.tween(swirl).to({ rotation: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
         game.add.tween(swirl.scale).to({
             x: 4,
             y: 4

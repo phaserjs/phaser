@@ -26,6 +26,10 @@ TODO:
 * Removed ignoreGlobalUpdate because it checks exists etc in the Group update, so remove those checks from Sprite.update (same for render)
 * Investigate why tweens don't restart after the game pauses
 * Fix bug in Tween yoyo + loop combo
+* Copy the setTransform from Sprite to Camera
+* Move Camera.scroll.x to just Camera.x/y
+
+
 
 V1.0.0
 
@@ -41,7 +45,6 @@ V1.0.0
 * Refactored QuadTree so it no longer creates any temporary variables in any methods.
 * The Sprite Renderer now uses a single setTransform for scale, rotation and translation that respects the Sprite.origin value in all cases.
 * Sprite.modified is set to true if scale, rotation, skew or flip have been used.
-* By default the Sprite.origin is set to the center of the sprite, but can be offset to anywhere.
 * Added Tween.loop property so they can now re-run themselves indefinitely.
 * Added Tween.yoyo property so they can reverse themselves after completing.
 

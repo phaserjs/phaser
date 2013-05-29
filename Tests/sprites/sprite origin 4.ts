@@ -13,7 +13,6 @@
     }
 
     var fuji: Phaser.Sprite;
-    var tweenRotate: Phaser.Tween;
     var tweenUp: Phaser.Tween;
     var tweenDown: Phaser.Tween;
 
@@ -28,7 +27,7 @@
         //  Here we set the origin to the center of the sprite again, so we can rotate and scale it at the same time
         fuji.origin.setTo(160, 100);
 
-        tweenRotate = game.add.tween(fuji);
+        game.add.tween(fuji).to({ rotation: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
 
         tweenUp = game.add.tween(fuji.scale);
         tweenUp.onComplete.add(scaleDown, this);
@@ -36,18 +35,7 @@
         tweenDown = game.add.tween(fuji.scale);
         tweenDown.onComplete.add(scaleUp, this);
 
-        //  Start it going
-        rotate();
         scaleUp();
-
-    }
-
-    function rotate() {
-
-        tweenRotate.clear();
-        tweenRotate.to({ rotation: 360 }, 2000);
-        tweenRotate.onComplete.add(rotate, this);
-        tweenRotate.start();
 
     }
 

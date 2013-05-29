@@ -78,6 +78,10 @@ module Phaser {
             this._fy = sprite.scale.y;
             this._sin = 0;
             this._cos = 1;
+            this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
+            this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
+            this._dw = sprite.frameBounds.width;
+            this._dh = sprite.frameBounds.height;
 
             //  Alpha
             if (sprite.texture.alpha !== 1)
@@ -98,11 +102,6 @@ module Phaser {
                 this._fy = -sprite.scale.y;
             }
 
-            this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
-            this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            this._dw = sprite.frameBounds.width;
-            this._dh = sprite.frameBounds.height;
-
             if (sprite.animations.currentFrame !== null)
             {
                 this._sx = sprite.animations.currentFrame.x;
@@ -114,15 +113,6 @@ module Phaser {
                     this._dy += sprite.animations.currentFrame.spriteSourceSizeY;
                 }
             }
-
-            //	Apply camera difference - looks like this is already applied?
-            /*
-            if (sprite.scrollFactor.x !== 1 || sprite.scrollFactor.y !== 1)
-            {
-                //this._dx -= (camera.worldView.x * this.scrollFactor.x);
-                //this._dy -= (camera.worldView.y * this.scrollFactor.y);
-            }
-            */
 
             //	Rotation and Flipped
             if (sprite.modified)
@@ -149,10 +139,11 @@ module Phaser {
             }
             else
             {
-                this._dx -= sprite.origin.x;
-                this._dy -= sprite.origin.y;
-                //this._dw = sprite.frameBounds.width * sprite.scale.x;
-                //this._dh = sprite.frameBounds.height * sprite.scale.y;
+                if (!sprite.origin.equals(0))
+                {
+                    this._dx -= sprite.origin.x;
+                    this._dy -= sprite.origin.y;
+                }
             }
 
             this._sx = Math.round(this._sx);
