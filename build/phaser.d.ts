@@ -3068,7 +3068,23 @@ module Phaser.Physics {
         public height: number;
         public halfWidth: number;
         public halfHeight: number;
+        public oH: number;
+        public oV: number;
+        private _drag;
+        public newVelocity: Vec2;
         public update(): void;
+        private updateMotion();
+        /**
+        * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+        *
+        * @param {number} Velocity Any component of velocity (e.g. 20).
+        * @param {number} Acceleration Rate at which the velocity is changing.
+        * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+        * @param {number} Max An absolute value cap for the velocity.
+        *
+        * @return {number} The altered Velocity value.
+        */
+        public computeVelocity(velocity: number, acceleration?: number, drag?: number, max?: number): number;
         private integrate();
         private collideWorld();
         private processWorld(px, py, dx, dy, tile);
@@ -6427,95 +6443,27 @@ module Phaser.Components {
         */
         public immovable: bool;
         /**
-        * Basic speed of this object.
-        *
-        * Velocity is given in pixels per second. Therefore a velocity of
-        * 100 will move at a rate of 100 pixels every 1000 ms (1sec). It's not balls-on
-        * accurate due to the way timers work, but it's pretty close. Expect tolerance
-        * of +- 10 px. Also that speed assumes no drag.
-        *
-        * @type {Vec2}
-        */
-        public velocity: Vec2;
-        /**
-        * The virtual mass of the object.
-        * @type {number}
-        */
-        public mass: number;
-        /**
-        * The bounciness of the object.
-        * @type {number}
-        */
-        public elasticity: number;
-        /**
-        * How fast the speed of this object is changing.
-        * @type {number}
-        */
-        public acceleration: Vec2;
-        /**
-        * This isn't drag exactly, more like deceleration that is only applied
-        * when acceleration is not affecting the sprite.
-        * @type {Vec2}
-        */
-        public drag: Vec2;
-        /**
-        * It will cap the speed automatically if you use the acceleration
-        * to change its velocity.
-        * @type {Vec2}
-        */
-        public maxVelocity: Vec2;
-        /**
-        * How fast this object is rotating.
-        * @type {number}
-        */
-        public angularVelocity: number;
-        /**
-        * How fast angularVelocity of this object is changing.
-        * @type {number}
-        */
-        public angularAcceleration: number;
-        /**
-        * Deacceleration of angularVelocity will be applied when it's rotating.
-        * @type {number}
-        */
-        public angularDrag: number;
-        /**
-        * It will cap the rotate speed automatically if you use the angularAcceleration
-        * to change its angularVelocity.
-        * @type {number}
-        */
-        public maxAngular: number;
-        /**
-        * Set this to false if you want to skip the automatic motion/movement stuff
-        * (see updateMotion()).
+        * Set this to false if you want to skip the automatic movement stuff
         * @type {boolean}
         */
         public moves: bool;
-        /**
-        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts.
-        * @type {number}
-        */
-        public touching: number;
-        /**
-        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step.
-        * @type {number}
-        */
-        public wasTouching: number;
-        /**
-        * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions.
-        * @type {number}
-        */
-        public allowCollisions: number;
-        /**
-        * Important variable for collision processing.
-        * @type {Vec2}
-        */
-        public last: Vec2;
+        public gravityFactor: Vec2;
+        public drag: Vec2;
+        public bounce: Vec2;
+        public friction: Vec2;
+        public velocity: Vec2;
+        public acceleration: Vec2;
         /**
         * Internal function for updating the position and speed of this object.
         */
         public update(): void;
-        public solid : bool;
+        /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        public renderDebugInfo(x: number, y: number, color?: string): void;
     }
 }
 /**

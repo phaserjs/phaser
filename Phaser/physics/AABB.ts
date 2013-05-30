@@ -22,6 +22,7 @@ module Phaser.Physics {
 
             this.position = new Vec2(x + this.halfWidth, y + this.halfHeight);
             this.oldPosition = new Vec2(x + this.halfWidth, y + this.halfHeight);
+            this.newVelocity = new Vec2(0, 0);
 
         }
 
@@ -38,29 +39,102 @@ module Phaser.Physics {
         public height: number;
         public halfWidth: number;
         public halfHeight: number;
+        public oH: number;
+        public oV: number;
+
+        private _drag: number;
+
+        public newVelocity: Vec2;
 
         public update() {
 
             if (this.sprite.physics.moves)
             {
-                this.integrate();
+                this.oldPosition.x = this.position.x;
+                this.oldPosition.y = this.position.y;
+
+                this.updateMotion();
                 this.collideWorld();
             }
 
         }
 
-        private integrate() {
+        private updateMotion() {
 
-            var ox: number = this.oldPosition.x;
-            var oy: number = this.oldPosition.y;
+            /*
+            var delta: number;
+            var velocityDelta: number;
 
-            this.oldPosition.x = this.position.x;
-            this.oldPosition.y = this.position.y;
+            velocityDelta = (this._game.motion.computeVelocity(this.angularVelocity, this.angularAcceleration, this.angularDrag, this.maxAngular) - this.angularVelocity) / 2;
+            this.angularVelocity += velocityDelta;
+            this._angle += this.angularVelocity * this._game.time.elapsed;
+            this.angularVelocity += velocityDelta;
+            */
 
-            //this.position.x += (this.world.drag.x * this.position.x + this.halfWidth) - (this.world.drag.x * ox) + this.world.gravity.x;
-            //this.position.y += (this.world.drag.y * this.position.y + this.halfHeight) - (this.world.drag.y * oy) + this.world.gravity.y;
-            this.position.x += (this.world.drag.x * this.position.x) - (this.world.drag.x * ox) + this.world.gravity.x;
-            this.position.y += (this.world.drag.y * this.position.y) - (this.world.drag.y * oy) + this.world.gravity.y;
+            //  move to temp vars
+            var delta;
+
+            var velocityDelta = (this.computeVelocity(this.sprite.physics.velocity.x, this.sprite.physics.acceleration.x, this.sprite.physics.drag.x) - this.sprite.physics.velocity.x) / 2;
+            this.sprite.physics.velocity.x += velocityDelta;
+            delta = this.sprite.physics.velocity.x * this.game.time.elapsed;
+            this.sprite.physics.velocity.x += velocityDelta;
+            this.position.x += delta;
+
+            var velocityDelta = (this.computeVelocity(this.sprite.physics.velocity.y, this.sprite.physics.acceleration.y, this.sprite.physics.drag.y) - this.sprite.physics.velocity.y) / 2;
+            this.sprite.physics.velocity.y += velocityDelta;
+            delta = this.sprite.physics.velocity.y * this.game.time.elapsed;
+            this.sprite.physics.velocity.y += velocityDelta;
+            this.position.y += delta;
+
+        }
+
+        /**
+        * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+        *
+        * @param {number} Velocity Any component of velocity (e.g. 20).
+        * @param {number} Acceleration Rate at which the velocity is changing.
+        * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+        * @param {number} Max An absolute value cap for the velocity.
+        *
+        * @return {number} The altered Velocity value.
+        */
+        public computeVelocity(velocity: number, acceleration: number = 0, drag: number = 0, max: number = 10000): number {
+
+            if (acceleration !== 0)
+            {
+                velocity += acceleration * this.game.time.elapsed;
+            }
+            else if (drag !== 0)
+            {
+                this._drag = drag * this.game.time.elapsed;
+
+                if (velocity - this._drag > 0)
+                {
+                    velocity = velocity - this._drag;
+                }
+                else if (velocity + this._drag < 0)
+                {
+                    velocity += this._drag;
+                }
+                else
+                {
+                    velocity = 0;
+                }
+            }
+
+            if ((velocity != 0) && (max != 10000))
+            {
+                if (velocity > max)
+                {
+                    velocity = max;
+                }
+                else if (velocity < -max)
+                {
+                    velocity = -max;
+                }
+            }
+
+            return velocity;
 
         }
 
@@ -71,7 +145,18 @@ module Phaser.Physics {
             
             if (0 < dx)
             {
-                this.processWorld(dx, 0, 1, 0, null);
+                //  Hit Left
+                this.oH = 1;
+                this.position.x += dx;
+
+                if (this.sprite.physics.bounce.x > 0)
+                {
+                    this.sprite.physics.velocity.x *= -(this.sprite.physics.bounce.x);
+                }
+                else
+                {
+                    this.sprite.physics.velocity.x = 0;
+                }
             }
             else
             {
@@ -79,7 +164,18 @@ module Phaser.Physics {
 
                 if (0 < dx)
                 {
-                    this.processWorld(-dx, 0, -1, 0, null);
+                    //  Hit Right
+                    this.oH = -1;
+                    this.position.x -= dx;
+
+                    if (this.sprite.physics.bounce.x > 0)
+                    {
+                        this.sprite.physics.velocity.x *= -(this.sprite.physics.bounce.x);
+                    }
+                    else
+                    {
+                        this.sprite.physics.velocity.x = 0;
+                    }
                 }
             }
 
@@ -88,7 +184,18 @@ module Phaser.Physics {
 
             if (0 < dy)
             {
-                this.processWorld(0, dy, 0, 1, null);
+                //  Hit Top
+                this.oV = 1;
+                this.position.y += dy;
+
+                if (this.sprite.physics.bounce.y > 0)
+                {
+                    this.sprite.physics.velocity.y *= -(this.sprite.physics.bounce.y);
+                }
+                else
+                {
+                    this.sprite.physics.velocity.y = 0;
+                }
             }
             else
             {
@@ -96,7 +203,18 @@ module Phaser.Physics {
 
                 if (0 < dy)
                 {
-                    this.processWorld(0, -dy, 0, -1, null);
+                    //  Hit Bottom
+                    this.oV = -1;
+                    this.position.y -= dy;
+
+                    if (this.sprite.physics.bounce.y > 0)
+                    {
+                        this.sprite.physics.velocity.y *= -(this.sprite.physics.bounce.y);
+                    }
+                    else
+                    {
+                        this.sprite.physics.velocity.y = 0;
+                    }
                 }
             }
 
@@ -105,23 +223,26 @@ module Phaser.Physics {
         private processWorld(px, py, dx, dy, tile) {
 
             //  Velocity
-            var vx: number = this.position.x - this.oldPosition.x;
-            var vy: number = this.position.y - this.oldPosition.y;
+            //this.sprite.physics.velocity.x = this.position.x - this.oldPosition.x;
+            //this.sprite.physics.velocity.y = this.position.y - this.oldPosition.y;
 
-            var dp: number = (vx * dx + vy * dy);
+            //  Optimise!!!
+            var dp: number = (this.sprite.physics.velocity.x * dx + this.sprite.physics.velocity.y * dy);
             var nx: number = dp * dx;
             var ny: number = dp * dy;
-            var tx: number = vx - nx;
-            var ty: number = vy - ny;
+            var tx: number = this.sprite.physics.velocity.x - nx;
+            var ty: number = this.sprite.physics.velocity.y - ny;
 
-            var b, bx, by, f, fx, fy;
+            var bx, by, fx, fy;
 
             if (dp < 0)
             {
-                fx = tx * this.world.friction.x;
-                fy = ty * this.world.friction.y;
-                bx = (nx * (1 + this.world.bounce.x));
-                by = (ny * (1 + this.world.bounce.y));
+                fx = tx * this.sprite.physics.friction.x;
+                fy = ty * this.sprite.physics.friction.y;
+                bx = (nx * (1 + this.sprite.physics.bounce.x));
+                by = (ny * (1 + this.sprite.physics.bounce.y));
+                //this.sprite.physics.velocity.x = bx;
+                //this.sprite.physics.velocity.y = by;
             }
             else
             {
@@ -147,6 +268,45 @@ module Phaser.Physics {
             //  center point
             context.fillStyle = 'rgb(0,255,0)';
             context.fillRect(this.position.x, this.position.y, 2, 2);
+
+            if (this.oH == 1)
+            {
+                context.beginPath();
+                context.strokeStyle = 'rgb(255,0,0)';
+                context.moveTo(this.position.x - this.halfWidth, this.position.y - this.halfHeight);
+                context.lineTo(this.position.x - this.halfWidth, this.position.y + this.halfHeight);
+                context.stroke();
+                context.closePath();
+            }
+            else if (this.oH == -1)
+            {
+                context.beginPath();
+                context.strokeStyle = 'rgb(255,0,0)';
+                context.moveTo(this.position.x + this.halfWidth, this.position.y - this.halfHeight);
+                context.lineTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+                context.stroke();
+                context.closePath();
+            }
+
+            if (this.oV == 1)
+            {
+                context.beginPath();
+                context.strokeStyle = 'rgb(255,0,0)';
+                context.moveTo(this.position.x - this.halfWidth, this.position.y - this.halfHeight);
+                context.lineTo(this.position.x + this.halfWidth, this.position.y - this.halfHeight);
+                context.stroke();
+                context.closePath();
+            }
+            else if (this.oV == -1)
+            {
+                context.beginPath();
+                context.strokeStyle = 'rgb(255,0,0)';
+                context.moveTo(this.position.x - this.halfWidth, this.position.y + this.halfHeight);
+                context.lineTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+                context.stroke();
+                context.closePath();
+            }
+
 
         }
 
