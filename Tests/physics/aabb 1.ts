@@ -16,14 +16,16 @@
 
     function create() {
 
-        atari = game.add.sprite(200, 200, 'atari');
+        atari = game.add.sprite(200, 300, 'atari');
         atari.texture.alpha = 0.5;
+        //atari.scale.setTo(2, 2);
 
-        atari.physics.bounce.setTo(0.5, 0.5);
+        atari.physics.shape.setSize(150, 50);
+        atari.physics.shape.offset.setTo(50, 25);
+
+        //atari.physics.gravity.setTo(0, 2);
+        atari.physics.bounce.setTo(0.7, 0.7);
         atari.physics.drag.setTo(10, 10);
-
-        //atari.physics.gravityFactor.x = 0;
-        //atari.physics.gravityFactor.y = 0;
 
     }
 

@@ -3019,6 +3019,207 @@ module Phaser {
     }
 }
 /**
+* Phaser - Vec2Utils
+*
+* A collection of methods useful for manipulating and performing operations on 2D vectors.
+*
+*/
+module Phaser {
+    class Vec2Utils {
+        /**
+        * Adds two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors.
+        */
+        static add(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Subtracts two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the difference of the two vectors.
+        */
+        static subtract(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Multiplies two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
+        */
+        static multiply(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Divides two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
+        */
+        static divide(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Scales a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {number} s Scaling value.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        static scale(a: Vec2, s: number, out?: Vec2): Vec2;
+        /**
+        * Rotate a 2D vector by 90 degrees.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        static perp(a: Vec2, out?: Vec2): Vec2;
+        /**
+        * Checks if two 2D vectors are equal.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Boolean}
+        */
+        static equals(a: Vec2, b: Vec2): bool;
+        /**
+        *
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} epsilon
+        * @return {Boolean}
+        */
+        static epsilonEquals(a: Vec2, b: Vec2, epsilon: number): bool;
+        /**
+        * Get the distance between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static distance(a: Vec2, b: Vec2): number;
+        /**
+        * Get the distance squared between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static distanceSq(a: Vec2, b: Vec2): number;
+        /**
+        * Project two 2D vectors onto another vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static project(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Project this vector onto a vector of unit length.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static projectUnit(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Right-hand normalize (make unit length) a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static normalRightHand(a: Vec2, out?: Vec2): Vec2;
+        /**
+        * Normalize (make unit length) a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static normalize(a: Vec2, out?: Vec2): Vec2;
+        /**
+        * The dot product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static dot(a: Vec2, b: Vec2): number;
+        /**
+        * The cross product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static cross(a: Vec2, b: Vec2): number;
+        /**
+        * The angle between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static angle(a: Vec2, b: Vec2): number;
+        /**
+        * The angle squared between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static angleSq(a: Vec2, b: Vec2): number;
+        /**
+        * Rotate a 2D vector around the origin to the given angle (theta).
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Number} theta The angle of rotation in radians.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static rotate(a: Vec2, b: Vec2, theta: number, out?: Vec2): Vec2;
+        /**
+        * Clone a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is a copy of the source Vec2.
+        */
+        static clone(a: Vec2, out?: Vec2): Vec2;
+    }
+}
+/**
+* Phaser - Physics - IPhysicsShape
+*/
+module Phaser.Physics {
+    interface IPhysicsShape {
+        game: Game;
+        world: PhysicsManager;
+        sprite: Sprite;
+        physics: Components.Physics;
+        position: Vec2;
+        oldPosition: Vec2;
+        offset: Vec2;
+        bounds: Rectangle;
+        oH: number;
+        oV: number;
+        setSize(width: number, height: number);
+        preUpdate();
+        update();
+        render(context: CanvasRenderingContext2D);
+    }
+}
+/**
 * Phaser - PhysicsManager
 *
 * Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
@@ -3030,50 +3231,21 @@ module Phaser.Physics {
         /**
         * Local private reference to Game.
         */
-        private _game;
+        public game: Game;
         private _objects;
+        private _drag;
+        private _delta;
+        private _velocityDelta;
+        private _length;
         public bounds: Rectangle;
         public gravity: Vec2;
         public drag: Vec2;
         public bounce: Vec2;
         public friction: Vec2;
-        private minFriction;
-        private maxFriction;
-        private minBounce;
-        private maxBounce;
-        private minGravity;
-        private maxGravity;
-        private _i;
-        private _length;
-        public add(o);
+        public add(shape: IPhysicsShape): IPhysicsShape;
         public update(): void;
         public render(): void;
-    }
-}
-/**
-* Phaser - Physics - AABB
-*/
-module Phaser.Physics {
-    class AABB {
-        constructor(game: Game, sprite: Sprite, x: number, y: number, width: number, height: number);
-        /**
-        * Local private reference to Game.
-        */
-        public game: Game;
-        public world: PhysicsManager;
-        public sprite: Sprite;
-        public position: Vec2;
-        public oldPosition: Vec2;
-        public width: number;
-        public height: number;
-        public halfWidth: number;
-        public halfHeight: number;
-        public oH: number;
-        public oV: number;
-        private _drag;
-        public newVelocity: Vec2;
-        public update(): void;
-        private updateMotion();
+        private updateMotion(obj);
         /**
         * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
         *
@@ -3084,10 +3256,30 @@ module Phaser.Physics {
         *
         * @return {number} The altered Velocity value.
         */
-        public computeVelocity(velocity: number, acceleration?: number, drag?: number, max?: number): number;
-        private integrate();
-        private collideWorld();
-        private processWorld(px, py, dx, dy, tile);
+        public computeVelocity(velocity: number, gravity?: number, acceleration?: number, drag?: number, max?: number): number;
+        private collideWorld(obj);
+    }
+}
+/**
+* Phaser - Physics - AABB
+*/
+module Phaser.Physics {
+    class AABB implements IPhysicsShape {
+        constructor(game: Game, sprite: Sprite, x: number, y: number, width: number, height: number);
+        public game: Game;
+        public world: PhysicsManager;
+        public sprite: Sprite;
+        public physics: Components.Physics;
+        public position: Vec2;
+        public oldPosition: Vec2;
+        public offset: Vec2;
+        public scale: Vec2;
+        public bounds: Rectangle;
+        public oH: number;
+        public oV: number;
+        public preUpdate(): void;
+        public update(): void;
+        public setSize(width: number, height: number): void;
         public render(context: CanvasRenderingContext2D): void;
     }
 }
@@ -4817,186 +5009,6 @@ module Phaser {
 module Phaser {
 }
 /**
-* Phaser - Vec2Utils
-*
-* A collection of methods useful for manipulating and performing operations on 2D vectors.
-*
-*/
-module Phaser {
-    class Vec2Utils {
-        /**
-        * Adds two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors.
-        */
-        static add(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Subtracts two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the difference of the two vectors.
-        */
-        static subtract(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Multiplies two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
-        */
-        static multiply(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Divides two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
-        */
-        static divide(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Scales a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {number} s Scaling value.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the scaled vector.
-        */
-        static scale(a: Vec2, s: number, out?: Vec2): Vec2;
-        /**
-        * Rotate a 2D vector by 90 degrees.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the scaled vector.
-        */
-        static perp(a: Vec2, out?: Vec2): Vec2;
-        /**
-        * Checks if two 2D vectors are equal.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Boolean}
-        */
-        static equals(a: Vec2, b: Vec2): bool;
-        /**
-        *
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} epsilon
-        * @return {Boolean}
-        */
-        static epsilonEquals(a: Vec2, b: Vec2, epsilon: number): bool;
-        /**
-        * Get the distance between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static distance(a: Vec2, b: Vec2): number;
-        /**
-        * Get the distance squared between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static distanceSq(a: Vec2, b: Vec2): number;
-        /**
-        * Project two 2D vectors onto another vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static project(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Project this vector onto a vector of unit length.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static projectUnit(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Right-hand normalize (make unit length) a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static normalRightHand(a: Vec2, out?: Vec2): Vec2;
-        /**
-        * Normalize (make unit length) a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static normalize(a: Vec2, out?: Vec2): Vec2;
-        /**
-        * The dot product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static dot(a: Vec2, b: Vec2): number;
-        /**
-        * The cross product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static cross(a: Vec2, b: Vec2): number;
-        /**
-        * The angle between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static angle(a: Vec2, b: Vec2): number;
-        /**
-        * The angle squared between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static angleSq(a: Vec2, b: Vec2): number;
-        /**
-        * Rotate a 2D vector around the origin to the given angle (theta).
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Number} theta The angle of rotation in radians.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static rotate(a: Vec2, b: Vec2, theta: number, out?: Vec2): Vec2;
-        /**
-        * Clone a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is a copy of the source Vec2.
-        */
-        static clone(a: Vec2, out?: Vec2): Vec2;
-    }
-}
-/**
 * Phaser - Pointer
 *
 * A Pointer object is used by the Touch and MSPoint managers and represents a single finger on the touch screen.
@@ -6436,7 +6448,7 @@ module Phaser.Components {
         *
         */
         private _sprite;
-        public AABB: Physics.AABB;
+        public shape: Physics.IPhysicsShape;
         /**
         * Whether this object will be moved by impacts with other objects or not.
         * @type {boolean}
@@ -6447,7 +6459,7 @@ module Phaser.Components {
         * @type {boolean}
         */
         public moves: bool;
-        public gravityFactor: Vec2;
+        public gravity: Vec2;
         public drag: Vec2;
         public bounce: Vec2;
         public friction: Vec2;

@@ -113,6 +113,10 @@
     <Content Include="physics\AABB.js">
       <DependentUpon>AABB.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="physics\IPhysicsShape.ts" />
+    <Content Include="physics\IPhysicsShape.js">
+      <DependentUpon>IPhysicsShape.ts</DependentUpon>
+    </Content>
     <Content Include="physics\PhysicsManager.js">
       <DependentUpon>PhysicsManager.ts</DependentUpon>
     </Content>

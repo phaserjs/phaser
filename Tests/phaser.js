@@ -4050,11 +4050,12 @@ var Phaser;
             this.texture = new Phaser.Components.Texture(this, key);
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
-            this.physics = new Phaser.Components.Physics(this);
             //  Transform related (if we add any more then move to a component)
             this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
             this.skew = new Phaser.Vec2(0, 0);
+            this.physics = new Phaser.Components.Physics(this);
+            this.physics.shape.physics = this.physics;
         }
         Object.defineProperty(Sprite.prototype, "rotation", {
             get: /**
@@ -5531,9 +5532,307 @@ var Phaser;
     })();
     Phaser.Tween = Tween;    
 })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../core/Vec2.ts" />
+/**
+* Phaser - Vec2Utils
+*
+* A collection of methods useful for manipulating and performing operations on 2D vectors.
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var Vec2Utils = (function () {
+        function Vec2Utils() { }
+        Vec2Utils.add = /**
+        * Adds two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors.
+        */
+        function add(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x + b.x, a.y + b.y);
+        };
+        Vec2Utils.subtract = /**
+        * Subtracts two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the difference of the two vectors.
+        */
+        function subtract(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x - b.x, a.y - b.y);
+        };
+        Vec2Utils.multiply = /**
+        * Multiplies two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
+        */
+        function multiply(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x * b.x, a.y * b.y);
+        };
+        Vec2Utils.divide = /**
+        * Divides two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
+        */
+        function divide(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x / b.x, a.y / b.y);
+        };
+        Vec2Utils.scale = /**
+        * Scales a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {number} s Scaling value.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        function scale(a, s, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x * s, a.y * s);
+        };
+        Vec2Utils.perp = /**
+        * Rotate a 2D vector by 90 degrees.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        function perp(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.y, -a.x);
+        };
+        Vec2Utils.equals = /**
+        * Checks if two 2D vectors are equal.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Boolean}
+        */
+        function equals(a, b) {
+            return a.x == b.x && a.y == b.y;
+        };
+        Vec2Utils.epsilonEquals = /**
+        *
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} epsilon
+        * @return {Boolean}
+        */
+        function epsilonEquals(a, b, epsilon) {
+            return Math.abs(a.x - b.x) <= epsilon && Math.abs(a.y - b.y) <= epsilon;
+        };
+        Vec2Utils.distance = /**
+        * Get the distance between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function distance(a, b) {
+            return Math.sqrt(Vec2Utils.distanceSq(a, b));
+        };
+        Vec2Utils.distanceSq = /**
+        * Get the distance squared between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function distanceSq(a, b) {
+            return ((a.x - b.x) * (a.x - b.x)) + ((a.y - b.y) * (a.y - b.y));
+        };
+        Vec2Utils.project = /**
+        * Project two 2D vectors onto another vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function project(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var amt = a.dot(b) / b.lengthSq();
+            if(amt != 0) {
+                out.setTo(amt * b.x, amt * b.y);
+            }
+            return out;
+        };
+        Vec2Utils.projectUnit = /**
+        * Project this vector onto a vector of unit length.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function projectUnit(a, b, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var amt = a.dot(b);
+            if(amt != 0) {
+                out.setTo(amt * b.x, amt * b.y);
+            }
+            return out;
+        };
+        Vec2Utils.normalRightHand = /**
+        * Right-hand normalize (make unit length) a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function normalRightHand(a, out) {
+            if (typeof out === "undefined") { out = this; }
+            return out.setTo(a.y * -1, a.x);
+        };
+        Vec2Utils.normalize = /**
+        * Normalize (make unit length) a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function normalize(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var m = a.length();
+            if(m != 0) {
+                out.setTo(a.x / m, a.y / m);
+            }
+            return out;
+        };
+        Vec2Utils.dot = /**
+        * The dot product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function dot(a, b) {
+            return ((a.x * b.x) + (a.y * b.y));
+        };
+        Vec2Utils.cross = /**
+        * The cross product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function cross(a, b) {
+            return ((a.x * b.y) - (a.y * b.x));
+        };
+        Vec2Utils.angle = /**
+        * The angle between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function angle(a, b) {
+            return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
+        };
+        Vec2Utils.angleSq = /**
+        * The angle squared between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        function angleSq(a, b) {
+            return a.subtract(b).angle(b.subtract(a));
+        };
+        Vec2Utils.rotate = /**
+        * Rotate a 2D vector around the origin to the given angle (theta).
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Number} theta The angle of rotation in radians.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function rotate(a, b, theta, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var x = a.x - b.x;
+            var y = a.y - b.y;
+            return out.setTo(x * Math.cos(theta) - y * Math.sin(theta) + b.x, x * Math.sin(theta) + y * Math.cos(theta) + b.y);
+        };
+        Vec2Utils.clone = /**
+        * Clone a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is a copy of the source Vec2.
+        */
+        function clone(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x, a.y);
+        };
+        return Vec2Utils;
+    })();
+    Phaser.Vec2Utils = Vec2Utils;    
+    /**
+    * Reflect this vector on an arbitrary axis.
+    *
+    * @param {Vec2} axis The vector representing the axis.
+    * @return {Vec2} This for chaining.
+    */
+    /*
+    static reflect(axis): Vec2 {
+    
+    var x = this.x;
+    var y = this.y;
+    this.project(axis).scale(2);
+    this.x -= x;
+    this.y -= y;
+    
+    return this;
+    
+    }
+    */
+    /**
+    * Reflect this vector on an arbitrary axis (represented by a unit vector)
+    *
+    * @param {Vec2} axis The unit vector representing the axis.
+    * @return {Vec2} This for chaining.
+    */
+    /*
+    static reflectN(axis): Vec2 {
+    
+    var x = this.x;
+    var y = this.y;
+    this.projectN(axis).scale(2);
+    this.x -= x;
+    this.y -= y;
+    
+    return this;
+    
+    }
+    
+    static getMagnitude(): number {
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    }
+    */
+    })(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
     /// <reference path="../Game.ts" />
+    /// <reference path="IPhysicsShape.ts" />
     /**
     * Phaser - PhysicsManager
     *
@@ -5543,98 +5842,56 @@ var Phaser;
     (function (Physics) {
         var PhysicsManager = (function () {
             function PhysicsManager(game, width, height) {
-                this.minFriction = 0;
-                this.maxFriction = 1;
-                this.minBounce = 0;
-                this.maxBounce = 1;
-                this.minGravity = 0;
-                this.maxGravity = 1;
-                this._i = 0;
                 this._length = 0;
-                this._game = game;
-                this.gravity = new Phaser.Vec2(0, 0.2);
-                this.drag = new Phaser.Vec2(1, 1);
-                this.bounce = new Phaser.Vec2(0.3, 0.7);
-                this.friction = new Phaser.Vec2(0.05, 0.05);
+                this.game = game;
+                this.gravity = new Phaser.Vec2();
+                this.drag = new Phaser.Vec2();
+                this.bounce = new Phaser.Vec2();
+                this.friction = new Phaser.Vec2();
                 this.bounds = new Phaser.Rectangle(0, 0, width, height);
                 this._objects = [];
             }
-            PhysicsManager.prototype.add = function (o) {
-                this._objects.push(o);
-                this._length++;
-                return o;
+            PhysicsManager.prototype.add = //  Add some sanity checks here + remove method, etc
+            function (shape) {
+                this._objects.push(shape);
+                return shape;
             };
             PhysicsManager.prototype.update = function () {
-                //  iterate through the objects here, updating and colliding
-                for(this._i = 0; this._i < this._length; this._i++) {
-                    this._objects[this._i].update();
+                this._length = this._objects.length;
+                for(var i = 0; i < this._length; i++) {
+                    this._objects[i].preUpdate();
+                    this.updateMotion(this._objects[i]);
+                    this.collideWorld(this._objects[i]);
                 }
             };
             PhysicsManager.prototype.render = function () {
                 //  iterate through the objects here, updating and colliding
-                for(this._i = 0; this._i < this._length; this._i++) {
-                    this._objects[this._i].render(this._game.stage.context);
+                for(var i = 0; i < this._length; i++) {
+                    this._objects[i].render(this.game.stage.context);
                 }
             };
-            return PhysicsManager;
-        })();
-        Physics.PhysicsManager = PhysicsManager;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../Game.ts" />
-    /// <reference path="PhysicsManager.ts" />
-    /**
-    * Phaser - Physics - AABB
-    */
-    (function (Physics) {
-        var AABB = (function () {
-            function AABB(game, sprite, x, y, width, height) {
-                this.game = game;
-                this.world = game.world.physics;
-                this.sprite = sprite;
-                this.width = width;
-                this.height = height;
-                this.halfWidth = Math.round(width / 2);
-                this.halfHeight = Math.round(height / 2);
-                this.position = new Phaser.Vec2(x + this.halfWidth, y + this.halfHeight);
-                this.oldPosition = new Phaser.Vec2(x + this.halfWidth, y + this.halfHeight);
-                this.newVelocity = new Phaser.Vec2(0, 0);
-            }
-            AABB.prototype.update = function () {
-                if(this.sprite.physics.moves) {
-                    this.oldPosition.x = this.position.x;
-                    this.oldPosition.y = this.position.y;
-                    this.updateMotion();
-                    //this.integrate();
-                    this.collideWorld();
+            PhysicsManager.prototype.updateMotion = function (obj) {
+                if(obj.physics.moves == false) {
+                    return;
                 }
-            };
-            AABB.prototype.updateMotion = function () {
                 /*
-                var delta: number;
-                var velocityDelta: number;
-                
                 velocityDelta = (this._game.motion.computeVelocity(this.angularVelocity, this.angularAcceleration, this.angularDrag, this.maxAngular) - this.angularVelocity) / 2;
                 this.angularVelocity += velocityDelta;
                 this._angle += this.angularVelocity * this._game.time.elapsed;
                 this.angularVelocity += velocityDelta;
                 */
-                var delta;
-                var velocityDelta = (this.computeVelocity(this.sprite.physics.velocity.x, this.sprite.physics.acceleration.x, this.sprite.physics.drag.x) - this.sprite.physics.velocity.x) / 2;
-                this.sprite.physics.velocity.x += velocityDelta;
-                delta = this.sprite.physics.velocity.x * this.game.time.elapsed;
-                this.sprite.physics.velocity.x += velocityDelta;
-                this.position.x += delta;
-                var velocityDelta = (this.computeVelocity(this.sprite.physics.velocity.y, this.sprite.physics.acceleration.y, this.sprite.physics.drag.y) - this.sprite.physics.velocity.y) / 2;
-                this.sprite.physics.velocity.y += velocityDelta;
-                delta = this.sprite.physics.velocity.y * this.game.time.elapsed;
-                this.sprite.physics.velocity.y += velocityDelta;
-                this.position.y += delta;
+                this._velocityDelta = (this.computeVelocity(obj.physics.velocity.x, obj.physics.gravity.x, obj.physics.acceleration.x, obj.physics.drag.x) - obj.physics.velocity.x) / 2;
+                obj.physics.velocity.x += this._velocityDelta;
+                this._delta = obj.physics.velocity.x * this.game.time.elapsed;
+                obj.physics.velocity.x += this._velocityDelta;
+                obj.position.x += this._delta;
+                this._velocityDelta = (this.computeVelocity(obj.physics.velocity.y, obj.physics.gravity.y, obj.physics.acceleration.y, obj.physics.drag.y) - obj.physics.velocity.y) / 2;
+                obj.physics.velocity.y += this._velocityDelta;
+                this._delta = obj.physics.velocity.y * this.game.time.elapsed;
+                obj.physics.velocity.y += this._velocityDelta;
+                obj.position.y += this._delta;
             };
-            AABB.prototype.computeVelocity = /**
+            PhysicsManager.prototype.computeVelocity = /**
             * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
             *
             * @param {number} Velocity Any component of velocity (e.g. 20).
@@ -5644,12 +5901,13 @@ var Phaser;
             *
             * @return {number} The altered Velocity value.
             */
-            function (velocity, acceleration, drag, max) {
+            function (velocity, gravity, acceleration, drag, max) {
+                if (typeof gravity === "undefined") { gravity = 0; }
                 if (typeof acceleration === "undefined") { acceleration = 0; }
                 if (typeof drag === "undefined") { drag = 0; }
                 if (typeof max === "undefined") { max = 10000; }
                 if(acceleration !== 0) {
-                    velocity += acceleration * this.game.time.elapsed;
+                    velocity += (acceleration + gravity) * this.game.time.elapsed;
                 } else if(drag !== 0) {
                     this._drag = drag * this.game.time.elapsed;
                     if(velocity - this._drag > 0) {
@@ -5659,6 +5917,7 @@ var Phaser;
                     } else {
                         velocity = 0;
                     }
+                    velocity += gravity;
                 }
                 if((velocity != 0) && (max != 10000)) {
                     if(velocity > max) {
@@ -5669,90 +5928,156 @@ var Phaser;
                 }
                 return velocity;
             };
-            AABB.prototype.integrate = function () {
-                //this.position.x += (this.sprite.physics.drag.x * this.position.x) - (this.sprite.physics.drag.x * this._ox) + (this.world.gravity.x * this.sprite.physics.gravityFactor.x);
-                //this.position.y += (this.sprite.physics.drag.y * this.position.y) - (this.sprite.physics.drag.y * this._oy) + (this.world.gravity.y * this.sprite.physics.gravityFactor.y);
-                            };
-            AABB.prototype.collideWorld = function () {
+            PhysicsManager.prototype.collideWorld = function (obj) {
                 //  Collide on the x-axis
-                var dx = this.world.bounds.x - (this.position.x - this.halfWidth);
+                var dx = obj.world.bounds.x - (obj.position.x - obj.bounds.halfWidth);
                 if(0 < dx) {
                     //  Hit Left
-                    this.oH = 1;
-                    this.position.x += dx;
-                    if(this.sprite.physics.bounce.x > 0) {
-                        this.sprite.physics.velocity.x *= -(this.sprite.physics.bounce.x);
+                    obj.oH = 1;
+                    obj.position.x += dx;
+                    if(obj.sprite.physics.bounce.x > 0) {
+                        obj.sprite.physics.velocity.x *= -(obj.sprite.physics.bounce.x);
                     } else {
-                        this.sprite.physics.velocity.x = 0;
+                        obj.sprite.physics.velocity.x = 0;
                     }
                 } else {
-                    dx = (this.position.x + this.halfWidth) - this.world.bounds.right;
+                    dx = (obj.position.x + obj.bounds.halfWidth) - obj.world.bounds.right;
                     if(0 < dx) {
                         //  Hit Right
-                        this.oH = -1;
-                        this.position.x -= dx;
-                        if(this.sprite.physics.bounce.x > 0) {
-                            this.sprite.physics.velocity.x *= -(this.sprite.physics.bounce.x);
+                        obj.oH = -1;
+                        obj.position.x -= dx;
+                        if(obj.sprite.physics.bounce.x > 0) {
+                            obj.sprite.physics.velocity.x *= -(obj.sprite.physics.bounce.x);
                         } else {
-                            this.sprite.physics.velocity.x = 0;
+                            obj.sprite.physics.velocity.x = 0;
                         }
                     }
                 }
                 //  Collide on the y-axis
-                var dy = this.world.bounds.y - (this.position.y - this.halfHeight);
+                var dy = obj.world.bounds.y - (obj.position.y - obj.bounds.halfHeight);
                 if(0 < dy) {
                     //  Hit Top
-                    this.oV = 1;
-                    this.position.y += dy;
-                    if(this.sprite.physics.bounce.y > 0) {
-                        this.sprite.physics.velocity.y *= -(this.sprite.physics.bounce.y);
+                    obj.oV = 1;
+                    obj.position.y += dy;
+                    if(obj.sprite.physics.bounce.y > 0) {
+                        obj.sprite.physics.velocity.y *= -(obj.sprite.physics.bounce.y);
                     } else {
-                        this.sprite.physics.velocity.y = 0;
+                        obj.sprite.physics.velocity.y = 0;
                     }
                 } else {
-                    dy = (this.position.y + this.halfHeight) - this.world.bounds.bottom;
+                    dy = (obj.position.y + obj.bounds.halfHeight) - obj.world.bounds.bottom;
                     if(0 < dy) {
                         //  Hit Bottom
-                        this.oV = -1;
-                        this.position.y -= dy;
-                        if(this.sprite.physics.bounce.y > 0) {
-                            this.sprite.physics.velocity.y *= -(this.sprite.physics.bounce.y);
+                        obj.oV = -1;
+                        obj.position.y -= dy;
+                        if(obj.sprite.physics.bounce.y > 0) {
+                            obj.sprite.physics.velocity.y *= -(obj.sprite.physics.bounce.y);
                         } else {
-                            this.sprite.physics.velocity.y = 0;
+                            obj.sprite.physics.velocity.y = 0;
                         }
                     }
                 }
             };
-            AABB.prototype.processWorld = function (px, py, dx, dy, tile) {
-                //  Velocity
-                //this.sprite.physics.velocity.x = this.position.x - this.oldPosition.x;
-                //this.sprite.physics.velocity.y = this.position.y - this.oldPosition.y;
-                //  Optimise!!!
-                var dp = (this.sprite.physics.velocity.x * dx + this.sprite.physics.velocity.y * dy);
-                var nx = dp * dx;
-                var ny = dp * dy;
-                var tx = this.sprite.physics.velocity.x - nx;
-                var ty = this.sprite.physics.velocity.y - ny;
-                var bx, by, fx, fy;
-                if(dp < 0) {
-                    fx = tx * this.sprite.physics.friction.x;
-                    fy = ty * this.sprite.physics.friction.y;
-                    bx = (nx * (1 + this.sprite.physics.bounce.x));
-                    by = (ny * (1 + this.sprite.physics.bounce.y));
-                    //this.sprite.physics.velocity.x = bx;
-                    //this.sprite.physics.velocity.y = by;
-                                    } else {
-                    bx = by = fx = fy = 0;
+            return PhysicsManager;
+        })();
+        Physics.PhysicsManager = PhysicsManager;        
+        /*
+        private processWorld(px, py, dx, dy, tile) {
+        
+        //  Velocity
+        //this.sprite.physics.velocity.x = this.position.x - this.oldPosition.x;
+        //this.sprite.physics.velocity.y = this.position.y - this.oldPosition.y;
+        
+        //  Optimise!!!
+        var dp: number = (this.sprite.physics.velocity.x * dx + this.sprite.physics.velocity.y * dy);
+        var nx: number = dp * dx;
+        var ny: number = dp * dy;
+        var tx: number = this.sprite.physics.velocity.x - nx;
+        var ty: number = this.sprite.physics.velocity.y - ny;
+        
+        var bx, by, fx, fy;
+        
+        if (dp < 0)
+        {
+        fx = tx * this.sprite.physics.friction.x;
+        fy = ty * this.sprite.physics.friction.y;
+        bx = (nx * (1 + this.sprite.physics.bounce.x));
+        by = (ny * (1 + this.sprite.physics.bounce.y));
+        //this.sprite.physics.velocity.x = bx;
+        //this.sprite.physics.velocity.y = by;
+        }
+        else
+        {
+        bx = by = fx = fy = 0;
+        }
+        
+        this.position.x += px;
+        this.position.y += py;
+        
+        this.oldPosition.x += px + bx + fx;
+        this.oldPosition.y += py + by + fy;
+        
+        }
+        */
+            })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="../core/Rectangle.ts" />
+    /// <reference path="../math/Vec2Utils.ts" />
+    /// <reference path="PhysicsManager.ts" />
+    /// <reference path="IPhysicsShape.ts" />
+    /**
+    * Phaser - Physics - AABB
+    */
+    (function (Physics) {
+        var AABB = (function () {
+            function AABB(game, sprite, x, y, width, height) {
+                this.game = game;
+                this.world = game.world.physics;
+                if(sprite !== null) {
+                    this.sprite = sprite;
+                    this.scale = Phaser.Vec2Utils.clone(this.sprite.scale);
+                } else {
+                    this.sprite = null;
+                    this.physics = null;
+                    this.scale = new Phaser.Vec2(1, 1);
                 }
-                this.position.x += px;
-                this.position.y += py;
-                this.oldPosition.x += px + bx + fx;
-                this.oldPosition.y += py + by + fy;
+                //this.bounds = new Rectangle(x + Math.round(width / 2), y + Math.round(height / 2), width, height);
+                this.bounds = new Phaser.Rectangle(x + Math.round(width / 2), y + Math.round(height / 2), width, height);
+                this.position = new Phaser.Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
+                this.oldPosition = new Phaser.Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
+                this.offset = new Phaser.Vec2(0, 0);
+            }
+            AABB.prototype.preUpdate = function () {
+                this.oldPosition.copyFrom(this.position);
+                if(this.sprite) {
+                    //  Update position to sprite value
+                    //console.log('a', this.position.x, this.position.y);
+                    this.position.setTo((this.sprite.x + this.bounds.halfWidth) + this.offset.x, (this.sprite.y + this.bounds.halfHeight) + this.offset.y);
+                    //console.log('b', this.position.x, this.position.y);
+                    //this.position.setTo(this.sprite.x, this.sprite.y);
+                    //  Update scale / dimensions
+                    if(Phaser.Vec2Utils.equals(this.scale, this.sprite.scale) == false) {
+                        console.log('scaled');
+                        this.scale.copyFrom(this.sprite.scale);
+                        this.bounds.width = this.sprite.width;
+                        this.bounds.height = this.sprite.height;
+                    }
+                }
+            };
+            AABB.prototype.update = function () {
+            };
+            AABB.prototype.setSize = function (width, height) {
+                this.bounds.width = width;
+                this.bounds.height = height;
             };
             AABB.prototype.render = function (context) {
                 context.beginPath();
                 context.strokeStyle = 'rgb(0,255,0)';
-                context.strokeRect(this.position.x - this.halfWidth, this.position.y - this.halfHeight, this.width, this.height);
+                context.strokeRect(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight, this.bounds.width, this.bounds.height);
                 context.stroke();
                 context.closePath();
                 //  center point
@@ -5761,30 +6086,30 @@ var Phaser;
                 if(this.oH == 1) {
                     context.beginPath();
                     context.strokeStyle = 'rgb(255,0,0)';
-                    context.moveTo(this.position.x - this.halfWidth, this.position.y - this.halfHeight);
-                    context.lineTo(this.position.x - this.halfWidth, this.position.y + this.halfHeight);
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
                     context.stroke();
                     context.closePath();
                 } else if(this.oH == -1) {
                     context.beginPath();
                     context.strokeStyle = 'rgb(255,0,0)';
-                    context.moveTo(this.position.x + this.halfWidth, this.position.y - this.halfHeight);
-                    context.lineTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+                    context.moveTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
                     context.stroke();
                     context.closePath();
                 }
                 if(this.oV == 1) {
                     context.beginPath();
                     context.strokeStyle = 'rgb(255,0,0)';
-                    context.moveTo(this.position.x - this.halfWidth, this.position.y - this.halfHeight);
-                    context.lineTo(this.position.x + this.halfWidth, this.position.y - this.halfHeight);
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
                     context.stroke();
                     context.closePath();
                 } else if(this.oV == -1) {
                     context.beginPath();
                     context.strokeStyle = 'rgb(255,0,0)';
-                    context.moveTo(this.position.x - this.halfWidth, this.position.y + this.halfHeight);
-                    context.lineTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
                     context.stroke();
                     context.closePath();
                 }
@@ -8946,300 +9271,6 @@ var Phaser;
 /// <reference path="../Game.ts" />
 /// <reference path="../core/Vec2.ts" />
 /**
-* Phaser - Vec2Utils
-*
-* A collection of methods useful for manipulating and performing operations on 2D vectors.
-*
-*/
-var Phaser;
-(function (Phaser) {
-    var Vec2Utils = (function () {
-        function Vec2Utils() { }
-        Vec2Utils.add = /**
-        * Adds two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors.
-        */
-        function add(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x + b.x, a.y + b.y);
-        };
-        Vec2Utils.subtract = /**
-        * Subtracts two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the difference of the two vectors.
-        */
-        function subtract(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x - b.x, a.y - b.y);
-        };
-        Vec2Utils.multiply = /**
-        * Multiplies two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
-        */
-        function multiply(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x * b.x, a.y * b.y);
-        };
-        Vec2Utils.divide = /**
-        * Divides two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
-        */
-        function divide(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x / b.x, a.y / b.y);
-        };
-        Vec2Utils.scale = /**
-        * Scales a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {number} s Scaling value.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the scaled vector.
-        */
-        function scale(a, s, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x * s, a.y * s);
-        };
-        Vec2Utils.perp = /**
-        * Rotate a 2D vector by 90 degrees.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the scaled vector.
-        */
-        function perp(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.y, -a.x);
-        };
-        Vec2Utils.equals = /**
-        * Checks if two 2D vectors are equal.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Boolean}
-        */
-        function equals(a, b) {
-            return a.x == b.x && a.y == b.y;
-        };
-        Vec2Utils.epsilonEquals = /**
-        *
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} epsilon
-        * @return {Boolean}
-        */
-        function epsilonEquals(a, b, epsilon) {
-            return Math.abs(a.x - b.x) <= epsilon && Math.abs(a.y - b.y) <= epsilon;
-        };
-        Vec2Utils.distance = /**
-        * Get the distance between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function distance(a, b) {
-            return Math.sqrt(Vec2Utils.distanceSq(a, b));
-        };
-        Vec2Utils.distanceSq = /**
-        * Get the distance squared between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function distanceSq(a, b) {
-            return ((a.x - b.x) * (a.x - b.x)) + ((a.y - b.y) * (a.y - b.y));
-        };
-        Vec2Utils.project = /**
-        * Project two 2D vectors onto another vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function project(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var amt = a.dot(b) / b.lengthSq();
-            if(amt != 0) {
-                out.setTo(amt * b.x, amt * b.y);
-            }
-            return out;
-        };
-        Vec2Utils.projectUnit = /**
-        * Project this vector onto a vector of unit length.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function projectUnit(a, b, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var amt = a.dot(b);
-            if(amt != 0) {
-                out.setTo(amt * b.x, amt * b.y);
-            }
-            return out;
-        };
-        Vec2Utils.normalRightHand = /**
-        * Right-hand normalize (make unit length) a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function normalRightHand(a, out) {
-            if (typeof out === "undefined") { out = this; }
-            return out.setTo(a.y * -1, a.x);
-        };
-        Vec2Utils.normalize = /**
-        * Normalize (make unit length) a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function normalize(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var m = a.length();
-            if(m != 0) {
-                out.setTo(a.x / m, a.y / m);
-            }
-            return out;
-        };
-        Vec2Utils.dot = /**
-        * The dot product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function dot(a, b) {
-            return ((a.x * b.x) + (a.y * b.y));
-        };
-        Vec2Utils.cross = /**
-        * The cross product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function cross(a, b) {
-            return ((a.x * b.y) - (a.y * b.x));
-        };
-        Vec2Utils.angle = /**
-        * The angle between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function angle(a, b) {
-            return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
-        };
-        Vec2Utils.angleSq = /**
-        * The angle squared between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        function angleSq(a, b) {
-            return a.subtract(b).angle(b.subtract(a));
-        };
-        Vec2Utils.rotate = /**
-        * Rotate a 2D vector around the origin to the given angle (theta).
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Number} theta The angle of rotation in radians.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        function rotate(a, b, theta, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var x = a.x - b.x;
-            var y = a.y - b.y;
-            return out.setTo(x * Math.cos(theta) - y * Math.sin(theta) + b.x, x * Math.sin(theta) + y * Math.cos(theta) + b.y);
-        };
-        Vec2Utils.clone = /**
-        * Clone a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is a copy of the source Vec2.
-        */
-        function clone(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            return out.setTo(a.x, a.y);
-        };
-        return Vec2Utils;
-    })();
-    Phaser.Vec2Utils = Vec2Utils;    
-    /**
-    * Reflect this vector on an arbitrary axis.
-    *
-    * @param {Vec2} axis The vector representing the axis.
-    * @return {Vec2} This for chaining.
-    */
-    /*
-    static reflect(axis): Vec2 {
-    
-    var x = this.x;
-    var y = this.y;
-    this.project(axis).scale(2);
-    this.x -= x;
-    this.y -= y;
-    
-    return this;
-    
-    }
-    */
-    /**
-    * Reflect this vector on an arbitrary axis (represented by a unit vector)
-    *
-    * @param {Vec2} axis The unit vector representing the axis.
-    * @return {Vec2} This for chaining.
-    */
-    /*
-    static reflectN(axis): Vec2 {
-    
-    var x = this.x;
-    var y = this.y;
-    this.projectN(axis).scale(2);
-    this.x -= x;
-    this.y -= y;
-    
-    return this;
-    
-    }
-    
-    static getMagnitude(): number {
-    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
-    }
-    */
-    })(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="../core/Vec2.ts" />
-/**
 * Phaser - Pointer
 *
 * A Pointer object is used by the Touch and MSPoint managers and represents a single finger on the touch screen.
@@ -11670,24 +11701,27 @@ var Phaser;
                 this.moves = true;
                 this._game = parent.game;
                 this._sprite = parent;
-                this.gravityFactor = new Phaser.Vec2(1, 1);
-                this.drag = new Phaser.Vec2(0, 0);
-                this.bounce = new Phaser.Vec2(0, 0);
-                this.friction = new Phaser.Vec2(0.05, 0.05);
-                this.velocity = new Phaser.Vec2(0, 0);
-                this.acceleration = new Phaser.Vec2(0, 0);
+                //  Copy from PhysicsManager?
+                this.gravity = new Phaser.Vec2();
+                this.drag = new Phaser.Vec2();
+                this.bounce = new Phaser.Vec2();
+                this.friction = new Phaser.Vec2();
+                this.velocity = new Phaser.Vec2();
+                this.acceleration = new Phaser.Vec2();
                 //this.AABB = new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height);
-                this.AABB = this._game.world.physics.add(new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
+                this.shape = this._game.world.physics.add(new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
             }
             Physics.prototype.update = /**
             * Internal function for updating the position and speed of this object.
             */
             function () {
                 if(this.moves) {
-                    this._sprite.x = this.AABB.position.x - this.AABB.halfWidth;
-                    this._sprite.y = this.AABB.position.y - this.AABB.halfHeight;
-                    //this._sprite.x = this.AABB.position.x;
-                    //this._sprite.y = this.AABB.position.y;
+                    this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth) - this.shape.offset.x;
+                    this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight) - this.shape.offset.y;
+                    //this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth);
+                    //this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight);
+                    //this._sprite.x = (this.shape.position.x);
+                    //this._sprite.y = (this.shape.position.y);
                                     }
             };
             Physics.prototype.renderDebugInfo = /**

@@ -48,12 +48,13 @@ module Phaser {
             this.width = this.frameBounds.width;
             this.height = this.frameBounds.height;
 
-            this.physics = new Phaser.Components.Physics(this);
-
             //  Transform related (if we add any more then move to a component)
             this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
             this.skew = new Phaser.Vec2(0, 0);
+
+            this.physics = new Phaser.Components.Physics(this);
+            this.physics.shape.physics = this.physics;
 
         }
 

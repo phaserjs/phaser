@@ -17,15 +17,16 @@ module Phaser.Components {
             this._game = parent.game;
             this._sprite = parent;
 
-            this.gravityFactor = new Vec2(1, 1);
-            this.drag = new Vec2(0, 0);
-            this.bounce = new Vec2(0, 0);
-            this.friction = new Vec2(0.05, 0.05);
-            this.velocity = new Vec2(0, 0);
-            this.acceleration = new Vec2(0, 0);
+            //  Copy from PhysicsManager?
+            this.gravity = new Vec2;
+            this.drag = new Vec2;
+            this.bounce = new Vec2;
+            this.friction = new Vec2;
+            this.velocity = new Vec2;
+            this.acceleration = new Vec2;
 
             //this.AABB = new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height);
-            this.AABB = this._game.world.physics.add(new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
+            this.shape = this._game.world.physics.add(new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
 
         }
 
@@ -39,7 +40,7 @@ module Phaser.Components {
          */
         private _sprite: Sprite;
 
-        public AABB: Phaser.Physics.AABB;
+        public shape: Phaser.Physics.IPhysicsShape;
 
         /**
          * Whether this object will be moved by impacts with other objects or not.
@@ -53,13 +54,12 @@ module Phaser.Components {
          */
         public moves: bool = true;
 
-        public gravityFactor: Vec2;
+        public gravity: Vec2;
         public drag: Vec2;
         public bounce: Vec2;
         public friction: Vec2;
         public velocity: Vec2;
         public acceleration: Vec2;
-
 
         /**
          * Internal function for updating the position and speed of this object.
@@ -68,10 +68,12 @@ module Phaser.Components {
 
             if (this.moves)
             {
-                this._sprite.x = this.AABB.position.x - this.AABB.halfWidth;
-                this._sprite.y = this.AABB.position.y - this.AABB.halfHeight;
-                //this._sprite.x = this.AABB.position.x;
-                //this._sprite.y = this.AABB.position.y;
+                this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth) - this.shape.offset.x;
+                this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight) - this.shape.offset.y;
+                //this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth);
+                //this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight);
+                //this._sprite.x = (this.shape.position.x);
+                //this._sprite.y = (this.shape.position.y);
             }
         }
 

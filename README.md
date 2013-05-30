@@ -28,6 +28,7 @@ TODO:
 * Fix bug in Tween yoyo + loop combo
 * Copy the setTransform from Sprite to Camera
 * Move Camera.scroll.x to just Camera.x/y
+* Get AABB offset working somehow
 
 
 
@@ -47,6 +48,8 @@ V1.0.0
 * Sprite.modified is set to true if scale, rotation, skew or flip have been used.
 * Added Tween.loop property so they can now re-run themselves indefinitely.
 * Added Tween.yoyo property so they can reverse themselves after completing.
+* Added Gravity to the Physics component.
+
 
 V0.9.6
 
