@@ -3242,6 +3242,8 @@ module Phaser.Physics {
         private _delta;
         private _velocityDelta;
         private _length;
+        private _distance;
+        private _tangent;
         public bounds: Rectangle;
         public gravity: Vec2;
         public drag: Vec2;
@@ -3263,6 +3265,9 @@ module Phaser.Physics {
         */
         public computeVelocity(velocity: number, gravity?: number, acceleration?: number, drag?: number, max?: number): number;
         private collideWorld(obj);
+        private separateX(shape, distance, tangent);
+        private separateY(shape, distance, tangent);
+        private separate(shape, distance, tangent);
     }
 }
 /**
@@ -6565,6 +6570,13 @@ module Phaser {
         * @return {Vec2} This for chaining.
         */
         public scale(x: number, y?: number): Vec2;
+        /**
+        * Multiply this vector by the given scalar.
+        *
+        * @param {number} scalar
+        * @return {Vec2} This for chaining.
+        */
+        public multiplyByScalar(scalar: number): Vec2;
         /**
         * Divide this vector by the given scalar.
         *

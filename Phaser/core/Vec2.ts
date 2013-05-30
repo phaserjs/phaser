@@ -204,6 +204,20 @@ module Phaser {
         }
 
         /**
+        * Multiply this vector by the given scalar.
+        * 
+        * @param {number} scalar
+        * @return {Vec2} This for chaining.
+        */
+        public multiplyByScalar(scalar: number): Vec2 {
+
+            this.x *= scalar;
+            this.y *= scalar;
+            return this;
+
+        }
+
+        /**
         * Divide this vector by the given scalar.
         * 
         * @param {number} scalar

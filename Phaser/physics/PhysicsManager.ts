@@ -23,6 +23,9 @@ module Phaser.Physics {
 
             this.bounds = new Rectangle(0, 0, width, height); 
 
+            this._distance = new Vec2;
+            this._tangent = new Vec2;
+
             this._objects = [];
 
         }
@@ -39,6 +42,8 @@ module Phaser.Physics {
         private _delta: number;
         private _velocityDelta: number;
         private _length: number = 0;
+        private _distance: Vec2;
+        private _tangent: Vec2;
 
         public bounds: Rectangle;
 
@@ -158,126 +163,215 @@ module Phaser.Physics {
 
         }
 
-        private collideWorld(obj:IPhysicsShape) {
+        private collideWorld(shape:IPhysicsShape) {
 
             //  Collide on the x-axis
-            var dx: number = obj.world.bounds.x - (obj.position.x - obj.bounds.halfWidth);
+            this._distance.x = shape.world.bounds.x - (shape.position.x - shape.bounds.halfWidth);
             
-            if (0 < dx)
+            if (0 < this._distance.x)
             {
                 //  Hit Left
-                obj.oH = 1;
-                obj.position.x += dx;
-
-                if (obj.sprite.physics.bounce.x > 0)
-                {
-                    obj.sprite.physics.velocity.x *= -(obj.sprite.physics.bounce.x);
-                }
-                else
-                {
-                    obj.sprite.physics.velocity.x = 0;
-                }
+                this._tangent.setTo(1, 0);
+                this.separateX(shape, this._distance, this._tangent);
             }
             else
             {
-                dx = (obj.position.x + obj.bounds.halfWidth) - obj.world.bounds.right;
+                this._distance.x = (shape.position.x + shape.bounds.halfWidth) - shape.world.bounds.right;
 
-                if (0 < dx)
+                if (0 < this._distance.x)
                 {
                     //  Hit Right
-                    obj.oH = -1;
-                    obj.position.x -= dx;
-
-                    if (obj.sprite.physics.bounce.x > 0)
-                    {
-                        obj.sprite.physics.velocity.x *= -(obj.sprite.physics.bounce.x);
-                    }
-                    else
-                    {
-                        obj.sprite.physics.velocity.x = 0;
-                    }
+                    this._tangent.setTo(-1, 0);
+                    this._distance.reverse();
+                    this.separateX(shape, this._distance, this._tangent);
                 }
             }
 
             //  Collide on the y-axis
-            var dy: number = obj.world.bounds.y - (obj.position.y - obj.bounds.halfHeight);
+            this._distance.y = shape.world.bounds.y - (shape.position.y - shape.bounds.halfHeight);
 
-            if (0 < dy)
+            if (0 < this._distance.y)
             {
                 //  Hit Top
-                obj.oV = 1;
-                obj.position.y += dy;
-
-                if (obj.sprite.physics.bounce.y > 0)
-                {
-                    obj.sprite.physics.velocity.y *= -(obj.sprite.physics.bounce.y);
-                }
-                else
-                {
-                    obj.sprite.physics.velocity.y = 0;
-                }
+                this._tangent.setTo(0, 1);
+                this.separateY(shape, this._distance, this._tangent);
             }
             else
             {
-                dy = (obj.position.y + obj.bounds.halfHeight) - obj.world.bounds.bottom;
+                this._distance.y = (shape.position.y + shape.bounds.halfHeight) - shape.world.bounds.bottom;
 
-                if (0 < dy)
+                if (0 < this._distance.y)
                 {
                     //  Hit Bottom
-                    obj.oV = -1;
-                    obj.position.y -= dy;
-
-                    if (obj.sprite.physics.bounce.y > 0)
-                    {
-                        obj.sprite.physics.velocity.y *= -(obj.sprite.physics.bounce.y);
-                    }
-                    else
-                    {
-                        obj.sprite.physics.velocity.y = 0;
-                    }
+                    this._tangent.setTo(0, -1);
+                    this._distance.reverse();
+                    this.separateY(shape, this._distance, this._tangent);
                 }
             }
 
         }
 
         /*
-        private processWorld(px, py, dx, dy, tile) {
+        private OLDButWorkingcollideWorld(obj:IPhysicsShape) {
 
-            //  Velocity
-            //this.sprite.physics.velocity.x = this.position.x - this.oldPosition.x;
-            //this.sprite.physics.velocity.y = this.position.y - this.oldPosition.y;
+            this._distance.setTo(0, 0);
 
-            //  Optimise!!!
-            var dp: number = (this.sprite.physics.velocity.x * dx + this.sprite.physics.velocity.y * dy);
-            var nx: number = dp * dx;
-            var ny: number = dp * dy;
-            var tx: number = this.sprite.physics.velocity.x - nx;
-            var ty: number = this.sprite.physics.velocity.y - ny;
-
-            var bx, by, fx, fy;
-
-            if (dp < 0)
+            //  Collide on the x-axis
+            this._distance.x = obj.world.bounds.x - (obj.position.x - obj.bounds.halfWidth);
+            
+            if (0 < this._distance.x)
             {
-                fx = tx * this.sprite.physics.friction.x;
-                fy = ty * this.sprite.physics.friction.y;
-                bx = (nx * (1 + this.sprite.physics.bounce.x));
-                by = (ny * (1 + this.sprite.physics.bounce.y));
-                //this.sprite.physics.velocity.x = bx;
-                //this.sprite.physics.velocity.y = by;
+                //  Hit Left
+                //  Parameter order: px, py (distance), dx, dy (tangent)
+                this._tangent.setTo(1, 0);
+                this.separate(obj, this._distance, this._tangent);
             }
             else
             {
-                bx = by = fx = fy = 0;
+                this._distance.x = (obj.position.x + obj.bounds.halfWidth) - obj.world.bounds.right;
+
+                if (0 < this._distance.x)
+                {
+                    //  Hit Right
+                    //  Parameter order: px, py (distance), dx, dy (tangent)
+                    this._tangent.setTo(-1, 0);
+                    this._distance.x = -this._distance.x;
+                    this.separate(obj, this._distance, this._tangent);
+                }
             }
 
-            this.position.x += px;
-            this.position.y += py;
+            //  Collide on the y-axis
+            this._distance.x = 0;
+            this._distance.y = obj.world.bounds.y - (obj.position.y - obj.bounds.halfHeight);
 
-            this.oldPosition.x += px + bx + fx;
-            this.oldPosition.y += py + by + fy;
+            if (0 < this._distance.y)
+            {
+                //  Hit Top
+                this._tangent.setTo(0, 1);
+                this.separate(obj, this._distance, this._tangent);
+            }
+            else
+            {
+                this._distance.y = (obj.position.y + obj.bounds.halfHeight) - obj.world.bounds.bottom;
+
+                if (0 < this._distance.y)
+                {
+                    //  Hit Bottom
+                    this._tangent.setTo(0, -1);
+                    this._distance.y = -this._distance.y;
+                    this.separate(obj, this._distance, this._tangent);
+                }
+            }
 
         }
-        */
+    */
+
+        private separateX(shape: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+
+            //  collision edges
+            shape.oH = tangent.x;
+
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shape.physics.velocity, tangent) < 0)
+            {
+                //  Apply horizontal bounce
+                if (shape.physics.bounce.x > 0)
+                {
+                    shape.physics.velocity.x *= -(shape.physics.bounce.x);
+                }
+                else
+                {
+                    shape.physics.velocity.x = 0;
+                }
+            }
+
+            shape.position.x += distance.x;
+
+        }
+
+        private separateY(shape: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+
+            //  collision edges
+            shape.oV = tangent.y;
+
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shape.physics.velocity, tangent) < 0)
+            {
+                //  Apply horizontal bounce
+                if (shape.physics.bounce.y > 0)
+                {
+                    shape.physics.velocity.y *= -(shape.physics.bounce.y);
+                }
+                else
+                {
+                    shape.physics.velocity.y = 0;
+                }
+            }
+
+            shape.position.y += distance.y;
+
+        }
+
+        private separate(shape:IPhysicsShape, distance: Vec2, tangent: Vec2) {
+
+            //  collision edges
+            shape.oH = tangent.x;
+            shape.oV = tangent.y;
+
+            //  Velocity (move to temp vars)
+
+            //  was vx/vy
+            var velocity: Vec2 = Vec2Utils.subtract(shape.position, shape.oldPosition);
+
+            //  was dp
+            var dot: number = Vec2Utils.dot(shape.physics.velocity, tangent);
+
+            //  project velocity onto the collision normal
+            //  was nx/ny
+            tangent.multiplyByScalar(dot);
+
+            //  was tx/ty (tangent velocity?)
+            var tangentVelocity: Vec2 = Vec2Utils.subtract(velocity, tangent);
+
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (dot < 0)
+            {
+                //  Apply horizontal bounce
+                if (distance.x != 0)
+                {
+                    if (shape.physics.bounce.x > 0)
+                    {
+                        shape.physics.velocity.x *= -(shape.physics.bounce.x);
+                    }
+                    else
+                    {
+                        shape.physics.velocity.x = 0;
+                    }
+                }
+
+                //  Apply vertical bounce
+                if (distance.y != 0)
+                {
+                    if (shape.physics.bounce.y > 0)
+                    {
+                        shape.physics.velocity.y *= -(shape.physics.bounce.y);
+                    }
+                    else
+                    {
+                        shape.physics.velocity.y = 0;
+                    }
+                }
+            }
+            else
+            {
+                //  moving out of collision
+            }
+
+            //  project object out of collision
+            //console.log('proj out', distance.x, distance.y,'dot',dot);
+            shape.position.add(distance);
+
+        }
 
     }
 

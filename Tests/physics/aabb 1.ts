@@ -20,8 +20,8 @@
         atari.texture.alpha = 0.5;
         //atari.scale.setTo(1.5, 1.5);
 
-        atari.physics.shape.setSize(150, 50);
-        atari.physics.shape.offset.setTo(50, 25);
+        //atari.physics.shape.setSize(150, 50);
+        //atari.physics.shape.offset.setTo(50, 25);
 
         //atari.physics.gravity.setTo(0, 2);
         atari.physics.bounce.setTo(0.7, 0.7);
