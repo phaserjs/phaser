@@ -1,11 +1,10 @@
 /// <reference path="../../core/Vec2.ts" />
 /// <reference path="../../core/Point.ts" />
+/// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../../physics/AABB.ts" />
 
 /**
 * Phaser - Components - Physics
-*
-* 
 */
 
 module Phaser.Components {
@@ -14,32 +13,24 @@ module Phaser.Components {
 
         constructor(parent: Sprite) {
 
-            this._game = parent.game;
+            this.game = parent.game;
             this._sprite = parent;
 
-            //  Copy from PhysicsManager?
-            this.gravity = new Vec2;
-            this.drag = new Vec2;
-            this.bounce = new Vec2;
-            this.friction = new Vec2;
+            this.gravity = Vec2Utils.clone(this.game.world.physics.gravity);
+            this.drag = Vec2Utils.clone(this.game.world.physics.drag);
+            this.bounce = Vec2Utils.clone(this.game.world.physics.bounce);
+            this.friction = Vec2Utils.clone(this.game.world.physics.friction);
+
             this.velocity = new Vec2;
             this.acceleration = new Vec2;
 
-            //this.AABB = new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height);
-            this.shape = this._game.world.physics.add(new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
+            this.shape = this.game.world.physics.add(new Phaser.Physics.AABB(this.game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
 
         }
 
-        /**
-         * 
-         */
-        private _game: Game;
-
-        /**
-         * 
-         */
         private _sprite: Sprite;
 
+        public game: Game;
         public shape: Phaser.Physics.IPhysicsShape;
 
         /**
@@ -70,10 +61,6 @@ module Phaser.Components {
             {
                 this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth) - this.shape.offset.x;
                 this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight) - this.shape.offset.y;
-                //this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth);
-                //this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight);
-                //this._sprite.x = (this.shape.position.x);
-                //this._sprite.y = (this.shape.position.y);
             }
         }
 

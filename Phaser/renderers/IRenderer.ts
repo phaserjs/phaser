@@ -6,6 +6,7 @@ module Phaser {
 
         render();
         renderSprite(camera: Camera, sprite: Sprite): bool;
+        renderScrollZone(camera: Camera, sprite: ScrollZone): bool;
 
     }
 

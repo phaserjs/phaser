@@ -3849,12 +3849,12 @@ var Phaser;
                 /**
                 * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
                 */
-                this._imageTexture = null;
+                this.imageTexture = null;
                 /**
                 * Reference to the DynamicTexture that is used as the texture for the Sprite.
                 * @type {DynamicTexture}
                 */
-                this._dynamicTexture = null;
+                this.dynamicTexture = null;
                 /**
                 * The status of the texture image.
                 * @type {boolean}
@@ -3876,6 +3876,11 @@ var Phaser;
                 * @type {boolean}
                 */
                 this.flippedY = false;
+                /**
+                * Is the texture a DynamicTexture?
+                * @type {boolean}
+                */
+                this.isDynamic = false;
                 this._game = parent.game;
                 this._sprite = parent;
                 this.canvas = parent.game.stage.canvas;
@@ -3896,11 +3901,13 @@ var Phaser;
                 if (typeof image === "undefined") { image = null; }
                 if (typeof dynamic === "undefined") { dynamic = null; }
                 if(dynamic) {
-                    this._dynamicTexture = dynamic;
-                    this.texture = this._dynamicTexture.canvas;
+                    this.isDynamic = true;
+                    this.dynamicTexture = dynamic;
+                    this.texture = this.dynamicTexture.canvas;
                 } else {
-                    this._imageTexture = image;
-                    this.texture = this._imageTexture;
+                    this.isDynamic = false;
+                    this.imageTexture = image;
+                    this.texture = this.imageTexture;
                 }
                 this.loaded = true;
                 return this._sprite;
@@ -3946,10 +3953,10 @@ var Phaser;
                 * @type {number}
                 */
                 function () {
-                    if(this._dynamicTexture) {
-                        return this._dynamicTexture.width;
+                    if(this.isDynamic) {
+                        return this.dynamicTexture.width;
                     } else {
-                        return this._imageTexture.width;
+                        return this.imageTexture.width;
                     }
                 },
                 enumerable: true,
@@ -3961,10 +3968,10 @@ var Phaser;
                 * @type {number}
                 */
                 function () {
-                    if(this._dynamicTexture) {
-                        return this._dynamicTexture.height;
+                    if(this.isDynamic) {
+                        return this.dynamicTexture.height;
                     } else {
-                        return this._imageTexture.height;
+                        return this.imageTexture.height;
                     }
                 },
                 enumerable: true,
@@ -4048,8 +4055,6 @@ var Phaser;
             ;
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this, key);
-            this.width = this.frameBounds.width;
-            this.height = this.frameBounds.height;
             //  Transform related (if we add any more then move to a component)
             this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
@@ -4102,6 +4107,26 @@ var Phaser;
             */
             function (value) {
                 this.animations.frameName = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Sprite.prototype, "width", {
+            get: function () {
+                return this.frameBounds.width;
+            },
+            set: function (value) {
+                this.frameBounds.width = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Sprite.prototype, "height", {
+            get: function () {
+                return this.frameBounds.height;
+            },
+            set: function (value) {
+                this.frameBounds.height = value;
             },
             enumerable: true,
             configurable: true
@@ -6045,7 +6070,6 @@ var Phaser;
                     this.physics = null;
                     this.scale = new Phaser.Vec2(1, 1);
                 }
-                //this.bounds = new Rectangle(x + Math.round(width / 2), y + Math.round(height / 2), width, height);
                 this.bounds = new Phaser.Rectangle(x + Math.round(width / 2), y + Math.round(height / 2), width, height);
                 this.position = new Phaser.Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
                 this.oldPosition = new Phaser.Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
@@ -6054,14 +6078,9 @@ var Phaser;
             AABB.prototype.preUpdate = function () {
                 this.oldPosition.copyFrom(this.position);
                 if(this.sprite) {
-                    //  Update position to sprite value
-                    //console.log('a', this.position.x, this.position.y);
                     this.position.setTo((this.sprite.x + this.bounds.halfWidth) + this.offset.x, (this.sprite.y + this.bounds.halfHeight) + this.offset.y);
-                    //console.log('b', this.position.x, this.position.y);
-                    //this.position.setTo(this.sprite.x, this.sprite.y);
                     //  Update scale / dimensions
                     if(Phaser.Vec2Utils.equals(this.scale, this.sprite.scale) == false) {
-                        console.log('scaled');
                         this.scale.copyFrom(this.sprite.scale);
                         this.bounds.width = this.sprite.width;
                         this.bounds.height = this.sprite.height;
@@ -6069,6 +6088,8 @@ var Phaser;
                 }
             };
             AABB.prototype.update = function () {
+                this.bounds.x = this.position.x;
+                this.bounds.y = this.position.y;
             };
             AABB.prototype.setSize = function (width, height) {
                 this.bounds.width = width;
@@ -6205,7 +6226,7 @@ var Phaser;
         function (x, y, width, height) {
             return this._world.physics.add(new Phaser.Physics.AABB(this._game, null, x, y, width, height));
         };
-        GameObjectFactory.prototype.tween = /**
+        GameObjectFactory.prototype.scrollZone = /**
         * Create a new Particle.
         *
         * @return {Particle} The newly created particle object.
@@ -6234,10 +6255,14 @@ var Phaser;
         * @param height {number} Height of this object.
         * @returns {ScrollZone} The newly created scroll zone object.
         */
-        //public scrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
-        //    return <ScrollZone> this._world.group.add(new ScrollZone(this._game, key, x, y, width, height));
-        //}
-        /**
+        function (key, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
+            return this._world.group.add(new Phaser.ScrollZone(this._game, key, x, y, width, height));
+        };
+        GameObjectFactory.prototype.tween = /**
         * Create a new Tilemap.
         *
         * @param key {string} Key for tileset image.
@@ -6270,7 +6295,7 @@ var Phaser;
         function (sprite) {
             return this._world.group.add(sprite);
         };
-        GameObjectFactory.prototype.existingTween = /**
+        GameObjectFactory.prototype.existingScrollZone = /**
         * Add an existing GeomSprite to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
         *
@@ -6297,10 +6322,10 @@ var Phaser;
         * @param scrollZone The ScrollZone to add to the Game World
         * @return {Phaser.ScrollZone} The ScrollZone object
         */
-        //public existingScrollZone(scrollZone: ScrollZone): ScrollZone {
-        //    return this._world.group.add(scrollZone);
-        //}
-        /**
+        function (scrollZone) {
+            return this._world.group.add(scrollZone);
+        };
+        GameObjectFactory.prototype.existingTween = /**
         * Add an existing Tilemap to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
         *
@@ -10881,19 +10906,284 @@ var Phaser;
         HeadlessRenderer.prototype.render = function () {
         };
         HeadlessRenderer.prototype.renderSprite = function (camera, sprite) {
-            //  Render checks (needs inCamera check added)
-            if(sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1) {
-                return false;
-            }
+            return true;
+        };
+        HeadlessRenderer.prototype.renderScrollZone = function (camera, scrollZone) {
             return true;
         };
         return HeadlessRenderer;
     })();
     Phaser.HeadlessRenderer = HeadlessRenderer;    
-    //  Add Tilemap, ScrollZone, etc?
-    })(Phaser || (Phaser = {}));
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../core/Vec2.ts" />
+/**
+* Phaser - ScrollRegion
+*
+* Creates a scrolling region within a ScrollZone.
+* It is scrolled via the scrollSpeed.x/y properties.
+*/
+var Phaser;
+(function (Phaser) {
+    var ScrollRegion = (function () {
+        /**
+        * ScrollRegion constructor
+        * Create a new <code>ScrollRegion</code>.
+        *
+        * @param x {number} X position in world coordinate.
+        * @param y {number} Y position in world coordinate.
+        * @param width {number} Width of this object.
+        * @param height {number} Height of this object.
+        * @param speedX {number} X-axis scrolling speed.
+        * @param speedY {number} Y-axis scrolling speed.
+        */
+        function ScrollRegion(x, y, width, height, speedX, speedY) {
+            this._anchorWidth = 0;
+            this._anchorHeight = 0;
+            this._inverseWidth = 0;
+            this._inverseHeight = 0;
+            /**
+            * Will this region be rendered? (default to true)
+            * @type {boolean}
+            */
+            this.visible = true;
+            //	Our seamless scrolling quads
+            this._A = new Phaser.Rectangle(x, y, width, height);
+            this._B = new Phaser.Rectangle(x, y, width, height);
+            this._C = new Phaser.Rectangle(x, y, width, height);
+            this._D = new Phaser.Rectangle(x, y, width, height);
+            this._scroll = new Phaser.Vec2();
+            this._bounds = new Phaser.Rectangle(x, y, width, height);
+            this.scrollSpeed = new Phaser.Vec2(speedX, speedY);
+        }
+        ScrollRegion.prototype.update = /**
+        * Update region scrolling with tick time.
+        * @param delta {number} Elapsed time since last update.
+        */
+        function (delta) {
+            this._scroll.x += this.scrollSpeed.x;
+            this._scroll.y += this.scrollSpeed.y;
+            if(this._scroll.x > this._bounds.right) {
+                this._scroll.x = this._bounds.x;
+            }
+            if(this._scroll.x < this._bounds.x) {
+                this._scroll.x = this._bounds.right;
+            }
+            if(this._scroll.y > this._bounds.bottom) {
+                this._scroll.y = this._bounds.y;
+            }
+            if(this._scroll.y < this._bounds.y) {
+                this._scroll.y = this._bounds.bottom;
+            }
+            //	Anchor Dimensions
+            this._anchorWidth = (this._bounds.width - this._scroll.x) + this._bounds.x;
+            this._anchorHeight = (this._bounds.height - this._scroll.y) + this._bounds.y;
+            if(this._anchorWidth > this._bounds.width) {
+                this._anchorWidth = this._bounds.width;
+            }
+            if(this._anchorHeight > this._bounds.height) {
+                this._anchorHeight = this._bounds.height;
+            }
+            this._inverseWidth = this._bounds.width - this._anchorWidth;
+            this._inverseHeight = this._bounds.height - this._anchorHeight;
+            //	Rectangle A
+            this._A.setTo(this._scroll.x, this._scroll.y, this._anchorWidth, this._anchorHeight);
+            //	Rectangle B
+            this._B.y = this._scroll.y;
+            this._B.width = this._inverseWidth;
+            this._B.height = this._anchorHeight;
+            //	Rectangle C
+            this._C.x = this._scroll.x;
+            this._C.width = this._anchorWidth;
+            this._C.height = this._inverseHeight;
+            //	Rectangle D
+            this._D.width = this._inverseWidth;
+            this._D.height = this._inverseHeight;
+        };
+        ScrollRegion.prototype.render = /**
+        * Render this region to specific context.
+        * @param context {CanvasRenderingContext2D} Canvas context this region will be rendered to.
+        * @param texture {object} The texture to be rendered.
+        * @param dx {number} X position in world coordinate.
+        * @param dy {number} Y position in world coordinate.
+        * @param width {number} Width of this region to be rendered.
+        * @param height {number} Height of this region to be rendered.
+        */
+        function (context, texture, dx, dy, dw, dh) {
+            if(this.visible == false) {
+                return;
+            }
+            //  dx/dy are the world coordinates to render the FULL ScrollZone into.
+            //  This ScrollRegion may be smaller than that and offset from the dx/dy coordinates.
+            this.crop(context, texture, this._A.x, this._A.y, this._A.width, this._A.height, dx, dy, dw, dh, 0, 0);
+            this.crop(context, texture, this._B.x, this._B.y, this._B.width, this._B.height, dx, dy, dw, dh, this._A.width, 0);
+            this.crop(context, texture, this._C.x, this._C.y, this._C.width, this._C.height, dx, dy, dw, dh, 0, this._A.height);
+            this.crop(context, texture, this._D.x, this._D.y, this._D.width, this._D.height, dx, dy, dw, dh, this._C.width, this._A.height);
+            //context.fillStyle = 'rgb(255,255,255)';
+            //context.font = '18px Arial';
+            //context.fillText('RectangleA: ' + this._A.toString(), 32, 450);
+            //context.fillText('RectangleB: ' + this._B.toString(), 32, 480);
+            //context.fillText('RectangleC: ' + this._C.toString(), 32, 510);
+            //context.fillText('RectangleD: ' + this._D.toString(), 32, 540);
+                    };
+        ScrollRegion.prototype.crop = /**
+        * Crop part of the texture and render it to the given context.
+        * @param context {CanvasRenderingContext2D} Canvas context the texture will be rendered to.
+        * @param texture {object} Texture to be rendered.
+        * @param srcX {number} Target region top-left x coordinate in the texture.
+        * @param srcX {number} Target region top-left y coordinate in the texture.
+        * @param srcW {number} Target region width in the texture.
+        * @param srcH {number} Target region height in the texture.
+        * @param destX {number} Render region top-left x coordinate in the context.
+        * @param destX {number} Render region top-left y coordinate in the context.
+        * @param destW {number} Target region width in the context.
+        * @param destH {number} Target region height in the context.
+        * @param offsetX {number} X offset to the context.
+        * @param offsetY {number} Y offset to the context.
+        */
+        function (context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY) {
+            offsetX += destX;
+            offsetY += destY;
+            if(srcW > (destX + destW) - offsetX) {
+                srcW = (destX + destW) - offsetX;
+            }
+            if(srcH > (destY + destH) - offsetY) {
+                srcH = (destY + destH) - offsetY;
+            }
+            srcX = Math.floor(srcX);
+            srcY = Math.floor(srcY);
+            srcW = Math.floor(srcW);
+            srcH = Math.floor(srcH);
+            offsetX = Math.floor(offsetX + this._bounds.x);
+            offsetY = Math.floor(offsetY + this._bounds.y);
+            if(srcW > 0 && srcH > 0) {
+                context.drawImage(texture, srcX, srcY, srcW, srcH, offsetX, offsetY, srcW, srcH);
+            }
+        };
+        return ScrollRegion;
+    })();
+    Phaser.ScrollRegion = ScrollRegion;    
+})(Phaser || (Phaser = {}));
+var __extends = this.__extends || function (d, b) {
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+/// <reference path="../Game.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../components/ScrollRegion.ts" />
+/**
+* Phaser - ScrollZone
+*
+* Creates a scrolling region of the given width and height from an image in the cache.
+* The ScrollZone can be positioned anywhere in-world like a normal game object, re-act to physics, collision, etc.
+* The image within it is scrolled via ScrollRegions and their scrollSpeed.x/y properties.
+* If you create a scroll zone larger than the given source image it will create a DynamicTexture and fill it with a pattern of the source image.
+*/
+var Phaser;
+(function (Phaser) {
+    var ScrollZone = (function (_super) {
+        __extends(ScrollZone, _super);
+        /**
+        * ScrollZone constructor
+        * Create a new <code>ScrollZone</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param key {string} Asset key for image texture of this object.
+        * @param x {number} X position in world coordinate.
+        * @param y {number} Y position in world coordinate.
+        * @param [width] {number} width of this object.
+        * @param [height] {number} height of this object.
+        */
+        function ScrollZone(game, key, x, y, width, height) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
+                _super.call(this, game, x, y, key, width, height);
+            this.type = Phaser.Types.SCROLLZONE;
+            this.render = game.renderer.renderScrollZone;
+            this.physics.moves = false;
+            this.regions = [];
+            if(this.texture.loaded) {
+                if(width > this.width || height > this.height) {
+                    //  Create our repeating texture (as the source image wasn't large enough for the requested size)
+                    this.createRepeatingTexture(width, height);
+                    this.width = width;
+                    this.height = height;
+                }
+                //  Create a default ScrollRegion at the requested size
+                this.addRegion(0, 0, this.width, this.height);
+                //  If the zone is smaller than the image itself then shrink the bounds
+                if((width < this.width || height < this.height) && width !== 0 && height !== 0) {
+                    this.width = width;
+                    this.height = height;
+                }
+            }
+        }
+        ScrollZone.prototype.addRegion = /**
+        * Add a new region to this zone.
+        * @param x {number} X position of the new region.
+        * @param y {number} Y position of the new region.
+        * @param width {number} Width of the new region.
+        * @param height {number} Height of the new region.
+        * @param [speedX] {number} x-axis scrolling speed.
+        * @param [speedY] {number} y-axis scrolling speed.
+        * @return {ScrollRegion} The newly added region.
+        */
+        function (x, y, width, height, speedX, speedY) {
+            if (typeof speedX === "undefined") { speedX = 0; }
+            if (typeof speedY === "undefined") { speedY = 0; }
+            if(x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height) {
+                throw Error('Invalid ScrollRegion defined. Cannot be larger than parent ScrollZone');
+                return;
+            }
+            this.currentRegion = new Phaser.ScrollRegion(x, y, width, height, speedX, speedY);
+            this.regions.push(this.currentRegion);
+            return this.currentRegion;
+        };
+        ScrollZone.prototype.setSpeed = /**
+        * Set scrolling speed of current region.
+        * @param x {number} X speed of current region.
+        * @param y {number} Y speed of current region.
+        */
+        function (x, y) {
+            if(this.currentRegion) {
+                this.currentRegion.scrollSpeed.setTo(x, y);
+            }
+            return this;
+        };
+        ScrollZone.prototype.update = /**
+        * Update regions.
+        */
+        function () {
+            for(var i = 0; i < this.regions.length; i++) {
+                this.regions[i].update(this.game.time.delta);
+            }
+        };
+        ScrollZone.prototype.createRepeatingTexture = /**
+        * Create repeating texture with _texture, and store it into the _dynamicTexture.
+        * Used to create texture when texture image is small than size of the zone.
+        */
+        function (regionWidth, regionHeight) {
+            console.log('create repeat');
+            //	Work out how many we'll need of the source image to make it tile properly
+            var tileWidth = Math.ceil(this.width / regionWidth) * regionWidth;
+            var tileHeight = Math.ceil(this.height / regionHeight) * regionHeight;
+            var dt = new Phaser.DynamicTexture(this.game, tileWidth, tileHeight);
+            dt.context.rect(0, 0, tileWidth, tileHeight);
+            dt.context.fillStyle = dt.context.createPattern(this.texture.imageTexture, "repeat");
+            dt.context.fill();
+            this.texture.loadDynamicTexture(dt);
+        };
+        return ScrollZone;
+    })(Phaser.Sprite);
+    Phaser.ScrollZone = ScrollZone;    
+})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="../gameobjects/ScrollZone.ts" />
 /// <reference path="../cameras/Camera.ts" />
 /// <reference path="IRenderer.ts" />
 var Phaser;
@@ -11031,6 +11321,89 @@ var Phaser;
             //}
             if(this._ga > -1) {
                 sprite.texture.context.globalAlpha = this._ga;
+            }
+            return true;
+        };
+        CanvasRenderer.prototype.renderScrollZone = function (camera, scrollZone) {
+            //  Render checks (needs inCamera check added)
+            if(scrollZone.scale.x == 0 || scrollZone.scale.y == 0 || scrollZone.texture.alpha < 0.1) {
+                return false;
+            }
+            //  Reset our temp vars
+            this._ga = -1;
+            this._sx = 0;
+            this._sy = 0;
+            this._sw = scrollZone.frameBounds.width;
+            this._sh = scrollZone.frameBounds.height;
+            this._fx = scrollZone.scale.x;
+            this._fy = scrollZone.scale.y;
+            this._sin = 0;
+            this._cos = 1;
+            this._dx = (camera.scaledX * scrollZone.scrollFactor.x) + scrollZone.frameBounds.x - (camera.worldView.x * scrollZone.scrollFactor.x);
+            this._dy = (camera.scaledY * scrollZone.scrollFactor.y) + scrollZone.frameBounds.y - (camera.worldView.y * scrollZone.scrollFactor.y);
+            this._dw = scrollZone.frameBounds.width;
+            this._dh = scrollZone.frameBounds.height;
+            //  Alpha
+            if(scrollZone.texture.alpha !== 1) {
+                this._ga = scrollZone.texture.context.globalAlpha;
+                scrollZone.texture.context.globalAlpha = scrollZone.texture.alpha;
+            }
+            //  Sprite Flip X
+            if(scrollZone.texture.flippedX) {
+                this._fx = -scrollZone.scale.x;
+            }
+            //  Sprite Flip Y
+            if(scrollZone.texture.flippedY) {
+                this._fy = -scrollZone.scale.y;
+            }
+            //	Rotation and Flipped
+            if(scrollZone.modified) {
+                if(scrollZone.texture.renderRotation == true && (scrollZone.rotation !== 0 || scrollZone.rotationOffset !== 0)) {
+                    this._sin = Math.sin(scrollZone.game.math.degreesToRadians(scrollZone.rotationOffset + scrollZone.rotation));
+                    this._cos = Math.cos(scrollZone.game.math.degreesToRadians(scrollZone.rotationOffset + scrollZone.rotation));
+                }
+                //  setTransform(a, b, c, d, e, f);
+                //  a = scale x
+                //  b = skew x
+                //  c = skew y
+                //  d = scale y
+                //  e = translate x
+                //  f = translate y
+                scrollZone.texture.context.save();
+                scrollZone.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + scrollZone.skew.x, -(this._sin * this._fy) + scrollZone.skew.y, this._cos * this._fy, this._dx, this._dy);
+                this._dx = -scrollZone.origin.x;
+                this._dy = -scrollZone.origin.y;
+            } else {
+                if(!scrollZone.origin.equals(0)) {
+                    this._dx -= scrollZone.origin.x;
+                    this._dy -= scrollZone.origin.y;
+                }
+            }
+            this._sx = Math.round(this._sx);
+            this._sy = Math.round(this._sy);
+            this._sw = Math.round(this._sw);
+            this._sh = Math.round(this._sh);
+            this._dx = Math.round(this._dx);
+            this._dy = Math.round(this._dy);
+            this._dw = Math.round(this._dw);
+            this._dh = Math.round(this._dh);
+            for(var i = 0; i < scrollZone.regions.length; i++) {
+                if(scrollZone.texture.isDynamic) {
+                    scrollZone.regions[i].render(scrollZone.texture.context, scrollZone.texture.texture, this._dx, this._dy, this._dw, this._dh);
+                } else {
+                    scrollZone.regions[i].render(scrollZone.texture.context, scrollZone.texture.texture, this._dx, this._dy, this._dw, this._dh);
+                }
+            }
+            if(scrollZone.modified) {
+                scrollZone.texture.context.restore();
+            }
+            //if (this.renderDebug)
+            //{
+            //    this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
+            //this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
+            //}
+            if(this._ga > -1) {
+                scrollZone.texture.context.globalAlpha = this._ga;
             }
             return true;
         };
@@ -11685,11 +12058,10 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../core/Vec2.ts" />
     /// <reference path="../../core/Point.ts" />
+    /// <reference path="../../math/Vec2Utils.ts" />
     /// <reference path="../../physics/AABB.ts" />
     /**
     * Phaser - Components - Physics
-    *
-    *
     */
     (function (Components) {
         var Physics = (function () {
@@ -11699,17 +12071,15 @@ var Phaser;
                 * @type {boolean}
                 */
                 this.moves = true;
-                this._game = parent.game;
+                this.game = parent.game;
                 this._sprite = parent;
-                //  Copy from PhysicsManager?
-                this.gravity = new Phaser.Vec2();
-                this.drag = new Phaser.Vec2();
-                this.bounce = new Phaser.Vec2();
-                this.friction = new Phaser.Vec2();
+                this.gravity = Phaser.Vec2Utils.clone(this.game.world.physics.gravity);
+                this.drag = Phaser.Vec2Utils.clone(this.game.world.physics.drag);
+                this.bounce = Phaser.Vec2Utils.clone(this.game.world.physics.bounce);
+                this.friction = Phaser.Vec2Utils.clone(this.game.world.physics.friction);
                 this.velocity = new Phaser.Vec2();
                 this.acceleration = new Phaser.Vec2();
-                //this.AABB = new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height);
-                this.shape = this._game.world.physics.add(new Phaser.Physics.AABB(this._game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
+                this.shape = this.game.world.physics.add(new Phaser.Physics.AABB(this.game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
             }
             Physics.prototype.update = /**
             * Internal function for updating the position and speed of this object.
@@ -11718,11 +12088,7 @@ var Phaser;
                 if(this.moves) {
                     this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth) - this.shape.offset.x;
                     this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight) - this.shape.offset.y;
-                    //this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth);
-                    //this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight);
-                    //this._sprite.x = (this.shape.position.x);
-                    //this._sprite.y = (this.shape.position.y);
-                                    }
+                }
             };
             Physics.prototype.renderDebugInfo = /**
             * Render debug infos. (including name, bounds info, position and some other properties)
@@ -11896,11 +12262,6 @@ var Phaser;
     })();
     Phaser.LinkedList = LinkedList;    
 })(Phaser || (Phaser = {}));
-var __extends = this.__extends || function (d, b) {
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 /// <reference path="../Game.ts" />
 /// <reference path="LinkedList.ts" />
 /// <reference path="../gameobjects/IGameObject.ts" />

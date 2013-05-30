@@ -2169,12 +2169,12 @@ module Phaser.Components {
         /**
         * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
         */
-        private _imageTexture;
+        public imageTexture;
         /**
         * Reference to the DynamicTexture that is used as the texture for the Sprite.
         * @type {DynamicTexture}
         */
-        private _dynamicTexture;
+        public dynamicTexture: DynamicTexture;
         /**
         * The status of the texture image.
         * @type {boolean}
@@ -2219,6 +2219,11 @@ module Phaser.Components {
         * @type {boolean}
         */
         public flippedY: bool;
+        /**
+        * Is the texture a DynamicTexture?
+        * @type {boolean}
+        */
+        public isDynamic: bool;
         /**
         * Updates the texture being used to render the Sprite.
         * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
@@ -2300,8 +2305,6 @@ module Phaser {
         *
         */
         public alive: bool;
-        public width: number;
-        public height: number;
         /**
         * Sprite physics.
         */
@@ -2382,6 +2385,8 @@ module Phaser {
         * Set the animation frame by frame name.
         */
         public frameName : string;
+        public width : number;
+        public height : number;
         /**
         * Pre-update is called right before update() on each object in the game loop.
         */
@@ -3348,6 +3353,17 @@ module Phaser {
         */
         public physicsAABB(x: number, y: number, width: number, height: number): Physics.AABB;
         /**
+        * Create a new ScrollZone object with image key, position and size.
+        *
+        * @param key {string} Key to a image you wish this object to use.
+        * @param x {number} X position of this object.
+        * @param y {number} Y position of this object.
+        * @param width number} Width of this object.
+        * @param height {number} Height of this object.
+        * @returns {ScrollZone} The newly created scroll zone object.
+        */
+        public scrollZone(key: string, x?: number, y?: number, width?: number, height?: number): ScrollZone;
+        /**
         * Create a tween object for a specific object.
         *
         * @param obj Object you wish the tween will affect.
@@ -3362,6 +3378,14 @@ module Phaser {
         * @return {Phaser.Sprite} The Sprite object
         */
         public existingSprite(sprite: Sprite): Sprite;
+        /**
+        * Add an existing ScrollZone to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param scrollZone The ScrollZone to add to the Game World
+        * @return {Phaser.ScrollZone} The ScrollZone object
+        */
+        public existingScrollZone(scrollZone: ScrollZone): ScrollZone;
         /**
         * Add an existing Tween to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
@@ -6014,6 +6038,7 @@ module Phaser {
     interface IRenderer {
         render();
         renderSprite(camera: Camera, sprite: Sprite): bool;
+        renderScrollZone(camera: Camera, sprite: ScrollZone): bool;
     }
 }
 module Phaser {
@@ -6025,6 +6050,140 @@ module Phaser {
         private _game;
         public render(): void;
         public renderSprite(camera: Camera, sprite: Sprite): bool;
+        public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
+    }
+}
+/**
+* Phaser - ScrollRegion
+*
+* Creates a scrolling region within a ScrollZone.
+* It is scrolled via the scrollSpeed.x/y properties.
+*/
+module Phaser {
+    class ScrollRegion {
+        /**
+        * ScrollRegion constructor
+        * Create a new <code>ScrollRegion</code>.
+        *
+        * @param x {number} X position in world coordinate.
+        * @param y {number} Y position in world coordinate.
+        * @param width {number} Width of this object.
+        * @param height {number} Height of this object.
+        * @param speedX {number} X-axis scrolling speed.
+        * @param speedY {number} Y-axis scrolling speed.
+        */
+        constructor(x: number, y: number, width: number, height: number, speedX: number, speedY: number);
+        private _A;
+        private _B;
+        private _C;
+        private _D;
+        private _bounds;
+        private _scroll;
+        private _anchorWidth;
+        private _anchorHeight;
+        private _inverseWidth;
+        private _inverseHeight;
+        /**
+        * Will this region be rendered? (default to true)
+        * @type {boolean}
+        */
+        public visible: bool;
+        /**
+        * Region scrolling speed.
+        * @type {Vec2}
+        */
+        public scrollSpeed: Vec2;
+        /**
+        * Update region scrolling with tick time.
+        * @param delta {number} Elapsed time since last update.
+        */
+        public update(delta: number): void;
+        /**
+        * Render this region to specific context.
+        * @param context {CanvasRenderingContext2D} Canvas context this region will be rendered to.
+        * @param texture {object} The texture to be rendered.
+        * @param dx {number} X position in world coordinate.
+        * @param dy {number} Y position in world coordinate.
+        * @param width {number} Width of this region to be rendered.
+        * @param height {number} Height of this region to be rendered.
+        */
+        public render(context: CanvasRenderingContext2D, texture, dx: number, dy: number, dw: number, dh: number): void;
+        /**
+        * Crop part of the texture and render it to the given context.
+        * @param context {CanvasRenderingContext2D} Canvas context the texture will be rendered to.
+        * @param texture {object} Texture to be rendered.
+        * @param srcX {number} Target region top-left x coordinate in the texture.
+        * @param srcX {number} Target region top-left y coordinate in the texture.
+        * @param srcW {number} Target region width in the texture.
+        * @param srcH {number} Target region height in the texture.
+        * @param destX {number} Render region top-left x coordinate in the context.
+        * @param destX {number} Render region top-left y coordinate in the context.
+        * @param destW {number} Target region width in the context.
+        * @param destH {number} Target region height in the context.
+        * @param offsetX {number} X offset to the context.
+        * @param offsetY {number} Y offset to the context.
+        */
+        private crop(context, texture, srcX, srcY, srcW, srcH, destX, destY, destW, destH, offsetX, offsetY);
+    }
+}
+/**
+* Phaser - ScrollZone
+*
+* Creates a scrolling region of the given width and height from an image in the cache.
+* The ScrollZone can be positioned anywhere in-world like a normal game object, re-act to physics, collision, etc.
+* The image within it is scrolled via ScrollRegions and their scrollSpeed.x/y properties.
+* If you create a scroll zone larger than the given source image it will create a DynamicTexture and fill it with a pattern of the source image.
+*/
+module Phaser {
+    class ScrollZone extends Sprite {
+        /**
+        * ScrollZone constructor
+        * Create a new <code>ScrollZone</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param key {string} Asset key for image texture of this object.
+        * @param x {number} X position in world coordinate.
+        * @param y {number} Y position in world coordinate.
+        * @param [width] {number} width of this object.
+        * @param [height] {number} height of this object.
+        */
+        constructor(game: Game, key: string, x?: number, y?: number, width?: number, height?: number);
+        /**
+        * Current region this zone is scrolling.
+        * @type {ScrollRegion}
+        */
+        public currentRegion: ScrollRegion;
+        /**
+        * Array contains all added regions.
+        * @type {ScrollRegion[]}
+        */
+        public regions: ScrollRegion[];
+        /**
+        * Add a new region to this zone.
+        * @param x {number} X position of the new region.
+        * @param y {number} Y position of the new region.
+        * @param width {number} Width of the new region.
+        * @param height {number} Height of the new region.
+        * @param [speedX] {number} x-axis scrolling speed.
+        * @param [speedY] {number} y-axis scrolling speed.
+        * @return {ScrollRegion} The newly added region.
+        */
+        public addRegion(x: number, y: number, width: number, height: number, speedX?: number, speedY?: number): ScrollRegion;
+        /**
+        * Set scrolling speed of current region.
+        * @param x {number} X speed of current region.
+        * @param y {number} Y speed of current region.
+        */
+        public setSpeed(x: number, y: number): ScrollZone;
+        /**
+        * Update regions.
+        */
+        public update(): void;
+        /**
+        * Create repeating texture with _texture, and store it into the _dynamicTexture.
+        * Used to create texture when texture image is small than size of the zone.
+        */
+        private createRepeatingTexture(regionWidth, regionHeight);
     }
 }
 module Phaser {
@@ -6057,6 +6216,7 @@ module Phaser {
         * @return {boolean} Return false if not rendered, otherwise return true.
         */
         public renderSprite(camera: Camera, sprite: Sprite): bool;
+        public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
     }
 }
 /**
@@ -6434,20 +6594,12 @@ module Phaser {
 }
 /**
 * Phaser - Components - Physics
-*
-*
 */
 module Phaser.Components {
     class Physics {
         constructor(parent: Sprite);
-        /**
-        *
-        */
-        private _game;
-        /**
-        *
-        */
         private _sprite;
+        public game: Game;
         public shape: Physics.IPhysicsShape;
         /**
         * Whether this object will be moved by impacts with other objects or not.

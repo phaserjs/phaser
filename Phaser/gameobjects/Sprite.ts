@@ -45,9 +45,6 @@ module Phaser {
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this, key);
 
-            this.width = this.frameBounds.width;
-            this.height = this.frameBounds.height;
-
             //  Transform related (if we add any more then move to a component)
             this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
@@ -98,10 +95,6 @@ module Phaser {
          * 
          */
         public alive: bool;
-
-        //  Getters only, don't over-write these values
-        public width: number;
-        public height: number;
 
         /**
          * Sprite physics.
@@ -215,6 +208,22 @@ module Phaser {
         */
         public get frameName(): string {
             return this.animations.frameName;
+        }
+
+        public set width(value: number) {
+            this.frameBounds.width = value;
+        }
+
+        public get width(): number {
+            return this.frameBounds.width;
+        }
+
+        public set height(value: number) {
+            this.frameBounds.height = value;
+        }
+
+        public get height(): number {
+            return this.frameBounds.height;
         }
 
         /**

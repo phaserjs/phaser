@@ -134,9 +134,9 @@ module Phaser {
          * @param height {number} Height of this object.
          * @returns {ScrollZone} The newly created scroll zone object.
          */
-        //public scrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
-        //    return <ScrollZone> this._world.group.add(new ScrollZone(this._game, key, x, y, width, height));
-        //}
+        public scrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
+            return <ScrollZone> this._world.group.add(new ScrollZone(this._game, key, x, y, width, height));
+        }
 
         /**
          * Create a new Tilemap.
@@ -203,9 +203,9 @@ module Phaser {
          * @param scrollZone The ScrollZone to add to the Game World
          * @return {Phaser.ScrollZone} The ScrollZone object
          */
-        //public existingScrollZone(scrollZone: ScrollZone): ScrollZone {
-        //    return this._world.group.add(scrollZone);
-        //}
+        public existingScrollZone(scrollZone: ScrollZone): ScrollZone {
+            return this._world.group.add(scrollZone);
+        }
 
         /**
          * Add an existing Tilemap to the current world.

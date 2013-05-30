@@ -69,6 +69,7 @@
     <Content Include="components\camera\CameraFX.js">
       <DependentUpon>CameraFX.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="components\ScrollRegion.ts" />
     <Content Include="components\sprite\Texture.js">
       <DependentUpon>Texture.ts</DependentUpon>
     </Content>
@@ -93,6 +94,7 @@
     <Content Include="gameobjects\IGameObject.js">
       <DependentUpon>IGameObject.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="gameobjects\ScrollZone.ts" />
     <Content Include="math\GameMath.js">
       <DependentUpon>GameMath.ts</DependentUpon>
     </Content>

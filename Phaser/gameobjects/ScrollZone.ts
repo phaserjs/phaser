@@ -28,17 +28,17 @@ module Phaser {
          */
         constructor(game: Game, key:string, x: number = 0, y: number = 0, width?: number = 0, height?: number = 0) {
 
-            super(game, x, y, width, height);
+            super(game, x, y, key, width, height);
+
+            this.type = Phaser.Types.SCROLLZONE;
+            this.render = game.renderer.renderScrollZone;
+            this.physics.moves = false;
 
             this.regions = [];
 
-            if (this._game.cache.getImage(key))
+            if (this.texture.loaded)
             {
-                this._texture = this._game.cache.getImage(key);
-                this.width = this._texture.width;
-                this.height = this._texture.height;
-
-                if (width > this._texture.width || height > this._texture.height)
+                if (width > this.width || height > this.height)
                 {
                     //  Create our repeating texture (as the source image wasn't large enough for the requested size)
                     this.createRepeatingTexture(width, height);
@@ -50,7 +50,7 @@ module Phaser {
                 this.addRegion(0, 0, this.width, this.height);
 
                 //  If the zone is smaller than the image itself then shrink the bounds
-                if ((width < this._texture.width || height < this._texture.height) && width !== 0 && height !== 0)
+                if ((width < this.width || height < this.height) && width !== 0 && height !== 0)
                 {
                     this.width = width;
                     this.height = height;
@@ -59,41 +59,6 @@ module Phaser {
             }
 
         }
-
-        /**
-         * Texture of this object.
-         */
-        private _texture;
-
-        /**
-         * If this zone is larger than texture image, this will be filled with a pattern of texture.
-         * @type {DynamicTexture}
-         */
-        private _dynamicTexture: DynamicTexture = null;
-
-        /**
-         * Local rendering related temp vars to help avoid gc spikes.
-         * @type {number}
-         */
-        private _dx: number = 0;
-
-        /**
-         * Local rendering related temp vars to help avoid gc spikes.
-         * @type {number}
-         */
-        private _dy: number = 0;
-
-        /**
-         * Local rendering related temp vars to help avoid gc spikes.
-         * @type {number}
-         */
-        private _dw: number = 0;
-
-        /**
-         * Local rendering related temp vars to help avoid gc spikes.
-         * @type {number}
-         */
-        private _dh: number = 0;
 
         /**
          * Current region this zone is scrolling.
@@ -106,12 +71,6 @@ module Phaser {
          * @type {ScrollRegion[]}
          */
         public regions: ScrollRegion[];
-
-        /**
-         * Flip this zone vertically? (default to false)
-         * @type {boolean}
-         */
-        public flipped: bool = false;
 
         /**
          * Add a new region to this zone.
@@ -162,111 +121,8 @@ module Phaser {
 
             for (var i = 0; i < this.regions.length; i++)
             {
-                this.regions[i].update(this._game.time.delta);
+                this.regions[i].update(this.game.time.delta);
             }
-
-        }
-
-        /**
-         * Check whether this zone is visible in a specific camera rectangle.
-         * @param camera {Rectangle} The rectangle you want to check.
-         * @return {boolean} Return true if bound of this zone intersects the given rectangle, otherwise return false.
-         */
-        public inCamera(camera: Rectangle): bool {
-
-            if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
-            {
-                this._dx = this.frameBounds.x - (camera.x * this.scrollFactor.x);
-                this._dy = this.frameBounds.y - (camera.y * this.scrollFactor.x);
-                this._dw = this.frameBounds.width * this.scale.x;
-                this._dh = this.frameBounds.height * this.scale.y;
-
-                return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
-            }
-            else
-            {
-                return camera.intersects(this.frameBounds, this.frameBounds.length);
-            }
-
-        }
-
-        /**
-         * Render this zone object to a specific camera.
-         * @param camera {Camera} The camera this object will be render to.
-         * @param cameraOffsetX {number} X offset of camera.
-         * @param cameraOffsetY {number} Y offset of camera.
-         * @return Return false if not rendered, otherwise return true.
-         */
-        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number) {
-
-            //  Render checks
-            if (this.visible == false || this.scale.x == 0 || this.scale.y == 0 || this.alpha < 0.1 || this.cameraBlacklist.indexOf(camera.ID) !== -1 || this.inCamera(camera.worldView) == false)
-            {
-                return false;
-            }
-
-            //  Alpha
-            if (this.alpha !== 1)
-            {
-                var globalAlpha = this.context.globalAlpha;
-                this.context.globalAlpha = this.alpha;
-            }
-
-            this._dx = cameraOffsetX + (this.frameBounds.topLeft.x - camera.worldView.x);
-            this._dy = cameraOffsetY + (this.frameBounds.topLeft.y - camera.worldView.y);
-            this._dw = this.frameBounds.width * this.scale.x;
-            this._dh = this.frameBounds.height * this.scale.y;
-
-            //	Apply camera difference
-            if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
-            {
-                this._dx -= (camera.worldView.x * this.scrollFactor.x);
-                this._dy -= (camera.worldView.y * this.scrollFactor.y);
-            }
-
-            //	Rotation - needs to work from origin point really, but for now from center
-            if (this.angle !== 0 || this.flipped == true)
-            {
-                this.context.save();
-                this.context.translate(this._dx + (this._dw / 2), this._dy + (this._dh / 2));
-
-                if (this.angle !== 0)
-                {
-                    this.context.rotate(this.angle * (Math.PI / 180));
-                }
-
-                this._dx = -(this._dw / 2);
-                this._dy = -(this._dh / 2);
-
-                if (this.flipped == true)
-                {
-                	this.context.scale(-1, 1);
-                }
-            }
-
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
-
-            for (var i = 0; i < this.regions.length; i++)
-            {
-                if (this._dynamicTexture)
-                {
-                    this.regions[i].render(this.context, this._dynamicTexture.canvas, this._dx, this._dy, this._dw, this._dh);
-                }
-                else
-                {
-                    this.regions[i].render(this.context, this._texture, this._dx, this._dy, this._dw, this._dh);
-                }
-            }
-
-            if (globalAlpha > -1)
-            {
-                this.context.globalAlpha = globalAlpha;
-            }
-
-            return true;
 
         }
 
@@ -277,14 +133,16 @@ module Phaser {
         private createRepeatingTexture(regionWidth: number, regionHeight: number) {
 
             //	Work out how many we'll need of the source image to make it tile properly
-            var tileWidth = Math.ceil(this._texture.width / regionWidth) * regionWidth;
-            var tileHeight = Math.ceil(this._texture.height / regionHeight) * regionHeight;
+            var tileWidth = Math.ceil(this.width / regionWidth) * regionWidth;
+            var tileHeight = Math.ceil(this.height / regionHeight) * regionHeight;
 
-            this._dynamicTexture = new DynamicTexture(this._game, tileWidth, tileHeight);
+            var dt: DynamicTexture = new DynamicTexture(this.game, tileWidth, tileHeight);
 
-            this._dynamicTexture.context.rect(0, 0, tileWidth, tileHeight);
-            this._dynamicTexture.context.fillStyle = this._dynamicTexture.context.createPattern(this._texture, "repeat");
-            this._dynamicTexture.context.fill();
+            dt.context.rect(0, 0, tileWidth, tileHeight);
+            dt.context.fillStyle = dt.context.createPattern(this.texture.imageTexture, "repeat");
+            dt.context.fill();
+
+            this.texture.loadDynamicTexture(dt);
 
         }
 

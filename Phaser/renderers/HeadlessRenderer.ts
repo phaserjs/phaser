@@ -18,18 +18,12 @@ module Phaser {
         public render() {}
 
         public renderSprite(camera: Camera, sprite: Sprite): bool {
-
-            //  Render checks (needs inCamera check added)
-            if (sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1)
-            {
-                return false;
-            }
-
             return true;
-
         }
 
-        //  Add Tilemap, ScrollZone, etc?
+        public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool {
+            return true;
+        }
 
     }
 

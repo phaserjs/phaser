@@ -69,6 +69,30 @@
     <Content Include="physics\aabb 1.js">
       <DependentUpon>aabb 1.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scrollzones\simple scrollzone.ts" />
+    <TypeScriptCompile Include="scrollzones\scroll window.ts" />
+    <TypeScriptCompile Include="scrollzones\region demo.ts" />
+    <TypeScriptCompile Include="scrollzones\parallax.ts" />
+    <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
+    <Content Include="scrollzones\ballscroller.js">
+      <DependentUpon>ballscroller.ts</DependentUpon>
+    </Content>
+    <Content Include="scrollzones\parallax.js">
+      <DependentUpon>parallax.ts</DependentUpon>
+    </Content>
+    <Content Include="scrollzones\region demo.js">
+      <DependentUpon>region demo.ts</DependentUpon>
+    </Content>
+    <Content Include="scrollzones\scroll window.js">
+      <DependentUpon>scroll window.ts</DependentUpon>
+    </Content>
+    <Content Include="scrollzones\simple scrollzone.js">
+      <DependentUpon>simple scrollzone.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scrollzones\skewed scroller.ts" />
+    <Content Include="scrollzones\skewed scroller.js">
+      <DependentUpon>skewed scroller.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\tween loop 1.js">
       <DependentUpon>tween loop 1.ts</DependentUpon>
     </Content>

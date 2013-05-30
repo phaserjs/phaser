@@ -29,7 +29,6 @@ module Phaser.Physics {
                 this.scale = new Vec2(1, 1);
             }
 
-            //this.bounds = new Rectangle(x + Math.round(width / 2), y + Math.round(height / 2), width, height);
             this.bounds = new Rectangle(x + Math.round(width / 2), y + Math.round(height / 2), width, height);
             this.position = new Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
             this.oldPosition = new Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
@@ -57,16 +56,11 @@ module Phaser.Physics {
             
             if (this.sprite)
             {
-                //  Update position to sprite value
-                //console.log('a', this.position.x, this.position.y);
                 this.position.setTo((this.sprite.x + this.bounds.halfWidth) + this.offset.x, (this.sprite.y + this.bounds.halfHeight) + this.offset.y);
-                //console.log('b', this.position.x, this.position.y);
-                //this.position.setTo(this.sprite.x, this.sprite.y);
     
                 //  Update scale / dimensions
                 if (Vec2Utils.equals(this.scale, this.sprite.scale) == false)
                 {
-                    console.log('scaled');
                     this.scale.copyFrom(this.sprite.scale);
                     this.bounds.width = this.sprite.width;
                     this.bounds.height = this.sprite.height;
@@ -76,6 +70,10 @@ module Phaser.Physics {
         }
 
         public update() {
+
+            this.bounds.x = this.position.x;
+            this.bounds.y = this.position.y;
+
         }
 
         public setSize(width: number, height: number) {

@@ -18,7 +18,7 @@
 
         atari = game.add.sprite(200, 300, 'atari');
         atari.texture.alpha = 0.5;
-        //atari.scale.setTo(2, 2);
+        //atari.scale.setTo(1.5, 1.5);
 
         atari.physics.shape.setSize(150, 50);
         atari.physics.shape.offset.setTo(50, 25);

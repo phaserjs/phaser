@@ -44,13 +44,13 @@ module Phaser.Components {
         /**
          * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
          */
-        private _imageTexture = null;
+        public imageTexture = null;
 
         /**
          * Reference to the DynamicTexture that is used as the texture for the Sprite.
          * @type {DynamicTexture}
          */
-        private _dynamicTexture: DynamicTexture = null;
+        public dynamicTexture: DynamicTexture = null;
 
         /**
         * The status of the texture image.
@@ -106,6 +106,12 @@ module Phaser.Components {
         public flippedY: bool = false;
 
         /**
+         * Is the texture a DynamicTexture?
+         * @type {boolean}
+         */
+        public isDynamic: bool = false;
+
+        /**
          * Updates the texture being used to render the Sprite.
          * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
          */
@@ -113,13 +119,15 @@ module Phaser.Components {
 
             if (dynamic)
             {
-                this._dynamicTexture = dynamic;
-                this.texture = this._dynamicTexture.canvas;
+                this.isDynamic = true;
+                this.dynamicTexture = dynamic;
+                this.texture = this.dynamicTexture.canvas;
             }
             else
             {
-                this._imageTexture = image;
-                this.texture = this._imageTexture;
+                this.isDynamic = false;
+                this.imageTexture = image;
+                this.texture = this.imageTexture;
             }
 
             this.loaded = true;
@@ -183,13 +191,13 @@ module Phaser.Components {
          */
         public get width(): number {
 
-            if (this._dynamicTexture)
+            if (this.isDynamic)
             {
-                return this._dynamicTexture.width;
+                return this.dynamicTexture.width;
             }
             else
             {
-                return this._imageTexture.width;
+                return this.imageTexture.width;
             }
         }
 
@@ -199,13 +207,13 @@ module Phaser.Components {
          */
         public get height(): number {
 
-            if (this._dynamicTexture)
+            if (this.isDynamic)
             {
-                return this._dynamicTexture.height;
+                return this.dynamicTexture.height;
             }
             else
             {
-                return this._imageTexture.height;
+                return this.imageTexture.height;
             }
 
         }
