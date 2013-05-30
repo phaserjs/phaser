@@ -74,6 +74,14 @@
     <TypeScriptCompile Include="scrollzones\region demo.ts" />
     <TypeScriptCompile Include="scrollzones\parallax.ts" />
     <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
+    <TypeScriptCompile Include="physics\circle 1.ts" />
+    <TypeScriptCompile Include="physics\aabb vs aabb 1.ts" />
+    <Content Include="physics\aabb vs aabb 1.js">
+      <DependentUpon>aabb vs aabb 1.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\circle 1.js">
+      <DependentUpon>circle 1.ts</DependentUpon>
+    </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>
     </Content>

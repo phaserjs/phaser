@@ -2958,15 +2958,8 @@ var Phaser;
         **/
         function intersects(a, b, tolerance) {
             if (typeof tolerance === "undefined") { tolerance = 0; }
-            // ?
-            //return (a.right > b.x) && (a.x < b.right) && (a.bottom > b.y) && (a.y < b.bottom);
             return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
-            //if (a.x >= b.right || a.right <= b.x || a.bottom <= b.y || a.y >= b.bottom)
-            //{
-            //    return false;
-            //}
-            //return true;
-                    };
+        };
         RectangleUtils.intersectsRaw = /**
         * Determines whether the object specified intersects (overlaps) with the given values.
         * @method intersectsRaw
@@ -3262,7 +3255,6 @@ var Phaser;
             if (typeof diameter === "undefined") { diameter = 0; }
             this._diameter = 0;
             this._radius = 0;
-            //private _pos: Vec2;
             /**
             * The x coordinate of the center of the circle
             * @property x
@@ -5858,6 +5850,7 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../Game.ts" />
     /// <reference path="IPhysicsShape.ts" />
+    /// <reference path="../utils/RectangleUtils.ts" />
     /**
     * Phaser - PhysicsManager
     *
@@ -5883,22 +5876,41 @@ var Phaser;
                 this._objects.push(shape);
                 return shape;
             };
+            PhysicsManager.prototype.remove = function (shape) {
+                this._length = this._objects.length;
+                for(var i = 0; i < this._length; i++) {
+                    if(this._objects[i] === shape) {
+                        this._objects[i] = null;
+                    }
+                }
+            };
             PhysicsManager.prototype.update = function () {
                 this._length = this._objects.length;
                 for(var i = 0; i < this._length; i++) {
-                    this._objects[i].preUpdate();
-                    this.updateMotion(this._objects[i]);
-                    this.collideWorld(this._objects[i]);
+                    if(this._objects[i]) {
+                        this._objects[i].preUpdate();
+                        this.updateMotion(this._objects[i]);
+                        this.collideWorld(this._objects[i]);
+                        if(this._objects[i].physics.immovable == false) {
+                            for(var x = 0; x < this._length; x++) {
+                                if(this._objects[x] !== this._objects[i]) {
+                                    this.collideShapes(this._objects[i], this._objects[x]);
+                                }
+                            }
+                        }
+                    }
                 }
             };
             PhysicsManager.prototype.render = function () {
                 //  iterate through the objects here, updating and colliding
                 for(var i = 0; i < this._length; i++) {
-                    this._objects[i].render(this.game.stage.context);
+                    if(this._objects[i]) {
+                        this._objects[i].render(this.game.stage.context);
+                    }
                 }
             };
-            PhysicsManager.prototype.updateMotion = function (obj) {
-                if(obj.physics.moves == false) {
+            PhysicsManager.prototype.updateMotion = function (shape) {
+                if(shape.physics.moves == false) {
                     return;
                 }
                 /*
@@ -5907,16 +5919,16 @@ var Phaser;
                 this._angle += this.angularVelocity * this._game.time.elapsed;
                 this.angularVelocity += velocityDelta;
                 */
-                this._velocityDelta = (this.computeVelocity(obj.physics.velocity.x, obj.physics.gravity.x, obj.physics.acceleration.x, obj.physics.drag.x) - obj.physics.velocity.x) / 2;
-                obj.physics.velocity.x += this._velocityDelta;
-                this._delta = obj.physics.velocity.x * this.game.time.elapsed;
-                obj.physics.velocity.x += this._velocityDelta;
-                obj.position.x += this._delta;
-                this._velocityDelta = (this.computeVelocity(obj.physics.velocity.y, obj.physics.gravity.y, obj.physics.acceleration.y, obj.physics.drag.y) - obj.physics.velocity.y) / 2;
-                obj.physics.velocity.y += this._velocityDelta;
-                this._delta = obj.physics.velocity.y * this.game.time.elapsed;
-                obj.physics.velocity.y += this._velocityDelta;
-                obj.position.y += this._delta;
+                this._velocityDelta = (this.computeVelocity(shape.physics.velocity.x, shape.physics.gravity.x, shape.physics.acceleration.x, shape.physics.drag.x) - shape.physics.velocity.x) / 2;
+                shape.physics.velocity.x += this._velocityDelta;
+                this._delta = shape.physics.velocity.x * this.game.time.elapsed;
+                shape.physics.velocity.x += this._velocityDelta;
+                shape.position.x += this._delta;
+                this._velocityDelta = (this.computeVelocity(shape.physics.velocity.y, shape.physics.gravity.y, shape.physics.acceleration.y, shape.physics.drag.y) - shape.physics.velocity.y) / 2;
+                shape.physics.velocity.y += this._velocityDelta;
+                this._delta = shape.physics.velocity.y * this.game.time.elapsed;
+                shape.physics.velocity.y += this._velocityDelta;
+                shape.position.y += this._delta;
             };
             PhysicsManager.prototype.computeVelocity = /**
             * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
@@ -5955,119 +5967,169 @@ var Phaser;
                 }
                 return velocity;
             };
-            PhysicsManager.prototype.collideWorld = function (obj) {
+            PhysicsManager.prototype.collideShapes = function (shapeA, shapeB) {
+                if(shapeA.physics.immovable && shapeB.physics.immovable) {
+                    return;
+                }
+                //  Simple bounds check first
+                if(Phaser.RectangleUtils.intersects(shapeA.bounds, shapeB.bounds)) {
+                    //  Collide on the x-axis
+                    if(shapeA.bounds.right >= shapeB.bounds.x && shapeA.bounds.right <= shapeB.bounds.right) {
+                        //  The right side of ShapeA hit the left side of ShapeB
+                        this._distance.x = shapeB.bounds.x - shapeA.bounds.right;
+                        if(this._distance.x != 0) {
+                            this._tangent.setTo(-1, 0);
+                            this.separateX(shapeA, shapeB, this._distance, this._tangent);
+                        }
+                    } else if(shapeA.bounds.x <= shapeB.bounds.right && shapeA.bounds.x >= shapeB.bounds.x) {
+                        //  The left side of ShapeA hit the right side of ShapeB
+                        this._distance.x = shapeB.bounds.right - shapeA.bounds.x;
+                        if(this._distance.x != 0) {
+                            this._tangent.setTo(1, 0);
+                            this.separateX(shapeA, shapeB, this._distance, this._tangent);
+                        }
+                    }
+                    //  Collide on the y-axis
+                    if(shapeA.bounds.y <= shapeB.bounds.bottom && shapeA.bounds.y >= shapeB.bounds.y) {
+                        console.log(shapeA.bounds.y, shapeB.bounds.bottom, shapeB.bounds.y);
+                        //  The top of ShapeA hit the bottom of ShapeB
+                        this._distance.y = shapeB.bounds.bottom - shapeA.bounds.y;
+                        if(this._distance.y != 0) {
+                            this._tangent.setTo(0, 1);
+                            this.separateY(shapeA, shapeB, this._distance, this._tangent);
+                        }
+                    } else if(shapeA.bounds.bottom >= shapeB.bounds.y && shapeA.bounds.bottom <= shapeB.bounds.bottom) {
+                        console.log(shapeA.bounds.bottom, shapeB.bounds.y, shapeB.bounds.bottom);
+                        //  The bottom of ShapeA hit the top of ShapeB
+                        this._distance.y = shapeB.bounds.y - shapeA.bounds.bottom;
+                        if(this._distance.y != 0) {
+                            this._tangent.setTo(0, -1);
+                            this.separateY(shapeA, shapeB, this._distance, this._tangent);
+                        }
+                    }
+                }
+            };
+            PhysicsManager.prototype.collideWorld = function (shape) {
                 //  Collide on the x-axis
-                this._distance.x = obj.world.bounds.x - (obj.position.x - obj.bounds.halfWidth);
+                this._distance.x = shape.world.bounds.x - (shape.position.x - shape.bounds.halfWidth);
                 if(0 < this._distance.x) {
                     //  Hit Left
                     this._tangent.setTo(1, 0);
-                    this.separateX(obj, this._distance, this._tangent);
+                    this.separateXWall(shape, this._distance, this._tangent);
                 } else {
-                    this._distance.x = (obj.position.x + obj.bounds.halfWidth) - obj.world.bounds.right;
+                    this._distance.x = (shape.position.x + shape.bounds.halfWidth) - shape.world.bounds.right;
                     if(0 < this._distance.x) {
                         //  Hit Right
                         this._tangent.setTo(-1, 0);
                         this._distance.reverse();
-                        this.separateX(obj, this._distance, this._tangent);
+                        this.separateXWall(shape, this._distance, this._tangent);
                     }
                 }
                 //  Collide on the y-axis
-                this._distance.y = obj.world.bounds.y - (obj.position.y - obj.bounds.halfHeight);
+                this._distance.y = shape.world.bounds.y - (shape.position.y - shape.bounds.halfHeight);
                 if(0 < this._distance.y) {
                     //  Hit Top
                     this._tangent.setTo(0, 1);
-                    this.separateY(obj, this._distance, this._tangent);
+                    this.separateYWall(shape, this._distance, this._tangent);
                 } else {
-                    this._distance.y = (obj.position.y + obj.bounds.halfHeight) - obj.world.bounds.bottom;
+                    this._distance.y = (shape.position.y + shape.bounds.halfHeight) - shape.world.bounds.bottom;
                     if(0 < this._distance.y) {
                         //  Hit Bottom
                         this._tangent.setTo(0, -1);
                         this._distance.reverse();
-                        this.separateY(obj, this._distance, this._tangent);
+                        this.separateYWall(shape, this._distance, this._tangent);
                     }
                 }
             };
-            PhysicsManager.prototype.separateX = /*
-            private OLDButWorkingcollideWorld(obj:IPhysicsShape) {
-            
-            this._distance.setTo(0, 0);
-            
-            //  Collide on the x-axis
-            this._distance.x = obj.world.bounds.x - (obj.position.x - obj.bounds.halfWidth);
-            
-            if (0 < this._distance.x)
-            {
-            //  Hit Left
-            //  Parameter order: px, py (distance), dx, dy (tangent)
-            this._tangent.setTo(1, 0);
-            this.separate(obj, this._distance, this._tangent);
-            }
-            else
-            {
-            this._distance.x = (obj.position.x + obj.bounds.halfWidth) - obj.world.bounds.right;
-            
-            if (0 < this._distance.x)
-            {
-            //  Hit Right
-            //  Parameter order: px, py (distance), dx, dy (tangent)
-            this._tangent.setTo(-1, 0);
-            this._distance.x = -this._distance.x;
-            this.separate(obj, this._distance, this._tangent);
-            }
-            }
-            
-            //  Collide on the y-axis
-            this._distance.x = 0;
-            this._distance.y = obj.world.bounds.y - (obj.position.y - obj.bounds.halfHeight);
-            
-            if (0 < this._distance.y)
-            {
-            //  Hit Top
-            this._tangent.setTo(0, 1);
-            this.separate(obj, this._distance, this._tangent);
-            }
-            else
-            {
-            this._distance.y = (obj.position.y + obj.bounds.halfHeight) - obj.world.bounds.bottom;
-            
-            if (0 < this._distance.y)
-            {
-            //  Hit Bottom
-            this._tangent.setTo(0, -1);
-            this._distance.y = -this._distance.y;
-            this.separate(obj, this._distance, this._tangent);
-            }
-            }
-            
-            }
-            */
-            function (shape, distance, tangent) {
+            PhysicsManager.prototype.separateX = function (shapeA, shapeB, distance, tangent) {
+                if(tangent.x == 1) {
+                    console.log('The left side of ShapeA hit the right side of ShapeB', distance.x);
+                    shapeA.physics.touching |= Phaser.Types.LEFT;
+                    shapeB.physics.touching |= Phaser.Types.RIGHT;
+                } else {
+                    console.log('The right side of ShapeA hit the left side of ShapeB', distance.x);
+                    shapeA.physics.touching |= Phaser.Types.RIGHT;
+                    shapeB.physics.touching |= Phaser.Types.LEFT;
+                }
                 //  collision edges
-                shape.oH = tangent.x;
+                shapeA.oH = tangent.x;
                 //  only apply collision response forces if the object is travelling into, and not out of, the collision
-                if(Phaser.Vec2Utils.dot(shape.physics.velocity, tangent) < 0) {
+                if(Phaser.Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0) {
                     //  Apply horizontal bounce
-                    if(shape.physics.bounce.x > 0) {
-                        shape.physics.velocity.x *= -(shape.physics.bounce.x);
+                    if(shapeA.physics.bounce.x > 0) {
+                        shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
                     } else {
-                        shape.physics.velocity.x = 0;
+                        shapeA.physics.velocity.x = 0;
                     }
                 }
-                shape.position.x += distance.x;
+                shapeA.position.x += distance.x;
+                shapeA.bounds.x += distance.x;
             };
-            PhysicsManager.prototype.separateY = function (shape, distance, tangent) {
+            PhysicsManager.prototype.separateY = function (shapeA, shapeB, distance, tangent) {
+                if(tangent.y == 1) {
+                    console.log('The top of ShapeA hit the bottom of ShapeB', distance.y);
+                    shapeA.physics.touching |= Phaser.Types.UP;
+                    shapeB.physics.touching |= Phaser.Types.DOWN;
+                } else {
+                    console.log('The bottom of ShapeA hit the top of ShapeB', distance.y);
+                    shapeA.physics.touching |= Phaser.Types.DOWN;
+                    shapeB.physics.touching |= Phaser.Types.UP;
+                }
                 //  collision edges
-                shape.oV = tangent.y;
+                shapeA.oV = tangent.y;
                 //  only apply collision response forces if the object is travelling into, and not out of, the collision
-                if(Phaser.Vec2Utils.dot(shape.physics.velocity, tangent) < 0) {
+                if(Phaser.Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0) {
                     //  Apply horizontal bounce
-                    if(shape.physics.bounce.y > 0) {
-                        shape.physics.velocity.y *= -(shape.physics.bounce.y);
+                    if(shapeA.physics.bounce.y > 0) {
+                        shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
                     } else {
-                        shape.physics.velocity.y = 0;
+                        shapeA.physics.velocity.y = 0;
                     }
                 }
-                shape.position.y += distance.y;
+                shapeA.position.y += distance.y;
+                shapeA.bounds.y += distance.y;
+            };
+            PhysicsManager.prototype.separateXWall = function (shapeA, distance, tangent) {
+                if(tangent.x == 1) {
+                    console.log('The left side of ShapeA hit the right side of ShapeB', distance.x);
+                    shapeA.physics.touching |= Phaser.Types.LEFT;
+                } else {
+                    console.log('The right side of ShapeA hit the left side of ShapeB', distance.x);
+                    shapeA.physics.touching |= Phaser.Types.RIGHT;
+                }
+                //  collision edges
+                shapeA.oH = tangent.x;
+                //  only apply collision response forces if the object is travelling into, and not out of, the collision
+                if(Phaser.Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0) {
+                    //  Apply horizontal bounce
+                    if(shapeA.physics.bounce.x > 0) {
+                        shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
+                    } else {
+                        shapeA.physics.velocity.x = 0;
+                    }
+                }
+                shapeA.position.x += distance.x;
+            };
+            PhysicsManager.prototype.separateYWall = function (shapeA, distance, tangent) {
+                if(tangent.y == 1) {
+                    console.log('The top of ShapeA hit the bottom of ShapeB', distance.y);
+                    shapeA.physics.touching |= Phaser.Types.UP;
+                } else {
+                    console.log('The bottom of ShapeA hit the top of ShapeB', distance.y);
+                    shapeA.physics.touching |= Phaser.Types.DOWN;
+                }
+                //  collision edges
+                shapeA.oV = tangent.y;
+                //  only apply collision response forces if the object is travelling into, and not out of, the collision
+                if(Phaser.Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0) {
+                    //  Apply horizontal bounce
+                    if(shapeA.physics.bounce.y > 0) {
+                        shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
+                    } else {
+                        shapeA.physics.velocity.y = 0;
+                    }
+                }
+                shapeA.position.y += distance.y;
             };
             PhysicsManager.prototype.separate = function (shape, distance, tangent) {
                 //  collision edges
@@ -6111,7 +6173,46 @@ var Phaser;
             return PhysicsManager;
         })();
         Physics.PhysicsManager = PhysicsManager;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
+        /**
+        * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+        * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+        * @param object1 The first GameObject or Group to check. If null the world.group is used.
+        * @param object2 The second GameObject or Group to check.
+        * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+        * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+        * @param context The context in which the callbacks will be called
+        * @returns {boolean} true if the objects overlap, otherwise false.
+        */
+        /*
+        public overlap(object1: Basic = null, object2: Basic = null, notifyCallback = null, processCallback = null, context = null): bool {
+        
+        if (object1 == null)
+        {
+        object1 = this._game.world.group;
+        }
+        
+        if (object2 == object1)
+        {
+        object2 = null;
+        }
+        
+        QuadTree.divisions = this._game.world.worldDivisions;
+        
+        var quadTree: QuadTree = new QuadTree(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
+        
+        quadTree.load(object1, object2, notifyCallback, processCallback, context);
+        
+        var result: bool = quadTree.execute();
+        
+        quadTree.destroy();
+        
+        quadTree = null;
+        
+        return result;
+        
+        }
+        */
+            })(Phaser.Physics || (Phaser.Physics = {}));
     var Physics = Phaser.Physics;
 })(Phaser || (Phaser = {}));
 var Phaser;
@@ -6144,6 +6245,8 @@ var Phaser;
             }
             AABB.prototype.preUpdate = function () {
                 this.oldPosition.copyFrom(this.position);
+                this.bounds.x = this.position.x - this.bounds.halfWidth;
+                this.bounds.y = this.position.y - this.bounds.halfHeight;
                 if(this.sprite) {
                     this.position.setTo((this.sprite.x + this.bounds.halfWidth) + this.offset.x, (this.sprite.y + this.bounds.halfHeight) + this.offset.y);
                     //  Update scale / dimensions
@@ -6155,14 +6258,19 @@ var Phaser;
                 }
             };
             AABB.prototype.update = function () {
-                this.bounds.x = this.position.x;
-                this.bounds.y = this.position.y;
-            };
+                //this.bounds.x = this.position.x;
+                //this.bounds.y = this.position.y;
+                            };
             AABB.prototype.setSize = function (width, height) {
                 this.bounds.width = width;
                 this.bounds.height = height;
             };
             AABB.prototype.render = function (context) {
+                //context.beginPath();
+                //context.strokeStyle = 'rgb(255,255,0)';
+                //context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+                //context.stroke();
+                //context.closePath();
                 context.beginPath();
                 context.strokeStyle = 'rgb(0,255,0)';
                 context.strokeRect(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight, this.bounds.width, this.bounds.height);
@@ -6171,14 +6279,14 @@ var Phaser;
                 //  center point
                 context.fillStyle = 'rgb(0,255,0)';
                 context.fillRect(this.position.x, this.position.y, 2, 2);
-                if(this.oH == 1) {
+                if(this.physics.touching == Phaser.Types.LEFT) {
                     context.beginPath();
                     context.strokeStyle = 'rgb(255,0,0)';
                     context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
                     context.lineTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
                     context.stroke();
                     context.closePath();
-                } else if(this.oH == -1) {
+                } else if(this.physics.touching == Phaser.Types.RIGHT) {
                     context.beginPath();
                     context.strokeStyle = 'rgb(255,0,0)';
                     context.moveTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
@@ -6186,14 +6294,14 @@ var Phaser;
                     context.stroke();
                     context.closePath();
                 }
-                if(this.oV == 1) {
+                if(this.physics.touching == Phaser.Types.UP) {
                     context.beginPath();
                     context.strokeStyle = 'rgb(255,0,0)';
                     context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
                     context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
                     context.stroke();
                     context.closePath();
-                } else if(this.oV == -1) {
+                } else if(this.physics.touching == Phaser.Types.DOWN) {
                     context.beginPath();
                     context.strokeStyle = 'rgb(255,0,0)';
                     context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
@@ -6439,6 +6547,15 @@ var Phaser;
         Types.GEOM_RECTANGLE = 2;
         Types.GEOM_LINE = 3;
         Types.GEOM_POLYGON = 4;
+        Types.LEFT = 0x0001;
+        Types.RIGHT = 0x0010;
+        Types.UP = 0x0100;
+        Types.DOWN = 0x1000;
+        Types.NONE = 0;
+        Types.CEILING = Types.UP;
+        Types.FLOOR = Types.DOWN;
+        Types.WALL = Types.LEFT | Types.RIGHT;
+        Types.ANY = Types.LEFT | Types.RIGHT | Types.UP | Types.DOWN;
         return Types;
     })();
     Phaser.Types = Types;    
@@ -12133,16 +12250,119 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="../core/Rectangle.ts" />
+    /// <reference path="../math/Vec2Utils.ts" />
+    /// <reference path="PhysicsManager.ts" />
+    /// <reference path="IPhysicsShape.ts" />
+    /**
+    * Phaser - Physics - Circle
+    */
+    (function (Physics) {
+        var Circle = (function () {
+            function Circle(game, sprite, x, y, diameter) {
+                this.game = game;
+                this.world = game.world.physics;
+                if(sprite !== null) {
+                    this.sprite = sprite;
+                    this.scale = Phaser.Vec2Utils.clone(this.sprite.scale);
+                } else {
+                    this.sprite = null;
+                    this.physics = null;
+                    this.scale = new Phaser.Vec2(1, 1);
+                }
+                this.radius = diameter / 2;
+                this.bounds = new Phaser.Rectangle(x + Math.round(diameter / 2), y + Math.round(diameter / 2), diameter, diameter);
+                this.position = new Phaser.Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
+                this.oldPosition = new Phaser.Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
+                this.offset = new Phaser.Vec2(0, 0);
+            }
+            Circle.prototype.preUpdate = function () {
+                this.oldPosition.copyFrom(this.position);
+                if(this.sprite) {
+                    this.position.setTo((this.sprite.x + this.bounds.halfWidth) + this.offset.x, (this.sprite.y + this.bounds.halfHeight) + this.offset.y);
+                    //  Update scale / dimensions
+                    if(Phaser.Vec2Utils.equals(this.scale, this.sprite.scale) == false) {
+                        this.scale.copyFrom(this.sprite.scale);
+                        //  needs to be radius based (+ square)
+                        //this.bounds.width = this.sprite.width;
+                        //this.bounds.height = this.sprite.height;
+                                            }
+                }
+            };
+            Circle.prototype.update = function () {
+                this.bounds.x = this.position.x;
+                this.bounds.y = this.position.y;
+            };
+            Circle.prototype.setSize = function (width, height) {
+                this.bounds.width = width;
+                this.bounds.height = height;
+            };
+            Circle.prototype.render = function (context) {
+                context.beginPath();
+                context.strokeStyle = 'rgb(0,255,0)';
+                context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+                context.stroke();
+                context.closePath();
+                //  center point
+                context.fillStyle = 'rgb(0,255,0)';
+                context.fillRect(this.position.x, this.position.y, 2, 2);
+                if(this.oH == 1) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.stroke();
+                    context.closePath();
+                } else if(this.oH == -1) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.stroke();
+                    context.closePath();
+                }
+                if(this.oV == 1) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.stroke();
+                    context.closePath();
+                } else if(this.oV == -1) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.stroke();
+                    context.closePath();
+                }
+            };
+            return Circle;
+        })();
+        Physics.Circle = Circle;        
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
     /// <reference path="../../core/Vec2.ts" />
     /// <reference path="../../core/Point.ts" />
     /// <reference path="../../math/Vec2Utils.ts" />
     /// <reference path="../../physics/AABB.ts" />
+    /// <reference path="../../physics/Circle.ts" />
+    /// <reference path="../../physics/IPhysicsShape.ts" />
     /**
     * Phaser - Components - Physics
     */
     (function (Components) {
         var Physics = (function () {
             function Physics(parent) {
+                /**
+                * Whether this object will be moved by impacts with other objects or not.
+                * @type {boolean}
+                */
+                this.immovable = false;
                 /**
                 * Set this to false if you want to skip the automatic movement stuff
                 * @type {boolean}
@@ -12156,13 +12376,19 @@ var Phaser;
                 this.friction = Phaser.Vec2Utils.clone(this.game.world.physics.friction);
                 this.velocity = new Phaser.Vec2();
                 this.acceleration = new Phaser.Vec2();
+                this.touching = Phaser.Types.NONE;
                 this.shape = this.game.world.physics.add(new Phaser.Physics.AABB(this.game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
             }
+            Physics.prototype.setCircle = function (diameter) {
+                this.game.world.physics.remove(this.shape);
+                this.shape = this.game.world.physics.add(new Phaser.Physics.Circle(this.game, this._sprite, this._sprite.x, this._sprite.y, diameter));
+                this._sprite.physics.shape.physics = this;
+            };
             Physics.prototype.update = /**
             * Internal function for updating the position and speed of this object.
             */
             function () {
-                if(this.moves) {
+                if(this.moves && this.shape) {
                     this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth) - this.shape.offset.x;
                     this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight) - this.shape.offset.y;
                 }
@@ -12177,7 +12403,8 @@ var Phaser;
                 if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
                 this._sprite.texture.context.fillStyle = color;
                 this._sprite.texture.context.fillText('Sprite: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
-                this._sprite.texture.context.fillText('x: ' + this._sprite.frameBounds.x.toFixed(1) + ' y: ' + this._sprite.frameBounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
+                //this._sprite.texture.context.fillText('x: ' + this._sprite.frameBounds.x.toFixed(1) + ' y: ' + this._sprite.frameBounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
+                this._sprite.texture.context.fillText('x: ' + this.shape.bounds.x.toFixed(1) + ' y: ' + this.shape.bounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
                 this._sprite.texture.context.fillText('vx: ' + this.velocity.x.toFixed(1) + ' vy: ' + this.velocity.y.toFixed(1), x, y + 28);
                 this._sprite.texture.context.fillText('ax: ' + this.acceleration.x.toFixed(1) + ' ay: ' + this.acceleration.y.toFixed(1), x, y + 42);
             };

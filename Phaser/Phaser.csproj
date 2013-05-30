@@ -116,6 +116,10 @@
       <DependentUpon>AABB.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="physics\IPhysicsShape.ts" />
+    <TypeScriptCompile Include="physics\Circle.ts" />
+    <Content Include="physics\Circle.js">
+      <DependentUpon>Circle.ts</DependentUpon>
+    </Content>
     <Content Include="physics\IPhysicsShape.js">
       <DependentUpon>IPhysicsShape.ts</DependentUpon>
     </Content>

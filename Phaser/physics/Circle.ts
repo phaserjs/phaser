@@ -5,14 +5,14 @@
 /// <reference path="IPhysicsShape.ts" />
 
 /**
-* Phaser - Physics - AABB
+* Phaser - Physics - Circle
 */
 
 module Phaser.Physics {
 
-    export class AABB implements IPhysicsShape {
+    export class Circle implements IPhysicsShape {
 
-        constructor(game: Game, sprite: Sprite, x: number, y: number, width: number, height: number) {
+        constructor(game: Game, sprite: Sprite, x: number, y: number, diameter: number) {
 
             this.game = game;
             this.world = game.world.physics;
@@ -29,7 +29,8 @@ module Phaser.Physics {
                 this.scale = new Vec2(1, 1);
             }
 
-            this.bounds = new Rectangle(x + Math.round(width / 2), y + Math.round(height / 2), width, height);
+            this.radius = diameter / 2;
+            this.bounds = new Rectangle(x + Math.round(diameter / 2), y + Math.round(diameter / 2), diameter, diameter);
             this.position = new Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
             this.oldPosition = new Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
             this.offset = new Vec2(0, 0);
@@ -47,15 +48,13 @@ module Phaser.Physics {
         public scale: Vec2;
         public bounds: Rectangle;
 
+        public radius: number;
         public oH: number;
         public oV: number;
 
         public preUpdate() {
 
             this.oldPosition.copyFrom(this.position);
-
-            this.bounds.x = this.position.x - this.bounds.halfWidth;
-            this.bounds.y = this.position.y - this.bounds.halfHeight;
             
             if (this.sprite)
             {
@@ -65,8 +64,9 @@ module Phaser.Physics {
                 if (Vec2Utils.equals(this.scale, this.sprite.scale) == false)
                 {
                     this.scale.copyFrom(this.sprite.scale);
-                    this.bounds.width = this.sprite.width;
-                    this.bounds.height = this.sprite.height;
+                    //  needs to be radius based (+ square)
+                    //this.bounds.width = this.sprite.width;
+                    //this.bounds.height = this.sprite.height;
                 }
             }
 
@@ -74,8 +74,8 @@ module Phaser.Physics {
 
         public update() {
 
-            //this.bounds.x = this.position.x;
-            //this.bounds.y = this.position.y;
+            this.bounds.x = this.position.x;
+            this.bounds.y = this.position.y;
 
         }
 
@@ -88,15 +88,9 @@ module Phaser.Physics {
 
         public render(context:CanvasRenderingContext2D) {
 
-            //context.beginPath();
-            //context.strokeStyle = 'rgb(255,255,0)';
-            //context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-            //context.stroke();
-            //context.closePath();
-
             context.beginPath();
             context.strokeStyle = 'rgb(0,255,0)';
-            context.strokeRect(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight, this.bounds.width, this.bounds.height);
+            context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
             context.stroke();
             context.closePath();
 
@@ -104,7 +98,7 @@ module Phaser.Physics {
             context.fillStyle = 'rgb(0,255,0)';
             context.fillRect(this.position.x, this.position.y, 2, 2);
 
-            if (this.physics.touching == Phaser.Types.LEFT)
+            if (this.oH == 1)
             {
                 context.beginPath();
                 context.strokeStyle = 'rgb(255,0,0)';
@@ -113,7 +107,7 @@ module Phaser.Physics {
                 context.stroke();
                 context.closePath();
             }
-            else if (this.physics.touching == Phaser.Types.RIGHT)
+            else if (this.oH == -1)
             {
                 context.beginPath();
                 context.strokeStyle = 'rgb(255,0,0)';
@@ -123,7 +117,7 @@ module Phaser.Physics {
                 context.closePath();
             }
 
-            if (this.physics.touching == Phaser.Types.UP)
+            if (this.oV == 1)
             {
                 context.beginPath();
                 context.strokeStyle = 'rgb(255,0,0)';
@@ -132,7 +126,7 @@ module Phaser.Physics {
                 context.stroke();
                 context.closePath();
             }
-            else if (this.physics.touching == Phaser.Types.DOWN)
+            else if (this.oV == -1)
             {
                 context.beginPath();
                 context.strokeStyle = 'rgb(255,0,0)';

@@ -3250,9 +3250,10 @@ module Phaser.Physics {
         public bounce: Vec2;
         public friction: Vec2;
         public add(shape: IPhysicsShape): IPhysicsShape;
+        public remove(shape: IPhysicsShape): void;
         public update(): void;
         public render(): void;
-        private updateMotion(obj);
+        private updateMotion(shape);
         /**
         * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
         *
@@ -3264,9 +3265,12 @@ module Phaser.Physics {
         * @return {number} The altered Velocity value.
         */
         public computeVelocity(velocity: number, gravity?: number, acceleration?: number, drag?: number, max?: number): number;
-        private collideWorld(obj);
-        private separateX(shape, distance, tangent);
-        private separateY(shape, distance, tangent);
+        private collideShapes(shapeA, shapeB);
+        private collideWorld(shape);
+        private separateX(shapeA, shapeB, distance, tangent);
+        private separateY(shapeA, shapeB, distance, tangent);
+        private separateXWall(shapeA, distance, tangent);
+        private separateYWall(shapeA, distance, tangent);
         private separate(shape, distance, tangent);
     }
 }
@@ -3422,6 +3426,51 @@ module Phaser {
         static GEOM_RECTANGLE: number;
         static GEOM_LINE: number;
         static GEOM_POLYGON: number;
+        /**
+        * Flag used to allow GameObjects to collide on their left side
+        * @type {number}
+        */
+        static LEFT: number;
+        /**
+        * Flag used to allow GameObjects to collide on their right side
+        * @type {number}
+        */
+        static RIGHT: number;
+        /**
+        * Flag used to allow GameObjects to collide on their top side
+        * @type {number}
+        */
+        static UP: number;
+        /**
+        * Flag used to allow GameObjects to collide on their bottom side
+        * @type {number}
+        */
+        static DOWN: number;
+        /**
+        * Flag used with GameObjects to disable collision
+        * @type {number}
+        */
+        static NONE: number;
+        /**
+        * Flag used to allow GameObjects to collide with a ceiling
+        * @type {number}
+        */
+        static CEILING: number;
+        /**
+        * Flag used to allow GameObjects to collide with a floor
+        * @type {number}
+        */
+        static FLOOR: number;
+        /**
+        * Flag used to allow GameObjects to collide with a wall (same as LEFT+RIGHT)
+        * @type {number}
+        */
+        static WALL: number;
+        /**
+        * Flag used to allow GameObjects to collide on any face
+        * @type {number}
+        */
+        static ANY: number;
     }
 }
 /**
@@ -6605,6 +6654,30 @@ module Phaser {
     }
 }
 /**
+* Phaser - Physics - Circle
+*/
+module Phaser.Physics {
+    class Circle implements IPhysicsShape {
+        constructor(game: Game, sprite: Sprite, x: number, y: number, diameter: number);
+        public game: Game;
+        public world: PhysicsManager;
+        public sprite: Sprite;
+        public physics: Components.Physics;
+        public position: Vec2;
+        public oldPosition: Vec2;
+        public offset: Vec2;
+        public scale: Vec2;
+        public bounds: Rectangle;
+        public radius: number;
+        public oH: number;
+        public oV: number;
+        public preUpdate(): void;
+        public update(): void;
+        public setSize(width: number, height: number): void;
+        public render(context: CanvasRenderingContext2D): void;
+    }
+}
+/**
 * Phaser - Components - Physics
 */
 module Phaser.Components {
@@ -6629,6 +6702,8 @@ module Phaser.Components {
         public friction: Vec2;
         public velocity: Vec2;
         public acceleration: Vec2;
+        public touching: number;
+        public setCircle(diameter: number): void;
         /**
         * Internal function for updating the position and speed of this object.
         */

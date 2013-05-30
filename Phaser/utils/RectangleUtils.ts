@@ -176,18 +176,7 @@ module Phaser {
         * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
         **/
         static intersects(a: Rectangle, b: Rectangle, tolerance?: number = 0): bool {
-
-            // ?
-            //return (a.right > b.x) && (a.x < b.right) && (a.bottom > b.y) && (a.y < b.bottom);
             return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
-
-            //if (a.x >= b.right || a.right <= b.x || a.bottom <= b.y || a.y >= b.bottom)
-            //{
-            //    return false;
-            //}
-
-            //return true;
-
         }
 
         /**

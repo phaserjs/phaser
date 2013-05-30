@@ -2,6 +2,8 @@
 /// <reference path="../../core/Point.ts" />
 /// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../../physics/AABB.ts" />
+/// <reference path="../../physics/Circle.ts" />
+/// <reference path="../../physics/IPhysicsShape.ts" />
 
 /**
 * Phaser - Components - Physics
@@ -23,6 +25,7 @@ module Phaser.Components {
 
             this.velocity = new Vec2;
             this.acceleration = new Vec2;
+            this.touching = Phaser.Types.NONE;
 
             this.shape = this.game.world.physics.add(new Phaser.Physics.AABB(this.game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
 
@@ -37,7 +40,7 @@ module Phaser.Components {
          * Whether this object will be moved by impacts with other objects or not.
          * @type {boolean}
          */
-        public immovable: bool;
+        public immovable: bool = false;
 
         /**
          * Set this to false if you want to skip the automatic movement stuff
@@ -52,12 +55,22 @@ module Phaser.Components {
         public velocity: Vec2;
         public acceleration: Vec2;
 
+        public touching: number;
+
+        public setCircle(diameter: number) {
+
+            this.game.world.physics.remove(this.shape);
+            this.shape = this.game.world.physics.add(new Phaser.Physics.Circle(this.game, this._sprite, this._sprite.x, this._sprite.y, diameter));
+            this._sprite.physics.shape.physics = this;
+
+        }
+
         /**
          * Internal function for updating the position and speed of this object.
          */
         public update() {
 
-            if (this.moves)
+            if (this.moves && this.shape)
             {
                 this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth) - this.shape.offset.x;
                 this._sprite.y = (this.shape.position.y - this.shape.bounds.halfHeight) - this.shape.offset.y;
@@ -74,7 +87,8 @@ module Phaser.Components {
 
             this._sprite.texture.context.fillStyle = color;
             this._sprite.texture.context.fillText('Sprite: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
-            this._sprite.texture.context.fillText('x: ' + this._sprite.frameBounds.x.toFixed(1) + ' y: ' + this._sprite.frameBounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
+            //this._sprite.texture.context.fillText('x: ' + this._sprite.frameBounds.x.toFixed(1) + ' y: ' + this._sprite.frameBounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
+            this._sprite.texture.context.fillText('x: ' + this.shape.bounds.x.toFixed(1) + ' y: ' + this.shape.bounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
             this._sprite.texture.context.fillText('vx: ' + this.velocity.x.toFixed(1) + ' vy: ' + this.velocity.y.toFixed(1), x, y + 28);
             this._sprite.texture.context.fillText('ax: ' + this.acceleration.x.toFixed(1) + ' ay: ' + this.acceleration.y.toFixed(1), x, y + 42);
 

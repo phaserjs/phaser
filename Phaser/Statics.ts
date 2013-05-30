@@ -24,6 +24,60 @@ module Phaser {
         static GEOM_LINE: number = 3;
         static GEOM_POLYGON: number = 4;
 
+        /**
+         * Flag used to allow GameObjects to collide on their left side
+         * @type {number}
+         */
+        static LEFT: number = 0x0001;
+
+        /**
+         * Flag used to allow GameObjects to collide on their right side
+         * @type {number}
+         */
+        static RIGHT: number = 0x0010;
+
+        /**
+         * Flag used to allow GameObjects to collide on their top side
+         * @type {number}
+         */
+        static UP: number = 0x0100;
+
+        /**
+         * Flag used to allow GameObjects to collide on their bottom side
+         * @type {number}
+         */
+        static DOWN: number = 0x1000;
+
+        /**
+         * Flag used with GameObjects to disable collision
+         * @type {number}
+         */
+        static NONE: number = 0;
+
+        /**
+         * Flag used to allow GameObjects to collide with a ceiling
+         * @type {number}
+         */
+        static CEILING: number = Types.UP;
+
+        /**
+         * Flag used to allow GameObjects to collide with a floor
+         * @type {number}
+         */
+        static FLOOR: number = Types.DOWN;
+
+        /**
+         * Flag used to allow GameObjects to collide with a wall (same as LEFT+RIGHT)
+         * @type {number}
+         */
+        static WALL: number = Types.LEFT | Types.RIGHT;
+
+        /**
+         * Flag used to allow GameObjects to collide on any face
+         * @type {number}
+         */
+        static ANY: number = Types.LEFT | Types.RIGHT | Types.UP | Types.DOWN;
+
     }
 
 }

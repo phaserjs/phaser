@@ -27,7 +27,6 @@ module Phaser {
 
         private _diameter: number = 0;
         private _radius: number = 0;
-        //private _pos: Vec2;
 
         /**
 	     * The x coordinate of the center of the circle
