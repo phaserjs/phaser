@@ -1,5 +1,7 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../Group.ts" />
+/// <reference path="../core/Group.ts" />
+/// <reference path="Particle.ts" />
+/// <reference path="../utils/SpriteUtils.ts" />
 
 /**
 * Phaser - Emitter
@@ -29,13 +31,13 @@ module Phaser {
             this.y = y;
             this.width = 0;
             this.height = 0;
-            this.minParticleSpeed = new MicroPoint(-100, -100);
-            this.maxParticleSpeed = new MicroPoint(100, 100);
+            this.minParticleSpeed = new Vec2(-100, -100);
+            this.maxParticleSpeed = new Vec2(100, 100);
             this.minRotation = -360;
             this.maxRotation = 360;
             this.gravity = 0;
             this.particleClass = null;
-            this.particleDrag = new MicroPoint();
+            this.particleDrag = new Vec2();
             this.frequency = 0.1;
             this.lifespan = 3;
             this.bounce = 0;
@@ -43,7 +45,6 @@ module Phaser {
             this._counter = 0;
             this._explode = true;
             this.on = false;
-            this._point = new MicroPoint();
 
         }
 
@@ -68,21 +69,26 @@ module Phaser {
         public height: number;
 
         /**
+         * 
+         */
+        public alive: bool;
+
+        /**
          * The minimum possible velocity of a particle.
          * The default value is (-100,-100).
          */
-        public minParticleSpeed: MicroPoint;
+        public minParticleSpeed: Vec2;
 
         /**
          * The maximum possible velocity of a particle.
          * The default value is (100,100).
          */
-        public maxParticleSpeed: MicroPoint;
+        public maxParticleSpeed: Vec2;
 
         /**
          * The X and Y drag component of particles launched from the emitter.
          */
-        public particleDrag: MicroPoint;
+        public particleDrag: Vec2;
 
         /**
          * The minimum possible angular velocity of a particle.  The default value is -360.
@@ -152,7 +158,7 @@ module Phaser {
         /**
          * Internal point object, handy for reusing for memory mgmt purposes.
          */
-        private _point: MicroPoint;
+        private _point: Vec2;
 
         /**
          * Clean up memory.
@@ -185,7 +191,7 @@ module Phaser {
             /*
             if(Multiple)
             {
-                var sprite:Sprite = new Sprite(this._game);
+                var sprite:Sprite = new Sprite(this.game);
                 sprite.loadGraphic(Graphics,true);
                 totalFrames = sprite.frames;
                 sprite.destroy();
@@ -200,17 +206,17 @@ module Phaser {
             {
                 if (this.particleClass == null)
                 {
-                    particle = new Particle(this._game);
+                    particle = new Particle(this.game);
                 }
                 else
                 {
-                    particle = new this.particleClass(this._game);
+                    particle = new this.particleClass(this.game);
                 }
 
                 if (multiple)
                 {
                     /*
-                    randomFrame = this._game.math.random()*totalFrames;
+                    randomFrame = this.game.math.random()*totalFrames;
                     if(BakedRotations > 0)
                         particle.loadRotatedGraphic(Graphics,BakedRotations,randomFrame);
                     else
@@ -231,21 +237,21 @@ module Phaser {
 
                     if (graphics)
                     {
-                        particle.loadGraphic(graphics);
+                        particle.texture.loadImage(graphics);
                     }
 
                 }
 
                 if (collide > 0)
                 {
-                    particle.allowCollisions = Collision.ANY;
+                    particle.body.allowCollisions = Types.ANY;
+                    particle.body.type = Types.BODY_DYNAMIC;
                     particle.width *= collide;
                     particle.height *= collide;
-                    //particle.centerOffsets();
                 }
                 else
                 {
-                    particle.allowCollisions = Collision.NONE;
+                    particle.body.allowCollisions = Types.NONE;
                 }
 
                 particle.exists = false;
@@ -287,7 +293,7 @@ module Phaser {
                 }
                 else
                 {
-                    this._timer += this._game.time.elapsed;
+                    this._timer += this.game.time.elapsed;
 
                     while ((this.frequency > 0) && (this._timer > this.frequency) && this.on)
                     {
@@ -311,11 +317,18 @@ module Phaser {
          * Call this function to turn off all the particles and the emitter.
          */
         public kill() {
-
             this.on = false;
+            this.alive = false;
+            this.exists = false;
+        }
 
-            super.kill();
-
+        /**
+         * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
+         * In practice, this is most often called by <code>Object.reset()</code>.
+         */
+        public revive() {
+            this.alive = true;
+            this.exists = true;
         }
 
         /**
@@ -351,46 +364,46 @@ module Phaser {
             var particle: Particle = this.recycle(Particle);
 
             particle.lifespan = this.lifespan;
-            particle.elasticity = this.bounce;
-            particle.reset(this.x - (particle.width >> 1) + this._game.math.random() * this.width, this.y - (particle.height >> 1) + this._game.math.random() * this.height);
+            particle.body.bounce.setTo(this.bounce, this.bounce);
+            SpriteUtils.reset(particle, this.x - (particle.width >> 1) + this.game.math.random() * this.width, this.y - (particle.height >> 1) + this.game.math.random() * this.height);
             particle.visible = true;
 
             if (this.minParticleSpeed.x != this.maxParticleSpeed.x)
             {
-                particle.velocity.x = this.minParticleSpeed.x + this._game.math.random() * (this.maxParticleSpeed.x - this.minParticleSpeed.x);
+                particle.body.velocity.x = this.minParticleSpeed.x + this.game.math.random() * (this.maxParticleSpeed.x - this.minParticleSpeed.x);
             }
             else
             {
-                particle.velocity.x = this.minParticleSpeed.x;
+                particle.body.velocity.x = this.minParticleSpeed.x;
             }
 
             if (this.minParticleSpeed.y != this.maxParticleSpeed.y)
             {
-                particle.velocity.y = this.minParticleSpeed.y + this._game.math.random() * (this.maxParticleSpeed.y - this.minParticleSpeed.y);
+                particle.body.velocity.y = this.minParticleSpeed.y + this.game.math.random() * (this.maxParticleSpeed.y - this.minParticleSpeed.y);
             }
             else
             {
-                particle.velocity.y = this.minParticleSpeed.y;
+                particle.body.velocity.y = this.minParticleSpeed.y;
             }
 
-            particle.acceleration.y = this.gravity;
+            particle.body.acceleration.y = this.gravity;
 
             if (this.minRotation != this.maxRotation && this.minRotation !== 0 && this.maxRotation !== 0)
             {
-                particle.angularVelocity = this.minRotation + this._game.math.random() * (this.maxRotation - this.minRotation);
+                particle.body.angularVelocity = this.minRotation + this.game.math.random() * (this.maxRotation - this.minRotation);
             }
             else
             {
-                particle.angularVelocity = this.minRotation;
+                particle.body.angularVelocity = this.minRotation;
             }
 
-            if (particle.angularVelocity != 0)
+            if (particle.body.angularVelocity != 0)
             {
-                particle.angle = this._game.math.random() * 360 - 180;
+                particle.angle = this.game.math.random() * 360 - 180;
             }
 
-            particle.drag.x = this.particleDrag.x;
-            particle.drag.y = this.particleDrag.y;
+            particle.body.drag.x = this.particleDrag.x;
+            particle.body.drag.y = this.particleDrag.y;
             particle.onEmit();
 
         }
@@ -444,10 +457,9 @@ module Phaser {
          *
          * @param Object {object} The <code>Object</code> that you want to sync up with.
          */
-        public at(object) {
-            object.getMidpoint(this._point);
-            this.x = this._point.x - (this.width >> 1);
-            this.y = this._point.y - (this.height >> 1);
+        public at(object: Sprite) {
+            this.x = object.body.bounds.halfWidth - (this.width >> 1);
+            this.y = object.body.bounds.halfHeight - (this.height >> 1);
         }
     }
 

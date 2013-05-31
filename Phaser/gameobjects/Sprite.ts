@@ -3,7 +3,6 @@
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
-/// <reference path="../components/sprite/Physics.ts" />
 /// <reference path="../physics/Body.ts" />
 
 /**
@@ -24,7 +23,6 @@ module Phaser {
          * @param [key] {string} Key of the graphic you want to load for this sprite.
          * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
          */
-        //constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, width?: number = 16, height?: number = 16) {
         constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, bodyType?: number = Phaser.Types.BODY_DISABLED) {
 
             this.game = game;
@@ -46,6 +44,7 @@ module Phaser {
 
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this, key);
+            this.cameraBlacklist = [];
 
             //  Transform related (if we add any more then move to a component)
             this.origin = new Phaser.Vec2(0, 0);
@@ -107,6 +106,12 @@ module Phaser {
          * @type AnimationManager
          */
         public animations: Phaser.Components.AnimationManager;
+
+        /**
+         * An Array of Cameras to which this GameObject won't render
+         * @type {Array}
+         */
+        public cameraBlacklist: number[];
 
         /**
          * The frame boundary around this Sprite.
@@ -290,7 +295,7 @@ module Phaser {
 
             */
 
-            if (this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.rotation == 0 && this.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
+            if (this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.angle == 0 && this.angleOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
             {
                 this.modified = false;
             }
@@ -301,6 +306,27 @@ module Phaser {
          * Clean up memory.
          */
         public destroy() {
+        }
+
+        /**
+         * Handy for "killing" game objects.
+         * Default behavior is to flag them as nonexistent AND dead.
+         * However, if you want the "corpse" to remain in the game,
+         * like to animate an effect or whatever, you should override this,
+         * setting only alive to false, and leaving exists true.
+         */
+        public kill() {
+            this.alive = false;
+            this.exists = false;
+        }
+
+        /**
+         * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
+         * In practice, this is most often called by <code>Object.reset()</code>.
+         */
+        public revive() {
+            this.alive = true;
+            this.exists = true;
         }
 
     }

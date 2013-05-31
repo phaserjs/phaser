@@ -61,7 +61,20 @@
     <Content Include="components\animation\AnimationManager.js">
       <DependentUpon>AnimationManager.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="components\sprite\Physics.ts" />
+    <TypeScriptCompile Include="Game.ts" />
+    <TypeScriptCompile Include="components\sprite\Events.ts" />
+    <TypeScriptCompile Include="components\sprite\Debug.ts" />
+    <Content Include="components\sprite\Debug.js">
+      <DependentUpon>Debug.ts</DependentUpon>
+    </Content>
+    <Content Include="components\sprite\Events.js">
+      <DependentUpon>Events.ts</DependentUpon>
+    </Content>
+    <Content Include="components\Tile.ts" />
+    <Content Include="components\TilemapLayer.ts" />
+    <Content Include="Game.js">
+      <DependentUpon>Game.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="core\Rectangle.ts" />
     <TypeScriptCompile Include="core\Point.ts" />
     <TypeScriptCompile Include="components\sprite\Texture.ts" />
@@ -90,15 +103,21 @@
     <Content Include="gameobjects\DynamicTexture.js">
       <DependentUpon>DynamicTexture.ts</DependentUpon>
     </Content>
-    <Content Include="Game.js">
-      <DependentUpon>Game.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="gameobjects\Sprite.ts" />
     <TypeScriptCompile Include="gameobjects\IGameObject.ts" />
+    <TypeScriptCompile Include="gameobjects\Emitter.ts" />
+    <Content Include="gameobjects\Emitter.js">
+      <DependentUpon>Emitter.ts</DependentUpon>
+    </Content>
     <Content Include="gameobjects\IGameObject.js">
       <DependentUpon>IGameObject.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="gameobjects\ScrollZone.ts" />
+    <Content Include="gameobjects\Particle.ts" />
+    <TypeScriptCompile Include="gameobjects\Tilemap.ts" />
+    <Content Include="gameobjects\Tilemap.js">
+      <DependentUpon>Tilemap.ts</DependentUpon>
+    </Content>
     <Content Include="math\GameMath.js">
       <DependentUpon>GameMath.ts</DependentUpon>
     </Content>
@@ -115,29 +134,21 @@
     <TypeScriptCompile Include="Statics.ts" />
     <TypeScriptCompile Include="renderers\HeadlessRenderer.ts" />
     <TypeScriptCompile Include="physics\PhysicsManager.ts" />
-    <TypeScriptCompile Include="physics\AABB.ts" />
-    <Content Include="physics\AABB.js">
-      <DependentUpon>AABB.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\IPhysicsShape.ts" />
-    <TypeScriptCompile Include="physics\Circle.ts" />
     <TypeScriptCompile Include="physics\Body.ts" />
+    <TypeScriptCompile Include="math\QuadTree.ts" />
+    <Content Include="math\QuadTree.js">
+      <DependentUpon>QuadTree.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="math\LinkedList.ts" />
+    <Content Include="math\LinkedList.js">
+      <DependentUpon>LinkedList.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Motion.ts" />
+    <Content Include="Motion.js">
+      <DependentUpon>Motion.ts</DependentUpon>
+    </Content>
     <Content Include="physics\Body.js">
       <DependentUpon>Body.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\Circle.js">
-      <DependentUpon>Circle.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\IPhysicsBody.ts" />
-    <TypeScriptCompile Include="physics\Fixture.ts" />
-    <Content Include="physics\Fixture.js">
-      <DependentUpon>Fixture.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\IPhysicsBody.js">
-      <DependentUpon>IPhysicsBody.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\IPhysicsShape.js">
-      <DependentUpon>IPhysicsShape.ts</DependentUpon>
     </Content>
     <Content Include="physics\PhysicsManager.js">
       <DependentUpon>PhysicsManager.ts</DependentUpon>
@@ -224,12 +235,6 @@
     <Content Include="system\Device.js">
       <DependentUpon>Device.ts</DependentUpon>
     </Content>
-    <Content Include="math\LinkedList.js">
-      <DependentUpon>LinkedList.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\QuadTree.js">
-      <DependentUpon>QuadTree.ts</DependentUpon>
-    </Content>
     <Content Include="math\RandomDataGenerator.js">
       <DependentUpon>RandomDataGenerator.ts</DependentUpon>
     </Content>
@@ -246,8 +251,6 @@
     <TypeScriptCompile Include="system\StageScaleMode.ts" />
     <TypeScriptCompile Include="system\RequestAnimationFrame.ts" />
     <TypeScriptCompile Include="math\RandomDataGenerator.ts" />
-    <TypeScriptCompile Include="physics\QuadTree.ts" />
-    <TypeScriptCompile Include="math\LinkedList.ts" />
     <TypeScriptCompile Include="system\Device.ts" />
     <TypeScriptCompile Include="cameras\Camera.ts" />
     <Content Include="tweens\easing\Back.js">
@@ -362,7 +365,6 @@
     <TypeScriptCompile Include="loader\Loader.ts" />
     <TypeScriptCompile Include="core\Group.ts" />
     <TypeScriptCompile Include="math\GameMath.ts" />
-    <TypeScriptCompile Include="Game.ts" />
     <TypeScriptCompile Include="gameobjects\DynamicTexture.ts" />
     <TypeScriptCompile Include="components\animation\AnimationManager.ts" />
     <Content Include="loader\Cache.js">

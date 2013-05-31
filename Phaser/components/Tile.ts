@@ -27,7 +27,7 @@ module Phaser {
 
             this.width = width;
             this.height = height;
-            this.allowCollisions = Collision.NONE;
+            this.allowCollisions = Types.NONE;
 
         }
 
@@ -144,7 +144,7 @@ module Phaser {
 
             this.allowCollisions = collision;
 
-            if (collision & Collision.ANY)
+            if (collision & Types.ANY)
             {
                 this.collideLeft = true;
                 this.collideRight = true;
@@ -153,22 +153,22 @@ module Phaser {
                 return;
             }
 
-            if (collision & Collision.LEFT || collision & Collision.WALL)
+            if (collision & Types.LEFT || collision & Types.WALL)
             {
                 this.collideLeft = true;
             }
 
-            if (collision & Collision.RIGHT || collision & Collision.WALL)
+            if (collision & Types.RIGHT || collision & Types.WALL)
             {
                 this.collideRight = true;
             }
 
-            if (collision & Collision.UP || collision & Collision.CEILING)
+            if (collision & Types.UP || collision & Types.CEILING)
             {
                 this.collideUp = true;
             }
 
-            if (collision & Collision.DOWN || collision & Collision.CEILING)
+            if (collision & Types.DOWN || collision & Types.CEILING)
             {
                 this.collideDown = true;
             }
@@ -180,7 +180,7 @@ module Phaser {
          */
         public resetCollision() {
 
-            this.allowCollisions = Collision.NONE;
+            this.allowCollisions = Types.NONE;
             this.collideLeft = false;
             this.collideRight = false;
             this.collideUp = false;

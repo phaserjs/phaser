@@ -1,6 +1,6 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../math/LinkedList.ts" />
-/// <reference path="../gameobjects/IGameObject.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="LinkedList.ts" />
 
 /**
 * Phaser - QuadTree
@@ -10,7 +10,7 @@
 * or the A list against the B list.  Handy for different things!
 */
 
-module Phaser.Physics {
+module Phaser {
 
     export class QuadTree extends Rectangle {
 
@@ -27,8 +27,8 @@ module Phaser.Physics {
 
             super(x, y, width, height);
 
-            this._headA = this._tailA = new LinkedList();
-            this._headB = this._tailB = new LinkedList();
+            this._headA = this._tailA = new Phaser.LinkedList();
+            this._headB = this._tailB = new Phaser.LinkedList();
 
             //Copy the parent's children (if there are any)
             if (parent != null)
@@ -42,7 +42,7 @@ module Phaser.Physics {
                         if (this._tailA.object != null)
                         {
                             this._ot = this._tailA;
-                            this._tailA = new LinkedList();
+                            this._tailA = new Phaser.LinkedList();
                             this._ot.next = this._tailA;
                         }
 
@@ -60,7 +60,7 @@ module Phaser.Physics {
                         if (this._tailB.object != null)
                         {
                             this._ot = this._tailB;
-                            this._tailB = new LinkedList();
+                            this._tailB = new Phaser.LinkedList();
                             this._ot.next = this._tailB;
                         }
 
@@ -93,8 +93,8 @@ module Phaser.Physics {
         }
 
         //  Reused temporary vars to help avoid gc spikes
-        private _iterator: LinkedList;
-        private _ot: LinkedList;
+        private _iterator: Phaser.LinkedList;
+        private _ot: Phaser.LinkedList;
         private _i;
         private _basic;
         private _members;
@@ -126,25 +126,25 @@ module Phaser.Physics {
          * Refers to the internal A and B linked lists,
          * which are used to store objects in the leaves.
          */
-        private _headA: LinkedList;
+        private _headA: Phaser.LinkedList;
 
         /**
          * Refers to the internal A and B linked lists,
          * which are used to store objects in the leaves.
          */
-        private _tailA: LinkedList;
+        private _tailA: Phaser.LinkedList;
 
         /**
          * Refers to the internal A and B linked lists,
          * which are used to store objects in the leaves.
          */
-        private _headB: LinkedList;
+        private _headB: Phaser.LinkedList;
 
         /**
          * Refers to the internal A and B linked lists,
          * which are used to store objects in the leaves.
          */
-        private _tailB: LinkedList;
+        private _tailB: Phaser.LinkedList;
 
         /**
          * Internal, governs and assists with the formation of the tree.
@@ -244,7 +244,7 @@ module Phaser.Physics {
         /**
          * Internal, used during tree processing and overlap checks.
          */
-        private static _iterator: LinkedList;
+        private static _iterator: Phaser.LinkedList;
 
         /**
          * Clean up memory.

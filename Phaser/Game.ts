@@ -1,17 +1,24 @@
+/// <reference path="core/Rectangle.ts" />
+/// <reference path="math/LinkedList.ts" />
+/// <reference path="math/QuadTree.ts" />
+/// <reference path="core/Point.ts" />
+/// <reference path="core/Vec2.ts" />
+/// <reference path="core/Circle.ts" />
+/// <reference path="core/Group.ts" />
+/// <reference path="core/Signal.ts" />
+/// <reference path="core/SignalBinding.ts" />
 /// <reference path="loader/Loader.ts" />
 /// <reference path="loader/Cache.ts" />
 /// <reference path="math/GameMath.ts" />
 /// <reference path="math/RandomDataGenerator.ts" />
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="gameobjects/GameObjectFactory.ts" />
-/// <reference path="core/Group.ts" />
-/// <reference path="core/Signal.ts" />
-/// <reference path="core/SignalBinding.ts" />
 /// <reference path="sound/SoundManager.ts" />
 /// <reference path="Stage.ts" />
 /// <reference path="Time.ts" />
 /// <reference path="tweens/TweenManager.ts" />
 /// <reference path="World.ts" />
+/// <reference path="Motion.ts" />
 /// <reference path="system/Device.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
 /// <reference path="input/Input.ts" />
@@ -170,12 +177,6 @@ module Phaser {
         public cache: Cache;
 
         /**
-         * Reference to the collision helper.
-         * @type {Collision}
-         */
-        //public collision: Collision;
-
-        /**
          * Reference to the input manager
          * @type {Input}
          */
@@ -197,7 +198,7 @@ module Phaser {
          * Reference to the motion helper.
          * @type {Motion}
          */
-        //public motion: Motion;
+        public motion: Motion;
 
         /**
          * Reference to the sound manager.
@@ -279,14 +280,13 @@ module Phaser {
             else
             {
                 this.device = new Device();
-                //this.motion = new Motion(this);
+                this.motion = new Motion(this);
                 this.math = new GameMath(this);
                 this.stage = new Stage(this, parent, width, height);
                 this.world = new World(this, width, height);
                 this.add = new GameObjectFactory(this);
                 this.sound = new SoundManager(this);
                 this.cache = new Cache(this);
-                //this.collision = new Collision(this);
                 this.loader = new Loader(this, this.loadComplete);
                 this.time = new Time(this);
                 this.tweens = new TweenManager(this);

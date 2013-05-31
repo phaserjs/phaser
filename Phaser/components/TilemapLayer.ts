@@ -356,30 +356,30 @@ module Phaser {
          * @param object {GameObject} Tiles you want to get that overlaps this.
          * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
          */
-        public getTileOverlaps(object: IGameObject) {
+        public getTileOverlaps(object: Sprite) {
 
             //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
-            if (object.collisionMask.x < 0 || object.collisionMask.x > this.widthInPixels || object.collisionMask.y < 0 || object.collisionMask.bottom > this.heightInPixels)
+            if (object.body.bounds.x < 0 || object.body.bounds.x > this.widthInPixels || object.body.bounds.y < 0 || object.body.bounds.bottom > this.heightInPixels)
             {
                 return;
             }
 
             //  What tiles do we need to check against?
-            this._tempTileX = this._game.math.snapToFloor(object.collisionMask.x, this.tileWidth) / this.tileWidth;
-            this._tempTileY = this._game.math.snapToFloor(object.collisionMask.y, this.tileHeight) / this.tileHeight;
-            this._tempTileW = (this._game.math.snapToCeil(object.collisionMask.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-            this._tempTileH = (this._game.math.snapToCeil(object.collisionMask.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
+            this._tempTileX = this._game.math.snapToFloor(object.body.bounds.x, this.tileWidth) / this.tileWidth;
+            this._tempTileY = this._game.math.snapToFloor(object.body.bounds.y, this.tileHeight) / this.tileHeight;
+            this._tempTileW = (this._game.math.snapToCeil(object.body.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
+            this._tempTileH = (this._game.math.snapToCeil(object.body.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
 
             //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
 
             this._tempBlockResults = [];
             this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
 
-            Collision.TILE_OVERLAP = false;
+            Phaser.Physics.PhysicsManager.TILE_OVERLAP = false;
 
             for (var r = 0; r < this._tempTileBlock.length; r++)
             {
-                if (Collision.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
+                if (this._game.world.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
                 {
                     this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
                 }
@@ -428,7 +428,7 @@ module Phaser {
                     if (collisionOnly)
                     {
                         //  We only want to consider the tile for checking if you can actually collide with it
-                        if (this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Collision.NONE)
+                        if (this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Types.NONE)
                         {
                             this._tempTileBlock.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
                         }

@@ -23,7 +23,7 @@
 
         //  The sprite is 320 x 200 pixels in size
         //  If we don't set an origin then the sprite will rotate around 0,0 - the top left corner
-        game.add.tween(fuji).to({ rotation: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
+        game.add.tween(fuji).to({ angle: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
 
     }
 

@@ -1,6 +1,11 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../tweens/Tween.ts" />
-/// <reference path="../physics/AABB.ts" />
+/// <reference path="../gameobjects/Emitter.ts" />
+/// <reference path="../gameobjects/Particle.ts" />
+/// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="../gameobjects/ScrollZone.ts" />
+/// <reference path="../gameobjects/DynamicTexture.ts" />
+/// <reference path="../gameobjects/Tilemap.ts" />
 
 /**
 * Phaser - GameObjectFactory
@@ -97,9 +102,9 @@ module Phaser {
          *
          * @return {Particle} The newly created particle object.
          */
-        //public particle(): Particle {
-        //    return new Particle(this._game);
-        //}
+        public particle(): Particle {
+            return new Particle(this._game);
+        }
 
         /**
          * Create a new Emitter.
@@ -109,9 +114,9 @@ module Phaser {
          * @param size {number} Optional, size of this emitter.
          * @return {Emitter} The newly created emitter object.
          */
-        //public emitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
-        //    return <Emitter> this._world.group.add(new Emitter(this._game, x, y, size));
-        //}
+        public emitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
+            return <Emitter> this._world.group.add(new Emitter(this._game, x, y, size));
+        }
 
         /**
          * Create a new ScrollZone object with image key, position and size.
@@ -138,9 +143,9 @@ module Phaser {
          * @param [tileHeight] {number} height of each tile.
          * @return {Tilemap} The newly created tilemap object.
          */
-        //public tilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
-        //    return <Tilemap> this._world.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
-        //}
+        public tilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
+            return <Tilemap> this._world.group.add(new Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
+        }
 
         /**
          * Create a tween object for a specific object.
@@ -181,9 +186,9 @@ module Phaser {
          * @param emitter The Emitter to add to the Game World
          * @return {Phaser.Emitter} The Emitter object
          */
-        //public existingEmitter(emitter: Emitter): Emitter {
-        //    return this._world.group.add(emitter);
-        //}
+        public existingEmitter(emitter: Emitter): Emitter {
+            return this._world.group.add(emitter);
+        }
 
         /**
          * Add an existing ScrollZone to the current world.
@@ -203,9 +208,9 @@ module Phaser {
          * @param tilemap The Tilemap to add to the Game World
          * @return {Phaser.Tilemap} The Tilemap object
          */
-        //public existingTilemap(tilemap: Tilemap): Tilemap {
-        //    return this._world.group.add(tilemap);
-        //}
+        public existingTilemap(tilemap: Tilemap): Tilemap {
+            return this._world.group.add(tilemap);
+        }
 
         /**
          * Add an existing Tween to the current world.

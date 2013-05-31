@@ -27,12 +27,17 @@ module Phaser {
          */
         constructor(game: Game, key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0) {
 
-            //super(game);
+            this.game = game;
+            this.type = Phaser.Types.TILEMAP;
 
-            this.isGroup = false;
+            this.exists = true;
+            this.active = true;
+            this.visible = true;
+            this.alive = true;
 
             this.tiles = [];
             this.layers = [];
+            this.cameraBlacklist = [];
 
             this.mapFormat = format;
 
@@ -49,7 +54,7 @@ module Phaser {
 
             if (this.currentLayer && resizeWorld)
             {
-                this._game.world.setSize(this.currentLayer.widthInPixels, this.currentLayer.heightInPixels, true);
+                this.game.world.setSize(this.currentLayer.widthInPixels, this.currentLayer.heightInPixels, true);
             }
 
         }
@@ -57,10 +62,41 @@ module Phaser {
         private _tempCollisionData;
 
         /**
+         * Reference to the main game object
+         */
+        public game: Game;
+
+        /**
+         * The type of game object.
+         */
+        public type: number;
+
+        /**
+         * Controls if both <code>update</code> and render are called by the core game loop.
+         */
+        public exists: bool;
+
+        /**
+         * Controls if <code>update()</code> is automatically called by the core game loop.
+         */
+        public active: bool;
+
+        /**
+         * Controls if this Sprite is rendered or skipped during the core game loop.
+         */
+        public visible: bool;
+
+        /**
+         * 
+         */
+        public alive: bool;
+
+        /**
          * Tilemap data format enum: CSV.
          * @type {number}
          */
         public static FORMAT_CSV: number = 0;
+
         /**
          * Tilemap data format enum: Tiled JSON.
          * @type {number}
@@ -72,35 +108,47 @@ module Phaser {
          * @type {Tile[]}
          */
         public tiles : Tile[];
+
         /**
          * Array contains tilemap layer objects of this map.
          * @type {TilemapLayer[]}
          */
         public layers : TilemapLayer[];
+
         /**
          * Current tilemap layer.
          * @type {TilemapLayer}
          */
         public currentLayer: TilemapLayer;
+
         /**
          * The tilemap layer for collision.
          * @type {TilemapLayer}
          */
         public collisionLayer: TilemapLayer;
+
         /**
          * Tilemap collision callback.
          * @type {function}
          */
         public collisionCallback = null;
+
         /**
          * Context for the collision callback called with.
          */
         public collisionCallbackContext;
+
         /**
          * Format of this tilemap data. Available values: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
          * @type {number}
          */
         public mapFormat: number;
+
+        /**
+         * An Array of Cameras to which this GameObject won't render
+         * @type {Array}
+         */
+        public cameraBlacklist: number[];
 
         /**
          * Inherited update method.
@@ -136,7 +184,7 @@ module Phaser {
          */
         private parseCSV(data: string, key: string, tileWidth: number, tileHeight: number) {
 
-            var layer: TilemapLayer = new TilemapLayer(this._game, this, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
+            var layer: TilemapLayer = new TilemapLayer(this.game, this, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
 
             //  Trim any rogue whitespace from the data
             data = data.trim();
@@ -179,7 +227,7 @@ module Phaser {
 
             for (var i = 0; i < json.layers.length; i++)
             {
-                var layer: TilemapLayer = new TilemapLayer(this._game, this, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
+                var layer: TilemapLayer = new TilemapLayer(this.game, this, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
 
                 layer.alpha = json.layers[i].opacity;
                 layer.visible = json.layers[i].visible;
@@ -230,7 +278,7 @@ module Phaser {
 
             for (var i = 0; i < qty; i++)
             {
-                this.tiles.push(new Tile(this._game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
+                this.tiles.push(new Tile(this.game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
             }
 
         }
@@ -266,7 +314,7 @@ module Phaser {
          * @param separateX {boolean} Enable seprate at x-axis.
          * @param separateY {boolean} Enable seprate at y-axis.
          */
-        public setCollisionRange(start: number, end: number, collision?:number = Collision.ANY, resetCollisions?: bool = false, separateX?: bool = true, separateY?: bool = true) {
+        public setCollisionRange(start: number, end: number, collision?:number = Types.ANY, resetCollisions?: bool = false, separateX?: bool = true, separateY?: bool = true) {
 
             for (var i = start; i < end; i++)
             {
@@ -283,7 +331,7 @@ module Phaser {
          * @param separateX {boolean} Enable seprate at x-axis.
          * @param separateY {boolean} Enable seprate at y-axis.
          */
-        public setCollisionByIndex(values:number[], collision?:number = Collision.ANY, resetCollisions?: bool = false, separateX?: bool = true, separateY?: bool = true) {
+        public setCollisionByIndex(values:number[], collision?:number = Types.ANY, resetCollisions?: bool = false, separateX?: bool = true, separateY?: bool = true) {
 
             for (var i = 0; i < values.length; i++)
             {
@@ -338,7 +386,7 @@ module Phaser {
 
         public getTileFromInputXY(layer?: number = 0):Tile {
 
-            return this.tiles[this.layers[layer].getTileFromWorldXY(this._game.input.getWorldX(), this._game.input.getWorldY())];
+            return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.getWorldX(), this.game.input.getWorldY())];
 
         }
 
@@ -347,7 +395,7 @@ module Phaser {
          * @param object {GameObject} Tiles you want to get that overlaps this.
          * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
          */
-        public getTileOverlaps(object: GameObject) {
+        public getTileOverlaps(object: Sprite) {
 
             return this.currentLayer.getTileOverlaps(object);
 
@@ -371,7 +419,7 @@ module Phaser {
 
             if (objectOrGroup == null)
             {
-                objectOrGroup = this._game.world.group;
+                objectOrGroup = this.game.world.group;
             }
 
             //  Group?
@@ -391,9 +439,9 @@ module Phaser {
          * @param object {GameObject} Target object you want to check.
          * @return {boolean} Return true if this collides with given object, otherwise return false.
          */
-        public collideGameObject(object: GameObject): bool {
+        public collideGameObject(object: Sprite): bool {
 
-            if (object !== this && object.immovable == false && object.exists == true && object.allowCollisions != Collision.NONE)
+            if (object.body.type == Types.BODY_DYNAMIC && object.exists == true && object.body.allowCollisions != Types.NONE)
             {
                 this._tempCollisionData = this.collisionLayer.getTileOverlaps(object);
 

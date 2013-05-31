@@ -1,4 +1,3 @@
-/// <reference path="../Game.ts" />
 /// <reference path="../gameobjects/IGameObject.ts" />
 
 /**

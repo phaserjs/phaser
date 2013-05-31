@@ -12,53 +12,51 @@ module Phaser {
     export class GameMath {
 
         constructor(game: Game) {
-
-            this._game = game;
-
+            this.game = game;
         }
 
-        private _game: Game;
+        public game: Game;
 
-        public static PI: number = 3.141592653589793; //number pi
-        public static PI_2: number = 1.5707963267948965; //PI / 2 OR 90 deg
-        public static PI_4: number = 0.7853981633974483; //PI / 4 OR 45 deg
-        public static PI_8: number = 0.39269908169872413; //PI / 8 OR 22.5 deg
-        public static PI_16: number = 0.19634954084936206; //PI / 16 OR 11.25 deg
-        public static TWO_PI: number = 6.283185307179586; //2 * PI OR 180 deg
-        public static THREE_PI_2: number = 4.7123889803846895; //3 * PI_2 OR 270 deg
-        public static E: number = 2.71828182845905; //number e
-        public static LN10: number = 2.302585092994046; //ln(10)
-        public static LN2: number = 0.6931471805599453; //ln(2)
-        public static LOG10E: number = 0.4342944819032518; //logB10(e)
-        public static LOG2E: number = 1.442695040888963387; //logB2(e)
-        public static SQRT1_2: number = 0.7071067811865476; //sqrt( 1 / 2 )
-        public static SQRT2: number = 1.4142135623730951; //sqrt( 2 )
-        public static DEG_TO_RAD: number = 0.017453292519943294444444444444444; //PI / 180;
-        public static RAD_TO_DEG: number = 57.295779513082325225835265587527; // 180.0 / PI;
+        static PI: number = 3.141592653589793; //number pi
+        static PI_2: number = 1.5707963267948965; //PI / 2 OR 90 deg
+        static PI_4: number = 0.7853981633974483; //PI / 4 OR 45 deg
+        static PI_8: number = 0.39269908169872413; //PI / 8 OR 22.5 deg
+        static PI_16: number = 0.19634954084936206; //PI / 16 OR 11.25 deg
+        static TWO_PI: number = 6.283185307179586; //2 * PI OR 180 deg
+        static THREE_PI_2: number = 4.7123889803846895; //3 * PI_2 OR 270 deg
+        static E: number = 2.71828182845905; //number e
+        static LN10: number = 2.302585092994046; //ln(10)
+        static LN2: number = 0.6931471805599453; //ln(2)
+        static LOG10E: number = 0.4342944819032518; //logB10(e)
+        static LOG2E: number = 1.442695040888963387; //logB2(e)
+        static SQRT1_2: number = 0.7071067811865476; //sqrt( 1 / 2 )
+        static SQRT2: number = 1.4142135623730951; //sqrt( 2 )
+        static DEG_TO_RAD: number = 0.017453292519943294444444444444444; //PI / 180;
+        static RAD_TO_DEG: number = 57.295779513082325225835265587527; // 180.0 / PI;
 
-        public static B_16: number = 65536;//2^16
-        public static B_31: number = 2147483648;//2^31
-        public static B_32: number = 4294967296;//2^32
-        public static B_48: number = 281474976710656;//2^48
-        public static B_53: number = 9007199254740992;//2^53 !!NOTE!! largest accurate double floating point whole value
-        public static B_64: number = 18446744073709551616;//2^64 !!NOTE!! Not accurate see B_53
+        static B_16: number = 65536;//2^16
+        static B_31: number = 2147483648;//2^31
+        static B_32: number = 4294967296;//2^32
+        static B_48: number = 281474976710656;//2^48
+        static B_53: number = 9007199254740992;//2^53 !!NOTE!! largest accurate double floating point whole value
+        static B_64: number = 18446744073709551616;//2^64 !!NOTE!! Not accurate see B_53
 
-        public static ONE_THIRD: number = 0.333333333333333333333333333333333; // 1.0/3.0;
-        public static TWO_THIRDS: number = 0.666666666666666666666666666666666; // 2.0/3.0;
-        public static ONE_SIXTH: number = 0.166666666666666666666666666666666; // 1.0/6.0;
+        static ONE_THIRD: number = 0.333333333333333333333333333333333; // 1.0/3.0;
+        static TWO_THIRDS: number = 0.666666666666666666666666666666666; // 2.0/3.0;
+        static ONE_SIXTH: number = 0.166666666666666666666666666666666; // 1.0/6.0;
 
-        public static COS_PI_3: number = 0.86602540378443864676372317075294;//COS( PI / 3 )
-        public static SIN_2PI_3: number = 0.03654595;// SIN( 2*PI/3 )
+        static COS_PI_3: number = 0.86602540378443864676372317075294;//COS( PI / 3 )
+        static SIN_2PI_3: number = 0.03654595;// SIN( 2*PI/3 )
 
-        public static CIRCLE_ALPHA: number = 0.5522847498307933984022516322796; //4*(Math.sqrt(2)-1)/3.0;
+        static CIRCLE_ALPHA: number = 0.5522847498307933984022516322796; //4*(Math.sqrt(2)-1)/3.0;
 
-        public static ON: bool = true;
-        public static OFF: bool = false;
+        static ON: bool = true;
+        static OFF: bool = false;
 
-        public static SHORT_EPSILON: number = 0.1;//round integer epsilon
-        public static PERC_EPSILON: number = 0.001;//percentage epsilon
-        public static EPSILON: number = 0.0001;//single float average epsilon
-        public static LONG_EPSILON: number = 0.00000001;//arbitrary 8 digit epsilon
+        static SHORT_EPSILON: number = 0.1;//round integer epsilon
+        static PERC_EPSILON: number = 0.001;//percentage epsilon
+        static EPSILON: number = 0.0001;//single float average epsilon
+        static LONG_EPSILON: number = 0.00000001;//arbitrary 8 digit epsilon
 
         public cosTable = [];
         public sinTable = [];
@@ -712,7 +710,7 @@ module Phaser {
         * @method linear
         * @param {Any} v
         * @param {Any} k
-        * @static
+        * @public
         */
         public linearInterpolation(v, k) {
 
@@ -731,7 +729,7 @@ module Phaser {
         * @method Bezier
         * @param {Any} v
         * @param {Any} k
-        * @static
+        * @public
         */
         public bezierInterpolation(v, k) {
 
@@ -751,7 +749,7 @@ module Phaser {
         * @method CatmullRom
         * @param {Any} v
         * @param {Any} k
-        * @static
+        * @public
         */
         public catmullRomInterpolation(v, k) {
 
@@ -782,7 +780,7 @@ module Phaser {
         * @param {Any} p0
         * @param {Any} p1
         * @param {Any} t
-        * @static
+        * @public
         */
         public linear(p0, p1, t) {
 
@@ -794,7 +792,7 @@ module Phaser {
         * @method Bernstein
         * @param {Any} n
         * @param {Any} i
-        * @static
+        * @public
         */
         public bernstein(n, i) {
 
@@ -809,7 +807,7 @@ module Phaser {
         * @param {Any} p2
         * @param {Any} p3
         * @param {Any} t
-        * @static
+        * @public
         */
         public catmullRom(p0, p1, p2, p3, t) {
 
@@ -975,34 +973,6 @@ module Phaser {
 
         }
 
-		/**
-		 * Finds the length of the given vector
-		 *
-		 * @param	dx
-		 * @param	dy
-		 *
-		 * @return
-		 */
-        public vectorLength(dx:number, dy:number):number
-        {
-            return Math.sqrt(dx * dx + dy * dy);
-        }
-
-		/**
-		 * Finds the dot product value of two vectors
-		 *
-		 * @param	ax		Vector X
-		 * @param	ay		Vector Y
-		 * @param	bx		Vector X
-		 * @param	by		Vector Y
-		 *
-		 * @return	Dot product
-		 */
-        public dotProduct(ax:number, ay:number, bx:number, by:number):number
-        {
-            return ax * bx + ay * by;
-        }
-
         /**
         * Shuffles the data in the given array into a new order
 	    * @param array The array to shuffle
@@ -1029,13 +999,26 @@ module Phaser {
          * @param {Boolean} round - Round the distance to the nearest integer (default false)
          * @return {Number} The distance between this Point object and the destination Point object.
          **/
-        public static distanceBetween(x1: number, y1: number, x2: number, y2: number): number {
+        public distanceBetween(x1: number, y1: number, x2: number, y2: number): number {
 
             var dx = x1 - x2;
             var dy = y1 - y2;
 
             return Math.sqrt(dx * dx + dy * dy);
 
+        }
+
+        /**
+		 * Finds the length of the given vector
+		 * 
+		 * @param	dx
+		 * @param	dy
+		 * 
+		 * @return
+		 */
+        public vectorLength(dx:number, dy:number):number
+        {
+            return Math.sqrt(dx * dx + dy * dy);
         }
 
         /**

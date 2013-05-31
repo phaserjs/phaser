@@ -2,7 +2,7 @@
 /// <reference path="../utils/RectangleUtils.ts" />
 /// <reference path="../utils/CircleUtils.ts" />
 /// <reference path="Body.ts" />
-/// <reference path="QuadTree.ts" />
+/// <reference path="../math/QuadTree.ts" />
 
 /**
 * Phaser - PhysicsManager
@@ -72,7 +72,17 @@ module Phaser.Physics {
         public bounce: Vec2;
         public angularDrag: number;
 
+        /**
+         * The overlap bias is used when calculating hull overlap before separation - change it if you have especially small or large GameObjects
+         * @type {number}
+         */
         static OVERLAP_BIAS: number = 4;
+
+        /**
+         * The overlap bias is used when calculating hull overlap before separation - change it if you have especially small or large GameObjects
+         * @type {number}
+         */
+        static TILE_OVERLAP: bool = false;
 
         /**
          * @type {number}
@@ -80,29 +90,7 @@ module Phaser.Physics {
         public worldDivisions: number = 6;
 
 
-        //  Add some sanity checks here + remove method, etc
         /*
-        public add(shape: IPhysicsShape): IPhysicsShape {
-
-            this._objects.push(shape);
-            return shape;
-
-        }
-
-        public remove(shape: IPhysicsShape) {
-
-            this._length = this._objects.length;
-
-            for (var i = 0; i < this._length; i++)
-            {
-                if (this._objects[i] === shape)
-                {
-                    this._objects[i] = null;
-                }
-            }
-
-        }
-
         public update() {
 
             this._length = this._objects.length;
@@ -222,74 +210,6 @@ module Phaser.Physics {
 
         }
 
-        private collideShapes(shapeA: IPhysicsShape, shapeB: IPhysicsShape) {
-
-            if (shapeA.physics.immovable && shapeB.physics.immovable)
-            {
-                return;
-            }
-
-            this._distance.setTo(0, 0);
-            this._tangent.setTo(0, 0);
-
-            //  Simple bounds check first
-            if (RectangleUtils.intersects(shapeA.bounds, shapeB.bounds))
-            {
-                //  Collide on the x-axis
-                if (shapeA.physics.velocity.x > 0 && shapeA.bounds.right > shapeB.bounds.x && shapeA.bounds.right <= shapeB.bounds.right)
-                {
-                    //  The right side of ShapeA hit the left side of ShapeB
-                    this._distance.x = shapeB.bounds.x - shapeA.bounds.right;
-
-                    if (this._distance.x != 0)
-                    {
-                        this._tangent.x = -1;
-                    }
-                }
-                else if (shapeA.physics.velocity.x < 0 && shapeA.bounds.x < shapeB.bounds.right && shapeA.bounds.x >= shapeB.bounds.x)
-                {
-                    //  The left side of ShapeA hit the right side of ShapeB
-                    this._distance.x = shapeB.bounds.right - shapeA.bounds.x;
-
-                    if (this._distance.x != 0)
-                    {
-                        this._tangent.x = 1;
-                    }
-                }
-
-                //  Collide on the y-axis
-                if (shapeA.physics.velocity.y < 0 && shapeA.bounds.y < shapeB.bounds.bottom && shapeA.bounds.y > shapeB.bounds.y)
-                {
-                    console.log('top A -> bot B');
-                    //  The top of ShapeA hit the bottom of ShapeB
-                    this._distance.y = shapeB.bounds.bottom - shapeA.bounds.y;
-                    console.log(shapeA.bounds, shapeB.bounds, this._distance.y);
-
-                    if (this._distance.y != 0)
-                    {
-                        this._tangent.y = 1;
-                    }
-                }
-                else if (shapeA.physics.velocity.y > 0 && shapeA.bounds.bottom > shapeB.bounds.y && shapeA.bounds.bottom < shapeB.bounds.bottom)
-                {
-                    //  The bottom of ShapeA hit the top of ShapeB
-                    this._distance.y = shapeB.bounds.y - shapeA.bounds.bottom;
-
-                    if (this._distance.y != 0)
-                    {
-                        this._tangent.y = -1;
-                    }
-                }
-
-                //  Separate
-                if (this._distance.equals(0) == false)
-                {
-                    //this.separate(shapeA, shapeB, this._distance, this._tangent);
-                }
-            }
-
-        }
-
         /**
          * The core Collision separation method.
          * @param body1 The first Physics.Body to separate
@@ -305,18 +225,18 @@ module Phaser.Physics {
 
         }
 
-        private checkHullIntersection(shape1:IPhysicsShape, shape2:IPhysicsShape): bool {
+        private checkHullIntersection(body1: Body, body2:Body): bool {
 
-            //if ((shape1.hullX + shape1.hullWidth > shape2.hullX) && (shape1.hullX < shape2.hullX + shape2.bounds.width) && (shape1.hullY + shape1.hullHeight > shape2.hullY) && (shape1.hullY < shape2.hullY + shape2.hullHeight))
-            //  maybe not bounds.width?
-            if ((shape1.hullX + shape1.hullWidth > shape2.hullX) && (shape1.hullX < shape2.hullX + shape2.hullWidth) && (shape1.hullY + shape1.hullHeight > shape2.hullY) && (shape1.hullY < shape2.hullY + shape2.hullHeight))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight));
+
+            //if ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight))
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
 
         }
 
@@ -547,8 +467,8 @@ module Phaser.Physics {
 
 
 
-
-        private OLDseparate(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+        /*
+        private TILEseparate(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
 
             if (tangent.x == 1)
             {
@@ -807,6 +727,7 @@ module Phaser.Physics {
             shapeA.position.y += distance.y;
 
         }
+        */
 
         /**
          * Checks for overlaps between two objects using the world QuadTree. Can be Sprite vs. Sprite, Sprite vs. Group or Group vs. Group.
@@ -845,6 +766,360 @@ module Phaser.Physics {
             return this._quadTreeResult;
 
         }
+
+
+
+
+
+
+        /**
+         * Collision resolution specifically for GameObjects vs. Tiles.
+         * @param object The GameObject to separate
+         * @param tile The Tile to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated
+         */
+        public separateTile(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool, separateX: bool, separateY: bool): bool {
+
+            //var separatedX: bool = this.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
+            //var separatedY: bool = this.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
+
+            //return separatedX || separatedY;
+
+            return false;
+
+        }
+
+        /**
+         * Separates the two objects on their x axis
+         * @param object The GameObject to separate
+         * @param tile The Tile to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+         */
+        /*
+        public separateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if (object.immovable)
+            {
+                return false;
+            }
+
+            //  First, get the object delta
+            var overlap: number = 0;
+            var objDelta: number = object.x - object.last.x;
+            //var objDelta: number = object.collisionMask.deltaX;
+
+            if (objDelta != 0)
+            {
+                //  Check if the X hulls actually overlap
+                var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                //var objDeltaAbs: number = object.collisionMask.deltaXAbs;
+                var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+
+                if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+                {
+                    var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (objDelta > 0)
+                    {
+                        overlap = object.x + object.width - x;
+
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.RIGHT;
+                        }
+                    }
+                    else if (objDelta < 0)
+                    {
+                        overlap = object.x - width - x;
+
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.LEFT;
+                        }
+
+                    }
+
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                if (separate == true)
+                {
+                    //console.log('
+                    object.x = object.x - overlap;
+                    object.velocity.x = -(object.velocity.x * object.elasticity);
+                }
+
+                Collision.TILE_OVERLAP = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        */
+
+        /**
+         * Separates the two objects on their y axis
+         * @param object The first GameObject to separate
+         * @param tile The second GameObject to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+         */
+        /*
+        public separateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if (object.immovable)
+            {
+                return false;
+            }
+
+            //  First, get the two object deltas
+            var overlap: number = 0;
+            var objDelta: number = object.y - object.last.y;
+
+            if (objDelta != 0)
+            {
+                //  Check if the Y hulls actually overlap
+                var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+
+                if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+                {
+                    var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (objDelta > 0)
+                    {
+                        overlap = object.y + object.height - y;
+
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.DOWN;
+                        }
+                    }
+                    else if (objDelta < 0)
+                    {
+                        overlap = object.y - height - y;
+
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.UP;
+                        }
+                    }
+                }
+            }
+
+            // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                if (separate == true)
+                {
+                    object.y = object.y - overlap;
+                    object.velocity.y = -(object.velocity.y * object.elasticity);
+                }
+
+                Collision.TILE_OVERLAP = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        */
+
+
+        /**
+         * Separates the two objects on their x axis
+         * @param object The GameObject to separate
+         * @param tile The Tile to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+         */
+        /*
+        public static NEWseparateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if (object.immovable)
+            {
+                return false;
+            }
+
+            //  First, get the object delta
+            var overlap: number = 0;
+
+            if (object.collisionMask.deltaX != 0)
+            {
+                //  Check if the X hulls actually overlap
+                //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                //var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+
+                //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+                if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
+                {
+                    var maxOverlap: number = object.collisionMask.deltaXAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (object.collisionMask.deltaX > 0)
+                    {
+                        //overlap = object.x + object.width - x;
+                        overlap = object.collisionMask.right - x;
+
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.RIGHT;
+                        }
+                    }
+                    else if (object.collisionMask.deltaX < 0)
+                    {
+                        //overlap = object.x - width - x;
+                        overlap = object.collisionMask.x - width - x;
+
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.LEFT;
+                        }
+
+                    }
+
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                if (separate == true)
+                {
+                    object.x = object.x - overlap;
+                    object.velocity.x = -(object.velocity.x * object.elasticity);
+                }
+
+                Collision.TILE_OVERLAP = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        */
+
+        /**
+         * Separates the two objects on their y axis
+         * @param object The first GameObject to separate
+         * @param tile The second GameObject to separate
+         * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+         */
+        /*
+        public NEWseparateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+
+            //  Can't separate two immovable objects (tiles are always immovable)
+            if (object.immovable)
+            {
+                return false;
+            }
+
+            //  First, get the two object deltas
+            var overlap: number = 0;
+            //var objDelta: number = object.y - object.last.y;
+
+            if (object.collisionMask.deltaY != 0)
+            {
+                //  Check if the Y hulls actually overlap
+                //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+                //var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+
+                //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+                if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
+                {
+                    //var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+                    var maxOverlap: number = object.collisionMask.deltaYAbs + Collision.OVERLAP_BIAS;
+
+                    //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                    if (object.collisionMask.deltaY > 0)
+                    {
+                        //overlap = object.y + object.height - y;
+                        overlap = object.collisionMask.bottom - y;
+
+                        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.DOWN;
+                        }
+                    }
+                    else if (object.collisionMask.deltaY < 0)
+                    {
+                        //overlap = object.y - height - y;
+                        overlap = object.collisionMask.y - height - y;
+
+                        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
+                        {
+                            overlap = 0;
+                        }
+                        else
+                        {
+                            object.touching |= Collision.UP;
+                        }
+                    }
+                }
+            }
+
+            // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (overlap != 0)
+            {
+                if (separate == true)
+                {
+                    object.y = object.y - overlap;
+                    object.velocity.y = -(object.velocity.y * object.elasticity);
+                }
+
+                Collision.TILE_OVERLAP = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    */
 
     }
 

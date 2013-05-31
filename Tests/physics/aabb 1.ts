@@ -24,39 +24,39 @@
         //atari.physics.shape.offset.setTo(50, 25);
 
         //atari.physics.gravity.setTo(0, 2);
-        atari.physics.bounce.setTo(0.7, 0.7);
-        atari.physics.drag.setTo(10, 10);
+        atari.body.bounce.setTo(0.7, 0.7);
+        atari.body.drag.setTo(10, 10);
 
     }
 
     function update() {
 
-        atari.physics.acceleration.x = 0;
-        atari.physics.acceleration.y = 0;
+        atari.body.acceleration.x = 0;
+        atari.body.acceleration.y = 0;
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            atari.physics.acceleration.x = -150;
+            atari.body.acceleration.x = -150;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            atari.physics.acceleration.x = 150;
+            atari.body.acceleration.x = 150;
         }
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            atari.physics.acceleration.y = -150;
+            atari.body.acceleration.y = -150;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
-            atari.physics.acceleration.y = 150;
+            atari.body.acceleration.y = 150;
         }
 
     }
 
     function render() {
 
-        atari.physics.renderDebugInfo(16, 16);
+        atari.body.renderDebugInfo(16, 16);
 
     }
 

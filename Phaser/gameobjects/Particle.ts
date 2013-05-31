@@ -51,7 +51,7 @@ module Phaser {
                 return;
             }
 
-            this.lifespan -= this._game.time.elapsed;
+            this.lifespan -= this.game.time.elapsed;
 
             if (this.lifespan <= 0)
             {
@@ -59,39 +59,39 @@ module Phaser {
             }
 
             //simpler bounce/spin behavior for now
-            if (this.touching)
+            if (this.body.touching)
             {
-                if (this.angularVelocity != 0)
+                if (this.body.angularVelocity != 0)
                 {
-                    this.angularVelocity = -this.angularVelocity;
+                    this.body.angularVelocity = -this.body.angularVelocity;
                 }
             }
 
-            if (this.acceleration.y > 0) //special behavior for particles with gravity
+            if (this.body.acceleration.y > 0) //special behavior for particles with gravity
             {
-                if (this.touching & Collision.FLOOR)
+                if (this.body.touching & Types.FLOOR)
                 {
-                    this.drag.x = this.friction;
+                    this.body.drag.x = this.friction;
 
-                    if (!(this.wasTouching & Collision.FLOOR))
+                    if (!(this.body.wasTouching & Types.FLOOR))
                     {
-                        if (this.velocity.y < -this.elasticity * 10)
+                        if (this.body.velocity.y < -this.body.bounce.y * 10)
                         {
-                            if (this.angularVelocity != 0)
+                            if (this.body.angularVelocity != 0)
                             {
-                                this.angularVelocity *= -this.elasticity;
+                                this.body.angularVelocity *= -this.body.bounce.y;
                             }
                         }
                         else
                         {
-                            this.velocity.y = 0;
-                            this.angularVelocity = 0;
+                            this.body.velocity.y = 0;
+                            this.body.angularVelocity = 0;
                         }
                     }
                 }
                 else
                 {
-                    this.drag.x = 0;
+                    this.body.drag.x = 0;
                 }
             }
         }

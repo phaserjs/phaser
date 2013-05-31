@@ -8,69 +8,13 @@
 * Phaser - SpriteUtils
 *
 * A collection of methods useful for manipulating and checking Sprites.
-*
-* TODO: 
 */
 
 module Phaser {
 
     export class SpriteUtils {
 
-        /**
-         * Pivot position enum: at the top-left corner.
-         * @type {number}
-         */
-        static ALIGN_TOP_LEFT: number = 0;
-
-        /**
-         * Pivot position enum: at the top-center corner.
-         * @type {number}
-         */
-        static ALIGN_TOP_CENTER: number = 1;
-
-        /**
-         * Pivot position enum: at the top-right corner.
-         * @type {number}
-         */
-        static ALIGN_TOP_RIGHT: number = 2;
-
-        /**
-         * Pivot position enum: at the center-left corner.
-         * @type {number}
-         */
-        static ALIGN_CENTER_LEFT: number = 3;
-
-        /**
-         * Pivot position enum: at the center corner.
-         * @type {number}
-         */
-        static ALIGN_CENTER: number = 4;
-
-        /**
-         * Pivot position enum: at the center-right corner.
-         * @type {number}
-         */
-        static ALIGN_CENTER_RIGHT: number = 5;
-
-        /**
-         * Pivot position enum: at the bottom-left corner.
-         * @type {number}
-         */
-        static ALIGN_BOTTOM_LEFT: number = 6;
-
-        /**
-         * Pivot position enum: at the bottom-center corner.
-         * @type {number}
-         */
-        static ALIGN_BOTTOM_CENTER: number = 7;
-
-        /**
-         * Pivot position enum: at the bottom-right corner.
-         * @type {number}
-         */
-        static ALIGN_BOTTOM_RIGHT: number = 8;
-
-
+        static _tempPoint: Point;
 
         static getAsPoints(sprite: Sprite): Phaser.Point[] {
 
@@ -240,20 +184,18 @@ module Phaser {
         *
         * @return {boolean} Whether the object is on screen or not.
         */
-        /*
-        static onScreen(camera: Camera = null): bool {
+        static onScreen(sprite: Sprite, camera: Camera = null): bool {
 
             if (camera == null)
             {
-                camera = this._game.camera;
+                camera = sprite.game.camera;
             }
 
-            this.getScreenXY(this._point, camera);
+            SpriteUtils.getScreenXY(sprite, SpriteUtils._tempPoint, camera);
 
-            return (this._point.x + this.width > 0) && (this._point.x < camera.width) && (this._point.y + this.height > 0) && (this._point.y < camera.height);
+            return (SpriteUtils._tempPoint.x + sprite.width > 0) && (SpriteUtils._tempPoint.x < camera.width) && (SpriteUtils._tempPoint.y + sprite.height > 0) && (SpriteUtils._tempPoint.y < camera.height);
 
         }
-        */
 
         /**
         * Call this to figure out the on-screen position of the object.
@@ -261,14 +203,13 @@ module Phaser {
         * @param point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
         * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return {MicroPoint} The <code>MicroPoint</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+        * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
-        /*
-        static getScreenXY(point: MicroPoint = null, camera: Camera = null): MicroPoint {
+        static getScreenXY(sprite: Sprite, point: Point = null, camera: Camera = null): Point {
 
             if (point == null)
             {
-                point = new MicroPoint();
+                point = new Point();
             }
 
             if (camera == null)
@@ -276,15 +217,14 @@ module Phaser {
                 camera = this._game.camera;
             }
 
-            point.x = this.x - camera.scroll.x * this.scrollFactor.x;
-            point.y = this.y - camera.scroll.y * this.scrollFactor.y;
+            point.x = sprite.x - camera.scroll.x * sprite.scrollFactor.x;
+            point.y = sprite.y - camera.scroll.y * sprite.scrollFactor.y;
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
 
             return point;
 
         }
-        */
 
         /**
         * Set the world bounds that this GameObject can exist within based on the size of the current game world.
@@ -305,7 +245,6 @@ module Phaser {
          * @param camera {Rectangle} The rectangle you want to check.
          * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
          */
-        /*
         static inCamera(camera: Rectangle, cameraOffsetX: number, cameraOffsetY: number): bool {
 
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
@@ -322,7 +261,6 @@ module Phaser {
             return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
 
         }
-        */
 
         /**
         * Handy for reviving game objects.
@@ -331,21 +269,17 @@ module Phaser {
         * @param x {number} The new X position of this object.
         * @param y {number} The new Y position of this object.
         */
-        /*
-        static reset(x: number, y: number) {
+        static reset(sprite: Sprite, x: number, y: number) {
 
-            this.revive();
-            this.touching = Collision.NONE;
-            this.wasTouching = Collision.NONE;
-            this.x = x;
-            this.y = y;
-            this.last.x = x;
-            this.last.y = y;
-            this.velocity.x = 0;
-            this.velocity.y = 0;
+            sprite.revive();
+            sprite.body.touching = Types.NONE;
+            sprite.body.wasTouching = Types.NONE;
+            sprite.x = x;
+            sprite.y = y;
+            sprite.body.velocity.x = 0;
+            sprite.body.velocity.y = 0;
 
         }
-        */
 
         /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere

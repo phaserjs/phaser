@@ -28,11 +28,10 @@ module Phaser {
          */
         constructor(game: Game, key:string, x: number = 0, y: number = 0, width?: number = 0, height?: number = 0) {
 
-            super(game, x, y, key, width, height);
+            super(game, x, y, key);
 
             this.type = Phaser.Types.SCROLLZONE;
             this.render = game.renderer.renderScrollZone;
-            this.physics.moves = false;
 
             this.regions = [];
 
