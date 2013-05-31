@@ -6705,6 +6705,7 @@ module Phaser.Physics {
         public scale: Vec2;
         public bounds: Rectangle;
         public radius: number;
+        public diameter: number;
         public preUpdate(): void;
         public update(): void;
         public setSize(width: number, height: number): void;

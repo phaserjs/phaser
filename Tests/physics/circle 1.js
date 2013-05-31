@@ -14,12 +14,12 @@
         card = game.add.sprite(400, 300, 'card');
         //atari.texture.alpha = 0.5;
         //atari.scale.setTo(1.5, 1.5);
-        atari.physics.setCircle(50);
+        atari.physics.setCircle(100);
         //atari.physics.shape.setSize(150, 50);
-        atari.physics.shape.offset.setTo(7, 5);
+        //atari.physics.shape.offset.setTo(7, 5);
         //atari.physics.gravity.setTo(0, 2);
         atari.physics.bounce.setTo(0.7, 0.7);
-        atari.physics.drag.setTo(10, 10);
+        //atari.physics.drag.setTo(10, 10);
         card.physics.bounce.setTo(0.7, 0.7);
     }
     function update() {
@@ -38,12 +38,5 @@
     }
     function render() {
         atari.physics.renderDebugInfo(16, 16);
-        game.stage.context.save();
-        game.stage.context.beginPath();
-        game.stage.context.strokeStyle = 'rgba(255,0,255,0.5)';
-        game.stage.context.arc(200, 200, 50, 0, Math.PI * 2);
-        game.stage.context.stroke();
-        game.stage.context.closePath();
-        game.stage.context.restore();
     }
 })();

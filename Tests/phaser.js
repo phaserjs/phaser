@@ -12559,6 +12559,7 @@ var Phaser;
                     this.physics = null;
                     this.scale = new Phaser.Vec2(1, 1);
                 }
+                this.diameter = diameter;
                 this.radius = diameter / 2;
                 this.bounds = new Phaser.Rectangle(x + Math.round(diameter / 2), y + Math.round(diameter / 2), diameter, diameter);
                 this.position = new Phaser.Vec2(x + this.bounds.halfWidth, y + this.bounds.halfHeight);
@@ -12589,18 +12590,11 @@ var Phaser;
                 this.bounds.height = height;
             };
             Circle.prototype.render = function (context) {
-                context.beginPath();
-                //context.strokeStyle = 'rgb(255,255,0)';
-                //context.strokeRect(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight, this.bounds.width, this.bounds.height);
-                //context.fillStyle = 'rgba(0,0,255,0.8)';
-                context.strokeStyle = 'rgba(0,0,255,0.5)';
-                context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-                //context.fill();
-                context.stroke();
-                context.closePath();
                 //  center point
-                context.fillStyle = 'rgb(255,255,0)';
-                context.fillRect(this.position.x, this.position.y, 2, 2);
+                context.fillStyle = 'rgba(255,0,0,0.5)';
+                context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+                context.rect(this.position.x, this.position.y, 2, 2);
+                context.fill();
                 /*
                 if (this.oH == 1)
                 {
@@ -12644,9 +12638,11 @@ var Phaser;
             Object.defineProperty(Circle.prototype, "hullWidth", {
                 get: function () {
                     if(this.deltaX > 0) {
-                        return this.bounds.width + this.deltaX;
+                        //return this.bounds.width + this.deltaX;
+                        return this.diameter + this.deltaX;
                     } else {
-                        return this.bounds.width - this.deltaX;
+                        //return this.bounds.width - this.deltaX;
+                        return this.diameter - this.deltaX;
                     }
                 },
                 enumerable: true,
@@ -12655,9 +12651,11 @@ var Phaser;
             Object.defineProperty(Circle.prototype, "hullHeight", {
                 get: function () {
                     if(this.deltaY > 0) {
-                        return this.bounds.height + this.deltaY;
+                        //return this.bounds.height + this.deltaY;
+                        return this.diameter + this.deltaY;
                     } else {
-                        return this.bounds.height - this.deltaY;
+                        //return this.bounds.height - this.deltaY;
+                        return this.diameter - this.deltaY;
                     }
                 },
                 enumerable: true,

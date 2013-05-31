@@ -131,6 +131,62 @@ module Phaser {
 
         }
 
+
+/*
+public static boolean intersect(Rectangle r, Circle c)
+{
+    float cx = Math.abs(c.x - r.x - r.halfWidth);
+    float xDist = r.halfWidth + c.radius;
+    if (cx > xDist)
+        return false;
+    float cy = Math.abs(c.y - r.y - r.halfHeight);
+    float yDist = r.halfHeight + c.radius;
+    if (cy > yDist)
+        return false;
+    if (cx <= r.halfWidth || cy <= r.halfHeight)
+        return true;
+    float xCornerDist = cx - r.halfWidth;
+    float yCornerDist = cy - r.halfHeight;
+    float xCornerDistSq = xCornerDist * xCornerDist;
+    float yCornerDistSq = yCornerDist * yCornerDist;
+    float maxCornerDistSq = c.radius * c.radius;
+    return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
+}
+    */
+
+        static intersectsRectangle(c: Circle, r: Rectangle): bool {
+
+            var cx: number = Math.abs(c.x - r.x - r.halfWidth);
+            var xDist: number = r.halfWidth + c.radius;
+
+            if (cx > xDist)
+            {
+                return false;
+            }
+
+            var cy: number = Math.abs(c.y - r.y - r.halfHeight);
+            var yDist: number = r.halfHeight + c.radius;
+
+            if (cy > yDist)
+            {
+                return false;
+            }
+
+            if (cx <= r.halfWidth || cy <= r.halfHeight)
+            {
+                return true;
+            }
+
+            var xCornerDist: number = cx - r.halfWidth;
+            var yCornerDist: number = cy - r.halfHeight;
+            var xCornerDistSq = xCornerDist * xCornerDist;
+            var yCornerDistSq = yCornerDist * yCornerDist;
+            var maxCornerDistSq = c.radius * c.radius;
+
+            return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
+
+        }
+
     }
 
 }

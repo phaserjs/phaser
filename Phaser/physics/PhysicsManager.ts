@@ -1,6 +1,7 @@
 /// <reference path="../Game.ts" />
 /// <reference path="IPhysicsShape.ts" />
 /// <reference path="../utils/RectangleUtils.ts" />
+/// <reference path="../utils/CircleUtils.ts" />
 
 /**
 * Phaser - PhysicsManager
@@ -312,6 +313,17 @@ module Phaser.Physics {
 
             if (object1.physics.shape.deltaX != object2.physics.shape.deltaX)
             {
+                //var intersects: bool = false;
+
+                //if (object1.physics.shape['radius'])
+                //{
+                //    intersects = CircleUtils.intersectsRectangle(object1.physics.shape, object2.physics.shape.bounds)
+                //}
+                //else
+                //{
+                //    intersects = RectangleUtils.intersects(object1.physics.shape.bounds, object2.physics.shape.bounds)
+                //}
+
                 if (RectangleUtils.intersects(object1.physics.shape.bounds, object2.physics.shape.bounds))
                 {
                     //var maxOverlap: number = object1.physics.shape.deltaXAbs + object2.physics.shape.deltaXAbs + Collision.OVERLAP_BIAS;
