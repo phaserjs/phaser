@@ -46,6 +46,10 @@ module Phaser {
             this._explode = true;
             this.on = false;
 
+            this.exists = true;
+            this.active = true;
+            this.visible = true;
+
         }
 
         /**
@@ -72,6 +76,11 @@ module Phaser {
          * 
          */
         public alive: bool;
+
+        /**
+         * 
+         */
+        public active: bool;
 
         /**
          * The minimum possible velocity of a particle.
@@ -217,29 +226,14 @@ module Phaser {
                 {
                     /*
                     randomFrame = this.game.math.random()*totalFrames;
-                    if(BakedRotations > 0)
-                        particle.loadRotatedGraphic(Graphics,BakedRotations,randomFrame);
-                    else
-                    {
-                        particle.loadGraphic(Graphics,true);
-                        particle.frame = randomFrame;
-                    }
                     */
                 }
                 else
                 {
-                    /*
-                    if (BakedRotations > 0)
-                        particle.loadRotatedGraphic(Graphics,BakedRotations);
-                    else
-                        particle.loadGraphic(Graphics);
-                    */
-
                     if (graphics)
                     {
                         particle.texture.loadImage(graphics);
                     }
-
                 }
 
                 if (collide > 0)
@@ -255,6 +249,8 @@ module Phaser {
                 }
 
                 particle.exists = false;
+                //  Center the origin for rotation assistance
+                particle.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
 
                 this.add(particle);
 
@@ -263,6 +259,9 @@ module Phaser {
 
             return this;
         }
+
+        public preUpdate() { }
+        public postUpdate() { }
 
         /**
          * Called automatically by the game loop, decides when to launch particles and when to "die".

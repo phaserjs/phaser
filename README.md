@@ -28,6 +28,8 @@ TODO:
 * Copy the setTransform from Sprite to Camera
 * Move Camera.scroll.x to just Camera.x/y
 * Apply Sprite scaling to Body.bounds
+* When you modify the sprite x/y directly the body position doesn't update, which leads to weird results. Need to work out who controls who.
+
 
 
 V1.0.0

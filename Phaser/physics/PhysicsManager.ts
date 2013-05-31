@@ -139,7 +139,7 @@ module Phaser.Physics {
                 return;
             }
 
-            this._velocityDelta  = (this.computeVelocity(body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
+            this._velocityDelta  = (this.computeVelocity(body.angularVelocity, body.gravity.x, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
             body.angularVelocity += this._velocityDelta;
             body.angle += body.angularVelocity * this.game.time.elapsed;
             body.angularVelocity += this._velocityDelta;
@@ -225,19 +225,8 @@ module Phaser.Physics {
 
         }
 
-        private checkHullIntersection(body1: Body, body2:Body): bool {
-
+        public checkHullIntersection(body1: Body, body2:Body): bool {
             return ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight));
-
-            //if ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight))
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-
         }
 
         /**
@@ -753,7 +742,7 @@ module Phaser.Physics {
 
             QuadTree.divisions = this.worldDivisions;
 
-            this._quadTree = new QuadTree(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            this._quadTree = new QuadTree(this, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
             this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
 

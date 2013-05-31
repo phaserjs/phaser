@@ -406,9 +406,10 @@ var Phaser;
         * @param {Number} height		Desired height of this node.
         * @param {Number} parent		The parent branch or node.  Pass null to create a root.
         */
-        function QuadTree(x, y, width, height, parent) {
+        function QuadTree(manager, x, y, width, height, parent) {
             if (typeof parent === "undefined") { parent = null; }
                 _super.call(this, x, y, width, height);
+            QuadTree.physics = manager;
             this._headA = this._tailA = new Phaser.LinkedList();
             this._headB = this._tailB = new Phaser.LinkedList();
             //Copy the parent's children (if there are any)
@@ -562,14 +563,14 @@ var Phaser;
             if((QuadTree._object.body.bounds.x > this._leftEdge) && (QuadTree._object.body.bounds.right < this._midpointX)) {
                 if((QuadTree._object.body.bounds.y > this._topEdge) && (QuadTree._object.body.bounds.bottom < this._midpointY)) {
                     if(this._northWestTree == null) {
-                        this._northWestTree = new QuadTree(this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
+                        this._northWestTree = new QuadTree(QuadTree.physics, this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
                     }
                     this._northWestTree.addObject();
                     return;
                 }
                 if((QuadTree._object.body.bounds.y > this._midpointY) && (QuadTree._object.body.bounds.bottom < this._bottomEdge)) {
                     if(this._southWestTree == null) {
-                        this._southWestTree = new QuadTree(this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
+                        this._southWestTree = new QuadTree(QuadTree.physics, this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
                     }
                     this._southWestTree.addObject();
                     return;
@@ -578,14 +579,14 @@ var Phaser;
             if((QuadTree._object.body.bounds.x > this._midpointX) && (QuadTree._object.body.bounds.right < this._rightEdge)) {
                 if((QuadTree._object.body.bounds.y > this._topEdge) && (QuadTree._object.body.bounds.bottom < this._midpointY)) {
                     if(this._northEastTree == null) {
-                        this._northEastTree = new QuadTree(this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
+                        this._northEastTree = new QuadTree(QuadTree.physics, this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
                     }
                     this._northEastTree.addObject();
                     return;
                 }
                 if((QuadTree._object.body.bounds.y > this._midpointY) && (QuadTree._object.body.bounds.bottom < this._bottomEdge)) {
                     if(this._southEastTree == null) {
-                        this._southEastTree = new QuadTree(this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
+                        this._southEastTree = new QuadTree(QuadTree.physics, this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
                     }
                     this._southEastTree.addObject();
                     return;
@@ -594,25 +595,25 @@ var Phaser;
             //If it wasn't completely contained we have to check out the partial overlaps
             if((QuadTree._object.body.bounds.right > this._leftEdge) && (QuadTree._object.body.bounds.x < this._midpointX) && (QuadTree._object.body.bounds.bottom > this._topEdge) && (QuadTree._object.body.bounds.y < this._midpointY)) {
                 if(this._northWestTree == null) {
-                    this._northWestTree = new QuadTree(this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
+                    this._northWestTree = new QuadTree(QuadTree.physics, this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
                 }
                 this._northWestTree.addObject();
             }
             if((QuadTree._object.body.bounds.right > this._midpointX) && (QuadTree._object.body.bounds.x < this._rightEdge) && (QuadTree._object.body.bounds.bottom > this._topEdge) && (QuadTree._object.body.bounds.y < this._midpointY)) {
                 if(this._northEastTree == null) {
-                    this._northEastTree = new QuadTree(this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
+                    this._northEastTree = new QuadTree(QuadTree.physics, this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
                 }
                 this._northEastTree.addObject();
             }
             if((QuadTree._object.body.bounds.right > this._midpointX) && (QuadTree._object.body.bounds.x < this._rightEdge) && (QuadTree._object.body.bounds.bottom > this._midpointY) && (QuadTree._object.body.bounds.y < this._bottomEdge)) {
                 if(this._southEastTree == null) {
-                    this._southEastTree = new QuadTree(this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
+                    this._southEastTree = new QuadTree(QuadTree.physics, this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
                 }
                 this._southEastTree.addObject();
             }
             if((QuadTree._object.body.bounds.right > this._leftEdge) && (QuadTree._object.body.bounds.x < this._midpointX) && (QuadTree._object.body.bounds.bottom > this._midpointY) && (QuadTree._object.body.bounds.y < this._bottomEdge)) {
                 if(this._southWestTree == null) {
-                    this._southWestTree = new QuadTree(this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
+                    this._southWestTree = new QuadTree(QuadTree.physics, this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
                 }
                 this._southWestTree.addObject();
             }
@@ -707,7 +708,8 @@ var Phaser;
                     QuadTree._iterator = QuadTree._iterator.next;
                     continue;
                 }
-                if(QuadTree._object.body.bounds.checkHullIntersection(this._checkObject.body.bounds)) {
+                //if (QuadTree._object.body.bounds.checkHullIntersection(this._checkObject.body.bounds))
+                if(QuadTree.physics.checkHullIntersection(QuadTree._object.body, this._checkObject.body)) {
                     //Execute callback functions if they exist
                     if((QuadTree._processingCallback == null) || QuadTree._processingCallback(QuadTree._object, this._checkObject)) {
                         this._overlapProcessed = true;
@@ -1351,7 +1353,15 @@ var Phaser;
             while(this._i < this.length) {
                 this._member = this.members[this._i++];
                 if(this._member != null && this._member.exists && this._member.visible && camera.isHidden(this._member) == false) {
-                    this._member.render.call(renderer, camera, this._member);
+                    //this._member.render.call(renderer, camera, this._member);
+                    //  call = context first, then parameters
+                    if(this._member.type == Phaser.Types.GROUP) {
+                        //console.log('group rend');
+                        this._member.render.call(this._member, renderer, camera, this._member);
+                        //this._member.render.call(this, renderer, camera, this._member);
+                                            } else {
+                        this._member.render.call(renderer, camera, this._member);
+                    }
                 }
             }
             if(this.alpha > 0) {
@@ -5284,6 +5294,8 @@ var Phaser;
             sprite.y = y;
             sprite.body.velocity.x = 0;
             sprite.body.velocity.y = 0;
+            sprite.body.position.x = x;
+            sprite.body.position.y = y;
         };
         SpriteUtils.setBounds = /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
@@ -5408,8 +5420,9 @@ var Phaser;
             * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
             * @return {Sprite} Sprite instance itself.
             */
-            function (key, clearAnimations) {
+            function (key, clearAnimations, updateBody) {
                 if (typeof clearAnimations === "undefined") { clearAnimations = true; }
+                if (typeof updateBody === "undefined") { updateBody = true; }
                 if(clearAnimations && this._sprite.animations.frameData !== null) {
                     this._sprite.animations.destroy();
                 }
@@ -5420,6 +5433,10 @@ var Phaser;
                     } else {
                         this._sprite.frameBounds.width = this.width;
                         this._sprite.frameBounds.height = this.height;
+                    }
+                    if(updateBody) {
+                        this._sprite.body.bounds.width = this.width;
+                        this._sprite.body.bounds.height = this.height;
                     }
                 }
             };
@@ -7563,6 +7580,7 @@ var Phaser;
         */
         function Particle(game) {
                 _super.call(this, game);
+            this.body.type = Phaser.Types.BODY_DYNAMIC;
             this.lifespan = 0;
             this.friction = 500;
         }
@@ -7571,7 +7589,7 @@ var Phaser;
         * be dead yet, and then has some special bounce behavior if there is some gravity on it.
         */
         function () {
-            //lifespan behavior
+            //  Lifespan behavior
             if(this.lifespan <= 0) {
                 return;
             }
@@ -7609,6 +7627,7 @@ var Phaser;
         * You can override this to add custom behavior like a sound or AI or something.
         */
         function () {
+            console.log('particle emitted', this.width, this.height);
         };
         return Particle;
     })(Phaser.Sprite);
@@ -7660,6 +7679,9 @@ var Phaser;
             this._counter = 0;
             this._explode = true;
             this.on = false;
+            this.exists = true;
+            this.active = true;
+            this.visible = true;
         }
         Emitter.prototype.destroy = /**
         * Clean up memory.
@@ -7718,12 +7740,6 @@ var Phaser;
                     }
                     */
                                     } else {
-                    /*
-                    if (BakedRotations > 0)
-                    particle.loadRotatedGraphic(Graphics,BakedRotations);
-                    else
-                    particle.loadGraphic(Graphics);
-                    */
                     if(graphics) {
                         particle.texture.loadImage(graphics);
                     }
@@ -7737,10 +7753,16 @@ var Phaser;
                     particle.body.allowCollisions = Phaser.Types.NONE;
                 }
                 particle.exists = false;
+                //  Center it
+                particle.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
                 this.add(particle);
                 i++;
             }
             return this;
+        };
+        Emitter.prototype.preUpdate = function () {
+        };
+        Emitter.prototype.postUpdate = function () {
         };
         Emitter.prototype.update = /**
         * Called automatically by the game loop, decides when to launch particles and when to "die".
@@ -10646,7 +10668,7 @@ var Phaser;
                 if(body.type == Phaser.Types.BODY_DISABLED) {
                     return;
                 }
-                this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
+                this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.gravity.x, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
                 body.angularVelocity += this._velocityDelta;
                 body.angle += body.angularVelocity * this.game.time.elapsed;
                 body.angularVelocity += this._velocityDelta;
@@ -10711,15 +10733,7 @@ var Phaser;
             };
             PhysicsManager.prototype.checkHullIntersection = function (body1, body2) {
                 return ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight));
-                //if ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight))
-                //{
-                //    return true;
-                //}
-                //else
-                //{
-                //    return false;
-                //}
-                            };
+            };
             PhysicsManager.prototype.separateBodyX = /**
             * Separates the two objects on their x axis
             * @param object1 The first GameObject to separate
@@ -11158,7 +11172,7 @@ var Phaser;
                     object2 = null;
                 }
                 Phaser.QuadTree.divisions = this.worldDivisions;
-                this._quadTree = new Phaser.QuadTree(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+                this._quadTree = new Phaser.QuadTree(this, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
                 this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
                 this._quadTreeResult = this._quadTree.execute();
                 this._quadTree.destroy();

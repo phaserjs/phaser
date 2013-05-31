@@ -201,7 +201,18 @@ module Phaser {
 
                 if (this._member != null && this._member.exists && this._member.visible && camera.isHidden(this._member) == false)
                 {
-                    this._member.render.call(renderer, camera, this._member);
+                    //this._member.render.call(renderer, camera, this._member);
+                    //  call = context first, then parameters
+                    if (this._member.type == Types.GROUP)
+                    {
+                        //console.log('group rend');
+                        this._member.render.call(this._member, renderer, camera, this._member);
+                        //this._member.render.call(this, renderer, camera, this._member);
+                    }
+                    else
+                    {
+                        this._member.render.call(renderer, camera, this._member);
+                    }
                 }
             }
 

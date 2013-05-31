@@ -143,7 +143,7 @@ module Phaser.Components {
          * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
          * @return {Sprite} Sprite instance itself.
          */
-        public loadImage(key: string, clearAnimations: bool = true) {
+        public loadImage(key: string, clearAnimations?: bool = true, updateBody?: bool = true) {
 
             if (clearAnimations && this._sprite.animations.frameData !== null)
             {
@@ -162,6 +162,12 @@ module Phaser.Components {
                 {
                     this._sprite.frameBounds.width = this.width;
                     this._sprite.frameBounds.height = this.height;
+                }
+
+                if (updateBody)
+                {
+                    this._sprite.body.bounds.width = this.width;
+                    this._sprite.body.bounds.height = this.height;
                 }
             }
 

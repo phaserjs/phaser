@@ -26,7 +26,7 @@
         //  This will cause it to rotate on its center
         fuji.origin.setTo(160, 100);
 
-        game.add.tween(fuji).to({ rotation: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
+        game.add.tween(fuji).to({ angle: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
 
     }
 

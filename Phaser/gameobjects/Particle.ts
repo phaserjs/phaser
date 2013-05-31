@@ -20,6 +20,7 @@ module Phaser {
 
             super(game);
 
+            this.body.type = Types.BODY_DYNAMIC;
             this.lifespan = 0;
             this.friction = 500;
 
@@ -45,7 +46,7 @@ module Phaser {
          */
         public update() {
 
-            //lifespan behavior
+            //  Lifespan behavior
             if (this.lifespan <= 0)
             {
                 return;

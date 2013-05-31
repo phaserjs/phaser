@@ -320,7 +320,7 @@ module Phaser {
         * @param {Number} height		Desired height of this node.
         * @param {Number} parent		The parent branch or node.  Pass null to create a root.
         */
-        constructor(x: number, y: number, width: number, height: number, parent?: QuadTree);
+        constructor(manager: Physics.PhysicsManager, x: number, y: number, width: number, height: number, parent?: QuadTree);
         private _iterator;
         private _ot;
         private _i;
@@ -329,6 +329,7 @@ module Phaser {
         private _l;
         private _overlapProcessed;
         private _checkObject;
+        static physics: Physics.PhysicsManager;
         /**
         * Flag for specifying that you want to add an object to the A list.
         */
@@ -3178,7 +3179,7 @@ module Phaser.Components {
         * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
         * @return {Sprite} Sprite instance itself.
         */
-        public loadImage(key: string, clearAnimations?: bool): void;
+        public loadImage(key: string, clearAnimations?: bool, updateBody?: bool): void;
         /**
         * Load a DynamicTexture as its texture.
         * @param texture {DynamicTexture} The texture object to be used by this sprite.
@@ -4298,6 +4299,10 @@ module Phaser {
         */
         public alive: bool;
         /**
+        *
+        */
+        public active: bool;
+        /**
         * The minimum possible velocity of a particle.
         * The default value is (-100,-100).
         */
@@ -4383,6 +4388,8 @@ module Phaser {
         * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
         */
         public makeParticles(graphics, quantity?: number, multiple?: bool, collide?: number): Emitter;
+        public preUpdate(): void;
+        public postUpdate(): void;
         /**
         * Called automatically by the game loop, decides when to launch particles and when to "die".
         */
@@ -6133,7 +6140,7 @@ module Phaser.Physics {
         * @returns {boolean} Returns true if the bodies were separated, otherwise false.
         */
         public separate(body1: Body, body2: Body): bool;
-        private checkHullIntersection(body1, body2);
+        public checkHullIntersection(body1: Body, body2: Body): bool;
         /**
         * Separates the two objects on their x axis
         * @param object1 The first GameObject to separate

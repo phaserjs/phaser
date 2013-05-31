@@ -66,6 +66,22 @@
       <DependentUpon>scrollfactor 2.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="physics\aabb 1.ts" />
+    <TypeScriptCompile Include="particles\graphic emitter.ts" />
+    <Content Include="particles\graphic emitter.js">
+      <DependentUpon>graphic emitter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\multiple streams.ts" />
+    <Content Include="particles\multiple streams.js">
+      <DependentUpon>multiple streams.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\sprite emitter.ts" />
+    <Content Include="particles\sprite emitter.js">
+      <DependentUpon>sprite emitter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\when particles collide.ts" />
+    <Content Include="particles\when particles collide.js">
+      <DependentUpon>when particles collide.ts</DependentUpon>
+    </Content>
     <Content Include="physics\aabb 1.js">
       <DependentUpon>aabb 1.ts</DependentUpon>
     </Content>
@@ -158,8 +174,6 @@
       <DependentUpon>boot screen.ts</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="particles\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

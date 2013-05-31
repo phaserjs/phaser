@@ -23,9 +23,11 @@ module Phaser {
          * @param {Number} height		Desired height of this node.
          * @param {Number} parent		The parent branch or node.  Pass null to create a root.
          */
-        constructor(x: number, y: number, width: number, height: number, parent: QuadTree = null) {
+        constructor(manager: Phaser.Physics.PhysicsManager, x: number, y: number, width: number, height: number, parent: QuadTree = null) {
 
             super(x, y, width, height);
+
+            QuadTree.physics = manager;
 
             this._headA = this._tailA = new Phaser.LinkedList();
             this._headB = this._tailB = new Phaser.LinkedList();
@@ -101,6 +103,8 @@ module Phaser {
         private _l: number;
         private _overlapProcessed: bool;
         private _checkObject;
+
+        public static physics: Phaser.Physics.PhysicsManager;
 
         /**
          * Flag for specifying that you want to add an object to the A list.
@@ -392,7 +396,7 @@ module Phaser {
                 {
                     if (this._northWestTree == null)
                     {
-                        this._northWestTree = new QuadTree(this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
+                        this._northWestTree = new QuadTree(QuadTree.physics, this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
                     }
 
                     this._northWestTree.addObject();
@@ -403,7 +407,7 @@ module Phaser {
                 {
                     if (this._southWestTree == null)
                     {
-                        this._southWestTree = new QuadTree(this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
+                        this._southWestTree = new QuadTree(QuadTree.physics, this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
                     }
 
                     this._southWestTree.addObject();
@@ -417,7 +421,7 @@ module Phaser {
                 {
                     if (this._northEastTree == null)
                     {
-                        this._northEastTree = new QuadTree(this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
+                        this._northEastTree = new QuadTree(QuadTree.physics, this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
                     }
 
                     this._northEastTree.addObject();
@@ -428,7 +432,7 @@ module Phaser {
                 {
                     if (this._southEastTree == null)
                     {
-                        this._southEastTree = new QuadTree(this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
+                        this._southEastTree = new QuadTree(QuadTree.physics, this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
                     }
 
                     this._southEastTree.addObject();
@@ -441,7 +445,7 @@ module Phaser {
             {
                 if (this._northWestTree == null)
                 {
-                    this._northWestTree = new QuadTree(this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
+                    this._northWestTree = new QuadTree(QuadTree.physics, this._leftEdge, this._topEdge, this._halfWidth, this._halfHeight, this);
                 }
 
                 this._northWestTree.addObject();
@@ -451,7 +455,7 @@ module Phaser {
             {
                 if (this._northEastTree == null)
                 {
-                    this._northEastTree = new QuadTree(this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
+                    this._northEastTree = new QuadTree(QuadTree.physics, this._midpointX, this._topEdge, this._halfWidth, this._halfHeight, this);
                 }
 
                 this._northEastTree.addObject();
@@ -461,7 +465,7 @@ module Phaser {
             {
                 if (this._southEastTree == null)
                 {
-                    this._southEastTree = new QuadTree(this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
+                    this._southEastTree = new QuadTree(QuadTree.physics, this._midpointX, this._midpointY, this._halfWidth, this._halfHeight, this);
                 }
 
                 this._southEastTree.addObject();
@@ -471,7 +475,7 @@ module Phaser {
             {
                 if (this._southWestTree == null)
                 {
-                    this._southWestTree = new QuadTree(this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
+                    this._southWestTree = new QuadTree(QuadTree.physics, this._leftEdge, this._midpointY, this._halfWidth, this._halfHeight, this);
                 }
 
                 this._southWestTree.addObject();
@@ -621,7 +625,8 @@ module Phaser {
                     continue;
                 }
 
-                if (QuadTree._object.body.bounds.checkHullIntersection(this._checkObject.body.bounds))
+                //if (QuadTree._object.body.bounds.checkHullIntersection(this._checkObject.body.bounds))
+                if (QuadTree.physics.checkHullIntersection(QuadTree._object.body, this._checkObject.body))
                 {
                     //Execute callback functions if they exist
                     if ((QuadTree._processingCallback == null) || QuadTree._processingCallback(QuadTree._object, this._checkObject))

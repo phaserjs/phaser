@@ -278,6 +278,8 @@ module Phaser {
             sprite.y = y;
             sprite.body.velocity.x = 0;
             sprite.body.velocity.y = 0;
+            sprite.body.position.x = x;
+            sprite.body.position.y = y;
 
         }
 
