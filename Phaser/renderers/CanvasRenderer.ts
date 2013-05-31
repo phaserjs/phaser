@@ -54,9 +54,6 @@ module Phaser {
                 this._camera.postRender();
             }
 
-            //  Physics Debug layer
-            this._game.world.physics.render();
-
         }
 
         /**
@@ -121,10 +118,10 @@ module Phaser {
             //	Rotation and Flipped
             if (sprite.modified)
             {
-                if (sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.rotationOffset !== 0))
+                if (sprite.texture.renderRotation == true && (sprite.angle !== 0 || sprite.angleOffset !== 0))
                 {
-                    this._sin = Math.sin(sprite.game.math.degreesToRadians(sprite.rotationOffset + sprite.rotation));
-                    this._cos = Math.cos(sprite.game.math.degreesToRadians(sprite.rotationOffset + sprite.rotation));
+                    this._sin = Math.sin(sprite.game.math.degreesToRadians(sprite.angleOffset + sprite.angle));
+                    this._cos = Math.cos(sprite.game.math.degreesToRadians(sprite.angleOffset + sprite.angle));
                 }
 
                 //  setTransform(a, b, c, d, e, f);
@@ -185,12 +182,6 @@ module Phaser {
                 sprite.texture.context.restore();
             }
 
-            //if (this.renderDebug)
-            //{
-            //    this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
-                //this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
-            //}
-
             if (this._ga > -1)
             {
                 sprite.texture.context.globalAlpha = this._ga;
@@ -245,10 +236,10 @@ module Phaser {
             //	Rotation and Flipped
             if (scrollZone.modified)
             {
-                if (scrollZone.texture.renderRotation == true && (scrollZone.rotation !== 0 || scrollZone.rotationOffset !== 0))
+                if (scrollZone.texture.renderRotation == true && (scrollZone.angle !== 0 || scrollZone.angleOffset !== 0))
                 {
-                    this._sin = Math.sin(scrollZone.game.math.degreesToRadians(scrollZone.rotationOffset + scrollZone.rotation));
-                    this._cos = Math.cos(scrollZone.game.math.degreesToRadians(scrollZone.rotationOffset + scrollZone.rotation));
+                    this._sin = Math.sin(scrollZone.game.math.degreesToRadians(scrollZone.angleOffset + scrollZone.angle));
+                    this._cos = Math.cos(scrollZone.game.math.degreesToRadians(scrollZone.angleOffset + scrollZone.angle));
                 }
 
                 //  setTransform(a, b, c, d, e, f);
@@ -299,12 +290,6 @@ module Phaser {
             {
                 scrollZone.texture.context.restore();
             }
-
-            //if (this.renderDebug)
-            //{
-            //    this.renderBounds(camera, cameraOffsetX, cameraOffsetY);
-                //this.collisionMask.render(camera, cameraOffsetX, cameraOffsetY);
-            //}
 
             if (this._ga > -1)
             {

@@ -1,5 +1,5 @@
 /// <reference path="../Game.ts" />
-/// <reference path="LinkedList.ts" />
+/// <reference path="../math/LinkedList.ts" />
 /// <reference path="../gameobjects/IGameObject.ts" />
 
 /**
@@ -10,7 +10,7 @@
 * or the A list against the B list.  Handy for different things!
 */
 
-module Phaser {
+module Phaser.Physics {
 
     export class QuadTree extends Rectangle {
 
@@ -333,7 +333,7 @@ module Phaser {
 
             QuadTree._list = list;
 
-            if (objectOrGroup.isGroup == true)
+            if (objectOrGroup.type == Types.GROUP)
             {
                 this._i = 0;
                 this._members = <Group> objectOrGroup['members'];
@@ -353,7 +353,7 @@ module Phaser {
                         {
                             QuadTree._object = this._basic;
 
-                            if (QuadTree._object.exists && QuadTree._object.allowCollisions)
+                            if (QuadTree._object.exists && QuadTree._object.body.allowCollisions)
                             {
                                 this.addObject();
                             }
@@ -365,7 +365,7 @@ module Phaser {
             {
                 QuadTree._object = objectOrGroup;
 
-                if (QuadTree._object.exists && QuadTree._object.allowCollisions)
+                if (QuadTree._object.exists && QuadTree._object.body.allowCollisions)
                 {
                     this.addObject();
                 }
@@ -379,16 +379,16 @@ module Phaser {
         private addObject() {
 
             //If this quad (not its children) lies entirely inside this object, add it here
-            if (!this._canSubdivide || ((this._leftEdge >= QuadTree._object.collisionMask.x) && (this._rightEdge <= QuadTree._object.collisionMask.right) && (this._topEdge >= QuadTree._object.collisionMask.y) && (this._bottomEdge <= QuadTree._object.collisionMask.bottom)))
+            if (!this._canSubdivide || ((this._leftEdge >= QuadTree._object.body.bounds.x) && (this._rightEdge <= QuadTree._object.body.bounds.right) && (this._topEdge >= QuadTree._object.body.bounds.y) && (this._bottomEdge <= QuadTree._object.body.bounds.bottom)))
             {
                 this.addToList();
                 return;
             }
 
             //See if the selected object fits completely inside any of the quadrants
-            if ((QuadTree._object.collisionMask.x > this._leftEdge) && (QuadTree._object.collisionMask.right < this._midpointX))
+            if ((QuadTree._object.body.bounds.x > this._leftEdge) && (QuadTree._object.body.bounds.right < this._midpointX))
             {
-                if ((QuadTree._object.collisionMask.y > this._topEdge) && (QuadTree._object.collisionMask.bottom < this._midpointY))
+                if ((QuadTree._object.body.bounds.y > this._topEdge) && (QuadTree._object.body.bounds.bottom < this._midpointY))
                 {
                     if (this._northWestTree == null)
                     {
@@ -399,7 +399,7 @@ module Phaser {
                     return;
                 }
 
-                if ((QuadTree._object.collisionMask.y > this._midpointY) && (QuadTree._object.collisionMask.bottom < this._bottomEdge))
+                if ((QuadTree._object.body.bounds.y > this._midpointY) && (QuadTree._object.body.bounds.bottom < this._bottomEdge))
                 {
                     if (this._southWestTree == null)
                     {
@@ -411,9 +411,9 @@ module Phaser {
                 }
             }
 
-            if ((QuadTree._object.collisionMask.x > this._midpointX) && (QuadTree._object.collisionMask.right < this._rightEdge))
+            if ((QuadTree._object.body.bounds.x > this._midpointX) && (QuadTree._object.body.bounds.right < this._rightEdge))
             {
-                if ((QuadTree._object.collisionMask.y > this._topEdge) && (QuadTree._object.collisionMask.bottom < this._midpointY))
+                if ((QuadTree._object.body.bounds.y > this._topEdge) && (QuadTree._object.body.bounds.bottom < this._midpointY))
                 {
                     if (this._northEastTree == null)
                     {
@@ -424,7 +424,7 @@ module Phaser {
                     return;
                 }
 
-                if ((QuadTree._object.collisionMask.y > this._midpointY) && (QuadTree._object.collisionMask.bottom < this._bottomEdge))
+                if ((QuadTree._object.body.bounds.y > this._midpointY) && (QuadTree._object.body.bounds.bottom < this._bottomEdge))
                 {
                     if (this._southEastTree == null)
                     {
@@ -437,7 +437,7 @@ module Phaser {
             }
 
             //If it wasn't completely contained we have to check out the partial overlaps
-            if ((QuadTree._object.collisionMask.right > this._leftEdge) && (QuadTree._object.collisionMask.x < this._midpointX) && (QuadTree._object.collisionMask.bottom > this._topEdge) && (QuadTree._object.collisionMask.y < this._midpointY))
+            if ((QuadTree._object.body.bounds.right > this._leftEdge) && (QuadTree._object.body.bounds.x < this._midpointX) && (QuadTree._object.body.bounds.bottom > this._topEdge) && (QuadTree._object.body.bounds.y < this._midpointY))
             {
                 if (this._northWestTree == null)
                 {
@@ -447,7 +447,7 @@ module Phaser {
                 this._northWestTree.addObject();
             }
 
-            if ((QuadTree._object.collisionMask.right > this._midpointX) && (QuadTree._object.collisionMask.x < this._rightEdge) && (QuadTree._object.collisionMask.bottom > this._topEdge) && (QuadTree._object.collisionMask.y < this._midpointY))
+            if ((QuadTree._object.body.bounds.right > this._midpointX) && (QuadTree._object.body.bounds.x < this._rightEdge) && (QuadTree._object.body.bounds.bottom > this._topEdge) && (QuadTree._object.body.bounds.y < this._midpointY))
             {
                 if (this._northEastTree == null)
                 {
@@ -457,7 +457,7 @@ module Phaser {
                 this._northEastTree.addObject();
             }
 
-            if ((QuadTree._object.collisionMask.right > this._midpointX) && (QuadTree._object.collisionMask.x < this._rightEdge) && (QuadTree._object.collisionMask.bottom > this._midpointY) && (QuadTree._object.collisionMask.y < this._bottomEdge))
+            if ((QuadTree._object.body.bounds.right > this._midpointX) && (QuadTree._object.body.bounds.x < this._rightEdge) && (QuadTree._object.body.bounds.bottom > this._midpointY) && (QuadTree._object.body.bounds.y < this._bottomEdge))
             {
                 if (this._southEastTree == null)
                 {
@@ -467,7 +467,7 @@ module Phaser {
                 this._southEastTree.addObject();
             }
 
-            if ((QuadTree._object.collisionMask.right > this._leftEdge) && (QuadTree._object.collisionMask.x < this._midpointX) && (QuadTree._object.collisionMask.bottom > this._midpointY) && (QuadTree._object.collisionMask.y < this._bottomEdge))
+            if ((QuadTree._object.body.bounds.right > this._leftEdge) && (QuadTree._object.body.bounds.x < this._midpointX) && (QuadTree._object.body.bounds.bottom > this._midpointY) && (QuadTree._object.body.bounds.y < this._bottomEdge))
             {
                 if (this._southWestTree == null)
                 {
@@ -561,7 +561,7 @@ module Phaser {
                         QuadTree._iterator = this._iterator.next;
                     }
 
-                    if (QuadTree._object.exists && (QuadTree._object.allowCollisions > 0) && (QuadTree._iterator != null) && (QuadTree._iterator.object != null) && QuadTree._iterator.object.exists && this.overlapNode())
+                    if (QuadTree._object.exists && (QuadTree._object.body.allowCollisions > 0) && (QuadTree._iterator != null) && (QuadTree._iterator.object != null) && QuadTree._iterator.object.exists && this.overlapNode())
                     {
                         this._overlapProcessed = true;
                     }
@@ -608,20 +608,20 @@ module Phaser {
 
             while (QuadTree._iterator != null)
             {
-                if (!QuadTree._object.exists || (QuadTree._object.allowCollisions <= 0))
+                if (!QuadTree._object.exists || (QuadTree._object.body.allowCollisions <= 0))
                 {
                     break;
                 }
 
                 this._checkObject = QuadTree._iterator.object;
 
-                if ((QuadTree._object === this._checkObject) || !this._checkObject.exists || (this._checkObject.allowCollisions <= 0))
+                if ((QuadTree._object === this._checkObject) || !this._checkObject.exists || (this._checkObject.body.allowCollisions <= 0))
                 {
                     QuadTree._iterator = QuadTree._iterator.next;
                     continue;
                 }
 
-                if (QuadTree._object.collisionMask.checkHullIntersection(this._checkObject.collisionMask))
+                if (QuadTree._object.body.bounds.checkHullIntersection(this._checkObject.body.bounds))
                 {
                     //Execute callback functions if they exist
                     if ((QuadTree._processingCallback == null) || QuadTree._processingCallback(QuadTree._object, this._checkObject))

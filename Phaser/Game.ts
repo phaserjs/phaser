@@ -639,9 +639,9 @@ module Phaser {
          * @param context The context in which the callbacks will be called
          * @returns {boolean} true if the objects overlap, otherwise false.
          */
-        //public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.callbackContext): bool {
-        //    return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
-        //}
+        public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.callbackContext): bool {
+            return this.world.physics.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, this.world.physics.separate, context);
+        }
 
         public get camera(): Camera {
             return this.world.cameras.current;

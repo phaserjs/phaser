@@ -23,13 +23,11 @@ Latest Update
 TODO:
 
 * Dispatch world resize event
-* Removed ignoreGlobalUpdate because it checks exists etc in the Group update, so remove those checks from Sprite.update (same for render)
 * Investigate why tweens don't restart after the game pauses
 * Fix bug in Tween yoyo + loop combo
 * Copy the setTransform from Sprite to Camera
 * Move Camera.scroll.x to just Camera.x/y
-* Get AABB offset working somehow
-
+* Apply Sprite scaling to Body.bounds
 
 
 V1.0.0
@@ -49,6 +47,9 @@ V1.0.0
 * Added Tween.loop property so they can now re-run themselves indefinitely.
 * Added Tween.yoyo property so they can reverse themselves after completing.
 * Added Gravity to the Physics component.
+* Removed Sprite.rotation - use Sprite.angle instead
+* Optimised separateX/Y and overlap so they don't use any temporary vars any more.
+* Added the new Physics.Body object to all Sprites. Used for all physics calculations in-game. Will be extended for Fixtures/Joints in future.
 
 
 V0.9.6
@@ -143,9 +144,7 @@ V0.9.6
 * TODO: Game.Time should monitor pause duration
 * TODO: Investigate bug re: tilemap collision and animation frames
 * TODO: Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
-* TODO: GameObject.clipRect - won't work with rotation :( have to use context.clip which is crazy expensive, damnit
 * TODO: Polygon geom primitive
-* TODO: Move GameObject transforms to a single matrix
 * TODO: this.target.view.style.cursor = "pointer"; ("default")
 * TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
 * TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more

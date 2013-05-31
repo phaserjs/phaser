@@ -1,7 +1,8 @@
 /// <reference path="../Game.ts" />
-/// <reference path="IPhysicsShape.ts" />
 /// <reference path="../utils/RectangleUtils.ts" />
 /// <reference path="../utils/CircleUtils.ts" />
+/// <reference path="Body.ts" />
+/// <reference path="QuadTree.ts" />
 
 /**
 * Phaser - PhysicsManager
@@ -21,14 +22,14 @@ module Phaser.Physics {
             this.gravity = new Vec2;
             this.drag = new Vec2;
             this.bounce = new Vec2;
-            this.friction = new Vec2;
+            this.angularDrag = 0;
 
             this.bounds = new Rectangle(0, 0, width, height); 
 
             this._distance = new Vec2;
             this._tangent = new Vec2;
 
-            this._objects = [];
+            this.members = new Group(game);
 
         }
 
@@ -37,7 +38,10 @@ module Phaser.Physics {
          */
         public game: Game;
 
-        private _objects: IPhysicsShape[];
+        /**
+         * Physics object pool
+         */
+        public members: Group;
 
         //  Temp calculation vars
         private _drag: number;
@@ -46,15 +50,38 @@ module Phaser.Physics {
         private _length: number = 0;
         private _distance: Vec2;
         private _tangent: Vec2;
+        private _separatedX: bool;
+        private _separatedY: bool;
+        private _overlap: number;
+        private _maxOverlap: number;
+        private _obj1Velocity: number;
+        private _obj2Velocity: number;
+        private _obj1NewVelocity: number;
+        private _obj2NewVelocity: number;
+        private _average: number;
+        private _quadTree: QuadTree;
+        private _quadTreeResult: bool;
+
+
+
 
         public bounds: Rectangle;
 
         public gravity: Vec2;
         public drag: Vec2;
         public bounce: Vec2;
-        public friction: Vec2;
+        public angularDrag: number;
+
+        static OVERLAP_BIAS: number = 4;
+
+        /**
+         * @type {number}
+         */
+        public worldDivisions: number = 6;
+
 
         //  Add some sanity checks here + remove method, etc
+        /*
         public add(shape: IPhysicsShape): IPhysicsShape {
 
             this._objects.push(shape);
@@ -115,32 +142,31 @@ module Phaser.Physics {
             }
 
         }
+*/
 
-        private updateMotion(shape: IPhysicsShape) {
+        public updateMotion(body: Phaser.Physics.Body) {
 
-            if (shape.physics.moves == false)
+            if (body.type == Types.BODY_DISABLED)
             {
                 return;
             }
 
-            /*
-            velocityDelta = (this._game.motion.computeVelocity(this.angularVelocity, this.angularAcceleration, this.angularDrag, this.maxAngular) - this.angularVelocity) / 2;
-            this.angularVelocity += velocityDelta;
-            this._angle += this.angularVelocity * this._game.time.elapsed;
-            this.angularVelocity += velocityDelta;
-            */
+            this._velocityDelta  = (this.computeVelocity(body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
+            body.angularVelocity += this._velocityDelta;
+            body.angle += body.angularVelocity * this.game.time.elapsed;
+            body.angularVelocity += this._velocityDelta;
 
-            this._velocityDelta = (this.computeVelocity(shape.physics.velocity.x, shape.physics.gravity.x, shape.physics.acceleration.x, shape.physics.drag.x) - shape.physics.velocity.x) / 2;
-            shape.physics.velocity.x += this._velocityDelta;
-            this._delta = shape.physics.velocity.x * this.game.time.elapsed;
-            shape.physics.velocity.x += this._velocityDelta;
-            shape.position.x += this._delta;
+            this._velocityDelta = (this.computeVelocity(body.velocity.x, body.gravity.x, body.acceleration.x, body.drag.x) - body.velocity.x) / 2;
+            body.velocity.x += this._velocityDelta;
+            this._delta = body.velocity.x * this.game.time.elapsed;
+            body.velocity.x += this._velocityDelta;
+            body.position.x += this._delta;
 
-            this._velocityDelta = (this.computeVelocity(shape.physics.velocity.y, shape.physics.gravity.y, shape.physics.acceleration.y, shape.physics.drag.y) - shape.physics.velocity.y) / 2;
-            shape.physics.velocity.y += this._velocityDelta;
-            this._delta = shape.physics.velocity.y * this.game.time.elapsed;
-            shape.physics.velocity.y += this._velocityDelta;
-            shape.position.y += this._delta;
+            this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
+            body.velocity.y += this._velocityDelta;
+            this._delta = body.velocity.y * this.game.time.elapsed;
+            body.velocity.y += this._velocityDelta;
+            body.position.y += this._delta;
 
         }
 
@@ -265,17 +291,17 @@ module Phaser.Physics {
         }
 
         /**
-         * The core Collision separation function used by Collision.overlap.
-         * @param object1 The first GameObject to separate
-         * @param object2 The second GameObject to separate
-         * @returns {boolean} Returns true if the objects were separated, otherwise false.
+         * The core Collision separation method.
+         * @param body1 The first Physics.Body to separate
+         * @param body2 The second Physics.Body to separate
+         * @returns {boolean} Returns true if the bodies were separated, otherwise false.
          */
-        public NEWseparate(object1, object2): bool {
+        public separate(body1: Body, body2: Body): bool {
 
-            var separatedX: bool = this.separateSpriteToSpriteX(object1, object2);
-            var separatedY: bool = this.separateSpriteToSpriteY(object1, object2);
+            this._separatedX = this.separateBodyX(body1, body2);
+            this._separatedY = this.separateBodyY(body1, body2);
 
-            return separatedX || separatedY;
+            return this._separatedX || this._separatedY;
 
         }
 
@@ -300,98 +326,95 @@ module Phaser.Physics {
          * @param object2 The second GameObject to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
          */
-        public separateSpriteToSpriteX(object1:Sprite, object2:Sprite): bool {
+        public separateBodyX(body1: Body, body2: Body): bool {
 
-            //  Can't separate two immovable objects
-            if (object1.physics.immovable && object2.physics.immovable)
+            //  Can't separate two disabled or static objects
+            if ((body1.type == Types.BODY_DISABLED || body1.type == Types.BODY_STATIC) && (body2.type == Types.BODY_DISABLED || body2.type == Types.BODY_STATIC))
             {
                 return false;
             }
 
             //  First, get the two object deltas
-            var overlap: number = 0;
+            this._overlap = 0;
 
-            if (object1.physics.shape.deltaX != object2.physics.shape.deltaX)
+            if (body1.deltaX != body2.deltaX)
             {
-                //var intersects: bool = false;
-
-                //if (object1.physics.shape['radius'])
-                //{
-                //    intersects = CircleUtils.intersectsRectangle(object1.physics.shape, object2.physics.shape.bounds)
-                //}
-                //else
-                //{
-                //    intersects = RectangleUtils.intersects(object1.physics.shape.bounds, object2.physics.shape.bounds)
-                //}
-
-                if (RectangleUtils.intersects(object1.physics.shape.bounds, object2.physics.shape.bounds))
+                if (RectangleUtils.intersects(body1.bounds, body2.bounds))
                 {
-                    //var maxOverlap: number = object1.physics.shape.deltaXAbs + object2.physics.shape.deltaXAbs + Collision.OVERLAP_BIAS;
-                    var maxOverlap: number = object1.physics.shape.deltaXAbs + object2.physics.shape.deltaXAbs + 4;
+                    this._maxOverlap = body1.deltaXAbs + body2.deltaXAbs + PhysicsManager.OVERLAP_BIAS;
 
                     //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (object1.physics.shape.deltaX > object2.physics.shape.deltaX)
+                    if (body1.deltaX > body2.deltaX)
                     {
-                        overlap = object1.physics.shape.bounds.right - object2.physics.shape.bounds.x;
+                        this._overlap = body1.bounds.right - body2.bounds.x;
 
-                        if ((overlap > maxOverlap) || !(object1.physics.allowCollisions & Phaser.Types.RIGHT) || !(object2.physics.allowCollisions & Phaser.Types.LEFT))
+                        if ((this._overlap > this._maxOverlap) || !(body1.allowCollisions & Types.RIGHT) || !(body2.allowCollisions & Types.LEFT))
                         {
-                            overlap = 0;
+                            this._overlap = 0;
                         }
                         else
                         {
-                            object1.physics.touching |= Phaser.Types.RIGHT;
-                            object2.physics.touching |= Phaser.Types.LEFT;
+                            body1.touching |= Types.RIGHT;
+                            body2.touching |= Types.LEFT;
                         }
                     }
-                    else if (object1.physics.shape.deltaX < object2.physics.shape.deltaX)
+                    else if (body1.deltaX < body2.deltaX)
                     {
-                        overlap = object1.physics.shape.bounds.x - object2.physics.shape.bounds.width - object2.physics.shape.bounds.x;
+                        this._overlap = body1.bounds.x - body2.bounds.width - body2.bounds.x;
 
-                        if ((-overlap > maxOverlap) || !(object1.physics.allowCollisions & Phaser.Types.LEFT) || !(object2.physics.allowCollisions & Phaser.Types.RIGHT))
+                        if ((-this._overlap > this._maxOverlap) || !(body1.allowCollisions & Types.LEFT) || !(body2.allowCollisions & Types.RIGHT))
                         {
-                            overlap = 0;
+                            this._overlap = 0;
                         }
                         else
                         {
-                            object1.physics.touching |= Phaser.Types.LEFT;
-                            object2.physics.touching |= Phaser.Types.RIGHT;
+                            body1.touching |= Types.LEFT;
+                            body2.touching |= Types.RIGHT;
                         }
                     }
                 }
             }
 
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (overlap != 0)
+            if (this._overlap != 0)
             {
-                var obj1Velocity: number = object1.physics.velocity.x;
-                var obj2Velocity: number = object2.physics.velocity.x;
+                this._obj1Velocity = body1.velocity.x;
+                this._obj2Velocity = body2.velocity.x;
 
-                if (!object1.physics.immovable && !object2.physics.immovable)
-                {
-                    overlap *= 0.5;
-                    object1.physics.shape.position.x = object1.physics.shape.position.x - overlap;
-                    object2.physics.shape.position.x += overlap;
+                /**
+                 * Dynamic = gives and receives impacts
+                 * Static = gives but doesn't receive impacts, cannot be moved by physics
+                 * Kinematic = gives impacts, but never receives, can be moved by physics
+                 */
 
-                    var obj1NewVelocity: number = Math.sqrt((obj2Velocity * obj2Velocity * object2.physics.mass) / object1.physics.mass) * ((obj2Velocity > 0) ? 1 : -1);
-                    var obj2NewVelocity: number = Math.sqrt((obj1Velocity * obj1Velocity * object1.physics.mass) / object2.physics.mass) * ((obj1Velocity > 0) ? 1 : -1);
-                    var average: number = (obj1NewVelocity + obj2NewVelocity) * 0.5;
-                    obj1NewVelocity -= average;
-                    obj2NewVelocity -= average;
-                    object1.physics.velocity.x = average + obj1NewVelocity * object1.physics.bounce.x;
-                    object2.physics.velocity.x = average + obj2NewVelocity * object2.physics.bounce.x;
-                }
-                else if (!object1.physics.immovable)
+                //  2 dynamic bodies will exchange velocities
+                if (body1.type == Types.BODY_DYNAMIC && body2.type == Types.BODY_DYNAMIC)
                 {
-                    overlap *= 2;
-                    object1.physics.shape.position.x -= overlap;
-                    object1.physics.velocity.x = obj2Velocity - obj1Velocity * object1.physics.bounce.x;
+                    this._overlap *= 0.5;
+                    body1.position.x = body1.position.x - this._overlap;
+                    body2.position.x += this._overlap;
+
+                    this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                    this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                    this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
+                    this._obj1NewVelocity -= this._average;
+                    this._obj2NewVelocity -= this._average;
+                    body1.velocity.x = this._average + this._obj1NewVelocity * body1.bounce.x;
+                    body2.velocity.x = this._average + this._obj2NewVelocity * body2.bounce.x;
                 }
-                else if (!object2.physics.immovable)
+                else if (body2.type != Types.BODY_DYNAMIC)
                 {
-                    overlap *= 2;
-                    object2.physics.shape.position.x += overlap;
-                    object2.physics.velocity.x = obj1Velocity - obj2Velocity * object2.physics.bounce.x;
+                    //  Body 2 is Static or Kinematic
+                    this._overlap *= 2;
+                    body1.position.x -= this._overlap;
+                    body1.velocity.x = this._obj2Velocity - this._obj1Velocity * body1.bounce.x;
+                }
+                else if (body1.type != Types.BODY_DYNAMIC)
+                {
+                    //  Body 1 is Static or Kinematic
+                    this._overlap *= 2;
+                    body2.position.x += this._overlap;
+                    body2.velocity.x = this._obj1Velocity - this._obj2Velocity * body2.bounce.x;
                 }
 
                 return true;
@@ -409,96 +432,104 @@ module Phaser.Physics {
          * @param object2 The second GameObject to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
          */
-        public separateSpriteToSpriteY(object1:Sprite, object2:Sprite): bool {
+        public separateBodyY(body1: Body, body2: Body): bool {
 
             //  Can't separate two immovable objects
-            if (object1.physics.immovable && object2.physics.immovable) {
+            if ((body1.type == Types.BODY_DISABLED || body1.type == Types.BODY_STATIC) && (body2.type == Types.BODY_DISABLED || body2.type == Types.BODY_STATIC))
+            {
                 return false;
             }
 
             //  First, get the two object deltas
-            var overlap: number = 0;
+            this._overlap = 0;
 
-            if (object1.physics.shape.deltaY != object2.physics.shape.deltaY)
+            if (body1.deltaY != body2.deltaY)
             {
-                if (RectangleUtils.intersects(object1.physics.shape.bounds, object2.physics.shape.bounds))
+                if (RectangleUtils.intersects(body1.bounds, body2.bounds))
                 {
                     //  This is the only place to use the DeltaAbs values
-                    //var maxOverlap: number = object1.physics.shape.deltaYAbs + object2.physics.shape.deltaYAbs + Phaser.Types.OVERLAP_BIAS;
-                    var maxOverlap: number = object1.physics.shape.deltaYAbs + object2.physics.shape.deltaYAbs + 4;
+                    this._maxOverlap = body1.deltaYAbs + body2.deltaYAbs + PhysicsManager.OVERLAP_BIAS;
 
                     //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                    if (object1.physics.shape.deltaY > object2.physics.shape.deltaY)
+                    if (body1.deltaY > body2.deltaY)
                     {
-                        overlap = object1.physics.shape.bounds.bottom - object2.physics.shape.bounds.y;
+                        this._overlap = body1.bounds.bottom - body2.bounds.y;
 
-                        if ((overlap > maxOverlap) || !(object1.physics.allowCollisions & Phaser.Types.DOWN) || !(object2.physics.allowCollisions & Phaser.Types.UP))
+                        if ((this._overlap > this._maxOverlap) || !(body1.allowCollisions & Types.DOWN) || !(body2.allowCollisions & Types.UP))
                         {
-                            overlap = 0;
+                            this._overlap = 0;
                         }
                         else
                         {
-                            object1.physics.touching |= Phaser.Types.DOWN;
-                            object2.physics.touching |= Phaser.Types.UP;
+                            body1.touching |= Types.DOWN;
+                            body2.touching |= Types.UP;
                         }
                     }
-                    else if (object1.physics.shape.deltaY < object2.physics.shape.deltaY)
+                    else if (body1.deltaY < body2.deltaY)
                     {
-                        overlap = object1.physics.shape.bounds.y - object2.physics.shape.bounds.height - object2.physics.shape.bounds.y;
+                        this._overlap = body1.bounds.y - body2.bounds.height - body2.bounds.y;
 
-                        if ((-overlap > maxOverlap) || !(object1.physics.allowCollisions & Phaser.Types.UP) || !(object2.physics.allowCollisions & Phaser.Types.DOWN))
+                        if ((-this._overlap > this._maxOverlap) || !(body1.allowCollisions & Types.UP) || !(body2.allowCollisions & Types.DOWN))
                         {
-                            overlap = 0;
+                            this._overlap = 0;
                         }
                         else
                         {
-                            object1.physics.touching |= Phaser.Types.UP;
-                            object2.physics.touching |= Phaser.Types.DOWN;
+                            body1.touching |= Types.UP;
+                            body2.touching |= Types.DOWN;
                         }
                     }
                 }
             }
 
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (overlap != 0)
+            if (this._overlap != 0)
             {
-                var obj1Velocity: number = object1.physics.velocity.y;
-                var obj2Velocity: number = object2.physics.velocity.y;
+                this._obj1Velocity = body1.velocity.y;
+                this._obj2Velocity = body2.velocity.y;
 
-                if (!object1.physics.immovable && !object2.physics.immovable)
+                /**
+                 * Dynamic = gives and receives impacts
+                 * Static = gives but doesn't receive impacts, cannot be moved by physics
+                 * Kinematic = gives impacts, but never receives, can be moved by physics
+                 */
+
+                if (body1.type == Types.BODY_DYNAMIC && body2.type == Types.BODY_DYNAMIC)
                 {
-                    overlap *= 0.5;
-                    object1.physics.shape.position.y = object1.physics.shape.position.y - overlap;
-                    object2.physics.shape.position.y += overlap;
+                    this._overlap *= 0.5;
+                    body1.position.y = body1.position.y - this._overlap;
+                    body2.position.y += this._overlap;
 
-                    var obj1NewVelocity: number = Math.sqrt((obj2Velocity * obj2Velocity * object2.physics.mass) / object1.physics.mass) * ((obj2Velocity > 0) ? 1 : -1);
-                    var obj2NewVelocity: number = Math.sqrt((obj1Velocity * obj1Velocity * object1.physics.mass) / object2.physics.mass) * ((obj1Velocity > 0) ? 1 : -1);
-                    var average: number = (obj1NewVelocity + obj2NewVelocity) * 0.5;
-                    obj1NewVelocity -= average;
-                    obj2NewVelocity -= average;
-                    object1.physics.velocity.y = average + obj1NewVelocity * object1.physics.bounce.y;
-                    object2.physics.velocity.y = average + obj2NewVelocity * object2.physics.bounce.y;
+                    this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                    this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                    var average: number = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
+                    this._obj1NewVelocity -= average;
+                    this._obj2NewVelocity -= average;
+                    body1.velocity.y = average + this._obj1NewVelocity * body1.bounce.y;
+                    body2.velocity.y = average + this._obj2NewVelocity * body2.bounce.y;
                 }
-                else if (!object1.physics.immovable)
+                else if (body2.type != Types.BODY_DYNAMIC)
                 {
-                    overlap *= 2;
-                    object1.physics.shape.position.y -= overlap;
-                    object1.physics.velocity.y = obj2Velocity - obj1Velocity * object1.physics.bounce.y;
+                    this._overlap *= 2;
+                    body1.position.y -= this._overlap;
+                    body1.velocity.y = this._obj2Velocity - this._obj1Velocity * body1.bounce.y;
                     //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (object2.active && object2.physics.moves && (object1.physics.shape.deltaY > object2.physics.shape.deltaY))
+                    //if (body2.parent.active && body2.moves && (body1.deltaY > body2.deltaY))
+                    if (body2.parent.active && (body1.deltaY > body2.deltaY))
                     {
-                        object1.physics.shape.position.x += object2.physics.shape.position.x - object2.physics.shape.oldPosition.x;
+                        body1.position.x += body2.position.x - body2.oldPosition.x;
                     }
                 }
-                else if (!object2.physics.immovable)
+                else if (body1.type != Types.BODY_DYNAMIC)
                 {
-                    overlap *= 2;
-                    object2.physics.shape.position.y += overlap;
-                    object2.physics.velocity.y = obj1Velocity - obj2Velocity * object2.physics.bounce.y;
+                    this._overlap *= 2;
+                    body2.position.y += this._overlap;
+                    body2.velocity.y = this._obj1Velocity - this._obj2Velocity * body2.bounce.y;
                     //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (object1.active && object1.physics.moves && (object1.physics.shape.deltaY < object2.physics.shape.deltaY))
+                    //if (object1.active && body1.moves && (body1.deltaY < body2.deltaY))
+                    if (body1.parent.active && (body1.deltaY < body2.deltaY))
                     {
-                        object2.physics.shape.position.x += object1.physics.shape.position.x - object1.physics.shape.oldPosition.x;
+                        body2.position.x += body1.position.x - body1.oldPosition.x;
                     }
                 }
 
@@ -517,7 +548,7 @@ module Phaser.Physics {
 
 
 
-        private separate(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+        private OLDseparate(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
 
             if (tangent.x == 1)
             {
@@ -777,83 +808,21 @@ module Phaser.Physics {
 
         }
 
-        private OLDseparate(shape:IPhysicsShape, distance: Vec2, tangent: Vec2) {
-
-            //  collision edges
-            //shape.oH = tangent.x;
-            //shape.oV = tangent.y;
-
-            //  Velocity (move to temp vars)
-
-            //  was vx/vy
-            var velocity: Vec2 = Vec2Utils.subtract(shape.position, shape.oldPosition);
-
-            //  was dp
-            var dot: number = Vec2Utils.dot(shape.physics.velocity, tangent);
-
-            //  project velocity onto the collision normal
-            //  was nx/ny
-            tangent.multiplyByScalar(dot);
-
-            //  was tx/ty (tangent velocity?)
-            var tangentVelocity: Vec2 = Vec2Utils.subtract(velocity, tangent);
-
-            //  only apply collision response forces if the object is travelling into, and not out of, the collision
-            if (dot < 0)
-            {
-                //  Apply horizontal bounce
-                if (distance.x != 0)
-                {
-                    if (shape.physics.bounce.x > 0)
-                    {
-                        shape.physics.velocity.x *= -(shape.physics.bounce.x);
-                    }
-                    else
-                    {
-                        shape.physics.velocity.x = 0;
-                    }
-                }
-
-                //  Apply vertical bounce
-                if (distance.y != 0)
-                {
-                    if (shape.physics.bounce.y > 0)
-                    {
-                        shape.physics.velocity.y *= -(shape.physics.bounce.y);
-                    }
-                    else
-                    {
-                        shape.physics.velocity.y = 0;
-                    }
-                }
-            }
-            else
-            {
-                //  moving out of collision
-            }
-
-            //  project object out of collision
-            //console.log('proj out', distance.x, distance.y,'dot',dot);
-            shape.position.add(distance);
-
-        }
-
         /**
-         * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+         * Checks for overlaps between two objects using the world QuadTree. Can be Sprite vs. Sprite, Sprite vs. Group or Group vs. Group.
          * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-         * @param object1 The first GameObject or Group to check. If null the world.group is used.
-         * @param object2 The second GameObject or Group to check.
+         * @param object1 The first Sprite or Group to check. If null the world.group is used.
+         * @param object2 The second Sprite or Group to check.
          * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
          * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
          * @param context The context in which the callbacks will be called
          * @returns {boolean} true if the objects overlap, otherwise false.
          */
-        /*
-        public overlap(object1: Basic = null, object2: Basic = null, notifyCallback = null, processCallback = null, context = null): bool {
+        public overlap(object1 = null, object2 = null, notifyCallback = null, processCallback = null, context = null): bool {
 
             if (object1 == null)
             {
-                object1 = this._game.world.group;
+                object1 = this.game.world.group;
             }
 
             if (object2 == object1)
@@ -861,23 +830,21 @@ module Phaser.Physics {
                 object2 = null;
             }
 
-            QuadTree.divisions = this._game.world.worldDivisions;
+            QuadTree.divisions = this.worldDivisions;
 
-            var quadTree: QuadTree = new QuadTree(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
+            this._quadTree = new QuadTree(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
-            quadTree.load(object1, object2, notifyCallback, processCallback, context);
+            this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
 
-            var result: bool = quadTree.execute();
+            this._quadTreeResult = this._quadTree.execute();
 
-            quadTree.destroy();
+            this._quadTree.destroy();
 
-            quadTree = null;
+            this._quadTree = null;
 
-            return result;
+            return this._quadTreeResult;
 
         }
-        */
-
 
     }
 

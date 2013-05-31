@@ -4,6 +4,7 @@
 /// <reference path="../../physics/AABB.ts" />
 /// <reference path="../../physics/Circle.ts" />
 /// <reference path="../../physics/IPhysicsShape.ts" />
+/// <reference path="../../physics/IPhysicsBody.ts" />
 
 /**
 * Phaser - Components - Physics
@@ -11,7 +12,7 @@
 
 module Phaser.Components {
 
-    export class Physics {
+    export class Physics implements Phaser.Physics.IPhysicsBody {
 
         constructor(parent: Sprite) {
 
@@ -50,7 +51,6 @@ module Phaser.Components {
          * @type {boolean}
          */
         public moves: bool = true;
-        public mass: number = 1;
 
         public gravity: Vec2;
         public drag: Vec2;
@@ -62,9 +62,11 @@ module Phaser.Components {
         public touching: number;
         public allowCollisions: number;
         public wasTouching: number;
+        public mass: number = 1;
 
         public setCircle(diameter: number) {
 
+            //  Here is the stuff I want to remove
             this.game.world.physics.remove(this.shape);
             this.shape = this.game.world.physics.add(new Phaser.Physics.Circle(this.game, this._sprite, this._sprite.x, this._sprite.y, diameter));
             this._sprite.physics.shape.physics = this;
@@ -76,6 +78,7 @@ module Phaser.Components {
          */
         public update() {
 
+            //  if this is all it does maybe move elsewhere? Sprite postUpdate?
             if (this.moves && this.shape)
             {
                 this._sprite.x = (this.shape.position.x - this.shape.bounds.halfWidth) - this.shape.offset.x;

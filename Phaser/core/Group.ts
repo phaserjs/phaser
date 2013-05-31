@@ -153,7 +153,7 @@ module Phaser {
         * Calls update on all members of this Group who have a status of active=true and exists=true
         * You can also call Object.update directly, which will bypass the active/exists check.
         */
-        public update(forceUpdate?: bool = false) {
+        public update() {
 
             this._i = 0;
 
@@ -164,7 +164,7 @@ module Phaser {
                 if (this._member != null && this._member.exists && this._member.active)
                 {
                     this._member.preUpdate();
-                    this._member.update(forceUpdate);
+                    this._member.update();
                     this._member.postUpdate();
                 }
             }

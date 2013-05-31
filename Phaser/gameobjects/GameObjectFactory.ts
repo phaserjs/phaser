@@ -62,11 +62,12 @@ module Phaser {
          *
          * @param x {number} X position of the new sprite.
          * @param y {number} Y position of the new sprite.
-         * @param key {string} Optional, key for the sprite sheet you want it to use.
+         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
          * @returns {Sprite} The newly created sprite object.
          */
-        public sprite(x: number, y: number, key?: string = ''): Sprite {
-            return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key));
+        public sprite(x: number, y: number, key?: string = '', bodyType?: number = Phaser.Types.BODY_DISABLED): Sprite {
+            return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key, bodyType));
         }
 
         /**
@@ -90,18 +91,6 @@ module Phaser {
             return <Group> this._world.group.add(new Group(this._game, maxSize));
         }
 
-        /**
-         * Create a new Sprite with specific position and sprite sheet key.
-         *
-         * @param x {number} X position of the new sprite.
-         * @param y {number} Y position of the new sprite.
-         * @param key {string} Optional, key for the sprite sheet you want it to use.
-         * @returns {Sprite} The newly created sprite object.
-         * WILL NEED TO TRACK A SPRITE
-         */
-        public physicsAABB(x: number, y: number, width: number, height: number): Physics.AABB {
-            return <Physics.AABB> this._world.physics.add(new Physics.AABB(this._game, null, x, y, width, height));
-        }
 
         /**
          * Create a new Particle.

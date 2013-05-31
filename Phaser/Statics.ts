@@ -24,6 +24,11 @@ module Phaser {
         static GEOM_LINE: number = 3;
         static GEOM_POLYGON: number = 4;
 
+        static BODY_DISABLED: number = 0;
+        static BODY_DYNAMIC: number = 1;
+        static BODY_STATIC: number = 2;
+        static BODY_KINEMATIC: number = 3;
+
         /**
          * Flag used to allow GameObjects to collide on their left side
          * @type {number}

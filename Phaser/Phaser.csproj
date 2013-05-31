@@ -121,8 +121,20 @@
     </Content>
     <TypeScriptCompile Include="physics\IPhysicsShape.ts" />
     <TypeScriptCompile Include="physics\Circle.ts" />
+    <TypeScriptCompile Include="physics\Body.ts" />
+    <Content Include="physics\Body.js">
+      <DependentUpon>Body.ts</DependentUpon>
+    </Content>
     <Content Include="physics\Circle.js">
       <DependentUpon>Circle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\IPhysicsBody.ts" />
+    <TypeScriptCompile Include="physics\Fixture.ts" />
+    <Content Include="physics\Fixture.js">
+      <DependentUpon>Fixture.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\IPhysicsBody.js">
+      <DependentUpon>IPhysicsBody.ts</DependentUpon>
     </Content>
     <Content Include="physics\IPhysicsShape.js">
       <DependentUpon>IPhysicsShape.ts</DependentUpon>
@@ -215,7 +227,7 @@
     <Content Include="math\LinkedList.js">
       <DependentUpon>LinkedList.ts</DependentUpon>
     </Content>
-    <Content Include="math\QuadTree.js">
+    <Content Include="physics\QuadTree.js">
       <DependentUpon>QuadTree.ts</DependentUpon>
     </Content>
     <Content Include="math\RandomDataGenerator.js">
@@ -234,7 +246,7 @@
     <TypeScriptCompile Include="system\StageScaleMode.ts" />
     <TypeScriptCompile Include="system\RequestAnimationFrame.ts" />
     <TypeScriptCompile Include="math\RandomDataGenerator.ts" />
-    <TypeScriptCompile Include="math\QuadTree.ts" />
+    <TypeScriptCompile Include="physics\QuadTree.ts" />
     <TypeScriptCompile Include="math\LinkedList.ts" />
     <TypeScriptCompile Include="system\Device.ts" />
     <TypeScriptCompile Include="cameras\Camera.ts" />

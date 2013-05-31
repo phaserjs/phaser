@@ -4,6 +4,7 @@
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
 /// <reference path="../components/sprite/Physics.ts" />
+/// <reference path="../physics/Body.ts" />
 
 /**
 * Phaser - Sprite
@@ -21,10 +22,10 @@ module Phaser {
          * @param [x] {number} the initial x position of the sprite.
          * @param [y] {number} the initial y position of the sprite.
          * @param [key] {string} Key of the graphic you want to load for this sprite.
-         * @param [width] {number} The width of the object.
-         * @param [height] {number} The height of the object.
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
          */
-        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, width?: number = 16, height?: number = 16) {
+        //constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, width?: number = 16, height?: number = 16) {
+        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, bodyType?: number = Phaser.Types.BODY_DISABLED) {
 
             this.game = game;
             this.type = Phaser.Types.SPRITE;
@@ -35,7 +36,8 @@ module Phaser {
             this.visible = true;
             this.alive = true;
 
-            this.frameBounds = new Rectangle(x, y, width, height);
+            //  We give it a default size of 16x16 but when the texture loads (if given) it will reset this
+            this.frameBounds = new Rectangle(x, y, 16, 16);
             this.scrollFactor = new Phaser.Vec2(1, 1);
 
             this.x = x;
@@ -50,16 +52,10 @@ module Phaser {
             this.scale = new Phaser.Vec2(1, 1);
             this.skew = new Phaser.Vec2(0, 0);
 
-            this.physics = new Phaser.Components.Physics(this);
-            this.physics.shape.physics = this.physics;
+            //  If a texture has been given the body will be set to that size, otherwise 16x16
+            this.body = new Phaser.Physics.Body(this, bodyType);
 
         }
-
-        /**
-          * Rotation angle of this object.
-          * @type {number}
-          */
-        private _rotation: number = 0;
 
         /**
          * Reference to the main game object
@@ -97,9 +93,9 @@ module Phaser {
         public alive: bool;
 
         /**
-         * Sprite physics.
+         * Sprite physics body.
          */
-        public physics: Phaser.Components.Physics;
+        public body: Phaser.Physics.Body;
 
         /**
          * The texture used to render the Sprite.
@@ -160,26 +156,26 @@ module Phaser {
         public z: number = 0;
 
         /**
-         * This value is added to the rotation of the Sprite.
+         * This value is added to the angle of the Sprite.
          * For example if you had a sprite graphic drawn facing straight up then you could set
-         * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
+         * angleOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
          * @type {number}
          */
-        public rotationOffset: number = 0;
+        public angleOffset: number = 0;
 
         /**
-        * The rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The angle of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
         */
-        public get rotation(): number {
-            return this._rotation;
+        public get angle(): number {
+            return this.body.angle;
         }
 
         /**
-        * Set the rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * Set the angle of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
         * The value is automatically wrapped to be between 0 and 360.
         */
-        public set rotation(value: number) {
-            this._rotation = this.game.math.wrap(value, 360, 0);
+        public set angle(value: number) {
+            this.body.angle = this.game.math.wrap(value, 360, 0);
         }
 
         /**
@@ -234,7 +230,7 @@ module Phaser {
             this.frameBounds.x = this.x;
             this.frameBounds.y = this.y;
 
-            if (this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.rotation != 0 || this.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY))
+            if (this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.angle != 0 || this.angleOffset != 0 || this.texture.flippedX || this.texture.flippedY))
             {
                 this.modified = true;
             }
@@ -253,7 +249,7 @@ module Phaser {
         public postUpdate() {
 
             this.animations.update();
-            this.physics.update();
+            this.body.postUpdate();
 
             /*
             if (this.worldBounds != null)
@@ -287,15 +283,11 @@ module Phaser {
                 }
             }
                 
-            this.collisionMask.update();
-
             if (this.inputEnabled)
             {
                 this.updateInput();
             }
 
-            this.wasTouching = this.touching;
-            this.touching = Collision.NONE;
             */
 
             if (this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.rotation == 0 && this.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)

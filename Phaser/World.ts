@@ -37,8 +37,6 @@ module Phaser {
 
             this.physics = new Physics.PhysicsManager(this._game, width, height);
 
-            this.worldDivisions = 6;
-
         }
 
         /**
@@ -70,17 +68,13 @@ module Phaser {
          */
         public physics: Physics.PhysicsManager;
 
-        /**
-         * @type {number}
-         */
-        public worldDivisions: number;
 
         /**
          * This is called automatically every frame, and is where main logic happens.
          */
         public update() {
 
-            this.physics.update();
+            //this.physics.update();
             this.group.update();
             this.cameras.update();
 
