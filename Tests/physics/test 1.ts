@@ -1,4 +1,6 @@
 /// <reference path="../../Phaser/Game.ts" />
+/// <reference path="../../Phaser/core/Polygon.ts" />
+/// <reference path="../../Phaser/utils/SpriteUtils.ts" />
 
 (function () {
 
@@ -7,32 +9,27 @@
     function init() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('atari', 'assets/sprites/mushroom2.png');
-        game.loader.addImageFile('card', 'assets/sprites/mana_card.png');
+        game.loader.addImageFile('atari', 'assets/sprites/atari800xl.png');
         game.loader.load();
 
     }
 
     var atari: Phaser.Sprite;
-    var card: Phaser.Sprite;
+    var p: Phaser.Polygon;
+
+    var atari2: Phaser.Sprite;
+    var p2: Phaser.Polygon;
 
     function create() {
 
         atari = game.add.sprite(200, 300, 'atari');
-        card = game.add.sprite(400, 300, 'card');
-        //atari.texture.alpha = 0.5;
-        //atari.scale.setTo(1.5, 1.5);
+        atari.texture.alpha = 0.2;
 
-        atari.physics.setCircle(50);
+        atari2 = game.add.sprite(500, 300, 'atari');
+        atari2.texture.alpha = 0.2;
 
-        //atari.physics.shape.setSize(150, 50);
-        atari.physics.shape.offset.setTo(7, 5);
-
-        //atari.physics.gravity.setTo(0, 2);
-        atari.physics.bounce.setTo(0.7, 0.7);
-        atari.physics.drag.setTo(10, 10);
-
-        card.physics.bounce.setTo(0.7, 0.7);
+        p = new Phaser.Polygon(game, Phaser.SpriteUtils.getAsPoints(atari));
+        p2 = new Phaser.Polygon(game, Phaser.SpriteUtils.getAsPoints(atari2));
 
     }
 
@@ -65,14 +62,8 @@
 
         atari.physics.renderDebugInfo(16, 16);
 
-        game.stage.context.save();
-            game.stage.context.beginPath();
-            game.stage.context.strokeStyle = 'rgba(255,0,255,0.5)';
-            game.stage.context.arc(200, 200, 50, 0, Math.PI * 2);
-            game.stage.context.stroke();
-            game.stage.context.closePath();
-        game.stage.context.restore();
-
+        p.render();
+        p2.render();
 
     }
 

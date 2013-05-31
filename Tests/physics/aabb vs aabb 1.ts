@@ -23,19 +23,19 @@
         atari = game.add.sprite(0, 310, 'atari');
         card = game.add.sprite(400, 300, 'card');
 
-        card.physics.immovable = true;
+        //card.physics.immovable = true;
 
         //atari.texture.alpha = 0.5;
         //atari.scale.setTo(1.5, 1.5);
 
-        //atari.physics.shape.setSize(150, 50);
-        //atari.physics.shape.offset.setTo(50, 25);
+        atari.physics.shape.setSize(150, 50);
+        atari.physics.shape.offset.setTo(50, 25);
 
         //atari.physics.gravity.setTo(0, 2);
-        atari.physics.bounce.setTo(0.7, 0.7);
+        atari.physics.bounce.setTo(1, 1);
         //atari.physics.drag.setTo(10, 10);
 
-        //card.physics.bounce.setTo(0.7, 0.7);
+        card.physics.bounce.setTo(0.7, 0.7);
         //card.physics.velocity.x = -50;
 
     }

@@ -70,6 +70,28 @@ module Phaser {
          */
         static ALIGN_BOTTOM_RIGHT: number = 8;
 
+
+
+        static getAsPoints(sprite: Sprite): Phaser.Point[] {
+
+            var out: Phaser.Point[] = [];
+
+            //  top left
+            out.push(new Point(sprite.x, sprite.y));
+
+            //  top right
+            out.push(new Point(sprite.x + sprite.width, sprite.y));
+
+            //  bottom right
+            out.push(new Point(sprite.x + sprite.width, sprite.y + sprite.height));
+
+            //  bottom left
+            out.push(new Point(sprite.x, sprite.y + sprite.height));
+
+            return out;
+
+        }
+
         /**
         * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.

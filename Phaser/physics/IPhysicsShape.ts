@@ -20,13 +20,22 @@ module Phaser.Physics {
         offset: Vec2;
 
         bounds: Rectangle;
-        oH: number;
-        oV: number;
+        //oH: number;
+        //oV: number;
 
         setSize(width: number, height: number);
         preUpdate();
         update();
         render(context:CanvasRenderingContext2D);
+
+        hullX;
+        hullY;
+        hullWidth;
+        hullHeight;
+        deltaX;
+        deltaY;
+        deltaXAbs;
+        deltaYAbs;
 
     }
 

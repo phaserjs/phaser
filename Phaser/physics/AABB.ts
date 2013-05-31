@@ -47,9 +47,6 @@ module Phaser.Physics {
         public scale: Vec2;
         public bounds: Rectangle;
 
-        public oH: number;
-        public oV: number;
-
         public preUpdate() {
 
             this.oldPosition.copyFrom(this.position);
@@ -88,12 +85,6 @@ module Phaser.Physics {
 
         public render(context:CanvasRenderingContext2D) {
 
-            //context.beginPath();
-            //context.strokeStyle = 'rgb(255,255,0)';
-            //context.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-            //context.stroke();
-            //context.closePath();
-
             context.beginPath();
             context.strokeStyle = 'rgb(0,255,0)';
             context.strokeRect(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight, this.bounds.width, this.bounds.height);
@@ -104,7 +95,7 @@ module Phaser.Physics {
             context.fillStyle = 'rgb(0,255,0)';
             context.fillRect(this.position.x, this.position.y, 2, 2);
 
-            if (this.physics.touching == Phaser.Types.LEFT)
+            if (this.physics.touching & Phaser.Types.LEFT)
             {
                 context.beginPath();
                 context.strokeStyle = 'rgb(255,0,0)';
@@ -113,7 +104,7 @@ module Phaser.Physics {
                 context.stroke();
                 context.closePath();
             }
-            else if (this.physics.touching == Phaser.Types.RIGHT)
+            if (this.physics.touching & Phaser.Types.RIGHT)
             {
                 context.beginPath();
                 context.strokeStyle = 'rgb(255,0,0)';
@@ -123,7 +114,7 @@ module Phaser.Physics {
                 context.closePath();
             }
 
-            if (this.physics.touching == Phaser.Types.UP)
+            if (this.physics.touching & Phaser.Types.UP)
             {
                 context.beginPath();
                 context.strokeStyle = 'rgb(255,0,0)';
@@ -132,7 +123,7 @@ module Phaser.Physics {
                 context.stroke();
                 context.closePath();
             }
-            else if (this.physics.touching == Phaser.Types.DOWN)
+            if (this.physics.touching & Phaser.Types.DOWN)
             {
                 context.beginPath();
                 context.strokeStyle = 'rgb(255,0,0)';
@@ -142,6 +133,74 @@ module Phaser.Physics {
                 context.closePath();
             }
 
+        }
+
+        public get hullWidth(): number {
+
+            if (this.deltaX > 0)
+            {
+                return this.bounds.width + this.deltaX;
+            }
+            else
+            {
+                return this.bounds.width - this.deltaX;
+            }
+
+        }
+
+        public get hullHeight(): number {
+
+            if (this.deltaY > 0)
+            {
+                return this.bounds.height + this.deltaY;
+            }
+            else
+            {
+                return this.bounds.height - this.deltaY;
+            }
+
+        }
+
+        public get hullX(): number {
+
+            if (this.position.x < this.oldPosition.x)
+            {
+                return this.position.x;
+            }
+            else
+            {
+                return this.oldPosition.x;
+            }
+
+        }
+
+        public get hullY(): number {
+
+            if (this.position.y < this.oldPosition.y)
+            {
+                return this.position.y;
+            }
+            else
+            {
+                return this.oldPosition.y;
+            }
+
+        }
+
+        public get deltaXAbs(): number {
+            return (this.deltaX > 0 ? this.deltaX : -this.deltaX);
+        }
+
+        public get deltaYAbs(): number {
+            return (this.deltaY > 0 ? this.deltaY : -this.deltaY);
+        }
+
+        public get deltaX(): number {
+            return this.position.x - this.oldPosition.x;
+        }
+
+        public get deltaY(): number {
+            return this.position.y - this.oldPosition.y;
         }
 
     }

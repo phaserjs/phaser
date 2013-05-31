@@ -82,6 +82,10 @@
     <Content Include="physics\circle 1.js">
       <DependentUpon>circle 1.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="physics\test 1.ts" />
+    <Content Include="physics\test 1.js">
+      <DependentUpon>test 1.ts</DependentUpon>
+    </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>
     </Content>

@@ -76,6 +76,10 @@
     <Content Include="core\Point.js">
       <DependentUpon>Point.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="core\Polygon.ts" />
+    <Content Include="core\Polygon.js">
+      <DependentUpon>Polygon.ts</DependentUpon>
+    </Content>
     <Content Include="core\Rectangle.js">
       <DependentUpon>Rectangle.ts</DependentUpon>
     </Content>

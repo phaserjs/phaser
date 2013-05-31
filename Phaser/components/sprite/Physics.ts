@@ -25,7 +25,10 @@ module Phaser.Components {
 
             this.velocity = new Vec2;
             this.acceleration = new Vec2;
+
             this.touching = Phaser.Types.NONE;
+            this.wasTouching = Phaser.Types.NONE;
+            this.allowCollisions = Phaser.Types.ANY;
 
             this.shape = this.game.world.physics.add(new Phaser.Physics.AABB(this.game, this._sprite, this._sprite.x, this._sprite.y, this._sprite.width, this._sprite.height));
 
@@ -47,6 +50,7 @@ module Phaser.Components {
          * @type {boolean}
          */
         public moves: bool = true;
+        public mass: number = 1;
 
         public gravity: Vec2;
         public drag: Vec2;
@@ -56,6 +60,8 @@ module Phaser.Components {
         public acceleration: Vec2;
 
         public touching: number;
+        public allowCollisions: number;
+        public wasTouching: number;
 
         public setCircle(diameter: number) {
 

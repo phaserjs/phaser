@@ -2137,6 +2137,7 @@ module Phaser {
         * @type {number}
         */
         static ALIGN_BOTTOM_RIGHT: number;
+        static getAsPoints(sprite: Sprite): Point[];
         /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
@@ -3216,12 +3217,18 @@ module Phaser.Physics {
         oldPosition: Vec2;
         offset: Vec2;
         bounds: Rectangle;
-        oH: number;
-        oV: number;
         setSize(width: number, height: number);
         preUpdate();
         update();
         render(context: CanvasRenderingContext2D);
+        hullX;
+        hullY;
+        hullWidth;
+        hullHeight;
+        deltaX;
+        deltaY;
+        deltaXAbs;
+        deltaYAbs;
     }
 }
 /**
@@ -3266,12 +3273,35 @@ module Phaser.Physics {
         */
         public computeVelocity(velocity: number, gravity?: number, acceleration?: number, drag?: number, max?: number): number;
         private collideShapes(shapeA, shapeB);
+        /**
+        * The core Collision separation function used by Collision.overlap.
+        * @param object1 The first GameObject to separate
+        * @param object2 The second GameObject to separate
+        * @returns {boolean} Returns true if the objects were separated, otherwise false.
+        */
+        public NEWseparate(object1, object2): bool;
+        private checkHullIntersection(shape1, shape2);
+        /**
+        * Separates the two objects on their x axis
+        * @param object1 The first GameObject to separate
+        * @param object2 The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        public separateSpriteToSpriteX(object1: Sprite, object2: Sprite): bool;
+        /**
+        * Separates the two objects on their y axis
+        * @param object1 The first GameObject to separate
+        * @param object2 The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        public separateSpriteToSpriteY(object1: Sprite, object2: Sprite): bool;
+        private separate(shapeA, shapeB, distance, tangent);
         private collideWorld(shape);
         private separateX(shapeA, shapeB, distance, tangent);
         private separateY(shapeA, shapeB, distance, tangent);
         private separateXWall(shapeA, distance, tangent);
         private separateYWall(shapeA, distance, tangent);
-        private separate(shape, distance, tangent);
+        private OLDseparate(shape, distance, tangent);
     }
 }
 /**
@@ -3289,12 +3319,18 @@ module Phaser.Physics {
         public offset: Vec2;
         public scale: Vec2;
         public bounds: Rectangle;
-        public oH: number;
-        public oV: number;
         public preUpdate(): void;
         public update(): void;
         public setSize(width: number, height: number): void;
         public render(context: CanvasRenderingContext2D): void;
+        public hullWidth : number;
+        public hullHeight : number;
+        public hullX : number;
+        public hullY : number;
+        public deltaXAbs : number;
+        public deltaYAbs : number;
+        public deltaX : number;
+        public deltaY : number;
     }
 }
 /**
@@ -6669,12 +6705,18 @@ module Phaser.Physics {
         public scale: Vec2;
         public bounds: Rectangle;
         public radius: number;
-        public oH: number;
-        public oV: number;
         public preUpdate(): void;
         public update(): void;
         public setSize(width: number, height: number): void;
         public render(context: CanvasRenderingContext2D): void;
+        public hullWidth : number;
+        public hullHeight : number;
+        public hullX : number;
+        public hullY : number;
+        public deltaXAbs : number;
+        public deltaYAbs : number;
+        public deltaX : number;
+        public deltaY : number;
     }
 }
 /**
@@ -6696,6 +6738,7 @@ module Phaser.Components {
         * @type {boolean}
         */
         public moves: bool;
+        public mass: number;
         public gravity: Vec2;
         public drag: Vec2;
         public bounce: Vec2;
@@ -6703,6 +6746,8 @@ module Phaser.Components {
         public velocity: Vec2;
         public acceleration: Vec2;
         public touching: number;
+        public allowCollisions: number;
+        public wasTouching: number;
         public setCircle(diameter: number): void;
         /**
         * Internal function for updating the position and speed of this object.
@@ -6715,6 +6760,23 @@ module Phaser.Components {
         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
         public renderDebugInfo(x: number, y: number, color?: string): void;
+    }
+}
+/**
+* Phaser - Polygon
+*
+*
+*/
+module Phaser {
+    class Polygon {
+        /**
+        *
+        **/
+        constructor(game: Game, points: Point[]);
+        public points: Point[];
+        public game: Game;
+        public context: CanvasRenderingContext2D;
+        public render(): void;
     }
 }
 /**

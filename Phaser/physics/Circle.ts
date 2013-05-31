@@ -49,13 +49,14 @@ module Phaser.Physics {
         public bounds: Rectangle;
 
         public radius: number;
-        public oH: number;
-        public oV: number;
 
         public preUpdate() {
 
             this.oldPosition.copyFrom(this.position);
             
+            this.bounds.x = this.position.x - this.bounds.halfWidth;
+            this.bounds.y = this.position.y - this.bounds.halfHeight;
+
             if (this.sprite)
             {
                 this.position.setTo((this.sprite.x + this.bounds.halfWidth) + this.offset.x, (this.sprite.y + this.bounds.halfHeight) + this.offset.y);
@@ -74,8 +75,8 @@ module Phaser.Physics {
 
         public update() {
 
-            this.bounds.x = this.position.x;
-            this.bounds.y = this.position.y;
+            //this.bounds.x = this.position.x;
+            //this.bounds.y = this.position.y;
 
         }
 
@@ -89,15 +90,20 @@ module Phaser.Physics {
         public render(context:CanvasRenderingContext2D) {
 
             context.beginPath();
-            context.strokeStyle = 'rgb(0,255,0)';
+            //context.strokeStyle = 'rgb(255,255,0)';
+            //context.strokeRect(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight, this.bounds.width, this.bounds.height);
+            //context.fillStyle = 'rgba(0,0,255,0.8)';
+            context.strokeStyle = 'rgba(0,0,255,0.5)';
             context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+            //context.fill();
             context.stroke();
             context.closePath();
 
             //  center point
-            context.fillStyle = 'rgb(0,255,0)';
+            context.fillStyle = 'rgb(255,255,0)';
             context.fillRect(this.position.x, this.position.y, 2, 2);
 
+            /*
             if (this.oH == 1)
             {
                 context.beginPath();
@@ -135,8 +141,78 @@ module Phaser.Physics {
                 context.stroke();
                 context.closePath();
             }
+    */
 
         }
+
+        public get hullWidth(): number {
+
+            if (this.deltaX > 0)
+            {
+                return this.bounds.width + this.deltaX;
+            }
+            else
+            {
+                return this.bounds.width - this.deltaX;
+            }
+
+        }
+
+        public get hullHeight(): number {
+
+            if (this.deltaY > 0)
+            {
+                return this.bounds.height + this.deltaY;
+            }
+            else
+            {
+                return this.bounds.height - this.deltaY;
+            }
+
+        }
+
+        public get hullX(): number {
+
+            if (this.position.x < this.oldPosition.x)
+            {
+                return this.position.x;
+            }
+            else
+            {
+                return this.oldPosition.x;
+            }
+
+        }
+
+        public get hullY(): number {
+
+            if (this.position.y < this.oldPosition.y)
+            {
+                return this.position.y;
+            }
+            else
+            {
+                return this.oldPosition.y;
+            }
+
+        }
+
+        public get deltaXAbs(): number {
+            return (this.deltaX > 0 ? this.deltaX : -this.deltaX);
+        }
+
+        public get deltaYAbs(): number {
+            return (this.deltaY > 0 ? this.deltaY : -this.deltaY);
+        }
+
+        public get deltaX(): number {
+            return this.position.x - this.oldPosition.x;
+        }
+
+        public get deltaY(): number {
+            return this.position.y - this.oldPosition.y;
+        }
+
 
     }
 
