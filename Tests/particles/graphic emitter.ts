@@ -17,8 +17,8 @@
     function create() {
 
         emitter = game.add.emitter(game.stage.centerX, game.stage.centerY);
-        emitter.makeParticles('jet', 50, false, 0);
-        emitter.start(false, 10, 0.1);
+        emitter.makeParticles('jet', 100, false, 0);
+        emitter.start(false, 20, 0.1);
 
     }
 

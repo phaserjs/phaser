@@ -1337,7 +1337,7 @@ var Phaser;
         * Calls render on all members of this Group who have a status of visible=true and exists=true
         * You can also call Object.render directly, which will bypass the visible/exists check.
         */
-        function (renderer, camera) {
+        function (camera) {
             if(camera.isHidden(this) == true) {
                 return;
             }
@@ -1353,14 +1353,10 @@ var Phaser;
             while(this._i < this.length) {
                 this._member = this.members[this._i++];
                 if(this._member != null && this._member.exists && this._member.visible && camera.isHidden(this._member) == false) {
-                    //this._member.render.call(renderer, camera, this._member);
-                    //  call = context first, then parameters
                     if(this._member.type == Phaser.Types.GROUP) {
-                        //console.log('group rend');
-                        this._member.render.call(this._member, renderer, camera, this._member);
-                        //this._member.render.call(this, renderer, camera, this._member);
-                                            } else {
-                        this._member.render.call(renderer, camera, this._member);
+                        this._member.render(camera);
+                    } else {
+                        this.game.renderer.renderGameObject(this._member);
                     }
                 }
             }
@@ -5053,6 +5049,7 @@ var Phaser;
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../core/Circle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="RectangleUtils.ts" />
 /**
 * Phaser - SpriteUtils
 *
@@ -5074,7 +5071,7 @@ var Phaser;
             out.push(new Phaser.Point(sprite.x, sprite.y + sprite.height));
             return out;
         };
-        SpriteUtils.onScreen = /**
+        SpriteUtils.overlapsPoint = /**
         * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
@@ -5190,29 +5187,22 @@ var Phaser;
         *
         * @return   Whether or not the point overlaps this object.
         */
-        /*
-        static overlapsPoint(point: Point, inScreenSpace: bool = false, camera: Camera = null): bool {
-        
-        if (!inScreenSpace)
-        {
-        return (point.x > this.x) && (point.x < this.x + this.width) && (point.y > this.y) && (point.y < this.y + this.height);
-        }
-        
-        if (camera == null)
-        {
-        camera = this._game.camera;
-        }
-        
-        var X: number = point.x - camera.scroll.x;
-        var Y: number = point.y - camera.scroll.y;
-        
-        this.getScreenXY(this._point, camera);
-        
-        return (X > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
-        
-        }
-        */
-        /**
+        function overlapsPoint(sprite, point, inScreenSpace, camera) {
+            if (typeof inScreenSpace === "undefined") { inScreenSpace = false; }
+            if (typeof camera === "undefined") { camera = null; }
+            if(!inScreenSpace) {
+                return Phaser.RectangleUtils.containsPoint(sprite.body.bounds, point);
+                //return (point.x > sprite.x) && (point.x < sprite.x + sprite.width) && (point.y > sprite.y) && (point.y < sprite.y + sprite.height);
+                            }
+            if(camera == null) {
+                camera = sprite.game.camera;
+            }
+            //var x: number = point.x - camera.scroll.x;
+            //var y: number = point.y - camera.scroll.y;
+            //this.getScreenXY(this._point, camera);
+            //return (x > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
+                    };
+        SpriteUtils.onScreen = /**
         * Check and see if this object is currently on screen.
         *
         * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
@@ -5250,7 +5240,7 @@ var Phaser;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
             return point;
         };
-        SpriteUtils.inCamera = /**
+        SpriteUtils.reset = /**
         * Set the world bounds that this GameObject can exist within based on the size of the current game world.
         *
         * @param action {number} The action to take if the object hits the world bounds, either OUT_OF_BOUNDS_KILL or OUT_OF_BOUNDS_STOP
@@ -5264,22 +5254,6 @@ var Phaser;
         }
         */
         /**
-        * Check whether this object is visible in a specific camera rectangle.
-        * @param camera {Rectangle} The rectangle you want to check.
-        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
-        */
-        function inCamera(camera, cameraOffsetX, cameraOffsetY) {
-            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if(this.scrollFactor.x == 0 && this.scrollFactor.y == 0) {
-                return true;
-            }
-            this._dx = (this.frameBounds.x - camera.x);
-            this._dy = (this.frameBounds.y - camera.y);
-            this._dw = this.frameBounds.width * this.scale.x;
-            this._dh = this.frameBounds.height * this.scale.y;
-            return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
-        };
-        SpriteUtils.reset = /**
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
@@ -5296,6 +5270,15 @@ var Phaser;
             sprite.body.velocity.y = 0;
             sprite.body.position.x = x;
             sprite.body.position.y = y;
+        };
+        SpriteUtils.setOriginToCenter = function setOriginToCenter(sprite, fromFrameBounds, fromBody) {
+            if (typeof fromFrameBounds === "undefined") { fromFrameBounds = true; }
+            if (typeof fromBody === "undefined") { fromBody = false; }
+            if(fromFrameBounds) {
+                sprite.origin.setTo(sprite.frameBounds.halfWidth, sprite.frameBounds.halfHeight);
+            } else if(fromBody) {
+                sprite.origin.setTo(sprite.body.bounds.halfWidth, sprite.body.bounds.halfHeight);
+            }
         };
         SpriteUtils.setBounds = /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
@@ -5968,9 +5951,10 @@ var Phaser;
                 this.parent.texture.context.fillStyle = color;
                 this.parent.texture.context.fillText('Sprite: (' + this.parent.frameBounds.width + ' x ' + this.parent.frameBounds.height + ')', x, y);
                 //this.parent.texture.context.fillText('x: ' + this._parent.frameBounds.x.toFixed(1) + ' y: ' + this._parent.frameBounds.y.toFixed(1) + ' rotation: ' + this._parent.rotation.toFixed(1), x, y + 14);
-                this.parent.texture.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' angle: ' + this.angle.toFixed(1), x, y + 14);
+                this.parent.texture.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' angle: ' + this.angle.toFixed(0), x, y + 14);
                 this.parent.texture.context.fillText('vx: ' + this.velocity.x.toFixed(1) + ' vy: ' + this.velocity.y.toFixed(1), x, y + 28);
-                this.parent.texture.context.fillText('ax: ' + this.acceleration.x.toFixed(1) + ' ay: ' + this.acceleration.y.toFixed(1), x, y + 42);
+                this.parent.texture.context.fillText('acx: ' + this.acceleration.x.toFixed(1) + ' acy: ' + this.acceleration.y.toFixed(1), x, y + 42);
+                this.parent.texture.context.fillText('angVx: ' + this.angularVelocity.toFixed(1) + ' angAc: ' + this.angularAcceleration.toFixed(1), x, y + 56);
             };
             return Body;
         })();
@@ -6030,7 +6014,6 @@ var Phaser;
             this.angleOffset = 0;
             this.game = game;
             this.type = Phaser.Types.SPRITE;
-            this.render = game.renderer.renderSprite;
             this.exists = true;
             this.active = true;
             this.visible = true;
@@ -6042,6 +6025,8 @@ var Phaser;
             this.y = y;
             this.z = 0// not used yet
             ;
+            //  If a texture has been given the body will be set to that size, otherwise 16x16
+            this.body = new Phaser.Physics.Body(this, bodyType);
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this, key);
             this.cameraBlacklist = [];
@@ -6049,8 +6034,6 @@ var Phaser;
             this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
             this.skew = new Phaser.Vec2(0, 0);
-            //  If a texture has been given the body will be set to that size, otherwise 16x16
-            this.body = new Phaser.Physics.Body(this, bodyType);
         }
         Object.defineProperty(Sprite.prototype, "angle", {
             get: /**
@@ -7627,7 +7610,6 @@ var Phaser;
         * You can override this to add custom behavior like a sound or AI or something.
         */
         function () {
-            console.log('particle emitted', this.width, this.height);
         };
         return Particle;
     })(Phaser.Sprite);
@@ -7731,13 +7713,6 @@ var Phaser;
                 if(multiple) {
                     /*
                     randomFrame = this.game.math.random()*totalFrames;
-                    if(BakedRotations > 0)
-                    particle.loadRotatedGraphic(Graphics,BakedRotations,randomFrame);
-                    else
-                    {
-                    particle.loadGraphic(Graphics,true);
-                    particle.frame = randomFrame;
-                    }
                     */
                                     } else {
                     if(graphics) {
@@ -7753,7 +7728,7 @@ var Phaser;
                     particle.body.allowCollisions = Phaser.Types.NONE;
                 }
                 particle.exists = false;
-                //  Center it
+                //  Center the origin for rotation assistance
                 particle.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
                 this.add(particle);
                 i++;
@@ -8108,7 +8083,6 @@ var Phaser;
             if (typeof height === "undefined") { height = 0; }
                 _super.call(this, game, x, y, key);
             this.type = Phaser.Types.SCROLLZONE;
-            this.render = game.renderer.renderScrollZone;
             this.regions = [];
             if(this.texture.loaded) {
                 if(width > this.width || height > this.height) {
@@ -14278,6 +14252,8 @@ var Phaser;
         }
         HeadlessRenderer.prototype.render = function () {
         };
+        HeadlessRenderer.prototype.renderGameObject = function (object) {
+        };
         HeadlessRenderer.prototype.renderSprite = function (camera, sprite) {
             return true;
         };
@@ -14316,13 +14292,38 @@ var Phaser;
         CanvasRenderer.prototype.render = function () {
             //  Get a list of all the active cameras
             this._cameraList = this._game.world.getAllCameras();
+            this._count = 0;
             //  Then iterate through world.group on them all (where not blacklisted, etc)
             for(var c = 0; c < this._cameraList.length; c++) {
                 this._camera = this._cameraList[c];
                 this._camera.preRender();
-                this._game.world.group.render(this, this._camera);
+                this._game.world.group.render(this._camera);
                 this._camera.postRender();
             }
+            this.renderTotal = this._count;
+        };
+        CanvasRenderer.prototype.renderGameObject = function (object) {
+            if(object.type == Phaser.Types.SPRITE) {
+                this.renderSprite(this._camera, object);
+            } else if(object.type == Phaser.Types.SCROLLZONE) {
+                this.renderScrollZone(this._camera, object);
+            }
+        };
+        CanvasRenderer.prototype.inCamera = /**
+        * Check whether this object is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        */
+        function (camera, sprite) {
+            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
+            if(sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0) {
+                return true;
+            }
+            this._dx = sprite.frameBounds.x - camera.worldView.x;
+            this._dy = sprite.frameBounds.y - camera.worldView.y;
+            this._dw = sprite.frameBounds.width * sprite.scale.x;
+            this._dh = sprite.frameBounds.height * sprite.scale.y;
+            return (camera.worldView.right > this._dx) && (camera.worldView.x < this._dx + this._dw) && (camera.worldView.bottom > this._dy) && (camera.worldView.y < this._dy + this._dh);
         };
         CanvasRenderer.prototype.renderSprite = /**
         * Render this sprite to specific camera. Called by game loop after update().
@@ -14330,10 +14331,10 @@ var Phaser;
         * @return {boolean} Return false if not rendered, otherwise return true.
         */
         function (camera, sprite) {
-            //  Render checks (needs inCamera check added)
-            if(sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1) {
+            if(sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
                 return false;
             }
+            this._count++;
             //  Reset our temp vars
             this._ga = -1;
             this._sx = 0;
@@ -14425,10 +14426,10 @@ var Phaser;
             return true;
         };
         CanvasRenderer.prototype.renderScrollZone = function (camera, scrollZone) {
-            //  Render checks (needs inCamera check added)
-            if(scrollZone.scale.x == 0 || scrollZone.scale.y == 0 || scrollZone.texture.alpha < 0.1) {
+            if(scrollZone.scale.x == 0 || scrollZone.scale.y == 0 || scrollZone.texture.alpha < 0.1 || this.inCamera(camera, scrollZone) == false) {
                 return false;
             }
+            this._count++;
             //  Reset our temp vars
             this._ga = -1;
             this._sx = 0;

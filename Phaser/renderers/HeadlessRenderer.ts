@@ -17,6 +17,9 @@ module Phaser {
 
         public render() {}
 
+        public renderGameObject(object) {
+        }
+
         public renderSprite(camera: Camera, sprite: Sprite): bool {
             return true;
         }

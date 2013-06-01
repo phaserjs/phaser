@@ -32,7 +32,7 @@ module Phaser {
         /**
          * Reference to the Renderer.renderSprite method. Can be overriden by custom classes.
          */
-        render;
+        //render;
 
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.

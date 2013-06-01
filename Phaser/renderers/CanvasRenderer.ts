@@ -36,11 +36,17 @@ module Phaser {
         private _camera: Camera;
         private _groupLength: number;
 
+        private _count: number;
+
+        public renderTotal: number;
+
         public render() {
 
             //  Get a list of all the active cameras
 
             this._cameraList = this._game.world.getAllCameras();
+
+            this._count = 0;
 
             //  Then iterate through world.group on them all (where not blacklisted, etc)
             for (var c = 0; c < this._cameraList.length; c++)
@@ -49,10 +55,47 @@ module Phaser {
 
                 this._camera.preRender();
 
-                this._game.world.group.render(this, this._camera);
+                this._game.world.group.render(this._camera);
 
                 this._camera.postRender();
             }
+
+            this.renderTotal = this._count;
+
+        }
+
+        public renderGameObject(object) {
+
+            if (object.type == Types.SPRITE)
+            {
+                this.renderSprite(this._camera, object);
+            }
+            else if (object.type == Types.SCROLLZONE)
+            {
+                this.renderScrollZone(this._camera, object);
+            }
+
+        }
+
+        /**
+         * Check whether this object is visible in a specific camera rectangle.
+         * @param camera {Rectangle} The rectangle you want to check.
+         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+         */
+        public inCamera(camera: Camera, sprite: Sprite): bool {
+
+            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
+            if (sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0)
+            {
+                return true;
+            }
+
+            this._dx = sprite.frameBounds.x - camera.worldView.x;
+            this._dy = sprite.frameBounds.y - camera.worldView.y;
+            this._dw = sprite.frameBounds.width * sprite.scale.x;
+            this._dh = sprite.frameBounds.height * sprite.scale.y;
+
+            return (camera.worldView.right > this._dx) && (camera.worldView.x < this._dx + this._dw) && (camera.worldView.bottom > this._dy) && (camera.worldView.y < this._dy + this._dh);
 
         }
 
@@ -63,11 +106,12 @@ module Phaser {
          */
         public renderSprite(camera: Camera, sprite: Sprite): bool {
 
-            //  Render checks (needs inCamera check added)
-            if (sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1)
+            if (sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false)
             {
                 return false;
             }
+
+            this._count++;
 
             //  Reset our temp vars
             this._ga = -1;
@@ -193,11 +237,12 @@ module Phaser {
 
         public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool {
 
-            //  Render checks (needs inCamera check added)
-            if (scrollZone.scale.x == 0 || scrollZone.scale.y == 0 || scrollZone.texture.alpha < 0.1)
+            if (scrollZone.scale.x == 0 || scrollZone.scale.y == 0 || scrollZone.texture.alpha < 0.1 || this.inCamera(camera, scrollZone) == false)
             {
                 return false;
             }
+
+            this._count++;
 
             //  Reset our temp vars
             this._ga = -1;

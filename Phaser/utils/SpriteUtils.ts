@@ -3,6 +3,7 @@
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../core/Circle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="RectangleUtils.ts" />
 
 /**
 * Phaser - SpriteUtils
@@ -154,28 +155,27 @@ module Phaser {
         *
         * @return   Whether or not the point overlaps this object.
         */
-        /*
-        static overlapsPoint(point: Point, inScreenSpace: bool = false, camera: Camera = null): bool {
+        static overlapsPoint(sprite: Sprite, point: Point, inScreenSpace: bool = false, camera: Camera = null): bool {
 
             if (!inScreenSpace)
             {
-                return (point.x > this.x) && (point.x < this.x + this.width) && (point.y > this.y) && (point.y < this.y + this.height);
+                return Phaser.RectangleUtils.containsPoint(sprite.body.bounds, point);
+                //return (point.x > sprite.x) && (point.x < sprite.x + sprite.width) && (point.y > sprite.y) && (point.y < sprite.y + sprite.height);
             }
 
             if (camera == null)
             {
-                camera = this._game.camera;
+                camera = sprite.game.camera;
             }
 
-            var X: number = point.x - camera.scroll.x;
-            var Y: number = point.y - camera.scroll.y;
+            //var x: number = point.x - camera.scroll.x;
+            //var y: number = point.y - camera.scroll.y;
 
-            this.getScreenXY(this._point, camera);
+            //this.getScreenXY(this._point, camera);
 
-            return (X > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
+            //return (x > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
 
         }
-        */
 
         /**
         * Check and see if this object is currently on screen.
@@ -241,28 +241,6 @@ module Phaser {
         */
 
         /**
-         * Check whether this object is visible in a specific camera rectangle.
-         * @param camera {Rectangle} The rectangle you want to check.
-         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
-         */
-        static inCamera(camera: Rectangle, cameraOffsetX: number, cameraOffsetY: number): bool {
-
-            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if (this.scrollFactor.x == 0 && this.scrollFactor.y == 0)
-            {
-                return true;
-            }
-
-            this._dx = (this.frameBounds.x - camera.x);
-            this._dy = (this.frameBounds.y - camera.y);
-            this._dw = this.frameBounds.width * this.scale.x;
-            this._dh = this.frameBounds.height * this.scale.y;
-
-            return (camera.right > this._dx) && (camera.x < this._dx + this._dw) && (camera.bottom > this._dy) && (camera.y < this._dy + this._dh);
-
-        }
-
-        /**
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
@@ -280,6 +258,19 @@ module Phaser {
             sprite.body.velocity.y = 0;
             sprite.body.position.x = x;
             sprite.body.position.y = y;
+
+        }
+
+        static setOriginToCenter(sprite: Sprite, fromFrameBounds: bool = true, fromBody?: bool = false) {
+
+            if (fromFrameBounds)
+            {
+                sprite.origin.setTo(sprite.frameBounds.halfWidth, sprite.frameBounds.halfHeight);
+            }
+            else if (fromBody)
+            {
+                sprite.origin.setTo(sprite.body.bounds.halfWidth, sprite.body.bounds.halfHeight);
+            }
 
         }
 

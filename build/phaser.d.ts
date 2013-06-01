@@ -248,10 +248,6 @@ module Phaser {
         */
         type: number;
         /**
-        * Reference to the Renderer.renderSprite method. Can be overriden by custom classes.
-        */
-        render;
-        /**
         * Controls if both <code>update</code> and render are called by the core game loop.
         */
         exists: bool;
@@ -975,7 +971,7 @@ module Phaser {
         * Calls render on all members of this Group who have a status of visible=true and exists=true
         * You can also call Object.render directly, which will bypass the visible/exists check.
         */
-        public render(renderer: IRenderer, camera: Camera): void;
+        public render(camera: Camera): void;
         /**
         * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
         */
@@ -3050,6 +3046,16 @@ module Phaser {
         static _tempPoint: Point;
         static getAsPoints(sprite: Sprite): Point[];
         /**
+        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
+        *
+        * @param point {Point} The point in world space you want to check.
+        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        *
+        * @return   Whether or not the point overlaps this object.
+        */
+        static overlapsPoint(sprite: Sprite, point: Point, inScreenSpace?: bool, camera?: Camera): bool;
+        /**
         * Check and see if this object is currently on screen.
         *
         * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
@@ -3067,12 +3073,6 @@ module Phaser {
         */
         static getScreenXY(sprite: Sprite, point?: Point, camera?: Camera): Point;
         /**
-        * Check whether this object is visible in a specific camera rectangle.
-        * @param camera {Rectangle} The rectangle you want to check.
-        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
-        */
-        static inCamera(camera: Rectangle, cameraOffsetX: number, cameraOffsetY: number): bool;
-        /**
         * Handy for reviving game objects.
         * Resets their existence flags and position.
         *
@@ -3080,6 +3080,7 @@ module Phaser {
         * @param y {number} The new Y position of this object.
         */
         static reset(sprite: Sprite, x: number, y: number): void;
+        static setOriginToCenter(sprite: Sprite, fromFrameBounds?: bool, fromBody?: bool): void;
         /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
@@ -3467,10 +3468,6 @@ module Phaser {
         * The type of game object.
         */
         public type: number;
-        /**
-        * Reference to the Renderer.renderSprite method. Can be overriden by custom classes.
-        */
-        public render;
         /**
         * Controls if both <code>update</code> and render are called by the core game loop.
         */
@@ -7727,6 +7724,7 @@ module Phaser {
 module Phaser {
     interface IRenderer {
         render();
+        renderGameObject(object);
         renderSprite(camera: Camera, sprite: Sprite): bool;
         renderScrollZone(camera: Camera, sprite: ScrollZone): bool;
     }
@@ -7739,6 +7737,7 @@ module Phaser {
         */
         private _game;
         public render(): void;
+        public renderGameObject(object): void;
         public renderSprite(camera: Camera, sprite: Sprite): bool;
         public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
     }
@@ -7766,7 +7765,16 @@ module Phaser {
         private _cameraList;
         private _camera;
         private _groupLength;
+        private _count;
+        public renderTotal: number;
         public render(): void;
+        public renderGameObject(object): void;
+        /**
+        * Check whether this object is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        */
+        public inCamera(camera: Camera, sprite: Sprite): bool;
         /**
         * Render this sprite to specific camera. Called by game loop after update().
         * @param camera {Camera} Camera this sprite will be rendered to.

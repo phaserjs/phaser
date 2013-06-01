@@ -6,6 +6,8 @@
 
     function init() {
 
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>> init');
+
         //  Using Phasers asset loader we load up a PNG from the assets folder
         game.loader.addImageFile('bunny', 'assets/sprites/bunny.png');
         game.loader.load();
@@ -13,6 +15,8 @@
     }
 
     function create() {
+
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>> create');
 
         //  This will create a Sprite positioned at the top-left of the game (0,0)
         //  Try changing the 0, 0 values

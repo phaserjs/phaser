@@ -31,7 +31,6 @@ module Phaser {
             super(game, x, y, key);
 
             this.type = Phaser.Types.SCROLLZONE;
-            this.render = game.renderer.renderScrollZone;
 
             this.regions = [];
 

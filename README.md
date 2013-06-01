@@ -52,6 +52,8 @@ V1.0.0
 * Removed Sprite.rotation - use Sprite.angle instead
 * Optimised separateX/Y and overlap so they don't use any temporary vars any more.
 * Added the new Physics.Body object to all Sprites. Used for all physics calculations in-game. Will be extended for Fixtures/Joints in future.
+* Added SpriteUtils.setOriginToCenter to quickly set the origin of a sprite based on either frameBounds or body.bounds
+
 
 
 V0.9.6

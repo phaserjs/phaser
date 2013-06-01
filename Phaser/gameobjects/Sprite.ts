@@ -27,7 +27,6 @@ module Phaser {
 
             this.game = game;
             this.type = Phaser.Types.SPRITE;
-            this.render = game.renderer.renderSprite;
 
             this.exists = true;
             this.active = true;
@@ -42,6 +41,9 @@ module Phaser {
             this.y = y;
             this.z = 0; // not used yet
 
+            //  If a texture has been given the body will be set to that size, otherwise 16x16
+            this.body = new Phaser.Physics.Body(this, bodyType);
+
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this, key);
             this.cameraBlacklist = [];
@@ -50,10 +52,6 @@ module Phaser {
             this.origin = new Phaser.Vec2(0, 0);
             this.scale = new Phaser.Vec2(1, 1);
             this.skew = new Phaser.Vec2(0, 0);
-
-            //  If a texture has been given the body will be set to that size, otherwise 16x16
-            this.body = new Phaser.Physics.Body(this, bodyType);
-
         }
 
         /**
@@ -65,11 +63,6 @@ module Phaser {
          * The type of game object.
          */
         public type: number;
-
-        /**
-         * Reference to the Renderer.renderSprite method. Can be overriden by custom classes.
-         */
-        public render;
 
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.

@@ -174,7 +174,7 @@ module Phaser {
         * Calls render on all members of this Group who have a status of visible=true and exists=true
         * You can also call Object.render directly, which will bypass the visible/exists check.
         */
-        public render(renderer:IRenderer, camera: Camera) {
+        public render(camera: Camera) {
 
             if (camera.isHidden(this) == true)
             {
@@ -201,17 +201,13 @@ module Phaser {
 
                 if (this._member != null && this._member.exists && this._member.visible && camera.isHidden(this._member) == false)
                 {
-                    //this._member.render.call(renderer, camera, this._member);
-                    //  call = context first, then parameters
                     if (this._member.type == Types.GROUP)
                     {
-                        //console.log('group rend');
-                        this._member.render.call(this._member, renderer, camera, this._member);
-                        //this._member.render.call(this, renderer, camera, this._member);
+                        this._member.render(camera);
                     }
                     else
                     {
-                        this._member.render.call(renderer, camera, this._member);
+                        this.game.renderer.renderGameObject(this._member);
                     }
                 }
             }
@@ -225,6 +221,7 @@ module Phaser {
             {
                 this.game.stage.context.restore();
             }
+
         }
 
         /**

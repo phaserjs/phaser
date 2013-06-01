@@ -71,6 +71,10 @@
       <DependentUpon>graphic emitter.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="particles\multiple streams.ts" />
+    <TypeScriptCompile Include="particles\mousetrail.ts" />
+    <Content Include="particles\mousetrail.js">
+      <DependentUpon>mousetrail.ts</DependentUpon>
+    </Content>
     <Content Include="particles\multiple streams.js">
       <DependentUpon>multiple streams.ts</DependentUpon>
     </Content>
@@ -96,6 +100,10 @@
     </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scrollzones\blasteroids.ts" />
+    <Content Include="scrollzones\blasteroids.js">
+      <DependentUpon>blasteroids.ts</DependentUpon>
     </Content>
     <Content Include="scrollzones\parallax.js">
       <DependentUpon>parallax.ts</DependentUpon>
