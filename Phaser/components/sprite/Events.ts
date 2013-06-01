@@ -10,6 +10,10 @@ module Phaser.Components {
 
     export class Events {
 
+        /**
+         * The Events component is a collection of events fired by the parent Sprite and its other components.
+         * @param parent The Sprite using this Input component
+         */
         constructor(parent: Sprite) {
 
             this.game = parent.game;
@@ -22,7 +26,14 @@ module Phaser.Components {
 
         }
 
+        /**
+         * Reference to Phaser.Game
+         */
         public game: Game;
+
+        /**
+         * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+         */
         private _sprite: Sprite;
 
         //  Creation and destruction
@@ -33,9 +44,25 @@ module Phaser.Components {
         public onOutOfBounds: Phaser.Signal;
 
         //  Input related events
+
+        /**
+         * Dispatched by the Input component when a pointer moves over an Input enabled sprite.
+         */
         public onInputOver: Phaser.Signal;
+
+        /**
+         * Dispatched by the Input component when a pointer moves out of an Input enabled sprite.
+         */
         public onInputOut: Phaser.Signal;
+
+        /**
+         * Dispatched by the Input component when a pointer is pressed down on an Input enabled sprite.
+         */
         public onInputDown: Phaser.Signal;
+
+        /**
+         * Dispatched by the Input component when a pointer is released over an Input enabled sprite
+         */
         public onInputUp: Phaser.Signal;
 
     }

@@ -12,9 +12,14 @@ module Phaser.Components {
 
     export class Texture {
 
+        /**
+         * Creates a new Sprite Texture component
+         * @param parent The Sprite using this Texture to render
+         * @param key An optional Game.Cache key to load an image from
+         */
         constructor(parent: Sprite, key?: string = '') {
 
-            this._game = parent.game;
+            this.game = parent.game;
             this._sprite = parent;
 
             this.canvas = parent.game.stage.canvas;
@@ -31,13 +36,14 @@ module Phaser.Components {
 
         }
 
-        /**
-         * 
-         */
-        private _game: Game;
 
         /**
-         * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+         * Reference to Phaser.Game
+         */
+        public game: Game;
+
+        /**
+         * Reference to the parent Sprite
          */
         private _sprite: Sprite;
 
@@ -53,7 +59,7 @@ module Phaser.Components {
         public dynamicTexture: DynamicTexture = null;
 
         /**
-        * The status of the texture image.
+        * The load status of the texture image.
         * @type {boolean}
         */
         public loaded: bool = false;
@@ -141,7 +147,6 @@ module Phaser.Components {
          * The graphic can be SpriteSheet or Texture Atlas. If you need to use a DynamicTexture see loadDynamicTexture.
          * @param key {string} Key of the graphic you want to load for this sprite.
          * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
-         * @return {Sprite} Sprite instance itself.
          */
         public loadImage(key: string, clearAnimations?: bool = true, updateBody?: bool = true) {
 
@@ -150,11 +155,11 @@ module Phaser.Components {
                 this._sprite.animations.destroy();
             }
 
-            if (this._game.cache.getImage(key) !== null)
+            if (this.game.cache.getImage(key) !== null)
             {
-                this.setTo(this._game.cache.getImage(key), null);
+                this.setTo(this.game.cache.getImage(key), null);
 
-                if (this._game.cache.isSpriteSheet(key))
+                if (this.game.cache.isSpriteSheet(key))
                 {
                     this._sprite.animations.loadFrameData(this._sprite.game.cache.getFrameData(key));
                 }
@@ -176,7 +181,6 @@ module Phaser.Components {
         /**
          * Load a DynamicTexture as its texture.
          * @param texture {DynamicTexture} The texture object to be used by this sprite.
-         * @return {Sprite} Sprite instance itself.
          */
         public loadDynamicTexture(texture: DynamicTexture) {
 

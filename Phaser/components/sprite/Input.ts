@@ -13,6 +13,10 @@ module Phaser.Components {
 
     export class Input {
 
+        /**
+         * Sprite Input component constructor
+         * @param parent The Sprite using this Input component
+         */
         constructor(parent: Sprite) {
 
             this.game = parent.game;
@@ -26,7 +30,7 @@ module Phaser.Components {
         }
 
         /**
-         * 
+         * Reference to Phaser.Game
          */
         public game: Game;
 
@@ -35,14 +39,38 @@ module Phaser.Components {
          */
         private _sprite: Sprite;
 
+        /**
+         * If enabled the Input component will be updated by the parent Sprite
+         * @type {Boolean}
+         */
         public enabled: bool;
+
+        /**
+         * The Input component can monitor either the physics body of the Sprite or the frameBounds
+         * If checkBody is set to true it will monitor the bounds of the physics body.
+         * @type {Boolean}
+         */
         public checkBody: bool;
+
+        /**
+         * Turn the mouse pointer into a hand image by temporarily setting the CSS style of the Game canvas
+         * on Input over. Only works on desktop browsers or browsers with a visible input pointer.
+         * @type {Boolean}
+         */
         public useHandCursor: bool;
 
-        public oldX: number;
-        public oldY: number;
-
+        /**
+         * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
+         * This value is only set with the pointer is over this Sprite.
+         * @type {number}
+         */
         public x: number = 0;
+
+        /**
+         * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
+         * This value is only set with the pointer is over this Sprite.
+         * @type {number}
+         */
         public y: number = 0;
 
         /**
@@ -86,6 +114,10 @@ module Phaser.Components {
         * @type {Boolean}
         **/
         public isOut: bool = true;
+
+        public oldX: number;
+        public oldY: number;
+
 
         /**
          * Update
@@ -142,14 +174,28 @@ module Phaser.Components {
 
         }
 
+        /**
+         * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+         * @param delay The time below which the pointer is considered as just over.
+         * @returns {boolean}
+         */
         public justOver(delay?:number = 500): bool {
             return (this.isOver && this.duration < delay);
         }
 
+        /**
+         * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+         * @param delay The time below which the pointer is considered as just out.
+         * @returns {boolean}
+         */
         public justOut(delay?:number = 500): bool {
             return (this.isOut && (this.game.time.now - this.timeOut < delay));
         }
 
+        /**
+         * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+         * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
+         */
         public get duration(): number {
 
             if (this.isOver)

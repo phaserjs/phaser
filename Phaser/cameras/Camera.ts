@@ -35,7 +35,7 @@ module Phaser {
             this._stageX = x;
             this._stageY = y;
             this.scaledX = x;
-            this.scaledY = x;
+            this.scaledY = y;
             this.fx = new CameraFX(this._game, this);
 
             //  The view into the world canvas we wish to render
@@ -194,12 +194,7 @@ module Phaser {
         */
         public isHidden(object): bool {
 
-            if (object['cameraBlacklist'] && object['cameraBlacklist'].length > 0 && object['cameraBlacklist'].indexOf(this.ID) == -1)
-            {
-                return true;
-            }
-
-            return false;
+            return (object['cameraBlacklist'] && object['cameraBlacklist'].length > 0 && object['cameraBlacklist'].indexOf(this.ID) == -1);
 
         }
 

@@ -214,7 +214,7 @@ module Phaser {
         }
 
         /**
-         * Parset JSON map data and generate tiles.
+         * Parse JSON map data and generate tiles.
          * @param data {string} JSON map data.
          * @param key {string} Asset key for tileset image.
          */
@@ -384,6 +384,11 @@ module Phaser {
 
         }
 
+        /**
+         * Gets the tile underneath the Input.x/y position
+         * @param layer The layer to check, defaults to 0
+         * @returns {Tile}
+         */
         public getTileFromInputXY(layer?: number = 0):Tile {
 
             return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.getWorldX(), this.game.input.getWorldY())];
@@ -393,7 +398,7 @@ module Phaser {
         /**
          * Get tiles overlaps the given object.
          * @param object {GameObject} Tiles you want to get that overlaps this.
-         * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+         * @return {array} Array with tiles information. (Each contains x, y and the tile.)
          */
         public getTileOverlaps(object: Sprite) {
 
