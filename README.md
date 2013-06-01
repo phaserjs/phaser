@@ -29,8 +29,15 @@ TODO:
 * Move Camera.scroll.x to just Camera.x/y
 * Apply Sprite scaling to Body.bounds
 * When you modify the sprite x/y directly the body position doesn't update, which leads to weird results. Need to work out who controls who.
-
-
+* Check that tween pausing works with the new performance.now
+* Game.Time should monitor pause duration
+* Investigate bug re: tilemap collision and animation frames
+* Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
+* Polygon geom primitive
+* If the Camera is larger than the Stage size then the rotation offset isn't correct
+* Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
+* Hook-up more events
+* Bug: Sprite x/y gets shifted if dynamic from the original value
 
 V1.0.0
 
@@ -53,7 +60,10 @@ V1.0.0
 * Optimised separateX/Y and overlap so they don't use any temporary vars any more.
 * Added the new Physics.Body object to all Sprites. Used for all physics calculations in-game. Will be extended for Fixtures/Joints in future.
 * Added SpriteUtils.setOriginToCenter to quickly set the origin of a sprite based on either frameBounds or body.bounds
-
+* Added Sprite.Input component for tracking Input events over a Sprite
+* Added Sprite.Input.useHandCursor (for desktop)
+* Added Sprite.Input.justOver and justOut with a configurable ms delay
+* Added Sprite.Events component for a global easy to access area to listen to events from
 
 
 V0.9.6
@@ -143,15 +153,6 @@ V0.9.6
 * Added GameObjectFactory methods to add existing objects to the game world, such as existingSprite(), existingTween(), etc.
 * Added the GameObjectFactory to Phaser.State
 * Added new format parameter to Loader.addTextureAtlas defining the format. Currently supported: JSON Array and Starling/Sparrow XML.
-
-* TODO: Check that tween pausing works with the new performance.now
-* TODO: Game.Time should monitor pause duration
-* TODO: Investigate bug re: tilemap collision and animation frames
-* TODO: Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
-* TODO: Polygon geom primitive
-* TODO: this.target.view.style.cursor = "pointer"; ("default")
-* TODO: If the Camera is larger than the Stage size then the rotation offset isn't correct
-* TODO: Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 
 Requirements
 ------------

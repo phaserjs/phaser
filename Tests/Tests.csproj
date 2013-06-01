@@ -67,6 +67,14 @@
     </Content>
     <TypeScriptCompile Include="physics\aabb 1.ts" />
     <TypeScriptCompile Include="particles\graphic emitter.ts" />
+    <TypeScriptCompile Include="input\over sprite 1.ts" />
+    <Content Include="input\over sprite 1.js">
+      <DependentUpon>over sprite 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="input\over sprite 2.ts" />
+    <Content Include="input\over sprite 2.js">
+      <DependentUpon>over sprite 2.ts</DependentUpon>
+    </Content>
     <Content Include="particles\graphic emitter.js">
       <DependentUpon>graphic emitter.ts</DependentUpon>
     </Content>

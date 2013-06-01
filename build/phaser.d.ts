@@ -3200,6 +3200,101 @@ module Phaser.Components {
     }
 }
 /**
+* Phaser - Components - Input
+*
+* Input detection component
+*/
+module Phaser.Components {
+    class Input {
+        constructor(parent: Sprite);
+        /**
+        *
+        */
+        public game: Game;
+        /**
+        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+        */
+        private _sprite;
+        public enabled: bool;
+        public checkBody: bool;
+        public useHandCursor: bool;
+        public oldX: number;
+        public oldY: number;
+        public x: number;
+        public y: number;
+        /**
+        * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
+        * @property isDown
+        * @type {Boolean}
+        **/
+        public isDown: bool;
+        /**
+        * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
+        * @property isUp
+        * @type {Boolean}
+        **/
+        public isUp: bool;
+        /**
+        * A timestamp representing when the Pointer first touched the touchscreen.
+        * @property timeDown
+        * @type {Number}
+        **/
+        public timeOver: number;
+        /**
+        * A timestamp representing when the Pointer left the touchscreen.
+        * @property timeUp
+        * @type {Number}
+        **/
+        public timeOut: number;
+        /**
+        * Is the Pointer over this Sprite
+        * @property isOver
+        * @type {Boolean}
+        **/
+        public isOver: bool;
+        /**
+        * Is the Pointer outside of this Sprite
+        * @property isOut
+        * @type {Boolean}
+        **/
+        public isOut: bool;
+        /**
+        * Update
+        */
+        public update(): void;
+        public justOver(delay?: number): bool;
+        public justOut(delay?: number): bool;
+        public duration : number;
+        /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        public renderDebugInfo(x: number, y: number, color?: string): void;
+    }
+}
+/**
+* Phaser - Components - Events
+*
+* Signals that are dispatched by the Sprite and its various components
+*/
+module Phaser.Components {
+    class Events {
+        constructor(parent: Sprite);
+        public game: Game;
+        private _sprite;
+        public onAdded: Signal;
+        public onKilled: Signal;
+        public onRevived: Signal;
+        public onOutOfBounds: Signal;
+        public onInputOver: Signal;
+        public onInputOut: Signal;
+        public onInputDown: Signal;
+        public onInputUp: Signal;
+    }
+}
+/**
 * Phaser - Vec2Utils
 *
 * A collection of methods useful for manipulating and performing operations on 2D vectors.
@@ -3492,6 +3587,14 @@ module Phaser {
         * The texture used to render the Sprite.
         */
         public texture: Components.Texture;
+        /**
+        * The Input component
+        */
+        public input: Components.Input;
+        /**
+        * The Events component
+        */
+        public events: Components.Events;
         /**
         * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
         * @type AnimationManager
@@ -8026,28 +8129,6 @@ module Phaser {
         */
         public collide(objectOrGroup1?, objectOrGroup2?, notifyCallback?, context?): bool;
         public camera : Camera;
-    }
-}
-/**
-* Phaser - Components - Events
-*
-*
-*/
-module Phaser.Components {
-    class Events {
-        constructor(parent: Sprite, key?: string);
-        /**
-        *
-        */
-        private _game;
-        /**
-        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
-        */
-        private _sprite;
-        public onInputOver: Signal;
-        public onInputOut: Signal;
-        public onInputDown: Signal;
-        public onInputUp: Signal;
     }
 }
 /**

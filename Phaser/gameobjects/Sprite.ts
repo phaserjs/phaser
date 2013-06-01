@@ -3,6 +3,8 @@
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
+/// <reference path="../components/sprite/Input.ts" />
+/// <reference path="../components/sprite/Events.ts" />
 /// <reference path="../physics/Body.ts" />
 
 /**
@@ -46,6 +48,9 @@ module Phaser {
 
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this, key);
+            this.input = new Phaser.Components.Input(this);
+            this.events = new Phaser.Components.Events(this);
+
             this.cameraBlacklist = [];
 
             //  Transform related (if we add any more then move to a component)
@@ -93,6 +98,16 @@ module Phaser {
          * The texture used to render the Sprite.
          */
         public texture: Phaser.Components.Texture;
+
+        /**
+         * The Input component
+         */
+        public input: Phaser.Components.Input;
+
+        /**
+         * The Events component
+         */
+        public events: Phaser.Components.Events;
 
         /**
          * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
@@ -280,13 +295,9 @@ module Phaser {
                     }
                 }
             }
-                
-            if (this.inputEnabled)
-            {
-                this.updateInput();
-            }
-
             */
+
+            this.input.update();
 
             if (this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.angle == 0 && this.angleOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
             {

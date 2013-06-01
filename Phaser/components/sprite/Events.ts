@@ -1,34 +1,38 @@
 /// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/DynamicTexture.ts" />
-/// <reference path="../../utils/SpriteUtils.ts" />
 
 /**
 * Phaser - Components - Events
 *
-* 
+* Signals that are dispatched by the Sprite and its various components
 */
 
 module Phaser.Components {
 
     export class Events {
 
-        constructor(parent: Sprite, key?: string = '') {
+        constructor(parent: Sprite) {
 
-            this._game = parent.game;
+            this.game = parent.game;
             this._sprite = parent;
+
+            this.onInputOver = new Phaser.Signal;
+            this.onInputOut = new Phaser.Signal;
+            this.onInputDown = new Phaser.Signal;
+            this.onInputUp = new Phaser.Signal;
 
         }
 
-        /**
-         * 
-         */
-        private _game: Game;
-
-        /**
-         * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
-         */
+        public game: Game;
         private _sprite: Sprite;
 
+        //  Creation and destruction
+        public onAdded: Phaser.Signal;
+        public onKilled: Phaser.Signal;
+        public onRevived: Phaser.Signal;
+
+        public onOutOfBounds: Phaser.Signal;
+
+        //  Input related events
         public onInputOver: Phaser.Signal;
         public onInputOut: Phaser.Signal;
         public onInputDown: Phaser.Signal;

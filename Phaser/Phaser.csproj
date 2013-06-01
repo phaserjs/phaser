@@ -70,6 +70,10 @@
     <Content Include="components\sprite\Events.js">
       <DependentUpon>Events.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="components\sprite\Input.ts" />
+    <Content Include="components\sprite\Input.js">
+      <DependentUpon>Input.ts</DependentUpon>
+    </Content>
     <Content Include="components\Tile.ts" />
     <Content Include="components\TilemapLayer.ts" />
     <Content Include="Game.js">

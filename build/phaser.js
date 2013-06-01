@@ -5472,6 +5472,162 @@ var Phaser;
     })(Phaser.Components || (Phaser.Components = {}));
     var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /// <reference path="../../gameobjects/DynamicTexture.ts" />
+    /// <reference path="../../utils/SpriteUtils.ts" />
+    /// <reference path="../../utils/RectangleUtils.ts" />
+    /**
+    * Phaser - Components - Input
+    *
+    * Input detection component
+    */
+    (function (Components) {
+        var Input = (function () {
+            function Input(parent) {
+                this.x = 0;
+                this.y = 0;
+                /**
+                * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
+                * @property isDown
+                * @type {Boolean}
+                **/
+                this.isDown = false;
+                /**
+                * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
+                * @property isUp
+                * @type {Boolean}
+                **/
+                this.isUp = true;
+                /**
+                * A timestamp representing when the Pointer first touched the touchscreen.
+                * @property timeDown
+                * @type {Number}
+                **/
+                this.timeOver = 0;
+                /**
+                * A timestamp representing when the Pointer left the touchscreen.
+                * @property timeUp
+                * @type {Number}
+                **/
+                this.timeOut = 0;
+                /**
+                * Is the Pointer over this Sprite
+                * @property isOver
+                * @type {Boolean}
+                **/
+                this.isOver = false;
+                /**
+                * Is the Pointer outside of this Sprite
+                * @property isOut
+                * @type {Boolean}
+                **/
+                this.isOut = true;
+                this.game = parent.game;
+                this._sprite = parent;
+                this.enabled = false;
+                this.checkBody = false;
+                this.useHandCursor = false;
+            }
+            Input.prototype.update = /**
+            * Update
+            */
+            function () {
+                if(this.enabled == false) {
+                    return;
+                }
+                if(this.game.input.x != this.oldX || this.game.input.y != this.oldY) {
+                    this.oldX = this.game.input.x;
+                    this.oldY = this.game.input.y;
+                    if(Phaser.RectangleUtils.contains(this._sprite.frameBounds, this.game.input.x, this.game.input.y)) {
+                        this.x = this.game.input.x - this._sprite.x;
+                        this.y = this.game.input.y - this._sprite.y;
+                        if(this.isOver == false) {
+                            this.isOver = true;
+                            this.isOut = false;
+                            this.timeOver = this.game.time.now;
+                            if(this.useHandCursor) {
+                                this._sprite.game.stage.canvas.style.cursor = "pointer";
+                            }
+                            this._sprite.events.onInputOver.dispatch(this._sprite, this.x, this.y, this.timeOver);
+                        }
+                    } else {
+                        if(this.isOver) {
+                            this.isOver = false;
+                            this.isOut = true;
+                            this.timeOut = this.game.time.now;
+                            if(this.useHandCursor) {
+                                this._sprite.game.stage.canvas.style.cursor = "default";
+                            }
+                            this._sprite.events.onInputOut.dispatch(this._sprite, this.timeOut);
+                        }
+                    }
+                }
+            };
+            Input.prototype.justOver = function (delay) {
+                if (typeof delay === "undefined") { delay = 500; }
+                return (this.isOver && this.duration < delay);
+            };
+            Input.prototype.justOut = function (delay) {
+                if (typeof delay === "undefined") { delay = 500; }
+                return (this.isOut && (this.game.time.now - this.timeOut < delay));
+            };
+            Object.defineProperty(Input.prototype, "duration", {
+                get: function () {
+                    if(this.isOver) {
+                        return this.game.time.now - this.timeOver;
+                    }
+                    return -1;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Input.prototype.renderDebugInfo = /**
+            * Render debug infos. (including name, bounds info, position and some other properties)
+            * @param x {number} X position of the debug info to be rendered.
+            * @param y {number} Y position of the debug info to be rendered.
+            * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+            */
+            function (x, y, color) {
+                if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+                this._sprite.texture.context.font = '14px Courier';
+                this._sprite.texture.context.fillStyle = color;
+                this._sprite.texture.context.fillText('Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
+                this._sprite.texture.context.fillText('x: ' + this.x.toFixed(1) + ' y: ' + this.y.toFixed(1), x, y + 14);
+                this._sprite.texture.context.fillText('over: ' + this.isOver + ' duration: ' + this.duration.toFixed(0), x, y + 28);
+                this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 42);
+            };
+            return Input;
+        })();
+        Components.Input = Input;        
+    })(Phaser.Components || (Phaser.Components = {}));
+    var Components = Phaser.Components;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /**
+    * Phaser - Components - Events
+    *
+    * Signals that are dispatched by the Sprite and its various components
+    */
+    (function (Components) {
+        var Events = (function () {
+            function Events(parent) {
+                this.game = parent.game;
+                this._sprite = parent;
+                this.onInputOver = new Phaser.Signal();
+                this.onInputOut = new Phaser.Signal();
+                this.onInputDown = new Phaser.Signal();
+                this.onInputUp = new Phaser.Signal();
+            }
+            return Events;
+        })();
+        Components.Events = Events;        
+    })(Phaser.Components || (Phaser.Components = {}));
+    var Components = Phaser.Components;
+})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../core/Vec2.ts" />
 /**
@@ -5967,6 +6123,8 @@ var Phaser;
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/sprite/Texture.ts" />
+/// <reference path="../components/sprite/Input.ts" />
+/// <reference path="../components/sprite/Events.ts" />
 /// <reference path="../physics/Body.ts" />
 /**
 * Phaser - Sprite
@@ -6029,6 +6187,8 @@ var Phaser;
             this.body = new Phaser.Physics.Body(this, bodyType);
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this, key);
+            this.input = new Phaser.Components.Input(this);
+            this.events = new Phaser.Components.Events(this);
             this.cameraBlacklist = [];
             //  Transform related (if we add any more then move to a component)
             this.origin = new Phaser.Vec2(0, 0);
@@ -6156,13 +6316,8 @@ var Phaser;
             }
             }
             }
-            
-            if (this.inputEnabled)
-            {
-            this.updateInput();
-            }
-            
             */
+            this.input.update();
             if(this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.angle == 0 && this.angleOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
                 this.modified = false;
             }
@@ -14962,29 +15117,6 @@ var Phaser;
         return Game;
     })();
     Phaser.Game = Game;    
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../Game.ts" />
-    /// <reference path="../../gameobjects/DynamicTexture.ts" />
-    /// <reference path="../../utils/SpriteUtils.ts" />
-    /**
-    * Phaser - Components - Events
-    *
-    *
-    */
-    (function (Components) {
-        var Events = (function () {
-            function Events(parent, key) {
-                if (typeof key === "undefined") { key = ''; }
-                this._game = parent.game;
-                this._sprite = parent;
-            }
-            return Events;
-        })();
-        Components.Events = Events;        
-    })(Phaser.Components || (Phaser.Components = {}));
-    var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
