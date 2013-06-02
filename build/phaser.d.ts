@@ -3261,39 +3261,42 @@ module Phaser.Components {
         * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
         */
         private _sprite;
-        private dragOffsetX;
-        private dragOffsetY;
-        private dragFromPoint;
-        private dragPixelPerfect;
-        private dragPixelPerfectAlpha;
-        private allowHorizontalDrag;
-        private allowVerticalDrag;
-        private snapOnDrag;
-        private snapOnRelease;
-        private snapX;
-        private snapY;
+        private _pointerData;
         /**
         * If enabled the Input component will be updated by the parent Sprite
         * @type {Boolean}
         */
         public enabled: bool;
         /**
-        * Is this sprite being dragged by the mouse or not?
-        * @default false
+        * The PriorityID controls which Sprite receives an Input event first if they should overlap.
         */
-        public isDragged: bool;
+        public priorityID: number;
+        public start(priority?: number, checkBody?: bool, useHandCursor?: bool): void;
+        public stop(): void;
+        private _dragPoint;
+        public dragOffset: Point;
+        public dragFromCenter: bool;
+        public dragPixelPerfect: bool;
+        public dragPixelPerfectAlpha: number;
+        public allowHorizontalDrag: bool;
+        public allowVerticalDrag: bool;
+        public snapOnDrag: bool;
+        public snapOnRelease: bool;
+        public snapOffset: Point;
+        public snapX: number;
+        public snapY: number;
         /**
         * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
         * @default false
         */
         public draggable: bool;
         /**
-        * An FlxRect region of the game world within which the sprite is restricted during mouse drag
+        * A region of the game world within which the sprite is restricted during drag
         * @default null
         */
         public boundsRect: Rectangle;
         /**
-        * An FlxSprite the bounds of which this sprite is restricted during mouse drag
+        * An Sprite the bounds of which this sprite is restricted during drag
         * @default null
         */
         public boundsSprite: Sprite;
@@ -3311,83 +3314,117 @@ module Phaser.Components {
         public useHandCursor: bool;
         /**
         * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
-        * This value is only set with the pointer is over this Sprite.
+        * This value is only set when the pointer is over this Sprite.
         * @type {number}
         */
-        public x: number;
+        public pointerX(pointer?: number): number;
         /**
         * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
-        * This value is only set with the pointer is over this Sprite.
+        * This value is only set when the pointer is over this Sprite.
         * @type {number}
         */
-        public y: number;
+        public pointerY(pointer?: number): number;
         /**
         * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
         * @property isDown
         * @type {Boolean}
         **/
-        public isDown: bool;
+        public pointerDown(pointer?: number): bool;
         /**
         * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
         * @property isUp
         * @type {Boolean}
         **/
-        public isUp: bool;
+        public pointerUp(pointer?: number): bool;
         /**
         * A timestamp representing when the Pointer first touched the touchscreen.
         * @property timeDown
         * @type {Number}
         **/
-        public timeOver: number;
+        public pointerTimeDown(pointer?: number): bool;
         /**
         * A timestamp representing when the Pointer left the touchscreen.
         * @property timeUp
         * @type {Number}
         **/
-        public timeOut: number;
+        public pointerTimeUp(pointer?: number): bool;
         /**
         * Is the Pointer over this Sprite
         * @property isOver
         * @type {Boolean}
         **/
-        public isOver: bool;
+        public pointerOver(pointer?: number): bool;
         /**
         * Is the Pointer outside of this Sprite
         * @property isOut
         * @type {Boolean}
         **/
-        public isOut: bool;
-        public oldX: number;
-        public oldY: number;
+        public pointerOut(pointer?: number): bool;
+        /**
+        * A timestamp representing when the Pointer first touched the touchscreen.
+        * @property timeDown
+        * @type {Number}
+        **/
+        public pointerTimeOver(pointer?: number): bool;
+        /**
+        * A timestamp representing when the Pointer left the touchscreen.
+        * @property timeUp
+        * @type {Number}
+        **/
+        public pointerTimeOut(pointer?: number): bool;
+        /**
+        * Is this sprite being dragged by the mouse or not?
+        * @default false
+        */
+        public pointerDragged(pointer?: number): bool;
         /**
         * Update
         */
-        public update(): void;
+        public update(pointer: Pointer): void;
+        public _touchedHandler(pointer: Pointer): void;
+        public _releasedHandler(pointer: Pointer): void;
         /**
-        * Updates the Mouse Drag on this Sprite.
+        * Updates the Pointer drag on this Sprite.
         */
-        private updateDrag();
+        private updateDrag(pointer);
         /**
         * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
         * @param delay The time below which the pointer is considered as just over.
         * @returns {boolean}
         */
-        public justOver(delay?: number): bool;
+        public justOver(pointer?: number, delay?: number): bool;
         /**
         * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
         * @param delay The time below which the pointer is considered as just out.
         * @returns {boolean}
         */
-        public justOut(delay?: number): bool;
+        public justOut(pointer?: number, delay?: number): bool;
+        /**
+        * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+        * @param delay The time below which the pointer is considered as just over.
+        * @returns {boolean}
+        */
+        public justPressed(pointer?: number, delay?: number): bool;
+        /**
+        * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+        * @param delay The time below which the pointer is considered as just out.
+        * @returns {boolean}
+        */
+        public justReleased(pointer?: number, delay?: number): bool;
         /**
         * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
         * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
         */
-        public duration : number;
+        public overDuration(pointer?: number): number;
+        /**
+        * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+        * @returns {number} The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
+        */
+        public downDuration(pointer?: number): number;
         /**
         * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
         *
-        * @param	lockCenter			If false the Sprite will drag from where you click it. If true it will center itself to the tip of the mouse pointer.
+        * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
         * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
         * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
         * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
@@ -3398,6 +3435,14 @@ module Phaser.Components {
         * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
         */
         public disableDrag(): void;
+        /**
+        * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
+        */
+        public startDrag(pointer: Pointer): void;
+        /**
+        * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
+        */
+        public stopDrag(pointer: Pointer): void;
         /**
         * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
         *
@@ -3420,10 +3465,6 @@ module Phaser.Components {
         */
         public disableSnap(): void;
         /**
-        * Called by FlxMouseControl when Mouse Drag starts on this Sprite. Should not usually be called directly.
-        */
-        public startDrag(): void;
-        /**
         * Bounds Rect check for the sprite drag
         */
         private checkBoundsRect();
@@ -3431,10 +3472,6 @@ module Phaser.Components {
         * Parent Sprite Bounds check for the sprite drag
         */
         private checkBoundsSprite();
-        /**
-        * Called by FlxMouseControl when Mouse Drag is stopped on this Sprite. Should not usually be called directly.
-        */
-        public stopDrag(): void;
         /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.
@@ -7065,11 +7102,11 @@ module Phaser {
         constructor(game: Game, id: number);
         /**
         * Local private reference to game.
-        * @property _game
+        * @property game
         * @type {Phaser.Game}
         * @private
         **/
-        private _game;
+        public game: Game;
         /**
         * Local private variable to store the status of dispatching a hold event
         * @property _holdSent
@@ -7244,6 +7281,12 @@ module Phaser {
         * @type {Number}
         **/
         public duration : number;
+        /**
+        * The Game Object this Pointer is currently dragging.
+        * @property draggedObject
+        * @type {Any}
+        **/
+        public draggedObject;
         /**
         * Gets the X value of this Pointer in world coordinate space
         * @param {Camera} [camera]
@@ -7981,6 +8024,10 @@ module Phaser {
         * @method start
         **/
         public boot(): void;
+        public inputObjects: any[];
+        public totalTrackedObjects: number;
+        public addGameObject(object): void;
+        public removeGameObject(object): void;
         /**
         * Updates the Input Manager. Called by the core Game loop.
         * @method update

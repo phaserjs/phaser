@@ -36,8 +36,8 @@ TODO:
 * Polygon geom primitive
 * If the Camera is larger than the Stage size then the rotation offset isn't correct
 * Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
-* Hook-up more events
 * Bug: Sprite x/y gets shifted if dynamic from the original value
+* Input CSS cursor those little 4-way arrows on drag?
 
 V1.0.0
 
@@ -68,7 +68,8 @@ V1.0.0
 * Added Group.addNewSprite(x,y,key) for quick addition of new Sprites to a Group
 * Fixed Group.sort so the sortHandler is called correctly
 * Added Group.swap(a,b) to swap the z-index of 2 objects with optional rendering update boolean
-
+* Sprites dispatch killed/revived and added to and removed from Group events.
+* Added Input drag, bounds, sprite bounds and snapping support.
 
 
 V0.9.6

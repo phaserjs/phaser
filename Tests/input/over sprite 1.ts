@@ -19,10 +19,7 @@
         sprite = game.add.sprite(200, 200, 'sprite');
 
         //  Enable Input detection
-        sprite.input.enabled = true;
-
-        //  Change the mouse pointer to a hand when over this sprite
-        sprite.input.useHandCursor = true;
+        sprite.input.start(0, false, true);
 
     }
 

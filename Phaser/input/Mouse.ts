@@ -24,7 +24,6 @@ module Phaser {
         **/
         private _game: Game;
 
-
         public static LEFT_BUTTON: number = 0;
         public static MIDDLE_BUTTON: number = 1;
         public static RIGHT_BUTTON: number = 2;

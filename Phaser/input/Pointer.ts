@@ -18,7 +18,7 @@ module Phaser {
         */
         constructor(game: Game, id: number) {
 
-            this._game = game;
+            this.game = game;
 
             this.id = id;
             this.active = false;
@@ -35,11 +35,11 @@ module Phaser {
 
         /**
         * Local private reference to game.
-        * @property _game
+        * @property game
         * @type {Phaser.Game}
         * @private
         **/
-        private _game: Game;
+        public game: Game;
 
         /**
         * Local private variable to store the status of dispatching a hold event
@@ -248,15 +248,24 @@ module Phaser {
                 return -1;
             }
 
-            return this._game.time.now - this.timeDown;
+            return this.game.time.now - this.timeDown;
 
         }
+
+        //  Sprite Drag Related
+
+        /**
+        * The Game Object this Pointer is currently dragging.
+        * @property draggedObject
+        * @type {Any}
+        **/
+        public draggedObject;
 
         /**
         * Gets the X value of this Pointer in world coordinate space
         * @param {Camera} [camera]
         */
-        public getWorldX(camera?: Camera = this._game.camera) {
+        public getWorldX(camera?: Camera = this.game.camera) {
 
             return camera.worldView.x + this.x;
 
@@ -266,7 +275,7 @@ module Phaser {
         * Gets the Y value of this Pointer in world coordinate space
         * @param {Camera} [camera]
         */
-        public getWorldY(camera?: Camera = this._game.camera) {
+        public getWorldY(camera?: Camera = this.game.camera) {
 
             return camera.worldView.y + this.y;
 
@@ -288,9 +297,9 @@ module Phaser {
             }
 
             //  Fix to stop rogue browser plugins from blocking the visibility state event
-            if (this._game.paused == true)
+            if (this.game.paused == true)
             {
-                this._game.stage.resumeGame();
+                this.game.stage.resumeGame();
                 return this;
             }
 
@@ -304,21 +313,21 @@ module Phaser {
             this.withinGame = true;
             this.isDown = true;
             this.isUp = false;
-            this.timeDown = this._game.time.now;
+            this.timeDown = this.game.time.now;
             this._holdSent = false;
 
-            if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
+            if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
-                this._game.input.x = this.x * this._game.input.scaleX;
-                this._game.input.y = this.y * this._game.input.scaleY;
-                this._game.input.onDown.dispatch(this);
+                this.game.input.x = this.x * this.game.input.scaleX;
+                this.game.input.y = this.y * this.game.input.scaleY;
+                this.game.input.onDown.dispatch(this);
             }
 
             this.totalTouches++;
 
             if (this.isMouse == false)
             {
-                this._game.input.currentPointers++;
+                this.game.input.currentPointers++;
             }
 
             return this;
@@ -329,25 +338,55 @@ module Phaser {
 
             if (this.active)
             {
-                if (this._holdSent == false && this.duration >= this._game.input.holdRate)
+                if (this._holdSent == false && this.duration >= this.game.input.holdRate)
                 {
-                    if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
+                    if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
                     {
-                        this._game.input.onHold.dispatch(this);
+                        this.game.input.onHold.dispatch(this);
                     }
 
                     this._holdSent = true;
                 }
 
                 //  Update the droppings history
-                if (this._game.input.recordPointerHistory && this._game.time.now >= this._nextDrop)
+                if (this.game.input.recordPointerHistory && this.game.time.now >= this._nextDrop)
                 {
-                    this._nextDrop = this._game.time.now + this._game.input.recordRate;
+                    this._nextDrop = this.game.time.now + this.game.input.recordRate;
                     this._history.push({ x: this.position.x, y: this.position.y });
 
-                    if (this._history.length > this._game.input.recordLimit)
+                    if (this._history.length > this.game.input.recordLimit)
                     {
                         this._history.shift();
+                    }
+                }
+
+                //  Iterate through the tracked objects
+
+                //  Build our temporary click stack
+                var _highestPriority = 0;
+
+                for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+                {
+                    if (this.game.input.inputObjects[i].input.enabled)
+                    {
+                        this.game.input.inputObjects[i].input.update(this);
+
+                        if (this.game.input.inputObjects[i].input.priorityID > _highestPriority)
+                        {
+                            _highestPriority = this.game.input.inputObjects[i].input.priorityID;
+                        }
+                    }
+                }
+
+                if (this.isDown)
+                {
+                    //  Now update all objects with the highest priority ID (can be more than 1)
+                    for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+                    {
+                        if (this.game.input.inputObjects[i].input.priorityID == _highestPriority)
+                        {
+                            this.game.input.inputObjects[i].input._touchedHandler(this);
+                        }
                     }
                 }
 
@@ -374,20 +413,20 @@ module Phaser {
             this.screenX = event.screenX;
             this.screenY = event.screenY;
 
-            this.x = this.pageX - this._game.stage.offset.x;
-            this.y = this.pageY - this._game.stage.offset.y;
+            this.x = this.pageX - this.game.stage.offset.x;
+            this.y = this.pageY - this.game.stage.offset.y;
 
             this.position.setTo(this.x, this.y);
             this.circle.x = this.x;
             this.circle.y = this.y;
 
-            if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
+            if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
-                this._game.input.x = this.x * this._game.input.scaleX;
-                this._game.input.y = this.y * this._game.input.scaleY;
-                this._game.input.position.setTo(this._game.input.x, this._game.input.y);
-                this._game.input.circle.x = this._game.input.x;
-                this._game.input.circle.y = this._game.input.y;
+                this.game.input.x = this.x * this.game.input.scaleX;
+                this.game.input.y = this.y * this.game.input.scaleY;
+                this.game.input.position.setTo(this.game.input.x, this.game.input.y);
+                this.game.input.circle.x = this.game.input.x;
+                this.game.input.circle.y = this.game.input.y;
             }
 
             return this;
@@ -413,25 +452,25 @@ module Phaser {
         */
         public stop(event): Pointer {
 
-            this.timeUp = this._game.time.now;
+            this.timeUp = this.game.time.now;
 
-            if (this._game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0))
+            if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
-                this._game.input.onUp.dispatch(this);
+                this.game.input.onUp.dispatch(this);
 
                 //  Was it a tap?
-                if (this.duration >= 0 && this.duration <= this._game.input.tapRate)
+                if (this.duration >= 0 && this.duration <= this.game.input.tapRate)
                 {
                     //  Was it a double-tap?
-                    if (this.timeUp - this.previousTapTime < this._game.input.doubleTapRate)
+                    if (this.timeUp - this.previousTapTime < this.game.input.doubleTapRate)
                     {
                         //  Yes, let's dispatch the signal then with the 2nd parameter set to true
-                        this._game.input.onTap.dispatch(this, true);
+                        this.game.input.onTap.dispatch(this, true);
                     }
                     else
                     {
                         //  Wasn't a double-tap, so dispatch a single tap signal
-                        this._game.input.onTap.dispatch(this, false);
+                        this.game.input.onTap.dispatch(this, false);
                     }
 
                     this.previousTapTime = this.timeUp;
@@ -439,14 +478,19 @@ module Phaser {
 
             }
 
-            this.active = false;
+            //  Mouse is always active
+            if (this.id > 0)
+            {
+                this.active = false;
+            }
+
             this.withinGame = false;
             this.isDown = false;
             this.isUp = true;
 
             if (this.isMouse == false)
             {
-                this._game.input.currentPointers--;
+                this.game.input.currentPointers--;
             }
 
             return this;
@@ -459,9 +503,9 @@ module Phaser {
         * @param {Number} [duration].
         * @return {Boolean}
         */
-        public justPressed(duration?: number = this._game.input.justPressedRate): bool {
+        public justPressed(duration?: number = this.game.input.justPressedRate): bool {
 
-            if (this.isDown === true && (this.timeDown + duration) > this._game.time.now)
+            if (this.isDown === true && (this.timeDown + duration) > this.game.time.now)
             {
                 return true;
             }
@@ -478,9 +522,9 @@ module Phaser {
         * @param {Number} [duration].
         * @return {Boolean}
         */
-        public justReleased(duration?: number = this._game.input.justReleasedRate): bool {
+        public justReleased(duration?: number = this.game.input.justReleasedRate): bool {
 
-            if (this.isUp === true && (this.timeUp + duration) > this._game.time.now)
+            if (this.isUp === true && (this.timeUp + duration) > this.game.time.now)
             {
                 return true;
             }
@@ -518,37 +562,37 @@ module Phaser {
                 return;
             }
 
-            this._game.stage.context.beginPath();
-            this._game.stage.context.arc(this.x, this.y, this.circle.radius, 0, Math.PI * 2);
+            this.game.stage.context.beginPath();
+            this.game.stage.context.arc(this.x, this.y, this.circle.radius, 0, Math.PI * 2);
 
             if (this.active)
             {
-                this._game.stage.context.fillStyle = 'rgba(0,255,0,0.5)';
-                this._game.stage.context.strokeStyle = 'rgb(0,255,0)';
+                this.game.stage.context.fillStyle = 'rgba(0,255,0,0.5)';
+                this.game.stage.context.strokeStyle = 'rgb(0,255,0)';
             }
             else
             {
-                this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
-                this._game.stage.context.strokeStyle = 'rgb(100,0,0)';
+                this.game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
+                this.game.stage.context.strokeStyle = 'rgb(100,0,0)';
             }
 
-            this._game.stage.context.fill();
-            this._game.stage.context.closePath();
+            this.game.stage.context.fill();
+            this.game.stage.context.closePath();
 
             //  Render the points
-            this._game.stage.context.beginPath();
-            this._game.stage.context.moveTo(this.positionDown.x, this.positionDown.y);
-            this._game.stage.context.lineTo(this.position.x, this.position.y);
-            this._game.stage.context.lineWidth = 2;
-            this._game.stage.context.stroke();
-            this._game.stage.context.closePath();
+            this.game.stage.context.beginPath();
+            this.game.stage.context.moveTo(this.positionDown.x, this.positionDown.y);
+            this.game.stage.context.lineTo(this.position.x, this.position.y);
+            this.game.stage.context.lineWidth = 2;
+            this.game.stage.context.stroke();
+            this.game.stage.context.closePath();
 
             //  Render the text
-            this._game.stage.context.fillStyle = 'rgb(255,255,255)';
-            this._game.stage.context.font = 'Arial 16px';
-            this._game.stage.context.fillText('ID: ' + this.id + " Active: " + this.active, this.x, this.y - 100);
-            this._game.stage.context.fillText('Screen X: ' + this.x + " Screen Y: " + this.y, this.x, this.y - 80);
-            this._game.stage.context.fillText('Duration: ' + this.duration + " ms", this.x, this.y - 60);
+            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
+            this.game.stage.context.font = 'Arial 16px';
+            this.game.stage.context.fillText('ID: ' + this.id + " Active: " + this.active, this.x, this.y - 100);
+            this.game.stage.context.fillText('Screen X: ' + this.x + " Screen Y: " + this.y, this.x, this.y - 80);
+            this.game.stage.context.fillText('Duration: ' + this.duration + " ms", this.x, this.y - 60);
 
         }
 

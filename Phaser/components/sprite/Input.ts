@@ -21,11 +21,7 @@ module Phaser.Components {
 
             this.game = parent.game;
             this._sprite = parent;
-
             this.enabled = false;
-
-            this.checkBody = false;
-            this.useHandCursor = false;
 
         }
 
@@ -39,17 +35,7 @@ module Phaser.Components {
          */
         private _sprite: Sprite;
 
-        private dragOffsetX: number;
-        private dragOffsetY: number;
-        private dragFromPoint: bool;
-		private dragPixelPerfect:bool = false;
-		private dragPixelPerfectAlpha:number;
-        private allowHorizontalDrag: bool = true;
-        private allowVerticalDrag: bool = true;
-        private snapOnDrag: bool = false;
-        private snapOnRelease: bool = false;
-        private snapX: number;
-        private snapY: number;
+        private _pointerData;
 
         /**
          * If enabled the Input component will be updated by the parent Sprite
@@ -58,10 +44,69 @@ module Phaser.Components {
         public enabled: bool;
 
         /**
-		 * Is this sprite being dragged by the mouse or not?
-		 * @default false
-		 */
-        public isDragged: bool = false;
+         * The PriorityID controls which Sprite receives an Input event first if they should overlap.
+         */
+		public priorityID:number = 0;
+
+		public start(priority:number = 0, checkBody?:bool = false, useHandCursor?:bool = false) {
+
+		    //  Turning on
+		    if (this.enabled)
+		    {
+		        return;
+		    }
+		    else
+		    {
+                //  Register, etc
+                this.checkBody = checkBody;
+                this.useHandCursor = useHandCursor;
+
+                this._pointerData = [];
+
+                for (var i = 0; i < 10; i++)
+                {
+                    this._pointerData.push({ id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, timeDown: 0, timeUp: 0, downDuration: 0, isDragged: false });
+                }
+
+                this.snapOffset = new Point;
+		        this.enabled = true;
+
+		        this.game.input.addGameObject(this._sprite);
+		    }
+
+		}
+
+		public stop() {
+
+		    //  Turning off
+		    if (this.enabled == false)
+		    {
+		        return;
+		    }
+		    else
+		    {
+                //  De-register, etc
+		        this.enabled = false;
+		        this.game.input.removeGameObject(this._sprite);
+		    }
+
+		}
+
+        private _dragPoint: Point;
+        public dragOffset: Point;
+        public dragFromCenter: bool;
+		public dragPixelPerfect:bool = false;
+		public dragPixelPerfectAlpha:number;
+
+        public allowHorizontalDrag: bool = true;
+        public allowVerticalDrag: bool = true;
+
+        public snapOnDrag: bool = false;
+        public snapOnRelease: bool = false;
+        public snapOffset: Point;
+        public snapX: number = 0;
+        public snapY: number = 0;
+
 
         /**
 		 * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
@@ -70,13 +115,13 @@ module Phaser.Components {
         public draggable: bool = false;
 
         /**
-		 * An FlxRect region of the game world within which the sprite is restricted during mouse drag
+		 * A region of the game world within which the sprite is restricted during drag
 		 * @default null
 		 */
         public boundsRect: Rectangle = null;
 
         /**
-		 * An FlxSprite the bounds of which this sprite is restricted during mouse drag
+		 * An Sprite the bounds of which this sprite is restricted during drag
 		 * @default null
 		 */
         public boundsSprite: Sprite = null;
@@ -97,145 +142,203 @@ module Phaser.Components {
 
         /**
          * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
-         * This value is only set with the pointer is over this Sprite.
+         * This value is only set when the pointer is over this Sprite.
          * @type {number}
          */
-        public x: number = 0;
+        public pointerX(pointer: number = 0): number {
+            return this._pointerData[pointer].x;
+        }
 
         /**
          * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
-         * This value is only set with the pointer is over this Sprite.
+         * This value is only set when the pointer is over this Sprite.
          * @type {number}
          */
-        public y: number = 0;
+        public pointerY(pointer: number = 0): number {
+            return this._pointerData[pointer].y;
+        }
 
         /**
         * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
         * @property isDown
         * @type {Boolean}
         **/
-        public isDown: bool = false;
+        public pointerDown(pointer: number = 0): bool {
+            return this._pointerData[pointer].isDown;
+        }
 
         /**
         * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
         * @property isUp
         * @type {Boolean}
         **/
-        public isUp: bool = true;
+        public pointerUp(pointer: number = 0): bool {
+            return this._pointerData[pointer].isUp;
+        }
 
         /**
         * A timestamp representing when the Pointer first touched the touchscreen.
         * @property timeDown
         * @type {Number}
         **/
-        public timeOver: number = 0;
+        public pointerTimeDown(pointer: number = 0): bool {
+            return this._pointerData[pointer].timeDown;
+        }
 
         /**
         * A timestamp representing when the Pointer left the touchscreen.
         * @property timeUp
         * @type {Number}
         **/
-        public timeOut: number = 0;
+        public pointerTimeUp(pointer: number = 0): bool {
+            return this._pointerData[pointer].timeUp;
+        }
 
         /**
         * Is the Pointer over this Sprite
         * @property isOver
         * @type {Boolean}
         **/
-        public isOver: bool = false;
+        public pointerOver(pointer: number = 0): bool {
+            return this._pointerData[pointer].isOver;
+        }
 
         /**
         * Is the Pointer outside of this Sprite
         * @property isOut
         * @type {Boolean}
         **/
-        public isOut: bool = true;
+        public pointerOut(pointer: number = 0): bool {
+            return this._pointerData[pointer].isOut;
+        }
 
-        public oldX: number;
-        public oldY: number;
+        /**
+        * A timestamp representing when the Pointer first touched the touchscreen.
+        * @property timeDown
+        * @type {Number}
+        **/
+        public pointerTimeOver(pointer: number = 0): bool {
+            return this._pointerData[pointer].timeOver;
+        }
 
+        /**
+        * A timestamp representing when the Pointer left the touchscreen.
+        * @property timeUp
+        * @type {Number}
+        **/
+        public pointerTimeOut(pointer: number = 0): bool {
+            return this._pointerData[pointer].timeOut;
+        }
+
+        /**
+		 * Is this sprite being dragged by the mouse or not?
+		 * @default false
+		 */
+        public pointerDragged(pointer: number = 0): bool {
+            return this._pointerData[pointer].isDragged;
+        }
 
         /**
          * Update
          */
-        public update() {
+        public update(pointer: Phaser.Pointer) {
 
             if (this.enabled == false)
             {
                 return;
             }
 
-			if (this.draggable && this.isDragged)
-			{
-				this.updateDrag();
-			}
-
-            if (this.game.input.x != this.oldX || this.game.input.y != this.oldY)
+            //  If was previously touched by this Pointer, check if still is
+            if (this._pointerData[pointer.id].isDown && pointer.isUp)
             {
-                this.oldX = this.game.input.x;
-                this.oldY = this.game.input.y;
-
-                if (RectangleUtils.contains(this._sprite.frameBounds, this.game.input.x, this.game.input.y))
-                {
-                    this.x = this.game.input.x - this._sprite.x;
-                    this.y = this.game.input.y - this._sprite.y;
-
-                    if (this.isOver == false)
-                    {
-                        this.isOver = true;
-                        this.isOut = false;
-                        this.timeOver = this.game.time.now;
-
-                        if (this.useHandCursor)
-                        {
-                            this._sprite.game.stage.canvas.style.cursor = "pointer";
-                        }
-
-                        this._sprite.events.onInputOver.dispatch(this._sprite, this.x, this.y, this.timeOver);
-                    }
-                }
-                else
-                {
-                    if (this.isOver)
-                    {
-                        this.isOver = false;
-                        this.isOut = true;
-                        this.timeOut = this.game.time.now;
-
-                        if (this.useHandCursor)
-                        {
-                            this._sprite.game.stage.canvas.style.cursor = "default";
-                        }
-
-                        this._sprite.events.onInputOut.dispatch(this._sprite, this.timeOut);
-                    }
-                }
-
+                this._releasedHandler(pointer);
             }
 
-            //  click handler to add to stack for sorting
+			if (this.draggable && this._pointerData[pointer.id].isDragged)
+			{
+				this.updateDrag(pointer);
+				//return;
+			}
+
+            if (RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y))
+            {
+                //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
+
+                this._pointerData[pointer.id].x = pointer.x - this._sprite.x;
+                this._pointerData[pointer.id].y = pointer.y - this._sprite.y;
+
+                if (this._pointerData[pointer.id].isOver == false)
+                {
+                    this._pointerData[pointer.id].isOver = true;
+                    this._pointerData[pointer.id].isOut = false;
+                    this._pointerData[pointer.id].timeOver = this.game.time.now;
+
+                    if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
+                    {
+                        this.game.stage.canvas.style.cursor = "pointer";
+                    }
+
+                    this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
+                }
+            }
+            else
+            {
+                if (this._pointerData[pointer.id].isOver)
+                {
+                    this._pointerData[pointer.id].isOver = false;
+                    this._pointerData[pointer.id].isOut = true;
+                    this._pointerData[pointer.id].timeOut = this.game.time.now;
+
+                    if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
+                    {
+                        this.game.stage.canvas.style.cursor = "default";
+                    }
+
+                    this._sprite.events.onInputOut.dispatch(this._sprite, pointer);
+                }
+            }
+
+        }
+
+        public _touchedHandler(pointer: Pointer) {
+
+            this._pointerData[pointer.id].isDown = true;
+            this._pointerData[pointer.id].isUp = false;
+            this._pointerData[pointer.id].timeDown = this.game.time.now;
+            this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
+
+        }
+
+        public _releasedHandler(pointer: Pointer) {
+
+            this._pointerData[pointer.id].isDown = false;
+            this._pointerData[pointer.id].isUp = true;
+            this._pointerData[pointer.id].timeUp = this.game.time.now;
+            //this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
+
+            this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
 
         }
 
 		/**
-		 * Updates the Mouse Drag on this Sprite.
+		 * Updates the Pointer drag on this Sprite.
 		 */
-		private updateDrag():void
+		private updateDrag(pointer: Pointer):void
 		{
-		    if (this.isUp)
+		    if (pointer.isUp)
 		    {
-		        this.stopDrag();
+		        this.stopDrag(pointer);
 		        return;
 		    }
-
+// something wrong here, should use _dragPoint as well I think somehow
 			if (this.allowHorizontalDrag)
 			{
-			    this._sprite.x = this.game.input.x - this.dragOffsetX;
+			    this._sprite.x = pointer.x - this.dragOffset.x;
 			}
 			
 			if (this.allowVerticalDrag)
 			{
-			    this._sprite.y = this.game.input.y - this.dragOffsetY;
+			    this._sprite.y = pointer.y - this.dragOffset.y;
 			}
 			
 			if (this.boundsRect)
@@ -260,8 +363,8 @@ module Phaser.Components {
          * @param delay The time below which the pointer is considered as just over.
          * @returns {boolean}
          */
-        public justOver(delay?: number = 500): bool {
-            return (this.isOver && this.duration < delay);
+        public justOver(pointer: number = 0, delay?: number = 500): bool {
+            return (this._pointerData[pointer].isOver && this.overDuration(pointer) < delay);
         }
 
         /**
@@ -269,19 +372,52 @@ module Phaser.Components {
          * @param delay The time below which the pointer is considered as just out.
          * @returns {boolean}
          */
-        public justOut(delay?: number = 500): bool {
-            return (this.isOut && (this.game.time.now - this.timeOut < delay));
+        public justOut(pointer: number = 0, delay?: number = 500): bool {
+            return (this._pointerData[pointer].isOut && (this.game.time.now - this._pointerData[pointer].timeOut < delay));
+        }
+
+        /**
+         * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+         * @param delay The time below which the pointer is considered as just over.
+         * @returns {boolean}
+         */
+        public justPressed(pointer: number = 0, delay?: number = 500): bool {
+            return (this._pointerData[pointer].isDown && this.downDuration(pointer) < delay);
+        }
+
+        /**
+         * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+         * @param delay The time below which the pointer is considered as just out.
+         * @returns {boolean}
+         */
+        public justReleased(pointer: number = 0, delay?: number = 500): bool {
+            return (this._pointerData[pointer].isUp && (this.game.time.now - this._pointerData[pointer].timeUp < delay));
         }
 
         /**
          * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
          * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
          */
-        public get duration(): number {
+        public overDuration(pointer: number = 0): number {
 
-            if (this.isOver)
+            if (this._pointerData[pointer].isOver)
             {
-                return this.game.time.now - this.timeOver;
+                return this.game.time.now - this._pointerData[pointer].timeOver;
+            }
+
+            return -1;
+
+        }
+
+        /**
+         * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+         * @returns {number} The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
+         */
+        public downDuration(pointer: number = 0): number {
+
+            if (this._pointerData[pointer].isDown)
+            {
+                return this.game.time.now - this._pointerData[pointer].timeDown;
             }
 
             return -1;
@@ -291,7 +427,7 @@ module Phaser.Components {
 		/**
 		 * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
 		 * 
-		 * @param	lockCenter			If false the Sprite will drag from where you click it. If true it will center itself to the tip of the mouse pointer.
+		 * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
 		 * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
 		 * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
 		 * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
@@ -299,9 +435,12 @@ module Phaser.Components {
 		 */
 		public enableDrag(lockCenter:bool = false, pixelPerfect:bool = false, alphaThreshold:number = 255, boundsRect:Rectangle = null, boundsSprite:Sprite = null):void
 		{
+            this._dragPoint = new Point;
+
 			this.draggable = true;
 			
-			this.dragFromPoint = lockCenter;
+            this.dragOffset = new Point;
+			this.dragFromCenter = lockCenter;
 			this.dragPixelPerfect = pixelPerfect;
 			this.dragPixelPerfectAlpha = alphaThreshold;
 			
@@ -321,19 +460,51 @@ module Phaser.Components {
 		 */
 		public disableDrag():void
 		{
-			if (this.isDragged)
-			{
-				//FlxMouseControl.dragTarget = null;
-				//FlxMouseControl.isDragging = false;
-			}
-			
-			this.isDragged = false;
+		    if (this._pointerData)
+		    {
+		        for (var i = 0; i < 10; i++)
+		        {
+    		        this._pointerData[i].isDragged = false;
+		        }
+		    }
+
 			this.draggable = false;
 			
 			//mouseStartDragCallback = null;
 			//mouseStopDragCallback = null;
 		}
-		 
+
+		/**
+		 * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
+		 */
+		public startDrag(pointer: Pointer):void
+		{
+            this._pointerData[pointer.id].isDragged = true;
+			
+			if (this.dragFromCenter)
+			{
+				//	Move the sprite to the middle of the pointer
+			    this.dragOffset.setTo(this._sprite.frameBounds.halfWidth, this._sprite.frameBounds.halfHeight);
+			}
+			 
+            this._dragPoint.setTo(pointer.x - this._sprite.x - this.dragOffset.x, pointer.y - this._sprite.y - this.dragOffset.y);
+
+		}
+
+		/**
+		 * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
+		 */
+		public stopDrag(pointer: Pointer):void
+		{
+            this._pointerData[pointer.id].isDragged = false;
+			
+			if (this.snapOnRelease)
+			{
+				this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
+				this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
+			}
+		}
+
 		/**
 		* Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
 		 * 
@@ -370,26 +541,6 @@ module Phaser.Components {
 		{
 			this.snapOnDrag = false;
 			this.snapOnRelease = false;
-		}
-
-		/**
-		 * Called by FlxMouseControl when Mouse Drag starts on this Sprite. Should not usually be called directly.
-		 */
-		public startDrag():void
-		{
-			this.isDragged = true;
-			
-			if (this.dragFromPoint == false)
-			{
-				this.dragOffsetX = this.game.input.x - this._sprite.x;
-				this.dragOffsetY = this.game.input.y - this._sprite.y;
-			}
-			else
-			{
-				//	Move the sprite to the middle of the mouse
-				this.dragOffsetX = this._sprite.frameBounds.halfWidth;
-				this.dragOffsetY = this._sprite.frameBounds.halfHeight;
-			}
 		}
 		
 		/**
@@ -439,20 +590,6 @@ module Phaser.Components {
 				this._sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this._sprite.height;
 			}
 		}
-		
-		/**
-		 * Called by FlxMouseControl when Mouse Drag is stopped on this Sprite. Should not usually be called directly.
-		 */
-		public stopDrag():void
-		{
-			this.isDragged = false;
-			
-			if (this.snapOnRelease)
-			{
-				this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
-				this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
-			}
-		}
 
         /**
          * Render debug infos. (including name, bounds info, position and some other properties)
@@ -465,9 +602,10 @@ module Phaser.Components {
             this._sprite.texture.context.font = '14px Courier';
             this._sprite.texture.context.fillStyle = color;
             this._sprite.texture.context.fillText('Sprite Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
-            this._sprite.texture.context.fillText('x: ' + this.x.toFixed(1) + ' y: ' + this.y.toFixed(1), x, y + 14);
-            this._sprite.texture.context.fillText('over: ' + this.isOver + ' duration: ' + this.duration.toFixed(0), x, y + 28);
-            this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 42);
+            this._sprite.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
+            this._sprite.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
+            this._sprite.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
+            this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
 
         }
 

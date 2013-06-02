@@ -446,7 +446,28 @@ module Phaser {
             this.mspointer.start();
             this.gestures.start();
 
+            this.mousePointer.active = true;
+
         }
+
+        public inputObjects = [];
+        public totalTrackedObjects: number = 0;
+
+        //  Add Input Enabled array + add/remove methods and then iterate and update them during the main update
+        //  Clear down this array on State swap??? Maybe removed from it when Sprite is destroyed
+
+        public addGameObject(object) {
+
+            //  Lots more checks here
+            this.inputObjects.push(object);
+            this.totalTrackedObjects++;
+        }
+
+        public removeGameObject(object) {
+            //  TODO
+        }
+
+
 
         /**
         * Updates the Input Manager. Called by the core Game loop.
@@ -454,6 +475,7 @@ module Phaser {
         **/
         public update() {
 
+            //  Swap for velocity vector - and add it to Pointer?
             this.speed.x = this.position.x - this._oldPosition.x;
             this.speed.y = this.position.y - this._oldPosition.y;
 

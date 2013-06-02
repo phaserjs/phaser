@@ -5579,136 +5579,245 @@ var Phaser;
             * @param parent The Sprite using this Input component
             */
             function Input(parent) {
+                /**
+                * The PriorityID controls which Sprite receives an Input event first if they should overlap.
+                */
+                this.priorityID = 0;
                 this.dragPixelPerfect = false;
                 this.allowHorizontalDrag = true;
                 this.allowVerticalDrag = true;
                 this.snapOnDrag = false;
                 this.snapOnRelease = false;
-                /**
-                * Is this sprite being dragged by the mouse or not?
-                * @default false
-                */
-                this.isDragged = false;
+                this.snapX = 0;
+                this.snapY = 0;
                 /**
                 * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
                 * @default false
                 */
                 this.draggable = false;
                 /**
-                * An FlxRect region of the game world within which the sprite is restricted during mouse drag
+                * A region of the game world within which the sprite is restricted during drag
                 * @default null
                 */
                 this.boundsRect = null;
                 /**
-                * An FlxSprite the bounds of which this sprite is restricted during mouse drag
+                * An Sprite the bounds of which this sprite is restricted during drag
                 * @default null
                 */
                 this.boundsSprite = null;
-                /**
-                * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
-                * This value is only set with the pointer is over this Sprite.
-                * @type {number}
-                */
-                this.x = 0;
-                /**
-                * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
-                * This value is only set with the pointer is over this Sprite.
-                * @type {number}
-                */
-                this.y = 0;
-                /**
-                * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
-                * @property isDown
-                * @type {Boolean}
-                **/
-                this.isDown = false;
-                /**
-                * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
-                * @property isUp
-                * @type {Boolean}
-                **/
-                this.isUp = true;
-                /**
-                * A timestamp representing when the Pointer first touched the touchscreen.
-                * @property timeDown
-                * @type {Number}
-                **/
-                this.timeOver = 0;
-                /**
-                * A timestamp representing when the Pointer left the touchscreen.
-                * @property timeUp
-                * @type {Number}
-                **/
-                this.timeOut = 0;
-                /**
-                * Is the Pointer over this Sprite
-                * @property isOver
-                * @type {Boolean}
-                **/
-                this.isOver = false;
-                /**
-                * Is the Pointer outside of this Sprite
-                * @property isOut
-                * @type {Boolean}
-                **/
-                this.isOut = true;
                 this.game = parent.game;
                 this._sprite = parent;
                 this.enabled = false;
-                this.checkBody = false;
-                this.useHandCursor = false;
             }
+            Input.prototype.start = function (priority, checkBody, useHandCursor) {
+                if (typeof priority === "undefined") { priority = 0; }
+                if (typeof checkBody === "undefined") { checkBody = false; }
+                if (typeof useHandCursor === "undefined") { useHandCursor = false; }
+                //  Turning on
+                if(this.enabled) {
+                    return;
+                } else {
+                    //  Register, etc
+                    this.checkBody = checkBody;
+                    this.useHandCursor = useHandCursor;
+                    this._pointerData = [];
+                    for(var i = 0; i < 10; i++) {
+                        this._pointerData.push({
+                            id: i,
+                            x: 0,
+                            y: 0,
+                            isDown: false,
+                            isUp: false,
+                            isOver: false,
+                            isOut: false,
+                            timeOver: 0,
+                            timeOut: 0,
+                            timeDown: 0,
+                            timeUp: 0,
+                            downDuration: 0,
+                            isDragged: false
+                        });
+                    }
+                    this.snapOffset = new Phaser.Point();
+                    this.enabled = true;
+                    this.game.input.addGameObject(this._sprite);
+                }
+            };
+            Input.prototype.stop = function () {
+                //  Turning off
+                if(this.enabled == false) {
+                    return;
+                } else {
+                    //  De-register, etc
+                    this.enabled = false;
+                    this.game.input.removeGameObject(this._sprite);
+                }
+            };
+            Input.prototype.pointerX = /**
+            * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
+            * This value is only set when the pointer is over this Sprite.
+            * @type {number}
+            */
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].x;
+            };
+            Input.prototype.pointerY = /**
+            * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
+            * This value is only set when the pointer is over this Sprite.
+            * @type {number}
+            */
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].y;
+            };
+            Input.prototype.pointerDown = /**
+            * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
+            * @property isDown
+            * @type {Boolean}
+            **/
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].isDown;
+            };
+            Input.prototype.pointerUp = /**
+            * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
+            * @property isUp
+            * @type {Boolean}
+            **/
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].isUp;
+            };
+            Input.prototype.pointerTimeDown = /**
+            * A timestamp representing when the Pointer first touched the touchscreen.
+            * @property timeDown
+            * @type {Number}
+            **/
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].timeDown;
+            };
+            Input.prototype.pointerTimeUp = /**
+            * A timestamp representing when the Pointer left the touchscreen.
+            * @property timeUp
+            * @type {Number}
+            **/
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].timeUp;
+            };
+            Input.prototype.pointerOver = /**
+            * Is the Pointer over this Sprite
+            * @property isOver
+            * @type {Boolean}
+            **/
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].isOver;
+            };
+            Input.prototype.pointerOut = /**
+            * Is the Pointer outside of this Sprite
+            * @property isOut
+            * @type {Boolean}
+            **/
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].isOut;
+            };
+            Input.prototype.pointerTimeOver = /**
+            * A timestamp representing when the Pointer first touched the touchscreen.
+            * @property timeDown
+            * @type {Number}
+            **/
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].timeOver;
+            };
+            Input.prototype.pointerTimeOut = /**
+            * A timestamp representing when the Pointer left the touchscreen.
+            * @property timeUp
+            * @type {Number}
+            **/
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].timeOut;
+            };
+            Input.prototype.pointerDragged = /**
+            * Is this sprite being dragged by the mouse or not?
+            * @default false
+            */
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                return this._pointerData[pointer].isDragged;
+            };
             Input.prototype.update = /**
             * Update
             */
-            function () {
+            function (pointer) {
                 if(this.enabled == false) {
                     return;
                 }
-                if(this.draggable && this.isDragged) {
-                    this.updateDrag();
+                //  If was previously touched by this Pointer, check if still is
+                if(this._pointerData[pointer.id].isDown && pointer.isUp) {
+                    this._releasedHandler(pointer);
                 }
-                if(this.game.input.x != this.oldX || this.game.input.y != this.oldY) {
-                    this.oldX = this.game.input.x;
-                    this.oldY = this.game.input.y;
-                    if(Phaser.RectangleUtils.contains(this._sprite.frameBounds, this.game.input.x, this.game.input.y)) {
-                        this.x = this.game.input.x - this._sprite.x;
-                        this.y = this.game.input.y - this._sprite.y;
-                        if(this.isOver == false) {
-                            this.isOver = true;
-                            this.isOut = false;
-                            this.timeOver = this.game.time.now;
-                            if(this.useHandCursor) {
-                                this._sprite.game.stage.canvas.style.cursor = "pointer";
-                            }
-                            this._sprite.events.onInputOver.dispatch(this._sprite, this.x, this.y, this.timeOver);
+                if(this.draggable && this._pointerData[pointer.id].isDragged) {
+                    this.updateDrag(pointer);
+                    //return;
+                                    }
+                if(Phaser.RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y)) {
+                    //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
+                    this._pointerData[pointer.id].x = pointer.x - this._sprite.x;
+                    this._pointerData[pointer.id].y = pointer.y - this._sprite.y;
+                    if(this._pointerData[pointer.id].isOver == false) {
+                        this._pointerData[pointer.id].isOver = true;
+                        this._pointerData[pointer.id].isOut = false;
+                        this._pointerData[pointer.id].timeOver = this.game.time.now;
+                        if(this.useHandCursor && this._pointerData[pointer.id].isDragged == false) {
+                            this.game.stage.canvas.style.cursor = "pointer";
                         }
-                    } else {
-                        if(this.isOver) {
-                            this.isOver = false;
-                            this.isOut = true;
-                            this.timeOut = this.game.time.now;
-                            if(this.useHandCursor) {
-                                this._sprite.game.stage.canvas.style.cursor = "default";
-                            }
-                            this._sprite.events.onInputOut.dispatch(this._sprite, this.timeOut);
+                        this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
+                    }
+                } else {
+                    if(this._pointerData[pointer.id].isOver) {
+                        this._pointerData[pointer.id].isOver = false;
+                        this._pointerData[pointer.id].isOut = true;
+                        this._pointerData[pointer.id].timeOut = this.game.time.now;
+                        if(this.useHandCursor && this._pointerData[pointer.id].isDragged == false) {
+                            this.game.stage.canvas.style.cursor = "default";
                         }
+                        this._sprite.events.onInputOut.dispatch(this._sprite, pointer);
                     }
                 }
             };
+            Input.prototype._touchedHandler = function (pointer) {
+                this._pointerData[pointer.id].isDown = true;
+                this._pointerData[pointer.id].isUp = false;
+                this._pointerData[pointer.id].timeDown = this.game.time.now;
+                this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
+            };
+            Input.prototype._releasedHandler = function (pointer) {
+                this._pointerData[pointer.id].isDown = false;
+                this._pointerData[pointer.id].isUp = true;
+                this._pointerData[pointer.id].timeUp = this.game.time.now;
+                //this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
+                this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
+            };
             Input.prototype.updateDrag = /**
-            * Updates the Mouse Drag on this Sprite.
+            * Updates the Pointer drag on this Sprite.
             */
-            function () {
-                if(this.isUp) {
-                    this.stopDrag();
+            function (pointer) {
+                if(pointer.isUp) {
+                    this.stopDrag(pointer);
                     return;
                 }
+                // something wrong here, should use _dragPoint as well I think somehow
                 if(this.allowHorizontalDrag) {
-                    this._sprite.x = this.game.input.x - this.dragOffsetX;
+                    this._sprite.x = pointer.x - this.dragOffset.x;
                 }
                 if(this.allowVerticalDrag) {
-                    this._sprite.y = this.game.input.y - this.dragOffsetY;
+                    this._sprite.y = pointer.y - this.dragOffset.y;
                 }
                 if(this.boundsRect) {
                     this.checkBoundsRect();
@@ -5726,37 +5835,67 @@ var Phaser;
             * @param delay The time below which the pointer is considered as just over.
             * @returns {boolean}
             */
-            function (delay) {
+            function (pointer, delay) {
+                if (typeof pointer === "undefined") { pointer = 0; }
                 if (typeof delay === "undefined") { delay = 500; }
-                return (this.isOver && this.duration < delay);
+                return (this._pointerData[pointer].isOver && this.overDuration(pointer) < delay);
             };
             Input.prototype.justOut = /**
             * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
             * @param delay The time below which the pointer is considered as just out.
             * @returns {boolean}
             */
-            function (delay) {
+            function (pointer, delay) {
+                if (typeof pointer === "undefined") { pointer = 0; }
                 if (typeof delay === "undefined") { delay = 500; }
-                return (this.isOut && (this.game.time.now - this.timeOut < delay));
+                return (this._pointerData[pointer].isOut && (this.game.time.now - this._pointerData[pointer].timeOut < delay));
             };
-            Object.defineProperty(Input.prototype, "duration", {
-                get: /**
-                * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
-                * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
-                */
-                function () {
-                    if(this.isOver) {
-                        return this.game.time.now - this.timeOver;
-                    }
-                    return -1;
-                },
-                enumerable: true,
-                configurable: true
-            });
+            Input.prototype.justPressed = /**
+            * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+            * @param delay The time below which the pointer is considered as just over.
+            * @returns {boolean}
+            */
+            function (pointer, delay) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                if (typeof delay === "undefined") { delay = 500; }
+                return (this._pointerData[pointer].isDown && this.downDuration(pointer) < delay);
+            };
+            Input.prototype.justReleased = /**
+            * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+            * @param delay The time below which the pointer is considered as just out.
+            * @returns {boolean}
+            */
+            function (pointer, delay) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                if (typeof delay === "undefined") { delay = 500; }
+                return (this._pointerData[pointer].isUp && (this.game.time.now - this._pointerData[pointer].timeUp < delay));
+            };
+            Input.prototype.overDuration = /**
+            * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+            * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
+            */
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                if(this._pointerData[pointer].isOver) {
+                    return this.game.time.now - this._pointerData[pointer].timeOver;
+                }
+                return -1;
+            };
+            Input.prototype.downDuration = /**
+            * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+            * @returns {number} The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
+            */
+            function (pointer) {
+                if (typeof pointer === "undefined") { pointer = 0; }
+                if(this._pointerData[pointer].isDown) {
+                    return this.game.time.now - this._pointerData[pointer].timeDown;
+                }
+                return -1;
+            };
             Input.prototype.enableDrag = /**
             * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
             *
-            * @param	lockCenter			If false the Sprite will drag from where you click it. If true it will center itself to the tip of the mouse pointer.
+            * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
             * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
             * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
             * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
@@ -5768,8 +5907,10 @@ var Phaser;
                 if (typeof alphaThreshold === "undefined") { alphaThreshold = 255; }
                 if (typeof boundsRect === "undefined") { boundsRect = null; }
                 if (typeof boundsSprite === "undefined") { boundsSprite = null; }
+                this._dragPoint = new Phaser.Point();
                 this.draggable = true;
-                this.dragFromPoint = lockCenter;
+                this.dragOffset = new Phaser.Point();
+                this.dragFromCenter = lockCenter;
                 this.dragPixelPerfect = pixelPerfect;
                 this.dragPixelPerfectAlpha = alphaThreshold;
                 if(boundsRect) {
@@ -5783,15 +5924,36 @@ var Phaser;
             * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
             */
             function () {
-                if(this.isDragged) {
-                    //FlxMouseControl.dragTarget = null;
-                    //FlxMouseControl.isDragging = false;
-                                    }
-                this.isDragged = false;
+                if(this._pointerData) {
+                    for(var i = 0; i < 10; i++) {
+                        this._pointerData[i].isDragged = false;
+                    }
+                }
                 this.draggable = false;
                 //mouseStartDragCallback = null;
                 //mouseStopDragCallback = null;
                             };
+            Input.prototype.startDrag = /**
+            * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
+            */
+            function (pointer) {
+                this._pointerData[pointer.id].isDragged = true;
+                if(this.dragFromCenter) {
+                    //	Move the sprite to the middle of the pointer
+                    this.dragOffset.setTo(this._sprite.frameBounds.halfWidth, this._sprite.frameBounds.halfHeight);
+                }
+                this._dragPoint.setTo(pointer.x - this._sprite.x - this.dragOffset.x, pointer.y - this._sprite.y - this.dragOffset.y);
+            };
+            Input.prototype.stopDrag = /**
+            * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
+            */
+            function (pointer) {
+                this._pointerData[pointer.id].isDragged = false;
+                if(this.snapOnRelease) {
+                    this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
+                    this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
+                }
+            };
             Input.prototype.setDragLock = /**
             * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
             *
@@ -5828,20 +5990,6 @@ var Phaser;
                 this.snapOnDrag = false;
                 this.snapOnRelease = false;
             };
-            Input.prototype.startDrag = /**
-            * Called by FlxMouseControl when Mouse Drag starts on this Sprite. Should not usually be called directly.
-            */
-            function () {
-                this.isDragged = true;
-                if(this.dragFromPoint == false) {
-                    this.dragOffsetX = this.game.input.x - this._sprite.x;
-                    this.dragOffsetY = this.game.input.y - this._sprite.y;
-                } else {
-                    //	Move the sprite to the middle of the mouse
-                    this.dragOffsetX = this._sprite.frameBounds.halfWidth;
-                    this.dragOffsetY = this._sprite.frameBounds.halfHeight;
-                }
-            };
             Input.prototype.checkBoundsRect = /**
             * Bounds Rect check for the sprite drag
             */
@@ -5872,16 +6020,6 @@ var Phaser;
                     this._sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this._sprite.height;
                 }
             };
-            Input.prototype.stopDrag = /**
-            * Called by FlxMouseControl when Mouse Drag is stopped on this Sprite. Should not usually be called directly.
-            */
-            function () {
-                this.isDragged = false;
-                if(this.snapOnRelease) {
-                    this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
-                    this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
-                }
-            };
             Input.prototype.renderDebugInfo = /**
             * Render debug infos. (including name, bounds info, position and some other properties)
             * @param x {number} X position of the debug info to be rendered.
@@ -5893,9 +6031,10 @@ var Phaser;
                 this._sprite.texture.context.font = '14px Courier';
                 this._sprite.texture.context.fillStyle = color;
                 this._sprite.texture.context.fillText('Sprite Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
-                this._sprite.texture.context.fillText('x: ' + this.x.toFixed(1) + ' y: ' + this.y.toFixed(1), x, y + 14);
-                this._sprite.texture.context.fillText('over: ' + this.isOver + ' duration: ' + this.duration.toFixed(0), x, y + 28);
-                this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 42);
+                this._sprite.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
+                this._sprite.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
+                this._sprite.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
+                this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
             };
             return Input;
         })();
@@ -6624,7 +6763,6 @@ var Phaser;
             }
             }
             */
-            this.input.update();
             if(this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.angle == 0 && this.angleOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
                 this.modified = false;
             }
@@ -13280,7 +13418,7 @@ var Phaser;
             * @type {Number}
             **/
             this.totalTouches = 0;
-            this._game = game;
+            this.game = game;
             this.id = id;
             this.active = false;
             this.position = new Phaser.Vec2();
@@ -13300,7 +13438,7 @@ var Phaser;
                 if(this.isUp) {
                     return -1;
                 }
-                return this._game.time.now - this.timeDown;
+                return this.game.time.now - this.timeDown;
             },
             enumerable: true,
             configurable: true
@@ -13310,7 +13448,7 @@ var Phaser;
         * @param {Camera} [camera]
         */
         function (camera) {
-            if (typeof camera === "undefined") { camera = this._game.camera; }
+            if (typeof camera === "undefined") { camera = this.game.camera; }
             return camera.worldView.x + this.x;
         };
         Pointer.prototype.getWorldY = /**
@@ -13318,7 +13456,7 @@ var Phaser;
         * @param {Camera} [camera]
         */
         function (camera) {
-            if (typeof camera === "undefined") { camera = this._game.camera; }
+            if (typeof camera === "undefined") { camera = this.game.camera; }
             return camera.worldView.y + this.y;
         };
         Pointer.prototype.start = /**
@@ -13333,8 +13471,8 @@ var Phaser;
                 this.button = event.button;
             }
             //  Fix to stop rogue browser plugins from blocking the visibility state event
-            if(this._game.paused == true) {
-                this._game.stage.resumeGame();
+            if(this.game.paused == true) {
+                this.game.stage.resumeGame();
                 return this;
             }
             this._history.length = 0;
@@ -13344,36 +13482,55 @@ var Phaser;
             this.withinGame = true;
             this.isDown = true;
             this.isUp = false;
-            this.timeDown = this._game.time.now;
+            this.timeDown = this.game.time.now;
             this._holdSent = false;
-            if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
-                this._game.input.x = this.x * this._game.input.scaleX;
-                this._game.input.y = this.y * this._game.input.scaleY;
-                this._game.input.onDown.dispatch(this);
+            if(this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0)) {
+                this.game.input.x = this.x * this.game.input.scaleX;
+                this.game.input.y = this.y * this.game.input.scaleY;
+                this.game.input.onDown.dispatch(this);
             }
             this.totalTouches++;
             if(this.isMouse == false) {
-                this._game.input.currentPointers++;
+                this.game.input.currentPointers++;
             }
             return this;
         };
         Pointer.prototype.update = function () {
             if(this.active) {
-                if(this._holdSent == false && this.duration >= this._game.input.holdRate) {
-                    if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
-                        this._game.input.onHold.dispatch(this);
+                if(this._holdSent == false && this.duration >= this.game.input.holdRate) {
+                    if(this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0)) {
+                        this.game.input.onHold.dispatch(this);
                     }
                     this._holdSent = true;
                 }
                 //  Update the droppings history
-                if(this._game.input.recordPointerHistory && this._game.time.now >= this._nextDrop) {
-                    this._nextDrop = this._game.time.now + this._game.input.recordRate;
+                if(this.game.input.recordPointerHistory && this.game.time.now >= this._nextDrop) {
+                    this._nextDrop = this.game.time.now + this.game.input.recordRate;
                     this._history.push({
                         x: this.position.x,
                         y: this.position.y
                     });
-                    if(this._history.length > this._game.input.recordLimit) {
+                    if(this._history.length > this.game.input.recordLimit) {
                         this._history.shift();
+                    }
+                }
+                //  Iterate through the tracked objects
+                //  Build our temporary click stack
+                var _highestPriority = 0;
+                for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
+                    if(this.game.input.inputObjects[i].input.enabled) {
+                        this.game.input.inputObjects[i].input.update(this);
+                        if(this.game.input.inputObjects[i].input.priorityID > _highestPriority) {
+                            _highestPriority = this.game.input.inputObjects[i].input.priorityID;
+                        }
+                    }
+                }
+                if(this.isDown) {
+                    //  Now update all objects with the highest priority ID (can be more than 1)
+                    for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
+                        if(this.game.input.inputObjects[i].input.priorityID == _highestPriority) {
+                            this.game.input.inputObjects[i].input._touchedHandler(this);
+                        }
                     }
                 }
             }
@@ -13393,17 +13550,17 @@ var Phaser;
             this.pageY = event.pageY;
             this.screenX = event.screenX;
             this.screenY = event.screenY;
-            this.x = this.pageX - this._game.stage.offset.x;
-            this.y = this.pageY - this._game.stage.offset.y;
+            this.x = this.pageX - this.game.stage.offset.x;
+            this.y = this.pageY - this.game.stage.offset.y;
             this.position.setTo(this.x, this.y);
             this.circle.x = this.x;
             this.circle.y = this.y;
-            if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
-                this._game.input.x = this.x * this._game.input.scaleX;
-                this._game.input.y = this.y * this._game.input.scaleY;
-                this._game.input.position.setTo(this._game.input.x, this._game.input.y);
-                this._game.input.circle.x = this._game.input.x;
-                this._game.input.circle.y = this._game.input.y;
+            if(this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0)) {
+                this.game.input.x = this.x * this.game.input.scaleX;
+                this.game.input.y = this.y * this.game.input.scaleY;
+                this.game.input.position.setTo(this.game.input.x, this.game.input.y);
+                this.game.input.circle.x = this.game.input.x;
+                this.game.input.circle.y = this.game.input.y;
             }
             return this;
         };
@@ -13422,28 +13579,31 @@ var Phaser;
         * @param {Any} event
         */
         function (event) {
-            this.timeUp = this._game.time.now;
-            if(this._game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this._game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this._game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this._game.input.currentPointers == 0)) {
-                this._game.input.onUp.dispatch(this);
+            this.timeUp = this.game.time.now;
+            if(this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0)) {
+                this.game.input.onUp.dispatch(this);
                 //  Was it a tap?
-                if(this.duration >= 0 && this.duration <= this._game.input.tapRate) {
+                if(this.duration >= 0 && this.duration <= this.game.input.tapRate) {
                     //  Was it a double-tap?
-                    if(this.timeUp - this.previousTapTime < this._game.input.doubleTapRate) {
+                    if(this.timeUp - this.previousTapTime < this.game.input.doubleTapRate) {
                         //  Yes, let's dispatch the signal then with the 2nd parameter set to true
-                        this._game.input.onTap.dispatch(this, true);
+                        this.game.input.onTap.dispatch(this, true);
                     } else {
                         //  Wasn't a double-tap, so dispatch a single tap signal
-                        this._game.input.onTap.dispatch(this, false);
+                        this.game.input.onTap.dispatch(this, false);
                     }
                     this.previousTapTime = this.timeUp;
                 }
             }
-            this.active = false;
+            //  Mouse is always active
+            if(this.id > 0) {
+                this.active = false;
+            }
             this.withinGame = false;
             this.isDown = false;
             this.isUp = true;
             if(this.isMouse == false) {
-                this._game.input.currentPointers--;
+                this.game.input.currentPointers--;
             }
             return this;
         };
@@ -13454,8 +13614,8 @@ var Phaser;
         * @return {Boolean}
         */
         function (duration) {
-            if (typeof duration === "undefined") { duration = this._game.input.justPressedRate; }
-            if(this.isDown === true && (this.timeDown + duration) > this._game.time.now) {
+            if (typeof duration === "undefined") { duration = this.game.input.justPressedRate; }
+            if(this.isDown === true && (this.timeDown + duration) > this.game.time.now) {
                 return true;
             } else {
                 return false;
@@ -13468,8 +13628,8 @@ var Phaser;
         * @return {Boolean}
         */
         function (duration) {
-            if (typeof duration === "undefined") { duration = this._game.input.justReleasedRate; }
-            if(this.isUp === true && (this.timeUp + duration) > this._game.time.now) {
+            if (typeof duration === "undefined") { duration = this.game.input.justReleasedRate; }
+            if(this.isUp === true && (this.timeUp + duration) > this.game.time.now) {
                 return true;
             } else {
                 return false;
@@ -13497,30 +13657,30 @@ var Phaser;
             if(hideIfUp == true && this.isUp == true) {
                 return;
             }
-            this._game.stage.context.beginPath();
-            this._game.stage.context.arc(this.x, this.y, this.circle.radius, 0, Math.PI * 2);
+            this.game.stage.context.beginPath();
+            this.game.stage.context.arc(this.x, this.y, this.circle.radius, 0, Math.PI * 2);
             if(this.active) {
-                this._game.stage.context.fillStyle = 'rgba(0,255,0,0.5)';
-                this._game.stage.context.strokeStyle = 'rgb(0,255,0)';
+                this.game.stage.context.fillStyle = 'rgba(0,255,0,0.5)';
+                this.game.stage.context.strokeStyle = 'rgb(0,255,0)';
             } else {
-                this._game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
-                this._game.stage.context.strokeStyle = 'rgb(100,0,0)';
+                this.game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
+                this.game.stage.context.strokeStyle = 'rgb(100,0,0)';
             }
-            this._game.stage.context.fill();
-            this._game.stage.context.closePath();
+            this.game.stage.context.fill();
+            this.game.stage.context.closePath();
             //  Render the points
-            this._game.stage.context.beginPath();
-            this._game.stage.context.moveTo(this.positionDown.x, this.positionDown.y);
-            this._game.stage.context.lineTo(this.position.x, this.position.y);
-            this._game.stage.context.lineWidth = 2;
-            this._game.stage.context.stroke();
-            this._game.stage.context.closePath();
+            this.game.stage.context.beginPath();
+            this.game.stage.context.moveTo(this.positionDown.x, this.positionDown.y);
+            this.game.stage.context.lineTo(this.position.x, this.position.y);
+            this.game.stage.context.lineWidth = 2;
+            this.game.stage.context.stroke();
+            this.game.stage.context.closePath();
             //  Render the text
-            this._game.stage.context.fillStyle = 'rgb(255,255,255)';
-            this._game.stage.context.font = 'Arial 16px';
-            this._game.stage.context.fillText('ID: ' + this.id + " Active: " + this.active, this.x, this.y - 100);
-            this._game.stage.context.fillText('Screen X: ' + this.x + " Screen Y: " + this.y, this.x, this.y - 80);
-            this._game.stage.context.fillText('Duration: ' + this.duration + " ms", this.x, this.y - 60);
+            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
+            this.game.stage.context.font = 'Arial 16px';
+            this.game.stage.context.fillText('ID: ' + this.id + " Active: " + this.active, this.x, this.y - 100);
+            this.game.stage.context.fillText('Screen X: ' + this.x + " Screen Y: " + this.y, this.x, this.y - 80);
+            this.game.stage.context.fillText('Duration: ' + this.duration + " ms", this.x, this.y - 60);
         };
         Pointer.prototype.toString = /**
         * Returns a string representation of this object.
@@ -14329,6 +14489,8 @@ var Phaser;
             * @type {Pointer}
             **/
             this.pointer10 = null;
+            this.inputObjects = [];
+            this.totalTrackedObjects = 0;
             this._game = game;
             this._stack = [];
             this.mousePointer = new Phaser.Pointer(this._game, 0);
@@ -14426,12 +14588,24 @@ var Phaser;
             this.touch.start();
             this.mspointer.start();
             this.gestures.start();
+            this.mousePointer.active = true;
         };
+        Input.prototype.addGameObject = //  Add Input Enabled array + add/remove methods and then iterate and update them during the main update
+        //  Clear down this array on State swap??? Maybe removed from it when Sprite is destroyed
+        function (object) {
+            //  Lots more checks here
+            this.inputObjects.push(object);
+            this.totalTrackedObjects++;
+        };
+        Input.prototype.removeGameObject = function (object) {
+            //  TODO
+                    };
         Input.prototype.update = /**
         * Updates the Input Manager. Called by the core Game loop.
         * @method update
         **/
         function () {
+            //  Swap for velocity vector - and add it to Pointer?
             this.speed.x = this.position.x - this._oldPosition.x;
             this.speed.y = this.position.y - this._oldPosition.y;
             this._oldPosition.copyFrom(this.position);

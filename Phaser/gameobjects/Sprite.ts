@@ -303,8 +303,6 @@ module Phaser {
             }
             */
 
-            this.input.update();
-
             if (this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.angle == 0 && this.angleOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
             {
                 this.modified = false;
