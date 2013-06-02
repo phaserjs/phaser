@@ -64,6 +64,11 @@ V1.0.0
 * Added Sprite.Input.useHandCursor (for desktop)
 * Added Sprite.Input.justOver and justOut with a configurable ms delay
 * Added Sprite.Events component for a global easy to access area to listen to events from
+* Added Group.ID, each Group has a unique ID. Added Sprite.group (and Group.group) which is a reference to the Group it was added to.
+* Added Group.addNewSprite(x,y,key) for quick addition of new Sprites to a Group
+* Fixed Group.sort so the sortHandler is called correctly
+* Added Group.swap(a,b) to swap the z-index of 2 objects with optional rendering update boolean
+
 
 
 V0.9.6

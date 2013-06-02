@@ -23,6 +23,7 @@ module Phaser {
         constructor(game: Game) {
 
             this._game = game;
+            this._stack = [];
 
             this.mousePointer = new Pointer(this._game, 0);
             this.pointer1 = new Pointer(this._game, 1);
@@ -42,7 +43,9 @@ module Phaser {
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
 
+            this.speed = new Vec2;
             this.position = new Vec2;
+            this._oldPosition = new Vec2;
             this.circle = new Circle(0, 0, 44);
 
             this.currentPointers = 0;
@@ -53,6 +56,18 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
+
+        /**
+         * Temporary click sorting stack
+         */
+        private _stack;
+
+        /**
+        * A vector object representing the previous position of the Pointer.
+        * @property vector
+        * @type {Vec2}
+        **/
+        private _oldPosition: Vec2 = null;
 
         /**
         * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
@@ -120,6 +135,14 @@ module Phaser {
         * @type {Vec2}
         **/
         public position: Vec2 = null;
+
+        /**
+        * A vector object representing the speed of the Pointer. Only really useful in single Pointer games,
+        * otherwise see the Pointer objects directly.
+        * @property vector
+        * @type {Vec2}
+        **/
+        public speed: Vec2 = null;
 
         /**
         * A Circle object centered on the x/y screen coordinates of the Input.
@@ -415,7 +438,7 @@ module Phaser {
         * Starts the Input Manager running
         * @method start
         **/
-        public start() {
+        public boot() {
 
             this.mouse.start();
             this.keyboard.start();
@@ -431,6 +454,11 @@ module Phaser {
         **/
         public update() {
 
+            this.speed.x = this.position.x - this._oldPosition.x;
+            this.speed.y = this.position.y - this._oldPosition.y;
+
+            this._oldPosition.copyFrom(this.position);
+
             this.mousePointer.update();
             this.pointer1.update();
             this.pointer2.update();
@@ -443,6 +471,12 @@ module Phaser {
             if (this.pointer8) { this.pointer8.update(); }
             if (this.pointer9) { this.pointer9.update(); }
             if (this.pointer10) { this.pointer10.update(); }
+
+        }
+
+        public addToStack(item) {
+
+            this._stack.push(item);
 
         }
 

@@ -31,11 +31,7 @@ module Phaser {
 
             this.cameras = new CameraManager(this._game, 0, 0, width, height);
 
-            this.group = new Group(this._game, 0);
-
             this.bounds = new Rectangle(0, 0, width, height);
-
-            this.physics = new Physics.PhysicsManager(this._game, width, height);
 
         }
 
@@ -68,6 +64,26 @@ module Phaser {
          */
         public physics: Physics.PhysicsManager;
 
+        /**
+         * Object container stores every object created with `create*` methods.
+         * @type {Group}
+         */
+        private _groupCounter: number = 0;
+
+        public getNextGroupID(): number {
+            return this._groupCounter++;
+        }
+
+        /**
+         * Called one by Game during the boot process.
+         */
+        public boot() {
+
+            this.group = new Group(this._game, 0);
+
+            this.physics = new Physics.PhysicsManager(this._game, this.width, this.height);
+
+        }
 
         /**
          * This is called automatically every frame, and is where main logic happens.

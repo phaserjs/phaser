@@ -41,7 +41,8 @@ module Phaser {
 
             this.x = x;
             this.y = y;
-            this.z = 0; // not used yet
+            this.z = -1;
+            this.group = null;
 
             //  If a texture has been given the body will be set to that size, otherwise 16x16
             this.body = new Phaser.Physics.Body(this, bodyType);
@@ -68,6 +69,11 @@ module Phaser {
          * The type of game object.
          */
         public type: number;
+
+        /**
+         * The Group this Sprite belongs to.
+         */
+        public group: Group;
 
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.
@@ -310,6 +316,7 @@ module Phaser {
          * Clean up memory.
          */
         public destroy() {
+
         }
 
         /**
@@ -319,9 +326,18 @@ module Phaser {
          * like to animate an effect or whatever, you should override this,
          * setting only alive to false, and leaving exists true.
          */
-        public kill() {
+        public kill(removeFromGroup:bool = false) {
+
             this.alive = false;
             this.exists = false;
+
+            if (removeFromGroup && this.group)
+            {
+                this.group.remove(this);
+            }
+
+            this.events.onKilled.dispatch(this);
+
         }
 
         /**
@@ -329,8 +345,12 @@ module Phaser {
          * In practice, this is most often called by <code>Object.reset()</code>.
          */
         public revive() {
+
             this.alive = true;
             this.exists = true;
+
+            this.events.onRevived.dispatch(this);
+
         }
 
     }

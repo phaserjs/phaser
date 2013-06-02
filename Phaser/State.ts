@@ -21,11 +21,10 @@ module Phaser {
             this.add = game.add;
             this.camera = game.camera;
             this.cache = game.cache;
-            //this.collision = game.collision;
             this.input = game.input;
             this.loader = game.loader;
             this.math = game.math;
-            //this.motion = game.motion;
+            this.motion = game.motion;
             this.sound = game.sound;
             this.stage = game.stage;
             this.time = game.time;
@@ -50,12 +49,6 @@ module Phaser {
          * @type {Cache}
          */
         public cache: Cache;
-
-        /**
-         * Reference to the collision helper.
-         * @type {Collision}
-         */
-        //public collision: Collision;
 
         /**
          * Reference to the GameObject Factory.
@@ -85,7 +78,7 @@ module Phaser {
          * Reference to the motion helper.
          * @type {Motion}
          */
-        //public motion: Motion;
+        public motion: Motion;
 
         /**
          * Reference to the sound manager.

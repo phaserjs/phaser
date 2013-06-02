@@ -232,6 +232,14 @@ module Phaser {
         */
         game: Game;
         /**
+        * The type of game object.
+        */
+        type: number;
+        /**
+        * The ID of the Group this Sprite belongs to.
+        */
+        group: Group;
+        /**
         * x value of the object.
         */
         x: number;
@@ -243,10 +251,6 @@ module Phaser {
         * Z-order value of the object.
         */
         z: number;
-        /**
-        * The type of game object.
-        */
-        type: number;
         /**
         * Controls if both <code>update</code> and render are called by the core game loop.
         */
@@ -906,6 +910,10 @@ module Phaser {
         private _prevAlpha;
         private _count;
         /**
+        * This keeps track of the z value of any game object added to this Group
+        */
+        private _zCounter;
+        /**
         * Reference to the main game object
         */
         public game: Game;
@@ -913,6 +921,18 @@ module Phaser {
         * The type of game object.
         */
         public type: number;
+        /**
+        * The unique Group ID
+        */
+        public ID: number;
+        /**
+        * The z value of this Group (within its parent Group, if any)
+        */
+        public z: number;
+        /**
+        * The Group this Group is a child of (if any).
+        */
+        public group: Group;
         /**
         * If this Group exists or not. Can be set to false to skip certain loop checks.
         */
@@ -958,6 +978,10 @@ module Phaser {
         */
         public cameraBlacklist: number[];
         /**
+        * Gets the next z index value for children of this Group
+        */
+        public getNextZIndex(): number;
+        /**
         * Override this function to handle any deleting or "shutdown" type operations you might need,
         * such as removing traditional Flash children like Basic objects.
         */
@@ -980,7 +1004,7 @@ module Phaser {
         */
         public maxSize : number;
         /**
-        * Adds a new <code>Basic</code> subclass (Basic, GameObject, Sprite, etc) to the group.
+        * Adds a new Game Object to the group.
         * Group will try to replace a null member of the array first.
         * Failing that, Group will add it to the end of the member array,
         * assuming there is room for it, and doubling the size of the array if necessary.
@@ -989,9 +1013,23 @@ module Phaser {
         * the object will NOT be added to the group!</p>
         *
         * @param {Basic} Object The object you want to add to the group.
-        * @return {Basic} The same <code>Basic</code> object that was passed in.
+        * @return {Basic} The same object that was passed in.
         */
         public add(object): any;
+        /**
+        * Create a new Sprite within this Group at the specified position.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @returns {Sprite} The newly created sprite object.
+        */
+        public addNewSprite(x: number, y: number, key?: string, bodyType?: number): Sprite;
+        /**
+        * Sets all of the game object properties needed to exist within this Group.
+        */
+        private setObjectIDs(object, zIndex?);
         /**
         * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
         *
@@ -1019,14 +1057,14 @@ module Phaser {
         /**
         * Removes an object from the group.
         *
-        * @param {Basic} object The <code>Basic</code> you want to remove.
+        * @param {Basic} object The Game Object you want to remove.
         * @param {boolean} splice Whether the object should be cut from the array entirely or not.
         *
         * @return {Basic} The removed object.
         */
         public remove(object, splice?: bool);
         /**
-        * Replaces an existing <code>Basic</code> with a new one.
+        * Replaces an existing game object in this Group with a new one.
         *
         * @param {Basic} oldObject	The object you want to replace.
         * @param {Basic} newObject	The new object you want to use instead.
@@ -1034,6 +1072,7 @@ module Phaser {
         * @return {Basic} The new object.
         */
         public replace(oldObject, newObject);
+        public swap(child1, child2, sort?: bool): bool;
         /**
         * Call this function to sort the group according to a particular value and order.
         * For example, to sort game objects for Zelda-style overlaps you might call
@@ -1045,6 +1084,15 @@ module Phaser {
         * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
         */
         public sort(index?: string, order?: number): void;
+        /**
+        * Helper function for the sort process.
+        *
+        * @param {Basic} Obj1 The first object being sorted.
+        * @param {Basic} Obj2 The second object being sorted.
+        *
+        * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
+        */
+        public sortHandler(obj1, obj2): number;
         /**
         * Go through and set the specified variable to the specified value on all members of the group.
         *
@@ -1139,15 +1187,6 @@ module Phaser {
         * Calls kill on the group's members and then on the group itself.
         */
         public kill(): void;
-        /**
-        * Helper function for the sort process.
-        *
-        * @param {Basic} Obj1 The first object being sorted.
-        * @param {Basic} Obj2 The second object being sorted.
-        *
-        * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
-        */
-        public sortHandler(obj1, obj2): number;
     }
 }
 /**
@@ -3101,13 +3140,18 @@ module Phaser {
 */
 module Phaser.Components {
     class Texture {
+        /**
+        * Creates a new Sprite Texture component
+        * @param parent The Sprite using this Texture to render
+        * @param key An optional Game.Cache key to load an image from
+        */
         constructor(parent: Sprite, key?: string);
         /**
-        *
+        * Reference to Phaser.Game
         */
-        private _game;
+        public game: Game;
         /**
-        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+        * Reference to the parent Sprite
         */
         private _sprite;
         /**
@@ -3120,7 +3164,7 @@ module Phaser.Components {
         */
         public dynamicTexture: DynamicTexture;
         /**
-        * The status of the texture image.
+        * The load status of the texture image.
         * @type {boolean}
         */
         public loaded: bool;
@@ -3178,13 +3222,11 @@ module Phaser.Components {
         * The graphic can be SpriteSheet or Texture Atlas. If you need to use a DynamicTexture see loadDynamicTexture.
         * @param key {string} Key of the graphic you want to load for this sprite.
         * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
-        * @return {Sprite} Sprite instance itself.
         */
         public loadImage(key: string, clearAnimations?: bool, updateBody?: bool): void;
         /**
         * Load a DynamicTexture as its texture.
         * @param texture {DynamicTexture} The texture object to be used by this sprite.
-        * @return {Sprite} Sprite instance itself.
         */
         public loadDynamicTexture(texture: DynamicTexture): void;
         /**
@@ -3206,21 +3248,78 @@ module Phaser.Components {
 */
 module Phaser.Components {
     class Input {
+        /**
+        * Sprite Input component constructor
+        * @param parent The Sprite using this Input component
+        */
         constructor(parent: Sprite);
         /**
-        *
+        * Reference to Phaser.Game
         */
         public game: Game;
         /**
         * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
         */
         private _sprite;
+        private dragOffsetX;
+        private dragOffsetY;
+        private dragFromPoint;
+        private dragPixelPerfect;
+        private dragPixelPerfectAlpha;
+        private allowHorizontalDrag;
+        private allowVerticalDrag;
+        private snapOnDrag;
+        private snapOnRelease;
+        private snapX;
+        private snapY;
+        /**
+        * If enabled the Input component will be updated by the parent Sprite
+        * @type {Boolean}
+        */
         public enabled: bool;
+        /**
+        * Is this sprite being dragged by the mouse or not?
+        * @default false
+        */
+        public isDragged: bool;
+        /**
+        * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
+        * @default false
+        */
+        public draggable: bool;
+        /**
+        * An FlxRect region of the game world within which the sprite is restricted during mouse drag
+        * @default null
+        */
+        public boundsRect: Rectangle;
+        /**
+        * An FlxSprite the bounds of which this sprite is restricted during mouse drag
+        * @default null
+        */
+        public boundsSprite: Sprite;
+        /**
+        * The Input component can monitor either the physics body of the Sprite or the frameBounds
+        * If checkBody is set to true it will monitor the bounds of the physics body.
+        * @type {Boolean}
+        */
         public checkBody: bool;
+        /**
+        * Turn the mouse pointer into a hand image by temporarily setting the CSS style of the Game canvas
+        * on Input over. Only works on desktop browsers or browsers with a visible input pointer.
+        * @type {Boolean}
+        */
         public useHandCursor: bool;
-        public oldX: number;
-        public oldY: number;
+        /**
+        * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
+        * This value is only set with the pointer is over this Sprite.
+        * @type {number}
+        */
         public x: number;
+        /**
+        * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
+        * This value is only set with the pointer is over this Sprite.
+        * @type {number}
+        */
         public y: number;
         /**
         * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
@@ -3258,13 +3357,84 @@ module Phaser.Components {
         * @type {Boolean}
         **/
         public isOut: bool;
+        public oldX: number;
+        public oldY: number;
         /**
         * Update
         */
         public update(): void;
+        /**
+        * Updates the Mouse Drag on this Sprite.
+        */
+        private updateDrag();
+        /**
+        * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+        * @param delay The time below which the pointer is considered as just over.
+        * @returns {boolean}
+        */
         public justOver(delay?: number): bool;
+        /**
+        * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+        * @param delay The time below which the pointer is considered as just out.
+        * @returns {boolean}
+        */
         public justOut(delay?: number): bool;
+        /**
+        * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+        * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
+        */
         public duration : number;
+        /**
+        * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
+        *
+        * @param	lockCenter			If false the Sprite will drag from where you click it. If true it will center itself to the tip of the mouse pointer.
+        * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
+        * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
+        * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
+        * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
+        */
+        public enableDrag(lockCenter?: bool, pixelPerfect?: bool, alphaThreshold?: number, boundsRect?: Rectangle, boundsSprite?: Sprite): void;
+        /**
+        * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
+        */
+        public disableDrag(): void;
+        /**
+        * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
+        *
+        * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
+        * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
+        */
+        public setDragLock(allowHorizontal?: bool, allowVertical?: bool): void;
+        /**
+        * Make this Sprite snap to the given grid either during drag or when it's released.
+        * For example 16x16 as the snapX and snapY would make the sprite snap to every 16 pixels.
+        *
+        * @param	snapX		The width of the grid cell in pixels
+        * @param	snapY		The height of the grid cell in pixels
+        * @param	onDrag		If true the sprite will snap to the grid while being dragged
+        * @param	onRelease	If true the sprite will snap to the grid when released
+        */
+        public enableSnap(snapX: number, snapY: number, onDrag?: bool, onRelease?: bool): void;
+        /**
+        * Stops the sprite from snapping to a grid during drag or release.
+        */
+        public disableSnap(): void;
+        /**
+        * Called by FlxMouseControl when Mouse Drag starts on this Sprite. Should not usually be called directly.
+        */
+        public startDrag(): void;
+        /**
+        * Bounds Rect check for the sprite drag
+        */
+        private checkBoundsRect();
+        /**
+        * Parent Sprite Bounds check for the sprite drag
+        */
+        private checkBoundsSprite();
+        /**
+        * Called by FlxMouseControl when Mouse Drag is stopped on this Sprite. Should not usually be called directly.
+        */
+        public stopDrag(): void;
         /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.
@@ -3281,17 +3451,52 @@ module Phaser.Components {
 */
 module Phaser.Components {
     class Events {
+        /**
+        * The Events component is a collection of events fired by the parent Sprite and its other components.
+        * @param parent The Sprite using this Input component
+        */
         constructor(parent: Sprite);
+        /**
+        * Reference to Phaser.Game
+        */
         public game: Game;
+        /**
+        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+        */
         private _sprite;
-        public onAdded: Signal;
+        /**
+        * Dispatched by the Group this Sprite is added to.
+        */
+        public onAddedToGroup: Signal;
+        /**
+        * Dispatched by the Group this Sprite is removed from.
+        */
+        public onRemovedFromGroup: Signal;
+        /**
+        * Dispatched when this Sprite is killed.
+        */
         public onKilled: Signal;
+        /**
+        * Dispatched when this Sprite is revived.
+        */
         public onRevived: Signal;
-        public onOutOfBounds: Signal;
+        /**
+        * Dispatched by the Input component when a pointer moves over an Input enabled sprite.
+        */
         public onInputOver: Signal;
+        /**
+        * Dispatched by the Input component when a pointer moves out of an Input enabled sprite.
+        */
         public onInputOut: Signal;
+        /**
+        * Dispatched by the Input component when a pointer is pressed down on an Input enabled sprite.
+        */
         public onInputDown: Signal;
+        /**
+        * Dispatched by the Input component when a pointer is released over an Input enabled sprite
+        */
         public onInputUp: Signal;
+        public onOutOfBounds: Signal;
     }
 }
 /**
@@ -3564,6 +3769,10 @@ module Phaser {
         */
         public type: number;
         /**
+        * The Group this Sprite belongs to.
+        */
+        public group: Group;
+        /**
         * Controls if both <code>update</code> and render are called by the core game loop.
         */
         public exists: bool;
@@ -3697,7 +3906,7 @@ module Phaser {
         * like to animate an effect or whatever, you should override this,
         * setting only alive to false, and leaving exists true.
         */
-        public kill(): void;
+        public kill(removeFromGroup?: bool): void;
         /**
         * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
         * In practice, this is most often called by <code>Object.reset()</code>.
@@ -5163,7 +5372,7 @@ module Phaser {
         */
         private parseCSV(data, key, tileWidth, tileHeight);
         /**
-        * Parset JSON map data and generate tiles.
+        * Parse JSON map data and generate tiles.
         * @param data {string} JSON map data.
         * @param key {string} Asset key for tileset image.
         */
@@ -5222,11 +5431,16 @@ module Phaser {
         * @return {Tile} The tile with specific properties.
         */
         public getTileFromWorldXY(x: number, y: number, layer?: number): Tile;
+        /**
+        * Gets the tile underneath the Input.x/y position
+        * @param layer The layer to check, defaults to 0
+        * @returns {Tile}
+        */
         public getTileFromInputXY(layer?: number): Tile;
         /**
         * Get tiles overlaps the given object.
         * @param object {GameObject} Tiles you want to get that overlaps this.
-        * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+        * @return {array} Array with tiles information. (Each contains x, y and the tile.)
         */
         public getTileOverlaps(object: Sprite);
         /**
@@ -5855,6 +6069,10 @@ module Phaser {
         */
         public scaleMode: number;
         /**
+        * Stage boot
+        */
+        public boot(): void;
+        /**
         * Update stage for rendering. This will handle scaling, clearing
         * and PauseScreen/BootScreen updating and rendering.
         */
@@ -6318,6 +6536,16 @@ module Phaser {
         * @type {Physics.PhysicsManager}
         */
         public physics: Physics.PhysicsManager;
+        /**
+        * Object container stores every object created with `create*` methods.
+        * @type {Group}
+        */
+        private _groupCounter;
+        public getNextGroupID(): number;
+        /**
+        * Called one by Game during the boot process.
+        */
+        public boot(): void;
         /**
         * This is called automatically every frame, and is where main logic happens.
         */
@@ -7479,6 +7707,16 @@ module Phaser {
         */
         private _game;
         /**
+        * Temporary click sorting stack
+        */
+        private _stack;
+        /**
+        * A vector object representing the previous position of the Pointer.
+        * @property vector
+        * @type {Vec2}
+        **/
+        private _oldPosition;
+        /**
         * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
         * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
         * @type {Boolean}
@@ -7534,6 +7772,13 @@ module Phaser {
         * @type {Vec2}
         **/
         public position: Vec2;
+        /**
+        * A vector object representing the speed of the Pointer. Only really useful in single Pointer games,
+        * otherwise see the Pointer objects directly.
+        * @property vector
+        * @type {Vec2}
+        **/
+        public speed: Vec2;
         /**
         * A Circle object centered on the x/y screen coordinates of the Input.
         * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
@@ -7735,12 +7980,13 @@ module Phaser {
         * Starts the Input Manager running
         * @method start
         **/
-        public start(): void;
+        public boot(): void;
         /**
         * Updates the Input Manager. Called by the core Game loop.
         * @method update
         **/
         public update(): void;
+        public addToStack(item): void;
         /**
         * Reset all of the Pointers and Input states
         * @method reset
@@ -8080,11 +8326,11 @@ module Phaser {
         */
         private loadComplete();
         /**
-        * Game loop method will be called when it's booting.
+        * The bootLoop is called while the game is still booting (waiting for the DOM and resources to be available)
         */
         private bootLoop();
         /**
-        * Game loop method will be called when it's paused.
+        * The pausedLoop is called when the game is paused.
         */
         private pausedLoop();
         /**
@@ -8112,7 +8358,7 @@ module Phaser {
         */
         public switchState(state, clearWorld?: bool, clearCache?: bool): void;
         /**
-        * Nuke the whole game from orbit
+        * Nuke the entire game from orbit
         */
         public destroy(): void;
         public paused : bool;
@@ -8440,6 +8686,11 @@ module Phaser {
         * @type {GameMath}
         */
         public math: GameMath;
+        /**
+        * Reference to the motion helper.
+        * @type {Motion}
+        */
+        public motion: Motion;
         /**
         * Reference to the sound manager.
         * @type {SoundManager}

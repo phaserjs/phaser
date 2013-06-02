@@ -57,9 +57,6 @@ module Phaser {
             this.scaleMode = StageScaleMode.NO_SCALE;
             this.scale = new StageScaleMode(this._game);
 
-            this._bootScreen = new BootScreen(this._game);
-            this._pauseScreen = new PauseScreen(this._game, width, height);
-
             document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
             document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
             window.onblur = (event) => this.visibilityChange(event);
@@ -152,6 +149,16 @@ module Phaser {
          * @type {number}
          */
         public scaleMode: number;
+
+        /**
+         * Stage boot
+         */
+        public boot() {
+
+            this._bootScreen = new BootScreen(this._game);
+            this._pauseScreen = new PauseScreen(this._game, this.width, this.height);
+
+        }
 
         /**
          * Update stage for rendering. This will handle scaling, clearing

@@ -295,9 +295,12 @@ module Phaser {
 
                 this.setRenderer(Phaser.Types.RENDERER_CANVAS);
 
+                this.world.boot();
+                this.stage.boot();
+                this.input.boot();
+
                 this.framerate = 60;
                 this.isBooted = true;
-                this.input.start();
 
                 //  Display the default game screen?
                 if (this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
@@ -354,7 +357,7 @@ module Phaser {
         }
 
         /**
-         * Game loop method will be called when it's booting.
+         * The bootLoop is called while the game is still booting (waiting for the DOM and resources to be available)
          */
         private bootLoop() {
 
@@ -365,7 +368,7 @@ module Phaser {
         }
 
         /**
-         * Game loop method will be called when it's paused.
+         * The pausedLoop is called when the game is paused.
          */
         private pausedLoop() {
 
@@ -563,7 +566,7 @@ module Phaser {
         }
 
         /**
-         * Nuke the whole game from orbit
+         * Nuke the entire game from orbit
          */
         public destroy() {
 

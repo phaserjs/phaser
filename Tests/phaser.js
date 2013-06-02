@@ -1276,6 +1276,26 @@ var Phaser;
         function Group(game, maxSize) {
             if (typeof maxSize === "undefined") { maxSize = 0; }
             /**
+            * Helper for sort.
+            */
+            this._sortIndex = '';
+            /**
+            * This keeps track of the z value of any game object added to this Group
+            */
+            this._zCounter = 0;
+            /**
+            * The unique Group ID
+            */
+            this.ID = -1;
+            /**
+            * The z value of this Group (within its parent Group, if any)
+            */
+            this.z = -1;
+            /**
+            * The Group this Group is a child of (if any).
+            */
+            this.group = null;
+            /**
             * You can set a globalCompositeOperation that will be applied before the render method is called on this Groups children.
             * This is useful if you wish to apply an effect like 'lighten' to a whole group of children as it saves doing it one-by-one.
             * If this value is set it will call a canvas context save and restore before and after the render pass.
@@ -1298,9 +1318,16 @@ var Phaser;
             this._marker = 0;
             this._sortIndex = null;
             this.cameraBlacklist = [];
+            this.ID = this.game.world.getNextGroupID();
         }
         Group.ASCENDING = -1;
         Group.DESCENDING = 1;
+        Group.prototype.getNextZIndex = /**
+        * Gets the next z index value for children of this Group
+        */
+        function () {
+            return this._zCounter++;
+        };
         Group.prototype.destroy = /**
         * Override this function to handle any deleting or "shutdown" type operations you might need,
         * such as removing traditional Flash children like Basic objects.
@@ -1400,7 +1427,7 @@ var Phaser;
             configurable: true
         });
         Group.prototype.add = /**
-        * Adds a new <code>Basic</code> subclass (Basic, GameObject, Sprite, etc) to the group.
+        * Adds a new Game Object to the group.
         * Group will try to replace a null member of the array first.
         * Failing that, Group will add it to the end of the member array,
         * assuming there is room for it, and doubling the size of the array if necessary.
@@ -1409,19 +1436,21 @@ var Phaser;
         * the object will NOT be added to the group!</p>
         *
         * @param {Basic} Object The object you want to add to the group.
-        * @return {Basic} The same <code>Basic</code> object that was passed in.
+        * @return {Basic} The same object that was passed in.
         */
         function (object) {
-            //Don't bother adding an object twice.
-            if(this.members.indexOf(Object) >= 0) {
+            //  Is this object already in another Group?
+            //  You can't add a Group to itself or an object to the same Group twice
+            if(object.group && (object.group.ID == this.ID || (object.type == Phaser.Types.GROUP && object.ID == this.ID))) {
                 return object;
             }
-            //First, look for a null entry where we can add the object.
+            //  First, look for a null entry where we can add the object.
             this._i = 0;
             this._length = this.members.length;
             while(this._i < this._length) {
                 if(this.members[this._i] == null) {
                     this.members[this._i] = object;
+                    this.setObjectIDs(object);
                     if(this._i >= this.length) {
                         this.length = this._i + 1;
                     }
@@ -1429,7 +1458,7 @@ var Phaser;
                 }
                 this._i++;
             }
-            //Failing that, expand the array (if we can) and add the object.
+            //  Failing that, expand the array (if we can) and add the object.
             if(this._maxSize > 0) {
                 if(this.members.length >= this._maxSize) {
                     return object;
@@ -1441,11 +1470,44 @@ var Phaser;
             } else {
                 this.members.length *= 2;
             }
-            //If we made it this far, then we successfully grew the group,
-            //and we can go ahead and add the object at the first open slot.
+            //  If we made it this far, then we successfully grew the group,
+            //  and we can go ahead and add the object at the first open slot.
             this.members[this._i] = object;
             this.length = this._i + 1;
+            this.setObjectIDs(object);
             return object;
+        };
+        Group.prototype.addNewSprite = /**
+        * Create a new Sprite within this Group at the specified position.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @returns {Sprite} The newly created sprite object.
+        */
+        function (x, y, key, bodyType) {
+            if (typeof key === "undefined") { key = ''; }
+            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
+            return this.add(new Phaser.Sprite(this.game, x, y, key, bodyType));
+        };
+        Group.prototype.setObjectIDs = /**
+        * Sets all of the game object properties needed to exist within this Group.
+        */
+        function (object, zIndex) {
+            if (typeof zIndex === "undefined") { zIndex = -1; }
+            //  If the object is already in another Group, inform that Group it has left
+            if(object.group !== null) {
+                object.group.remove(object);
+            }
+            object.group = this;
+            if(zIndex == -1) {
+                zIndex = this.getNextZIndex();
+            }
+            object.z = zIndex;
+            if(object['events']) {
+                object['events'].onAddedToGroup.dispatch(object, this, object.z);
+            }
         };
         Group.prototype.recycle = /**
         * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
@@ -1499,7 +1561,7 @@ var Phaser;
         Group.prototype.remove = /**
         * Removes an object from the group.
         *
-        * @param {Basic} object The <code>Basic</code> you want to remove.
+        * @param {Basic} object The Game Object you want to remove.
         * @param {boolean} splice Whether the object should be cut from the array entirely or not.
         *
         * @return {Basic} The removed object.
@@ -1516,10 +1578,15 @@ var Phaser;
             } else {
                 this.members[this._i] = null;
             }
+            if(object['events']) {
+                object['events'].onRemovedFromGroup.dispatch(object, this);
+            }
+            object.group = null;
+            object.z = -1;
             return object;
         };
         Group.prototype.replace = /**
-        * Replaces an existing <code>Basic</code> with a new one.
+        * Replaces an existing game object in this Group with a new one.
         *
         * @param {Basic} oldObject	The object you want to replace.
         * @param {Basic} newObject	The new object you want to use instead.
@@ -1531,8 +1598,24 @@ var Phaser;
             if(this._i < 0 || (this._i >= this.members.length)) {
                 return null;
             }
+            this.setObjectIDs(newObject, this.members[this._i].z);
+            //  Null the old object
+            this.remove(this.members[this._i]);
             this.members[this._i] = newObject;
             return newObject;
+        };
+        Group.prototype.swap = function (child1, child2, sort) {
+            if (typeof sort === "undefined") { sort = true; }
+            if(child1.group.ID != this.ID || child2.group.ID != this.ID || child1 === child2) {
+                return false;
+            }
+            var tempZ = child1.z;
+            child1.z = child2.z;
+            child2.z = tempZ;
+            if(sort) {
+                this.sort();
+            }
+            return true;
         };
         Group.prototype.sort = /**
         * Call this function to sort the group according to a particular value and order.
@@ -1545,11 +1628,30 @@ var Phaser;
         * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
         */
         function (index, order) {
-            if (typeof index === "undefined") { index = "y"; }
+            if (typeof index === "undefined") { index = 'z'; }
             if (typeof order === "undefined") { order = Group.ASCENDING; }
+            var _this = this;
             this._sortIndex = index;
             this._sortOrder = order;
-            this.members.sort(this.sortHandler);
+            this.members.sort(function (a, b) {
+                return _this.sortHandler(a, b);
+            });
+        };
+        Group.prototype.sortHandler = /**
+        * Helper function for the sort process.
+        *
+        * @param {Basic} Obj1 The first object being sorted.
+        * @param {Basic} Obj2 The second object being sorted.
+        *
+        * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
+        */
+        function (obj1, obj2) {
+            if(obj1[this._sortIndex] < obj2[this._sortIndex]) {
+                return this._sortOrder;
+            } else if(obj1[this._sortIndex] > obj2[this._sortIndex]) {
+                return -this._sortOrder;
+            }
+            return 0;
         };
         Group.prototype.setAll = /**
         * Go through and set the specified variable to the specified value on all members of the group.
@@ -1790,22 +1892,6 @@ var Phaser;
                     this._member.kill();
                 }
             }
-        };
-        Group.prototype.sortHandler = /**
-        * Helper function for the sort process.
-        *
-        * @param {Basic} Obj1 The first object being sorted.
-        * @param {Basic} Obj2 The second object being sorted.
-        *
-        * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
-        */
-        function (obj1, obj2) {
-            if(obj1[this._sortIndex] < obj2[this._sortIndex]) {
-                return this._sortOrder;
-            } else if(obj1[this._sortIndex] > obj2[this._sortIndex]) {
-                return -this._sortOrder;
-            }
-            return 0;
         };
         return Group;
     })();
@@ -5328,6 +5414,11 @@ var Phaser;
     */
     (function (Components) {
         var Texture = (function () {
+            /**
+            * Creates a new Sprite Texture component
+            * @param parent The Sprite using this Texture to render
+            * @param key An optional Game.Cache key to load an image from
+            */
             function Texture(parent, key) {
                 if (typeof key === "undefined") { key = ''; }
                 /**
@@ -5340,7 +5431,7 @@ var Phaser;
                 */
                 this.dynamicTexture = null;
                 /**
-                * The status of the texture image.
+                * The load status of the texture image.
                 * @type {boolean}
                 */
                 this.loaded = false;
@@ -5365,7 +5456,7 @@ var Phaser;
                 * @type {boolean}
                 */
                 this.isDynamic = false;
-                this._game = parent.game;
+                this.game = parent.game;
                 this._sprite = parent;
                 this.canvas = parent.game.stage.canvas;
                 this.context = parent.game.stage.context;
@@ -5401,7 +5492,6 @@ var Phaser;
             * The graphic can be SpriteSheet or Texture Atlas. If you need to use a DynamicTexture see loadDynamicTexture.
             * @param key {string} Key of the graphic you want to load for this sprite.
             * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
-            * @return {Sprite} Sprite instance itself.
             */
             function (key, clearAnimations, updateBody) {
                 if (typeof clearAnimations === "undefined") { clearAnimations = true; }
@@ -5409,9 +5499,9 @@ var Phaser;
                 if(clearAnimations && this._sprite.animations.frameData !== null) {
                     this._sprite.animations.destroy();
                 }
-                if(this._game.cache.getImage(key) !== null) {
-                    this.setTo(this._game.cache.getImage(key), null);
-                    if(this._game.cache.isSpriteSheet(key)) {
+                if(this.game.cache.getImage(key) !== null) {
+                    this.setTo(this.game.cache.getImage(key), null);
+                    if(this.game.cache.isSpriteSheet(key)) {
                         this._sprite.animations.loadFrameData(this._sprite.game.cache.getFrameData(key));
                     } else {
                         this._sprite.frameBounds.width = this.width;
@@ -5426,7 +5516,6 @@ var Phaser;
             Texture.prototype.loadDynamicTexture = /**
             * Load a DynamicTexture as its texture.
             * @param texture {DynamicTexture} The texture object to be used by this sprite.
-            * @return {Sprite} Sprite instance itself.
             */
             function (texture) {
                 if(this._sprite.animations.frameData !== null) {
@@ -5485,8 +5574,47 @@ var Phaser;
     */
     (function (Components) {
         var Input = (function () {
+            /**
+            * Sprite Input component constructor
+            * @param parent The Sprite using this Input component
+            */
             function Input(parent) {
+                this.dragPixelPerfect = false;
+                this.allowHorizontalDrag = true;
+                this.allowVerticalDrag = true;
+                this.snapOnDrag = false;
+                this.snapOnRelease = false;
+                /**
+                * Is this sprite being dragged by the mouse or not?
+                * @default false
+                */
+                this.isDragged = false;
+                /**
+                * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
+                * @default false
+                */
+                this.draggable = false;
+                /**
+                * An FlxRect region of the game world within which the sprite is restricted during mouse drag
+                * @default null
+                */
+                this.boundsRect = null;
+                /**
+                * An FlxSprite the bounds of which this sprite is restricted during mouse drag
+                * @default null
+                */
+                this.boundsSprite = null;
+                /**
+                * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
+                * This value is only set with the pointer is over this Sprite.
+                * @type {number}
+                */
                 this.x = 0;
+                /**
+                * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
+                * This value is only set with the pointer is over this Sprite.
+                * @type {number}
+                */
                 this.y = 0;
                 /**
                 * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
@@ -5537,6 +5665,9 @@ var Phaser;
                 if(this.enabled == false) {
                     return;
                 }
+                if(this.draggable && this.isDragged) {
+                    this.updateDrag();
+                }
                 if(this.game.input.x != this.oldX || this.game.input.y != this.oldY) {
                     this.oldX = this.game.input.x;
                     this.oldY = this.game.input.y;
@@ -5565,16 +5696,55 @@ var Phaser;
                     }
                 }
             };
-            Input.prototype.justOver = function (delay) {
+            Input.prototype.updateDrag = /**
+            * Updates the Mouse Drag on this Sprite.
+            */
+            function () {
+                if(this.isUp) {
+                    this.stopDrag();
+                    return;
+                }
+                if(this.allowHorizontalDrag) {
+                    this._sprite.x = this.game.input.x - this.dragOffsetX;
+                }
+                if(this.allowVerticalDrag) {
+                    this._sprite.y = this.game.input.y - this.dragOffsetY;
+                }
+                if(this.boundsRect) {
+                    this.checkBoundsRect();
+                }
+                if(this.boundsSprite) {
+                    this.checkBoundsSprite();
+                }
+                if(this.snapOnDrag) {
+                    this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
+                    this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
+                }
+            };
+            Input.prototype.justOver = /**
+            * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+            * @param delay The time below which the pointer is considered as just over.
+            * @returns {boolean}
+            */
+            function (delay) {
                 if (typeof delay === "undefined") { delay = 500; }
                 return (this.isOver && this.duration < delay);
             };
-            Input.prototype.justOut = function (delay) {
+            Input.prototype.justOut = /**
+            * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+            * @param delay The time below which the pointer is considered as just out.
+            * @returns {boolean}
+            */
+            function (delay) {
                 if (typeof delay === "undefined") { delay = 500; }
                 return (this.isOut && (this.game.time.now - this.timeOut < delay));
             };
             Object.defineProperty(Input.prototype, "duration", {
-                get: function () {
+                get: /**
+                * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+                * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
+                */
+                function () {
                     if(this.isOver) {
                         return this.game.time.now - this.timeOver;
                     }
@@ -5583,6 +5753,135 @@ var Phaser;
                 enumerable: true,
                 configurable: true
             });
+            Input.prototype.enableDrag = /**
+            * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
+            *
+            * @param	lockCenter			If false the Sprite will drag from where you click it. If true it will center itself to the tip of the mouse pointer.
+            * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
+            * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
+            * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
+            * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
+            */
+            function (lockCenter, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
+                if (typeof lockCenter === "undefined") { lockCenter = false; }
+                if (typeof pixelPerfect === "undefined") { pixelPerfect = false; }
+                if (typeof alphaThreshold === "undefined") { alphaThreshold = 255; }
+                if (typeof boundsRect === "undefined") { boundsRect = null; }
+                if (typeof boundsSprite === "undefined") { boundsSprite = null; }
+                this.draggable = true;
+                this.dragFromPoint = lockCenter;
+                this.dragPixelPerfect = pixelPerfect;
+                this.dragPixelPerfectAlpha = alphaThreshold;
+                if(boundsRect) {
+                    this.boundsRect = boundsRect;
+                }
+                if(boundsSprite) {
+                    this.boundsSprite = boundsSprite;
+                }
+            };
+            Input.prototype.disableDrag = /**
+            * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
+            */
+            function () {
+                if(this.isDragged) {
+                    //FlxMouseControl.dragTarget = null;
+                    //FlxMouseControl.isDragging = false;
+                                    }
+                this.isDragged = false;
+                this.draggable = false;
+                //mouseStartDragCallback = null;
+                //mouseStopDragCallback = null;
+                            };
+            Input.prototype.setDragLock = /**
+            * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
+            *
+            * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
+            * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
+            */
+            function (allowHorizontal, allowVertical) {
+                if (typeof allowHorizontal === "undefined") { allowHorizontal = true; }
+                if (typeof allowVertical === "undefined") { allowVertical = true; }
+                this.allowHorizontalDrag = allowHorizontal;
+                this.allowVerticalDrag = allowVertical;
+            };
+            Input.prototype.enableSnap = /**
+            * Make this Sprite snap to the given grid either during drag or when it's released.
+            * For example 16x16 as the snapX and snapY would make the sprite snap to every 16 pixels.
+            *
+            * @param	snapX		The width of the grid cell in pixels
+            * @param	snapY		The height of the grid cell in pixels
+            * @param	onDrag		If true the sprite will snap to the grid while being dragged
+            * @param	onRelease	If true the sprite will snap to the grid when released
+            */
+            function (snapX, snapY, onDrag, onRelease) {
+                if (typeof onDrag === "undefined") { onDrag = true; }
+                if (typeof onRelease === "undefined") { onRelease = false; }
+                this.snapOnDrag = onDrag;
+                this.snapOnRelease = onRelease;
+                this.snapX = snapX;
+                this.snapY = snapY;
+            };
+            Input.prototype.disableSnap = /**
+            * Stops the sprite from snapping to a grid during drag or release.
+            */
+            function () {
+                this.snapOnDrag = false;
+                this.snapOnRelease = false;
+            };
+            Input.prototype.startDrag = /**
+            * Called by FlxMouseControl when Mouse Drag starts on this Sprite. Should not usually be called directly.
+            */
+            function () {
+                this.isDragged = true;
+                if(this.dragFromPoint == false) {
+                    this.dragOffsetX = this.game.input.x - this._sprite.x;
+                    this.dragOffsetY = this.game.input.y - this._sprite.y;
+                } else {
+                    //	Move the sprite to the middle of the mouse
+                    this.dragOffsetX = this._sprite.frameBounds.halfWidth;
+                    this.dragOffsetY = this._sprite.frameBounds.halfHeight;
+                }
+            };
+            Input.prototype.checkBoundsRect = /**
+            * Bounds Rect check for the sprite drag
+            */
+            function () {
+                if(this._sprite.x < this.boundsRect.left) {
+                    this._sprite.x = this.boundsRect.x;
+                } else if((this._sprite.x + this._sprite.width) > this.boundsRect.right) {
+                    this._sprite.x = this.boundsRect.right - this._sprite.width;
+                }
+                if(this._sprite.y < this.boundsRect.top) {
+                    this._sprite.y = this.boundsRect.top;
+                } else if((this._sprite.y + this._sprite.height) > this.boundsRect.bottom) {
+                    this._sprite.y = this.boundsRect.bottom - this._sprite.height;
+                }
+            };
+            Input.prototype.checkBoundsSprite = /**
+            * Parent Sprite Bounds check for the sprite drag
+            */
+            function () {
+                if(this._sprite.x < this.boundsSprite.x) {
+                    this._sprite.x = this.boundsSprite.x;
+                } else if((this._sprite.x + this._sprite.width) > (this.boundsSprite.x + this.boundsSprite.width)) {
+                    this._sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this._sprite.width;
+                }
+                if(this._sprite.y < this.boundsSprite.y) {
+                    this._sprite.y = this.boundsSprite.y;
+                } else if((this._sprite.y + this._sprite.height) > (this.boundsSprite.y + this.boundsSprite.height)) {
+                    this._sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this._sprite.height;
+                }
+            };
+            Input.prototype.stopDrag = /**
+            * Called by FlxMouseControl when Mouse Drag is stopped on this Sprite. Should not usually be called directly.
+            */
+            function () {
+                this.isDragged = false;
+                if(this.snapOnRelease) {
+                    this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
+                    this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
+                }
+            };
             Input.prototype.renderDebugInfo = /**
             * Render debug infos. (including name, bounds info, position and some other properties)
             * @param x {number} X position of the debug info to be rendered.
@@ -5593,7 +5892,7 @@ var Phaser;
                 if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
                 this._sprite.texture.context.font = '14px Courier';
                 this._sprite.texture.context.fillStyle = color;
-                this._sprite.texture.context.fillText('Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
+                this._sprite.texture.context.fillText('Sprite Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
                 this._sprite.texture.context.fillText('x: ' + this.x.toFixed(1) + ' y: ' + this.y.toFixed(1), x, y + 14);
                 this._sprite.texture.context.fillText('over: ' + this.isOver + ' duration: ' + this.duration.toFixed(0), x, y + 28);
                 this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 42);
@@ -5614,9 +5913,17 @@ var Phaser;
     */
     (function (Components) {
         var Events = (function () {
+            /**
+            * The Events component is a collection of events fired by the parent Sprite and its other components.
+            * @param parent The Sprite using this Input component
+            */
             function Events(parent) {
                 this.game = parent.game;
                 this._sprite = parent;
+                this.onAddedToGroup = new Phaser.Signal();
+                this.onRemovedFromGroup = new Phaser.Signal();
+                this.onKilled = new Phaser.Signal();
+                this.onRevived = new Phaser.Signal();
                 this.onInputOver = new Phaser.Signal();
                 this.onInputOut = new Phaser.Signal();
                 this.onInputDown = new Phaser.Signal();
@@ -6181,8 +6488,8 @@ var Phaser;
             this.scrollFactor = new Phaser.Vec2(1, 1);
             this.x = x;
             this.y = y;
-            this.z = 0// not used yet
-            ;
+            this.z = -1;
+            this.group = null;
             //  If a texture has been given the body will be set to that size, otherwise 16x16
             this.body = new Phaser.Physics.Body(this, bodyType);
             this.animations = new Phaser.Components.AnimationManager(this);
@@ -6334,9 +6641,14 @@ var Phaser;
         * like to animate an effect or whatever, you should override this,
         * setting only alive to false, and leaving exists true.
         */
-        function () {
+        function (removeFromGroup) {
+            if (typeof removeFromGroup === "undefined") { removeFromGroup = false; }
             this.alive = false;
             this.exists = false;
+            if(removeFromGroup && this.group) {
+                this.group.remove(this);
+            }
+            this.events.onKilled.dispatch(this);
         };
         Sprite.prototype.revive = /**
         * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
@@ -6345,6 +6657,7 @@ var Phaser;
         function () {
             this.alive = true;
             this.exists = true;
+            this.events.onRevived.dispatch(this);
         };
         return Sprite;
     })();
@@ -6595,7 +6908,7 @@ var Phaser;
             this._stageX = x;
             this._stageY = y;
             this.scaledX = x;
-            this.scaledY = x;
+            this.scaledY = y;
             this.fx = new Phaser.CameraFX(this._game, this);
             //  The view into the world canvas we wish to render
             this.worldView = new Phaser.Rectangle(0, 0, width, height);
@@ -6622,10 +6935,7 @@ var Phaser;
         * @param object {Sprite/Group} The object to check.
         */
         function (object) {
-            if(object['cameraBlacklist'] && object['cameraBlacklist'].length > 0 && object['cameraBlacklist'].indexOf(this.ID) == -1) {
-                return true;
-            }
-            return false;
+            return (object['cameraBlacklist'] && object['cameraBlacklist'].length > 0 && object['cameraBlacklist'].indexOf(this.ID) == -1);
         };
         Camera.prototype.show = /**
         * Un-hides an object previously hidden to this Camera.
@@ -8270,7 +8580,7 @@ var Phaser;
             if (typeof speedY === "undefined") { speedY = 0; }
             if(x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height) {
                 throw Error('Invalid ScrollRegion defined. Cannot be larger than parent ScrollZone');
-                return;
+                return null;
             }
             this.currentRegion = new Phaser.ScrollRegion(x, y, width, height, speedX, speedY);
             this.regions.push(this.currentRegion);
@@ -8995,7 +9305,7 @@ var Phaser;
             this.generateTiles(tileQuantity);
         };
         Tilemap.prototype.parseTiledJSON = /**
-        * Parset JSON map data and generate tiles.
+        * Parse JSON map data and generate tiles.
         * @param data {string} JSON map data.
         * @param key {string} Asset key for tileset image.
         */
@@ -9132,14 +9442,19 @@ var Phaser;
             if (typeof layer === "undefined") { layer = 0; }
             return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
         };
-        Tilemap.prototype.getTileFromInputXY = function (layer) {
+        Tilemap.prototype.getTileFromInputXY = /**
+        * Gets the tile underneath the Input.x/y position
+        * @param layer The layer to check, defaults to 0
+        * @returns {Tile}
+        */
+        function (layer) {
             if (typeof layer === "undefined") { layer = 0; }
             return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.getWorldX(), this.game.input.getWorldY())];
         };
         Tilemap.prototype.getTileOverlaps = /**
         * Get tiles overlaps the given object.
         * @param object {GameObject} Tiles you want to get that overlaps this.
-        * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+        * @return {array} Array with tiles information. (Each contains x, y and the tile.)
         */
         function (object) {
             return this.currentLayer.getTileOverlaps(object);
@@ -10156,8 +10471,6 @@ var Phaser;
             this.aspectRatio = width / height;
             this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
             this.scale = new Phaser.StageScaleMode(this._game);
-            this._bootScreen = new Phaser.BootScreen(this._game);
-            this._pauseScreen = new Phaser.PauseScreen(this._game, width, height);
             document.addEventListener('visibilitychange', function (event) {
                 return _this.visibilityChange(event);
             }, false);
@@ -10171,6 +10484,13 @@ var Phaser;
                 return _this.visibilityChange(event);
             };
         }
+        Stage.prototype.boot = /**
+        * Stage boot
+        */
+        function () {
+            this._bootScreen = new Phaser.BootScreen(this._game);
+            this._pauseScreen = new Phaser.PauseScreen(this._game, this.width, this.height);
+        };
         Stage.prototype.update = /**
         * Update stage for rendering. This will handle scaling, clearing
         * and PauseScreen/BootScreen updating and rendering.
@@ -11678,12 +11998,25 @@ var Phaser;
         * @param height {number} Height of the world bound.
         */
         function World(game, width, height) {
+            /**
+            * Object container stores every object created with `create*` methods.
+            * @type {Group}
+            */
+            this._groupCounter = 0;
             this._game = game;
             this.cameras = new Phaser.CameraManager(this._game, 0, 0, width, height);
-            this.group = new Phaser.Group(this._game, 0);
             this.bounds = new Phaser.Rectangle(0, 0, width, height);
-            this.physics = new Phaser.Physics.PhysicsManager(this._game, width, height);
         }
+        World.prototype.getNextGroupID = function () {
+            return this._groupCounter++;
+        };
+        World.prototype.boot = /**
+        * Called one by Game during the boot process.
+        */
+        function () {
+            this.group = new Phaser.Group(this._game, 0);
+            this.physics = new Phaser.Physics.PhysicsManager(this._game, this.width, this.height);
+        };
         World.prototype.update = /**
         * This is called automatically every frame, and is where main logic happens.
         */
@@ -13847,6 +14180,12 @@ var Phaser;
     var Input = (function () {
         function Input(game) {
             /**
+            * A vector object representing the previous position of the Pointer.
+            * @property vector
+            * @type {Vec2}
+            **/
+            this._oldPosition = null;
+            /**
             * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
             * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
             * @type {Boolean}
@@ -13862,6 +14201,13 @@ var Phaser;
             * @type {Vec2}
             **/
             this.position = null;
+            /**
+            * A vector object representing the speed of the Pointer. Only really useful in single Pointer games,
+            * otherwise see the Pointer objects directly.
+            * @property vector
+            * @type {Vec2}
+            **/
+            this.speed = null;
             /**
             * A Circle object centered on the x/y screen coordinates of the Input.
             * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
@@ -13984,6 +14330,7 @@ var Phaser;
             **/
             this.pointer10 = null;
             this._game = game;
+            this._stack = [];
             this.mousePointer = new Phaser.Pointer(this._game, 0);
             this.pointer1 = new Phaser.Pointer(this._game, 1);
             this.pointer2 = new Phaser.Pointer(this._game, 2);
@@ -13999,7 +14346,9 @@ var Phaser;
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
+            this.speed = new Phaser.Vec2();
             this.position = new Phaser.Vec2();
+            this._oldPosition = new Phaser.Vec2();
             this.circle = new Phaser.Circle(0, 0, 44);
             this.currentPointers = 0;
         }
@@ -14067,7 +14416,7 @@ var Phaser;
                 return this['pointer' + next];
             }
         };
-        Input.prototype.start = /**
+        Input.prototype.boot = /**
         * Starts the Input Manager running
         * @method start
         **/
@@ -14083,6 +14432,9 @@ var Phaser;
         * @method update
         **/
         function () {
+            this.speed.x = this.position.x - this._oldPosition.x;
+            this.speed.y = this.position.y - this._oldPosition.y;
+            this._oldPosition.copyFrom(this.position);
             this.mousePointer.update();
             this.pointer1.update();
             this.pointer2.update();
@@ -14104,6 +14456,9 @@ var Phaser;
             if(this.pointer10) {
                 this.pointer10.update();
             }
+        };
+        Input.prototype.addToStack = function (item) {
+            this._stack.push(item);
         };
         Input.prototype.reset = /**
         * Reset all of the Pointers and Input states
@@ -14852,9 +15207,11 @@ var Phaser;
                     (Date.now() * Math.random()).toString()
                 ]);
                 this.setRenderer(Phaser.Types.RENDERER_CANVAS);
+                this.world.boot();
+                this.stage.boot();
+                this.input.boot();
                 this.framerate = 60;
                 this.isBooted = true;
-                this.input.start();
                 //  Display the default game screen?
                 if(this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null) {
                     this._raf = new Phaser.RequestAnimationFrame(this, this.bootLoop);
@@ -14889,7 +15246,7 @@ var Phaser;
             this._loadComplete = true;
         };
         Game.prototype.bootLoop = /**
-        * Game loop method will be called when it's booting.
+        * The bootLoop is called while the game is still booting (waiting for the DOM and resources to be available)
         */
         function () {
             this.tweens.update();
@@ -14897,7 +15254,7 @@ var Phaser;
             this.stage.update();
         };
         Game.prototype.pausedLoop = /**
-        * Game loop method will be called when it's paused.
+        * The pausedLoop is called when the game is paused.
         */
         function () {
             this.tweens.update();
@@ -15036,7 +15393,7 @@ var Phaser;
             }
         };
         Game.prototype.destroy = /**
-        * Nuke the whole game from orbit
+        * Nuke the entire game from orbit
         */
         function () {
             this.callbackContext = null;
@@ -15574,11 +15931,10 @@ var Phaser;
             this.add = game.add;
             this.camera = game.camera;
             this.cache = game.cache;
-            //this.collision = game.collision;
             this.input = game.input;
             this.loader = game.loader;
             this.math = game.math;
-            //this.motion = game.motion;
+            this.motion = game.motion;
             this.sound = game.sound;
             this.stage = game.stage;
             this.time = game.time;

@@ -27,6 +27,8 @@ module Phaser {
 
             this.cameraBlacklist = [];
 
+            this.ID = this.game.world.getNextGroupID();
+
         }
 
         /**
@@ -43,7 +45,7 @@ module Phaser {
         /**
          * Helper for sort.
          */
-        private _sortIndex: string;
+        private _sortIndex: string = '';
 
         /**
          * Helper for sort.
@@ -60,6 +62,11 @@ module Phaser {
         private _count: number;
 
         /**
+         * This keeps track of the z value of any game object added to this Group
+         */
+        private _zCounter: number = 0;
+
+        /**
          * Reference to the main game object
          */
         public game: Game;
@@ -68,6 +75,21 @@ module Phaser {
          * The type of game object.
          */
         public type: number;
+
+        /**
+         * The unique Group ID
+         */
+        public ID: number = -1;
+
+        /**
+         * The z value of this Group (within its parent Group, if any)
+         */
+        public z: number = -1;
+
+        /**
+         * The Group this Group is a child of (if any).
+         */
+        public group: Group = null;
 
         /**
          * If this Group exists or not. Can be set to false to skip certain loop checks.
@@ -121,6 +143,13 @@ module Phaser {
          * @type {Array}
          */
         public cameraBlacklist: number[];
+
+        /**
+         * Gets the next z index value for children of this Group
+         */
+        public getNextZIndex(): number {
+            return this._zCounter++;
+        }
 
         /**
          * Override this function to handle any deleting or "shutdown" type operations you might need,
@@ -266,7 +295,7 @@ module Phaser {
         }
 
         /**
-         * Adds a new <code>Basic</code> subclass (Basic, GameObject, Sprite, etc) to the group.
+         * Adds a new Game Object to the group.
          * Group will try to replace a null member of the array first.
          * Failing that, Group will add it to the end of the member array,
          * assuming there is room for it, and doubling the size of the array if necessary.
@@ -275,17 +304,19 @@ module Phaser {
          * the object will NOT be added to the group!</p>
          *
          * @param {Basic} Object The object you want to add to the group.
-         * @return {Basic} The same <code>Basic</code> object that was passed in.
+         * @return {Basic} The same object that was passed in.
          */
         public add(object): any {
 
-            //Don't bother adding an object twice.
-            if (this.members.indexOf(Object) >= 0)
+            //  Is this object already in another Group?
+
+            //  You can't add a Group to itself or an object to the same Group twice
+            if (object.group && (object.group.ID == this.ID || (object.type == Types.GROUP && object.ID == this.ID)))
             {
                 return object;
             }
 
-            //First, look for a null entry where we can add the object.
+            //  First, look for a null entry where we can add the object.
             this._i = 0;
             this._length = this.members.length;
 
@@ -294,6 +325,8 @@ module Phaser {
                 if (this.members[this._i] == null)
                 {
                     this.members[this._i] = object;
+
+                    this.setObjectIDs(object);
 
                     if (this._i >= this.length)
                     {
@@ -306,7 +339,7 @@ module Phaser {
                 this._i++;
             }
 
-            //Failing that, expand the array (if we can) and add the object.
+            //  Failing that, expand the array (if we can) and add the object.
             if (this._maxSize > 0)
             {
                 if (this.members.length >= this._maxSize)
@@ -327,12 +360,54 @@ module Phaser {
                 this.members.length *= 2;
             }
 
-            //If we made it this far, then we successfully grew the group,
-            //and we can go ahead and add the object at the first open slot.
+            //  If we made it this far, then we successfully grew the group,
+            //  and we can go ahead and add the object at the first open slot.
             this.members[this._i] = object;
             this.length = this._i + 1;
 
+            this.setObjectIDs(object);
+
             return object;
+
+        }
+
+        /**
+         * Create a new Sprite within this Group at the specified position.
+         *
+         * @param x {number} X position of the new sprite.
+         * @param y {number} Y position of the new sprite.
+         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+         * @returns {Sprite} The newly created sprite object.
+         */
+        public addNewSprite(x: number, y: number, key?: string = '', bodyType?: number = Phaser.Types.BODY_DISABLED): Sprite {
+            return <Sprite> this.add(new Sprite(this.game, x, y, key, bodyType));
+        }
+
+        /**
+         * Sets all of the game object properties needed to exist within this Group.
+         */
+        private setObjectIDs(object, zIndex: number = -1) {
+
+            //  If the object is already in another Group, inform that Group it has left
+            if (object.group !== null)
+            {
+                object.group.remove(object);
+            }
+
+            object.group = this;
+
+            if (zIndex == -1)
+            {
+                zIndex = this.getNextZIndex();
+            }
+
+            object.z = zIndex;
+
+            if (object['events'])
+            {
+                object['events'].onAddedToGroup.dispatch(object, this, object.z);
+            }
 
         }
 
@@ -405,7 +480,7 @@ module Phaser {
         /**
          * Removes an object from the group.
          *
-         * @param {Basic} object The <code>Basic</code> you want to remove.
+         * @param {Basic} object The Game Object you want to remove.
          * @param {boolean} splice Whether the object should be cut from the array entirely or not.
          *
          * @return {Basic} The removed object.
@@ -429,12 +504,19 @@ module Phaser {
                 this.members[this._i] = null;
             }
 
+            if (object['events'])
+            {
+                object['events'].onRemovedFromGroup.dispatch(object, this);
+            }
+
+            object.group = null;
+            object.z = -1;
             return object;
 
         }
 
         /**
-         * Replaces an existing <code>Basic</code> with a new one.
+         * Replaces an existing game object in this Group with a new one.
          *
          * @param {Basic} oldObject	The object you want to replace.
          * @param {Basic} newObject	The new object you want to use instead.
@@ -450,9 +532,35 @@ module Phaser {
                 return null;
             }
 
+            this.setObjectIDs(newObject, this.members[this._i].z);
+
+            //  Null the old object
+            this.remove(this.members[this._i]);
+
             this.members[this._i] = newObject;
 
             return newObject;
+
+        }
+
+        public swap(child1, child2, sort?: bool = true): bool {
+
+            if (child1.group.ID != this.ID || child2.group.ID != this.ID || child1 === child2)
+            {
+                return false;
+            }
+
+            var tempZ: number = child1.z;
+
+            child1.z = child2.z;
+            child2.z = tempZ;
+
+            if (sort)
+            {
+                this.sort();
+            }
+
+            return true;
 
         }
 
@@ -466,11 +574,34 @@ module Phaser {
          * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
          * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
          */
-        public sort(index: string = "y", order: number = Group.ASCENDING) {
+        public sort(index: string = 'z', order: number = Group.ASCENDING) {
 
             this._sortIndex = index;
             this._sortOrder = order;
-            this.members.sort(this.sortHandler);
+            this.members.sort((a, b) => this.sortHandler(a, b));
+
+        }
+
+        /**
+         * Helper function for the sort process.
+         *
+         * @param {Basic} Obj1 The first object being sorted.
+         * @param {Basic} Obj2 The second object being sorted.
+         *
+         * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
+         */
+        public sortHandler(obj1, obj2): number {
+
+            if (obj1[this._sortIndex] < obj2[this._sortIndex])
+            {
+                return this._sortOrder;
+            }
+            else if (obj1[this._sortIndex] > obj2[this._sortIndex])
+            {
+                return -this._sortOrder;
+            }
+
+            return 0;
 
         }
 
@@ -818,29 +949,6 @@ module Phaser {
                     this._member.kill();
                 }
             }
-
-        }
-
-        /**
-         * Helper function for the sort process.
-         *
-         * @param {Basic} Obj1 The first object being sorted.
-         * @param {Basic} Obj2 The second object being sorted.
-         *
-         * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
-         */
-        public sortHandler(obj1, obj2): number {
-
-            if (obj1[this._sortIndex] < obj2[this._sortIndex])
-            {
-                return this._sortOrder;
-            }
-            else if (obj1[this._sortIndex] > obj2[this._sortIndex])
-            {
-                return -this._sortOrder;
-            }
-
-            return 0;
 
         }
 

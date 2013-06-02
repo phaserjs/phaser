@@ -10,6 +10,16 @@ module Phaser {
         game: Game;
 
         /**
+         * The type of game object.
+         */
+        type: number;
+
+        /**
+         * The ID of the Group this Sprite belongs to.
+         */
+        group: Group;
+
+        /**
          * x value of the object.
          */
         x: number;
@@ -23,16 +33,6 @@ module Phaser {
          * Z-order value of the object.
          */
         z: number;
-
-        /**
-         * The type of game object.
-         */
-        type: number;
-
-        /**
-         * Reference to the Renderer.renderSprite method. Can be overriden by custom classes.
-         */
-        //render;
 
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.

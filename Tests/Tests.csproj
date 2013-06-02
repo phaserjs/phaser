@@ -68,6 +68,18 @@
     <TypeScriptCompile Include="physics\aabb 1.ts" />
     <TypeScriptCompile Include="particles\graphic emitter.ts" />
     <TypeScriptCompile Include="input\over sprite 1.ts" />
+    <TypeScriptCompile Include="groups\create group 1.ts" />
+    <Content Include="groups\create group 1.js">
+      <DependentUpon>create group 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="groups\display order.ts" />
+    <Content Include="groups\display order.js">
+      <DependentUpon>display order.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="groups\swap children.ts" />
+    <Content Include="groups\swap children.js">
+      <DependentUpon>swap children.ts</DependentUpon>
+    </Content>
     <Content Include="input\over sprite 1.js">
       <DependentUpon>over sprite 1.ts</DependentUpon>
     </Content>

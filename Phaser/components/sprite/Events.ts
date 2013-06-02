@@ -19,6 +19,11 @@ module Phaser.Components {
             this.game = parent.game;
             this._sprite = parent;
 
+            this.onAddedToGroup = new Phaser.Signal;
+            this.onRemovedFromGroup = new Phaser.Signal;
+            this.onKilled = new Phaser.Signal;
+            this.onRevived = new Phaser.Signal;
+
             this.onInputOver = new Phaser.Signal;
             this.onInputOut = new Phaser.Signal;
             this.onInputDown = new Phaser.Signal;
@@ -36,14 +41,25 @@ module Phaser.Components {
          */
         private _sprite: Sprite;
 
-        //  Creation and destruction
-        public onAdded: Phaser.Signal;
+        /**
+         * Dispatched by the Group this Sprite is added to.
+         */
+        public onAddedToGroup: Phaser.Signal;
+
+        /**
+         * Dispatched by the Group this Sprite is removed from.
+         */
+        public onRemovedFromGroup: Phaser.Signal;
+
+        /**
+         * Dispatched when this Sprite is killed.
+         */
         public onKilled: Phaser.Signal;
+
+        /**
+         * Dispatched when this Sprite is revived.
+         */
         public onRevived: Phaser.Signal;
-
-        public onOutOfBounds: Phaser.Signal;
-
-        //  Input related events
 
         /**
          * Dispatched by the Input component when a pointer moves over an Input enabled sprite.
@@ -64,6 +80,11 @@ module Phaser.Components {
          * Dispatched by the Input component when a pointer is released over an Input enabled sprite
          */
         public onInputUp: Phaser.Signal;
+
+
+
+
+        public onOutOfBounds: Phaser.Signal;
 
     }
 
