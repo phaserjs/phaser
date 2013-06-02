@@ -38,6 +38,8 @@ TODO:
 * Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 * Bug: Sprite x/y gets shifted if dynamic from the original value
 * Input CSS cursor those little 4-way arrows on drag?
+* Stage CSS3 transforms!!! Color tints, sepia, greyscale, all of those cool things :)
+
 
 V1.0.0
 

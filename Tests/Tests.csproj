@@ -80,6 +80,10 @@
     <Content Include="groups\swap children.js">
       <DependentUpon>swap children.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="input\drag sprite 1.ts" />
+    <Content Include="input\drag sprite 1.js">
+      <DependentUpon>drag sprite 1.ts</DependentUpon>
+    </Content>
     <Content Include="input\over sprite 1.js">
       <DependentUpon>over sprite 1.ts</DependentUpon>
     </Content>

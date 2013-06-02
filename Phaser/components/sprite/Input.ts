@@ -302,10 +302,19 @@ module Phaser.Components {
 
         public _touchedHandler(pointer: Pointer) {
 
-            this._pointerData[pointer.id].isDown = true;
-            this._pointerData[pointer.id].isUp = false;
-            this._pointerData[pointer.id].timeDown = this.game.time.now;
-            this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
+            if (this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true)
+            {
+                this._pointerData[pointer.id].isDown = true;
+                this._pointerData[pointer.id].isUp = false;
+                this._pointerData[pointer.id].timeDown = this.game.time.now;
+                this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
+
+                //  Star drag
+                if (this.draggable)
+                {
+                    this.startDrag(pointer);
+                }
+            }
 
         }
 
@@ -330,15 +339,15 @@ module Phaser.Components {
 		        this.stopDrag(pointer);
 		        return;
 		    }
-// something wrong here, should use _dragPoint as well I think somehow
+
 			if (this.allowHorizontalDrag)
 			{
-			    this._sprite.x = pointer.x - this.dragOffset.x;
+			    this._sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
 			}
 			
 			if (this.allowVerticalDrag)
 			{
-			    this._sprite.y = pointer.y - this.dragOffset.y;
+			    this._sprite.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
 			}
 			
 			if (this.boundsRect)
@@ -481,13 +490,15 @@ module Phaser.Components {
 		{
             this._pointerData[pointer.id].isDragged = true;
 			
-			if (this.dragFromCenter)
-			{
-				//	Move the sprite to the middle of the pointer
-			    this.dragOffset.setTo(this._sprite.frameBounds.halfWidth, this._sprite.frameBounds.halfHeight);
-			}
-			 
-            this._dragPoint.setTo(pointer.x - this._sprite.x - this.dragOffset.x, pointer.y - this._sprite.y - this.dragOffset.y);
+            if (this.dragFromCenter)
+            {
+                //	Move the sprite to the middle of the pointer
+                this._dragPoint.setTo(-this._sprite.frameBounds.halfWidth, -this._sprite.frameBounds.halfHeight);
+            }
+            else
+            {
+                this._dragPoint.setTo(this._sprite.x - pointer.x, this._sprite.y - pointer.y);
+            }
 
 		}
 
