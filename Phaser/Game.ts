@@ -25,6 +25,7 @@
 /// <reference path="renderers/IRenderer.ts" />
 /// <reference path="renderers/HeadlessRenderer.ts" />
 /// <reference path="renderers/CanvasRenderer.ts" />
+/// <reference path="utils/DebugUtils.ts" />
 
 /**
 * Phaser - Game
@@ -303,6 +304,7 @@ module Phaser {
                 this.isBooted = true;
 
                 //  Set-up some static helper references
+                DebugUtils.game = this;
                 ColorUtils.game = this;
 
                 //  Display the default game screen?

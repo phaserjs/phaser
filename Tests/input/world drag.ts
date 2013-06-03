@@ -15,15 +15,23 @@
 
     }
 
+    var test: Phaser.Sprite;
+
     function create() {
 
         game.add.sprite(0, 0, 'backdrop');
 
         for (var i = 0; i < 1; i++)
         {
-            var sprite: Phaser.Sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'melon');
-            sprite.input.start(i, false, true);
-            sprite.input.enableDrag();
+            //var sprite: Phaser.Sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'melon');
+            //sprite.input.start(i, false, true);
+            //sprite.input.enableDrag();
+
+            test = game.add.sprite(700, 200, 'melon');
+            test.input.start(i, false, true);
+            test.input.enableDrag();
+
+
         }
 
     }
@@ -53,6 +61,10 @@
     function render() {
 
         game.camera.renderDebugInfo(32, 32);
+
+        test.body.renderDebugInfo(300, 32);
+
+        Phaser.DebugUtils.renderSpriteInfo(test, 32, 200);
 
     }
 

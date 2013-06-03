@@ -43,6 +43,7 @@ module Phaser {
             this.y = y;
             this.z = -1;
             this.group = null;
+            this.screen = new Point;
 
             //  If a texture has been given the body will be set to that size, otherwise 16x16
             this.body = new Phaser.Physics.Body(this, bodyType);
@@ -160,6 +161,13 @@ module Phaser {
         public origin: Phaser.Vec2;
 
         /**
+         * A Point holding the x/y coordinate of this Sprite relative to the screen. It uses the default created world
+         * camera to calculate its values. If you have changed the default camera (i.e. resized it, deleted it) this value
+         * will be incorrect and should be ignored.
+         */
+        public screen: Point;
+
+        /**
          * x value of the object.
          */
         public x: number = 0;
@@ -248,6 +256,9 @@ module Phaser {
 
             this.frameBounds.x = this.x;
             this.frameBounds.y = this.y;
+
+            this.screen.x = this.x - (this.game.world.cameras.default.worldView.x * this.scrollFactor.x);
+            this.screen.y = this.y - (this.game.world.cameras.default.worldView.y * this.scrollFactor.y);
 
             if (this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.angle != 0 || this.angleOffset != 0 || this.texture.flippedX || this.texture.flippedY))
             {

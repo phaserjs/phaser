@@ -39,6 +39,8 @@ TODO:
 * Bug: Sprite x/y gets shifted if dynamic from the original value
 * Input CSS cursor those little 4-way arrows on drag?
 * Stage CSS3 transforms!!! Color tints, sepia, greyscale, all of those cool things :)
+* Cameras should have option to be input disabled + Pointers should check which camera they are over before doing Sprite selection
+* Can Cameras be positioned within the world?
 
 
 V1.0.0
@@ -74,6 +76,7 @@ V1.0.0
 * Added Input drag, bounds, sprite bounds and snapping support.
 * Added the new ColorUtils class full of lots of handy color manipulation functions.
 * Fixed issue in Camera.inCamera check where it wouldn't take into consideration the Sprites scrollFactor.
+
 
 
 

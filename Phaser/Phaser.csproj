@@ -178,6 +178,10 @@
     <Content Include="utils\ColorUtils.js">
       <DependentUpon>ColorUtils.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="utils\DebugUtils.ts" />
+    <Content Include="utils\DebugUtils.js">
+      <DependentUpon>DebugUtils.ts</DependentUpon>
+    </Content>
     <Content Include="utils\PixelUtils.js">
       <DependentUpon>PixelUtils.ts</DependentUpon>
     </Content>

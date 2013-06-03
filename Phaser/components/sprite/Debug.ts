@@ -67,23 +67,6 @@ module Phaser.Components {
         }
         */
 
-        /**
-         * Render debug infos. (including name, bounds info, position and some other properties)
-         * @param x {number} X position of the debug info to be rendered.
-         * @param y {number} Y position of the debug info to be rendered.
-         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-         */
-        /*
-        public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
-
-            this.context.fillStyle = color;
-            this.context.fillText('Sprite: ' + this.name + ' (' + this.frameBounds.width + ' x ' + this.frameBounds.height + ')', x, y);
-            this.context.fillText('x: ' + this.frameBounds.x.toFixed(1) + ' y: ' + this.frameBounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
-            this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
-            this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
-
-        }
-        */
 
     }
 

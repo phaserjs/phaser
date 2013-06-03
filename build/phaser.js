@@ -5589,6 +5589,22 @@ var Phaser;
 (function (Phaser) {
     var SpriteUtils = (function () {
         function SpriteUtils() { }
+        SpriteUtils.inCamera = /**
+        * Check whether this object is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        */
+        function inCamera(camera, sprite) {
+            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
+            if(sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0) {
+                return true;
+            }
+            var dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
+            var dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
+            var dw = sprite.frameBounds.width * sprite.scale.x;
+            var dh = sprite.frameBounds.height * sprite.scale.y;
+            return (camera.scaledX + camera.worldView.width > this._dx) && (camera.scaledX < this._dx + this._dw) && (camera.scaledY + camera.worldView.height > this._dy) && (camera.scaledY < this._dy + this._dh);
+        };
         SpriteUtils.getAsPoints = function getAsPoints(sprite) {
             var out = [];
             //  top left
@@ -5750,7 +5766,7 @@ var Phaser;
         SpriteUtils.getScreenXY = /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param point {Point} Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
         * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
@@ -7093,6 +7109,7 @@ var Phaser;
             this.y = y;
             this.z = -1;
             this.group = null;
+            this.screen = new Phaser.Point();
             //  If a texture has been given the body will be set to that size, otherwise 16x16
             this.body = new Phaser.Physics.Body(this, bodyType);
             this.animations = new Phaser.Components.AnimationManager(this);
@@ -7180,6 +7197,8 @@ var Phaser;
         function () {
             this.frameBounds.x = this.x;
             this.frameBounds.y = this.y;
+            this.screen.x = this.x - (this.game.camera.worldView.x * this.scrollFactor.x);
+            this.screen.y = this.y - (this.game.camera.worldView.y * this.scrollFactor.y);
             if(this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.angle != 0 || this.angleOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
                 this.modified = true;
             }
@@ -7733,10 +7752,6 @@ var Phaser;
             if(this.alpha !== 1) {
                 this._game.stage.context.globalAlpha = 1;
             }
-            //  Debug test
-            this._game.stage.context.fillStyle = 'rgba(255,0,0,0.3)';
-            //this._game.stage.context.fillRect(this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
-            this._game.stage.context.fillRect(this.worldView.x, this.worldView.y, this.worldView.width, this.worldView.height);
         };
         Camera.prototype.setPosition = /**
         * Set position of this camera.
@@ -7879,7 +7894,8 @@ var Phaser;
             this._cameraInstance = 0;
             this._game = game;
             this._cameras = [];
-            this.current = this.addCamera(x, y, width, height);
+            this.default = this.addCamera(x, y, width, height);
+            this.current = this.default;
         }
         CameraManager.CAMERA_TYPE_ORTHOGRAPHIC = 0;
         CameraManager.CAMERA_TYPE_ISOMETRIC = 1;
@@ -15489,7 +15505,6 @@ var Phaser;
         */
         function (camera, sprite) {
             if(sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
-                console.log('out of camera', sprite.frameBounds.x, sprite.frameBounds.y, sprite.frameBounds.width, sprite.frameBounds.height);
                 return false;
             }
             this._count++;
@@ -15665,6 +15680,39 @@ var Phaser;
     })();
     Phaser.CanvasRenderer = CanvasRenderer;    
 })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../core/Point.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../core/Circle.ts" />
+/// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="RectangleUtils.ts" />
+/**
+* Phaser - DebugUtils
+*
+* A collection of methods for displaying debug information about game objects.
+*/
+var Phaser;
+(function (Phaser) {
+    var DebugUtils = (function () {
+        function DebugUtils() { }
+        DebugUtils.renderSpriteInfo = /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function renderSpriteInfo(sprite, x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.game.stage.context.fillStyle = color;
+            DebugUtils.game.stage.context.fillText('Sprite: ' + ' (' + sprite.frameBounds.width + ' x ' + sprite.frameBounds.height + ')', x, y);
+            DebugUtils.game.stage.context.fillText('x: ' + sprite.frameBounds.x.toFixed(1) + ' y: ' + sprite.frameBounds.y.toFixed(1) + ' angle: ' + sprite.angle.toFixed(1), x, y + 14);
+            //DebugUtils.game.stage.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
+            //DebugUtils.game.stage.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
+                    };
+        return DebugUtils;
+    })();
+    Phaser.DebugUtils = DebugUtils;    
+})(Phaser || (Phaser = {}));
 /// <reference path="core/Rectangle.ts" />
 /// <reference path="math/LinkedList.ts" />
 /// <reference path="math/QuadTree.ts" />
@@ -15692,6 +15740,7 @@ var Phaser;
 /// <reference path="renderers/IRenderer.ts" />
 /// <reference path="renderers/HeadlessRenderer.ts" />
 /// <reference path="renderers/CanvasRenderer.ts" />
+/// <reference path="utils/DebugUtils.ts" />
 /**
 * Phaser - Game
 *
@@ -15861,6 +15910,7 @@ var Phaser;
                 this.framerate = 60;
                 this.isBooted = true;
                 //  Set-up some static helper references
+                Phaser.DebugUtils.game = this;
                 Phaser.ColorUtils.game = this;
                 //  Display the default game screen?
                 if(this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null) {
@@ -16190,23 +16240,6 @@ var Phaser;
         //this.context.fillRect(this._dx, this._dy + sh, 1, 1);       //  bottom left
         //this.context.fillRect(this._dx + hw, this._dy + sh, 1, 1);  //  bottom center
         //this.context.fillRect(this._dx + sw, this._dy + sh, 1, 1);  //  bottom right
-        
-        }
-        */
-        /**
-        * Render debug infos. (including name, bounds info, position and some other properties)
-        * @param x {number} X position of the debug info to be rendered.
-        * @param y {number} Y position of the debug info to be rendered.
-        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-        */
-        /*
-        public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
-        
-        this.context.fillStyle = color;
-        this.context.fillText('Sprite: ' + this.name + ' (' + this.frameBounds.width + ' x ' + this.frameBounds.height + ')', x, y);
-        this.context.fillText('x: ' + this.frameBounds.x.toFixed(1) + ' y: ' + this.frameBounds.y.toFixed(1) + ' rotation: ' + this.angle.toFixed(1), x, y + 14);
-        this.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
-        this.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
         
         }
         */

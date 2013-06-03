@@ -7,15 +7,16 @@
         game.loader.addImageFile('melon', 'assets/sprites/melon.png');
         game.loader.load();
     }
+    var test;
     function create() {
         game.add.sprite(0, 0, 'backdrop');
         for(var i = 0; i < 1; i++) {
             //var sprite: Phaser.Sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'melon');
-            var sprite = game.add.sprite(200, 200, 'melon');
-            sprite.scrollFactor.setTo(2, 2);
-            sprite.scale.setTo(2, 2);
-            sprite.input.start(i, false, true);
-            sprite.input.enableDrag();
+            //sprite.input.start(i, false, true);
+            //sprite.input.enableDrag();
+            test = game.add.sprite(700, 200, 'melon');
+            test.input.start(i, false, true);
+            test.input.enableDrag();
         }
     }
     function update() {
@@ -32,5 +33,7 @@
     }
     function render() {
         game.camera.renderDebugInfo(32, 32);
+        test.body.renderDebugInfo(300, 32);
+        Phaser.DebugUtils.renderSpriteInfo(test, 32, 200);
     }
 })();

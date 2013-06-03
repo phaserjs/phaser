@@ -17,6 +17,28 @@ module Phaser {
 
         static _tempPoint: Point;
 
+        /**
+         * Check whether this object is visible in a specific camera rectangle.
+         * @param camera {Rectangle} The rectangle you want to check.
+         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+         */
+        static inCamera(camera: Camera, sprite: Sprite): bool {
+
+            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
+            if (sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0)
+            {
+                return true;
+            }
+
+            var dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
+            var dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
+            var dw = sprite.frameBounds.width * sprite.scale.x;
+            var dh = sprite.frameBounds.height * sprite.scale.y;
+
+            return (camera.scaledX + camera.worldView.width > this._dx) && (camera.scaledX < this._dx + this._dw) && (camera.scaledY + camera.worldView.height > this._dy) && (camera.scaledY < this._dy + this._dh);
+
+        }
+
         static getAsPoints(sprite: Sprite): Phaser.Point[] {
 
             var out: Phaser.Point[] = [];
@@ -200,7 +222,7 @@ module Phaser {
         /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param point {Point} Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
         * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.

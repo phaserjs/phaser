@@ -3311,6 +3311,12 @@ module Phaser {
 module Phaser {
     class SpriteUtils {
         static _tempPoint: Point;
+        /**
+        * Check whether this object is visible in a specific camera rectangle.
+        * @param camera {Rectangle} The rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        */
+        static inCamera(camera: Camera, sprite: Sprite): bool;
         static getAsPoints(sprite: Sprite): Point[];
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
@@ -3333,7 +3339,7 @@ module Phaser {
         /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param point {Point} Takes a <code>MicroPoint</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param point {Point} Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
         * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
@@ -4107,6 +4113,7 @@ module Phaser {
         * The Sprite origin is the point around which scale and rotation takes place.
         */
         public origin: Vec2;
+        public screen: Point;
         /**
         * x value of the object.
         */
@@ -4508,6 +4515,10 @@ module Phaser {
         * Currently used camera.
         */
         public current: Camera;
+        /**
+        * The default created camera.
+        */
+        public default: Camera;
         /**
         * Get all the cameras.
         *
@@ -8408,6 +8419,23 @@ module Phaser {
         */
         public renderSprite(camera: Camera, sprite: Sprite): bool;
         public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
+    }
+}
+/**
+* Phaser - DebugUtils
+*
+* A collection of methods for displaying debug information about game objects.
+*/
+module Phaser {
+    class DebugUtils {
+        static game: Game;
+        /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        static renderSpriteInfo(sprite: Sprite, x: number, y: number, color?: string): void;
     }
 }
 /**
