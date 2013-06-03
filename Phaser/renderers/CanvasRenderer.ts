@@ -90,12 +90,12 @@ module Phaser {
                 return true;
             }
 
-            this._dx = sprite.frameBounds.x - camera.worldView.x;
-            this._dy = sprite.frameBounds.y - camera.worldView.y;
+            this._dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
+            this._dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
             this._dw = sprite.frameBounds.width * sprite.scale.x;
             this._dh = sprite.frameBounds.height * sprite.scale.y;
 
-            return (camera.worldView.right > this._dx) && (camera.worldView.x < this._dx + this._dw) && (camera.worldView.bottom > this._dy) && (camera.worldView.y < this._dy + this._dh);
+            return (camera.scaledX + camera.worldView.width > this._dx) && (camera.scaledX < this._dx + this._dw) && (camera.scaledY + camera.worldView.height > this._dy) && (camera.scaledY < this._dy + this._dh);
 
         }
 

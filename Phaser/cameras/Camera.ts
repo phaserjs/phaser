@@ -474,6 +474,11 @@ module Phaser {
                 this._game.stage.context.globalAlpha = 1;
             }
 
+            //  Debug test
+            this._game.stage.context.fillStyle = 'rgba(255,0,0,0.3)';
+            //this._game.stage.context.fillRect(this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
+            this._game.stage.context.fillRect(this.worldView.x, this.worldView.y, this.worldView.width, this.worldView.height);
+
         }
 
         /**

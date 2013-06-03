@@ -173,6 +173,14 @@
     <Content Include="utils\CircleUtils.js">
       <DependentUpon>CircleUtils.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="utils\PixelUtils.ts" />
+    <TypeScriptCompile Include="utils\ColorUtils.ts" />
+    <Content Include="utils\ColorUtils.js">
+      <DependentUpon>ColorUtils.ts</DependentUpon>
+    </Content>
+    <Content Include="utils\PixelUtils.js">
+      <DependentUpon>PixelUtils.ts</DependentUpon>
+    </Content>
     <Content Include="utils\PointUtils.js">
       <DependentUpon>PointUtils.ts</DependentUpon>
     </Content>

@@ -2928,6 +2928,255 @@ module Phaser {
     }
 }
 /**
+* Phaser - ColorUtils
+*
+* A collection of methods useful for manipulating color values.
+*/
+module Phaser {
+    class ColorUtils {
+        static game: Game;
+        /**
+        * Given an alpha and 3 color values this will return an integer representation of it
+        *
+        * @param alpha {number} The Alpha value (between 0 and 255)
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
+        *
+        * @return  A native color value integer (format: 0xAARRGGBB)
+        */
+        static getColor32(alpha: number, red: number, green: number, blue: number): number;
+        /**
+        * Given 3 color values this will return an integer representation of it
+        *
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
+        *
+        * @return  A native color value integer (format: 0xRRGGBB)
+        */
+        static getColor(red: number, green: number, blue: number): number;
+        /**
+        * Get HSV color wheel values in an array which will be 360 elements in size
+        *
+        * @param	alpha	Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
+        *
+        * @return	Array
+        */
+        static getHSVColorWheel(alpha?: number): any[];
+        /**
+        * Returns a Complementary Color Harmony for the given color.
+        * <p>A complementary hue is one directly opposite the color given on the color wheel</p>
+        * <p>Value returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        *
+        * @return 0xAARRGGBB format color value
+        */
+        static getComplementHarmony(color: number): number;
+        /**
+        * Returns an Analogous Color Harmony for the given color.
+        * <p>An Analogous harmony are hues adjacent to each other on the color wheel</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        * @param	threshold Control how adjacent the colors will be (default +- 30 degrees)
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
+        */
+        static getAnalogousHarmony(color: number, threshold?: number): {
+            color1: number;
+            color2: number;
+            color3: number;
+            hue1: any;
+            hue2: number;
+            hue3: number;
+        };
+        /**
+        * Returns an Split Complement Color Harmony for the given color.
+        * <p>A Split Complement harmony are the two hues on either side of the color's Complement</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        * @param	threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
+        */
+        static getSplitComplementHarmony(color: number, threshold?: number): any;
+        /**
+        * Returns a Triadic Color Harmony for the given color.
+        * <p>A Triadic harmony are 3 hues equidistant from each other on the color wheel</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
+        */
+        static getTriadicHarmony(color: number): any;
+        /**
+        * Returns a string containing handy information about the given color including string hex value,
+        * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
+        *
+        * @param	color A color value in the format 0xAARRGGBB
+        *
+        * @return	string containing the 3 lines of information
+        */
+        static getColorInfo(color: number): string;
+        /**
+        * Return a string representation of the color in the format 0xAARRGGBB
+        *
+        * @param	color The color to get the string representation for
+        *
+        * @return	A string of length 10 characters in the format 0xAARRGGBB
+        */
+        static RGBtoHexstring(color: number): string;
+        /**
+        * Return a string representation of the color in the format #RRGGBB
+        *
+        * @param	color The color to get the string representation for
+        *
+        * @return	A string of length 10 characters in the format 0xAARRGGBB
+        */
+        static RGBtoWebstring(color: number): string;
+        /**
+        * Return a string containing a hex representation of the given color
+        *
+        * @param	color The color channel to get the hex value for, must be a value between 0 and 255)
+        *
+        * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
+        */
+        static colorToHexstring(color: number): string;
+        /**
+        * Convert a HSV (hue, saturation, lightness) color space value to an RGB color
+        *
+        * @param	h 		Hue degree, between 0 and 359
+        * @param	s 		Saturation, between 0.0 (grey) and 1.0
+        * @param	v 		Value, between 0.0 (black) and 1.0
+        * @param	alpha	Alpha value to set per color (between 0 and 255)
+        *
+        * @return 32-bit ARGB color value (0xAARRGGBB)
+        */
+        static HSVtoRGB(h: number, s: number, v: number, alpha?: number): number;
+        /**
+        * Convert an RGB color value to an object containing the HSV color space values: Hue, Saturation and Lightness
+        *
+        * @param	color In format 0xRRGGBB
+        *
+        * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
+        */
+        static RGBtoHSV(color: number): any;
+        /**
+        *
+        * @method interpolateColor
+        * @param {Number} color1
+        * @param {Number} color2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @param {Number} alpha
+        * @return {Number}
+        * @static
+        */
+        static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha?: number): number;
+        /**
+        *
+        * @method interpolateColorWithRGB
+        * @param {Number} color
+        * @param {Number} r2
+        * @param {Number} g2
+        * @param {Number} b2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @return {Number}
+        * @static
+        */
+        static interpolateColorWithRGB(color: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
+        /**
+        *
+        * @method interpolateRGB
+        * @param {Number} r1
+        * @param {Number} g1
+        * @param {Number} b1
+        * @param {Number} r2
+        * @param {Number} g2
+        * @param {Number} b2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @return {Number}
+        * @static
+        */
+        static interpolateRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
+        /**
+        * Returns a random color value between black and white
+        * <p>Set the min value to start each channel from the given offset.</p>
+        * <p>Set the max value to restrict the maximum color used per channel</p>
+        *
+        * @param	min		The lowest value to use for the color
+        * @param	max 	The highest value to use for the color
+        * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
+        *
+        * @return 32-bit color value with alpha
+        */
+        static getRandomColor(min?: number, max?: number, alpha?: number): number;
+        /**
+        * Return the component parts of a color as an Object with the properties alpha, red, green, blue
+        *
+        * <p>Alpha will only be set if it exist in the given color (0xAARRGGBB)</p>
+        *
+        * @param	color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB)
+        *
+        * @return Object with properties: alpha, red, green, blue
+        */
+        static getRGB(color: number): any;
+        /**
+        *
+        * @method getWebRGB
+        * @param {Number} color
+        * @return {Any}
+        */
+        static getWebRGB(color: number): any;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
+        */
+        static getAlpha(color: number): number;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
+        */
+        static getAlphaFloat(color: number): number;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
+        */
+        static getRed(color: number): number;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
+        */
+        static getGreen(color: number): number;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
+        */
+        static getBlue(color: number): number;
+    }
+}
+/**
 * Phaser - DynamicTexture
 *
 * A DynamicTexture can be thought of as a mini canvas into which you can draw anything.
@@ -3052,27 +3301,6 @@ module Phaser {
         public render(x?: number, y?: number): void;
         public width : number;
         public height : number;
-        /**
-        * Given an alpha and 3 color values this will return an integer representation of it
-        *
-        * @param alpha {number} The Alpha value (between 0 and 255)
-        * @param red   {number} The Red channel value (between 0 and 255)
-        * @param green {number} The Green channel value (between 0 and 255)
-        * @param blue  {number} The Blue channel value (between 0 and 255)
-        *
-        * @return  A native color value integer (format: 0xAARRGGBB)
-        */
-        private getColor32(alpha, red, green, blue);
-        /**
-        * Given 3 color values this will return an integer representation of it
-        *
-        * @param red   {number} The Red channel value (between 0 and 255)
-        * @param green {number} The Green channel value (between 0 and 255)
-        * @param blue  {number} The Blue channel value (between 0 and 255)
-        *
-        * @return  A native color value integer (format: 0xRRGGBB)
-        */
-        private getColor(red, green, blue);
     }
 }
 /**
@@ -8470,6 +8698,27 @@ module Phaser {
         public game: Game;
         public context: CanvasRenderingContext2D;
         public render(): void;
+    }
+}
+/**
+* Phaser - PixelUtils
+*
+* A collection of methods useful for manipulating pixels.
+*/
+module Phaser {
+    class PixelUtils {
+        static boot(): void;
+        /**
+        * Canvas element used in 1x1 pixel checks.
+        * @type {HTMLCanvasElement}
+        */
+        static pixelCanvas: HTMLCanvasElement;
+        /**
+        * Render context of pixelCanvas
+        * @type {CanvasRenderingContext2D}
+        */
+        static pixelContext: CanvasRenderingContext2D;
+        static getPixel(key: string, x: number, y: number): number;
     }
 }
 /**

@@ -4890,7 +4890,476 @@ var Phaser;
     Phaser.RectangleUtils = RectangleUtils;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="../core/Point.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../core/Circle.ts" />
+/**
+* Phaser - ColorUtils
+*
+* A collection of methods useful for manipulating color values.
+*/
+var Phaser;
+(function (Phaser) {
+    var ColorUtils = (function () {
+        function ColorUtils() { }
+        ColorUtils.getColor32 = /**
+        * Given an alpha and 3 color values this will return an integer representation of it
+        *
+        * @param alpha {number} The Alpha value (between 0 and 255)
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
+        *
+        * @return  A native color value integer (format: 0xAARRGGBB)
+        */
+        function getColor32(alpha, red, green, blue) {
+            return alpha << 24 | red << 16 | green << 8 | blue;
+        };
+        ColorUtils.getColor = /**
+        * Given 3 color values this will return an integer representation of it
+        *
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
+        *
+        * @return  A native color value integer (format: 0xRRGGBB)
+        */
+        function getColor(red, green, blue) {
+            return red << 16 | green << 8 | blue;
+        };
+        ColorUtils.getHSVColorWheel = /**
+        * Get HSV color wheel values in an array which will be 360 elements in size
+        *
+        * @param	alpha	Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
+        *
+        * @return	Array
+        */
+        function getHSVColorWheel(alpha) {
+            if (typeof alpha === "undefined") { alpha = 255; }
+            var colors = [];
+            for(var c = 0; c <= 359; c++) {
+                //colors[c] = HSVtoRGB(c, 1.0, 1.0, alpha);
+                colors[c] = ColorUtils.getWebRGB(ColorUtils.HSVtoRGB(c, 1.0, 1.0, alpha));
+            }
+            return colors;
+        };
+        ColorUtils.getComplementHarmony = /**
+        * Returns a Complementary Color Harmony for the given color.
+        * <p>A complementary hue is one directly opposite the color given on the color wheel</p>
+        * <p>Value returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        *
+        * @return 0xAARRGGBB format color value
+        */
+        function getComplementHarmony(color) {
+            var hsv = ColorUtils.RGBtoHSV(color);
+            var opposite = ColorUtils.game.math.wrapValue(hsv.hue, 180, 359);
+            return ColorUtils.HSVtoRGB(opposite, 1.0, 1.0);
+        };
+        ColorUtils.getAnalogousHarmony = /**
+        * Returns an Analogous Color Harmony for the given color.
+        * <p>An Analogous harmony are hues adjacent to each other on the color wheel</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        * @param	threshold Control how adjacent the colors will be (default +- 30 degrees)
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
+        */
+        function getAnalogousHarmony(color, threshold) {
+            if (typeof threshold === "undefined") { threshold = 30; }
+            var hsv = ColorUtils.RGBtoHSV(color);
+            if(threshold > 359 || threshold < 0) {
+                throw Error("Color Warning: Invalid threshold given to getAnalogousHarmony()");
+            }
+            var warmer = ColorUtils.game.math.wrapValue(hsv.hue, 359 - threshold, 359);
+            var colder = ColorUtils.game.math.wrapValue(hsv.hue, threshold, 359);
+            return {
+                color1: color,
+                color2: ColorUtils.HSVtoRGB(warmer, 1.0, 1.0),
+                color3: ColorUtils.HSVtoRGB(colder, 1.0, 1.0),
+                hue1: hsv.hue,
+                hue2: warmer,
+                hue3: colder
+            };
+        };
+        ColorUtils.getSplitComplementHarmony = /**
+        * Returns an Split Complement Color Harmony for the given color.
+        * <p>A Split Complement harmony are the two hues on either side of the color's Complement</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        * @param	threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
+        */
+        function getSplitComplementHarmony(color, threshold) {
+            if (typeof threshold === "undefined") { threshold = 30; }
+            var hsv = ColorUtils.RGBtoHSV(color);
+            if(threshold >= 359 || threshold <= 0) {
+                throw Error("FlxColor Warning: Invalid threshold given to getSplitComplementHarmony()");
+            }
+            var opposite = ColorUtils.game.math.wrapValue(hsv.hue, 180, 359);
+            var warmer = ColorUtils.game.math.wrapValue(hsv.hue, opposite - threshold, 359);
+            var colder = ColorUtils.game.math.wrapValue(hsv.hue, opposite + threshold, 359);
+            return {
+                color1: color,
+                color2: ColorUtils.HSVtoRGB(warmer, hsv.saturation, hsv.value),
+                color3: ColorUtils.HSVtoRGB(colder, hsv.saturation, hsv.value),
+                hue1: hsv.hue,
+                hue2: warmer,
+                hue3: colder
+            };
+        };
+        ColorUtils.getTriadicHarmony = /**
+        * Returns a Triadic Color Harmony for the given color.
+        * <p>A Triadic harmony are 3 hues equidistant from each other on the color wheel</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
+        */
+        function getTriadicHarmony(color) {
+            var hsv = ColorUtils.RGBtoHSV(color);
+            var triadic1 = ColorUtils.game.math.wrapValue(hsv.hue, 120, 359);
+            var triadic2 = ColorUtils.game.math.wrapValue(triadic1, 120, 359);
+            return {
+                color1: color,
+                color2: ColorUtils.HSVtoRGB(triadic1, 1.0, 1.0),
+                color3: ColorUtils.HSVtoRGB(triadic2, 1.0, 1.0)
+            };
+        };
+        ColorUtils.getColorInfo = /**
+        * Returns a string containing handy information about the given color including string hex value,
+        * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
+        *
+        * @param	color A color value in the format 0xAARRGGBB
+        *
+        * @return	string containing the 3 lines of information
+        */
+        function getColorInfo(color) {
+            var argb = ColorUtils.getRGB(color);
+            var hsl = ColorUtils.RGBtoHSV(color);
+            //	Hex format
+            var result = ColorUtils.RGBtoHexstring(color) + "\n";
+            //	RGB format
+            result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
+            //	HSL info
+            result = result.concat("Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness);
+            return result;
+        };
+        ColorUtils.RGBtoHexstring = /**
+        * Return a string representation of the color in the format 0xAARRGGBB
+        *
+        * @param	color The color to get the string representation for
+        *
+        * @return	A string of length 10 characters in the format 0xAARRGGBB
+        */
+        function RGBtoHexstring(color) {
+            var argb = ColorUtils.getRGB(color);
+            return "0x" + ColorUtils.colorToHexstring(argb.alpha) + ColorUtils.colorToHexstring(argb.red) + ColorUtils.colorToHexstring(argb.green) + ColorUtils.colorToHexstring(argb.blue);
+        };
+        ColorUtils.RGBtoWebstring = /**
+        * Return a string representation of the color in the format #RRGGBB
+        *
+        * @param	color The color to get the string representation for
+        *
+        * @return	A string of length 10 characters in the format 0xAARRGGBB
+        */
+        function RGBtoWebstring(color) {
+            var argb = ColorUtils.getRGB(color);
+            return "#" + ColorUtils.colorToHexstring(argb.red) + ColorUtils.colorToHexstring(argb.green) + ColorUtils.colorToHexstring(argb.blue);
+        };
+        ColorUtils.colorToHexstring = /**
+        * Return a string containing a hex representation of the given color
+        *
+        * @param	color The color channel to get the hex value for, must be a value between 0 and 255)
+        *
+        * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
+        */
+        function colorToHexstring(color) {
+            var digits = "0123456789ABCDEF";
+            var lsd = color % 16;
+            var msd = (color - lsd) / 16;
+            var hexified = digits.charAt(msd) + digits.charAt(lsd);
+            return hexified;
+        };
+        ColorUtils.HSVtoRGB = /**
+        * Convert a HSV (hue, saturation, lightness) color space value to an RGB color
+        *
+        * @param	h 		Hue degree, between 0 and 359
+        * @param	s 		Saturation, between 0.0 (grey) and 1.0
+        * @param	v 		Value, between 0.0 (black) and 1.0
+        * @param	alpha	Alpha value to set per color (between 0 and 255)
+        *
+        * @return 32-bit ARGB color value (0xAARRGGBB)
+        */
+        function HSVtoRGB(h, s, v, alpha) {
+            if (typeof alpha === "undefined") { alpha = 255; }
+            var result;
+            if(s == 0.0) {
+                result = ColorUtils.getColor32(alpha, v * 255, v * 255, v * 255);
+            } else {
+                h = h / 60.0;
+                var f = h - Math.floor(h);
+                var p = v * (1.0 - s);
+                var q = v * (1.0 - s * f);
+                var t = v * (1.0 - s * (1.0 - f));
+                switch(Math.floor(h)) {
+                    case 0:
+                        result = ColorUtils.getColor32(alpha, v * 255, t * 255, p * 255);
+                        break;
+                    case 1:
+                        result = ColorUtils.getColor32(alpha, q * 255, v * 255, p * 255);
+                        break;
+                    case 2:
+                        result = ColorUtils.getColor32(alpha, p * 255, v * 255, t * 255);
+                        break;
+                    case 3:
+                        result = ColorUtils.getColor32(alpha, p * 255, q * 255, v * 255);
+                        break;
+                    case 4:
+                        result = ColorUtils.getColor32(alpha, t * 255, p * 255, v * 255);
+                        break;
+                    case 5:
+                        result = ColorUtils.getColor32(alpha, v * 255, p * 255, q * 255);
+                        break;
+                    default:
+                        throw new Error("ColorUtils.HSVtoRGB : Unknown color");
+                }
+            }
+            return result;
+        };
+        ColorUtils.RGBtoHSV = /**
+        * Convert an RGB color value to an object containing the HSV color space values: Hue, Saturation and Lightness
+        *
+        * @param	color In format 0xRRGGBB
+        *
+        * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
+        */
+        function RGBtoHSV(color) {
+            var rgb = ColorUtils.getRGB(color);
+            var red = rgb.red / 255;
+            var green = rgb.green / 255;
+            var blue = rgb.blue / 255;
+            var min = Math.min(red, green, blue);
+            var max = Math.max(red, green, blue);
+            var delta = max - min;
+            var lightness = (max + min) / 2;
+            var hue;
+            var saturation;
+            //  Grey color, no chroma
+            if(delta == 0) {
+                hue = 0;
+                saturation = 0;
+            } else {
+                if(lightness < 0.5) {
+                    saturation = delta / (max + min);
+                } else {
+                    saturation = delta / (2 - max - min);
+                }
+                var delta_r = (((max - red) / 6) + (delta / 2)) / delta;
+                var delta_g = (((max - green) / 6) + (delta / 2)) / delta;
+                var delta_b = (((max - blue) / 6) + (delta / 2)) / delta;
+                if(red == max) {
+                    hue = delta_b - delta_g;
+                } else if(green == max) {
+                    hue = (1 / 3) + delta_r - delta_b;
+                } else if(blue == max) {
+                    hue = (2 / 3) + delta_g - delta_r;
+                }
+                if(hue < 0) {
+                    hue += 1;
+                }
+                if(hue > 1) {
+                    hue -= 1;
+                }
+            }
+            //	Keep the value with 0 to 359
+            hue *= 360;
+            hue = Math.round(hue);
+            return {
+                hue: hue,
+                saturation: saturation,
+                lightness: lightness,
+                value: lightness
+            };
+        };
+        ColorUtils.interpolateColor = /**
+        *
+        * @method interpolateColor
+        * @param {Number} color1
+        * @param {Number} color2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @param {Number} alpha
+        * @return {Number}
+        * @static
+        */
+        function interpolateColor(color1, color2, steps, currentStep, alpha) {
+            if (typeof alpha === "undefined") { alpha = 255; }
+            var src1 = ColorUtils.getRGB(color1);
+            var src2 = ColorUtils.getRGB(color2);
+            var r = (((src2.red - src1.red) * currentStep) / steps) + src1.red;
+            var g = (((src2.green - src1.green) * currentStep) / steps) + src1.green;
+            var b = (((src2.blue - src1.blue) * currentStep) / steps) + src1.blue;
+            return ColorUtils.getColor32(alpha, r, g, b);
+        };
+        ColorUtils.interpolateColorWithRGB = /**
+        *
+        * @method interpolateColorWithRGB
+        * @param {Number} color
+        * @param {Number} r2
+        * @param {Number} g2
+        * @param {Number} b2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @return {Number}
+        * @static
+        */
+        function interpolateColorWithRGB(color, r2, g2, b2, steps, currentStep) {
+            var src = ColorUtils.getRGB(color);
+            var r = (((r2 - src.red) * currentStep) / steps) + src.red;
+            var g = (((g2 - src.green) * currentStep) / steps) + src.green;
+            var b = (((b2 - src.blue) * currentStep) / steps) + src.blue;
+            return ColorUtils.getColor(r, g, b);
+        };
+        ColorUtils.interpolateRGB = /**
+        *
+        * @method interpolateRGB
+        * @param {Number} r1
+        * @param {Number} g1
+        * @param {Number} b1
+        * @param {Number} r2
+        * @param {Number} g2
+        * @param {Number} b2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @return {Number}
+        * @static
+        */
+        function interpolateRGB(r1, g1, b1, r2, g2, b2, steps, currentStep) {
+            var r = (((r2 - r1) * currentStep) / steps) + r1;
+            var g = (((g2 - g1) * currentStep) / steps) + g1;
+            var b = (((b2 - b1) * currentStep) / steps) + b1;
+            return ColorUtils.getColor(r, g, b);
+        };
+        ColorUtils.getRandomColor = /**
+        * Returns a random color value between black and white
+        * <p>Set the min value to start each channel from the given offset.</p>
+        * <p>Set the max value to restrict the maximum color used per channel</p>
+        *
+        * @param	min		The lowest value to use for the color
+        * @param	max 	The highest value to use for the color
+        * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
+        *
+        * @return 32-bit color value with alpha
+        */
+        function getRandomColor(min, max, alpha) {
+            if (typeof min === "undefined") { min = 0; }
+            if (typeof max === "undefined") { max = 255; }
+            if (typeof alpha === "undefined") { alpha = 255; }
+            //	Sanity checks
+            if(max > 255) {
+                return ColorUtils.getColor(255, 255, 255);
+            }
+            if(min > max) {
+                return ColorUtils.getColor(255, 255, 255);
+            }
+            var red = min + Math.round(Math.random() * (max - min));
+            var green = min + Math.round(Math.random() * (max - min));
+            var blue = min + Math.round(Math.random() * (max - min));
+            return ColorUtils.getColor32(alpha, red, green, blue);
+        };
+        ColorUtils.getRGB = /**
+        * Return the component parts of a color as an Object with the properties alpha, red, green, blue
+        *
+        * <p>Alpha will only be set if it exist in the given color (0xAARRGGBB)</p>
+        *
+        * @param	color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB)
+        *
+        * @return Object with properties: alpha, red, green, blue
+        */
+        function getRGB(color) {
+            return {
+                alpha: color >>> 24,
+                red: color >> 16 & 0xFF,
+                green: color >> 8 & 0xFF,
+                blue: color & 0xFF
+            };
+        };
+        ColorUtils.getWebRGB = /**
+        *
+        * @method getWebRGB
+        * @param {Number} color
+        * @return {Any}
+        */
+        function getWebRGB(color) {
+            var alpha = (color >>> 24) / 255;
+            var red = color >> 16 & 0xFF;
+            var green = color >> 8 & 0xFF;
+            var blue = color & 0xFF;
+            return 'rgba(' + red.toString() + ',' + green.toString() + ',' + blue.toString() + ',' + alpha.toString() + ')';
+        };
+        ColorUtils.getAlpha = /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
+        */
+        function getAlpha(color) {
+            return color >>> 24;
+        };
+        ColorUtils.getAlphaFloat = /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
+        */
+        function getAlphaFloat(color) {
+            return (color >>> 24) / 255;
+        };
+        ColorUtils.getRed = /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
+        */
+        function getRed(color) {
+            return color >> 16 & 0xFF;
+        };
+        ColorUtils.getGreen = /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
+        */
+        function getGreen(color) {
+            return color >> 8 & 0xFF;
+        };
+        ColorUtils.getBlue = /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
+        */
+        function getBlue(color) {
+            return color & 0xFF;
+        };
+        return ColorUtils;
+    })();
+    Phaser.ColorUtils = ColorUtils;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
 /// <reference path="../utils/RectangleUtils.ts" />
+/// <reference path="../utils/ColorUtils.ts" />
 /// <reference path="IGameObject.ts" />
 /**
 * Phaser - DynamicTexture
@@ -4940,7 +5409,7 @@ var Phaser;
             //b = imageData.data[2];
             //a = imageData.data[3];
             var imageData = this.context.getImageData(x, y, 1, 1);
-            return this.getColor(imageData.data[0], imageData.data[1], imageData.data[2]);
+            return Phaser.ColorUtils.getColor(imageData.data[0], imageData.data[1], imageData.data[2]);
         };
         DynamicTexture.prototype.getPixel32 = /**
         * Get a color of a specific pixel (including alpha value).
@@ -4950,7 +5419,7 @@ var Phaser;
         */
         function (x, y) {
             var imageData = this.context.getImageData(x, y, 1, 1);
-            return this.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
+            return Phaser.ColorUtils.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
         };
         DynamicTexture.prototype.getPixels = /**
         * Get pixels in array in a specific rectangle.
@@ -5101,31 +5570,6 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        DynamicTexture.prototype.getColor32 = /**
-        * Given an alpha and 3 color values this will return an integer representation of it
-        *
-        * @param alpha {number} The Alpha value (between 0 and 255)
-        * @param red   {number} The Red channel value (between 0 and 255)
-        * @param green {number} The Green channel value (between 0 and 255)
-        * @param blue  {number} The Blue channel value (between 0 and 255)
-        *
-        * @return  A native color value integer (format: 0xAARRGGBB)
-        */
-        function (alpha, red, green, blue) {
-            return alpha << 24 | red << 16 | green << 8 | blue;
-        };
-        DynamicTexture.prototype.getColor = /**
-        * Given 3 color values this will return an integer representation of it
-        *
-        * @param red   {number} The Red channel value (between 0 and 255)
-        * @param green {number} The Green channel value (between 0 and 255)
-        * @param blue  {number} The Blue channel value (between 0 and 255)
-        *
-        * @return  A native color value integer (format: 0xRRGGBB)
-        */
-        function (red, green, blue) {
-            return red << 16 | green << 8 | blue;
-        };
         return DynamicTexture;
     })();
     Phaser.DynamicTexture = DynamicTexture;    
@@ -7289,6 +7733,10 @@ var Phaser;
             if(this.alpha !== 1) {
                 this._game.stage.context.globalAlpha = 1;
             }
+            //  Debug test
+            this._game.stage.context.fillStyle = 'rgba(255,0,0,0.3)';
+            //this._game.stage.context.fillRect(this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
+            this._game.stage.context.fillRect(this.worldView.x, this.worldView.y, this.worldView.width, this.worldView.height);
         };
         Camera.prototype.setPosition = /**
         * Set position of this camera.
@@ -13544,7 +13992,6 @@ var Phaser;
                         }
                     }
                 }
-                //console.log('highest priority was', _highestPriority);
                 if(this.isDown) {
                     //  Now update all objects with the highest priority ID (can be more than 1)
                     for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
@@ -15029,11 +15476,11 @@ var Phaser;
             if(sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0) {
                 return true;
             }
-            this._dx = sprite.frameBounds.x - camera.worldView.x;
-            this._dy = sprite.frameBounds.y - camera.worldView.y;
+            this._dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
+            this._dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
             this._dw = sprite.frameBounds.width * sprite.scale.x;
             this._dh = sprite.frameBounds.height * sprite.scale.y;
-            return (camera.worldView.right > this._dx) && (camera.worldView.x < this._dx + this._dw) && (camera.worldView.bottom > this._dy) && (camera.worldView.y < this._dy + this._dh);
+            return (camera.scaledX + camera.worldView.width > this._dx) && (camera.scaledX < this._dx + this._dw) && (camera.scaledY + camera.worldView.height > this._dy) && (camera.scaledY < this._dy + this._dh);
         };
         CanvasRenderer.prototype.renderSprite = /**
         * Render this sprite to specific camera. Called by game loop after update().
@@ -15042,6 +15489,7 @@ var Phaser;
         */
         function (camera, sprite) {
             if(sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
+                console.log('out of camera', sprite.frameBounds.x, sprite.frameBounds.y, sprite.frameBounds.width, sprite.frameBounds.height);
                 return false;
             }
             this._count++;
@@ -15412,6 +15860,8 @@ var Phaser;
                 this.input.boot();
                 this.framerate = 60;
                 this.isBooted = true;
+                //  Set-up some static helper references
+                Phaser.ColorUtils.game = this;
                 //  Display the default game screen?
                 if(this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null) {
                     this._raf = new Phaser.RequestAnimationFrame(this, this.bootLoop);
@@ -15797,6 +16247,34 @@ var Phaser;
         return Polygon;
     })();
     Phaser.Polygon = Polygon;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../core/Point.ts" />
+/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../core/Circle.ts" />
+/**
+* Phaser - PixelUtils
+*
+* A collection of methods useful for manipulating pixels.
+*/
+var Phaser;
+(function (Phaser) {
+    var PixelUtils = (function () {
+        function PixelUtils() { }
+        PixelUtils.boot = function boot() {
+            PixelUtils.pixelCanvas = document.createElement('canvas');
+            PixelUtils.pixelCanvas.width = 1;
+            PixelUtils.pixelCanvas.height = 1;
+            PixelUtils.pixelContext = PixelUtils.pixelCanvas.getContext('2d');
+        };
+        PixelUtils.getPixel = function getPixel(key, x, y) {
+            //  write out a single pixel (won't help with rotated sprites though.. hmm)
+            var imageData = PixelUtils.pixelContext.getImageData(0, 0, 1, 1);
+            return Phaser.ColorUtils.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
+        };
+        return PixelUtils;
+    })();
+    Phaser.PixelUtils = PixelUtils;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**

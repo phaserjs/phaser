@@ -88,6 +88,14 @@
     <Content Include="input\drag sprite 2.js">
       <DependentUpon>drag sprite 2.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="input\motion lock.ts" />
+    <TypeScriptCompile Include="input\motion lock 2.ts" />
+    <Content Include="input\motion lock 2.js">
+      <DependentUpon>motion lock 2.ts</DependentUpon>
+    </Content>
+    <Content Include="input\motion lock.js">
+      <DependentUpon>motion lock.ts</DependentUpon>
+    </Content>
     <Content Include="input\over sprite 1.js">
       <DependentUpon>over sprite 1.ts</DependentUpon>
     </Content>
@@ -96,8 +104,16 @@
       <DependentUpon>over sprite 2.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="input\touch priority.ts" />
+    <TypeScriptCompile Include="input\snap 1.ts" />
+    <Content Include="input\snap 1.js">
+      <DependentUpon>snap 1.ts</DependentUpon>
+    </Content>
     <Content Include="input\touch priority.js">
       <DependentUpon>touch priority.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="input\world drag.ts" />
+    <Content Include="input\world drag.js">
+      <DependentUpon>world drag.ts</DependentUpon>
     </Content>
     <Content Include="particles\graphic emitter.js">
       <DependentUpon>graphic emitter.ts</DependentUpon>

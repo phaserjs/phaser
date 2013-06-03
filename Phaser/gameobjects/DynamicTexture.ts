@@ -1,5 +1,6 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../utils/RectangleUtils.ts" />
+/// <reference path="../utils/ColorUtils.ts" />
 /// <reference path="IGameObject.ts" />
 
 /**
@@ -90,7 +91,7 @@ module Phaser {
             //a = imageData.data[3];
             var imageData = this.context.getImageData(x, y, 1, 1);
 
-            return this.getColor(imageData.data[0], imageData.data[1], imageData.data[2]);
+            return ColorUtils.getColor(imageData.data[0], imageData.data[1], imageData.data[2]);
 
         }
 
@@ -104,7 +105,7 @@ module Phaser {
 
             var imageData = this.context.getImageData(x, y, 1, 1);
 
-            return this.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
+            return ColorUtils.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
 
         }
 
@@ -286,37 +287,6 @@ module Phaser {
 
         public get height(): number {
             return this.bounds.height;
-        }
-
-        /**
-         * Given an alpha and 3 color values this will return an integer representation of it
-         *
-         * @param alpha {number} The Alpha value (between 0 and 255)
-         * @param red   {number} The Red channel value (between 0 and 255)
-         * @param green {number} The Green channel value (between 0 and 255)
-         * @param blue  {number} The Blue channel value (between 0 and 255)
-         *
-         * @return  A native color value integer (format: 0xAARRGGBB)
-         */
-        private getColor32(alpha: number, red: number, green: number, blue: number): number {
-
-            return alpha << 24 | red << 16 | green << 8 | blue;
-
-        }
-
-        /**
-         * Given 3 color values this will return an integer representation of it
-         *
-         * @param red   {number} The Red channel value (between 0 and 255)
-         * @param green {number} The Green channel value (between 0 and 255)
-         * @param blue  {number} The Blue channel value (between 0 and 255)
-         *
-         * @return  A native color value integer (format: 0xRRGGBB)
-         */
-        private getColor(red: number, green: number, blue: number): number {
-
-            return red << 16 | green << 8 | blue;
-
         }
 
     }

@@ -72,6 +72,9 @@ V1.0.0
 * Added Group.swap(a,b) to swap the z-index of 2 objects with optional rendering update boolean
 * Sprites dispatch killed/revived and added to and removed from Group events.
 * Added Input drag, bounds, sprite bounds and snapping support.
+* Added the new ColorUtils class full of lots of handy color manipulation functions.
+* Fixed issue in Camera.inCamera check where it wouldn't take into consideration the Sprites scrollFactor.
+
 
 
 V0.9.6

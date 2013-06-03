@@ -302,6 +302,9 @@ module Phaser {
                 this.framerate = 60;
                 this.isBooted = true;
 
+                //  Set-up some static helper references
+                ColorUtils.game = this;
+
                 //  Display the default game screen?
                 if (this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
                 {

@@ -374,8 +374,6 @@ module Phaser {
                     }
                 }
 
-                //console.log('highest priority was', _highestPriority);
-
                 if (this.isDown)
                 {
                     //  Now update all objects with the highest priority ID (can be more than 1)
