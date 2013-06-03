@@ -252,8 +252,6 @@ module Phaser {
 
         }
 
-        //  Sprite Drag Related
-
         /**
         * The Game Object this Pointer is currently dragging.
         * @property draggedObject
@@ -369,14 +367,14 @@ module Phaser {
                 {
                     if (this.game.input.inputObjects[i].input.enabled)
                     {
-                        this.game.input.inputObjects[i].input.update(this);
-
-                        if (this.game.input.inputObjects[i].input.priorityID > _highestPriority)
+                        if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].input.priorityID > _highestPriority)
                         {
                             _highestPriority = this.game.input.inputObjects[i].input.priorityID;
                         }
                     }
                 }
+
+                //console.log('highest priority was', _highestPriority);
 
                 if (this.isDown)
                 {
@@ -492,6 +490,16 @@ module Phaser {
             {
                 this.game.input.currentPointers--;
             }
+
+            for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+            {
+                if (this.game.input.inputObjects[i].input.enabled)
+                {
+                    this.game.input.inputObjects[i].input._releasedHandler(this);
+                }
+            }
+
+            this.draggedObject = null;
 
             return this;
 

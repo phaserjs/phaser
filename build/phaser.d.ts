@@ -3271,10 +3271,10 @@ module Phaser.Components {
         * The PriorityID controls which Sprite receives an Input event first if they should overlap.
         */
         public priorityID: number;
-        public start(priority?: number, checkBody?: bool, useHandCursor?: bool): void;
-        public stop(): void;
         private _dragPoint;
+        private _draggedPointerID;
         public dragOffset: Point;
+        public isDragged: bool;
         public dragFromCenter: bool;
         public dragPixelPerfect: bool;
         public dragPixelPerfectAlpha: number;
@@ -3377,10 +3377,12 @@ module Phaser.Components {
         * @default false
         */
         public pointerDragged(pointer?: number): bool;
+        public start(priority?: number, checkBody?: bool, useHandCursor?: bool): Sprite;
+        public stop(): void;
         /**
         * Update
         */
-        public update(pointer: Pointer): void;
+        public update(pointer: Pointer): bool;
         public _touchedHandler(pointer: Pointer): void;
         public _releasedHandler(pointer: Pointer): void;
         /**

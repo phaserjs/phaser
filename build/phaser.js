@@ -5583,6 +5583,7 @@ var Phaser;
                 * The PriorityID controls which Sprite receives an Input event first if they should overlap.
                 */
                 this.priorityID = 0;
+                this.isDragged = false;
                 this.dragPixelPerfect = false;
                 this.allowHorizontalDrag = true;
                 this.allowVerticalDrag = true;
@@ -5609,50 +5610,6 @@ var Phaser;
                 this._sprite = parent;
                 this.enabled = false;
             }
-            Input.prototype.start = function (priority, checkBody, useHandCursor) {
-                if (typeof priority === "undefined") { priority = 0; }
-                if (typeof checkBody === "undefined") { checkBody = false; }
-                if (typeof useHandCursor === "undefined") { useHandCursor = false; }
-                //  Turning on
-                if(this.enabled) {
-                    return;
-                } else {
-                    //  Register, etc
-                    this.checkBody = checkBody;
-                    this.useHandCursor = useHandCursor;
-                    this._pointerData = [];
-                    for(var i = 0; i < 10; i++) {
-                        this._pointerData.push({
-                            id: i,
-                            x: 0,
-                            y: 0,
-                            isDown: false,
-                            isUp: false,
-                            isOver: false,
-                            isOut: false,
-                            timeOver: 0,
-                            timeOut: 0,
-                            timeDown: 0,
-                            timeUp: 0,
-                            downDuration: 0,
-                            isDragged: false
-                        });
-                    }
-                    this.snapOffset = new Phaser.Point();
-                    this.enabled = true;
-                    this.game.input.addGameObject(this._sprite);
-                }
-            };
-            Input.prototype.stop = function () {
-                //  Turning off
-                if(this.enabled == false) {
-                    return;
-                } else {
-                    //  De-register, etc
-                    this.enabled = false;
-                    this.game.input.removeGameObject(this._sprite);
-                }
-            };
             Input.prototype.pointerX = /**
             * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
             * This value is only set when the pointer is over this Sprite.
@@ -5751,21 +5708,60 @@ var Phaser;
                 if (typeof pointer === "undefined") { pointer = 0; }
                 return this._pointerData[pointer].isDragged;
             };
+            Input.prototype.start = function (priority, checkBody, useHandCursor) {
+                if (typeof priority === "undefined") { priority = 0; }
+                if (typeof checkBody === "undefined") { checkBody = false; }
+                if (typeof useHandCursor === "undefined") { useHandCursor = false; }
+                //  Turning on
+                if(this.enabled == false) {
+                    //  Register, etc
+                    this.checkBody = checkBody;
+                    this.useHandCursor = useHandCursor;
+                    this.priorityID = priority;
+                    this._pointerData = [];
+                    for(var i = 0; i < 10; i++) {
+                        this._pointerData.push({
+                            id: i,
+                            x: 0,
+                            y: 0,
+                            isDown: false,
+                            isUp: false,
+                            isOver: false,
+                            isOut: false,
+                            timeOver: 0,
+                            timeOut: 0,
+                            timeDown: 0,
+                            timeUp: 0,
+                            downDuration: 0,
+                            isDragged: false
+                        });
+                    }
+                    this.snapOffset = new Phaser.Point();
+                    this.enabled = true;
+                    this.game.input.addGameObject(this._sprite);
+                }
+                return this._sprite;
+            };
+            Input.prototype.stop = function () {
+                //  Turning off
+                if(this.enabled == false) {
+                    return;
+                } else {
+                    //  De-register, etc
+                    this.enabled = false;
+                    this.game.input.removeGameObject(this._sprite);
+                }
+            };
             Input.prototype.update = /**
             * Update
             */
             function (pointer) {
                 if(this.enabled == false) {
-                    return;
+                    return false;
                 }
-                //  If was previously touched by this Pointer, check if still is
-                if(this._pointerData[pointer.id].isDown && pointer.isUp) {
-                    this._releasedHandler(pointer);
-                }
-                if(this.draggable && this._pointerData[pointer.id].isDragged) {
+                if(this.draggable && this._draggedPointerID == pointer.id) {
                     this.updateDrag(pointer);
-                    //return;
-                                    }
+                }
                 if(Phaser.RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y)) {
                     //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
                     this._pointerData[pointer.id].x = pointer.x - this._sprite.x;
@@ -5779,6 +5775,7 @@ var Phaser;
                         }
                         this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
                     }
+                    return true;
                 } else {
                     if(this._pointerData[pointer.id].isOver) {
                         this._pointerData[pointer.id].isOver = false;
@@ -5789,6 +5786,7 @@ var Phaser;
                         }
                         this._sprite.events.onInputOut.dispatch(this._sprite, pointer);
                     }
+                    return false;
                 }
             };
             Input.prototype._touchedHandler = function (pointer) {
@@ -5797,18 +5795,28 @@ var Phaser;
                     this._pointerData[pointer.id].isUp = false;
                     this._pointerData[pointer.id].timeDown = this.game.time.now;
                     this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
-                    //  Star drag
-                    if(this.draggable) {
+                    //  Start drag
+                    if(this.draggable && this.isDragged == false && pointer.draggedObject == null) {
                         this.startDrag(pointer);
                     }
                 }
             };
             Input.prototype._releasedHandler = function (pointer) {
-                this._pointerData[pointer.id].isDown = false;
-                this._pointerData[pointer.id].isUp = true;
-                this._pointerData[pointer.id].timeUp = this.game.time.now;
-                //this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
-                this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
+                //  If was previously touched by this Pointer, check if still is
+                if(this._pointerData[pointer.id].isDown && pointer.isUp) {
+                    this._pointerData[pointer.id].isDown = false;
+                    this._pointerData[pointer.id].isUp = true;
+                    this._pointerData[pointer.id].timeUp = this.game.time.now;
+                    this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
+                    this._sprite.events.onInputUp.dispatch(this._sprite, pointer);
+                    //  Stop drag
+                    if(this.draggable && this.isDragged && this._draggedPointerID == pointer.id) {
+                        this.stopDrag(pointer);
+                    }
+                    if(this.useHandCursor) {
+                        this.game.stage.canvas.style.cursor = "default";
+                    }
+                }
             };
             Input.prototype.updateDrag = /**
             * Updates the Pointer drag on this Sprite.
@@ -5935,13 +5943,15 @@ var Phaser;
                     }
                 }
                 this.draggable = false;
-                //mouseStartDragCallback = null;
-                //mouseStopDragCallback = null;
-                            };
+                this.isDragged = false;
+                this._draggedPointerID = -1;
+            };
             Input.prototype.startDrag = /**
             * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
             */
             function (pointer) {
+                this.isDragged = true;
+                this._draggedPointerID = pointer.id;
                 this._pointerData[pointer.id].isDragged = true;
                 if(this.dragFromCenter) {
                     //	Move the sprite to the middle of the pointer
@@ -5949,16 +5959,20 @@ var Phaser;
                 } else {
                     this._dragPoint.setTo(this._sprite.x - pointer.x, this._sprite.y - pointer.y);
                 }
+                pointer.draggedObject = this._sprite;
             };
             Input.prototype.stopDrag = /**
             * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
             */
             function (pointer) {
+                this.isDragged = false;
+                this._draggedPointerID = -1;
                 this._pointerData[pointer.id].isDragged = false;
                 if(this.snapOnRelease) {
                     this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
                     this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
                 }
+                pointer.draggedObject = null;
             };
             Input.prototype.setDragLock = /**
             * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
@@ -13525,12 +13539,12 @@ var Phaser;
                 var _highestPriority = 0;
                 for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
                     if(this.game.input.inputObjects[i].input.enabled) {
-                        this.game.input.inputObjects[i].input.update(this);
-                        if(this.game.input.inputObjects[i].input.priorityID > _highestPriority) {
+                        if(this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].input.priorityID > _highestPriority) {
                             _highestPriority = this.game.input.inputObjects[i].input.priorityID;
                         }
                     }
                 }
+                //console.log('highest priority was', _highestPriority);
                 if(this.isDown) {
                     //  Now update all objects with the highest priority ID (can be more than 1)
                     for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
@@ -13611,6 +13625,12 @@ var Phaser;
             if(this.isMouse == false) {
                 this.game.input.currentPointers--;
             }
+            for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
+                if(this.game.input.inputObjects[i].input.enabled) {
+                    this.game.input.inputObjects[i].input._releasedHandler(this);
+                }
+            }
+            this.draggedObject = null;
             return this;
         };
         Pointer.prototype.justPressed = /**

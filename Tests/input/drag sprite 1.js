@@ -9,12 +9,13 @@
     var sprite;
     function create() {
         sprite = game.add.sprite(200, 200, 'sprite');
-        //  Enable Input detection
+        //  Enable Input detection. Sprites have this disabled by default,
+        //  so you have to start it if you want to interact with them.
         sprite.input.start(0, false, true);
+        //  This allows you to drag the sprite. The parameter controls if you drag from the position you touched it (false)
+        //  or if it will snap to the center (true)
         sprite.input.enableDrag(true);
-        sprite.input.allowVerticalDrag = false;
-        //sprite.input.dragOffset.setTo(0, 50);
-            }
+    }
     function render() {
         game.input.renderDebugInfo(32, 32);
         sprite.input.renderDebugInfo(300, 32);

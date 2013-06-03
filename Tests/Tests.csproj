@@ -84,12 +84,20 @@
     <Content Include="input\drag sprite 1.js">
       <DependentUpon>drag sprite 1.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="input\drag sprite 2.ts" />
+    <Content Include="input\drag sprite 2.js">
+      <DependentUpon>drag sprite 2.ts</DependentUpon>
+    </Content>
     <Content Include="input\over sprite 1.js">
       <DependentUpon>over sprite 1.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="input\over sprite 2.ts" />
     <Content Include="input\over sprite 2.js">
       <DependentUpon>over sprite 2.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="input\touch priority.ts" />
+    <Content Include="input\touch priority.js">
+      <DependentUpon>touch priority.ts</DependentUpon>
     </Content>
     <Content Include="particles\graphic emitter.js">
       <DependentUpon>graphic emitter.ts</DependentUpon>
