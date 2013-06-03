@@ -1394,6 +1394,37 @@ var Phaser;
                 this.game.stage.context.restore();
             }
         };
+        Group.prototype.directRender = /**
+        * Calls render on all members of this Group regardless of their visible status and also ignores the camera blacklist.
+        * Use this when the Group objects render to hidden canvases for example.
+        */
+        function (camera) {
+            if(this.globalCompositeOperation) {
+                this.game.stage.context.save();
+                this.game.stage.context.globalCompositeOperation = this.globalCompositeOperation;
+            }
+            if(this.alpha > 0) {
+                this._prevAlpha = this.game.stage.context.globalAlpha;
+                this.game.stage.context.globalAlpha = this.alpha;
+            }
+            this._i = 0;
+            while(this._i < this.length) {
+                this._member = this.members[this._i++];
+                if(this._member != null && this._member.exists) {
+                    if(this._member.type == Phaser.Types.GROUP) {
+                        this._member.directRender(camera);
+                    } else {
+                        this.game.renderer.renderGameObject(this._member);
+                    }
+                }
+            }
+            if(this.alpha > 0) {
+                this.game.stage.context.globalAlpha = this._prevAlpha;
+            }
+            if(this.globalCompositeOperation) {
+                this.game.stage.context.restore();
+            }
+        };
         Object.defineProperty(Group.prototype, "maxSize", {
             get: /**
             * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
@@ -2630,7 +2661,7 @@ var Phaser;
         function (key) {
             var data = JSON.parse(this._xhr.response);
             var file = this._fileList[key];
-            this._game.cache.addTextureAtlas(file.key, file.url, file.data, data['frames'], file.format);
+            this._game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
             this.nextFile(key, true);
         };
         Loader.prototype.dataLoadError = /**
@@ -4121,7 +4152,7 @@ var Phaser;
             //  Let's create some frames then
             var data = new Phaser.FrameData();
             //  By this stage frames is a fully parsed array
-            var frames = json;
+            var frames = json['frames'];
             var newFrame;
             for(var i = 0; i < frames.length; i++) {
                 newFrame = data.addFrame(new Phaser.Frame(frames[i].frame.x, frames[i].frame.y, frames[i].frame.w, frames[i].frame.h, frames[i].filename));
@@ -4326,6 +4357,7 @@ var Phaser;
             * Either cw or ccw, rotation is always 90 degrees.
             */
             this.rotationDirection = 'cw';
+            console.log('Creating Frame', name, 'x', x, 'y', y, 'width', width, 'height', height);
             this.x = x;
             this.y = y;
             this.width = width;
@@ -4345,10 +4377,10 @@ var Phaser;
         * @param trimmed {boolean} Whether this frame trimmed or not.
         * @param actualWidth {number} Actual width of this frame.
         * @param actualHeight {number} Actual height of this frame.
-        * @param destX {number} Destiny x position.
-        * @param destY {number} Destiny y position.
-        * @param destWidth {number} Destiny draw width.
-        * @param destHeight {number} Destiny draw height.
+        * @param destX {number} Destination x position.
+        * @param destY {number} Destination y position.
+        * @param destWidth {number} Destination draw width.
+        * @param destHeight {number} Destination draw height.
         */
         function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
             this.trimmed = trimmed;
@@ -4416,7 +4448,7 @@ var Phaser;
         * @return {Frame} The frame you want.
         */
         function (name) {
-            if(this._frameNames[name] >= 0) {
+            if(this._frameNames[name] !== '') {
                 return this._frames[this._frameNames[name]];
             }
             return null;
@@ -4427,7 +4459,7 @@ var Phaser;
         * @return {boolean} True if frame with given name found, otherwise return false.
         */
         function (name) {
-            if(this._frameNames[name] >= 0) {
+            if(this._frameNames[name]) {
                 return true;
             }
             return false;
@@ -4460,7 +4492,7 @@ var Phaser;
             return output;
         };
         FrameData.prototype.getFrameIndexesByName = /**
-        * Get all names of frames by giving their indexes.
+        * Get the frame indexes by giving the frame names.
         * @param [output] {number[]} result will be added into this array.
         * @return {number[]} Names of specific frames in an array.
         */
@@ -4675,6 +4707,8 @@ var Phaser;
                         this.currentFrame = this._frameData.getFrameByName(value);
                         this._parent.frameBounds.width = this.currentFrame.width;
                         this._parent.frameBounds.height = this.currentFrame.height;
+                        //this._parent.frameBounds.width = this.currentFrame.sourceSizeW;
+                        //this._parent.frameBounds.height = this.currentFrame.sourceSizeH;
                         this._frameIndex = this.currentFrame.index;
                     }
                 },
@@ -6066,6 +6100,7 @@ var Phaser;
                 * @default null
                 */
                 this.boundsSprite = null;
+                this.consumePointerEvent = false;
                 this.game = parent.game;
                 this._sprite = parent;
                 this.enabled = false;
@@ -6202,6 +6237,26 @@ var Phaser;
                 }
                 return this._sprite;
             };
+            Input.prototype.reset = function () {
+                this.enabled = false;
+                for(var i = 0; i < 10; i++) {
+                    this._pointerData[i] = {
+                        id: i,
+                        x: 0,
+                        y: 0,
+                        isDown: false,
+                        isUp: false,
+                        isOver: false,
+                        isOut: false,
+                        timeOver: 0,
+                        timeOut: 0,
+                        timeDown: 0,
+                        timeUp: 0,
+                        downDuration: 0,
+                        isDragged: false
+                    };
+                }
+            };
             Input.prototype.stop = function () {
                 //  Turning off
                 if(this.enabled == false) {
@@ -6216,7 +6271,7 @@ var Phaser;
             * Update
             */
             function (pointer) {
-                if(this.enabled == false) {
+                if(this.enabled == false || this._sprite.visible == false) {
                     return false;
                 }
                 if(this.draggable && this._draggedPointerID == pointer.id) {
@@ -6251,6 +6306,7 @@ var Phaser;
             };
             Input.prototype._touchedHandler = function (pointer) {
                 if(this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true) {
+                    console.log('touchDown on', this._sprite.texture.cacheKey, this._sprite.frameBounds.width, this._sprite.frameBounds.height);
                     this._pointerData[pointer.id].isDown = true;
                     this._pointerData[pointer.id].isUp = false;
                     this._pointerData[pointer.id].timeDown = this.game.time.now;
@@ -6260,6 +6316,8 @@ var Phaser;
                         this.startDrag(pointer);
                     }
                 }
+                //  Consume the event?
+                return this.consumePointerEvent;
             };
             Input.prototype._releasedHandler = function (pointer) {
                 //  If was previously touched by this Pointer, check if still is
@@ -7197,8 +7255,8 @@ var Phaser;
         function () {
             this.frameBounds.x = this.x;
             this.frameBounds.y = this.y;
-            this.screen.x = this.x - (this.game.camera.worldView.x * this.scrollFactor.x);
-            this.screen.y = this.y - (this.game.camera.worldView.y * this.scrollFactor.y);
+            this.screen.x = this.x - (this.game.world.cameras.default.worldView.x * this.scrollFactor.x);
+            this.screen.y = this.y - (this.game.world.cameras.default.worldView.y * this.scrollFactor.y);
             if(this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.angle != 0 || this.angleOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
                 this.modified = true;
             }
@@ -7254,7 +7312,8 @@ var Phaser;
         * Clean up memory.
         */
         function () {
-        };
+            //this.input.destroy();
+                    };
         Sprite.prototype.kill = /**
         * Handy for "killing" game objects.
         * Default behavior is to flag them as nonexistent AND dead.
@@ -13787,6 +13846,8 @@ var Phaser;
             * @private
             */
             this._nextDrop = 0;
+            //  Monitor events outside of a state reset loop
+            this._stateReset = false;
             /**
             * A Vector object containing the initial position when the Pointer was engaged with the screen.
             * @property positionDown
@@ -13973,6 +14034,7 @@ var Phaser;
                 this.game.input.y = this.y * this.game.input.scaleY;
                 this.game.input.onDown.dispatch(this);
             }
+            this._stateReset = false;
             this.totalTouches++;
             if(this.isMouse == false) {
                 this.game.input.currentPointers++;
@@ -14008,11 +14070,13 @@ var Phaser;
                         }
                     }
                 }
-                if(this.isDown) {
+                if(this.isDown && this._stateReset == false) {
                     //  Now update all objects with the highest priority ID (can be more than 1)
                     for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
                         if(this.game.input.inputObjects[i].input.priorityID == _highestPriority) {
-                            this.game.input.inputObjects[i].input._touchedHandler(this);
+                            if(this.game.input.inputObjects[i].input._touchedHandler(this) == false) {
+                                return;
+                            }
                         }
                     }
                 }
@@ -14062,6 +14126,10 @@ var Phaser;
         * @param {Any} event
         */
         function (event) {
+            if(this._stateReset) {
+                event.preventDefault();
+                return;
+            }
             this.timeUp = this.game.time.now;
             if(this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0)) {
                 this.game.input.onUp.dispatch(this);
@@ -14129,13 +14197,16 @@ var Phaser;
         * @method reset
         */
         function () {
-            this.active = false;
+            if(this.isMouse == false) {
+                this.active = false;
+            }
             this.identifier = null;
             this.isDown = false;
             this.isUp = true;
             this.totalTouches = 0;
             this._holdSent = false;
             this._history.length = 0;
+            this._stateReset = true;
         };
         Pointer.prototype.renderDebug = /**
         * Renders the Pointer.circle object onto the stage in green if down or red if up.
@@ -14981,7 +15052,6 @@ var Phaser;
             this.inputObjects = [];
             this.totalTrackedObjects = 0;
             this._game = game;
-            this._stack = [];
             this.mousePointer = new Phaser.Pointer(this._game, 0);
             this.pointer1 = new Phaser.Pointer(this._game, 1);
             this.pointer2 = new Phaser.Pointer(this._game, 2);
@@ -15120,9 +15190,6 @@ var Phaser;
                 this.pointer10.update();
             }
         };
-        Input.prototype.addToStack = function (item) {
-            this._stack.push(item);
-        };
         Input.prototype.reset = /**
         * Reset all of the Pointers and Input states
         * @method reset
@@ -15131,6 +15198,7 @@ var Phaser;
         function (hard) {
             if (typeof hard === "undefined") { hard = false; }
             this.keyboard.reset();
+            this.mousePointer.reset();
             this.pointer1.reset();
             this.pointer2.reset();
             this.pointer3.reset();
@@ -15152,7 +15220,17 @@ var Phaser;
                 this.pointer10.reset();
             }
             this.currentPointers = 0;
+            for(var i = 0; i < this.totalTrackedObjects; i++) {
+                this.inputObjects[i].input.reset();
+            }
+            this._game.stage.canvas.style.cursor = "default";
+            this.inputObjects.length = 0;
+            this.totalTrackedObjects = 0;
             if(hard == true) {
+                this.onDown.dispose();
+                this.onUp.dispose();
+                this.onTap.dispose();
+                this.onHold.dispose();
                 this.onDown = new Phaser.Signal();
                 this.onUp = new Phaser.Signal();
                 this.onTap = new Phaser.Signal();
@@ -15433,6 +15511,14 @@ var Phaser;
         HeadlessRenderer.prototype.renderScrollZone = function (camera, scrollZone) {
             return true;
         };
+        HeadlessRenderer.prototype.renderCircle = function (camera, circle, context, outline, fill, lineColor, fillColor, lineWidth) {
+            if (typeof outline === "undefined") { outline = true; }
+            if (typeof fill === "undefined") { fill = true; }
+            if (typeof lineColor === "undefined") { lineColor = 'rgb(0,255,0)'; }
+            if (typeof fillColor === "undefined") { fillColor = 'rgba(0,100,0.0.3)'; }
+            if (typeof lineWidth === "undefined") { lineWidth = 1; }
+            return true;
+        };
         return HeadlessRenderer;
     })();
     Phaser.HeadlessRenderer = HeadlessRenderer;    
@@ -15497,6 +15583,52 @@ var Phaser;
             this._dw = sprite.frameBounds.width * sprite.scale.x;
             this._dh = sprite.frameBounds.height * sprite.scale.y;
             return (camera.scaledX + camera.worldView.width > this._dx) && (camera.scaledX < this._dx + this._dw) && (camera.scaledY + camera.worldView.height > this._dy) && (camera.scaledY < this._dy + this._dh);
+        };
+        CanvasRenderer.prototype.renderCircle = function (camera, circle, context, outline, fill, lineColor, fillColor, lineWidth) {
+            if (typeof outline === "undefined") { outline = false; }
+            if (typeof fill === "undefined") { fill = true; }
+            if (typeof lineColor === "undefined") { lineColor = 'rgb(0,255,0)'; }
+            if (typeof fillColor === "undefined") { fillColor = 'rgba(0,100,0.0.3)'; }
+            if (typeof lineWidth === "undefined") { lineWidth = 1; }
+            this._count++;
+            //  Reset our temp vars
+            this._sx = 0;
+            this._sy = 0;
+            this._sw = circle.diameter;
+            this._sh = circle.diameter;
+            this._fx = 1;
+            this._fy = 1;
+            this._sin = 0;
+            this._cos = 1;
+            this._dx = camera.scaledX + circle.x - camera.worldView.x;
+            this._dy = camera.scaledY + circle.y - camera.worldView.y;
+            this._dw = circle.diameter;
+            this._dh = circle.diameter;
+            this._sx = Math.round(this._sx);
+            this._sy = Math.round(this._sy);
+            this._sw = Math.round(this._sw);
+            this._sh = Math.round(this._sh);
+            this._dx = Math.round(this._dx);
+            this._dy = Math.round(this._dy);
+            this._dw = Math.round(this._dw);
+            this._dh = Math.round(this._dh);
+            this._game.stage.saveCanvasValues();
+            context.save();
+            context.lineWidth = lineWidth;
+            context.strokeStyle = lineColor;
+            context.fillStyle = fillColor;
+            context.beginPath();
+            context.arc(this._dx, this._dy, circle.radius, 0, Math.PI * 2);
+            context.closePath();
+            if(outline) {
+                //context.stroke();
+                            }
+            if(fill) {
+                context.fill();
+            }
+            context.restore();
+            this._game.stage.restoreCanvasValues();
+            return true;
         };
         CanvasRenderer.prototype.renderSprite = /**
         * Render this sprite to specific camera. Called by game loop after update().

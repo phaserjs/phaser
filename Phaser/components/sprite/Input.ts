@@ -223,6 +223,17 @@ module Phaser.Components {
 
 		}
 
+		public reset() {
+
+		    this.enabled = false;
+
+            for (var i = 0; i < 10; i++)
+            {
+                this._pointerData[i] = { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, timeDown: 0, timeUp: 0, downDuration: 0, isDragged: false };
+            }
+
+		}
+
 		public stop() {
 
 		    //  Turning off
@@ -239,69 +250,94 @@ module Phaser.Components {
 
 		}
 
+		public checkPointerOver(pointer: Phaser.Pointer): bool {
+
+		    if (this.enabled == false || this._sprite.visible == false)
+		    {
+		        return false;
+		    }
+		    else
+		    {
+		        return RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y);
+		    }
+
+		}
+
         /**
          * Update
          */
         public update(pointer: Phaser.Pointer): bool {
 
-            if (this.enabled == false)
+            if (this.enabled == false || this._sprite.visible == false)
             {
                 return false;
             }
 
-			if (this.draggable && this._draggedPointerID == pointer.id)
-			{
-				this.updateDrag(pointer);
-			}
-
-            if (RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y))
+            if (this.draggable && this._draggedPointerID == pointer.id)
             {
-                //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
-
-                this._pointerData[pointer.id].x = pointer.x - this._sprite.x;
-                this._pointerData[pointer.id].y = pointer.y - this._sprite.y;
-
-                if (this._pointerData[pointer.id].isOver == false)
-                {
-                    this._pointerData[pointer.id].isOver = true;
-                    this._pointerData[pointer.id].isOut = false;
-                    this._pointerData[pointer.id].timeOver = this.game.time.now;
-
-                    if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
-                    {
-                        this.game.stage.canvas.style.cursor = "pointer";
-                    }
-
-                    this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
-                }
-
-                return true;
+                return this.updateDrag(pointer);
             }
-            else
+            else if (this._pointerData[pointer.id].isOver == true)
             {
-                if (this._pointerData[pointer.id].isOver)
+                if (RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y))
                 {
-                    this._pointerData[pointer.id].isOver = false;
-                    this._pointerData[pointer.id].isOut = true;
-                    this._pointerData[pointer.id].timeOut = this.game.time.now;
-
-                    if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
-                    {
-                        this.game.stage.canvas.style.cursor = "default";
-                    }
-
-                    this._sprite.events.onInputOut.dispatch(this._sprite, pointer);
+                    this._pointerData[pointer.id].x = pointer.x - this._sprite.x;
+                    this._pointerData[pointer.id].y = pointer.y - this._sprite.y;
+                    return true;
                 }
-
-                return false;
+                else
+                {
+                    this._pointOutHandler(pointer);
+                    return false;
+                }
             }
 
         }
 
-        public _touchedHandler(pointer: Pointer) {
+        public _pointerOverHandler(pointer: Pointer) {
+
+            //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
+
+            if (this._pointerData[pointer.id].isOver == false)
+            {
+                this._pointerData[pointer.id].isOver = true;
+                this._pointerData[pointer.id].isOut = false;
+                this._pointerData[pointer.id].timeOver = this.game.time.now;
+                this._pointerData[pointer.id].x = pointer.x - this._sprite.x;
+                this._pointerData[pointer.id].y = pointer.y - this._sprite.y;
+
+                if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
+                {
+                    this.game.stage.canvas.style.cursor = "pointer";
+                }
+
+                this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
+            }
+
+        }
+
+        public _pointOutHandler(pointer: Pointer) {
+
+            this._pointerData[pointer.id].isOver = false;
+            this._pointerData[pointer.id].isOut = true;
+            this._pointerData[pointer.id].timeOut = this.game.time.now;
+
+            if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
+            {
+                this.game.stage.canvas.style.cursor = "default";
+            }
+
+            this._sprite.events.onInputOut.dispatch(this._sprite, pointer);
+
+        }
+
+        public consumePointerEvent: bool = false;
+
+        public _touchedHandler(pointer: Pointer): bool {
 
             if (this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true)
             {
+                console.log('touchDown on', this._sprite.texture.cacheKey,this._sprite.frameName, this._sprite.frameBounds.width,this._sprite.frameBounds.height);
                 this._pointerData[pointer.id].isDown = true;
                 this._pointerData[pointer.id].isUp = false;
                 this._pointerData[pointer.id].timeDown = this.game.time.now;
@@ -309,12 +345,16 @@ module Phaser.Components {
                 this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
 
                 //  Start drag
-                if (this.draggable && this.isDragged == false && pointer.draggedObject == null)
+                //if (this.draggable && this.isDragged == false && pointer.targetObject == null)
+                if (this.draggable && this.isDragged == false)
                 {
                     this.startDrag(pointer);
                 }
 
             }
+
+            //  Consume the event?
+            return this.consumePointerEvent;
 
         }
 
@@ -347,12 +387,12 @@ module Phaser.Components {
 		/**
 		 * Updates the Pointer drag on this Sprite.
 		 */
-		private updateDrag(pointer: Pointer):void
+		private updateDrag(pointer: Pointer):bool
 		{
 		    if (pointer.isUp)
 		    {
 		        this.stopDrag(pointer);
-		        return;
+		        return false;
 		    }
 
 			if (this.allowHorizontalDrag)
@@ -380,6 +420,8 @@ module Phaser.Components {
 				this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
 				this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
 			}
+
+			return true;
 		}
 
         /**
@@ -516,7 +558,7 @@ module Phaser.Components {
                 this._dragPoint.setTo(this._sprite.x - pointer.x, this._sprite.y - pointer.y);
             }
 
-		    pointer.draggedObject = this._sprite;
+		    //pointer.draggedObject = this._sprite;
 
 		}
 
@@ -535,7 +577,7 @@ module Phaser.Components {
 				this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
 			}
 
-		    pointer.draggedObject = null;
+		    //pointer.draggedObject = null;
 		}
 
 		/**

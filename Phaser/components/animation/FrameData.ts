@@ -24,6 +24,7 @@ module Phaser {
          * Local frame container.
          */
         private _frames: Frame[];
+
         /**
          * Local frameName<->index container.
          */
@@ -76,7 +77,7 @@ module Phaser {
          */
         public getFrameByName(name: string): Frame {
 
-            if (this._frameNames[name] >= 0)
+            if (this._frameNames[name] !== '')
             {
                 return this._frames[this._frameNames[name]];
             }
@@ -92,7 +93,7 @@ module Phaser {
          */
         public checkFrameName(name: string): bool {
 
-            if (this._frameNames[name] >= 0)
+            if (this._frameNames[name])
             {
                 return true;
             }
@@ -138,7 +139,7 @@ module Phaser {
         }
 
         /**
-         * Get all names of frames by giving their indexes.
+         * Get the frame indexes by giving the frame names.
          * @param [output] {number[]} result will be added into this array.
          * @return {number[]} Names of specific frames in an array.
          */

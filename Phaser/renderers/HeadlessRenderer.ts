@@ -28,6 +28,10 @@ module Phaser {
             return true;
         }
 
+        public renderCircle(camera: Camera, circle: Circle, context, outline?: bool = true, fill?: bool = true, lineColor?: string = 'rgb(0,255,0)', fillColor?: string = 'rgba(0,100,0.0.3)', lineWidth?: number = 1): bool {
+            return true;
+        }
+
     }
 
 }

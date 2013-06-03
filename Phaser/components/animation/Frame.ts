@@ -22,6 +22,8 @@ module Phaser {
          */
         constructor(x: number, y: number, width: number, height: number, name: string) {
 
+            console.log('Creating Frame', name, 'x', x, 'y', y, 'width', width, 'height', height);
+
             this.x = x;
             this.y = y;
             this.width = width;
@@ -134,10 +136,10 @@ module Phaser {
          * @param trimmed {boolean} Whether this frame trimmed or not.
          * @param actualWidth {number} Actual width of this frame.
          * @param actualHeight {number} Actual height of this frame.
-         * @param destX {number} Destiny x position.
-         * @param destY {number} Destiny y position.
-         * @param destWidth {number} Destiny draw width.
-         * @param destHeight {number} Destiny draw height.
+         * @param destX {number} Destination x position.
+         * @param destY {number} Destination y position.
+         * @param destWidth {number} Destination draw width.
+         * @param destHeight {number} Destination draw height.
          */
         public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number) {
 

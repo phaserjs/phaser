@@ -88,8 +88,7 @@ module Phaser {
             var data: FrameData = new FrameData();
 
             //  By this stage frames is a fully parsed array
-            var frames = json;
-
+            var frames = json['frames'];
             var newFrame: Frame;
 
             for (var i = 0; i < frames.length; i++)

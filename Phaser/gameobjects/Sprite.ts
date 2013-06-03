@@ -183,6 +183,11 @@ module Phaser {
         public z: number = 0;
 
         /**
+         * Render iteration
+         */
+        public renderOrderID: number = 0;
+
+        /**
          * This value is added to the angle of the Sprite.
          * For example if you had a sprite graphic drawn facing straight up then you could set
          * angleOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
@@ -325,6 +330,9 @@ module Phaser {
          * Clean up memory.
          */
         public destroy() {
+
+            //this.input.destroy();
+
 
         }
 

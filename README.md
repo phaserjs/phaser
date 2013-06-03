@@ -41,6 +41,10 @@ TODO:
 * Stage CSS3 transforms!!! Color tints, sepia, greyscale, all of those cool things :)
 * Cameras should have option to be input disabled + Pointers should check which camera they are over before doing Sprite selection
 * Can Cameras be positioned within the world?
+* Added JSON Texture Atlas object support.
+* Bug in AnimationManager set frame/frameName - the width/height are trimmed and wrong
+* RenderOrderID won't work across cameras - but then neither do Pointers yet anyway
+
 
 
 V1.0.0
@@ -76,7 +80,8 @@ V1.0.0
 * Added Input drag, bounds, sprite bounds and snapping support.
 * Added the new ColorUtils class full of lots of handy color manipulation functions.
 * Fixed issue in Camera.inCamera check where it wouldn't take into consideration the Sprites scrollFactor.
-
+* Fixed issue with JSON Atlas loader incorrectly parsing the frames array.
+* Fixed bug in FrameData.getFrameByName where the first frame of the array would always be skipped.
 
 
 

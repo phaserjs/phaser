@@ -65,6 +65,9 @@ module Phaser {
         */
         private _nextDrop: number = 0;
 
+        //  Monitor events outside of a state reset loop
+        private _stateReset: bool = false;
+
         /**
         * The Pointer ID (a number between 1 and 10, 0 is reserved for the mouse pointer specifically)
         * @property id
@@ -253,11 +256,11 @@ module Phaser {
         }
 
         /**
-        * The Game Object this Pointer is currently dragging.
-        * @property draggedObject
+        * The Game Object this Pointer is currently over / touching / dragging.
+        * @property targetObject
         * @type {Any}
         **/
-        public draggedObject;
+        public targetObject = null;
 
         /**
         * Gets the X value of this Pointer in world coordinate space
@@ -303,16 +306,16 @@ module Phaser {
 
             this._history.length = 0;
 
-            this.move(event);
-
-            this.positionDown.setTo(this.x, this.y);
-
             this.active = true;
             this.withinGame = true;
             this.isDown = true;
             this.isUp = false;
             this.timeDown = this.game.time.now;
             this._holdSent = false;
+
+            this.positionDown.setTo(this.x, this.y);
+
+            this.move(event);
 
             if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
@@ -321,11 +324,40 @@ module Phaser {
                 this.game.input.onDown.dispatch(this);
             }
 
+            this._stateReset = false;
             this.totalTouches++;
 
             if (this.isMouse == false)
             {
                 this.game.input.currentPointers++;
+            }
+
+            //  Build our temporary click stack
+            /*
+            var _highestPriority = 0;
+            var _highestRenderID = 0;
+            var _highestRenderObject: number = -1;
+
+            for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+            {
+                if (this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
+                {
+                    _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
+                    _highestRenderObject = i;
+                }
+            }
+
+            if (_highestRenderObject !== -1 && this._stateReset == false)
+            {
+                this.targetObject = this.game.input.inputObjects[_highestRenderObject];
+                this.targetObject.input._touchedHandler(this);
+                //_highestRenderObject.input._touchedHandler(this);
+            }
+            */
+
+            if (this.targetObject !== null)
+            {
+                this.targetObject.input._touchedHandler(this);
             }
 
             return this;
@@ -361,30 +393,46 @@ module Phaser {
                 //  Iterate through the tracked objects
 
                 //  Build our temporary click stack
+                /*
                 var _highestPriority = 0;
+                var _highestRenderID = 0;
+                var _highestRenderObject = null;
 
                 for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
                 {
                     if (this.game.input.inputObjects[i].input.enabled)
                     {
-                        if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].input.priorityID > _highestPriority)
+                        //if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].input.priorityID > _highestPriority)
+                        if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
                         {
-                            _highestPriority = this.game.input.inputObjects[i].input.priorityID;
+                            _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
+                            _highestRenderObject = this.game.input.inputObjects[i];
                         }
                     }
                 }
 
-                if (this.isDown)
+                if (_highestRenderObject !== null)
                 {
-                    //  Now update all objects with the highest priority ID (can be more than 1)
-                    for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+                    _highestRenderObject.input._pointerOverHandler(this);
+
+                    if (this.isDown && this._stateReset == false)
                     {
-                        if (this.game.input.inputObjects[i].input.priorityID == _highestPriority)
-                        {
-                            this.game.input.inputObjects[i].input._touchedHandler(this);
-                        }
+                        _highestRenderObject.input._touchedHandler(this);
                     }
+
+                    //  Now update all objects with the highest priority ID (can be more than 1)
+                    //for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+                    //{
+                    //    if (this.game.input.inputObjects[i].input.priorityID == _highestPriority)
+                    //    {
+                    //        if (this.game.input.inputObjects[i].input._touchedHandler(this) == false)
+                    //        {
+                    //            return;
+                    //        }
+                    //    }
+                    //}
                 }
+                */
 
             }
 
@@ -425,6 +473,38 @@ module Phaser {
                 this.game.input.circle.y = this.game.input.y;
             }
 
+            if (this.targetObject !== null)
+            {
+                if (this.targetObject.input.update(this) == false)
+                {
+                    this.targetObject = null;
+                }
+            }
+            else
+            {
+                //  Build our temporary click stack
+                var _highestRenderID = 0;
+                var _highestRenderObject: number = -1;
+
+                for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+                {
+                    if (this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
+                    {
+                        _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
+                        _highestRenderObject = i;
+                    }
+                }
+
+                //console.log('pointer move', _highestRenderID);
+
+                if (_highestRenderObject !== -1)
+                {
+                    console.log('setting target');
+                    this.targetObject = this.game.input.inputObjects[_highestRenderObject];
+                    this.targetObject.input._pointerOverHandler(this);
+                }
+            }
+
             return this;
 
         }
@@ -447,6 +527,12 @@ module Phaser {
         * @param {Any} event
         */
         public stop(event): Pointer {
+
+            if (this._stateReset)
+            {
+                event.preventDefault();
+                return;
+            }
 
             this.timeUp = this.game.time.now;
 
@@ -497,7 +583,12 @@ module Phaser {
                 }
             }
 
-            this.draggedObject = null;
+            if (this.targetObject)
+            {
+                this.targetObject.input._releasedHandler(this);
+            }
+
+            this.targetObject = null;
 
             return this;
 
@@ -547,13 +638,19 @@ module Phaser {
         */
         public reset() {
 
-            this.active = false;
+            if (this.isMouse == false)
+            {
+                this.active = false;
+            }
+
             this.identifier = null;
             this.isDown = false;
             this.isUp = true;
             this.totalTouches = 0;
             this._holdSent = false;
             this._history.length = 0;
+            this._stateReset = true;
+            this.targetObject = null;
 
         }
 

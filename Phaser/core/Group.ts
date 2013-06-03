@@ -254,6 +254,55 @@ module Phaser {
         }
 
         /**
+        * Calls render on all members of this Group regardless of their visible status and also ignores the camera blacklist.
+        * Use this when the Group objects render to hidden canvases for example.
+        */
+        public directRender(camera: Camera) {
+
+            if (this.globalCompositeOperation)
+            {
+                this.game.stage.context.save();
+                this.game.stage.context.globalCompositeOperation = this.globalCompositeOperation;
+            }
+
+            if (this.alpha > 0)
+            {
+                this._prevAlpha = this.game.stage.context.globalAlpha;
+                this.game.stage.context.globalAlpha = this.alpha;
+            }
+
+            this._i = 0;
+
+            while (this._i < this.length)
+            {
+                this._member = this.members[this._i++];
+
+                if (this._member != null && this._member.exists)
+                {
+                    if (this._member.type == Types.GROUP)
+                    {
+                        this._member.directRender(camera);
+                    }
+                    else
+                    {
+                        this.game.renderer.renderGameObject(this._member);
+                    }
+                }
+            }
+
+            if (this.alpha > 0)
+            {
+                this.game.stage.context.globalAlpha = this._prevAlpha;
+            }
+
+            if (this.globalCompositeOperation)
+            {
+                this.game.stage.context.restore();
+            }
+
+        }
+
+        /**
          * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
          */
         public get maxSize(): number {

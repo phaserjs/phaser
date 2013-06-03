@@ -251,6 +251,8 @@ module Phaser.Components {
 
                 this._parent.frameBounds.width = this.currentFrame.width;
                 this._parent.frameBounds.height = this.currentFrame.height;
+                //this._parent.frameBounds.width = this.currentFrame.sourceSizeW;
+                //this._parent.frameBounds.height = this.currentFrame.sourceSizeH;
                 this._frameIndex = this.currentFrame.index;
             }
 

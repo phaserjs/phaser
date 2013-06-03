@@ -89,7 +89,7 @@ module Phaser {
          * @param data {object} Extra texture atlas data.
          * @param atlasData {object} Texture atlas frames data.
          */
-        public addTextureAtlas(key: string, url: string, data, atlasData, format) {
+        public addTextureAtlas(key: string, url: string, data, atlasData, format: number) {
 
             this._images[key] = { url: url, data: data, spriteSheet: true };
 

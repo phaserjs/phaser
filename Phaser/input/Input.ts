@@ -23,7 +23,6 @@ module Phaser {
         constructor(game: Game) {
 
             this._game = game;
-            this._stack = [];
 
             this.mousePointer = new Pointer(this._game, 0);
             this.pointer1 = new Pointer(this._game, 1);
@@ -56,11 +55,6 @@ module Phaser {
          * Local private reference to game.
          */
         private _game: Game;
-
-        /**
-         * Temporary click sorting stack
-         */
-        private _stack;
 
         /**
         * A vector object representing the previous position of the Pointer.
@@ -496,12 +490,6 @@ module Phaser {
 
         }
 
-        public addToStack(item) {
-
-            this._stack.push(item);
-
-        }
-
         /**
         * Reset all of the Pointers and Input states
         * @method reset
@@ -511,6 +499,7 @@ module Phaser {
 
             this.keyboard.reset();
 
+            this.mousePointer.reset();
             this.pointer1.reset();
             this.pointer2.reset();
             this.pointer3.reset();
@@ -525,8 +514,23 @@ module Phaser {
 
             this.currentPointers = 0;
 
+            for (var i = 0; i < this.totalTrackedObjects; i++)
+            {
+                this.inputObjects[i].input.reset();
+            }
+
+            this._game.stage.canvas.style.cursor = "default";
+
+            this.inputObjects.length = 0;
+            this.totalTrackedObjects = 0;
+
             if (hard == true)
             {
+                this.onDown.dispose();
+                this.onUp.dispose();
+                this.onTap.dispose();
+                this.onHold.dispose();
+
                 this.onDown = new Phaser.Signal();
                 this.onUp = new Phaser.Signal();
                 this.onTap = new Phaser.Signal();

@@ -99,6 +99,62 @@ module Phaser {
 
         }
 
+        public renderCircle(camera: Camera, circle: Circle, context, outline?: bool = false, fill?: bool = true, lineColor?: string = 'rgb(0,255,0)', fillColor?: string = 'rgba(0,100,0.0.3)', lineWidth?: number = 1): bool {
+
+            this._count++;
+
+            //  Reset our temp vars
+            this._sx = 0;
+            this._sy = 0;
+            this._sw = circle.diameter;
+            this._sh = circle.diameter;
+            this._fx = 1;
+            this._fy = 1;
+            this._sin = 0;
+            this._cos = 1;
+            this._dx = camera.scaledX + circle.x - camera.worldView.x;
+            this._dy = camera.scaledY + circle.y - camera.worldView.y;
+            this._dw = circle.diameter;
+            this._dh = circle.diameter;
+
+            this._sx = Math.round(this._sx);
+            this._sy = Math.round(this._sy);
+            this._sw = Math.round(this._sw);
+            this._sh = Math.round(this._sh);
+            this._dx = Math.round(this._dx);
+            this._dy = Math.round(this._dy);
+            this._dw = Math.round(this._dw);
+            this._dh = Math.round(this._dh);
+
+            this._game.stage.saveCanvasValues();
+
+            context.save();
+            context.lineWidth = lineWidth;
+            context.strokeStyle = lineColor;
+            context.fillStyle = fillColor;
+
+            context.beginPath();
+            context.arc(this._dx, this._dy, circle.radius, 0, Math.PI * 2);
+            context.closePath();
+
+            if (outline)
+            {
+                //context.stroke();
+            }
+
+            if (fill)
+            {
+                context.fill();
+            }
+
+            context.restore();
+
+            this._game.stage.restoreCanvasValues();
+
+            return true;
+
+        }
+
         /**
          * Render this sprite to specific camera. Called by game loop after update().
          * @param camera {Camera} Camera this sprite will be rendered to.
@@ -110,6 +166,8 @@ module Phaser {
             {
                 return false;
             }
+
+            sprite.renderOrderID = this._count;
 
             this._count++;
 

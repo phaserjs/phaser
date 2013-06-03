@@ -997,6 +997,11 @@ module Phaser {
         */
         public render(camera: Camera): void;
         /**
+        * Calls render on all members of this Group regardless of their visible status and also ignores the camera blacklist.
+        * Use this when the Group objects render to hidden canvases for example.
+        */
+        public directRender(camera: Camera): void;
+        /**
         * The maximum capacity of this group.  Default is 0, meaning no max capacity, and the group can just grow.
         */
         /**
@@ -1659,7 +1664,7 @@ module Phaser {
         * @param data {object} Extra texture atlas data.
         * @param atlasData {object} Texture atlas frames data.
         */
-        public addTextureAtlas(key: string, url: string, data, atlasData, format): void;
+        public addTextureAtlas(key: string, url: string, data, atlasData, format: number): void;
         /**
         * Add a new image.
         * @param key {string} Asset key for the image.
@@ -2615,10 +2620,10 @@ module Phaser {
         * @param trimmed {boolean} Whether this frame trimmed or not.
         * @param actualWidth {number} Actual width of this frame.
         * @param actualHeight {number} Actual height of this frame.
-        * @param destX {number} Destiny x position.
-        * @param destY {number} Destiny y position.
-        * @param destWidth {number} Destiny draw width.
-        * @param destHeight {number} Destiny draw height.
+        * @param destX {number} Destination x position.
+        * @param destY {number} Destination y position.
+        * @param destWidth {number} Destination draw width.
+        * @param destHeight {number} Destination draw height.
         */
         public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number): void;
     }
@@ -2682,7 +2687,7 @@ module Phaser {
         */
         public getFrameIndexes(output?: number[]): number[];
         /**
-        * Get all names of frames by giving their indexes.
+        * Get the frame indexes by giving the frame names.
         * @param [output] {number[]} result will be added into this array.
         * @return {number[]} Names of specific frames in an array.
         */
@@ -3612,12 +3617,14 @@ module Phaser.Components {
         */
         public pointerDragged(pointer?: number): bool;
         public start(priority?: number, checkBody?: bool, useHandCursor?: bool): Sprite;
+        public reset(): void;
         public stop(): void;
         /**
         * Update
         */
         public update(pointer: Pointer): bool;
-        public _touchedHandler(pointer: Pointer): void;
+        public consumePointerEvent: bool;
+        public _touchedHandler(pointer: Pointer): bool;
         public _releasedHandler(pointer: Pointer): void;
         /**
         * Updates the Pointer drag on this Sprite.
@@ -4113,6 +4120,11 @@ module Phaser {
         * The Sprite origin is the point around which scale and rotation takes place.
         */
         public origin: Vec2;
+        /**
+        * A Point holding the x/y coordinate of this Sprite relative to the screen. It uses the default created world
+        * camera to calculate its values. If you have changed the default camera (i.e. resized it, deleted it) this value
+        * will be incorrect and should be ignored.
+        */
         public screen: Point;
         /**
         * x value of the object.
@@ -7369,6 +7381,7 @@ module Phaser {
         * @private
         */
         private _nextDrop;
+        private _stateReset;
         /**
         * The Pointer ID (a number between 1 and 10, 0 is reserved for the mouse pointer specifically)
         * @property id
@@ -7991,10 +8004,6 @@ module Phaser {
         */
         private _game;
         /**
-        * Temporary click sorting stack
-        */
-        private _stack;
-        /**
         * A vector object representing the previous position of the Pointer.
         * @property vector
         * @type {Vec2}
@@ -8274,7 +8283,6 @@ module Phaser {
         * @method update
         **/
         public update(): void;
-        public addToStack(item): void;
         /**
         * Reset all of the Pointers and Input states
         * @method reset
@@ -8364,6 +8372,7 @@ module Phaser {
         renderGameObject(object);
         renderSprite(camera: Camera, sprite: Sprite): bool;
         renderScrollZone(camera: Camera, sprite: ScrollZone): bool;
+        renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number);
     }
 }
 module Phaser {
@@ -8377,6 +8386,7 @@ module Phaser {
         public renderGameObject(object): void;
         public renderSprite(camera: Camera, sprite: Sprite): bool;
         public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
+        public renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number): bool;
     }
 }
 module Phaser {
@@ -8412,6 +8422,7 @@ module Phaser {
         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
         */
         public inCamera(camera: Camera, sprite: Sprite): bool;
+        public renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number): bool;
         /**
         * Render this sprite to specific camera. Called by game loop after update().
         * @param camera {Camera} Camera this sprite will be rendered to.

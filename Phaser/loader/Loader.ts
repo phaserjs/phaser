@@ -434,7 +434,7 @@ module Phaser {
             var data = JSON.parse(this._xhr.response);
             var file = this._fileList[key];
 
-            this._game.cache.addTextureAtlas(file.key, file.url, file.data, data['frames'], file.format);
+            this._game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
 
             this.nextFile(key, true);
 
