@@ -8,9 +8,9 @@
 
     function init() {
 
-        game.loader.addImageFile('jet', 'assets/sprites/particle1.png');
-        game.loader.addImageFile('starfield', 'assets/misc/starfield.jpg');
-        game.loader.load();
+        game.load.image('jet', 'assets/sprites/particle1.png');
+        game.load.image('starfield', 'assets/misc/starfield.jpg');
+        game.load.start();
 
     }
 

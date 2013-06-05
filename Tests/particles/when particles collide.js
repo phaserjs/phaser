@@ -4,9 +4,9 @@
     var leftEmitter;
     var rightEmitter;
     function init() {
-        game.loader.addImageFile('ball1', 'assets/sprites/aqua_ball.png');
-        game.loader.addImageFile('ball2', 'assets/sprites/yellow_ball.png');
-        game.loader.load();
+        game.load.image('ball1', 'assets/sprites/aqua_ball.png');
+        game.load.image('ball2', 'assets/sprites/yellow_ball.png');
+        game.load.start();
     }
     function create() {
         leftEmitter = game.add.emitter(0, game.stage.centerY - 200);

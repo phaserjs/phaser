@@ -7,8 +7,8 @@
     function init() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('atari', 'assets/sprites/atari800xl.png');
-        game.loader.load();
+        game.load.image('atari', 'assets/sprites/atari800xl.png');
+        game.load.start();
 
     }
 

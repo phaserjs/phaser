@@ -7,9 +7,9 @@
 
     function init() {
 
-        game.loader.addImageFile('starray', 'assets/pics/auto_scroll_landscape.png');
+        game.load.image('starray', 'assets/pics/auto_scroll_landscape.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

@@ -101,7 +101,7 @@ module Phaser {
         private _step: number = 0;
 
         /**
-         * Whether loader complete loading or not.
+         * Whether load complete loading or not.
          * @type {boolean}
          */
         private _loadComplete: bool = false;
@@ -187,7 +187,7 @@ module Phaser {
          * Reference to the assets loader.
          * @type {Loader}
          */
-        public loader: Loader;
+        public load: Loader;
 
         /**
          * Reference to the math helper.
@@ -288,7 +288,7 @@ module Phaser {
                 this.add = new GameObjectFactory(this);
                 this.sound = new SoundManager(this);
                 this.cache = new Cache(this);
-                this.loader = new Loader(this, this.loadComplete);
+                this.load = new Loader(this, this.loadComplete);
                 this.time = new Time(this);
                 this.tweens = new TweenManager(this);
                 this.input = new Input(this);
@@ -353,7 +353,7 @@ module Phaser {
         }
 
         /**
-         * Called when the loader has finished after init was run.
+         * Called when the load has finished after init was run.
          */
         private loadComplete() {
 
@@ -432,12 +432,12 @@ module Phaser {
 
             if (this.onInitCallback !== null)
             {
-                this.loader.reset();
+                this.load.reset();
 
                 this.onInitCallback.call(this.callbackContext);
 
-                //  Is the loader empty?
-                if (this.loader.queueSize == 0)
+                //  Is the load empty?
+                if (this.load.queueSize == 0)
                 {
                     if (this.onCreateCallback !== null)
                     {
@@ -584,7 +584,7 @@ module Phaser {
             this.onDestroyCallback = null;
             this.cache = null;
             this.input = null;
-            this.loader = null;
+            this.load = null;
             this.sound = null;
             this.stage = null;
             this.time = null;

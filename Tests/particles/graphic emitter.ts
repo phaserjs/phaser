@@ -8,9 +8,9 @@
 
     function init() {
 
-        game.loader.addImageFile('jet', 'assets/sprites/jets.png');
+        game.load.image('jet', 'assets/sprites/jets.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

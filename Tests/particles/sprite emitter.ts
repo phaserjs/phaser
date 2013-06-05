@@ -25,13 +25,13 @@ class customParticle extends Phaser.Particle {
 
     function init() {
 
-        game.loader.addImageFile('carrot', 'assets/sprites/carrot.png');
-        game.loader.addImageFile('melon', 'assets/sprites/melon.png');
-        game.loader.addImageFile('eggplant', 'assets/sprites/eggplant.png');
-        game.loader.addImageFile('mushroom', 'assets/sprites/mushroom.png');
-        game.loader.addImageFile('pineapple', 'assets/sprites/pineapple.png');
+        game.load.image('carrot', 'assets/sprites/carrot.png');
+        game.load.image('melon', 'assets/sprites/melon.png');
+        game.load.image('eggplant', 'assets/sprites/eggplant.png');
+        game.load.image('mushroom', 'assets/sprites/mushroom.png');
+        game.load.image('pineapple', 'assets/sprites/pineapple.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

@@ -7,8 +7,8 @@
 
     function init() {
 
-        game.loader.addImageFile('crystal', 'assets/pics/jim_sachs_time_crystal.png');
-        game.loader.load();
+        game.load.image('crystal', 'assets/pics/jim_sachs_time_crystal.png');
+        game.load.start();
 
     }
 

@@ -3,8 +3,8 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
     function init() {
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('sprite', 'assets/sprites/parsec.png');
-        game.loader.load();
+        game.load.image('sprite', 'assets/sprites/parsec.png');
+        game.load.start();
     }
     var sprite;
     function create() {

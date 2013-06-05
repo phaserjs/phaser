@@ -7,9 +7,9 @@
 
     function init() {
 
-        game.loader.addImageFile('balls', 'assets/sprites/balls.png');
+        game.load.image('balls', 'assets/sprites/balls.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

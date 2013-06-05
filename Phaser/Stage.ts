@@ -255,7 +255,7 @@ module Phaser {
 
         public pauseGame() {
 
-            if (this.disablePauseScreen == false)
+            if (this.disablePauseScreen == false && this.pauseScreen)
             {
                 this.pauseScreen.onPaused();
             }
@@ -267,7 +267,7 @@ module Phaser {
 
         public resumeGame() {
 
-            if (this.disablePauseScreen == false)
+            if (this.disablePauseScreen == false && this.pauseScreen)
             {
                 this.pauseScreen.onResume();
             }

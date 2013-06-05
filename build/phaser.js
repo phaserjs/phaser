@@ -2337,7 +2337,7 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Loader.prototype.addImageFile = /**
+        Loader.prototype.image = /**
         * Add a new image asset loading request with key and url.
         * @param key {string} Unique asset key of this image file.
         * @param url {string} URL of image file.
@@ -2356,7 +2356,7 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addSpriteSheet = /**
+        Loader.prototype.spritesheet = /**
         * Add a new sprite sheet loading request.
         * @param key {string} Unique asset key of the sheet file.
         * @param url {string} URL of sheet file.
@@ -2382,7 +2382,7 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addTextureAtlas = /**
+        Loader.prototype.atlas = /**
         * Add a new texture atlas loading request.
         * @param key {string} Unique asset key of the texture atlas file.
         * @param textureURL {string} The url of the texture atlas image file.
@@ -2467,7 +2467,7 @@ var Phaser;
                 }
             }
         };
-        Loader.prototype.addAudioFile = /**
+        Loader.prototype.audio = /**
         * Add a new audio file loading request.
         * @param key {string} Unique asset key of the audio file.
         * @param url {string} URL of audio file.
@@ -2487,7 +2487,7 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addTextFile = /**
+        Loader.prototype.text = /**
         * Add a new text file loading request.
         * @param key {string} Unique asset key of the text file.
         * @param url {string} URL of text file.
@@ -2520,7 +2520,7 @@ var Phaser;
             this._fileList = {
             };
         };
-        Loader.prototype.load = /**
+        Loader.prototype.start = /**
         * Load assets.
         * @param onFileLoadCallback {function} Called when each file loaded successfully.
         * @param onCompleteCallback {function} Called when all assets completely loaded.
@@ -6289,7 +6289,7 @@ var Phaser;
                         this._pointerData[pointer.id].y = pointer.scaledY - this._sprite.y;
                         return true;
                     } else {
-                        this._pointOutHandler(pointer);
+                        this._pointerOutHandler(pointer);
                         return false;
                     }
                 }
@@ -6308,7 +6308,7 @@ var Phaser;
                     this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
                 }
             };
-            Input.prototype._pointOutHandler = function (pointer) {
+            Input.prototype._pointerOutHandler = function (pointer) {
                 this._pointerData[pointer.id].isOver = false;
                 this._pointerData[pointer.id].isOut = true;
                 this._pointerData[pointer.id].timeOut = this.game.time.now;
@@ -6318,9 +6318,7 @@ var Phaser;
                 this._sprite.events.onInputOut.dispatch(this._sprite, pointer);
             };
             Input.prototype._touchedHandler = function (pointer) {
-                console.log('touched handler', this._pointerData[pointer.id]);
                 if(this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true) {
-                    //console.log('touchDown on', this._sprite.texture.cacheKey,this._sprite.frameName, this._sprite.frameBounds.width,this._sprite.frameBounds.height);
                     this._pointerData[pointer.id].isDown = true;
                     this._pointerData[pointer.id].isUp = false;
                     this._pointerData[pointer.id].timeDown = this.game.time.now;
@@ -6335,7 +6333,6 @@ var Phaser;
                 return this.consumePointerEvent;
             };
             Input.prototype._releasedHandler = function (pointer) {
-                console.log('release handler');
                 //  If was previously touched by this Pointer, check if still is
                 if(this._pointerData[pointer.id].isDown && pointer.isUp) {
                     this._pointerData[pointer.id].isDown = false;
@@ -6494,8 +6491,8 @@ var Phaser;
                 } else {
                     this._dragPoint.setTo(this._sprite.x - pointer.x, this._sprite.y - pointer.y);
                 }
-                //pointer.draggedObject = this._sprite;
-                            };
+                this.updateDrag(pointer);
+            };
             Input.prototype.stopDrag = /**
             * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
             */
@@ -6583,13 +6580,13 @@ var Phaser;
             */
             function (x, y, color) {
                 if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-                this._sprite.texture.context.font = '16px Courier';
+                this._sprite.texture.context.font = '14px Courier';
                 this._sprite.texture.context.fillStyle = color;
                 this._sprite.texture.context.fillText('Sprite Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
-                this._sprite.texture.context.fillText('x: ' + this.pointerX(1).toFixed(1) + ' y: ' + this.pointerY(1).toFixed(1), x, y + 14);
-                this._sprite.texture.context.fillText('over: ' + this.pointerOver(1) + ' duration: ' + this.overDuration(1).toFixed(0), x, y + 28);
-                this._sprite.texture.context.fillText('down: ' + this.pointerDown(1) + ' duration: ' + this.downDuration(1).toFixed(0), x, y + 42);
-                this._sprite.texture.context.fillText('just over: ' + this.justOver(1) + ' just out: ' + this.justOut(1), x, y + 56);
+                this._sprite.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
+                this._sprite.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
+                this._sprite.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
+                this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
             };
             return Input;
         })();
@@ -10551,6 +10548,9 @@ var Phaser;
             */
             this._context = null;
             this._game = game;
+            if(window['PhaserGlobal'] && window['PhaserGlobal'].disableAudio == true) {
+                return;
+            }
             if(game.device.webaudio == true) {
                 if(!!window['AudioContext']) {
                     this._context = new window['AudioContext']();
@@ -11365,14 +11365,14 @@ var Phaser;
             }
         };
         Stage.prototype.pauseGame = function () {
-            if(this.disablePauseScreen == false) {
+            if(this.disablePauseScreen == false && this.pauseScreen) {
                 this.pauseScreen.onPaused();
             }
             this.saveCanvasValues();
             this._game.paused = true;
         };
         Stage.prototype.resumeGame = function () {
-            if(this.disablePauseScreen == false) {
+            if(this.disablePauseScreen == false && this.pauseScreen) {
                 this.pauseScreen.onResume();
             }
             this.restoreCanvasValues();
@@ -14234,28 +14234,6 @@ var Phaser;
             if(this.isMouse == false) {
                 this.game.input.currentPointers++;
             }
-            //  Build our temporary click stack
-            /*
-            var _highestPriority = 0;
-            var _highestRenderID = 0;
-            var _highestRenderObject: number = -1;
-            
-            for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
-            {
-            if (this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
-            {
-            _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
-            _highestRenderObject = i;
-            }
-            }
-            
-            if (_highestRenderObject !== -1 && this._stateReset == false)
-            {
-            this.targetObject = this.game.input.inputObjects[_highestRenderObject];
-            this.targetObject.input._touchedHandler(this);
-            //_highestRenderObject.input._touchedHandler(this);
-            }
-            */
             if(this.targetObject !== null) {
                 this.targetObject.input._touchedHandler(this);
             }
@@ -14280,49 +14258,7 @@ var Phaser;
                         this._history.shift();
                     }
                 }
-                //  Iterate through the tracked objects
-                //  Build our temporary click stack
-                /*
-                var _highestPriority = 0;
-                var _highestRenderID = 0;
-                var _highestRenderObject = null;
-                
-                for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
-                {
-                if (this.game.input.inputObjects[i].input.enabled)
-                {
-                //if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].input.priorityID > _highestPriority)
-                if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
-                {
-                _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
-                _highestRenderObject = this.game.input.inputObjects[i];
-                }
-                }
-                }
-                
-                if (_highestRenderObject !== null)
-                {
-                _highestRenderObject.input._pointerOverHandler(this);
-                
-                if (this.isDown && this._stateReset == false)
-                {
-                _highestRenderObject.input._touchedHandler(this);
-                }
-                
-                //  Now update all objects with the highest priority ID (can be more than 1)
-                //for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
-                //{
-                //    if (this.game.input.inputObjects[i].input.priorityID == _highestPriority)
-                //    {
-                //        if (this.game.input.inputObjects[i].input._touchedHandler(this) == false)
-                //        {
-                //            return;
-                //        }
-                //    }
-                //}
-                }
-                */
-                            }
+            }
         };
         Pointer.prototype.move = /**
         * Called when the Pointer is moved on the touchscreen
@@ -14357,7 +14293,7 @@ var Phaser;
                 }
             } else {
                 //  Build our temporary click stack
-                var _highestRenderID = 0;
+                var _highestRenderID = -1;
                 var _highestRenderObject = -1;
                 for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
                     if(this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID) {
@@ -15770,7 +15706,7 @@ var Phaser;
         */
         function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this._game.stage.context.font = '24px Courier';
+            this._game.stage.context.font = '14px Courier';
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
             this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
@@ -16234,7 +16170,7 @@ var Phaser;
             */
             this._step = 0;
             /**
-            * Whether loader complete loading or not.
+            * Whether load complete loading or not.
             * @type {boolean}
             */
             this._loadComplete = false;
@@ -16336,7 +16272,7 @@ var Phaser;
                 this.add = new Phaser.GameObjectFactory(this);
                 this.sound = new Phaser.SoundManager(this);
                 this.cache = new Phaser.Cache(this);
-                this.loader = new Phaser.Loader(this, this.loadComplete);
+                this.load = new Phaser.Loader(this, this.loadComplete);
                 this.time = new Phaser.Time(this);
                 this.tweens = new Phaser.TweenManager(this);
                 this.input = new Phaser.Input(this);
@@ -16380,7 +16316,7 @@ var Phaser;
                                 }
         };
         Game.prototype.loadComplete = /**
-        * Called when the loader has finished after init was run.
+        * Called when the load has finished after init was run.
         */
         function () {
             this._loadComplete = true;
@@ -16433,10 +16369,10 @@ var Phaser;
         */
         function () {
             if(this.onInitCallback !== null) {
-                this.loader.reset();
+                this.load.reset();
                 this.onInitCallback.call(this.callbackContext);
-                //  Is the loader empty?
-                if(this.loader.queueSize == 0) {
+                //  Is the load empty?
+                if(this.load.queueSize == 0) {
                     if(this.onCreateCallback !== null) {
                         this.onCreateCallback.call(this.callbackContext);
                     }
@@ -16545,7 +16481,7 @@ var Phaser;
             this.onDestroyCallback = null;
             this.cache = null;
             this.input = null;
-            this.loader = null;
+            this.load = null;
             this.sound = null;
             this.stage = null;
             this.time = null;
@@ -17083,7 +17019,7 @@ var Phaser;
             this.camera = game.camera;
             this.cache = game.cache;
             this.input = game.input;
-            this.loader = game.loader;
+            this.load = game.load;
             this.math = game.math;
             this.motion = game.motion;
             this.sound = game.sound;

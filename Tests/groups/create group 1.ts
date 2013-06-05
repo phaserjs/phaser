@@ -7,8 +7,8 @@
     function init() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('sonic', 'assets/sprites/sonic_havok_sanity.png');
-        game.loader.load();
+        game.load.image('sonic', 'assets/sprites/sonic_havok_sanity.png');
+        game.load.start();
 
     }
 

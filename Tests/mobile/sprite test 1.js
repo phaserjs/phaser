@@ -3,10 +3,10 @@
     var game = new Phaser.Game(this, 'game', 320, 400, init, create);
     var emitter;
     function init() {
-        game.loader.addImageFile('backdrop1', 'assets/pics/atari_fujilogo.png');
-        game.loader.addImageFile('backdrop2', 'assets/pics/acryl_bladerunner.png');
-        game.loader.addImageFile('jet', 'assets/sprites/carrot.png');
-        game.loader.load();
+        game.load.image('backdrop1', 'assets/pics/atari_fujilogo.png');
+        game.load.image('backdrop2', 'assets/pics/acryl_bladerunner.png');
+        game.load.image('jet', 'assets/sprites/carrot.png');
+        game.load.start();
         //  This can help a lot on crappy old Android phones :)
         //game.framerate = 30;
         game.stage.backgroundColor = 'rgb(0,0,0)';

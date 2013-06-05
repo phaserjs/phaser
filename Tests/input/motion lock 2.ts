@@ -7,8 +7,8 @@
     function init() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('sprite', 'assets/sprites/darkwing_crazy.png');
-        game.loader.load();
+        game.load.image('sprite', 'assets/sprites/darkwing_crazy.png');
+        game.load.start();
 
     }
 

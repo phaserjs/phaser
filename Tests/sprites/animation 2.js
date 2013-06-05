@@ -3,8 +3,8 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addSpriteSheet('monster', 'assets/sprites/metalslug_monster39x40.png', 39, 40);
-        game.loader.load();
+        game.load.spritesheet('monster', 'assets/sprites/metalslug_monster39x40.png', 39, 40);
+        game.load.start();
     }
     var monster;
     function create() {

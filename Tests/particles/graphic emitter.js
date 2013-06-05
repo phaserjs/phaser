@@ -3,8 +3,8 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     var emitter;
     function init() {
-        game.loader.addImageFile('jet', 'assets/sprites/jets.png');
-        game.loader.load();
+        game.load.image('jet', 'assets/sprites/jets.png');
+        game.load.start();
     }
     function create() {
         emitter = game.add.emitter(game.stage.centerX, game.stage.centerY);

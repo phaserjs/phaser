@@ -3,8 +3,8 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        game.loader.addImageFile('starray', 'assets/pics/auto_scroll_landscape.png');
-        game.loader.load();
+        game.load.image('starray', 'assets/pics/auto_scroll_landscape.png');
+        game.load.start();
     }
     function create() {
         var zone = game.add.scrollZone('starray');

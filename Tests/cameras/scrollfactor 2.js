@@ -3,8 +3,8 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
     function init() {
         game.world.setSize(1600, 800, true);
-        game.loader.addImageFile('disk', 'assets/pics/devilstar_demo_download_disk.png');
-        game.loader.load();
+        game.load.image('disk', 'assets/pics/devilstar_demo_download_disk.png');
+        game.load.start();
     }
     function create() {
         for(var i = 0; i < 10; i++) {

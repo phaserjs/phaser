@@ -3,9 +3,9 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        game.loader.addImageFile('dragonsun', 'assets/pics/cougar_dragonsun.png');
-        game.loader.addImageFile('overlay', 'assets/pics/scrollframe.png');
-        game.loader.load();
+        game.load.image('dragonsun', 'assets/pics/cougar_dragonsun.png');
+        game.load.image('overlay', 'assets/pics/scrollframe.png');
+        game.load.start();
     }
     var scroller;
     function create() {

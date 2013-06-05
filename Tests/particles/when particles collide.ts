@@ -9,10 +9,10 @@
 
     function init() {
 
-        game.loader.addImageFile('ball1', 'assets/sprites/aqua_ball.png');
-        game.loader.addImageFile('ball2', 'assets/sprites/yellow_ball.png');
+        game.load.image('ball1', 'assets/sprites/aqua_ball.png');
+        game.load.image('ball2', 'assets/sprites/yellow_ball.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

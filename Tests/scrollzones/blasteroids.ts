@@ -7,12 +7,12 @@
 
     function init() {
 
-        game.loader.addImageFile('nashwan', 'assets/sprites/xenon2_ship.png');
-        game.loader.addImageFile('starfield', 'assets/misc/starfield.jpg');
-        game.loader.addImageFile('jet', 'assets/sprites/particle1.png');
-        game.loader.addImageFile('bullet', 'assets/misc/bullet1.png');
+        game.load.image('nashwan', 'assets/sprites/xenon2_ship.png');
+        game.load.image('starfield', 'assets/misc/starfield.jpg');
+        game.load.image('jet', 'assets/sprites/particle1.png');
+        game.load.image('bullet', 'assets/misc/bullet1.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

@@ -6,11 +6,11 @@
 
     function init() {
 
-        game.loader.addImageFile('atari1', 'assets/sprites/atari130xe.png');
-        game.loader.addImageFile('atari2', 'assets/sprites/atari800xl.png');
-        game.loader.addImageFile('card', 'assets/sprites/mana_card.png');
+        game.load.image('atari1', 'assets/sprites/atari130xe.png');
+        game.load.image('atari2', 'assets/sprites/atari800xl.png');
+        game.load.image('card', 'assets/sprites/mana_card.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

@@ -7,8 +7,8 @@
     function init() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('fuji', 'assets/pics/atari_fujilogo.png');
-        game.loader.load();
+        game.load.image('fuji', 'assets/pics/atari_fujilogo.png');
+        game.load.start();
 
     }
 

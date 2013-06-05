@@ -7,10 +7,10 @@
 
     function init() {
 
-        game.loader.addImageFile('dragonsun', 'assets/pics/cougar_dragonsun.png');
-        game.loader.addImageFile('overlay', 'assets/pics/scrollframe.png');
+        game.load.image('dragonsun', 'assets/pics/cougar_dragonsun.png');
+        game.load.image('overlay', 'assets/pics/scrollframe.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

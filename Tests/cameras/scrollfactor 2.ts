@@ -8,9 +8,9 @@
 
         game.world.setSize(1600, 800, true);
 
-        game.loader.addImageFile('disk', 'assets/pics/devilstar_demo_download_disk.png');
+        game.load.image('disk', 'assets/pics/devilstar_demo_download_disk.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

@@ -7,8 +7,8 @@
     function init() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('bunny', 'assets/sprites/bunny.png');
-        game.loader.load();
+        game.load.image('bunny', 'assets/sprites/bunny.png');
+        game.load.start();
 
     }
 

@@ -2337,7 +2337,7 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Loader.prototype.addImageFile = /**
+        Loader.prototype.image = /**
         * Add a new image asset loading request with key and url.
         * @param key {string} Unique asset key of this image file.
         * @param url {string} URL of image file.
@@ -2356,7 +2356,7 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addSpriteSheet = /**
+        Loader.prototype.spritesheet = /**
         * Add a new sprite sheet loading request.
         * @param key {string} Unique asset key of the sheet file.
         * @param url {string} URL of sheet file.
@@ -2382,7 +2382,7 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addTextureAtlas = /**
+        Loader.prototype.atlas = /**
         * Add a new texture atlas loading request.
         * @param key {string} Unique asset key of the texture atlas file.
         * @param textureURL {string} The url of the texture atlas image file.
@@ -2467,7 +2467,7 @@ var Phaser;
                 }
             }
         };
-        Loader.prototype.addAudioFile = /**
+        Loader.prototype.audio = /**
         * Add a new audio file loading request.
         * @param key {string} Unique asset key of the audio file.
         * @param url {string} URL of audio file.
@@ -2487,7 +2487,7 @@ var Phaser;
                 this._keys.push(key);
             }
         };
-        Loader.prototype.addTextFile = /**
+        Loader.prototype.text = /**
         * Add a new text file loading request.
         * @param key {string} Unique asset key of the text file.
         * @param url {string} URL of text file.
@@ -2520,7 +2520,7 @@ var Phaser;
             this._fileList = {
             };
         };
-        Loader.prototype.load = /**
+        Loader.prototype.start = /**
         * Load assets.
         * @param onFileLoadCallback {function} Called when each file loaded successfully.
         * @param onCompleteCallback {function} Called when all assets completely loaded.
@@ -6289,7 +6289,7 @@ var Phaser;
                         this._pointerData[pointer.id].y = pointer.scaledY - this._sprite.y;
                         return true;
                     } else {
-                        this._pointOutHandler(pointer);
+                        this._pointerOutHandler(pointer);
                         return false;
                     }
                 }
@@ -6308,7 +6308,7 @@ var Phaser;
                     this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
                 }
             };
-            Input.prototype._pointOutHandler = function (pointer) {
+            Input.prototype._pointerOutHandler = function (pointer) {
                 this._pointerData[pointer.id].isOver = false;
                 this._pointerData[pointer.id].isOut = true;
                 this._pointerData[pointer.id].timeOut = this.game.time.now;
@@ -6319,7 +6319,6 @@ var Phaser;
             };
             Input.prototype._touchedHandler = function (pointer) {
                 if(this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true) {
-                    //console.log('touchDown on', this._sprite.texture.cacheKey,this._sprite.frameName, this._sprite.frameBounds.width,this._sprite.frameBounds.height);
                     this._pointerData[pointer.id].isDown = true;
                     this._pointerData[pointer.id].isUp = false;
                     this._pointerData[pointer.id].timeDown = this.game.time.now;
@@ -6492,8 +6491,8 @@ var Phaser;
                 } else {
                     this._dragPoint.setTo(this._sprite.x - pointer.x, this._sprite.y - pointer.y);
                 }
-                //pointer.draggedObject = this._sprite;
-                            };
+                this.updateDrag(pointer);
+            };
             Input.prototype.stopDrag = /**
             * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
             */
@@ -6584,10 +6583,10 @@ var Phaser;
                 this._sprite.texture.context.font = '14px Courier';
                 this._sprite.texture.context.fillStyle = color;
                 this._sprite.texture.context.fillText('Sprite Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
-                this._sprite.texture.context.fillText('x: ' + this.pointerX(1).toFixed(1) + ' y: ' + this.pointerY(1).toFixed(1), x, y + 14);
-                this._sprite.texture.context.fillText('over: ' + this.pointerOver(1) + ' duration: ' + this.overDuration(1).toFixed(0), x, y + 28);
-                this._sprite.texture.context.fillText('down: ' + this.pointerDown(1) + ' duration: ' + this.downDuration(1).toFixed(0), x, y + 42);
-                this._sprite.texture.context.fillText('just over: ' + this.justOver(1) + ' just out: ' + this.justOut(1), x, y + 56);
+                this._sprite.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
+                this._sprite.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
+                this._sprite.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
+                this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
             };
             return Input;
         })();
@@ -10549,6 +10548,9 @@ var Phaser;
             */
             this._context = null;
             this._game = game;
+            if(window['PhaserGlobal'] && window['PhaserGlobal'].disableAudio == true) {
+                return;
+            }
             if(game.device.webaudio == true) {
                 if(!!window['AudioContext']) {
                     this._context = new window['AudioContext']();
@@ -10740,6 +10742,8 @@ var Phaser;
                     this.orientation = 0;
                 }
             }
+            this.scaleFactor = new Phaser.Vec2(1, 1);
+            this.aspectRatio = 0;
             window.addEventListener('orientationchange', function (event) {
                 return _this.checkOrientation(event);
             }, false);
@@ -10801,7 +10805,6 @@ var Phaser;
                     //  Back to normal
                     this._game.paused = false;
                     this.incorrectOrientation = false;
-                    this._game.input.reset();
                     this.refresh();
                 }
             } else {
@@ -10809,7 +10812,6 @@ var Phaser;
                     //  Show orientation screen
                     this._game.paused = true;
                     this.incorrectOrientation = true;
-                    this._game.input.reset();
                     this.refresh();
                 }
             }
@@ -10905,32 +10907,43 @@ var Phaser;
                 } else if(this._game.stage.scaleMode == StageScaleMode.SHOW_ALL) {
                     this.setShowAll();
                 }
+                this.setSize();
                 clearInterval(this._check);
                 this._check = null;
             }
         };
-        StageScaleMode.prototype.setMaximum = function () {
-            this.width = window.innerWidth;
-            this.height = window.innerHeight;
-            this._game.stage.canvas.style.width = this.width + 'px';
-            this._game.stage.canvas.style.height = this.height + 'px';
-            this._game.input.scaleX = this._game.stage.width / this.width;
-            this._game.input.scaleY = this._game.stage.height / this.height;
-        };
-        StageScaleMode.prototype.setShowAll = function () {
-            var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
-            this.width = Math.round(this._game.stage.width * multiplier);
-            this.height = Math.round(this._game.stage.height * multiplier);
+        StageScaleMode.prototype.setSize = function () {
             if(this.maxWidth && this.width > this.maxWidth) {
                 this.width = this.maxWidth;
             }
             if(this.maxHeight && this.height > this.maxHeight) {
                 this.height = this.maxHeight;
             }
+            if(this.minWidth && this.width < this.minWidth) {
+                this.width = this.minWidth;
+            }
+            if(this.minHeight && this.height < this.minHeight) {
+                this.height = this.minHeight;
+            }
             this._game.stage.canvas.style.width = this.width + 'px';
             this._game.stage.canvas.style.height = this.height + 'px';
             this._game.input.scaleX = this._game.stage.width / this.width;
             this._game.input.scaleY = this._game.stage.height / this.height;
+            this._game.stage.getOffset(this._game.stage.canvas);
+            this.aspectRatio = this.width / this.height;
+            this.scaleFactor.x = this._game.stage.width / this.width;
+            this.scaleFactor.y = this._game.stage.height / this.height;
+            //this.scaleFactor.x = this.width / this._game.stage.width;
+            //this.scaleFactor.y = this.height / this._game.stage.height;
+                    };
+        StageScaleMode.prototype.setMaximum = function () {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        };
+        StageScaleMode.prototype.setShowAll = function () {
+            var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
+            this.width = Math.round(this._game.stage.width * multiplier);
+            this.height = Math.round(this._game.stage.height * multiplier);
         };
         StageScaleMode.prototype.setExactFit = function () {
             if(this.maxWidth && window.innerWidth > this.maxWidth) {
@@ -10943,10 +10956,6 @@ var Phaser;
             } else {
                 this.height = window.innerHeight;
             }
-            this._game.stage.canvas.style.width = this.width + 'px';
-            this._game.stage.canvas.style.height = this.height + 'px';
-            this._game.input.scaleX = this._game.stage.width / this.width;
-            this._game.input.scaleY = this._game.stage.height / this.height;
         };
         return StageScaleMode;
     })();
@@ -11201,9 +11210,7 @@ var Phaser;
             } else if(this._showOnPortrait) {
                 this.game.stage.context.drawImage(this.portraitImage, 0, 0, this.portraitImage.width, this.portraitImage.height, 0, 0, this.game.stage.width, this.game.stage.height);
             }
-            //this.game.stage.context.font = '32px Arial';
-            //this.game.stage.context.fillText('w: ' + this.game.stage.width + ' h: ' + this.game.stage.height, 32, 32);
-                    };
+        };
         return OrientationScreen;
     })();
     Phaser.OrientationScreen = OrientationScreen;    
@@ -11260,7 +11267,7 @@ var Phaser;
             this.canvas = document.createElement('canvas');
             this.canvas.width = width;
             this.canvas.height = height;
-            if(document.getElementById(parent)) {
+            if((parent !== '' || parent !== null) && document.getElementById(parent)) {
                 document.getElementById(parent).appendChild(this.canvas);
                 document.getElementById(parent).style.overflow = 'hidden';
             } else {
@@ -11275,11 +11282,11 @@ var Phaser;
                 event.preventDefault();
             };
             this.context = this.canvas.getContext('2d');
-            this.offset = this.getOffset(this.canvas);
-            this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, width, height);
-            this.aspectRatio = width / height;
             this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
             this.scale = new Phaser.StageScaleMode(this._game);
+            this.getOffset(this.canvas);
+            this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, width, height);
+            this.aspectRatio = width / height;
             document.addEventListener('visibilitychange', function (event) {
                 return _this.visibilityChange(event);
             }, false);
@@ -11300,9 +11307,7 @@ var Phaser;
             this.bootScreen = new Phaser.BootScreen(this._game);
             this.pauseScreen = new Phaser.PauseScreen(this._game, this.width, this.height);
             this.orientationScreen = new Phaser.OrientationScreen(this._game);
-            //this.scale.enterLandscape.add(this.orientationChange, this);
-            //this.scale.enterPortrait.add(this.orientationChange, this);
-                    };
+        };
         Stage.prototype.update = /**
         * Update stage for rendering. This will handle scaling, clearing
         * and PauseScreen/BootScreen updating and rendering.
@@ -11344,31 +11349,7 @@ var Phaser;
                 }
             }
         };
-        Stage.prototype.enableOrientationCheck = /**
-        * This method is called when the device orientation changes.
-        */
-        /*
-        private orientationChange(format: number, landscape: bool, portrait: bool) {
-        
-        if (this.scale.forceLandscape && portrait)
-        {
-        this._game.paused = true;
-        this.scale.incorrectOrientation = true;
-        }
-        else if (this.scale.forcePortrait && landscape)
-        {
-        this._game.paused = true;
-        this.scale.incorrectOrientation = true;
-        }
-        else if ((this.scale.forceLandscape && landscape) || (this.scale.forcePortrait && portrait))
-        {
-        this._game.paused = false;
-        this.scale.incorrectOrientation = false;
-        }
-        
-        }
-        */
-        function (forceLandscape, forcePortrait, imageKey) {
+        Stage.prototype.enableOrientationCheck = function (forceLandscape, forcePortrait, imageKey) {
             if (typeof imageKey === "undefined") { imageKey = ''; }
             this.scale.forceLandscape = forceLandscape;
             this.scale.forcePortrait = forcePortrait;
@@ -11384,25 +11365,35 @@ var Phaser;
             }
         };
         Stage.prototype.pauseGame = function () {
-            this.pauseScreen.onPaused();
+            if(this.disablePauseScreen == false && this.pauseScreen) {
+                this.pauseScreen.onPaused();
+            }
             this.saveCanvasValues();
             this._game.paused = true;
         };
         Stage.prototype.resumeGame = function () {
-            this.pauseScreen.onResume();
+            if(this.disablePauseScreen == false && this.pauseScreen) {
+                this.pauseScreen.onResume();
+            }
             this.restoreCanvasValues();
             this._game.paused = false;
         };
         Stage.prototype.getOffset = /**
         * Get the DOM offset values of the given element
         */
-        function (element) {
+        function (element, populateOffset) {
+            if (typeof populateOffset === "undefined") { populateOffset = true; }
             var box = element.getBoundingClientRect();
             var clientTop = element.clientTop || document.body.clientTop || 0;
             var clientLeft = element.clientLeft || document.body.clientLeft || 0;
             var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
             var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
-            return new Phaser.Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+            if(populateOffset) {
+                this.offset = new Phaser.Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+                return this.offset;
+            } else {
+                return new Phaser.Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+            }
         };
         Stage.prototype.saveCanvasValues = /**
         * Save current canvas properties (strokeStyle, lineWidth and fillStyle) for later using.
@@ -14220,7 +14211,7 @@ var Phaser;
                 this.button = event.button;
             }
             //  Fix to stop rogue browser plugins from blocking the visibility state event
-            if(this.game.paused == true) {
+            if(this.game.paused == true && this.game.stage.scale.incorrectOrientation == false) {
                 this.game.stage.resumeGame();
                 return this;
             }
@@ -14243,28 +14234,6 @@ var Phaser;
             if(this.isMouse == false) {
                 this.game.input.currentPointers++;
             }
-            //  Build our temporary click stack
-            /*
-            var _highestPriority = 0;
-            var _highestRenderID = 0;
-            var _highestRenderObject: number = -1;
-            
-            for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
-            {
-            if (this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
-            {
-            _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
-            _highestRenderObject = i;
-            }
-            }
-            
-            if (_highestRenderObject !== -1 && this._stateReset == false)
-            {
-            this.targetObject = this.game.input.inputObjects[_highestRenderObject];
-            this.targetObject.input._touchedHandler(this);
-            //_highestRenderObject.input._touchedHandler(this);
-            }
-            */
             if(this.targetObject !== null) {
                 this.targetObject.input._touchedHandler(this);
             }
@@ -14289,49 +14258,7 @@ var Phaser;
                         this._history.shift();
                     }
                 }
-                //  Iterate through the tracked objects
-                //  Build our temporary click stack
-                /*
-                var _highestPriority = 0;
-                var _highestRenderID = 0;
-                var _highestRenderObject = null;
-                
-                for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
-                {
-                if (this.game.input.inputObjects[i].input.enabled)
-                {
-                //if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].input.priorityID > _highestPriority)
-                if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
-                {
-                _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
-                _highestRenderObject = this.game.input.inputObjects[i];
-                }
-                }
-                }
-                
-                if (_highestRenderObject !== null)
-                {
-                _highestRenderObject.input._pointerOverHandler(this);
-                
-                if (this.isDown && this._stateReset == false)
-                {
-                _highestRenderObject.input._touchedHandler(this);
-                }
-                
-                //  Now update all objects with the highest priority ID (can be more than 1)
-                //for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
-                //{
-                //    if (this.game.input.inputObjects[i].input.priorityID == _highestPriority)
-                //    {
-                //        if (this.game.input.inputObjects[i].input._touchedHandler(this) == false)
-                //        {
-                //            return;
-                //        }
-                //    }
-                //}
-                }
-                */
-                            }
+            }
         };
         Pointer.prototype.move = /**
         * Called when the Pointer is moved on the touchscreen
@@ -14366,7 +14293,7 @@ var Phaser;
                 }
             } else {
                 //  Build our temporary click stack
-                var _highestRenderID = 0;
+                var _highestRenderID = -1;
                 var _highestRenderObject = -1;
                 for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
                     if(this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID) {
@@ -14374,7 +14301,6 @@ var Phaser;
                         _highestRenderObject = i;
                     }
                 }
-                //console.log('pointer move', _highestRenderID);
                 if(_highestRenderObject !== -1) {
                     //console.log('setting target');
                     this.targetObject = this.game.input.inputObjects[_highestRenderObject];
@@ -14482,6 +14408,9 @@ var Phaser;
             this._holdSent = false;
             this._history.length = 0;
             this._stateReset = true;
+            if(this.targetObject) {
+                this.targetObject.input._releasedHandler(this);
+            }
             this.targetObject = null;
         };
         Pointer.prototype.renderDebug = /**
@@ -15126,8 +15055,8 @@ var Phaser;
             }
             event.preventDefault();
             for(var i = 0; i < event.changedTouches.length; i++) {
-                console.log('touch enter');
-            }
+                //console.log('touch enter');
+                            }
         };
         Touch.prototype.onTouchLeave = /**
         * For touch enter and leave its a list of the touch points that have entered or left the target
@@ -15141,8 +15070,8 @@ var Phaser;
             }
             event.preventDefault();
             for(var i = 0; i < event.changedTouches.length; i++) {
-                console.log('touch leave');
-            }
+                //console.log('touch leave');
+                            }
         };
         Touch.prototype.onTouchMove = /**
         *
@@ -15534,12 +15463,7 @@ var Phaser;
                 this.pointer10.reset();
             }
             this.currentPointers = 0;
-            for(var i = 0; i < this.totalTrackedObjects; i++) {
-                this.inputObjects[i].input.reset();
-            }
             this._game.stage.canvas.style.cursor = "default";
-            this.inputObjects.length = 0;
-            this.totalTrackedObjects = 0;
             if(hard == true) {
                 this.onDown.dispose();
                 this.onUp.dispose();
@@ -15549,6 +15473,11 @@ var Phaser;
                 this.onUp = new Phaser.Signal();
                 this.onTap = new Phaser.Signal();
                 this.onHold = new Phaser.Signal();
+                for(var i = 0; i < this.totalTrackedObjects; i++) {
+                    this.inputObjects[i].input.reset();
+                }
+                this.inputObjects.length = 0;
+                this.totalTrackedObjects = 0;
             }
         };
         Object.defineProperty(Input.prototype, "totalInactivePointers", {
@@ -15777,7 +15706,7 @@ var Phaser;
         */
         function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this._game.stage.context.font = '24px Courier';
+            this._game.stage.context.font = '14px Courier';
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
             this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
@@ -16241,7 +16170,7 @@ var Phaser;
             */
             this._step = 0;
             /**
-            * Whether loader complete loading or not.
+            * Whether load complete loading or not.
             * @type {boolean}
             */
             this._loadComplete = false;
@@ -16343,7 +16272,7 @@ var Phaser;
                 this.add = new Phaser.GameObjectFactory(this);
                 this.sound = new Phaser.SoundManager(this);
                 this.cache = new Phaser.Cache(this);
-                this.loader = new Phaser.Loader(this, this.loadComplete);
+                this.load = new Phaser.Loader(this, this.loadComplete);
                 this.time = new Phaser.Time(this);
                 this.tweens = new Phaser.TweenManager(this);
                 this.input = new Phaser.Input(this);
@@ -16387,7 +16316,7 @@ var Phaser;
                                 }
         };
         Game.prototype.loadComplete = /**
-        * Called when the loader has finished after init was run.
+        * Called when the load has finished after init was run.
         */
         function () {
             this._loadComplete = true;
@@ -16440,10 +16369,10 @@ var Phaser;
         */
         function () {
             if(this.onInitCallback !== null) {
-                this.loader.reset();
+                this.load.reset();
                 this.onInitCallback.call(this.callbackContext);
-                //  Is the loader empty?
-                if(this.loader.queueSize == 0) {
+                //  Is the load empty?
+                if(this.load.queueSize == 0) {
                     if(this.onCreateCallback !== null) {
                         this.onCreateCallback.call(this.callbackContext);
                     }
@@ -16552,7 +16481,7 @@ var Phaser;
             this.onDestroyCallback = null;
             this.cache = null;
             this.input = null;
-            this.loader = null;
+            this.load = null;
             this.sound = null;
             this.stage = null;
             this.time = null;
@@ -17090,7 +17019,7 @@ var Phaser;
             this.camera = game.camera;
             this.cache = game.cache;
             this.input = game.input;
-            this.loader = game.loader;
+            this.load = game.load;
             this.math = game.math;
             this.motion = game.motion;
             this.sound = game.sound;

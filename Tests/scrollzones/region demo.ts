@@ -7,9 +7,9 @@
 
     function init() {
 
-        game.loader.addImageFile('angelDawn', 'assets/pics/game14_angel_dawn.png');
+        game.load.image('angelDawn', 'assets/pics/game14_angel_dawn.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

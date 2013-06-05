@@ -8,10 +8,10 @@
 
         game.world.setSize(1920, 1200, true);
 
-        game.loader.addImageFile('backdrop', 'assets/pics/remember-me.jpg');
-        game.loader.addImageFile('melon', 'assets/sprites/melon.png');
+        game.load.image('backdrop', 'assets/pics/remember-me.jpg');
+        game.load.image('melon', 'assets/sprites/melon.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

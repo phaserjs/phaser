@@ -19,6 +19,11 @@ module Phaser {
 
             this._game = game;
 
+            if (window['PhaserGlobal'] && window['PhaserGlobal'].disableAudio == true)
+            {
+                return;
+            }
+
             if (game.device.webaudio == true)
             {
                 if (!!window['AudioContext'])

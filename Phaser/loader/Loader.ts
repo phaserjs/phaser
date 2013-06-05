@@ -107,7 +107,7 @@ module Phaser {
          * @param key {string} Unique asset key of this image file.
          * @param url {string} URL of image file.
          */
-        public addImageFile(key: string, url: string) {
+        public image(key: string, url: string) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -126,7 +126,7 @@ module Phaser {
          * @param frameHeight {number} Height of each single frame.
          * @param frameMax {number} How many frames in this sprite sheet.
          */
-        public addSpriteSheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number = -1) {
+        public spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number = -1) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -145,7 +145,7 @@ module Phaser {
          * @param [atlasData] {object} A JSON or XML data object.
          * @param [format] {number} A value describing the format of the data.
          */
-        public addTextureAtlas(key: string, textureURL: string, atlasURL?: string = null, atlasData? = null, format?:number = Loader.TEXTURE_ATLAS_JSON_ARRAY) {
+        public atlas(key: string, textureURL: string, atlasURL?: string = null, atlasData? = null, format?:number = Loader.TEXTURE_ATLAS_JSON_ARRAY) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -222,7 +222,7 @@ module Phaser {
          * @param key {string} Unique asset key of the audio file.
          * @param url {string} URL of audio file.
          */
-        public addAudioFile(key: string, url: string) {
+        public audio(key: string, url: string) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -238,7 +238,7 @@ module Phaser {
          * @param key {string} Unique asset key of the text file.
          * @param url {string} URL of text file.
          */
-        public addTextFile(key: string, url: string) {
+        public text(key: string, url: string) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -273,7 +273,7 @@ module Phaser {
          * @param onFileLoadCallback {function} Called when each file loaded successfully.
          * @param onCompleteCallback {function} Called when all assets completely loaded.
          */
-        public load(onFileLoadCallback = null, onCompleteCallback = null) {
+        public start(onFileLoadCallback = null, onCompleteCallback = null) {
 
             this.progress = 0;
             this.hasLoaded = false;

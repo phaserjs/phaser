@@ -7,8 +7,8 @@
     function init() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('swirl', 'assets/pics/color_wheel_swirl.png');
-        game.loader.load();
+        game.load.image('swirl', 'assets/pics/color_wheel_swirl.png');
+        game.load.start();
 
     }
 

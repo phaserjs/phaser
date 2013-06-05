@@ -22,7 +22,7 @@ module Phaser {
             this.camera = game.camera;
             this.cache = game.cache;
             this.input = game.input;
-            this.loader = game.loader;
+            this.load = game.load;
             this.math = game.math;
             this.motion = game.motion;
             this.sound = game.sound;
@@ -66,7 +66,7 @@ module Phaser {
          * Reference to the assets loader.
          * @type {Loader}
          */
-        public loader: Loader;
+        public load: Loader;
 
         /**
          * Reference to the math helper.

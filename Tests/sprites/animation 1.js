@@ -5,8 +5,8 @@
         //  Using Phasers asset loader we load up a PNG from the assets folder
         //  The sprite sheet is a standard frame-by-frame sheet, and each frame is 37 x 45 pixels in size.
         //  The final parameter (18) is the number of frames there are. You can omit this if your frames fill the entire sheet.
-        game.loader.addSpriteSheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
-        game.loader.load();
+        game.load.spritesheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
+        game.load.start();
     }
     var mummy;
     function create() {

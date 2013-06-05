@@ -3,8 +3,8 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
     function init() {
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('atari', 'assets/sprites/atari800xl.png');
-        game.loader.load();
+        game.load.image('atari', 'assets/sprites/atari800xl.png');
+        game.load.start();
     }
     var atari;
     function create() {

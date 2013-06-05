@@ -45,7 +45,7 @@ TODO:
 * Bug in AnimationManager set frame/frameName - the width/height are trimmed and wrong
 * RenderOrderID won't work across cameras - but then neither do Pointers yet anyway
 * Swap to using time based motion (like the tweens) rather than delta timer - it just doesn't work well on slow phones
-
+* Bug in World drag
 
 V1.0.0
 
@@ -90,6 +90,7 @@ V1.0.0
 * Added support for minWidth and minHeight to game scale size, so it can never go below those values when scaling.
 * Vastly improved orientation detection and response speed.
 * Added custom callback support for all Touch and Mouse Events so you can easily hook events to custom APIs.
+* Updated Game.loader and its methods. You now load images by: game.load.image() and also: game.load.atlas, game.load.audio, game.load.spritesheet, game.load.text. And you start it with game.load.start().
 
 
 

@@ -1519,7 +1519,7 @@ module Phaser {
         * @param key {string} Unique asset key of this image file.
         * @param url {string} URL of image file.
         */
-        public addImageFile(key: string, url: string): void;
+        public image(key: string, url: string): void;
         /**
         * Add a new sprite sheet loading request.
         * @param key {string} Unique asset key of the sheet file.
@@ -1528,7 +1528,7 @@ module Phaser {
         * @param frameHeight {number} Height of each single frame.
         * @param frameMax {number} How many frames in this sprite sheet.
         */
-        public addSpriteSheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number): void;
+        public spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number): void;
         /**
         * Add a new texture atlas loading request.
         * @param key {string} Unique asset key of the texture atlas file.
@@ -1537,19 +1537,19 @@ module Phaser {
         * @param [atlasData] {object} A JSON or XML data object.
         * @param [format] {number} A value describing the format of the data.
         */
-        public addTextureAtlas(key: string, textureURL: string, atlasURL?: string, atlasData?, format?: number): void;
+        public atlas(key: string, textureURL: string, atlasURL?: string, atlasData?, format?: number): void;
         /**
         * Add a new audio file loading request.
         * @param key {string} Unique asset key of the audio file.
         * @param url {string} URL of audio file.
         */
-        public addAudioFile(key: string, url: string): void;
+        public audio(key: string, url: string): void;
         /**
         * Add a new text file loading request.
         * @param key {string} Unique asset key of the text file.
         * @param url {string} URL of text file.
         */
-        public addTextFile(key: string, url: string): void;
+        public text(key: string, url: string): void;
         /**
         * Remove loading request of a file.
         * @param key {string} Key of the file you want to remove.
@@ -1564,7 +1564,7 @@ module Phaser {
         * @param onFileLoadCallback {function} Called when each file loaded successfully.
         * @param onCompleteCallback {function} Called when all assets completely loaded.
         */
-        public load(onFileLoadCallback?, onCompleteCallback?): void;
+        public start(onFileLoadCallback?, onCompleteCallback?): void;
         /**
         * Load files. Private method ONLY used by loader.
         */
@@ -3625,7 +3625,7 @@ module Phaser.Components {
         */
         public update(pointer: Pointer): bool;
         public _pointerOverHandler(pointer: Pointer): void;
-        public _pointOutHandler(pointer: Pointer): void;
+        public _pointerOutHandler(pointer: Pointer): void;
         public consumePointerEvent: bool;
         public _touchedHandler(pointer: Pointer): bool;
         public _releasedHandler(pointer: Pointer): void;
@@ -8612,7 +8612,7 @@ module Phaser {
         */
         private _step;
         /**
-        * Whether loader complete loading or not.
+        * Whether load complete loading or not.
         * @type {boolean}
         */
         private _loadComplete;
@@ -8684,7 +8684,7 @@ module Phaser {
         * Reference to the assets loader.
         * @type {Loader}
         */
-        public loader: Loader;
+        public load: Loader;
         /**
         * Reference to the math helper.
         * @type {GameMath}
@@ -8754,7 +8754,7 @@ module Phaser {
         private boot(parent, width, height);
         public setRenderer(type: number): void;
         /**
-        * Called when the loader has finished after init was run.
+        * Called when the load has finished after init was run.
         */
         private loadComplete();
         /**
@@ -9133,7 +9133,7 @@ module Phaser {
         * Reference to the assets loader.
         * @type {Loader}
         */
-        public loader: Loader;
+        public load: Loader;
         /**
         * Reference to the math helper.
         * @type {GameMath}

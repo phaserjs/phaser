@@ -16,10 +16,10 @@ class MainMenu extends State {
 
     public init() {
 
-        this.loader.addImageFile('car', '../../assets/pics/supercars_parsec.png');
+        this.load.image('car', '../../assets/pics/supercars_parsec.png');
         this.loader.addSpriteSheet('monster', '../../assets/sprites/metalslug_monster39x40.png', 39, 40);
 
-        this.loader.load();
+        this.load.start();
 
     }
 

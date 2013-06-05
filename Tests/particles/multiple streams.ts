@@ -13,14 +13,14 @@
 
     function init() {
 
-        game.loader.addImageFile('ball1', 'assets/sprites/aqua_ball.png');
-        game.loader.addImageFile('ball2', 'assets/sprites/yellow_ball.png');
-        game.loader.addImageFile('ball3', 'assets/sprites/red_ball.png');
-        game.loader.addImageFile('ball4', 'assets/sprites/purple_ball.png');
-        game.loader.addImageFile('ball5', 'assets/sprites/blue_ball.png');
-        game.loader.addImageFile('ball6', 'assets/sprites/green_ball.png');
+        game.load.image('ball1', 'assets/sprites/aqua_ball.png');
+        game.load.image('ball2', 'assets/sprites/yellow_ball.png');
+        game.load.image('ball3', 'assets/sprites/red_ball.png');
+        game.load.image('ball4', 'assets/sprites/purple_ball.png');
+        game.load.image('ball5', 'assets/sprites/blue_ball.png');
+        game.load.image('ball6', 'assets/sprites/green_ball.png');
 
-        game.loader.load();
+        game.load.start();
 
     }
 

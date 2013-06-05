@@ -3,8 +3,8 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        game.loader.addImageFile('angelDawn', 'assets/pics/game14_angel_dawn.png');
-        game.loader.load();
+        game.load.image('angelDawn', 'assets/pics/game14_angel_dawn.png');
+        game.load.start();
     }
     var scroller;
     function create() {

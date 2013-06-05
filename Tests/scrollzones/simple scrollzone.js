@@ -3,8 +3,8 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        game.loader.addImageFile('crystal', 'assets/pics/jim_sachs_time_crystal.png');
-        game.loader.load();
+        game.load.image('crystal', 'assets/pics/jim_sachs_time_crystal.png');
+        game.load.start();
     }
     function create() {
         //  This creates our ScrollZone. It is positioned at x0 y0 (world coodinates) by default and uses

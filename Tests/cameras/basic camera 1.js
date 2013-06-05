@@ -3,9 +3,9 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
     function init() {
         game.world.setSize(1920, 1200, true);
-        game.loader.addImageFile('backdrop', 'assets/pics/remember-me.jpg');
-        game.loader.addImageFile('melon', 'assets/sprites/melon.png');
-        game.loader.load();
+        game.load.image('backdrop', 'assets/pics/remember-me.jpg');
+        game.load.image('melon', 'assets/sprites/melon.png');
+        game.load.start();
     }
     function create() {
         game.add.sprite(0, 0, 'backdrop');

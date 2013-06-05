@@ -2,9 +2,9 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        game.loader.addImageFile('atari1', 'assets/sprites/atari130xe.png');
-        game.loader.addImageFile('atari2', 'assets/sprites/atari800xl.png');
-        game.loader.load();
+        game.load.image('atari1', 'assets/sprites/atari130xe.png');
+        game.load.image('atari2', 'assets/sprites/atari800xl.png');
+        game.load.start();
     }
     var atari1;
     var atari2;

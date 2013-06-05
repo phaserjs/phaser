@@ -3,10 +3,10 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
     function init() {
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.loader.addImageFile('atari1', 'assets/sprites/atari130xe.png');
-        game.loader.addImageFile('atari2', 'assets/sprites/atari800xl.png');
-        game.loader.addImageFile('sonic', 'assets/sprites/sonic_havok_sanity.png');
-        game.loader.load();
+        game.load.image('atari1', 'assets/sprites/atari130xe.png');
+        game.load.image('atari2', 'assets/sprites/atari800xl.png');
+        game.load.image('sonic', 'assets/sprites/sonic_havok_sanity.png');
+        game.load.start();
     }
     var atari1;
     var atari2;
