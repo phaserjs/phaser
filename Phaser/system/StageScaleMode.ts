@@ -38,6 +38,9 @@ module Phaser {
                 }
             }
 
+            this.scaleFactor = new Vec2(1, 1);
+            this.aspectRatio = 0;
+
             window.addEventListener('orientationchange', (event) => this.checkOrientation(event), false);
             window.addEventListener('resize', (event) => this.checkResize(event), false);
 
@@ -73,6 +76,24 @@ module Phaser {
          * @type {number}
          */
         public static SHOW_ALL: number = 2;
+
+        /**
+         * If the game should be forced to use Landscape mode, this is set to true by Game.Stage
+         * @type {Boolean}
+         */
+        public forceLandscape: bool = false;
+
+        /**
+         * If the game should be forced to use Portrait mode, this is set to true by Game.Stage
+         * @type {Boolean}
+         */
+        public forcePortrait: bool = false;
+
+        /**
+         * If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
+         * @type {Boolean}
+         */
+        public incorrectOrientation: bool = false;
 
         /**
          * Minimum width the canvas should be scaled to (in pixels)
@@ -113,23 +134,36 @@ module Phaser {
         public height: number = 0;
 
         /**
-         * Window orientation angle (90 and -90 are landscape, 0 is portrait)
+         * Asperct ratio of the scaled game size (width / height)
+         * @type {number}
+         */
+        public aspectRatio: number;
+
+        /**
+         * The scale factor of the scaled game width
+         * @type {Vec2}
+         */
+        public scaleFactor: Vec2;
+
+        /**
+         * Window orientation angle (90 and -90 are landscape, 0 and 80 are portrait)
          * @type {number}
          */
         public orientation: number;
 
         /**
-         * A Signal that is dispatched when the device enters landscape mode from portrait
+         * A Signal that is dispatched when the device enters landscape orientation from portrait
          * @type {Signal}
          */
         public enterLandscape: Phaser.Signal;
 
         /**
-         * A Signal that is dispatched when the device enters portrait mode from landscape
+         * A Signal that is dispatched when the device enters portrait orientation from landscape
          * @type {Signal}
          */
         public enterPortrait: Phaser.Signal;
 
+        //  Full Screen API calls
         public get isFullScreen(): bool {
 
             if (document['fullscreenElement'] === null|| document['mozFullScreenElement'] === null|| document['webkitFullscreenElement'] === null)
@@ -192,10 +226,41 @@ module Phaser {
                 this.refresh();
             }
 
+            if (this.forceLandscape || this.forcePortrait)
+            {
+                this.checkOrientationState();
+            }
+
+        }
+
+        private checkOrientationState() {
+
+            //  They are in the wrong orientation
+            if (this.incorrectOrientation)
+            {
+                if ((this.forceLandscape && window.innerWidth > window.innerHeight) || (this.forcePortrait && window.innerHeight > window.innerWidth))
+                {
+                    //  Back to normal
+                    this._game.paused = false;
+                    this.incorrectOrientation = false;
+                    this.refresh();
+                }
+            }
+            else
+            {
+                if ((this.forceLandscape && window.innerWidth < window.innerHeight) || (this.forcePortrait && window.innerHeight < window.innerWidth))
+                {
+                    //  Show orientation screen
+                    this._game.paused = true;
+                    this.incorrectOrientation = true;
+                    this.refresh();
+                }
+            }
+
         }
 
         public get isPortrait(): bool {
-            return this.orientation == 0;
+            return this.orientation == 0 || this.orientation == 180;
         }
 
         public get isLandscape(): bool {
@@ -211,11 +276,11 @@ module Phaser {
 
             if (this.isLandscape)
             {
-                this.enterLandscape.dispatch(this.orientation);
+                this.enterLandscape.dispatch(this.orientation, true, false);
             }
             else
             {
-                this.enterPortrait.dispatch(this.orientation);
+                this.enterPortrait.dispatch(this.orientation, false, true);
             }
 
             if (this._game.stage.scaleMode !== StageScaleMode.NO_SCALE)
@@ -241,11 +306,11 @@ module Phaser {
 
             if (this.isLandscape)
             {
-                this.enterLandscape.dispatch(this.orientation);
+                this.enterLandscape.dispatch(this.orientation, true, false);
             }
             else
             {
-                this.enterPortrait.dispatch(this.orientation);
+                this.enterPortrait.dispatch(this.orientation, false, true);
             }
 
             if (this._game.stage.scaleMode !== StageScaleMode.NO_SCALE)
@@ -281,6 +346,7 @@ module Phaser {
             {
                 this._iterations = 40;
                 this._check = window.setInterval(() => this.setScreenSize(), 10);
+                this.setScreenSize();
             }
 
         }
@@ -309,54 +375,101 @@ module Phaser {
                 // Set minimum height of content to new window height
                 document.documentElement.style.minHeight = window.innerHeight + 'px';
 
-                if (this._game.stage.scaleMode == StageScaleMode.EXACT_FIT)
+                if (this.incorrectOrientation == true)
                 {
-                    if (this.maxWidth && window.innerWidth > this.maxWidth)
-                    {
-                        this.width = this.maxWidth;
-                    }
-                    else
-                    {
-                        this.width = window.innerWidth;
-                    }
-
-                    if (this.maxHeight && window.innerHeight > this.maxHeight)
-                    {
-                        this.height = this.maxHeight;
-                    }
-                    else
-                    {
-                        this.height = window.innerHeight;
-                    }
+                    this.setMaximum();
+                }
+                else if (this._game.stage.scaleMode == StageScaleMode.EXACT_FIT)
+                {
+                    this.setExactFit();
                 }
                 else if (this._game.stage.scaleMode == StageScaleMode.SHOW_ALL)
                 {
-                    var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
-
-                    this.width = Math.round(this._game.stage.width * multiplier);
-                    this.height = Math.round(this._game.stage.height * multiplier);
-
-                    if (this.maxWidth && this.width > this.maxWidth)
-                    {
-                        this.width = this.maxWidth;
-                    }
-
-                    if (this.maxHeight && this.height > this.maxHeight)
-                    {
-                        this.height = this.maxHeight;
-                    }
+                    this.setShowAll();
                 }
 
-                this._game.stage.canvas.style.width = this.width + 'px';
-                this._game.stage.canvas.style.height = this.height + 'px';
-
-                this._game.input.scaleX = this._game.stage.width / this.width;
-                this._game.input.scaleY = this._game.stage.height / this.height;
+                this.setSize();
 
                 clearInterval(this._check);
 
                 this._check = null;
 
+            }
+
+        }
+
+        private setSize() {
+
+            if (this.maxWidth && this.width > this.maxWidth)
+            {
+                this.width = this.maxWidth;
+            }
+
+            if (this.maxHeight && this.height > this.maxHeight)
+            {
+                this.height = this.maxHeight;
+            }
+
+            if (this.minWidth && this.width < this.minWidth)
+            {
+                this.width = this.minWidth;
+            }
+
+            if (this.minHeight && this.height < this.minHeight)
+            {
+                this.height = this.minHeight;
+            }
+
+            this._game.stage.canvas.style.width = this.width + 'px';
+            this._game.stage.canvas.style.height = this.height + 'px';
+
+            this._game.input.scaleX = this._game.stage.width / this.width;
+            this._game.input.scaleY = this._game.stage.height / this.height;
+
+            this._game.stage.getOffset(this._game.stage.canvas);
+
+            this.aspectRatio = this.width / this.height;
+            this.scaleFactor.x = this._game.stage.width / this.width;
+            this.scaleFactor.y = this._game.stage.height / this.height;
+            //this.scaleFactor.x = this.width / this._game.stage.width;
+            //this.scaleFactor.y = this.height / this._game.stage.height;
+
+        }
+
+        private setMaximum() {
+
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+
+        }
+
+        private setShowAll() {
+
+            var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
+
+            this.width = Math.round(this._game.stage.width * multiplier);
+            this.height = Math.round(this._game.stage.height * multiplier);
+
+        }
+
+        private setExactFit() {
+
+            if (this.maxWidth && window.innerWidth > this.maxWidth)
+            {
+                this.width = this.maxWidth;
+            }
+            else
+            {
+                this.width = window.innerWidth;
+            }
+
+            if (this.maxHeight && window.innerHeight > this.maxHeight)
+            {
+                this.height = this.maxHeight;
+            }
+            else
+            {
+                this.height = window.innerHeight;
             }
 
         }

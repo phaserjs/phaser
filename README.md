@@ -44,7 +44,7 @@ TODO:
 * Added JSON Texture Atlas object support.
 * Bug in AnimationManager set frame/frameName - the width/height are trimmed and wrong
 * RenderOrderID won't work across cameras - but then neither do Pointers yet anyway
-
+* Swap to using time based motion (like the tweens) rather than delta timer - it just doesn't work well on slow phones
 
 
 V1.0.0
@@ -82,6 +82,15 @@ V1.0.0
 * Fixed issue in Camera.inCamera check where it wouldn't take into consideration the Sprites scrollFactor.
 * Fixed issue with JSON Atlas loader incorrectly parsing the frames array.
 * Fixed bug in FrameData.getFrameByName where the first frame of the array would always be skipped.
+* Fixed bug where the Stage.backgroundColor property wasn't being saved correctly.
+* Made Stage.bootScreen and Stage.pauseScreen public so you can override them with your own States now.
+* Added the new OrientationScreen and Stage.enableOrientationCheck to allow for easy 'portrait/landscape only' game handling.
+* Added fix to StageScaleMode for 180 degree portrait orientation on iPad.
+* Added fix to orientation check so that it updates the input offsets correctly on rotation.
+* Added support for minWidth and minHeight to game scale size, so it can never go below those values when scaling.
+* Vastly improved orientation detection and response speed.
+* Added custom callback support for all Touch and Mouse Events so you can easily hook events to custom APIs.
+
 
 
 

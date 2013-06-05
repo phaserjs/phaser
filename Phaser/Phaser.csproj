@@ -170,6 +170,10 @@
     <Content Include="renderers\CanvasRenderer.js">
       <DependentUpon>CanvasRenderer.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="system\screens\OrientationScreen.ts" />
+    <Content Include="system\screens\OrientationScreen.js">
+      <DependentUpon>OrientationScreen.ts</DependentUpon>
+    </Content>
     <Content Include="utils\CircleUtils.js">
       <DependentUpon>CircleUtils.ts</DependentUpon>
     </Content>

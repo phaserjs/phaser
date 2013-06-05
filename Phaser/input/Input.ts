@@ -513,16 +513,8 @@ module Phaser {
             if (this.pointer10) { this.pointer10.reset(); }
 
             this.currentPointers = 0;
-
-            for (var i = 0; i < this.totalTrackedObjects; i++)
-            {
-                this.inputObjects[i].input.reset();
-            }
-
+            
             this._game.stage.canvas.style.cursor = "default";
-
-            this.inputObjects.length = 0;
-            this.totalTrackedObjects = 0;
 
             if (hard == true)
             {
@@ -535,6 +527,14 @@ module Phaser {
                 this.onUp = new Phaser.Signal();
                 this.onTap = new Phaser.Signal();
                 this.onHold = new Phaser.Signal();
+
+                for (var i = 0; i < this.totalTrackedObjects; i++)
+                {
+                    this.inputObjects[i].input.reset();
+                }
+
+                this.inputObjects.length = 0;
+                this.totalTrackedObjects = 0;
             }
 
         }
@@ -904,7 +904,7 @@ module Phaser {
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this._game.stage.context.font = '14px Courier';
+            this._game.stage.context.font = '24px Courier';
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
             this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);

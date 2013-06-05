@@ -13,6 +13,7 @@ module Phaser {
         constructor(game: Game) {
 
             this._game = game;
+            this.callbackContext = this._game;
 
         }
 
@@ -35,6 +36,15 @@ module Phaser {
         public disabled: bool = false;
 
         /**
+        * Custom callback useful for hooking into a 3rd party library. Will be passed the mouse event as the only parameter.
+        * Callbacks are fired even if this component is disabled and before the event propagation is disabled.
+        */
+        public callbackContext;
+        public mouseDownCallback = null;
+        public mouseMoveCallback = null;
+        public mouseUpCallback = null;
+
+        /**
         * Starts the event listeners running
         * @method start
         */
@@ -50,6 +60,11 @@ module Phaser {
          * @param {MouseEvent} event
          */
         public onMouseDown(event: MouseEvent) {
+
+            if (this.mouseDownCallback)
+            {
+                this.mouseDownCallback.call(this.callbackContext, event);
+            }
 
             if (this._game.input.disabled || this.disabled)
             {
@@ -67,6 +82,11 @@ module Phaser {
          */
         public onMouseMove(event: MouseEvent) {
 
+            if (this.mouseMoveCallback)
+            {
+                this.mouseMoveCallback.call(this.callbackContext, event);
+            }
+
             if (this._game.input.disabled || this.disabled)
             {
                 return;
@@ -82,6 +102,11 @@ module Phaser {
          * @param {MouseEvent} event
          */
         public onMouseUp(event: MouseEvent) {
+
+            if (this.mouseUpCallback)
+            {
+                this.mouseUpCallback.call(this.callbackContext, event);
+            }
 
             if (this._game.input.disabled || this.disabled)
             {

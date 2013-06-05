@@ -3619,10 +3619,13 @@ module Phaser.Components {
         public start(priority?: number, checkBody?: bool, useHandCursor?: bool): Sprite;
         public reset(): void;
         public stop(): void;
+        public checkPointerOver(pointer: Pointer): bool;
         /**
         * Update
         */
         public update(pointer: Pointer): bool;
+        public _pointerOverHandler(pointer: Pointer): void;
+        public _pointOutHandler(pointer: Pointer): void;
         public consumePointerEvent: bool;
         public _touchedHandler(pointer: Pointer): bool;
         public _releasedHandler(pointer: Pointer): void;
@@ -4138,6 +4141,10 @@ module Phaser {
         * z order value of the object.
         */
         public z: number;
+        /**
+        * Render iteration
+        */
+        public renderOrderID: number;
         /**
         * This value is added to the angle of the Sprite.
         * For example if you had a sprite graphic drawn facing straight up then you could set
@@ -6077,6 +6084,21 @@ module Phaser {
         */
         static SHOW_ALL: number;
         /**
+        * If the game should be forced to use Landscape mode, this is set to true by Game.Stage
+        * @type {Boolean}
+        */
+        public forceLandscape: bool;
+        /**
+        * If the game should be forced to use Portrait mode, this is set to true by Game.Stage
+        * @type {Boolean}
+        */
+        public forcePortrait: bool;
+        /**
+        * If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
+        * @type {Boolean}
+        */
+        public incorrectOrientation: bool;
+        /**
         * Minimum width the canvas should be scaled to (in pixels)
         * @type {number}
         */
@@ -6109,17 +6131,27 @@ module Phaser {
         */
         public height: number;
         /**
-        * Window orientation angle (90 and -90 are landscape, 0 is portrait)
+        * Asperct ratio of the scaled game size (width / height)
+        * @type {number}
+        */
+        public aspectRatio: number;
+        /**
+        * The scale factor of the scaled game width
+        * @type {Vec2}
+        */
+        public scaleFactor: Vec2;
+        /**
+        * Window orientation angle (90 and -90 are landscape, 0 and 80 are portrait)
         * @type {number}
         */
         public orientation: number;
         /**
-        * A Signal that is dispatched when the device enters landscape mode from portrait
+        * A Signal that is dispatched when the device enters landscape orientation from portrait
         * @type {Signal}
         */
         public enterLandscape: Signal;
         /**
-        * A Signal that is dispatched when the device enters portrait mode from landscape
+        * A Signal that is dispatched when the device enters portrait orientation from landscape
         * @type {Signal}
         */
         public enterPortrait: Signal;
@@ -6130,6 +6162,7 @@ module Phaser {
         * The core update loop, called by Phaser.Stage
         */
         public update(): void;
+        private checkOrientationState();
         public isPortrait : bool;
         public isLandscape : bool;
         /**
@@ -6148,6 +6181,10 @@ module Phaser {
         * Set screen size automatically based on the scaleMode.
         */
         private setScreenSize();
+        private setSize();
+        private setMaximum();
+        private setShowAll();
+        private setExactFit();
     }
 }
 /**
@@ -6269,6 +6306,50 @@ module Phaser {
     }
 }
 /**
+* Phaser - OrientationScreen
+*
+* The Orientation Screen is displayed whenever the device is turned to an unsupported orientation.
+*/
+module Phaser {
+    class OrientationScreen {
+        /**
+        * OrientationScreen constructor
+        * Create a new <code>OrientationScreen</code> with specific width and height.
+        *
+        * @param width {number} Screen canvas width.
+        * @param height {number} Screen canvas height.
+        */
+        constructor(game: Game);
+        /**
+        * Local reference to game.
+        */
+        public game: Game;
+        private _showOnLandscape;
+        private _showOnPortrait;
+        /**
+        * Landscape Image. If you only want your game to work in Portrait mode, and display an image when in Landscape,
+        * then set this to be the key of an image previously loaded into the Game.Cache.
+        * @type {Cache Reference}
+        */
+        public landscapeImage;
+        /**
+        * Portrait Image. If you only want your game to work in Landscape mode, and display an image when in Portrait,
+        * then set this to be the key of an image previously loaded into the Game.Cache.
+        * @type {Cache Reference}
+        */
+        public portraitImage;
+        public enable(onLandscape: bool, onPortrait: bool, imageKey: string): void;
+        /**
+        * Update
+        */
+        public update(): void;
+        /**
+        * Render
+        */
+        public render(): void;
+    }
+}
+/**
 * Phaser - Stage
 *
 * The Stage is the canvas on which everything is displayed. This class handles display within the web browser, focus handling,
@@ -6291,20 +6372,25 @@ module Phaser {
         */
         private _game;
         /**
-        * Background color of the stage (defaults to black)
+        * Background color of the stage (defaults to black). Set via the public backgroundColor property.
         * @type {string}
         */
-        private _bgColor;
+        private _backgroundColor;
         /**
         * This will be displayed when Phaser is started without any default functions or State
         * @type {BootScreen}
         */
-        private _bootScreen;
+        public bootScreen;
         /**
         * This will be displayed whenever the game loses focus or the player switches to another browser tab.
         * @type {PauseScreen}
         */
-        private _pauseScreen;
+        public pauseScreen;
+        /**
+        * This will be displayed whenever the device is turned to an unsupported orientation.
+        * @type {OrientationScreen}
+        */
+        public orientationScreen;
         /**
         * Bound of this stage.
         * @type {Rectangle}
@@ -6371,12 +6457,13 @@ module Phaser {
         * This method is called when the canvas elements visibility is changed.
         */
         private visibilityChange(event);
+        public enableOrientationCheck(forceLandscape: bool, forcePortrait: bool, imageKey?: string): void;
         public pauseGame(): void;
         public resumeGame(): void;
         /**
         * Get the DOM offset values of the given element
         */
-        private getOffset(element);
+        public getOffset(element, populateOffset?: bool): Point;
         /**
         * Canvas strokeStyle.
         * @type {string}
@@ -7536,11 +7623,11 @@ module Phaser {
         **/
         public duration : number;
         /**
-        * The Game Object this Pointer is currently dragging.
-        * @property draggedObject
+        * The Game Object this Pointer is currently over / touching / dragging.
+        * @property targetObject
         * @type {Any}
         **/
-        public draggedObject;
+        public targetObject;
         /**
         * Gets the X value of this Pointer in world coordinate space
         * @param {Camera} [camera]
@@ -7551,6 +7638,16 @@ module Phaser {
         * @param {Camera} [camera]
         */
         public getWorldY(camera?: Camera): number;
+        /**
+        * Gets the X value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        public scaledX : number;
+        /**
+        * Gets the Y value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        public scaledY : number;
         /**
         * Called when the Pointer is pressed onto the touchscreen
         * @method start
@@ -7722,6 +7819,14 @@ module Phaser {
         * @type {Boolean}
         */
         public disabled: bool;
+        /**
+        * Custom callback useful for hooking into a 3rd party library. Will be passed the mouse event as the only parameter.
+        * Callbacks are fired even if this component is disabled and before the event propagation is disabled.
+        */
+        public callbackContext;
+        public mouseDownCallback;
+        public mouseMoveCallback;
+        public mouseUpCallback;
         /**
         * Starts the event listeners running
         * @method start
@@ -7933,6 +8038,17 @@ module Phaser {
         * @type {Boolean}
         */
         public disabled: bool;
+        /**
+        * Custom callback useful for hooking into a 3rd party library. Will be passed the touch event as the only parameter.
+        * Callbacks are fired even if this component is disabled and before the event propogation is disabled.
+        */
+        public callbackContext;
+        public touchStartCallback;
+        public touchMoveCallback;
+        public touchEndCallback;
+        public touchEnterCallback;
+        public touchLeaveCallback;
+        public touchCancelCallback;
         /**
         * Starts the event listeners running
         * @method start

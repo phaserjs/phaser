@@ -258,7 +258,7 @@ module Phaser.Components {
 		    }
 		    else
 		    {
-		        return RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y);
+		        return RectangleUtils.contains(this._sprite.frameBounds, pointer.scaledX, pointer.scaledY);
 		    }
 
 		}
@@ -279,10 +279,10 @@ module Phaser.Components {
             }
             else if (this._pointerData[pointer.id].isOver == true)
             {
-                if (RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y))
+                if (RectangleUtils.contains(this._sprite.frameBounds, pointer.scaledX, pointer.scaledY))
                 {
-                    this._pointerData[pointer.id].x = pointer.x - this._sprite.x;
-                    this._pointerData[pointer.id].y = pointer.y - this._sprite.y;
+                    this._pointerData[pointer.id].x = pointer.scaledX - this._sprite.x;
+                    this._pointerData[pointer.id].y = pointer.scaledY - this._sprite.y;
                     return true;
                 }
                 else
@@ -335,9 +335,11 @@ module Phaser.Components {
 
         public _touchedHandler(pointer: Pointer): bool {
 
+            console.log('touched handler', this._pointerData[pointer.id]);
+
             if (this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true)
             {
-                console.log('touchDown on', this._sprite.texture.cacheKey,this._sprite.frameName, this._sprite.frameBounds.width,this._sprite.frameBounds.height);
+                //console.log('touchDown on', this._sprite.texture.cacheKey,this._sprite.frameName, this._sprite.frameBounds.width,this._sprite.frameBounds.height);
                 this._pointerData[pointer.id].isDown = true;
                 this._pointerData[pointer.id].isUp = false;
                 this._pointerData[pointer.id].timeDown = this.game.time.now;
@@ -359,6 +361,8 @@ module Phaser.Components {
         }
 
         public _releasedHandler(pointer: Pointer) {
+
+            console.log('release handler');
 
             //  If was previously touched by this Pointer, check if still is
             if (this._pointerData[pointer.id].isDown && pointer.isUp)
@@ -674,13 +678,13 @@ module Phaser.Components {
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this._sprite.texture.context.font = '14px Courier';
+            this._sprite.texture.context.font = '16px Courier';
             this._sprite.texture.context.fillStyle = color;
             this._sprite.texture.context.fillText('Sprite Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
-            this._sprite.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
-            this._sprite.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
-            this._sprite.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
-            this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
+            this._sprite.texture.context.fillText('x: ' + this.pointerX(1).toFixed(1) + ' y: ' + this.pointerY(1).toFixed(1), x, y + 14);
+            this._sprite.texture.context.fillText('over: ' + this.pointerOver(1) + ' duration: ' + this.overDuration(1).toFixed(0), x, y + 28);
+            this._sprite.texture.context.fillText('down: ' + this.pointerDown(1) + ' duration: ' + this.downDuration(1).toFixed(0), x, y + 42);
+            this._sprite.texture.context.fillText('just over: ' + this.justOver(1) + ' just out: ' + this.justOut(1), x, y + 56);
 
         }
 

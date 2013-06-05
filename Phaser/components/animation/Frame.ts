@@ -22,7 +22,7 @@ module Phaser {
          */
         constructor(x: number, y: number, width: number, height: number, name: string) {
 
-            console.log('Creating Frame', name, 'x', x, 'y', y, 'width', width, 'height', height);
+            //console.log('Creating Frame', name, 'x', x, 'y', y, 'width', width, 'height', height);
 
             this.x = x;
             this.y = y;

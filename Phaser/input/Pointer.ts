@@ -283,6 +283,22 @@ module Phaser {
         }
 
         /**
+        * Gets the X value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        public get scaledX():number {
+            return Math.floor(this.x * this.game.input.scaleX);
+        }
+
+        /**
+        * Gets the Y value of this Pointer in world coordinate space
+        * @param {Camera} [camera]
+        */
+        public get scaledY():number {
+            return Math.floor(this.y * this.game.input.scaleY);
+        }
+
+        /**
         * Called when the Pointer is pressed onto the touchscreen
         * @method start
         * @param {Any} event
@@ -298,7 +314,7 @@ module Phaser {
             }
 
             //  Fix to stop rogue browser plugins from blocking the visibility state event
-            if (this.game.paused == true)
+            if (this.game.paused == true && this.game.stage.scale.incorrectOrientation == false)
             {
                 this.game.stage.resumeGame();
                 return this;
@@ -495,11 +511,9 @@ module Phaser {
                     }
                 }
 
-                //console.log('pointer move', _highestRenderID);
-
                 if (_highestRenderObject !== -1)
                 {
-                    console.log('setting target');
+                    //console.log('setting target');
                     this.targetObject = this.game.input.inputObjects[_highestRenderObject];
                     this.targetObject.input._pointerOverHandler(this);
                 }
@@ -650,6 +664,12 @@ module Phaser {
             this._holdSent = false;
             this._history.length = 0;
             this._stateReset = true;
+
+            if (this.targetObject)
+            {
+                this.targetObject.input._releasedHandler(this);
+            }
+
             this.targetObject = null;
 
         }

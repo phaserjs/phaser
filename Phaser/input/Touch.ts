@@ -23,6 +23,7 @@ module Phaser {
         constructor(game: Game) {
 
             this._game = game;
+            this.callbackContext = this._game;
 
         }
 
@@ -39,6 +40,18 @@ module Phaser {
         * @type {Boolean}
         */
         public disabled: bool = false;
+
+        /**
+        * Custom callback useful for hooking into a 3rd party library. Will be passed the touch event as the only parameter.
+        * Callbacks are fired even if this component is disabled and before the event propogation is disabled.
+        */
+        public callbackContext;
+        public touchStartCallback = null;
+        public touchMoveCallback = null;
+        public touchEndCallback = null;
+        public touchEnterCallback = null;
+        public touchLeaveCallback = null;
+        public touchCancelCallback = null;
 
         /**
         * Starts the event listeners running
@@ -78,6 +91,11 @@ module Phaser {
         **/
         private onTouchStart(event) {
 
+            if (this.touchStartCallback)
+            {
+                this.touchStartCallback.call(this.callbackContext, event);
+            }
+
             if (this._game.input.disabled || this.disabled)
             {
                 return;
@@ -103,6 +121,11 @@ module Phaser {
         **/
         private onTouchCancel(event) {
 
+            if (this.touchCancelCallback)
+            {
+                this.touchCancelCallback.call(this.callbackContext, event);
+            }
+
             if (this._game.input.disabled || this.disabled)
             {
                 return;
@@ -127,6 +150,11 @@ module Phaser {
         **/
         private onTouchEnter(event) {
 
+            if (this.touchEnterCallback)
+            {
+                this.touchEnterCallback.call(this.callbackContext, event);
+            }
+
             if (this._game.input.disabled || this.disabled)
             {
                 return;
@@ -136,7 +164,7 @@ module Phaser {
 
             for (var i = 0; i < event.changedTouches.length; i++)
             {
-                console.log('touch enter');
+                //console.log('touch enter');
             }
 
         }
@@ -149,11 +177,16 @@ module Phaser {
         **/
         private onTouchLeave(event) {
 
+            if (this.touchLeaveCallback)
+            {
+                this.touchLeaveCallback.call(this.callbackContext, event);
+            }
+
             event.preventDefault();
 
             for (var i = 0; i < event.changedTouches.length; i++)
             {
-                console.log('touch leave');
+                //console.log('touch leave');
             }
 
         }
@@ -164,6 +197,11 @@ module Phaser {
         * @param {Any} event
         **/
         private onTouchMove(event) {
+
+            if (this.touchMoveCallback)
+            {
+                this.touchMoveCallback.call(this.callbackContext, event);
+            }
 
             event.preventDefault();
 
@@ -180,6 +218,11 @@ module Phaser {
         * @param {Any} event
         **/
         private onTouchEnd(event) {
+
+            if (this.touchEndCallback)
+            {
+                this.touchEndCallback.call(this.callbackContext, event);
+            }
 
             event.preventDefault();
 

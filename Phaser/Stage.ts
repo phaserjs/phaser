@@ -3,6 +3,7 @@
 /// <reference path="system/StageScaleMode.ts" />
 /// <reference path="system/screens/BootScreen.ts" />
 /// <reference path="system/screens/PauseScreen.ts" />
+/// <reference path="system/screens/OrientationScreen.ts" />
 
 /**
 * Phaser - Stage
@@ -32,7 +33,7 @@ module Phaser {
             this.canvas.width = width;
             this.canvas.height = height;
 
-            if (document.getElementById(parent))
+            if ((parent !== '' || parent !== null) && document.getElementById(parent))
             {
                 document.getElementById(parent).appendChild(this.canvas);
                 document.getElementById(parent).style.overflow = 'hidden';
@@ -51,11 +52,12 @@ module Phaser {
 
             this.context = this.canvas.getContext('2d');
 
-            this.offset = this.getOffset(this.canvas);
-            this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
-            this.aspectRatio = width / height;
             this.scaleMode = StageScaleMode.NO_SCALE;
             this.scale = new StageScaleMode(this._game);
+
+            this.getOffset(this.canvas);
+            this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
+            this.aspectRatio = width / height;
 
             document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
             document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
@@ -70,22 +72,28 @@ module Phaser {
         private _game: Game;
 
         /**
-         * Background color of the stage (defaults to black)
+         * Background color of the stage (defaults to black). Set via the public backgroundColor property.
          * @type {string}
          */
-        private _bgColor: string = 'rgb(0,0,0)';
+        private _backgroundColor: string = 'rgb(0,0,0)';
 
         /**
          * This will be displayed when Phaser is started without any default functions or State
          * @type {BootScreen}
          */
-        private _bootScreen;
+        public bootScreen;
 
         /**
          * This will be displayed whenever the game loses focus or the player switches to another browser tab.
          * @type {PauseScreen}
          */
-        private _pauseScreen;
+        public pauseScreen;
+
+        /**
+         * This will be displayed whenever the device is turned to an unsupported orientation.
+         * @type {OrientationScreen}
+         */
+        public orientationScreen;
 
         /**
          * Bound of this stage.
@@ -155,8 +163,9 @@ module Phaser {
          */
         public boot() {
 
-            this._bootScreen = new BootScreen(this._game);
-            this._pauseScreen = new PauseScreen(this._game, this.width, this.height);
+            this.bootScreen = new BootScreen(this._game);
+            this.pauseScreen = new PauseScreen(this._game, this.width, this.height);
+            this.orientationScreen = new OrientationScreen(this._game);
 
         }
 
@@ -174,16 +183,23 @@ module Phaser {
                 this.context.clearRect(0, 0, this.width, this.height);
             }
 
-            if (this._game.isRunning == false && this.disableBootScreen == false)
+            if (this._game.paused && this.scale.incorrectOrientation)
             {
-                this._bootScreen.update();
-                this._bootScreen.render();
+                this.orientationScreen.update();
+                this.orientationScreen.render();
+                return;
             }
 
-            if (this._game.paused == true && this.disablePauseScreen == false)
+            if (this._game.isRunning == false && this.disableBootScreen == false)
             {
-                this._pauseScreen.update();
-                this._pauseScreen.render();
+                this.bootScreen.update();
+                this.bootScreen.render();
+            }
+
+            if (this._game.paused && this.disablePauseScreen == false)
+            {
+                this.pauseScreen.update();
+                this.pauseScreen.render();
             }
 
         }
@@ -215,9 +231,35 @@ module Phaser {
 
         }
 
+        public enableOrientationCheck(forceLandscape: bool, forcePortrait: bool, imageKey?: string = '') {
+
+            this.scale.forceLandscape = forceLandscape;
+            this.scale.forcePortrait = forcePortrait;
+            this.orientationScreen.enable(forceLandscape, forcePortrait, imageKey);
+
+            if (forceLandscape || forcePortrait)
+            {
+                if ((this.scale.isLandscape && forcePortrait) || (this.scale.isPortrait && forceLandscape))
+                {
+                    //  They are in the wrong orientation right now
+                    this._game.paused = true;
+                    this.scale.incorrectOrientation = true;
+                }
+                else
+                {
+                    this.scale.incorrectOrientation = false;
+                }
+            }
+
+        }
+
         public pauseGame() {
 
-            this._pauseScreen.onPaused();
+            if (this.disablePauseScreen == false)
+            {
+                this.pauseScreen.onPaused();
+            }
+
             this.saveCanvasValues();
             this._game.paused = true;
 
@@ -225,7 +267,11 @@ module Phaser {
 
         public resumeGame() {
 
-            this._pauseScreen.onResume();
+            if (this.disablePauseScreen == false)
+            {
+                this.pauseScreen.onResume();
+            }
+
             this.restoreCanvasValues();
             this._game.paused = false;
 
@@ -234,7 +280,7 @@ module Phaser {
         /**
          * Get the DOM offset values of the given element
          */
-        private getOffset(element): Point {
+        public getOffset(element, populateOffset: bool = true): Point {
 
             var box = element.getBoundingClientRect();
 
@@ -243,7 +289,15 @@ module Phaser {
             var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
             var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
 
-            return new Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+            if (populateOffset)
+            {
+                this.offset = new Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+                return this.offset;
+            }
+            else
+            {
+                return new Point(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+            }
 
         }
 
@@ -289,10 +343,11 @@ module Phaser {
 
         public set backgroundColor(color: string) {
             this.canvas.style.backgroundColor = color;
+            this._backgroundColor = color;
         }
 
         public get backgroundColor(): string {
-            return this._bgColor;
+            return this._backgroundColor;
         }
 
         public get x(): number {

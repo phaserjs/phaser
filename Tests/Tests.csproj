@@ -115,6 +115,10 @@
     <Content Include="input\world drag.js">
       <DependentUpon>world drag.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="mobile\sprite test 1.ts" />
+    <Content Include="mobile\sprite test 1.js">
+      <DependentUpon>sprite test 1.ts</DependentUpon>
+    </Content>
     <Content Include="particles\graphic emitter.js">
       <DependentUpon>graphic emitter.ts</DependentUpon>
     </Content>

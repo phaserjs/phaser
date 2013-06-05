@@ -4357,7 +4357,7 @@ var Phaser;
             * Either cw or ccw, rotation is always 90 degrees.
             */
             this.rotationDirection = 'cw';
-            console.log('Creating Frame', name, 'x', x, 'y', y, 'width', width, 'height', height);
+            //console.log('Creating Frame', name, 'x', x, 'y', y, 'width', width, 'height', height);
             this.x = x;
             this.y = y;
             this.width = width;
@@ -6267,6 +6267,13 @@ var Phaser;
                     this.game.input.removeGameObject(this._sprite);
                 }
             };
+            Input.prototype.checkPointerOver = function (pointer) {
+                if(this.enabled == false || this._sprite.visible == false) {
+                    return false;
+                } else {
+                    return Phaser.RectangleUtils.contains(this._sprite.frameBounds, pointer.scaledX, pointer.scaledY);
+                }
+            };
             Input.prototype.update = /**
             * Update
             */
@@ -6275,44 +6282,51 @@ var Phaser;
                     return false;
                 }
                 if(this.draggable && this._draggedPointerID == pointer.id) {
-                    this.updateDrag(pointer);
+                    return this.updateDrag(pointer);
+                } else if(this._pointerData[pointer.id].isOver == true) {
+                    if(Phaser.RectangleUtils.contains(this._sprite.frameBounds, pointer.scaledX, pointer.scaledY)) {
+                        this._pointerData[pointer.id].x = pointer.scaledX - this._sprite.x;
+                        this._pointerData[pointer.id].y = pointer.scaledY - this._sprite.y;
+                        return true;
+                    } else {
+                        this._pointOutHandler(pointer);
+                        return false;
+                    }
                 }
-                if(Phaser.RectangleUtils.contains(this._sprite.frameBounds, pointer.x, pointer.y)) {
-                    //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
+            };
+            Input.prototype._pointerOverHandler = function (pointer) {
+                //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
+                if(this._pointerData[pointer.id].isOver == false) {
+                    this._pointerData[pointer.id].isOver = true;
+                    this._pointerData[pointer.id].isOut = false;
+                    this._pointerData[pointer.id].timeOver = this.game.time.now;
                     this._pointerData[pointer.id].x = pointer.x - this._sprite.x;
                     this._pointerData[pointer.id].y = pointer.y - this._sprite.y;
-                    if(this._pointerData[pointer.id].isOver == false) {
-                        this._pointerData[pointer.id].isOver = true;
-                        this._pointerData[pointer.id].isOut = false;
-                        this._pointerData[pointer.id].timeOver = this.game.time.now;
-                        if(this.useHandCursor && this._pointerData[pointer.id].isDragged == false) {
-                            this.game.stage.canvas.style.cursor = "pointer";
-                        }
-                        this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
+                    if(this.useHandCursor && this._pointerData[pointer.id].isDragged == false) {
+                        this.game.stage.canvas.style.cursor = "pointer";
                     }
-                    return true;
-                } else {
-                    if(this._pointerData[pointer.id].isOver) {
-                        this._pointerData[pointer.id].isOver = false;
-                        this._pointerData[pointer.id].isOut = true;
-                        this._pointerData[pointer.id].timeOut = this.game.time.now;
-                        if(this.useHandCursor && this._pointerData[pointer.id].isDragged == false) {
-                            this.game.stage.canvas.style.cursor = "default";
-                        }
-                        this._sprite.events.onInputOut.dispatch(this._sprite, pointer);
-                    }
-                    return false;
+                    this._sprite.events.onInputOver.dispatch(this._sprite, pointer);
                 }
+            };
+            Input.prototype._pointOutHandler = function (pointer) {
+                this._pointerData[pointer.id].isOver = false;
+                this._pointerData[pointer.id].isOut = true;
+                this._pointerData[pointer.id].timeOut = this.game.time.now;
+                if(this.useHandCursor && this._pointerData[pointer.id].isDragged == false) {
+                    this.game.stage.canvas.style.cursor = "default";
+                }
+                this._sprite.events.onInputOut.dispatch(this._sprite, pointer);
             };
             Input.prototype._touchedHandler = function (pointer) {
                 if(this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true) {
-                    console.log('touchDown on', this._sprite.texture.cacheKey, this._sprite.frameBounds.width, this._sprite.frameBounds.height);
+                    //console.log('touchDown on', this._sprite.texture.cacheKey,this._sprite.frameName, this._sprite.frameBounds.width,this._sprite.frameBounds.height);
                     this._pointerData[pointer.id].isDown = true;
                     this._pointerData[pointer.id].isUp = false;
                     this._pointerData[pointer.id].timeDown = this.game.time.now;
                     this._sprite.events.onInputDown.dispatch(this._sprite, pointer);
                     //  Start drag
-                    if(this.draggable && this.isDragged == false && pointer.draggedObject == null) {
+                    //if (this.draggable && this.isDragged == false && pointer.targetObject == null)
+                    if(this.draggable && this.isDragged == false) {
                         this.startDrag(pointer);
                     }
                 }
@@ -6342,7 +6356,7 @@ var Phaser;
             function (pointer) {
                 if(pointer.isUp) {
                     this.stopDrag(pointer);
-                    return;
+                    return false;
                 }
                 if(this.allowHorizontalDrag) {
                     this._sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
@@ -6360,6 +6374,7 @@ var Phaser;
                     this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
                     this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
                 }
+                return true;
             };
             Input.prototype.justOver = /**
             * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
@@ -6477,8 +6492,8 @@ var Phaser;
                 } else {
                     this._dragPoint.setTo(this._sprite.x - pointer.x, this._sprite.y - pointer.y);
                 }
-                pointer.draggedObject = this._sprite;
-            };
+                //pointer.draggedObject = this._sprite;
+                            };
             Input.prototype.stopDrag = /**
             * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
             */
@@ -6490,8 +6505,8 @@ var Phaser;
                     this._sprite.x = Math.floor(this._sprite.x / this.snapX) * this.snapX;
                     this._sprite.y = Math.floor(this._sprite.y / this.snapY) * this.snapY;
                 }
-                pointer.draggedObject = null;
-            };
+                //pointer.draggedObject = null;
+                            };
             Input.prototype.setDragLock = /**
             * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
             *
@@ -6569,10 +6584,10 @@ var Phaser;
                 this._sprite.texture.context.font = '14px Courier';
                 this._sprite.texture.context.fillStyle = color;
                 this._sprite.texture.context.fillText('Sprite Input: (' + this._sprite.frameBounds.width + ' x ' + this._sprite.frameBounds.height + ')', x, y);
-                this._sprite.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
-                this._sprite.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
-                this._sprite.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
-                this._sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
+                this._sprite.texture.context.fillText('x: ' + this.pointerX(1).toFixed(1) + ' y: ' + this.pointerY(1).toFixed(1), x, y + 14);
+                this._sprite.texture.context.fillText('over: ' + this.pointerOver(1) + ' duration: ' + this.overDuration(1).toFixed(0), x, y + 28);
+                this._sprite.texture.context.fillText('down: ' + this.pointerDown(1) + ' duration: ' + this.downDuration(1).toFixed(0), x, y + 42);
+                this._sprite.texture.context.fillText('just over: ' + this.justOver(1) + ' just out: ' + this.justOut(1), x, y + 56);
             };
             return Input;
         })();
@@ -7147,6 +7162,10 @@ var Phaser;
             * z order value of the object.
             */
             this.z = 0;
+            /**
+            * Render iteration
+            */
+            this.renderOrderID = 0;
             /**
             * This value is added to the angle of the Sprite.
             * For example if you had a sprite graphic drawn facing straight up then you could set
@@ -10663,6 +10682,21 @@ var Phaser;
             */
             this._startHeight = 0;
             /**
+            * If the game should be forced to use Landscape mode, this is set to true by Game.Stage
+            * @type {Boolean}
+            */
+            this.forceLandscape = false;
+            /**
+            * If the game should be forced to use Portrait mode, this is set to true by Game.Stage
+            * @type {Boolean}
+            */
+            this.forcePortrait = false;
+            /**
+            * If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
+            * @type {Boolean}
+            */
+            this.incorrectOrientation = false;
+            /**
             * Minimum width the canvas should be scaled to (in pixels)
             * @type {number}
             */
@@ -10717,7 +10751,8 @@ var Phaser;
         StageScaleMode.NO_SCALE = 1;
         StageScaleMode.SHOW_ALL = 2;
         Object.defineProperty(StageScaleMode.prototype, "isFullScreen", {
-            get: function () {
+            get: //  Full Screen API calls
+            function () {
                 if(document['fullscreenElement'] === null || document['mozFullScreenElement'] === null || document['webkitFullscreenElement'] === null) {
                     return false;
                 }
@@ -10755,10 +10790,33 @@ var Phaser;
             if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
                 this.refresh();
             }
+            if(this.forceLandscape || this.forcePortrait) {
+                this.checkOrientationState();
+            }
+        };
+        StageScaleMode.prototype.checkOrientationState = function () {
+            //  They are in the wrong orientation
+            if(this.incorrectOrientation) {
+                if((this.forceLandscape && window.innerWidth > window.innerHeight) || (this.forcePortrait && window.innerHeight > window.innerWidth)) {
+                    //  Back to normal
+                    this._game.paused = false;
+                    this.incorrectOrientation = false;
+                    this._game.input.reset();
+                    this.refresh();
+                }
+            } else {
+                if((this.forceLandscape && window.innerWidth < window.innerHeight) || (this.forcePortrait && window.innerHeight < window.innerWidth)) {
+                    //  Show orientation screen
+                    this._game.paused = true;
+                    this.incorrectOrientation = true;
+                    this._game.input.reset();
+                    this.refresh();
+                }
+            }
         };
         Object.defineProperty(StageScaleMode.prototype, "isPortrait", {
             get: function () {
-                return this.orientation == 0;
+                return this.orientation == 0 || this.orientation == 180;
             },
             enumerable: true,
             configurable: true
@@ -10776,9 +10834,9 @@ var Phaser;
         function (event) {
             this.orientation = window['orientation'];
             if(this.isLandscape) {
-                this.enterLandscape.dispatch(this.orientation);
+                this.enterLandscape.dispatch(this.orientation, true, false);
             } else {
-                this.enterPortrait.dispatch(this.orientation);
+                this.enterPortrait.dispatch(this.orientation, false, true);
             }
             if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE) {
                 this.refresh();
@@ -10794,9 +10852,9 @@ var Phaser;
                 this.orientation = 0;
             }
             if(this.isLandscape) {
-                this.enterLandscape.dispatch(this.orientation);
+                this.enterLandscape.dispatch(this.orientation, true, false);
             } else {
-                this.enterPortrait.dispatch(this.orientation);
+                this.enterPortrait.dispatch(this.orientation, false, true);
             }
             if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE) {
                 this.refresh();
@@ -10822,6 +10880,7 @@ var Phaser;
                 this._check = window.setInterval(function () {
                     return _this.setScreenSize();
                 }, 10);
+                this.setScreenSize();
             }
         };
         StageScaleMode.prototype.setScreenSize = /**
@@ -10839,35 +10898,55 @@ var Phaser;
             if(window.innerHeight > this._startHeight || this._iterations < 0) {
                 // Set minimum height of content to new window height
                 document.documentElement.style.minHeight = window.innerHeight + 'px';
-                if(this._game.stage.scaleMode == StageScaleMode.EXACT_FIT) {
-                    if(this.maxWidth && window.innerWidth > this.maxWidth) {
-                        this.width = this.maxWidth;
-                    } else {
-                        this.width = window.innerWidth;
-                    }
-                    if(this.maxHeight && window.innerHeight > this.maxHeight) {
-                        this.height = this.maxHeight;
-                    } else {
-                        this.height = window.innerHeight;
-                    }
+                if(this.incorrectOrientation == true) {
+                    this.setMaximum();
+                } else if(this._game.stage.scaleMode == StageScaleMode.EXACT_FIT) {
+                    this.setExactFit();
                 } else if(this._game.stage.scaleMode == StageScaleMode.SHOW_ALL) {
-                    var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
-                    this.width = Math.round(this._game.stage.width * multiplier);
-                    this.height = Math.round(this._game.stage.height * multiplier);
-                    if(this.maxWidth && this.width > this.maxWidth) {
-                        this.width = this.maxWidth;
-                    }
-                    if(this.maxHeight && this.height > this.maxHeight) {
-                        this.height = this.maxHeight;
-                    }
+                    this.setShowAll();
                 }
-                this._game.stage.canvas.style.width = this.width + 'px';
-                this._game.stage.canvas.style.height = this.height + 'px';
-                this._game.input.scaleX = this._game.stage.width / this.width;
-                this._game.input.scaleY = this._game.stage.height / this.height;
                 clearInterval(this._check);
                 this._check = null;
             }
+        };
+        StageScaleMode.prototype.setMaximum = function () {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+            this._game.stage.canvas.style.width = this.width + 'px';
+            this._game.stage.canvas.style.height = this.height + 'px';
+            this._game.input.scaleX = this._game.stage.width / this.width;
+            this._game.input.scaleY = this._game.stage.height / this.height;
+        };
+        StageScaleMode.prototype.setShowAll = function () {
+            var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
+            this.width = Math.round(this._game.stage.width * multiplier);
+            this.height = Math.round(this._game.stage.height * multiplier);
+            if(this.maxWidth && this.width > this.maxWidth) {
+                this.width = this.maxWidth;
+            }
+            if(this.maxHeight && this.height > this.maxHeight) {
+                this.height = this.maxHeight;
+            }
+            this._game.stage.canvas.style.width = this.width + 'px';
+            this._game.stage.canvas.style.height = this.height + 'px';
+            this._game.input.scaleX = this._game.stage.width / this.width;
+            this._game.input.scaleY = this._game.stage.height / this.height;
+        };
+        StageScaleMode.prototype.setExactFit = function () {
+            if(this.maxWidth && window.innerWidth > this.maxWidth) {
+                this.width = this.maxWidth;
+            } else {
+                this.width = window.innerWidth;
+            }
+            if(this.maxHeight && window.innerHeight > this.maxHeight) {
+                this.height = this.maxHeight;
+            } else {
+                this.height = window.innerHeight;
+            }
+            this._game.stage.canvas.style.width = this.width + 'px';
+            this._game.stage.canvas.style.height = this.height + 'px';
+            this._game.input.scaleX = this._game.stage.width / this.width;
+            this._game.input.scaleY = this._game.stage.height / this.height;
         };
         return StageScaleMode;
     })();
@@ -11081,11 +11160,60 @@ var Phaser;
     })();
     Phaser.PauseScreen = PauseScreen;    
 })(Phaser || (Phaser = {}));
+/// <reference path="../../Game.ts" />
+/**
+* Phaser - OrientationScreen
+*
+* The Orientation Screen is displayed whenever the device is turned to an unsupported orientation.
+*/
+var Phaser;
+(function (Phaser) {
+    var OrientationScreen = (function () {
+        /**
+        * OrientationScreen constructor
+        * Create a new <code>OrientationScreen</code> with specific width and height.
+        *
+        * @param width {number} Screen canvas width.
+        * @param height {number} Screen canvas height.
+        */
+        function OrientationScreen(game) {
+            this._showOnLandscape = false;
+            this._showOnPortrait = false;
+            this.game = game;
+        }
+        OrientationScreen.prototype.enable = function (onLandscape, onPortrait, imageKey) {
+            this._showOnLandscape = onLandscape;
+            this._showOnPortrait = onPortrait;
+            this.landscapeImage = this.game.cache.getImage(imageKey);
+            this.portraitImage = this.game.cache.getImage(imageKey);
+        };
+        OrientationScreen.prototype.update = /**
+        * Update
+        */
+        function () {
+        };
+        OrientationScreen.prototype.render = /**
+        * Render
+        */
+        function () {
+            if(this._showOnLandscape) {
+                this.game.stage.context.drawImage(this.landscapeImage, 0, 0, this.landscapeImage.width, this.landscapeImage.height, 0, 0, this.game.stage.width, this.game.stage.height);
+            } else if(this._showOnPortrait) {
+                this.game.stage.context.drawImage(this.portraitImage, 0, 0, this.portraitImage.width, this.portraitImage.height, 0, 0, this.game.stage.width, this.game.stage.height);
+            }
+            //this.game.stage.context.font = '32px Arial';
+            //this.game.stage.context.fillText('w: ' + this.game.stage.width + ' h: ' + this.game.stage.height, 32, 32);
+                    };
+        return OrientationScreen;
+    })();
+    Phaser.OrientationScreen = OrientationScreen;    
+})(Phaser || (Phaser = {}));
 /// <reference path="Phaser.ts" />
 /// <reference path="Game.ts" />
 /// <reference path="system/StageScaleMode.ts" />
 /// <reference path="system/screens/BootScreen.ts" />
 /// <reference path="system/screens/PauseScreen.ts" />
+/// <reference path="system/screens/OrientationScreen.ts" />
 /**
 * Phaser - Stage
 *
@@ -11107,10 +11235,10 @@ var Phaser;
         function Stage(game, parent, width, height) {
             var _this = this;
             /**
-            * Background color of the stage (defaults to black)
+            * Background color of the stage (defaults to black). Set via the public backgroundColor property.
             * @type {string}
             */
-            this._bgColor = 'rgb(0,0,0)';
+            this._backgroundColor = 'rgb(0,0,0)';
             /**
             * Clear the whole stage every frame? (Default to true)
             * @type {boolean}
@@ -11169,9 +11297,12 @@ var Phaser;
         * Stage boot
         */
         function () {
-            this._bootScreen = new Phaser.BootScreen(this._game);
-            this._pauseScreen = new Phaser.PauseScreen(this._game, this.width, this.height);
-        };
+            this.bootScreen = new Phaser.BootScreen(this._game);
+            this.pauseScreen = new Phaser.PauseScreen(this._game, this.width, this.height);
+            this.orientationScreen = new Phaser.OrientationScreen(this._game);
+            //this.scale.enterLandscape.add(this.orientationChange, this);
+            //this.scale.enterPortrait.add(this.orientationChange, this);
+                    };
         Stage.prototype.update = /**
         * Update stage for rendering. This will handle scaling, clearing
         * and PauseScreen/BootScreen updating and rendering.
@@ -11182,13 +11313,18 @@ var Phaser;
                 //  implement dirty rect? could take up more cpu time than it saves. needs benching.
                 this.context.clearRect(0, 0, this.width, this.height);
             }
-            if(this._game.isRunning == false && this.disableBootScreen == false) {
-                this._bootScreen.update();
-                this._bootScreen.render();
+            if(this._game.paused && this.scale.incorrectOrientation) {
+                this.orientationScreen.update();
+                this.orientationScreen.render();
+                return;
             }
-            if(this._game.paused == true && this.disablePauseScreen == false) {
-                this._pauseScreen.update();
-                this._pauseScreen.render();
+            if(this._game.isRunning == false && this.disableBootScreen == false) {
+                this.bootScreen.update();
+                this.bootScreen.render();
+            }
+            if(this._game.paused && this.disablePauseScreen == false) {
+                this.pauseScreen.update();
+                this.pauseScreen.render();
             }
         };
         Stage.prototype.visibilityChange = /**
@@ -11208,13 +11344,52 @@ var Phaser;
                 }
             }
         };
+        Stage.prototype.enableOrientationCheck = /**
+        * This method is called when the device orientation changes.
+        */
+        /*
+        private orientationChange(format: number, landscape: bool, portrait: bool) {
+        
+        if (this.scale.forceLandscape && portrait)
+        {
+        this._game.paused = true;
+        this.scale.incorrectOrientation = true;
+        }
+        else if (this.scale.forcePortrait && landscape)
+        {
+        this._game.paused = true;
+        this.scale.incorrectOrientation = true;
+        }
+        else if ((this.scale.forceLandscape && landscape) || (this.scale.forcePortrait && portrait))
+        {
+        this._game.paused = false;
+        this.scale.incorrectOrientation = false;
+        }
+        
+        }
+        */
+        function (forceLandscape, forcePortrait, imageKey) {
+            if (typeof imageKey === "undefined") { imageKey = ''; }
+            this.scale.forceLandscape = forceLandscape;
+            this.scale.forcePortrait = forcePortrait;
+            this.orientationScreen.enable(forceLandscape, forcePortrait, imageKey);
+            if(forceLandscape || forcePortrait) {
+                if((this.scale.isLandscape && forcePortrait) || (this.scale.isPortrait && forceLandscape)) {
+                    //  They are in the wrong orientation right now
+                    this._game.paused = true;
+                    this.scale.incorrectOrientation = true;
+                } else {
+                    this.scale.incorrectOrientation = false;
+                }
+            }
+        };
         Stage.prototype.pauseGame = function () {
-            this._pauseScreen.onPaused();
+            this.pauseScreen.onPaused();
             this.saveCanvasValues();
             this._game.paused = true;
         };
         Stage.prototype.resumeGame = function () {
-            this._pauseScreen.onResume();
+            this.pauseScreen.onResume();
             this.restoreCanvasValues();
             this._game.paused = false;
         };
@@ -11247,10 +11422,11 @@ var Phaser;
         };
         Object.defineProperty(Stage.prototype, "backgroundColor", {
             get: function () {
-                return this._bgColor;
+                return this._backgroundColor;
             },
             set: function (color) {
                 this.canvas.style.backgroundColor = color;
+                this._backgroundColor = color;
             },
             enumerable: true,
             configurable: true
@@ -13963,6 +14139,12 @@ var Phaser;
             * @type {Number}
             **/
             this.totalTouches = 0;
+            /**
+            * The Game Object this Pointer is currently over / touching / dragging.
+            * @property targetObject
+            * @type {Any}
+            **/
+            this.targetObject = null;
             this.game = game;
             this.id = id;
             this.active = false;
@@ -14004,6 +14186,28 @@ var Phaser;
             if (typeof camera === "undefined") { camera = this.game.camera; }
             return camera.worldView.y + this.y;
         };
+        Object.defineProperty(Pointer.prototype, "scaledX", {
+            get: /**
+            * Gets the X value of this Pointer in world coordinate space
+            * @param {Camera} [camera]
+            */
+            function () {
+                return Math.floor(this.x * this.game.input.scaleX);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Pointer.prototype, "scaledY", {
+            get: /**
+            * Gets the Y value of this Pointer in world coordinate space
+            * @param {Camera} [camera]
+            */
+            function () {
+                return Math.floor(this.y * this.game.input.scaleY);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Pointer.prototype.start = /**
         * Called when the Pointer is pressed onto the touchscreen
         * @method start
@@ -14021,14 +14225,14 @@ var Phaser;
                 return this;
             }
             this._history.length = 0;
-            this.move(event);
-            this.positionDown.setTo(this.x, this.y);
             this.active = true;
             this.withinGame = true;
             this.isDown = true;
             this.isUp = false;
             this.timeDown = this.game.time.now;
             this._holdSent = false;
+            this.positionDown.setTo(this.x, this.y);
+            this.move(event);
             if(this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0)) {
                 this.game.input.x = this.x * this.game.input.scaleX;
                 this.game.input.y = this.y * this.game.input.scaleY;
@@ -14038,6 +14242,31 @@ var Phaser;
             this.totalTouches++;
             if(this.isMouse == false) {
                 this.game.input.currentPointers++;
+            }
+            //  Build our temporary click stack
+            /*
+            var _highestPriority = 0;
+            var _highestRenderID = 0;
+            var _highestRenderObject: number = -1;
+            
+            for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+            {
+            if (this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
+            {
+            _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
+            _highestRenderObject = i;
+            }
+            }
+            
+            if (_highestRenderObject !== -1 && this._stateReset == false)
+            {
+            this.targetObject = this.game.input.inputObjects[_highestRenderObject];
+            this.targetObject.input._touchedHandler(this);
+            //_highestRenderObject.input._touchedHandler(this);
+            }
+            */
+            if(this.targetObject !== null) {
+                this.targetObject.input._touchedHandler(this);
             }
             return this;
         };
@@ -14062,25 +14291,47 @@ var Phaser;
                 }
                 //  Iterate through the tracked objects
                 //  Build our temporary click stack
+                /*
                 var _highestPriority = 0;
-                for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
-                    if(this.game.input.inputObjects[i].input.enabled) {
-                        if(this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].input.priorityID > _highestPriority) {
-                            _highestPriority = this.game.input.inputObjects[i].input.priorityID;
-                        }
-                    }
+                var _highestRenderID = 0;
+                var _highestRenderObject = null;
+                
+                for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+                {
+                if (this.game.input.inputObjects[i].input.enabled)
+                {
+                //if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].input.priorityID > _highestPriority)
+                if (this.game.input.inputObjects[i].input.update(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
+                {
+                _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
+                _highestRenderObject = this.game.input.inputObjects[i];
                 }
-                if(this.isDown && this._stateReset == false) {
-                    //  Now update all objects with the highest priority ID (can be more than 1)
-                    for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
-                        if(this.game.input.inputObjects[i].input.priorityID == _highestPriority) {
-                            if(this.game.input.inputObjects[i].input._touchedHandler(this) == false) {
-                                return;
+                }
+                }
+                
+                if (_highestRenderObject !== null)
+                {
+                _highestRenderObject.input._pointerOverHandler(this);
+                
+                if (this.isDown && this._stateReset == false)
+                {
+                _highestRenderObject.input._touchedHandler(this);
+                }
+                
+                //  Now update all objects with the highest priority ID (can be more than 1)
+                //for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+                //{
+                //    if (this.game.input.inputObjects[i].input.priorityID == _highestPriority)
+                //    {
+                //        if (this.game.input.inputObjects[i].input._touchedHandler(this) == false)
+                //        {
+                //            return;
+                //        }
+                //    }
+                //}
+                }
+                */
                             }
-                        }
-                    }
-                }
-            }
         };
         Pointer.prototype.move = /**
         * Called when the Pointer is moved on the touchscreen
@@ -14108,6 +14359,27 @@ var Phaser;
                 this.game.input.position.setTo(this.game.input.x, this.game.input.y);
                 this.game.input.circle.x = this.game.input.x;
                 this.game.input.circle.y = this.game.input.y;
+            }
+            if(this.targetObject !== null) {
+                if(this.targetObject.input.update(this) == false) {
+                    this.targetObject = null;
+                }
+            } else {
+                //  Build our temporary click stack
+                var _highestRenderID = 0;
+                var _highestRenderObject = -1;
+                for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
+                    if(this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID) {
+                        _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
+                        _highestRenderObject = i;
+                    }
+                }
+                //console.log('pointer move', _highestRenderID);
+                if(_highestRenderObject !== -1) {
+                    //console.log('setting target');
+                    this.targetObject = this.game.input.inputObjects[_highestRenderObject];
+                    this.targetObject.input._pointerOverHandler(this);
+                }
             }
             return this;
         };
@@ -14161,7 +14433,10 @@ var Phaser;
                     this.game.input.inputObjects[i].input._releasedHandler(this);
                 }
             }
-            this.draggedObject = null;
+            if(this.targetObject) {
+                this.targetObject.input._releasedHandler(this);
+            }
+            this.targetObject = null;
             return this;
         };
         Pointer.prototype.justPressed = /**
@@ -14207,6 +14482,7 @@ var Phaser;
             this._holdSent = false;
             this._history.length = 0;
             this._stateReset = true;
+            this.targetObject = null;
         };
         Pointer.prototype.renderDebug = /**
         * Renders the Pointer.circle object onto the stage in green if down or red if up.
@@ -14402,7 +14678,11 @@ var Phaser;
             * @type {Boolean}
             */
             this.disabled = false;
+            this.mouseDownCallback = null;
+            this.mouseMoveCallback = null;
+            this.mouseUpCallback = null;
             this._game = game;
+            this.callbackContext = this._game;
         }
         Mouse.LEFT_BUTTON = 0;
         Mouse.MIDDLE_BUTTON = 1;
@@ -14427,6 +14707,9 @@ var Phaser;
         * @param {MouseEvent} event
         */
         function (event) {
+            if(this.mouseDownCallback) {
+                this.mouseDownCallback.call(this.callbackContext, event);
+            }
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
@@ -14437,6 +14720,9 @@ var Phaser;
         * @param {MouseEvent} event
         */
         function (event) {
+            if(this.mouseMoveCallback) {
+                this.mouseMoveCallback.call(this.callbackContext, event);
+            }
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
@@ -14447,6 +14733,9 @@ var Phaser;
         * @param {MouseEvent} event
         */
         function (event) {
+            if(this.mouseUpCallback) {
+                this.mouseUpCallback.call(this.callbackContext, event);
+            }
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
@@ -14735,7 +15024,14 @@ var Phaser;
             * @type {Boolean}
             */
             this.disabled = false;
+            this.touchStartCallback = null;
+            this.touchMoveCallback = null;
+            this.touchEndCallback = null;
+            this.touchEnterCallback = null;
+            this.touchLeaveCallback = null;
+            this.touchCancelCallback = null;
             this._game = game;
+            this.callbackContext = this._game;
         }
         Touch.prototype.start = /**
         * Starts the event listeners running
@@ -14781,6 +15077,9 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
+            if(this.touchStartCallback) {
+                this.touchStartCallback.call(this.callbackContext, event);
+            }
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
@@ -14799,6 +15098,9 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
+            if(this.touchCancelCallback) {
+                this.touchCancelCallback.call(this.callbackContext, event);
+            }
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
@@ -14816,6 +15118,9 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
+            if(this.touchEnterCallback) {
+                this.touchEnterCallback.call(this.callbackContext, event);
+            }
             if(this._game.input.disabled || this.disabled) {
                 return;
             }
@@ -14831,6 +15136,9 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
+            if(this.touchLeaveCallback) {
+                this.touchLeaveCallback.call(this.callbackContext, event);
+            }
             event.preventDefault();
             for(var i = 0; i < event.changedTouches.length; i++) {
                 console.log('touch leave');
@@ -14842,6 +15150,9 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
+            if(this.touchMoveCallback) {
+                this.touchMoveCallback.call(this.callbackContext, event);
+            }
             event.preventDefault();
             for(var i = 0; i < event.changedTouches.length; i++) {
                 this._game.input.updatePointer(event.changedTouches[i]);
@@ -14853,6 +15164,9 @@ var Phaser;
         * @param {Any} event
         **/
         function (event) {
+            if(this.touchEndCallback) {
+                this.touchEndCallback.call(this.callbackContext, event);
+            }
             event.preventDefault();
             //  For touch end its a list of the touch points that have been removed from the surface
             //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
@@ -15463,7 +15777,7 @@ var Phaser;
         */
         function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this._game.stage.context.font = '14px Courier';
+            this._game.stage.context.font = '24px Courier';
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
             this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
@@ -15639,6 +15953,7 @@ var Phaser;
             if(sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
                 return false;
             }
+            sprite.renderOrderID = this._count;
             this._count++;
             //  Reset our temp vars
             this._ga = -1;
