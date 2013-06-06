@@ -23,13 +23,13 @@
         fuji = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji');
 
         //  sets origin to the center of the sprite (half the width and half the height)
-        fuji.origin.setTo(160, 100);
+        fuji.transform.origin.setTo(160, 100);
 
         //  We'll tween the scale down to zero (which will make the sprite invisible) and then flip it
         //  The end result should look like turning over a card
 
         //  Create our tween
-        tween = game.add.tween(fuji.scale);
+        tween = game.add.tween(fuji.transform.scale);
 
         //  Start it going
         scaleLeft();

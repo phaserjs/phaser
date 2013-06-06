@@ -74,22 +74,26 @@
     <Content Include="components\sprite\Input.js">
       <DependentUpon>Input.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="components\Texture.ts" />
+    <Content Include="components\Texture.js">
+      <DependentUpon>Texture.ts</DependentUpon>
+    </Content>
     <Content Include="components\Tile.ts" />
     <Content Include="components\TilemapLayer.ts" />
+    <TypeScriptCompile Include="components\Transform.ts" />
+    <Content Include="components\Transform.js">
+      <DependentUpon>Transform.ts</DependentUpon>
+    </Content>
     <Content Include="Game.js">
       <DependentUpon>Game.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="core\Rectangle.ts" />
     <TypeScriptCompile Include="core\Point.ts" />
-    <TypeScriptCompile Include="components\sprite\Texture.ts" />
     <TypeScriptCompile Include="components\camera\CameraFX.ts" />
     <Content Include="components\camera\CameraFX.js">
       <DependentUpon>CameraFX.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="components\ScrollRegion.ts" />
-    <Content Include="components\sprite\Texture.js">
-      <DependentUpon>Texture.ts</DependentUpon>
-    </Content>
     <Content Include="core\Point.js">
       <DependentUpon>Point.ts</DependentUpon>
     </Content>

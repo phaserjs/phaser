@@ -1,0 +1,28 @@
+{"frames": [
+
+{
+	"filename": "invader1",
+	"frame": {"x":0,"y":0,"w":128,"h":104},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":36,"y":73,"w":128,"h":104},
+	"sourceSize": {"w":200,"h":250}
+},
+{
+	"filename": "tennyson",
+	"frame": {"x":128,"y":0,"w":120,"h":104},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":24,"w":120,"h":104},
+	"sourceSize": {"w":120,"h":128}
+}],
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "invaderpig.png",
+	"format": "RGBA8888",
+	"size": {"w":248,"h":104},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:aaccbd2de0ca8112964651683164d103$"
+}
+}

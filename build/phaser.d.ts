@@ -55,48 +55,48 @@ module Phaser {
 module Phaser {
     class Rectangle {
         /**
-        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a rectangle with x, y, width, and height properties set to 0 is created.
+        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a Rectangle with x, y, width, and height properties set to 0 is created.
         * @class Rectangle
         * @constructor
-        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
-        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
-        * @return {Rectangle} This rectangle object
+        * @param {Number} x The x coordinate of the top-left corner of the Rectangle.
+        * @param {Number} y The y coordinate of the top-left corner of the Rectangle.
+        * @param {Number} width The width of the Rectangle in pixels.
+        * @param {Number} height The height of the Rectangle in pixels.
+        * @return {Rectangle} This Rectangle object
         **/
         constructor(x?: number, y?: number, width?: number, height?: number);
         /**
-        * The x coordinate of the top-left corner of the rectangle
+        * The x coordinate of the top-left corner of the Rectangle
         * @property x
         * @type Number
         **/
         public x: number;
         /**
-        * The y coordinate of the top-left corner of the rectangle
+        * The y coordinate of the top-left corner of the Rectangle
         * @property y
         * @type Number
         **/
         public y: number;
         /**
-        * The width of the rectangle in pixels
+        * The width of the Rectangle in pixels
         * @property width
         * @type Number
         **/
         public width: number;
         /**
-        * The height of the rectangle in pixels
+        * The height of the Rectangle in pixels
         * @property height
         * @type Number
         **/
         public height: number;
         /**
-        * Half of the width of the rectangle
+        * Half of the width of the Rectangle
         * @property halfWidth
         * @type Number
         **/
         public halfWidth : number;
         /**
-        * Half of the height of the rectangle
+        * Half of the height of the Rectangle
         * @property halfHeight
         * @type Number
         **/
@@ -182,7 +182,7 @@ module Phaser {
         /**
         * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
         * @method setEmpty
-        * @return {Rectangle} This rectangle object
+        * @return {Rectangle} This Rectangle object
         **/
         public empty : bool;
         /**
@@ -203,11 +203,11 @@ module Phaser {
         /**
         * Sets the members of Rectangle to the specified values.
         * @method setTo
-        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
-        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
-        * @return {Rectangle} This rectangle object
+        * @param {Number} x The x coordinate of the top-left corner of the Rectangle.
+        * @param {Number} y The y coordinate of the top-left corner of the Rectangle.
+        * @param {Number} width The width of the Rectangle in pixels.
+        * @param {Number} height The height of the Rectangle in pixels.
+        * @return {Rectangle} This Rectangle object
         **/
         public setTo(x: number, y: number, width: number, height: number): Rectangle;
         /**
@@ -248,7 +248,7 @@ module Phaser {
         */
         y: number;
         /**
-        * Z-order value of the object.
+        * z-index value of the object.
         */
         z: number;
         /**
@@ -260,21 +260,17 @@ module Phaser {
         */
         active: bool;
         /**
-        * Controls if this Sprite is rendered or skipped during the core game loop.
+        * Controls if this is rendered or skipped during the core game loop.
         */
         visible: bool;
         /**
-        * The texture used to render the Sprite.
+        * The texture used to render.
         */
         texture: Components.Texture;
         /**
-        * Scale of the Sprite. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
+        * The transform component.
         */
-        scale: Vec2;
-        /**
-        * The influence of camera movement upon the Sprite.
-        */
-        scrollFactor: Vec2;
+        transform: Components.Transform;
     }
 }
 /**
@@ -822,7 +818,7 @@ module Phaser {
         static SCROLLZONE: number;
         static GEOM_POINT: number;
         static GEOM_CIRCLE: number;
-        static GEOM_RECTANGLE: number;
+        static GEOM_Rectangle: number;
         static GEOM_LINE: number;
         static GEOM_POLYGON: number;
         static BODY_DISABLED: number;
@@ -874,6 +870,1889 @@ module Phaser {
         * @type {number}
         */
         static ANY: number;
+    }
+}
+/**
+* Phaser - RectangleUtils
+*
+* A collection of methods useful for manipulating and comparing Rectangle objects.
+*
+* TODO: Check docs + overlap + intersect + toPolygon?
+*/
+module Phaser {
+    class RectangleUtils {
+        /**
+        * Get the location of the Rectangles top-left corner as a Point object.
+        * @method getTopLeftAsPoint
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        static getTopLeftAsPoint(a: Rectangle, out?: Point): Point;
+        /**
+        * Get the location of the Rectangles bottom-right corner as a Point object.
+        * @method getTopLeftAsPoint
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        static getBottomRightAsPoint(a: Rectangle, out?: Point): Point;
+        /**
+        * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
+        * @method inflate
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Number} dx The amount to be added to the left side of the Rectangle.
+        * @param {Number} dy The amount to be added to the bottom side of the Rectangle.
+        * @return {Rectangle} This Rectangle object.
+        **/
+        static inflate(a: Rectangle, dx: number, dy: number): Rectangle;
+        /**
+        * Increases the size of the Rectangle object. This method is similar to the Rectangle.inflate() method except it takes a Point object as a parameter.
+        * @method inflatePoint
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} point The x property of this Point object is used to increase the horizontal dimension of the Rectangle object. The y property is used to increase the vertical dimension of the Rectangle object.
+        * @return {Rectangle} The Rectangle object.
+        **/
+        static inflatePoint(a: Rectangle, point: Point): Rectangle;
+        /**
+        * The size of the Rectangle object, expressed as a Point object with the values of the width and height properties.
+        * @method size
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} output Optional Point object. If given the values will be set into the object, otherwise a brand new Point object will be created and returned.
+        * @return {Point} The size of the Rectangle object
+        **/
+        static size(a: Rectangle, output?: Point): Point;
+        /**
+        * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
+        * @method clone
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Rectangle} output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Rectangle}
+        **/
+        static clone(a: Rectangle, output?: Rectangle): Rectangle;
+        /**
+        * Determines whether the specified coordinates are contained within the region defined by this Rectangle object.
+        * @method contains
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Number} x The x coordinate of the point to test.
+        * @param {Number} y The y coordinate of the point to test.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        static contains(a: Rectangle, x: number, y: number): bool;
+        /**
+        * Determines whether the specified point is contained within the rectangular region defined by this Rectangle object. This method is similar to the Rectangle.contains() method, except that it takes a Point object as a parameter.
+        * @method containsPoint
+        * @param {Rectangle} a - The Rectangle object.
+        * @param {Point} point The point object being checked. Can be Point or any object with .x and .y values.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        static containsPoint(a: Rectangle, point: Point): bool;
+        /**
+        * Determines whether the first Rectangle object is fully contained within the second Rectangle object.
+        * A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
+        * @method containsRect
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        **/
+        static containsRect(a: Rectangle, b: Rectangle): bool;
+        /**
+        * Determines whether the two Rectangles are equal.
+        * This method compares the x, y, width and height properties of each Rectangle.
+        * @method equals
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @return {Boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
+        **/
+        static equals(a: Rectangle, b: Rectangle): bool;
+        /**
+        * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the Rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
+        * @method intersection
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Rectangle} A Rectangle object that equals the area of intersection. If the Rectangles do not intersect, this method returns an empty Rectangle object; that is, a Rectangle with its x, y, width, and height properties set to 0.
+        **/
+        static intersection(a: Rectangle, b: Rectangle, out?: Rectangle): Rectangle;
+        /**
+        * Determines whether the two Rectangles intersect with each other.
+        * This method checks the x, y, width, and height properties of the Rectangles.
+        * @method intersects
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
+        **/
+        static intersects(a: Rectangle, b: Rectangle, tolerance?: number): bool;
+        /**
+        * Determines whether the object specified intersects (overlaps) with the given values.
+        * @method intersectsRaw
+        * @param {Number} left
+        * @param {Number} right
+        * @param {Number} top
+        * @param {Number} bottomt
+        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+        * @return {Boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
+        **/
+        static intersectsRaw(a: Rectangle, left: number, right: number, top: number, bottom: number, tolerance?: number): bool;
+        /**
+        * Adds two Rectangles together to create a new Rectangle object, by filling in the horizontal and vertical space between the two Rectangles.
+        * @method union
+        * @param {Rectangle} a - The first Rectangle object.
+        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Rectangle} A Rectangle object that is the union of the two Rectangles.
+        **/
+        static union(a: Rectangle, b: Rectangle, out?: Rectangle): Rectangle;
+    }
+}
+/**
+* Phaser - ColorUtils
+*
+* A collection of methods useful for manipulating color values.
+*/
+module Phaser {
+    class ColorUtils {
+        static game: Game;
+        /**
+        * Given an alpha and 3 color values this will return an integer representation of it
+        *
+        * @param alpha {number} The Alpha value (between 0 and 255)
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
+        *
+        * @return  A native color value integer (format: 0xAARRGGBB)
+        */
+        static getColor32(alpha: number, red: number, green: number, blue: number): number;
+        /**
+        * Given 3 color values this will return an integer representation of it
+        *
+        * @param red   {number} The Red channel value (between 0 and 255)
+        * @param green {number} The Green channel value (between 0 and 255)
+        * @param blue  {number} The Blue channel value (between 0 and 255)
+        *
+        * @return  A native color value integer (format: 0xRRGGBB)
+        */
+        static getColor(red: number, green: number, blue: number): number;
+        /**
+        * Get HSV color wheel values in an array which will be 360 elements in size
+        *
+        * @param	alpha	Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
+        *
+        * @return	Array
+        */
+        static getHSVColorWheel(alpha?: number): any[];
+        /**
+        * Returns a Complementary Color Harmony for the given color.
+        * <p>A complementary hue is one directly opposite the color given on the color wheel</p>
+        * <p>Value returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        *
+        * @return 0xAARRGGBB format color value
+        */
+        static getComplementHarmony(color: number): number;
+        /**
+        * Returns an Analogous Color Harmony for the given color.
+        * <p>An Analogous harmony are hues adjacent to each other on the color wheel</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        * @param	threshold Control how adjacent the colors will be (default +- 30 degrees)
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
+        */
+        static getAnalogousHarmony(color: number, threshold?: number): {
+            color1: number;
+            color2: number;
+            color3: number;
+            hue1: any;
+            hue2: number;
+            hue3: number;
+        };
+        /**
+        * Returns an Split Complement Color Harmony for the given color.
+        * <p>A Split Complement harmony are the two hues on either side of the color's Complement</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        * @param	threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
+        */
+        static getSplitComplementHarmony(color: number, threshold?: number): any;
+        /**
+        * Returns a Triadic Color Harmony for the given color.
+        * <p>A Triadic harmony are 3 hues equidistant from each other on the color wheel</p>
+        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
+        *
+        * @param	color The color to base the harmony on
+        *
+        * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
+        */
+        static getTriadicHarmony(color: number): any;
+        /**
+        * Returns a string containing handy information about the given color including string hex value,
+        * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
+        *
+        * @param	color A color value in the format 0xAARRGGBB
+        *
+        * @return	string containing the 3 lines of information
+        */
+        static getColorInfo(color: number): string;
+        /**
+        * Return a string representation of the color in the format 0xAARRGGBB
+        *
+        * @param	color The color to get the string representation for
+        *
+        * @return	A string of length 10 characters in the format 0xAARRGGBB
+        */
+        static RGBtoHexstring(color: number): string;
+        /**
+        * Return a string representation of the color in the format #RRGGBB
+        *
+        * @param	color The color to get the string representation for
+        *
+        * @return	A string of length 10 characters in the format 0xAARRGGBB
+        */
+        static RGBtoWebstring(color: number): string;
+        /**
+        * Return a string containing a hex representation of the given color
+        *
+        * @param	color The color channel to get the hex value for, must be a value between 0 and 255)
+        *
+        * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
+        */
+        static colorToHexstring(color: number): string;
+        /**
+        * Convert a HSV (hue, saturation, lightness) color space value to an RGB color
+        *
+        * @param	h 		Hue degree, between 0 and 359
+        * @param	s 		Saturation, between 0.0 (grey) and 1.0
+        * @param	v 		Value, between 0.0 (black) and 1.0
+        * @param	alpha	Alpha value to set per color (between 0 and 255)
+        *
+        * @return 32-bit ARGB color value (0xAARRGGBB)
+        */
+        static HSVtoRGB(h: number, s: number, v: number, alpha?: number): number;
+        /**
+        * Convert an RGB color value to an object containing the HSV color space values: Hue, Saturation and Lightness
+        *
+        * @param	color In format 0xRRGGBB
+        *
+        * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
+        */
+        static RGBtoHSV(color: number): any;
+        /**
+        *
+        * @method interpolateColor
+        * @param {Number} color1
+        * @param {Number} color2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @param {Number} alpha
+        * @return {Number}
+        * @static
+        */
+        static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha?: number): number;
+        /**
+        *
+        * @method interpolateColorWithRGB
+        * @param {Number} color
+        * @param {Number} r2
+        * @param {Number} g2
+        * @param {Number} b2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @return {Number}
+        * @static
+        */
+        static interpolateColorWithRGB(color: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
+        /**
+        *
+        * @method interpolateRGB
+        * @param {Number} r1
+        * @param {Number} g1
+        * @param {Number} b1
+        * @param {Number} r2
+        * @param {Number} g2
+        * @param {Number} b2
+        * @param {Number} steps
+        * @param {Number} currentStep
+        * @return {Number}
+        * @static
+        */
+        static interpolateRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
+        /**
+        * Returns a random color value between black and white
+        * <p>Set the min value to start each channel from the given offset.</p>
+        * <p>Set the max value to restrict the maximum color used per channel</p>
+        *
+        * @param	min		The lowest value to use for the color
+        * @param	max 	The highest value to use for the color
+        * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
+        *
+        * @return 32-bit color value with alpha
+        */
+        static getRandomColor(min?: number, max?: number, alpha?: number): number;
+        /**
+        * Return the component parts of a color as an Object with the properties alpha, red, green, blue
+        *
+        * <p>Alpha will only be set if it exist in the given color (0xAARRGGBB)</p>
+        *
+        * @param	color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB)
+        *
+        * @return Object with properties: alpha, red, green, blue
+        */
+        static getRGB(color: number): any;
+        /**
+        *
+        * @method getWebRGB
+        * @param {Number} color
+        * @return {Any}
+        */
+        static getWebRGB(color: number): any;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
+        */
+        static getAlpha(color: number): number;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
+        */
+        static getAlphaFloat(color: number): number;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
+        */
+        static getRed(color: number): number;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
+        */
+        static getGreen(color: number): number;
+        /**
+        * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255
+        *
+        * @param	color	In the format 0xAARRGGBB
+        *
+        * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
+        */
+        static getBlue(color: number): number;
+    }
+}
+/**
+* Phaser - DynamicTexture
+*
+* A DynamicTexture can be thought of as a mini canvas into which you can draw anything.
+* Game Objects can be assigned a DynamicTexture, so when they render in the world they do so
+* based on the contents of the texture at the time. This allows you to create powerful effects
+* once and have them replicated across as many game objects as you like.
+*/
+module Phaser {
+    class DynamicTexture {
+        /**
+        * DynamicTexture constructor
+        * Create a new <code>DynamicTexture</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param width {number} Init width of this texture.
+        * @param height {number} Init height of this texture.
+        */
+        constructor(game: Game, width: number, height: number);
+        /**
+        * Reference to game.
+        */
+        public game: Game;
+        /**
+        * The type of game object.
+        */
+        public type: number;
+        private _sx;
+        private _sy;
+        private _sw;
+        private _sh;
+        private _dx;
+        private _dy;
+        private _dw;
+        private _dh;
+        /**
+        * Bound of this texture with width and height info.
+        * @type {Rectangle}
+        */
+        public bounds: Rectangle;
+        /**
+        * This class is actually a wrapper of canvas.
+        * @type {HTMLCanvasElement}
+        */
+        public canvas: HTMLCanvasElement;
+        /**
+        * Canvas context of this object.
+        * @type {CanvasRenderingContext2D}
+        */
+        public context: CanvasRenderingContext2D;
+        /**
+        * Get a color of a specific pixel.
+        * @param x {number} X position of the pixel in this texture.
+        * @param y {number} Y position of the pixel in this texture.
+        * @return {number} A native color value integer (format: 0xRRGGBB)
+        */
+        public getPixel(x: number, y: number): number;
+        /**
+        * Get a color of a specific pixel (including alpha value).
+        * @param x {number} X position of the pixel in this texture.
+        * @param y {number} Y position of the pixel in this texture.
+        * @return  A native color value integer (format: 0xAARRGGBB)
+        */
+        public getPixel32(x: number, y: number): number;
+        /**
+        * Get pixels in array in a specific Rectangle.
+        * @param rect {Rectangle} The specific Rectangle.
+        * @returns {array} CanvasPixelArray.
+        */
+        public getPixels(rect: Rectangle): ImageData;
+        /**
+        * Set color of a specific pixel.
+        * @param x {number} X position of the target pixel.
+        * @param y {number} Y position of the target pixel.
+        * @param color {number} Native integer with color value. (format: 0xRRGGBB)
+        */
+        public setPixel(x: number, y: number, color: string): void;
+        /**
+        * Set color (with alpha) of a specific pixel.
+        * @param x {number} X position of the target pixel.
+        * @param y {number} Y position of the target pixel.
+        * @param color {number} Native integer with color value. (format: 0xAARRGGBB)
+        */
+        public setPixel32(x: number, y: number, color: number): void;
+        /**
+        * Set image data to a specific Rectangle.
+        * @param rect {Rectangle} Target Rectangle.
+        * @param input {object} Source image data.
+        */
+        public setPixels(rect: Rectangle, input): void;
+        /**
+        * Fill a given Rectangle with specific color.
+        * @param rect {Rectangle} Target Rectangle you want to fill.
+        * @param color {number} A native number with color value. (format: 0xRRGGBB)
+        */
+        public fillRect(rect: Rectangle, color: number): void;
+        /**
+        *
+        */
+        public pasteImage(key: string, frame?: number, destX?: number, destY?: number, destWidth?: number, destHeight?: number): void;
+        /**
+        * Copy pixel from another DynamicTexture to this texture.
+        * @param sourceTexture {DynamicTexture} Source texture object.
+        * @param sourceRect {Rectangle} The specific region Rectangle to be copied to this in the source.
+        * @param destPoint {Point} Top-left point the target image data will be paste at.
+        */
+        public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point): void;
+        /**
+        * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
+        * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
+        */
+        public assignCanvasToGameObjects(objects: IGameObject[]): void;
+        /**
+        * Clear the whole canvas.
+        */
+        public clear(): void;
+        /**
+        * Renders this DynamicTexture to the Stage at the given x/y coordinates
+        *
+        * @param x {number} The X coordinate to render on the stage to (given in screen coordinates, not world)
+        * @param y {number} The Y coordinate to render on the stage to (given in screen coordinates, not world)
+        */
+        public render(x?: number, y?: number): void;
+        public width : number;
+        public height : number;
+    }
+}
+/**
+* Phaser - AnimationLoader
+*
+* Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
+*/
+module Phaser {
+    class AnimationLoader {
+        /**
+        * Parse a sprite sheet from asset data.
+        * @param key {string} Asset key for the sprite sheet data.
+        * @param frameWidth {number} Width of animation frame.
+        * @param frameHeight {number} Height of animation frame.
+        * @param frameMax {number} Number of animation frames.
+        * @return {FrameData} Generated FrameData object.
+        */
+        static parseSpriteSheet(game: Game, key: string, frameWidth: number, frameHeight: number, frameMax: number): FrameData;
+        /**
+        * Parse frame datas from json.
+        * @param json {object} Json data you want to parse.
+        * @return {FrameData} Generated FrameData object.
+        */
+        static parseJSONData(game: Game, json): FrameData;
+        static parseXMLData(game: Game, xml, format: number): FrameData;
+    }
+}
+/**
+* Phaser - Animation
+*
+* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
+*/
+module Phaser {
+    class Animation {
+        /**
+        * Animation constructor
+        * Create a new <code>Animation</code>.
+        *
+        * @param parent {Sprite} Owner sprite of this animation.
+        * @param frameData {FrameData} The FrameData object contains animation data.
+        * @param name {string} Unique name of this animation.
+        * @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
+        * @param delay {number} Time between frames in ms.
+        * @param looped {boolean} Whether or not the animation is looped or just plays once.
+        */
+        constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool);
+        /**
+        * Local private reference to game.
+        */
+        private _game;
+        /**
+        * Local private reference to its owner sprite.
+        * @type {Sprite}
+        */
+        private _parent;
+        /**
+        * Animation frame container.
+        * @type {number[]}
+        */
+        private _frames;
+        /**
+        * Frame data of this animation.(parsed from sprite sheet)
+        * @type {FrameData}
+        */
+        private _frameData;
+        /**
+        * Index of current frame.
+        * @type {number}
+        */
+        private _frameIndex;
+        /**
+        * Time when switched to last frame (in ms).
+        * @type number
+        */
+        private _timeLastFrame;
+        /**
+        * Time when this will switch to next frame (in ms).
+        * @type number
+        */
+        private _timeNextFrame;
+        /**
+        * Name of this animation.
+        * @type {string}
+        */
+        public name: string;
+        /**
+        * Currently played frame instance.
+        * @type {Frame}
+        */
+        public currentFrame: Frame;
+        /**
+        * Whether or not this animation finished playing.
+        * @type {boolean}
+        */
+        public isFinished: bool;
+        /**
+        * Whethor or not this animation is currently playing.
+        * @type {boolean}
+        */
+        public isPlaying: bool;
+        /**
+        * Whether or not the animation is looped.
+        * @type {boolean}
+        */
+        public looped: bool;
+        /**
+        * Time between frames in ms.
+        * @type {number}
+        */
+        public delay: number;
+        public frameTotal : number;
+        public frame : number;
+        /**
+        * Play this animation.
+        * @param frameRate {number} FrameRate you want to specify instead of using default.
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        */
+        public play(frameRate?: number, loop?: bool): void;
+        /**
+        * Play this animation from the first frame.
+        */
+        public restart(): void;
+        /**
+        * Stop playing animation and set it finished.
+        */
+        public stop(): void;
+        /**
+        * Update animation frames.
+        */
+        public update(): bool;
+        /**
+        * Clean up animation memory.
+        */
+        public destroy(): void;
+        /**
+        * Animation complete callback method.
+        */
+        private onComplete();
+    }
+}
+/**
+* Phaser - Frame
+*
+* A Frame is a single frame of an animation and is part of a FrameData collection.
+*/
+module Phaser {
+    class Frame {
+        /**
+        * Frame constructor
+        * Create a new <code>Frame</code> with specific position, size and name.
+        *
+        * @param x {number} X position within the image to cut from.
+        * @param y {number} Y position within the image to cut from.
+        * @param width {number} Width of the frame.
+        * @param height {number} Height of the frame.
+        * @param name {string} Name of this frame.
+        */
+        constructor(x: number, y: number, width: number, height: number, name: string);
+        /**
+        * X position within the image to cut from.
+        * @type {number}
+        */
+        public x: number;
+        /**
+        * Y position within the image to cut from.
+        * @type {number}
+        */
+        public y: number;
+        /**
+        * Width of the frame.
+        * @type {number}
+        */
+        public width: number;
+        /**
+        * Height of the frame.
+        * @type {number}
+        */
+        public height: number;
+        /**
+        * Useful for Sprite Sheets.
+        * @type {number}
+        */
+        public index: number;
+        /**
+        * Useful for Texture Atlas files. (is set to the filename value)
+        */
+        public name: string;
+        /**
+        * Rotated? (not yet implemented)
+        */
+        public rotated: bool;
+        /**
+        * Either cw or ccw, rotation is always 90 degrees.
+        */
+        public rotationDirection: string;
+        /**
+        * Was it trimmed when packed?
+        * @type {boolean}
+        */
+        public trimmed: bool;
+        /**
+        * Width of the original sprite.
+        * @type {number}
+        */
+        public sourceSizeW: number;
+        /**
+        * Height of the original sprite.
+        * @type {number}
+        */
+        public sourceSizeH: number;
+        /**
+        * X position of the trimmed sprite inside original sprite.
+        * @type {number}
+        */
+        public spriteSourceSizeX: number;
+        /**
+        * Y position of the trimmed sprite inside original sprite.
+        * @type {number}
+        */
+        public spriteSourceSizeY: number;
+        /**
+        * Width of the trimmed sprite.
+        * @type {number}
+        */
+        public spriteSourceSizeW: number;
+        /**
+        * Height of the trimmed sprite.
+        * @type {number}
+        */
+        public spriteSourceSizeH: number;
+        /**
+        * Set rotation of this frame. (Not yet supported!)
+        */
+        public setRotation(rotated: bool, rotationDirection: string): void;
+        /**
+        * Set trim of the frame.
+        * @param trimmed {boolean} Whether this frame trimmed or not.
+        * @param actualWidth {number} Actual width of this frame.
+        * @param actualHeight {number} Actual height of this frame.
+        * @param destX {number} Destination x position.
+        * @param destY {number} Destination y position.
+        * @param destWidth {number} Destination draw width.
+        * @param destHeight {number} Destination draw height.
+        */
+        public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number): void;
+    }
+}
+/**
+* Phaser - FrameData
+*
+* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
+*/
+module Phaser {
+    class FrameData {
+        /**
+        * FrameData constructor
+        */
+        constructor();
+        /**
+        * Local frame container.
+        */
+        private _frames;
+        /**
+        * Local frameName<->index container.
+        */
+        private _frameNames;
+        public total : number;
+        /**
+        * Add a new frame.
+        * @param frame {Frame} The frame you want to add.
+        * @return {Frame} The frame you just added.
+        */
+        public addFrame(frame: Frame): Frame;
+        /**
+        * Get a frame by its index.
+        * @param index {number} Index of the frame you want to get.
+        * @return {Frame} The frame you want.
+        */
+        public getFrame(index: number): Frame;
+        /**
+        * Get a frame by its name.
+        * @param name {string} Name of the frame you want to get.
+        * @return {Frame} The frame you want.
+        */
+        public getFrameByName(name: string): Frame;
+        /**
+        * Check whether there's a frame with given name.
+        * @param name {string} Name of the frame you want to check.
+        * @return {boolean} True if frame with given name found, otherwise return false.
+        */
+        public checkFrameName(name: string): bool;
+        /**
+        * Get ranges of frames in an array.
+        * @param start {number} Start index of frames you want.
+        * @param end {number} End index of frames you want.
+        * @param [output] {Frame[]} result will be added into this array.
+        * @return {Frame[]} Ranges of specific frames in an array.
+        */
+        public getFrameRange(start: number, end: number, output?: Frame[]): Frame[];
+        /**
+        * Get all indexes of frames by giving their name.
+        * @param [output] {number[]} result will be added into this array.
+        * @return {number[]} Indexes of specific frames in an array.
+        */
+        public getFrameIndexes(output?: number[]): number[];
+        /**
+        * Get the frame indexes by giving the frame names.
+        * @param [output] {number[]} result will be added into this array.
+        * @return {number[]} Names of specific frames in an array.
+        */
+        public getFrameIndexesByName(input: string[]): number[];
+        /**
+        * Get all frames in this frame data.
+        * @return {Frame[]} All the frames in an array.
+        */
+        public getAllFrames(): Frame[];
+        /**
+        * Get All frames with specific ranges.
+        * @param range {number[]} Ranges in an array.
+        * @return {Frame[]} All frames in an array.
+        */
+        public getFrames(range: number[]): Frame[];
+    }
+}
+/**
+* Phaser - AnimationManager
+*
+* Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
+* sprite specific animations.
+*/
+module Phaser.Components {
+    class AnimationManager {
+        /**
+        * AnimationManager constructor
+        * Create a new <code>AnimationManager</code>.
+        *
+        * @param parent {Sprite} Owner sprite of this manager.
+        */
+        constructor(parent: Sprite);
+        /**
+        * Local private reference to game.
+        */
+        private _game;
+        /**
+        * Local private reference to its owner sprite.
+        */
+        private _parent;
+        /**
+        * Animation key-value container.
+        */
+        private _anims;
+        /**
+        * Index of current frame.
+        * @type {number}
+        */
+        private _frameIndex;
+        /**
+        * Data contains animation frames.
+        * @type {FrameData}
+        */
+        private _frameData;
+        /**
+        * When an animation frame changes you can choose to automatically update the physics bounds of the parent Sprite
+        * to the width and height of the new frame. If you've set a specific physics bounds that you don't want changed during
+        * animation then set this to false, otherwise leave it set to true.
+        * @type {boolean}
+        */
+        public autoUpdateBounds: bool;
+        /**
+        * Keeps track of the current animation being played.
+        */
+        public currentAnim: Animation;
+        /**
+        * Keeps track of the current frame of animation.
+        */
+        public currentFrame: Frame;
+        /**
+        * Load animation frame data.
+        * @param frameData Data to be loaded.
+        */
+        public loadFrameData(frameData: FrameData): void;
+        /**
+        * Add a new animation.
+        * @param name {string} What this animation should be called (e.g. "run").
+        * @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
+        * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+        * @return {Animation} The Animation that was created
+        */
+        public add(name: string, frames?: any[], frameRate?: number, loop?: bool, useNumericIndex?: bool): Animation;
+        /**
+        * Check whether the frames is valid.
+        * @param frames {any[]} Frames to be validated.
+        * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
+        * @return {boolean} True if they're valid, otherwise return false.
+        */
+        private validateFrames(frames, useNumericIndex);
+        /**
+        * Play animation with specific name.
+        * @param name {string} The string name of the animation you want to play.
+        * @param frameRate {number} FrameRate you want to specify instead of using default.
+        * @param loop {boolean} Whether or not the animation is looped or just plays once.
+        */
+        public play(name: string, frameRate?: number, loop?: bool): void;
+        /**
+        * Stop animation by name.
+        * Current animation will be automatically set to the stopped one.
+        */
+        public stop(name: string): void;
+        /**
+        * Update animation and parent sprite's bounds.
+        */
+        public update(): void;
+        public frameData : FrameData;
+        public frameTotal : number;
+        public frame : number;
+        public frameName : string;
+        /**
+        * Removes all related references
+        */
+        public destroy(): void;
+    }
+}
+/**
+* Phaser - Components - Transform
+*/
+module Phaser.Components {
+    class Transform {
+        /**
+        * Creates a new Sprite Transform component
+        * @param parent The Sprite using this transform
+        */
+        constructor(parent);
+        /**
+        * Reference to Phaser.Game
+        */
+        public game: Game;
+        /**
+        * Reference to the parent object (Sprite, Group, etc)
+        */
+        public parent: Sprite;
+        /**
+        * Scale of the object. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
+        */
+        public scale: Vec2;
+        /**
+        * Skew the object along the x and y axis. A skew value of 0 is no skew.
+        */
+        public skew: Vec2;
+        /**
+        * The influence of camera movement upon the object, if supported.
+        */
+        public scrollFactor: Vec2;
+        /**
+        * The origin is the point around which scale and rotation takes place.
+        */
+        public origin: Vec2;
+        /**
+        * This value is added to the rotation of the object.
+        * For example if you had a texture drawn facing straight up then you could set
+        * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
+        * @type {number}
+        */
+        public rotationOffset: number;
+        /**
+        * The rotation of the object in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        public rotation: number;
+    }
+}
+/**
+* Phaser - Components - Input
+*
+* Input detection component
+*/
+module Phaser.Components.Sprite {
+    class Input {
+        /**
+        * Sprite Input component constructor
+        * @param parent The Sprite using this Input component
+        */
+        constructor(parent: Sprite);
+        /**
+        * Reference to Phaser.Game
+        */
+        public game: Game;
+        /**
+        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+        */
+        private sprite;
+        private _pointerData;
+        /**
+        * If enabled the Input component will be updated by the parent Sprite
+        * @type {Boolean}
+        */
+        public enabled: bool;
+        /**
+        * The PriorityID controls which Sprite receives an Input event first if they should overlap.
+        */
+        public priorityID: number;
+        private _dragPoint;
+        private _draggedPointerID;
+        public dragOffset: Point;
+        public isDragged: bool;
+        public dragFromCenter: bool;
+        public dragPixelPerfect: bool;
+        public dragPixelPerfectAlpha: number;
+        public allowHorizontalDrag: bool;
+        public allowVerticalDrag: bool;
+        public snapOnDrag: bool;
+        public snapOnRelease: bool;
+        public snapOffset: Point;
+        public snapX: number;
+        public snapY: number;
+        /**
+        * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
+        * @default false
+        */
+        public draggable: bool;
+        /**
+        * A region of the game world within which the sprite is restricted during drag
+        * @default null
+        */
+        public boundsRect: Rectangle;
+        /**
+        * An Sprite the bounds of which this sprite is restricted during drag
+        * @default null
+        */
+        public boundsSprite: Sprite;
+        /**
+        * The Input component can monitor either the physics body of the Sprite or the frameBounds
+        * If checkBody is set to true it will monitor the bounds of the physics body.
+        * @type {Boolean}
+        */
+        public checkBody: bool;
+        /**
+        * Turn the mouse pointer into a hand image by temporarily setting the CSS style of the Game canvas
+        * on Input over. Only works on desktop browsers or browsers with a visible input pointer.
+        * @type {Boolean}
+        */
+        public useHandCursor: bool;
+        /**
+        * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
+        * This value is only set when the pointer is over this Sprite.
+        * @type {number}
+        */
+        public pointerX(pointer?: number): number;
+        /**
+        * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
+        * This value is only set when the pointer is over this Sprite.
+        * @type {number}
+        */
+        public pointerY(pointer?: number): number;
+        /**
+        * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
+        * @property isDown
+        * @type {Boolean}
+        **/
+        public pointerDown(pointer?: number): bool;
+        /**
+        * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
+        * @property isUp
+        * @type {Boolean}
+        **/
+        public pointerUp(pointer?: number): bool;
+        /**
+        * A timestamp representing when the Pointer first touched the touchscreen.
+        * @property timeDown
+        * @type {Number}
+        **/
+        public pointerTimeDown(pointer?: number): bool;
+        /**
+        * A timestamp representing when the Pointer left the touchscreen.
+        * @property timeUp
+        * @type {Number}
+        **/
+        public pointerTimeUp(pointer?: number): bool;
+        /**
+        * Is the Pointer over this Sprite
+        * @property isOver
+        * @type {Boolean}
+        **/
+        public pointerOver(pointer?: number): bool;
+        /**
+        * Is the Pointer outside of this Sprite
+        * @property isOut
+        * @type {Boolean}
+        **/
+        public pointerOut(pointer?: number): bool;
+        /**
+        * A timestamp representing when the Pointer first touched the touchscreen.
+        * @property timeDown
+        * @type {Number}
+        **/
+        public pointerTimeOver(pointer?: number): bool;
+        /**
+        * A timestamp representing when the Pointer left the touchscreen.
+        * @property timeUp
+        * @type {Number}
+        **/
+        public pointerTimeOut(pointer?: number): bool;
+        /**
+        * Is this sprite being dragged by the mouse or not?
+        * @default false
+        */
+        public pointerDragged(pointer?: number): bool;
+        public start(priority?: number, checkBody?: bool, useHandCursor?: bool): Sprite;
+        public reset(): void;
+        public stop(): void;
+        public checkPointerOver(pointer: Pointer): bool;
+        /**
+        * Update
+        */
+        public update(pointer: Pointer): bool;
+        public _pointerOverHandler(pointer: Pointer): void;
+        public _pointerOutHandler(pointer: Pointer): void;
+        public consumePointerEvent: bool;
+        public _touchedHandler(pointer: Pointer): bool;
+        public _releasedHandler(pointer: Pointer): void;
+        /**
+        * Updates the Pointer drag on this Sprite.
+        */
+        private updateDrag(pointer);
+        /**
+        * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+        * @param delay The time below which the pointer is considered as just over.
+        * @returns {boolean}
+        */
+        public justOver(pointer?: number, delay?: number): bool;
+        /**
+        * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+        * @param delay The time below which the pointer is considered as just out.
+        * @returns {boolean}
+        */
+        public justOut(pointer?: number, delay?: number): bool;
+        /**
+        * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+        * @param delay The time below which the pointer is considered as just over.
+        * @returns {boolean}
+        */
+        public justPressed(pointer?: number, delay?: number): bool;
+        /**
+        * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+        * @param delay The time below which the pointer is considered as just out.
+        * @returns {boolean}
+        */
+        public justReleased(pointer?: number, delay?: number): bool;
+        /**
+        * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+        * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
+        */
+        public overDuration(pointer?: number): number;
+        /**
+        * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
+        * @returns {number} The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
+        */
+        public downDuration(pointer?: number): number;
+        /**
+        * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
+        *
+        * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
+        * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
+        * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
+        * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
+        * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
+        */
+        public enableDrag(lockCenter?: bool, pixelPerfect?: bool, alphaThreshold?: number, boundsRect?: Rectangle, boundsSprite?: Sprite): void;
+        /**
+        * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
+        */
+        public disableDrag(): void;
+        /**
+        * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
+        */
+        public startDrag(pointer: Pointer): void;
+        /**
+        * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
+        */
+        public stopDrag(pointer: Pointer): void;
+        /**
+        * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
+        *
+        * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
+        * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
+        */
+        public setDragLock(allowHorizontal?: bool, allowVertical?: bool): void;
+        /**
+        * Make this Sprite snap to the given grid either during drag or when it's released.
+        * For example 16x16 as the snapX and snapY would make the sprite snap to every 16 pixels.
+        *
+        * @param	snapX		The width of the grid cell in pixels
+        * @param	snapY		The height of the grid cell in pixels
+        * @param	onDrag		If true the sprite will snap to the grid while being dragged
+        * @param	onRelease	If true the sprite will snap to the grid when released
+        */
+        public enableSnap(snapX: number, snapY: number, onDrag?: bool, onRelease?: bool): void;
+        /**
+        * Stops the sprite from snapping to a grid during drag or release.
+        */
+        public disableSnap(): void;
+        /**
+        * Bounds Rect check for the sprite drag
+        */
+        private checkBoundsRect();
+        /**
+        * Parent Sprite Bounds check for the sprite drag
+        */
+        private checkBoundsSprite();
+        /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        public renderDebugInfo(x: number, y: number, color?: string): void;
+    }
+}
+/**
+* Phaser - Components - Events
+*
+* Signals that are dispatched by the Sprite and its various components
+*/
+module Phaser.Components.Sprite {
+    class Events {
+        /**
+        * The Events component is a collection of events fired by the parent Sprite and its other components.
+        * @param parent The Sprite using this Input component
+        */
+        constructor(parent: Sprite);
+        /**
+        * Reference to Phaser.Game
+        */
+        public game: Game;
+        /**
+        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+        */
+        private sprite;
+        /**
+        * Dispatched by the Group this Sprite is added to.
+        */
+        public onAddedToGroup: Signal;
+        /**
+        * Dispatched by the Group this Sprite is removed from.
+        */
+        public onRemovedFromGroup: Signal;
+        /**
+        * Dispatched when this Sprite is killed.
+        */
+        public onKilled: Signal;
+        /**
+        * Dispatched when this Sprite is revived.
+        */
+        public onRevived: Signal;
+        /**
+        * Dispatched by the Input component when a pointer moves over an Input enabled sprite.
+        */
+        public onInputOver: Signal;
+        /**
+        * Dispatched by the Input component when a pointer moves out of an Input enabled sprite.
+        */
+        public onInputOut: Signal;
+        /**
+        * Dispatched by the Input component when a pointer is pressed down on an Input enabled sprite.
+        */
+        public onInputDown: Signal;
+        /**
+        * Dispatched by the Input component when a pointer is released over an Input enabled sprite
+        */
+        public onInputUp: Signal;
+        public onOutOfBounds: Signal;
+    }
+}
+/**
+* Phaser - Vec2Utils
+*
+* A collection of methods useful for manipulating and performing operations on 2D vectors.
+*
+*/
+module Phaser {
+    class Vec2Utils {
+        /**
+        * Adds two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors.
+        */
+        static add(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Subtracts two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the difference of the two vectors.
+        */
+        static subtract(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Multiplies two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
+        */
+        static multiply(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Divides two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
+        */
+        static divide(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Scales a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {number} s Scaling value.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        static scale(a: Vec2, s: number, out?: Vec2): Vec2;
+        /**
+        * Rotate a 2D vector by 90 degrees.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        static perp(a: Vec2, out?: Vec2): Vec2;
+        /**
+        * Checks if two 2D vectors are equal.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Boolean}
+        */
+        static equals(a: Vec2, b: Vec2): bool;
+        /**
+        *
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} epsilon
+        * @return {Boolean}
+        */
+        static epsilonEquals(a: Vec2, b: Vec2, epsilon: number): bool;
+        /**
+        * Get the distance between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static distance(a: Vec2, b: Vec2): number;
+        /**
+        * Get the distance squared between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static distanceSq(a: Vec2, b: Vec2): number;
+        /**
+        * Project two 2D vectors onto another vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static project(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Project this vector onto a vector of unit length.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static projectUnit(a: Vec2, b: Vec2, out?: Vec2): Vec2;
+        /**
+        * Right-hand normalize (make unit length) a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static normalRightHand(a: Vec2, out?: Vec2): Vec2;
+        /**
+        * Normalize (make unit length) a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static normalize(a: Vec2, out?: Vec2): Vec2;
+        /**
+        * The dot product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static dot(a: Vec2, b: Vec2): number;
+        /**
+        * The cross product of two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static cross(a: Vec2, b: Vec2): number;
+        /**
+        * The angle between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static angle(a: Vec2, b: Vec2): number;
+        /**
+        * The angle squared between two 2D vectors.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @return {Number}
+        */
+        static angleSq(a: Vec2, b: Vec2): number;
+        /**
+        * Rotate a 2D vector around the origin to the given angle (theta).
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Number} theta The angle of rotation in radians.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static rotate(a: Vec2, b: Vec2, theta: number, out?: Vec2): Vec2;
+        /**
+        * Clone a 2D vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is a copy of the source Vec2.
+        */
+        static clone(a: Vec2, out?: Vec2): Vec2;
+    }
+}
+/**
+* Phaser - Physics - Body
+*/
+module Phaser.Physics {
+    class Body {
+        constructor(sprite: Sprite, type: number);
+        /**
+        * Reference to Phaser.Game
+        */
+        public game: Game;
+        /**
+        * Reference to the sprite Sprite
+        */
+        public sprite: Sprite;
+        /**
+        * The type of Body (disabled, dynamic, static or kinematic)
+        * Disabled = skips all physics operations / tests (default)
+        * Dynamic = gives and receives impacts
+        * Static = gives but doesn't receive impacts, cannot be moved by physics
+        * Kinematic = gives impacts, but never receives, can be moved by physics
+        * @type {number}
+        */
+        public type: number;
+        public gravity: Vec2;
+        public bounce: Vec2;
+        public velocity: Vec2;
+        public acceleration: Vec2;
+        public drag: Vec2;
+        public maxVelocity: Vec2;
+        public angularVelocity: number;
+        public angularAcceleration: number;
+        public angularDrag: number;
+        public maxAngular: number;
+        /**
+        * Orientation of the object.
+        * @type {number}
+        */
+        public facing: number;
+        public touching: number;
+        public allowCollisions: number;
+        public wasTouching: number;
+        public mass: number;
+        public position: Vec2;
+        public oldPosition: Vec2;
+        public offset: Vec2;
+        public bounds: Rectangle;
+        public preUpdate(): void;
+        public postUpdate(): void;
+        public hullWidth : number;
+        public hullHeight : number;
+        public hullX : number;
+        public hullY : number;
+        public deltaXAbs : number;
+        public deltaYAbs : number;
+        public deltaX : number;
+        public deltaY : number;
+        public render(context: CanvasRenderingContext2D): void;
+        /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        public renderDebugInfo(x: number, y: number, color?: string): void;
+    }
+}
+/**
+* Phaser - Sprite
+*/
+module Phaser {
+    class Sprite implements IGameObject {
+        /**
+        * Create a new <code>Sprite</code>.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param [x] {number} the initial x position of the sprite.
+        * @param [y] {number} the initial y position of the sprite.
+        * @param [key] {string} Key of the graphic you want to load for this sprite.
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        */
+        constructor(game: Game, x?: number, y?: number, key?: string, frame?, bodyType?: number);
+        /**
+        * Reference to the main game object
+        */
+        public game: Game;
+        /**
+        * The type of game object.
+        */
+        public type: number;
+        /**
+        * The Group this Sprite belongs to.
+        */
+        public group: Group;
+        /**
+        * Controls if both <code>update</code> and render are called by the core game loop.
+        */
+        public exists: bool;
+        /**
+        * Controls if <code>update()</code> is automatically called by the core game loop.
+        */
+        public active: bool;
+        /**
+        * Controls if this Sprite is rendered or skipped during the core game loop.
+        */
+        public visible: bool;
+        /**
+        * A useful state for many game objects. Kill and revive both flip this switch.
+        */
+        public alive: bool;
+        /**
+        * Sprite physics body.
+        */
+        public body: Physics.Body;
+        /**
+        * The texture used to render the Sprite.
+        */
+        public texture: Components.Texture;
+        /**
+        * The Sprite transform component.
+        */
+        public transform: Components.Transform;
+        /**
+        * The Input component
+        */
+        public input: Components.Sprite.Input;
+        /**
+        * The Events component
+        */
+        public events: Components.Sprite.Events;
+        /**
+        * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
+        * @type AnimationManager
+        */
+        public animations: Components.AnimationManager;
+        /**
+        * A Rectangle that defines the size and placement of the Sprite in the game world,
+        * after taking into consideration both scrollFactor and scaling.
+        */
+        public worldView: Rectangle;
+        /**
+        * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
+        */
+        public modified: bool;
+        /**
+        * x value of the object.
+        */
+        public x: number;
+        /**
+        * y value of the object.
+        */
+        public y: number;
+        /**
+        * z order value of the object.
+        */
+        public z: number;
+        /**
+        * Render iteration counter
+        */
+        public renderOrderID: number;
+        /**
+        * The rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        /**
+        * Set the rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The value is automatically wrapped to be between 0 and 360.
+        */
+        public rotation : number;
+        /**
+        * Get the animation frame number.
+        */
+        /**
+        * Set the animation frame by frame number.
+        */
+        public frame : number;
+        /**
+        * Get the animation frame name.
+        */
+        /**
+        * Set the animation frame by frame name.
+        */
+        public frameName : string;
+        public width : number;
+        public height : number;
+        /**
+        * Pre-update is called right before update() on each object in the game loop.
+        */
+        public preUpdate(): void;
+        /**
+        * Override this function to update your class's position and appearance.
+        */
+        public update(): void;
+        /**
+        * Automatically called after update() by the game loop.
+        */
+        public postUpdate(): void;
+        /**
+        * Clean up memory.
+        */
+        public destroy(): void;
+        /**
+        * Handy for "killing" game objects.
+        * Default behavior is to flag them as nonexistent AND dead.
+        * However, if you want the "corpse" to remain in the game,
+        * like to animate an effect or whatever, you should override this,
+        * setting only alive to false, and leaving exists true.
+        */
+        public kill(removeFromGroup?: bool): void;
+        /**
+        * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
+        * In practice, this is most often called by <code>Object.reset()</code>.
+        */
+        public revive(): void;
+    }
+}
+/**
+* Phaser - SpriteUtils
+*
+* A collection of methods useful for manipulating and checking Sprites.
+*/
+module Phaser {
+    class SpriteUtils {
+        static _tempPoint: Point;
+        /**
+        * Check whether this object is visible in a specific camera Rectangle.
+        * @param camera {Rectangle} The Rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+        */
+        static inCamera(camera: Camera, sprite: Sprite): bool;
+        static getAsPoints(sprite: Sprite): Point[];
+        /**
+        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
+        *
+        * @param point {Point} The point in world space you want to check.
+        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        *
+        * @return   Whether or not the point overlaps this object.
+        */
+        static overlapsPoint(sprite: Sprite, point: Point, inScreenSpace?: bool, camera?: Camera): bool;
+        /**
+        * Check and see if this object is currently on screen.
+        *
+        * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        *
+        * @return {boolean} Whether the object is on screen or not.
+        */
+        static onScreen(sprite: Sprite, camera?: Camera): bool;
+        /**
+        * Call this to figure out the on-screen position of the object.
+        *
+        * @param point {Point} Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        *
+        * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
+        */
+        static getScreenXY(sprite: Sprite, point?: Point, camera?: Camera): Point;
+        /**
+        * Handy for reviving game objects.
+        * Resets their existence flags and position.
+        *
+        * @param x {number} The new X position of this object.
+        * @param y {number} The new Y position of this object.
+        */
+        static reset(sprite: Sprite, x: number, y: number): void;
+        static setOriginToCenter(sprite: Sprite, fromFrameBounds?: bool, fromBody?: bool): void;
+        /**
+        * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
+        * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
+        * it can be stopped from leaving the world, or a section of it.
+        *
+        * @param x {number} x position of the bound
+        * @param y {number} y position of the bound
+        * @param width {number} width of its bound
+        * @param height {number} height of its bound
+        */
+        static setBounds(x: number, y: number, width: number, height: number): void;
+    }
+}
+/**
+* Phaser - Components - Texture
+*
+* The Texture being used to render the object (Sprite, Group background, etc). Either Image based on a DynamicTexture.
+*/
+module Phaser.Components {
+    class Texture {
+        /**
+        * Creates a new Texture component
+        * @param parent The object using this Texture to render.
+        * @param key An optional Game.Cache key to load an image from
+        */
+        constructor(parent);
+        /**
+        * Private _width - use the width getter/setter instead
+        */
+        private _width;
+        /**
+        * Private _height - use the height getter/setter instead
+        */
+        private _height;
+        /**
+        * Reference to Phaser.Game
+        */
+        public game: Game;
+        /**
+        * Reference to the parent object (Sprite, Group, etc)
+        */
+        public parent;
+        /**
+        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+        */
+        public imageTexture;
+        /**
+        * Reference to the DynamicTexture that is used as the texture for the Sprite.
+        * @type {DynamicTexture}
+        */
+        public dynamicTexture: DynamicTexture;
+        /**
+        * The load status of the texture image.
+        * @type {boolean}
+        */
+        public loaded: bool;
+        /**
+        * An Array of Cameras to which this texture won't render
+        * @type {Array}
+        */
+        public cameraBlacklist: number[];
+        /**
+        * Whether the Sprite background is opaque or not. If set to true the Sprite is filled with
+        * the value of Texture.backgroundColor every frame. Normally you wouldn't enable this but
+        * for some effects it can be handy.
+        * @type {boolean}
+        */
+        public opaque: bool;
+        /**
+        * Opacity of the Sprite texture where 1 is opaque (default) and 0 is fully transparent.
+        * @type {number}
+        */
+        public alpha: number;
+        /**
+        * The Background Color of the Sprite if Texture.opaque is set to true.
+        * Given in css color string format, i.e. 'rgb(0,0,0)' or '#ff0000'.
+        * @type {string}
+        */
+        public backgroundColor: string;
+        /**
+        * You can set a globalCompositeOperation that will be applied before the render method is called on this Sprite.
+        * This is useful if you wish to apply an effect like 'lighten'.
+        * If this value is set it will call a canvas context save and restore before and after the render pass, so use it sparingly.
+        * Set to null to disable.
+        */
+        public globalCompositeOperation: string;
+        /**
+        * A reference to the Canvas this Sprite renders to.
+        * @type {HTMLCanvasElement}
+        */
+        public canvas: HTMLCanvasElement;
+        /**
+        * A reference to the Canvas Context2D this Sprite renders to.
+        * @type {CanvasRenderingContext2D}
+        */
+        public context: CanvasRenderingContext2D;
+        /**
+        * The Cache key used for the Image Texture.
+        */
+        public cacheKey: string;
+        /**
+        * The Texture being used to render the Sprite. Either an Image Texture from the Cache or a DynamicTexture.
+        */
+        public texture;
+        /**
+        * Controls if the Sprite is rendered rotated or not.
+        * If renderRotation is false then the object can still rotate but it will never be rendered rotated.
+        * @type {boolean}
+        */
+        public renderRotation: bool;
+        /**
+        * Flip the graphic horizontally (defaults to false)
+        * @type {boolean}
+        */
+        public flippedX: bool;
+        /**
+        * Flip the graphic vertically (defaults to false)
+        * @type {boolean}
+        */
+        public flippedY: bool;
+        /**
+        * Is the texture a DynamicTexture?
+        * @type {boolean}
+        */
+        public isDynamic: bool;
+        /**
+        * Updates the texture being used to render the Sprite.
+        * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
+        */
+        public setTo(image?, dynamic?: DynamicTexture);
+        /**
+        * Sets a new graphic from the game cache to use as the texture for this Sprite.
+        * The graphic can be SpriteSheet or Texture Atlas. If you need to use a DynamicTexture see loadDynamicTexture.
+        * @param key {string} Key of the graphic you want to load for this sprite.
+        * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
+        * @param updateBody {boolean} Update the physics body dimensions to match the newly loaded texture/frame?
+        */
+        public loadImage(key: string, clearAnimations?: bool, updateBody?: bool): void;
+        /**
+        * Load a DynamicTexture as its texture.
+        * @param texture {DynamicTexture} The texture object to be used by this sprite.
+        */
+        public loadDynamicTexture(texture: DynamicTexture): void;
+        /**
+        * The width of the texture. If an animation it will be the frame width, not the width of the sprite sheet.
+        * If using a DynamicTexture it will be the width of the dynamic texture itself.
+        * @type {number}
+        */
+        public width : number;
+        /**
+        * The height of the texture. If an animation it will be the frame height, not the height of the sprite sheet.
+        * If using a DynamicTexture it will be the height of the dynamic texture itself.
+        * @type {number}
+        */
+        public height : number;
     }
 }
 /**
@@ -934,6 +2813,18 @@ module Phaser {
         */
         public group: Group;
         /**
+        * Optional texture used in the background of the Camera.
+        */
+        public texture: Components.Texture;
+        /**
+        * The transform component.
+        */
+        public transform: Components.Transform;
+        /**
+        * A boolean representing if the Group has been modified in any way via a scale, rotate, flip or skew.
+        */
+        public modified: bool;
+        /**
         * If this Group exists or not. Can be set to false to skip certain loop checks.
         */
         public exists: bool;
@@ -959,24 +2850,6 @@ module Phaser {
         * instead of members.length unless you really know what you're doing!
         */
         public length: number;
-        /**
-        * You can set a globalCompositeOperation that will be applied before the render method is called on this Groups children.
-        * This is useful if you wish to apply an effect like 'lighten' to a whole group of children as it saves doing it one-by-one.
-        * If this value is set it will call a canvas context save and restore before and after the render pass.
-        * Set to null to disable.
-        */
-        public globalCompositeOperation: string;
-        /**
-        * You can set an alpha value on this Group that will be applied before the render method is called on this Groups children.
-        * This is useful if you wish to alpha a whole group of children as it saves doing it one-by-one.
-        * Set to 0 to disable.
-        */
-        public alpha: number;
-        /**
-        * An Array of Cameras to which this Group, or any of its children, won't render
-        * @type {Array}
-        */
-        public cameraBlacklist: number[];
         /**
         * Gets the next z index value for children of this Group
         */
@@ -1027,10 +2900,11 @@ module Phaser {
         * @param x {number} X position of the new sprite.
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
+        * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
         * @returns {Sprite} The newly created sprite object.
         */
-        public addNewSprite(x: number, y: number, key?: string, bodyType?: number): Sprite;
+        public addNewSprite(x: number, y: number, key?: string, frame?, bodyType?: number): Sprite;
         /**
         * Sets all of the game object properties needed to exist within this Group.
         */
@@ -1085,7 +2959,7 @@ module Phaser {
         * <code>State.update()</code> override.  To sort all existing objects after
         * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
         *
-        * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
+        * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "z".
         * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
         */
         public sort(index?: string, order?: number): void;
@@ -1909,7 +3783,7 @@ module Phaser {
         */
         public angleBetween(x1: number, y1: number, x2: number, y2: number): number;
         /**
-        * set an angle with in the bounds of -PI to PI
+        * set an angle within the bounds of -PI to PI
         */
         public normalizeAngle(angle: number, radians?: bool): number;
         /**
@@ -2233,16 +4107,16 @@ module Phaser {
         */
         public vectorLength(dx: number, dy: number): number;
         /**
-        * Rotates the point around the x/y coordinates given to the desired angle and distance
+        * Rotates the point around the x/y coordinates given to the desired rotation and distance
         * @param point {Object} Any object with exposed x and y properties
         * @param x {number} The x coordinate of the anchor point
         * @param y {number} The y coordinate of the anchor point
-        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
-        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} rotation The rotation in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
         * @param {Number} distance An optional distance constraint between the point and the anchor
         * @return The modified point object
         */
-        public rotatePoint(point, x1: number, y1: number, angle: number, asDegrees?: bool, distance?: number);
+        public rotatePoint(point, x1: number, y1: number, rotation: number, asDegrees?: bool, distance?: number);
     }
 }
 /**
@@ -2384,1830 +4258,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - AnimationLoader
-*
-* Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
-*/
-module Phaser {
-    class AnimationLoader {
-        /**
-        * Parse a sprite sheet from asset data.
-        * @param key {string} Asset key for the sprite sheet data.
-        * @param frameWidth {number} Width of animation frame.
-        * @param frameHeight {number} Height of animation frame.
-        * @param frameMax {number} Number of animation frames.
-        * @return {FrameData} Generated FrameData object.
-        */
-        static parseSpriteSheet(game: Game, key: string, frameWidth: number, frameHeight: number, frameMax: number): FrameData;
-        /**
-        * Parse frame datas from json.
-        * @param json {object} Json data you want to parse.
-        * @return {FrameData} Generated FrameData object.
-        */
-        static parseJSONData(game: Game, json): FrameData;
-        static parseXMLData(game: Game, xml, format: number): FrameData;
-    }
-}
-/**
-* Phaser - Animation
-*
-* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
-*/
-module Phaser {
-    class Animation {
-        /**
-        * Animation constructor
-        * Create a new <code>Animation</code>.
-        *
-        * @param parent {Sprite} Owner sprite of this animation.
-        * @param frameData {FrameData} The FrameData object contains animation data.
-        * @param name {string} Unique name of this animation.
-        * @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
-        * @param delay {number} Time between frames in ms.
-        * @param looped {boolean} Whether or not the animation is looped or just plays once.
-        */
-        constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool);
-        /**
-        * Local private reference to game.
-        */
-        private _game;
-        /**
-        * Local private reference to its owner sprite.
-        * @type {Sprite}
-        */
-        private _parent;
-        /**
-        * Animation frame container.
-        * @type {number[]}
-        */
-        private _frames;
-        /**
-        * Frame data of this animation.(parsed from sprite sheet)
-        * @type {FrameData}
-        */
-        private _frameData;
-        /**
-        * Index of current frame.
-        * @type {number}
-        */
-        private _frameIndex;
-        /**
-        * Time when switched to last frame (in ms).
-        * @type number
-        */
-        private _timeLastFrame;
-        /**
-        * Time when this will switch to next frame (in ms).
-        * @type number
-        */
-        private _timeNextFrame;
-        /**
-        * Name of this animation.
-        * @type {string}
-        */
-        public name: string;
-        /**
-        * Currently played frame instance.
-        * @type {Frame}
-        */
-        public currentFrame: Frame;
-        /**
-        * Whether or not this animation finished playing.
-        * @type {boolean}
-        */
-        public isFinished: bool;
-        /**
-        * Whethor or not this animation is currently playing.
-        * @type {boolean}
-        */
-        public isPlaying: bool;
-        /**
-        * Whether or not the animation is looped.
-        * @type {boolean}
-        */
-        public looped: bool;
-        /**
-        * Time between frames in ms.
-        * @type {number}
-        */
-        public delay: number;
-        public frameTotal : number;
-        public frame : number;
-        /**
-        * Play this animation.
-        * @param frameRate {number} FrameRate you want to specify instead of using default.
-        * @param loop {boolean} Whether or not the animation is looped or just plays once.
-        */
-        public play(frameRate?: number, loop?: bool): void;
-        /**
-        * Play this animation from the first frame.
-        */
-        public restart(): void;
-        /**
-        * Stop playing animation and set it finished.
-        */
-        public stop(): void;
-        /**
-        * Update animation frames.
-        */
-        public update(): bool;
-        /**
-        * Clean up animation memory.
-        */
-        public destroy(): void;
-        /**
-        * Animation complete callback method.
-        */
-        private onComplete();
-    }
-}
-/**
-* Phaser - Frame
-*
-* A Frame is a single frame of an animation and is part of a FrameData collection.
-*/
-module Phaser {
-    class Frame {
-        /**
-        * Frame constructor
-        * Create a new <code>Frame</code> with specific position, size and name.
-        *
-        * @param x {number} X position within the image to cut from.
-        * @param y {number} Y position within the image to cut from.
-        * @param width {number} Width of the frame.
-        * @param height {number} Height of the frame.
-        * @param name {string} Name of this frame.
-        */
-        constructor(x: number, y: number, width: number, height: number, name: string);
-        /**
-        * X position within the image to cut from.
-        * @type {number}
-        */
-        public x: number;
-        /**
-        * Y position within the image to cut from.
-        * @type {number}
-        */
-        public y: number;
-        /**
-        * Width of the frame.
-        * @type {number}
-        */
-        public width: number;
-        /**
-        * Height of the frame.
-        * @type {number}
-        */
-        public height: number;
-        /**
-        * Useful for Sprite Sheets.
-        * @type {number}
-        */
-        public index: number;
-        /**
-        * Useful for Texture Atlas files. (is set to the filename value)
-        */
-        public name: string;
-        /**
-        * Rotated? (not yet implemented)
-        */
-        public rotated: bool;
-        /**
-        * Either cw or ccw, rotation is always 90 degrees.
-        */
-        public rotationDirection: string;
-        /**
-        * Was it trimmed when packed?
-        * @type {boolean}
-        */
-        public trimmed: bool;
-        /**
-        * Width of the original sprite.
-        * @type {number}
-        */
-        public sourceSizeW: number;
-        /**
-        * Height of the original sprite.
-        * @type {number}
-        */
-        public sourceSizeH: number;
-        /**
-        * X position of the trimmed sprite inside original sprite.
-        * @type {number}
-        */
-        public spriteSourceSizeX: number;
-        /**
-        * Y position of the trimmed sprite inside original sprite.
-        * @type {number}
-        */
-        public spriteSourceSizeY: number;
-        /**
-        * Width of the trimmed sprite.
-        * @type {number}
-        */
-        public spriteSourceSizeW: number;
-        /**
-        * Height of the trimmed sprite.
-        * @type {number}
-        */
-        public spriteSourceSizeH: number;
-        /**
-        * Set rotation of this frame. (Not yet supported!)
-        */
-        public setRotation(rotated: bool, rotationDirection: string): void;
-        /**
-        * Set trim of the frame.
-        * @param trimmed {boolean} Whether this frame trimmed or not.
-        * @param actualWidth {number} Actual width of this frame.
-        * @param actualHeight {number} Actual height of this frame.
-        * @param destX {number} Destination x position.
-        * @param destY {number} Destination y position.
-        * @param destWidth {number} Destination draw width.
-        * @param destHeight {number} Destination draw height.
-        */
-        public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number): void;
-    }
-}
-/**
-* Phaser - FrameData
-*
-* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
-*/
-module Phaser {
-    class FrameData {
-        /**
-        * FrameData constructor
-        */
-        constructor();
-        /**
-        * Local frame container.
-        */
-        private _frames;
-        /**
-        * Local frameName<->index container.
-        */
-        private _frameNames;
-        public total : number;
-        /**
-        * Add a new frame.
-        * @param frame {Frame} The frame you want to add.
-        * @return {Frame} The frame you just added.
-        */
-        public addFrame(frame: Frame): Frame;
-        /**
-        * Get a frame by its index.
-        * @param index {number} Index of the frame you want to get.
-        * @return {Frame} The frame you want.
-        */
-        public getFrame(index: number): Frame;
-        /**
-        * Get a frame by its name.
-        * @param name {string} Name of the frame you want to get.
-        * @return {Frame} The frame you want.
-        */
-        public getFrameByName(name: string): Frame;
-        /**
-        * Check whether there's a frame with given name.
-        * @param name {string} Name of the frame you want to check.
-        * @return {boolean} True if frame with given name found, otherwise return false.
-        */
-        public checkFrameName(name: string): bool;
-        /**
-        * Get ranges of frames in an array.
-        * @param start {number} Start index of frames you want.
-        * @param end {number} End index of frames you want.
-        * @param [output] {Frame[]} result will be added into this array.
-        * @return {Frame[]} Ranges of specific frames in an array.
-        */
-        public getFrameRange(start: number, end: number, output?: Frame[]): Frame[];
-        /**
-        * Get all indexes of frames by giving their name.
-        * @param [output] {number[]} result will be added into this array.
-        * @return {number[]} Indexes of specific frames in an array.
-        */
-        public getFrameIndexes(output?: number[]): number[];
-        /**
-        * Get the frame indexes by giving the frame names.
-        * @param [output] {number[]} result will be added into this array.
-        * @return {number[]} Names of specific frames in an array.
-        */
-        public getFrameIndexesByName(input: string[]): number[];
-        /**
-        * Get all frames in this frame data.
-        * @return {Frame[]} All the frames in an array.
-        */
-        public getAllFrames(): Frame[];
-        /**
-        * Get All frames with specific ranges.
-        * @param range {number[]} Ranges in an array.
-        * @return {Frame[]} All frames in an array.
-        */
-        public getFrames(range: number[]): Frame[];
-    }
-}
-/**
-* Phaser - AnimationManager
-*
-* Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
-* sprite specific animations.
-*/
-module Phaser.Components {
-    class AnimationManager {
-        /**
-        * AnimationManager constructor
-        * Create a new <code>AnimationManager</code>.
-        *
-        * @param parent {Sprite} Owner sprite of this manager.
-        */
-        constructor(parent: Sprite);
-        /**
-        * Local private reference to game.
-        */
-        private _game;
-        /**
-        * Local private reference to its owner sprite.
-        */
-        private _parent;
-        /**
-        * Animation key-value container.
-        */
-        private _anims;
-        /**
-        * Index of current frame.
-        * @type {number}
-        */
-        private _frameIndex;
-        /**
-        * Data contains animation frames.
-        * @type {FrameData}
-        */
-        private _frameData;
-        /**
-        * Keeps track of the current animation being played.
-        */
-        public currentAnim: Animation;
-        /**
-        * Keeps track of the current frame of animation.
-        */
-        public currentFrame: Frame;
-        /**
-        * Load animation frame data.
-        * @param frameData Data to be loaded.
-        */
-        public loadFrameData(frameData: FrameData): void;
-        /**
-        * Add a new animation.
-        * @param name {string} What this animation should be called (e.g. "run").
-        * @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
-        * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
-        * @param loop {boolean} Whether or not the animation is looped or just plays once.
-        * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
-        * @return {Animation} The Animation that was created
-        */
-        public add(name: string, frames?: any[], frameRate?: number, loop?: bool, useNumericIndex?: bool): Animation;
-        /**
-        * Check whether the frames is valid.
-        * @param frames {any[]} Frames to be validated.
-        * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
-        * @return {boolean} True if they're valid, otherwise return false.
-        */
-        private validateFrames(frames, useNumericIndex);
-        /**
-        * Play animation with specific name.
-        * @param name {string} The string name of the animation you want to play.
-        * @param frameRate {number} FrameRate you want to specify instead of using default.
-        * @param loop {boolean} Whether or not the animation is looped or just plays once.
-        */
-        public play(name: string, frameRate?: number, loop?: bool): void;
-        /**
-        * Stop animation by name.
-        * Current animation will be automatically set to the stopped one.
-        */
-        public stop(name: string): void;
-        /**
-        * Update animation and parent sprite's bounds.
-        */
-        public update(): void;
-        public frameData : FrameData;
-        public frameTotal : number;
-        public frame : number;
-        public frameName : string;
-        /**
-        * Removes all related references
-        */
-        public destroy(): void;
-    }
-}
-/**
-* Phaser - RectangleUtils
-*
-* A collection of methods useful for manipulating and comparing Rectangle objects.
-*
-* TODO: Check docs + overlap + intersect + toPolygon?
-*/
-module Phaser {
-    class RectangleUtils {
-        /**
-        * Get the location of the Rectangles top-left corner as a Point object.
-        * @method getTopLeftAsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
-        static getTopLeftAsPoint(a: Rectangle, out?: Point): Point;
-        /**
-        * Get the location of the Rectangles bottom-right corner as a Point object.
-        * @method getTopLeftAsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
-        static getBottomRightAsPoint(a: Rectangle, out?: Point): Point;
-        /**
-        * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
-        * @method inflate
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Number} dx The amount to be added to the left side of the Rectangle.
-        * @param {Number} dy The amount to be added to the bottom side of the Rectangle.
-        * @return {Rectangle} This Rectangle object.
-        **/
-        static inflate(a: Rectangle, dx: number, dy: number): Rectangle;
-        /**
-        * Increases the size of the Rectangle object. This method is similar to the Rectangle.inflate() method except it takes a Point object as a parameter.
-        * @method inflatePoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} point The x property of this Point object is used to increase the horizontal dimension of the Rectangle object. The y property is used to increase the vertical dimension of the Rectangle object.
-        * @return {Rectangle} The Rectangle object.
-        **/
-        static inflatePoint(a: Rectangle, point: Point): Rectangle;
-        /**
-        * The size of the Rectangle object, expressed as a Point object with the values of the width and height properties.
-        * @method size
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} output Optional Point object. If given the values will be set into the object, otherwise a brand new Point object will be created and returned.
-        * @return {Point} The size of the Rectangle object
-        **/
-        static size(a: Rectangle, output?: Point): Point;
-        /**
-        * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
-        * @method clone
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle}
-        **/
-        static clone(a: Rectangle, output?: Rectangle): Rectangle;
-        /**
-        * Determines whether the specified coordinates are contained within the region defined by this Rectangle object.
-        * @method contains
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Number} x The x coordinate of the point to test.
-        * @param {Number} y The y coordinate of the point to test.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
-        static contains(a: Rectangle, x: number, y: number): bool;
-        /**
-        * Determines whether the specified point is contained within the rectangular region defined by this Rectangle object. This method is similar to the Rectangle.contains() method, except that it takes a Point object as a parameter.
-        * @method containsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} point The point object being checked. Can be Point or any object with .x and .y values.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
-        static containsPoint(a: Rectangle, point: Point): bool;
-        /**
-        * Determines whether the first Rectangle object is fully contained within the second Rectangle object.
-        * A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
-        * @method containsRect
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
-        static containsRect(a: Rectangle, b: Rectangle): bool;
-        /**
-        * Determines whether the two Rectangles are equal.
-        * This method compares the x, y, width and height properties of each Rectangle.
-        * @method equals
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @return {Boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
-        **/
-        static equals(a: Rectangle, b: Rectangle): bool;
-        /**
-        * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
-        * @method intersection
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle} A Rectangle object that equals the area of intersection. If the rectangles do not intersect, this method returns an empty Rectangle object; that is, a rectangle with its x, y, width, and height properties set to 0.
-        **/
-        static intersection(a: Rectangle, b: Rectangle, out?: Rectangle): Rectangle;
-        /**
-        * Determines whether the two Rectangles intersect with each other.
-        * This method checks the x, y, width, and height properties of the Rectangles.
-        * @method intersects
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
-        * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
-        **/
-        static intersects(a: Rectangle, b: Rectangle, tolerance?: number): bool;
-        /**
-        * Determines whether the object specified intersects (overlaps) with the given values.
-        * @method intersectsRaw
-        * @param {Number} left
-        * @param {Number} right
-        * @param {Number} top
-        * @param {Number} bottomt
-        * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
-        * @return {Boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
-        **/
-        static intersectsRaw(a: Rectangle, left: number, right: number, top: number, bottom: number, tolerance?: number): bool;
-        /**
-        * Adds two rectangles together to create a new Rectangle object, by filling in the horizontal and vertical space between the two rectangles.
-        * @method union
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle} A Rectangle object that is the union of the two rectangles.
-        **/
-        static union(a: Rectangle, b: Rectangle, out?: Rectangle): Rectangle;
-    }
-}
-/**
-* Phaser - ColorUtils
-*
-* A collection of methods useful for manipulating color values.
-*/
-module Phaser {
-    class ColorUtils {
-        static game: Game;
-        /**
-        * Given an alpha and 3 color values this will return an integer representation of it
-        *
-        * @param alpha {number} The Alpha value (between 0 and 255)
-        * @param red   {number} The Red channel value (between 0 and 255)
-        * @param green {number} The Green channel value (between 0 and 255)
-        * @param blue  {number} The Blue channel value (between 0 and 255)
-        *
-        * @return  A native color value integer (format: 0xAARRGGBB)
-        */
-        static getColor32(alpha: number, red: number, green: number, blue: number): number;
-        /**
-        * Given 3 color values this will return an integer representation of it
-        *
-        * @param red   {number} The Red channel value (between 0 and 255)
-        * @param green {number} The Green channel value (between 0 and 255)
-        * @param blue  {number} The Blue channel value (between 0 and 255)
-        *
-        * @return  A native color value integer (format: 0xRRGGBB)
-        */
-        static getColor(red: number, green: number, blue: number): number;
-        /**
-        * Get HSV color wheel values in an array which will be 360 elements in size
-        *
-        * @param	alpha	Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
-        *
-        * @return	Array
-        */
-        static getHSVColorWheel(alpha?: number): any[];
-        /**
-        * Returns a Complementary Color Harmony for the given color.
-        * <p>A complementary hue is one directly opposite the color given on the color wheel</p>
-        * <p>Value returned in 0xAARRGGBB format with Alpha set to 255.</p>
-        *
-        * @param	color The color to base the harmony on
-        *
-        * @return 0xAARRGGBB format color value
-        */
-        static getComplementHarmony(color: number): number;
-        /**
-        * Returns an Analogous Color Harmony for the given color.
-        * <p>An Analogous harmony are hues adjacent to each other on the color wheel</p>
-        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
-        *
-        * @param	color The color to base the harmony on
-        * @param	threshold Control how adjacent the colors will be (default +- 30 degrees)
-        *
-        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
-        */
-        static getAnalogousHarmony(color: number, threshold?: number): {
-            color1: number;
-            color2: number;
-            color3: number;
-            hue1: any;
-            hue2: number;
-            hue3: number;
-        };
-        /**
-        * Returns an Split Complement Color Harmony for the given color.
-        * <p>A Split Complement harmony are the two hues on either side of the color's Complement</p>
-        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
-        *
-        * @param	color The color to base the harmony on
-        * @param	threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
-        *
-        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
-        */
-        static getSplitComplementHarmony(color: number, threshold?: number): any;
-        /**
-        * Returns a Triadic Color Harmony for the given color.
-        * <p>A Triadic harmony are 3 hues equidistant from each other on the color wheel</p>
-        * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
-        *
-        * @param	color The color to base the harmony on
-        *
-        * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
-        */
-        static getTriadicHarmony(color: number): any;
-        /**
-        * Returns a string containing handy information about the given color including string hex value,
-        * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
-        *
-        * @param	color A color value in the format 0xAARRGGBB
-        *
-        * @return	string containing the 3 lines of information
-        */
-        static getColorInfo(color: number): string;
-        /**
-        * Return a string representation of the color in the format 0xAARRGGBB
-        *
-        * @param	color The color to get the string representation for
-        *
-        * @return	A string of length 10 characters in the format 0xAARRGGBB
-        */
-        static RGBtoHexstring(color: number): string;
-        /**
-        * Return a string representation of the color in the format #RRGGBB
-        *
-        * @param	color The color to get the string representation for
-        *
-        * @return	A string of length 10 characters in the format 0xAARRGGBB
-        */
-        static RGBtoWebstring(color: number): string;
-        /**
-        * Return a string containing a hex representation of the given color
-        *
-        * @param	color The color channel to get the hex value for, must be a value between 0 and 255)
-        *
-        * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
-        */
-        static colorToHexstring(color: number): string;
-        /**
-        * Convert a HSV (hue, saturation, lightness) color space value to an RGB color
-        *
-        * @param	h 		Hue degree, between 0 and 359
-        * @param	s 		Saturation, between 0.0 (grey) and 1.0
-        * @param	v 		Value, between 0.0 (black) and 1.0
-        * @param	alpha	Alpha value to set per color (between 0 and 255)
-        *
-        * @return 32-bit ARGB color value (0xAARRGGBB)
-        */
-        static HSVtoRGB(h: number, s: number, v: number, alpha?: number): number;
-        /**
-        * Convert an RGB color value to an object containing the HSV color space values: Hue, Saturation and Lightness
-        *
-        * @param	color In format 0xRRGGBB
-        *
-        * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
-        */
-        static RGBtoHSV(color: number): any;
-        /**
-        *
-        * @method interpolateColor
-        * @param {Number} color1
-        * @param {Number} color2
-        * @param {Number} steps
-        * @param {Number} currentStep
-        * @param {Number} alpha
-        * @return {Number}
-        * @static
-        */
-        static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha?: number): number;
-        /**
-        *
-        * @method interpolateColorWithRGB
-        * @param {Number} color
-        * @param {Number} r2
-        * @param {Number} g2
-        * @param {Number} b2
-        * @param {Number} steps
-        * @param {Number} currentStep
-        * @return {Number}
-        * @static
-        */
-        static interpolateColorWithRGB(color: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
-        /**
-        *
-        * @method interpolateRGB
-        * @param {Number} r1
-        * @param {Number} g1
-        * @param {Number} b1
-        * @param {Number} r2
-        * @param {Number} g2
-        * @param {Number} b2
-        * @param {Number} steps
-        * @param {Number} currentStep
-        * @return {Number}
-        * @static
-        */
-        static interpolateRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number;
-        /**
-        * Returns a random color value between black and white
-        * <p>Set the min value to start each channel from the given offset.</p>
-        * <p>Set the max value to restrict the maximum color used per channel</p>
-        *
-        * @param	min		The lowest value to use for the color
-        * @param	max 	The highest value to use for the color
-        * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
-        *
-        * @return 32-bit color value with alpha
-        */
-        static getRandomColor(min?: number, max?: number, alpha?: number): number;
-        /**
-        * Return the component parts of a color as an Object with the properties alpha, red, green, blue
-        *
-        * <p>Alpha will only be set if it exist in the given color (0xAARRGGBB)</p>
-        *
-        * @param	color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB)
-        *
-        * @return Object with properties: alpha, red, green, blue
-        */
-        static getRGB(color: number): any;
-        /**
-        *
-        * @method getWebRGB
-        * @param {Number} color
-        * @return {Any}
-        */
-        static getWebRGB(color: number): any;
-        /**
-        * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
-        *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
-        */
-        static getAlpha(color: number): number;
-        /**
-        * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1
-        *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
-        */
-        static getAlphaFloat(color: number): number;
-        /**
-        * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255
-        *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
-        */
-        static getRed(color: number): number;
-        /**
-        * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255
-        *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
-        */
-        static getGreen(color: number): number;
-        /**
-        * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255
-        *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
-        */
-        static getBlue(color: number): number;
-    }
-}
-/**
-* Phaser - DynamicTexture
-*
-* A DynamicTexture can be thought of as a mini canvas into which you can draw anything.
-* Game Objects can be assigned a DynamicTexture, so when they render in the world they do so
-* based on the contents of the texture at the time. This allows you to create powerful effects
-* once and have them replicated across as many game objects as you like.
-*/
-module Phaser {
-    class DynamicTexture {
-        /**
-        * DynamicTexture constructor
-        * Create a new <code>DynamicTexture</code>.
-        *
-        * @param game {Phaser.Game} Current game instance.
-        * @param width {number} Init width of this texture.
-        * @param height {number} Init height of this texture.
-        */
-        constructor(game: Game, width: number, height: number);
-        /**
-        * Reference to game.
-        */
-        public game: Game;
-        /**
-        * The type of game object.
-        */
-        public type: number;
-        private _sx;
-        private _sy;
-        private _sw;
-        private _sh;
-        private _dx;
-        private _dy;
-        private _dw;
-        private _dh;
-        /**
-        * Bound of this texture with width and height info.
-        * @type {Rectangle}
-        */
-        public bounds: Rectangle;
-        /**
-        * This class is actually a wrapper of canvas.
-        * @type {HTMLCanvasElement}
-        */
-        public canvas: HTMLCanvasElement;
-        /**
-        * Canvas context of this object.
-        * @type {CanvasRenderingContext2D}
-        */
-        public context: CanvasRenderingContext2D;
-        /**
-        * Get a color of a specific pixel.
-        * @param x {number} X position of the pixel in this texture.
-        * @param y {number} Y position of the pixel in this texture.
-        * @return {number} A native color value integer (format: 0xRRGGBB)
-        */
-        public getPixel(x: number, y: number): number;
-        /**
-        * Get a color of a specific pixel (including alpha value).
-        * @param x {number} X position of the pixel in this texture.
-        * @param y {number} Y position of the pixel in this texture.
-        * @return  A native color value integer (format: 0xAARRGGBB)
-        */
-        public getPixel32(x: number, y: number): number;
-        /**
-        * Get pixels in array in a specific rectangle.
-        * @param rect {Rectangle} The specific rectangle.
-        * @returns {array} CanvasPixelArray.
-        */
-        public getPixels(rect: Rectangle): ImageData;
-        /**
-        * Set color of a specific pixel.
-        * @param x {number} X position of the target pixel.
-        * @param y {number} Y position of the target pixel.
-        * @param color {number} Native integer with color value. (format: 0xRRGGBB)
-        */
-        public setPixel(x: number, y: number, color: string): void;
-        /**
-        * Set color (with alpha) of a specific pixel.
-        * @param x {number} X position of the target pixel.
-        * @param y {number} Y position of the target pixel.
-        * @param color {number} Native integer with color value. (format: 0xAARRGGBB)
-        */
-        public setPixel32(x: number, y: number, color: number): void;
-        /**
-        * Set image data to a specific rectangle.
-        * @param rect {Rectangle} Target rectangle.
-        * @param input {object} Source image data.
-        */
-        public setPixels(rect: Rectangle, input): void;
-        /**
-        * Fill a given rectangle with specific color.
-        * @param rect {Rectangle} Target rectangle you want to fill.
-        * @param color {number} A native number with color value. (format: 0xRRGGBB)
-        */
-        public fillRect(rect: Rectangle, color: number): void;
-        /**
-        *
-        */
-        public pasteImage(key: string, frame?: number, destX?: number, destY?: number, destWidth?: number, destHeight?: number): void;
-        /**
-        * Copy pixel from another DynamicTexture to this texture.
-        * @param sourceTexture {DynamicTexture} Source texture object.
-        * @param sourceRect {Rectangle} The specific region rectangle to be copied to this in the source.
-        * @param destPoint {Point} Top-left point the target image data will be paste at.
-        */
-        public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point): void;
-        /**
-        * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
-        * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
-        */
-        public assignCanvasToGameObjects(objects: IGameObject[]): void;
-        /**
-        * Clear the whole canvas.
-        */
-        public clear(): void;
-        /**
-        * Renders this DynamicTexture to the Stage at the given x/y coordinates
-        *
-        * @param x {number} The X coordinate to render on the stage to (given in screen coordinates, not world)
-        * @param y {number} The Y coordinate to render on the stage to (given in screen coordinates, not world)
-        */
-        public render(x?: number, y?: number): void;
-        public width : number;
-        public height : number;
-    }
-}
-/**
-* Phaser - SpriteUtils
-*
-* A collection of methods useful for manipulating and checking Sprites.
-*/
-module Phaser {
-    class SpriteUtils {
-        static _tempPoint: Point;
-        /**
-        * Check whether this object is visible in a specific camera rectangle.
-        * @param camera {Rectangle} The rectangle you want to check.
-        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
-        */
-        static inCamera(camera: Camera, sprite: Sprite): bool;
-        static getAsPoints(sprite: Sprite): Point[];
-        /**
-        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
-        *
-        * @param point {Point} The point in world space you want to check.
-        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        *
-        * @return   Whether or not the point overlaps this object.
-        */
-        static overlapsPoint(sprite: Sprite, point: Point, inScreenSpace?: bool, camera?: Camera): bool;
-        /**
-        * Check and see if this object is currently on screen.
-        *
-        * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
-        *
-        * @return {boolean} Whether the object is on screen or not.
-        */
-        static onScreen(sprite: Sprite, camera?: Camera): bool;
-        /**
-        * Call this to figure out the on-screen position of the object.
-        *
-        * @param point {Point} Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        *
-        * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
-        */
-        static getScreenXY(sprite: Sprite, point?: Point, camera?: Camera): Point;
-        /**
-        * Handy for reviving game objects.
-        * Resets their existence flags and position.
-        *
-        * @param x {number} The new X position of this object.
-        * @param y {number} The new Y position of this object.
-        */
-        static reset(sprite: Sprite, x: number, y: number): void;
-        static setOriginToCenter(sprite: Sprite, fromFrameBounds?: bool, fromBody?: bool): void;
-        /**
-        * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
-        * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
-        * it can be stopped from leaving the world, or a section of it.
-        *
-        * @param x {number} x position of the bound
-        * @param y {number} y position of the bound
-        * @param width {number} width of its bound
-        * @param height {number} height of its bound
-        */
-        static setBounds(x: number, y: number, width: number, height: number): void;
-    }
-}
-/**
-* Phaser - Components - Texture
-*
-* The Texture being used to render the Sprite. Either Image based on a DynamicTexture.
-*/
-module Phaser.Components {
-    class Texture {
-        /**
-        * Creates a new Sprite Texture component
-        * @param parent The Sprite using this Texture to render
-        * @param key An optional Game.Cache key to load an image from
-        */
-        constructor(parent: Sprite, key?: string);
-        /**
-        * Reference to Phaser.Game
-        */
-        public game: Game;
-        /**
-        * Reference to the parent Sprite
-        */
-        private _sprite;
-        /**
-        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
-        */
-        public imageTexture;
-        /**
-        * Reference to the DynamicTexture that is used as the texture for the Sprite.
-        * @type {DynamicTexture}
-        */
-        public dynamicTexture: DynamicTexture;
-        /**
-        * The load status of the texture image.
-        * @type {boolean}
-        */
-        public loaded: bool;
-        /**
-        * Opacity of the Sprite texture where 1 is opaque and 0 is fully transparent.
-        * @type {number}
-        */
-        public alpha: number;
-        /**
-        * A reference to the Canvas this Sprite renders to.
-        * @type {HTMLCanvasElement}
-        */
-        public canvas: HTMLCanvasElement;
-        /**
-        * A reference to the Canvas Context2D this Sprite renders to.
-        * @type {CanvasRenderingContext2D}
-        */
-        public context: CanvasRenderingContext2D;
-        /**
-        * The Cache key used for the Image Texture.
-        */
-        public cacheKey: string;
-        /**
-        * The Texture being used to render the Sprite. Either an Image Texture from the Cache or a DynamicTexture.
-        */
-        public texture;
-        /**
-        * Controls if the Sprite is rendered rotated or not.
-        * If renderRotation is false then the object can still rotate but it will never be rendered rotated.
-        * @type {boolean}
-        */
-        public renderRotation: bool;
-        /**
-        * Flip the graphic horizontally (defaults to false)
-        * @type {boolean}
-        */
-        public flippedX: bool;
-        /**
-        * Flip the graphic vertically (defaults to false)
-        * @type {boolean}
-        */
-        public flippedY: bool;
-        /**
-        * Is the texture a DynamicTexture?
-        * @type {boolean}
-        */
-        public isDynamic: bool;
-        /**
-        * Updates the texture being used to render the Sprite.
-        * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
-        */
-        public setTo(image?, dynamic?: DynamicTexture): Sprite;
-        /**
-        * Sets a new graphic from the game cache to use as the texture for this Sprite.
-        * The graphic can be SpriteSheet or Texture Atlas. If you need to use a DynamicTexture see loadDynamicTexture.
-        * @param key {string} Key of the graphic you want to load for this sprite.
-        * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
-        */
-        public loadImage(key: string, clearAnimations?: bool, updateBody?: bool): void;
-        /**
-        * Load a DynamicTexture as its texture.
-        * @param texture {DynamicTexture} The texture object to be used by this sprite.
-        */
-        public loadDynamicTexture(texture: DynamicTexture): void;
-        /**
-        * Getter only. The width of the texture.
-        * @type {number}
-        */
-        public width : number;
-        /**
-        * Getter only. The height of the texture.
-        * @type {number}
-        */
-        public height : number;
-    }
-}
-/**
-* Phaser - Components - Input
-*
-* Input detection component
-*/
-module Phaser.Components {
-    class Input {
-        /**
-        * Sprite Input component constructor
-        * @param parent The Sprite using this Input component
-        */
-        constructor(parent: Sprite);
-        /**
-        * Reference to Phaser.Game
-        */
-        public game: Game;
-        /**
-        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
-        */
-        private _sprite;
-        private _pointerData;
-        /**
-        * If enabled the Input component will be updated by the parent Sprite
-        * @type {Boolean}
-        */
-        public enabled: bool;
-        /**
-        * The PriorityID controls which Sprite receives an Input event first if they should overlap.
-        */
-        public priorityID: number;
-        private _dragPoint;
-        private _draggedPointerID;
-        public dragOffset: Point;
-        public isDragged: bool;
-        public dragFromCenter: bool;
-        public dragPixelPerfect: bool;
-        public dragPixelPerfectAlpha: number;
-        public allowHorizontalDrag: bool;
-        public allowVerticalDrag: bool;
-        public snapOnDrag: bool;
-        public snapOnRelease: bool;
-        public snapOffset: Point;
-        public snapX: number;
-        public snapY: number;
-        /**
-        * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
-        * @default false
-        */
-        public draggable: bool;
-        /**
-        * A region of the game world within which the sprite is restricted during drag
-        * @default null
-        */
-        public boundsRect: Rectangle;
-        /**
-        * An Sprite the bounds of which this sprite is restricted during drag
-        * @default null
-        */
-        public boundsSprite: Sprite;
-        /**
-        * The Input component can monitor either the physics body of the Sprite or the frameBounds
-        * If checkBody is set to true it will monitor the bounds of the physics body.
-        * @type {Boolean}
-        */
-        public checkBody: bool;
-        /**
-        * Turn the mouse pointer into a hand image by temporarily setting the CSS style of the Game canvas
-        * on Input over. Only works on desktop browsers or browsers with a visible input pointer.
-        * @type {Boolean}
-        */
-        public useHandCursor: bool;
-        /**
-        * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
-        * This value is only set when the pointer is over this Sprite.
-        * @type {number}
-        */
-        public pointerX(pointer?: number): number;
-        /**
-        * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
-        * This value is only set when the pointer is over this Sprite.
-        * @type {number}
-        */
-        public pointerY(pointer?: number): number;
-        /**
-        * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
-        * @property isDown
-        * @type {Boolean}
-        **/
-        public pointerDown(pointer?: number): bool;
-        /**
-        * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
-        * @property isUp
-        * @type {Boolean}
-        **/
-        public pointerUp(pointer?: number): bool;
-        /**
-        * A timestamp representing when the Pointer first touched the touchscreen.
-        * @property timeDown
-        * @type {Number}
-        **/
-        public pointerTimeDown(pointer?: number): bool;
-        /**
-        * A timestamp representing when the Pointer left the touchscreen.
-        * @property timeUp
-        * @type {Number}
-        **/
-        public pointerTimeUp(pointer?: number): bool;
-        /**
-        * Is the Pointer over this Sprite
-        * @property isOver
-        * @type {Boolean}
-        **/
-        public pointerOver(pointer?: number): bool;
-        /**
-        * Is the Pointer outside of this Sprite
-        * @property isOut
-        * @type {Boolean}
-        **/
-        public pointerOut(pointer?: number): bool;
-        /**
-        * A timestamp representing when the Pointer first touched the touchscreen.
-        * @property timeDown
-        * @type {Number}
-        **/
-        public pointerTimeOver(pointer?: number): bool;
-        /**
-        * A timestamp representing when the Pointer left the touchscreen.
-        * @property timeUp
-        * @type {Number}
-        **/
-        public pointerTimeOut(pointer?: number): bool;
-        /**
-        * Is this sprite being dragged by the mouse or not?
-        * @default false
-        */
-        public pointerDragged(pointer?: number): bool;
-        public start(priority?: number, checkBody?: bool, useHandCursor?: bool): Sprite;
-        public reset(): void;
-        public stop(): void;
-        public checkPointerOver(pointer: Pointer): bool;
-        /**
-        * Update
-        */
-        public update(pointer: Pointer): bool;
-        public _pointerOverHandler(pointer: Pointer): void;
-        public _pointerOutHandler(pointer: Pointer): void;
-        public consumePointerEvent: bool;
-        public _touchedHandler(pointer: Pointer): bool;
-        public _releasedHandler(pointer: Pointer): void;
-        /**
-        * Updates the Pointer drag on this Sprite.
-        */
-        private updateDrag(pointer);
-        /**
-        * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
-        * @param delay The time below which the pointer is considered as just over.
-        * @returns {boolean}
-        */
-        public justOver(pointer?: number, delay?: number): bool;
-        /**
-        * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
-        * @param delay The time below which the pointer is considered as just out.
-        * @returns {boolean}
-        */
-        public justOut(pointer?: number, delay?: number): bool;
-        /**
-        * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
-        * @param delay The time below which the pointer is considered as just over.
-        * @returns {boolean}
-        */
-        public justPressed(pointer?: number, delay?: number): bool;
-        /**
-        * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
-        * @param delay The time below which the pointer is considered as just out.
-        * @returns {boolean}
-        */
-        public justReleased(pointer?: number, delay?: number): bool;
-        /**
-        * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
-        * @returns {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
-        */
-        public overDuration(pointer?: number): number;
-        /**
-        * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
-        * @returns {number} The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
-        */
-        public downDuration(pointer?: number): number;
-        /**
-        * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
-        *
-        * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
-        * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
-        * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
-        * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
-        * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
-        */
-        public enableDrag(lockCenter?: bool, pixelPerfect?: bool, alphaThreshold?: number, boundsRect?: Rectangle, boundsSprite?: Sprite): void;
-        /**
-        * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
-        */
-        public disableDrag(): void;
-        /**
-        * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
-        */
-        public startDrag(pointer: Pointer): void;
-        /**
-        * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
-        */
-        public stopDrag(pointer: Pointer): void;
-        /**
-        * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
-        *
-        * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
-        * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
-        */
-        public setDragLock(allowHorizontal?: bool, allowVertical?: bool): void;
-        /**
-        * Make this Sprite snap to the given grid either during drag or when it's released.
-        * For example 16x16 as the snapX and snapY would make the sprite snap to every 16 pixels.
-        *
-        * @param	snapX		The width of the grid cell in pixels
-        * @param	snapY		The height of the grid cell in pixels
-        * @param	onDrag		If true the sprite will snap to the grid while being dragged
-        * @param	onRelease	If true the sprite will snap to the grid when released
-        */
-        public enableSnap(snapX: number, snapY: number, onDrag?: bool, onRelease?: bool): void;
-        /**
-        * Stops the sprite from snapping to a grid during drag or release.
-        */
-        public disableSnap(): void;
-        /**
-        * Bounds Rect check for the sprite drag
-        */
-        private checkBoundsRect();
-        /**
-        * Parent Sprite Bounds check for the sprite drag
-        */
-        private checkBoundsSprite();
-        /**
-        * Render debug infos. (including name, bounds info, position and some other properties)
-        * @param x {number} X position of the debug info to be rendered.
-        * @param y {number} Y position of the debug info to be rendered.
-        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-        */
-        public renderDebugInfo(x: number, y: number, color?: string): void;
-    }
-}
-/**
-* Phaser - Components - Events
-*
-* Signals that are dispatched by the Sprite and its various components
-*/
-module Phaser.Components {
-    class Events {
-        /**
-        * The Events component is a collection of events fired by the parent Sprite and its other components.
-        * @param parent The Sprite using this Input component
-        */
-        constructor(parent: Sprite);
-        /**
-        * Reference to Phaser.Game
-        */
-        public game: Game;
-        /**
-        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
-        */
-        private _sprite;
-        /**
-        * Dispatched by the Group this Sprite is added to.
-        */
-        public onAddedToGroup: Signal;
-        /**
-        * Dispatched by the Group this Sprite is removed from.
-        */
-        public onRemovedFromGroup: Signal;
-        /**
-        * Dispatched when this Sprite is killed.
-        */
-        public onKilled: Signal;
-        /**
-        * Dispatched when this Sprite is revived.
-        */
-        public onRevived: Signal;
-        /**
-        * Dispatched by the Input component when a pointer moves over an Input enabled sprite.
-        */
-        public onInputOver: Signal;
-        /**
-        * Dispatched by the Input component when a pointer moves out of an Input enabled sprite.
-        */
-        public onInputOut: Signal;
-        /**
-        * Dispatched by the Input component when a pointer is pressed down on an Input enabled sprite.
-        */
-        public onInputDown: Signal;
-        /**
-        * Dispatched by the Input component when a pointer is released over an Input enabled sprite
-        */
-        public onInputUp: Signal;
-        public onOutOfBounds: Signal;
-    }
-}
-/**
-* Phaser - Vec2Utils
-*
-* A collection of methods useful for manipulating and performing operations on 2D vectors.
-*
-*/
-module Phaser {
-    class Vec2Utils {
-        /**
-        * Adds two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors.
-        */
-        static add(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Subtracts two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the difference of the two vectors.
-        */
-        static subtract(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Multiplies two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
-        */
-        static multiply(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Divides two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
-        */
-        static divide(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Scales a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {number} s Scaling value.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the scaled vector.
-        */
-        static scale(a: Vec2, s: number, out?: Vec2): Vec2;
-        /**
-        * Rotate a 2D vector by 90 degrees.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is the scaled vector.
-        */
-        static perp(a: Vec2, out?: Vec2): Vec2;
-        /**
-        * Checks if two 2D vectors are equal.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Boolean}
-        */
-        static equals(a: Vec2, b: Vec2): bool;
-        /**
-        *
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} epsilon
-        * @return {Boolean}
-        */
-        static epsilonEquals(a: Vec2, b: Vec2, epsilon: number): bool;
-        /**
-        * Get the distance between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static distance(a: Vec2, b: Vec2): number;
-        /**
-        * Get the distance squared between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static distanceSq(a: Vec2, b: Vec2): number;
-        /**
-        * Project two 2D vectors onto another vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static project(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Project this vector onto a vector of unit length.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static projectUnit(a: Vec2, b: Vec2, out?: Vec2): Vec2;
-        /**
-        * Right-hand normalize (make unit length) a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static normalRightHand(a: Vec2, out?: Vec2): Vec2;
-        /**
-        * Normalize (make unit length) a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static normalize(a: Vec2, out?: Vec2): Vec2;
-        /**
-        * The dot product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static dot(a: Vec2, b: Vec2): number;
-        /**
-        * The cross product of two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static cross(a: Vec2, b: Vec2): number;
-        /**
-        * The angle between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static angle(a: Vec2, b: Vec2): number;
-        /**
-        * The angle squared between two 2D vectors.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Number}
-        */
-        static angleSq(a: Vec2, b: Vec2): number;
-        /**
-        * Rotate a 2D vector around the origin to the given angle (theta).
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} b Reference to a source Vec2 object.
-        * @param {Number} theta The angle of rotation in radians.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2.
-        */
-        static rotate(a: Vec2, b: Vec2, theta: number, out?: Vec2): Vec2;
-        /**
-        * Clone a 2D vector.
-        *
-        * @param {Vec2} a Reference to a source Vec2 object.
-        * @param {Vec2} out The output Vec2 that is the result of the operation.
-        * @return {Vec2} A Vec2 that is a copy of the source Vec2.
-        */
-        static clone(a: Vec2, out?: Vec2): Vec2;
-    }
-}
-/**
-* Phaser - Physics - Body
-*/
-module Phaser.Physics {
-    class Body {
-        constructor(parent: Sprite, type: number);
-        public game: Game;
-        public parent: Sprite;
-        /**
-        * The type of Body (disabled, dynamic, static or kinematic)
-        * Disabled = skips all physics operations / tests (default)
-        * Dynamic = gives and receives impacts
-        * Static = gives but doesn't receive impacts, cannot be moved by physics
-        * Kinematic = gives impacts, but never receives, can be moved by physics
-        * @type {number}
-        */
-        public type: number;
-        public gravity: Vec2;
-        public bounce: Vec2;
-        public velocity: Vec2;
-        public acceleration: Vec2;
-        public drag: Vec2;
-        public maxVelocity: Vec2;
-        public angularVelocity: number;
-        public angularAcceleration: number;
-        public angularDrag: number;
-        public maxAngular: number;
-        /**
-        * Angle of rotation of this body.
-        * @type {number}
-        */
-        public angle: number;
-        /**
-        * Orientation of the object.
-        * @type {number}
-        */
-        public facing: number;
-        public touching: number;
-        public allowCollisions: number;
-        public wasTouching: number;
-        public mass: number;
-        public position: Vec2;
-        public oldPosition: Vec2;
-        public offset: Vec2;
-        public bounds: Rectangle;
-        public preUpdate(): void;
-        public postUpdate(): void;
-        public hullWidth : number;
-        public hullHeight : number;
-        public hullX : number;
-        public hullY : number;
-        public deltaXAbs : number;
-        public deltaYAbs : number;
-        public deltaX : number;
-        public deltaY : number;
-        public render(context: CanvasRenderingContext2D): void;
-        /**
-        * Render debug infos. (including name, bounds info, position and some other properties)
-        * @param x {number} X position of the debug info to be rendered.
-        * @param y {number} Y position of the debug info to be rendered.
-        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-        */
-        public renderDebugInfo(x: number, y: number, color?: string): void;
-    }
-}
-/**
-* Phaser - Sprite
-*
-*/
-module Phaser {
-    class Sprite implements IGameObject {
-        /**
-        * Create a new <code>Sprite</code>.
-        *
-        * @param game {Phaser.Game} Current game instance.
-        * @param [x] {number} the initial x position of the sprite.
-        * @param [y] {number} the initial y position of the sprite.
-        * @param [key] {string} Key of the graphic you want to load for this sprite.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
-        */
-        constructor(game: Game, x?: number, y?: number, key?: string, bodyType?: number);
-        /**
-        * Reference to the main game object
-        */
-        public game: Game;
-        /**
-        * The type of game object.
-        */
-        public type: number;
-        /**
-        * The Group this Sprite belongs to.
-        */
-        public group: Group;
-        /**
-        * Controls if both <code>update</code> and render are called by the core game loop.
-        */
-        public exists: bool;
-        /**
-        * Controls if <code>update()</code> is automatically called by the core game loop.
-        */
-        public active: bool;
-        /**
-        * Controls if this Sprite is rendered or skipped during the core game loop.
-        */
-        public visible: bool;
-        /**
-        *
-        */
-        public alive: bool;
-        /**
-        * Sprite physics body.
-        */
-        public body: Physics.Body;
-        /**
-        * The texture used to render the Sprite.
-        */
-        public texture: Components.Texture;
-        /**
-        * The Input component
-        */
-        public input: Components.Input;
-        /**
-        * The Events component
-        */
-        public events: Components.Events;
-        /**
-        * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
-        * @type AnimationManager
-        */
-        public animations: Components.AnimationManager;
-        /**
-        * An Array of Cameras to which this GameObject won't render
-        * @type {Array}
-        */
-        public cameraBlacklist: number[];
-        /**
-        * The frame boundary around this Sprite.
-        * For non-animated sprites this matches the loaded texture dimensions.
-        * For animated sprites it will be updated as part of the animation loop, changing to the dimensions of the current animation frame.
-        */
-        public frameBounds: Rectangle;
-        /**
-        * Scale of the Sprite. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
-        */
-        public scale: Vec2;
-        /**
-        * Skew the Sprite along the x and y axis. A skew value of 0 is no skew.
-        */
-        public skew: Vec2;
-        /**
-        * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
-        */
-        public modified: bool;
-        /**
-        * The influence of camera movement upon the Sprite.
-        */
-        public scrollFactor: Vec2;
-        /**
-        * The Sprite origin is the point around which scale and rotation takes place.
-        */
-        public origin: Vec2;
-        /**
-        * A Point holding the x/y coordinate of this Sprite relative to the screen. It uses the default created world
-        * camera to calculate its values. If you have changed the default camera (i.e. resized it, deleted it) this value
-        * will be incorrect and should be ignored.
-        */
-        public screen: Point;
-        /**
-        * x value of the object.
-        */
-        public x: number;
-        /**
-        * y value of the object.
-        */
-        public y: number;
-        /**
-        * z order value of the object.
-        */
-        public z: number;
-        /**
-        * Render iteration
-        */
-        public renderOrderID: number;
-        /**
-        * This value is added to the angle of the Sprite.
-        * For example if you had a sprite graphic drawn facing straight up then you could set
-        * angleOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
-        * @type {number}
-        */
-        public angleOffset: number;
-        /**
-        * The angle of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
-        */
-        /**
-        * Set the angle of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
-        * The value is automatically wrapped to be between 0 and 360.
-        */
-        public angle : number;
-        /**
-        * Get the animation frame number.
-        */
-        /**
-        * Set the animation frame by frame number.
-        */
-        public frame : number;
-        /**
-        * Get the animation frame name.
-        */
-        /**
-        * Set the animation frame by frame name.
-        */
-        public frameName : string;
-        public width : number;
-        public height : number;
-        /**
-        * Pre-update is called right before update() on each object in the game loop.
-        */
-        public preUpdate(): void;
-        /**
-        * Override this function to update your class's position and appearance.
-        */
-        public update(): void;
-        /**
-        * Automatically called after update() by the game loop.
-        */
-        public postUpdate(): void;
-        /**
-        * Clean up memory.
-        */
-        public destroy(): void;
-        /**
-        * Handy for "killing" game objects.
-        * Default behavior is to flag them as nonexistent AND dead.
-        * However, if you want the "corpse" to remain in the game,
-        * like to animate an effect or whatever, you should override this,
-        * setting only alive to false, and leaving exists true.
-        */
-        public kill(removeFromGroup?: bool): void;
-        /**
-        * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
-        * In practice, this is most often called by <code>Object.reset()</code>.
-        */
-        public revive(): void;
-    }
-}
-/**
 * Phaser - CameraFX
 *
 * CameraFX controls all special effects applied to game Cameras.
@@ -4305,17 +4355,19 @@ module Phaser {
         * @param height {number} The height of the camera display in pixels.
         */
         constructor(game: Game, id: number, x: number, y: number, width: number, height: number);
+        private _target;
         /**
         * Local private reference to Game.
         */
-        private _game;
-        private _clip;
-        private _stageX;
-        private _stageY;
-        private _rotation;
-        private _target;
-        public scaledX: number;
-        public scaledY: number;
+        public game: Game;
+        /**
+        * Optional texture used in the background of the Camera.
+        */
+        public texture: Components.Texture;
+        /**
+        * The transform component.
+        */
+        public transform: Components.Transform;
         /**
         * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
         * @type {number}
@@ -4341,27 +4393,30 @@ module Phaser {
         */
         public ID: number;
         /**
-        * Camera view rectangle in world coordinate.
+        * Controls if this camera is clipped or not when rendering. You shouldn't usually set this value directly.
+        */
+        public clip: bool;
+        /**
+        * Camera view Rectangle in world coordinate.
         * @type {Rectangle}
         */
         public worldView: Rectangle;
         /**
-        * Scale factor of the camera.
-        * @type {Vec2}
-        */
-        public scale: Vec2;
-        /**
-        * Scrolling factor.
-        * @type {MicroPoint}
-        */
-        public scroll: Vec2;
-        /**
-        * Camera bounds.
+        * Visible / renderable area (changes if the camera resizes/moves around the stage)
         * @type {Rectangle}
         */
-        public bounds: Rectangle;
+        public screenView: Rectangle;
         /**
-        * Sprite moving inside this rectangle will not cause camera moving.
+        * Camera worldBounds.
+        * @type {Rectangle}
+        */
+        public worldBounds: Rectangle;
+        /**
+        * A boolean representing if the Camera has been modified in any way via a scale, rotate, flip or skew.
+        */
+        public modified: bool;
+        /**
+        * Sprite moving inside this Rectangle will not cause camera moving.
         * @type {Rectangle}
         */
         public deadzone: Rectangle;
@@ -4371,39 +4426,14 @@ module Phaser {
         */
         public disableClipping: bool;
         /**
-        * Whether the camera background is opaque or not. If set to true the Camera is filled with
-        * the value of Camera.backgroundColor every frame. Normally you wouldn't enable this if the
-        * Camera is the full Stage size, as the Stage.backgroundColor has the same effect. But for
-        * multiple or mini cameras it can be very useful.
-        * @type {boolean}
-        */
-        public opaque: bool;
-        /**
-        * The Background Color of the camera in css color string format, i.e. 'rgb(0,0,0)' or '#ff0000'.
-        * Not used if the Camera.opaque property is false.
-        * @type {string}
-        */
-        public backgroundColor: string;
-        /**
-        * Whether this camera visible or not. (default is true)
+        * Whether this camera is visible or not. (default is true)
         * @type {boolean}
         */
         public visible: bool;
         /**
-        * Alpha of the camera. (everything rendered to this camera will be affected)
-        * @type {number}
+        * The z value of this Camera. Cameras are rendered in z-index order by the Renderer.
         */
-        public alpha: number;
-        /**
-        * The x position of the current input event in world coordinates.
-        * @type {number}
-        */
-        public inputX: number;
-        /**
-        * The y position of the current input event in world coordinates.
-        * @type {number}
-        */
-        public inputY: number;
+        public z: number;
         /**
         * Effects manager.
         * @type {CameraFX}
@@ -4460,27 +4490,7 @@ module Phaser {
         */
         public update(): void;
         /**
-        * Camera preRender
-        */
-        public preRender(): void;
-        /**
-        * Camera postRender
-        */
-        public postRender(): void;
-        /**
-        * Set position of this camera.
-        * @param x {number} X position.
-        * @param y {number} Y position.
-        */
-        public setPosition(x: number, y: number): void;
-        /**
-        * Give this camera a new size.
-        * @param width {number} Width of new size.
-        * @param height {number} Height of new size.
-        */
-        public setSize(width: number, height: number): void;
-        /**
-        * Render debug infos. (including id, position, rotation, scrolling factor, bounds and some other properties)
+        * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
         * @param x {number} X position of the debug info to be rendered.
         * @param y {number} Y position of the debug info to be rendered.
         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
@@ -4494,6 +4504,15 @@ module Phaser {
         public y : number;
         public width : number;
         public height : number;
+        public setPosition(x: number, y: number): void;
+        public setSize(width: number, height: number): void;
+        /**
+        * The angle of the Camera in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        /**
+        * Set the angle of the Camera in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The value is automatically wrapped to be between 0 and 360.
+        */
         public rotation : number;
         private checkClip();
     }
@@ -4528,6 +4547,14 @@ module Phaser {
         * Local helper stores index of next created camera.
         */
         private _cameraInstance;
+        /**
+        * Helper for sort.
+        */
+        private _sortIndex;
+        /**
+        * Helper for sort.
+        */
+        private _sortOrder;
         static CAMERA_TYPE_ORTHOGRAPHIC: number;
         static CAMERA_TYPE_ISOMETRIC: number;
         /**
@@ -4565,6 +4592,24 @@ module Phaser {
         * @returns {boolean} True if successfully removed the camera, otherwise return false.
         */
         public removeCamera(id: number): bool;
+        public swap(camera1: Camera, camera2: Camera, sort?: bool): bool;
+        /**
+        * Call this function to sort the Cameras according to a particular value and order (default is their Z value).
+        * The order in which they are sorted determines the render order. If sorted on z then Cameras with a lower z-index value render first.
+        *
+        * @param {string} index The <code>string</code> name of the Camera variable you want to sort on. Default value is "z".
+        * @param {number} order A <code>Group</code> constant that defines the sort order. Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
+        */
+        public sort(index?: string, order?: number): void;
+        /**
+        * Helper function for the sort process.
+        *
+        * @param {Basic} Obj1 The first object being sorted.
+        * @param {Basic} Obj2 The second object being sorted.
+        *
+        * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
+        */
+        public sortHandler(obj1, obj2): number;
         /**
         * Clean up memory.
         */
@@ -5347,10 +5392,10 @@ module Phaser {
         * Swap tiles with 2 kinds of indexes.
         * @param tileA {number} First tile index.
         * @param tileB {number} Second tile index.
-        * @param [x] {number} specify a rectangle of tiles to operate. The x position in tiles of rectangle's left-top corner.
-        * @param [y] {number} specify a rectangle of tiles to operate. The y position in tiles of rectangle's left-top corner.
-        * @param [width] {number} specify a rectangle of tiles to operate. The width in tiles.
-        * @param [height] {number} specify a rectangle of tiles to operate. The height in tiles.
+        * @param [x] {number} specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+        * @param [y] {number} specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+        * @param [width] {number} specify a Rectangle of tiles to operate. The width in tiles.
+        * @param [height] {number} specify a Rectangle of tiles to operate. The height in tiles.
         */
         public swapTile(tileA: number, tileB: number, x?: number, y?: number, width?: number, height?: number): void;
         /**
@@ -5800,10 +5845,11 @@ module Phaser {
         * @param x {number} X position of the new sprite.
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
+        * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
         * @returns {Sprite} The newly created sprite object.
         */
-        public sprite(x: number, y: number, key?: string, bodyType?: number): Sprite;
+        public sprite(x: number, y: number, key?: string, frame?, bodyType?: number): Sprite;
         /**
         * Create a new DynamicTexture with specific size.
         *
@@ -6056,7 +6102,7 @@ module Phaser {
         /**
         * StageScaleMode constructor
         */
-        constructor(game: Game);
+        constructor(game: Game, width: number, height: number);
         /**
         * Local private reference to game.
         */
@@ -6098,6 +6144,20 @@ module Phaser {
         * @type {Boolean}
         */
         public incorrectOrientation: bool;
+        /**
+        * If you wish to align your game in the middle of the page then you can set this value to true.
+        * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+        * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
+        * @type {Boolean}
+        */
+        public pageAlignHorizontally: bool;
+        /**
+        * If you wish to align your game in the middle of the page then you can set this value to true.
+        * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+        * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
+        * @type {Boolean}
+        */
+        public pageAlignVeritcally: bool;
         /**
         * Minimum width the canvas should be scaled to (in pixels)
         * @type {number}
@@ -6180,7 +6240,7 @@ module Phaser {
         /**
         * Set screen size automatically based on the scaleMode.
         */
-        private setScreenSize();
+        public setScreenSize(force?: bool): void;
         private setSize();
         private setMaximum();
         private setShowAll();
@@ -6458,6 +6518,7 @@ module Phaser {
         */
         private visibilityChange(event);
         public enableOrientationCheck(forceLandscape: bool, forcePortrait: bool, imageKey?: string): void;
+        public setImageRenderingCrisp(): void;
         public pauseGame(): void;
         public resumeGame(): void;
         /**
@@ -7629,7 +7690,7 @@ module Phaser {
         **/
         public targetObject;
         /**
-        * Gets the X value of this Pointer in world coordinate space
+        * Gets the X value of this Pointer in world coordinate space (is it properly scaled?)
         * @param {Camera} [camera]
         */
         public getWorldX(camera?: Camera): number;
@@ -8489,6 +8550,10 @@ module Phaser {
         renderSprite(camera: Camera, sprite: Sprite): bool;
         renderScrollZone(camera: Camera, sprite: ScrollZone): bool;
         renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number);
+        preRenderGroup(camera: Camera, group: Group);
+        postRenderGroup(camera: Camera, group: Group);
+        preRenderCamera(camera: Camera);
+        postRenderCamera(camera: Camera);
     }
 }
 module Phaser {
@@ -8503,6 +8568,10 @@ module Phaser {
         public renderSprite(camera: Camera, sprite: Sprite): bool;
         public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
         public renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number): bool;
+        public preRenderCamera(camera: Camera): void;
+        public postRenderCamera(camera: Camera): void;
+        public preRenderGroup(camera: Camera, group: Group): void;
+        public postRenderGroup(camera: Camera, group: Group): void;
     }
 }
 module Phaser {
@@ -8532,12 +8601,22 @@ module Phaser {
         public renderTotal: number;
         public render(): void;
         public renderGameObject(object): void;
+        public preRenderGroup(camera: Camera, group: Group): bool;
+        public postRenderGroup(camera: Camera, group: Group): void;
         /**
-        * Check whether this object is visible in a specific camera rectangle.
-        * @param camera {Rectangle} The rectangle you want to check.
-        * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+        * Check whether this object is visible in a specific camera Rectangle.
+        * @param camera {Rectangle} The Rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
         */
         public inCamera(camera: Camera, sprite: Sprite): bool;
+        public inScreen(camera: Camera): bool;
+        /**
+        * Render this sprite to specific camera. Called by game loop after update().
+        * @param camera {Camera} Camera this sprite will be rendered to.
+        * @return {boolean} Return false if not rendered, otherwise return true.
+        */
+        public preRenderCamera(camera: Camera): bool;
+        public postRenderCamera(camera: Camera): void;
         public renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number): bool;
         /**
         * Render this sprite to specific camera. Called by game loop after update().

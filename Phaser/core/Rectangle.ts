@@ -14,14 +14,14 @@ module Phaser {
     export class Rectangle {
 
         /**
-        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a rectangle with x, y, width, and height properties set to 0 is created.
+        * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a Rectangle with x, y, width, and height properties set to 0 is created.
         * @class Rectangle
         * @constructor
-        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
-        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
-        * @return {Rectangle} This rectangle object
+        * @param {Number} x The x coordinate of the top-left corner of the Rectangle.
+        * @param {Number} y The y coordinate of the top-left corner of the Rectangle.
+        * @param {Number} width The width of the Rectangle in pixels.
+        * @param {Number} height The height of the Rectangle in pixels.
+        * @return {Rectangle} This Rectangle object
         **/
         constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
 
@@ -33,35 +33,35 @@ module Phaser {
         }
 
         /** 
-        * The x coordinate of the top-left corner of the rectangle
+        * The x coordinate of the top-left corner of the Rectangle
         * @property x
         * @type Number
         **/
         x: number;
 
         /** 
-        * The y coordinate of the top-left corner of the rectangle
+        * The y coordinate of the top-left corner of the Rectangle
         * @property y
         * @type Number
         **/
         y: number;
 
         /** 
-        * The width of the rectangle in pixels
+        * The width of the Rectangle in pixels
         * @property width
         * @type Number
         **/
         width: number;
 
         /** 
-        * The height of the rectangle in pixels
+        * The height of the Rectangle in pixels
         * @property height
         * @type Number
         **/
         height: number;
 
         /** 
-        * Half of the width of the rectangle
+        * Half of the width of the Rectangle
         * @property halfWidth
         * @type Number
         **/
@@ -70,7 +70,7 @@ module Phaser {
         }
 
         /** 
-        * Half of the height of the rectangle
+        * Half of the height of the Rectangle
         * @property halfHeight
         * @type Number
         **/
@@ -248,7 +248,7 @@ module Phaser {
         /**
         * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
         * @method setEmpty
-        * @return {Rectangle} This rectangle object
+        * @return {Rectangle} This Rectangle object
         **/
         set empty(value: bool) {
             return this.setTo(0, 0, 0, 0);
@@ -283,11 +283,11 @@ module Phaser {
         /**
         * Sets the members of Rectangle to the specified values.
         * @method setTo
-        * @param {Number} x The x coordinate of the top-left corner of the rectangle.
-        * @param {Number} y The y coordinate of the top-left corner of the rectangle.
-        * @param {Number} width The width of the rectangle in pixels.
-        * @param {Number} height The height of the rectangle in pixels.
-        * @return {Rectangle} This rectangle object
+        * @param {Number} x The x coordinate of the top-left corner of the Rectangle.
+        * @param {Number} y The y coordinate of the top-left corner of the Rectangle.
+        * @param {Number} width The width of the Rectangle in pixels.
+        * @param {Number} height The height of the Rectangle in pixels.
+        * @return {Rectangle} This Rectangle object
         **/
         setTo(x: number, y: number, width: number, height: number): Rectangle {
 

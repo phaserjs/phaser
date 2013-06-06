@@ -69,34 +69,6 @@
     <TypeScriptCompile Include="particles\graphic emitter.ts" />
     <TypeScriptCompile Include="input\over sprite 1.ts" />
     <TypeScriptCompile Include="groups\create group 1.ts" />
-    <TypeScriptCompile Include="demoscene\ballmover.ts" />
-    <Content Include="demoscene\ballmover.js">
-      <DependentUpon>ballmover.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="demoscene\scroller1.ts" />
-    <TypeScriptCompile Include="demoscene\colorwhirl.ts" />
-    <Content Include="demoscene\colorwhirl.js">
-      <DependentUpon>colorwhirl.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="demoscene\fujiboink.ts" />
-    <TypeScriptCompile Include="demoscene\fruitfall.ts" />
-    <Content Include="demoscene\fruitfall.js">
-      <DependentUpon>fruitfall.ts</DependentUpon>
-    </Content>
-    <Content Include="demoscene\fujiboink.js">
-      <DependentUpon>fujiboink.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="demoscene\metalslug.ts" />
-    <Content Include="demoscene\metalslug.js">
-      <DependentUpon>metalslug.ts</DependentUpon>
-    </Content>
-    <Content Include="demoscene\scroller1.js">
-      <DependentUpon>scroller1.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="demoscene\starray.ts" />
-    <Content Include="demoscene\starray.js">
-      <DependentUpon>starray.ts</DependentUpon>
-    </Content>
     <Content Include="groups\create group 1.js">
       <DependentUpon>create group 1.ts</DependentUpon>
     </Content>
@@ -201,6 +173,14 @@
     <Content Include="scrollzones\skewed scroller.js">
       <DependentUpon>skewed scroller.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="sprites\atlas 1.ts" />
+    <Content Include="sprites\atlas 1.js">
+      <DependentUpon>atlas 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="sprites\atlas 2.ts" />
+    <Content Include="sprites\atlas 2.js">
+      <DependentUpon>atlas 2.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\tween loop 1.js">
       <DependentUpon>tween loop 1.ts</DependentUpon>
     </Content>
@@ -262,6 +242,8 @@
       <DependentUpon>boot screen.ts</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="demoscene\" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

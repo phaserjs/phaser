@@ -219,10 +219,10 @@ module Phaser {
          * Swap tiles with 2 kinds of indexes.
          * @param tileA {number} First tile index.
          * @param tileB {number} Second tile index.
-         * @param [x] {number} specify a rectangle of tiles to operate. The x position in tiles of rectangle's left-top corner.
-         * @param [y] {number} specify a rectangle of tiles to operate. The y position in tiles of rectangle's left-top corner.
-         * @param [width] {number} specify a rectangle of tiles to operate. The width in tiles.
-         * @param [height] {number} specify a rectangle of tiles to operate. The height in tiles.
+         * @param [x] {number} specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+         * @param [y] {number} specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+         * @param [width] {number} specify a Rectangle of tiles to operate. The width in tiles.
+         * @param [height] {number} specify a Rectangle of tiles to operate. The height in tiles.
          */
         public swapTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
 

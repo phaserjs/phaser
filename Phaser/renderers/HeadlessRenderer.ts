@@ -32,6 +32,18 @@ module Phaser {
             return true;
         }
 
+        public preRenderCamera(camera: Camera) {
+        }
+
+        public postRenderCamera(camera: Camera) {
+        }
+
+        public preRenderGroup(camera: Camera, group: Group) {
+        }
+
+        public postRenderGroup(camera: Camera, group: Group) {
+        }
+
     }
 
 }

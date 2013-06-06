@@ -15,7 +15,7 @@ module Phaser {
         /**
          * StageScaleMode constructor
          */
-        constructor(game: Game) {
+        constructor(game: Game, width: number, height: number) {
 
             this._game = game;
 
@@ -40,6 +40,10 @@ module Phaser {
 
             this.scaleFactor = new Vec2(1, 1);
             this.aspectRatio = 0;
+            this.minWidth = width;
+            this.minHeight = height;
+            this.maxWidth = width;
+            this.maxHeight = height;
 
             window.addEventListener('orientationchange', (event) => this.checkOrientation(event), false);
             window.addEventListener('resize', (event) => this.checkResize(event), false);
@@ -94,6 +98,22 @@ module Phaser {
          * @type {Boolean}
          */
         public incorrectOrientation: bool = false;
+
+        /**
+         * If you wish to align your game in the middle of the page then you can set this value to true.
+         * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+         * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
+         * @type {Boolean}
+         */
+        public pageAlignHorizontally: bool = false;
+
+        /**
+         * If you wish to align your game in the middle of the page then you can set this value to true.
+         * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+         * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
+         * @type {Boolean}
+         */
+        public pageAlignVeritcally: bool = false;
 
         /**
          * Minimum width the canvas should be scaled to (in pixels)
@@ -354,7 +374,7 @@ module Phaser {
         /**
          * Set screen size automatically based on the scaleMode.
          */
-        private setScreenSize() {
+        public setScreenSize(force: bool = false) {
 
             if (this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false)
             {
@@ -370,7 +390,7 @@ module Phaser {
 
             this._iterations--;
 
-            if (window.innerHeight > this._startHeight || this._iterations < 0)
+            if (force || window.innerHeight > this._startHeight || this._iterations < 0)
             {
                 // Set minimum height of content to new window height
                 document.documentElement.style.minHeight = window.innerHeight + 'px';
@@ -400,24 +420,27 @@ module Phaser {
 
         private setSize() {
 
-            if (this.maxWidth && this.width > this.maxWidth)
+            if (this.incorrectOrientation == false)
             {
-                this.width = this.maxWidth;
-            }
+                if (this.maxWidth && this.width > this.maxWidth)
+                {
+                    this.width = this.maxWidth;
+                }
 
-            if (this.maxHeight && this.height > this.maxHeight)
-            {
-                this.height = this.maxHeight;
-            }
+                if (this.maxHeight && this.height > this.maxHeight)
+                {
+                    this.height = this.maxHeight;
+                }
 
-            if (this.minWidth && this.width < this.minWidth)
-            {
-                this.width = this.minWidth;
-            }
+                if (this.minWidth && this.width < this.minWidth)
+                {
+                    this.width = this.minWidth;
+                }
 
-            if (this.minHeight && this.height < this.minHeight)
-            {
-                this.height = this.minHeight;
+                if (this.minHeight && this.height < this.minHeight)
+                {
+                    this.height = this.minHeight;
+                }
             }
 
             this._game.stage.canvas.style.width = this.width + 'px';
@@ -426,13 +449,35 @@ module Phaser {
             this._game.input.scaleX = this._game.stage.width / this.width;
             this._game.input.scaleY = this._game.stage.height / this.height;
 
+            if (this.pageAlignHorizontally)
+            {
+                if (this.width < window.innerWidth && this.incorrectOrientation == false)
+                {
+                    this._game.stage.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
+                }
+                else
+                {
+                    this._game.stage.canvas.style.marginLeft = '0px';
+                }
+            }
+
+            if (this.pageAlignVeritcally)
+            {
+                if (this.height < window.innerHeight && this.incorrectOrientation == false)
+                {
+                    this._game.stage.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
+                }
+                else
+                {
+                    this._game.stage.canvas.style.marginTop = '0px';
+                }
+            }
+
             this._game.stage.getOffset(this._game.stage.canvas);
 
             this.aspectRatio = this.width / this.height;
             this.scaleFactor.x = this._game.stage.width / this.width;
             this.scaleFactor.y = this._game.stage.height / this.height;
-            //this.scaleFactor.x = this.width / this._game.stage.width;
-            //this.scaleFactor.y = this.height / this._game.stage.height;
 
         }
 

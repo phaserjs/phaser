@@ -250,7 +250,7 @@ module Phaser {
 
                 particle.exists = false;
                 //  Center the origin for rotation assistance
-                particle.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
+                particle.transform.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
 
                 this.add(particle);
 
@@ -398,7 +398,7 @@ module Phaser {
 
             if (particle.body.angularVelocity != 0)
             {
-                particle.angle = this.game.math.random() * 360 - 180;
+                particle.rotation = this.game.math.random() * 360 - 180;
             }
 
             particle.body.drag.x = this.particleDrag.x;

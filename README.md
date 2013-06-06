@@ -25,8 +25,6 @@ TODO:
 * Dispatch world resize event
 * Investigate why tweens don't restart after the game pauses
 * Fix bug in Tween yoyo + loop combo
-* Copy the setTransform from Sprite to Camera
-* Move Camera.scroll.x to just Camera.x/y
 * Apply Sprite scaling to Body.bounds
 * When you modify the sprite x/y directly the body position doesn't update, which leads to weird results. Need to work out who controls who.
 * Check that tween pausing works with the new performance.now
@@ -40,12 +38,14 @@ TODO:
 * Input CSS cursor those little 4-way arrows on drag?
 * Stage CSS3 transforms!!! Color tints, sepia, greyscale, all of those cool things :)
 * Cameras should have option to be input disabled + Pointers should check which camera they are over before doing Sprite selection
-* Can Cameras be positioned within the world?
 * Added JSON Texture Atlas object support.
-* Bug in AnimationManager set frame/frameName - the width/height are trimmed and wrong
 * RenderOrderID won't work across cameras - but then neither do Pointers yet anyway
 * Swap to using time based motion (like the tweens) rather than delta timer - it just doesn't work well on slow phones
 * Bug in World drag
+
+* Add clip support + shape options to Texture Component.
+
+
 
 V1.0.0
 
@@ -91,7 +91,18 @@ V1.0.0
 * Vastly improved orientation detection and response speed.
 * Added custom callback support for all Touch and Mouse Events so you can easily hook events to custom APIs.
 * Updated Game.loader and its methods. You now load images by: game.load.image() and also: game.load.atlas, game.load.audio, game.load.spritesheet, game.load.text. And you start it with game.load.start().
-
+* Added optional frame parameter to Phaser.Sprite (and game.add.sprite) so you can set a frame ID or frame name on construction.
+* Fixed bug where passing a texture atlas string would incorrectly skip the frames array.
+* Added AnimationManager.autoUpdateBounds to control if a new frame should change the physics bounds of a sprite body or not.
+* Added StageScaleMode.pageAlignHorizontally and pageAlignVertically booleans. When on Phaser will set the margin-left and top of the canvas element so that it is positioned in the middle of the page (based on window.innerWidth).
+* Added support for globalCompositeOperation, opaque and backgroundColor to the Sprite.Texture and Camera.Texture components.
+* Added ability for a Camera to skew and rotate around an origin.
+* Moved the Camera rendering into CanvasRenderer to keep things consistent.
+* Added Stage.setImageRenderingCrisp to quickly set the canvas image-rendering to crisp-edges (note: poor browser support atm)
+* Sprite.width / height now report the scaled width height, setting them adjusts the scale as it does so.
+* Created a Transform component containing scale, skew, rotation, scrollFactor, origin and rotationOffset. Added to Sprite, Camera, Group.
+* Created a Texture component containing image data, alpha, flippedX, flippedY, etc. Added to Sprite, Camera, Group.
+* Added CameraManager.swap and CameraManager.sort methods and added a z-index property to Camera to control render order.
 
 
 
@@ -169,7 +180,7 @@ V0.9.6
 * Added Point.rotate to allow you to rotate a point around another point, with optional distance clamping. Also created test cases.
 * Added Group.alpha to apply a globalAlpha before the groups children are rendered. Useful to save on alpha calls.
 * Added Group.globalCompositeOperation to apply a composite operation before all of the groups children are rendered.
-* Added Camera black list support to Group along with Group.showToCamera, Group.hideFromCamera and Group.clearCameraList
+* Added Camera black list support to Sprite and Group along with Camera.show, Camera.hide and Camera.isHidden methods to populate them. 
 * Added GameMath.rotatePoint to allow for point rotation at any angle around a given anchor and distance
 * Updated World.setSize() to optionally update the VerletManager dimensions as well
 * Added GameObject.setPosition(x, y)

@@ -17,6 +17,6 @@
         monster.animations.add('walk', null, 30, true);
         //  Then you can just call 'play' on its own with no other values to start things going
         monster.animations.play('walk');
-        monster.scale.setTo(2, 2);
+        monster.transform.scale.setTo(2, 2);
     }
 })();

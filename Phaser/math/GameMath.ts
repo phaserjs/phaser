@@ -308,7 +308,7 @@ module Phaser {
 
 
         /**
-         * set an angle with in the bounds of -PI to PI
+         * set an angle within the bounds of -PI to PI
          */
         public normalizeAngle(angle: number, radians: bool = true): number {
             var rd: number = (radians) ? GameMath.PI : 180;
@@ -1022,20 +1022,20 @@ module Phaser {
         }
 
         /**
-        * Rotates the point around the x/y coordinates given to the desired angle and distance
+        * Rotates the point around the x/y coordinates given to the desired rotation and distance
 	    * @param point {Object} Any object with exposed x and y properties
 	    * @param x {number} The x coordinate of the anchor point
 	    * @param y {number} The y coordinate of the anchor point
-        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
-	    * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Number} rotation The rotation in radians (unless asDegrees is true) to return the point from.
+	    * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
         * @param {Number} distance An optional distance constraint between the point and the anchor
         * @return The modified point object
         */
-        public rotatePoint(point, x1: number, y1: number, angle: number, asDegrees: bool = false, distance?:number = null) {
+        public rotatePoint(point, x1: number, y1: number, rotation: number, asDegrees: bool = false, distance?:number = null) {
 
             if (asDegrees)
             {
-                angle = angle * GameMath.DEG_TO_RAD;
+                rotation = rotation * GameMath.DEG_TO_RAD;
             }
 
             //  Get distance from origin to the point
@@ -1044,8 +1044,8 @@ module Phaser {
                 distance = Math.sqrt(((x1 - point.x) * (x1 - point.x)) + ((y1 - point.y) * (y1 - point.y)));
             }
 
-            point.x = x1 + distance * Math.cos(angle);
-            point.y = y1 + distance * Math.sin(angle);
+            point.x = x1 + distance * Math.cos(rotation);
+            point.y = y1 + distance * Math.sin(rotation);
 
             return point;
 

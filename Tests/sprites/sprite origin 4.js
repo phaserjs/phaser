@@ -15,13 +15,13 @@
         fuji = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji');
         //  The sprite is 320 x 200 pixels in size
         //  Here we set the origin to the center of the sprite again, so we can rotate and scale it at the same time
-        fuji.origin.setTo(160, 100);
+        fuji.transform.origin.setTo(160, 100);
         game.add.tween(fuji).to({
-            angle: 360
+            rotation: 360
         }, 2000, Phaser.Easing.Linear.None, true, 0, true);
-        tweenUp = game.add.tween(fuji.scale);
+        tweenUp = game.add.tween(fuji.transform.scale);
         tweenUp.onComplete.add(scaleDown, this);
-        tweenDown = game.add.tween(fuji.scale);
+        tweenDown = game.add.tween(fuji.transform.scale);
         tweenDown.onComplete.add(scaleUp, this);
         scaleUp();
     }

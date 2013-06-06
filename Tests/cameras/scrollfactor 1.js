@@ -11,19 +11,19 @@
         game.add.sprite(0, 0, 'backdrop');
         for(var i = 0; i < 400; i++) {
             var tempBall = game.add.sprite(game.world.randomX * 2, game.world.randomY * 2, 'ball');
-            tempBall.scrollFactor.setTo(2, 2);
+            tempBall.transform.scrollFactor.setTo(2, 2);
         }
     }
     function update() {
         if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            game.camera.scroll.x -= 4;
+            game.camera.x -= 4;
         } else if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            game.camera.scroll.x += 4;
+            game.camera.x += 4;
         }
         if(game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-            game.camera.scroll.y -= 4;
+            game.camera.y -= 4;
         } else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-            game.camera.scroll.y += 4;
+            game.camera.y += 4;
         }
     }
     function render() {

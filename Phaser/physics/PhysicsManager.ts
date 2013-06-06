@@ -141,7 +141,7 @@ module Phaser.Physics {
 
             this._velocityDelta  = (this.computeVelocity(body.angularVelocity, body.gravity.x, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
             body.angularVelocity += this._velocityDelta;
-            body.angle += body.angularVelocity * this.game.time.elapsed;
+            body.sprite.transform.rotation += body.angularVelocity * this.game.time.elapsed;
             body.angularVelocity += this._velocityDelta;
 
             this._velocityDelta = (this.computeVelocity(body.velocity.x, body.gravity.x, body.acceleration.x, body.drag.x) - body.velocity.x) / 2;
@@ -424,7 +424,7 @@ module Phaser.Physics {
                     body1.velocity.y = this._obj2Velocity - this._obj1Velocity * body1.bounce.y;
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     //if (body2.parent.active && body2.moves && (body1.deltaY > body2.deltaY))
-                    if (body2.parent.active && (body1.deltaY > body2.deltaY))
+                    if (body2.sprite.active && (body1.deltaY > body2.deltaY))
                     {
                         body1.position.x += body2.position.x - body2.oldPosition.x;
                     }
@@ -436,7 +436,7 @@ module Phaser.Physics {
                     body2.velocity.y = this._obj1Velocity - this._obj2Velocity * body2.bounce.y;
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     //if (object1.active && body1.moves && (body1.deltaY < body2.deltaY))
-                    if (body1.parent.active && (body1.deltaY < body2.deltaY))
+                    if (body1.sprite.active && (body1.deltaY < body2.deltaY))
                     {
                         body2.position.x += body1.position.x - body1.oldPosition.x;
                     }

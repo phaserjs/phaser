@@ -110,8 +110,8 @@ module Phaser {
         }
 
         /**
-         * Get pixels in array in a specific rectangle.
-         * @param rect {Rectangle} The specific rectangle.
+         * Get pixels in array in a specific Rectangle.
+         * @param rect {Rectangle} The specific Rectangle.
          * @returns {array} CanvasPixelArray.
          */
         public getPixels(rect: Rectangle) {
@@ -147,8 +147,8 @@ module Phaser {
         }
 
         /**
-         * Set image data to a specific rectangle.
-         * @param rect {Rectangle} Target rectangle.
+         * Set image data to a specific Rectangle.
+         * @param rect {Rectangle} Target Rectangle.
          * @param input {object} Source image data.
          */
         public setPixels(rect: Rectangle, input) {
@@ -158,8 +158,8 @@ module Phaser {
         }
 
         /**
-         * Fill a given rectangle with specific color.
-         * @param rect {Rectangle} Target rectangle you want to fill.
+         * Fill a given Rectangle with specific color.
+         * @param rect {Rectangle} Target Rectangle you want to fill.
          * @param color {number} A native number with color value. (format: 0xRRGGBB)
          */
         public fillRect(rect: Rectangle, color: number) {
@@ -231,7 +231,7 @@ module Phaser {
         /**
          * Copy pixel from another DynamicTexture to this texture.
          * @param sourceTexture {DynamicTexture} Source texture object.
-         * @param sourceRect {Rectangle} The specific region rectangle to be copied to this in the source.
+         * @param sourceRect {Rectangle} The specific region Rectangle to be copied to this in the source.
          * @param destPoint {Point} Top-left point the target image data will be paste at.
          */
         public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point) {

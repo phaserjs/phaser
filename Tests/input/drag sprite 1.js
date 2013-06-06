@@ -18,6 +18,7 @@
     }
     function render() {
         game.input.renderDebugInfo(32, 32);
+        //game.input.mousePointer.renderDebug(32, 32);
         sprite.input.renderDebugInfo(300, 32);
     }
 })();

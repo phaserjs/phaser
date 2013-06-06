@@ -263,7 +263,7 @@ module Phaser {
         public targetObject = null;
 
         /**
-        * Gets the X value of this Pointer in world coordinate space
+        * Gets the X value of this Pointer in world coordinate space (is it properly scaled?)
         * @param {Camera} [camera]
         */
         public getWorldX(camera?: Camera = this.game.camera) {
@@ -329,6 +329,7 @@ module Phaser {
             this.timeDown = this.game.time.now;
             this._holdSent = false;
 
+            // x and y are the old values here?
             this.positionDown.setTo(this.x, this.y);
 
             this.move(event);

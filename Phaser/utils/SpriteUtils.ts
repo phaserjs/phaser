@@ -18,24 +18,24 @@ module Phaser {
         static _tempPoint: Point;
 
         /**
-         * Check whether this object is visible in a specific camera rectangle.
-         * @param camera {Rectangle} The rectangle you want to check.
-         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+         * Check whether this object is visible in a specific camera Rectangle.
+         * @param camera {Rectangle} The Rectangle you want to check.
+         * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
          */
         static inCamera(camera: Camera, sprite: Sprite): bool {
 
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if (sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0)
+            if (sprite.transform.scrollFactor.x == 0 && sprite.transform.scrollFactor.y == 0)
             {
                 return true;
             }
 
-            var dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
-            var dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            var dw = sprite.frameBounds.width * sprite.scale.x;
-            var dh = sprite.frameBounds.height * sprite.scale.y;
+            var dx = sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
+            var dy = sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
+            var dw = sprite.width * sprite.transform.scale.x;
+            var dh = sprite.height * sprite.transform.scale.y;
 
-            return (camera.scaledX + camera.worldView.width > this._dx) && (camera.scaledX < this._dx + this._dw) && (camera.scaledY + camera.worldView.height > this._dy) && (camera.scaledY < this._dy + this._dh);
+            return (camera.screenView.x + camera.worldView.width > this._dx) && (camera.screenView.x < this._dx + this._dw) && (camera.screenView.y + camera.worldView.height > this._dy) && (camera.screenView.y < this._dy + this._dh);
 
         }
 
@@ -158,8 +158,8 @@ module Phaser {
 
             var objectScreenPos: Point = objectOrGroup.getScreenXY(null, Camera);
 
-            this._point.x = X - camera.scroll.x * this.scrollFactor.x; //copied from getScreenXY()
-            this._point.y = Y - camera.scroll.y * this.scrollFactor.y;
+            this._point.x = X - camera.scroll.x * this.transform.scrollFactor.x; //copied from getScreenXY()
+            this._point.y = Y - camera.scroll.y * this.transform.scrollFactor.y;
             this._point.x += (this._point.x > 0) ? 0.0000001 : -0.0000001;
             this._point.y += (this._point.y > 0) ? 0.0000001 : -0.0000001;
 
@@ -239,8 +239,8 @@ module Phaser {
                 camera = this._game.camera;
             }
 
-            point.x = sprite.x - camera.scroll.x * sprite.scrollFactor.x;
-            point.y = sprite.y - camera.scroll.y * sprite.scrollFactor.y;
+            point.x = sprite.x - camera.x * sprite.transform.scrollFactor.x;
+            point.y = sprite.y - camera.y * sprite.transform.scrollFactor.y;
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
 
@@ -287,11 +287,11 @@ module Phaser {
 
             if (fromFrameBounds)
             {
-                sprite.origin.setTo(sprite.frameBounds.halfWidth, sprite.frameBounds.halfHeight);
+                sprite.transform.origin.setTo(sprite.width / 2, sprite.height / 2);
             }
             else if (fromBody)
             {
-                sprite.origin.setTo(sprite.body.bounds.halfWidth, sprite.body.bounds.halfHeight);
+                sprite.transform.origin.setTo(sprite.body.bounds.halfWidth, sprite.body.bounds.halfHeight);
             }
 
         }

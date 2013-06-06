@@ -2,14 +2,14 @@
 /// <reference path="../core/Vec2.ts" />
 /// <reference path="../core/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
-/// <reference path="../components/sprite/Texture.ts" />
+/// <reference path="../components/Texture.ts" />
+/// <reference path="../components/Transform.ts" />
 /// <reference path="../components/sprite/Input.ts" />
 /// <reference path="../components/sprite/Events.ts" />
 /// <reference path="../physics/Body.ts" />
 
 /**
 * Phaser - Sprite
-*
 */
 
 module Phaser {
@@ -25,7 +25,7 @@ module Phaser {
          * @param [key] {string} Key of the graphic you want to load for this sprite.
          * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
          */
-        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, bodyType?: number = Phaser.Types.BODY_DISABLED) {
+        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED) {
 
             this.game = game;
             this.type = Phaser.Types.SPRITE;
@@ -35,30 +35,41 @@ module Phaser {
             this.visible = true;
             this.alive = true;
 
-            //  We give it a default size of 16x16 but when the texture loads (if given) it will reset this
-            this.frameBounds = new Rectangle(x, y, 16, 16);
-            this.scrollFactor = new Phaser.Vec2(1, 1);
-
             this.x = x;
             this.y = y;
             this.z = -1;
             this.group = null;
-            this.screen = new Point;
 
-            //  If a texture has been given the body will be set to that size, otherwise 16x16
-            this.body = new Phaser.Physics.Body(this, bodyType);
-
+            this.transform = new Phaser.Components.Transform(this);
             this.animations = new Phaser.Components.AnimationManager(this);
-            this.texture = new Phaser.Components.Texture(this, key);
-            this.input = new Phaser.Components.Input(this);
-            this.events = new Phaser.Components.Events(this);
+            this.texture = new Phaser.Components.Texture(this);
+            this.body = new Phaser.Physics.Body(this, bodyType);
+            this.input = new Phaser.Components.Sprite.Input(this);
+            this.events = new Phaser.Components.Sprite.Events(this);
 
-            this.cameraBlacklist = [];
+            if (key !== null)
+            {
+                this.texture.loadImage(key, false);
+            }
+            else
+            {
+                this.texture.opaque = true;
+            }
 
-            //  Transform related (if we add any more then move to a component)
-            this.origin = new Phaser.Vec2(0, 0);
-            this.scale = new Phaser.Vec2(1, 1);
-            this.skew = new Phaser.Vec2(0, 0);
+            if (frame !== null)
+            {
+                if (typeof frame == 'string')
+                {
+                    this.frameName = frame;
+                }
+                else
+                {
+                    this.frame = frame;
+                }
+            }
+
+            this.worldView = new Rectangle(x, y, this.width, this.height);
+
         }
 
         /**
@@ -92,7 +103,7 @@ module Phaser {
         public visible: bool;
 
         /**
-         * 
+         * A useful state for many game objects. Kill and revive both flip this switch.
          */
         public alive: bool;
 
@@ -107,14 +118,19 @@ module Phaser {
         public texture: Phaser.Components.Texture;
 
         /**
+         * The Sprite transform component.
+         */
+        public transform: Phaser.Components.Transform;
+
+        /**
          * The Input component
          */
-        public input: Phaser.Components.Input;
+        public input: Phaser.Components.Sprite.Input;
 
         /**
          * The Events component
          */
-        public events: Phaser.Components.Events;
+        public events: Phaser.Components.Sprite.Events;
 
         /**
          * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
@@ -123,49 +139,15 @@ module Phaser {
         public animations: Phaser.Components.AnimationManager;
 
         /**
-         * An Array of Cameras to which this GameObject won't render
-         * @type {Array}
+         * A Rectangle that defines the size and placement of the Sprite in the game world,
+         * after taking into consideration both scrollFactor and scaling.
          */
-        public cameraBlacklist: number[];
-
-        /**
-         * The frame boundary around this Sprite.
-         * For non-animated sprites this matches the loaded texture dimensions.
-         * For animated sprites it will be updated as part of the animation loop, changing to the dimensions of the current animation frame.
-         */
-        public frameBounds: Phaser.Rectangle;
-
-        /**
-         * Scale of the Sprite. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
-         */
-        public scale: Phaser.Vec2;
-
-        /**
-         * Skew the Sprite along the x and y axis. A skew value of 0 is no skew.
-         */
-        public skew: Phaser.Vec2;
+        public worldView: Phaser.Rectangle;
 
         /**
          * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
          */
         public modified: bool = false;
-
-        /**
-         * The influence of camera movement upon the Sprite.
-         */
-        public scrollFactor: Phaser.Vec2;
-
-        /**
-         * The Sprite origin is the point around which scale and rotation takes place.
-         */
-        public origin: Phaser.Vec2;
-
-        /**
-         * A Point holding the x/y coordinate of this Sprite relative to the screen. It uses the default created world
-         * camera to calculate its values. If you have changed the default camera (i.e. resized it, deleted it) this value
-         * will be incorrect and should be ignored.
-         */
-        public screen: Point;
 
         /**
          * x value of the object.
@@ -183,31 +165,23 @@ module Phaser {
         public z: number = 0;
 
         /**
-         * Render iteration
+         * Render iteration counter
          */
         public renderOrderID: number = 0;
 
         /**
-         * This value is added to the angle of the Sprite.
-         * For example if you had a sprite graphic drawn facing straight up then you could set
-         * angleOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
-         * @type {number}
-         */
-        public angleOffset: number = 0;
-
-        /**
-        * The angle of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
         */
-        public get angle(): number {
-            return this.body.angle;
+        public get rotation(): number {
+            return this.transform.rotation;
         }
 
         /**
-        * Set the angle of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * Set the rotation of the sprite in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
         * The value is automatically wrapped to be between 0 and 360.
         */
-        public set angle(value: number) {
-            this.body.angle = this.game.math.wrap(value, 360, 0);
+        public set rotation(value: number) {
+            this.transform.rotation = this.game.math.wrap(value, 360, 0);
         }
 
         /**
@@ -239,19 +213,19 @@ module Phaser {
         }
 
         public set width(value: number) {
-            this.frameBounds.width = value;
+            this.transform.scale.x = value / this.texture.width;
         }
 
         public get width(): number {
-            return this.frameBounds.width;
+            return this.texture.width * this.transform.scale.x;
         }
 
         public set height(value: number) {
-            this.frameBounds.height = value;
+            this.transform.scale.y = value / this.texture.height;
         }
 
         public get height(): number {
-            return this.frameBounds.height;
+            return this.texture.height * this.transform.scale.y;
         }
 
         /**
@@ -259,13 +233,12 @@ module Phaser {
          */
         public preUpdate() {
 
-            this.frameBounds.x = this.x;
-            this.frameBounds.y = this.y;
+            this.worldView.x = this.x - (this.game.world.cameras.default.worldView.x * this.transform.scrollFactor.x);
+            this.worldView.y = this.y - (this.game.world.cameras.default.worldView.y * this.transform.scrollFactor.y);
+            this.worldView.width = this.width;
+            this.worldView.height = this.height;
 
-            this.screen.x = this.x - (this.game.world.cameras.default.worldView.x * this.scrollFactor.x);
-            this.screen.y = this.y - (this.game.world.cameras.default.worldView.y * this.scrollFactor.y);
-
-            if (this.modified == false && (!this.scale.equals(1) || !this.skew.equals(0) || this.angle != 0 || this.angleOffset != 0 || this.texture.flippedX || this.texture.flippedY))
+            if (this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY))
             {
                 this.modified = true;
             }
@@ -319,7 +292,7 @@ module Phaser {
             }
             */
 
-            if (this.modified == true && this.scale.equals(1) && this.skew.equals(0) && this.angle == 0 && this.angleOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
+            if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
             {
                 this.modified = false;
             }

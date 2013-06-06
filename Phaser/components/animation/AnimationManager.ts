@@ -22,7 +22,7 @@ module Phaser.Components {
          *
          * @param parent {Sprite} Owner sprite of this manager.
          */
-        constructor(parent: Sprite) {
+        constructor(parent: Phaser.Sprite) {
 
             this._parent = parent;
             this._game = parent.game;
@@ -38,7 +38,7 @@ module Phaser.Components {
         /**
          * Local private reference to its owner sprite.
          */
-        private _parent: Sprite;
+        private _parent: Phaser.Sprite;
 
         /**
          * Animation key-value container.
@@ -56,6 +56,14 @@ module Phaser.Components {
          * @type {FrameData}
          */
         private _frameData: FrameData = null;
+
+        /**
+         * When an animation frame changes you can choose to automatically update the physics bounds of the parent Sprite
+         * to the width and height of the new frame. If you've set a specific physics bounds that you don't want changed during
+         * animation then set this to false, otherwise leave it set to true.
+         * @type {boolean}
+         */
+        public autoUpdateBounds: bool = true;
 
         /**
          * Keeps track of the current animation being played.
@@ -200,8 +208,8 @@ module Phaser.Components {
             if (this.currentAnim && this.currentAnim.update() == true)
             {
                 this.currentFrame = this.currentAnim.currentFrame;
-                this._parent.frameBounds.width = this.currentFrame.width;
-                this._parent.frameBounds.height = this.currentFrame.height;
+                this._parent.texture.width = this.currentFrame.width;
+                this._parent.texture.height = this.currentFrame.height;
             }
 
         }
@@ -232,8 +240,15 @@ module Phaser.Components {
             {
                 this.currentFrame = this._frameData.getFrame(value);
 
-                this._parent.frameBounds.width = this.currentFrame.width;
-                this._parent.frameBounds.height = this.currentFrame.height;
+                this._parent.texture.width = this.currentFrame.width;
+                this._parent.texture.height = this.currentFrame.height;
+
+                if (this.autoUpdateBounds && this._parent['body'])
+                {
+                    this._parent.body.bounds.width = this.currentFrame.width;
+                    this._parent.body.bounds.height = this.currentFrame.height;
+                }
+
                 this._frameIndex = value;
             }
 
@@ -249,10 +264,9 @@ module Phaser.Components {
             {
                 this.currentFrame = this._frameData.getFrameByName(value);
 
-                this._parent.frameBounds.width = this.currentFrame.width;
-                this._parent.frameBounds.height = this.currentFrame.height;
-                //this._parent.frameBounds.width = this.currentFrame.sourceSizeW;
-                //this._parent.frameBounds.height = this.currentFrame.sourceSizeH;
+                this._parent.texture.width = this.currentFrame.width;
+                this._parent.texture.height = this.currentFrame.height;
+
                 this._frameIndex = this.currentFrame.index;
             }
 

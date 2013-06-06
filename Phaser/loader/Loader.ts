@@ -167,7 +167,7 @@ module Phaser {
                         }
 
                         this._queueSize++;
-                        this._fileList[key] = { type: 'textureatlas', key: key, url: textureURL, data: null, atlasURL: null, atlasData: atlasData['frames'], format: format, error: false, loaded: false };
+                        this._fileList[key] = { type: 'textureatlas', key: key, url: textureURL, data: null, atlasURL: null, atlasData: atlasData, format: format, error: false, loaded: false };
                         this._keys.push(key);
                     }
                     else if (format == Loader.TEXTURE_ATLAS_XML_STARLING)
