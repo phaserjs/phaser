@@ -12,10 +12,25 @@ module Phaser {
     export class GameMath {
 
         constructor(game: Game) {
+            
             this.game = game;
+
+            GameMath.sinA = [];
+            GameMath.cosA = [];
+
+            for (var i = 0; i < 360; i++)
+            {
+                GameMath.sinA.push(Math.sin(this.degreesToRadians(i)));
+                GameMath.cosA.push(Math.cos(this.degreesToRadians(i)));
+            }
         }
 
         public game: Game;
+
+        //  Pre-calculated tables containing Math.sin(angle) and Math.cos(angle) from -180 to 180
+        //  So sinA[sprite.rotation] would be the same as Math.sin(sprite.rotation) without a call to Math.sin
+        static sinA: number[];
+        static cosA: number[];
 
         static PI: number = 3.141592653589793; //number pi
         static PI_2: number = 1.5707963267948965; //PI / 2 OR 90 deg

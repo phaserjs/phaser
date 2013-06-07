@@ -193,6 +193,10 @@
     <Content Include="sprites\atlas 2.js">
       <DependentUpon>atlas 2.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="sprites\origin 5.ts" />
+    <Content Include="sprites\origin 5.js">
+      <DependentUpon>origin 5.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\tween loop 1.js">
       <DependentUpon>tween loop 1.ts</DependentUpon>
     </Content>

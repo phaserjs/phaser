@@ -443,11 +443,10 @@ module Phaser {
 
             if (sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false)
             {
-                return false;
+                //return false;
             }
 
             sprite.renderOrderID = this._count;
-
             this._count++;
 
             //  Reset our temp vars
@@ -456,12 +455,8 @@ module Phaser {
             this._sy = 0;
             this._sw = sprite.texture.width;
             this._sh = sprite.texture.height;
-            this._fx = sprite.transform.scale.x;
-            this._fy = sprite.transform.scale.y;
-            this._sin = 0;
-            this._cos = 1;
-            this._dx = (camera.screenView.x * sprite.transform.scrollFactor.x) + sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
-            this._dy = (camera.screenView.y * sprite.transform.scrollFactor.y) + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
+            this._dx = camera.screenView.x + sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
+            this._dy = camera.screenView.y + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
             this._dw = sprite.texture.width;
             this._dh = sprite.texture.height;
 
@@ -477,18 +472,6 @@ module Phaser {
             {
                 this._ga = sprite.texture.context.globalAlpha;
                 sprite.texture.context.globalAlpha = sprite.texture.alpha;
-            }
-
-            //  Sprite Flip X
-            if (sprite.texture.flippedX)
-            {
-                this._fx = -sprite.transform.scale.x;
-            }
-
-            //  Sprite Flip Y
-            if (sprite.texture.flippedY)
-            {
-                this._fy = -sprite.transform.scale.y;
             }
 
             if (sprite.animations.currentFrame !== null)
@@ -507,36 +490,26 @@ module Phaser {
                 }
             }
 
-            //	Rotation and Flipped
             if (sprite.modified)
             {
-                if (sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.transform.rotationOffset !== 0))
-                {
-                    this._sin = Math.sin(sprite.game.math.degreesToRadians(sprite.transform.rotationOffset + sprite.rotation));
-                    this._cos = Math.cos(sprite.game.math.degreesToRadians(sprite.transform.rotationOffset + sprite.rotation));
-                }
-
-                //  setTransform(a, b, c, d, e, f);
-                //  a = scale x
-                //  b = skew x
-                //  c = skew y
-                //  d = scale y
-                //  e = translate x
-                //  f = translate y
-
                 sprite.texture.context.save();
-                sprite.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + sprite.transform.skew.x, -(this._sin * this._fy) + sprite.transform.skew.y, this._cos * this._fy, this._dx, this._dy);
 
-                this._dx = -sprite.transform.origin.x;
-                this._dy = -sprite.transform.origin.y;
+                sprite.texture.context.setTransform(
+                    sprite.transform.local.data[0],         //  scale x
+                    sprite.transform.local.data[3],         //  skew x
+                    sprite.transform.local.data[1],         //  skew y
+                    sprite.transform.local.data[4],         //  scale y
+                    this._dx,                               //  translate x
+                    this._dy                                //  translate y
+                );
+
+                this._dx = sprite.transform.origin.x * -this._dw;
+                this._dy = sprite.transform.origin.y * -this._dh;
             }
             else
             {
-                if (!sprite.transform.origin.equals(0))
-                {
-                    this._dx -= sprite.transform.origin.x;
-                    this._dy -= sprite.transform.origin.y;
-                }
+                this._dx -= (this._dw * sprite.transform.origin.x);
+                this._dy -= (this._dh * sprite.transform.origin.y);
             }
 
             this._sx = Math.round(this._sx);
@@ -568,7 +541,7 @@ module Phaser {
                     this._dh			//	Destination Height (always same as Source Height unless scaled)
                 );
             }
-
+                
             if (sprite.modified || sprite.texture.globalCompositeOperation)
             {
                 sprite.texture.context.restore();

@@ -492,7 +492,7 @@ module Phaser {
 /**
 * Phaser - Vec2
 *
-* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
+* A Vector 2
 */
 module Phaser {
     class Vec2 {
@@ -1805,6 +1805,88 @@ module Phaser.Components {
     }
 }
 /**
+* Phaser - Mat3
+*
+* A 3x3 Matrix
+*/
+module Phaser {
+    class Mat3 {
+        /**
+        * Creates a new Mat3 object.
+        * @class Mat3
+        * @constructor
+        * @return {Mat3} This object
+        **/
+        constructor();
+        private _a00;
+        private _a01;
+        private _a02;
+        private _a10;
+        private _a11;
+        private _a12;
+        private _a20;
+        private _a21;
+        private _a22;
+        public data: number[];
+        public a00 : number;
+        public a01 : number;
+        public a02 : number;
+        public a10 : number;
+        public a11 : number;
+        public a12 : number;
+        public a20 : number;
+        public a21 : number;
+        public a22 : number;
+        /**
+        * Copies the values from one Mat3 into this Mat3.
+        * @method copyFromMat3
+        * @param {any} source - The object to copy from.
+        * @return {Mat3} This Mat3 object.
+        **/
+        public copyFromMat3(source: Mat3): Mat3;
+        /**
+        * Copies the upper-left 3x3 values into this Mat3.
+        * @method copyFromMat4
+        * @param {any} source - The object to copy from.
+        * @return {Mat3} This Mat3 object.
+        **/
+        public copyFromMat4(source: any): Mat3;
+        /**
+        * Clones this Mat3 into a new Mat3
+        * @param {Mat3} out The output Mat3, if none is given a new Mat3 object will be created.
+        * @return {Mat3} The new Mat3
+        **/
+        public clone(out?: Mat3): Mat3;
+        /**
+        * Sets this Mat3 to the identity matrix.
+        * @method identity
+        * @param {any} source - The object to copy from.
+        * @return {Mat3} This Mat3 object.
+        **/
+        public identity(): Mat3;
+        /**
+        * Translates this Mat3 by the given vector
+        **/
+        public translate(v: Vec2): Mat3;
+        private setTemps();
+        /**
+        * Rotates this Mat3 by the given angle (given in radians)
+        **/
+        public rotate(rad: number): Mat3;
+        /**
+        * Scales this Mat3 by the given vector
+        **/
+        public scale(v: Vec2): Mat3;
+        public setTo(a00: number, a01: number, a02: number, a10: number, a11: number, a12: number, a20: number, a21: number, a22: number): Mat3;
+        /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        public toString(): string;
+    }
+}
+/**
 * Phaser - Components - Transform
 */
 module Phaser.Components {
@@ -1814,6 +1896,12 @@ module Phaser.Components {
         * @param parent The Sprite using this transform
         */
         constructor(parent);
+        public local: Mat3;
+        private _sin;
+        private _cos;
+        public update(): void;
+        public calculatedX : number;
+        public calculatedY : number;
         /**
         * Reference to Phaser.Game
         */
@@ -1835,7 +1923,7 @@ module Phaser.Components {
         */
         public scrollFactor: Vec2;
         /**
-        * The origin is the point around which scale and rotation takes place.
+        * The origin is the point around which scale and rotation takes place and defaults to the center of the sprite.
         */
         public origin: Vec2;
         /**
@@ -1849,6 +1937,14 @@ module Phaser.Components {
         * The rotation of the object in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
         */
         public rotation: number;
+        /**
+        * The center of the Sprite after taking scaling into consideration
+        */
+        public centerX : number;
+        /**
+        * The center of the Sprite after taking scaling into consideration
+        */
+        public centerY : number;
     }
 }
 /**
@@ -3636,6 +3732,8 @@ module Phaser {
     class GameMath {
         constructor(game: Game);
         public game: Game;
+        static sinA: number[];
+        static cosA: number[];
         static PI: number;
         static PI_2: number;
         static PI_4: number;
@@ -8943,44 +9041,6 @@ module Phaser.Components {
     }
 }
 /**
-* Phaser - Polygon
-*
-*
-*/
-module Phaser {
-    class Polygon {
-        /**
-        *
-        **/
-        constructor(game: Game, points: Point[]);
-        public points: Point[];
-        public game: Game;
-        public context: CanvasRenderingContext2D;
-        public render(): void;
-    }
-}
-/**
-* Phaser - PixelUtils
-*
-* A collection of methods useful for manipulating pixels.
-*/
-module Phaser {
-    class PixelUtils {
-        static boot(): void;
-        /**
-        * Canvas element used in 1x1 pixel checks.
-        * @type {HTMLCanvasElement}
-        */
-        static pixelCanvas: HTMLCanvasElement;
-        /**
-        * Render context of pixelCanvas
-        * @type {CanvasRenderingContext2D}
-        */
-        static pixelContext: CanvasRenderingContext2D;
-        static getPixel(key: string, x: number, y: number): number;
-    }
-}
-/**
 * Phaser - Line
 *
 * A Line object is an infinte line through space. The two sets of x/y coordinates define the Line Segment.
@@ -9129,6 +9189,59 @@ module Phaser {
         * @return {String}
         */
         public toString(): string;
+    }
+}
+/**
+* Phaser - Mat3Utils
+*
+* A collection of methods useful for manipulating and performing operations on Mat3 objects.
+*
+*/
+module Phaser {
+    class Mat3Utils {
+        /**
+        * Transpose the values of a Mat3
+        **/
+        static transpose(source: Mat3, dest?: Mat3): Mat3;
+        /**
+        * Inverts a Mat3
+        **/
+        static invert(source: Mat3): Mat3;
+        /**
+        * Calculates the adjugate of a Mat3
+        **/
+        static adjoint(source: Mat3): Mat3;
+        /**
+        * Calculates the adjugate of a Mat3
+        **/
+        static determinant(source: Mat3): number;
+        /**
+        * Multiplies two Mat3s
+        **/
+        static multiply(source: Mat3, b: Mat3): Mat3;
+        static fromQuaternion(): void;
+        static normalFromMat4(): void;
+    }
+}
+/**
+* Phaser - PixelUtils
+*
+* A collection of methods useful for manipulating pixels.
+*/
+module Phaser {
+    class PixelUtils {
+        static boot(): void;
+        /**
+        * Canvas element used in 1x1 pixel checks.
+        * @type {HTMLCanvasElement}
+        */
+        static pixelCanvas: HTMLCanvasElement;
+        /**
+        * Render context of pixelCanvas
+        * @type {CanvasRenderingContext2D}
+        */
+        static pixelContext: CanvasRenderingContext2D;
+        static getPixel(key: string, x: number, y: number): number;
     }
 }
 /**

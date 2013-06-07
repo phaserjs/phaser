@@ -1,6 +1,6 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Vec2.ts" />
-/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/Texture.ts" />
 /// <reference path="../components/Transform.ts" />
@@ -40,11 +40,12 @@ module Phaser {
             this.z = -1;
             this.group = null;
 
-            this.transform = new Phaser.Components.Transform(this);
+            //  No dependencies
             this.animations = new Phaser.Components.AnimationManager(this);
-            this.texture = new Phaser.Components.Texture(this);
             this.input = new Phaser.Components.Sprite.Input(this);
             this.events = new Phaser.Components.Sprite.Events(this);
+            this.texture = new Phaser.Components.Texture(this);
+            this.transform = new Phaser.Components.Transform(this);
 
             if (key !== null)
             {
@@ -233,10 +234,14 @@ module Phaser {
          */
         public preUpdate() {
 
+            this.transform.update();
+
             //this.worldView.x = this.x * this.transform.scrollFactor.x;
             //this.worldView.y = this.y * this.transform.scrollFactor.y;
-            this.worldView.x = this.x - this.transform.origin.x;
-            this.worldView.y = this.y - this.transform.origin.y;
+            this.worldView.x = this.x;
+            this.worldView.y = this.y;
+            //this.worldView.x = this.x - this.transform.origin.x;
+            //this.worldView.y = this.y - this.transform.origin.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
 

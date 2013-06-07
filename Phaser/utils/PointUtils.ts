@@ -1,5 +1,5 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
+/// <reference path="../geom/Point.ts" />
 
 /**
 * Phaser - PointUtils

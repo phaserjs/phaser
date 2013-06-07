@@ -1,7 +1,7 @@
 /// <reference path="Game.ts" />
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="core/Group.ts" />
-/// <reference path="core/Rectangle.ts" />
+/// <reference path="geom/Rectangle.ts" />
 /// <reference path="physics/PhysicsManager.ts" />
 
 /**

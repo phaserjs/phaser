@@ -1,5 +1,5 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../components/ScrollRegion.ts" />
 
 /**

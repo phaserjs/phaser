@@ -384,7 +384,7 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="LinkedList.ts" />
 /**
 * Phaser - QuadTree
@@ -734,7 +734,7 @@ var Phaser;
 /**
 * Phaser - Vec2
 *
-* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
+* A Vector 2
 */
 var Phaser;
 (function (Phaser) {
@@ -1264,8 +1264,8 @@ var Phaser;
     Phaser.Types = Types;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /**
 * Phaser - RectangleUtils
 *
@@ -1455,9 +1455,9 @@ var Phaser;
     Phaser.RectangleUtils = RectangleUtils;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Circle.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Circle.ts" />
 /**
 * Phaser - ColorUtils
 *
@@ -2797,9 +2797,263 @@ var Phaser;
     })(Phaser.Components || (Phaser.Components = {}));
     var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/**
+* Phaser - Mat3
+*
+* A 3x3 Matrix
+*/
+var Phaser;
+(function (Phaser) {
+    var Mat3 = (function () {
+        /**
+        * Creates a new Mat3 object.
+        * @class Mat3
+        * @constructor
+        * @return {Mat3} This object
+        **/
+        function Mat3() {
+            this.data = [
+                1, 
+                0, 
+                0, 
+                0, 
+                1, 
+                0, 
+                0, 
+                0, 
+                1
+            ];
+        }
+        Object.defineProperty(Mat3.prototype, "a00", {
+            get: function () {
+                return this.data[0];
+            },
+            set: function (value) {
+                this.data[0] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Mat3.prototype, "a01", {
+            get: function () {
+                return this.data[1];
+            },
+            set: function (value) {
+                this.data[1] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Mat3.prototype, "a02", {
+            get: function () {
+                return this.data[2];
+            },
+            set: function (value) {
+                this.data[2] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Mat3.prototype, "a10", {
+            get: function () {
+                return this.data[3];
+            },
+            set: function (value) {
+                this.data[3] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Mat3.prototype, "a11", {
+            get: function () {
+                return this.data[4];
+            },
+            set: function (value) {
+                this.data[4] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Mat3.prototype, "a12", {
+            get: function () {
+                return this.data[5];
+            },
+            set: function (value) {
+                this.data[5] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Mat3.prototype, "a20", {
+            get: function () {
+                return this.data[6];
+            },
+            set: function (value) {
+                this.data[6] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Mat3.prototype, "a21", {
+            get: function () {
+                return this.data[7];
+            },
+            set: function (value) {
+                this.data[7] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Mat3.prototype, "a22", {
+            get: function () {
+                return this.data[8];
+            },
+            set: function (value) {
+                this.data[8] = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Mat3.prototype.copyFromMat3 = /**
+        * Copies the values from one Mat3 into this Mat3.
+        * @method copyFromMat3
+        * @param {any} source - The object to copy from.
+        * @return {Mat3} This Mat3 object.
+        **/
+        function (source) {
+            this.data[0] = source.data[0];
+            this.data[1] = source.data[1];
+            this.data[2] = source.data[2];
+            this.data[3] = source.data[3];
+            this.data[4] = source.data[4];
+            this.data[5] = source.data[5];
+            this.data[6] = source.data[6];
+            this.data[7] = source.data[7];
+            this.data[8] = source.data[8];
+            return this;
+        };
+        Mat3.prototype.copyFromMat4 = /**
+        * Copies the upper-left 3x3 values into this Mat3.
+        * @method copyFromMat4
+        * @param {any} source - The object to copy from.
+        * @return {Mat3} This Mat3 object.
+        **/
+        function (source) {
+            this.data[0] = source[0];
+            this.data[1] = source[1];
+            this.data[2] = source[2];
+            this.data[3] = source[4];
+            this.data[4] = source[5];
+            this.data[5] = source[6];
+            this.data[6] = source[8];
+            this.data[7] = source[9];
+            this.data[8] = source[10];
+            return this;
+        };
+        Mat3.prototype.clone = /**
+        * Clones this Mat3 into a new Mat3
+        * @param {Mat3} out The output Mat3, if none is given a new Mat3 object will be created.
+        * @return {Mat3} The new Mat3
+        **/
+        function (out) {
+            if (typeof out === "undefined") { out = new Phaser.Mat3(); }
+            out[0] = this.data[0];
+            out[1] = this.data[1];
+            out[2] = this.data[2];
+            out[3] = this.data[3];
+            out[4] = this.data[4];
+            out[5] = this.data[5];
+            out[6] = this.data[6];
+            out[7] = this.data[7];
+            out[8] = this.data[8];
+            return out;
+        };
+        Mat3.prototype.identity = /**
+        * Sets this Mat3 to the identity matrix.
+        * @method identity
+        * @param {any} source - The object to copy from.
+        * @return {Mat3} This Mat3 object.
+        **/
+        function () {
+            return this.setTo(1, 0, 0, 0, 1, 0, 0, 0, 1);
+        };
+        Mat3.prototype.translate = /**
+        * Translates this Mat3 by the given vector
+        **/
+        function (v) {
+            this.a20 = v.x * this.a00 + v.y * this.a10 + this.a20;
+            this.a21 = v.x * this.a01 + v.y * this.a11 + this.a21;
+            this.a22 = v.x * this.a02 + v.y * this.a12 + this.a22;
+            return this;
+        };
+        Mat3.prototype.setTemps = function () {
+            this._a00 = this.data[0];
+            this._a01 = this.data[1];
+            this._a02 = this.data[2];
+            this._a10 = this.data[3];
+            this._a11 = this.data[4];
+            this._a12 = this.data[5];
+            this._a20 = this.data[6];
+            this._a21 = this.data[7];
+            this._a22 = this.data[8];
+        };
+        Mat3.prototype.rotate = /**
+        * Rotates this Mat3 by the given angle (given in radians)
+        **/
+        function (rad) {
+            this.setTemps();
+            var s = Phaser.GameMath.sinA[rad];
+            var c = Phaser.GameMath.cosA[rad];
+            this.data[0] = c * this._a00 + s * this._a10;
+            this.data[1] = c * this._a01 + s * this._a10;
+            this.data[2] = c * this._a02 + s * this._a12;
+            this.data[3] = c * this._a10 - s * this._a00;
+            this.data[4] = c * this._a11 - s * this._a01;
+            this.data[5] = c * this._a12 - s * this._a02;
+            return this;
+        };
+        Mat3.prototype.scale = /**
+        * Scales this Mat3 by the given vector
+        **/
+        function (v) {
+            this.data[0] = v.x * this.data[0];
+            this.data[1] = v.x * this.data[1];
+            this.data[2] = v.x * this.data[2];
+            this.data[3] = v.y * this.data[3];
+            this.data[4] = v.y * this.data[4];
+            this.data[5] = v.y * this.data[5];
+            return this;
+        };
+        Mat3.prototype.setTo = function (a00, a01, a02, a10, a11, a12, a20, a21, a22) {
+            this.data[0] = a00;
+            this.data[1] = a01;
+            this.data[2] = a02;
+            this.data[3] = a10;
+            this.data[4] = a11;
+            this.data[5] = a12;
+            this.data[6] = a20;
+            this.data[7] = a21;
+            this.data[8] = a22;
+            return this;
+        };
+        Mat3.prototype.toString = /**
+        * Returns a string representation of this object.
+        * @method toString
+        * @return {string} a string representation of the object.
+        **/
+        function () {
+            return '';
+            //return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
+                    };
+        return Mat3;
+    })();
+    Phaser.Mat3 = Mat3;    
+})(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
     /// <reference path="../Game.ts" />
+    /// <reference path="../math/Mat3.ts" />
     /**
     * Phaser - Components - Transform
     */
@@ -2823,11 +3077,87 @@ var Phaser;
                 this.rotation = 0;
                 this.game = parent.game;
                 this.parent = parent;
+                this.local = new Phaser.Mat3();
                 this.scrollFactor = new Phaser.Vec2(1, 1);
                 this.origin = new Phaser.Vec2();
                 this.scale = new Phaser.Vec2(1, 1);
                 this.skew = new Phaser.Vec2();
             }
+            Transform.prototype.update = function () {
+                //  0 a = scale x
+                //  3 b = skew x
+                //  1 c = skew y
+                //  4 d = scale y
+                //  2 e = translate x
+                //  5 f = translate y
+                //  Scale & Skew
+                //                  if (sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.transform.rotationOffset !== 0))
+                this._sin = 0;
+                this._cos = 1;
+                if(this.parent.texture.renderRotation) {
+                    this._sin = Phaser.GameMath.sinA[this.rotation + this.rotationOffset];
+                    this._cos = Phaser.GameMath.cosA[this.rotation + this.rotationOffset];
+                }
+                if(this.parent.texture.flippedX) {
+                    //this.local.data[0] = GameMath.cosA[this.rotation + this.rotationOffset] * -this.scale.x;
+                    //this.local.data[3] = (GameMath.sinA[this.rotation + this.rotationOffset] * -this.scale.x) + this.skew.x;
+                    this.local.data[0] = this._cos * -this.scale.x;
+                    this.local.data[3] = (this._sin * -this.scale.x) + this.skew.x;
+                } else {
+                    //this.local.data[0] = GameMath.cosA[this.rotation + this.rotationOffset] * this.scale.x;
+                    //this.local.data[3] = (GameMath.sinA[this.rotation + this.rotationOffset] * this.scale.x) + this.skew.x;
+                    this.local.data[0] = this._cos * this.scale.x;
+                    this.local.data[3] = (this._sin * this.scale.x) + this.skew.x;
+                }
+                if(this.parent.texture.flippedY) {
+                    //this.local.data[4] = GameMath.cosA[this.rotation + this.rotationOffset] * -this.scale.y;
+                    //this.local.data[1] = -(GameMath.sinA[this.rotation + this.rotationOffset] * -this.scale.y) + this.skew.y;
+                    this.local.data[4] = this._cos * -this.scale.y;
+                    this.local.data[1] = -(this._sin * -this.scale.y) + this.skew.y;
+                } else {
+                    //this.local.data[4] = GameMath.cosA[this.rotation + this.rotationOffset] * this.scale.y;
+                    //this.local.data[1] = -(GameMath.sinA[this.rotation + this.rotationOffset] * this.scale.y) + this.skew.y;
+                    this.local.data[4] = this._cos * this.scale.y;
+                    this.local.data[1] = -(this._sin * this.scale.y) + this.skew.y;
+                }
+                //  Translate
+                this.local.data[2] = this.parent.x;
+                this.local.data[5] = this.parent.y;
+            };
+            Object.defineProperty(Transform.prototype, "calculatedX", {
+                get: function () {
+                    return this.origin.x * this.scale.x;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "calculatedY", {
+                get: function () {
+                    return this.origin.y * this.scale.y;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "centerX", {
+                get: /**
+                * The center of the Sprite after taking scaling into consideration
+                */
+                function () {
+                    return this.parent.width / 2;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "centerY", {
+                get: /**
+                * The center of the Sprite after taking scaling into consideration
+                */
+                function () {
+                    return this.parent.height / 2;
+                },
+                enumerable: true,
+                configurable: true
+            });
             return Transform;
         })();
         Components.Transform = Transform;        
@@ -3412,7 +3742,7 @@ var Phaser;
     var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Vec2.ts" />
+/// <reference path="../math/Vec2.ts" />
 /**
 * Phaser - Vec2Utils
 *
@@ -3707,8 +4037,8 @@ var Phaser;
     })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
-    /// <reference path="../core/Vec2.ts" />
-    /// <reference path="../core/Point.ts" />
+    /// <reference path="../math/Vec2.ts" />
+    /// <reference path="../geom/Point.ts" />
     /// <reference path="../math/Vec2Utils.ts" />
     /**
     * Phaser - Physics - Body
@@ -3938,8 +4268,8 @@ var Phaser;
     var Physics = Phaser.Physics;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Vec2.ts" />
-/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../components/animation/AnimationManager.ts" />
 /// <reference path="../components/Texture.ts" />
 /// <reference path="../components/Transform.ts" />
@@ -3997,11 +4327,12 @@ var Phaser;
             this.y = y;
             this.z = -1;
             this.group = null;
-            this.transform = new Phaser.Components.Transform(this);
+            //  No dependencies
             this.animations = new Phaser.Components.AnimationManager(this);
-            this.texture = new Phaser.Components.Texture(this);
             this.input = new Phaser.Components.Sprite.Input(this);
             this.events = new Phaser.Components.Sprite.Events(this);
+            this.texture = new Phaser.Components.Texture(this);
+            this.transform = new Phaser.Components.Transform(this);
             if(key !== null) {
                 this.texture.loadImage(key, false);
             } else {
@@ -4090,10 +4421,13 @@ var Phaser;
         * Pre-update is called right before update() on each object in the game loop.
         */
         function () {
+            this.transform.update();
             //this.worldView.x = this.x * this.transform.scrollFactor.x;
             //this.worldView.y = this.y * this.transform.scrollFactor.y;
-            this.worldView.x = this.x - this.transform.origin.x;
-            this.worldView.y = this.y - this.transform.origin.y;
+            this.worldView.x = this.x;
+            this.worldView.y = this.y;
+            //this.worldView.x = this.x - this.transform.origin.x;
+            //this.worldView.y = this.y - this.transform.origin.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
             if(this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
@@ -4183,9 +4517,9 @@ var Phaser;
     Phaser.Sprite = Sprite;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Circle.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Circle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="RectangleUtils.ts" />
 /**
@@ -6357,6 +6691,12 @@ var Phaser;
             */
             this.globalSeed = Math.random();
             this.game = game;
+            GameMath.sinA = [];
+            GameMath.cosA = [];
+            for(var i = 0; i < 360; i++) {
+                GameMath.sinA.push(Math.sin(this.degreesToRadians(i)));
+                GameMath.cosA.push(Math.cos(this.degreesToRadians(i)));
+            }
         }
         GameMath.PI = 3.141592653589793;
         GameMath.PI_2 = 1.5707963267948965;
@@ -7626,9 +7966,9 @@ var Phaser;
     Phaser.CameraFX = CameraFX;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Vec2.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../math/Vec2.ts" />
 /// <reference path="../components/camera/CameraFX.ts" />
 /// <reference path="../components/Texture.ts" />
 /// <reference path="../components/Transform.ts" />
@@ -9164,8 +9504,8 @@ var Phaser;
     Phaser.Emitter = Emitter;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Vec2.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../math/Vec2.ts" />
 /**
 * Phaser - ScrollRegion
 *
@@ -9314,7 +9654,7 @@ var Phaser;
     Phaser.ScrollRegion = ScrollRegion;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../components/ScrollRegion.ts" />
 /**
 * Phaser - ScrollZone
@@ -11865,9 +12205,9 @@ var Phaser;
     Phaser.TweenManager = TweenManager;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Circle.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Circle.ts" />
 /**
 * Phaser - CircleUtils
 *
@@ -12967,7 +13307,7 @@ var Phaser;
 /// <reference path="Game.ts" />
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="core/Group.ts" />
-/// <reference path="core/Rectangle.ts" />
+/// <reference path="geom/Rectangle.ts" />
 /// <reference path="physics/PhysicsManager.ts" />
 /**
 * Phaser - World
@@ -13931,7 +14271,7 @@ var Phaser;
     Phaser.RequestAnimationFrame = RequestAnimationFrame;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
+/// <reference path="../geom/Point.ts" />
 /**
 * Phaser - PointUtils
 *
@@ -14128,7 +14468,7 @@ var Phaser;
     })();    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Vec2.ts" />
+/// <reference path="../math/Vec2.ts" />
 /**
 * Phaser - Pointer
 *
@@ -16235,8 +16575,8 @@ var Phaser;
         */
         function (camera, sprite) {
             if(sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
-                return false;
-            }
+                //return false;
+                            }
             sprite.renderOrderID = this._count;
             this._count++;
             //  Reset our temp vars
@@ -16245,12 +16585,8 @@ var Phaser;
             this._sy = 0;
             this._sw = sprite.texture.width;
             this._sh = sprite.texture.height;
-            this._fx = sprite.transform.scale.x;
-            this._fy = sprite.transform.scale.y;
-            this._sin = 0;
-            this._cos = 1;
-            this._dx = (camera.screenView.x * sprite.transform.scrollFactor.x) + sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
-            this._dy = (camera.screenView.y * sprite.transform.scrollFactor.y) + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
+            this._dx = camera.screenView.x + sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
+            this._dy = camera.screenView.y + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
             this._dw = sprite.texture.width;
             this._dh = sprite.texture.height;
             //  Global Composite Ops
@@ -16262,14 +16598,6 @@ var Phaser;
             if(sprite.texture.alpha !== 1 && sprite.texture.context.globalAlpha != sprite.texture.alpha) {
                 this._ga = sprite.texture.context.globalAlpha;
                 sprite.texture.context.globalAlpha = sprite.texture.alpha;
-            }
-            //  Sprite Flip X
-            if(sprite.texture.flippedX) {
-                this._fx = -sprite.transform.scale.x;
-            }
-            //  Sprite Flip Y
-            if(sprite.texture.flippedY) {
-                this._fy = -sprite.transform.scale.y;
             }
             if(sprite.animations.currentFrame !== null) {
                 this._sx = sprite.animations.currentFrame.x;
@@ -16283,28 +16611,20 @@ var Phaser;
                     this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
                 }
             }
-            //	Rotation and Flipped
             if(sprite.modified) {
-                if(sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.transform.rotationOffset !== 0)) {
-                    this._sin = Math.sin(sprite.game.math.degreesToRadians(sprite.transform.rotationOffset + sprite.rotation));
-                    this._cos = Math.cos(sprite.game.math.degreesToRadians(sprite.transform.rotationOffset + sprite.rotation));
-                }
-                //  setTransform(a, b, c, d, e, f);
-                //  a = scale x
-                //  b = skew x
-                //  c = skew y
-                //  d = scale y
-                //  e = translate x
-                //  f = translate y
                 sprite.texture.context.save();
-                sprite.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + sprite.transform.skew.x, -(this._sin * this._fy) + sprite.transform.skew.y, this._cos * this._fy, this._dx, this._dy);
-                this._dx = -sprite.transform.origin.x;
-                this._dy = -sprite.transform.origin.y;
+                sprite.texture.context.setTransform(sprite.transform.local.data[0], //  scale x
+                sprite.transform.local.data[3], //  skew x
+                sprite.transform.local.data[1], //  skew y
+                sprite.transform.local.data[4], //  scale y
+                this._dx, //  translate x
+                this._dy);
+                //  translate y
+                this._dx = sprite.transform.origin.x * -this._dw;
+                this._dy = sprite.transform.origin.y * -this._dh;
             } else {
-                if(!sprite.transform.origin.equals(0)) {
-                    this._dx -= sprite.transform.origin.x;
-                    this._dy -= sprite.transform.origin.y;
-                }
+                this._dx -= (this._dw * sprite.transform.origin.x);
+                this._dy -= (this._dh * sprite.transform.origin.y);
             }
             this._sx = Math.round(this._sx);
             this._sy = Math.round(this._sy);
@@ -16421,9 +16741,9 @@ var Phaser;
     Phaser.CanvasRenderer = CanvasRenderer;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Circle.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Circle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="RectangleUtils.ts" />
 /**
@@ -16479,12 +16799,12 @@ var Phaser;
     })();
     Phaser.DebugUtils = DebugUtils;    
 })(Phaser || (Phaser = {}));
-/// <reference path="core/Rectangle.ts" />
+/// <reference path="geom/Rectangle.ts" />
 /// <reference path="math/LinkedList.ts" />
 /// <reference path="math/QuadTree.ts" />
-/// <reference path="core/Point.ts" />
-/// <reference path="core/Vec2.ts" />
-/// <reference path="core/Circle.ts" />
+/// <reference path="geom/Point.ts" />
+/// <reference path="math/Vec2.ts" />
+/// <reference path="geom/Circle.ts" />
 /// <reference path="core/Group.ts" />
 /// <reference path="core/Signal.ts" />
 /// <reference path="core/SignalBinding.ts" />
@@ -17015,69 +17335,6 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
-* Phaser - Polygon
-*
-*
-*/
-var Phaser;
-(function (Phaser) {
-    var Polygon = (function () {
-        /**
-        *
-        **/
-        function Polygon(game, points) {
-            this.game = game;
-            this.context = game.stage.context;
-            this.points = [];
-            for(var i = 0; i < points.length; i++) {
-                this.points.push(new Phaser.Point().copyFrom(points[i]));
-            }
-        }
-        Polygon.prototype.render = function () {
-            this.context.beginPath();
-            this.context.strokeStyle = 'rgb(255,255,0)';
-            this.context.moveTo(this.points[0].x, this.points[0].y);
-            for(var i = 1; i < this.points.length; i++) {
-                this.context.lineTo(this.points[i].x, this.points[i].y);
-            }
-            this.context.lineTo(this.points[0].x, this.points[0].y);
-            this.context.stroke();
-            this.context.closePath();
-        };
-        return Polygon;
-    })();
-    Phaser.Polygon = Polygon;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Circle.ts" />
-/**
-* Phaser - PixelUtils
-*
-* A collection of methods useful for manipulating pixels.
-*/
-var Phaser;
-(function (Phaser) {
-    var PixelUtils = (function () {
-        function PixelUtils() { }
-        PixelUtils.boot = function boot() {
-            PixelUtils.pixelCanvas = document.createElement('canvas');
-            PixelUtils.pixelCanvas.width = 1;
-            PixelUtils.pixelCanvas.height = 1;
-            PixelUtils.pixelContext = PixelUtils.pixelCanvas.getContext('2d');
-        };
-        PixelUtils.getPixel = function getPixel(key, x, y) {
-            //  write out a single pixel (won't help with rotated sprites though.. hmm)
-            var imageData = PixelUtils.pixelContext.getImageData(0, 0, 1, 1);
-            return Phaser.ColorUtils.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
-        };
-        return PixelUtils;
-    })();
-    Phaser.PixelUtils = PixelUtils;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
 * Phaser - Line
 *
 * A Line object is an infinte line through space. The two sets of x/y coordinates define the Line Segment.
@@ -17345,6 +17602,189 @@ var Phaser;
         return Line;
     })();
     Phaser.Line = Line;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../math/Mat3.ts" />
+/**
+* Phaser - Mat3Utils
+*
+* A collection of methods useful for manipulating and performing operations on Mat3 objects.
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var Mat3Utils = (function () {
+        function Mat3Utils() { }
+        Mat3Utils.transpose = /**
+        * Transpose the values of a Mat3
+        **/
+        function transpose(source, dest) {
+            if (typeof dest === "undefined") { dest = null; }
+            if(dest === null) {
+                //  Transpose ourselves
+                var a01 = source.data[1];
+                var a02 = source.data[2];
+                var a12 = source.data[5];
+                source.data[1] = source.data[3];
+                source.data[2] = source.data[6];
+                source.data[3] = a01;
+                source.data[5] = source.data[7];
+                source.data[6] = a02;
+                source.data[7] = a12;
+            } else {
+                source.data[0] = dest.data[0];
+                source.data[1] = dest.data[3];
+                source.data[2] = dest.data[6];
+                source.data[3] = dest.data[1];
+                source.data[4] = dest.data[4];
+                source.data[5] = dest.data[7];
+                source.data[6] = dest.data[2];
+                source.data[7] = dest.data[5];
+                source.data[8] = dest.data[8];
+            }
+            return source;
+        };
+        Mat3Utils.invert = /**
+        * Inverts a Mat3
+        **/
+        function invert(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            var b01 = a22 * a11 - a12 * a21;
+            var b11 = -a22 * a10 + a12 * a20;
+            var b21 = a21 * a10 - a11 * a20;
+            //  Determinant
+            var det = a00 * b01 + a01 * b11 + a02 * b21;
+            if(!det) {
+                return null;
+            }
+            det = 1.0 / det;
+            source.data[0] = b01 * det;
+            source.data[1] = (-a22 * a01 + a02 * a21) * det;
+            source.data[2] = (a12 * a01 - a02 * a11) * det;
+            source.data[3] = b11 * det;
+            source.data[4] = (a22 * a00 - a02 * a20) * det;
+            source.data[5] = (-a12 * a00 + a02 * a10) * det;
+            source.data[6] = b21 * det;
+            source.data[7] = (-a21 * a00 + a01 * a20) * det;
+            source.data[8] = (a11 * a00 - a01 * a10) * det;
+            return source;
+        };
+        Mat3Utils.adjoint = /**
+        * Calculates the adjugate of a Mat3
+        **/
+        function adjoint(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            source.data[0] = (a11 * a22 - a12 * a21);
+            source.data[1] = (a02 * a21 - a01 * a22);
+            source.data[2] = (a01 * a12 - a02 * a11);
+            source.data[3] = (a12 * a20 - a10 * a22);
+            source.data[4] = (a00 * a22 - a02 * a20);
+            source.data[5] = (a02 * a10 - a00 * a12);
+            source.data[6] = (a10 * a21 - a11 * a20);
+            source.data[7] = (a01 * a20 - a00 * a21);
+            source.data[8] = (a00 * a11 - a01 * a10);
+            return source;
+        };
+        Mat3Utils.determinant = /**
+        * Calculates the adjugate of a Mat3
+        **/
+        function determinant(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
+        };
+        Mat3Utils.multiply = /**
+        * Multiplies two Mat3s
+        **/
+        function multiply(source, b) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            var b00 = b.data[0];
+            var b01 = b.data[1];
+            var b02 = b.data[2];
+            var b10 = b.data[3];
+            var b11 = b.data[4];
+            var b12 = b.data[5];
+            var b20 = b.data[6];
+            var b21 = b.data[7];
+            var b22 = b.data[8];
+            source.data[0] = b00 * a00 + b01 * a10 + b02 * a20;
+            source.data[1] = b00 * a01 + b01 * a11 + b02 * a21;
+            source.data[2] = b00 * a02 + b01 * a12 + b02 * a22;
+            source.data[3] = b10 * a00 + b11 * a10 + b12 * a20;
+            source.data[4] = b10 * a01 + b11 * a11 + b12 * a21;
+            source.data[5] = b10 * a02 + b11 * a12 + b12 * a22;
+            source.data[6] = b20 * a00 + b21 * a10 + b22 * a20;
+            source.data[7] = b20 * a01 + b21 * a11 + b22 * a21;
+            source.data[8] = b20 * a02 + b21 * a12 + b22 * a22;
+            return source;
+        };
+        Mat3Utils.fromQuaternion = function fromQuaternion() {
+        };
+        Mat3Utils.normalFromMat4 = function normalFromMat4() {
+        };
+        return Mat3Utils;
+    })();
+    Phaser.Mat3Utils = Mat3Utils;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Circle.ts" />
+/**
+* Phaser - PixelUtils
+*
+* A collection of methods useful for manipulating pixels.
+*/
+var Phaser;
+(function (Phaser) {
+    var PixelUtils = (function () {
+        function PixelUtils() { }
+        PixelUtils.boot = function boot() {
+            PixelUtils.pixelCanvas = document.createElement('canvas');
+            PixelUtils.pixelCanvas.width = 1;
+            PixelUtils.pixelCanvas.height = 1;
+            PixelUtils.pixelContext = PixelUtils.pixelCanvas.getContext('2d');
+        };
+        PixelUtils.getPixel = function getPixel(key, x, y) {
+            //  write out a single pixel (won't help with rotated sprites though.. hmm)
+            var imageData = PixelUtils.pixelContext.getImageData(0, 0, 1, 1);
+            return Phaser.ColorUtils.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
+        };
+        return PixelUtils;
+    })();
+    Phaser.PixelUtils = PixelUtils;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**

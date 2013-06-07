@@ -1,7 +1,7 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Circle.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Circle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="RectangleUtils.ts" />
 
