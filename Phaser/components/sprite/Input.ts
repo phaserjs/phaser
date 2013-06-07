@@ -258,7 +258,7 @@ module Phaser.Components.Sprite {
 		    }
 		    else
 		    {
-		        return RectangleUtils.contains(this.sprite.worldView, pointer.scaledX, pointer.scaledY);
+		        return RectangleUtils.contains(this.sprite.worldView, pointer.worldX(), pointer.worldY());
 		    }
 
 		}
@@ -279,10 +279,10 @@ module Phaser.Components.Sprite {
             }
             else if (this._pointerData[pointer.id].isOver == true)
             {
-                if (RectangleUtils.contains(this.sprite.worldView, pointer.scaledX, pointer.scaledY))
+                if (RectangleUtils.contains(this.sprite.worldView, pointer.worldX(), pointer.worldY()))
                 {
-                    this._pointerData[pointer.id].x = pointer.scaledX - this.sprite.x;
-                    this._pointerData[pointer.id].y = pointer.scaledY - this.sprite.y;
+                    this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
+                    this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
                     return true;
                 }
                 else

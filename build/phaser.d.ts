@@ -2344,7 +2344,7 @@ module Phaser.Physics {
         */
         public game: Game;
         /**
-        * Reference to the sprite Sprite
+        * Reference to the parent Sprite
         */
         public sprite: Sprite;
         /**
@@ -2379,6 +2379,12 @@ module Phaser.Physics {
         public oldPosition: Vec2;
         public offset: Vec2;
         public bounds: Rectangle;
+        private _width;
+        private _height;
+        public x : number;
+        public y : number;
+        public width : number;
+        public height : number;
         public preUpdate(): void;
         public postUpdate(): void;
         public hullWidth : number;
@@ -2411,7 +2417,7 @@ module Phaser {
         * @param [x] {number} the initial x position of the sprite.
         * @param [y] {number} the initial y position of the sprite.
         * @param [key] {string} Key of the graphic you want to load for this sprite.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
         */
         constructor(game: Game, x?: number, y?: number, key?: string, frame?, bodyType?: number);
         /**
@@ -2865,6 +2871,11 @@ module Phaser {
         */
         public update(): void;
         /**
+        * Calls update on all members of this Group who have a status of active=true and exists=true
+        * You can also call Object.postUpdate directly, which will bypass the active/exists check.
+        */
+        public postUpdate(): void;
+        /**
         * Calls render on all members of this Group who have a status of visible=true and exists=true
         * You can also call Object.render directly, which will bypass the visible/exists check.
         */
@@ -2901,7 +2912,7 @@ module Phaser {
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
         * @returns {Sprite} The newly created sprite object.
         */
         public addNewSprite(x: number, y: number, key?: string, frame?, bodyType?: number): Sprite;
@@ -4490,6 +4501,10 @@ module Phaser {
         */
         public update(): void;
         /**
+        * Update focusing and scrolling.
+        */
+        public postUpdate(): void;
+        /**
         * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
         * @param x {number} X position of the debug info to be rendered.
         * @param y {number} Y position of the debug info to be rendered.
@@ -4575,6 +4590,10 @@ module Phaser {
         * Update cameras.
         */
         public update(): void;
+        /**
+        * postUpdate cameras.
+        */
+        public postUpdate(): void;
         /**
         * Create a new camera with specific position and size.
         *
@@ -6989,6 +7008,10 @@ module Phaser {
         */
         public update(): void;
         /**
+        * This is called automatically every frame, and is where main logic happens.
+        */
+        public postUpdate(): void;
+        /**
         * Clean up memory.
         */
         public destroy(): void;
@@ -7618,13 +7641,13 @@ module Phaser {
         */
         public screenY: number;
         /**
-        * The horizontal coordinate of point relative to the game element
+        * The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
         * @property x
         * @type {Number}
         */
         public x: number;
         /**
-        * The vertical coordinate of point relative to the game element
+        * The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.
         * @property y
         * @type {Number}
         */
@@ -7690,25 +7713,15 @@ module Phaser {
         **/
         public targetObject;
         /**
-        * Gets the X value of this Pointer in world coordinate space (is it properly scaled?)
+        * Gets the X value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public getWorldX(camera?: Camera): number;
+        public worldX(camera?: Camera): number;
         /**
-        * Gets the Y value of this Pointer in world coordinate space
+        * Gets the Y value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public getWorldY(camera?: Camera): number;
-        /**
-        * Gets the X value of this Pointer in world coordinate space
-        * @param {Camera} [camera]
-        */
-        public scaledX : number;
-        /**
-        * Gets the Y value of this Pointer in world coordinate space
-        * @param {Camera} [camera]
-        */
-        public scaledY : number;
+        public worldY(camera?: Camera): number;
         /**
         * Called when the Pointer is pressed onto the touchscreen
         * @method start
@@ -8187,6 +8200,18 @@ module Phaser {
         **/
         private _oldPosition;
         /**
+        * X coordinate of the most recent Pointer event
+        * @type {Number}
+        * @private
+        */
+        private _x;
+        /**
+        * X coordinate of the most recent Pointer event
+        * @type {Number}
+        * @private
+        */
+        private _y;
+        /**
         * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
         * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
         * @type {Boolean}
@@ -8211,6 +8236,12 @@ module Phaser {
         * With this setting when the mouse is used it updates the Input.x/y globals at the same time as any active Pointer objects might
         */
         static MOUSE_TOUCH_COMBINE: number;
+        /**
+        * The camera being used for mouse and touch based pointers to calculate their world coordinates.
+        * @property camera
+        * @type {Camera}
+        **/
+        public camera: Camera;
         /**
         * Phaser.Mouse handler
         * @type {Mouse}
@@ -8257,27 +8288,11 @@ module Phaser {
         **/
         public circle: Circle;
         /**
-        * X coordinate of the most recent Pointer event
-        * @type {Number}
-        * @private
+        * The scale by which all input coordinates are multiplied, calculated by the StageScaleMode.
+        * In an un-scaled game the values will be x: 1 and y: 1.
+        * @type {Vec2}
         */
-        private _x;
-        /**
-        * X coordinate of the most recent Pointer event
-        * @type {Number}
-        * @private
-        */
-        private _y;
-        /**
-        *
-        * @type {Number}
-        */
-        public scaleX: number;
-        /**
-        *
-        * @type {Number}
-        */
-        public scaleY: number;
+        public scale: Vec2;
         /**
         * The maximum number of Pointers allowed to be active at any one time.
         * For lots of games it's useful to set this to 1
@@ -8428,13 +8443,22 @@ module Phaser {
         **/
         public pointer10: Pointer;
         /**
-        * The screen X coordinate
+        * The most recently active Pointer object.
+        * When you've limited max pointers to 1 this will accurately be either the first finger touched or mouse.
+        * @property activePointer
+        * @type {Pointer}
+        **/
+        public activePointer: Pointer;
+        /**
+        * The X coordinate of the most recently active pointer.
+        * This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
         * @property x
         * @type {Number}
         **/
         public x : number;
         /**
-        * The screen Y coordinate
+        * The Y coordinate of the most recently active pointer.
+        * This value takes game scaling into account automatically. See Pointer.screenY/clientY for source values.
         * @property y
         * @type {Number}
         **/
@@ -8554,16 +8578,15 @@ module Phaser {
         postRenderGroup(camera: Camera, group: Group);
         preRenderCamera(camera: Camera);
         postRenderCamera(camera: Camera);
+        inCamera(camera: Camera, sprite: Sprite): bool;
     }
 }
 module Phaser {
     class HeadlessRenderer implements IRenderer {
         constructor(game: Game);
-        /**
-        * The essential reference to the main game object
-        */
         private _game;
         public render(): void;
+        public inCamera(camera: Camera, sprite: Sprite): bool;
         public renderGameObject(object): void;
         public renderSprite(camera: Camera, sprite: Sprite): bool;
         public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
@@ -8642,6 +8665,8 @@ module Phaser {
         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
         static renderSpriteInfo(sprite: Sprite, x: number, y: number, color?: string): void;
+        static renderSpriteBounds(sprite: Sprite, camera?: Camera, color?: string): void;
+        static renderSpritePhysicsBody(sprite: Sprite, camera?: Camera, color?: string): void;
     }
 }
 /**

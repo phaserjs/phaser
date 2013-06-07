@@ -83,7 +83,24 @@ module Phaser {
          * Update cameras.
          */
         public update() {
-            this._cameras.forEach((camera) => camera.update());
+
+            for (var i = 0; i < this._cameras.length; i++)
+            {
+                this._cameras[i].update();
+            }
+
+        }
+
+        /**
+         * postUpdate cameras.
+         */
+        public postUpdate() {
+
+            for (var i = 0; i < this._cameras.length; i++)
+            {
+                this._cameras[i].postUpdate();
+            }
+
         }
 
         /**

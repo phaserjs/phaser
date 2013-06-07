@@ -446,8 +446,7 @@ module Phaser {
             this._game.stage.canvas.style.width = this.width + 'px';
             this._game.stage.canvas.style.height = this.height + 'px';
 
-            this._game.input.scaleX = this._game.stage.width / this.width;
-            this._game.input.scaleY = this._game.stage.height / this.height;
+            this._game.input.scale.setTo(this._game.stage.width / this.width, this._game.stage.height / this.height);
 
             if (this.pageAlignHorizontally)
             {

@@ -42,11 +42,15 @@ module Phaser {
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
 
+            this.scale = new Vec2(1, 1);
             this.speed = new Vec2;
             this.position = new Vec2;
             this._oldPosition = new Vec2;
             this.circle = new Circle(0, 0, 44);
 
+            this.camera = this._game.camera;
+
+            this.activePointer = this.mousePointer;
             this.currentPointers = 0;
 
         }
@@ -62,6 +66,20 @@ module Phaser {
         * @type {Vec2}
         **/
         private _oldPosition: Vec2 = null;
+
+        /**
+        * X coordinate of the most recent Pointer event
+        * @type {Number}
+        * @private
+        */
+        private _x: number = 0;
+
+        /**
+        * X coordinate of the most recent Pointer event
+        * @type {Number}
+        * @private
+        */
+        private _y: number = 0;
 
         /**
         * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
@@ -92,6 +110,13 @@ module Phaser {
         * With this setting when the mouse is used it updates the Input.x/y globals at the same time as any active Pointer objects might
         */
         public static MOUSE_TOUCH_COMBINE: number = 2;
+
+        /**
+        * The camera being used for mouse and touch based pointers to calculate their world coordinates.
+        * @property camera
+        * @type {Camera}
+        **/
+        public camera: Camera;
 
         /**
         * Phaser.Mouse handler
@@ -147,30 +172,11 @@ module Phaser {
         public circle: Circle = null;
 
         /**
-        * X coordinate of the most recent Pointer event
-        * @type {Number}
-        * @private
-        */
-        private _x: number = 0;
-
-        /**
-        * X coordinate of the most recent Pointer event
-        * @type {Number}
-        * @private
-        */
-        private _y: number = 0;
-
-        /**
-         *
-         * @type {Number}
+         * The scale by which all input coordinates are multiplied, calculated by the StageScaleMode.
+         * In an un-scaled game the values will be x: 1 and y: 1.
+         * @type {Vec2}
          */
-        public scaleX: number = 1;
-
-        /**
-         *
-         * @type {Number}
-         */
-        public scaleY: number = 1;
+        public scale: Vec2 = null;
 
         /**
         * The maximum number of Pointers allowed to be active at any one time.
@@ -347,37 +353,39 @@ module Phaser {
         public pointer10: Pointer = null;
 
         /**
-        * The screen X coordinate
+        * The most recently active Pointer object.
+        * When you've limited max pointers to 1 this will accurately be either the first finger touched or mouse.
+        * @property activePointer
+        * @type {Pointer}
+        **/
+        public activePointer: Pointer = null;
+
+        /**
+        * The X coordinate of the most recently active pointer.
+        * This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
         * @property x
         * @type {Number}
         **/
         public get x(): number {
-
             return this._x;
-
         }
 
         public set x(value: number) {
-
             this._x = Math.round(value);
-
         }
 
         /**
-        * The screen Y coordinate
+        * The Y coordinate of the most recently active pointer.
+        * This value takes game scaling into account automatically. See Pointer.screenY/clientY for source values.
         * @property y
         * @type {Number}
         **/
         public get y(): number {
-
             return this._y;
-
         }
 
         public set y(value: number) {
-
             this._y = Math.round(value);
-
         }
 
         /**
@@ -469,7 +477,6 @@ module Phaser {
         **/
         public update() {
 
-            //  Swap for velocity vector - and add it to Pointer?
             this.speed.x = this.position.x - this._oldPosition.x;
             this.speed.y = this.position.y - this._oldPosition.y;
 
@@ -487,6 +494,7 @@ module Phaser {
             if (this.pointer8) { this.pointer8.update(); }
             if (this.pointer9) { this.pointer9.update(); }
             if (this.pointer10) { this.pointer10.update(); }
+
 
         }
 
@@ -883,18 +891,14 @@ module Phaser {
          * @param {Camera} [camera]
          */
         public getWorldX(camera?: Camera = this._game.camera) {
-
             return camera.worldView.x + this.x;
-
         }
 
         /**
          * @param {Camera} [camera]
          */
         public getWorldY(camera?: Camera = this._game.camera) {
-
             return camera.worldView.y + this.y;
-
         }
 
         /**
@@ -904,12 +908,12 @@ module Phaser {
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this._game.stage.context.font = '14px Courier';
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
-            this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
+            this._game.stage.context.fillText('X: ' + this.x + ' Y: ' + this.y, x, y + 14);
             this._game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
-            this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
+            this._game.stage.context.fillText('Scale X: ' + this.scale.x.toFixed(1) + ' Scale Y: ' + this.scale.x.toFixed(1), x, y + 42);
+            this._game.stage.context.fillText('Screen X: ' + this.activePointer.screenX + ' Screen Y: ' + this.activePointer.screenY, x, y + 56);
 
         }
 

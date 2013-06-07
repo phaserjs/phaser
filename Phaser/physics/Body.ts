@@ -18,11 +18,15 @@ module Phaser.Physics {
 
             //  Fixture properties
             //  Will extend into its own class at a later date - can move the fixture defs there and add shape support, but this will do for 1.0 release
-            this.bounds = new Rectangle(sprite.x + Math.round(sprite.width / 2), sprite.y + Math.round(sprite.height / 2), sprite.width, sprite.height);
-            this.bounce = Vec2Utils.clone(this.game.world.physics.bounce);
+            this.bounds = new Rectangle;
+
+            this._width = sprite.width;
+            this._height = sprite.height;
+
 
             //  Body properties
             this.gravity = Vec2Utils.clone(this.game.world.physics.gravity);
+            this.bounce = Vec2Utils.clone(this.game.world.physics.bounce);
 
             this.velocity = new Vec2;
             this.acceleration = new Vec2;
@@ -49,7 +53,7 @@ module Phaser.Physics {
         public game: Game;
 
         /**
-         * Reference to the sprite Sprite
+         * Reference to the parent Sprite
          */
         public sprite: Phaser.Sprite;
 
@@ -94,17 +98,41 @@ module Phaser.Physics {
 
 
 
+        private _width: number = 0;
+        private _height: number = 0;
+
+        public get x(): number {
+            return this.sprite.x + this.offset.x;
+        }
+
+        public get y(): number {
+            return this.sprite.y + this.offset.y;
+        }
+
+        public set width(value: number) {
+            this._width = value;
+        }
+
+        public set height(value: number) {
+            this._height = value;
+        }
+
+        public get width(): number {
+            return this._width * this.sprite.transform.scale.x;
+        }
+
+        public get height(): number {
+            return this._height * this.sprite.transform.scale.y;
+        }
 
         public preUpdate() {
 
             this.oldPosition.copyFrom(this.position);
 
-            this.bounds.x = this.position.x - this.bounds.halfWidth;
-            this.bounds.y = this.position.y - this.bounds.halfHeight;
-
-            if (this.sprite.transform.scale.equals(1) == false)
-            {
-            }
+            this.bounds.x = this.x;
+            this.bounds.y = this.y;
+            this.bounds.width = this.width;
+            this.bounds.height = this.height;
 
         }
 
@@ -117,13 +145,12 @@ module Phaser.Physics {
             {
                 this.game.world.physics.updateMotion(this);
 
-                this.sprite.x = (this.position.x - this.bounds.halfWidth) - this.offset.x;
-                this.sprite.y = (this.position.y - this.bounds.halfHeight) - this.offset.y;
-
                 this.wasTouching = this.touching;
                 this.touching = Phaser.Types.NONE;
 
             }
+
+            this.position.setTo(this.x, this.y);
 
         }
 

@@ -62,9 +62,6 @@ module Phaser.Physics {
         private _quadTree: QuadTree;
         private _quadTreeResult: bool;
 
-
-
-
         public bounds: Rectangle;
 
         public gravity: Vec2;
@@ -148,13 +145,15 @@ module Phaser.Physics {
             body.velocity.x += this._velocityDelta;
             this._delta = body.velocity.x * this.game.time.elapsed;
             body.velocity.x += this._velocityDelta;
-            body.position.x += this._delta;
+            //body.position.x += this._delta;
+            body.sprite.x += this._delta;
 
             this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
             body.velocity.y += this._velocityDelta;
             this._delta = body.velocity.y * this.game.time.elapsed;
             body.velocity.y += this._velocityDelta;
-            body.position.y += this._delta;
+            //body.position.y += this._delta;
+            body.sprite.y += this._delta;
 
         }
 
@@ -747,6 +746,8 @@ module Phaser.Physics {
             this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
 
             this._quadTreeResult = this._quadTree.execute();
+
+            console.log('over', this._quadTreeResult);
 
             this._quadTree.destroy();
 

@@ -69,6 +69,10 @@
     <TypeScriptCompile Include="particles\graphic emitter.ts" />
     <TypeScriptCompile Include="input\over sprite 1.ts" />
     <TypeScriptCompile Include="groups\create group 1.ts" />
+    <TypeScriptCompile Include="cameras\world sprite.ts" />
+    <Content Include="cameras\world sprite.js">
+      <DependentUpon>world sprite.ts</DependentUpon>
+    </Content>
     <Content Include="groups\create group 1.js">
       <DependentUpon>create group 1.ts</DependentUpon>
     </Content>
@@ -90,11 +94,19 @@
     </Content>
     <TypeScriptCompile Include="input\motion lock.ts" />
     <TypeScriptCompile Include="input\motion lock 2.ts" />
+    <TypeScriptCompile Include="input\game scale 1.ts" />
+    <Content Include="input\game scale 1.js">
+      <DependentUpon>game scale 1.ts</DependentUpon>
+    </Content>
     <Content Include="input\motion lock 2.js">
       <DependentUpon>motion lock 2.ts</DependentUpon>
     </Content>
     <Content Include="input\motion lock.js">
       <DependentUpon>motion lock.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="input\multitouch.ts" />
+    <Content Include="input\multitouch.js">
+      <DependentUpon>multitouch.ts</DependentUpon>
     </Content>
     <Content Include="input\over sprite 1.js">
       <DependentUpon>over sprite 1.ts</DependentUpon>

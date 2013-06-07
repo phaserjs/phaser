@@ -291,10 +291,6 @@ module Phaser {
             {
                 this.modified = true;
             }
-            else if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
-            {
-                this.modified = false;
-            }
 
             this.fx.preUpdate();
 
@@ -365,6 +361,42 @@ module Phaser {
                 }
             }
 
+        }
+
+        /**
+         * Update focusing and scrolling.
+         */
+        public postUpdate() {
+
+            if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
+            {
+                this.modified = false;
+            }
+
+            //  Make sure we didn't go outside the cameras worldBounds
+            if (this.worldBounds !== null)
+            {
+                if (this.worldView.x < this.worldBounds.left)
+                {
+                    this.worldView.x = this.worldBounds.left;
+                }
+
+                if (this.worldView.x > this.worldBounds.right - this.width)
+                {
+                    this.worldView.x = (this.worldBounds.right - this.width) + 1;
+                }
+
+                if (this.worldView.y < this.worldBounds.top)
+                {
+                    this.worldView.y = this.worldBounds.top;
+                }
+
+                if (this.worldView.y > this.worldBounds.bottom - this.height)
+                {
+                    this.worldView.y = (this.worldBounds.bottom - this.height) + 1;
+                }
+            }
+
             this.fx.postUpdate();
 
         }
@@ -380,11 +412,12 @@ module Phaser {
             this.game.stage.context.fillStyle = color;
             this.game.stage.context.fillText('Camera ID: ' + this.ID + ' (' + this.screenView.width + ' x ' + this.screenView.height + ')', x, y);
             this.game.stage.context.fillText('X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' rotation: ' + this.transform.rotation, x, y + 14);
-            this.game.stage.context.fillText('World X: ' + this.worldView.x.toFixed(1) + ' World Y: ' + this.worldView.y.toFixed(1), x, y + 28);
+            this.game.stage.context.fillText('World X: ' + this.worldView.x + ' World Y: ' + this.worldView.y + ' W: ' + this.worldView.width + ' H: ' + this.worldView.height + ' R: ' + this.worldView.right + ' B: ' + this.worldView.bottom, x, y + 28);
+            this.game.stage.context.fillText('ScreenView X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' W: ' + this.screenView.width + ' H: ' + this.screenView.height, x, y + 42);
 
             if (this.worldBounds)
             {
-                this.game.stage.context.fillText('Bounds: ' + this.worldBounds.width + ' x ' + this.worldBounds.height, x, y + 42);
+                this.game.stage.context.fillText('Bounds: ' + this.worldBounds.width + ' x ' + this.worldBounds.height, x, y + 56);
             }
 
         }

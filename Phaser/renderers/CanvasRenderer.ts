@@ -215,24 +215,13 @@ module Phaser {
          */
         public inCamera(camera: Camera, sprite: Sprite): bool {
 
-                return true;
-
-            /*
-
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if (sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0)
+            if (sprite.transform.scrollFactor.equals(0))
             {
                 return true;
             }
 
-            this._dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
-            this._dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            this._dw = sprite.frameBounds.width * sprite.scale.x;
-            this._dh = sprite.frameBounds.height * sprite.scale.y;
-
-            //return (camera.screenView.x + camera.worldView.width > this._dx) && (camera.screenView.x < this._dx + this._dw) && (camera.screenView.y + camera.worldView.height > this._dy) && (camera.screenView.y < this._dy + this._dh);
-
-            */
+            return RectangleUtils.intersects(sprite.worldView, camera.worldView);
 
         }
 

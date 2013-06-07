@@ -23,9 +23,9 @@ module Phaser {
          * @param [x] {number} the initial x position of the sprite.
          * @param [y] {number} the initial y position of the sprite.
          * @param [key] {string} Key of the graphic you want to load for this sprite.
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
          */
-        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED) {
+        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC) {
 
             this.game = game;
             this.type = Phaser.Types.SPRITE;
@@ -43,7 +43,6 @@ module Phaser {
             this.transform = new Phaser.Components.Transform(this);
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this);
-            this.body = new Phaser.Physics.Body(this, bodyType);
             this.input = new Phaser.Components.Sprite.Input(this);
             this.events = new Phaser.Components.Sprite.Events(this);
 
@@ -68,6 +67,7 @@ module Phaser {
                 }
             }
 
+            this.body = new Phaser.Physics.Body(this, bodyType);
             this.worldView = new Rectangle(x, y, this.width, this.height);
 
         }
@@ -233,8 +233,10 @@ module Phaser {
          */
         public preUpdate() {
 
-            this.worldView.x = this.x - (this.game.world.cameras.default.worldView.x * this.transform.scrollFactor.x);
-            this.worldView.y = this.y - (this.game.world.cameras.default.worldView.y * this.transform.scrollFactor.y);
+            //this.worldView.x = this.x * this.transform.scrollFactor.x;
+            //this.worldView.y = this.y * this.transform.scrollFactor.y;
+            this.worldView.x = this.x - this.transform.origin.x;
+            this.worldView.y = this.y - this.transform.origin.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
 

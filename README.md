@@ -41,9 +41,12 @@ TODO:
 * Added JSON Texture Atlas object support.
 * RenderOrderID won't work across cameras - but then neither do Pointers yet anyway
 * Swap to using time based motion (like the tweens) rather than delta timer - it just doesn't work well on slow phones
-* Bug in World drag
+* Pointer.getWorldX(camera) needs to take camera scale into consideration
+* Add a 'click to bring to top' demo (+ Group feature?)
 
 * Add clip support + shape options to Texture Component.
+
+Make sure I'm using Point and not Vec2 when it's not a directional vector I need
 
 
 
@@ -103,6 +106,11 @@ V1.0.0
 * Created a Transform component containing scale, skew, rotation, scrollFactor, origin and rotationOffset. Added to Sprite, Camera, Group.
 * Created a Texture component containing image data, alpha, flippedX, flippedY, etc. Added to Sprite, Camera, Group.
 * Added CameraManager.swap and CameraManager.sort methods and added a z-index property to Camera to control render order.
+* Added World.postUpdate loop + Group and Camera postUpdate methods.
+* Fixed issue stopping Pointer from working in world coordinates and fixed the world drag example.
+* For consistency renamed input.scaledX/Y = input.scale.
+* Added input.activePointer which contains a reference to the most recently active pointer.
+
 
 
 

@@ -33,5 +33,6 @@
     }
     function render() {
         atari.body.renderDebugInfo(16, 16);
+        Phaser.DebugUtils.renderSpritePhysicsBody(atari);
     }
 })();

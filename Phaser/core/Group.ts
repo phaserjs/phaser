@@ -186,7 +186,28 @@ module Phaser {
             {
                 this.modified = true;
             }
-            else if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
+
+            this._i = 0;
+
+            while (this._i < this.length)
+            {
+                this._member = this.members[this._i++];
+
+                if (this._member != null && this._member.exists && this._member.active)
+                {
+                    this._member.preUpdate();
+                    this._member.update();
+                }
+            }
+        }
+
+        /**
+        * Calls update on all members of this Group who have a status of active=true and exists=true
+        * You can also call Object.postUpdate directly, which will bypass the active/exists check.
+        */
+        public postUpdate() {
+
+            if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
             {
                 this.modified = false;
             }
@@ -199,8 +220,6 @@ module Phaser {
 
                 if (this._member != null && this._member.exists && this._member.active)
                 {
-                    this._member.preUpdate();
-                    this._member.update();
                     this._member.postUpdate();
                 }
             }
@@ -398,10 +417,10 @@ module Phaser {
          * @param y {number} Y position of the new sprite.
          * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
          * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
          * @returns {Sprite} The newly created sprite object.
          */
-        public addNewSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED): Sprite {
+        public addNewSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC): Sprite {
             return <Sprite> this.add(new Sprite(this.game, x, y, key, frame, bodyType));
         }
 

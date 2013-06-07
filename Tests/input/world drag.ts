@@ -66,6 +66,8 @@
 
         Phaser.DebugUtils.renderSpriteInfo(test, 32, 200);
 
+        game.input.renderDebugInfo(300, 200);
+
     }
 
 })();

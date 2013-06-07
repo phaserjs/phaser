@@ -13,7 +13,8 @@ module Phaser {
         postRenderGroup(camera: Camera, group: Group);
         preRenderCamera(camera: Camera);
         postRenderCamera(camera: Camera);
-
+        
+        inCamera(camera: Camera, sprite: Sprite): bool;
 
     }
 

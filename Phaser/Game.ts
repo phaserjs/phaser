@@ -416,6 +416,8 @@ module Phaser {
                 this.onUpdateCallback.call(this.callbackContext);
             }
 
+            this.world.postUpdate();
+
             this.renderer.render();
 
             if (this._loadComplete && this.onRenderCallback)

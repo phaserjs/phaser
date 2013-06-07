@@ -10,8 +10,8 @@
     function create() {
         //  Create a load of sprites
         for(var i = 0; i < 26; i++) {
-            var tempSprite = game.add.sprite(i * 32, 100, 'sprite', Phaser.Types.BODY_DYNAMIC);
-            tempSprite.input.enabled = true;
+            var tempSprite = game.add.sprite(i * 32, 100, 'sprite');
+            tempSprite.input.start(0, false, true);
             tempSprite.events.onInputOver.add(dropSprite, this);
         }
     }

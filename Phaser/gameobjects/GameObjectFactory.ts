@@ -72,7 +72,7 @@ module Phaser {
          * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
          * @returns {Sprite} The newly created sprite object.
          */
-        public sprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED): Sprite {
+        public sprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC): Sprite {
             return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key, frame, bodyType));
         }
 

@@ -97,6 +97,17 @@ module Phaser {
         }
 
         /**
+         * This is called automatically every frame, and is where main logic happens.
+         */
+        public postUpdate() {
+
+            //this.physics.postUpdate();
+            this.group.postUpdate();
+            this.cameras.postUpdate();
+
+        }
+
+        /**
          * Clean up memory.
          */
         public destroy() {

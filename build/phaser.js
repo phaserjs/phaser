@@ -3051,7 +3051,7 @@ var Phaser;
                     if(this.enabled == false || this.sprite.visible == false) {
                         return false;
                     } else {
-                        return Phaser.RectangleUtils.contains(this.sprite.worldView, pointer.scaledX, pointer.scaledY);
+                        return Phaser.RectangleUtils.contains(this.sprite.worldView, pointer.worldX(), pointer.worldY());
                     }
                 };
                 Input.prototype.update = /**
@@ -3064,9 +3064,9 @@ var Phaser;
                     if(this.draggable && this._draggedPointerID == pointer.id) {
                         return this.updateDrag(pointer);
                     } else if(this._pointerData[pointer.id].isOver == true) {
-                        if(Phaser.RectangleUtils.contains(this.sprite.worldView, pointer.scaledX, pointer.scaledY)) {
-                            this._pointerData[pointer.id].x = pointer.scaledX - this.sprite.x;
-                            this._pointerData[pointer.id].y = pointer.scaledY - this.sprite.y;
+                        if(Phaser.RectangleUtils.contains(this.sprite.worldView, pointer.worldX(), pointer.worldY())) {
+                            this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
+                            this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
                             return true;
                         } else {
                             this._pointerOutHandler(pointer);
@@ -3721,15 +3721,19 @@ var Phaser;
                 this.angularDrag = 0;
                 this.maxAngular = 10000;
                 this.mass = 1;
+                this._width = 0;
+                this._height = 0;
                 this.sprite = sprite;
                 this.game = sprite.game;
                 this.type = type;
                 //  Fixture properties
                 //  Will extend into its own class at a later date - can move the fixture defs there and add shape support, but this will do for 1.0 release
-                this.bounds = new Phaser.Rectangle(sprite.x + Math.round(sprite.width / 2), sprite.y + Math.round(sprite.height / 2), sprite.width, sprite.height);
-                this.bounce = Phaser.Vec2Utils.clone(this.game.world.physics.bounce);
+                this.bounds = new Phaser.Rectangle();
+                this._width = sprite.width;
+                this._height = sprite.height;
                 //  Body properties
                 this.gravity = Phaser.Vec2Utils.clone(this.game.world.physics.gravity);
+                this.bounce = Phaser.Vec2Utils.clone(this.game.world.physics.bounce);
                 this.velocity = new Phaser.Vec2();
                 this.acceleration = new Phaser.Vec2();
                 this.drag = Phaser.Vec2Utils.clone(this.game.world.physics.drag);
@@ -3744,12 +3748,46 @@ var Phaser;
                 this.oldPosition = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
                 this.offset = new Phaser.Vec2();
             }
+            Object.defineProperty(Body.prototype, "x", {
+                get: function () {
+                    return this.sprite.x + this.offset.x;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "y", {
+                get: function () {
+                    return this.sprite.y + this.offset.y;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "width", {
+                get: function () {
+                    return this._width * this.sprite.transform.scale.x;
+                },
+                set: function (value) {
+                    this._width = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "height", {
+                get: function () {
+                    return this._height * this.sprite.transform.scale.y;
+                },
+                set: function (value) {
+                    this._height = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
             Body.prototype.preUpdate = function () {
                 this.oldPosition.copyFrom(this.position);
-                this.bounds.x = this.position.x - this.bounds.halfWidth;
-                this.bounds.y = this.position.y - this.bounds.halfHeight;
-                if(this.sprite.transform.scale.equals(1) == false) {
-                }
+                this.bounds.x = this.x;
+                this.bounds.y = this.y;
+                this.bounds.width = this.width;
+                this.bounds.height = this.height;
             };
             Body.prototype.postUpdate = //  Shall we do this? Or just update the values directly in the separate functions? But then the bounds will be out of sync - as long as
             //  the bounds are updated and used in calculations then we can do one final sprite movement here I guess?
@@ -3757,11 +3795,10 @@ var Phaser;
                 //  if this is all it does maybe move elsewhere? Sprite postUpdate?
                 if(this.type !== Phaser.Types.BODY_DISABLED) {
                     this.game.world.physics.updateMotion(this);
-                    this.sprite.x = (this.position.x - this.bounds.halfWidth) - this.offset.x;
-                    this.sprite.y = (this.position.y - this.bounds.halfHeight) - this.offset.y;
                     this.wasTouching = this.touching;
                     this.touching = Phaser.Types.NONE;
                 }
+                this.position.setTo(this.x, this.y);
             };
             Object.defineProperty(Body.prototype, "hullWidth", {
                 get: function () {
@@ -3922,14 +3959,14 @@ var Phaser;
         * @param [x] {number} the initial x position of the sprite.
         * @param [y] {number} the initial y position of the sprite.
         * @param [key] {string} Key of the graphic you want to load for this sprite.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
         */
         function Sprite(game, x, y, key, frame, bodyType) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof key === "undefined") { key = null; }
             if (typeof frame === "undefined") { frame = null; }
-            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
+            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DYNAMIC; }
             /**
             * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
             */
@@ -3963,7 +4000,6 @@ var Phaser;
             this.transform = new Phaser.Components.Transform(this);
             this.animations = new Phaser.Components.AnimationManager(this);
             this.texture = new Phaser.Components.Texture(this);
-            this.body = new Phaser.Physics.Body(this, bodyType);
             this.input = new Phaser.Components.Sprite.Input(this);
             this.events = new Phaser.Components.Sprite.Events(this);
             if(key !== null) {
@@ -3978,6 +4014,7 @@ var Phaser;
                     this.frame = frame;
                 }
             }
+            this.body = new Phaser.Physics.Body(this, bodyType);
             this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
         }
         Object.defineProperty(Sprite.prototype, "rotation", {
@@ -4053,8 +4090,10 @@ var Phaser;
         * Pre-update is called right before update() on each object in the game loop.
         */
         function () {
-            this.worldView.x = this.x - (this.game.world.cameras.default.worldView.x * this.transform.scrollFactor.x);
-            this.worldView.y = this.y - (this.game.world.cameras.default.worldView.y * this.transform.scrollFactor.y);
+            //this.worldView.x = this.x * this.transform.scrollFactor.x;
+            //this.worldView.y = this.y * this.transform.scrollFactor.y;
+            this.worldView.x = this.x - this.transform.origin.x;
+            this.worldView.y = this.y - this.transform.origin.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
             if(this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
@@ -4702,8 +4741,6 @@ var Phaser;
         function () {
             if(this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
                 this.modified = true;
-            } else if(this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
-                this.modified = false;
             }
             this._i = 0;
             while(this._i < this.length) {
@@ -4711,6 +4748,21 @@ var Phaser;
                 if(this._member != null && this._member.exists && this._member.active) {
                     this._member.preUpdate();
                     this._member.update();
+                }
+            }
+        };
+        Group.prototype.postUpdate = /**
+        * Calls update on all members of this Group who have a status of active=true and exists=true
+        * You can also call Object.postUpdate directly, which will bypass the active/exists check.
+        */
+        function () {
+            if(this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
+                this.modified = false;
+            }
+            this._i = 0;
+            while(this._i < this.length) {
+                this._member = this.members[this._i++];
+                if(this._member != null && this._member.exists && this._member.active) {
                     this._member.postUpdate();
                 }
             }
@@ -4846,13 +4898,13 @@ var Phaser;
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
         * @returns {Sprite} The newly created sprite object.
         */
         function (x, y, key, frame, bodyType) {
             if (typeof key === "undefined") { key = ''; }
             if (typeof frame === "undefined") { frame = null; }
-            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
+            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DYNAMIC; }
             return this.add(new Phaser.Sprite(this.game, x, y, key, frame, bodyType));
         };
         Group.prototype.setObjectIDs = /**
@@ -7760,8 +7812,6 @@ var Phaser;
         function () {
             if(this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
                 this.modified = true;
-            } else if(this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
-                this.modified = false;
             }
             this.fx.preUpdate();
             if(this._target !== null) {
@@ -7804,6 +7854,29 @@ var Phaser;
                     this.worldView.y = (this.worldBounds.bottom - this.height) + 1;
                 }
             }
+        };
+        Camera.prototype.postUpdate = /**
+        * Update focusing and scrolling.
+        */
+        function () {
+            if(this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
+                this.modified = false;
+            }
+            //  Make sure we didn't go outside the cameras worldBounds
+            if(this.worldBounds !== null) {
+                if(this.worldView.x < this.worldBounds.left) {
+                    this.worldView.x = this.worldBounds.left;
+                }
+                if(this.worldView.x > this.worldBounds.right - this.width) {
+                    this.worldView.x = (this.worldBounds.right - this.width) + 1;
+                }
+                if(this.worldView.y < this.worldBounds.top) {
+                    this.worldView.y = this.worldBounds.top;
+                }
+                if(this.worldView.y > this.worldBounds.bottom - this.height) {
+                    this.worldView.y = (this.worldBounds.bottom - this.height) + 1;
+                }
+            }
             this.fx.postUpdate();
         };
         Camera.prototype.renderDebugInfo = /**
@@ -7817,9 +7890,10 @@ var Phaser;
             this.game.stage.context.fillStyle = color;
             this.game.stage.context.fillText('Camera ID: ' + this.ID + ' (' + this.screenView.width + ' x ' + this.screenView.height + ')', x, y);
             this.game.stage.context.fillText('X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' rotation: ' + this.transform.rotation, x, y + 14);
-            this.game.stage.context.fillText('World X: ' + this.worldView.x.toFixed(1) + ' World Y: ' + this.worldView.y.toFixed(1), x, y + 28);
+            this.game.stage.context.fillText('World X: ' + this.worldView.x + ' World Y: ' + this.worldView.y + ' W: ' + this.worldView.width + ' H: ' + this.worldView.height + ' R: ' + this.worldView.right + ' B: ' + this.worldView.bottom, x, y + 28);
+            this.game.stage.context.fillText('ScreenView X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' W: ' + this.screenView.width + ' H: ' + this.screenView.height, x, y + 42);
             if(this.worldBounds) {
-                this.game.stage.context.fillText('Bounds: ' + this.worldBounds.width + ' x ' + this.worldBounds.height, x, y + 42);
+                this.game.stage.context.fillText('Bounds: ' + this.worldBounds.width + ' x ' + this.worldBounds.height, x, y + 56);
             }
         };
         Camera.prototype.destroy = /**
@@ -7959,9 +8033,17 @@ var Phaser;
         * Update cameras.
         */
         function () {
-            this._cameras.forEach(function (camera) {
-                return camera.update();
-            });
+            for(var i = 0; i < this._cameras.length; i++) {
+                this._cameras[i].update();
+            }
+        };
+        CameraManager.prototype.postUpdate = /**
+        * postUpdate cameras.
+        */
+        function () {
+            for(var i = 0; i < this._cameras.length; i++) {
+                this._cameras[i].postUpdate();
+            }
         };
         CameraManager.prototype.addCamera = /**
         * Create a new camera with specific position and size.
@@ -10295,7 +10377,7 @@ var Phaser;
         function (x, y, key, frame, bodyType) {
             if (typeof key === "undefined") { key = ''; }
             if (typeof frame === "undefined") { frame = null; }
-            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
+            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DYNAMIC; }
             return this._world.group.add(new Phaser.Sprite(this._game, x, y, key, frame, bodyType));
         };
         GameObjectFactory.prototype.dynamicTexture = /**
@@ -10967,8 +11049,7 @@ var Phaser;
             }
             this._game.stage.canvas.style.width = this.width + 'px';
             this._game.stage.canvas.style.height = this.height + 'px';
-            this._game.input.scaleX = this._game.stage.width / this.width;
-            this._game.input.scaleY = this._game.stage.height / this.height;
+            this._game.input.scale.setTo(this._game.stage.width / this.width, this._game.stage.height / this.height);
             if(this.pageAlignHorizontally) {
                 if(this.width < window.innerWidth && this.incorrectOrientation == false) {
                     this._game.stage.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
@@ -12032,12 +12113,14 @@ var Phaser;
                 body.velocity.x += this._velocityDelta;
                 this._delta = body.velocity.x * this.game.time.elapsed;
                 body.velocity.x += this._velocityDelta;
-                body.position.x += this._delta;
+                //body.position.x += this._delta;
+                body.sprite.x += this._delta;
                 this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
                 body.velocity.y += this._velocityDelta;
                 this._delta = body.velocity.y * this.game.time.elapsed;
                 body.velocity.y += this._velocityDelta;
-                body.position.y += this._delta;
+                //body.position.y += this._delta;
+                body.sprite.y += this._delta;
             };
             PhysicsManager.prototype.computeVelocity = /**
             * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
@@ -12531,6 +12614,7 @@ var Phaser;
                 this._quadTree = new Phaser.QuadTree(this, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
                 this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
                 this._quadTreeResult = this._quadTree.execute();
+                console.log('over', this._quadTreeResult);
                 this._quadTree.destroy();
                 this._quadTree = null;
                 return this._quadTreeResult;
@@ -12931,6 +13015,14 @@ var Phaser;
             //this.physics.update();
             this.group.update();
             this.cameras.update();
+        };
+        World.prototype.postUpdate = /**
+        * This is called automatically every frame, and is where main logic happens.
+        */
+        function () {
+            //this.physics.postUpdate();
+            this.group.postUpdate();
+            this.cameras.postUpdate();
         };
         World.prototype.destroy = /**
         * Clean up memory.
@@ -14136,13 +14228,13 @@ var Phaser;
             */
             this.screenY = -1;
             /**
-            * The horizontal coordinate of point relative to the game element
+            * The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
             * @property x
             * @type {Number}
             */
             this.x = -1;
             /**
-            * The vertical coordinate of point relative to the game element
+            * The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.
             * @property y
             * @type {Number}
             */
@@ -14220,44 +14312,22 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Pointer.prototype.getWorldX = /**
-        * Gets the X value of this Pointer in world coordinate space (is it properly scaled?)
+        Pointer.prototype.worldX = /**
+        * Gets the X value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
         function (camera) {
-            if (typeof camera === "undefined") { camera = this.game.camera; }
+            if (typeof camera === "undefined") { camera = this.game.input.camera; }
             return camera.worldView.x + this.x;
         };
-        Pointer.prototype.getWorldY = /**
-        * Gets the Y value of this Pointer in world coordinate space
+        Pointer.prototype.worldY = /**
+        * Gets the Y value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
         function (camera) {
-            if (typeof camera === "undefined") { camera = this.game.camera; }
+            if (typeof camera === "undefined") { camera = this.game.input.camera; }
             return camera.worldView.y + this.y;
         };
-        Object.defineProperty(Pointer.prototype, "scaledX", {
-            get: /**
-            * Gets the X value of this Pointer in world coordinate space
-            * @param {Camera} [camera]
-            */
-            function () {
-                return Math.floor(this.x * this.game.input.scaleX);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Pointer.prototype, "scaledY", {
-            get: /**
-            * Gets the Y value of this Pointer in world coordinate space
-            * @param {Camera} [camera]
-            */
-            function () {
-                return Math.floor(this.y * this.game.input.scaleY);
-            },
-            enumerable: true,
-            configurable: true
-        });
         Pointer.prototype.start = /**
         * Called when the Pointer is pressed onto the touchscreen
         * @method start
@@ -14281,12 +14351,15 @@ var Phaser;
             this.isUp = false;
             this.timeDown = this.game.time.now;
             this._holdSent = false;
+            //  This sets the x/y and other local values
+            this.move(event);
             // x and y are the old values here?
             this.positionDown.setTo(this.x, this.y);
-            this.move(event);
             if(this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0)) {
-                this.game.input.x = this.x * this.game.input.scaleX;
-                this.game.input.y = this.y * this.game.input.scaleY;
+                //this.game.input.x = this.x * this.game.input.scale.x;
+                //this.game.input.y = this.y * this.game.input.scale.y;
+                this.game.input.x = this.x;
+                this.game.input.y = this.y;
                 this.game.input.onDown.dispatch(this);
             }
             this._stateReset = false;
@@ -14335,14 +14408,15 @@ var Phaser;
             this.pageY = event.pageY;
             this.screenX = event.screenX;
             this.screenY = event.screenY;
-            this.x = this.pageX - this.game.stage.offset.x;
-            this.y = this.pageY - this.game.stage.offset.y;
+            this.x = (this.pageX - this.game.stage.offset.x) * this.game.input.scale.x;
+            this.y = (this.pageY - this.game.stage.offset.y) * this.game.input.scale.y;
             this.position.setTo(this.x, this.y);
             this.circle.x = this.x;
             this.circle.y = this.y;
             if(this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0)) {
-                this.game.input.x = this.x * this.game.input.scaleX;
-                this.game.input.y = this.y * this.game.input.scaleY;
+                this.game.input.activePointer = this;
+                this.game.input.x = this.x;
+                this.game.input.y = this.y;
                 this.game.input.position.setTo(this.game.input.x, this.game.input.y);
                 this.game.input.circle.x = this.game.input.x;
                 this.game.input.circle.y = this.game.input.y;
@@ -15209,6 +15283,18 @@ var Phaser;
             **/
             this._oldPosition = null;
             /**
+            * X coordinate of the most recent Pointer event
+            * @type {Number}
+            * @private
+            */
+            this._x = 0;
+            /**
+            * X coordinate of the most recent Pointer event
+            * @type {Number}
+            * @private
+            */
+            this._y = 0;
+            /**
             * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
             * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
             * @type {Boolean}
@@ -15239,27 +15325,11 @@ var Phaser;
             **/
             this.circle = null;
             /**
-            * X coordinate of the most recent Pointer event
-            * @type {Number}
-            * @private
+            * The scale by which all input coordinates are multiplied, calculated by the StageScaleMode.
+            * In an un-scaled game the values will be x: 1 and y: 1.
+            * @type {Vec2}
             */
-            this._x = 0;
-            /**
-            * X coordinate of the most recent Pointer event
-            * @type {Number}
-            * @private
-            */
-            this._y = 0;
-            /**
-            *
-            * @type {Number}
-            */
-            this.scaleX = 1;
-            /**
-            *
-            * @type {Number}
-            */
-            this.scaleY = 1;
+            this.scale = null;
             /**
             * The maximum number of Pointers allowed to be active at any one time.
             * For lots of games it's useful to set this to 1
@@ -15352,6 +15422,13 @@ var Phaser;
             * @type {Pointer}
             **/
             this.pointer10 = null;
+            /**
+            * The most recently active Pointer object.
+            * When you've limited max pointers to 1 this will accurately be either the first finger touched or mouse.
+            * @property activePointer
+            * @type {Pointer}
+            **/
+            this.activePointer = null;
             this.inputObjects = [];
             this.totalTrackedObjects = 0;
             this._game = game;
@@ -15370,10 +15447,13 @@ var Phaser;
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
+            this.scale = new Phaser.Vec2(1, 1);
             this.speed = new Phaser.Vec2();
             this.position = new Phaser.Vec2();
             this._oldPosition = new Phaser.Vec2();
             this.circle = new Phaser.Circle(0, 0, 44);
+            this.camera = this._game.camera;
+            this.activePointer = this.mousePointer;
             this.currentPointers = 0;
         }
         Input.MOUSE_OVERRIDES_TOUCH = 0;
@@ -15381,7 +15461,8 @@ var Phaser;
         Input.MOUSE_TOUCH_COMBINE = 2;
         Object.defineProperty(Input.prototype, "x", {
             get: /**
-            * The screen X coordinate
+            * The X coordinate of the most recently active pointer.
+            * This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
             * @property x
             * @type {Number}
             **/
@@ -15396,7 +15477,8 @@ var Phaser;
         });
         Object.defineProperty(Input.prototype, "y", {
             get: /**
-            * The screen Y coordinate
+            * The Y coordinate of the most recently active pointer.
+            * This value takes game scaling into account automatically. See Pointer.screenY/clientY for source values.
             * @property y
             * @type {Number}
             **/
@@ -15467,7 +15549,6 @@ var Phaser;
         * @method update
         **/
         function () {
-            //  Swap for velocity vector - and add it to Pointer?
             this.speed.x = this.position.x - this._oldPosition.x;
             this.speed.y = this.position.y - this._oldPosition.y;
             this._oldPosition.copyFrom(this.position);
@@ -15766,12 +15847,12 @@ var Phaser;
         */
         function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this._game.stage.context.font = '14px Courier';
             this._game.stage.context.fillStyle = color;
             this._game.stage.context.fillText('Input', x, y);
-            this._game.stage.context.fillText('Screen X: ' + this.x + ' Screen Y: ' + this.y, x, y + 14);
+            this._game.stage.context.fillText('X: ' + this.x + ' Y: ' + this.y, x, y + 14);
             this._game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
-            this._game.stage.context.fillText('Scale X: ' + this.scaleX.toFixed(1) + ' Scale Y: ' + this.scaleY.toFixed(1), x, y + 42);
+            this._game.stage.context.fillText('Scale X: ' + this.scale.x.toFixed(1) + ' Scale Y: ' + this.scale.x.toFixed(1), x, y + 42);
+            this._game.stage.context.fillText('Screen X: ' + this.activePointer.screenX + ' Screen Y: ' + this.activePointer.screenY, x, y + 56);
         };
         Input.prototype.getDistance = /**
         * Get the distance between two Pointer objects
@@ -15805,6 +15886,9 @@ var Phaser;
             this._game = game;
         }
         HeadlessRenderer.prototype.render = function () {
+        };
+        HeadlessRenderer.prototype.inCamera = function (camera, sprite) {
+            return true;
         };
         HeadlessRenderer.prototype.renderGameObject = function (object) {
         };
@@ -15981,24 +16065,12 @@ var Phaser;
         * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
         */
         function (camera, sprite) {
-            return true;
-            /*
-            
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if (sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0)
-            {
-            return true;
+            if(sprite.transform.scrollFactor.equals(0)) {
+                return true;
             }
-            
-            this._dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
-            this._dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            this._dw = sprite.frameBounds.width * sprite.scale.x;
-            this._dh = sprite.frameBounds.height * sprite.scale.y;
-            
-            //return (camera.screenView.x + camera.worldView.width > this._dx) && (camera.screenView.x < this._dx + this._dw) && (camera.screenView.y + camera.worldView.height > this._dy) && (camera.screenView.y < this._dy + this._dh);
-            
-            */
-                    };
+            return Phaser.RectangleUtils.intersects(sprite.worldView, camera.worldView);
+        };
         CanvasRenderer.prototype.inScreen = function (camera) {
             return true;
         };
@@ -16372,11 +16444,37 @@ var Phaser;
         function renderSpriteInfo(sprite, x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             DebugUtils.game.stage.context.fillStyle = color;
-            DebugUtils.game.stage.context.fillText('Sprite: ' + ' (' + sprite.width + ' x ' + sprite.height + ')', x, y);
+            DebugUtils.game.stage.context.fillText('Sprite: ' + ' (' + sprite.width + ' x ' + sprite.height + ') origin: ' + sprite.transform.origin.x + ' x ' + sprite.transform.origin.y, x, y);
             DebugUtils.game.stage.context.fillText('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1), x, y + 14);
-            //DebugUtils.game.stage.context.fillText('dx: ' + this._dx.toFixed(1) + ' dy: ' + this._dy.toFixed(1) + ' dw: ' + this._dw.toFixed(1) + ' dh: ' + this._dh.toFixed(1), x, y + 28);
-            //DebugUtils.game.stage.context.fillText('sx: ' + this._sx.toFixed(1) + ' sy: ' + this._sy.toFixed(1) + ' sw: ' + this._sw.toFixed(1) + ' sh: ' + this._sh.toFixed(1), x, y + 42);
-                    };
+            DebugUtils.game.stage.context.fillText('wx: ' + sprite.worldView.x + ' wy: ' + sprite.worldView.y + ' ww: ' + sprite.worldView.width.toFixed(1) + ' wh: ' + sprite.worldView.height.toFixed(1) + ' wb: ' + sprite.worldView.bottom + ' wr: ' + sprite.worldView.right, x, y + 28);
+            DebugUtils.game.stage.context.fillText('sx: ' + sprite.transform.scale.x.toFixed(1) + ' sy: ' + sprite.transform.scale.y.toFixed(1), x, y + 42);
+            DebugUtils.game.stage.context.fillText('tx: ' + sprite.texture.width.toFixed(1) + ' ty: ' + sprite.texture.height.toFixed(1), x, y + 56);
+            DebugUtils.game.stage.context.fillText('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite), x, y + 70);
+        };
+        DebugUtils.renderSpriteBounds = function renderSpriteBounds(sprite, camera, color) {
+            if (typeof camera === "undefined") { camera = null; }
+            if (typeof color === "undefined") { color = 'rgba(0,255,0,0.2)'; }
+            if(camera == null) {
+                camera = DebugUtils.game.camera;
+            }
+            //var dx = (camera.screenView.x * sprite.transform.scrollFactor.x) + sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
+            //var dy = (camera.screenView.y * sprite.transform.scrollFactor.y) + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
+            var dx = sprite.worldView.x;
+            var dy = sprite.worldView.y;
+            DebugUtils.game.stage.context.fillStyle = color;
+            DebugUtils.game.stage.context.fillRect(dx, dy, sprite.width, sprite.height);
+        };
+        DebugUtils.renderSpritePhysicsBody = function renderSpritePhysicsBody(sprite, camera, color) {
+            if (typeof camera === "undefined") { camera = null; }
+            if (typeof color === "undefined") { color = 'rgba(255,0,0,0.2)'; }
+            if(camera == null) {
+                camera = DebugUtils.game.camera;
+            }
+            var dx = (camera.screenView.x * sprite.transform.scrollFactor.x) + sprite.body.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
+            var dy = (camera.screenView.y * sprite.transform.scrollFactor.y) + sprite.body.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
+            DebugUtils.game.stage.context.fillStyle = color;
+            DebugUtils.game.stage.context.fillRect(dx, dy, sprite.body.width, sprite.body.height);
+        };
         return DebugUtils;
     })();
     Phaser.DebugUtils = DebugUtils;    
@@ -16651,6 +16749,7 @@ var Phaser;
             if(this._loadComplete && this.onUpdateCallback) {
                 this.onUpdateCallback.call(this.callbackContext);
             }
+            this.world.postUpdate();
             this.renderer.render();
             if(this._loadComplete && this.onRenderCallback) {
                 this.onRenderCallback.call(this.callbackContext);
