@@ -70,6 +70,7 @@ module Phaser {
 
             this.body = new Phaser.Physics.Body(this, bodyType);
             this.worldView = new Rectangle(x, y, this.width, this.height);
+            this.cameraView = new Rectangle(x, y, this.width, this.height);
 
         }
 
@@ -144,6 +145,12 @@ module Phaser {
          * after taking into consideration both scrollFactor and scaling.
          */
         public worldView: Phaser.Rectangle;
+
+        /**
+         * A Rectangle that maps to the placement of this sprite with respect to a specific Camera.
+         * This value is constantly updated and modified during the internal render pass, it is not meant to be accessed directly.
+         */
+        public cameraView: Phaser.Rectangle;
 
         /**
          * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
@@ -236,12 +243,8 @@ module Phaser {
 
             this.transform.update();
 
-            //this.worldView.x = this.x * this.transform.scrollFactor.x;
-            //this.worldView.y = this.y * this.transform.scrollFactor.y;
-            this.worldView.x = this.x;
-            this.worldView.y = this.y;
-            //this.worldView.x = this.x - this.transform.origin.x;
-            //this.worldView.y = this.y - this.transform.origin.y;
+            this.worldView.x = this.x * this.transform.scrollFactor.x;
+            this.worldView.y = this.y * this.transform.scrollFactor.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
 

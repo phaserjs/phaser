@@ -16,26 +16,78 @@ module Phaser {
     export class SpriteUtils {
 
         static _tempPoint: Point;
+        static _sin: number;
+        static _cos: number;
 
         /**
-         * Check whether this object is visible in a specific camera Rectangle.
-         * @param camera {Rectangle} The Rectangle you want to check.
-         * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+         * Updates a Sprites cameraView Rectangle based on the given camera, sprite world position and rotation
+         * @param camera {Camera} The Camera to use in the view
+         * @param sprite {Sprite} The Sprite that will have its cameraView property modified
+         * @return {Rectangle} A reference to the Sprite.cameraView property
          */
-        static inCamera(camera: Camera, sprite: Sprite): bool {
+        static updateCameraView(camera: Camera, sprite: Sprite): Rectangle {
 
-            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if (sprite.transform.scrollFactor.x == 0 && sprite.transform.scrollFactor.y == 0)
+            if (sprite.rotation == 0 || sprite.texture.renderRotation == false)
             {
-                return true;
+                //  Easy out
+                sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.width * sprite.transform.origin.x));
+                sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.height * sprite.transform.origin.y));
+                sprite.cameraView.width = sprite.width;
+                sprite.cameraView.height = sprite.height;
+            }
+            else
+            {
+                //  If the sprite is rotated around its center we can use this quicker method:
+
+                //  Work out bounding box
+                SpriteUtils._sin = Phaser.GameMath.sinA[sprite.rotation];
+                SpriteUtils._cos = Phaser.GameMath.cosA[sprite.rotation];
+
+                if (SpriteUtils._sin < 0)
+                {
+                    SpriteUtils._sin = -SpriteUtils._sin;
+                }
+
+                if (SpriteUtils._cos < 0)
+                {
+                    SpriteUtils._cos = -SpriteUtils._cos;
+                }
+
+                sprite.cameraView.width = Math.round(sprite.height * SpriteUtils._sin + sprite.width * SpriteUtils._cos);
+                sprite.cameraView.height = Math.round(sprite.height * SpriteUtils._cos + sprite.width * SpriteUtils._sin);
+
+                //  if origin isn't 0.5 we need to work out the difference to apply to the x/y
+                if (sprite.transform.origin.equals(0.5))
+                {
+                    //  Easy out
+                    sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
+                    sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
+                }
+                else
+                {
+                    //var ax = sprite.cameraView.width * sprite.transform.origin.x;
+                    //var ay = sprite.cameraView.height * sprite.transform.origin.y;
+                    //var bx = sprite.cameraView.width * 0.5;
+                    //var by = sprite.cameraView.height * 0.5;
+                    //var c = sprite.game.math.distanceBetween(ax, ay, bx, by) / 2;
+
+                    //console.log('actual x', ax, 'actual y', ay, 'cx', bx, 'cy', by);
+
+                    sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
+                    sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
+                }
+
             }
 
-            var dx = sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
-            var dy = sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
-            var dw = sprite.width * sprite.transform.scale.x;
-            var dh = sprite.height * sprite.transform.scale.y;
+            if (sprite.animations.currentFrame !== null && sprite.animations.currentFrame.trimmed)
+            {
+                //sprite.cameraView.x += sprite.animations.currentFrame.spriteSourceSizeX;
+                //sprite.cameraView.y += sprite.animations.currentFrame.spriteSourceSizeY;
+                //this._dw = sprite.animations.currentFrame.spriteSourceSizeW;
+                //this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
+            }
 
-            return (camera.screenView.x + camera.worldView.width > this._dx) && (camera.screenView.x < this._dx + this._dw) && (camera.screenView.y + camera.worldView.height > this._dy) && (camera.screenView.y < this._dy + this._dh);
+            return sprite.cameraView;
 
         }
 

@@ -221,7 +221,9 @@ module Phaser {
                 return true;
             }
 
-            return RectangleUtils.intersects(sprite.worldView, camera.worldView);
+            Phaser.SpriteUtils.updateCameraView(camera, sprite);
+
+            return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
 
         }
 
@@ -440,6 +442,8 @@ module Phaser {
          * @return {boolean} Return false if not rendered, otherwise return true.
          */
         public renderSprite(camera: Camera, sprite: Sprite): bool {
+
+            Phaser.SpriteUtils.updateCameraView(camera, sprite);
 
             if (sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false)
             {

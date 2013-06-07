@@ -3084,14 +3084,7 @@ var Phaser;
                 this.skew = new Phaser.Vec2();
             }
             Transform.prototype.update = function () {
-                //  0 a = scale x
-                //  3 b = skew x
-                //  1 c = skew y
-                //  4 d = scale y
-                //  2 e = translate x
-                //  5 f = translate y
                 //  Scale & Skew
-                //                  if (sprite.texture.renderRotation == true && (sprite.rotation !== 0 || sprite.transform.rotationOffset !== 0))
                 this._sin = 0;
                 this._cos = 1;
                 if(this.parent.texture.renderRotation) {
@@ -3099,24 +3092,16 @@ var Phaser;
                     this._cos = Phaser.GameMath.cosA[this.rotation + this.rotationOffset];
                 }
                 if(this.parent.texture.flippedX) {
-                    //this.local.data[0] = GameMath.cosA[this.rotation + this.rotationOffset] * -this.scale.x;
-                    //this.local.data[3] = (GameMath.sinA[this.rotation + this.rotationOffset] * -this.scale.x) + this.skew.x;
                     this.local.data[0] = this._cos * -this.scale.x;
                     this.local.data[3] = (this._sin * -this.scale.x) + this.skew.x;
                 } else {
-                    //this.local.data[0] = GameMath.cosA[this.rotation + this.rotationOffset] * this.scale.x;
-                    //this.local.data[3] = (GameMath.sinA[this.rotation + this.rotationOffset] * this.scale.x) + this.skew.x;
                     this.local.data[0] = this._cos * this.scale.x;
                     this.local.data[3] = (this._sin * this.scale.x) + this.skew.x;
                 }
                 if(this.parent.texture.flippedY) {
-                    //this.local.data[4] = GameMath.cosA[this.rotation + this.rotationOffset] * -this.scale.y;
-                    //this.local.data[1] = -(GameMath.sinA[this.rotation + this.rotationOffset] * -this.scale.y) + this.skew.y;
                     this.local.data[4] = this._cos * -this.scale.y;
                     this.local.data[1] = -(this._sin * -this.scale.y) + this.skew.y;
                 } else {
-                    //this.local.data[4] = GameMath.cosA[this.rotation + this.rotationOffset] * this.scale.y;
-                    //this.local.data[1] = -(GameMath.sinA[this.rotation + this.rotationOffset] * this.scale.y) + this.skew.y;
                     this.local.data[4] = this._cos * this.scale.y;
                     this.local.data[1] = -(this._sin * this.scale.y) + this.skew.y;
                 }
@@ -3124,20 +3109,6 @@ var Phaser;
                 this.local.data[2] = this.parent.x;
                 this.local.data[5] = this.parent.y;
             };
-            Object.defineProperty(Transform.prototype, "calculatedX", {
-                get: function () {
-                    return this.origin.x * this.scale.x;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Transform.prototype, "calculatedY", {
-                get: function () {
-                    return this.origin.y * this.scale.y;
-                },
-                enumerable: true,
-                configurable: true
-            });
             Object.defineProperty(Transform.prototype, "centerX", {
                 get: /**
                 * The center of the Sprite after taking scaling into consideration
@@ -4347,6 +4318,7 @@ var Phaser;
             }
             this.body = new Phaser.Physics.Body(this, bodyType);
             this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
+            this.cameraView = new Phaser.Rectangle(x, y, this.width, this.height);
         }
         Object.defineProperty(Sprite.prototype, "rotation", {
             get: /**
@@ -4422,12 +4394,8 @@ var Phaser;
         */
         function () {
             this.transform.update();
-            //this.worldView.x = this.x * this.transform.scrollFactor.x;
-            //this.worldView.y = this.y * this.transform.scrollFactor.y;
-            this.worldView.x = this.x;
-            this.worldView.y = this.y;
-            //this.worldView.x = this.x - this.transform.origin.x;
-            //this.worldView.y = this.y - this.transform.origin.y;
+            this.worldView.x = this.x * this.transform.scrollFactor.x;
+            this.worldView.y = this.y * this.transform.scrollFactor.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
             if(this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
@@ -4531,21 +4499,55 @@ var Phaser;
 (function (Phaser) {
     var SpriteUtils = (function () {
         function SpriteUtils() { }
-        SpriteUtils.inCamera = /**
-        * Check whether this object is visible in a specific camera Rectangle.
-        * @param camera {Rectangle} The Rectangle you want to check.
-        * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+        SpriteUtils.updateCameraView = /**
+        * Updates a Sprites cameraView Rectangle based on the given camera, sprite world position and rotation
+        * @param camera {Camera} The Camera to use in the view
+        * @param sprite {Sprite} The Sprite that will have its cameraView property modified
+        * @return {Rectangle} A reference to the Sprite.cameraView property
         */
-        function inCamera(camera, sprite) {
-            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if(sprite.transform.scrollFactor.x == 0 && sprite.transform.scrollFactor.y == 0) {
-                return true;
+        function updateCameraView(camera, sprite) {
+            if(sprite.rotation == 0 || sprite.texture.renderRotation == false) {
+                //  Easy out
+                sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.width * sprite.transform.origin.x));
+                sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.height * sprite.transform.origin.y));
+                sprite.cameraView.width = sprite.width;
+                sprite.cameraView.height = sprite.height;
+            } else {
+                //  If the sprite is rotated around its center we can use this quicker method:
+                //  Work out bounding box
+                SpriteUtils._sin = Phaser.GameMath.sinA[sprite.rotation];
+                SpriteUtils._cos = Phaser.GameMath.cosA[sprite.rotation];
+                if(SpriteUtils._sin < 0) {
+                    SpriteUtils._sin = -SpriteUtils._sin;
+                }
+                if(SpriteUtils._cos < 0) {
+                    SpriteUtils._cos = -SpriteUtils._cos;
+                }
+                sprite.cameraView.width = Math.round(sprite.height * SpriteUtils._sin + sprite.width * SpriteUtils._cos);
+                sprite.cameraView.height = Math.round(sprite.height * SpriteUtils._cos + sprite.width * SpriteUtils._sin);
+                //  if origin isn't 0.5 we need to work out the difference to apply to the x/y
+                if(sprite.transform.origin.equals(0.5)) {
+                    //  Easy out
+                    sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
+                    sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
+                } else {
+                    //var ax = sprite.cameraView.width * sprite.transform.origin.x;
+                    //var ay = sprite.cameraView.height * sprite.transform.origin.y;
+                    //var bx = sprite.cameraView.width * 0.5;
+                    //var by = sprite.cameraView.height * 0.5;
+                    //var c = sprite.game.math.distanceBetween(ax, ay, bx, by) / 2;
+                    //console.log('actual x', ax, 'actual y', ay, 'cx', bx, 'cy', by);
+                    sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
+                    sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
+                }
             }
-            var dx = sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
-            var dy = sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
-            var dw = sprite.width * sprite.transform.scale.x;
-            var dh = sprite.height * sprite.transform.scale.y;
-            return (camera.screenView.x + camera.worldView.width > this._dx) && (camera.screenView.x < this._dx + this._dw) && (camera.screenView.y + camera.worldView.height > this._dy) && (camera.screenView.y < this._dy + this._dh);
+            if(sprite.animations.currentFrame !== null && sprite.animations.currentFrame.trimmed) {
+                //sprite.cameraView.x += sprite.animations.currentFrame.spriteSourceSizeX;
+                //sprite.cameraView.y += sprite.animations.currentFrame.spriteSourceSizeY;
+                //this._dw = sprite.animations.currentFrame.spriteSourceSizeW;
+                //this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
+                            }
+            return sprite.cameraView;
         };
         SpriteUtils.getAsPoints = function getAsPoints(sprite) {
             var out = [];
@@ -16409,7 +16411,8 @@ var Phaser;
             if(sprite.transform.scrollFactor.equals(0)) {
                 return true;
             }
-            return Phaser.RectangleUtils.intersects(sprite.worldView, camera.worldView);
+            Phaser.SpriteUtils.updateCameraView(camera, sprite);
+            return Phaser.RectangleUtils.intersects(sprite.cameraView, camera.screenView);
         };
         CanvasRenderer.prototype.inScreen = function (camera) {
             return true;
@@ -16574,6 +16577,7 @@ var Phaser;
         * @return {boolean} Return false if not rendered, otherwise return true.
         */
         function (camera, sprite) {
+            Phaser.SpriteUtils.updateCameraView(camera, sprite);
             if(sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
                 //return false;
                             }
@@ -16769,7 +16773,8 @@ var Phaser;
             DebugUtils.game.stage.context.fillText('wx: ' + sprite.worldView.x + ' wy: ' + sprite.worldView.y + ' ww: ' + sprite.worldView.width.toFixed(1) + ' wh: ' + sprite.worldView.height.toFixed(1) + ' wb: ' + sprite.worldView.bottom + ' wr: ' + sprite.worldView.right, x, y + 28);
             DebugUtils.game.stage.context.fillText('sx: ' + sprite.transform.scale.x.toFixed(1) + ' sy: ' + sprite.transform.scale.y.toFixed(1), x, y + 42);
             DebugUtils.game.stage.context.fillText('tx: ' + sprite.texture.width.toFixed(1) + ' ty: ' + sprite.texture.height.toFixed(1), x, y + 56);
-            DebugUtils.game.stage.context.fillText('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite), x, y + 70);
+            DebugUtils.game.stage.context.fillText('cx: ' + sprite.cameraView.x + ' cy: ' + sprite.cameraView.y + ' cw: ' + sprite.cameraView.width + ' ch: ' + sprite.cameraView.height + ' cb: ' + sprite.cameraView.bottom + ' cr: ' + sprite.cameraView.right, x, y + 70);
+            DebugUtils.game.stage.context.fillText('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite), x, y + 84);
         };
         DebugUtils.renderSpriteBounds = function renderSpriteBounds(sprite, camera, color) {
             if (typeof camera === "undefined") { camera = null; }

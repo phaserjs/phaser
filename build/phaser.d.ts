@@ -1896,12 +1896,10 @@ module Phaser.Components {
         * @param parent The Sprite using this transform
         */
         constructor(parent);
-        public local: Mat3;
         private _sin;
         private _cos;
+        public local: Mat3;
         public update(): void;
-        public calculatedX : number;
-        public calculatedY : number;
         /**
         * Reference to Phaser.Game
         */
@@ -2575,6 +2573,11 @@ module Phaser {
         */
         public worldView: Rectangle;
         /**
+        * A Rectangle that maps to the placement of this sprite with respect to a specific Camera.
+        * This value is constantly updated and modified during the internal render pass, it is not meant to be accessed directly.
+        */
+        public cameraView: Rectangle;
+        /**
         * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
         */
         public modified: bool;
@@ -2657,12 +2660,15 @@ module Phaser {
 module Phaser {
     class SpriteUtils {
         static _tempPoint: Point;
+        static _sin: number;
+        static _cos: number;
         /**
-        * Check whether this object is visible in a specific camera Rectangle.
-        * @param camera {Rectangle} The Rectangle you want to check.
-        * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+        * Updates a Sprites cameraView Rectangle based on the given camera, sprite world position and rotation
+        * @param camera {Camera} The Camera to use in the view
+        * @param sprite {Sprite} The Sprite that will have its cameraView property modified
+        * @return {Rectangle} A reference to the Sprite.cameraView property
         */
-        static inCamera(camera: Camera, sprite: Sprite): bool;
+        static updateCameraView(camera: Camera, sprite: Sprite): Rectangle;
         static getAsPoints(sprite: Sprite): Point[];
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
