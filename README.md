@@ -43,6 +43,7 @@ TODO:
 * Swap to using time based motion (like the tweens) rather than delta timer - it just doesn't work well on slow phones
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
 * Add a 'click to bring to top' demo (+ Group feature?)
+* If stage.clear set to false and game pauses, when it unpauses you still see the pause arrow - resolve this
 
 * Add clip support + shape options to Texture Component.
 

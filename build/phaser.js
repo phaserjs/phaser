@@ -3083,48 +3083,186 @@ var Phaser;
                 this.scale = new Phaser.Vec2(1, 1);
                 this.skew = new Phaser.Vec2();
             }
-            Transform.prototype.update = function () {
-                //  Scale & Skew
-                this._sin = 0;
-                this._cos = 1;
-                if(this.parent.texture.renderRotation) {
-                    this._sin = Phaser.GameMath.sinA[this.rotation + this.rotationOffset];
-                    this._cos = Phaser.GameMath.cosA[this.rotation + this.rotationOffset];
-                }
-                if(this.parent.texture.flippedX) {
-                    this.local.data[0] = this._cos * -this.scale.x;
-                    this.local.data[3] = (this._sin * -this.scale.x) + this.skew.x;
+            Transform.prototype.setCache = function () {
+                this._cachedHalfWidth = this.parent.width / 2;
+                this._cachedHalfHeight = this.parent.height / 2;
+                this._cachedOffsetX = this.origin.x * this.parent.width;
+                this._cachedOffsetY = this.origin.y * this.parent.height;
+                this._cachedAngleToCenter = Math.atan2(this.halfHeight - this._cachedOffsetY, this.halfWidth - this._cachedOffsetX);
+                this._cachedDistance = Math.sqrt(((this._cachedOffsetX - this._cachedHalfWidth) * (this._cachedOffsetX - this._cachedHalfWidth)) + ((this._cachedOffsetY - this._cachedHalfHeight) * (this._cachedOffsetY - this._cachedHalfHeight)));
+                this._cachedWidth = this.parent.width;
+                this._cachedHeight = this.parent.height;
+                this._cachedOriginX = this.origin.x;
+                this._cachedOriginY = this.origin.y;
+                this._cachedSin = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                this._cachedCos = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                this._cachedCosAngle = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._cachedAngleToCenter);
+                this._cachedSinAngle = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._cachedAngleToCenter);
+                this._cachedRotation = this.rotation;
+                if(this.parent.texture && this.parent.texture.renderRotation) {
+                    this._cachedSin = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                    this._cachedCos = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
                 } else {
-                    this.local.data[0] = this._cos * this.scale.x;
-                    this.local.data[3] = (this._sin * this.scale.x) + this.skew.x;
+                    this._cachedSin = 0;
+                    this._cachedCos = 1;
+                }
+            };
+            Transform.prototype.update = function () {
+                //  Check cache
+                var dirty = false;
+                //  1) Height or Width change (also triggered by a change in scale) or an Origin change
+                if(this.parent.width !== this._cachedWidth || this.parent.height !== this._cachedHeight || this.origin.x !== this._cachedOriginX || this.origin.y !== this._cachedOriginY) {
+                    this._cachedHalfWidth = this.parent.width / 2;
+                    this._cachedHalfHeight = this.parent.height / 2;
+                    this._cachedOffsetX = this.origin.x * this.parent.width;
+                    this._cachedOffsetY = this.origin.y * this.parent.height;
+                    this._cachedAngleToCenter = Math.atan2(this.halfHeight - this._cachedOffsetY, this.halfWidth - this._cachedOffsetX);
+                    this._cachedDistance = Math.sqrt(((this._cachedOffsetX - this._cachedHalfWidth) * (this._cachedOffsetX - this._cachedHalfWidth)) + ((this._cachedOffsetY - this._cachedHalfHeight) * (this._cachedOffsetY - this._cachedHalfHeight)));
+                    //  Store
+                    this._cachedWidth = this.parent.width;
+                    this._cachedHeight = this.parent.height;
+                    this._cachedOriginX = this.origin.x;
+                    this._cachedOriginY = this.origin.y;
+                    dirty = true;
+                }
+                //  2) Rotation change
+                if(this.rotation != this._cachedRotation) {
+                    this._cachedSin = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                    this._cachedCos = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                    this._cachedCosAngle = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._cachedAngleToCenter);
+                    this._cachedSinAngle = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._cachedAngleToCenter);
+                    if(this.parent.texture.renderRotation) {
+                        this._cachedSin = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                        this._cachedCos = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                    } else {
+                        this._cachedSin = 0;
+                        this._cachedCos = 1;
+                    }
+                    //  Store
+                    this._cachedRotation = this.rotation;
+                    dirty = true;
+                }
+                if(dirty) {
+                    this._cachedCenterX = this.parent.x + this._cachedDistance * this._cachedCosAngle;
+                    this._cachedCenterY = this.parent.y + this._cachedDistance * this._cachedSinAngle;
+                }
+                //  Scale and Skew
+                if(this.parent.texture.flippedX) {
+                    this.local.data[0] = this._cachedCos * -this.scale.x;
+                    this.local.data[3] = (this._cachedSin * -this.scale.x) + this.skew.x;
+                } else {
+                    this.local.data[0] = this._cachedCos * this.scale.x;
+                    this.local.data[3] = (this._cachedSin * this.scale.x) + this.skew.x;
                 }
                 if(this.parent.texture.flippedY) {
-                    this.local.data[4] = this._cos * -this.scale.y;
-                    this.local.data[1] = -(this._sin * -this.scale.y) + this.skew.y;
+                    this.local.data[4] = this._cachedCos * -this.scale.y;
+                    this.local.data[1] = -(this._cachedSin * -this.scale.y) + this.skew.y;
                 } else {
-                    this.local.data[4] = this._cos * this.scale.y;
-                    this.local.data[1] = -(this._sin * this.scale.y) + this.skew.y;
+                    this.local.data[4] = this._cachedCos * this.scale.y;
+                    this.local.data[1] = -(this._cachedSin * this.scale.y) + this.skew.y;
                 }
                 //  Translate
                 this.local.data[2] = this.parent.x;
                 this.local.data[5] = this.parent.y;
             };
-            Object.defineProperty(Transform.prototype, "centerX", {
+            Object.defineProperty(Transform.prototype, "distance", {
                 get: /**
-                * The center of the Sprite after taking scaling into consideration
+                * The distance from the center of the transform to the rotation origin.
                 */
                 function () {
-                    return this.parent.width / 2;
-                },
+                    return this._cachedDistance;
+                    //return Math.sqrt(((this.offsetX - this.halfWidth) * (this.offsetX - this.halfWidth)) + ((this.offsetY - this.halfHeight) * (this.offsetY - this.halfHeight)));
+                                    },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "angleToCenter", {
+                get: /**
+                * The angle between the center of the transform to the rotation origin.
+                */
+                function () {
+                    return this._cachedAngleToCenter;
+                    //return Math.atan2(this.halfHeight - this.offsetY, this.halfWidth - this.offsetX);
+                                    },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "offsetX", {
+                get: /**
+                * The offset on the X axis of the origin
+                */
+                function () {
+                    return this._cachedOffsetX;
+                    //return this.origin.x * this.parent.width;
+                                    },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "offsetY", {
+                get: /**
+                * The offset on the Y axis of the origin
+                */
+                function () {
+                    return this._cachedOffsetY;
+                    //return this.origin.y * this.parent.height;
+                                    },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "halfWidth", {
+                get: /**
+                * Half the width of the parent sprite, taking into consideration scaling
+                */
+                function () {
+                    return this._cachedHalfWidth;
+                    //return this.parent.width / 2;
+                                    },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "halfHeight", {
+                get: /**
+                * Half the height of the parent sprite, taking into consideration scaling
+                */
+                function () {
+                    return this._cachedHalfHeight;
+                    //return this.parent.height / 2;
+                                    },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "centerX", {
+                get: /**
+                * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
+                */
+                function () {
+                    return this._cachedCenterX;
+                    //return this.parent.x + this.distance * Math.cos((this.rotation * Math.PI / 180) + this.angleToCenter);
+                                    },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(Transform.prototype, "centerY", {
                 get: /**
-                * The center of the Sprite after taking scaling into consideration
+                * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
                 */
                 function () {
-                    return this.parent.height / 2;
+                    return this._cachedCenterY;
+                    //return this.parent.y + this.distance * Math.sin((this.rotation * Math.PI / 180) + this.angleToCenter);
+                                    },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "sin", {
+                get: function () {
+                    return this._cachedSin;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Transform.prototype, "cos", {
+                get: function () {
+                    return this._cachedCos;
                 },
                 enumerable: true,
                 configurable: true
@@ -4319,6 +4457,7 @@ var Phaser;
             this.body = new Phaser.Physics.Body(this, bodyType);
             this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.cameraView = new Phaser.Rectangle(x, y, this.width, this.height);
+            this.transform.setCache();
         }
         Object.defineProperty(Sprite.prototype, "rotation", {
             get: /**
@@ -4394,8 +4533,10 @@ var Phaser;
         */
         function () {
             this.transform.update();
-            this.worldView.x = this.x * this.transform.scrollFactor.x;
-            this.worldView.y = this.y * this.transform.scrollFactor.y;
+            this.worldView.x = (this.x * this.transform.scrollFactor.x) - (this.width * this.transform.origin.x);
+            this.worldView.y = (this.y * this.transform.scrollFactor.y) - (this.height * this.transform.origin.y);
+            //this.worldView.x = this.x * this.transform.scrollFactor.x;
+            //this.worldView.y = this.y * this.transform.scrollFactor.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
             if(this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
@@ -4514,32 +4655,28 @@ var Phaser;
                 sprite.cameraView.height = sprite.height;
             } else {
                 //  If the sprite is rotated around its center we can use this quicker method:
-                //  Work out bounding box
-                SpriteUtils._sin = Phaser.GameMath.sinA[sprite.rotation];
-                SpriteUtils._cos = Phaser.GameMath.cosA[sprite.rotation];
-                if(SpriteUtils._sin < 0) {
-                    SpriteUtils._sin = -SpriteUtils._sin;
-                }
-                if(SpriteUtils._cos < 0) {
-                    SpriteUtils._cos = -SpriteUtils._cos;
-                }
-                sprite.cameraView.width = Math.round(sprite.height * SpriteUtils._sin + sprite.width * SpriteUtils._cos);
-                sprite.cameraView.height = Math.round(sprite.height * SpriteUtils._cos + sprite.width * SpriteUtils._sin);
-                //  if origin isn't 0.5 we need to work out the difference to apply to the x/y
-                if(sprite.transform.origin.equals(0.5)) {
-                    //  Easy out
+                if(sprite.transform.origin.x == 0.5 && sprite.transform.origin.y == 0.5) {
+                    SpriteUtils._sin = Math.sin((sprite.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                    SpriteUtils._cos = Math.cos((sprite.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                    if(SpriteUtils._sin < 0) {
+                        SpriteUtils._sin = -SpriteUtils._sin;
+                    }
+                    if(SpriteUtils._cos < 0) {
+                        SpriteUtils._cos = -SpriteUtils._cos;
+                    }
+                    sprite.cameraView.width = Math.round(sprite.height * SpriteUtils._sin + sprite.width * SpriteUtils._cos);
+                    sprite.cameraView.height = Math.round(sprite.height * SpriteUtils._cos + sprite.width * SpriteUtils._sin);
                     sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
                     sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
                 } else {
-                    //var ax = sprite.cameraView.width * sprite.transform.origin.x;
-                    //var ay = sprite.cameraView.height * sprite.transform.origin.y;
-                    //var bx = sprite.cameraView.width * 0.5;
-                    //var by = sprite.cameraView.height * 0.5;
-                    //var c = sprite.game.math.distanceBetween(ax, ay, bx, by) / 2;
-                    //console.log('actual x', ax, 'actual y', ay, 'cx', bx, 'cy', by);
-                    sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
-                    sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
-                }
+                    /*
+                    //  Useful to get the maximum AABB size of any given rect
+                    
+                    If you want a single box that covers all angles, just take the half-diagonal of your existing box as the radius of a circle.
+                    The new box has to contain this circle, so it should be a square with side-length equal to twice the radius
+                    (equiv. the diagonal of the original AABB) and with the same center as the original.
+                    */
+                                    }
             }
             if(sprite.animations.currentFrame !== null && sprite.animations.currentFrame.trimmed) {
                 //sprite.cameraView.x += sprite.animations.currentFrame.spriteSourceSizeX;
@@ -4548,6 +4685,58 @@ var Phaser;
                 //this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
                             }
             return sprite.cameraView;
+        };
+        SpriteUtils.getCornersAsPoints = function getCornersAsPoints(sprite) {
+            var out = [];
+            var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            //  Upper Left
+            out.push(new Phaser.Point(sprite.x + (sprite.width / 2) * cos - (sprite.height / 2) * sin, sprite.y + (sprite.height / 2) * cos + (sprite.width / 2) * sin));
+            //  Upper Right
+            out.push(new Phaser.Point(sprite.x - (sprite.width / 2) * cos - (sprite.height / 2) * sin, sprite.y + (sprite.height / 2) * cos - (sprite.width / 2) * sin));
+            //  Bottom Left
+            out.push(new Phaser.Point(sprite.x + (sprite.width / 2) * cos + (sprite.height / 2) * sin, sprite.y - (sprite.height / 2) * cos + (sprite.width / 2) * sin));
+            //  Bottom Right
+            out.push(new Phaser.Point(sprite.x - (sprite.width / 2) * cos + (sprite.height / 2) * sin, sprite.y - (sprite.height / 2) * cos - (sprite.width / 2) * sin));
+            return out;
+        };
+        SpriteUtils.getCornersAsPoints2 = function getCornersAsPoints2(sprite) {
+            var out = [];
+            var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            //  This = the center point
+            var cx = sprite.x + (sprite.width / 2) * cos - (sprite.height / 2) * sin;
+            var cy = sprite.y + (sprite.height / 2) * cos + (sprite.width / 2) * sin;
+            //  Upper Left
+            out.push(new Phaser.Point(cx + (sprite.width / 2) * cos - (sprite.height / 2) * sin, cy + (sprite.height / 2) * cos + (sprite.width / 2) * sin));
+            //  Upper Right
+            out.push(new Phaser.Point(cx - (sprite.width / 2) * cos - (sprite.height / 2) * sin, cy + (sprite.height / 2) * cos - (sprite.width / 2) * sin));
+            //  Bottom Left
+            out.push(new Phaser.Point(cx + (sprite.width / 2) * cos + (sprite.height / 2) * sin, cy - (sprite.height / 2) * cos + (sprite.width / 2) * sin));
+            //  Bottom Right
+            out.push(new Phaser.Point(cx - (sprite.width / 2) * cos + (sprite.height / 2) * sin, cy - (sprite.height / 2) * cos - (sprite.width / 2) * sin));
+            return out;
+        };
+        SpriteUtils.getCornersAsPoints3 = function getCornersAsPoints3(sprite) {
+            var out = [];
+            var sin = sprite.transform.sin;
+            var cos = sprite.transform.cos;
+            //var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            //var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            //  This = the center point
+            //var cx = sprite.x + sprite.transform.distance * Math.cos((sprite.transform.rotation * Math.PI / 180) + sprite.transform.angleToCenter);
+            //var cy = sprite.y + sprite.transform.distance * Math.sin((sprite.transform.rotation * Math.PI / 180) + sprite.transform.angleToCenter);
+            var cx = sprite.transform.centerX;
+            var cy = sprite.transform.centerY;
+            //  Upper Left
+            out.push(new Phaser.Point(cx + sprite.transform.halfWidth * cos - sprite.transform.halfHeight * sin, cy + sprite.transform.halfHeight * cos + sprite.transform.halfWidth * sin));
+            //  Upper Right
+            out.push(new Phaser.Point(cx - sprite.transform.halfWidth * cos - sprite.transform.halfHeight * sin, cy + sprite.transform.halfHeight * cos - sprite.transform.halfWidth * sin));
+            //  Bottom Left
+            out.push(new Phaser.Point(cx + sprite.transform.halfWidth * cos + sprite.transform.halfHeight * sin, cy - sprite.transform.halfHeight * cos + sprite.transform.halfWidth * sin));
+            //  Bottom Right
+            out.push(new Phaser.Point(cx - sprite.transform.halfWidth * cos + sprite.transform.halfHeight * sin, cy - sprite.transform.halfHeight * cos - sprite.transform.halfWidth * sin));
+            return out;
         };
         SpriteUtils.getAsPoints = function getAsPoints(sprite) {
             var out = [];
@@ -16411,7 +16600,6 @@ var Phaser;
             if(sprite.transform.scrollFactor.equals(0)) {
                 return true;
             }
-            Phaser.SpriteUtils.updateCameraView(camera, sprite);
             return Phaser.RectangleUtils.intersects(sprite.cameraView, camera.screenView);
         };
         CanvasRenderer.prototype.inScreen = function (camera) {
@@ -16579,8 +16767,8 @@ var Phaser;
         function (camera, sprite) {
             Phaser.SpriteUtils.updateCameraView(camera, sprite);
             if(sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
-                //return false;
-                            }
+                return false;
+            }
             sprite.renderOrderID = this._count;
             this._count++;
             //  Reset our temp vars

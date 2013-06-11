@@ -128,6 +128,18 @@
       <DependentUpon>world drag.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="mobile\sprite test 1.ts" />
+    <TypeScriptCompile Include="misc\point1.ts" />
+    <Content Include="misc\point1.js">
+      <DependentUpon>point1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="misc\point2.ts" />
+    <Content Include="misc\point2.js">
+      <DependentUpon>point2.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="misc\point3.ts" />
+    <Content Include="misc\point3.js">
+      <DependentUpon>point3.ts</DependentUpon>
+    </Content>
     <Content Include="mobile\sprite test 1.js">
       <DependentUpon>sprite test 1.ts</DependentUpon>
     </Content>

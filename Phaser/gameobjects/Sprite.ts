@@ -72,6 +72,8 @@ module Phaser {
             this.worldView = new Rectangle(x, y, this.width, this.height);
             this.cameraView = new Rectangle(x, y, this.width, this.height);
 
+            this.transform.setCache();
+
         }
 
         /**
@@ -243,8 +245,10 @@ module Phaser {
 
             this.transform.update();
 
-            this.worldView.x = this.x * this.transform.scrollFactor.x;
-            this.worldView.y = this.y * this.transform.scrollFactor.y;
+            this.worldView.x = (this.x * this.transform.scrollFactor.x) - (this.width * this.transform.origin.x);
+            this.worldView.y = (this.y * this.transform.scrollFactor.y) - (this.height * this.transform.origin.y);
+            //this.worldView.x = this.x * this.transform.scrollFactor.x;
+            //this.worldView.y = this.y * this.transform.scrollFactor.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
 

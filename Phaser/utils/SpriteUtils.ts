@@ -38,43 +38,39 @@ module Phaser {
             else
             {
                 //  If the sprite is rotated around its center we can use this quicker method:
-
-                //  Work out bounding box
-                SpriteUtils._sin = Phaser.GameMath.sinA[sprite.rotation];
-                SpriteUtils._cos = Phaser.GameMath.cosA[sprite.rotation];
-
-                if (SpriteUtils._sin < 0)
+                if (sprite.transform.origin.x == 0.5 && sprite.transform.origin.y == 0.5)
                 {
-                    SpriteUtils._sin = -SpriteUtils._sin;
-                }
+                    SpriteUtils._sin = Math.sin((sprite.rotation + sprite.transform.rotationOffset) * GameMath.DEG_TO_RAD);
+                    SpriteUtils._cos = Math.cos((sprite.rotation + sprite.transform.rotationOffset) * GameMath.DEG_TO_RAD);
 
-                if (SpriteUtils._cos < 0)
-                {
-                    SpriteUtils._cos = -SpriteUtils._cos;
-                }
+                    if (SpriteUtils._sin < 0)
+                    {
+                        SpriteUtils._sin = -SpriteUtils._sin;
+                    }
 
-                sprite.cameraView.width = Math.round(sprite.height * SpriteUtils._sin + sprite.width * SpriteUtils._cos);
-                sprite.cameraView.height = Math.round(sprite.height * SpriteUtils._cos + sprite.width * SpriteUtils._sin);
+                    if (SpriteUtils._cos < 0)
+                    {
+                        SpriteUtils._cos = -SpriteUtils._cos;
+                    }
 
-                //  if origin isn't 0.5 we need to work out the difference to apply to the x/y
-                if (sprite.transform.origin.equals(0.5))
-                {
-                    //  Easy out
+                    sprite.cameraView.width = Math.round(sprite.height * SpriteUtils._sin + sprite.width * SpriteUtils._cos);
+                    sprite.cameraView.height = Math.round(sprite.height * SpriteUtils._cos + sprite.width * SpriteUtils._sin);
                     sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
                     sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
                 }
                 else
                 {
-                    //var ax = sprite.cameraView.width * sprite.transform.origin.x;
-                    //var ay = sprite.cameraView.height * sprite.transform.origin.y;
-                    //var bx = sprite.cameraView.width * 0.5;
-                    //var by = sprite.cameraView.height * 0.5;
-                    //var c = sprite.game.math.distanceBetween(ax, ay, bx, by) / 2;
 
-                    //console.log('actual x', ax, 'actual y', ay, 'cx', bx, 'cy', by);
 
-                    sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
-                    sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
+
+                    /*
+                        //  Useful to get the maximum AABB size of any given rect
+
+                        If you want a single box that covers all angles, just take the half-diagonal of your existing box as the radius of a circle.
+                        The new box has to contain this circle, so it should be a square with side-length equal to twice the radius 
+                        (equiv. the diagonal of the original AABB) and with the same center as the original.
+                    */
+
                 }
 
             }
@@ -90,6 +86,90 @@ module Phaser {
             return sprite.cameraView;
 
         }
+
+        static getCornersAsPoints(sprite: Sprite): Phaser.Point[] {
+
+            var out: Phaser.Point[] = [];
+
+            var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+
+            //  Upper Left
+            out.push(new Point(sprite.x + (sprite.width / 2) * cos - (sprite.height / 2) * sin, sprite.y + (sprite.height / 2) * cos + (sprite.width / 2) * sin));
+
+            //  Upper Right
+            out.push(new Point(sprite.x - (sprite.width / 2) * cos - (sprite.height / 2) * sin, sprite.y + (sprite.height / 2) * cos - (sprite.width / 2) * sin));
+
+            //  Bottom Left
+            out.push(new Point(sprite.x + (sprite.width / 2) * cos + (sprite.height / 2) * sin, sprite.y - (sprite.height / 2) * cos + (sprite.width / 2) * sin));
+
+            //  Bottom Right
+            out.push(new Point(sprite.x - (sprite.width / 2) * cos + (sprite.height / 2) * sin, sprite.y - (sprite.height / 2) * cos - (sprite.width / 2) * sin));
+
+            return out;
+
+        }
+
+        static getCornersAsPoints2(sprite: Sprite): Phaser.Point[] {
+
+            var out: Phaser.Point[] = [];
+
+            var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+
+            //  This = the center point
+            var cx = sprite.x + (sprite.width / 2) * cos - (sprite.height / 2) * sin;
+            var cy = sprite.y + (sprite.height / 2) * cos + (sprite.width / 2) * sin;
+
+            //  Upper Left
+            out.push(new Point(cx + (sprite.width / 2) * cos - (sprite.height / 2) * sin, cy + (sprite.height / 2) * cos + (sprite.width / 2) * sin));
+
+            //  Upper Right
+            out.push(new Point(cx - (sprite.width / 2) * cos - (sprite.height / 2) * sin, cy + (sprite.height / 2) * cos - (sprite.width / 2) * sin));
+
+            //  Bottom Left
+            out.push(new Point(cx + (sprite.width / 2) * cos + (sprite.height / 2) * sin, cy - (sprite.height / 2) * cos + (sprite.width / 2) * sin));
+
+            //  Bottom Right
+            out.push(new Point(cx - (sprite.width / 2) * cos + (sprite.height / 2) * sin, cy - (sprite.height / 2) * cos - (sprite.width / 2) * sin));
+
+            return out;
+
+        }
+
+        static getCornersAsPoints3(sprite: Sprite): Phaser.Point[] {
+
+            var out: Phaser.Point[] = [];
+
+            var sin: number = sprite.transform.sin;
+            var cos: number = sprite.transform.cos;
+
+            //var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            //var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+
+            //  This = the center point
+            //var cx = sprite.x + sprite.transform.distance * Math.cos((sprite.transform.rotation * Math.PI / 180) + sprite.transform.angleToCenter);
+            //var cy = sprite.y + sprite.transform.distance * Math.sin((sprite.transform.rotation * Math.PI / 180) + sprite.transform.angleToCenter);
+
+            var cx: number = sprite.transform.centerX;
+            var cy: number = sprite.transform.centerY;
+
+            //  Upper Left
+            out.push(new Point(cx + sprite.transform.halfWidth * cos - sprite.transform.halfHeight * sin, cy + sprite.transform.halfHeight * cos + sprite.transform.halfWidth * sin));
+
+            //  Upper Right
+            out.push(new Point(cx - sprite.transform.halfWidth * cos - sprite.transform.halfHeight * sin, cy + sprite.transform.halfHeight * cos - sprite.transform.halfWidth * sin));
+
+            //  Bottom Left
+            out.push(new Point(cx + sprite.transform.halfWidth * cos + sprite.transform.halfHeight * sin, cy - sprite.transform.halfHeight * cos + sprite.transform.halfWidth * sin));
+
+            //  Bottom Right
+            out.push(new Point(cx - sprite.transform.halfWidth * cos + sprite.transform.halfHeight * sin, cy - sprite.transform.halfHeight * cos - sprite.transform.halfWidth * sin));
+
+            return out;
+
+        }
+
 
         static getAsPoints(sprite: Sprite): Phaser.Point[] {
 

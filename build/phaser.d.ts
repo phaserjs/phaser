@@ -1896,9 +1896,29 @@ module Phaser.Components {
         * @param parent The Sprite using this transform
         */
         constructor(parent);
-        private _sin;
-        private _cos;
+        private _rotation;
+        private _cachedSin;
+        private _cachedCos;
+        private _cachedRotation;
+        private _cachedScaleX;
+        private _cachedScaleY;
+        private _cachedAngle;
+        private _cachedAngleToCenter;
+        private _cachedDistance;
+        private _cachedWidth;
+        private _cachedHeight;
+        private _cachedHalfWidth;
+        private _cachedHalfHeight;
+        private _cachedCosAngle;
+        private _cachedSinAngle;
+        private _cachedOffsetX;
+        private _cachedOffsetY;
+        private _cachedOriginX;
+        private _cachedOriginY;
+        private _cachedCenterX;
+        private _cachedCenterY;
         public local: Mat3;
+        public setCache(): void;
         public update(): void;
         /**
         * Reference to Phaser.Game
@@ -1921,7 +1941,7 @@ module Phaser.Components {
         */
         public scrollFactor: Vec2;
         /**
-        * The origin is the point around which scale and rotation takes place and defaults to the center of the sprite.
+        * The origin is the point around which scale and rotation takes place and defaults to the top-left of the sprite.
         */
         public origin: Vec2;
         /**
@@ -1936,13 +1956,39 @@ module Phaser.Components {
         */
         public rotation: number;
         /**
-        * The center of the Sprite after taking scaling into consideration
+        * The distance from the center of the transform to the rotation origin.
+        */
+        public distance : number;
+        /**
+        * The angle between the center of the transform to the rotation origin.
+        */
+        public angleToCenter : number;
+        /**
+        * The offset on the X axis of the origin
+        */
+        public offsetX : number;
+        /**
+        * The offset on the Y axis of the origin
+        */
+        public offsetY : number;
+        /**
+        * Half the width of the parent sprite, taking into consideration scaling
+        */
+        public halfWidth : number;
+        /**
+        * Half the height of the parent sprite, taking into consideration scaling
+        */
+        public halfHeight : number;
+        /**
+        * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
         */
         public centerX : number;
         /**
-        * The center of the Sprite after taking scaling into consideration
+        * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
         */
         public centerY : number;
+        public sin : number;
+        public cos : number;
     }
 }
 /**
@@ -2669,6 +2715,9 @@ module Phaser {
         * @return {Rectangle} A reference to the Sprite.cameraView property
         */
         static updateCameraView(camera: Camera, sprite: Sprite): Rectangle;
+        static getCornersAsPoints(sprite: Sprite): Point[];
+        static getCornersAsPoints2(sprite: Sprite): Point[];
+        static getCornersAsPoints3(sprite: Sprite): Point[];
         static getAsPoints(sprite: Sprite): Point[];
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.

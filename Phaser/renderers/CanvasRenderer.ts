@@ -221,8 +221,6 @@ module Phaser {
                 return true;
             }
 
-            Phaser.SpriteUtils.updateCameraView(camera, sprite);
-
             return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
 
         }
@@ -447,7 +445,7 @@ module Phaser {
 
             if (sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false)
             {
-                //return false;
+                return false;
             }
 
             sprite.renderOrderID = this._count;
