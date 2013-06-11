@@ -1897,26 +1897,22 @@ module Phaser.Components {
         */
         constructor(parent);
         private _rotation;
-        private _cachedSin;
-        private _cachedCos;
-        private _cachedRotation;
-        private _cachedScaleX;
-        private _cachedScaleY;
-        private _cachedAngle;
-        private _cachedAngleToCenter;
-        private _cachedDistance;
-        private _cachedWidth;
-        private _cachedHeight;
-        private _cachedHalfWidth;
-        private _cachedHalfHeight;
-        private _cachedCosAngle;
-        private _cachedSinAngle;
-        private _cachedOffsetX;
-        private _cachedOffsetY;
-        private _cachedOriginX;
-        private _cachedOriginY;
-        private _cachedCenterX;
-        private _cachedCenterY;
+        private _pos;
+        private _scale;
+        private _size;
+        private _halfSize;
+        private _offset;
+        private _origin;
+        private _sc;
+        private _scA;
+        private _angle;
+        private _distance;
+        private _prevRotation;
+        public center: Point;
+        public upperLeft: Point;
+        public upperRight: Point;
+        public bottomLeft: Point;
+        public bottomRight: Point;
         public local: Mat3;
         public setCache(): void;
         public update(): void;
@@ -1979,14 +1975,6 @@ module Phaser.Components {
         * Half the height of the parent sprite, taking into consideration scaling
         */
         public halfHeight : number;
-        /**
-        * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
-        */
-        public centerX : number;
-        /**
-        * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
-        */
-        public centerY : number;
         public sin : number;
         public cos : number;
     }
@@ -2715,9 +2703,6 @@ module Phaser {
         * @return {Rectangle} A reference to the Sprite.cameraView property
         */
         static updateCameraView(camera: Camera, sprite: Sprite): Rectangle;
-        static getCornersAsPoints(sprite: Sprite): Point[];
-        static getCornersAsPoints2(sprite: Sprite): Point[];
-        static getCornersAsPoints3(sprite: Sprite): Point[];
         static getAsPoints(sprite: Sprite): Point[];
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.

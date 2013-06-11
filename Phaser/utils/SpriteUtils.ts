@@ -40,8 +40,8 @@ module Phaser {
                 //  If the sprite is rotated around its center we can use this quicker method:
                 if (sprite.transform.origin.x == 0.5 && sprite.transform.origin.y == 0.5)
                 {
-                    SpriteUtils._sin = Math.sin((sprite.rotation + sprite.transform.rotationOffset) * GameMath.DEG_TO_RAD);
-                    SpriteUtils._cos = Math.cos((sprite.rotation + sprite.transform.rotationOffset) * GameMath.DEG_TO_RAD);
+                    SpriteUtils._sin = sprite.transform.sin;
+                    SpriteUtils._cos = sprite.transform.cos;
 
                     if (SpriteUtils._sin < 0)
                     {
@@ -60,8 +60,23 @@ module Phaser {
                 }
                 else
                 {
+                    //var left:Number = Math.min(topLeft.x, topRight.x, bottomRight.x, bottomLeft.x);
+                    //var top:Number = Math.min(topLeft.y, topRight.y, bottomRight.y, bottomLeft.y);
+                    //var right:Number = Math.max(topLeft.x, topRight.x, bottomRight.x, bottomLeft.x);
+                    //var bottom:Number = Math.max(topLeft.y, topRight.y, bottomRight.y, bottomLeft.y);
+                    //return new Rectangle(left, top, right - left, bottom - top);
 
+                    var minX: number = Math.min(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
+                    var minY: number = Math.min(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
+                    var maxX: number = Math.max(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
+                    var maxY: number = Math.max(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
 
+                    //  (min_x,min_y), (min_x,max_y), (max_x,max_y), (max_x,min_y)
+
+                    sprite.cameraView.x = minX;
+                    sprite.cameraView.y = minY;
+                    sprite.cameraView.width = maxX - minX;
+                    sprite.cameraView.height = maxY - minY;
 
                     /*
                         //  Useful to get the maximum AABB size of any given rect
@@ -86,90 +101,6 @@ module Phaser {
             return sprite.cameraView;
 
         }
-
-        static getCornersAsPoints(sprite: Sprite): Phaser.Point[] {
-
-            var out: Phaser.Point[] = [];
-
-            var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-            var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-
-            //  Upper Left
-            out.push(new Point(sprite.x + (sprite.width / 2) * cos - (sprite.height / 2) * sin, sprite.y + (sprite.height / 2) * cos + (sprite.width / 2) * sin));
-
-            //  Upper Right
-            out.push(new Point(sprite.x - (sprite.width / 2) * cos - (sprite.height / 2) * sin, sprite.y + (sprite.height / 2) * cos - (sprite.width / 2) * sin));
-
-            //  Bottom Left
-            out.push(new Point(sprite.x + (sprite.width / 2) * cos + (sprite.height / 2) * sin, sprite.y - (sprite.height / 2) * cos + (sprite.width / 2) * sin));
-
-            //  Bottom Right
-            out.push(new Point(sprite.x - (sprite.width / 2) * cos + (sprite.height / 2) * sin, sprite.y - (sprite.height / 2) * cos - (sprite.width / 2) * sin));
-
-            return out;
-
-        }
-
-        static getCornersAsPoints2(sprite: Sprite): Phaser.Point[] {
-
-            var out: Phaser.Point[] = [];
-
-            var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-            var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-
-            //  This = the center point
-            var cx = sprite.x + (sprite.width / 2) * cos - (sprite.height / 2) * sin;
-            var cy = sprite.y + (sprite.height / 2) * cos + (sprite.width / 2) * sin;
-
-            //  Upper Left
-            out.push(new Point(cx + (sprite.width / 2) * cos - (sprite.height / 2) * sin, cy + (sprite.height / 2) * cos + (sprite.width / 2) * sin));
-
-            //  Upper Right
-            out.push(new Point(cx - (sprite.width / 2) * cos - (sprite.height / 2) * sin, cy + (sprite.height / 2) * cos - (sprite.width / 2) * sin));
-
-            //  Bottom Left
-            out.push(new Point(cx + (sprite.width / 2) * cos + (sprite.height / 2) * sin, cy - (sprite.height / 2) * cos + (sprite.width / 2) * sin));
-
-            //  Bottom Right
-            out.push(new Point(cx - (sprite.width / 2) * cos + (sprite.height / 2) * sin, cy - (sprite.height / 2) * cos - (sprite.width / 2) * sin));
-
-            return out;
-
-        }
-
-        static getCornersAsPoints3(sprite: Sprite): Phaser.Point[] {
-
-            var out: Phaser.Point[] = [];
-
-            var sin: number = sprite.transform.sin;
-            var cos: number = sprite.transform.cos;
-
-            //var sin = Math.sin((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-            //var cos = Math.cos((sprite.transform.rotation + sprite.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-
-            //  This = the center point
-            //var cx = sprite.x + sprite.transform.distance * Math.cos((sprite.transform.rotation * Math.PI / 180) + sprite.transform.angleToCenter);
-            //var cy = sprite.y + sprite.transform.distance * Math.sin((sprite.transform.rotation * Math.PI / 180) + sprite.transform.angleToCenter);
-
-            var cx: number = sprite.transform.centerX;
-            var cy: number = sprite.transform.centerY;
-
-            //  Upper Left
-            out.push(new Point(cx + sprite.transform.halfWidth * cos - sprite.transform.halfHeight * sin, cy + sprite.transform.halfHeight * cos + sprite.transform.halfWidth * sin));
-
-            //  Upper Right
-            out.push(new Point(cx - sprite.transform.halfWidth * cos - sprite.transform.halfHeight * sin, cy + sprite.transform.halfHeight * cos - sprite.transform.halfWidth * sin));
-
-            //  Bottom Left
-            out.push(new Point(cx + sprite.transform.halfWidth * cos + sprite.transform.halfHeight * sin, cy - sprite.transform.halfHeight * cos + sprite.transform.halfWidth * sin));
-
-            //  Bottom Right
-            out.push(new Point(cx - sprite.transform.halfWidth * cos + sprite.transform.halfHeight * sin, cy - sprite.transform.halfHeight * cos - sprite.transform.halfWidth * sin));
-
-            return out;
-
-        }
-
 
         static getAsPoints(sprite: Sprite): Phaser.Point[] {
 
