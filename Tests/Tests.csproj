@@ -117,6 +117,10 @@
     </Content>
     <TypeScriptCompile Include="input\touch priority.ts" />
     <TypeScriptCompile Include="input\snap 1.ts" />
+    <TypeScriptCompile Include="input\point in rotated sprite.ts" />
+    <Content Include="input\point in rotated sprite.js">
+      <DependentUpon>point in rotated sprite.ts</DependentUpon>
+    </Content>
     <Content Include="input\snap 1.js">
       <DependentUpon>snap 1.ts</DependentUpon>
     </Content>

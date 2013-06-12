@@ -10,8 +10,8 @@ module Phaser.Components {
     export class Transform {
 
         /**
-         * Creates a new Sprite Transform component
-         * @param parent The Sprite using this transform
+         * Creates a new Transform component
+         * @param parent The game object using this transform
          */
         constructor(parent) {
 
@@ -57,14 +57,39 @@ module Phaser.Components {
         private _distance: number;
         private _prevRotation: number;
 
+        /**
+         * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
+         */
         public center: Phaser.Point;
+
+        /**
+         * The upper-left corner of the Sprite in world coordinates, after taking scaling and rotation into consideration
+         */
         public upperLeft: Phaser.Point;
+
+        /**
+         * The upper-right corner of the Sprite in world coordinates, after taking scaling and rotation into consideration
+         */
         public upperRight: Phaser.Point;
+
+        /**
+         * The bottom-left corner of the Sprite in world coordinates, after taking scaling and rotation into consideration
+         */
         public bottomLeft: Phaser.Point;
+
+        /**
+         * The bottom-right corner of the Sprite in world coordinates, after taking scaling and rotation into consideration
+         */
         public bottomRight: Phaser.Point;
 
+        /**
+         * The local transform matrix
+         */
         public local: Mat3;
 
+        /**
+         * Populates the transform cache. Called by the parent object on creation.
+         */
         public setCache() {
 
             this._pos.x = this.parent.x;
@@ -96,14 +121,22 @@ module Phaser.Components {
                 this._sc.y = 1;
             }
 
-            this.center.setTo(this.center.x, this.center.y);
+            this.center.x = this.parent.x + this._distance * this._scA.y;
+            this.center.y = this.parent.y + this._distance * this._scA.x;
+
             this.upperLeft.setTo(this.center.x - this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y - this._halfSize.x * this._sc.x);
             this.upperRight.setTo(this.center.x + this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y + this._halfSize.x * this._sc.x);
             this.bottomLeft.setTo(this.center.x - this._halfSize.x * this._sc.y - this._halfSize.y * this._sc.x, this.center.y + this._halfSize.y * this._sc.y - this._halfSize.x * this._sc.x);
             this.bottomRight.setTo(this.center.x + this._halfSize.x * this._sc.y - this._halfSize.y * this._sc.x, this.center.y + this._halfSize.y * this._sc.y + this._halfSize.x * this._sc.x);
 
+            this._pos.x = this.parent.x;
+            this._pos.y = this.parent.y;
+
         }
 
+        /**
+         * Updates the local transform matrix and the cache values if anything has changed in the parent.
+         */
         public update() {
 
             //  Check cache
@@ -155,8 +188,6 @@ module Phaser.Components {
             {
                 this.center.x = this.parent.x + this._distance * this._scA.y;
                 this.center.y = this.parent.y + this._distance * this._scA.x;
-
-                this.center.setTo(this.center.x, this.center.y);
 
                 this.upperLeft.setTo(this.center.x - this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y - this._halfSize.x * this._sc.x);
                 this.upperRight.setTo(this.center.x + this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y + this._halfSize.x * this._sc.x);
@@ -282,23 +313,15 @@ module Phaser.Components {
         }
 
         /**
-         * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
+         * The equivalent of Math.sin(rotation + rotationOffset)
          */
-        //public get centerX(): number {
-        //    return this.center.x;
-        //}
-
-        /**
-         * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
-         */
-        //public get centerY(): number {
-        //    return this.center.y;
-        //}
-
         public get sin(): number {
             return this._sc.x;
         }
 
+        /**
+         * The equivalent of Math.cos(rotation + rotationOffset)
+         */
         public get cos(): number {
             return this._sc.y;
         }

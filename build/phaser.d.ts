@@ -1892,8 +1892,8 @@ module Phaser {
 module Phaser.Components {
     class Transform {
         /**
-        * Creates a new Sprite Transform component
-        * @param parent The Sprite using this transform
+        * Creates a new Transform component
+        * @param parent The game object using this transform
         */
         constructor(parent);
         private _rotation;
@@ -1908,13 +1908,37 @@ module Phaser.Components {
         private _angle;
         private _distance;
         private _prevRotation;
+        /**
+        * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
+        */
         public center: Point;
+        /**
+        * The upper-left corner of the Sprite in world coordinates, after taking scaling and rotation into consideration
+        */
         public upperLeft: Point;
+        /**
+        * The upper-right corner of the Sprite in world coordinates, after taking scaling and rotation into consideration
+        */
         public upperRight: Point;
+        /**
+        * The bottom-left corner of the Sprite in world coordinates, after taking scaling and rotation into consideration
+        */
         public bottomLeft: Point;
+        /**
+        * The bottom-right corner of the Sprite in world coordinates, after taking scaling and rotation into consideration
+        */
         public bottomRight: Point;
+        /**
+        * The local transform matrix
+        */
         public local: Mat3;
+        /**
+        * Populates the transform cache. Called by the parent object on creation.
+        */
         public setCache(): void;
+        /**
+        * Updates the local transform matrix and the cache values if anything has changed in the parent.
+        */
         public update(): void;
         /**
         * Reference to Phaser.Game
@@ -1975,7 +1999,13 @@ module Phaser.Components {
         * Half the height of the parent sprite, taking into consideration scaling
         */
         public halfHeight : number;
+        /**
+        * The equivalent of Math.sin(rotation + rotationOffset)
+        */
         public sin : number;
+        /**
+        * The equivalent of Math.cos(rotation + rotationOffset)
+        */
         public cos : number;
     }
 }
@@ -2704,6 +2734,17 @@ module Phaser {
         */
         static updateCameraView(camera: Camera, sprite: Sprite): Rectangle;
         static getAsPoints(sprite: Sprite): Point[];
+        /**
+        * Checks to see if the given x and y coordinates overlaps this <code>Sprite</code>, taking scaling and rotation into account.
+        * The coordinates must be given in world space, not local or camera space.
+        *
+        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
+        * @param x {Number} The x coordinate in world space.
+        * @param y {Number} The y coordinate in world space.
+        *
+        * @return   Whether or not the point overlaps this object.
+        */
+        static overlapsXY(sprite: Sprite, x: number, y: number): bool;
         /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *

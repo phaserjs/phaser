@@ -221,8 +221,7 @@ module Phaser {
                 return true;
             }
 
-            return true;
-            //return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
+            return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
 
         }
 

@@ -60,42 +60,11 @@ module Phaser {
                 }
                 else
                 {
-                    //var left:Number = Math.min(topLeft.x, topRight.x, bottomRight.x, bottomLeft.x);
-                    //var top:Number = Math.min(topLeft.y, topRight.y, bottomRight.y, bottomLeft.y);
-                    //var right:Number = Math.max(topLeft.x, topRight.x, bottomRight.x, bottomLeft.x);
-                    //var bottom:Number = Math.max(topLeft.y, topRight.y, bottomRight.y, bottomLeft.y);
-                    //return new Rectangle(left, top, right - left, bottom - top);
-
-                    var minX: number = Math.min(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
-                    var minY: number = Math.min(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
-                    var maxX: number = Math.max(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
-                    var maxY: number = Math.max(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
-
-                    //  (min_x,min_y), (min_x,max_y), (max_x,max_y), (max_x,min_y)
-
-                    sprite.cameraView.x = minX;
-                    sprite.cameraView.y = minY;
-                    sprite.cameraView.width = maxX - minX;
-                    sprite.cameraView.height = maxY - minY;
-
-                    /*
-                        //  Useful to get the maximum AABB size of any given rect
-
-                        If you want a single box that covers all angles, just take the half-diagonal of your existing box as the radius of a circle.
-                        The new box has to contain this circle, so it should be a square with side-length equal to twice the radius 
-                        (equiv. the diagonal of the original AABB) and with the same center as the original.
-                    */
-
+                    sprite.cameraView.x = Math.min(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
+                    sprite.cameraView.y = Math.min(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
+                    sprite.cameraView.width = Math.max(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x) - sprite.cameraView.x;
+                    sprite.cameraView.height = Math.max(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y) - sprite.cameraView.y;
                 }
-
-            }
-
-            if (sprite.animations.currentFrame !== null && sprite.animations.currentFrame.trimmed)
-            {
-                //sprite.cameraView.x += sprite.animations.currentFrame.spriteSourceSizeX;
-                //sprite.cameraView.y += sprite.animations.currentFrame.spriteSourceSizeY;
-                //this._dw = sprite.animations.currentFrame.spriteSourceSizeW;
-                //this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
             }
 
             return sprite.cameraView;
@@ -174,92 +143,60 @@ module Phaser {
         }
         */
 
-        /**
-        * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
-        * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
-        * WARNING: Currently tilemaps do NOT support screen space overlap checks!
-        *
-        * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param objectOrGroup {object} The object or group being tested.
-        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        *
-        * @return {boolean} Whether or not the two objects overlap.
-        */
-        /*
-        static overlapsAt(X: number, Y: number, objectOrGroup, inScreenSpace: bool = false, camera: Camera = null): bool {
-
-            if (objectOrGroup.isGroup)
-            {
-                var results: bool = false;
-                var basic;
-                var i: number = 0;
-                var members = objectOrGroup.members;
-
-                while (i < length)
-                {
-                    if (this.overlapsAt(X, Y, members[i++], inScreenSpace, camera))
-                    {
-                        results = true;
-                    }
-                }
-
-                return results;
-            }
-
-            if (!inScreenSpace)
-            {
-                return (objectOrGroup.x + objectOrGroup.width > X) && (objectOrGroup.x < X + this.width) &&
-                        (objectOrGroup.y + objectOrGroup.height > Y) && (objectOrGroup.y < Y + this.height);
-            }
-
-            if (camera == null)
-            {
-                camera = this._game.camera;
-            }
-
-            var objectScreenPos: Point = objectOrGroup.getScreenXY(null, Camera);
-
-            this._point.x = X - camera.scroll.x * this.transform.scrollFactor.x; //copied from getScreenXY()
-            this._point.y = Y - camera.scroll.y * this.transform.scrollFactor.y;
-            this._point.x += (this._point.x > 0) ? 0.0000001 : -0.0000001;
-            this._point.y += (this._point.y > 0) ? 0.0000001 : -0.0000001;
-
-            return (objectScreenPos.x + objectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) &&
-                (objectScreenPos.y + objectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
-        }
-        */
 
         /**
-        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
+        * Checks to see if the given x and y coordinates overlaps this <code>Sprite</code>, taking scaling and rotation into account.
+        * The coordinates must be given in world space, not local or camera space.
         *
-        * @param point {Point} The point in world space you want to check.
-        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
+        * @param x {Number} The x coordinate in world space.
+        * @param y {Number} The y coordinate in world space.
         *
         * @return   Whether or not the point overlaps this object.
         */
-        static overlapsPoint(sprite: Sprite, point: Point, inScreenSpace: bool = false, camera: Camera = null): bool {
+        static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): bool {
 
-            if (!inScreenSpace)
+            //  if rotation == 0 then just do a rect check instead!
+            if (sprite.transform.rotation == 0)
             {
-                return Phaser.RectangleUtils.containsPoint(sprite.body.bounds, point);
-                //return (point.x > sprite.x) && (point.x < sprite.x + sprite.width) && (point.y > sprite.y) && (point.y < sprite.y + sprite.height);
+                return Phaser.RectangleUtils.contains(sprite.cameraView, x, y);
             }
 
-            if (camera == null)
+            if ((x - sprite.transform.upperLeft.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) < 0)
             {
-                camera = sprite.game.camera;
+                return false;
             }
 
-            //var x: number = point.x - camera.scroll.x;
-            //var y: number = point.y - camera.scroll.y;
+            if ((x - sprite.transform.upperRight.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperRight.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) > 0)
+            {
+                return false;
+            }
 
-            //this.getScreenXY(this._point, camera);
+            if ((x - sprite.transform.upperLeft.x) * (sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y) < 0)
+            {
+                return false;
+            }
 
-            //return (x > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
+            if ((x - sprite.transform.bottomLeft.x) * (sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x) + (y - sprite.transform.bottomLeft.y) * (sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y) > 0)
+            {
+                return false;
+            }
 
+            return true;
+
+        }
+
+        /**
+        * Checks to see if the given point overlaps this <code>Sprite</code>, taking scaling and rotation into account.
+        * The point must be given in world space, not local or camera space.
+        *
+        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
+        * @param point {Point} The point in world space you want to check.
+        *
+        * @return   Whether or not the point overlaps this object.
+        */
+        static overlapsPoint(sprite: Sprite, point: Point): bool {
+            return overlapsXY(sprite, point.x, point.y);
         }
 
         /**
@@ -343,19 +280,6 @@ module Phaser {
             sprite.body.velocity.y = 0;
             sprite.body.position.x = x;
             sprite.body.position.y = y;
-
-        }
-
-        static setOriginToCenter(sprite: Sprite, fromFrameBounds: bool = true, fromBody?: bool = false) {
-
-            if (fromFrameBounds)
-            {
-                sprite.transform.origin.setTo(sprite.width / 2, sprite.height / 2);
-            }
-            else if (fromBody)
-            {
-                sprite.transform.origin.setTo(sprite.body.bounds.halfWidth, sprite.body.bounds.halfHeight);
-            }
 
         }
 

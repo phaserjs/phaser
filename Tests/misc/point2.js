@@ -2,16 +2,17 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
     function init() {
-        game.load.image('box', 'assets/tests/320x200.png');
+        game.load.spritesheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
         game.load.start();
     }
     var sprite;
     var rotate = false;
     function create() {
         game.stage.backgroundColor = 'rgb(0,0,0)';
-        game.stage.disablePauseScreen = true;
-        sprite = game.add.sprite(game.stage.centerX, game.stage.centerY, 'box');
-        sprite.transform.origin.setTo(0, 0);
+        sprite = game.add.sprite(game.stage.centerX, game.stage.centerY, 'mummy');
+        sprite.animations.add('walk');
+        sprite.animations.play('walk', 20, true);
+        sprite.transform.scale.setTo(4, 4);
         game.input.onTap.add(rotateIt, this);
     }
     function rotateIt() {
@@ -27,30 +28,19 @@
         }
     }
     function render() {
-        var originX = sprite.transform.origin.x * sprite.width;
-        var originY = sprite.transform.origin.y * sprite.height;
-        var centerX = 0.5 * sprite.width;
-        var centerY = 0.5 * sprite.height;
-        var distanceX = originX - centerX;
-        var distanceY = originY - centerY;
-        var distance = Math.sqrt(((originX - centerX) * (originX - centerX)) + ((originY - centerY) * (originY - centerY)));
-        var px = sprite.x + distance * Math.cos(sprite.transform.rotation + 45 * Math.PI / 180);
-        var py = sprite.y + distance * Math.sin(sprite.transform.rotation + 45 * Math.PI / 180);
         game.stage.context.save();
-        game.stage.context.fillStyle = 'rgb(255,255,0)';
-        game.stage.context.fillText('rect width: ' + originX + ' height: ' + originY, 32, 32);
-        game.stage.context.fillText('center x: ' + centerX + ' centerY: ' + centerY, 32, 52);
-        game.stage.context.fillText('angle: ' + sprite.rotation, 32, 72);
-        game.stage.context.fillText('point of rotation x: ' + sprite.transform.origin.x + ' y: ' + sprite.transform.origin.y, 32, 92);
-        game.stage.context.fillText('x: ' + sprite.x + ' y: ' + sprite.y, sprite.x + 4, sprite.y);
-        game.stage.context.restore();
-        game.stage.context.save();
-        game.stage.context.fillStyle = 'rgba(255,255,255,0.1)';
-        game.stage.context.beginPath();
-        game.stage.context.moveTo(sprite.x, sprite.y);
-        game.stage.context.arc(sprite.x, sprite.y, distance, 0, Math.PI * 2);
-        game.stage.context.closePath();
-        game.stage.context.fill();
+        game.stage.context.fillStyle = 'rgb(255,0,255)';
+        game.stage.context.fillText('x: ' + Math.round(sprite.transform.upperLeft.x) + ' y: ' + Math.round(sprite.transform.upperLeft.y), sprite.transform.upperLeft.x, sprite.transform.upperLeft.y);
+        game.stage.context.fillText('x: ' + Math.round(sprite.transform.upperRight.x) + ' y: ' + Math.round(sprite.transform.upperRight.y), sprite.transform.upperRight.x, sprite.transform.upperRight.y);
+        game.stage.context.fillText('x: ' + Math.round(sprite.transform.bottomLeft.x) + ' y: ' + Math.round(sprite.transform.bottomLeft.y), sprite.transform.bottomLeft.x, sprite.transform.bottomLeft.y);
+        game.stage.context.fillText('x: ' + Math.round(sprite.transform.bottomRight.x) + ' y: ' + Math.round(sprite.transform.bottomRight.y), sprite.transform.bottomRight.x, sprite.transform.bottomRight.y);
+        game.stage.context.fillRect(sprite.transform.center.x, sprite.transform.center.y, 2, 2);
+        game.stage.context.fillRect(sprite.transform.upperLeft.x, sprite.transform.upperLeft.y, 2, 2);
+        game.stage.context.fillRect(sprite.transform.upperRight.x, sprite.transform.upperRight.y, 2, 2);
+        game.stage.context.fillRect(sprite.transform.bottomLeft.x, sprite.transform.bottomLeft.y, 2, 2);
+        game.stage.context.fillRect(sprite.transform.bottomRight.x, sprite.transform.bottomRight.y, 2, 2);
+        game.stage.context.strokeStyle = 'rgb(255,255,0)';
+        game.stage.context.strokeRect(sprite.cameraView.x, sprite.cameraView.y, sprite.cameraView.width, sprite.cameraView.height);
         game.stage.context.restore();
     }
 })();

@@ -6,7 +6,7 @@
 
     function init() {
 
-        game.load.image('box', 'assets/tests/320x200.png');
+        game.load.atlas('bot', 'assets/sprites/running_bot.png', null, botData);
         game.load.start();
 
     }
@@ -17,11 +17,14 @@
     function create() {
 
         game.stage.backgroundColor = 'rgb(0,0,0)';
-        game.stage.disablePauseScreen = true;
 
-        sprite = game.add.sprite(game.stage.centerX, game.stage.centerY, 'box');
+        sprite = game.add.sprite(game.stage.centerX, game.stage.centerY, 'bot');
 
-        sprite.transform.origin.setTo(0.3, 0.8);
+        sprite.animations.add('run', null, 10, true);
+
+        sprite.animations.play('run');
+
+        //sprite.transform.scale.setTo(4, 4);
 
         game.input.onTap.add(rotateIt, this);
 
@@ -42,36 +45,27 @@
 
     function render() {
 
-        var originX: number = sprite.transform.origin.x * sprite.width;
-        var originY: number = sprite.transform.origin.y * sprite.height;
-        var centerX: number = 0.5 * sprite.width;
-        var centerY: number = 0.5 * sprite.height;
-        var distanceX: number = originX - centerX;
-        var distanceY: number = originY - centerY;
-        var distance: number = Math.sqrt(((originX - centerX) * (originX - centerX)) + ((originY - centerY) * (originY - centerY)));
-
-        var px = sprite.x + distance * Math.cos(sprite.transform.rotation + 45 * Math.PI / 180);
-        var py = sprite.y + distance * Math.sin(sprite.transform.rotation + 45 * Math.PI / 180);
-
         game.stage.context.save();
-        game.stage.context.fillStyle = 'rgb(255,255,0)';
-        game.stage.context.fillText('rect width: ' + originX + ' height: ' + originY, 32, 32);
-        game.stage.context.fillText('center x: ' + centerX + ' centerY: ' + centerY, 32, 52);
-        game.stage.context.fillText('angle: ' + sprite.rotation , 32, 72);
-        game.stage.context.fillText('point of rotation x: ' + sprite.transform.origin.x + ' y: ' + sprite.transform.origin.y, 32, 92);
-        game.stage.context.fillText('sprite x: ' + sprite.x + ' sprite y: ' + sprite.y, 32, 112);
-        game.stage.context.fillRect(sprite.x, sprite.y, 2, 2);
-        game.stage.context.restore();
+        game.stage.context.fillStyle = 'rgb(255,0,255)';
 
-        game.stage.context.save();
-        game.stage.context.fillStyle = 'rgba(255,255,255,0.1)';
-        game.stage.context.beginPath();
-        game.stage.context.moveTo(sprite.x, sprite.y);
-        game.stage.context.arc(sprite.x, sprite.y, distance, 0, Math.PI * 2);
-        game.stage.context.closePath();
-        game.stage.context.fill();
+        game.stage.context.fillText('x: ' + Math.round(sprite.transform.upperLeft.x) + ' y: ' + Math.round(sprite.transform.upperLeft.y), sprite.transform.upperLeft.x, sprite.transform.upperLeft.y);
+        game.stage.context.fillText('x: ' + Math.round(sprite.transform.upperRight.x) + ' y: ' + Math.round(sprite.transform.upperRight.y), sprite.transform.upperRight.x, sprite.transform.upperRight.y);
+        game.stage.context.fillText('x: ' + Math.round(sprite.transform.bottomLeft.x) + ' y: ' + Math.round(sprite.transform.bottomLeft.y), sprite.transform.bottomLeft.x, sprite.transform.bottomLeft.y);
+        game.stage.context.fillText('x: ' + Math.round(sprite.transform.bottomRight.x) + ' y: ' + Math.round(sprite.transform.bottomRight.y), sprite.transform.bottomRight.x, sprite.transform.bottomRight.y);
+
+        game.stage.context.fillRect(sprite.transform.center.x, sprite.transform.center.y, 2, 2);
+        game.stage.context.fillRect(sprite.transform.upperLeft.x, sprite.transform.upperLeft.y, 2, 2);
+        game.stage.context.fillRect(sprite.transform.upperRight.x, sprite.transform.upperRight.y, 2, 2);
+        game.stage.context.fillRect(sprite.transform.bottomLeft.x, sprite.transform.bottomLeft.y, 2, 2);
+        game.stage.context.fillRect(sprite.transform.bottomRight.x, sprite.transform.bottomRight.y, 2, 2);
+
+        game.stage.context.strokeStyle = 'rgb(255,255,0)';
+        game.stage.context.strokeRect(sprite.cameraView.x, sprite.cameraView.y, sprite.cameraView.width, sprite.cameraView.height);
+
         game.stage.context.restore();
 
     }
+
+    var botData = '{"frames": [{"filename": "running bot.swf/0000","frame": { "x": 34, "y": 128, "w": 56, "h": 60 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 0, "y": 2, "w": 56, "h": 60 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0001","frame": { "x": 54, "y": 0, "w": 56, "h": 58 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0002","frame": { "x": 54, "y": 58, "w": 56, "h": 58 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0003","frame": { "x": 0, "y": 192, "w": 34, "h": 64 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 11, "y": 0, "w": 34, "h": 64 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0004","frame": { "x": 0, "y": 64, "w": 54, "h": 64 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 1, "y": 0, "w": 54, "h": 64 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0005","frame": { "x": 196, "y": 0, "w": 56, "h": 58 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0006","frame": { "x": 0, "y": 0, "w": 54, "h": 64 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 1, "y": 0, "w": 54, "h": 64 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0007","frame": { "x": 140, "y": 0, "w": 56, "h": 58 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0008","frame": { "x": 34, "y": 188, "w": 50, "h": 60 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 3, "y": 2, "w": 50, "h": 60 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0009","frame": { "x": 0, "y": 128, "w": 34, "h": 64 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 11, "y": 0, "w": 34, "h": 64 },"sourceSize": { "w": 56, "h": 64 }},{"filename": "running bot.swf/0010","frame": { "x": 84, "y": 188, "w": 56, "h": 58 },"rotated": false,"trimmed": true,"spriteSourceSize": { "x": 0, "y": 3, "w": 56, "h": 58 },"sourceSize": { "w": 56, "h": 64 }}]}';
 
 })();

@@ -26,30 +26,28 @@ TODO:
 * Investigate why tweens don't restart after the game pauses
 * Fix bug in Tween yoyo + loop combo
 * Apply Sprite scaling to Body.bounds
-* When you modify the sprite x/y directly the body position doesn't update, which leads to weird results. Need to work out who controls who.
 * Check that tween pausing works with the new performance.now
 * Game.Time should monitor pause duration
 * Investigate bug re: tilemap collision and animation frames
 * Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
-* Polygon geom primitive
 * If the Camera is larger than the Stage size then the rotation offset isn't correct
 * Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 * Bug: Sprite x/y gets shifted if dynamic from the original value
 * Input CSS cursor those little 4-way arrows on drag?
 * Stage CSS3 transforms!!! Color tints, sepia, greyscale, all of those cool things :)
-* Cameras should have option to be input disabled + Pointers should check which camera they are over before doing Sprite selection
-* Added JSON Texture Atlas object support.
-* RenderOrderID won't work across cameras - but then neither do Pointers yet anyway
+* Add JSON Texture Atlas object support.
 * Swap to using time based motion (like the tweens) rather than delta timer - it just doesn't work well on slow phones
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
 * Add a 'click to bring to top' demo (+ Group feature?)
 * If stage.clear set to false and game pauses, when it unpauses you still see the pause arrow - resolve this
-
 * Add clip support + shape options to Texture Component.
+* Make sure I'm using Point and not Vec2 when it's not a directional vector I need
+* Bug with setting scale or anything on a Sprite inside a Group, or maybe group.addNewSprite issue
 
-Make sure I'm using Point and not Vec2 when it's not a directional vector I need
-
-
+* Make input check use the rotated sprite check
+* Sprite collision events
+* See which functions in the input component can move elsewhere (utils)
+* Move all of the renderDebugInfo methods to the DebugUtils class
 
 V1.0.0
 
@@ -98,7 +96,7 @@ V1.0.0
 * Added optional frame parameter to Phaser.Sprite (and game.add.sprite) so you can set a frame ID or frame name on construction.
 * Fixed bug where passing a texture atlas string would incorrectly skip the frames array.
 * Added AnimationManager.autoUpdateBounds to control if a new frame should change the physics bounds of a sprite body or not.
-* Added StageScaleMode.pageAlignHorizontally and pageAlignVertically booleans. When on Phaser will set the margin-left and top of the canvas element so that it is positioned in the middle of the page (based on window.innerWidth).
+* Added StageScaleMode.pageAlignHorizontally and pageAlignVertically booleans. When true Phaser will set the margin-left and top of the canvas element so that it is positioned in the middle of the page (based only on window.innerWidth).
 * Added support for globalCompositeOperation, opaque and backgroundColor to the Sprite.Texture and Camera.Texture components.
 * Added ability for a Camera to skew and rotate around an origin.
 * Moved the Camera rendering into CanvasRenderer to keep things consistent.
@@ -109,8 +107,12 @@ V1.0.0
 * Added CameraManager.swap and CameraManager.sort methods and added a z-index property to Camera to control render order.
 * Added World.postUpdate loop + Group and Camera postUpdate methods.
 * Fixed issue stopping Pointer from working in world coordinates and fixed the world drag example.
-* For consistency renamed input.scaledX/Y = input.scale.
+* For consistency renamed input.scaledX/Y to input.scale.
 * Added input.activePointer which contains a reference to the most recently active pointer.
+* Sprite.Transform now has upperLeft, upperRight, bottomLeft and bottomRight Point properties and lots of useful coordinate related methods.
+* Camera.inCamera check now uses the Sprite.worldView which finally accurately updates regardless of scale, rotation or rotation origin.
+* Added Math.Mat3 for Matrix3 operations (which Sprite.Transform uses) and Math.Mat3Utils for lots of use Mat3 related methods.
+* Added SpriteUtils.overlapsXY and overlapsPoint to check if a point is within a sprite, taking scale and rotation into account.
 
 
 

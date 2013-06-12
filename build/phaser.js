@@ -3060,8 +3060,8 @@ var Phaser;
     (function (Components) {
         var Transform = (function () {
             /**
-            * Creates a new Sprite Transform component
-            * @param parent The Sprite using this transform
+            * Creates a new Transform component
+            * @param parent The game object using this transform
             */
             function Transform(parent) {
                 /**
@@ -3096,7 +3096,10 @@ var Phaser;
                 this._sc = new Phaser.Point();
                 this._scA = new Phaser.Point();
             }
-            Transform.prototype.setCache = function () {
+            Transform.prototype.setCache = /**
+            * Populates the transform cache. Called by the parent object on creation.
+            */
+            function () {
                 this._pos.x = this.parent.x;
                 this._pos.y = this.parent.y;
                 this._halfSize.x = this.parent.width / 2;
@@ -3121,13 +3124,19 @@ var Phaser;
                     this._sc.x = 0;
                     this._sc.y = 1;
                 }
-                this.center.setTo(this.center.x, this.center.y);
+                this.center.x = this.parent.x + this._distance * this._scA.y;
+                this.center.y = this.parent.y + this._distance * this._scA.x;
                 this.upperLeft.setTo(this.center.x - this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y - this._halfSize.x * this._sc.x);
                 this.upperRight.setTo(this.center.x + this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y + this._halfSize.x * this._sc.x);
                 this.bottomLeft.setTo(this.center.x - this._halfSize.x * this._sc.y - this._halfSize.y * this._sc.x, this.center.y + this._halfSize.y * this._sc.y - this._halfSize.x * this._sc.x);
                 this.bottomRight.setTo(this.center.x + this._halfSize.x * this._sc.y - this._halfSize.y * this._sc.x, this.center.y + this._halfSize.y * this._sc.y + this._halfSize.x * this._sc.x);
+                this._pos.x = this.parent.x;
+                this._pos.y = this.parent.y;
             };
-            Transform.prototype.update = function () {
+            Transform.prototype.update = /**
+            * Updates the local transform matrix and the cache values if anything has changed in the parent.
+            */
+            function () {
                 //  Check cache
                 var dirty = false;
                 //  1) Height or Width change (also triggered by a change in scale) or an Origin change
@@ -3166,7 +3175,6 @@ var Phaser;
                 if(dirty || this.parent.x != this._pos.x || this.parent.y != this._pos.y) {
                     this.center.x = this.parent.x + this._distance * this._scA.y;
                     this.center.y = this.parent.y + this._distance * this._scA.x;
-                    this.center.setTo(this.center.x, this.center.y);
                     this.upperLeft.setTo(this.center.x - this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y - this._halfSize.x * this._sc.x);
                     this.upperRight.setTo(this.center.x + this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y + this._halfSize.x * this._sc.x);
                     this.bottomLeft.setTo(this.center.x - this._halfSize.x * this._sc.y - this._halfSize.y * this._sc.x, this.center.y + this._halfSize.y * this._sc.y - this._halfSize.x * this._sc.x);
@@ -3255,17 +3263,8 @@ var Phaser;
             });
             Object.defineProperty(Transform.prototype, "sin", {
                 get: /**
-                * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
+                * The equivalent of Math.sin(rotation + rotationOffset)
                 */
-                //public get centerX(): number {
-                //    return this.center.x;
-                //}
-                /**
-                * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
-                */
-                //public get centerY(): number {
-                //    return this.center.y;
-                //}
                 function () {
                     return this._sc.x;
                 },
@@ -3273,7 +3272,10 @@ var Phaser;
                 configurable: true
             });
             Object.defineProperty(Transform.prototype, "cos", {
-                get: function () {
+                get: /**
+                * The equivalent of Math.cos(rotation + rotationOffset)
+                */
+                function () {
                     return this._sc.y;
                 },
                 enumerable: true,
@@ -4681,35 +4683,12 @@ var Phaser;
                     sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
                     sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
                 } else {
-                    //var left:Number = Math.min(topLeft.x, topRight.x, bottomRight.x, bottomLeft.x);
-                    //var top:Number = Math.min(topLeft.y, topRight.y, bottomRight.y, bottomLeft.y);
-                    //var right:Number = Math.max(topLeft.x, topRight.x, bottomRight.x, bottomLeft.x);
-                    //var bottom:Number = Math.max(topLeft.y, topRight.y, bottomRight.y, bottomLeft.y);
-                    //return new Rectangle(left, top, right - left, bottom - top);
-                    var minX = Math.min(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
-                    var minY = Math.min(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
-                    var maxX = Math.max(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
-                    var maxY = Math.max(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
-                    //  (min_x,min_y), (min_x,max_y), (max_x,max_y), (max_x,min_y)
-                    sprite.cameraView.x = minX;
-                    sprite.cameraView.y = minY;
-                    sprite.cameraView.width = maxX - minX;
-                    sprite.cameraView.height = maxY - minY;
-                    /*
-                    //  Useful to get the maximum AABB size of any given rect
-                    
-                    If you want a single box that covers all angles, just take the half-diagonal of your existing box as the radius of a circle.
-                    The new box has to contain this circle, so it should be a square with side-length equal to twice the radius
-                    (equiv. the diagonal of the original AABB) and with the same center as the original.
-                    */
-                                    }
+                    sprite.cameraView.x = Math.min(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
+                    sprite.cameraView.y = Math.min(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
+                    sprite.cameraView.width = Math.max(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x) - sprite.cameraView.x;
+                    sprite.cameraView.height = Math.max(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y) - sprite.cameraView.y;
+                }
             }
-            if(sprite.animations.currentFrame !== null && sprite.animations.currentFrame.trimmed) {
-                //sprite.cameraView.x += sprite.animations.currentFrame.spriteSourceSizeX;
-                //sprite.cameraView.y += sprite.animations.currentFrame.spriteSourceSizeY;
-                //this._dw = sprite.animations.currentFrame.spriteSourceSizeW;
-                //this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
-                            }
             return sprite.cameraView;
         };
         SpriteUtils.getAsPoints = function getAsPoints(sprite) {
@@ -4724,7 +4703,7 @@ var Phaser;
             out.push(new Phaser.Point(sprite.x, sprite.y + sprite.height));
             return out;
         };
-        SpriteUtils.overlapsPoint = /**
+        SpriteUtils.overlapsXY = /**
         * Checks to see if some <code>GameObject</code> overlaps this <code>GameObject</code> or <code>Group</code>.
         * If the group has a LOT of things in it, it might be faster to use <code>Collision.overlaps()</code>.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
@@ -4777,7 +4756,7 @@ var Phaser;
         */
         /**
         * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
-        * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
+        * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size into account.
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
         * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
@@ -4832,6 +4811,43 @@ var Phaser;
         }
         */
         /**
+        * Checks to see if the given x and y coordinates overlaps this <code>Sprite</code>, taking scaling and rotation into account.
+        * The coordinates must be given in world space, not local or camera space.
+        *
+        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
+        * @param x {Number} The x coordinate in world space.
+        * @param y {Number} The y coordinate in world space.
+        *
+        * @return   Whether or not the point overlaps this object.
+        */
+        function overlapsXY(sprite, x, y) {
+            //  if rotation == 0 then just do a rect check instead!
+            if(sprite.transform.rotation == 0) {
+                return Phaser.RectangleUtils.contains(sprite.cameraView, x, y);
+            }
+            //var ex: number = sprite.transform.upperRight.x - sprite.transform.upperLeft.x;
+            //var ey: number = sprite.transform.upperRight.y - sprite.transform.upperLeft.y;
+            //var fx: number = sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x;
+            //var fy: number = sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y;
+            //if ((x-ax)*ex+(y-ay)*ey<0.0) return false;
+            if((x - sprite.transform.upperLeft.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) < 0) {
+                return false;
+            }
+            //if ((x-bx)*ex+(y-by)*ey>0.0) return false;
+            if((x - sprite.transform.upperRight.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperRight.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) > 0) {
+                return false;
+            }
+            //if ((x-ax)*fx+(y-ay)*fy<0.0) return false;
+            if((x - sprite.transform.upperLeft.x) * (sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y) < 0) {
+                return false;
+            }
+            //if ((x-dx)*fx+(y-dy)*fy>0.0) return false;
+            if((x - sprite.transform.bottomLeft.x) * (sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x) + (y - sprite.transform.bottomLeft.y) * (sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y) > 0) {
+                return false;
+            }
+            return true;
+        };
+        SpriteUtils.overlapsPoint = /**
         * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
         *
         * @param point {Point} The point in world space you want to check.
@@ -16574,9 +16590,8 @@ var Phaser;
             if(sprite.transform.scrollFactor.equals(0)) {
                 return true;
             }
-            return true;
-            //return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
-                    };
+            return Phaser.RectangleUtils.intersects(sprite.cameraView, camera.screenView);
+        };
         CanvasRenderer.prototype.inScreen = function (camera) {
             return true;
         };
