@@ -53,7 +53,7 @@
         }
 
         ship = game.add.sprite(game.stage.centerX, game.stage.centerY, 'nashwan', Phaser.Types.BODY_DYNAMIC);
-        Phaser.SpriteUtils.setOriginToCenter(ship);
+        ship.transform.origin.setTo(0.5, 0.5);
 
         //  We do this because the ship was drawn facing up, but 0 degrees is pointing to the right
         ship.transform.rotationOffset = 90;

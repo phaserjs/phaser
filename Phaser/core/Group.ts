@@ -583,6 +583,14 @@ module Phaser {
 
         }
 
+        /**
+         * Swaps two existing game object in this Group with each other.
+         *
+         * @param {Basic} child1 The first object to swap.
+         * @param {Basic} child2 The second object to swap.
+         *
+         * @return {Basic} True if the two objects successfully swapped position.
+         */
         public swap(child1, child2, sort?: bool = true): bool {
 
             if (child1.group.ID != this.ID || child2.group.ID != this.ID || child1 === child2)
@@ -599,6 +607,43 @@ module Phaser {
             {
                 this.sort();
             }
+
+            return true;
+
+        }
+
+        public bringToTop(child): bool {
+
+            //  If child not in this group, or is already at the top of the group, return false
+            if (child.group.ID != this.ID || child.z == this._zCounter)
+            {
+                return false;
+            }
+
+            this.sort();
+
+            //  What's the z index of the top most child?
+            var tempZ: number = child.z;
+            var childIndex: number = this._zCounter;
+
+            this._i = 0;
+
+            while (this._i < this.length)
+            {
+                this._member = this.members[this._i++];
+
+                if (this._i > childIndex)
+                {
+                    this._member.z--;
+                }
+                else if (this._member.z == child.z)
+                {
+                    childIndex = this._i;
+                    this._member.z = this._zCounter;
+                }
+            }
+
+            this.sort();
 
             return true;
 

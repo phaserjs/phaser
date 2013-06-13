@@ -422,7 +422,7 @@ module Phaser {
 
                 for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
                 {
-                    if (this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
+                    if (this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
                     {
                         _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
                         _highestRenderObject = i;
@@ -510,7 +510,7 @@ module Phaser {
 
             for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
             {
-                if (this.game.input.inputObjects[i].input.enabled)
+                if (this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.enabled)
                 {
                     this.game.input.inputObjects[i].input._releasedHandler(this);
                 }

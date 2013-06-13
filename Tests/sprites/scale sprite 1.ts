@@ -22,11 +22,11 @@
         //  And now let's scale the sprite by half
 
         //  You can do either:
-        //  smallBunny.transform.scale.x = 0.5;
-        //  smallBunny.transform.scale.y = 0.5;
+        //smallBunny.scale.x = 0.5;
+        //smallBunny.scale.y = 0.5;
 
         //  Or you can set them both at the same time using setTo:
-        smallBunny.transform.scale.setTo(0.5, 0.5);
+        smallBunny.scale.setTo(0.5, 0.5);
 
     }
 

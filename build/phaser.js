@@ -3310,10 +3310,15 @@ var Phaser;
                     * The PriorityID controls which Sprite receives an Input event first if they should overlap.
                     */
                     this.priorityID = 0;
+                    /**
+                    * The index of this Input component entry in the Game.Input manager.
+                    */
+                    this.indexID = 0;
                     this.isDragged = false;
                     this.dragPixelPerfect = false;
                     this.allowHorizontalDrag = true;
                     this.allowVerticalDrag = true;
+                    this.bringToTop = false;
                     this.snapOnDrag = false;
                     this.snapOnRelease = false;
                     this.snapX = 0;
@@ -3497,14 +3502,25 @@ var Phaser;
                     } else {
                         //  De-register, etc
                         this.enabled = false;
-                        this.game.input.removeGameObject(this.sprite);
+                        this.game.input.removeGameObject(this.indexID);
                     }
                 };
-                Input.prototype.checkPointerOver = function (pointer) {
+                Input.prototype.destroy = /**
+                * Clean up memory.
+                */
+                function () {
+                    if(this.enabled) {
+                        this.game.input.removeGameObject(this.indexID);
+                    }
+                };
+                Input.prototype.checkPointerOver = /**
+                * Checks if the given pointer is over this Sprite. All checks are done in world coordinates.
+                */
+                function (pointer) {
                     if(this.enabled == false || this.sprite.visible == false) {
                         return false;
                     } else {
-                        return Phaser.RectangleUtils.contains(this.sprite.worldView, pointer.worldX(), pointer.worldY());
+                        return Phaser.SpriteUtils.overlapsXY(this.sprite, pointer.worldX(), pointer.worldY());
                     }
                 };
                 Input.prototype.update = /**
@@ -3517,7 +3533,7 @@ var Phaser;
                     if(this.draggable && this._draggedPointerID == pointer.id) {
                         return this.updateDrag(pointer);
                     } else if(this._pointerData[pointer.id].isOver == true) {
-                        if(Phaser.RectangleUtils.contains(this.sprite.worldView, pointer.worldX(), pointer.worldY())) {
+                        if(Phaser.SpriteUtils.overlapsXY(this.sprite, pointer.worldX(), pointer.worldY())) {
                             this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
                             this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
                             return true;
@@ -3560,6 +3576,9 @@ var Phaser;
                         //if (this.draggable && this.isDragged == false && pointer.targetObject == null)
                         if(this.draggable && this.isDragged == false) {
                             this.startDrag(pointer);
+                        }
+                        if(this.bringToTop) {
+                            this.sprite.group.bringToTop(this.sprite);
                         }
                     }
                     //  Consume the event?
@@ -3674,19 +3693,22 @@ var Phaser;
                 * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
                 *
                 * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
+                * @param	bringToTop			If true the Sprite will be bought to the top of the rendering list in its current Group.
                 * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
                 * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
                 * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
                 * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
                 */
-                function (lockCenter, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
+                function (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
                     if (typeof lockCenter === "undefined") { lockCenter = false; }
+                    if (typeof bringToTop === "undefined") { bringToTop = false; }
                     if (typeof pixelPerfect === "undefined") { pixelPerfect = false; }
                     if (typeof alphaThreshold === "undefined") { alphaThreshold = 255; }
                     if (typeof boundsRect === "undefined") { boundsRect = null; }
                     if (typeof boundsSprite === "undefined") { boundsSprite = null; }
                     this._dragPoint = new Phaser.Point();
                     this.draggable = true;
+                    this.bringToTop = bringToTop;
                     this.dragOffset = new Phaser.Point();
                     this.dragFromCenter = lockCenter;
                     this.dragPixelPerfect = pixelPerfect;
@@ -3725,6 +3747,9 @@ var Phaser;
                         this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
                     }
                     this.updateDrag(pointer);
+                    if(this.bringToTop) {
+                        this.sprite.group.bringToTop(this.sprite);
+                    }
                 };
                 Input.prototype.stopDrag = /**
                 * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
@@ -4450,7 +4475,6 @@ var Phaser;
             this.y = y;
             this.z = -1;
             this.group = null;
-            //  No dependencies
             this.animations = new Phaser.Components.AnimationManager(this);
             this.input = new Phaser.Components.Sprite.Input(this);
             this.events = new Phaser.Components.Sprite.Events(this);
@@ -4472,6 +4496,10 @@ var Phaser;
             this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.cameraView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.transform.setCache();
+            //  Handy proxies
+            this.scale = this.transform.scale;
+            this.alpha = this.texture.alpha;
+            this.origin = this.transform.origin;
         }
         Object.defineProperty(Sprite.prototype, "rotation", {
             get: /**
@@ -4608,8 +4636,8 @@ var Phaser;
         * Clean up memory.
         */
         function () {
-            //this.input.destroy();
-                    };
+            this.input.destroy();
+        };
         Sprite.prototype.kill = /**
         * Handy for "killing" game objects.
         * Default behavior is to flag them as nonexistent AND dead.
@@ -4755,62 +4783,6 @@ var Phaser;
         }
         */
         /**
-        * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
-        * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size into account.
-        * WARNING: Currently tilemaps do NOT support screen space overlap checks!
-        *
-        * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param objectOrGroup {object} The object or group being tested.
-        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        *
-        * @return {boolean} Whether or not the two objects overlap.
-        */
-        /*
-        static overlapsAt(X: number, Y: number, objectOrGroup, inScreenSpace: bool = false, camera: Camera = null): bool {
-        
-        if (objectOrGroup.isGroup)
-        {
-        var results: bool = false;
-        var basic;
-        var i: number = 0;
-        var members = objectOrGroup.members;
-        
-        while (i < length)
-        {
-        if (this.overlapsAt(X, Y, members[i++], inScreenSpace, camera))
-        {
-        results = true;
-        }
-        }
-        
-        return results;
-        }
-        
-        if (!inScreenSpace)
-        {
-        return (objectOrGroup.x + objectOrGroup.width > X) && (objectOrGroup.x < X + this.width) &&
-        (objectOrGroup.y + objectOrGroup.height > Y) && (objectOrGroup.y < Y + this.height);
-        }
-        
-        if (camera == null)
-        {
-        camera = this._game.camera;
-        }
-        
-        var objectScreenPos: Point = objectOrGroup.getScreenXY(null, Camera);
-        
-        this._point.x = X - camera.scroll.x * this.transform.scrollFactor.x; //copied from getScreenXY()
-        this._point.y = Y - camera.scroll.y * this.transform.scrollFactor.y;
-        this._point.x += (this._point.x > 0) ? 0.0000001 : -0.0000001;
-        this._point.y += (this._point.y > 0) ? 0.0000001 : -0.0000001;
-        
-        return (objectScreenPos.x + objectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) &&
-        (objectScreenPos.y + objectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
-        }
-        */
-        /**
         * Checks to see if the given x and y coordinates overlaps this <code>Sprite</code>, taking scaling and rotation into account.
         * The coordinates must be given in world space, not local or camera space.
         *
@@ -4825,52 +4797,32 @@ var Phaser;
             if(sprite.transform.rotation == 0) {
                 return Phaser.RectangleUtils.contains(sprite.cameraView, x, y);
             }
-            //var ex: number = sprite.transform.upperRight.x - sprite.transform.upperLeft.x;
-            //var ey: number = sprite.transform.upperRight.y - sprite.transform.upperLeft.y;
-            //var fx: number = sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x;
-            //var fy: number = sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y;
-            //if ((x-ax)*ex+(y-ay)*ey<0.0) return false;
             if((x - sprite.transform.upperLeft.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) < 0) {
                 return false;
             }
-            //if ((x-bx)*ex+(y-by)*ey>0.0) return false;
             if((x - sprite.transform.upperRight.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperRight.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) > 0) {
                 return false;
             }
-            //if ((x-ax)*fx+(y-ay)*fy<0.0) return false;
             if((x - sprite.transform.upperLeft.x) * (sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y) < 0) {
                 return false;
             }
-            //if ((x-dx)*fx+(y-dy)*fy>0.0) return false;
             if((x - sprite.transform.bottomLeft.x) * (sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x) + (y - sprite.transform.bottomLeft.y) * (sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y) > 0) {
                 return false;
             }
             return true;
         };
         SpriteUtils.overlapsPoint = /**
-        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
+        * Checks to see if the given point overlaps this <code>Sprite</code>, taking scaling and rotation into account.
+        * The point must be given in world space, not local or camera space.
         *
+        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
         * @param point {Point} The point in world space you want to check.
-        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return   Whether or not the point overlaps this object.
         */
-        function overlapsPoint(sprite, point, inScreenSpace, camera) {
-            if (typeof inScreenSpace === "undefined") { inScreenSpace = false; }
-            if (typeof camera === "undefined") { camera = null; }
-            if(!inScreenSpace) {
-                return Phaser.RectangleUtils.containsPoint(sprite.body.bounds, point);
-                //return (point.x > sprite.x) && (point.x < sprite.x + sprite.width) && (point.y > sprite.y) && (point.y < sprite.y + sprite.height);
-                            }
-            if(camera == null) {
-                camera = sprite.game.camera;
-            }
-            //var x: number = point.x - camera.scroll.x;
-            //var y: number = point.y - camera.scroll.y;
-            //this.getScreenXY(this._point, camera);
-            //return (x > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
-                    };
+        function overlapsPoint(sprite, point) {
+            return SpriteUtils.overlapsXY(sprite, point.x, point.y);
+        };
         SpriteUtils.onScreen = /**
         * Check and see if this object is currently on screen.
         *
@@ -4939,15 +4891,6 @@ var Phaser;
             sprite.body.velocity.y = 0;
             sprite.body.position.x = x;
             sprite.body.position.y = y;
-        };
-        SpriteUtils.setOriginToCenter = function setOriginToCenter(sprite, fromFrameBounds, fromBody) {
-            if (typeof fromFrameBounds === "undefined") { fromFrameBounds = true; }
-            if (typeof fromBody === "undefined") { fromBody = false; }
-            if(fromFrameBounds) {
-                sprite.transform.origin.setTo(sprite.width / 2, sprite.height / 2);
-            } else if(fromBody) {
-                sprite.transform.origin.setTo(sprite.body.bounds.halfWidth, sprite.body.bounds.halfHeight);
-            }
         };
         SpriteUtils.setBounds = /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
@@ -5535,7 +5478,15 @@ var Phaser;
             this.members[this._i] = newObject;
             return newObject;
         };
-        Group.prototype.swap = function (child1, child2, sort) {
+        Group.prototype.swap = /**
+        * Swaps two existing game object in this Group with each other.
+        *
+        * @param {Basic} child1 The first object to swap.
+        * @param {Basic} child2 The second object to swap.
+        *
+        * @return {Basic} True if the two objects successfully swapped position.
+        */
+        function (child1, child2, sort) {
             if (typeof sort === "undefined") { sort = true; }
             if(child1.group.ID != this.ID || child2.group.ID != this.ID || child1 === child2) {
                 return false;
@@ -5546,6 +5497,28 @@ var Phaser;
             if(sort) {
                 this.sort();
             }
+            return true;
+        };
+        Group.prototype.bringToTop = function (child) {
+            //  If child not in this group, or is already at the top of the group, return false
+            if(child.group.ID != this.ID || child.z == this._zCounter) {
+                return false;
+            }
+            this.sort();
+            //  What's the z index of the top most child?
+            var tempZ = child.z;
+            var childIndex = this._zCounter;
+            this._i = 0;
+            while(this._i < this.length) {
+                this._member = this.members[this._i++];
+                if(this._i > childIndex) {
+                    this._member.z--;
+                } else if(this._member.z == child.z) {
+                    childIndex = this._i;
+                    this._member.z = this._zCounter;
+                }
+            }
+            this.sort();
             return true;
         };
         Group.prototype.sort = /**
@@ -6831,6 +6804,13 @@ var Phaser;
                 return this._text[key].data;
             }
             return null;
+        };
+        Cache.prototype.getImageKeys = function () {
+            var output = [];
+            for(var item in this._images) {
+                output.push(item);
+            }
+            return output;
         };
         Cache.prototype.destroy = /**
         * Clean up cache memory.
@@ -14951,7 +14931,7 @@ var Phaser;
                 var _highestRenderID = -1;
                 var _highestRenderObject = -1;
                 for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
-                    if(this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID) {
+                    if(this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID) {
                         _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
                         _highestRenderObject = i;
                     }
@@ -15010,7 +14990,7 @@ var Phaser;
                 this.game.input.currentPointers--;
             }
             for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
-                if(this.game.input.inputObjects[i].input.enabled) {
+                if(this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.enabled) {
                     this.game.input.inputObjects[i].input._releasedHandler(this);
                 }
             }
@@ -16055,16 +16035,34 @@ var Phaser;
             this.gestures.start();
             this.mousePointer.active = true;
         };
-        Input.prototype.addGameObject = //  Add Input Enabled array + add/remove methods and then iterate and update them during the main update
-        //  Clear down this array on State swap??? Maybe removed from it when Sprite is destroyed
+        Input.prototype.addGameObject = /**
+        * Adds a new game object to be tracked by the Input Manager. Called by the Sprite.Input component, should not usually be called directly.
+        * @method addGameObject
+        **/
         function (object) {
-            //  Lots more checks here
+            //  Find a spare slot
+            for(var i = 0; i < this.inputObjects.length; i++) {
+                if(this.inputObjects[i] == null) {
+                    this.inputObjects[i] = object;
+                    object.input.indexID = i;
+                    this.totalTrackedObjects++;
+                    return;
+                }
+            }
+            //  If we got this far we need to push a new entry into the array
+            object.input.indexID = this.inputObjects.length;
             this.inputObjects.push(object);
             this.totalTrackedObjects++;
         };
-        Input.prototype.removeGameObject = function (object) {
-            //  TODO
-                    };
+        Input.prototype.removeGameObject = /**
+        * Removes a game object from the Input Manager. Called by the Sprite.Input component, should not usually be called directly.
+        * @method removeGameObject
+        **/
+        function (index) {
+            if(this.inputObjects[index]) {
+                this.inputObjects[index] = null;
+            }
+        };
         Input.prototype.update = /**
         * Updates the Input Manager. Called by the core Game loop.
         * @method update

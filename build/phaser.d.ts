@@ -2039,6 +2039,10 @@ module Phaser.Components.Sprite {
         * The PriorityID controls which Sprite receives an Input event first if they should overlap.
         */
         public priorityID: number;
+        /**
+        * The index of this Input component entry in the Game.Input manager.
+        */
+        public indexID: number;
         private _dragPoint;
         private _draggedPointerID;
         public dragOffset: Point;
@@ -2048,6 +2052,7 @@ module Phaser.Components.Sprite {
         public dragPixelPerfectAlpha: number;
         public allowHorizontalDrag: bool;
         public allowVerticalDrag: bool;
+        public bringToTop: bool;
         public snapOnDrag: bool;
         public snapOnRelease: bool;
         public snapOffset: Point;
@@ -2148,6 +2153,13 @@ module Phaser.Components.Sprite {
         public start(priority?: number, checkBody?: bool, useHandCursor?: bool): Sprite;
         public reset(): void;
         public stop(): void;
+        /**
+        * Clean up memory.
+        */
+        public destroy(): void;
+        /**
+        * Checks if the given pointer is over this Sprite. All checks are done in world coordinates.
+        */
         public checkPointerOver(pointer: Pointer): bool;
         /**
         * Update
@@ -2200,12 +2212,13 @@ module Phaser.Components.Sprite {
         * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
         *
         * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
+        * @param	bringToTop			If true the Sprite will be bought to the top of the rendering list in its current Group.
         * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
         * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
         * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
         * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
         */
-        public enableDrag(lockCenter?: bool, pixelPerfect?: bool, alphaThreshold?: number, boundsRect?: Rectangle, boundsSprite?: Sprite): void;
+        public enableDrag(lockCenter?: bool, bringToTop?: bool, pixelPerfect?: bool, alphaThreshold?: number, boundsRect?: Rectangle, boundsSprite?: Sprite): void;
         /**
         * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
         */
@@ -2670,6 +2683,20 @@ module Phaser {
         */
         public rotation : number;
         /**
+        * The scale of the Sprite. A value of 1 is original scale. 0.5 is half size. 2 is double the size.
+        * This is a reference to Sprite.transform.scale
+        */
+        public scale: Vec2;
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public alpha: number;
+        /**
+        * The origin of the Sprite around which rotation and positioning takes place.
+        * This is a reference to Sprite.transform.origin
+        */
+        public origin: Vec2;
+        /**
         * Get the animation frame number.
         */
         /**
@@ -2746,15 +2773,15 @@ module Phaser {
         */
         static overlapsXY(sprite: Sprite, x: number, y: number): bool;
         /**
-        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
+        * Checks to see if the given point overlaps this <code>Sprite</code>, taking scaling and rotation into account.
+        * The point must be given in world space, not local or camera space.
         *
+        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
         * @param point {Point} The point in world space you want to check.
-        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
         * @return   Whether or not the point overlaps this object.
         */
-        static overlapsPoint(sprite: Sprite, point: Point, inScreenSpace?: bool, camera?: Camera): bool;
+        static overlapsPoint(sprite: Sprite, point: Point): bool;
         /**
         * Check and see if this object is currently on screen.
         *
@@ -2780,7 +2807,6 @@ module Phaser {
         * @param y {number} The new Y position of this object.
         */
         static reset(sprite: Sprite, x: number, y: number): void;
-        static setOriginToCenter(sprite: Sprite, fromFrameBounds?: bool, fromBody?: bool): void;
         /**
         * Set the world bounds that this GameObject can exist within. By default a GameObject can exist anywhere
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
@@ -3139,7 +3165,16 @@ module Phaser {
         * @return {Basic} The new object.
         */
         public replace(oldObject, newObject);
+        /**
+        * Swaps two existing game object in this Group with each other.
+        *
+        * @param {Basic} child1 The first object to swap.
+        * @param {Basic} child2 The second object to swap.
+        *
+        * @return {Basic} True if the two objects successfully swapped position.
+        */
         public swap(child1, child2, sort?: bool): bool;
+        public bringToTop(child): bool;
         /**
         * Call this function to sort the group according to a particular value and order.
         * For example, to sort game objects for Zelda-style overlaps you might call
@@ -3797,6 +3832,7 @@ module Phaser {
         * @return {object} The text data you want.
         */
         public getText(key: string);
+        public getImageKeys(): any[];
         /**
         * Clean up cache memory.
         */
@@ -8656,8 +8692,16 @@ module Phaser {
         public boot(): void;
         public inputObjects: any[];
         public totalTrackedObjects: number;
+        /**
+        * Adds a new game object to be tracked by the Input Manager. Called by the Sprite.Input component, should not usually be called directly.
+        * @method addGameObject
+        **/
         public addGameObject(object): void;
-        public removeGameObject(object): void;
+        /**
+        * Removes a game object from the Input Manager. Called by the Sprite.Input component, should not usually be called directly.
+        * @method removeGameObject
+        **/
+        public removeGameObject(index: number): void;
         /**
         * Updates the Input Manager. Called by the core Game loop.
         * @method update

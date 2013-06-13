@@ -262,6 +262,57 @@ module Phaser {
         }
 
         /**
+         * Returns an array containing all of the keys of Images in the Cache.
+         * @return {Array} The string based keys in the Cache.
+         */
+        public getImageKeys() {
+
+            var output = [];
+
+            for (var item in this._images)
+            {
+                output.push(item);
+            }
+
+            return output;
+
+        }
+
+        /**
+         * Returns an array containing all of the keys of Sounds in the Cache.
+         * @return {Array} The string based keys in the Cache.
+         */
+        public getSoundKeys() {
+
+            var output = [];
+
+            for (var item in this._sounds)
+            {
+                output.push(item);
+            }
+
+            return output;
+
+        }
+
+        /**
+         * Returns an array containing all of the keys of Text Files in the Cache.
+         * @return {Array} The string based keys in the Cache.
+         */
+        public getTextKeys() {
+
+            var output = [];
+
+            for (var item in this._text)
+            {
+                output.push(item);
+            }
+
+            return output;
+
+        }
+
+        /**
          * Clean up cache memory.
          */
         public destroy() {

@@ -48,6 +48,11 @@ module Phaser.Components.Sprite {
          */
 		public priorityID:number = 0;
 
+        /**
+         * The index of this Input component entry in the Game.Input manager.
+         */
+		public indexID:number = 0;
+
         private _dragPoint: Point;
         private _draggedPointerID: number;
         public dragOffset: Point;
@@ -58,6 +63,7 @@ module Phaser.Components.Sprite {
 
         public allowHorizontalDrag: bool = true;
         public allowVerticalDrag: bool = true;
+        public bringToTop: bool = false;
 
         public snapOnDrag: bool = false;
         public snapOnRelease: bool = false;
@@ -245,11 +251,26 @@ module Phaser.Components.Sprite {
 		    {
                 //  De-register, etc
 		        this.enabled = false;
-		        this.game.input.removeGameObject(this.sprite);
+		        this.game.input.removeGameObject(this.indexID);
 		    }
 
 		}
 
+        /**
+         * Clean up memory.
+         */
+        public destroy() {
+
+		    if (this.enabled)
+		    {
+		        this.game.input.removeGameObject(this.indexID);
+		    }
+
+        }
+
+        /**
+         * Checks if the given pointer is over this Sprite. All checks are done in world coordinates.
+         */
 		public checkPointerOver(pointer: Phaser.Pointer): bool {
 
 		    if (this.enabled == false || this.sprite.visible == false)
@@ -258,7 +279,7 @@ module Phaser.Components.Sprite {
 		    }
 		    else
 		    {
-		        return RectangleUtils.contains(this.sprite.worldView, pointer.worldX(), pointer.worldY());
+                return SpriteUtils.overlapsXY(this.sprite, pointer.worldX(), pointer.worldY());
 		    }
 
 		}
@@ -279,7 +300,7 @@ module Phaser.Components.Sprite {
             }
             else if (this._pointerData[pointer.id].isOver == true)
             {
-                if (RectangleUtils.contains(this.sprite.worldView, pointer.worldX(), pointer.worldY()))
+                if (SpriteUtils.overlapsXY(this.sprite, pointer.worldX(), pointer.worldY()))
                 {
                     this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
                     this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
@@ -348,6 +369,11 @@ module Phaser.Components.Sprite {
                 if (this.draggable && this.isDragged == false)
                 {
                     this.startDrag(pointer);
+                }
+
+                if (this.bringToTop)
+                {
+                    this.sprite.group.bringToTop(this.sprite);
                 }
 
             }
@@ -493,16 +519,18 @@ module Phaser.Components.Sprite {
 		 * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
 		 * 
 		 * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
+		 * @param	bringToTop			If true the Sprite will be bought to the top of the rendering list in its current Group.
 		 * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
 		 * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
 		 * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
 		 * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
 		 */
-		public enableDrag(lockCenter:bool = false, pixelPerfect:bool = false, alphaThreshold:number = 255, boundsRect:Rectangle = null, boundsSprite:Phaser.Sprite = null):void
+		public enableDrag(lockCenter:bool = false, bringToTop:bool = false, pixelPerfect:bool = false, alphaThreshold:number = 255, boundsRect:Rectangle = null, boundsSprite:Phaser.Sprite = null):void
 		{
             this._dragPoint = new Point;
 
 			this.draggable = true;
+			this.bringToTop = bringToTop;
 			
             this.dragOffset = new Point;
 			this.dragFromCenter = lockCenter;
@@ -558,6 +586,11 @@ module Phaser.Components.Sprite {
             }
 
             this.updateDrag(pointer);
+
+            if (this.bringToTop)
+            {
+                this.sprite.group.bringToTop(this.sprite);
+            }
 
 		}
 

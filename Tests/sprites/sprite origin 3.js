@@ -14,7 +14,7 @@
         fuji = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji');
         //  The sprite is 320 x 200 pixels in size
         //  Here we set the origin to be the bottom-right of the sprite
-        fuji.transform.origin.setTo(320, 200);
+        fuji.origin.setTo(320, 200);
         game.add.tween(fuji).to({
             rotation: 360
         }, 2000, Phaser.Easing.Linear.None, true, 0, true);

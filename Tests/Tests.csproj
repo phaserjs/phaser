@@ -85,6 +85,10 @@
       <DependentUpon>swap children.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="input\drag sprite 1.ts" />
+    <TypeScriptCompile Include="input\bring to top.ts" />
+    <Content Include="input\bring to top.js">
+      <DependentUpon>bring to top.ts</DependentUpon>
+    </Content>
     <Content Include="input\drag sprite 1.js">
       <DependentUpon>drag sprite 1.ts</DependentUpon>
     </Content>
@@ -120,6 +124,10 @@
     <TypeScriptCompile Include="input\point in rotated sprite.ts" />
     <Content Include="input\point in rotated sprite.js">
       <DependentUpon>point in rotated sprite.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="input\rotated sprites.ts" />
+    <Content Include="input\rotated sprites.js">
+      <DependentUpon>rotated sprites.ts</DependentUpon>
     </Content>
     <Content Include="input\snap 1.js">
       <DependentUpon>snap 1.ts</DependentUpon>
@@ -274,8 +282,6 @@
       <DependentUpon>boot screen.ts</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="demoscene\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

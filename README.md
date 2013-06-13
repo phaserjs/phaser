@@ -33,18 +33,15 @@ TODO:
 * If the Camera is larger than the Stage size then the rotation offset isn't correct
 * Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
 * Bug: Sprite x/y gets shifted if dynamic from the original value
-* Input CSS cursor those little 4-way arrows on drag?
 * Stage CSS3 transforms!!! Color tints, sepia, greyscale, all of those cool things :)
 * Add JSON Texture Atlas object support.
 * Swap to using time based motion (like the tweens) rather than delta timer - it just doesn't work well on slow phones
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
-* Add a 'click to bring to top' demo (+ Group feature?)
 * If stage.clear set to false and game pauses, when it unpauses you still see the pause arrow - resolve this
 * Add clip support + shape options to Texture Component.
 * Make sure I'm using Point and not Vec2 when it's not a directional vector I need
 * Bug with setting scale or anything on a Sprite inside a Group, or maybe group.addNewSprite issue
 
-* Make input check use the rotated sprite check
 * Sprite collision events
 * See which functions in the input component can move elsewhere (utils)
 * Move all of the renderDebugInfo methods to the DebugUtils class
@@ -113,6 +110,8 @@ V1.0.0
 * Camera.inCamera check now uses the Sprite.worldView which finally accurately updates regardless of scale, rotation or rotation origin.
 * Added Math.Mat3 for Matrix3 operations (which Sprite.Transform uses) and Math.Mat3Utils for lots of use Mat3 related methods.
 * Added SpriteUtils.overlapsXY and overlapsPoint to check if a point is within a sprite, taking scale and rotation into account.
+* Added Cache.getImageKeys (and similar) to return an array of all the keys for all currently cached objects.
+* Added Group.bringToTop feature. Will sort the Group, move the given sprites z-index to the top and shift the rest down by one.
 
 
 

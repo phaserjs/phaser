@@ -40,7 +40,6 @@ module Phaser {
             this.z = -1;
             this.group = null;
 
-            //  No dependencies
             this.animations = new Phaser.Components.AnimationManager(this);
             this.input = new Phaser.Components.Sprite.Input(this);
             this.events = new Phaser.Components.Sprite.Events(this);
@@ -73,6 +72,11 @@ module Phaser {
             this.cameraView = new Rectangle(x, y, this.width, this.height);
 
             this.transform.setCache();
+
+            //  Handy proxies
+            this.scale = this.transform.scale;
+            this.alpha = this.texture.alpha;
+            this.origin = this.transform.origin;
 
         }
 
@@ -193,6 +197,23 @@ module Phaser {
         public set rotation(value: number) {
             this.transform.rotation = this.game.math.wrap(value, 360, 0);
         }
+
+        /**
+        * The scale of the Sprite. A value of 1 is original scale. 0.5 is half size. 2 is double the size.
+        * This is a reference to Sprite.transform.scale
+        */
+        public scale: Phaser.Vec2;
+
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public alpha: number;
+
+        /**
+        * The origin of the Sprite around which rotation and positioning takes place.
+        * This is a reference to Sprite.transform.origin
+        */
+        public origin: Phaser.Vec2;
 
         /**
         * Set the animation frame by frame number.
@@ -318,8 +339,7 @@ module Phaser {
          */
         public destroy() {
 
-            //this.input.destroy();
-
+            this.input.destroy();
 
         }
 

@@ -455,21 +455,45 @@ module Phaser {
         public inputObjects = [];
         public totalTrackedObjects: number = 0;
 
-        //  Add Input Enabled array + add/remove methods and then iterate and update them during the main update
-        //  Clear down this array on State swap??? Maybe removed from it when Sprite is destroyed
-
+        /**
+        * Adds a new game object to be tracked by the Input Manager. Called by the Sprite.Input component, should not usually be called directly.
+        * @method addGameObject
+        **/
         public addGameObject(object) {
 
-            //  Lots more checks here
+            //  Find a spare slot
+            for (var i = 0; i < this.inputObjects.length; i++)
+            {
+                if (this.inputObjects[i] == null)
+                {
+                    this.inputObjects[i] = object;
+                    object.input.indexID = i;
+                    this.totalTrackedObjects++;
+                    return;
+                }
+            }
+
+            //  If we got this far we need to push a new entry into the array
+            object.input.indexID = this.inputObjects.length;
+
             this.inputObjects.push(object);
+
             this.totalTrackedObjects++;
+
         }
 
-        public removeGameObject(object) {
-            //  TODO
+        /**
+        * Removes a game object from the Input Manager. Called by the Sprite.Input component, should not usually be called directly.
+        * @method removeGameObject
+        **/
+        public removeGameObject(index: number) {
+
+            if (this.inputObjects[index])
+            {
+                this.inputObjects[index] = null;
+            }
+
         }
-
-
 
         /**
         * Updates the Input Manager. Called by the core Game loop.
@@ -521,7 +545,7 @@ module Phaser {
             if (this.pointer10) { this.pointer10.reset(); }
 
             this.currentPointers = 0;
-            
+
             this._game.stage.canvas.style.cursor = "default";
 
             if (hard == true)
@@ -618,7 +642,7 @@ module Phaser {
         * @param {Any} event The event data from the Touch event
         * @return {Pointer} The Pointer object that was started or null if no Pointer object is available
         **/
-        public startPointer(event):Pointer {
+        public startPointer(event): Pointer {
 
             if (this.maxPointers < 10 && this.totalActivePointers == this.maxPointers)
             {
@@ -677,7 +701,7 @@ module Phaser {
         * @param {Any} event The event data from the Touch event
         * @return {Pointer} The Pointer object that was updated or null if no Pointer object is available
         **/
-        public updatePointer(event):Pointer {
+        public updatePointer(event): Pointer {
 
             //  Unrolled for speed
             if (this.pointer1.active == true && this.pointer1.identifier == event.identifier)
@@ -731,7 +755,7 @@ module Phaser {
         * @param {Any} event The event data from the Touch event
         * @return {Pointer} The Pointer object that was stopped or null if no Pointer object is available
         **/
-        public stopPointer(event):Pointer {
+        public stopPointer(event): Pointer {
 
             //  Unrolled for speed
             if (this.pointer1.active == true && this.pointer1.identifier == event.identifier)
