@@ -45,6 +45,8 @@ TODO:
 * Sprite collision events
 * See which functions in the input component can move elsewhere (utils)
 * Move all of the renderDebugInfo methods to the DebugUtils class
+* Check bounds/edge points when sprite is only 1x1 sized :)
+
 
 V1.0.0
 

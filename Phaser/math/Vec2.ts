@@ -218,6 +218,21 @@ module Phaser {
         }
 
         /**
+        * Adds the given vector to this vector then multiplies by the given scalar.
+        * 
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {number} scalar
+        * @return {Vec2} This for chaining.
+        */
+        public multiplyAddByScalar(a: Vec2, scalar: number): Vec2 {
+
+            this.x += a.x * scalar;
+            this.y += a.y * scalar;
+            return this;
+
+        }
+
+        /**
         * Divide this vector by the given scalar.
         * 
         * @param {number} scalar

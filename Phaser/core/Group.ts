@@ -623,7 +623,6 @@ module Phaser {
             this.sort();
 
             //  What's the z index of the top most child?
-            var tempZ: number = child.z;
             var childIndex: number = this._zCounter;
 
             this._i = 0;
@@ -632,17 +631,21 @@ module Phaser {
             {
                 this._member = this.members[this._i++];
 
-                if (this._i > childIndex)
+                if (this._member)
                 {
-                    this._member.z--;
-                }
-                else if (this._member.z == child.z)
-                {
-                    childIndex = this._i;
-                    this._member.z = this._zCounter;
+                    if (this._i > childIndex)
+                    {
+                        this._member.z--;
+                    }
+                    else if (this._member.z == child.z)
+                    {
+                        childIndex = this._i;
+                        this._member.z = this._zCounter;
+                    }
                 }
             }
 
+            //  Maybe redundant?
             this.sort();
 
             return true;

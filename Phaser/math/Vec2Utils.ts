@@ -73,13 +73,37 @@ module Phaser {
         }
 
         /**
-        * Rotate a 2D vector by 90 degrees.
+        * Adds two 2D vectors together and multiplies the result by the given scalar.
+        * 
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {number} s Scaling value.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors added and multiplied.
+        */
+        static multiplyAdd(a: Vec2, b: Vec2, s: number, out?: Vec2 = new Vec2): Vec2 {
+            return out.setTo(a.x + b.x * s, a.y + b.y * s);
+        }
+
+        /**
+        * Return a perpendicular vector (90 degrees rotation)
         * 
         * @param {Vec2} a Reference to a source Vec2 object.
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the scaled vector.
         */
         static perp(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
+            return out.setTo(-a.y, a.x);
+        }
+
+        /**
+        * Return a perpendicular vector (-90 degrees rotation)
+        * 
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        static rperp(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.y, -a.x);
         }
 
