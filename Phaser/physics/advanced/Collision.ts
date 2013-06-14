@@ -22,6 +22,8 @@ module Phaser.Physics.Advanced {
 
         public collide(a, b, contacts: Contact[]) {
 
+            console.log('collide', a.type, b.type);
+
             //  Circle (a is the circle)
             if (a.type == Manager.SHAPE_TYPE_CIRCLE)
             {

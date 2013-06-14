@@ -20,6 +20,8 @@
     var physics: Phaser.Physics.Advanced.Manager;
     var circle: Phaser.Physics.Advanced.Body;
 
+    var ground: Phaser.Physics.Advanced.ShapeBox;
+
     function create() {
 
         atari = game.add.sprite(200, 100, 'atari');
@@ -30,17 +32,20 @@
         var walls = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_STATIC);
         walls.game = game;
 
-        walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 0.2, 20.48, 0.4));
-        walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 15.16, 20.48, 0.4));
-        walls.addShape(new Phaser.Physics.Advanced.ShapeBox(-10.04, 7.68, 0.4, 14.56));
-        walls.addShape(new Phaser.Physics.Advanced.ShapeBox(10.04, 7.68, 0.4, 14.56));
+        //  position is in relation to the containing body! don't forget this
+        ground = walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 500, 800, 20));
+
+        //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 0.2, 20.48, 0.4));
+        //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 15.16, 20.48, 0.4));
+        //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(-10.04, 7.68, 0.4, 14.56));
+        //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(10.04, 7.68, 0.4, 14.56));
         walls.resetMassData();
 
         physics.space.addBody(walls);
 
         //  Add a circle
 
-        circle = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_DYNAMIC, 4, 4);
+        circle = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_DYNAMIC, physics.pixelsToMeters(300), physics.pixelsToMeters(200));
         circle.game = game;
 
         var shape = new Phaser.Physics.Advanced.ShapeCircle(0.4, 0, 0);
@@ -55,7 +60,14 @@
     }
 
     function update() {
+
         physics.update();
+
+        atari.x = physics.metersToPixels(circle.position.x);
+        atari.y = physics.metersToPixels(circle.position.y);
+
+        //console.log(circle.velocity.x, circle.velocity.y);
+        //console.log('p', circle.position.x, circle.position.y);
     }
 
     function render() {

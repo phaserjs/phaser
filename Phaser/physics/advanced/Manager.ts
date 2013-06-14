@@ -63,7 +63,7 @@ module Phaser.Physics.Advanced {
         public static shapeCounter: number = 0;
 
         public space: Space;
-        public lastTime: number = 0;
+        public lastTime: number = Date.now();
         public frameRateHz: number = 60;
         public timeDelta: number = 0;
         public paused: bool = false;
@@ -146,7 +146,13 @@ module Phaser.Physics.Advanced {
 
 
 
+        public pixelsToMeters(value: number): number {
+            return value * 0.02;
+        }
 
+        public metersToPixels(value: number): number {
+            return value * 50;
+        }
 
         public static pixelsToMeters(value: number): number {
             return value * 0.02;
@@ -164,23 +170,23 @@ module Phaser.Physics.Advanced {
             return value * 50;
         }
 
-        public static areaForCircle(radius_outer, radius_inner) {
+        public static areaForCircle(radius_outer, radius_inner): number {
             return Math.PI * (radius_outer * radius_outer - radius_inner * radius_inner);
         }
 
-        public static inertiaForCircle(mass, center, radius_outer, radius_inner) {
+        public static inertiaForCircle(mass, center, radius_outer, radius_inner): number {
             return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthSq());
         }
 
-        public static areaForSegment(a, b, radius) {
+        public static areaForSegment(a, b, radius): number {
             return radius * (Math.PI * radius + 2 * Phaser.Vec2Utils.distance(a, b));
         }
 
-        public static centroidForSegment(a, b) {
+        public static centroidForSegment(a, b): Phaser.Vec2 {
             return Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
         }
 
-        public static inertiaForSegment(mass, a, b) {
+        public static inertiaForSegment(mass, a, b): number {
 
             var distsq = Phaser.Vec2Utils.distanceSq(b, a);
             var offset: Phaser.Vec2 = Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
@@ -188,7 +194,7 @@ module Phaser.Physics.Advanced {
             return mass * (distsq / 12 + offset.lengthSq());
         }
 
-        public static areaForPoly(verts) {
+        public static areaForPoly(verts): number {
 
             var area = 0;
 
@@ -200,7 +206,7 @@ module Phaser.Physics.Advanced {
             return area / 2;
         }
 
-        public static centroidForPoly(verts) {
+        public static centroidForPoly(verts): Phaser.Vec2 {
 
             var area = 0;
             var vsum = new Phaser.Vec2;
@@ -220,7 +226,7 @@ module Phaser.Physics.Advanced {
             return Phaser.Vec2Utils.scale(vsum, 1 / (3 * area));
         }
 
-        public static inertiaForPoly(mass, verts, offset) {
+        public static inertiaForPoly(mass, verts, offset): number {
 
             var sum1 = 0;
             var sum2 = 0;

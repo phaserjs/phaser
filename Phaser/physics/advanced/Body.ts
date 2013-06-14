@@ -2,10 +2,12 @@
 /// <reference path="../../geom/Point.ts" />
 /// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../../math/Transform.ts" />
+/// <reference path="../../math/TransformUtils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Joint.ts" />
 /// <reference path="Bounds.ts" />
 /// <reference path="Space.ts" />
+/// <reference path="IShape.ts" />
 
 /**
 * Phaser - Advanced Physics - Body
@@ -128,14 +130,14 @@ module Phaser.Physics.Advanced {
         public awaked: bool;
 
         //  Shapes
-        public shapes = [];
+        public shapes: IShape[] = [];
 
         //  Joints
-        public joints = [];
+        public joints: IJoint[] = [];
         public jointHash = {};
 
 	    // Bounds of all shapes
-	    public bounds;
+	    public bounds: Bounds;
 
 	    public fixedRotation = false;
 	    public categoryBits = 0x0001;
@@ -143,22 +145,22 @@ module Phaser.Physics.Advanced {
 	    public stepCount = 0;
 	    public space: Space;
 
-        /*
 	    public duplicate() {
 
-	        var body = new Body(this.type, this.transform.t, this.angle);
+	        console.log('body duplicate called');
+
+	        //var body = new Body(this.type, this.transform.t, this.angle);
 	        
-            for (var i = 0; i < this.shapes.length; i++)
-	        {
-	            body.addShape(this.shapes[i].duplicate());
-	        }
+            //for (var i = 0; i < this.shapes.length; i++)
+	        //{
+	        //    body.addShape(this.shapes[i].duplicate());
+	        //}
 
-	        body.resetMassData();
+	        //body.resetMassData();
 
-	        return body;
+	        //return body;
 
 	    }
-        */
 
 	    public get isDisabled(): bool {
 	        return this.type == Phaser.Types.BODY_DISABLED ? true : false;
@@ -197,7 +199,10 @@ module Phaser.Physics.Advanced {
 
             //  Check not already part of this body
 	        shape.body = this;
+
 	        this.shapes.push(shape);
+
+	        return shape;
 
 	    }
 
@@ -234,8 +239,10 @@ module Phaser.Physics.Advanced {
 
 	    public setTransform(pos, angle) {
 
-            this.transform.setTo(pos, angle)
-            this.position = this.transform.transform(this.centroid);
+	        this.transform.setTo(pos, angle);
+            //  inject the transform into this.position
+            Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
+            //this.position.copyFrom(this.transform.transform(this.centroid));
 	        this.angle = angle;
 
 	    }
@@ -243,26 +250,37 @@ module Phaser.Physics.Advanced {
 	    public syncTransform() {
 
             this.transform.setRotation(this.angle);
+
+            //var rotc: Phaser.Vec2 = this.transform.rotate(this.centroid);
+            //var sub: Phaser.Vec2 = Phaser.Vec2Utils.subtract(this.position, rotc);
+            //this.transform.setPosition(sub);
+
             //  this.transform.setPosition(vec2.sub(this.position, this.transform.rotate(this.centroid)));
-            Phaser.Vec2Utils.subtract(this.position, this.transform.rotate(this.centroid), this.transform.t);
+            //Phaser.Vec2Utils.subtract(this.position, this.transform.rotate(this.centroid), this.transform.t);
+
+            //  OPTIMISE: Creating new vector
+            Phaser.Vec2Utils.subtract(this.position, Phaser.TransformUtils.rotate(this.transform, this.centroid), this.transform.t);
 
 	    }
 
 	    public getWorldPoint(p:Phaser.Vec2) {
-            //  This is returning a new vector - check it's actually used in that way
-            return this.transform.transform(p)
+            //  OPTIMISE: Creating new vector
+	        return Phaser.TransformUtils.transform(this.transform, p);
 	    }
 
 	    public getWorldVector(v) {
-            return this.transform.rotate(v)
+            //  OPTIMISE: Creating new vector
+	        return Phaser.TransformUtils.rotate(this.transform, v);
 	    }
 
 	    public getLocalPoint(p) {
-            return this.transform.untransform(p)
+            //  OPTIMISE: Creating new vector
+	        return Phaser.TransformUtils.untransform(this.transform, p);
 	    }
 
 	    public getLocalVector(v) {
-            return this.transform.unrotate(v)
+            //  OPTIMISE: Creating new vector
+	        return Phaser.TransformUtils.unrotate(this.transform, v);
 	    }
 
 	    public setFixedRotation(flag) {
@@ -280,7 +298,8 @@ module Phaser.Physics.Advanced {
 
 	        if (this.isDynamic == false)
 	        {
-	            this.position.copyFrom(this.transform.transform(this.centroid));
+	            Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
+	            //this.position.copyFrom(this.transform.transform(this.centroid));
 	            return;
 	        }
 
@@ -317,7 +336,8 @@ module Phaser.Physics.Advanced {
 
 	        // Move center of mass
 	        var oldPosition: Phaser.Vec2 =  Phaser.Vec2Utils.clone(this.position);
-	        this.position = this.transform.transform(this.centroid);
+	        //this.position.copyFrom(this.transform.transform(this.centroid));
+            Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
 
 	        // Update center of mass velocity
 
@@ -347,6 +367,9 @@ module Phaser.Physics.Advanced {
 	    }
 
 	    public cacheData() {
+
+	        console.log('Body cacheData', this.name, 'len', this.shapes.length);
+
 	        this.bounds.clear();
 
 	        for (var i = 0; i < this.shapes.length; i++)
@@ -385,8 +408,14 @@ module Phaser.Physics.Advanced {
 
 	    public updatePosition(dt) {
 
+	        //console.log('body update pos', this.position.y);
+	        //console.log('pre add temp', this._tempVec2.y);
+
 	        //this.position.addself(vec2.scale(this.velocity, dt));
 	        this.position.add(Phaser.Vec2Utils.scale(this.velocity, dt, this._tempVec2));
+
+	        //console.log('post add temp', this._tempVec2.y);
+	        //console.log('post add', this.position.y);
 
 	        this.angle += this.angularVelocity * dt;
 

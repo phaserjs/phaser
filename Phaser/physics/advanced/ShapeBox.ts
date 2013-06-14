@@ -16,7 +16,15 @@ module Phaser.Physics.Advanced {
 
     export class ShapeBox extends Phaser.Physics.Advanced.ShapePoly {
 
+        //  Give in pixels
         constructor(x, y, width, height) {
+
+            console.log('creating box', x, y, width, height);
+
+            x = Manager.pixelsToMeters(x);
+            y = Manager.pixelsToMeters(y);
+            width = Manager.pixelsToMeters(width);
+            height = Manager.pixelsToMeters(height);
 
 	        var hw = width * 0.5;
 	        var hh = height * 0.5;

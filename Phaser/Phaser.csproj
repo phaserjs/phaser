@@ -167,6 +167,10 @@
     <Content Include="math\Transform.js">
       <DependentUpon>Transform.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="math\TransformUtils.ts" />
+    <Content Include="math\TransformUtils.js">
+      <DependentUpon>TransformUtils.ts</DependentUpon>
+    </Content>
     <Content Include="math\Vec2.js">
       <DependentUpon>Vec2.ts</DependentUpon>
     </Content>
@@ -194,6 +198,10 @@
     <TypeScriptCompile Include="physics\advanced\ContactSolver.ts" />
     <Content Include="physics\advanced\ContactSolver.js">
       <DependentUpon>ContactSolver.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\advanced\IShape.ts" />
+    <Content Include="physics\advanced\IShape.js">
+      <DependentUpon>IShape.ts</DependentUpon>
     </Content>
     <Content Include="physics\advanced\Joint.js">
       <DependentUpon>Joint.ts</DependentUpon>

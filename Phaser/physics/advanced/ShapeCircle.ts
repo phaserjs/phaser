@@ -13,7 +13,7 @@
 
 module Phaser.Physics.Advanced {
 
-    export class ShapeCircle extends Phaser.Physics.Advanced.Shape {
+    export class ShapeCircle extends Phaser.Physics.Advanced.Shape implements IShape {
 
         constructor(radius: number, x?: number = 0, y?: number = 0) {
 
@@ -39,43 +39,49 @@ module Phaser.Physics.Advanced {
             return new ShapeCircle(this.center.x, this.center.y, this.radius);
         }
 
-        public recenter(c) {
+        public recenter(c:Phaser.Vec2) {
             this.center.subtract(c);
         }
 
-        public transform(xf) {
-            this.center = xf.transform(this.center);
+        public transform(xf: Transform) {
+
+            Phaser.TransformUtils.transform(xf, this.center, this.center);
+            //this.center = xf.transform(this.center);
         }
 
-        public untransform(xf) {
-            this.center = xf.untransform(this.center);
+        public untransform(xf: Transform) {
+            Phaser.TransformUtils.untransform(xf, this.center, this.center);
+            //this.center = xf.untransform(this.center);
         }
 
-        public area() {
+        public area(): number {
             return Manager.areaForCircle(this.radius, 0);
         }
 
-        public centroid() {
+        public centroid(): Phaser.Vec2 {
             return Phaser.Vec2Utils.clone(this.center);
         }
 
-        public inertia(mass) {
+        public inertia(mass: number): number {
             return Manager.inertiaForCircle(mass, this.center, this.radius, 0);
         }
 
+        public cacheData(xf: Transform) {
 
-        public cacheData(xf) {
-            this.tc = xf.transform(this.center);
+            Phaser.TransformUtils.transform(xf, this.center, this.tc);
+            //this.tc = xf.transform(this.center);
+
             this.bounds.mins.setTo(this.tc.x - this.radius, this.tc.y - this.radius);
             this.bounds.maxs.setTo(this.tc.x + this.radius, this.tc.y + this.radius);
+
         }
 
-        public pointQuery(p) {
+        public pointQuery(p:Phaser.Vec2): bool {
             //return vec2.distsq(this.tc, p) < (this.r * this.r);
             return Phaser.Vec2Utils.distanceSq(this.tc, p) < (this.radius * this.radius);
         }
 
-        public findVertexByPoint(p, minDist) {
+        public findVertexByPoint(p:Phaser.Vec2, minDist: number): number {
 
             var dsq = minDist * minDist;
 

@@ -4,6 +4,7 @@
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
 /// <reference path="Bounds.ts" />
+/// <reference path="IShape.ts" />
 
 /**
 * Phaser - Advanced Physics - Shape
@@ -30,6 +31,7 @@ module Phaser.Physics.Advanced {
 
         public id: number;
         public type: number;
+        public body: Body;
 
     	// Coefficient of restitution (elasticity)
         public elasticity: number;
@@ -42,6 +44,11 @@ module Phaser.Physics.Advanced {
 
         // Axis-aligned bounding box
         public bounds: Bounds;
+
+        //  Over-ridden by ShapePoly
+        public findEdgeByPoint(p: Phaser.Vec2, minDist: number): number {
+            return -1;
+        }
 
     }
 

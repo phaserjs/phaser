@@ -24,6 +24,11 @@ module Phaser.Physics.Advanced {
             this.lambdaNormal = 0;
             this.lambdaTangential = 0;
 
+            this.r1 = new Phaser.Vec2;
+            this.r2 = new Phaser.Vec2;
+            this.r1_local = new Phaser.Vec2;
+            this.r2_local = new Phaser.Vec2;
+
         }
 
         public hash;
@@ -31,8 +36,8 @@ module Phaser.Physics.Advanced {
     	// Linear velocities at contact point
         public r1: Phaser.Vec2;
         public r2: Phaser.Vec2;
-        public r1_local;
-        public r2_local;
+        public r1_local: Phaser.Vec2;
+        public r2_local: Phaser.Vec2;
     	// Bounce velocity
         public bounce;
         public emn;

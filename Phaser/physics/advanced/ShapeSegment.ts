@@ -13,7 +13,7 @@
 
 module Phaser.Physics.Advanced {
 
-    export class ShapeSegment extends Phaser.Physics.Advanced.Shape {
+    export class ShapeSegment extends Phaser.Physics.Advanced.Shape implements IShape {
 
         constructor(a, b, radius: number) {
 
@@ -62,32 +62,46 @@ module Phaser.Physics.Advanced {
             this.b.subtract(c);
         }
 
-        public transform(xf) {
-            this.a = xf.transform(this.a);
-            this.b = xf.transform(this.b);
+        public transform(xf:Transform) {
+
+            Phaser.TransformUtils.transform(xf, this.a, this.a);
+            Phaser.TransformUtils.transform(xf, this.b, this.b);
+            
+            //this.a = xf.transform(this.a);
+            //this.b = xf.transform(this.b);
+
         }
 
-        public untransform(xf) {
-            this.a = xf.untransform(this.a);
-            this.b = xf.untransform(this.b);
+        public untransform(xf:Transform) {
+
+            Phaser.TransformUtils.untransform(xf, this.a, this.a);
+            Phaser.TransformUtils.untransform(xf, this.b, this.b);
+
+            //this.a = xf.untransform(this.a);
+            //this.b = xf.untransform(this.b);
+
         }
 
-        public area() {
+        public area(): number {
             return Manager.areaForSegment(this.a, this.b, this.radius);
         }
 
-        public centroid() {
+        public centroid(): Phaser.Vec2 {
             return Manager.centroidForSegment(this.a, this.b);
         }
 
-        public inertia(mass) {
+        public inertia(mass: number): number {
             return Manager.inertiaForSegment(mass, this.a, this.b);
         }
 
-        public cacheData(xf) {
+        public cacheData(xf:Transform) {
 
-            this.ta = xf.transform(this.a);
-            this.tb = xf.transform(this.b);
+            Phaser.TransformUtils.transform(xf, this.a, this.ta);
+            Phaser.TransformUtils.transform(xf, this.b, this.tb);
+
+            //this.ta = xf.transform(this.a);
+            //this.tb = xf.transform(this.b);
+
             this.tn = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(this.tb, this.ta)).normalize();
 
             var l;
@@ -121,7 +135,7 @@ module Phaser.Physics.Advanced {
 
         }
 
-        public pointQuery(p) {
+        public pointQuery(p: Phaser.Vec2): bool {
 
             if (!this.bounds.containPoint(p))
             {
@@ -162,7 +176,7 @@ module Phaser.Physics.Advanced {
             return true;
         }
 
-        public findVertexByPoint(p, minDist) {
+        public findVertexByPoint(p:Phaser.Vec2, minDist: number): number {
 
             var dsq = minDist * minDist;
 

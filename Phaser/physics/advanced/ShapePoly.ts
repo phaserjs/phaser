@@ -13,9 +13,11 @@
 
 module Phaser.Physics.Advanced {
 
-    export class ShapePoly extends Phaser.Physics.Advanced.Shape {
+    export class ShapePoly extends Phaser.Physics.Advanced.Shape implements IShape {
 
         constructor(verts?:Phaser.Vec2[]) {
+
+            console.log('ShapePoly created', verts);
 
             super(Manager.SHAPE_TYPE_POLY);
 
@@ -29,7 +31,8 @@ module Phaser.Physics.Advanced {
             {
                 for (var i = 0; i < verts.length; i++)
                 {
-                    Phaser.Vec2Utils.clone(verts[i], this.verts[i]);
+                    console.log('cloning vert', i);
+                    this.verts[i] = Phaser.Vec2Utils.clone(verts[i]);
                     this.tverts[i] = this.verts[i];
 
                     this.tplanes[i] = {};
@@ -38,7 +41,11 @@ module Phaser.Physics.Advanced {
                 }
             }
 
+            console.log('ShapePoly finished', this.verts);
+
             this.finishVerts();
+
+            console.log('ShapePoly finished 2', this.verts);
 
         }
 
@@ -121,23 +128,25 @@ module Phaser.Physics.Advanced {
             }
         }
 
-        public area() {
+        public area(): number {
             return Manager.areaForPoly(this.verts);
         }
 
-        public centroid() {
+        public centroid(): Phaser.Vec2 {
             return Manager.centroidForPoly(this.verts);
         }
 
-        public inertia(mass) {
+        public inertia(mass: number): number {
             return Manager.inertiaForPoly(mass, this.verts, new Phaser.Vec2);
         }
 
-        public cacheData(xf) {
+        public cacheData(xf:Transform) {
 
             this.bounds.clear();
 
             var numVerts = this.verts.length;
+
+            console.log('shapePoly cacheData', numVerts);
 
             if (numVerts == 0)
             {
@@ -146,7 +155,8 @@ module Phaser.Physics.Advanced {
 
             for (var i = 0; i < numVerts; i++)
             {
-                this.tverts[i] = xf.transform(this.verts[i]);
+                Phaser.TransformUtils.transform(xf, this.tverts[i], this.tverts[i]);
+                //this.tverts[i] = xf.transform(this.verts[i]);
             }
 
             if (numVerts < 2)
@@ -170,7 +180,7 @@ module Phaser.Physics.Advanced {
 
         }
 
-        public pointQuery(p) {
+        public pointQuery(p: Phaser.Vec2): bool {
 
             if (!this.bounds.containPoint(p))
             {
@@ -180,7 +190,7 @@ module Phaser.Physics.Advanced {
             return this.containPoint(p);
         }
 
-        public findVertexByPoint(p, minDist) {
+        public findVertexByPoint(p:Phaser.Vec2, minDist: number): number {
 
             var dsq = minDist * minDist;
 
@@ -195,7 +205,7 @@ module Phaser.Physics.Advanced {
             return -1;
         }
 
-        public findEdgeByPoint(p, minDist) {
+        public findEdgeByPoint(p: Phaser.Vec2, minDist: number): number {
 
             var dsq = minDist * minDist;
             var numVerts = this.tverts.length;

@@ -9426,7 +9426,6 @@ module Phaser {
         * @return {Transform} This object
         **/
         constructor(pos: Vec2, angle: number);
-        private _tempVec;
         public t: Vec2;
         public c: number;
         public s: number;
@@ -9434,10 +9433,20 @@ module Phaser {
         public setRotation(angle: number): Transform;
         public setPosition(p: Vec2): Transform;
         public identity(): Transform;
-        public rotate(v: Vec2): Vec2;
-        public unrotate(v: Vec2): Vec2;
-        public transform(v: Vec2): Vec2;
-        public untransform(v: Vec2): Vec2;
+    }
+}
+/**
+* Phaser - TransformUtils
+*
+* A collection of methods useful for manipulating and performing operations on 2D Transforms.
+*
+*/
+module Phaser {
+    class TransformUtils {
+        static rotate(t: Transform, v: Vec2, out?: Vec2): Vec2;
+        static unrotate(t: Transform, v: Vec2, out?: Vec2): Vec2;
+        static transform(t: Transform, v: Vec2, out?: Vec2): Vec2;
+        static untransform(t: Transform, v: Vec2, out?: Vec2): Vec2;
     }
 }
 /**
@@ -9621,6 +9630,8 @@ module Phaser.Physics.Advanced {
         public allowSleep: bool;
         public warmStarting: bool;
         public update(): void;
+        public pixelsToMeters(value: number): number;
+        public metersToPixels(value: number): number;
         static pixelsToMeters(value: number): number;
         static metersToPixels(value: number): number;
         static p2m(value: number): number;
@@ -9654,19 +9665,42 @@ module Phaser.Physics.Advanced {
         public mins: Vec2;
         public maxs: Vec2;
         public toString(): string;
-        public setTo(mins, maxs): void;
+        public setTo(mins: Vec2, maxs: Vec2): void;
         public copy(b: Bounds): Bounds;
         public clear(): Bounds;
         public isEmpty(): bool;
         public getPerimeter(): number;
-        public addPoint(p): Bounds;
-        public addBounds(b): Bounds;
+        public addPoint(p: Vec2): Bounds;
+        public addBounds(b: Bounds): Bounds;
         public addBounds2(mins, maxs): Bounds;
-        public addExtents(center, extent_x, extent_y): Bounds;
-        public expand(ax, ay): Bounds;
-        public containPoint(p): bool;
-        public intersectsBounds(b): bool;
-        static expand(b, ax, ay);
+        public addExtents(center: Vec2, extent_x: number, extent_y: number): Bounds;
+        public expand(ax: number, ay: number): Bounds;
+        public containPoint(p: Vec2): bool;
+        public intersectsBounds(b: Bounds): bool;
+        static expand(b: Bounds, ax, ay);
+    }
+}
+/**
+* Phaser - Advanced Physics - IShape
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    interface IShape {
+        id: number;
+        type: number;
+        elasticity: number;
+        friction: number;
+        density: number;
+        body: Body;
+        bounds: Bounds;
+        area(): number;
+        centroid(): Vec2;
+        inertia(mass: number): number;
+        cacheData(xf: Transform);
+        pointQuery(p: Vec2): bool;
+        findEdgeByPoint(p: Vec2, minDist: number): number;
+        findVertexByPoint(p: Vec2, minDist: number): number;
     }
 }
 /**
@@ -9679,10 +9713,12 @@ module Phaser.Physics.Advanced {
         constructor(type: number);
         public id: number;
         public type: number;
+        public body: Body;
         public elasticity: number;
         public friction: number;
         public density: number;
         public bounds: Bounds;
+        public findEdgeByPoint(p: Vec2, minDist: number): number;
     }
 }
 /**
@@ -9696,8 +9732,8 @@ module Phaser.Physics.Advanced {
         public hash;
         public r1: Vec2;
         public r2: Vec2;
-        public r1_local;
-        public r2_local;
+        public r1_local: Vec2;
+        public r2_local: Vec2;
         public bounce;
         public emn;
         public emt;
@@ -9730,22 +9766,22 @@ module Phaser.Physics.Advanced {
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 module Phaser.Physics.Advanced {
-    class ShapeCircle extends Shape {
+    class ShapeCircle extends Shape implements IShape {
         constructor(radius: number, x?: number, y?: number);
         public radius: number;
         public center: Vec2;
         public tc: Vec2;
         public finishVerts(): void;
         public duplicate(): ShapeCircle;
-        public recenter(c): void;
-        public transform(xf): void;
-        public untransform(xf): void;
+        public recenter(c: Vec2): void;
+        public transform(xf: Transform): void;
+        public untransform(xf: Transform): void;
         public area(): number;
         public centroid(): Vec2;
-        public inertia(mass): number;
-        public cacheData(xf): void;
-        public pointQuery(p): bool;
-        public findVertexByPoint(p, minDist): number;
+        public inertia(mass: number): number;
+        public cacheData(xf: Transform): void;
+        public pointQuery(p: Vec2): bool;
+        public findVertexByPoint(p: Vec2, minDist: number): number;
         public distanceOnPlane(n, d): void;
     }
 }
@@ -9829,7 +9865,7 @@ module Phaser.Physics.Advanced {
         public removeJoint(joint: IJoint): void;
         public findShapeByPoint(p, refShape);
         public findBodyByPoint(p, refBody: Body);
-        public shapeById(id);
+        public shapeById(id): IShape;
         public jointById(id): IJoint;
         public findVertexByPoint(p, minDist, refVertexId): number;
         public findEdgeByPoint(p, minDist, refEdgeId): number;
@@ -9887,21 +9923,22 @@ module Phaser.Physics.Advanced {
         public angularDamping: number;
         public sleepTime: number;
         public awaked: bool;
-        public shapes: any[];
-        public joints: any[];
+        public shapes: IShape[];
+        public joints: IJoint[];
         public jointHash: {};
-        public bounds;
+        public bounds: Bounds;
         public fixedRotation: bool;
         public categoryBits: number;
         public maskBits: number;
         public stepCount: number;
         public space: Space;
+        public duplicate(): void;
         public isDisabled : bool;
         public isStatic : bool;
         public isKinetic : bool;
         public isDynamic : bool;
         public setType(type: number): void;
-        public addShape(shape): void;
+        public addShape(shape);
         public removeShape(shape): void;
         public mass: number;
         public massInverted: number;
@@ -9940,7 +9977,7 @@ module Phaser.Physics.Advanced {
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 module Phaser.Physics.Advanced {
-    class ShapePoly extends Shape {
+    class ShapePoly extends Shape implements IShape {
         constructor(verts?: Vec2[]);
         public verts: Vec2[];
         public planes;
@@ -9954,11 +9991,11 @@ module Phaser.Physics.Advanced {
         public untransform(xf): void;
         public area(): number;
         public centroid(): Vec2;
-        public inertia(mass): number;
-        public cacheData(xf): void;
-        public pointQuery(p): bool;
-        public findVertexByPoint(p, minDist): number;
-        public findEdgeByPoint(p, minDist): number;
+        public inertia(mass: number): number;
+        public cacheData(xf: Transform): void;
+        public pointQuery(p: Vec2): bool;
+        public findVertexByPoint(p: Vec2, minDist: number): number;
+        public findEdgeByPoint(p: Vec2, minDist: number): number;
         public distanceOnPlane(n, d): number;
         public containPoint(p): bool;
         public containPointPartial(p, n): bool;
@@ -9980,7 +10017,7 @@ module Phaser.Physics.Advanced {
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 module Phaser.Physics.Advanced {
-    class ShapeSegment extends Shape {
+    class ShapeSegment extends Shape implements IShape {
         constructor(a, b, radius: number);
         public a: Vec2;
         public b: Vec2;
@@ -9992,14 +10029,14 @@ module Phaser.Physics.Advanced {
         public finishVerts(): void;
         public duplicate(): ShapeSegment;
         public recenter(c): void;
-        public transform(xf): void;
-        public untransform(xf): void;
+        public transform(xf: Transform): void;
+        public untransform(xf: Transform): void;
         public area(): number;
         public centroid(): Vec2;
-        public inertia(mass): number;
-        public cacheData(xf): void;
-        public pointQuery(p): bool;
-        public findVertexByPoint(p, minDist): number;
+        public inertia(mass: number): number;
+        public cacheData(xf: Transform): void;
+        public pointQuery(p: Vec2): bool;
+        public findVertexByPoint(p: Vec2, minDist: number): number;
         public distanceOnPlane(n, d): number;
     }
 }

@@ -38,6 +38,8 @@ module Phaser.Physics.Advanced {
 
         constructor(shape1, shape2) {
 
+            console.log('ContactSolver super');
+
             this.shape1 = shape1;
             this.shape2 = shape2;
 
@@ -95,7 +97,10 @@ module Phaser.Physics.Advanced {
 
             for (var i = 0; i < this.contacts.length; i++)
             {
-                var con = this.contacts[i];
+                var con: Contact = this.contacts[i];
+
+                console.log('initSolver con');
+                console.log(con);
 
                 // Transformed r1, r2
                 Phaser.Vec2Utils.subtract(con.point, body1.position, con.r1);
@@ -104,8 +109,10 @@ module Phaser.Physics.Advanced {
                 //con.r2 = vec2.sub(con.point, body2.p);
 
                 // Local r1, r2
-                con.r1_local = body1.transform.unrotate(con.r1);
-                con.r2_local = body2.transform.unrotate(con.r2);
+	            Phaser.TransformUtils.unrotate(body1.transform, con.r1, con.r1_local);
+	            Phaser.TransformUtils.unrotate(body2.transform, con.r2, con.r2_local);
+                //con.r1_local = body1.transform.unrotate(con.r1);
+                //con.r2_local = body2.transform.unrotate(con.r2);
 
                 var n = con.normal;
                 var t = Phaser.Vec2Utils.perp(con.normal);
@@ -142,6 +149,10 @@ module Phaser.Physics.Advanced {
 
                 // bounce velocity dot n
                 con.bounce = Phaser.Vec2Utils.dot(rv, con.normal) * this.elasticity;
+                console.log('bounce?', Phaser.Vec2Utils.dot(rv, con.normal), this.elasticity);
+
+                console.log('con over');
+                console.log(con);
 
             }
         }

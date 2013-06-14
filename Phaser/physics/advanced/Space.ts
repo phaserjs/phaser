@@ -32,7 +32,7 @@ module Phaser.Physics.Advanced {
 
             //this.postSolve(arb) { };
 
-            this.gravity = new Phaser.Vec2;
+            this.gravity = new Phaser.Vec2(0, 10);
             this.damping = 0;
 
         }
@@ -84,6 +84,8 @@ module Phaser.Physics.Advanced {
             {
                 return;
             }
+
+            console.log('Body added to space', body.name);
 
             var index = this.bodyArr.push(body) - 1;
             this.bodyHash[body.id] = index;
@@ -447,6 +449,8 @@ module Phaser.Physics.Advanced {
 
         public genTemporalContactSolvers() {
 
+            console.log('genTemporalContactSolvers');
+
             //var t0 = Date.now();
 
             var newContactSolverArr = [];
@@ -455,7 +459,9 @@ module Phaser.Physics.Advanced {
 
             for (var body1_index = 0; body1_index < this.bodyArr.length; body1_index++)
             {
-                var body1 = this.bodyArr[body1_index];
+                var body1: Body = this.bodyArr[body1_index];
+
+                //console.log('body1', body1_index, body1.type);
 
                 if (!body1)
                 {
@@ -466,7 +472,10 @@ module Phaser.Physics.Advanced {
 
                 for (var body2_index = 0; body2_index < this.bodyArr.length; body2_index++)
                 {
-                    var body2 = this.bodyArr[body2_index];
+                    var body2: Body = this.bodyArr[body2_index];
+
+                    //console.log('body2', body2_index, body2.type);
+
                     if (!body2)
                     {
                         continue;
@@ -477,6 +486,8 @@ module Phaser.Physics.Advanced {
                         continue;
                     }
 
+                    //console.log('step');
+
                     var active1 = body1.isAwake && !body1.isStatic;
                     var active2 = body2.isAwake && !body2.isStatic;
 
@@ -485,15 +496,21 @@ module Phaser.Physics.Advanced {
                         continue;
                     }
 
+                    //console.log('active');
+
                     if (!body1.isCollidable(body2))
                     {
                         continue;
                     }
 
+                    //console.log('collideable');
+
                     if (!body1.bounds.intersectsBounds(body2.bounds))
                     {
                         continue;
                     }
+
+                    console.log('>>>>>>>>>> intersects');
 
                     for (var i = 0; i < body1.shapes.length; i++)
                     {
@@ -532,8 +549,8 @@ module Phaser.Physics.Advanced {
 
                                 var newContactSolver = new ContactSolver(shape1, shape2);
                                 newContactSolver.contacts = contactArr;
-                                newContactSolver.elasticity = Math.max(shape1.e, shape2.e);
-                                newContactSolver.friction = Math.sqrt(shape1.u * shape2.u);
+                                newContactSolver.elasticity = Math.max(shape1.elasticity, shape2.elasticity);
+                                newContactSolver.friction = Math.sqrt(shape1.friction * shape2.friction);
                                 newContactSolverArr.push(newContactSolver);
                             }
                         }
@@ -660,6 +677,7 @@ module Phaser.Physics.Advanced {
             for (var i = 0; i < this.bodyArr.length; i++)
             {
                 var body = this.bodyArr[i];
+
                 if (!body)
                 {
                     continue;
@@ -757,7 +775,9 @@ module Phaser.Physics.Advanced {
             for (var i = 0; i < this.contactSolvers.length; i++)
             {
                 var arb = this.contactSolvers[i];
-                this.postSolve(arb);
+
+                //  Re-enable this
+                //this.postSolve(arb);
             }
 
             for (var i = 0; i < this.bodyArr.length; i++)
