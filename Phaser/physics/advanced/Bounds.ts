@@ -157,10 +157,6 @@ module Phaser.Physics.Advanced {
                 return false;
             }
 
-            console.log('intersects TRUE');
-            console.log(this);
-            console.log(b);
-
             return true;
         }
 

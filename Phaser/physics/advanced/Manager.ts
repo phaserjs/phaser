@@ -1,6 +1,6 @@
 /// <reference path="../../Game.ts" />
 /// <reference path="Body.ts" />
-/// <reference path="Joint.ts" />
+/// <reference path="joints/Joint.ts" />
 
 /**
 * Phaser - Advanced Physics Manager

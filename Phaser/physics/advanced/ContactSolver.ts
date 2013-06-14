@@ -3,7 +3,7 @@
 /// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
-/// <reference path="Shape.ts" />
+/// <reference path="shapes/Shape.ts" />
 /// <reference path="Contact.ts" />
 
 /**
@@ -38,7 +38,7 @@ module Phaser.Physics.Advanced {
 
         constructor(shape1, shape2) {
 
-            console.log('ContactSolver super');
+            //console.log('ContactSolver super');
 
             this.shape1 = shape1;
             this.shape2 = shape2;
@@ -99,8 +99,8 @@ module Phaser.Physics.Advanced {
             {
                 var con: Contact = this.contacts[i];
 
-                console.log('initSolver con');
-                console.log(con);
+                //console.log('initSolver con');
+                //console.log(con);
 
                 // Transformed r1, r2
                 Phaser.Vec2Utils.subtract(con.point, body1.position, con.r1);
@@ -149,10 +149,6 @@ module Phaser.Physics.Advanced {
 
                 // bounce velocity dot n
                 con.bounce = Phaser.Vec2Utils.dot(rv, con.normal) * this.elasticity;
-                console.log('bounce?', Phaser.Vec2Utils.dot(rv, con.normal), this.elasticity);
-
-                console.log('con over');
-                console.log(con);
 
             }
         }

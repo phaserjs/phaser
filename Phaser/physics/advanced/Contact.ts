@@ -3,7 +3,7 @@
 /// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
-/// <reference path="Shape.ts" />
+/// <reference path="shapes/Shape.ts" />
 
 /**
 * Phaser - Advanced Physics - Contact

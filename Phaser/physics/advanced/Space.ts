@@ -3,7 +3,7 @@
 /// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
-/// <reference path="Shape.ts" />
+/// <reference path="shapes/Shape.ts" />
 /// <reference path="ContactSolver.ts" />
 /// <reference path="Contact.ts" />
 /// <reference path="Collision.ts" />
@@ -85,7 +85,7 @@ module Phaser.Physics.Advanced {
                 return;
             }
 
-            console.log('Body added to space', body.name);
+            //console.log('Body added to space', body.name);
 
             var index = this.bodyArr.push(body) - 1;
             this.bodyHash[body.id] = index;
@@ -449,7 +449,7 @@ module Phaser.Physics.Advanced {
 
         public genTemporalContactSolvers() {
 
-            console.log('genTemporalContactSolvers');
+            //console.log('genTemporalContactSolvers');
 
             //var t0 = Date.now();
 
@@ -510,7 +510,7 @@ module Phaser.Physics.Advanced {
                         continue;
                     }
 
-                    console.log('>>>>>>>>>> intersects');
+                    //console.log('>>>>>>>>>> intersects');
 
                     for (var i = 0; i < body1.shapes.length; i++)
                     {

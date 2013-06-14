@@ -19479,9 +19479,6 @@ var Phaser;
                     if(this.mins.x > b.maxs.x || this.maxs.x < b.mins.x || this.mins.y > b.maxs.y || this.maxs.y < b.mins.y) {
                         return false;
                     }
-                    console.log('intersects TRUE');
-                    console.log(this);
-                    console.log(b);
                     return true;
                 };
                 Bounds.expand = function expand(b, ax, ay) {
@@ -19613,7 +19610,7 @@ var Phaser;
         (function (Advanced) {
             var ContactSolver = (function () {
                 function ContactSolver(shape1, shape2) {
-                    console.log('ContactSolver super');
+                    //console.log('ContactSolver super');
                     this.shape1 = shape1;
                     this.shape2 = shape2;
                     this.contacts = [];
@@ -19643,8 +19640,8 @@ var Phaser;
                     var sum_m_inv = body1.massInverted + body2.massInverted;
                     for(var i = 0; i < this.contacts.length; i++) {
                         var con = this.contacts[i];
-                        console.log('initSolver con');
-                        console.log(con);
+                        //console.log('initSolver con');
+                        //console.log(con);
                         // Transformed r1, r2
                         Phaser.Vec2Utils.subtract(con.point, body1.position, con.r1);
                         Phaser.Vec2Utils.subtract(con.point, body2.position, con.r2);
@@ -19683,9 +19680,6 @@ var Phaser;
                         //var rv = vec2.sub(v2, v1);
                         // bounce velocity dot n
                         con.bounce = Phaser.Vec2Utils.dot(rv, con.normal) * this.elasticity;
-                        console.log('bounce?', Phaser.Vec2Utils.dot(rv, con.normal), this.elasticity);
-                        console.log('con over');
-                        console.log(con);
                     }
                 };
                 ContactSolver.prototype.warmStart = function () {
@@ -19933,7 +19927,7 @@ var Phaser;
                 function Collision() {
                 }
                 Collision.prototype.collide = function (a, b, contacts) {
-                    console.log('collide', a.type, b.type);
+                    //console.log('collide', a.type, b.type);
                     //  Circle (a is the circle)
                     if(a.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
                         if(b.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
@@ -20351,7 +20345,7 @@ var Phaser;
                     if(this.bodyHash[body.id] != undefined) {
                         return;
                     }
-                    console.log('Body added to space', body.name);
+                    //console.log('Body added to space', body.name);
                     var index = this.bodyArr.push(body) - 1;
                     this.bodyHash[body.id] = index;
                     body.awake(true);
@@ -20570,7 +20564,7 @@ var Phaser;
                     return null;
                 };
                 Space.prototype.genTemporalContactSolvers = function () {
-                    console.log('genTemporalContactSolvers');
+                    //console.log('genTemporalContactSolvers');
                     //var t0 = Date.now();
                     var newContactSolverArr = [];
                     this.numContacts = 0;
@@ -20604,7 +20598,7 @@ var Phaser;
                             if(!body1.bounds.intersectsBounds(body2.bounds)) {
                                 continue;
                             }
-                            console.log('>>>>>>>>>> intersects');
+                            //console.log('>>>>>>>>>> intersects');
                             for(var i = 0; i < body1.shapes.length; i++) {
                                 for(var j = 0; j < body2.shapes.length; j++) {
                                     var shape1 = body1.shapes[i];
@@ -20890,7 +20884,7 @@ var Phaser;
                     this.stepCount = 0;
                 }
                 Body.prototype.duplicate = function () {
-                    console.log('body duplicate called');
+                    //console.log('body duplicate called');
                     //var body = new Body(this.type, this.transform.t, this.angle);
                     //for (var i = 0; i < this.shapes.length; i++)
                     //{
@@ -21015,7 +21009,7 @@ var Phaser;
                         var centroid = shape.centroid();
                         var mass = shape.area() * shape.density;
                         var inertia = shape.inertia(mass);
-                        console.log('rmd', centroid, shape);
+                        //console.log('rmd', centroid, shape);
                         totalMassCentroid.multiplyAddByScalar(centroid, mass);
                         totalMass += mass;
                         totalInertia += inertia;
@@ -21050,7 +21044,7 @@ var Phaser;
                     }
                 };
                 Body.prototype.cacheData = function () {
-                    console.log('Body cacheData', this.name, 'len', this.shapes.length);
+                    //console.log('Body cacheData', this.name, 'len', this.shapes.length);
                     this.bounds.clear();
                     for(var i = 0; i < this.shapes.length; i++) {
                         var shape = this.shapes[i];
@@ -21218,7 +21212,7 @@ var Phaser;
                     this.tplanes = [];
                     if(verts) {
                         for(var i = 0; i < verts.length; i++) {
-                            console.log('cloning vert', i);
+                            //console.log('cloning vert', i);
                             this.verts[i] = Phaser.Vec2Utils.clone(verts[i]);
                             this.tverts[i] = this.verts[i];
                             this.tplanes[i] = {
@@ -21227,10 +21221,10 @@ var Phaser;
                             this.tplanes[i].d = 0;
                         }
                     }
-                    console.log('ShapePoly finished', this.verts);
+                    //console.log('ShapePoly finished', this.verts);
                     this.finishVerts();
-                    console.log('ShapePoly finished 2', this.verts);
-                }
+                    //console.log('ShapePoly finished 2', this.verts);
+                                    }
                 ShapePoly.prototype.finishVerts = function () {
                     if(this.verts.length < 2) {
                         this.convexity = false;
@@ -21294,7 +21288,7 @@ var Phaser;
                 ShapePoly.prototype.cacheData = function (xf) {
                     this.bounds.clear();
                     var numVerts = this.verts.length;
-                    console.log('shapePoly cacheData', numVerts);
+                    //console.log('shapePoly cacheData', numVerts);
                     if(numVerts == 0) {
                         return;
                     }

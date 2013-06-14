@@ -1,23 +1,20 @@
-/// <reference path="../../math/Vec2.ts" />
-/// <reference path="../../geom/Point.ts" />
-/// <reference path="../../math/Vec2Utils.ts" />
-/// <reference path="Manager.ts" />
-/// <reference path="Body.ts" />
+/// <reference path="../../../math/Vec2.ts" />
+/// <reference path="../../../math/Vec2Utils.ts" />
+/// <reference path="../Manager.ts" />
+/// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
 
 /**
-* Phaser - Advanced Physics - ShapePoly (convex only)
+* Phaser - Advanced Physics - Shapes - Convex Polygon
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics.Advanced.Shapes {
 
-    export class ShapePoly extends Phaser.Physics.Advanced.Shape implements IShape {
+    export class Poly extends Phaser.Physics.Advanced.Shape implements IShape {
 
         constructor(verts?:Phaser.Vec2[]) {
-
-            console.log('ShapePoly created', verts);
 
             super(Manager.SHAPE_TYPE_POLY);
 
@@ -31,7 +28,6 @@ module Phaser.Physics.Advanced {
             {
                 for (var i = 0; i < verts.length; i++)
                 {
-                    //console.log('cloning vert', i);
                     this.verts[i] = Phaser.Vec2Utils.clone(verts[i]);
                     this.tverts[i] = this.verts[i];
 
@@ -41,11 +37,7 @@ module Phaser.Physics.Advanced {
                 }
             }
 
-            //console.log('ShapePoly finished', this.verts);
-
             this.finishVerts();
-
-            //console.log('ShapePoly finished 2', this.verts);
 
         }
 

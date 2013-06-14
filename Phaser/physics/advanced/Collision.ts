@@ -3,7 +3,7 @@
 /// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
-/// <reference path="Shape.ts" />
+/// <reference path="shapes/Shape.ts" />
 /// <reference path="Contact.ts" />
 /// <reference path="ShapeCircle.ts" />
 
@@ -22,7 +22,7 @@ module Phaser.Physics.Advanced {
 
         public collide(a, b, contacts: Contact[]) {
 
-            console.log('collide', a.type, b.type);
+            //console.log('collide', a.type, b.type);
 
             //  Circle (a is the circle)
             if (a.type == Manager.SHAPE_TYPE_CIRCLE)

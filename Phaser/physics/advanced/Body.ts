@@ -4,10 +4,10 @@
 /// <reference path="../../math/Transform.ts" />
 /// <reference path="../../math/TransformUtils.ts" />
 /// <reference path="Manager.ts" />
-/// <reference path="Joint.ts" />
+/// <reference path="joints/Joint.ts" />
 /// <reference path="Bounds.ts" />
 /// <reference path="Space.ts" />
-/// <reference path="IShape.ts" />
+/// <reference path="shapes/IShape.ts" />
 
 /**
 * Phaser - Advanced Physics - Body
@@ -147,7 +147,7 @@ module Phaser.Physics.Advanced {
 
 	    public duplicate() {
 
-	        console.log('body duplicate called');
+	        //console.log('body duplicate called');
 
 	        //var body = new Body(this.type, this.transform.t, this.angle);
 	        
@@ -314,7 +314,7 @@ module Phaser.Physics.Advanced {
 	            var mass = shape.area() * shape.density;
 	            var inertia = shape.inertia(mass);
 
-	            console.log('rmd', centroid, shape);
+	            //console.log('rmd', centroid, shape);
 
                 totalMassCentroid.multiplyAddByScalar(centroid, mass);
 	            totalMass += mass;
@@ -368,7 +368,7 @@ module Phaser.Physics.Advanced {
 
 	    public cacheData() {
 
-	        console.log('Body cacheData', this.name, 'len', this.shapes.length);
+	        //console.log('Body cacheData', this.name, 'len', this.shapes.length);
 
 	        this.bounds.clear();
 
@@ -501,7 +501,7 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    public applyAngularImpulse(impulse) {
+	    public applyAngularImpulse(impulse: number) {
 
 	        if (this.isDynamic == false)
 	        {
