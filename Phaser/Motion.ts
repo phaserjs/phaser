@@ -210,8 +210,8 @@ module Phaser {
 		 * @return {number} Distance (in pixels)
 		 */
         public distanceToPoint(a: Sprite, target: Point): number {
-            var dx: number = (a.x + a.origin.x) - (target.x);
-            var dy: number = (a.y + a.origin.y) - (target.y);
+            var dx: number = (a.x + a.transform.origin.x) - (target.x);
+            var dy: number = (a.y + a.transform.origin.y) - (target.y);
 
             return this.game.math.vectorLength(dx, dy);
         }
@@ -223,8 +223,8 @@ module Phaser {
 		 * @return {number} The distance between the given sprite and the mouse coordinates
 		 */
         public distanceToMouse(a: Sprite): number {
-            var dx: number = (a.x + a.origin.x) - this.game.input.x;
-            var dy: number = (a.y + a.origin.y) - this.game.input.y;
+            var dx: number = (a.x + a.transform.origin.x) - this.game.input.x;
+            var dy: number = (a.y + a.transform.origin.y) - this.game.input.y;
 
             return this.game.math.vectorLength(dx, dy);
         }
@@ -240,8 +240,8 @@ module Phaser {
 		 * @return {number} The angle (in radians unless asDegrees is true)
 		 */
         public angleBetweenPoint(a: Sprite, target: Point, asDegrees: bool = false): number {
-            var dx: number = (target.x) - (a.x + a.origin.x);
-            var dy: number = (target.y) - (a.y + a.origin.y);
+            var dx: number = (target.x) - (a.x + a.transform.origin.x);
+            var dy: number = (target.y) - (a.y + a.transform.origin.y);
 
             if (asDegrees)
             {
@@ -265,8 +265,8 @@ module Phaser {
 		 */
         public angleBetween(a: Sprite, b: Sprite, asDegrees: bool = false): number {
 
-            var dx: number = (b.x + b.origin.x) - (a.x + a.origin.x);
-            var dy: number = (b.y + b.origin.y) - (a.y + a.origin.y);
+            var dx: number = (b.x + b.transform.origin.x) - (a.x + a.transform.origin.x);
+            var dy: number = (b.y + b.transform.origin.y) - (a.y + a.transform.origin.y);
 
             if (asDegrees)
             {

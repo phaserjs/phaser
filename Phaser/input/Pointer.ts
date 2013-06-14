@@ -1,5 +1,5 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Vec2.ts" />
+/// <reference path="../math/Vec2.ts" />
 
 /**
 * Phaser - Pointer
@@ -170,14 +170,14 @@ module Phaser {
         public screenY: number = -1;
 
         /**
-        * The horizontal coordinate of point relative to the game element
+        * The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
         * @property x
         * @type {Number}
         */
         public x: number = -1;
 
         /**
-        * The vertical coordinate of point relative to the game element
+        * The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.
         * @property y
         * @type {Number}
         */
@@ -263,39 +263,19 @@ module Phaser {
         public targetObject = null;
 
         /**
-        * Gets the X value of this Pointer in world coordinate space
+        * Gets the X value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public getWorldX(camera?: Camera = this.game.camera) {
-
+        public worldX(camera?: Camera = this.game.input.camera) {
             return camera.worldView.x + this.x;
-
         }
 
         /**
-        * Gets the Y value of this Pointer in world coordinate space
+        * Gets the Y value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public getWorldY(camera?: Camera = this.game.camera) {
-
+        public worldY(camera?: Camera = this.game.input.camera) {
             return camera.worldView.y + this.y;
-
-        }
-
-        /**
-        * Gets the X value of this Pointer in world coordinate space
-        * @param {Camera} [camera]
-        */
-        public get scaledX():number {
-            return Math.floor(this.x * this.game.input.scaleX);
-        }
-
-        /**
-        * Gets the Y value of this Pointer in world coordinate space
-        * @param {Camera} [camera]
-        */
-        public get scaledY():number {
-            return Math.floor(this.y * this.game.input.scaleY);
         }
 
         /**
@@ -329,14 +309,18 @@ module Phaser {
             this.timeDown = this.game.time.now;
             this._holdSent = false;
 
-            this.positionDown.setTo(this.x, this.y);
-
+            //  This sets the x/y and other local values
             this.move(event);
+
+            // x and y are the old values here?
+            this.positionDown.setTo(this.x, this.y);
 
             if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
-                this.game.input.x = this.x * this.game.input.scaleX;
-                this.game.input.y = this.y * this.game.input.scaleY;
+                //this.game.input.x = this.x * this.game.input.scale.x;
+                //this.game.input.y = this.y * this.game.input.scale.y;
+                this.game.input.x = this.x;
+                this.game.input.y = this.y;
                 this.game.input.onDown.dispatch(this);
             }
 
@@ -406,8 +390,8 @@ module Phaser {
             this.screenX = event.screenX;
             this.screenY = event.screenY;
 
-            this.x = this.pageX - this.game.stage.offset.x;
-            this.y = this.pageY - this.game.stage.offset.y;
+            this.x = (this.pageX - this.game.stage.offset.x) * this.game.input.scale.x;
+            this.y = (this.pageY - this.game.stage.offset.y) * this.game.input.scale.y;
 
             this.position.setTo(this.x, this.y);
             this.circle.x = this.x;
@@ -415,8 +399,9 @@ module Phaser {
 
             if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
-                this.game.input.x = this.x * this.game.input.scaleX;
-                this.game.input.y = this.y * this.game.input.scaleY;
+                this.game.input.activePointer = this;
+                this.game.input.x = this.x;
+                this.game.input.y = this.y;
                 this.game.input.position.setTo(this.game.input.x, this.game.input.y);
                 this.game.input.circle.x = this.game.input.x;
                 this.game.input.circle.y = this.game.input.y;
@@ -437,7 +422,7 @@ module Phaser {
 
                 for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
                 {
-                    if (this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
+                    if (this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
                     {
                         _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
                         _highestRenderObject = i;
@@ -525,7 +510,7 @@ module Phaser {
 
             for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
             {
-                if (this.game.input.inputObjects[i].input.enabled)
+                if (this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.enabled)
                 {
                     this.game.input.inputObjects[i].input._releasedHandler(this);
                 }

@@ -1,9 +1,9 @@
-/// <reference path="core/Rectangle.ts" />
+/// <reference path="geom/Rectangle.ts" />
 /// <reference path="math/LinkedList.ts" />
 /// <reference path="math/QuadTree.ts" />
-/// <reference path="core/Point.ts" />
-/// <reference path="core/Vec2.ts" />
-/// <reference path="core/Circle.ts" />
+/// <reference path="geom/Point.ts" />
+/// <reference path="math/Vec2.ts" />
+/// <reference path="geom/Circle.ts" />
 /// <reference path="core/Group.ts" />
 /// <reference path="core/Signal.ts" />
 /// <reference path="core/SignalBinding.ts" />
@@ -415,6 +415,8 @@ module Phaser {
             {
                 this.onUpdateCallback.call(this.callbackContext);
             }
+
+            this.world.postUpdate();
 
             this.renderer.render();
 

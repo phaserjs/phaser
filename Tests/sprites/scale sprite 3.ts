@@ -22,7 +22,7 @@
         //  You don't have to use the same values when scaling a sprite,
         //  here we'll create a short and wide bunny
 
-        bunny.scale.setTo(3, 0.7);
+        bunny.transform.scale.setTo(3, 0.7);
 
     }
 

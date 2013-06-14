@@ -22,11 +22,11 @@
         //  And now let's scale the sprite by two
 
         //  You can do either:
-        //  smallBunny.scale.x = 2;
-        //  smallBunny.scale.y = 2;
+        //  smallBunny.transform.scale.x = 2;
+        //  smallBunny.transform.scale.y = 2;
 
         //  Or you can set them both at the same time using setTo:
-        bigBunny.scale.setTo(2, 2);
+        bigBunny.transform.scale.setTo(2, 2);
 
     }
 

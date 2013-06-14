@@ -1,7 +1,7 @@
 /// <reference path="Game.ts" />
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="core/Group.ts" />
-/// <reference path="core/Rectangle.ts" />
+/// <reference path="geom/Rectangle.ts" />
 /// <reference path="physics/PhysicsManager.ts" />
 
 /**
@@ -93,6 +93,17 @@ module Phaser {
             //this.physics.update();
             this.group.update();
             this.cameras.update();
+
+        }
+
+        /**
+         * This is called automatically every frame, and is where main logic happens.
+         */
+        public postUpdate() {
+
+            //this.physics.postUpdate();
+            this.group.postUpdate();
+            this.cameras.postUpdate();
 
         }
 

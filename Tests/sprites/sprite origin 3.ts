@@ -26,7 +26,7 @@
         //  Here we set the origin to be the bottom-right of the sprite
         fuji.origin.setTo(320, 200);
 
-        game.add.tween(fuji).to({ angle: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
+        game.add.tween(fuji).to({ rotation: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
 
     }
 

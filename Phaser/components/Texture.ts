@@ -1,11 +1,11 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/DynamicTexture.ts" />
-/// <reference path="../../utils/SpriteUtils.ts" />
+/// <reference path="../Game.ts" />
+/// <reference path="../gameobjects/DynamicTexture.ts" />
+/// <reference path="../utils/SpriteUtils.ts" />
 
 /**
 * Phaser - Components - Texture
 *
-* The Texture being used to render the Sprite. Either Image based on a DynamicTexture.
+* The Texture being used to render the object (Sprite, Group background, etc). Either Image based on a DynamicTexture.
 */
 
 module Phaser.Components {
@@ -13,14 +13,14 @@ module Phaser.Components {
     export class Texture {
 
         /**
-         * Creates a new Sprite Texture component
-         * @param parent The Sprite using this Texture to render
+         * Creates a new Texture component
+         * @param parent The object using this Texture to render.
          * @param key An optional Game.Cache key to load an image from
          */
-        constructor(parent: Sprite, key?: string = '') {
+        constructor(parent) {
 
             this.game = parent.game;
-            this._sprite = parent;
+            this.parent = parent;
 
             this.canvas = parent.game.stage.canvas;
             this.context = parent.game.stage.context;
@@ -28,14 +28,22 @@ module Phaser.Components {
             this.flippedX = false;
             this.flippedY = false;
 
-            if (key !== null)
-            {
-                this.cacheKey = key;
-                this.loadImage(key);
-            }
+            this._width = 16;
+            this._height = 16;
+
+            this.cameraBlacklist = [];
 
         }
 
+        /**
+         * Private _width - use the width getter/setter instead
+         */
+        private _width: number;
+
+        /**
+         * Private _height - use the height getter/setter instead
+         */
+        private _height: number;
 
         /**
          * Reference to Phaser.Game
@@ -43,9 +51,9 @@ module Phaser.Components {
         public game: Game;
 
         /**
-         * Reference to the parent Sprite
+         * Reference to the parent object (Sprite, Group, etc)
          */
-        private _sprite: Sprite;
+        public parent;
 
         /**
          * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
@@ -65,10 +73,39 @@ module Phaser.Components {
         public loaded: bool = false;
 
         /**
-        * Opacity of the Sprite texture where 1 is opaque and 0 is fully transparent.
+         * An Array of Cameras to which this texture won't render
+         * @type {Array}
+         */
+        public cameraBlacklist: number[];
+
+        /**
+         * Whether the Sprite background is opaque or not. If set to true the Sprite is filled with
+         * the value of Texture.backgroundColor every frame. Normally you wouldn't enable this but
+         * for some effects it can be handy.
+         * @type {boolean}
+         */
+        public opaque: bool = false;
+
+        /**
+        * Opacity of the Sprite texture where 1 is opaque (default) and 0 is fully transparent.
         * @type {number}
         */
         public alpha: number;
+
+        /**
+         * The Background Color of the Sprite if Texture.opaque is set to true.
+         * Given in css color string format, i.e. 'rgb(0,0,0)' or '#ff0000'.
+         * @type {string}
+         */
+        public backgroundColor: string = 'rgb(255,255,255)';
+
+        /**
+         * You can set a globalCompositeOperation that will be applied before the render method is called on this Sprite.
+         * This is useful if you wish to apply an effect like 'lighten'.
+         * If this value is set it will call a canvas context save and restore before and after the render pass, so use it sparingly.
+         * Set to null to disable.
+         */
+        public globalCompositeOperation: string = null;
 
         /**
         * A reference to the Canvas this Sprite renders to.
@@ -121,7 +158,7 @@ module Phaser.Components {
          * Updates the texture being used to render the Sprite.
          * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
          */
-        public setTo(image = null, dynamic?: DynamicTexture = null): Sprite {
+        public setTo(image = null, dynamic?: DynamicTexture = null) {
 
             if (dynamic)
             {
@@ -134,11 +171,13 @@ module Phaser.Components {
                 this.isDynamic = false;
                 this.imageTexture = image;
                 this.texture = this.imageTexture;
+                this._width = image.width;
+                this._height = image.height;
             }
 
             this.loaded = true;
 
-            return this._sprite;
+            return this.parent;
 
         }
 
@@ -147,32 +186,31 @@ module Phaser.Components {
          * The graphic can be SpriteSheet or Texture Atlas. If you need to use a DynamicTexture see loadDynamicTexture.
          * @param key {string} Key of the graphic you want to load for this sprite.
          * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
+         * @param updateBody {boolean} Update the physics body dimensions to match the newly loaded texture/frame?
          */
         public loadImage(key: string, clearAnimations?: bool = true, updateBody?: bool = true) {
 
-            if (clearAnimations && this._sprite.animations.frameData !== null)
+            if (clearAnimations && this.parent['animations'] && this.parent['animations'].frameData !== null)
             {
-                this._sprite.animations.destroy();
+                this.parent.animations.destroy();
             }
 
             if (this.game.cache.getImage(key) !== null)
             {
                 this.setTo(this.game.cache.getImage(key), null);
+                this.cacheKey = key;
 
-                if (this.game.cache.isSpriteSheet(key))
+                if (this.game.cache.isSpriteSheet(key) && this.parent['animations'])
                 {
-                    this._sprite.animations.loadFrameData(this._sprite.game.cache.getFrameData(key));
+                    this.parent.animations.loadFrameData(this.parent.game.cache.getFrameData(key));
                 }
                 else
                 {
-                    this._sprite.frameBounds.width = this.width;
-                    this._sprite.frameBounds.height = this.height;
-                }
-
-                if (updateBody)
-                {
-                    this._sprite.body.bounds.width = this.width;
-                    this._sprite.body.bounds.height = this.height;
+                    if (updateBody && this.parent['body'])
+                    {
+                        this.parent.body.bounds.width = this.width;
+                        this.parent.body.bounds.height = this.height;
+                    }
                 }
             }
 
@@ -184,19 +222,28 @@ module Phaser.Components {
          */
         public loadDynamicTexture(texture: DynamicTexture) {
 
-            if (this._sprite.animations.frameData !== null)
+            if (this.parent.animations.frameData !== null)
             {
-                this._sprite.animations.destroy();
+                this.parent.animations.destroy();
             }
 
             this.setTo(null, texture);
-            this._sprite.frameBounds.width = this.width;
-            this._sprite.frameBounds.height = this.height;
+            this.parent.texture.width = this.width;
+            this.parent.texture.height = this.height;
 
         }
 
+        public set width(value: number) {
+            this._width = value;
+        }
+
+        public set height(value: number) {
+            this._height = value;
+        }
+
         /**
-         * Getter only. The width of the texture.
+         * The width of the texture. If an animation it will be the frame width, not the width of the sprite sheet.
+         * If using a DynamicTexture it will be the width of the dynamic texture itself.
          * @type {number}
          */
         public get width(): number {
@@ -207,12 +254,13 @@ module Phaser.Components {
             }
             else
             {
-                return this.imageTexture.width;
+                return this._width;
             }
         }
 
         /**
-         * Getter only. The height of the texture.
+         * The height of the texture. If an animation it will be the frame height, not the height of the sprite sheet.
+         * If using a DynamicTexture it will be the height of the dynamic texture itself.
          * @type {number}
          */
         public get height(): number {
@@ -223,7 +271,7 @@ module Phaser.Components {
             }
             else
             {
-                return this.imageTexture.height;
+                return this._height;
             }
 
         }

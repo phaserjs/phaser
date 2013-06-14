@@ -39,9 +39,12 @@
             atari.body.acceleration.y = 150;
         }
         //  collide?
-            }
+        game.collide(atari, card);
+    }
     function render() {
         atari.body.renderDebugInfo(16, 16);
         card.body.renderDebugInfo(200, 16);
+        Phaser.DebugUtils.renderSpritePhysicsBody(atari);
+        Phaser.DebugUtils.renderSpritePhysicsBody(card);
     }
 })();

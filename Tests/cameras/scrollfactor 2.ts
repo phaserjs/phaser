@@ -19,7 +19,7 @@
         for (var i = 0; i < 10; i++)
         {
             var temp:Phaser.Sprite = game.add.sprite(600 + (10 * i), 200 + (10 * i), 'disk');
-            temp.scrollFactor.setTo(i / 2, i / 2);
+            temp.transform.scrollFactor.setTo(i / 2, i / 2);
         }
 
     }
@@ -28,20 +28,20 @@
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            game.camera.scroll.x -= 4;
+            game.camera.x -= 4;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            game.camera.scroll.x += 4;
+            game.camera.x += 4;
         }
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            game.camera.scroll.y -= 4;
+            game.camera.y -= 4;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
-            game.camera.scroll.y += 4;
+            game.camera.y += 4;
         }
 
     }

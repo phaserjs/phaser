@@ -53,7 +53,7 @@ module Phaser {
             this.context = this.canvas.getContext('2d');
 
             this.scaleMode = StageScaleMode.NO_SCALE;
-            this.scale = new StageScaleMode(this._game);
+            this.scale = new StageScaleMode(this._game, width, height);
 
             this.getOffset(this.canvas);
             this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
@@ -167,6 +167,8 @@ module Phaser {
             this.pauseScreen = new PauseScreen(this._game, this.width, this.height);
             this.orientationScreen = new OrientationScreen(this._game);
 
+            this.scale.setScreenSize(true);
+
         }
 
         /**
@@ -251,6 +253,13 @@ module Phaser {
                 }
             }
 
+        }
+
+        public setImageRenderingCrisp() {
+            this.canvas.style['image-rendering'] = 'crisp-edges';
+            this.canvas.style['image-rendering'] = '-moz-crisp-edges';
+            this.canvas.style['image-rendering'] = '-webkit-optimize-contrast';
+            this.canvas.style['-ms-interpolation-mode'] = 'nearest-neighbor';
         }
 
         public pauseGame() {

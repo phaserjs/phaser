@@ -20,7 +20,7 @@ module Phaser {
 
         static GEOM_POINT: number = 0;
         static GEOM_CIRCLE: number = 1;
-        static GEOM_RECTANGLE: number = 2;
+        static GEOM_Rectangle: number = 2;
         static GEOM_LINE: number = 3;
         static GEOM_POLYGON: number = 4;
 

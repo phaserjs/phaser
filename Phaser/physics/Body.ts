@@ -1,5 +1,5 @@
-/// <reference path="../core/Vec2.ts" />
-/// <reference path="../core/Point.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../geom/Point.ts" />
 /// <reference path="../math/Vec2Utils.ts" />
 
 /**
@@ -10,26 +10,29 @@ module Phaser.Physics {
 
     export class Body {
 
-        constructor(parent: Sprite, type: number) {
+        constructor(sprite: Phaser.Sprite, type: number) {
 
-            this.parent = parent;
-            this.game = parent.game;
+            this.sprite = sprite;
+            this.game = sprite.game;
             this.type = type;
 
             //  Fixture properties
             //  Will extend into its own class at a later date - can move the fixture defs there and add shape support, but this will do for 1.0 release
-            this.bounds = new Rectangle(parent.x + Math.round(parent.width / 2), parent.y + Math.round(parent.height / 2), parent.width, parent.height);
-            this.bounce = Vec2Utils.clone(this.game.world.physics.bounce);
+            this.bounds = new Rectangle;
+
+            this._width = sprite.width;
+            this._height = sprite.height;
+
 
             //  Body properties
             this.gravity = Vec2Utils.clone(this.game.world.physics.gravity);
+            this.bounce = Vec2Utils.clone(this.game.world.physics.bounce);
 
             this.velocity = new Vec2;
             this.acceleration = new Vec2;
             this.drag = Vec2Utils.clone(this.game.world.physics.drag);
             this.maxVelocity = new Vec2(10000, 10000);
 
-            this.angle = 0;
             this.angularVelocity = 0;
             this.angularAcceleration = 0;
             this.angularDrag = 0;
@@ -38,14 +41,21 @@ module Phaser.Physics {
             this.wasTouching = Types.NONE;
             this.allowCollisions = Types.ANY;
 
-            this.position = new Vec2(parent.x + this.bounds.halfWidth, parent.y + this.bounds.halfHeight);
-            this.oldPosition = new Vec2(parent.x + this.bounds.halfWidth, parent.y + this.bounds.halfHeight);
+            this.position = new Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+            this.oldPosition = new Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
             this.offset = new Vec2;
 
         }
 
+        /**
+         * Reference to Phaser.Game
+         */
         public game: Game;
-        public parent: Sprite;
+
+        /**
+         * Reference to the parent Sprite
+         */
+        public sprite: Phaser.Sprite;
 
         /**
          * The type of Body (disabled, dynamic, static or kinematic)
@@ -71,12 +81,6 @@ module Phaser.Physics {
         public maxAngular: number = 10000;
 
         /**
-          * Angle of rotation of this body.
-          * @type {number}
-          */
-        public angle: number;
-
-        /**
          * Orientation of the object.
          * @type {number}
          */
@@ -94,17 +98,41 @@ module Phaser.Physics {
 
 
 
+        private _width: number = 0;
+        private _height: number = 0;
+
+        public get x(): number {
+            return this.sprite.x + this.offset.x;
+        }
+
+        public get y(): number {
+            return this.sprite.y + this.offset.y;
+        }
+
+        public set width(value: number) {
+            this._width = value;
+        }
+
+        public set height(value: number) {
+            this._height = value;
+        }
+
+        public get width(): number {
+            return this._width * this.sprite.transform.scale.x;
+        }
+
+        public get height(): number {
+            return this._height * this.sprite.transform.scale.y;
+        }
 
         public preUpdate() {
 
             this.oldPosition.copyFrom(this.position);
 
-            this.bounds.x = this.position.x - this.bounds.halfWidth;
-            this.bounds.y = this.position.y - this.bounds.halfHeight;
-
-            if (this.parent.scale.equals(1) == false)
-            {
-            }
+            this.bounds.x = this.x;
+            this.bounds.y = this.y;
+            this.bounds.width = this.width;
+            this.bounds.height = this.height;
 
         }
 
@@ -117,13 +145,12 @@ module Phaser.Physics {
             {
                 this.game.world.physics.updateMotion(this);
 
-                this.parent.x = (this.position.x - this.bounds.halfWidth) - this.offset.x;
-                this.parent.y = (this.position.y - this.bounds.halfHeight) - this.offset.y;
-
                 this.wasTouching = this.touching;
                 this.touching = Phaser.Types.NONE;
 
             }
+
+            this.position.setTo(this.x, this.y);
 
         }
 
@@ -267,13 +294,13 @@ module Phaser.Physics {
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this.parent.texture.context.fillStyle = color;
-            this.parent.texture.context.fillText('Sprite: (' + this.parent.frameBounds.width + ' x ' + this.parent.frameBounds.height + ')', x, y);
-            //this.parent.texture.context.fillText('x: ' + this._parent.frameBounds.x.toFixed(1) + ' y: ' + this._parent.frameBounds.y.toFixed(1) + ' rotation: ' + this._parent.rotation.toFixed(1), x, y + 14);
-            this.parent.texture.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' angle: ' + this.angle.toFixed(0), x, y + 14);
-            this.parent.texture.context.fillText('vx: ' + this.velocity.x.toFixed(1) + ' vy: ' + this.velocity.y.toFixed(1), x, y + 28);
-            this.parent.texture.context.fillText('acx: ' + this.acceleration.x.toFixed(1) + ' acy: ' + this.acceleration.y.toFixed(1), x, y + 42);
-            this.parent.texture.context.fillText('angVx: ' + this.angularVelocity.toFixed(1) + ' angAc: ' + this.angularAcceleration.toFixed(1), x, y + 56);
+            this.sprite.texture.context.fillStyle = color;
+            this.sprite.texture.context.fillText('Sprite: (' + this.sprite.width + ' x ' + this.sprite.height + ')', x, y);
+            //this.sprite.texture.context.fillText('x: ' + this._sprite.frameBounds.x.toFixed(1) + ' y: ' + this._sprite.frameBounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
+            this.sprite.texture.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.sprite.transform.rotation.toFixed(0), x, y + 14);
+            this.sprite.texture.context.fillText('vx: ' + this.velocity.x.toFixed(1) + ' vy: ' + this.velocity.y.toFixed(1), x, y + 28);
+            this.sprite.texture.context.fillText('acx: ' + this.acceleration.x.toFixed(1) + ' acy: ' + this.acceleration.y.toFixed(1), x, y + 42);
+            this.sprite.texture.context.fillText('angVx: ' + this.angularVelocity.toFixed(1) + ' angAc: ' + this.angularAcceleration.toFixed(1), x, y + 56);
 
         }
 

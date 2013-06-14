@@ -1,7 +1,7 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Circle.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../geom/Circle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="RectangleUtils.ts" />
 
@@ -16,26 +16,58 @@ module Phaser {
     export class SpriteUtils {
 
         static _tempPoint: Point;
+        static _sin: number;
+        static _cos: number;
 
         /**
-         * Check whether this object is visible in a specific camera rectangle.
-         * @param camera {Rectangle} The rectangle you want to check.
-         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+         * Updates a Sprites cameraView Rectangle based on the given camera, sprite world position and rotation
+         * @param camera {Camera} The Camera to use in the view
+         * @param sprite {Sprite} The Sprite that will have its cameraView property modified
+         * @return {Rectangle} A reference to the Sprite.cameraView property
          */
-        static inCamera(camera: Camera, sprite: Sprite): bool {
+        static updateCameraView(camera: Camera, sprite: Sprite): Rectangle {
 
-            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if (sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0)
+            if (sprite.rotation == 0 || sprite.texture.renderRotation == false)
             {
-                return true;
+                //  Easy out
+                sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.width * sprite.transform.origin.x));
+                sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.height * sprite.transform.origin.y));
+                sprite.cameraView.width = sprite.width;
+                sprite.cameraView.height = sprite.height;
+            }
+            else
+            {
+                //  If the sprite is rotated around its center we can use this quicker method:
+                if (sprite.transform.origin.x == 0.5 && sprite.transform.origin.y == 0.5)
+                {
+                    SpriteUtils._sin = sprite.transform.sin;
+                    SpriteUtils._cos = sprite.transform.cos;
+
+                    if (SpriteUtils._sin < 0)
+                    {
+                        SpriteUtils._sin = -SpriteUtils._sin;
+                    }
+
+                    if (SpriteUtils._cos < 0)
+                    {
+                        SpriteUtils._cos = -SpriteUtils._cos;
+                    }
+
+                    sprite.cameraView.width = Math.round(sprite.height * SpriteUtils._sin + sprite.width * SpriteUtils._cos);
+                    sprite.cameraView.height = Math.round(sprite.height * SpriteUtils._cos + sprite.width * SpriteUtils._sin);
+                    sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
+                    sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
+                }
+                else
+                {
+                    sprite.cameraView.x = Math.min(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x);
+                    sprite.cameraView.y = Math.min(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y);
+                    sprite.cameraView.width = Math.max(sprite.transform.upperLeft.x, sprite.transform.upperRight.x, sprite.transform.bottomLeft.x, sprite.transform.bottomRight.x) - sprite.cameraView.x;
+                    sprite.cameraView.height = Math.max(sprite.transform.upperLeft.y, sprite.transform.upperRight.y, sprite.transform.bottomLeft.y, sprite.transform.bottomRight.y) - sprite.cameraView.y;
+                }
             }
 
-            var dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
-            var dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            var dw = sprite.frameBounds.width * sprite.scale.x;
-            var dh = sprite.frameBounds.height * sprite.scale.y;
-
-            return (camera.scaledX + camera.worldView.width > this._dx) && (camera.scaledX < this._dx + this._dw) && (camera.scaledY + camera.worldView.height > this._dy) && (camera.scaledY < this._dy + this._dh);
+            return sprite.cameraView;
 
         }
 
@@ -111,92 +143,60 @@ module Phaser {
         }
         */
 
-        /**
-        * Checks to see if this <code>GameObject</code> were located at the given position, would it overlap the <code>GameObject</code> or <code>Group</code>?
-        * This is distinct from overlapsPoint(), which just checks that point, rather than taking the object's size numbero account.
-        * WARNING: Currently tilemaps do NOT support screen space overlap checks!
-        *
-        * @param X {number} The X position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param Y {number} The Y position you want to check.  Pretends this object (the caller, not the parameter) is located here.
-        * @param objectOrGroup {object} The object or group being tested.
-        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        *
-        * @return {boolean} Whether or not the two objects overlap.
-        */
-        /*
-        static overlapsAt(X: number, Y: number, objectOrGroup, inScreenSpace: bool = false, camera: Camera = null): bool {
-
-            if (objectOrGroup.isGroup)
-            {
-                var results: bool = false;
-                var basic;
-                var i: number = 0;
-                var members = objectOrGroup.members;
-
-                while (i < length)
-                {
-                    if (this.overlapsAt(X, Y, members[i++], inScreenSpace, camera))
-                    {
-                        results = true;
-                    }
-                }
-
-                return results;
-            }
-
-            if (!inScreenSpace)
-            {
-                return (objectOrGroup.x + objectOrGroup.width > X) && (objectOrGroup.x < X + this.width) &&
-                        (objectOrGroup.y + objectOrGroup.height > Y) && (objectOrGroup.y < Y + this.height);
-            }
-
-            if (camera == null)
-            {
-                camera = this._game.camera;
-            }
-
-            var objectScreenPos: Point = objectOrGroup.getScreenXY(null, Camera);
-
-            this._point.x = X - camera.scroll.x * this.scrollFactor.x; //copied from getScreenXY()
-            this._point.y = Y - camera.scroll.y * this.scrollFactor.y;
-            this._point.x += (this._point.x > 0) ? 0.0000001 : -0.0000001;
-            this._point.y += (this._point.y > 0) ? 0.0000001 : -0.0000001;
-
-            return (objectScreenPos.x + objectOrGroup.width > this._point.x) && (objectScreenPos.x < this._point.x + this.width) &&
-                (objectScreenPos.y + objectOrGroup.height > this._point.y) && (objectScreenPos.y < this._point.y + this.height);
-        }
-        */
 
         /**
-        * Checks to see if a point in 2D world space overlaps this <code>GameObject</code>.
+        * Checks to see if the given x and y coordinates overlaps this <code>Sprite</code>, taking scaling and rotation into account.
+        * The coordinates must be given in world space, not local or camera space.
         *
-        * @param point {Point} The point in world space you want to check.
-        * @param inScreenSpace {boolean} Whether to take scroll factors into account when checking for overlap.
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
+        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
+        * @param x {Number} The x coordinate in world space.
+        * @param y {Number} The y coordinate in world space.
         *
         * @return   Whether or not the point overlaps this object.
         */
-        static overlapsPoint(sprite: Sprite, point: Point, inScreenSpace: bool = false, camera: Camera = null): bool {
+        static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): bool {
 
-            if (!inScreenSpace)
+            //  if rotation == 0 then just do a rect check instead!
+            if (sprite.transform.rotation == 0)
             {
-                return Phaser.RectangleUtils.containsPoint(sprite.body.bounds, point);
-                //return (point.x > sprite.x) && (point.x < sprite.x + sprite.width) && (point.y > sprite.y) && (point.y < sprite.y + sprite.height);
+                return Phaser.RectangleUtils.contains(sprite.cameraView, x, y);
             }
 
-            if (camera == null)
+            if ((x - sprite.transform.upperLeft.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) < 0)
             {
-                camera = sprite.game.camera;
+                return false;
             }
 
-            //var x: number = point.x - camera.scroll.x;
-            //var y: number = point.y - camera.scroll.y;
+            if ((x - sprite.transform.upperRight.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperRight.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) > 0)
+            {
+                return false;
+            }
 
-            //this.getScreenXY(this._point, camera);
+            if ((x - sprite.transform.upperLeft.x) * (sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y) < 0)
+            {
+                return false;
+            }
 
-            //return (x > this._point.x) && (X < this._point.x + this.width) && (Y > this._point.y) && (Y < this._point.y + this.height);
+            if ((x - sprite.transform.bottomLeft.x) * (sprite.transform.bottomLeft.x - sprite.transform.upperLeft.x) + (y - sprite.transform.bottomLeft.y) * (sprite.transform.bottomLeft.y - sprite.transform.upperLeft.y) > 0)
+            {
+                return false;
+            }
 
+            return true;
+
+        }
+
+        /**
+        * Checks to see if the given point overlaps this <code>Sprite</code>, taking scaling and rotation into account.
+        * The point must be given in world space, not local or camera space.
+        *
+        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
+        * @param point {Point} The point in world space you want to check.
+        *
+        * @return   Whether or not the point overlaps this object.
+        */
+        static overlapsPoint(sprite: Sprite, point: Point): bool {
+            return overlapsXY(sprite, point.x, point.y);
         }
 
         /**
@@ -239,8 +239,8 @@ module Phaser {
                 camera = this._game.camera;
             }
 
-            point.x = sprite.x - camera.scroll.x * sprite.scrollFactor.x;
-            point.y = sprite.y - camera.scroll.y * sprite.scrollFactor.y;
+            point.x = sprite.x - camera.x * sprite.transform.scrollFactor.x;
+            point.y = sprite.y - camera.y * sprite.transform.scrollFactor.y;
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
 
@@ -280,19 +280,6 @@ module Phaser {
             sprite.body.velocity.y = 0;
             sprite.body.position.x = x;
             sprite.body.position.y = y;
-
-        }
-
-        static setOriginToCenter(sprite: Sprite, fromFrameBounds: bool = true, fromBody?: bool = false) {
-
-            if (fromFrameBounds)
-            {
-                sprite.origin.setTo(sprite.frameBounds.halfWidth, sprite.frameBounds.halfHeight);
-            }
-            else if (fromBody)
-            {
-                sprite.origin.setTo(sprite.body.bounds.halfWidth, sprite.body.bounds.halfHeight);
-            }
 
         }
 

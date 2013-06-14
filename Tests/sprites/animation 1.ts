@@ -30,7 +30,7 @@
         mummy.animations.play('walk', 20, true);
 
         //  This just scales the sprite up so you can see the animation better
-        mummy.scale.setTo(4, 4);
+        mummy.transform.scale.setTo(4, 4);
 
     }
 

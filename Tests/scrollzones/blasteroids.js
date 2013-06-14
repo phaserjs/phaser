@@ -24,21 +24,21 @@
         //  Looks like a smoke trail!
         //emitter.globalCompositeOperation = 'xor';
         //  Looks way cool :)
-        emitter.globalCompositeOperation = 'lighter';
+        emitter.texture.globalCompositeOperation = 'lighter';
         bullets = game.add.group(50);
         //  Create our bullet pool
         for(var i = 0; i < 50; i++) {
             var tempBullet = new Phaser.Sprite(game, game.stage.centerX, game.stage.centerY, 'bullet');
             tempBullet.exists = false;
-            tempBullet.angleOffset = 90;
+            tempBullet.transform.rotationOffset = 90;
             //tempBullet.setBounds(-100, -100, 900, 700);
             //tempBullet.outOfBoundsAction = Phaser.GameObject.OUT_OF_BOUNDS_KILL;
             bullets.add(tempBullet);
         }
         ship = game.add.sprite(game.stage.centerX, game.stage.centerY, 'nashwan', Phaser.Types.BODY_DYNAMIC);
-        Phaser.SpriteUtils.setOriginToCenter(ship);
+        ship.transform.origin.setTo(0.5, 0.5);
         //  We do this because the ship was drawn facing up, but 0 degrees is pointing to the right
-        ship.angleOffset = 90;
+        ship.transform.rotationOffset = 90;
         game.input.onDown.add(test, this);
     }
     function test(event) {
@@ -62,7 +62,7 @@
                 speed = 0;
             }
         }
-        shipMotion = game.motion.velocityFromAngle(ship.angle, speed);
+        shipMotion = game.motion.velocityFromAngle(ship.rotation, speed);
         scroller.setSpeed(shipMotion.x, shipMotion.y);
         //  emit particles
         if(speed > 2) {
@@ -89,9 +89,9 @@
             var b = bullets.getFirstAvailable();
             b.x = ship.x;
             b.y = ship.y - 26;
-            var bulletMotion = game.motion.velocityFromAngle(ship.angle, 400);
+            var bulletMotion = game.motion.velocityFromAngle(ship.rotation, 400);
             b.revive();
-            b.angle = ship.angle;
+            b.rotation = ship.rotation;
             b.body.velocity.setTo(bulletMotion.x, bulletMotion.y);
             fireRate = game.time.now + 100;
         }

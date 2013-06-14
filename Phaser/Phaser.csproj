@@ -74,36 +74,24 @@
     <Content Include="components\sprite\Input.js">
       <DependentUpon>Input.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="components\Texture.ts" />
+    <Content Include="components\Texture.js">
+      <DependentUpon>Texture.ts</DependentUpon>
+    </Content>
     <Content Include="components\Tile.ts" />
     <Content Include="components\TilemapLayer.ts" />
+    <TypeScriptCompile Include="components\Transform.ts" />
+    <Content Include="components\Transform.js">
+      <DependentUpon>Transform.ts</DependentUpon>
+    </Content>
     <Content Include="Game.js">
       <DependentUpon>Game.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="core\Rectangle.ts" />
-    <TypeScriptCompile Include="core\Point.ts" />
-    <TypeScriptCompile Include="components\sprite\Texture.ts" />
     <TypeScriptCompile Include="components\camera\CameraFX.ts" />
     <Content Include="components\camera\CameraFX.js">
       <DependentUpon>CameraFX.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="components\ScrollRegion.ts" />
-    <Content Include="components\sprite\Texture.js">
-      <DependentUpon>Texture.ts</DependentUpon>
-    </Content>
-    <Content Include="core\Point.js">
-      <DependentUpon>Point.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="core\Polygon.ts" />
-    <Content Include="core\Polygon.js">
-      <DependentUpon>Polygon.ts</DependentUpon>
-    </Content>
-    <Content Include="core\Rectangle.js">
-      <DependentUpon>Rectangle.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="core\Vec2.ts" />
-    <Content Include="core\Vec2.js">
-      <DependentUpon>Vec2.ts</DependentUpon>
-    </Content>
     <Content Include="gameobjects\DynamicTexture.js">
       <DependentUpon>DynamicTexture.ts</DependentUpon>
     </Content>
@@ -121,6 +109,22 @@
     <TypeScriptCompile Include="gameobjects\Tilemap.ts" />
     <Content Include="gameobjects\Tilemap.js">
       <DependentUpon>Tilemap.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geom\Circle.ts" />
+    <Content Include="geom\Circle.js">
+      <DependentUpon>Circle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geom\Line.ts" />
+    <Content Include="geom\Line.js">
+      <DependentUpon>Line.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geom\Point.ts" />
+    <Content Include="geom\Point.js">
+      <DependentUpon>Point.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="geom\Rectangle.ts" />
+    <Content Include="geom\Rectangle.js">
+      <DependentUpon>Rectangle.ts</DependentUpon>
     </Content>
     <Content Include="math\GameMath.js">
       <DependentUpon>GameMath.ts</DependentUpon>
@@ -140,6 +144,14 @@
     <TypeScriptCompile Include="physics\PhysicsManager.ts" />
     <TypeScriptCompile Include="physics\Body.ts" />
     <TypeScriptCompile Include="math\QuadTree.ts" />
+    <TypeScriptCompile Include="math\Mat3.ts" />
+    <Content Include="math\Mat3.js">
+      <DependentUpon>Mat3.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="math\Mat3Utils.ts" />
+    <Content Include="math\Mat3Utils.js">
+      <DependentUpon>Mat3Utils.ts</DependentUpon>
+    </Content>
     <Content Include="math\QuadTree.js">
       <DependentUpon>QuadTree.ts</DependentUpon>
     </Content>
@@ -148,6 +160,10 @@
       <DependentUpon>LinkedList.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Motion.ts" />
+    <TypeScriptCompile Include="math\Vec2.ts" />
+    <Content Include="math\Vec2.js">
+      <DependentUpon>Vec2.ts</DependentUpon>
+    </Content>
     <Content Include="Motion.js">
       <DependentUpon>Motion.ts</DependentUpon>
     </Content>
@@ -196,14 +212,8 @@
     <Content Include="utils\RectangleUtils.js">
       <DependentUpon>RectangleUtils.ts</DependentUpon>
     </Content>
-    <Content Include="core\Circle.js">
-      <DependentUpon>Circle.ts</DependentUpon>
-    </Content>
     <Content Include="math\IntersectResult.js">
       <DependentUpon>IntersectResult.ts</DependentUpon>
-    </Content>
-    <Content Include="core\Line.js">
-      <DependentUpon>Line.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="math\Vec2Utils.ts" />
     <Content Include="math\Vec2Utils.js">
@@ -337,9 +347,7 @@
     <TypeScriptCompile Include="components\animation\Frame.ts" />
     <TypeScriptCompile Include="loader\AnimationLoader.ts" />
     <TypeScriptCompile Include="components\animation\Animation.ts" />
-    <TypeScriptCompile Include="core\Line.ts" />
     <TypeScriptCompile Include="math\IntersectResult.ts" />
-    <TypeScriptCompile Include="core\Circle.ts" />
     <Content Include="core\Group.js">
       <DependentUpon>Group.ts</DependentUpon>
     </Content>

@@ -1,9 +1,11 @@
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
-/// <reference path="../core/Vec2.ts" />
-/// <reference path="../gameobjects/Sprite.ts" />
 /// <reference path="../Game.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../math/Vec2.ts" />
 /// <reference path="../components/camera/CameraFX.ts" />
+/// <reference path="../components/Texture.ts" />
+/// <reference path="../components/Transform.ts" />
+/// <reference path="../gameobjects/Sprite.ts" />
 
 /**
 * Phaser - Camera
@@ -29,37 +31,45 @@ module Phaser {
          */
         constructor(game: Game, id: number, x: number, y: number, width: number, height: number) {
 
-            this._game = game;
+            this.game = game;
 
             this.ID = id;
-            this._stageX = x;
-            this._stageY = y;
-            this.scaledX = x;
-            this.scaledY = y;
-            this.fx = new CameraFX(this._game, this);
+            this.z = id;
 
-            //  The view into the world canvas we wish to render
+            //  The view into the world we wish to render (by default the full game world size)
+            //  The size of this Rect is the same as screenView, but the values are all in world coordinates instead of screen coordinates
             this.worldView = new Rectangle(0, 0, width, height);
+
+            //  The rect of the area being rendered in stage/screen coordinates
+            this.screenView = new Rectangle(x, y, width, height);
+
+            this.fx = new CameraFX(this.game, this);
+
+            this.transform = new Phaser.Components.Transform(this);
+            this.texture = new Phaser.Components.Texture(this);
+
+            this.texture.opaque = false;
 
             this.checkClip();
 
         }
 
+        private _target: Sprite = null;
+
         /**
          * Local private reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
-        private _clip: bool = false;
-        private _stageX: number;
-        private _stageY: number;
-        private _rotation: number = 0;
-        private _target: Sprite = null;
-        //private _sx: number = 0;
-        //private _sy: number = 0;
+        /**
+         * Optional texture used in the background of the Camera.
+         */
+        public texture: Phaser.Components.Texture;
 
-        public scaledX: number;
-        public scaledY: number;
+        /**
+         * The transform component.
+         */
+        public transform: Phaser.Components.Transform;
 
         /**
          * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
@@ -91,31 +101,35 @@ module Phaser {
         public ID: number;
 
         /**
-         * Camera view rectangle in world coordinate.
+         * Controls if this camera is clipped or not when rendering. You shouldn't usually set this value directly.
+         */
+        public clip: bool = false;
+
+        /**
+         * Camera view Rectangle in world coordinate.
          * @type {Rectangle}
          */
         public worldView: Rectangle;
 
         /**
-         * Scale factor of the camera.
-         * @type {Vec2}
-         */
-        public scale: Vec2 = new Vec2(1, 1);
-
-        /**
-         * Scrolling factor.
-         * @type {MicroPoint}
-         */
-        public scroll: Vec2 = new Vec2(0, 0);
-
-        /**
-         * Camera bounds.
+         * Visible / renderable area (changes if the camera resizes/moves around the stage)
          * @type {Rectangle}
          */
-        public bounds: Rectangle = null;
+        public screenView: Rectangle;
 
         /**
-         * Sprite moving inside this rectangle will not cause camera moving.
+         * Camera worldBounds.
+         * @type {Rectangle}
+         */
+        public worldBounds: Rectangle = null;
+
+        /**
+         * A boolean representing if the Camera has been modified in any way via a scale, rotate, flip or skew.
+         */
+        public modified: bool = false;
+
+        /**
+         * Sprite moving inside this Rectangle will not cause camera moving.
          * @type {Rectangle}
          */
         public deadzone: Rectangle = null;
@@ -127,44 +141,15 @@ module Phaser {
         public disableClipping: bool = false;
 
         /**
-         * Whether the camera background is opaque or not. If set to true the Camera is filled with
-         * the value of Camera.backgroundColor every frame. Normally you wouldn't enable this if the
-         * Camera is the full Stage size, as the Stage.backgroundColor has the same effect. But for
-         * multiple or mini cameras it can be very useful.
-         * @type {boolean}
-         */
-        public opaque: bool = false;
-
-        /**
-         * The Background Color of the camera in css color string format, i.e. 'rgb(0,0,0)' or '#ff0000'.
-         * Not used if the Camera.opaque property is false.
-         * @type {string}
-         */
-        public backgroundColor: string = 'rgb(0,0,0)';
-
-        /**
-         * Whether this camera visible or not. (default is true)
+         * Whether this camera is visible or not. (default is true)
          * @type {boolean}
          */
         public visible: bool = true;
 
         /**
-         * Alpha of the camera. (everything rendered to this camera will be affected)
-         * @type {number}
+         * The z value of this Camera. Cameras are rendered in z-index order by the Renderer.
          */
-        public alpha: number = 1;
-
-        /**
-         * The x position of the current input event in world coordinates.
-         * @type {number}
-         */
-        public inputX: number = 0;
-
-        /**
-         * The y position of the current input event in world coordinates.
-         * @type {number}
-         */
-        public inputY: number = 0;
+        public z: number = -1;
 
         /**
          * Effects manager.
@@ -182,7 +167,7 @@ module Phaser {
 
             if (this.isHidden(object) == false)
             {
-                object['cameraBlacklist'].push(this.ID);
+                object.texture['cameraBlacklist'].push(this.ID);
             }
 
         }
@@ -193,9 +178,7 @@ module Phaser {
         * @param object {Sprite/Group} The object to check.
         */
         public isHidden(object): bool {
-
-            return (object['cameraBlacklist'] && object['cameraBlacklist'].length > 0 && object['cameraBlacklist'].indexOf(this.ID) == -1);
-
+            return (object.texture['cameraBlacklist'] && object.texture['cameraBlacklist'].length > 0 && object.texture['cameraBlacklist'].indexOf(this.ID) == -1);
         }
 
         /**
@@ -208,7 +191,7 @@ module Phaser {
 
             if (this.isHidden(object) == true)
             {
-                object['cameraBlacklist'].slice(object['cameraBlacklist'].indexOf(this.ID), 1);
+                object.texture['cameraBlacklist'].slice(object.texture['cameraBlacklist'].indexOf(this.ID), 1);
             }
 
         }
@@ -257,8 +240,8 @@ module Phaser {
             x += (x > 0) ? 0.0000001 : -0.0000001;
             y += (y > 0) ? 0.0000001 : -0.0000001;
 
-            this.scroll.x = Math.round(x - this.worldView.halfWidth);
-            this.scroll.y = Math.round(y - this.worldView.halfHeight);
+            this.worldView.x = Math.round(x - this.worldView.halfWidth);
+            this.worldView.y = Math.round(y - this.worldView.halfHeight);
 
         }
 
@@ -271,8 +254,8 @@ module Phaser {
             point.x += (point.x > 0) ? 0.0000001 : -0.0000001;
             point.y += (point.y > 0) ? 0.0000001 : -0.0000001;
 
-            this.scroll.x = Math.round(point.x - this.worldView.halfWidth);
-            this.scroll.y = Math.round(point.y - this.worldView.halfHeight);
+            this.worldView.x = Math.round(point.x - this.worldView.halfWidth);
+            this.worldView.y = Math.round(point.y - this.worldView.halfHeight);
 
         }
 
@@ -286,14 +269,15 @@ module Phaser {
          */
         public setBounds(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
 
-            if (this.bounds == null)
+            if (this.worldBounds == null)
             {
-                this.bounds = new Rectangle();
+                this.worldBounds = new Rectangle;
             }
 
-            this.bounds.setTo(x, y, width, height);
+            this.worldBounds.setTo(x, y, width, height);
 
-            this.scroll.setTo(0, 0);
+            this.worldView.x = x;
+            this.worldView.y = y;
 
             this.update();
         }
@@ -302,6 +286,11 @@ module Phaser {
          * Update focusing and scrolling.
          */
         public update() {
+
+            if (this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY))
+            {
+                this.modified = true;
+            }
 
             this.fx.preUpdate();
 
@@ -319,206 +308,116 @@ module Phaser {
 
                     edge = targetX - this.deadzone.x;
 
-                    if (this.scroll.x > edge)
+                    if (this.worldView.x > edge)
                     {
-                        this.scroll.x = edge;
+                        this.worldView.x = edge;
                     }
 
                     edge = targetX + this._target.width - this.deadzone.x - this.deadzone.width;
 
-                    if (this.scroll.x < edge)
+                    if (this.worldView.x < edge)
                     {
-                        this.scroll.x = edge;
+                        this.worldView.x = edge;
                     }
 
                     edge = targetY - this.deadzone.y;
 
-                    if (this.scroll.y > edge)
+                    if (this.worldView.y > edge)
                     {
-                        this.scroll.y = edge;
+                        this.worldView.y = edge;
                     }
 
                     edge = targetY + this._target.height - this.deadzone.y - this.deadzone.height;
 
-                    if (this.scroll.y < edge)
+                    if (this.worldView.y < edge)
                     {
-                        this.scroll.y = edge;
+                        this.worldView.y = edge;
                     }
                 }
 
             }
 
-            //  Make sure we didn't go outside the cameras bounds
-            if (this.bounds !== null)
+            //  Make sure we didn't go outside the cameras worldBounds
+            if (this.worldBounds !== null)
             {
-                if (this.scroll.x < this.bounds.left)
+                if (this.worldView.x < this.worldBounds.left)
                 {
-                    this.scroll.x = this.bounds.left;
+                    this.worldView.x = this.worldBounds.left;
                 }
 
-                if (this.scroll.x > this.bounds.right - this.width)
+                if (this.worldView.x > this.worldBounds.right - this.width)
                 {
-                    this.scroll.x = (this.bounds.right - this.width) + 1;
+                    this.worldView.x = (this.worldBounds.right - this.width) + 1;
                 }
 
-                if (this.scroll.y < this.bounds.top)
+                if (this.worldView.y < this.worldBounds.top)
                 {
-                    this.scroll.y = this.bounds.top;
+                    this.worldView.y = this.worldBounds.top;
                 }
 
-                if (this.scroll.y > this.bounds.bottom - this.height)
+                if (this.worldView.y > this.worldBounds.bottom - this.height)
                 {
-                    this.scroll.y = (this.bounds.bottom - this.height) + 1;
+                    this.worldView.y = (this.worldBounds.bottom - this.height) + 1;
                 }
             }
 
-            this.worldView.x = this.scroll.x;
-            this.worldView.y = this.scroll.y;
+        }
 
-            //  Input values
-            this.inputX = this.worldView.x + this._game.input.x;
-            this.inputY = this.worldView.y + this._game.input.y;
+        /**
+         * Update focusing and scrolling.
+         */
+        public postUpdate() {
+
+            if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
+            {
+                this.modified = false;
+            }
+
+            //  Make sure we didn't go outside the cameras worldBounds
+            if (this.worldBounds !== null)
+            {
+                if (this.worldView.x < this.worldBounds.left)
+                {
+                    this.worldView.x = this.worldBounds.left;
+                }
+
+                if (this.worldView.x > this.worldBounds.right - this.width)
+                {
+                    this.worldView.x = (this.worldBounds.right - this.width) + 1;
+                }
+
+                if (this.worldView.y < this.worldBounds.top)
+                {
+                    this.worldView.y = this.worldBounds.top;
+                }
+
+                if (this.worldView.y > this.worldBounds.bottom - this.height)
+                {
+                    this.worldView.y = (this.worldBounds.bottom - this.height) + 1;
+                }
+            }
 
             this.fx.postUpdate();
 
         }
 
         /**
-         * Camera preRender
-         */
-        public preRender() {
-
-            if (this.visible === false || this.alpha < 0.1)
-            {
-                return;
-            }
-
-            if (this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1)
-            {
-                this._game.stage.context.save();
-            }
-
-            this.fx.preRender(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
-
-            if (this.alpha !== 1)
-            {
-                this._game.stage.context.globalAlpha = this.alpha;
-            }
-
-            this.scaledX = this._stageX;
-            this.scaledY = this._stageY;
-
-            //  Scale on
-            if (this.scale.x !== 1 || this.scale.y !== 1)
-            {
-                this._game.stage.context.scale(this.scale.x, this.scale.y);
-                this.scaledX = this.scaledX / this.scale.x;
-                this.scaledY = this.scaledY / this.scale.y;
-            }
-
-            //  Rotation - translate to the mid-point of the camera
-            if (this._rotation !== 0)
-            {
-                this._game.stage.context.translate(this.scaledX + this.worldView.halfWidth, this.scaledY + this.worldView.halfHeight);
-                this._game.stage.context.rotate(this._rotation * (Math.PI / 180));
-
-                // now shift back to where that should actually render
-                this._game.stage.context.translate(-(this.scaledX + this.worldView.halfWidth), -(this.scaledY + this.worldView.halfHeight));
-            }
-
-            //  Background
-            if (this.opaque)
-            {
-                this._game.stage.context.fillStyle = this.backgroundColor;
-                this._game.stage.context.fillRect(this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
-            }
-
-            this.fx.render(this, this._stageX, this._stageY, this.worldView.width, this.worldView.height);
-
-            //  Clip the camera so we don't get sprites appearing outside the edges
-            if (this._clip == true && this.disableClipping == false)
-            {
-                this._game.stage.context.beginPath();
-                this._game.stage.context.rect(this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
-                this._game.stage.context.closePath();
-                this._game.stage.context.clip();
-            }
-
-        }
-
-        /**
-         * Camera postRender
-         */
-        public postRender() {
-
-            //  Scale off
-            if (this.scale.x !== 1 || this.scale.y !== 1)
-            {
-                this._game.stage.context.scale(1, 1);
-            }
-
-            this.fx.postRender(this, this.scaledX, this.scaledY, this.worldView.width, this.worldView.height);
-
-            if (this._rotation !== 0 || (this._clip && this.disableClipping == false))
-            {
-                this._game.stage.context.translate(0, 0);
-            }
-
-            if (this._rotation !== 0 || this._clip || this.scale.x !== 1 || this.scale.y !== 1)
-            {
-                this._game.stage.context.restore();
-            }
-
-            if (this.alpha !== 1)
-            {
-                this._game.stage.context.globalAlpha = 1;
-            }
-
-        }
-
-        /**
-         * Set position of this camera.
-         * @param x {number} X position.
-         * @param y {number} Y position.
-         */
-        public setPosition(x: number, y: number) {
-
-            this._stageX = x;
-            this._stageY = y;
-
-            this.checkClip();
-
-        }
-
-        /**
-         * Give this camera a new size.
-         * @param width {number} Width of new size.
-         * @param height {number} Height of new size.
-         */
-        public setSize(width: number, height: number) {
-
-            this.worldView.width = width;
-            this.worldView.height = height;
-            this.checkClip();
-
-        }
-
-        /**
-         * Render debug infos. (including id, position, rotation, scrolling factor, bounds and some other properties)
+         * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
          * @param x {number} X position of the debug info to be rendered.
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this._game.stage.context.fillStyle = color;
-            this._game.stage.context.fillText('Camera ID: ' + this.ID + ' (' + this.worldView.width + ' x ' + this.worldView.height + ')', x, y);
-            this._game.stage.context.fillText('X: ' + this._stageX + ' Y: ' + this._stageY + ' Rotation: ' + this._rotation, x, y + 14);
-            this._game.stage.context.fillText('World X: ' + this.scroll.x.toFixed(1) + ' World Y: ' + this.scroll.y.toFixed(1), x, y + 28);
+            this.game.stage.context.fillStyle = color;
+            this.game.stage.context.fillText('Camera ID: ' + this.ID + ' (' + this.screenView.width + ' x ' + this.screenView.height + ')', x, y);
+            this.game.stage.context.fillText('X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' rotation: ' + this.transform.rotation, x, y + 14);
+            this.game.stage.context.fillText('World X: ' + this.worldView.x + ' World Y: ' + this.worldView.y + ' W: ' + this.worldView.width + ' H: ' + this.worldView.height + ' R: ' + this.worldView.right + ' B: ' + this.worldView.bottom, x, y + 28);
+            this.game.stage.context.fillText('ScreenView X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' W: ' + this.screenView.width + ' H: ' + this.screenView.height, x, y + 42);
 
-            if (this.bounds)
+            if (this.worldBounds)
             {
-                this._game.stage.context.fillText('Bounds: ' + this.bounds.width + ' x ' + this.bounds.height, x, y + 42);
+                this.game.stage.context.fillText('Bounds: ' + this.worldBounds.width + ' x ' + this.worldBounds.height, x, y + 56);
             }
 
         }
@@ -528,75 +427,82 @@ module Phaser {
          */
         public destroy() {
 
-            this._game.world.cameras.removeCamera(this.ID);
+            this.game.world.cameras.removeCamera(this.ID);
             this.fx.destroy();
         }
 
         public get x(): number {
-            return this._stageX;
-        }
-
-        public set x(value: number) {
-            this._stageX = value;
-            this.checkClip();
+            return this.worldView.x;
         }
 
         public get y(): number {
-            return this._stageY;
+            return this.worldView.y;
+        }
+
+        public set x(value: number) {
+            this.worldView.x = value;
         }
 
         public set y(value: number) {
-            this._stageY = value;
-            this.checkClip();
+            this.worldView.y = value;
         }
 
         public get width(): number {
-            return this.worldView.width;
-        }
-
-        public set width(value: number) {
-
-            if (value > this._game.stage.width)
-            {
-                value = this._game.stage.width;
-            }
-
-            this.worldView.width = value;
-            this.checkClip();
+            return this.screenView.width;
         }
 
         public get height(): number {
-            return this.worldView.height;
+            return this.screenView.height;
+        }
+
+        public set width(value: number) {
+            this.screenView.width = value;
+            this.worldView.width = value;
         }
 
         public set height(value: number) {
-
-            if (value > this._game.stage.height)
-            {
-                value = this._game.stage.height;
-            }
-
+            this.screenView.height = value;
             this.worldView.height = value;
+        }
+
+        public setPosition(x: number, y: number) {
+            this.screenView.x = x;
+            this.screenView.y = y;
             this.checkClip();
         }
 
-        public get rotation(): number {
-            return this._rotation;
+        public setSize(width: number, height: number) {
+            this.screenView.width = width * this.transform.scale.x;
+            this.screenView.height = height * this.transform.scale.y;
+            this.worldView.width = width;
+            this.worldView.height = height;
+            this.checkClip();
         }
 
+        /**
+        * The angle of the Camera in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        public get rotation(): number {
+            return this.transform.rotation;
+        }
+
+        /**
+        * Set the angle of the Camera in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The value is automatically wrapped to be between 0 and 360.
+        */
         public set rotation(value: number) {
-            this._rotation = this._game.math.wrap(value, 360, 0);
+            this.transform.rotation = this.game.math.wrap(value, 360, 0);
         }
 
         private checkClip() {
 
-            if (this._stageX !== 0 || this._stageY !== 0 || this.worldView.width < this._game.stage.width || this.worldView.height < this._game.stage.height)
+            if (this.screenView.x != 0 || this.screenView.y != 0 || this.screenView.width < this.game.stage.width || this.screenView.height < this.game.stage.height)
             {
-                this._clip = true;
+                this.clip = true;
             }
             else
             {
-                this._clip = false;
+                this.clip = false;
             }
 
         }

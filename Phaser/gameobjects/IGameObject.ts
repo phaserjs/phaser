@@ -30,7 +30,7 @@ module Phaser {
         y: number;
 
         /**
-         * Z-order value of the object.
+         * z-index value of the object.
          */
         z: number;
 
@@ -45,24 +45,19 @@ module Phaser {
         active: bool;
 
         /**
-         * Controls if this Sprite is rendered or skipped during the core game loop.
+         * Controls if this is rendered or skipped during the core game loop.
          */
         visible: bool;
 
         /**
-         * The texture used to render the Sprite.
+         * The texture used to render.
          */
         texture: Phaser.Components.Texture;
 
         /**
-         * Scale of the Sprite. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
+         * The transform component.
          */
-        scale: Phaser.Vec2;
-
-        /**
-         * The influence of camera movement upon the Sprite.
-         */
-        scrollFactor: Phaser.Vec2;
+        transform: Phaser.Components.Transform;
 
     }
 

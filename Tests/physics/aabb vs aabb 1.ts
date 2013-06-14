@@ -64,6 +64,7 @@
         }
 
         //  collide?
+        game.collide(atari, card);
 
     }
 
@@ -71,6 +72,9 @@
 
         atari.body.renderDebugInfo(16, 16);
         card.body.renderDebugInfo(200, 16);
+
+        Phaser.DebugUtils.renderSpritePhysicsBody(atari);
+        Phaser.DebugUtils.renderSpritePhysicsBody(card);
 
     }
 

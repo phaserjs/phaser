@@ -47,6 +47,16 @@ module Phaser {
          */
         private _cameraInstance: number = 0;
 
+        /**
+         * Helper for sort.
+         */
+        private _sortIndex: string = '';
+
+        /**
+         * Helper for sort.
+         */
+        private _sortOrder: number;
+
         public static CAMERA_TYPE_ORTHOGRAPHIC: number = 0;
         public static CAMERA_TYPE_ISOMETRIC: number = 1;
 
@@ -73,7 +83,24 @@ module Phaser {
          * Update cameras.
          */
         public update() {
-            this._cameras.forEach((camera) => camera.update());
+
+            for (var i = 0; i < this._cameras.length; i++)
+            {
+                this._cameras[i].update();
+            }
+
+        }
+
+        /**
+         * postUpdate cameras.
+         */
+        public postUpdate() {
+
+            for (var i = 0; i < this._cameras.length; i++)
+            {
+                this._cameras[i].postUpdate();
+            }
+
         }
 
         /**
@@ -121,6 +148,65 @@ module Phaser {
             }
 
             return false;
+
+        }
+
+        public swap(camera1: Camera, camera2: Camera, sort?: bool = true): bool {
+
+            if (camera1.ID == camera2.ID)
+            {
+                return false;
+            }
+
+            var tempZ: number = camera1.z;
+
+            camera1.z = camera2.z;
+            camera2.z = tempZ;
+
+            if (sort)
+            {
+                this.sort();
+            }
+
+            return true;
+
+        }
+
+        /**
+         * Call this function to sort the Cameras according to a particular value and order (default is their Z value).
+         * The order in which they are sorted determines the render order. If sorted on z then Cameras with a lower z-index value render first.
+         *
+         * @param {string} index The <code>string</code> name of the Camera variable you want to sort on. Default value is "z".
+         * @param {number} order A <code>Group</code> constant that defines the sort order. Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
+         */
+        public sort(index: string = 'z', order: number = Group.ASCENDING) {
+
+            this._sortIndex = index;
+            this._sortOrder = order;
+            this._cameras.sort((a, b) => this.sortHandler(a, b));
+
+        }
+
+        /**
+         * Helper function for the sort process.
+         *
+         * @param {Basic} Obj1 The first object being sorted.
+         * @param {Basic} Obj2 The second object being sorted.
+         *
+         * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
+         */
+        public sortHandler(obj1, obj2): number {
+
+            if (obj1[this._sortIndex] < obj2[this._sortIndex])
+            {
+                return this._sortOrder;
+            }
+            else if (obj1[this._sortIndex] > obj2[this._sortIndex])
+            {
+                return -this._sortOrder;
+            }
+
+            return 0;
 
         }
 

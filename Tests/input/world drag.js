@@ -21,19 +21,20 @@
     }
     function update() {
         if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            game.camera.scroll.x -= 4;
+            game.camera.x -= 4;
         } else if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            game.camera.scroll.x += 4;
+            game.camera.x += 4;
         }
         if(game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-            game.camera.scroll.y -= 4;
+            game.camera.y -= 4;
         } else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-            game.camera.scroll.y += 4;
+            game.camera.y += 4;
         }
     }
     function render() {
         game.camera.renderDebugInfo(32, 32);
         test.body.renderDebugInfo(300, 32);
         Phaser.DebugUtils.renderSpriteInfo(test, 32, 200);
+        game.input.renderDebugInfo(300, 200);
     }
 })();

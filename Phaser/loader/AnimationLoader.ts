@@ -81,6 +81,7 @@ module Phaser {
             //  Malformed?
             if (!json['frames'])
             {
+                console.log(json);
                 throw new Error("Phaser.AnimationLoader.parseJSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
             }
 

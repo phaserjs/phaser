@@ -1,5 +1,7 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../Statics.ts" />
+/// <reference path="../components/Texture.ts" />
+/// <reference path="../components/Transform.ts" />
 
 /**
 * Phaser - Group
@@ -25,9 +27,11 @@ module Phaser {
             this._marker = 0;
             this._sortIndex = null;
 
-            this.cameraBlacklist = [];
-
             this.ID = this.game.world.getNextGroupID();
+
+            this.transform = new Phaser.Components.Transform(this);
+            this.texture = new Phaser.Components.Texture(this);
+            this.texture.opaque = false;
 
         }
 
@@ -92,6 +96,21 @@ module Phaser {
         public group: Group = null;
 
         /**
+         * Optional texture used in the background of the Camera.
+         */
+        public texture: Phaser.Components.Texture;
+
+        /**
+         * The transform component.
+         */
+        public transform: Phaser.Components.Transform;
+
+        /**
+         * A boolean representing if the Group has been modified in any way via a scale, rotate, flip or skew.
+         */
+        public modified: bool = false;
+
+        /**
          * If this Group exists or not. Can be set to false to skip certain loop checks.
          */
         public exists: bool;
@@ -122,27 +141,6 @@ module Phaser {
          * instead of members.length unless you really know what you're doing!
          */
         public length: number;
-
-        /**
-         * You can set a globalCompositeOperation that will be applied before the render method is called on this Groups children.
-         * This is useful if you wish to apply an effect like 'lighten' to a whole group of children as it saves doing it one-by-one.
-         * If this value is set it will call a canvas context save and restore before and after the render pass.
-         * Set to null to disable.
-         */
-        public globalCompositeOperation: string = null;
-
-        /**
-         * You can set an alpha value on this Group that will be applied before the render method is called on this Groups children.
-         * This is useful if you wish to alpha a whole group of children as it saves doing it one-by-one.
-         * Set to 0 to disable.
-         */
-        public alpha: number = 0;
-
-        /**
-         * An Array of Cameras to which this Group, or any of its children, won't render
-         * @type {Array}
-         */
-        public cameraBlacklist: number[];
 
         /**
          * Gets the next z index value for children of this Group
@@ -184,6 +182,11 @@ module Phaser {
         */
         public update() {
 
+            if (this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY))
+            {
+                this.modified = true;
+            }
+
             this._i = 0;
 
             while (this._i < this.length)
@@ -194,6 +197,29 @@ module Phaser {
                 {
                     this._member.preUpdate();
                     this._member.update();
+                }
+            }
+        }
+
+        /**
+        * Calls update on all members of this Group who have a status of active=true and exists=true
+        * You can also call Object.postUpdate directly, which will bypass the active/exists check.
+        */
+        public postUpdate() {
+
+            if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
+            {
+                this.modified = false;
+            }
+
+            this._i = 0;
+
+            while (this._i < this.length)
+            {
+                this._member = this.members[this._i++];
+
+                if (this._member != null && this._member.exists && this._member.active)
+                {
                     this._member.postUpdate();
                 }
             }
@@ -210,17 +236,7 @@ module Phaser {
                 return;
             }
 
-            if (this.globalCompositeOperation)
-            {
-                this.game.stage.context.save();
-                this.game.stage.context.globalCompositeOperation = this.globalCompositeOperation;
-            }
-
-            if (this.alpha > 0)
-            {
-                this._prevAlpha = this.game.stage.context.globalAlpha;
-                this.game.stage.context.globalAlpha = this.alpha;
-            }
+            this.game.renderer.preRenderGroup(camera, this);
 
             this._i = 0;
 
@@ -241,15 +257,7 @@ module Phaser {
                 }
             }
 
-            if (this.alpha > 0)
-            {
-                this.game.stage.context.globalAlpha = this._prevAlpha;
-            }
-
-            if (this.globalCompositeOperation)
-            {
-                this.game.stage.context.restore();
-            }
+            this.game.renderer.postRenderGroup(camera, this);
 
         }
 
@@ -259,17 +267,7 @@ module Phaser {
         */
         public directRender(camera: Camera) {
 
-            if (this.globalCompositeOperation)
-            {
-                this.game.stage.context.save();
-                this.game.stage.context.globalCompositeOperation = this.globalCompositeOperation;
-            }
-
-            if (this.alpha > 0)
-            {
-                this._prevAlpha = this.game.stage.context.globalAlpha;
-                this.game.stage.context.globalAlpha = this.alpha;
-            }
+            this.game.renderer.preRenderGroup(camera, this);
 
             this._i = 0;
 
@@ -290,15 +288,7 @@ module Phaser {
                 }
             }
 
-            if (this.alpha > 0)
-            {
-                this.game.stage.context.globalAlpha = this._prevAlpha;
-            }
-
-            if (this.globalCompositeOperation)
-            {
-                this.game.stage.context.restore();
-            }
+            this.game.renderer.postRenderGroup(camera, this);
 
         }
 
@@ -426,11 +416,12 @@ module Phaser {
          * @param x {number} X position of the new sprite.
          * @param y {number} Y position of the new sprite.
          * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
          * @returns {Sprite} The newly created sprite object.
          */
-        public addNewSprite(x: number, y: number, key?: string = '', bodyType?: number = Phaser.Types.BODY_DISABLED): Sprite {
-            return <Sprite> this.add(new Sprite(this.game, x, y, key, bodyType));
+        public addNewSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC): Sprite {
+            return <Sprite> this.add(new Sprite(this.game, x, y, key, frame, bodyType));
         }
 
         /**
@@ -592,6 +583,14 @@ module Phaser {
 
         }
 
+        /**
+         * Swaps two existing game object in this Group with each other.
+         *
+         * @param {Basic} child1 The first object to swap.
+         * @param {Basic} child2 The second object to swap.
+         *
+         * @return {Basic} True if the two objects successfully swapped position.
+         */
         public swap(child1, child2, sort?: bool = true): bool {
 
             if (child1.group.ID != this.ID || child2.group.ID != this.ID || child1 === child2)
@@ -613,6 +612,43 @@ module Phaser {
 
         }
 
+        public bringToTop(child): bool {
+
+            //  If child not in this group, or is already at the top of the group, return false
+            if (child.group.ID != this.ID || child.z == this._zCounter)
+            {
+                return false;
+            }
+
+            this.sort();
+
+            //  What's the z index of the top most child?
+            var tempZ: number = child.z;
+            var childIndex: number = this._zCounter;
+
+            this._i = 0;
+
+            while (this._i < this.length)
+            {
+                this._member = this.members[this._i++];
+
+                if (this._i > childIndex)
+                {
+                    this._member.z--;
+                }
+                else if (this._member.z == child.z)
+                {
+                    childIndex = this._i;
+                    this._member.z = this._zCounter;
+                }
+            }
+
+            this.sort();
+
+            return true;
+
+        }
+
         /**
          * Call this function to sort the group according to a particular value and order.
          * For example, to sort game objects for Zelda-style overlaps you might call
@@ -620,7 +656,7 @@ module Phaser {
          * <code>State.update()</code> override.  To sort all existing objects after
          * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
          *
-         * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "y".
+         * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "z".
          * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
          */
         public sort(index: string = 'z', order: number = Group.ASCENDING) {

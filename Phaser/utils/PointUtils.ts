@@ -1,5 +1,5 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
+/// <reference path="../geom/Point.ts" />
 
 /**
 * Phaser - PointUtils
@@ -180,7 +180,7 @@ module Phaser {
 	    * @param x {number} The x coordinate of the anchor point
 	    * @param y {number} The y coordinate of the anchor point
         * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
-	    * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+	    * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
         * @return The modified point object
         */
@@ -208,7 +208,7 @@ module Phaser {
 	    * @param x {number} The x coordinate of the anchor point
 	    * @param y {number} The y coordinate of the anchor point
         * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
-	    * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+	    * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
         * @return The modified point object
         */

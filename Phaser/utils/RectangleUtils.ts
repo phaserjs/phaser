@@ -1,6 +1,6 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../core/Point.ts" />
-/// <reference path="../core/Rectangle.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../geom/Rectangle.ts" />
 
 /**
 * Phaser - RectangleUtils
@@ -145,12 +145,12 @@ module Phaser {
         }
 
         /**
-        * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
+        * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the Rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
         * @method intersection
         * @param {Rectangle} a - The first Rectangle object.
         * @param {Rectangle} b - The second Rectangle object.
         * @param {Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle} A Rectangle object that equals the area of intersection. If the rectangles do not intersect, this method returns an empty Rectangle object; that is, a rectangle with its x, y, width, and height properties set to 0.
+        * @return {Rectangle} A Rectangle object that equals the area of intersection. If the Rectangles do not intersect, this method returns an empty Rectangle object; that is, a Rectangle with its x, y, width, and height properties set to 0.
         **/
         static intersection(a: Rectangle, b: Rectangle, out?: Rectangle = new Rectangle): Rectangle {
 
@@ -194,12 +194,12 @@ module Phaser {
         }
 
         /**
-        * Adds two rectangles together to create a new Rectangle object, by filling in the horizontal and vertical space between the two rectangles.
+        * Adds two Rectangles together to create a new Rectangle object, by filling in the horizontal and vertical space between the two Rectangles.
         * @method union
         * @param {Rectangle} a - The first Rectangle object.
         * @param {Rectangle} b - The second Rectangle object.
         * @param {Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle} A Rectangle object that is the union of the two rectangles.
+        * @return {Rectangle} A Rectangle object that is the union of the two Rectangles.
         **/
         static union(a: Rectangle, b: Rectangle, out?: Rectangle = new Rectangle): Rectangle {
             return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));

@@ -53,11 +53,11 @@ module Phaser {
             {
                 this._camera = this._cameraList[c];
 
-                this._camera.preRender();
+                this.preRenderCamera(this._camera);
 
                 this._game.world.group.render(this._camera);
 
-                this._camera.postRender();
+                this.postRenderCamera(this._camera);
             }
 
             this.renderTotal = this._count;
@@ -77,25 +77,304 @@ module Phaser {
 
         }
 
+        public preRenderGroup(camera: Camera, group: Group) {
+
+            if (camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1 || this.inScreen(camera) == false)
+            {
+                return false;
+            }
+
+            //  Reset our temp vars
+            this._ga = -1;
+            this._sx = 0;
+            this._sy = 0;
+            this._sw = group.texture.width;
+            this._sh = group.texture.height;
+            this._fx = group.transform.scale.x;
+            this._fy = group.transform.scale.y;
+            this._sin = 0;
+            this._cos = 1;
+            //this._dx = (camera.screenView.x * camera.scrollFactor.x) + camera.frameBounds.x - (camera.worldView.x * camera.scrollFactor.x);
+            //this._dy = (camera.screenView.y * camera.scrollFactor.y) + camera.frameBounds.y - (camera.worldView.y * camera.scrollFactor.y);
+            this._dx = 0;
+            this._dy = 0;
+            this._dw = group.texture.width;
+            this._dh = group.texture.height;
+
+            //  Global Composite Ops
+            if (group.texture.globalCompositeOperation)
+            {
+                group.texture.context.save();
+                group.texture.context.globalCompositeOperation = group.texture.globalCompositeOperation;
+            }
+
+            //  Alpha
+            if (group.texture.alpha !== 1 && group.texture.context.globalAlpha !== group.texture.alpha)
+            {
+                this._ga = group.texture.context.globalAlpha;
+                group.texture.context.globalAlpha = group.texture.alpha;
+            }
+
+            //  Flip X
+            if (group.texture.flippedX)
+            {
+                this._fx = -group.transform.scale.x;
+            }
+
+            //  Flip Y
+            if (group.texture.flippedY)
+            {
+                this._fy = -group.transform.scale.y;
+            }
+
+            //	Rotation and Flipped
+            if (group.modified)
+            {
+                if (group.transform.rotation !== 0 || group.transform.rotationOffset !== 0)
+                {
+                    this._sin = Math.sin(group.game.math.degreesToRadians(group.transform.rotationOffset + group.transform.rotation));
+                    this._cos = Math.cos(group.game.math.degreesToRadians(group.transform.rotationOffset + group.transform.rotation));
+                }
+
+                //  setTransform(a, b, c, d, e, f);
+                //  a = scale x
+                //  b = skew x
+                //  c = skew y
+                //  d = scale y
+                //  e = translate x
+                //  f = translate y
+
+                group.texture.context.save();
+                group.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + group.transform.skew.x, -(this._sin * this._fy) + group.transform.skew.y, this._cos * this._fy, this._dx, this._dy);
+
+                this._dx = -group.transform.origin.x;
+                this._dy = -group.transform.origin.y;
+            }
+            else
+            {
+                if (!group.transform.origin.equals(0))
+                {
+                    this._dx -= group.transform.origin.x;
+                    this._dy -= group.transform.origin.y;
+                }
+            }
+
+            this._sx = Math.round(this._sx);
+            this._sy = Math.round(this._sy);
+            this._sw = Math.round(this._sw);
+            this._sh = Math.round(this._sh);
+            this._dx = Math.round(this._dx);
+            this._dy = Math.round(this._dy);
+            this._dw = Math.round(this._dw);
+            this._dh = Math.round(this._dh);
+
+            if (group.texture.opaque)
+            {
+                group.texture.context.fillStyle = group.texture.backgroundColor;
+                group.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+            }
+
+            if (group.texture.loaded)
+            {
+                group.texture.context.drawImage(
+                    group.texture.texture,	    //	Source Image
+                    this._sx, 			//	Source X (location within the source image)
+                    this._sy, 			//	Source Y
+                    this._sw, 			//	Source Width
+                    this._sh, 			//	Source Height
+                    this._dx, 			//	Destination X (where on the canvas it'll be drawn)
+                    this._dy, 			//	Destination Y
+                    this._dw, 			//	Destination Width (always same as Source Width unless scaled)
+                    this._dh			//	Destination Height (always same as Source Height unless scaled)
+                );
+            }
+
+            return true;
+
+        }
+
+        public postRenderGroup(camera: Camera, group: Group) {
+
+            if (group.modified || group.texture.globalCompositeOperation)
+            {
+                group.texture.context.restore();
+            }
+
+            //  This could have been over-written by a sprite, need to store elsewhere
+            if (this._ga > -1)
+            {
+                group.texture.context.globalAlpha = this._ga;
+            }
+
+        }
+
         /**
-         * Check whether this object is visible in a specific camera rectangle.
-         * @param camera {Rectangle} The rectangle you want to check.
-         * @return {boolean} Return true if bounds of this sprite intersects the given rectangle, otherwise return false.
+         * Check whether this object is visible in a specific camera Rectangle.
+         * @param camera {Rectangle} The Rectangle you want to check.
+         * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
          */
         public inCamera(camera: Camera, sprite: Sprite): bool {
 
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if (sprite.scrollFactor.x == 0 && sprite.scrollFactor.y == 0)
+            if (sprite.transform.scrollFactor.equals(0))
             {
                 return true;
             }
 
-            this._dx = sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
-            this._dy = sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            this._dw = sprite.frameBounds.width * sprite.scale.x;
-            this._dh = sprite.frameBounds.height * sprite.scale.y;
+            return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
 
-            return (camera.scaledX + camera.worldView.width > this._dx) && (camera.scaledX < this._dx + this._dw) && (camera.scaledY + camera.worldView.height > this._dy) && (camera.scaledY < this._dy + this._dh);
+        }
+
+        public inScreen(camera: Camera): bool {
+
+            return true;
+
+        }
+
+        /**
+         * Render this sprite to specific camera. Called by game loop after update().
+         * @param camera {Camera} Camera this sprite will be rendered to.
+         * @return {boolean} Return false if not rendered, otherwise return true.
+         */
+        public preRenderCamera(camera: Camera): bool {
+
+            if (camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1 || this.inScreen(camera) == false)
+            {
+                return false;
+            }
+
+            //  Reset our temp vars
+            this._ga = -1;
+            this._sx = 0;
+            this._sy = 0;
+            this._sw = camera.width;
+            this._sh = camera.height;
+            this._fx = camera.transform.scale.x;
+            this._fy = camera.transform.scale.y;
+            this._sin = 0;
+            this._cos = 1;
+            this._dx = camera.screenView.x;
+            this._dy = camera.screenView.y;
+            this._dw = camera.width;
+            this._dh = camera.height;
+
+            //  Global Composite Ops
+            if (camera.texture.globalCompositeOperation)
+            {
+                camera.texture.context.save();
+                camera.texture.context.globalCompositeOperation = camera.texture.globalCompositeOperation;
+            }
+
+            //  Alpha
+            if (camera.texture.alpha !== 1 && camera.texture.context.globalAlpha != camera.texture.alpha)
+            {
+                this._ga = camera.texture.context.globalAlpha;
+                camera.texture.context.globalAlpha = camera.texture.alpha;
+            }
+
+            //  Sprite Flip X
+            if (camera.texture.flippedX)
+            {
+                this._fx = -camera.transform.scale.x;
+            }
+
+            //  Sprite Flip Y
+            if (camera.texture.flippedY)
+            {
+                this._fy = -camera.transform.scale.y;
+            }
+
+            //	Rotation and Flipped
+            if (camera.modified)
+            {
+                if (camera.transform.rotation !== 0 || camera.transform.rotationOffset !== 0)
+                {
+                    this._sin = Math.sin(camera.game.math.degreesToRadians(camera.transform.rotationOffset + camera.transform.rotation));
+                    this._cos = Math.cos(camera.game.math.degreesToRadians(camera.transform.rotationOffset + camera.transform.rotation));
+                }
+
+                //  setTransform(a, b, c, d, e, f);
+                //  a = scale x
+                //  b = skew x
+                //  c = skew y
+                //  d = scale y
+                //  e = translate x
+                //  f = translate y
+
+                camera.texture.context.save();
+                camera.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + camera.transform.skew.x, -(this._sin * this._fy) + camera.transform.skew.y, this._cos * this._fy, this._dx, this._dy);
+
+                this._dx = -camera.transform.origin.x;
+                this._dy = -camera.transform.origin.y;
+            }
+            else
+            {
+                if (!camera.transform.origin.equals(0))
+                {
+                    this._dx -= camera.transform.origin.x;
+                    this._dy -= camera.transform.origin.y;
+                }
+            }
+
+            this._sx = Math.round(this._sx);
+            this._sy = Math.round(this._sy);
+            this._sw = Math.round(this._sw);
+            this._sh = Math.round(this._sh);
+            this._dx = Math.round(this._dx);
+            this._dy = Math.round(this._dy);
+            this._dw = Math.round(this._dw);
+            this._dh = Math.round(this._dh);
+
+            //  Clip the camera so we don't get sprites appearing outside the edges
+            if (camera.clip == true && camera.disableClipping == false)
+            {
+                camera.texture.context.beginPath();
+                camera.texture.context.rect(camera.screenView.x, camera.screenView.x, camera.screenView.width, camera.screenView.height);
+                camera.texture.context.closePath();
+                camera.texture.context.clip();
+            }
+
+            if (camera.texture.opaque)
+            {
+                camera.texture.context.fillStyle = camera.texture.backgroundColor;
+                camera.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+            }
+
+            //camera.fx.render(camera);
+
+            if (camera.texture.loaded)
+            {
+                camera.texture.context.drawImage(
+                    camera.texture.texture,	    //	Source Image
+                    this._sx, 			//	Source X (location within the source image)
+                    this._sy, 			//	Source Y
+                    this._sw, 			//	Source Width
+                    this._sh, 			//	Source Height
+                    this._dx, 			//	Destination X (where on the canvas it'll be drawn)
+                    this._dy, 			//	Destination Y
+                    this._dw, 			//	Destination Width (always same as Source Width unless scaled)
+                    this._dh			//	Destination Height (always same as Source Height unless scaled)
+                );
+            }
+
+            return true;
+
+        }
+
+        public postRenderCamera(camera: Camera) {
+
+            //camera.fx.postRender(camera);
+
+            if (camera.modified || camera.texture.globalCompositeOperation)
+            {
+                camera.texture.context.restore();
+            }
+
+            //  This could have been over-written by a sprite, need to store elsewhere
+            if (this._ga > -1)
+            {
+                camera.texture.context.globalAlpha = this._ga;
+            }
 
         }
 
@@ -112,8 +391,8 @@ module Phaser {
             this._fy = 1;
             this._sin = 0;
             this._cos = 1;
-            this._dx = camera.scaledX + circle.x - camera.worldView.x;
-            this._dy = camera.scaledY + circle.y - camera.worldView.y;
+            this._dx = camera.screenView.x + circle.x - camera.worldView.x;
+            this._dy = camera.screenView.y + circle.y - camera.worldView.y;
             this._dw = circle.diameter;
             this._dh = circle.diameter;
 
@@ -162,47 +441,39 @@ module Phaser {
          */
         public renderSprite(camera: Camera, sprite: Sprite): bool {
 
-            if (sprite.scale.x == 0 || sprite.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false)
+            Phaser.SpriteUtils.updateCameraView(camera, sprite);
+
+            if (sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false)
             {
                 return false;
             }
 
             sprite.renderOrderID = this._count;
-
             this._count++;
 
             //  Reset our temp vars
             this._ga = -1;
             this._sx = 0;
             this._sy = 0;
-            this._sw = sprite.frameBounds.width;
-            this._sh = sprite.frameBounds.height;
-            this._fx = sprite.scale.x;
-            this._fy = sprite.scale.y;
-            this._sin = 0;
-            this._cos = 1;
-            this._dx = (camera.scaledX * sprite.scrollFactor.x) + sprite.frameBounds.x - (camera.worldView.x * sprite.scrollFactor.x);
-            this._dy = (camera.scaledY * sprite.scrollFactor.y) + sprite.frameBounds.y - (camera.worldView.y * sprite.scrollFactor.y);
-            this._dw = sprite.frameBounds.width;
-            this._dh = sprite.frameBounds.height;
+            this._sw = sprite.texture.width;
+            this._sh = sprite.texture.height;
+            this._dx = camera.screenView.x + sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
+            this._dy = camera.screenView.y + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
+            this._dw = sprite.texture.width;
+            this._dh = sprite.texture.height;
+
+            //  Global Composite Ops
+            if (sprite.texture.globalCompositeOperation)
+            {
+                sprite.texture.context.save();
+                sprite.texture.context.globalCompositeOperation = sprite.texture.globalCompositeOperation;
+            }
 
             //  Alpha
-            if (sprite.texture.alpha !== 1)
+            if (sprite.texture.alpha !== 1 && sprite.texture.context.globalAlpha != sprite.texture.alpha)
             {
                 this._ga = sprite.texture.context.globalAlpha;
                 sprite.texture.context.globalAlpha = sprite.texture.alpha;
-            }
-
-            //  Sprite Flip X
-            if (sprite.texture.flippedX)
-            {
-                this._fx = -sprite.scale.x;
-            }
-
-            //  Sprite Flip Y
-            if (sprite.texture.flippedY)
-            {
-                this._fy = -sprite.scale.y;
             }
 
             if (sprite.animations.currentFrame !== null)
@@ -214,39 +485,33 @@ module Phaser {
                 {
                     this._dx += sprite.animations.currentFrame.spriteSourceSizeX;
                     this._dy += sprite.animations.currentFrame.spriteSourceSizeY;
+                    this._sw = sprite.animations.currentFrame.spriteSourceSizeW;
+                    this._sh = sprite.animations.currentFrame.spriteSourceSizeH;
+                    this._dw = sprite.animations.currentFrame.spriteSourceSizeW;
+                    this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
                 }
             }
 
-            //	Rotation and Flipped
             if (sprite.modified)
             {
-                if (sprite.texture.renderRotation == true && (sprite.angle !== 0 || sprite.angleOffset !== 0))
-                {
-                    this._sin = Math.sin(sprite.game.math.degreesToRadians(sprite.angleOffset + sprite.angle));
-                    this._cos = Math.cos(sprite.game.math.degreesToRadians(sprite.angleOffset + sprite.angle));
-                }
-
-                //  setTransform(a, b, c, d, e, f);
-                //  a = scale x
-                //  b = skew x
-                //  c = skew y
-                //  d = scale y
-                //  e = translate x
-                //  f = translate y
-
                 sprite.texture.context.save();
-                sprite.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + sprite.skew.x, -(this._sin * this._fy) + sprite.skew.y, this._cos * this._fy, this._dx, this._dy);
 
-                this._dx = -sprite.origin.x;
-                this._dy = -sprite.origin.y;
+                sprite.texture.context.setTransform(
+                    sprite.transform.local.data[0],         //  scale x
+                    sprite.transform.local.data[3],         //  skew x
+                    sprite.transform.local.data[1],         //  skew y
+                    sprite.transform.local.data[4],         //  scale y
+                    this._dx,                               //  translate x
+                    this._dy                                //  translate y
+                );
+
+                this._dx = sprite.transform.origin.x * -this._dw;
+                this._dy = sprite.transform.origin.y * -this._dh;
             }
             else
             {
-                if (!sprite.origin.equals(0))
-                {
-                    this._dx -= sprite.origin.x;
-                    this._dy -= sprite.origin.y;
-                }
+                this._dx -= (this._dw * sprite.transform.origin.x);
+                this._dy -= (this._dh * sprite.transform.origin.y);
             }
 
             this._sx = Math.round(this._sx);
@@ -257,6 +522,12 @@ module Phaser {
             this._dy = Math.round(this._dy);
             this._dw = Math.round(this._dw);
             this._dh = Math.round(this._dh);
+
+            if (sprite.texture.opaque)
+            {
+                sprite.texture.context.fillStyle = sprite.texture.backgroundColor;
+                sprite.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+            }
 
             if (sprite.texture.loaded)
             {
@@ -272,14 +543,8 @@ module Phaser {
                     this._dh			//	Destination Height (always same as Source Height unless scaled)
                 );
             }
-            else
-            {
-                //sprite.texture.context.fillStyle = this.fillColor;
-                sprite.texture.context.fillStyle = 'rgb(255,255,255)';
-                sprite.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            }
-
-            if (sprite.modified)
+                
+            if (sprite.modified || sprite.texture.globalCompositeOperation)
             {
                 sprite.texture.context.restore();
             }
@@ -295,7 +560,7 @@ module Phaser {
 
         public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool {
 
-            if (scrollZone.scale.x == 0 || scrollZone.scale.y == 0 || scrollZone.texture.alpha < 0.1 || this.inCamera(camera, scrollZone) == false)
+            if (scrollZone.transform.scale.x == 0 || scrollZone.transform.scale.y == 0 || scrollZone.texture.alpha < 0.1 || this.inCamera(camera, scrollZone) == false)
             {
                 return false;
             }
@@ -306,16 +571,16 @@ module Phaser {
             this._ga = -1;
             this._sx = 0;
             this._sy = 0;
-            this._sw = scrollZone.frameBounds.width;
-            this._sh = scrollZone.frameBounds.height;
-            this._fx = scrollZone.scale.x;
-            this._fy = scrollZone.scale.y;
+            this._sw = scrollZone.width;
+            this._sh = scrollZone.height;
+            this._fx = scrollZone.transform.scale.x;
+            this._fy = scrollZone.transform.scale.y;
             this._sin = 0;
             this._cos = 1;
-            this._dx = (camera.scaledX * scrollZone.scrollFactor.x) + scrollZone.frameBounds.x - (camera.worldView.x * scrollZone.scrollFactor.x);
-            this._dy = (camera.scaledY * scrollZone.scrollFactor.y) + scrollZone.frameBounds.y - (camera.worldView.y * scrollZone.scrollFactor.y);
-            this._dw = scrollZone.frameBounds.width;
-            this._dh = scrollZone.frameBounds.height;
+            this._dx = (camera.screenView.x * scrollZone.transform.scrollFactor.x) + scrollZone.x - (camera.worldView.x * scrollZone.transform.scrollFactor.x);
+            this._dy = (camera.screenView.y * scrollZone.transform.scrollFactor.y) + scrollZone.y - (camera.worldView.y * scrollZone.transform.scrollFactor.y);
+            this._dw = scrollZone.width;
+            this._dh = scrollZone.height;
 
             //  Alpha
             if (scrollZone.texture.alpha !== 1)
@@ -327,22 +592,22 @@ module Phaser {
             //  Sprite Flip X
             if (scrollZone.texture.flippedX)
             {
-                this._fx = -scrollZone.scale.x;
+                this._fx = -scrollZone.transform.scale.x;
             }
 
             //  Sprite Flip Y
             if (scrollZone.texture.flippedY)
             {
-                this._fy = -scrollZone.scale.y;
+                this._fy = -scrollZone.transform.scale.y;
             }
 
             //	Rotation and Flipped
             if (scrollZone.modified)
             {
-                if (scrollZone.texture.renderRotation == true && (scrollZone.angle !== 0 || scrollZone.angleOffset !== 0))
+                if (scrollZone.texture.renderRotation == true && (scrollZone.rotation !== 0 || scrollZone.transform.rotationOffset !== 0))
                 {
-                    this._sin = Math.sin(scrollZone.game.math.degreesToRadians(scrollZone.angleOffset + scrollZone.angle));
-                    this._cos = Math.cos(scrollZone.game.math.degreesToRadians(scrollZone.angleOffset + scrollZone.angle));
+                    this._sin = Math.sin(scrollZone.game.math.degreesToRadians(scrollZone.transform.rotationOffset + scrollZone.rotation));
+                    this._cos = Math.cos(scrollZone.game.math.degreesToRadians(scrollZone.transform.rotationOffset + scrollZone.rotation));
                 }
 
                 //  setTransform(a, b, c, d, e, f);
@@ -354,17 +619,17 @@ module Phaser {
                 //  f = translate y
 
                 scrollZone.texture.context.save();
-                scrollZone.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + scrollZone.skew.x, -(this._sin * this._fy) + scrollZone.skew.y, this._cos * this._fy, this._dx, this._dy);
+                scrollZone.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + scrollZone.transform.skew.x, -(this._sin * this._fy) + scrollZone.transform.skew.y, this._cos * this._fy, this._dx, this._dy);
 
-                this._dx = -scrollZone.origin.x;
-                this._dy = -scrollZone.origin.y;
+                this._dx = -scrollZone.transform.origin.x;
+                this._dy = -scrollZone.transform.origin.y;
             }
             else
             {
-                if (!scrollZone.origin.equals(0))
+                if (!scrollZone.transform.origin.equals(0))
                 {
-                    this._dx -= scrollZone.origin.x;
-                    this._dy -= scrollZone.origin.y;
+                    this._dx -= scrollZone.transform.origin.x;
+                    this._dy -= scrollZone.transform.origin.y;
                 }
             }
 

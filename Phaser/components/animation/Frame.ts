@@ -143,14 +143,21 @@ module Phaser {
          */
         public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number) {
 
+            //console.log('setTrim', trimmed, 'aw', actualWidth, 'ah', actualHeight, 'dx', destX, 'dy', destY, 'dw', destWidth, 'dh', destHeight);
+
             this.trimmed = trimmed;
 
-            this.sourceSizeW = actualWidth;
-            this.sourceSizeH = actualHeight;
-            this.spriteSourceSizeX = destX;
-            this.spriteSourceSizeY = destY;
-            this.spriteSourceSizeW = destWidth;
-            this.spriteSourceSizeH = destHeight;
+            if (trimmed)
+            {
+                this.width = actualWidth;
+                this.height = actualHeight;
+                this.sourceSizeW = actualWidth;
+                this.sourceSizeH = actualHeight;
+                this.spriteSourceSizeX = destX;
+                this.spriteSourceSizeY = destY;
+                this.spriteSourceSizeW = destWidth;
+                this.spriteSourceSizeH = destHeight;
+            }
 
         }
 

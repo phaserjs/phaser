@@ -14,7 +14,7 @@
         scroller.setSpeed(0, -1);
         emitter = game.add.emitter(game.stage.centerX, game.stage.centerY);
         emitter.makeParticles('jet', 200);
-        emitter.globalCompositeOperation = 'lighter';
+        emitter.texture.globalCompositeOperation = 'lighter';
         emitter.gravity = 300;
         emitter.setXSpeed(-50, 50);
         emitter.setYSpeed(-50, -100);

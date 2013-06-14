@@ -6,7 +6,7 @@
 * Signals that are dispatched by the Sprite and its various components
 */
 
-module Phaser.Components {
+module Phaser.Components.Sprite {
 
     export class Events {
 
@@ -14,10 +14,10 @@ module Phaser.Components {
          * The Events component is a collection of events fired by the parent Sprite and its other components.
          * @param parent The Sprite using this Input component
          */
-        constructor(parent: Sprite) {
+        constructor(parent: Phaser.Sprite) {
 
             this.game = parent.game;
-            this._sprite = parent;
+            this.sprite = parent;
 
             this.onAddedToGroup = new Phaser.Signal;
             this.onRemovedFromGroup = new Phaser.Signal;
@@ -39,7 +39,7 @@ module Phaser.Components {
         /**
          * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
          */
-        private _sprite: Sprite;
+        private sprite: Phaser.Sprite;
 
         /**
          * Dispatched by the Group this Sprite is added to.

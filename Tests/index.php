@@ -93,7 +93,6 @@ if (isset($_GET['m']))
     <a href="<?php echo $js?>" class="button play">View JavaScript</a>
     <a href="<?php echo $ts?>" class="button play">View TypeScript</a>
 
-
     <div id="game"></div>
 
     <p>You'll learn best from these Tests by viewing the source code.<br />

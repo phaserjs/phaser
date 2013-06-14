@@ -62,9 +62,6 @@ module Phaser.Physics {
         private _quadTree: QuadTree;
         private _quadTreeResult: bool;
 
-
-
-
         public bounds: Rectangle;
 
         public gravity: Vec2;
@@ -141,20 +138,22 @@ module Phaser.Physics {
 
             this._velocityDelta  = (this.computeVelocity(body.angularVelocity, body.gravity.x, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
             body.angularVelocity += this._velocityDelta;
-            body.angle += body.angularVelocity * this.game.time.elapsed;
+            body.sprite.transform.rotation += body.angularVelocity * this.game.time.elapsed;
             body.angularVelocity += this._velocityDelta;
 
             this._velocityDelta = (this.computeVelocity(body.velocity.x, body.gravity.x, body.acceleration.x, body.drag.x) - body.velocity.x) / 2;
             body.velocity.x += this._velocityDelta;
             this._delta = body.velocity.x * this.game.time.elapsed;
             body.velocity.x += this._velocityDelta;
-            body.position.x += this._delta;
+            //body.position.x += this._delta;
+            body.sprite.x += this._delta;
 
             this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
             body.velocity.y += this._velocityDelta;
             this._delta = body.velocity.y * this.game.time.elapsed;
             body.velocity.y += this._velocityDelta;
-            body.position.y += this._delta;
+            //body.position.y += this._delta;
+            body.sprite.y += this._delta;
 
         }
 
@@ -424,7 +423,7 @@ module Phaser.Physics {
                     body1.velocity.y = this._obj2Velocity - this._obj1Velocity * body1.bounce.y;
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     //if (body2.parent.active && body2.moves && (body1.deltaY > body2.deltaY))
-                    if (body2.parent.active && (body1.deltaY > body2.deltaY))
+                    if (body2.sprite.active && (body1.deltaY > body2.deltaY))
                     {
                         body1.position.x += body2.position.x - body2.oldPosition.x;
                     }
@@ -436,7 +435,7 @@ module Phaser.Physics {
                     body2.velocity.y = this._obj1Velocity - this._obj2Velocity * body2.bounce.y;
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     //if (object1.active && body1.moves && (body1.deltaY < body2.deltaY))
-                    if (body1.parent.active && (body1.deltaY < body2.deltaY))
+                    if (body1.sprite.active && (body1.deltaY < body2.deltaY))
                     {
                         body2.position.x += body1.position.x - body1.oldPosition.x;
                     }
@@ -747,6 +746,8 @@ module Phaser.Physics {
             this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
 
             this._quadTreeResult = this._quadTree.execute();
+
+            console.log('over', this._quadTreeResult);
 
             this._quadTree.destroy();
 

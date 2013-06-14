@@ -3,7 +3,7 @@
 /**
 * Phaser - Vec2
 *
-* A Circle object is an area defined by its position, as indicated by its center point (x,y) and diameter.
+* A Vector 2
 */
 
 module Phaser {
