@@ -3,7 +3,7 @@
 (function () {
     var game = new Phaser.Game(this, 'demo1', 320, 200, init, create, update);
     function init() {
-        game.load.image('balls', '../assets/sprites/balls.png');
+        game.load.image('balls', 'assets/sprites/balls.png');
         game.load.start();
     }
     var scroller;
