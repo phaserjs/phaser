@@ -47,6 +47,8 @@ TODO:
 * Move all of the renderDebugInfo methods to the DebugUtils class
 * Check bounds/edge points when sprite is only 1x1 sized :)
 
+* See what I can move out of Body and into a BodyUtils class.
+* See about optimising Advanced Physics a lot more, so it doesn't create lots of Vec2s everywhere.
 
 V1.0.0
 
@@ -114,7 +116,7 @@ V1.0.0
 * Added SpriteUtils.overlapsXY and overlapsPoint to check if a point is within a sprite, taking scale and rotation into account.
 * Added Cache.getImageKeys (and similar) to return an array of all the keys for all currently cached objects.
 * Added Group.bringToTop feature. Will sort the Group, move the given sprites z-index to the top and shift the rest down by one.
-
+* Brand new Advanced Physics system added and working! Woohoo :)
 
 
 

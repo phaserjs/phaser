@@ -2,7 +2,7 @@
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
-/// <reference path="ShapePoly.ts" />
+/// <reference path="Poly.ts" />
 
 /**
 * Phaser - Advanced Physics - Shapes - Box
@@ -12,7 +12,7 @@
 
 module Phaser.Physics.Advanced.Shapes {
 
-    export class Box extends Phaser.Physics.Advanced.ShapePoly {
+    export class Box extends Phaser.Physics.Advanced.Shapes.Poly {
 
         //  Give in pixels
         constructor(x, y, width, height) {

@@ -94,7 +94,7 @@ module Phaser.Physics.Advanced.Shapes {
         }
 
         public duplicate() {
-            return new ShapePoly(this.verts);
+            return new Phaser.Physics.Advanced.Shapes.Poly(this.verts);
         }
 
         public recenter(c) {

@@ -34,8 +34,8 @@ module Phaser.Physics.Advanced.Shapes {
             this.radius = Math.abs(this.radius);
         }
 
-        public duplicate() {
-            return new ShapeCircle(this.center.x, this.center.y, this.radius);
+        public duplicate(): Circle {
+            return new Circle(this.center.x, this.center.y, this.radius);
         }
 
         public recenter(c:Phaser.Vec2) {

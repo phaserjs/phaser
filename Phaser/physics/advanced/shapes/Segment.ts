@@ -18,7 +18,6 @@ module Phaser.Physics.Advanced.Shapes {
 
             super(Manager.SHAPE_TYPE_SEGMENT);
 
-            //  What types are A and B??!
             this.a = a.duplicate();
             this.b = b.duplicate();
             this.radius = radius;
@@ -53,7 +52,7 @@ module Phaser.Physics.Advanced.Shapes {
         }
 
         public duplicate() {
-            return new ShapeSegment(this.a, this.b, this.radius);
+            return new Phaser.Physics.Advanced.Shapes.Segment(this.a, this.b, this.radius);
         }
 
         public recenter(c) {

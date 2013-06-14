@@ -1,7 +1,7 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Phaser/physics/advanced/Manager.ts" />
-/// <reference path="../../Phaser/physics/advanced/ShapeBox.ts" />
-/// <reference path="../../Phaser/physics/advanced/ShapeCircle.ts" />
+/// <reference path="../../Phaser/physics/advanced/shapes/Box.ts" />
+/// <reference path="../../Phaser/physics/advanced/shapes/Circle.ts" />
 
 (function () {
 
@@ -22,7 +22,7 @@
     var circle: Phaser.Physics.Advanced.Body;
     var walls: Phaser.Physics.Advanced.Body;
 
-    var ground: Phaser.Physics.Advanced.ShapeBox;
+    var ground: Phaser.Physics.Advanced.Shapes.Box;
 
     function create() {
 
@@ -36,8 +36,7 @@
         walls.game = game;
 
         //  position is in relation to the containing body! don't forget this
-        ground = walls.addShape(new Phaser.Physics.Advanced.ShapeBox(400, 500, 500, 20));
-        ground.friction = 10;
+        ground = walls.addShape(new Phaser.Physics.Advanced.Shapes.Box(400, 500, 500, 20));
 
         //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 0.2, 20.48, 0.4));
         //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 15.16, 20.48, 0.4));
@@ -52,9 +51,9 @@
         circle = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_DYNAMIC, physics.pixelsToMeters(300), physics.pixelsToMeters(200));
         circle.game = game;
 
-        var shape = new Phaser.Physics.Advanced.ShapeCircle(0.4, 0, 0);
+        var shape = new Phaser.Physics.Advanced.Shapes.Circle(0.4, 0, 0);
         shape.elasticity = 0.8;
-        shape.friction = 10.0;
+        shape.friction = 1;
         shape.density = 1;
         circle.addShape(shape);
         circle.resetMassData();

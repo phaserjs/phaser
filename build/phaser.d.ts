@@ -9734,9 +9734,9 @@ module Phaser.Physics.Advanced {
         public r2: Vec2;
         public r1_local: Vec2;
         public r2_local: Vec2;
-        public bounce;
-        public emn;
-        public emt;
+        public bounce: number;
+        public emn: number;
+        public emt: number;
         public point;
         public normal: Vec2;
         public depth;
@@ -9761,18 +9761,18 @@ module Phaser.Physics.Advanced {
     }
 }
 /**
-* Phaser - Advanced Physics - Shape
+* Phaser - Advanced Physics - Shape - Circle
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
-module Phaser.Physics.Advanced {
-    class ShapeCircle extends Shape implements IShape {
+module Phaser.Physics.Advanced.Shapes {
+    class Circle extends Shape implements IShape {
         constructor(radius: number, x?: number, y?: number);
         public radius: number;
         public center: Vec2;
         public tc: Vec2;
         public finishVerts(): void;
-        public duplicate(): ShapeCircle;
+        public duplicate(): Circle;
         public recenter(c: Vec2): void;
         public transform(xf: Transform): void;
         public untransform(xf: Transform): void;
@@ -9786,6 +9786,65 @@ module Phaser.Physics.Advanced {
     }
 }
 /**
+* Phaser - Advanced Physics - Shapes - Convex Polygon
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced.Shapes {
+    class Poly extends Shape implements IShape {
+        constructor(verts?: Vec2[]);
+        public verts: Vec2[];
+        public planes;
+        public tverts;
+        public tplanes;
+        public convexity: bool;
+        public finishVerts(): void;
+        public duplicate(): Poly;
+        public recenter(c): void;
+        public transform(xf): void;
+        public untransform(xf): void;
+        public area(): number;
+        public centroid(): Vec2;
+        public inertia(mass: number): number;
+        public cacheData(xf: Transform): void;
+        public pointQuery(p: Vec2): bool;
+        public findVertexByPoint(p: Vec2, minDist: number): number;
+        public findEdgeByPoint(p: Vec2, minDist: number): number;
+        public distanceOnPlane(n, d): number;
+        public containPoint(p): bool;
+        public containPointPartial(p, n): bool;
+    }
+}
+/**
+* Phaser - Advanced Physics - Shapes - Segment
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced.Shapes {
+    class Segment extends Shape implements IShape {
+        constructor(a, b, radius: number);
+        public a: Vec2;
+        public b: Vec2;
+        public radius: number;
+        public normal: Vec2;
+        public ta: Vec2;
+        public tb: Vec2;
+        public tn: Vec2;
+        public finishVerts(): void;
+        public duplicate(): Segment;
+        public recenter(c): void;
+        public transform(xf: Transform): void;
+        public untransform(xf: Transform): void;
+        public area(): number;
+        public centroid(): Vec2;
+        public inertia(mass: number): number;
+        public cacheData(xf: Transform): void;
+        public pointQuery(p: Vec2): bool;
+        public findVertexByPoint(p: Vec2, minDist: number): number;
+        public distanceOnPlane(n, d): number;
+    }
+}
+/**
 * Phaser - Advanced Physics - Collision Handlers
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
@@ -9793,22 +9852,22 @@ module Phaser.Physics.Advanced {
 module Phaser.Physics.Advanced {
     class Collision {
         constructor();
-        public collide(a, b, contacts: Contact[]);
+        public collide(a, b, contacts: Contact[]): number;
         private _circle2Circle(c1, r1, c2, r2, contactArr);
-        public circle2Circle(circ1, circ2, contactArr): number;
-        public circle2Segment(circ: ShapeCircle, seg, contactArr: Contact[]): number;
-        public circle2Poly(circ: ShapeCircle, poly, contactArr: Contact[]): number;
-        public segmentPointDistanceSq(seg, p): number;
-        public segment2Segment(seg1, seg2, contactArr): number;
-        public findPointsBehindSeg(contactArr, seg, poly, dist, coef): void;
-        public segment2Poly(seg, poly, contactArr);
-        public findMSA(poly, planes, num): {
+        public circle2Circle(circ1: Shapes.Circle, circ2: Shapes.Circle, contactArr: Contact[]): number;
+        public circle2Segment(circ: Shapes.Circle, seg: Shapes.Segment, contactArr: Contact[]): number;
+        public circle2Poly(circ: Shapes.Circle, poly: Shapes.Poly, contactArr: Contact[]): number;
+        public segmentPointDistanceSq(seg: Shapes.Segment, p): number;
+        public segment2Segment(seg1: Shapes.Segment, seg2: Shapes.Segment, contactArr: Contact[]): number;
+        public findPointsBehindSeg(contactArr: Contact[], seg: Shapes.Segment, poly: Shapes.Poly, dist: number, coef: number): void;
+        public segment2Poly(seg: Shapes.Segment, poly: Shapes.Poly, contactArr: Contact[]): number;
+        public findMSA(poly: Shapes.Poly, planes, num: number): {
             dist: number;
             index: number;
         };
-        public findVertsFallback(contactArr, poly1, poly2, n, dist): number;
-        public findVerts(contactArr, poly1, poly2, n, dist): number;
-        public poly2Poly(poly1, poly2, contactArr): number;
+        public findVertsFallback(contactArr: Contact[], poly1: Shapes.Poly, poly2: Shapes.Poly, n, dist: number): number;
+        public findVerts(contactArr: Contact[], poly1: Shapes.Poly, poly2: Shapes.Poly, n, dist: number): number;
+        public poly2Poly(poly1: Shapes.Poly, poly2: Shapes.Poly, contactArr: Contact[]): number;
     }
 }
 /**
@@ -9972,192 +10031,25 @@ module Phaser.Physics.Advanced {
     }
 }
 /**
-* Phaser - Advanced Physics - ShapePoly (convex only)
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class ShapePoly extends Shape implements IShape {
-        constructor(verts?: Vec2[]);
-        public verts: Vec2[];
-        public planes;
-        public tverts;
-        public tplanes;
-        public convexity: bool;
-        public finishVerts(): void;
-        public duplicate(): ShapePoly;
-        public recenter(c): void;
-        public transform(xf): void;
-        public untransform(xf): void;
-        public area(): number;
-        public centroid(): Vec2;
-        public inertia(mass: number): number;
-        public cacheData(xf: Transform): void;
-        public pointQuery(p: Vec2): bool;
-        public findVertexByPoint(p: Vec2, minDist: number): number;
-        public findEdgeByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n, d): number;
-        public containPoint(p): bool;
-        public containPointPartial(p, n): bool;
-    }
-}
-/**
-* Phaser - Advanced Physics - ShapeBox
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class ShapeBox extends ShapePoly {
-        constructor(x, y, width, height);
-    }
-}
-/**
-* Phaser - Advanced Physics - Shape
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class ShapeSegment extends Shape implements IShape {
-        constructor(a, b, radius: number);
-        public a: Vec2;
-        public b: Vec2;
-        public radius: number;
-        public normal: Vec2;
-        public ta: Vec2;
-        public tb: Vec2;
-        public tn: Vec2;
-        public finishVerts(): void;
-        public duplicate(): ShapeSegment;
-        public recenter(c): void;
-        public transform(xf: Transform): void;
-        public untransform(xf: Transform): void;
-        public area(): number;
-        public centroid(): Vec2;
-        public inertia(mass: number): number;
-        public cacheData(xf: Transform): void;
-        public pointQuery(p: Vec2): bool;
-        public findVertexByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n, d): number;
-    }
-}
-/**
-* Phaser - Advanced Physics - ShapeTriangle
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class ShapeTriangle extends ShapePoly {
-        constructor(p1, p2, p3);
-    }
-}
-/**
 * Phaser - Advanced Physics - Shapes - Box
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 module Phaser.Physics.Advanced.Shapes {
-    class Box extends ShapePoly {
+    class Box extends Poly {
         constructor(x, y, width, height);
     }
 }
 /**
-* Phaser - Advanced Physics - Shape - Circle
+* Phaser - Advanced Physics - Shapes - Triangle
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 module Phaser.Physics.Advanced.Shapes {
-    class Circle extends Shape implements IShape {
-        constructor(radius: number, x?: number, y?: number);
-        public radius: number;
-        public center: Vec2;
-        public tc: Vec2;
-        public finishVerts(): void;
-        public duplicate(): ShapeCircle;
-        public recenter(c: Vec2): void;
-        public transform(xf: Transform): void;
-        public untransform(xf: Transform): void;
-        public area(): number;
-        public centroid(): Vec2;
-        public inertia(mass: number): number;
-        public cacheData(xf: Transform): void;
-        public pointQuery(p: Vec2): bool;
-        public findVertexByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n, d): void;
+    class Triangle extends Poly {
+        constructor(p1, p2, p3);
     }
 }
-/**
-* Phaser - Advanced Physics - Shapes - Convex Polygon
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Poly extends Shape implements IShape {
-        constructor(verts?: Vec2[]);
-        public verts: Vec2[];
-        public planes;
-        public tverts;
-        public tplanes;
-        public convexity: bool;
-        public finishVerts(): void;
-        public duplicate(): ShapePoly;
-        public recenter(c): void;
-        public transform(xf): void;
-        public untransform(xf): void;
-        public area(): number;
-        public centroid(): Vec2;
-        public inertia(mass: number): number;
-        public cacheData(xf: Transform): void;
-        public pointQuery(p: Vec2): bool;
-        public findVertexByPoint(p: Vec2, minDist: number): number;
-        public findEdgeByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n, d): number;
-        public containPoint(p): bool;
-        public containPointPartial(p, n): bool;
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Segment
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Segment extends Shape implements IShape {
-        constructor(a, b, radius: number);
-        public a: Vec2;
-        public b: Vec2;
-        public radius: number;
-        public normal: Vec2;
-        public ta: Vec2;
-        public tb: Vec2;
-        public tn: Vec2;
-        public finishVerts(): void;
-        public duplicate(): ShapeSegment;
-        public recenter(c): void;
-        public transform(xf: Transform): void;
-        public untransform(xf: Transform): void;
-        public area(): number;
-        public centroid(): Vec2;
-        public inertia(mass: number): number;
-        public cacheData(xf: Transform): void;
-        public pointQuery(p: Vec2): bool;
-        public findVertexByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n, d): number;
-    }
-}
-interface IPoint {
-    getDist(): number;
-}
-module Shapes {
-    class Point implements IPoint {
-        public x: number;
-        public y: number;
-        constructor(x: number, y: number);
-        public getDist(): number;
-        static origin: Point;
-    }
-}
-var p: IPoint;
-var dist: number;
 /**
 * Phaser - PixelUtils
 *

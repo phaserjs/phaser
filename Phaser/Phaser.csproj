@@ -210,33 +210,33 @@
     <Content Include="physics\advanced\Manager.js">
       <DependentUpon>Manager.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="physics\advanced\ShapeCircle.ts" />
-    <TypeScriptCompile Include="physics\advanced\ShapeBox.ts" />
-    <Content Include="physics\advanced\ShapeBox.js">
-      <DependentUpon>ShapeBox.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\advanced\ShapeCircle.js">
-      <DependentUpon>ShapeCircle.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\ShapeSegment.ts" />
-    <TypeScriptCompile Include="physics\advanced\ShapePoly.ts" />
-    <Content Include="physics\advanced\ShapePoly.js">
-      <DependentUpon>ShapePoly.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\advanced\ShapeSegment.js">
-      <DependentUpon>ShapeSegment.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\ShapeTriangle.ts" />
     <TypeScriptCompile Include="physics\advanced\shapes\Shape.ts" />
     <TypeScriptCompile Include="physics\advanced\shapes\IShape.ts" />
+    <TypeScriptCompile Include="physics\advanced\shapes\Box.ts" />
+    <Content Include="physics\advanced\shapes\Box.js">
+      <DependentUpon>Box.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\advanced\shapes\Circle.ts" />
+    <Content Include="physics\advanced\shapes\Circle.js">
+      <DependentUpon>Circle.ts</DependentUpon>
+    </Content>
     <Content Include="physics\advanced\shapes\IShape.js">
       <DependentUpon>IShape.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\advanced\shapes\Poly.ts" />
+    <Content Include="physics\advanced\shapes\Poly.js">
+      <DependentUpon>Poly.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\advanced\shapes\Segment.ts" />
+    <Content Include="physics\advanced\shapes\Segment.js">
+      <DependentUpon>Segment.ts</DependentUpon>
     </Content>
     <Content Include="physics\advanced\shapes\Shape.js">
       <DependentUpon>Shape.ts</DependentUpon>
     </Content>
-    <Content Include="physics\advanced\ShapeTriangle.js">
-      <DependentUpon>ShapeTriangle.ts</DependentUpon>
+    <TypeScriptCompile Include="physics\advanced\shapes\Triangle.ts" />
+    <Content Include="physics\advanced\shapes\Triangle.js">
+      <DependentUpon>Triangle.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="physics\advanced\Space.ts" />
     <Content Include="physics\advanced\Space.js">
