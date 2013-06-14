@@ -138,6 +138,20 @@ module Phaser {
         }
 
         /**
+        * Normalize this vector.
+        * 
+        * @return {Vec2} This for chaining.
+        */
+        public normalize(): Vec2 {
+
+	        var inv = (this.x != 0 || this.y != 0) ? 1 / Math.sqrt(this.x * this.x + this.y * this.y) : 0;
+	        this.x *= inv;
+	        this.y *= inv;
+	        return this;
+
+        }
+
+        /**
         * The dot product of two 2D vectors.
         * 
         * @param {Vec2} a Reference to a source Vec2 object.

@@ -1,0 +1,58 @@
+/// <reference path="../../math/Vec2.ts" />
+/// <reference path="../../geom/Point.ts" />
+/// <reference path="../../math/Vec2Utils.ts" />
+/// <reference path="Manager.ts" />
+/// <reference path="Body.ts" />
+/// <reference path="Shape.ts" />
+
+/**
+* Phaser - Advanced Physics - Contact
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+
+module Phaser.Physics.Advanced {
+
+    export class Contact {
+
+        constructor(p, n, d, hash) {
+
+            this.hash = hash;
+            this.point = p;
+            this.normal = n;
+            this.depth = d;
+            this.lambdaNormal = 0;
+            this.lambdaTangential = 0;
+
+        }
+
+        public hash;
+
+    	// Linear velocities at contact point
+        public r1: Phaser.Vec2;
+        public r2: Phaser.Vec2;
+        public r1_local;
+        public r2_local;
+    	// Bounce velocity
+        public bounce;
+        public emn;
+        public emt;
+
+    	// Contact point
+        public point;
+
+        // Contact normal (toward shape2)
+        public normal: Phaser.Vec2;
+
+    	// Penetration depth (d < 0)
+        public depth;
+
+    	// Accumulated normal constraint impulse
+        public lambdaNormal;
+
+    	// Accumulated tangential constraint impulse
+        public lambdaTangential;
+
+    }
+
+}

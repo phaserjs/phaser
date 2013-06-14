@@ -572,6 +572,12 @@ module Phaser {
         */
         public lengthSq(): number;
         /**
+        * Normalize this vector.
+        *
+        * @return {Vec2} This for chaining.
+        */
+        public normalize(): Vec2;
+        /**
         * The dot product of two 2D vectors.
         *
         * @param {Vec2} a Reference to a source Vec2 object.
@@ -2396,6 +2402,14 @@ module Phaser {
         */
         static multiplyAdd(a: Vec2, b: Vec2, s: number, out?: Vec2): Vec2;
         /**
+        * Return a negative vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the negative vector.
+        */
+        static negative(a: Vec2, out?: Vec2): Vec2;
+        /**
         * Return a perpendicular vector (90 degrees rotation)
         *
         * @param {Vec2} a Reference to a source Vec2 object.
@@ -2519,7 +2533,17 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static rotate(a: Vec2, b: Vec2, theta: number, out?: Vec2): Vec2;
+        static rotateAroundOrigin(a: Vec2, b: Vec2, theta: number, out?: Vec2): Vec2;
+        /**
+        * Rotate a 2D vector to the given angle (theta).
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Number} theta The angle of rotation in radians.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static rotate(a: Vec2, theta: number, out?: Vec2): Vec2;
         /**
         * Clone a 2D vector.
         *
@@ -9579,6 +9603,9 @@ module Phaser.Physics.Advanced {
         static JOINT_LIMIT_STATE_AT_LOWER: number;
         static JOINT_LIMIT_STATE_AT_UPPER: number;
         static JOINT_LIMIT_STATE_EQUAL_LIMITS: number;
+        static CONTACT_SOLVER_COLLISION_SLOP: number;
+        static CONTACT_SOLVER_BAUMGARTE: number;
+        static CONTACT_SOLVER_MAX_LINEAR_CORRECTION: number;
         static bodyCounter: number;
         static jointCounter: number;
         static shapeCounter: number;
@@ -9586,6 +9613,16 @@ module Phaser.Physics.Advanced {
         static metersToPixels(value: number): number;
         static p2m(value: number): number;
         static m2p(value: number): number;
+        static areaForCircle(radius_outer, radius_inner): number;
+        static inertiaForCircle(mass, center, radius_outer, radius_inner): number;
+        static areaForSegment(a, b, radius): number;
+        static centroidForSegment(a, b): Vec2;
+        static inertiaForSegment(mass, a, b): number;
+        static areaForPoly(verts): number;
+        static centroidForPoly(verts): Vec2;
+        static inertiaForPoly(mass, verts, offset): number;
+        static inertiaForBox(mass, w, h): number;
+        static createConvexHull(points): any[];
     }
 }
 /**
@@ -9728,13 +9765,172 @@ module Phaser.Physics.Advanced {
     }
 }
 /**
+* Phaser - Advanced Physics - Contact
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class Contact {
+        constructor(p, n, d, hash);
+        public hash;
+        public r1: Vec2;
+        public r2: Vec2;
+        public r1_local;
+        public r2_local;
+        public bounce;
+        public emn;
+        public emt;
+        public point;
+        public normal: Vec2;
+        public depth;
+        public lambdaNormal;
+        public lambdaTangential;
+    }
+}
+/**
 * Phaser - Advanced Physics - Shape
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 module Phaser.Physics.Advanced {
     class ShapeCircle extends Shape {
+        constructor(radius: number, x?: number, y?: number);
+        public radius: number;
+        public center: Vec2;
+        public tc: Vec2;
+        public finishVerts(): void;
+        public duplicate(): ShapeCircle;
+        public recenter(c): void;
+        public transform(xf): void;
+        public untransform(xf): void;
+        public area(): number;
+        public centroid(): void;
+        public inertia(mass): number;
+        public cacheData(xf): void;
+        public pointQuery(p): bool;
+        public findVertexByPoint(p, minDist): number;
+        public distanceOnPlane(n, d): void;
+    }
+}
+/**
+* Phaser - Advanced Physics - Collision Handlers
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class Collision {
         constructor();
+        public collide(a, b, contacts: Contact[]);
+        private _circle2Circle(c1, r1, c2, r2, contactArr);
+        public circle2Circle(circ1, circ2, contactArr): number;
+        public circle2Segment(circ: ShapeCircle, seg, contactArr: Contact[]): number;
+        public circle2Poly(circ: ShapeCircle, poly, contactArr: Contact[]): number;
+        public segmentPointDistanceSq(seg, p): number;
+        public segment2Segment(seg1, seg2, contactArr): number;
+        public findPointsBehindSeg(contactArr, seg, poly, dist, coef): void;
+        public segment2Poly(seg, poly, contactArr);
+        public findMSA(poly, planes, num): {
+            dist: number;
+            index: number;
+        };
+        public findVertsFallback(contactArr, poly1, poly2, n, dist): number;
+        public findVerts(contactArr, poly1, poly2, n, dist): number;
+        public poly2Poly(poly1, poly2, contactArr): number;
+    }
+}
+module Phaser.Physics.Advanced {
+    class ContactSolver {
+        constructor(shape1, shape2);
+        public shape1;
+        public shape2;
+        public contacts: Contact[];
+        public elasticity: number;
+        public friction: number;
+        public update(newContactArr: Contact[]): void;
+        public initSolver(dt_inv): void;
+        public warmStart(): void;
+        public solveVelocityConstraints(): void;
+        public solvePositionConstraints(): bool;
+        public clamp(v, min, max);
+    }
+}
+/**
+* Phaser - Advanced Physics - ShapePoly (convex only)
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class ShapePoly extends Shape {
+        constructor(verts?: Vec2[]);
+        public verts: Vec2[];
+        public planes;
+        public tverts;
+        public tplanes;
+        public convexity: bool;
+        public finishVerts(): void;
+        public duplicate(): ShapePoly;
+        public recenter(c): void;
+        public transform(xf): void;
+        public untransform(xf): void;
+        public area(): number;
+        public centroid(): Vec2;
+        public inertia(mass): number;
+        public cacheData(xf): void;
+        public pointQuery(p): bool;
+        public findVertexByPoint(p, minDist): number;
+        public findEdgeByPoint(p, minDist): number;
+        public distanceOnPlane(n, d): number;
+        public containPoint(p): bool;
+        public containPointPartial(p, n): bool;
+    }
+}
+/**
+* Phaser - Advanced Physics - ShapeBox
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class ShapeBox extends ShapePoly {
+        constructor(x, y, width, height);
+    }
+}
+/**
+* Phaser - Advanced Physics - Shape
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class ShapeSegment extends Shape {
+        constructor(a, b, radius: number);
+        public a: Vec2;
+        public b: Vec2;
+        public radius: number;
+        public normal: Vec2;
+        public ta: Vec2;
+        public tb: Vec2;
+        public tn: Vec2;
+        public finishVerts(): void;
+        public duplicate(): ShapeSegment;
+        public recenter(c): void;
+        public transform(xf): void;
+        public untransform(xf): void;
+        public area(): number;
+        public centroid(): Vec2;
+        public inertia(mass): number;
+        public cacheData(xf): void;
+        public pointQuery(p): bool;
+        public findVertexByPoint(p, minDist): number;
+        public distanceOnPlane(n, d): number;
+    }
+}
+/**
+* Phaser - Advanced Physics - ShapeTriangle
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class ShapeTriangle extends ShapePoly {
+        constructor(p1, p2, p3);
     }
 }
 /**

@@ -86,6 +86,17 @@ module Phaser {
         }
 
         /**
+        * Return a negative vector.
+        * 
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the negative vector.
+        */
+        static negative(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
+            return out.setTo(-a.x, -a.y);
+        }
+
+        /**
         * Return a perpendicular vector (90 degrees rotation)
         * 
         * @param {Vec2} a Reference to a source Vec2 object.
@@ -277,10 +288,28 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static rotate(a: Vec2, b: Vec2, theta: number, out?: Vec2 = new Vec2): Vec2 {
+        static rotateAroundOrigin(a: Vec2, b: Vec2, theta: number, out?: Vec2 = new Vec2): Vec2 {
             var x = a.x - b.x;
             var y = a.y - b.y;
             return out.setTo(x * Math.cos(theta) - y * Math.sin(theta) + b.x, x * Math.sin(theta) + y * Math.cos(theta) + b.y);
+        }
+
+        /**
+        * Rotate a 2D vector to the given angle (theta).
+        * 
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Number} theta The angle of rotation in radians.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        static rotate(a: Vec2, theta: number, out?: Vec2 = new Vec2): Vec2 {
+
+            var c = Math.cos(theta);
+            var s = Math.sin(theta);
+
+            return out.setTo(a.x * c - a.y * s, a.x * s + a.y * c);
+
         }
 
         /**

@@ -833,6 +833,17 @@ var Phaser;
         function () {
             return (this.x * this.x) + (this.y * this.y);
         };
+        Vec2.prototype.normalize = /**
+        * Normalize this vector.
+        *
+        * @return {Vec2} This for chaining.
+        */
+        function () {
+            var inv = (this.x != 0 || this.y != 0) ? 1 / Math.sqrt(this.x * this.x + this.y * this.y) : 0;
+            this.x *= inv;
+            this.y *= inv;
+            return this;
+        };
         Vec2.prototype.dot = /**
         * The dot product of two 2D vectors.
         *
@@ -3986,6 +3997,17 @@ var Phaser;
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
             return out.setTo(a.x + b.x * s, a.y + b.y * s);
         };
+        Vec2Utils.negative = /**
+        * Return a negative vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the negative vector.
+        */
+        function negative(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(-a.x, -a.y);
+        };
         Vec2Utils.perp = /**
         * Return a perpendicular vector (90 degrees rotation)
         *
@@ -4147,7 +4169,7 @@ var Phaser;
         function angleSq(a, b) {
             return a.subtract(b).angle(b.subtract(a));
         };
-        Vec2Utils.rotate = /**
+        Vec2Utils.rotateAroundOrigin = /**
         * Rotate a 2D vector around the origin to the given angle (theta).
         *
         * @param {Vec2} a Reference to a source Vec2 object.
@@ -4156,11 +4178,26 @@ var Phaser;
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        function rotate(a, b, theta, out) {
+        function rotateAroundOrigin(a, b, theta, out) {
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
             var x = a.x - b.x;
             var y = a.y - b.y;
             return out.setTo(x * Math.cos(theta) - y * Math.sin(theta) + b.x, x * Math.sin(theta) + y * Math.cos(theta) + b.y);
+        };
+        Vec2Utils.rotate = /**
+        * Rotate a 2D vector to the given angle (theta).
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Number} theta The angle of rotation in radians.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function rotate(a, theta, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var c = Math.cos(theta);
+            var s = Math.sin(theta);
+            return out.setTo(a.x * c - a.y * s, a.x * s + a.y * c);
         };
         Vec2Utils.clone = /**
         * Clone a 2D vector.
@@ -17849,28 +17886,6 @@ var Phaser;
     Phaser.Line = Line;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="Vec2Utils.ts" />
-/**
-* Phaser - 2D Transform
-*
-* A 2D Transform
-*/
-var Phaser;
-(function (Phaser) {
-    var Bounds = (function () {
-        /**
-        * Creates a new 2D AABB object.
-        * @class Bounds
-        * @constructor
-        * @return {Bounds} This object
-        **/
-        function Bounds(pos, angle) {
-        }
-        return Bounds;
-    })();
-    Phaser.Bounds = Bounds;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
 /// <reference path="../math/Vec2.ts" />
 /// <reference path="../math/Mat3.ts" />
 /**
@@ -19119,6 +19134,9 @@ var Phaser;
                 Manager.JOINT_LIMIT_STATE_AT_LOWER = 1;
                 Manager.JOINT_LIMIT_STATE_AT_UPPER = 2;
                 Manager.JOINT_LIMIT_STATE_EQUAL_LIMITS = 3;
+                Manager.CONTACT_SOLVER_COLLISION_SLOP = 0.0008;
+                Manager.CONTACT_SOLVER_BAUMGARTE = 0.28;
+                Manager.CONTACT_SOLVER_MAX_LINEAR_CORRECTION = 1;
                 Manager.bodyCounter = 0;
                 Manager.jointCounter = 0;
                 Manager.shapeCounter = 0;
@@ -19133,6 +19151,107 @@ var Phaser;
                 };
                 Manager.m2p = function m2p(value) {
                     return value * 50;
+                };
+                Manager.areaForCircle = function areaForCircle(radius_outer, radius_inner) {
+                    return Math.PI * (radius_outer * radius_outer - radius_inner * radius_inner);
+                };
+                Manager.inertiaForCircle = function inertiaForCircle(mass, center, radius_outer, radius_inner) {
+                    return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthsq());
+                };
+                Manager.areaForSegment = function areaForSegment(a, b, radius) {
+                    return radius * (Math.PI * radius + 2 * Phaser.Vec2Utils.distance(a, b));
+                };
+                Manager.centroidForSegment = function centroidForSegment(a, b) {
+                    return Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
+                };
+                Manager.inertiaForSegment = function inertiaForSegment(mass, a, b) {
+                    var distsq = Phaser.Vec2Utils.distanceSq(b, a);
+                    var offset = Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
+                    return mass * (distsq / 12 + offset.lengthSq());
+                };
+                Manager.areaForPoly = function areaForPoly(verts) {
+                    var area = 0;
+                    for(var i = 0; i < verts.length; i++) {
+                        area += Phaser.Vec2Utils.cross(verts[i], verts[(i + 1) % verts.length]);
+                    }
+                    return area / 2;
+                };
+                Manager.centroidForPoly = function centroidForPoly(verts) {
+                    var area = 0;
+                    var vsum = new Phaser.Vec2();
+                    for(var i = 0; i < verts.length; i++) {
+                        var v1 = verts[i];
+                        var v2 = verts[(i + 1) % verts.length];
+                        var cross = Phaser.Vec2Utils.cross(v1, v2);
+                        area += cross;
+                        //  SO many vecs created here - unroll these bad boys
+                        vsum.add(Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(v1, v2), cross));
+                    }
+                    return Phaser.Vec2Utils.scale(vsum, 1 / (3 * area));
+                };
+                Manager.inertiaForPoly = function inertiaForPoly(mass, verts, offset) {
+                    var sum1 = 0;
+                    var sum2 = 0;
+                    for(var i = 0; i < verts.length; i++) {
+                        var v1 = Phaser.Vec2Utils.add(verts[i], offset);
+                        var v2 = Phaser.Vec2Utils.add(verts[(i + 1) % verts.length], offset);
+                        var a = Phaser.Vec2Utils.cross(v2, v1);
+                        var b = Phaser.Vec2Utils.dot(v1, v1) + Phaser.Vec2Utils.dot(v1, v2) + Phaser.Vec2Utils.dot(v2, v2);
+                        sum1 += a * b;
+                        sum2 += a;
+                    }
+                    return (mass * sum1) / (6 * sum2);
+                };
+                Manager.inertiaForBox = function inertiaForBox(mass, w, h) {
+                    return mass * (w * w + h * h) / 12;
+                };
+                Manager.createConvexHull = // Create the convex hull using the Gift wrapping algorithm (http://en.wikipedia.org/wiki/Gift_wrapping_algorithm)
+                function createConvexHull(points) {
+                    // Find the right most point on the hull
+                    var i0 = 0;
+                    var x0 = points[0].x;
+                    for(var i = 1; i < points.length; i++) {
+                        var x = points[i].x;
+                        if(x > x0 || (x == x0 && points[i].y < points[i0].y)) {
+                            i0 = i;
+                            x0 = x;
+                        }
+                    }
+                    var n = points.length;
+                    var hull = [];
+                    var m = 0;
+                    var ih = i0;
+                    while(1) {
+                        hull[m] = ih;
+                        var ie = 0;
+                        for(var j = 1; j < n; j++) {
+                            if(ie == ih) {
+                                ie = j;
+                                continue;
+                            }
+                            var r = Phaser.Vec2Utils.subtract(points[ie], points[hull[m]]);
+                            var v = Phaser.Vec2Utils.subtract(points[j], points[hull[m]]);
+                            var c = Phaser.Vec2Utils.cross(r, v);
+                            if(c < 0) {
+                                ie = j;
+                            }
+                            // Collinearity check
+                            if(c == 0 && v.lengthSq() > r.lengthSq()) {
+                                ie = j;
+                            }
+                        }
+                        m++;
+                        ih = ie;
+                        if(ie == i0) {
+                            break;
+                        }
+                    }
+                    // Copy vertices
+                    var newPoints = [];
+                    for(var i = 0; i < m; ++i) {
+                        newPoints.push(points[hull[i]]);
+                    }
+                    return newPoints;
                 };
                 return Manager;
             })();
@@ -19676,6 +19795,38 @@ var Phaser;
         /// <reference path="Body.ts" />
         /// <reference path="Shape.ts" />
         /**
+        * Phaser - Advanced Physics - Contact
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Contact = (function () {
+                function Contact(p, n, d, hash) {
+                    this.hash = hash;
+                    this.point = p;
+                    this.normal = n;
+                    this.depth = d;
+                    this.lambdaNormal = 0;
+                    this.lambdaTangential = 0;
+                }
+                return Contact;
+            })();
+            Advanced.Contact = Contact;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="Shape.ts" />
+        /**
         * Phaser - Advanced Physics - Shape
         *
         * Based on the work Ju Hyung Lee started in JS PhyRus.
@@ -19683,12 +19834,1078 @@ var Phaser;
         (function (Advanced) {
             var ShapeCircle = (function (_super) {
                 __extends(ShapeCircle, _super);
-                function ShapeCircle() {
+                function ShapeCircle(radius, x, y) {
+                    if (typeof x === "undefined") { x = 0; }
+                    if (typeof y === "undefined") { y = 0; }
                                 _super.call(this, Advanced.Manager.SHAPE_TYPE_CIRCLE);
+                    this.center = new Phaser.Vec2(x, y);
+                    this.radius = radius;
+                    this.tc = new Phaser.Vec2();
+                    this.finishVerts();
                 }
+                ShapeCircle.prototype.finishVerts = function () {
+                    this.radius = Math.abs(this.radius);
+                };
+                ShapeCircle.prototype.duplicate = function () {
+                    return new ShapeCircle(this.center.x, this.center.y, this.radius);
+                };
+                ShapeCircle.prototype.recenter = function (c) {
+                    this.center.subtract(c);
+                };
+                ShapeCircle.prototype.transform = function (xf) {
+                    this.center = xf.transform(this.center);
+                };
+                ShapeCircle.prototype.untransform = function (xf) {
+                    this.center = xf.untransform(this.center);
+                };
+                ShapeCircle.prototype.area = function () {
+                    return Advanced.Manager.areaForCircle(this.radius, 0);
+                };
+                ShapeCircle.prototype.centroid = function () {
+                    //return this.center.duplicate();
+                                    };
+                ShapeCircle.prototype.inertia = function (mass) {
+                    return Advanced.Manager.inertiaForCircle(mass, this.center, this.radius, 0);
+                };
+                ShapeCircle.prototype.cacheData = function (xf) {
+                    this.tc = xf.transform(this.center);
+                    this.bounds.mins.set(this.tc.x - this.radius, this.tc.y - this.radius);
+                    this.bounds.maxs.set(this.tc.x + this.radius, this.tc.y + this.radius);
+                };
+                ShapeCircle.prototype.pointQuery = function (p) {
+                    //return vec2.distsq(this.tc, p) < (this.r * this.r);
+                    return Phaser.Vec2Utils.distanceSq(this.tc, p) < (this.radius * this.radius);
+                };
+                ShapeCircle.prototype.findVertexByPoint = function (p, minDist) {
+                    var dsq = minDist * minDist;
+                    if(Phaser.Vec2Utils.distanceSq(this.tc, p) < dsq) {
+                        return 0;
+                    }
+                    return -1;
+                };
+                ShapeCircle.prototype.distanceOnPlane = function (n, d) {
+                    Phaser.Vec2Utils.dot(n, this.tc) - this.radius - d;
+                };
                 return ShapeCircle;
             })(Phaser.Physics.Advanced.Shape);
             Advanced.ShapeCircle = ShapeCircle;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="Shape.ts" />
+        /// <reference path="Contact.ts" />
+        /// <reference path="ShapeCircle.ts" />
+        /**
+        * Phaser - Advanced Physics - Collision Handlers
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Collision = (function () {
+                function Collision() {
+                }
+                Collision.prototype.collide = function (a, b, contacts) {
+                    //  Circle (a is the circle)
+                    if(a.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
+                        if(b.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
+                            return this.circle2Circle(a, b, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_SEGMENT) {
+                            return this.circle2Segment(a, b, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_POLY) {
+                            return this.circle2Poly(a, b, contacts);
+                        }
+                    }
+                    //  Segment (a is the segment)
+                    if(a.type == Advanced.Manager.SHAPE_TYPE_SEGMENT) {
+                        if(b.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
+                            return this.circle2Segment(b, a, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_SEGMENT) {
+                            return this.segment2Segment(a, b, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_POLY) {
+                            return this.segment2Poly(a, b, contacts);
+                        }
+                    }
+                    //  Poly (a is the poly)
+                    if(a.type == Advanced.Manager.SHAPE_TYPE_POLY) {
+                        if(b.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
+                            return this.circle2Poly(b, a, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_SEGMENT) {
+                            return this.segment2Poly(b, a, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_POLY) {
+                            return this.poly2Poly(a, b, contacts);
+                        }
+                    }
+                };
+                Collision.prototype._circle2Circle = function (c1, r1, c2, r2, contactArr) {
+                    var rmax = r1 + r2;
+                    var t = new Phaser.Vec2();
+                    //var t = vec2.sub(c2, c1);
+                    Phaser.Vec2Utils.subtract(c2, c1, t);
+                    var distsq = t.lengthSq();
+                    if(distsq > rmax * rmax) {
+                        return 0;
+                    }
+                    var dist = Math.sqrt(distsq);
+                    var p = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(c1, t, 0.5 + (r1 - r2) * 0.5 / dist, p);
+                    //var p = vec2.mad(c1, t, 0.5 + (r1 - r2) * 0.5 / dist);
+                    var n = new Phaser.Vec2();
+                    //var n = (dist != 0) ? vec2.scale(t, 1 / dist) : vec2.zero;
+                    if(dist != 0) {
+                        Phaser.Vec2Utils.scale(t, 1 / dist, n);
+                    }
+                    var d = dist - rmax;
+                    contactArr.push(new Advanced.Contact(p, n, d, 0));
+                    return 1;
+                };
+                Collision.prototype.circle2Circle = function (circ1, circ2, contactArr) {
+                    return this._circle2Circle(circ1.tc, circ1.r, circ2.tc, circ2.r, contactArr);
+                };
+                Collision.prototype.circle2Segment = function (circ, seg, contactArr) {
+                    var rsum = circ.radius + seg.r;
+                    // Normal distance from segment
+                    var dn = Phaser.Vec2Utils.dot(circ.tc, seg.tn) - Phaser.Vec2Utils.dot(seg.ta, seg.tn);
+                    var dist = (dn < 0 ? dn * -1 : dn) - rsum;
+                    if(dist > 0) {
+                        return 0;
+                    }
+                    // Tangential distance along segment
+                    var dt = Phaser.Vec2Utils.cross(circ.tc, seg.tn);
+                    var dtMin = Phaser.Vec2Utils.cross(seg.ta, seg.tn);
+                    var dtMax = Phaser.Vec2Utils.cross(seg.tb, seg.tn);
+                    if(dt < dtMin) {
+                        if(dt < dtMin - rsum) {
+                            return 0;
+                        }
+                        return this._circle2Circle(circ.tc, circ.radius, seg.ta, seg.r, contactArr);
+                    } else if(dt > dtMax) {
+                        if(dt > dtMax + rsum) {
+                            return 0;
+                        }
+                        return this._circle2Circle(circ.tc, circ.radius, seg.tb, seg.r, contactArr);
+                    }
+                    var n = new Phaser.Vec2();
+                    if(dn > 0) {
+                        n.copyFrom(seg.tn);
+                    } else {
+                        Phaser.Vec2Utils.negative(seg.tn, n);
+                    }
+                    //var n = (dn > 0) ? seg.tn : vec2.neg(seg.tn);
+                    var c1 = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(circ.tc, n, -(circ.radius + dist * 0.5), c1);
+                    var c2 = new Phaser.Vec2();
+                    Phaser.Vec2Utils.negative(n, c2);
+                    contactArr.push(new Advanced.Contact(c1, c2, dist, 0));
+                    //contactArr.push(new Contact(vec2.mad(circ.tc, n, -(circ.r + dist * 0.5)), vec2.neg(n), dist, 0));
+                    return 1;
+                };
+                Collision.prototype.circle2Poly = function (circ, poly, contactArr) {
+                    var minDist = -999999;
+                    var minIdx = -1;
+                    for(var i = 0; i < poly.verts.length; i++) {
+                        var plane = poly.tplanes[i];
+                        var dist = Phaser.Vec2Utils.dot(circ.tc, plane.n) - plane.d - circ.radius;
+                        if(dist > 0) {
+                            return 0;
+                        } else if(dist > minDist) {
+                            minDist = dist;
+                            minIdx = i;
+                        }
+                    }
+                    var n = poly.tplanes[minIdx].n;
+                    var a = poly.tverts[minIdx];
+                    var b = poly.tverts[(minIdx + 1) % poly.verts.length];
+                    var dta = Phaser.Vec2Utils.cross(a, n);
+                    var dtb = Phaser.Vec2Utils.cross(b, n);
+                    var dt = Phaser.Vec2Utils.cross(circ.tc, n);
+                    if(dt > dta) {
+                        return this._circle2Circle(circ.tc, circ.radius, a, 0, contactArr);
+                    } else if(dt < dtb) {
+                        return this._circle2Circle(circ.tc, circ.radius, b, 0, contactArr);
+                    }
+                    var c1 = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(circ.tc, n, -(circ.radius + minDist * 0.5), c1);
+                    var c2 = new Phaser.Vec2();
+                    Phaser.Vec2Utils.negative(n, c2);
+                    contactArr.push(new Advanced.Contact(c1, c2, minDist, 0));
+                    //contactArr.push(new Contact(vec2.mad(circ.tc, n, -(circ.r + minDist * 0.5)), vec2.neg(n), minDist, 0));
+                    return 1;
+                };
+                Collision.prototype.segmentPointDistanceSq = function (seg, p) {
+                    var w = new Phaser.Vec2();
+                    var d = new Phaser.Vec2();
+                    Phaser.Vec2Utils.subtract(p, seg.ta, w);
+                    Phaser.Vec2Utils.subtract(seg.tb, seg.ta, d);
+                    //var w = vec2.sub(p, seg.ta);
+                    //var d = vec2.sub(seg.tb, seg.ta);
+                    var proj = w.dot(d);
+                    if(proj <= 0) {
+                        return w.dot(w);
+                    }
+                    var vsq = d.dot(d);
+                    if(proj >= vsq) {
+                        return w.dot(w) - 2 * proj + vsq;
+                    }
+                    return w.dot(w) - proj * proj / vsq;
+                };
+                Collision.prototype.segment2Segment = // FIXME and optimise me lots!!!
+                function (seg1, seg2, contactArr) {
+                    var d = [];
+                    d[0] = this.segmentPointDistanceSq(seg1, seg2.ta);
+                    d[1] = this.segmentPointDistanceSq(seg1, seg2.tb);
+                    d[2] = this.segmentPointDistanceSq(seg2, seg1.ta);
+                    d[3] = this.segmentPointDistanceSq(seg2, seg1.tb);
+                    var idx1 = d[0] < d[1] ? 0 : 1;
+                    var idx2 = d[2] < d[3] ? 2 : 3;
+                    var idxm = d[idx1] < d[idx2] ? idx1 : idx2;
+                    var s, t;
+                    var u = Phaser.Vec2Utils.subtract(seg1.tb, seg1.ta);
+                    var v = Phaser.Vec2Utils.subtract(seg2.tb, seg2.ta);
+                    switch(idxm) {
+                        case 0:
+                            s = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg2.ta, seg1.ta), u) / Phaser.Vec2Utils.dot(u, u);
+                            s = s < 0 ? 0 : (s > 1 ? 1 : s);
+                            t = 0;
+                            break;
+                        case 1:
+                            s = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg2.tb, seg1.ta), u) / Phaser.Vec2Utils.dot(u, u);
+                            s = s < 0 ? 0 : (s > 1 ? 1 : s);
+                            t = 1;
+                            break;
+                        case 2:
+                            s = 0;
+                            t = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg1.ta, seg2.ta), v) / Phaser.Vec2Utils.dot(v, v);
+                            t = t < 0 ? 0 : (t > 1 ? 1 : t);
+                            break;
+                        case 3:
+                            s = 1;
+                            t = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg1.tb, seg2.ta), v) / Phaser.Vec2Utils.dot(v, v);
+                            t = t < 0 ? 0 : (t > 1 ? 1 : t);
+                            break;
+                    }
+                    var minp1 = Phaser.Vec2Utils.multiplyAdd(seg1.ta, u, s);
+                    var minp2 = Phaser.Vec2Utils.multiplyAdd(seg2.ta, v, t);
+                    return this._circle2Circle(minp1, seg1.r, minp2, seg2.r, contactArr);
+                };
+                Collision.prototype.findPointsBehindSeg = // Identify vertexes that have penetrated the segment.
+                function (contactArr, seg, poly, dist, coef) {
+                    var dta = Phaser.Vec2Utils.cross(seg.tn, seg.ta);
+                    var dtb = Phaser.Vec2Utils.cross(seg.tn, seg.tb);
+                    var n = new Phaser.Vec2();
+                    Phaser.Vec2Utils.scale(seg.tn, coef, n);
+                    //var n = vec2.scale(seg.tn, coef);
+                    for(var i = 0; i < poly.verts.length; i++) {
+                        var v = poly.tverts[i];
+                        if(Phaser.Vec2Utils.dot(v, n) < Phaser.Vec2Utils.dot(seg.tn, seg.ta) * coef + seg.r) {
+                            var dt = Phaser.Vec2Utils.cross(seg.tn, v);
+                            if(dta >= dt && dt >= dtb) {
+                                contactArr.push(new Advanced.Contact(v, n, dist, (poly.id << 16) | i));
+                            }
+                        }
+                    }
+                };
+                Collision.prototype.segment2Poly = function (seg, poly, contactArr) {
+                    var seg_td = Phaser.Vec2Utils.dot(seg.tn, seg.ta);
+                    var seg_d1 = poly.distanceOnPlane(seg.tn, seg_td) - seg.r;
+                    if(seg_d1 > 0) {
+                        return 0;
+                    }
+                    var n = new Phaser.Vec2();
+                    Phaser.Vec2Utils.negative(seg.tn, n);
+                    var seg_d2 = poly.distanceOnPlane(n, -seg_td) - seg.r;
+                    //var seg_d2 = poly.distanceOnPlane(vec2.neg(seg.tn), -seg_td) - seg.r;
+                    if(seg_d2 > 0) {
+                        return 0;
+                    }
+                    var poly_d = -999999;
+                    var poly_i = -1;
+                    for(var i = 0; i < poly.verts.length; i++) {
+                        var plane = poly.tplanes[i];
+                        var dist = seg.distanceOnPlane(plane.n, plane.d);
+                        if(dist > 0) {
+                            return 0;
+                        }
+                        if(dist > poly_d) {
+                            poly_d = dist;
+                            poly_i = i;
+                        }
+                    }
+                    var poly_n = new Phaser.Vec2();
+                    Phaser.Vec2Utils.negative(poly.tplanes[poly_i].n, poly_n);
+                    //var poly_n = vec2.neg(poly.tplanes[poly_i].n);
+                    var va = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(seg.ta, poly_n, seg.r, va);
+                    //var va = vec2.mad(seg.ta, poly_n, seg.r);
+                    var vb = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(seg.tb, poly_n, seg.r, vb);
+                    //var vb = vec2.mad(seg.tb, poly_n, seg.r);
+                    if(poly.containPoint(va)) {
+                        contactArr.push(new Advanced.Contact(va, poly_n, poly_d, (seg.id << 16) | 0));
+                    }
+                    if(poly.containPoint(vb)) {
+                        contactArr.push(new Advanced.Contact(vb, poly_n, poly_d, (seg.id << 16) | 1));
+                    }
+                    // Floating point precision problems here.
+                    // This will have to do for now.
+                    poly_d -= 0.1;
+                    if(seg_d1 >= poly_d || seg_d2 >= poly_d) {
+                        if(seg_d1 > seg_d2) {
+                            this.findPointsBehindSeg(contactArr, seg, poly, seg_d1, 1);
+                        } else {
+                            this.findPointsBehindSeg(contactArr, seg, poly, seg_d2, -1);
+                        }
+                    }
+                    // If no other collision points are found, try colliding endpoints.
+                    if(contactArr.length == 0) {
+                        var poly_a = poly.tverts[poly_i];
+                        var poly_b = poly.tverts[(poly_i + 1) % poly.verts.length];
+                        if(this._circle2Circle(seg.ta, seg.r, poly_a, 0, contactArr)) {
+                            return 1;
+                        }
+                        if(this._circle2Circle(seg.tb, seg.r, poly_a, 0, contactArr)) {
+                            return 1;
+                        }
+                        if(this._circle2Circle(seg.ta, seg.r, poly_b, 0, contactArr)) {
+                            return 1;
+                        }
+                        if(this._circle2Circle(seg.tb, seg.r, poly_b, 0, contactArr)) {
+                            return 1;
+                        }
+                    }
+                    return contactArr.length;
+                };
+                Collision.prototype.findMSA = // Find the minimum separating axis for the given poly and plane list.
+                function (poly, planes, num) {
+                    var min_dist = -999999;
+                    var min_index = -1;
+                    for(var i = 0; i < num; i++) {
+                        var dist = poly.distanceOnPlane(planes[i].n, planes[i].d);
+                        if(dist > 0) {
+                            // no collision
+                            return {
+                                dist: 0,
+                                index: -1
+                            };
+                        } else if(dist > min_dist) {
+                            min_dist = dist;
+                            min_index = i;
+                        }
+                    }
+                    //  new object - see what we can do here
+                    return {
+                        dist: min_dist,
+                        index: min_index
+                    };
+                };
+                Collision.prototype.findVertsFallback = function (contactArr, poly1, poly2, n, dist) {
+                    var num = 0;
+                    for(var i = 0; i < poly1.verts.length; i++) {
+                        var v = poly1.tverts[i];
+                        if(poly2.containPointPartial(v, n)) {
+                            contactArr.push(new Advanced.Contact(v, n, dist, (poly1.id << 16) | i));
+                            num++;
+                        }
+                    }
+                    for(var i = 0; i < poly2.verts.length; i++) {
+                        var v = poly2.tverts[i];
+                        if(poly1.containPointPartial(v, n)) {
+                            contactArr.push(new Advanced.Contact(v, n, dist, (poly2.id << 16) | i));
+                            num++;
+                        }
+                    }
+                    return num;
+                };
+                Collision.prototype.findVerts = // Find the overlapped vertices.
+                function (contactArr, poly1, poly2, n, dist) {
+                    var num = 0;
+                    for(var i = 0; i < poly1.verts.length; i++) {
+                        var v = poly1.tverts[i];
+                        if(poly2.containPoint(v)) {
+                            contactArr.push(new Advanced.Contact(v, n, dist, (poly1.id << 16) | i));
+                            num++;
+                        }
+                    }
+                    for(var i = 0; i < poly2.verts.length; i++) {
+                        var v = poly2.tverts[i];
+                        if(poly1.containPoint(v)) {
+                            contactArr.push(new Advanced.Contact(v, n, dist, (poly2.id << 16) | i));
+                            num++;
+                        }
+                    }
+                    return num > 0 ? num : this.findVertsFallback(contactArr, poly1, poly2, n, dist);
+                };
+                Collision.prototype.poly2Poly = function (poly1, poly2, contactArr) {
+                    var msa1 = this.findMSA(poly2, poly1.tplanes, poly1.verts.length);
+                    if(msa1.index == -1) {
+                        return 0;
+                    }
+                    var msa2 = this.findMSA(poly1, poly2.tplanes, poly2.verts.length);
+                    if(msa2.index == -1) {
+                        return 0;
+                    }
+                    // Penetration normal direction shoud be from poly1 to poly2
+                    if(msa1.dist > msa2.dist) {
+                        return this.findVerts(contactArr, poly1, poly2, poly1.tplanes[msa1.index].n, msa1.dist);
+                    }
+                    return this.findVerts(contactArr, poly1, poly2, Phaser.Vec2Utils.negative(poly2.tplanes[msa2.index].n), msa2.dist);
+                };
+                return Collision;
+            })();
+            Advanced.Collision = Collision;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="Shape.ts" />
+        /// <reference path="Contact.ts" />
+        /**
+        * Phaser - Advanced Physics - ContactSolver
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        //-------------------------------------------------------------------------------------------------
+        // Contact Constraint
+        //
+        // Non-penetration constraint:
+        // C = dot(p2 - p1, n)
+        // Cdot = dot(v2 - v1, n)
+        // J = [ -n, -cross(r1, n), n, cross(r2, n) ]
+        //
+        // impulse = JT * lambda = [ -n * lambda, -cross(r1, n) * lambda, n * lambda, cross(r1, n) * lambda ]
+        //
+        // Friction constraint:
+        // C = dot(p2 - p1, t)
+        // Cdot = dot(v2 - v1, t)
+        // J = [ -t, -cross(r1, t), t, cross(r2, t) ]
+        //
+        // impulse = JT * lambda = [ -t * lambda, -cross(r1, t) * lambda, t * lambda, cross(r1, t) * lambda ]
+        //
+        // NOTE: lambda is an impulse in constraint space.
+        //-------------------------------------------------------------------------------------------------
+        (function (Advanced) {
+            var ContactSolver = (function () {
+                function ContactSolver(shape1, shape2) {
+                    this.shape1 = shape1;
+                    this.shape2 = shape2;
+                    this.contacts = [];
+                    this.elasticity = 1;
+                    this.friction = 1;
+                }
+                ContactSolver.prototype.update = function (newContactArr) {
+                    for(var i = 0; i < newContactArr.length; i++) {
+                        var newContact = newContactArr[i];
+                        var k = -1;
+                        for(var j = 0; j < this.contacts.length; j++) {
+                            if(newContact.hash == this.contacts[j].hash) {
+                                k = j;
+                                break;
+                            }
+                        }
+                        if(k > -1) {
+                            newContact.lambdaNormal = this.contacts[k].lambdaNormal;
+                            newContact.lambdaTangential = this.contacts[k].lambdaTangential;
+                        }
+                    }
+                    this.contacts = newContactArr;
+                };
+                ContactSolver.prototype.initSolver = function (dt_inv) {
+                    var body1 = this.shape1.body;
+                    var body2 = this.shape2.body;
+                    var sum_m_inv = body1.massInverted + body2.massInverted;
+                    for(var i = 0; i < this.contacts.length; i++) {
+                        var con = this.contacts[i];
+                        // Transformed r1, r2
+                        Phaser.Vec2Utils.subtract(con.point, body1.position, con.r1);
+                        Phaser.Vec2Utils.subtract(con.point, body2.position, con.r2);
+                        //con.r1 = vec2.sub(con.point, body1.p);
+                        //con.r2 = vec2.sub(con.point, body2.p);
+                        // Local r1, r2
+                        con.r1_local = body1.transform.unrotate(con.r1);
+                        con.r2_local = body2.transform.unrotate(con.r2);
+                        var n = con.normal;
+                        var t = Phaser.Vec2Utils.perp(con.normal);
+                        // invEMn = J * invM * JT
+                        // J = [ -n, -cross(r1, n), n, cross(r2, n) ]
+                        var sn1 = Phaser.Vec2Utils.cross(con.r1, n);
+                        var sn2 = Phaser.Vec2Utils.cross(con.r2, n);
+                        var emn_inv = sum_m_inv + body1.inertiaInverted * sn1 * sn1 + body2.inertiaInverted * sn2 * sn2;
+                        con.emn = emn_inv == 0 ? 0 : 1 / emn_inv;
+                        // invEMt = J * invM * JT
+                        // J = [ -t, -cross(r1, t), t, cross(r2, t) ]
+                        var st1 = Phaser.Vec2Utils.cross(con.r1, t);
+                        var st2 = Phaser.Vec2Utils.cross(con.r2, t);
+                        var emt_inv = sum_m_inv + body1.inertiaInverted * st1 * st1 + body2.inertiaInverted * st2 * st2;
+                        con.emt = emt_inv == 0 ? 0 : 1 / emt_inv;
+                        // Linear velocities at contact point
+                        // in 2D: cross(w, r) = perp(r) * w
+                        var v1 = new Phaser.Vec2();
+                        var v2 = new Phaser.Vec2();
+                        Phaser.Vec2Utils.multiplyAdd(body1.velocity, Phaser.Vec2Utils.perp(con.r1), body1.angularVelocity, v1);
+                        Phaser.Vec2Utils.multiplyAdd(body2.velocity, Phaser.Vec2Utils.perp(con.r2), body2.angularVelocity, v2);
+                        //var v1 = vec2.mad(body1.v, vec2.perp(con.r1), body1.w);
+                        //var v2 = vec2.mad(body2.v, vec2.perp(con.r2), body2.w);
+                        // relative velocity at contact point
+                        var rv = new Phaser.Vec2();
+                        Phaser.Vec2Utils.subtract(v2, v1, rv);
+                        //var rv = vec2.sub(v2, v1);
+                        // bounce velocity dot n
+                        con.bounce = Phaser.Vec2Utils.dot(rv, con.normal) * this.elasticity;
+                    }
+                };
+                ContactSolver.prototype.warmStart = function () {
+                    var body1 = this.shape1.body;
+                    var body2 = this.shape2.body;
+                    for(var i = 0; i < this.contacts.length; i++) {
+                        var con = this.contacts[i];
+                        var n = con.normal;
+                        var lambda_n = con.lambdaNormal;
+                        var lambda_t = con.lambdaTangential;
+                        // Apply accumulated impulses
+                        //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
+                        //var impulse = new vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
+                        var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
+                        body1.velocity.multiplyAddByScalar(impulse, -body1.massInverted);
+                        //body1.v.mad(impulse, -body1.m_inv);
+                        body1.angularVelocity -= Phaser.Vec2Utils.cross(con.r1, impulse) * body1.inertiaInverted;
+                        //body1.w -= vec2.cross(con.r1, impulse) * body1.i_inv;
+                        body2.velocity.multiplyAddByScalar(impulse, -body2.massInverted);
+                        //body2.v.mad(impulse, body2.m_inv);
+                        body2.angularVelocity -= Phaser.Vec2Utils.cross(con.r2, impulse) * body2.inertiaInverted;
+                        //body2.w += vec2.cross(con.r2, impulse) * body2.i_inv;
+                                            }
+                };
+                ContactSolver.prototype.solveVelocityConstraints = function () {
+                    var body1 = this.shape1.body;
+                    var body2 = this.shape2.body;
+                    var m1_inv = body1.massInverted;
+                    var i1_inv = body1.inertiaInverted;
+                    var m2_inv = body2.massInverted;
+                    var i2_inv = body2.inertiaInverted;
+                    for(var i = 0; i < this.contacts.length; i++) {
+                        var con = this.contacts[i];
+                        var n = con.normal;
+                        var t = Phaser.Vec2Utils.perp(n);
+                        var r1 = con.r1;
+                        var r2 = con.r2;
+                        // Linear velocities at contact point
+                        // in 2D: cross(w, r) = perp(r) * w
+                        var v1 = new Phaser.Vec2();
+                        var v2 = new Phaser.Vec2();
+                        Phaser.Vec2Utils.multiplyAdd(body1.velocity, Phaser.Vec2Utils.perp(r1), body1.angularVelocity, v1);
+                        //var v1 = vec2.mad(body1.v, vec2.perp(r1), body1.w);
+                        Phaser.Vec2Utils.multiplyAdd(body2.velocity, Phaser.Vec2Utils.perp(r2), body2.angularVelocity, v2);
+                        //var v2 = vec2.mad(body2.v, vec2.perp(r2), body2.w);
+                        // Relative velocity at contact point
+                        var rv = new Phaser.Vec2();
+                        Phaser.Vec2Utils.subtract(v2, v1, rv);
+                        //var rv = vec2.sub(v2, v1);
+                        // Compute normal constraint impulse + adding bounce as a velocity bias
+                        // lambda_n = -EMn * J * V
+                        var lambda_n = -con.emn * (Phaser.Vec2Utils.dot(n, rv) + con.bounce);
+                        // Accumulate and clamp
+                        var lambda_n_old = con.lambdaNormal;
+                        con.lambdaNormal = Math.max(lambda_n_old + lambda_n, 0);
+                        lambda_n = con.lambdaNormal - lambda_n_old;
+                        // Compute frictional constraint impulse
+                        // lambda_t = -EMt * J * V
+                        var lambda_t = -con.emt * Phaser.Vec2Utils.dot(t, rv);
+                        // Max friction constraint impulse (Coulomb's Law)
+                        var lambda_t_max = con.lambdaNormal * this.friction;
+                        // Accumulate and clamp
+                        var lambda_t_old = con.lambdaTangential;
+                        con.lambdaTangential = this.clamp(lambda_t_old + lambda_t, -lambda_t_max, lambda_t_max);
+                        lambda_t = con.lambdaTangential - lambda_t_old;
+                        // Apply the final impulses
+                        //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
+                        var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
+                        body1.velocity.multiplyAddByScalar(impulse, -m1_inv);
+                        //body1.v.mad(impulse, -m1_inv);
+                        body1.angularVelocity -= Phaser.Vec2Utils.cross(r1, impulse) * i1_inv;
+                        //body1.w -= vec2.cross(r1, impulse) * i1_inv;
+                        body2.velocity.multiplyAddByScalar(impulse, m2_inv);
+                        //body2.v.mad(impulse, m2_inv);
+                        body1.angularVelocity += Phaser.Vec2Utils.cross(r2, impulse) * i2_inv;
+                        //body2.w += vec2.cross(r2, impulse) * i2_inv;
+                                            }
+                };
+                ContactSolver.prototype.solvePositionConstraints = function () {
+                    var body1 = this.shape1.body;
+                    var body2 = this.shape2.body;
+                    var m1_inv = body1.massInverted;
+                    var i1_inv = body1.inertiaInverted;
+                    var m2_inv = body2.massInverted;
+                    var i2_inv = body2.inertiaInverted;
+                    var sum_m_inv = m1_inv + m2_inv;
+                    var max_penetration = 0;
+                    for(var i = 0; i < this.contacts.length; i++) {
+                        var con = this.contacts[i];
+                        var n = con.normal;
+                        var r1 = new Phaser.Vec2();
+                        var r2 = new Phaser.Vec2();
+                        // Transformed r1, r2
+                        Phaser.Vec2Utils.rotate(con.r1_local, body1.angle, r1);
+                        //var r1 = vec2.rotate(con.r1_local, body1.a);
+                        Phaser.Vec2Utils.rotate(con.r2_local, body2.angle, r2);
+                        //var r2 = vec2.rotate(con.r2_local, body2.a);
+                        // Contact points (corrected)
+                        var p1 = new Phaser.Vec2();
+                        var p2 = new Phaser.Vec2();
+                        Phaser.Vec2Utils.add(body1.position, r1, p1);
+                        //var p1 = vec2.add(body1.p, r1);
+                        Phaser.Vec2Utils.add(body2.position, r2, p2);
+                        //var p2 = vec2.add(body2.p, r2);
+                        // Corrected delta vector
+                        var dp = new Phaser.Vec2();
+                        Phaser.Vec2Utils.subtract(p2, p1);
+                        //var dp = vec2.sub(p2, p1);
+                        // Position constraint
+                        var c = Phaser.Vec2Utils.dot(dp, n) + con.depth;
+                        var correction = this.clamp(Advanced.Manager.CONTACT_SOLVER_BAUMGARTE * (c + Advanced.Manager.CONTACT_SOLVER_COLLISION_SLOP), -Advanced.Manager.CONTACT_SOLVER_MAX_LINEAR_CORRECTION, 0);
+                        if(correction == 0) {
+                            continue;
+                        }
+                        // We don't need max_penetration less than or equal slop
+                        max_penetration = Math.max(max_penetration, -c);
+                        // Compute lambda for position constraint
+                        // Solve (J * invM * JT) * lambda = -C / dt
+                        var sn1 = Phaser.Vec2Utils.cross(r1, n);
+                        var sn2 = Phaser.Vec2Utils.cross(r2, n);
+                        var em_inv = sum_m_inv + body1.inertiaInverted * sn1 * sn1 + body2.inertiaInverted * sn2 * sn2;
+                        var lambda_dt = em_inv == 0 ? 0 : -correction / em_inv;
+                        // Apply correction impulses
+                        var impulse_dt = new Phaser.Vec2();
+                        Phaser.Vec2Utils.scale(n, lambda_dt, impulse_dt);
+                        //var impulse_dt = vec2.scale(n, lambda_dt);
+                        body1.position.multiplyAddByScalar(impulse_dt, -m1_inv);
+                        //body1.p.mad(impulse_dt, -m1_inv);
+                        body1.angle -= sn1 * lambda_dt * i1_inv;
+                        body2.position.multiplyAddByScalar(impulse_dt, m2_inv);
+                        //body2.p.mad(impulse_dt, m2_inv);
+                        body2.angle += sn2 * lambda_dt * i2_inv;
+                    }
+                    return max_penetration <= Advanced.Manager.CONTACT_SOLVER_COLLISION_SLOP * 3;
+                };
+                ContactSolver.prototype.clamp = function (v, min, max) {
+                    return v < min ? min : (v > max ? max : v);
+                };
+                return ContactSolver;
+            })();
+            Advanced.ContactSolver = ContactSolver;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="Shape.ts" />
+        /**
+        * Phaser - Advanced Physics - ShapePoly (convex only)
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var ShapePoly = (function (_super) {
+                __extends(ShapePoly, _super);
+                function ShapePoly(verts) {
+                                _super.call(this, Advanced.Manager.SHAPE_TYPE_POLY);
+                    this.verts = [];
+                    this.planes = [];
+                    this.tverts = [];
+                    this.tplanes = [];
+                    if(verts) {
+                        for(var i = 0; i < verts.length; i++) {
+                            Phaser.Vec2Utils.clone(verts[i], this.verts[i]);
+                            this.tverts[i] = this.verts[i];
+                            this.tplanes[i] = {
+                            };
+                            this.tplanes[i].n = new Phaser.Vec2();
+                            this.tplanes[i].d = 0;
+                        }
+                    }
+                    this.finishVerts();
+                }
+                ShapePoly.prototype.finishVerts = function () {
+                    if(this.verts.length < 2) {
+                        this.convexity = false;
+                        this.planes = [];
+                        return;
+                    }
+                    this.convexity = true;
+                    this.tverts = [];
+                    this.tplanes = [];
+                    // Must be counter-clockwise verts
+                    for(var i = 0; i < this.verts.length; i++) {
+                        var a = this.verts[i];
+                        var b = this.verts[(i + 1) % this.verts.length];
+                        var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
+                        this.planes[i] = {
+                        };
+                        this.planes[i].n = n;
+                        this.planes[i].d = Phaser.Vec2Utils.dot(n, a);
+                        this.tverts[i] = this.verts[i];
+                        this.tplanes[i] = {
+                        };
+                        this.tplanes[i].n = new Phaser.Vec2();
+                        this.tplanes[i].d = 0;
+                    }
+                    for(var i = 0; i < this.verts.length; i++) {
+                        var b = this.verts[(i + 2) % this.verts.length];
+                        var n = this.planes[i].n;
+                        var d = this.planes[i].d;
+                        if(Phaser.Vec2Utils.dot(n, b) - d > 0) {
+                            this.convexity = false;
+                        }
+                    }
+                };
+                ShapePoly.prototype.duplicate = function () {
+                    return new ShapePoly(this.verts);
+                };
+                ShapePoly.prototype.recenter = function (c) {
+                    for(var i = 0; i < this.verts.length; i++) {
+                        this.verts[i].subtract(c);
+                    }
+                };
+                ShapePoly.prototype.transform = function (xf) {
+                    for(var i = 0; i < this.verts.length; i++) {
+                        this.verts[i] = xf.transform(this.verts[i]);
+                    }
+                };
+                ShapePoly.prototype.untransform = function (xf) {
+                    for(var i = 0; i < this.verts.length; i++) {
+                        this.verts[i] = xf.untransform(this.verts[i]);
+                    }
+                };
+                ShapePoly.prototype.area = function () {
+                    return Advanced.Manager.areaForPoly(this.verts);
+                };
+                ShapePoly.prototype.centroid = function () {
+                    return Advanced.Manager.centroidForPoly(this.verts);
+                };
+                ShapePoly.prototype.inertia = function (mass) {
+                    return Advanced.Manager.inertiaForPoly(mass, this.verts, new Phaser.Vec2());
+                };
+                ShapePoly.prototype.cacheData = function (xf) {
+                    this.bounds.clear();
+                    var numVerts = this.verts.length;
+                    if(numVerts == 0) {
+                        return;
+                    }
+                    for(var i = 0; i < numVerts; i++) {
+                        this.tverts[i] = xf.transform(this.verts[i]);
+                    }
+                    if(numVerts < 2) {
+                        this.bounds.addPoint(this.tverts[0]);
+                        return;
+                    }
+                    for(var i = 0; i < numVerts; i++) {
+                        var a = this.tverts[i];
+                        var b = this.tverts[(i + 1) % numVerts];
+                        var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
+                        this.tplanes[i].n = n;
+                        this.tplanes[i].d = Phaser.Vec2Utils.dot(n, a);
+                        this.bounds.addPoint(a);
+                    }
+                };
+                ShapePoly.prototype.pointQuery = function (p) {
+                    if(!this.bounds.containPoint(p)) {
+                        return false;
+                    }
+                    return this.containPoint(p);
+                };
+                ShapePoly.prototype.findVertexByPoint = function (p, minDist) {
+                    var dsq = minDist * minDist;
+                    for(var i = 0; i < this.tverts.length; i++) {
+                        if(Phaser.Vec2Utils.distanceSq(this.tverts[i], p) < dsq) {
+                            return i;
+                        }
+                    }
+                    return -1;
+                };
+                ShapePoly.prototype.findEdgeByPoint = function (p, minDist) {
+                    var dsq = minDist * minDist;
+                    var numVerts = this.tverts.length;
+                    for(var i = 0; i < this.tverts.length; i++) {
+                        var v1 = this.tverts[i];
+                        var v2 = this.tverts[(i + 1) % numVerts];
+                        var n = this.tplanes[i].n;
+                        var dtv1 = Phaser.Vec2Utils.cross(v1, n);
+                        var dtv2 = Phaser.Vec2Utils.cross(v2, n);
+                        var dt = Phaser.Vec2Utils.cross(p, n);
+                        if(dt > dtv1) {
+                            if(Phaser.Vec2Utils.distanceSq(v1, p) < dsq) {
+                                return i;
+                            }
+                        } else if(dt < dtv2) {
+                            if(Phaser.Vec2Utils.distanceSq(v2, p) < dsq) {
+                                return i;
+                            }
+                        } else {
+                            var dist = Phaser.Vec2Utils.dot(n, p) - Phaser.Vec2Utils.dot(n, v1);
+                            if(dist * dist < dsq) {
+                                return i;
+                            }
+                        }
+                    }
+                    return -1;
+                };
+                ShapePoly.prototype.distanceOnPlane = function (n, d) {
+                    var min = 999999;
+                    for(var i = 0; i < this.verts.length; i++) {
+                        min = Math.min(min, Phaser.Vec2Utils.dot(n, this.tverts[i]));
+                    }
+                    return min - d;
+                };
+                ShapePoly.prototype.containPoint = function (p) {
+                    for(var i = 0; i < this.verts.length; i++) {
+                        var plane = this.tplanes[i];
+                        if(Phaser.Vec2Utils.dot(plane.n, p) - plane.d > 0) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+                ShapePoly.prototype.containPointPartial = function (p, n) {
+                    for(var i = 0; i < this.verts.length; i++) {
+                        var plane = this.tplanes[i];
+                        if(Phaser.Vec2Utils.dot(plane.n, n) < 0.0001) {
+                            continue;
+                        }
+                        if(Phaser.Vec2Utils.dot(plane.n, p) - plane.d > 0) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+                return ShapePoly;
+            })(Phaser.Physics.Advanced.Shape);
+            Advanced.ShapePoly = ShapePoly;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="Shape.ts" />
+        /// <reference path="ShapePoly.ts" />
+        /**
+        * Phaser - Advanced Physics - ShapeBox
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var ShapeBox = (function (_super) {
+                __extends(ShapeBox, _super);
+                function ShapeBox(x, y, width, height) {
+                    var hw = width * 0.5;
+                    var hh = height * 0.5;
+                                _super.call(this, [
+                new Phaser.Vec2(-hw + x, +hh + y), 
+                new Phaser.Vec2(-hw + x, -hh + y), 
+                new Phaser.Vec2(+hw + x, -hh + y), 
+                new Phaser.Vec2(+hw + x, +hh + y)
+            ]);
+                }
+                return ShapeBox;
+            })(Phaser.Physics.Advanced.ShapePoly);
+            Advanced.ShapeBox = ShapeBox;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="Shape.ts" />
+        /**
+        * Phaser - Advanced Physics - Shape
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var ShapeSegment = (function (_super) {
+                __extends(ShapeSegment, _super);
+                function ShapeSegment(a, b, radius) {
+                                _super.call(this, Advanced.Manager.SHAPE_TYPE_SEGMENT);
+                    //  What types are A and B??!
+                    this.a = a.duplicate();
+                    this.b = b.duplicate();
+                    this.radius = radius;
+                    this.normal = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(b, a));
+                    this.normal.normalize();
+                    this.ta = new Phaser.Vec2();
+                    this.tb = new Phaser.Vec2();
+                    this.tn = new Phaser.Vec2();
+                    this.finishVerts();
+                }
+                ShapeSegment.prototype.finishVerts = function () {
+                    this.normal = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(this.b, this.a));
+                    this.normal.normalize();
+                    this.radius = Math.abs(this.radius);
+                };
+                ShapeSegment.prototype.duplicate = function () {
+                    return new ShapeSegment(this.a, this.b, this.radius);
+                };
+                ShapeSegment.prototype.recenter = function (c) {
+                    this.a.subtract(c);
+                    this.b.subtract(c);
+                };
+                ShapeSegment.prototype.transform = function (xf) {
+                    this.a = xf.transform(this.a);
+                    this.b = xf.transform(this.b);
+                };
+                ShapeSegment.prototype.untransform = function (xf) {
+                    this.a = xf.untransform(this.a);
+                    this.b = xf.untransform(this.b);
+                };
+                ShapeSegment.prototype.area = function () {
+                    return Advanced.Manager.areaForSegment(this.a, this.b, this.radius);
+                };
+                ShapeSegment.prototype.centroid = function () {
+                    return Advanced.Manager.centroidForSegment(this.a, this.b);
+                };
+                ShapeSegment.prototype.inertia = function (mass) {
+                    return Advanced.Manager.inertiaForSegment(mass, this.a, this.b);
+                };
+                ShapeSegment.prototype.cacheData = function (xf) {
+                    this.ta = xf.transform(this.a);
+                    this.tb = xf.transform(this.b);
+                    this.tn = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(this.tb, this.ta)).normalize();
+                    var l;
+                    var r;
+                    var t;
+                    var b;
+                    if(this.ta.x < this.tb.x) {
+                        l = this.ta.x;
+                        r = this.tb.x;
+                    } else {
+                        l = this.tb.x;
+                        r = this.ta.x;
+                    }
+                    if(this.ta.y < this.tb.y) {
+                        b = this.ta.y;
+                        t = this.tb.y;
+                    } else {
+                        b = this.tb.y;
+                        t = this.ta.y;
+                    }
+                    this.bounds.mins.set(l - this.radius, b - this.radius);
+                    this.bounds.maxs.set(r + this.radius, t + this.radius);
+                };
+                ShapeSegment.prototype.pointQuery = function (p) {
+                    if(!this.bounds.containPoint(p)) {
+                        return false;
+                    }
+                    var dn = Phaser.Vec2Utils.dot(this.tn, p) - Phaser.Vec2Utils.dot(this.ta, this.tn);
+                    var dist = Math.abs(dn);
+                    if(dist > this.radius) {
+                        return false;
+                    }
+                    var dt = Phaser.Vec2Utils.cross(p, this.tn);
+                    var dta = Phaser.Vec2Utils.cross(this.ta, this.tn);
+                    var dtb = Phaser.Vec2Utils.cross(this.tb, this.tn);
+                    if(dt <= dta) {
+                        if(dt < dta - this.radius) {
+                            return false;
+                        }
+                        return Phaser.Vec2Utils.distanceSq(this.ta, p) < (this.radius * this.radius);
+                    } else if(dt > dtb) {
+                        if(dt > dtb + this.radius) {
+                            return false;
+                        }
+                        return Phaser.Vec2Utils.distanceSq(this.tb, p) < (this.radius * this.radius);
+                    }
+                    return true;
+                };
+                ShapeSegment.prototype.findVertexByPoint = function (p, minDist) {
+                    var dsq = minDist * minDist;
+                    if(Phaser.Vec2Utils.distanceSq(this.ta, p) < dsq) {
+                        return 0;
+                    }
+                    if(Phaser.Vec2Utils.distanceSq(this.tb, p) < dsq) {
+                        return 1;
+                    }
+                    return -1;
+                };
+                ShapeSegment.prototype.distanceOnPlane = function (n, d) {
+                    var a = Phaser.Vec2Utils.dot(n, this.ta) - this.radius;
+                    var b = Phaser.Vec2Utils.dot(n, this.tb) - this.radius;
+                    return Math.min(a, b) - d;
+                };
+                return ShapeSegment;
+            })(Phaser.Physics.Advanced.Shape);
+            Advanced.ShapeSegment = ShapeSegment;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="Shape.ts" />
+        /// <reference path="ShapePoly.ts" />
+        /**
+        * Phaser - Advanced Physics - ShapeTriangle
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var ShapeTriangle = (function (_super) {
+                __extends(ShapeTriangle, _super);
+                function ShapeTriangle(p1, p2, p3) {
+                                _super.call(this, [
+                new Phaser.Vec2(p1.x, p1.y), 
+                new Phaser.Vec2(p2.x, p2.y), 
+                new Phaser.Vec2(p3.x, p3.y)
+            ]);
+                }
+                return ShapeTriangle;
+            })(Phaser.Physics.Advanced.ShapePoly);
+            Advanced.ShapeTriangle = ShapeTriangle;            
         })(Physics.Advanced || (Physics.Advanced = {}));
         var Advanced = Physics.Advanced;
     })(Phaser.Physics || (Phaser.Physics = {}));

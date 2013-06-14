@@ -184,6 +184,18 @@
     <Content Include="physics\advanced\Bounds.js">
       <DependentUpon>Bounds.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="physics\advanced\Contact.ts" />
+    <TypeScriptCompile Include="physics\advanced\Collision.ts" />
+    <Content Include="physics\advanced\Collision.js">
+      <DependentUpon>Collision.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\advanced\Contact.js">
+      <DependentUpon>Contact.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\advanced\ContactSolver.ts" />
+    <Content Include="physics\advanced\ContactSolver.js">
+      <DependentUpon>ContactSolver.ts</DependentUpon>
+    </Content>
     <Content Include="physics\advanced\Joint.js">
       <DependentUpon>Joint.ts</DependentUpon>
     </Content>
@@ -196,8 +208,24 @@
       <DependentUpon>Shape.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="physics\advanced\ShapeCircle.ts" />
+    <TypeScriptCompile Include="physics\advanced\ShapeBox.ts" />
+    <Content Include="physics\advanced\ShapeBox.js">
+      <DependentUpon>ShapeBox.ts</DependentUpon>
+    </Content>
     <Content Include="physics\advanced\ShapeCircle.js">
       <DependentUpon>ShapeCircle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\advanced\ShapeSegment.ts" />
+    <TypeScriptCompile Include="physics\advanced\ShapePoly.ts" />
+    <Content Include="physics\advanced\ShapePoly.js">
+      <DependentUpon>ShapePoly.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\advanced\ShapeSegment.js">
+      <DependentUpon>ShapeSegment.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\advanced\ShapeTriangle.ts" />
+    <Content Include="physics\advanced\ShapeTriangle.js">
+      <DependentUpon>ShapeTriangle.ts</DependentUpon>
     </Content>
     <Content Include="physics\ArcadePhysics.js">
       <DependentUpon>ArcadePhysics.ts</DependentUpon>
