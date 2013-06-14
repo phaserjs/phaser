@@ -57,7 +57,6 @@
     <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="physics\advanced\joints\" />
     <Folder Include="physics\arcade\" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +199,10 @@
       <DependentUpon>Joint.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="physics\advanced\Manager.ts" />
+    <TypeScriptCompile Include="physics\advanced\joints\IJoint.ts" />
+    <Content Include="physics\advanced\joints\IJoint.js">
+      <DependentUpon>IJoint.ts</DependentUpon>
+    </Content>
     <Content Include="physics\advanced\Manager.js">
       <DependentUpon>Manager.ts</DependentUpon>
     </Content>
@@ -226,6 +229,10 @@
     <TypeScriptCompile Include="physics\advanced\ShapeTriangle.ts" />
     <Content Include="physics\advanced\ShapeTriangle.js">
       <DependentUpon>ShapeTriangle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\advanced\Space.ts" />
+    <Content Include="physics\advanced\Space.js">
+      <DependentUpon>Space.ts</DependentUpon>
     </Content>
     <Content Include="physics\ArcadePhysics.js">
       <DependentUpon>ArcadePhysics.ts</DependentUpon>

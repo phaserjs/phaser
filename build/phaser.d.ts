@@ -9583,6 +9583,7 @@ module Phaser.Physics.Advanced {
         * Local reference to Game.
         */
         public game: Game;
+        static collision: Collision;
         static SHAPE_TYPE_CIRCLE: number;
         static SHAPE_TYPE_SEGMENT: number;
         static SHAPE_TYPE_POLY: number;
@@ -9658,97 +9659,6 @@ module Phaser.Physics.Advanced {
     }
 }
 /**
-* Phaser - Advanced Physics - Body
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class Body {
-        constructor(sprite: Sprite, type: number);
-        /**
-        * Reference to Phaser.Game
-        */
-        public game: Game;
-        /**
-        * Reference to the parent Sprite
-        */
-        public sprite: Sprite;
-        /**
-        * The Body ID
-        */
-        public id: number;
-        /**
-        * The Body name
-        */
-        public name: string;
-        /**
-        * The type of Body (disabled, dynamic, static or kinematic)
-        * Disabled = skips all physics operations / tests (default)
-        * Dynamic = gives and receives impacts
-        * Static = gives but doesn't receive impacts, cannot be moved by physics
-        * Kinematic = gives impacts, but never receives, can be moved by physics
-        * @type {number}
-        */
-        public type: number;
-        public angle: number;
-        public transform: Transform;
-        public centroid: Vec2;
-        public position: Vec2;
-        public velocity: Vec2;
-        public force: Vec2;
-        public angularVelocity: number;
-        public torque: number;
-        public linearDamping: number;
-        public angularDamping: number;
-        public sleepTime: number;
-        public awaked: bool;
-        public shapes: any[];
-        public joints: any[];
-        public jointHash: {};
-        public bounds;
-        public fixedRotation: bool;
-        public categoryBits: number;
-        public maskBits: number;
-        public stepCount: number;
-        public isDisabled : bool;
-        public isStatic : bool;
-        public isKinetic : bool;
-        public isDynamic : bool;
-        public setType(type: number): void;
-        public addShape(shape): void;
-        public removeShape(shape): void;
-        public mass: number;
-        public massInverted: number;
-        public inertia: number;
-        public inertiaInverted: number;
-        private setMass(mass);
-        private setInertia(inertia);
-        public setTransform(pos, angle): void;
-        public syncTransform(): void;
-        public getWorldPoint(p: Vec2): Vec2;
-        public getWorldVector(v): Vec2;
-        public getLocalPoint(p): Vec2;
-        public getLocalVector(v): Vec2;
-        public setFixedRotation(flag): void;
-        public resetMassData(): void;
-        public resetJointAnchors(): void;
-        public cacheData(): void;
-        private _tempVec2;
-        public updateVelocity(gravity, dt, damping): void;
-        public updatePosition(dt): void;
-        public resetForce(): void;
-        public applyForce(force, p): void;
-        public applyForceToCenter(force): void;
-        public applyTorque(torque): void;
-        public applyLinearImpulse(impulse, p): void;
-        public applyAngularImpulse(impulse): void;
-        public kineticEnergy(): number;
-        public isAwake : bool;
-        public awake(flag): void;
-        public isCollidable(other): bool;
-    }
-}
-/**
 * Phaser - Advanced Physics - Shape
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
@@ -9785,6 +9695,22 @@ module Phaser.Physics.Advanced {
         public depth;
         public lambdaNormal;
         public lambdaTangential;
+    }
+}
+module Phaser.Physics.Advanced {
+    class ContactSolver {
+        constructor(shape1, shape2);
+        public shape1;
+        public shape2;
+        public contacts: Contact[];
+        public elasticity: number;
+        public friction: number;
+        public update(newContactArr: Contact[]): void;
+        public initSolver(dt_inv): void;
+        public warmStart(): void;
+        public solveVelocityConstraints(): void;
+        public solvePositionConstraints(): bool;
+        public clamp(v, min, max);
     }
 }
 /**
@@ -9838,20 +9764,163 @@ module Phaser.Physics.Advanced {
         public poly2Poly(poly1, poly2, contactArr): number;
     }
 }
+/**
+* Phaser - Advanced Physics - Joint
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
 module Phaser.Physics.Advanced {
-    class ContactSolver {
-        constructor(shape1, shape2);
-        public shape1;
-        public shape2;
-        public contacts: Contact[];
-        public elasticity: number;
-        public friction: number;
-        public update(newContactArr: Contact[]): void;
-        public initSolver(dt_inv): void;
-        public warmStart(): void;
-        public solveVelocityConstraints(): void;
-        public solvePositionConstraints(): bool;
-        public clamp(v, min, max);
+    interface IJoint {
+        id: number;
+        type: number;
+        body1: Body;
+        body2: Body;
+        collideConnected;
+        maxForce: number;
+        breakable: bool;
+        anchor1: Vec2;
+        anchor2: Vec2;
+        getWorldAnchor1();
+        getWorldAnchor2();
+        setWorldAnchor1(anchor1);
+        setWorldAnchor2(anchor2);
+        initSolver(dt, warmStarting);
+        solveVelocityConstraints();
+        solvePositionConstraints();
+        getReactionForce(dt_inv);
+    }
+}
+/**
+* Phaser - Advanced Physics - Space
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class Space {
+        constructor();
+        static TIME_TO_SLEEP: number;
+        static SLEEP_LINEAR_TOLERANCE: number;
+        static SLEEP_ANGULAR_TOLERANCE: number;
+        public bodyArr: Body[];
+        public bodyHash;
+        public jointArr: IJoint[];
+        public jointHash;
+        public numContacts: number;
+        public contactSolvers: ContactSolver[];
+        public postSolve;
+        public gravity: Vec2;
+        public damping: number;
+        public stepCount: number;
+        public clear(): void;
+        public addBody(body: Body): void;
+        public removeBody(body: Body): void;
+        public addJoint(joint: IJoint): void;
+        public removeJoint(joint: IJoint): void;
+        public findShapeByPoint(p, refShape);
+        public findBodyByPoint(p, refBody: Body);
+        public shapeById(id);
+        public jointById(id): IJoint;
+        public findVertexByPoint(p, minDist, refVertexId): number;
+        public findEdgeByPoint(p, minDist, refEdgeId): number;
+        public findJointByPoint(p, minDist, refJointId): number;
+        public findContactSolver(shape1, shape2): ContactSolver;
+        public genTemporalContactSolvers(): any[];
+        public initSolver(dt, dt_inv, warmStarting): void;
+        public velocitySolver(iteration): void;
+        public positionSolver(iteration): bool;
+        public step(dt, vel_iteration, pos_iteration, warmStarting, allowSleep): void;
+    }
+}
+/**
+* Phaser - Advanced Physics - Body
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class Body {
+        constructor(sprite: Sprite, type: number);
+        /**
+        * Reference to Phaser.Game
+        */
+        public game: Game;
+        /**
+        * Reference to the parent Sprite
+        */
+        public sprite: Sprite;
+        /**
+        * The Body ID
+        */
+        public id: number;
+        /**
+        * The Body name
+        */
+        public name: string;
+        /**
+        * The type of Body (disabled, dynamic, static or kinematic)
+        * Disabled = skips all physics operations / tests (default)
+        * Dynamic = gives and receives impacts
+        * Static = gives but doesn't receive impacts, cannot be moved by physics
+        * Kinematic = gives impacts, but never receives, can be moved by physics
+        * @type {number}
+        */
+        public type: number;
+        public angle: number;
+        public transform: Transform;
+        public centroid: Vec2;
+        public position: Vec2;
+        public velocity: Vec2;
+        public force: Vec2;
+        public angularVelocity: number;
+        public torque: number;
+        public linearDamping: number;
+        public angularDamping: number;
+        public sleepTime: number;
+        public awaked: bool;
+        public shapes: any[];
+        public joints: any[];
+        public jointHash: {};
+        public bounds;
+        public fixedRotation: bool;
+        public categoryBits: number;
+        public maskBits: number;
+        public stepCount: number;
+        public space: Space;
+        public isDisabled : bool;
+        public isStatic : bool;
+        public isKinetic : bool;
+        public isDynamic : bool;
+        public setType(type: number): void;
+        public addShape(shape): void;
+        public removeShape(shape): void;
+        public mass: number;
+        public massInverted: number;
+        public inertia: number;
+        public inertiaInverted: number;
+        private setMass(mass);
+        private setInertia(inertia);
+        public setTransform(pos, angle): void;
+        public syncTransform(): void;
+        public getWorldPoint(p: Vec2): Vec2;
+        public getWorldVector(v): Vec2;
+        public getLocalPoint(p): Vec2;
+        public getLocalVector(v): Vec2;
+        public setFixedRotation(flag): void;
+        public resetMassData(): void;
+        public resetJointAnchors(): void;
+        public cacheData(): void;
+        private _tempVec2;
+        public updateVelocity(gravity, dt, damping): void;
+        public updatePosition(dt): void;
+        public resetForce(): void;
+        public applyForce(force, p): void;
+        public applyForceToCenter(force): void;
+        public applyTorque(torque): void;
+        public applyLinearImpulse(impulse, p): void;
+        public applyAngularImpulse(impulse): void;
+        public kineticEnergy(): number;
+        public isAwake : bool;
+        public awake(flag): void;
+        public isCollidable(other): bool;
     }
 }
 /**

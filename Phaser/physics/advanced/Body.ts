@@ -5,6 +5,7 @@
 /// <reference path="Manager.ts" />
 /// <reference path="Joint.ts" />
 /// <reference path="Bounds.ts" />
+/// <reference path="Space.ts" />
 
 /**
 * Phaser - Advanced Physics - Body
@@ -133,6 +134,7 @@ module Phaser.Physics.Advanced {
 	    public categoryBits = 0x0001;
 	    public maskBits = 0xFFFF;
 	    public stepCount = 0;
+	    public space: Space;
 
         //  duplicate = Util function
         //  serialize = Util function

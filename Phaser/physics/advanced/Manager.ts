@@ -17,12 +17,16 @@ module Phaser.Physics.Advanced {
 
             this.game = game;
 
+            Manager.collision = new Collision();
+
         }
 
         /**
          * Local reference to Game.
          */
         public game: Game;
+
+        public static collision: Collision;
 
         public static SHAPE_TYPE_CIRCLE: number = 0;
         public static SHAPE_TYPE_SEGMENT: number = 1;
