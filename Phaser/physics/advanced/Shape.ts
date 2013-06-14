@@ -3,6 +3,7 @@
 /// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
+/// <reference path="Bounds.ts" />
 
 /**
 * Phaser - Advanced Physics - Shape
@@ -23,7 +24,7 @@ module Phaser.Physics.Advanced {
             this.friction = 1.0;
             this.density = 1;
 
-            //this.bounds = new Bounds;
+            this.bounds = new Bounds;
 
         }
 
@@ -40,7 +41,7 @@ module Phaser.Physics.Advanced {
         public density: number;
 
         // Axis-aligned bounding box
-        public bounds;
+        public bounds: Bounds;
 
     }
 

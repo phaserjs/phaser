@@ -116,8 +116,8 @@ module Phaser.Physics.Advanced {
                 t = this.ta.y;
             }
 
-            this.bounds.mins.set(l - this.radius, b - this.radius);
-            this.bounds.maxs.set(r + this.radius, t + this.radius);
+            this.bounds.mins.setTo(l - this.radius, b - this.radius);
+            this.bounds.maxs.setTo(r + this.radius, t + this.radius);
 
         }
 

@@ -17,6 +17,8 @@ module Phaser.Physics.Advanced {
 
             this.game = game;
 
+            this.space = new Space();
+
             Manager.collision = new Collision();
 
         }
@@ -60,6 +62,92 @@ module Phaser.Physics.Advanced {
         public static jointCounter: number = 0;
         public static shapeCounter: number = 0;
 
+        public space: Space;
+        public lastTime: number = 0;
+        public frameRateHz: number = 60;
+        public timeDelta: number = 0;
+        public paused: bool = false;
+        public step: bool = false; // step through the simulation (i.e. per click)
+        public velocityIterations: number = 8;
+        public positionIterations: number = 4;
+        public allowSleep: bool = true;
+        public warmStarting: bool = true;
+
+        public update() {
+
+            var time = Date.now();
+            var frameTime = (time - this.lastTime) / 1000;
+            this.lastTime = time;
+
+            //  if rAf - why?
+            frameTime = Math.floor(frameTime * 60 + 0.5) / 60;
+
+            //if (!mouseDown)
+            //{
+            //    var p = canvasToWorld(mousePosition);
+            //    var body = space.findBodyByPoint(p);
+            //    //domCanvas.style.cursor = body ? "pointer" : "default";
+            //}
+
+            if (!this.paused || this.step)
+            {
+                var h = 1 / this.frameRateHz;
+
+                this.timeDelta += frameTime;
+
+                if (this.step)
+                {
+                    this.step = false;
+                    this.timeDelta = h;
+                }
+
+                for (var maxSteps = 4; maxSteps > 0 && this.timeDelta >= h; maxSteps--)
+                {
+                    this.space.step(h, this.velocityIterations, this.positionIterations, this.warmStarting, this.allowSleep);
+                    this.timeDelta -= h;
+                }
+
+                if (this.timeDelta > h)
+                {
+                    this.timeDelta = 0;
+                }
+
+                //if (sceneIndex < demoArr.length)
+                //{
+                //    demo = demoArr[sceneIndex];
+                //    demo.runFrame();
+                //}
+            }
+
+            //frameCount++;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public static pixelsToMeters(value: number): number {
             return value * 0.02;
         }
@@ -81,7 +169,7 @@ module Phaser.Physics.Advanced {
         }
 
         public static inertiaForCircle(mass, center, radius_outer, radius_inner) {
-            return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthsq());
+            return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthSq());
         }
 
         public static areaForSegment(a, b, radius) {

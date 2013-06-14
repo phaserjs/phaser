@@ -9610,6 +9610,17 @@ module Phaser.Physics.Advanced {
         static bodyCounter: number;
         static jointCounter: number;
         static shapeCounter: number;
+        public space: Space;
+        public lastTime: number;
+        public frameRateHz: number;
+        public timeDelta: number;
+        public paused: bool;
+        public step: bool;
+        public velocityIterations: number;
+        public positionIterations: number;
+        public allowSleep: bool;
+        public warmStarting: bool;
+        public update(): void;
         static pixelsToMeters(value: number): number;
         static metersToPixels(value: number): number;
         static p2m(value: number): number;
@@ -9671,7 +9682,7 @@ module Phaser.Physics.Advanced {
         public elasticity: number;
         public friction: number;
         public density: number;
-        public bounds;
+        public bounds: Bounds;
     }
 }
 /**
@@ -9730,7 +9741,7 @@ module Phaser.Physics.Advanced {
         public transform(xf): void;
         public untransform(xf): void;
         public area(): number;
-        public centroid(): void;
+        public centroid(): Vec2;
         public inertia(mass): number;
         public cacheData(xf): void;
         public pointQuery(p): bool;
@@ -9838,7 +9849,7 @@ module Phaser.Physics.Advanced {
 */
 module Phaser.Physics.Advanced {
     class Body {
-        constructor(sprite: Sprite, type: number);
+        constructor(sprite: Sprite, type: number, x?: number, y?: number);
         /**
         * Reference to Phaser.Game
         */

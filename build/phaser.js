@@ -19112,7 +19112,18 @@ var Phaser;
         (function (Advanced) {
             var Manager = (function () {
                 function Manager(game) {
+                    this.lastTime = 0;
+                    this.frameRateHz = 60;
+                    this.timeDelta = 0;
+                    this.paused = false;
+                    this.step = false;
+                    // step through the simulation (i.e. per click)
+                    this.velocityIterations = 8;
+                    this.positionIterations = 4;
+                    this.allowSleep = true;
+                    this.warmStarting = true;
                     this.game = game;
+                    this.space = new Advanced.Space();
                     Manager.collision = new Advanced.Collision();
                 }
                 Manager.SHAPE_TYPE_CIRCLE = 0;
@@ -19141,6 +19152,40 @@ var Phaser;
                 Manager.bodyCounter = 0;
                 Manager.jointCounter = 0;
                 Manager.shapeCounter = 0;
+                Manager.prototype.update = function () {
+                    var time = Date.now();
+                    var frameTime = (time - this.lastTime) / 1000;
+                    this.lastTime = time;
+                    //  if rAf - why?
+                    frameTime = Math.floor(frameTime * 60 + 0.5) / 60;
+                    //if (!mouseDown)
+                    //{
+                    //    var p = canvasToWorld(mousePosition);
+                    //    var body = space.findBodyByPoint(p);
+                    //    //domCanvas.style.cursor = body ? "pointer" : "default";
+                    //}
+                    if(!this.paused || this.step) {
+                        var h = 1 / this.frameRateHz;
+                        this.timeDelta += frameTime;
+                        if(this.step) {
+                            this.step = false;
+                            this.timeDelta = h;
+                        }
+                        for(var maxSteps = 4; maxSteps > 0 && this.timeDelta >= h; maxSteps--) {
+                            this.space.step(h, this.velocityIterations, this.positionIterations, this.warmStarting, this.allowSleep);
+                            this.timeDelta -= h;
+                        }
+                        if(this.timeDelta > h) {
+                            this.timeDelta = 0;
+                        }
+                        //if (sceneIndex < demoArr.length)
+                        //{
+                        //    demo = demoArr[sceneIndex];
+                        //    demo.runFrame();
+                        //}
+                                            }
+                    //frameCount++;
+                                    };
                 Manager.pixelsToMeters = function pixelsToMeters(value) {
                     return value * 0.02;
                 };
@@ -19157,7 +19202,7 @@ var Phaser;
                     return Math.PI * (radius_outer * radius_outer - radius_inner * radius_inner);
                 };
                 Manager.inertiaForCircle = function inertiaForCircle(mass, center, radius_outer, radius_inner) {
-                    return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthsq());
+                    return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthSq());
                 };
                 Manager.areaForSegment = function areaForSegment(a, b, radius) {
                     return radius * (Math.PI * radius + 2 * Phaser.Vec2Utils.distance(a, b));
@@ -19432,6 +19477,7 @@ var Phaser;
         /// <reference path="../../math/Vec2Utils.ts" />
         /// <reference path="Manager.ts" />
         /// <reference path="Body.ts" />
+        /// <reference path="Bounds.ts" />
         /**
         * Phaser - Advanced Physics - Shape
         *
@@ -19445,8 +19491,8 @@ var Phaser;
                     this.elasticity = 0.0;
                     this.friction = 1.0;
                     this.density = 1;
-                    //this.bounds = new Bounds;
-                                    }
+                    this.bounds = new Advanced.Bounds();
+                }
                 return Shape;
             })();
             Advanced.Shape = Shape;            
@@ -19780,15 +19826,15 @@ var Phaser;
                     return Advanced.Manager.areaForCircle(this.radius, 0);
                 };
                 ShapeCircle.prototype.centroid = function () {
-                    //return this.center.duplicate();
-                                    };
+                    return Phaser.Vec2Utils.clone(this.center);
+                };
                 ShapeCircle.prototype.inertia = function (mass) {
                     return Advanced.Manager.inertiaForCircle(mass, this.center, this.radius, 0);
                 };
                 ShapeCircle.prototype.cacheData = function (xf) {
                     this.tc = xf.transform(this.center);
-                    this.bounds.mins.set(this.tc.x - this.radius, this.tc.y - this.radius);
-                    this.bounds.maxs.set(this.tc.x + this.radius, this.tc.y + this.radius);
+                    this.bounds.mins.setTo(this.tc.x - this.radius, this.tc.y - this.radius);
+                    this.bounds.maxs.setTo(this.tc.x + this.radius, this.tc.y + this.radius);
                 };
                 ShapeCircle.prototype.pointQuery = function (p) {
                     //return vec2.distsq(this.tc, p) < (this.r * this.r);
@@ -20731,7 +20777,9 @@ var Phaser;
         */
         (function (Advanced) {
             var Body = (function () {
-                function Body(sprite, type) {
+                function Body(sprite, type, x, y) {
+                    if (typeof x === "undefined") { x = 0; }
+                    if (typeof y === "undefined") { y = 0; }
                     //  Shapes
                     this.shapes = [];
                     //  Joints
@@ -20742,13 +20790,19 @@ var Phaser;
                     this.categoryBits = 0x0001;
                     this.maskBits = 0xFFFF;
                     this.stepCount = 0;
-                    this.sprite = sprite;
-                    this.game = sprite.game;
+                    this._tempVec2 = new Phaser.Vec2();
                     this.id = Phaser.Physics.Advanced.Manager.bodyCounter++;
                     this.name = 'body' + this.id;
                     this.type = type;
-                    this.position = new Phaser.Vec2(sprite.x, sprite.y);
-                    this.angle = sprite.rotation;
+                    if(sprite) {
+                        this.sprite = sprite;
+                        this.game = sprite.game;
+                        this.position = new Phaser.Vec2(sprite.x, sprite.y);
+                        this.angle = sprite.rotation;
+                    } else {
+                        this.position = new Phaser.Vec2(x, y);
+                        this.angle = 0;
+                    }
                     this.transform = new Phaser.Transform(this.position, this.angle);
                     this.centroid = new Phaser.Vec2();
                     this.velocity = new Phaser.Vec2();
@@ -20770,8 +20824,22 @@ var Phaser;
                     this.stepCount = 0;
                 }
                 Object.defineProperty(Body.prototype, "isDisabled", {
-                    get: //  duplicate = Util function
-                    //  serialize = Util function
+                    get: /*
+                    public duplicate() {
+                    
+                    var body = new Body(this.type, this.transform.t, this.angle);
+                    
+                    for (var i = 0; i < this.shapes.length; i++)
+                    {
+                    body.addShape(this.shapes[i].duplicate());
+                    }
+                    
+                    body.resetMassData();
+                    
+                    return body;
+                    
+                    }
+                    */
                     function () {
                         return this.type == Phaser.Types.BODY_DISABLED ? true : false;
                     },
@@ -20875,6 +20943,7 @@ var Phaser;
                         var centroid = shape.centroid();
                         var mass = shape.area() * shape.density;
                         var inertia = shape.inertia(mass);
+                        console.log('rmd', centroid, shape);
                         totalMassCentroid.multiplyAddByScalar(centroid, mass);
                         totalMass += mass;
                         totalInertia += inertia;
@@ -21357,8 +21426,8 @@ var Phaser;
                         b = this.tb.y;
                         t = this.ta.y;
                     }
-                    this.bounds.mins.set(l - this.radius, b - this.radius);
-                    this.bounds.maxs.set(r + this.radius, t + this.radius);
+                    this.bounds.mins.setTo(l - this.radius, b - this.radius);
+                    this.bounds.maxs.setTo(r + this.radius, t + this.radius);
                 };
                 ShapeSegment.prototype.pointQuery = function (p) {
                     if(!this.bounds.containPoint(p)) {

@@ -56,7 +56,7 @@ module Phaser.Physics.Advanced {
         }
 
         public centroid() {
-            //return this.center.duplicate();
+            return Phaser.Vec2Utils.clone(this.center);
         }
 
         public inertia(mass) {
@@ -66,8 +66,8 @@ module Phaser.Physics.Advanced {
 
         public cacheData(xf) {
             this.tc = xf.transform(this.center);
-            this.bounds.mins.set(this.tc.x - this.radius, this.tc.y - this.radius);
-            this.bounds.maxs.set(this.tc.x + this.radius, this.tc.y + this.radius);
+            this.bounds.mins.setTo(this.tc.x - this.radius, this.tc.y - this.radius);
+            this.bounds.maxs.setTo(this.tc.x + this.radius, this.tc.y + this.radius);
         }
 
         public pointQuery(p) {

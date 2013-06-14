@@ -17,17 +17,24 @@ module Phaser.Physics.Advanced {
 
     export class Body {
 
-        constructor(sprite: Phaser.Sprite, type: number) {
-
-            this.sprite = sprite;
-            this.game = sprite.game;
+        constructor(sprite: Phaser.Sprite, type: number, x?: number = 0, y?: number = 0) {
 
             this.id = Phaser.Physics.Advanced.Manager.bodyCounter++;
             this.name = 'body' + this.id;
             this.type = type;
 
-            this.position = new Phaser.Vec2(sprite.x, sprite.y);
-            this.angle = sprite.rotation;
+            if (sprite)
+            {
+                this.sprite = sprite;
+                this.game = sprite.game;
+                this.position = new Phaser.Vec2(sprite.x, sprite.y);
+                this.angle = sprite.rotation;
+            }
+            else
+            {
+                this.position = new Phaser.Vec2(x, y);
+                this.angle = 0;
+            }
 
             this.transform = new Phaser.Transform(this.position, this.angle);
             this.centroid = new Phaser.Vec2;
@@ -136,8 +143,22 @@ module Phaser.Physics.Advanced {
 	    public stepCount = 0;
 	    public space: Space;
 
-        //  duplicate = Util function
-        //  serialize = Util function
+        /*
+	    public duplicate() {
+
+	        var body = new Body(this.type, this.transform.t, this.angle);
+	        
+            for (var i = 0; i < this.shapes.length; i++)
+	        {
+	            body.addShape(this.shapes[i].duplicate());
+	        }
+
+	        body.resetMassData();
+
+	        return body;
+
+	    }
+        */
 
 	    public get isDisabled(): bool {
 	        return this.type == Phaser.Types.BODY_DISABLED ? true : false;
@@ -274,6 +295,8 @@ module Phaser.Physics.Advanced {
 	            var mass = shape.area() * shape.density;
 	            var inertia = shape.inertia(mass);
 
+	            console.log('rmd', centroid, shape);
+
                 totalMassCentroid.multiplyAddByScalar(centroid, mass);
 	            totalMass += mass;
 	            totalInertia += inertia;
@@ -335,7 +358,7 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    private _tempVec2: Phaser.Vec2;
+	    private _tempVec2: Phaser.Vec2 = new Phaser.Vec2;
 
 	    public updateVelocity(gravity, dt, damping) {
 
