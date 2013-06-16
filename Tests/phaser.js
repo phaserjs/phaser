@@ -833,6 +833,17 @@ var Phaser;
         function () {
             return (this.x * this.x) + (this.y * this.y);
         };
+        Vec2.prototype.normalize = /**
+        * Normalize this vector.
+        *
+        * @return {Vec2} This for chaining.
+        */
+        function () {
+            var inv = (this.x != 0 || this.y != 0) ? 1 / Math.sqrt(this.x * this.x + this.y * this.y) : 0;
+            this.x *= inv;
+            this.y *= inv;
+            return this;
+        };
         Vec2.prototype.dot = /**
         * The dot product of two 2D vectors.
         *
@@ -895,6 +906,18 @@ var Phaser;
         function (scalar) {
             this.x *= scalar;
             this.y *= scalar;
+            return this;
+        };
+        Vec2.prototype.multiplyAddByScalar = /**
+        * Adds the given vector to this vector then multiplies by the given scalar.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {number} scalar
+        * @return {Vec2} This for chaining.
+        */
+        function (a, scalar) {
+            this.x += a.x * scalar;
+            this.y += a.y * scalar;
             return this;
         };
         Vec2.prototype.divideByScalar = /**
@@ -1247,9 +1270,9 @@ var Phaser;
         Types.GEOM_LINE = 3;
         Types.GEOM_POLYGON = 4;
         Types.BODY_DISABLED = 0;
-        Types.BODY_DYNAMIC = 1;
-        Types.BODY_STATIC = 2;
-        Types.BODY_KINEMATIC = 3;
+        Types.BODY_STATIC = 1;
+        Types.BODY_KINETIC = 2;
+        Types.BODY_DYNAMIC = 3;
         Types.LEFT = 0x0001;
         Types.RIGHT = 0x0010;
         Types.UP = 0x0100;
@@ -3890,7 +3913,7 @@ var Phaser;
     var Components = Phaser.Components;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../math/Vec2.ts" />
+/// <reference path="Vec2.ts" />
 /**
 * Phaser - Vec2Utils
 *
@@ -3961,14 +3984,49 @@ var Phaser;
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
             return out.setTo(a.x * s, a.y * s);
         };
+        Vec2Utils.multiplyAdd = /**
+        * Adds two 2D vectors together and multiplies the result by the given scalar.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {number} s Scaling value.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the sum of the two vectors added and multiplied.
+        */
+        function multiplyAdd(a, b, s, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(a.x + b.x * s, a.y + b.y * s);
+        };
+        Vec2Utils.negative = /**
+        * Return a negative vector.
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the negative vector.
+        */
+        function negative(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(-a.x, -a.y);
+        };
         Vec2Utils.perp = /**
-        * Rotate a 2D vector by 90 degrees.
+        * Return a perpendicular vector (90 degrees rotation)
         *
         * @param {Vec2} a Reference to a source Vec2 object.
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the scaled vector.
         */
         function perp(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(-a.y, a.x);
+        };
+        Vec2Utils.rperp = /**
+        * Return a perpendicular vector (-90 degrees rotation)
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2 that is the scaled vector.
+        */
+        function rperp(a, out) {
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
             return out.setTo(a.y, -a.x);
         };
@@ -4111,7 +4169,7 @@ var Phaser;
         function angleSq(a, b) {
             return a.subtract(b).angle(b.subtract(a));
         };
-        Vec2Utils.rotate = /**
+        Vec2Utils.rotateAroundOrigin = /**
         * Rotate a 2D vector around the origin to the given angle (theta).
         *
         * @param {Vec2} a Reference to a source Vec2 object.
@@ -4120,11 +4178,26 @@ var Phaser;
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        function rotate(a, b, theta, out) {
+        function rotateAroundOrigin(a, b, theta, out) {
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
             var x = a.x - b.x;
             var y = a.y - b.y;
             return out.setTo(x * Math.cos(theta) - y * Math.sin(theta) + b.x, x * Math.sin(theta) + y * Math.cos(theta) + b.y);
+        };
+        Vec2Utils.rotate = /**
+        * Rotate a 2D vector to the given angle (theta).
+        *
+        * @param {Vec2} a Reference to a source Vec2 object.
+        * @param {Vec2} b Reference to a source Vec2 object.
+        * @param {Number} theta The angle of rotation in radians.
+        * @param {Vec2} out The output Vec2 that is the result of the operation.
+        * @return {Vec2} A Vec2.
+        */
+        function rotate(a, theta, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var c = Math.cos(theta);
+            var s = Math.sin(theta);
+            return out.setTo(a.x * c - a.y * s, a.x * s + a.y * c);
         };
         Vec2Utils.clone = /**
         * Clone a 2D vector.
@@ -5506,18 +5579,20 @@ var Phaser;
             }
             this.sort();
             //  What's the z index of the top most child?
-            var tempZ = child.z;
             var childIndex = this._zCounter;
             this._i = 0;
             while(this._i < this.length) {
                 this._member = this.members[this._i++];
-                if(this._i > childIndex) {
-                    this._member.z--;
-                } else if(this._member.z == child.z) {
-                    childIndex = this._i;
-                    this._member.z = this._zCounter;
+                if(this._member) {
+                    if(this._i > childIndex) {
+                        this._member.z--;
+                    } else if(this._member.z == child.z) {
+                        childIndex = this._i;
+                        this._member.z = this._zCounter;
+                    }
                 }
             }
+            //  Maybe redundant?
             this.sort();
             return true;
         };
@@ -6805,9 +6880,35 @@ var Phaser;
             }
             return null;
         };
-        Cache.prototype.getImageKeys = function () {
+        Cache.prototype.getImageKeys = /**
+        * Returns an array containing all of the keys of Images in the Cache.
+        * @return {Array} The string based keys in the Cache.
+        */
+        function () {
             var output = [];
             for(var item in this._images) {
+                output.push(item);
+            }
+            return output;
+        };
+        Cache.prototype.getSoundKeys = /**
+        * Returns an array containing all of the keys of Sounds in the Cache.
+        * @return {Array} The string based keys in the Cache.
+        */
+        function () {
+            var output = [];
+            for(var item in this._sounds) {
+                output.push(item);
+            }
+            return output;
+        };
+        Cache.prototype.getTextKeys = /**
+        * Returns an array containing all of the keys of Text Files in the Cache.
+        * @return {Array} The string based keys in the Cache.
+        */
+        function () {
+            var output = [];
+            for(var item in this._text) {
                 output.push(item);
             }
             return output;
@@ -13503,7 +13604,7 @@ var Phaser;
             return this._groupCounter++;
         };
         World.prototype.boot = /**
-        * Called one by Game during the boot process.
+        * Called once by Game during the boot process.
         */
         function () {
             this.group = new Phaser.Group(this._game, 0);
@@ -17938,6 +18039,3566 @@ var Phaser;
         return Mat3Utils;
     })();
     Phaser.Mat3Utils = Mat3Utils;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="Vec2Utils.ts" />
+/**
+* Phaser - 2D Transform
+*
+* A 2D Transform
+*/
+var Phaser;
+(function (Phaser) {
+    var Transform = (function () {
+        /**
+        * Creates a new 2D Transform object.
+        * @class Transform
+        * @constructor
+        * @return {Transform} This object
+        **/
+        function Transform(pos, angle) {
+            this.t = Phaser.Vec2Utils.clone(pos);
+            this.c = Math.cos(angle);
+            this.s = Math.sin(angle);
+        }
+        Transform.prototype.setTo = function (pos, angle) {
+            this.t.copyFrom(pos);
+            this.c = Math.cos(angle);
+            this.s = Math.sin(angle);
+            return this;
+        };
+        Transform.prototype.setRotation = function (angle) {
+            this.c = Math.cos(angle);
+            this.s = Math.sin(angle);
+            return this;
+        };
+        Transform.prototype.setPosition = function (p) {
+            this.t.copyFrom(p);
+            return this;
+        };
+        Transform.prototype.identity = function () {
+            this.t.setTo(0, 0);
+            this.c = 1;
+            this.s = 0;
+            return this;
+        };
+        return Transform;
+    })();
+    Phaser.Transform = Transform;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="Vec2.ts" />
+/// <reference path="Transform.ts" />
+/**
+* Phaser - TransformUtils
+*
+* A collection of methods useful for manipulating and performing operations on 2D Transforms.
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var TransformUtils = (function () {
+        function TransformUtils() { }
+        TransformUtils.rotate = function rotate(t, v, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(v.x * t.c - v.y * t.s, v.x * t.s + v.y * t.c);
+        };
+        TransformUtils.unrotate = function unrotate(t, v, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(v.x * t.c + v.y * t.s, -v.x * t.s + v.y * t.c);
+        };
+        TransformUtils.transform = function transform(t, v, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            return out.setTo(v.x * t.c - v.y * t.s + t.t.x, v.x * t.s + v.y * t.c + t.t.y);
+        };
+        TransformUtils.untransform = function untransform(t, v, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var px = v.x - t.t.x;
+            var py = v.y - t.t.y;
+            return out.setTo(px * t.c + py * t.s, -px * t.s + py * t.c);
+        };
+        return TransformUtils;
+    })();
+    Phaser.TransformUtils = TransformUtils;    
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /// <reference path="../utils/RectangleUtils.ts" />
+    /// <reference path="../utils/CircleUtils.ts" />
+    /// <reference path="Body.ts" />
+    /// <reference path="../math/QuadTree.ts" />
+    /**
+    * Phaser - PhysicsManager
+    *
+    * Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
+    * all of the physics objects in the world.
+    */
+    (function (Physics) {
+        var ArcadePhysics = (function () {
+            function ArcadePhysics(game, width, height) {
+                this._length = 0;
+                /**
+                * @type {number}
+                */
+                this.worldDivisions = 6;
+                this.game = game;
+                this.gravity = new Phaser.Vec2();
+                this.drag = new Phaser.Vec2();
+                this.bounce = new Phaser.Vec2();
+                this.angularDrag = 0;
+                this.bounds = new Phaser.Rectangle(0, 0, width, height);
+                this._distance = new Phaser.Vec2();
+                this._tangent = new Phaser.Vec2();
+                this.members = new Phaser.Group(game);
+            }
+            ArcadePhysics.OVERLAP_BIAS = 4;
+            ArcadePhysics.TILE_OVERLAP = false;
+            ArcadePhysics.prototype.updateMotion = /*
+            public update() {
+            
+            this._length = this._objects.length;
+            
+            for (var i = 0; i < this._length; i++)
+            {
+            if (this._objects[i])
+            {
+            this._objects[i].preUpdate();
+            this.updateMotion(this._objects[i]);
+            this.collideWorld(this._objects[i]);
+            
+            for (var x = 0; x < this._length; x++)
+            {
+            if (this._objects[x] && this._objects[x] !== this._objects[i])
+            {
+            //this.collideShapes(this._objects[i], this._objects[x]);
+            var r = this.NEWseparate(this._objects[i], this._objects[x]);
+            //console.log('sep', r);
+            }
+            }
+            
+            }
+            }
+            
+            }
+            
+            public render() {
+            
+            //  iterate through the objects here, updating and colliding
+            for (var i = 0; i < this._length; i++)
+            {
+            if (this._objects[i])
+            {
+            this._objects[i].render(this.game.stage.context);
+            }
+            }
+            
+            }
+            */
+            function (body) {
+                if(body.type == Phaser.Types.BODY_DISABLED) {
+                    return;
+                }
+                this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.gravity.x, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
+                body.angularVelocity += this._velocityDelta;
+                body.sprite.transform.rotation += body.angularVelocity * this.game.time.elapsed;
+                body.angularVelocity += this._velocityDelta;
+                this._velocityDelta = (this.computeVelocity(body.velocity.x, body.gravity.x, body.acceleration.x, body.drag.x) - body.velocity.x) / 2;
+                body.velocity.x += this._velocityDelta;
+                this._delta = body.velocity.x * this.game.time.elapsed;
+                body.velocity.x += this._velocityDelta;
+                //body.position.x += this._delta;
+                body.sprite.x += this._delta;
+                this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
+                body.velocity.y += this._velocityDelta;
+                this._delta = body.velocity.y * this.game.time.elapsed;
+                body.velocity.y += this._velocityDelta;
+                //body.position.y += this._delta;
+                body.sprite.y += this._delta;
+            };
+            ArcadePhysics.prototype.computeVelocity = /**
+            * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+            *
+            * @param {number} Velocity Any component of velocity (e.g. 20).
+            * @param {number} Acceleration Rate at which the velocity is changing.
+            * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+            * @param {number} Max An absolute value cap for the velocity.
+            *
+            * @return {number} The altered Velocity value.
+            */
+            function (velocity, gravity, acceleration, drag, max) {
+                if (typeof gravity === "undefined") { gravity = 0; }
+                if (typeof acceleration === "undefined") { acceleration = 0; }
+                if (typeof drag === "undefined") { drag = 0; }
+                if (typeof max === "undefined") { max = 10000; }
+                if(acceleration !== 0) {
+                    velocity += (acceleration + gravity) * this.game.time.elapsed;
+                } else if(drag !== 0) {
+                    this._drag = drag * this.game.time.elapsed;
+                    if(velocity - this._drag > 0) {
+                        velocity = velocity - this._drag;
+                    } else if(velocity + this._drag < 0) {
+                        velocity += this._drag;
+                    } else {
+                        velocity = 0;
+                    }
+                    velocity += gravity;
+                }
+                if((velocity != 0) && (max != 10000)) {
+                    if(velocity > max) {
+                        velocity = max;
+                    } else if(velocity < -max) {
+                        velocity = -max;
+                    }
+                }
+                return velocity;
+            };
+            ArcadePhysics.prototype.separate = /**
+            * The core Collision separation method.
+            * @param body1 The first Physics.Body to separate
+            * @param body2 The second Physics.Body to separate
+            * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+            */
+            function (body1, body2) {
+                this._separatedX = this.separateBodyX(body1, body2);
+                this._separatedY = this.separateBodyY(body1, body2);
+                return this._separatedX || this._separatedY;
+            };
+            ArcadePhysics.prototype.checkHullIntersection = function (body1, body2) {
+                return ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight));
+            };
+            ArcadePhysics.prototype.separateBodyX = /**
+            * Separates the two objects on their x axis
+            * @param object1 The first GameObject to separate
+            * @param object2 The second GameObject to separate
+            * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+            */
+            function (body1, body2) {
+                //  Can't separate two disabled or static objects
+                if((body1.type == Phaser.Types.BODY_DISABLED || body1.type == Phaser.Types.BODY_STATIC) && (body2.type == Phaser.Types.BODY_DISABLED || body2.type == Phaser.Types.BODY_STATIC)) {
+                    return false;
+                }
+                //  First, get the two object deltas
+                this._overlap = 0;
+                if(body1.deltaX != body2.deltaX) {
+                    if(Phaser.RectangleUtils.intersects(body1.bounds, body2.bounds)) {
+                        this._maxOverlap = body1.deltaXAbs + body2.deltaXAbs + Physics.PhysicsManager.OVERLAP_BIAS;
+                        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                        if(body1.deltaX > body2.deltaX) {
+                            this._overlap = body1.bounds.right - body2.bounds.x;
+                            if((this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.RIGHT) || !(body2.allowCollisions & Phaser.Types.LEFT)) {
+                                this._overlap = 0;
+                            } else {
+                                body1.touching |= Phaser.Types.RIGHT;
+                                body2.touching |= Phaser.Types.LEFT;
+                            }
+                        } else if(body1.deltaX < body2.deltaX) {
+                            this._overlap = body1.bounds.x - body2.bounds.width - body2.bounds.x;
+                            if((-this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.LEFT) || !(body2.allowCollisions & Phaser.Types.RIGHT)) {
+                                this._overlap = 0;
+                            } else {
+                                body1.touching |= Phaser.Types.LEFT;
+                                body2.touching |= Phaser.Types.RIGHT;
+                            }
+                        }
+                    }
+                }
+                //  Then adjust their positions and velocities accordingly (if there was any overlap)
+                if(this._overlap != 0) {
+                    this._obj1Velocity = body1.velocity.x;
+                    this._obj2Velocity = body2.velocity.x;
+                    /**
+                    * Dynamic = gives and receives impacts
+                    * Static = gives but doesn't receive impacts, cannot be moved by physics
+                    * Kinematic = gives impacts, but never receives, can be moved by physics
+                    */
+                    //  2 dynamic bodies will exchange velocities
+                    if(body1.type == Phaser.Types.BODY_DYNAMIC && body2.type == Phaser.Types.BODY_DYNAMIC) {
+                        this._overlap *= 0.5;
+                        body1.position.x = body1.position.x - this._overlap;
+                        body2.position.x += this._overlap;
+                        this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                        this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                        this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
+                        this._obj1NewVelocity -= this._average;
+                        this._obj2NewVelocity -= this._average;
+                        body1.velocity.x = this._average + this._obj1NewVelocity * body1.bounce.x;
+                        body2.velocity.x = this._average + this._obj2NewVelocity * body2.bounce.x;
+                    } else if(body2.type != Phaser.Types.BODY_DYNAMIC) {
+                        //  Body 2 is Static or Kinematic
+                        this._overlap *= 2;
+                        body1.position.x -= this._overlap;
+                        body1.velocity.x = this._obj2Velocity - this._obj1Velocity * body1.bounce.x;
+                    } else if(body1.type != Phaser.Types.BODY_DYNAMIC) {
+                        //  Body 1 is Static or Kinematic
+                        this._overlap *= 2;
+                        body2.position.x += this._overlap;
+                        body2.velocity.x = this._obj1Velocity - this._obj2Velocity * body2.bounce.x;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+            ArcadePhysics.prototype.separateBodyY = /**
+            * Separates the two objects on their y axis
+            * @param object1 The first GameObject to separate
+            * @param object2 The second GameObject to separate
+            * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+            */
+            function (body1, body2) {
+                //  Can't separate two immovable objects
+                if((body1.type == Phaser.Types.BODY_DISABLED || body1.type == Phaser.Types.BODY_STATIC) && (body2.type == Phaser.Types.BODY_DISABLED || body2.type == Phaser.Types.BODY_STATIC)) {
+                    return false;
+                }
+                //  First, get the two object deltas
+                this._overlap = 0;
+                if(body1.deltaY != body2.deltaY) {
+                    if(Phaser.RectangleUtils.intersects(body1.bounds, body2.bounds)) {
+                        //  This is the only place to use the DeltaAbs values
+                        this._maxOverlap = body1.deltaYAbs + body2.deltaYAbs + Physics.PhysicsManager.OVERLAP_BIAS;
+                        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                        if(body1.deltaY > body2.deltaY) {
+                            this._overlap = body1.bounds.bottom - body2.bounds.y;
+                            if((this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.DOWN) || !(body2.allowCollisions & Phaser.Types.UP)) {
+                                this._overlap = 0;
+                            } else {
+                                body1.touching |= Phaser.Types.DOWN;
+                                body2.touching |= Phaser.Types.UP;
+                            }
+                        } else if(body1.deltaY < body2.deltaY) {
+                            this._overlap = body1.bounds.y - body2.bounds.height - body2.bounds.y;
+                            if((-this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.UP) || !(body2.allowCollisions & Phaser.Types.DOWN)) {
+                                this._overlap = 0;
+                            } else {
+                                body1.touching |= Phaser.Types.UP;
+                                body2.touching |= Phaser.Types.DOWN;
+                            }
+                        }
+                    }
+                }
+                //  Then adjust their positions and velocities accordingly (if there was any overlap)
+                if(this._overlap != 0) {
+                    this._obj1Velocity = body1.velocity.y;
+                    this._obj2Velocity = body2.velocity.y;
+                    /**
+                    * Dynamic = gives and receives impacts
+                    * Static = gives but doesn't receive impacts, cannot be moved by physics
+                    * Kinematic = gives impacts, but never receives, can be moved by physics
+                    */
+                    if(body1.type == Phaser.Types.BODY_DYNAMIC && body2.type == Phaser.Types.BODY_DYNAMIC) {
+                        this._overlap *= 0.5;
+                        body1.position.y = body1.position.y - this._overlap;
+                        body2.position.y += this._overlap;
+                        this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                        this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                        var average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
+                        this._obj1NewVelocity -= average;
+                        this._obj2NewVelocity -= average;
+                        body1.velocity.y = average + this._obj1NewVelocity * body1.bounce.y;
+                        body2.velocity.y = average + this._obj2NewVelocity * body2.bounce.y;
+                    } else if(body2.type != Phaser.Types.BODY_DYNAMIC) {
+                        this._overlap *= 2;
+                        body1.position.y -= this._overlap;
+                        body1.velocity.y = this._obj2Velocity - this._obj1Velocity * body1.bounce.y;
+                        //  This is special case code that handles things like horizontal moving platforms you can ride
+                        //if (body2.parent.active && body2.moves && (body1.deltaY > body2.deltaY))
+                        if(body2.sprite.active && (body1.deltaY > body2.deltaY)) {
+                            body1.position.x += body2.position.x - body2.oldPosition.x;
+                        }
+                    } else if(body1.type != Phaser.Types.BODY_DYNAMIC) {
+                        this._overlap *= 2;
+                        body2.position.y += this._overlap;
+                        body2.velocity.y = this._obj1Velocity - this._obj2Velocity * body2.bounce.y;
+                        //  This is special case code that handles things like horizontal moving platforms you can ride
+                        //if (object1.active && body1.moves && (body1.deltaY < body2.deltaY))
+                        if(body1.sprite.active && (body1.deltaY < body2.deltaY)) {
+                            body2.position.x += body1.position.x - body1.oldPosition.x;
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+            ArcadePhysics.prototype.overlap = /*
+            private TILEseparate(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.x == 1)
+            {
+            console.log('1 The left side of ShapeA hit the right side of ShapeB', Math.floor(distance.x));
+            shapeA.physics.touching |= Phaser.Types.LEFT;
+            shapeB.physics.touching |= Phaser.Types.RIGHT;
+            }
+            else if (tangent.x == -1)
+            {
+            console.log('2 The right side of ShapeA hit the left side of ShapeB', Math.floor(distance.x));
+            shapeA.physics.touching |= Phaser.Types.RIGHT;
+            shapeB.physics.touching |= Phaser.Types.LEFT;
+            }
+            
+            if (tangent.y == 1)
+            {
+            console.log('3 The top of ShapeA hit the bottom of ShapeB', Math.floor(distance.y));
+            shapeA.physics.touching |= Phaser.Types.UP;
+            shapeB.physics.touching |= Phaser.Types.DOWN;
+            }
+            else if (tangent.y == -1)
+            {
+            console.log('4 The bottom of ShapeA hit the top of ShapeB', Math.floor(distance.y));
+            shapeA.physics.touching |= Phaser.Types.DOWN;
+            shapeB.physics.touching |= Phaser.Types.UP;
+            }
+            
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            var dot = Vec2Utils.dot(shapeA.physics.velocity, tangent);
+            
+            if (dot < 0)
+            {
+            console.log('in to', dot);
+            
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.x > 0)
+            {
+            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
+            }
+            else
+            {
+            shapeA.physics.velocity.x = 0;
+            }
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.y > 0)
+            {
+            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
+            }
+            else
+            {
+            shapeA.physics.velocity.y = 0;
+            }
+            }
+            else
+            {
+            console.log('out of', dot);
+            }
+            
+            shapeA.position.x += Math.floor(distance.x);
+            //shapeA.bounds.x += Math.floor(distance.x);
+            
+            shapeA.position.y += Math.floor(distance.y);
+            //shapeA.bounds.y += distance.y;
+            
+            console.log('------------------------------------------------');
+            
+            }
+            
+            private collideWorld(shape:IPhysicsShape) {
+            
+            //  Collide on the x-axis
+            this._distance.x = shape.world.bounds.x - (shape.position.x - shape.bounds.halfWidth);
+            
+            if (0 < this._distance.x)
+            {
+            //  Hit Left
+            this._tangent.setTo(1, 0);
+            this.separateXWall(shape, this._distance, this._tangent);
+            }
+            else
+            {
+            this._distance.x = (shape.position.x + shape.bounds.halfWidth) - shape.world.bounds.right;
+            
+            if (0 < this._distance.x)
+            {
+            //  Hit Right
+            this._tangent.setTo(-1, 0);
+            this._distance.reverse();
+            this.separateXWall(shape, this._distance, this._tangent);
+            }
+            }
+            
+            //  Collide on the y-axis
+            this._distance.y = shape.world.bounds.y - (shape.position.y - shape.bounds.halfHeight);
+            
+            if (0 < this._distance.y)
+            {
+            //  Hit Top
+            this._tangent.setTo(0, 1);
+            this.separateYWall(shape, this._distance, this._tangent);
+            }
+            else
+            {
+            this._distance.y = (shape.position.y + shape.bounds.halfHeight) - shape.world.bounds.bottom;
+            
+            if (0 < this._distance.y)
+            {
+            //  Hit Bottom
+            this._tangent.setTo(0, -1);
+            this._distance.reverse();
+            this.separateYWall(shape, this._distance, this._tangent);
+            }
+            }
+            
+            }
+            
+            private separateX(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.x == 1)
+            {
+            console.log('The left side of ShapeA hit the right side of ShapeB', distance.x);
+            shapeA.physics.touching |= Phaser.Types.LEFT;
+            shapeB.physics.touching |= Phaser.Types.RIGHT;
+            }
+            else
+            {
+            console.log('The right side of ShapeA hit the left side of ShapeB', distance.x);
+            shapeA.physics.touching |= Phaser.Types.RIGHT;
+            shapeB.physics.touching |= Phaser.Types.LEFT;
+            }
+            
+            //  collision edges
+            //shapeA.oH = tangent.x;
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
+            {
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.x > 0)
+            {
+            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
+            }
+            else
+            {
+            shapeA.physics.velocity.x = 0;
+            }
+            }
+            
+            shapeA.position.x += distance.x;
+            shapeA.bounds.x += distance.x;
+            
+            }
+            
+            private separateY(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.y == 1)
+            {
+            console.log('The top of ShapeA hit the bottom of ShapeB', distance.y);
+            shapeA.physics.touching |= Phaser.Types.UP;
+            shapeB.physics.touching |= Phaser.Types.DOWN;
+            }
+            else
+            {
+            console.log('The bottom of ShapeA hit the top of ShapeB', distance.y);
+            shapeA.physics.touching |= Phaser.Types.DOWN;
+            shapeB.physics.touching |= Phaser.Types.UP;
+            }
+            
+            //  collision edges
+            //shapeA.oV = tangent.y;
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
+            {
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.y > 0)
+            {
+            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
+            }
+            else
+            {
+            shapeA.physics.velocity.y = 0;
+            }
+            }
+            
+            shapeA.position.y += distance.y;
+            shapeA.bounds.y += distance.y;
+            
+            }
+            
+            private separateXWall(shapeA: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.x == 1)
+            {
+            console.log('The left side of ShapeA hit the right side of ShapeB', distance.x);
+            shapeA.physics.touching |= Phaser.Types.LEFT;
+            }
+            else
+            {
+            console.log('The right side of ShapeA hit the left side of ShapeB', distance.x);
+            shapeA.physics.touching |= Phaser.Types.RIGHT;
+            }
+            
+            //  collision edges
+            //shapeA.oH = tangent.x;
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
+            {
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.x > 0)
+            {
+            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
+            }
+            else
+            {
+            shapeA.physics.velocity.x = 0;
+            }
+            }
+            
+            shapeA.position.x += distance.x;
+            
+            }
+            
+            private separateYWall(shapeA: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.y == 1)
+            {
+            console.log('The top of ShapeA hit the bottom of ShapeB', distance.y);
+            shapeA.physics.touching |= Phaser.Types.UP;
+            }
+            else
+            {
+            console.log('The bottom of ShapeA hit the top of ShapeB', distance.y);
+            shapeA.physics.touching |= Phaser.Types.DOWN;
+            }
+            
+            //  collision edges
+            //shapeA.oV = tangent.y;
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
+            {
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.y > 0)
+            {
+            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
+            }
+            else
+            {
+            shapeA.physics.velocity.y = 0;
+            }
+            }
+            
+            shapeA.position.y += distance.y;
+            
+            }
+            */
+            /**
+            * Checks for overlaps between two objects using the world QuadTree. Can be Sprite vs. Sprite, Sprite vs. Group or Group vs. Group.
+            * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+            * @param object1 The first Sprite or Group to check. If null the world.group is used.
+            * @param object2 The second Sprite or Group to check.
+            * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+            * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+            * @param context The context in which the callbacks will be called
+            * @returns {boolean} true if the objects overlap, otherwise false.
+            */
+            function (object1, object2, notifyCallback, processCallback, context) {
+                if (typeof object1 === "undefined") { object1 = null; }
+                if (typeof object2 === "undefined") { object2 = null; }
+                if (typeof notifyCallback === "undefined") { notifyCallback = null; }
+                if (typeof processCallback === "undefined") { processCallback = null; }
+                if (typeof context === "undefined") { context = null; }
+                /*
+                if (object1 == null)
+                {
+                object1 = this.game.world.group;
+                }
+                
+                if (object2 == object1)
+                {
+                object2 = null;
+                }
+                
+                QuadTree.divisions = this.worldDivisions;
+                
+                this._quadTree = new Phaser.QuadTree(this, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+                
+                this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
+                
+                this._quadTreeResult = this._quadTree.execute();
+                
+                console.log('over', this._quadTreeResult);
+                
+                this._quadTree.destroy();
+                
+                this._quadTree = null;
+                
+                return this._quadTreeResult;
+                */
+                return false;
+            };
+            ArcadePhysics.prototype.separateTile = /**
+            * Collision resolution specifically for GameObjects vs. Tiles.
+            * @param object The GameObject to separate
+            * @param tile The Tile to separate
+            * @returns {boolean} Whether the objects in fact touched and were separated
+            */
+            function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
+                //var separatedX: bool = this.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
+                //var separatedY: bool = this.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
+                //return separatedX || separatedY;
+                return false;
+            };
+            return ArcadePhysics;
+        })();
+        Physics.ArcadePhysics = ArcadePhysics;        
+        /**
+        * Separates the two objects on their x axis
+        * @param object The GameObject to separate
+        * @param tile The Tile to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        /*
+        public separateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+        
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+        return false;
+        }
+        
+        //  First, get the object delta
+        var overlap: number = 0;
+        var objDelta: number = object.x - object.last.x;
+        //var objDelta: number = object.collisionMask.deltaX;
+        
+        if (objDelta != 0)
+        {
+        //  Check if the X hulls actually overlap
+        var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+        //var objDeltaAbs: number = object.collisionMask.deltaXAbs;
+        var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+        
+        if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+        {
+        var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+        
+        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+        if (objDelta > 0)
+        {
+        overlap = object.x + object.width - x;
+        
+        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.RIGHT;
+        }
+        }
+        else if (objDelta < 0)
+        {
+        overlap = object.x - width - x;
+        
+        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.LEFT;
+        }
+        
+        }
+        
+        }
+        }
+        
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (overlap != 0)
+        {
+        if (separate == true)
+        {
+        //console.log('
+        object.x = object.x - overlap;
+        object.velocity.x = -(object.velocity.x * object.elasticity);
+        }
+        
+        Collision.TILE_OVERLAP = true;
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+        
+        }
+        */
+        /**
+        * Separates the two objects on their y axis
+        * @param object The first GameObject to separate
+        * @param tile The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        /*
+        public separateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+        
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+        return false;
+        }
+        
+        //  First, get the two object deltas
+        var overlap: number = 0;
+        var objDelta: number = object.y - object.last.y;
+        
+        if (objDelta != 0)
+        {
+        //  Check if the Y hulls actually overlap
+        var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+        var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+        
+        if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+        {
+        var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+        
+        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+        if (objDelta > 0)
+        {
+        overlap = object.y + object.height - y;
+        
+        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.DOWN;
+        }
+        }
+        else if (objDelta < 0)
+        {
+        overlap = object.y - height - y;
+        
+        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.UP;
+        }
+        }
+        }
+        }
+        
+        // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+        
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (overlap != 0)
+        {
+        if (separate == true)
+        {
+        object.y = object.y - overlap;
+        object.velocity.y = -(object.velocity.y * object.elasticity);
+        }
+        
+        Collision.TILE_OVERLAP = true;
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+        }
+        */
+        /**
+        * Separates the two objects on their x axis
+        * @param object The GameObject to separate
+        * @param tile The Tile to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        /*
+        public static NEWseparateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+        
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+        return false;
+        }
+        
+        //  First, get the object delta
+        var overlap: number = 0;
+        
+        if (object.collisionMask.deltaX != 0)
+        {
+        //  Check if the X hulls actually overlap
+        //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+        //var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+        
+        //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+        if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
+        {
+        var maxOverlap: number = object.collisionMask.deltaXAbs + Collision.OVERLAP_BIAS;
+        
+        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+        if (object.collisionMask.deltaX > 0)
+        {
+        //overlap = object.x + object.width - x;
+        overlap = object.collisionMask.right - x;
+        
+        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.RIGHT;
+        }
+        }
+        else if (object.collisionMask.deltaX < 0)
+        {
+        //overlap = object.x - width - x;
+        overlap = object.collisionMask.x - width - x;
+        
+        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.LEFT;
+        }
+        
+        }
+        
+        }
+        }
+        
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (overlap != 0)
+        {
+        if (separate == true)
+        {
+        object.x = object.x - overlap;
+        object.velocity.x = -(object.velocity.x * object.elasticity);
+        }
+        
+        Collision.TILE_OVERLAP = true;
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+        
+        }
+        */
+        /**
+        * Separates the two objects on their y axis
+        * @param object The first GameObject to separate
+        * @param tile The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        /*
+        public NEWseparateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+        
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+        return false;
+        }
+        
+        //  First, get the two object deltas
+        var overlap: number = 0;
+        //var objDelta: number = object.y - object.last.y;
+        
+        if (object.collisionMask.deltaY != 0)
+        {
+        //  Check if the Y hulls actually overlap
+        //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+        //var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+        
+        //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+        if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
+        {
+        //var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+        var maxOverlap: number = object.collisionMask.deltaYAbs + Collision.OVERLAP_BIAS;
+        
+        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+        if (object.collisionMask.deltaY > 0)
+        {
+        //overlap = object.y + object.height - y;
+        overlap = object.collisionMask.bottom - y;
+        
+        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.DOWN;
+        }
+        }
+        else if (object.collisionMask.deltaY < 0)
+        {
+        //overlap = object.y - height - y;
+        overlap = object.collisionMask.y - height - y;
+        
+        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.UP;
+        }
+        }
+        }
+        }
+        
+        // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+        
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (overlap != 0)
+        {
+        if (separate == true)
+        {
+        object.y = object.y - overlap;
+        object.velocity.y = -(object.velocity.y * object.elasticity);
+        }
+        
+        Collision.TILE_OVERLAP = true;
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+        }
+        */
+            })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../../math/Vec2.ts" />
+        /// <reference path="../../../geom/Point.ts" />
+        /// <reference path="../../../math/Vec2Utils.ts" />
+        /// <reference path="../Manager.ts" />
+        /// <reference path="../Body.ts" />
+        /**
+        * Phaser - Advanced Physics - Joint
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Joint = (function () {
+                function Joint(type, body1, body2, collideConnected) {
+                    this.id = Phaser.Physics.Advanced.Manager.jointCounter++;
+                    this.type = type;
+                    this.body1 = body1;
+                    this.body2 = body2;
+                    this.collideConnected = collideConnected;
+                    this.maxForce = 9999999999;
+                    this.breakable = false;
+                }
+                Joint.prototype.getWorldAnchor1 = function () {
+                    return this.body1.getWorldPoint(this.anchor1);
+                };
+                Joint.prototype.getWorldAnchor2 = function () {
+                    return this.body2.getWorldPoint(this.anchor2);
+                };
+                Joint.prototype.setWorldAnchor1 = function (anchor1) {
+                    this.anchor1 = this.body1.getLocalPoint(anchor1);
+                };
+                Joint.prototype.setWorldAnchor2 = function (anchor2) {
+                    this.anchor2 = this.body2.getLocalPoint(anchor2);
+                };
+                return Joint;
+            })();
+            Advanced.Joint = Joint;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="joints/Joint.ts" />
+        /**
+        * Phaser - Advanced Physics Manager
+        *
+        * Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
+        * all of the physics objects in the world.
+        */
+        (function (Advanced) {
+            var Manager = (function () {
+                function Manager(game) {
+                    this.lastTime = Date.now();
+                    this.frameRateHz = 60;
+                    this.timeDelta = 0;
+                    this.paused = false;
+                    this.step = false;
+                    // step through the simulation (i.e. per click)
+                    this.velocityIterations = 8;
+                    this.positionIterations = 4;
+                    this.allowSleep = true;
+                    this.warmStarting = true;
+                    this.game = game;
+                    this.space = new Advanced.Space();
+                    Manager.collision = new Advanced.Collision();
+                }
+                Manager.SHAPE_TYPE_CIRCLE = 0;
+                Manager.SHAPE_TYPE_SEGMENT = 1;
+                Manager.SHAPE_TYPE_POLY = 2;
+                Manager.SHAPE_NUM_TYPES = 3;
+                Manager.JOINT_TYPE_ANGLE = 0;
+                Manager.JOINT_TYPE_REVOLUTE = 1;
+                Manager.JOINT_TYPE_WELD = 2;
+                Manager.JOINT_TYPE_WHEEL = 3;
+                Manager.JOINT_TYPE_PRISMATIC = 4;
+                Manager.JOINT_TYPE_DISTANCE = 5;
+                Manager.JOINT_TYPE_ROPE = 6;
+                Manager.JOINT_TYPE_MOUSE = 7;
+                Manager.JOINT_LINEAR_SLOP = 0.0008;
+                Manager.JOINT_ANGULAR_SLOP = 2 * Phaser.GameMath.DEG_TO_RAD;
+                Manager.JOINT_MAX_LINEAR_CORRECTION = 0.5;
+                Manager.JOINT_MAX_ANGULAR_CORRECTION = 8 * Phaser.GameMath.DEG_TO_RAD;
+                Manager.JOINT_LIMIT_STATE_INACTIVE = 0;
+                Manager.JOINT_LIMIT_STATE_AT_LOWER = 1;
+                Manager.JOINT_LIMIT_STATE_AT_UPPER = 2;
+                Manager.JOINT_LIMIT_STATE_EQUAL_LIMITS = 3;
+                Manager.CONTACT_SOLVER_COLLISION_SLOP = 0.0008;
+                Manager.CONTACT_SOLVER_BAUMGARTE = 0.28;
+                Manager.CONTACT_SOLVER_MAX_LINEAR_CORRECTION = 1;
+                Manager.bodyCounter = 0;
+                Manager.jointCounter = 0;
+                Manager.shapeCounter = 0;
+                Manager.prototype.update = function () {
+                    var time = Date.now();
+                    var frameTime = (time - this.lastTime) / 1000;
+                    this.lastTime = time;
+                    //  if rAf - why?
+                    frameTime = Math.floor(frameTime * 60 + 0.5) / 60;
+                    //if (!mouseDown)
+                    //{
+                    //    var p = canvasToWorld(mousePosition);
+                    //    var body = space.findBodyByPoint(p);
+                    //    //domCanvas.style.cursor = body ? "pointer" : "default";
+                    //}
+                    if(!this.paused || this.step) {
+                        var h = 1 / this.frameRateHz;
+                        this.timeDelta += frameTime;
+                        if(this.step) {
+                            this.step = false;
+                            this.timeDelta = h;
+                        }
+                        for(var maxSteps = 4; maxSteps > 0 && this.timeDelta >= h; maxSteps--) {
+                            this.space.step(h, this.velocityIterations, this.positionIterations, this.warmStarting, this.allowSleep);
+                            this.timeDelta -= h;
+                        }
+                        if(this.timeDelta > h) {
+                            this.timeDelta = 0;
+                        }
+                        //if (sceneIndex < demoArr.length)
+                        //{
+                        //    demo = demoArr[sceneIndex];
+                        //    demo.runFrame();
+                        //}
+                                            }
+                    //frameCount++;
+                                    };
+                Manager.prototype.pixelsToMeters = function (value) {
+                    return value * 0.02;
+                };
+                Manager.prototype.metersToPixels = function (value) {
+                    return value * 50;
+                };
+                Manager.pixelsToMeters = function pixelsToMeters(value) {
+                    return value * 0.02;
+                };
+                Manager.metersToPixels = function metersToPixels(value) {
+                    return value * 50;
+                };
+                Manager.p2m = function p2m(value) {
+                    return value * 0.02;
+                };
+                Manager.m2p = function m2p(value) {
+                    return value * 50;
+                };
+                Manager.areaForCircle = function areaForCircle(radius_outer, radius_inner) {
+                    return Math.PI * (radius_outer * radius_outer - radius_inner * radius_inner);
+                };
+                Manager.inertiaForCircle = function inertiaForCircle(mass, center, radius_outer, radius_inner) {
+                    return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthSq());
+                };
+                Manager.areaForSegment = function areaForSegment(a, b, radius) {
+                    return radius * (Math.PI * radius + 2 * Phaser.Vec2Utils.distance(a, b));
+                };
+                Manager.centroidForSegment = function centroidForSegment(a, b) {
+                    return Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
+                };
+                Manager.inertiaForSegment = function inertiaForSegment(mass, a, b) {
+                    var distsq = Phaser.Vec2Utils.distanceSq(b, a);
+                    var offset = Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
+                    return mass * (distsq / 12 + offset.lengthSq());
+                };
+                Manager.areaForPoly = function areaForPoly(verts) {
+                    var area = 0;
+                    for(var i = 0; i < verts.length; i++) {
+                        area += Phaser.Vec2Utils.cross(verts[i], verts[(i + 1) % verts.length]);
+                    }
+                    return area / 2;
+                };
+                Manager.centroidForPoly = function centroidForPoly(verts) {
+                    var area = 0;
+                    var vsum = new Phaser.Vec2();
+                    for(var i = 0; i < verts.length; i++) {
+                        var v1 = verts[i];
+                        var v2 = verts[(i + 1) % verts.length];
+                        var cross = Phaser.Vec2Utils.cross(v1, v2);
+                        area += cross;
+                        //  SO many vecs created here - unroll these bad boys
+                        vsum.add(Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(v1, v2), cross));
+                    }
+                    return Phaser.Vec2Utils.scale(vsum, 1 / (3 * area));
+                };
+                Manager.inertiaForPoly = function inertiaForPoly(mass, verts, offset) {
+                    var sum1 = 0;
+                    var sum2 = 0;
+                    for(var i = 0; i < verts.length; i++) {
+                        var v1 = Phaser.Vec2Utils.add(verts[i], offset);
+                        var v2 = Phaser.Vec2Utils.add(verts[(i + 1) % verts.length], offset);
+                        var a = Phaser.Vec2Utils.cross(v2, v1);
+                        var b = Phaser.Vec2Utils.dot(v1, v1) + Phaser.Vec2Utils.dot(v1, v2) + Phaser.Vec2Utils.dot(v2, v2);
+                        sum1 += a * b;
+                        sum2 += a;
+                    }
+                    return (mass * sum1) / (6 * sum2);
+                };
+                Manager.inertiaForBox = function inertiaForBox(mass, w, h) {
+                    return mass * (w * w + h * h) / 12;
+                };
+                Manager.createConvexHull = // Create the convex hull using the Gift wrapping algorithm (http://en.wikipedia.org/wiki/Gift_wrapping_algorithm)
+                function createConvexHull(points) {
+                    // Find the right most point on the hull
+                    var i0 = 0;
+                    var x0 = points[0].x;
+                    for(var i = 1; i < points.length; i++) {
+                        var x = points[i].x;
+                        if(x > x0 || (x == x0 && points[i].y < points[i0].y)) {
+                            i0 = i;
+                            x0 = x;
+                        }
+                    }
+                    var n = points.length;
+                    var hull = [];
+                    var m = 0;
+                    var ih = i0;
+                    while(1) {
+                        hull[m] = ih;
+                        var ie = 0;
+                        for(var j = 1; j < n; j++) {
+                            if(ie == ih) {
+                                ie = j;
+                                continue;
+                            }
+                            var r = Phaser.Vec2Utils.subtract(points[ie], points[hull[m]]);
+                            var v = Phaser.Vec2Utils.subtract(points[j], points[hull[m]]);
+                            var c = Phaser.Vec2Utils.cross(r, v);
+                            if(c < 0) {
+                                ie = j;
+                            }
+                            // Collinearity check
+                            if(c == 0 && v.lengthSq() > r.lengthSq()) {
+                                ie = j;
+                            }
+                        }
+                        m++;
+                        ih = ie;
+                        if(ie == i0) {
+                            break;
+                        }
+                    }
+                    // Copy vertices
+                    var newPoints = [];
+                    for(var i = 0; i < m; ++i) {
+                        newPoints.push(points[hull[i]]);
+                    }
+                    return newPoints;
+                };
+                return Manager;
+            })();
+            Advanced.Manager = Manager;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /**
+        * Phaser - 2D AABB
+        *
+        * A 2D AABB object
+        */
+        (function (Advanced) {
+            var Bounds = (function () {
+                /**
+                * Creates a new 2D AABB object.
+                * @class Bounds
+                * @constructor
+                * @return {Bounds} This object
+                **/
+                function Bounds(mins, maxs) {
+                    if (typeof mins === "undefined") { mins = null; }
+                    if (typeof maxs === "undefined") { maxs = null; }
+                    if(mins) {
+                        this.mins = Phaser.Vec2Utils.clone(mins);
+                    } else {
+                        this.mins = new Phaser.Vec2(999999, 999999);
+                    }
+                    if(maxs) {
+                        this.maxs = Phaser.Vec2Utils.clone(maxs);
+                    } else {
+                        this.maxs = new Phaser.Vec2(999999, 999999);
+                    }
+                }
+                Bounds.prototype.toString = function () {
+                    return [
+                        "mins:", 
+                        this.mins.toString(), 
+                        "maxs:", 
+                        this.maxs.toString()
+                    ].join(" ");
+                };
+                Bounds.prototype.setTo = function (mins, maxs) {
+                    this.mins.setTo(mins.x, mins.y);
+                    this.maxs.setTo(maxs.x, maxs.y);
+                };
+                Bounds.prototype.copy = function (b) {
+                    this.mins.copyFrom(b.mins);
+                    this.maxs.copyFrom(b.maxs);
+                    return this;
+                };
+                Bounds.prototype.clear = function () {
+                    this.mins.setTo(999999, 999999);
+                    this.maxs.setTo(-999999, -999999);
+                    return this;
+                };
+                Bounds.prototype.isEmpty = function () {
+                    return (this.mins.x > this.maxs.x || this.mins.y > this.maxs.y);
+                };
+                Bounds.prototype.getPerimeter = /*
+                public getCenter() {
+                return vec2.scale(vec2.add(this.mins, this.maxs), 0.5);
+                }
+                
+                public getExtent() {
+                return vec2.scale(vec2.sub(this.maxs, this.mins), 0.5);
+                }
+                */
+                function () {
+                    return (this.maxs.x - this.mins.x + this.maxs.y - this.mins.y) * 2;
+                };
+                Bounds.prototype.addPoint = function (p) {
+                    if(this.mins.x > p.x) {
+                        this.mins.x = p.x;
+                    }
+                    if(this.maxs.x < p.x) {
+                        this.maxs.x = p.x;
+                    }
+                    if(this.mins.y > p.y) {
+                        this.mins.y = p.y;
+                    }
+                    if(this.maxs.y < p.y) {
+                        this.maxs.y = p.y;
+                    }
+                    return this;
+                };
+                Bounds.prototype.addBounds = function (b) {
+                    if(this.mins.x > b.mins.x) {
+                        this.mins.x = b.mins.x;
+                    }
+                    if(this.maxs.x < b.maxs.x) {
+                        this.maxs.x = b.maxs.x;
+                    }
+                    if(this.mins.y > b.mins.y) {
+                        this.mins.y = b.mins.y;
+                    }
+                    if(this.maxs.y < b.maxs.y) {
+                        this.maxs.y = b.maxs.y;
+                    }
+                    return this;
+                };
+                Bounds.prototype.addBounds2 = function (mins, maxs) {
+                    if(this.mins.x > mins.x) {
+                        this.mins.x = mins.x;
+                    }
+                    if(this.maxs.x < maxs.x) {
+                        this.maxs.x = maxs.x;
+                    }
+                    if(this.mins.y > mins.y) {
+                        this.mins.y = mins.y;
+                    }
+                    if(this.maxs.y < maxs.y) {
+                        this.maxs.y = maxs.y;
+                    }
+                    return this;
+                };
+                Bounds.prototype.addExtents = function (center, extent_x, extent_y) {
+                    if(this.mins.x > center.x - extent_x) {
+                        this.mins.x = center.x - extent_x;
+                    }
+                    if(this.maxs.x < center.x + extent_x) {
+                        this.maxs.x = center.x + extent_x;
+                    }
+                    if(this.mins.y > center.y - extent_y) {
+                        this.mins.y = center.y - extent_y;
+                    }
+                    if(this.maxs.y < center.y + extent_y) {
+                        this.maxs.y = center.y + extent_y;
+                    }
+                    return this;
+                };
+                Bounds.prototype.expand = function (ax, ay) {
+                    this.mins.x -= ax;
+                    this.mins.y -= ay;
+                    this.maxs.x += ax;
+                    this.maxs.y += ay;
+                    return this;
+                };
+                Bounds.prototype.containPoint = function (p) {
+                    if(p.x < this.mins.x || p.x > this.maxs.x || p.y < this.mins.y || p.y > this.maxs.y) {
+                        return false;
+                    }
+                    return true;
+                };
+                Bounds.prototype.intersectsBounds = function (b) {
+                    if(this.mins.x > b.maxs.x || this.maxs.x < b.mins.x || this.mins.y > b.maxs.y || this.maxs.y < b.mins.y) {
+                        return false;
+                    }
+                    return true;
+                };
+                Bounds.expand = function expand(b, ax, ay) {
+                    var b = new Bounds(b.mins, b.maxs);
+                    b.expand(ax, ay);
+                    return b;
+                };
+                return Bounds;
+            })();
+            Advanced.Bounds = Bounds;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+            })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../../math/Vec2.ts" />
+        /// <reference path="../../../math/Vec2Utils.ts" />
+        /// <reference path="../Manager.ts" />
+        /// <reference path="../Body.ts" />
+        /// <reference path="../Bounds.ts" />
+        /// <reference path="IShape.ts" />
+        /**
+        * Phaser - Advanced Physics - Shape
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Shape = (function () {
+                function Shape(type) {
+                    this.id = Phaser.Physics.Advanced.Manager.shapeCounter++;
+                    this.type = type;
+                    this.elasticity = 0.0;
+                    this.friction = 1.0;
+                    this.density = 1;
+                    this.bounds = new Advanced.Bounds();
+                }
+                Shape.prototype.findEdgeByPoint = //  Over-ridden by ShapePoly
+                function (p, minDist) {
+                    return -1;
+                };
+                return Shape;
+            })();
+            Advanced.Shape = Shape;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="shapes/Shape.ts" />
+        /**
+        * Phaser - Advanced Physics - Contact
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Contact = (function () {
+                function Contact(p, n, d, hash) {
+                    this.hash = hash;
+                    this.point = p;
+                    this.normal = n;
+                    this.depth = d;
+                    this.lambdaNormal = 0;
+                    this.lambdaTangential = 0;
+                    this.r1 = new Phaser.Vec2();
+                    this.r2 = new Phaser.Vec2();
+                    this.r1_local = new Phaser.Vec2();
+                    this.r2_local = new Phaser.Vec2();
+                }
+                return Contact;
+            })();
+            Advanced.Contact = Contact;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="shapes/Shape.ts" />
+        /// <reference path="Contact.ts" />
+        /**
+        * Phaser - Advanced Physics - ContactSolver
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        //-------------------------------------------------------------------------------------------------
+        // Contact Constraint
+        //
+        // Non-penetration constraint:
+        // C = dot(p2 - p1, n)
+        // Cdot = dot(v2 - v1, n)
+        // J = [ -n, -cross(r1, n), n, cross(r2, n) ]
+        //
+        // impulse = JT * lambda = [ -n * lambda, -cross(r1, n) * lambda, n * lambda, cross(r1, n) * lambda ]
+        //
+        // Friction constraint:
+        // C = dot(p2 - p1, t)
+        // Cdot = dot(v2 - v1, t)
+        // J = [ -t, -cross(r1, t), t, cross(r2, t) ]
+        //
+        // impulse = JT * lambda = [ -t * lambda, -cross(r1, t) * lambda, t * lambda, cross(r1, t) * lambda ]
+        //
+        // NOTE: lambda is an impulse in constraint space.
+        //-------------------------------------------------------------------------------------------------
+        (function (Advanced) {
+            var ContactSolver = (function () {
+                function ContactSolver(shape1, shape2) {
+                    //console.log('ContactSolver super');
+                    this.shape1 = shape1;
+                    this.shape2 = shape2;
+                    this.contacts = [];
+                    this.elasticity = 1;
+                    this.friction = 1;
+                }
+                ContactSolver.prototype.update = function (newContactArr) {
+                    for(var i = 0; i < newContactArr.length; i++) {
+                        var newContact = newContactArr[i];
+                        var k = -1;
+                        for(var j = 0; j < this.contacts.length; j++) {
+                            if(newContact.hash == this.contacts[j].hash) {
+                                k = j;
+                                break;
+                            }
+                        }
+                        if(k > -1) {
+                            newContact.lambdaNormal = this.contacts[k].lambdaNormal;
+                            newContact.lambdaTangential = this.contacts[k].lambdaTangential;
+                        }
+                    }
+                    this.contacts = newContactArr;
+                };
+                ContactSolver.prototype.initSolver = function (dt_inv) {
+                    var body1 = this.shape1.body;
+                    var body2 = this.shape2.body;
+                    var sum_m_inv = body1.massInverted + body2.massInverted;
+                    for(var i = 0; i < this.contacts.length; i++) {
+                        var con = this.contacts[i];
+                        //console.log('initSolver con');
+                        //console.log(con);
+                        // Transformed r1, r2
+                        Phaser.Vec2Utils.subtract(con.point, body1.position, con.r1);
+                        Phaser.Vec2Utils.subtract(con.point, body2.position, con.r2);
+                        //con.r1 = vec2.sub(con.point, body1.p);
+                        //con.r2 = vec2.sub(con.point, body2.p);
+                        // Local r1, r2
+                        Phaser.TransformUtils.unrotate(body1.transform, con.r1, con.r1_local);
+                        Phaser.TransformUtils.unrotate(body2.transform, con.r2, con.r2_local);
+                        //con.r1_local = body1.transform.unrotate(con.r1);
+                        //con.r2_local = body2.transform.unrotate(con.r2);
+                        var n = con.normal;
+                        var t = Phaser.Vec2Utils.perp(con.normal);
+                        // invEMn = J * invM * JT
+                        // J = [ -n, -cross(r1, n), n, cross(r2, n) ]
+                        var sn1 = Phaser.Vec2Utils.cross(con.r1, n);
+                        var sn2 = Phaser.Vec2Utils.cross(con.r2, n);
+                        var emn_inv = sum_m_inv + body1.inertiaInverted * sn1 * sn1 + body2.inertiaInverted * sn2 * sn2;
+                        con.emn = emn_inv == 0 ? 0 : 1 / emn_inv;
+                        // invEMt = J * invM * JT
+                        // J = [ -t, -cross(r1, t), t, cross(r2, t) ]
+                        var st1 = Phaser.Vec2Utils.cross(con.r1, t);
+                        var st2 = Phaser.Vec2Utils.cross(con.r2, t);
+                        var emt_inv = sum_m_inv + body1.inertiaInverted * st1 * st1 + body2.inertiaInverted * st2 * st2;
+                        con.emt = emt_inv == 0 ? 0 : 1 / emt_inv;
+                        // Linear velocities at contact point
+                        // in 2D: cross(w, r) = perp(r) * w
+                        var v1 = new Phaser.Vec2();
+                        var v2 = new Phaser.Vec2();
+                        Phaser.Vec2Utils.multiplyAdd(body1.velocity, Phaser.Vec2Utils.perp(con.r1), body1.angularVelocity, v1);
+                        Phaser.Vec2Utils.multiplyAdd(body2.velocity, Phaser.Vec2Utils.perp(con.r2), body2.angularVelocity, v2);
+                        //var v1 = vec2.mad(body1.v, vec2.perp(con.r1), body1.w);
+                        //var v2 = vec2.mad(body2.v, vec2.perp(con.r2), body2.w);
+                        // relative velocity at contact point
+                        var rv = new Phaser.Vec2();
+                        Phaser.Vec2Utils.subtract(v2, v1, rv);
+                        //var rv = vec2.sub(v2, v1);
+                        // bounce velocity dot n
+                        con.bounce = Phaser.Vec2Utils.dot(rv, con.normal) * this.elasticity;
+                    }
+                };
+                ContactSolver.prototype.warmStart = function () {
+                    var body1 = this.shape1.body;
+                    var body2 = this.shape2.body;
+                    for(var i = 0; i < this.contacts.length; i++) {
+                        var con = this.contacts[i];
+                        var n = con.normal;
+                        var lambda_n = con.lambdaNormal;
+                        var lambda_t = con.lambdaTangential;
+                        // Apply accumulated impulses
+                        //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
+                        //var impulse = new vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
+                        var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
+                        body1.velocity.multiplyAddByScalar(impulse, -body1.massInverted);
+                        //body1.v.mad(impulse, -body1.m_inv);
+                        body1.angularVelocity -= Phaser.Vec2Utils.cross(con.r1, impulse) * body1.inertiaInverted;
+                        //body1.w -= vec2.cross(con.r1, impulse) * body1.i_inv;
+                        body2.velocity.multiplyAddByScalar(impulse, -body2.massInverted);
+                        //body2.v.mad(impulse, body2.m_inv);
+                        body2.angularVelocity -= Phaser.Vec2Utils.cross(con.r2, impulse) * body2.inertiaInverted;
+                        //body2.w += vec2.cross(con.r2, impulse) * body2.i_inv;
+                                            }
+                };
+                ContactSolver.prototype.solveVelocityConstraints = function () {
+                    var body1 = this.shape1.body;
+                    var body2 = this.shape2.body;
+                    var m1_inv = body1.massInverted;
+                    var i1_inv = body1.inertiaInverted;
+                    var m2_inv = body2.massInverted;
+                    var i2_inv = body2.inertiaInverted;
+                    for(var i = 0; i < this.contacts.length; i++) {
+                        var con = this.contacts[i];
+                        var n = con.normal;
+                        var t = Phaser.Vec2Utils.perp(n);
+                        var r1 = con.r1;
+                        var r2 = con.r2;
+                        // Linear velocities at contact point
+                        // in 2D: cross(w, r) = perp(r) * w
+                        var v1 = new Phaser.Vec2();
+                        var v2 = new Phaser.Vec2();
+                        Phaser.Vec2Utils.multiplyAdd(body1.velocity, Phaser.Vec2Utils.perp(r1), body1.angularVelocity, v1);
+                        //var v1 = vec2.mad(body1.v, vec2.perp(r1), body1.w);
+                        Phaser.Vec2Utils.multiplyAdd(body2.velocity, Phaser.Vec2Utils.perp(r2), body2.angularVelocity, v2);
+                        //var v2 = vec2.mad(body2.v, vec2.perp(r2), body2.w);
+                        // Relative velocity at contact point
+                        var rv = new Phaser.Vec2();
+                        Phaser.Vec2Utils.subtract(v2, v1, rv);
+                        //var rv = vec2.sub(v2, v1);
+                        // Compute normal constraint impulse + adding bounce as a velocity bias
+                        // lambda_n = -EMn * J * V
+                        var lambda_n = -con.emn * (Phaser.Vec2Utils.dot(n, rv) + con.bounce);
+                        // Accumulate and clamp
+                        var lambda_n_old = con.lambdaNormal;
+                        con.lambdaNormal = Math.max(lambda_n_old + lambda_n, 0);
+                        lambda_n = con.lambdaNormal - lambda_n_old;
+                        // Compute frictional constraint impulse
+                        // lambda_t = -EMt * J * V
+                        var lambda_t = -con.emt * Phaser.Vec2Utils.dot(t, rv);
+                        // Max friction constraint impulse (Coulomb's Law)
+                        var lambda_t_max = con.lambdaNormal * this.friction;
+                        // Accumulate and clamp
+                        var lambda_t_old = con.lambdaTangential;
+                        con.lambdaTangential = this.clamp(lambda_t_old + lambda_t, -lambda_t_max, lambda_t_max);
+                        lambda_t = con.lambdaTangential - lambda_t_old;
+                        // Apply the final impulses
+                        //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
+                        var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
+                        body1.velocity.multiplyAddByScalar(impulse, -m1_inv);
+                        //body1.v.mad(impulse, -m1_inv);
+                        body1.angularVelocity -= Phaser.Vec2Utils.cross(r1, impulse) * i1_inv;
+                        //body1.w -= vec2.cross(r1, impulse) * i1_inv;
+                        body2.velocity.multiplyAddByScalar(impulse, m2_inv);
+                        //body2.v.mad(impulse, m2_inv);
+                        body1.angularVelocity += Phaser.Vec2Utils.cross(r2, impulse) * i2_inv;
+                        //body2.w += vec2.cross(r2, impulse) * i2_inv;
+                                            }
+                };
+                ContactSolver.prototype.solvePositionConstraints = function () {
+                    var body1 = this.shape1.body;
+                    var body2 = this.shape2.body;
+                    var m1_inv = body1.massInverted;
+                    var i1_inv = body1.inertiaInverted;
+                    var m2_inv = body2.massInverted;
+                    var i2_inv = body2.inertiaInverted;
+                    var sum_m_inv = m1_inv + m2_inv;
+                    var max_penetration = 0;
+                    for(var i = 0; i < this.contacts.length; i++) {
+                        var con = this.contacts[i];
+                        var n = con.normal;
+                        var r1 = new Phaser.Vec2();
+                        var r2 = new Phaser.Vec2();
+                        // Transformed r1, r2
+                        Phaser.Vec2Utils.rotate(con.r1_local, body1.angle, r1);
+                        //var r1 = vec2.rotate(con.r1_local, body1.a);
+                        Phaser.Vec2Utils.rotate(con.r2_local, body2.angle, r2);
+                        //var r2 = vec2.rotate(con.r2_local, body2.a);
+                        // Contact points (corrected)
+                        var p1 = new Phaser.Vec2();
+                        var p2 = new Phaser.Vec2();
+                        Phaser.Vec2Utils.add(body1.position, r1, p1);
+                        //var p1 = vec2.add(body1.p, r1);
+                        Phaser.Vec2Utils.add(body2.position, r2, p2);
+                        //var p2 = vec2.add(body2.p, r2);
+                        // Corrected delta vector
+                        var dp = new Phaser.Vec2();
+                        Phaser.Vec2Utils.subtract(p2, p1);
+                        //var dp = vec2.sub(p2, p1);
+                        // Position constraint
+                        var c = Phaser.Vec2Utils.dot(dp, n) + con.depth;
+                        var correction = this.clamp(Advanced.Manager.CONTACT_SOLVER_BAUMGARTE * (c + Advanced.Manager.CONTACT_SOLVER_COLLISION_SLOP), -Advanced.Manager.CONTACT_SOLVER_MAX_LINEAR_CORRECTION, 0);
+                        if(correction == 0) {
+                            continue;
+                        }
+                        // We don't need max_penetration less than or equal slop
+                        max_penetration = Math.max(max_penetration, -c);
+                        // Compute lambda for position constraint
+                        // Solve (J * invM * JT) * lambda = -C / dt
+                        var sn1 = Phaser.Vec2Utils.cross(r1, n);
+                        var sn2 = Phaser.Vec2Utils.cross(r2, n);
+                        var em_inv = sum_m_inv + body1.inertiaInverted * sn1 * sn1 + body2.inertiaInverted * sn2 * sn2;
+                        var lambda_dt = em_inv == 0 ? 0 : -correction / em_inv;
+                        // Apply correction impulses
+                        var impulse_dt = new Phaser.Vec2();
+                        Phaser.Vec2Utils.scale(n, lambda_dt, impulse_dt);
+                        //var impulse_dt = vec2.scale(n, lambda_dt);
+                        body1.position.multiplyAddByScalar(impulse_dt, -m1_inv);
+                        //body1.p.mad(impulse_dt, -m1_inv);
+                        body1.angle -= sn1 * lambda_dt * i1_inv;
+                        body2.position.multiplyAddByScalar(impulse_dt, m2_inv);
+                        //body2.p.mad(impulse_dt, m2_inv);
+                        body2.angle += sn2 * lambda_dt * i2_inv;
+                    }
+                    return max_penetration <= Advanced.Manager.CONTACT_SOLVER_COLLISION_SLOP * 3;
+                };
+                ContactSolver.prototype.clamp = function (v, min, max) {
+                    return v < min ? min : (v > max ? max : v);
+                };
+                return ContactSolver;
+            })();
+            Advanced.ContactSolver = ContactSolver;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        (function (Advanced) {
+            /// <reference path="../../../math/Vec2.ts" />
+            /// <reference path="../../../math/Vec2Utils.ts" />
+            /// <reference path="../Manager.ts" />
+            /// <reference path="../Body.ts" />
+            /// <reference path="Shape.ts" />
+            /**
+            * Phaser - Advanced Physics - Shape - Circle
+            *
+            * Based on the work Ju Hyung Lee started in JS PhyRus.
+            */
+            (function (Shapes) {
+                var Circle = (function (_super) {
+                    __extends(Circle, _super);
+                    function Circle(radius, x, y) {
+                        if (typeof x === "undefined") { x = 0; }
+                        if (typeof y === "undefined") { y = 0; }
+                                        _super.call(this, Advanced.Manager.SHAPE_TYPE_CIRCLE);
+                        this.center = new Phaser.Vec2(x, y);
+                        this.radius = radius;
+                        this.tc = new Phaser.Vec2();
+                        this.finishVerts();
+                    }
+                    Circle.prototype.finishVerts = function () {
+                        this.radius = Math.abs(this.radius);
+                    };
+                    Circle.prototype.duplicate = function () {
+                        return new Circle(this.center.x, this.center.y, this.radius);
+                    };
+                    Circle.prototype.recenter = function (c) {
+                        this.center.subtract(c);
+                    };
+                    Circle.prototype.transform = function (xf) {
+                        Phaser.TransformUtils.transform(xf, this.center, this.center);
+                        //this.center = xf.transform(this.center);
+                                            };
+                    Circle.prototype.untransform = function (xf) {
+                        Phaser.TransformUtils.untransform(xf, this.center, this.center);
+                        //this.center = xf.untransform(this.center);
+                                            };
+                    Circle.prototype.area = function () {
+                        return Advanced.Manager.areaForCircle(this.radius, 0);
+                    };
+                    Circle.prototype.centroid = function () {
+                        return Phaser.Vec2Utils.clone(this.center);
+                    };
+                    Circle.prototype.inertia = function (mass) {
+                        return Advanced.Manager.inertiaForCircle(mass, this.center, this.radius, 0);
+                    };
+                    Circle.prototype.cacheData = function (xf) {
+                        Phaser.TransformUtils.transform(xf, this.center, this.tc);
+                        //this.tc = xf.transform(this.center);
+                        this.bounds.mins.setTo(this.tc.x - this.radius, this.tc.y - this.radius);
+                        this.bounds.maxs.setTo(this.tc.x + this.radius, this.tc.y + this.radius);
+                    };
+                    Circle.prototype.pointQuery = function (p) {
+                        //return vec2.distsq(this.tc, p) < (this.r * this.r);
+                        return Phaser.Vec2Utils.distanceSq(this.tc, p) < (this.radius * this.radius);
+                    };
+                    Circle.prototype.findVertexByPoint = function (p, minDist) {
+                        var dsq = minDist * minDist;
+                        if(Phaser.Vec2Utils.distanceSq(this.tc, p) < dsq) {
+                            return 0;
+                        }
+                        return -1;
+                    };
+                    Circle.prototype.distanceOnPlane = function (n, d) {
+                        Phaser.Vec2Utils.dot(n, this.tc) - this.radius - d;
+                    };
+                    return Circle;
+                })(Phaser.Physics.Advanced.Shape);
+                Shapes.Circle = Circle;                
+            })(Advanced.Shapes || (Advanced.Shapes = {}));
+            var Shapes = Advanced.Shapes;
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        (function (Advanced) {
+            /// <reference path="../../../math/Vec2.ts" />
+            /// <reference path="../../../math/Vec2Utils.ts" />
+            /// <reference path="../Manager.ts" />
+            /// <reference path="../Body.ts" />
+            /// <reference path="Shape.ts" />
+            /**
+            * Phaser - Advanced Physics - Shapes - Convex Polygon
+            *
+            * Based on the work Ju Hyung Lee started in JS PhyRus.
+            */
+            (function (Shapes) {
+                var Poly = (function (_super) {
+                    __extends(Poly, _super);
+                    function Poly(verts) {
+                                        _super.call(this, Advanced.Manager.SHAPE_TYPE_POLY);
+                        this.verts = [];
+                        this.planes = [];
+                        this.tverts = [];
+                        this.tplanes = [];
+                        if(verts) {
+                            for(var i = 0; i < verts.length; i++) {
+                                this.verts[i] = Phaser.Vec2Utils.clone(verts[i]);
+                                this.tverts[i] = this.verts[i];
+                                this.tplanes[i] = {
+                                };
+                                this.tplanes[i].n = new Phaser.Vec2();
+                                this.tplanes[i].d = 0;
+                            }
+                        }
+                        this.finishVerts();
+                    }
+                    Poly.prototype.finishVerts = function () {
+                        if(this.verts.length < 2) {
+                            this.convexity = false;
+                            this.planes = [];
+                            return;
+                        }
+                        this.convexity = true;
+                        this.tverts = [];
+                        this.tplanes = [];
+                        // Must be counter-clockwise verts
+                        for(var i = 0; i < this.verts.length; i++) {
+                            var a = this.verts[i];
+                            var b = this.verts[(i + 1) % this.verts.length];
+                            var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
+                            this.planes[i] = {
+                            };
+                            this.planes[i].n = n;
+                            this.planes[i].d = Phaser.Vec2Utils.dot(n, a);
+                            this.tverts[i] = this.verts[i];
+                            this.tplanes[i] = {
+                            };
+                            this.tplanes[i].n = new Phaser.Vec2();
+                            this.tplanes[i].d = 0;
+                        }
+                        for(var i = 0; i < this.verts.length; i++) {
+                            var b = this.verts[(i + 2) % this.verts.length];
+                            var n = this.planes[i].n;
+                            var d = this.planes[i].d;
+                            if(Phaser.Vec2Utils.dot(n, b) - d > 0) {
+                                this.convexity = false;
+                            }
+                        }
+                    };
+                    Poly.prototype.duplicate = function () {
+                        return new Phaser.Physics.Advanced.Shapes.Poly(this.verts);
+                    };
+                    Poly.prototype.recenter = function (c) {
+                        for(var i = 0; i < this.verts.length; i++) {
+                            this.verts[i].subtract(c);
+                        }
+                    };
+                    Poly.prototype.transform = function (xf) {
+                        for(var i = 0; i < this.verts.length; i++) {
+                            this.verts[i] = xf.transform(this.verts[i]);
+                        }
+                    };
+                    Poly.prototype.untransform = function (xf) {
+                        for(var i = 0; i < this.verts.length; i++) {
+                            this.verts[i] = xf.untransform(this.verts[i]);
+                        }
+                    };
+                    Poly.prototype.area = function () {
+                        return Advanced.Manager.areaForPoly(this.verts);
+                    };
+                    Poly.prototype.centroid = function () {
+                        return Advanced.Manager.centroidForPoly(this.verts);
+                    };
+                    Poly.prototype.inertia = function (mass) {
+                        return Advanced.Manager.inertiaForPoly(mass, this.verts, new Phaser.Vec2());
+                    };
+                    Poly.prototype.cacheData = function (xf) {
+                        this.bounds.clear();
+                        var numVerts = this.verts.length;
+                        //console.log('shapePoly cacheData', numVerts);
+                        if(numVerts == 0) {
+                            return;
+                        }
+                        for(var i = 0; i < numVerts; i++) {
+                            Phaser.TransformUtils.transform(xf, this.tverts[i], this.tverts[i]);
+                            //this.tverts[i] = xf.transform(this.verts[i]);
+                                                    }
+                        if(numVerts < 2) {
+                            this.bounds.addPoint(this.tverts[0]);
+                            return;
+                        }
+                        for(var i = 0; i < numVerts; i++) {
+                            var a = this.tverts[i];
+                            var b = this.tverts[(i + 1) % numVerts];
+                            var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
+                            this.tplanes[i].n = n;
+                            this.tplanes[i].d = Phaser.Vec2Utils.dot(n, a);
+                            this.bounds.addPoint(a);
+                        }
+                    };
+                    Poly.prototype.pointQuery = function (p) {
+                        if(!this.bounds.containPoint(p)) {
+                            return false;
+                        }
+                        return this.containPoint(p);
+                    };
+                    Poly.prototype.findVertexByPoint = function (p, minDist) {
+                        var dsq = minDist * minDist;
+                        for(var i = 0; i < this.tverts.length; i++) {
+                            if(Phaser.Vec2Utils.distanceSq(this.tverts[i], p) < dsq) {
+                                return i;
+                            }
+                        }
+                        return -1;
+                    };
+                    Poly.prototype.findEdgeByPoint = function (p, minDist) {
+                        var dsq = minDist * minDist;
+                        var numVerts = this.tverts.length;
+                        for(var i = 0; i < this.tverts.length; i++) {
+                            var v1 = this.tverts[i];
+                            var v2 = this.tverts[(i + 1) % numVerts];
+                            var n = this.tplanes[i].n;
+                            var dtv1 = Phaser.Vec2Utils.cross(v1, n);
+                            var dtv2 = Phaser.Vec2Utils.cross(v2, n);
+                            var dt = Phaser.Vec2Utils.cross(p, n);
+                            if(dt > dtv1) {
+                                if(Phaser.Vec2Utils.distanceSq(v1, p) < dsq) {
+                                    return i;
+                                }
+                            } else if(dt < dtv2) {
+                                if(Phaser.Vec2Utils.distanceSq(v2, p) < dsq) {
+                                    return i;
+                                }
+                            } else {
+                                var dist = Phaser.Vec2Utils.dot(n, p) - Phaser.Vec2Utils.dot(n, v1);
+                                if(dist * dist < dsq) {
+                                    return i;
+                                }
+                            }
+                        }
+                        return -1;
+                    };
+                    Poly.prototype.distanceOnPlane = function (n, d) {
+                        var min = 999999;
+                        for(var i = 0; i < this.verts.length; i++) {
+                            min = Math.min(min, Phaser.Vec2Utils.dot(n, this.tverts[i]));
+                        }
+                        return min - d;
+                    };
+                    Poly.prototype.containPoint = function (p) {
+                        for(var i = 0; i < this.verts.length; i++) {
+                            var plane = this.tplanes[i];
+                            if(Phaser.Vec2Utils.dot(plane.n, p) - plane.d > 0) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    };
+                    Poly.prototype.containPointPartial = function (p, n) {
+                        for(var i = 0; i < this.verts.length; i++) {
+                            var plane = this.tplanes[i];
+                            if(Phaser.Vec2Utils.dot(plane.n, n) < 0.0001) {
+                                continue;
+                            }
+                            if(Phaser.Vec2Utils.dot(plane.n, p) - plane.d > 0) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    };
+                    return Poly;
+                })(Phaser.Physics.Advanced.Shape);
+                Shapes.Poly = Poly;                
+            })(Advanced.Shapes || (Advanced.Shapes = {}));
+            var Shapes = Advanced.Shapes;
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        (function (Advanced) {
+            /// <reference path="../../../math/Vec2.ts" />
+            /// <reference path="../../../math/Vec2Utils.ts" />
+            /// <reference path="../Manager.ts" />
+            /// <reference path="../Body.ts" />
+            /// <reference path="Shape.ts" />
+            /**
+            * Phaser - Advanced Physics - Shapes - Segment
+            *
+            * Based on the work Ju Hyung Lee started in JS PhyRus.
+            */
+            (function (Shapes) {
+                var Segment = (function (_super) {
+                    __extends(Segment, _super);
+                    function Segment(a, b, radius) {
+                                        _super.call(this, Advanced.Manager.SHAPE_TYPE_SEGMENT);
+                        this.a = a.duplicate();
+                        this.b = b.duplicate();
+                        this.radius = radius;
+                        this.normal = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(b, a));
+                        this.normal.normalize();
+                        this.ta = new Phaser.Vec2();
+                        this.tb = new Phaser.Vec2();
+                        this.tn = new Phaser.Vec2();
+                        this.finishVerts();
+                    }
+                    Segment.prototype.finishVerts = function () {
+                        this.normal = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(this.b, this.a));
+                        this.normal.normalize();
+                        this.radius = Math.abs(this.radius);
+                    };
+                    Segment.prototype.duplicate = function () {
+                        return new Phaser.Physics.Advanced.Shapes.Segment(this.a, this.b, this.radius);
+                    };
+                    Segment.prototype.recenter = function (c) {
+                        this.a.subtract(c);
+                        this.b.subtract(c);
+                    };
+                    Segment.prototype.transform = function (xf) {
+                        Phaser.TransformUtils.transform(xf, this.a, this.a);
+                        Phaser.TransformUtils.transform(xf, this.b, this.b);
+                        //this.a = xf.transform(this.a);
+                        //this.b = xf.transform(this.b);
+                                            };
+                    Segment.prototype.untransform = function (xf) {
+                        Phaser.TransformUtils.untransform(xf, this.a, this.a);
+                        Phaser.TransformUtils.untransform(xf, this.b, this.b);
+                        //this.a = xf.untransform(this.a);
+                        //this.b = xf.untransform(this.b);
+                                            };
+                    Segment.prototype.area = function () {
+                        return Advanced.Manager.areaForSegment(this.a, this.b, this.radius);
+                    };
+                    Segment.prototype.centroid = function () {
+                        return Advanced.Manager.centroidForSegment(this.a, this.b);
+                    };
+                    Segment.prototype.inertia = function (mass) {
+                        return Advanced.Manager.inertiaForSegment(mass, this.a, this.b);
+                    };
+                    Segment.prototype.cacheData = function (xf) {
+                        Phaser.TransformUtils.transform(xf, this.a, this.ta);
+                        Phaser.TransformUtils.transform(xf, this.b, this.tb);
+                        //this.ta = xf.transform(this.a);
+                        //this.tb = xf.transform(this.b);
+                        this.tn = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(this.tb, this.ta)).normalize();
+                        var l;
+                        var r;
+                        var t;
+                        var b;
+                        if(this.ta.x < this.tb.x) {
+                            l = this.ta.x;
+                            r = this.tb.x;
+                        } else {
+                            l = this.tb.x;
+                            r = this.ta.x;
+                        }
+                        if(this.ta.y < this.tb.y) {
+                            b = this.ta.y;
+                            t = this.tb.y;
+                        } else {
+                            b = this.tb.y;
+                            t = this.ta.y;
+                        }
+                        this.bounds.mins.setTo(l - this.radius, b - this.radius);
+                        this.bounds.maxs.setTo(r + this.radius, t + this.radius);
+                    };
+                    Segment.prototype.pointQuery = function (p) {
+                        if(!this.bounds.containPoint(p)) {
+                            return false;
+                        }
+                        var dn = Phaser.Vec2Utils.dot(this.tn, p) - Phaser.Vec2Utils.dot(this.ta, this.tn);
+                        var dist = Math.abs(dn);
+                        if(dist > this.radius) {
+                            return false;
+                        }
+                        var dt = Phaser.Vec2Utils.cross(p, this.tn);
+                        var dta = Phaser.Vec2Utils.cross(this.ta, this.tn);
+                        var dtb = Phaser.Vec2Utils.cross(this.tb, this.tn);
+                        if(dt <= dta) {
+                            if(dt < dta - this.radius) {
+                                return false;
+                            }
+                            return Phaser.Vec2Utils.distanceSq(this.ta, p) < (this.radius * this.radius);
+                        } else if(dt > dtb) {
+                            if(dt > dtb + this.radius) {
+                                return false;
+                            }
+                            return Phaser.Vec2Utils.distanceSq(this.tb, p) < (this.radius * this.radius);
+                        }
+                        return true;
+                    };
+                    Segment.prototype.findVertexByPoint = function (p, minDist) {
+                        var dsq = minDist * minDist;
+                        if(Phaser.Vec2Utils.distanceSq(this.ta, p) < dsq) {
+                            return 0;
+                        }
+                        if(Phaser.Vec2Utils.distanceSq(this.tb, p) < dsq) {
+                            return 1;
+                        }
+                        return -1;
+                    };
+                    Segment.prototype.distanceOnPlane = function (n, d) {
+                        var a = Phaser.Vec2Utils.dot(n, this.ta) - this.radius;
+                        var b = Phaser.Vec2Utils.dot(n, this.tb) - this.radius;
+                        return Math.min(a, b) - d;
+                    };
+                    return Segment;
+                })(Phaser.Physics.Advanced.Shape);
+                Shapes.Segment = Segment;                
+            })(Advanced.Shapes || (Advanced.Shapes = {}));
+            var Shapes = Advanced.Shapes;
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="shapes/Shape.ts" />
+        /// <reference path="shapes/Circle.ts" />
+        /// <reference path="shapes/Poly.ts" />
+        /// <reference path="shapes/Segment.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="Contact.ts" />
+        /**
+        * Phaser - Advanced Physics - Collision Handlers
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Collision = (function () {
+                function Collision() {
+                }
+                Collision.prototype.collide = function (a, b, contacts) {
+                    //  Circle (a is the circle)
+                    if(a.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
+                        if(b.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
+                            return this.circle2Circle(a, b, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_SEGMENT) {
+                            return this.circle2Segment(a, b, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_POLY) {
+                            return this.circle2Poly(a, b, contacts);
+                        }
+                    }
+                    //  Segment (a is the segment)
+                    if(a.type == Advanced.Manager.SHAPE_TYPE_SEGMENT) {
+                        if(b.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
+                            return this.circle2Segment(b, a, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_SEGMENT) {
+                            return this.segment2Segment(a, b, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_POLY) {
+                            return this.segment2Poly(a, b, contacts);
+                        }
+                    }
+                    //  Poly (a is the poly)
+                    if(a.type == Advanced.Manager.SHAPE_TYPE_POLY) {
+                        if(b.type == Advanced.Manager.SHAPE_TYPE_CIRCLE) {
+                            return this.circle2Poly(b, a, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_SEGMENT) {
+                            return this.segment2Poly(b, a, contacts);
+                        } else if(b.type == Advanced.Manager.SHAPE_TYPE_POLY) {
+                            return this.poly2Poly(a, b, contacts);
+                        }
+                    }
+                };
+                Collision.prototype._circle2Circle = function (c1, r1, c2, r2, contactArr) {
+                    var rmax = r1 + r2;
+                    var t = new Phaser.Vec2();
+                    //var t = vec2.sub(c2, c1);
+                    Phaser.Vec2Utils.subtract(c2, c1, t);
+                    var distsq = t.lengthSq();
+                    if(distsq > rmax * rmax) {
+                        return 0;
+                    }
+                    var dist = Math.sqrt(distsq);
+                    var p = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(c1, t, 0.5 + (r1 - r2) * 0.5 / dist, p);
+                    //var p = vec2.mad(c1, t, 0.5 + (r1 - r2) * 0.5 / dist);
+                    var n = new Phaser.Vec2();
+                    //var n = (dist != 0) ? vec2.scale(t, 1 / dist) : vec2.zero;
+                    if(dist != 0) {
+                        Phaser.Vec2Utils.scale(t, 1 / dist, n);
+                    }
+                    var d = dist - rmax;
+                    contactArr.push(new Advanced.Contact(p, n, d, 0));
+                    return 1;
+                };
+                Collision.prototype.circle2Circle = function (circ1, circ2, contactArr) {
+                    return this._circle2Circle(circ1.tc, circ1.radius, circ2.tc, circ2.radius, contactArr);
+                };
+                Collision.prototype.circle2Segment = function (circ, seg, contactArr) {
+                    var rsum = circ.radius + seg.radius;
+                    // Normal distance from segment
+                    var dn = Phaser.Vec2Utils.dot(circ.tc, seg.tn) - Phaser.Vec2Utils.dot(seg.ta, seg.tn);
+                    var dist = (dn < 0 ? dn * -1 : dn) - rsum;
+                    if(dist > 0) {
+                        return 0;
+                    }
+                    // Tangential distance along segment
+                    var dt = Phaser.Vec2Utils.cross(circ.tc, seg.tn);
+                    var dtMin = Phaser.Vec2Utils.cross(seg.ta, seg.tn);
+                    var dtMax = Phaser.Vec2Utils.cross(seg.tb, seg.tn);
+                    if(dt < dtMin) {
+                        if(dt < dtMin - rsum) {
+                            return 0;
+                        }
+                        return this._circle2Circle(circ.tc, circ.radius, seg.ta, seg.radius, contactArr);
+                    } else if(dt > dtMax) {
+                        if(dt > dtMax + rsum) {
+                            return 0;
+                        }
+                        return this._circle2Circle(circ.tc, circ.radius, seg.tb, seg.radius, contactArr);
+                    }
+                    var n = new Phaser.Vec2();
+                    if(dn > 0) {
+                        n.copyFrom(seg.tn);
+                    } else {
+                        Phaser.Vec2Utils.negative(seg.tn, n);
+                    }
+                    //var n = (dn > 0) ? seg.tn : vec2.neg(seg.tn);
+                    var c1 = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(circ.tc, n, -(circ.radius + dist * 0.5), c1);
+                    var c2 = new Phaser.Vec2();
+                    Phaser.Vec2Utils.negative(n, c2);
+                    contactArr.push(new Advanced.Contact(c1, c2, dist, 0));
+                    //contactArr.push(new Contact(vec2.mad(circ.tc, n, -(circ.r + dist * 0.5)), vec2.neg(n), dist, 0));
+                    return 1;
+                };
+                Collision.prototype.circle2Poly = function (circ, poly, contactArr) {
+                    var minDist = -999999;
+                    var minIdx = -1;
+                    for(var i = 0; i < poly.verts.length; i++) {
+                        var plane = poly.tplanes[i];
+                        var dist = Phaser.Vec2Utils.dot(circ.tc, plane.n) - plane.d - circ.radius;
+                        if(dist > 0) {
+                            return 0;
+                        } else if(dist > minDist) {
+                            minDist = dist;
+                            minIdx = i;
+                        }
+                    }
+                    var n = poly.tplanes[minIdx].n;
+                    var a = poly.tverts[minIdx];
+                    var b = poly.tverts[(minIdx + 1) % poly.verts.length];
+                    var dta = Phaser.Vec2Utils.cross(a, n);
+                    var dtb = Phaser.Vec2Utils.cross(b, n);
+                    var dt = Phaser.Vec2Utils.cross(circ.tc, n);
+                    if(dt > dta) {
+                        return this._circle2Circle(circ.tc, circ.radius, a, 0, contactArr);
+                    } else if(dt < dtb) {
+                        return this._circle2Circle(circ.tc, circ.radius, b, 0, contactArr);
+                    }
+                    var c1 = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(circ.tc, n, -(circ.radius + minDist * 0.5), c1);
+                    var c2 = new Phaser.Vec2();
+                    Phaser.Vec2Utils.negative(n, c2);
+                    contactArr.push(new Advanced.Contact(c1, c2, minDist, 0));
+                    //contactArr.push(new Contact(vec2.mad(circ.tc, n, -(circ.r + minDist * 0.5)), vec2.neg(n), minDist, 0));
+                    return 1;
+                };
+                Collision.prototype.segmentPointDistanceSq = function (seg, p) {
+                    var w = new Phaser.Vec2();
+                    var d = new Phaser.Vec2();
+                    Phaser.Vec2Utils.subtract(p, seg.ta, w);
+                    Phaser.Vec2Utils.subtract(seg.tb, seg.ta, d);
+                    //var w = vec2.sub(p, seg.ta);
+                    //var d = vec2.sub(seg.tb, seg.ta);
+                    var proj = w.dot(d);
+                    if(proj <= 0) {
+                        return w.dot(w);
+                    }
+                    var vsq = d.dot(d);
+                    if(proj >= vsq) {
+                        return w.dot(w) - 2 * proj + vsq;
+                    }
+                    return w.dot(w) - proj * proj / vsq;
+                };
+                Collision.prototype.segment2Segment = // FIXME and optimise me lots!!!
+                function (seg1, seg2, contactArr) {
+                    var d = [];
+                    d[0] = this.segmentPointDistanceSq(seg1, seg2.ta);
+                    d[1] = this.segmentPointDistanceSq(seg1, seg2.tb);
+                    d[2] = this.segmentPointDistanceSq(seg2, seg1.ta);
+                    d[3] = this.segmentPointDistanceSq(seg2, seg1.tb);
+                    var idx1 = d[0] < d[1] ? 0 : 1;
+                    var idx2 = d[2] < d[3] ? 2 : 3;
+                    var idxm = d[idx1] < d[idx2] ? idx1 : idx2;
+                    var s, t;
+                    var u = Phaser.Vec2Utils.subtract(seg1.tb, seg1.ta);
+                    var v = Phaser.Vec2Utils.subtract(seg2.tb, seg2.ta);
+                    switch(idxm) {
+                        case 0:
+                            s = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg2.ta, seg1.ta), u) / Phaser.Vec2Utils.dot(u, u);
+                            s = s < 0 ? 0 : (s > 1 ? 1 : s);
+                            t = 0;
+                            break;
+                        case 1:
+                            s = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg2.tb, seg1.ta), u) / Phaser.Vec2Utils.dot(u, u);
+                            s = s < 0 ? 0 : (s > 1 ? 1 : s);
+                            t = 1;
+                            break;
+                        case 2:
+                            s = 0;
+                            t = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg1.ta, seg2.ta), v) / Phaser.Vec2Utils.dot(v, v);
+                            t = t < 0 ? 0 : (t > 1 ? 1 : t);
+                            break;
+                        case 3:
+                            s = 1;
+                            t = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg1.tb, seg2.ta), v) / Phaser.Vec2Utils.dot(v, v);
+                            t = t < 0 ? 0 : (t > 1 ? 1 : t);
+                            break;
+                    }
+                    var minp1 = Phaser.Vec2Utils.multiplyAdd(seg1.ta, u, s);
+                    var minp2 = Phaser.Vec2Utils.multiplyAdd(seg2.ta, v, t);
+                    return this._circle2Circle(minp1, seg1.radius, minp2, seg2.radius, contactArr);
+                };
+                Collision.prototype.findPointsBehindSeg = // Identify vertexes that have penetrated the segment.
+                function (contactArr, seg, poly, dist, coef) {
+                    var dta = Phaser.Vec2Utils.cross(seg.tn, seg.ta);
+                    var dtb = Phaser.Vec2Utils.cross(seg.tn, seg.tb);
+                    var n = new Phaser.Vec2();
+                    Phaser.Vec2Utils.scale(seg.tn, coef, n);
+                    //var n = vec2.scale(seg.tn, coef);
+                    for(var i = 0; i < poly.verts.length; i++) {
+                        var v = poly.tverts[i];
+                        if(Phaser.Vec2Utils.dot(v, n) < Phaser.Vec2Utils.dot(seg.tn, seg.ta) * coef + seg.radius) {
+                            var dt = Phaser.Vec2Utils.cross(seg.tn, v);
+                            if(dta >= dt && dt >= dtb) {
+                                contactArr.push(new Advanced.Contact(v, n, dist, (poly.id << 16) | i));
+                            }
+                        }
+                    }
+                };
+                Collision.prototype.segment2Poly = function (seg, poly, contactArr) {
+                    var seg_td = Phaser.Vec2Utils.dot(seg.tn, seg.ta);
+                    var seg_d1 = poly.distanceOnPlane(seg.tn, seg_td) - seg.radius;
+                    if(seg_d1 > 0) {
+                        return 0;
+                    }
+                    var n = new Phaser.Vec2();
+                    Phaser.Vec2Utils.negative(seg.tn, n);
+                    var seg_d2 = poly.distanceOnPlane(n, -seg_td) - seg.radius;
+                    //var seg_d2 = poly.distanceOnPlane(vec2.neg(seg.tn), -seg_td) - seg.r;
+                    if(seg_d2 > 0) {
+                        return 0;
+                    }
+                    var poly_d = -999999;
+                    var poly_i = -1;
+                    for(var i = 0; i < poly.verts.length; i++) {
+                        var plane = poly.tplanes[i];
+                        var dist = seg.distanceOnPlane(plane.n, plane.d);
+                        if(dist > 0) {
+                            return 0;
+                        }
+                        if(dist > poly_d) {
+                            poly_d = dist;
+                            poly_i = i;
+                        }
+                    }
+                    var poly_n = new Phaser.Vec2();
+                    Phaser.Vec2Utils.negative(poly.tplanes[poly_i].n, poly_n);
+                    //var poly_n = vec2.neg(poly.tplanes[poly_i].n);
+                    var va = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(seg.ta, poly_n, seg.radius, va);
+                    //var va = vec2.mad(seg.ta, poly_n, seg.r);
+                    var vb = new Phaser.Vec2();
+                    Phaser.Vec2Utils.multiplyAdd(seg.tb, poly_n, seg.radius, vb);
+                    //var vb = vec2.mad(seg.tb, poly_n, seg.r);
+                    if(poly.containPoint(va)) {
+                        contactArr.push(new Advanced.Contact(va, poly_n, poly_d, (seg.id << 16) | 0));
+                    }
+                    if(poly.containPoint(vb)) {
+                        contactArr.push(new Advanced.Contact(vb, poly_n, poly_d, (seg.id << 16) | 1));
+                    }
+                    // Floating point precision problems here.
+                    // This will have to do for now.
+                    poly_d -= 0.1;
+                    if(seg_d1 >= poly_d || seg_d2 >= poly_d) {
+                        if(seg_d1 > seg_d2) {
+                            this.findPointsBehindSeg(contactArr, seg, poly, seg_d1, 1);
+                        } else {
+                            this.findPointsBehindSeg(contactArr, seg, poly, seg_d2, -1);
+                        }
+                    }
+                    // If no other collision points are found, try colliding endpoints.
+                    if(contactArr.length == 0) {
+                        var poly_a = poly.tverts[poly_i];
+                        var poly_b = poly.tverts[(poly_i + 1) % poly.verts.length];
+                        if(this._circle2Circle(seg.ta, seg.radius, poly_a, 0, contactArr)) {
+                            return 1;
+                        }
+                        if(this._circle2Circle(seg.tb, seg.radius, poly_a, 0, contactArr)) {
+                            return 1;
+                        }
+                        if(this._circle2Circle(seg.ta, seg.radius, poly_b, 0, contactArr)) {
+                            return 1;
+                        }
+                        if(this._circle2Circle(seg.tb, seg.radius, poly_b, 0, contactArr)) {
+                            return 1;
+                        }
+                    }
+                    return contactArr.length;
+                };
+                Collision.prototype.findMSA = // Find the minimum separating axis for the given poly and plane list.
+                function (poly, planes, num) {
+                    var min_dist = -999999;
+                    var min_index = -1;
+                    for(var i = 0; i < num; i++) {
+                        var dist = poly.distanceOnPlane(planes[i].n, planes[i].d);
+                        if(dist > 0) {
+                            // no collision
+                            return {
+                                dist: 0,
+                                index: -1
+                            };
+                        } else if(dist > min_dist) {
+                            min_dist = dist;
+                            min_index = i;
+                        }
+                    }
+                    //  new object - see what we can do here
+                    return {
+                        dist: min_dist,
+                        index: min_index
+                    };
+                };
+                Collision.prototype.findVertsFallback = function (contactArr, poly1, poly2, n, dist) {
+                    var num = 0;
+                    for(var i = 0; i < poly1.verts.length; i++) {
+                        var v = poly1.tverts[i];
+                        if(poly2.containPointPartial(v, n)) {
+                            contactArr.push(new Advanced.Contact(v, n, dist, (poly1.id << 16) | i));
+                            num++;
+                        }
+                    }
+                    for(var i = 0; i < poly2.verts.length; i++) {
+                        var v = poly2.tverts[i];
+                        if(poly1.containPointPartial(v, n)) {
+                            contactArr.push(new Advanced.Contact(v, n, dist, (poly2.id << 16) | i));
+                            num++;
+                        }
+                    }
+                    return num;
+                };
+                Collision.prototype.findVerts = // Find the overlapped vertices.
+                function (contactArr, poly1, poly2, n, dist) {
+                    var num = 0;
+                    for(var i = 0; i < poly1.verts.length; i++) {
+                        var v = poly1.tverts[i];
+                        if(poly2.containPoint(v)) {
+                            contactArr.push(new Advanced.Contact(v, n, dist, (poly1.id << 16) | i));
+                            num++;
+                        }
+                    }
+                    for(var i = 0; i < poly2.verts.length; i++) {
+                        var v = poly2.tverts[i];
+                        if(poly1.containPoint(v)) {
+                            contactArr.push(new Advanced.Contact(v, n, dist, (poly2.id << 16) | i));
+                            num++;
+                        }
+                    }
+                    return num > 0 ? num : this.findVertsFallback(contactArr, poly1, poly2, n, dist);
+                };
+                Collision.prototype.poly2Poly = function (poly1, poly2, contactArr) {
+                    var msa1 = this.findMSA(poly2, poly1.tplanes, poly1.verts.length);
+                    if(msa1.index == -1) {
+                        return 0;
+                    }
+                    var msa2 = this.findMSA(poly1, poly2.tplanes, poly2.verts.length);
+                    if(msa2.index == -1) {
+                        return 0;
+                    }
+                    // Penetration normal direction shoud be from poly1 to poly2
+                    if(msa1.dist > msa2.dist) {
+                        return this.findVerts(contactArr, poly1, poly2, poly1.tplanes[msa1.index].n, msa1.dist);
+                    }
+                    return this.findVerts(contactArr, poly1, poly2, Phaser.Vec2Utils.negative(poly2.tplanes[msa2.index].n), msa2.dist);
+                };
+                return Collision;
+            })();
+            Advanced.Collision = Collision;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+            })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /// <reference path="shapes/Shape.ts" />
+        /// <reference path="ContactSolver.ts" />
+        /// <reference path="Contact.ts" />
+        /// <reference path="Collision.ts" />
+        /// <reference path="joints/IJoint.ts" />
+        /**
+        * Phaser - Advanced Physics - Space
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Space = (function () {
+                function Space() {
+                    this.stepCount = 0;
+                    this.bodyArr = [];
+                    this.bodyHash = {
+                    };
+                    this.jointArr = [];
+                    this.jointHash = {
+                    };
+                    this.numContacts = 0;
+                    this.contactSolvers = [];
+                    //this.postSolve(arb) { };
+                    this.gravity = new Phaser.Vec2(0, 10);
+                    this.damping = 0;
+                }
+                Space.TIME_TO_SLEEP = 0.5;
+                Space.SLEEP_LINEAR_TOLERANCE = 0.5;
+                Space.SLEEP_ANGULAR_TOLERANCE = 2 * Phaser.GameMath.DEG_TO_RAD;
+                Space.prototype.clear = function () {
+                    Advanced.Manager.shapeCounter = 0;
+                    Advanced.Manager.bodyCounter = 0;
+                    Advanced.Manager.jointCounter = 0;
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        if(this.bodyArr[i]) {
+                            this.removeBody(this.bodyArr[i]);
+                        }
+                    }
+                    this.bodyArr = [];
+                    this.bodyHash = {
+                    };
+                    this.jointArr = [];
+                    this.jointHash = {
+                    };
+                    this.contactSolvers = [];
+                    this.stepCount = 0;
+                };
+                Space.prototype.addBody = function (body) {
+                    if(this.bodyHash[body.id] != undefined) {
+                        return;
+                    }
+                    //console.log('Body added to space', body.name);
+                    var index = this.bodyArr.push(body) - 1;
+                    this.bodyHash[body.id] = index;
+                    body.awake(true);
+                    body.space = this;
+                    body.cacheData();
+                };
+                Space.prototype.removeBody = function (body) {
+                    if(this.bodyHash[body.id] == undefined) {
+                        return;
+                    }
+                    // Remove linked joint
+                    for(var i = 0; i < body.joints.length; i++) {
+                        if(body.joints[i]) {
+                            this.removeJoint(body.joints[i]);
+                        }
+                    }
+                    body.space = null;
+                    var index = this.bodyHash[body.id];
+                    delete this.bodyHash[body.id];
+                    delete this.bodyArr[index];
+                };
+                Space.prototype.addJoint = function (joint) {
+                    if(this.jointHash[joint.id] != undefined) {
+                        return;
+                    }
+                    joint.body1.awake(true);
+                    joint.body2.awake(true);
+                    var index = this.jointArr.push(joint) - 1;
+                    this.jointHash[joint.id] = index;
+                    var index = joint.body1.joints.push(joint) - 1;
+                    joint.body1.jointHash[joint.id] = index;
+                    var index = joint.body2.joints.push(joint) - 1;
+                    joint.body2.jointHash[joint.id] = index;
+                };
+                Space.prototype.removeJoint = function (joint) {
+                    if(this.jointHash[joint.id] == undefined) {
+                        return;
+                    }
+                    joint.body1.awake(true);
+                    joint.body2.awake(true);
+                    var index = joint.body1.jointHash[joint.id];
+                    delete joint.body1.jointHash[joint.id];
+                    delete joint.body1.joints[index];
+                    var index = joint.body2.jointHash[joint.id];
+                    delete joint.body2.jointHash[joint.id];
+                    delete joint.body2.joints[index];
+                    var index = this.jointHash[joint.id];
+                    delete this.jointHash[joint.id];
+                    delete this.jointArr[index];
+                };
+                Space.prototype.findShapeByPoint = function (p, refShape) {
+                    var firstShape;
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        for(var j = 0; j < body.shapes.length; j++) {
+                            var shape = body.shapes[j];
+                            if(shape.pointQuery(p)) {
+                                if(!refShape) {
+                                    return shape;
+                                }
+                                if(!firstShape) {
+                                    firstShape = shape;
+                                }
+                                if(shape == refShape) {
+                                    refShape = null;
+                                }
+                            }
+                        }
+                    }
+                    return firstShape;
+                };
+                Space.prototype.findBodyByPoint = function (p, refBody) {
+                    var firstBody;
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        for(var j = 0; j < body.shapes.length; j++) {
+                            var shape = body.shapes[j];
+                            if(shape.pointQuery(p)) {
+                                if(!refBody) {
+                                    return shape.body;
+                                }
+                                if(!firstBody) {
+                                    firstBody = shape.body;
+                                }
+                                if(shape.body == refBody) {
+                                    refBody = null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    return firstBody;
+                };
+                Space.prototype.shapeById = // TODO: Replace this function to shape hashing
+                function (id) {
+                    var shape;
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        for(var j = 0; j < body.shapes.length; j++) {
+                            if(body.shapes[j].id == id) {
+                                return body.shapes[j];
+                            }
+                        }
+                    }
+                    return null;
+                };
+                Space.prototype.jointById = function (id) {
+                    var index = this.jointHash[id];
+                    if(index != undefined) {
+                        return this.jointArr[index];
+                    }
+                    return null;
+                };
+                Space.prototype.findVertexByPoint = function (p, minDist, refVertexId) {
+                    var firstVertexId = -1;
+                    refVertexId = refVertexId || -1;
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        for(var j = 0; j < body.shapes.length; j++) {
+                            var shape = body.shapes[j];
+                            var index = shape.findVertexByPoint(p, minDist);
+                            if(index != -1) {
+                                var vertex = (shape.id << 16) | index;
+                                if(refVertexId == -1) {
+                                    return vertex;
+                                }
+                                if(firstVertexId == -1) {
+                                    firstVertexId = vertex;
+                                }
+                                if(vertex == refVertexId) {
+                                    refVertexId = -1;
+                                }
+                            }
+                        }
+                    }
+                    return firstVertexId;
+                };
+                Space.prototype.findEdgeByPoint = function (p, minDist, refEdgeId) {
+                    var firstEdgeId = -1;
+                    refEdgeId = refEdgeId || -1;
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        for(var j = 0; j < body.shapes.length; j++) {
+                            var shape = body.shapes[j];
+                            if(shape.type != Advanced.Manager.SHAPE_TYPE_POLY) {
+                                continue;
+                            }
+                            var index = shape.findEdgeByPoint(p, minDist);
+                            if(index != -1) {
+                                var edge = (shape.id << 16) | index;
+                                if(refEdgeId == -1) {
+                                    return edge;
+                                }
+                                if(firstEdgeId == -1) {
+                                    firstEdgeId = edge;
+                                }
+                                if(edge == refEdgeId) {
+                                    refEdgeId = -1;
+                                }
+                            }
+                        }
+                    }
+                    return firstEdgeId;
+                };
+                Space.prototype.findJointByPoint = function (p, minDist, refJointId) {
+                    var firstJointId = -1;
+                    var dsq = minDist * minDist;
+                    refJointId = refJointId || -1;
+                    for(var i = 0; i < this.jointArr.length; i++) {
+                        var joint = this.jointArr[i];
+                        if(!joint) {
+                            continue;
+                        }
+                        var jointId = -1;
+                        if(Phaser.Vec2Utils.distanceSq(p, joint.getWorldAnchor1()) < dsq) {
+                            jointId = (joint.id << 16 | 0);
+                        } else if(Phaser.Vec2Utils.distanceSq(p, joint.getWorldAnchor2()) < dsq) {
+                            jointId = (joint.id << 16 | 1);
+                        }
+                        if(jointId != -1) {
+                            if(refJointId == -1) {
+                                return jointId;
+                            }
+                            if(firstJointId == -1) {
+                                firstJointId = jointId;
+                            }
+                            if(jointId == refJointId) {
+                                refJointId = -1;
+                            }
+                        }
+                    }
+                    return firstJointId;
+                };
+                Space.prototype.findContactSolver = function (shape1, shape2) {
+                    for(var i = 0; i < this.contactSolvers.length; i++) {
+                        var contactSolver = this.contactSolvers[i];
+                        if(shape1 == contactSolver.shape1 && shape2 == contactSolver.shape2) {
+                            return contactSolver;
+                        }
+                    }
+                    return null;
+                };
+                Space.prototype.genTemporalContactSolvers = function () {
+                    //console.log('genTemporalContactSolvers');
+                    //var t0 = Date.now();
+                    var newContactSolverArr = [];
+                    this.numContacts = 0;
+                    for(var body1_index = 0; body1_index < this.bodyArr.length; body1_index++) {
+                        var body1 = this.bodyArr[body1_index];
+                        //console.log('body1', body1_index, body1.type);
+                        if(!body1) {
+                            continue;
+                        }
+                        body1.stepCount = this.stepCount;
+                        for(var body2_index = 0; body2_index < this.bodyArr.length; body2_index++) {
+                            var body2 = this.bodyArr[body2_index];
+                            //console.log('body2', body2_index, body2.type);
+                            if(!body2) {
+                                continue;
+                            }
+                            if(body1.stepCount == body2.stepCount) {
+                                continue;
+                            }
+                            //console.log('step');
+                            var active1 = body1.isAwake && !body1.isStatic;
+                            var active2 = body2.isAwake && !body2.isStatic;
+                            if(!active1 && !active2) {
+                                continue;
+                            }
+                            //console.log('active');
+                            if(!body1.isCollidable(body2)) {
+                                continue;
+                            }
+                            //console.log('collideable');
+                            if(!body1.bounds.intersectsBounds(body2.bounds)) {
+                                continue;
+                            }
+                            //console.log('>>>>>>>>>> intersects');
+                            for(var i = 0; i < body1.shapes.length; i++) {
+                                for(var j = 0; j < body2.shapes.length; j++) {
+                                    var shape1 = body1.shapes[i];
+                                    var shape2 = body2.shapes[j];
+                                    var contactArr = [];
+                                    if(!Advanced.Manager.collision.collide(shape1, shape2, contactArr)) {
+                                        continue;
+                                    }
+                                    if(shape1.type > shape2.type) {
+                                        var temp = shape1;
+                                        shape1 = shape2;
+                                        shape2 = temp;
+                                    }
+                                    this.numContacts += contactArr.length;
+                                    var contactSolver = this.findContactSolver(shape1, shape2);
+                                    if(contactSolver) {
+                                        contactSolver.update(contactArr);
+                                        newContactSolverArr.push(contactSolver);
+                                    } else {
+                                        body1.awake(true);
+                                        body2.awake(true);
+                                        var newContactSolver = new Advanced.ContactSolver(shape1, shape2);
+                                        newContactSolver.contacts = contactArr;
+                                        newContactSolver.elasticity = Math.max(shape1.elasticity, shape2.elasticity);
+                                        newContactSolver.friction = Math.sqrt(shape1.friction * shape2.friction);
+                                        newContactSolverArr.push(newContactSolver);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //stats.timeCollision = Date.now() - t0;
+                    return newContactSolverArr;
+                };
+                Space.prototype.initSolver = function (dt, dt_inv, warmStarting) {
+                    //var t0 = Date.now();
+                    // Initialize contact solvers
+                    for(var i = 0; i < this.contactSolvers.length; i++) {
+                        this.contactSolvers[i].initSolver(dt_inv);
+                    }
+                    // Initialize joint solver
+                    for(var i = 0; i < this.jointArr.length; i++) {
+                        if(this.jointArr[i]) {
+                            this.jointArr[i].initSolver(dt, warmStarting);
+                        }
+                    }
+                    // Warm starting (apply cached impulse)
+                    if(warmStarting) {
+                        for(var i = 0; i < this.contactSolvers.length; i++) {
+                            this.contactSolvers[i].warmStart();
+                        }
+                    }
+                    //stats.timeInitSolver = Date.now() - t0;
+                                    };
+                Space.prototype.velocitySolver = function (iteration) {
+                    //var t0 = Date.now();
+                    for(var i = 0; i < iteration; i++) {
+                        for(var j = 0; j < this.jointArr.length; j++) {
+                            if(this.jointArr[j]) {
+                                this.jointArr[j].solveVelocityConstraints();
+                            }
+                        }
+                        for(var j = 0; j < this.contactSolvers.length; j++) {
+                            this.contactSolvers[j].solveVelocityConstraints();
+                        }
+                    }
+                    //stats.timeVelocitySolver = Date.now() - t0;
+                                    };
+                Space.prototype.positionSolver = function (iteration) {
+                    //var t0 = Date.now();
+                    var positionSolved = false;
+                    //stats.positionIterations = 0;
+                    for(var i = 0; i < iteration; i++) {
+                        var contactsOk = true;
+                        var jointsOk = true;
+                        for(var j = 0; j < this.contactSolvers.length; j++) {
+                            var contactOk = this.contactSolvers[j].solvePositionConstraints();
+                            contactsOk = contactOk && contactsOk;
+                        }
+                        for(var j = 0; j < this.jointArr.length; j++) {
+                            if(this.jointArr[j]) {
+                                var jointOk = this.jointArr[j].solvePositionConstraints();
+                                jointsOk = jointOk && jointsOk;
+                            }
+                        }
+                        if(contactsOk && jointsOk) {
+                            // exit early if the position errors are small
+                            positionSolved = true;
+                            break;
+                        }
+                        //stats.positionIterations++;
+                                            }
+                    //stats.timePositionSolver = Date.now() - t0;
+                    return positionSolved;
+                };
+                Space.prototype.step = function (dt, vel_iteration, pos_iteration, warmStarting, allowSleep) {
+                    var dt_inv = 1 / dt;
+                    this.stepCount++;
+                    // Generate contact & contactSolver
+                    this.contactSolvers = this.genTemporalContactSolvers();
+                    // Initialize contacts & joints solver
+                    this.initSolver(dt, dt_inv, warmStarting);
+                    // Intergrate velocity
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        if(body.isDynamic && body.isAwake) {
+                            body.updateVelocity(this.gravity, dt, this.damping);
+                        }
+                    }
+                    for(var i = 0; i < this.jointArr.length; i++) {
+                        var joint = this.jointArr[i];
+                        if(!joint) {
+                            continue;
+                        }
+                        var body1 = joint.body1;
+                        var body2 = joint.body2;
+                        var awake1 = body1.isAwake && !body1.isStatic;
+                        var awake2 = body2.isAwake && !body2.isStatic;
+                        if(awake1 ^ awake2) {
+                            if(!awake1) {
+                                body1.awake(true);
+                            }
+                            if(!awake2) {
+                                body2.awake(true);
+                            }
+                        }
+                    }
+                    // Iterative velocity constraints solver
+                    this.velocitySolver(vel_iteration);
+                    // Intergrate position
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        if(body.isDynamic && body.isAwake) {
+                            body.updatePosition(dt);
+                        }
+                    }
+                    // Process breakable joint
+                    for(var i = 0; i < this.jointArr.length; i++) {
+                        var joint = this.jointArr[i];
+                        if(!joint) {
+                            continue;
+                        }
+                        if(joint.breakable) {
+                            if(joint.getReactionForce(dt_inv).lengthsq() >= joint.maxForce * joint.maxForce) {
+                                this.removeJoint(joint);
+                            }
+                        }
+                    }
+                    // Iterative position constraints solver
+                    var positionSolved = this.positionSolver(pos_iteration);
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        body.syncTransform();
+                    }
+                    // Post solve collision callback
+                    for(var i = 0; i < this.contactSolvers.length; i++) {
+                        var arb = this.contactSolvers[i];
+                        //  Re-enable this
+                        //this.postSolve(arb);
+                                            }
+                    for(var i = 0; i < this.bodyArr.length; i++) {
+                        var body = this.bodyArr[i];
+                        if(!body) {
+                            continue;
+                        }
+                        if(body.isDynamic && body.isAwake) {
+                            body.cacheData();
+                        }
+                    }
+                    // Process sleeping
+                    if(allowSleep) {
+                        var minSleepTime = 999999;
+                        var linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
+                        var angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
+                        for(var i = 0; i < this.bodyArr.length; i++) {
+                            var body = this.bodyArr[i];
+                            if(!body) {
+                                continue;
+                            }
+                            if(!body.isDynamic) {
+                                continue;
+                            }
+                            if(body.angularVelocity * body.angularVelocity > angTolSqr || body.velocity.dot(body.velocity) > linTolSqr) {
+                                body.sleepTime = 0;
+                                minSleepTime = 0;
+                            } else {
+                                body.sleepTime += dt;
+                                minSleepTime = Math.min(minSleepTime, body.sleepTime);
+                            }
+                        }
+                        if(positionSolved && minSleepTime >= Space.TIME_TO_SLEEP) {
+                            for(var i = 0; i < this.bodyArr.length; i++) {
+                                var body = this.bodyArr[i];
+                                if(!body) {
+                                    continue;
+                                }
+                                body.awake(false);
+                            }
+                        }
+                    }
+                };
+                return Space;
+            })();
+            Advanced.Space = Space;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../geom/Point.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="../../math/Transform.ts" />
+        /// <reference path="../../math/TransformUtils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="joints/Joint.ts" />
+        /// <reference path="Bounds.ts" />
+        /// <reference path="Space.ts" />
+        /// <reference path="shapes/IShape.ts" />
+        /**
+        * Phaser - Advanced Physics - Body
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Body = (function () {
+                function Body(sprite, type, x, y) {
+                    if (typeof x === "undefined") { x = 0; }
+                    if (typeof y === "undefined") { y = 0; }
+                    //  Shapes
+                    this.shapes = [];
+                    //  Joints
+                    this.joints = [];
+                    this.jointHash = {
+                    };
+                    this.fixedRotation = false;
+                    this.categoryBits = 0x0001;
+                    this.maskBits = 0xFFFF;
+                    this.stepCount = 0;
+                    this._tempVec2 = new Phaser.Vec2();
+                    this.id = Phaser.Physics.Advanced.Manager.bodyCounter++;
+                    this.name = 'body' + this.id;
+                    this.type = type;
+                    if(sprite) {
+                        this.sprite = sprite;
+                        this.game = sprite.game;
+                        this.position = new Phaser.Vec2(sprite.x, sprite.y);
+                        this.angle = sprite.rotation;
+                    } else {
+                        this.position = new Phaser.Vec2(x, y);
+                        this.angle = 0;
+                    }
+                    this.transform = new Phaser.Transform(this.position, this.angle);
+                    this.centroid = new Phaser.Vec2();
+                    this.velocity = new Phaser.Vec2();
+                    this.force = new Phaser.Vec2();
+                    this.angularVelocity = 0;
+                    this.torque = 0;
+                    this.linearDamping = 0;
+                    this.angularDamping = 0;
+                    this.sleepTime = 0;
+                    this.awaked = false;
+                    this.shapes = [];
+                    this.joints = [];
+                    this.jointHash = {
+                    };
+                    this.bounds = new Advanced.Bounds();
+                    this.fixedRotation = false;
+                    this.categoryBits = 0x0001;
+                    this.maskBits = 0xFFFF;
+                    this.stepCount = 0;
+                }
+                Body.prototype.duplicate = function () {
+                    //console.log('body duplicate called');
+                    //var body = new Body(this.type, this.transform.t, this.angle);
+                    //for (var i = 0; i < this.shapes.length; i++)
+                    //{
+                    //    body.addShape(this.shapes[i].duplicate());
+                    //}
+                    //body.resetMassData();
+                    //return body;
+                                    };
+                Object.defineProperty(Body.prototype, "isDisabled", {
+                    get: function () {
+                        return this.type == Phaser.Types.BODY_DISABLED ? true : false;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Body.prototype, "isStatic", {
+                    get: function () {
+                        return this.type == Phaser.Types.BODY_STATIC ? true : false;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Body.prototype, "isKinetic", {
+                    get: function () {
+                        return this.type == Phaser.Types.BODY_KINETIC ? true : false;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Body.prototype, "isDynamic", {
+                    get: function () {
+                        return this.type == Phaser.Types.BODY_DYNAMIC ? true : false;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Body.prototype.setType = function (type) {
+                    if(type == this.type) {
+                        return;
+                    }
+                    this.force.setTo(0, 0);
+                    this.velocity.setTo(0, 0);
+                    this.torque = 0;
+                    this.angularVelocity = 0;
+                    this.type = type;
+                    this.awake(true);
+                };
+                Body.prototype.addShape = function (shape) {
+                    //  Check not already part of this body
+                    shape.body = this;
+                    this.shapes.push(shape);
+                    return shape;
+                };
+                Body.prototype.removeShape = function (shape) {
+                    var index = this.shapes.indexOf(shape);
+                    if(index != -1) {
+                        this.shapes.splice(index, 1);
+                        shape.body = undefined;
+                    }
+                };
+                Body.prototype.setMass = function (mass) {
+                    this.mass = mass;
+                    this.massInverted = mass > 0 ? 1 / mass : 0;
+                };
+                Body.prototype.setInertia = function (inertia) {
+                    this.inertia = inertia;
+                    this.inertiaInverted = inertia > 0 ? 1 / inertia : 0;
+                };
+                Body.prototype.setTransform = function (pos, angle) {
+                    this.transform.setTo(pos, angle);
+                    //  inject the transform into this.position
+                    Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
+                    //this.position.copyFrom(this.transform.transform(this.centroid));
+                    this.angle = angle;
+                };
+                Body.prototype.syncTransform = function () {
+                    this.transform.setRotation(this.angle);
+                    //var rotc: Phaser.Vec2 = this.transform.rotate(this.centroid);
+                    //var sub: Phaser.Vec2 = Phaser.Vec2Utils.subtract(this.position, rotc);
+                    //this.transform.setPosition(sub);
+                    //  this.transform.setPosition(vec2.sub(this.position, this.transform.rotate(this.centroid)));
+                    //Phaser.Vec2Utils.subtract(this.position, this.transform.rotate(this.centroid), this.transform.t);
+                    //  OPTIMISE: Creating new vector
+                    Phaser.Vec2Utils.subtract(this.position, Phaser.TransformUtils.rotate(this.transform, this.centroid), this.transform.t);
+                };
+                Body.prototype.getWorldPoint = function (p) {
+                    //  OPTIMISE: Creating new vector
+                    return Phaser.TransformUtils.transform(this.transform, p);
+                };
+                Body.prototype.getWorldVector = function (v) {
+                    //  OPTIMISE: Creating new vector
+                    return Phaser.TransformUtils.rotate(this.transform, v);
+                };
+                Body.prototype.getLocalPoint = function (p) {
+                    //  OPTIMISE: Creating new vector
+                    return Phaser.TransformUtils.untransform(this.transform, p);
+                };
+                Body.prototype.getLocalVector = function (v) {
+                    //  OPTIMISE: Creating new vector
+                    return Phaser.TransformUtils.unrotate(this.transform, v);
+                };
+                Body.prototype.setFixedRotation = function (flag) {
+                    this.fixedRotation = flag;
+                    this.resetMassData();
+                };
+                Body.prototype.resetMassData = function () {
+                    this.centroid.setTo(0, 0);
+                    this.mass = 0;
+                    this.massInverted = 0;
+                    this.inertia = 0;
+                    this.inertiaInverted = 0;
+                    if(this.isDynamic == false) {
+                        Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
+                        //this.position.copyFrom(this.transform.transform(this.centroid));
+                        return;
+                    }
+                    var totalMassCentroid = new Phaser.Vec2(0, 0);
+                    var totalMass = 0;
+                    var totalInertia = 0;
+                    for(var i = 0; i < this.shapes.length; i++) {
+                        var shape = this.shapes[i];
+                        var centroid = shape.centroid();
+                        var mass = shape.area() * shape.density;
+                        var inertia = shape.inertia(mass);
+                        //console.log('rmd', centroid, shape);
+                        totalMassCentroid.multiplyAddByScalar(centroid, mass);
+                        totalMass += mass;
+                        totalInertia += inertia;
+                    }
+                    //this.centroid.copy(vec2.scale(totalMassCentroid, 1 / totalMass));
+                    Phaser.Vec2Utils.scale(totalMassCentroid, 1 / totalMass, this.centroid);
+                    this.setMass(totalMass);
+                    if(!this.fixedRotation) {
+                        //this.setInertia(totalInertia - totalMass * vec2.dot(this.centroid, this.centroid));
+                        this.setInertia(totalInertia - totalMass * Phaser.Vec2Utils.dot(this.centroid, this.centroid));
+                    }
+                    //console.log("mass = " + this.m + " inertia = " + this.i);
+                    // Move center of mass
+                    var oldPosition = Phaser.Vec2Utils.clone(this.position);
+                    //this.position.copyFrom(this.transform.transform(this.centroid));
+                    Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
+                    // Update center of mass velocity
+                    //this.velocity.mad(vec2.perp(vec2.sub(this.position, old_p)), this.angularVelocity);
+                    oldPosition.subtract(this.position);
+                    this.velocity.multiplyAddByScalar(Phaser.Vec2Utils.perp(oldPosition, oldPosition), this.angularVelocity);
+                };
+                Body.prototype.resetJointAnchors = function () {
+                    for(var i = 0; i < this.joints.length; i++) {
+                        var joint = this.joints[i];
+                        if(!joint) {
+                            continue;
+                        }
+                        var anchor1 = joint.getWorldAnchor1();
+                        var anchor2 = joint.getWorldAnchor2();
+                        joint.setWorldAnchor1(anchor1);
+                        joint.setWorldAnchor2(anchor2);
+                    }
+                };
+                Body.prototype.cacheData = function () {
+                    //console.log('Body cacheData', this.name, 'len', this.shapes.length);
+                    this.bounds.clear();
+                    for(var i = 0; i < this.shapes.length; i++) {
+                        var shape = this.shapes[i];
+                        shape.cacheData(this.transform);
+                        this.bounds.addBounds(shape.bounds);
+                    }
+                };
+                Body.prototype.updateVelocity = function (gravity, dt, damping) {
+                    // this.velocity = vec2.mad(this.velocity, vec2.mad(gravity, this.force, this.massInverted), dt);
+                    Phaser.Vec2Utils.multiplyAdd(gravity, this.force, this.massInverted, this._tempVec2);
+                    Phaser.Vec2Utils.multiplyAdd(this.velocity, this._tempVec2, dt, this.velocity);
+                    this.angularVelocity = this.angularVelocity + this.torque * this.inertiaInverted * dt;
+                    // Apply damping.
+                    // ODE: dv/dt + c * v = 0
+                    // Solution: v(t) = v0 * exp(-c * t)
+                    // Time step: v(t + dt) = v0 * exp(-c * (t + dt)) = v0 * exp(-c * t) * exp(-c * dt) = v * exp(-c * dt)
+                    // v2 = exp(-c * dt) * v1
+                    // Taylor expansion:
+                    // v2 = (1.0f - c * dt) * v1
+                    this.velocity.scale(this.game.math.clamp(1 - dt * (damping + this.linearDamping), 0, 1));
+                    this.angularVelocity *= this.game.math.clamp(1 - dt * (damping + this.angularDamping), 0, 1);
+                    this.force.setTo(0, 0);
+                    this.torque = 0;
+                };
+                Body.prototype.updatePosition = function (dt) {
+                    //console.log('body update pos', this.position.y);
+                    //console.log('pre add temp', this._tempVec2.y);
+                    //this.position.addself(vec2.scale(this.velocity, dt));
+                    this.position.add(Phaser.Vec2Utils.scale(this.velocity, dt, this._tempVec2));
+                    //console.log('post add temp', this._tempVec2.y);
+                    //console.log('post add', this.position.y);
+                    this.angle += this.angularVelocity * dt;
+                };
+                Body.prototype.resetForce = function () {
+                    this.force.setTo(0, 0);
+                    this.torque = 0;
+                };
+                Body.prototype.applyForce = function (force, p) {
+                    if(this.isDynamic == false) {
+                        return;
+                    }
+                    if(this.isAwake == false) {
+                        this.awake(true);
+                    }
+                    this.force.add(force);
+                    //  this.f.addself(force);
+                    //  this.torque += vec2.cross(vec2.sub(p, this.p), force);
+                    Phaser.Vec2Utils.subtract(p, this.position, this._tempVec2);
+                    this.torque += Phaser.Vec2Utils.cross(this._tempVec2, force);
+                };
+                Body.prototype.applyForceToCenter = function (force) {
+                    if(this.isDynamic == false) {
+                        return;
+                    }
+                    if(this.isAwake == false) {
+                        this.awake(true);
+                    }
+                    this.force.add(force);
+                };
+                Body.prototype.applyTorque = function (torque) {
+                    if(this.isDynamic == false) {
+                        return;
+                    }
+                    if(this.isAwake == false) {
+                        this.awake(true);
+                    }
+                    this.torque += torque;
+                };
+                Body.prototype.applyLinearImpulse = function (impulse, p) {
+                    if(this.isDynamic == false) {
+                        return;
+                    }
+                    if(this.isAwake == false) {
+                        this.awake(true);
+                    }
+                    this.velocity.multiplyAddByScalar(impulse, this.massInverted);
+                    //  this.angularVelocity += vec2.cross(vec2.sub(p, this.position), impulse) * this.inertiaInverted;
+                    Phaser.Vec2Utils.subtract(p, this.position, this._tempVec2);
+                    this.angularVelocity += Phaser.Vec2Utils.cross(this._tempVec2, impulse) * this.inertiaInverted;
+                };
+                Body.prototype.applyAngularImpulse = function (impulse) {
+                    if(this.isDynamic == false) {
+                        return;
+                    }
+                    if(this.isAwake == false) {
+                        this.awake(true);
+                    }
+                    this.angularVelocity += impulse * this.inertiaInverted;
+                };
+                Body.prototype.kineticEnergy = function () {
+                    var vsq = this.velocity.dot(this.velocity);
+                    var wsq = this.angularVelocity * this.angularVelocity;
+                    return 0.5 * (this.mass * vsq + this.inertia * wsq);
+                };
+                Object.defineProperty(Body.prototype, "isAwake", {
+                    get: function () {
+                        return this.awaked;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Body.prototype.awake = function (flag) {
+                    this.awaked = flag;
+                    if(flag) {
+                        this.sleepTime = 0;
+                    } else {
+                        this.velocity.setTo(0, 0);
+                        this.angularVelocity = 0;
+                        this.force.setTo(0, 0);
+                        this.torque = 0;
+                    }
+                };
+                Body.prototype.isCollidable = function (other) {
+                    if(this == other) {
+                        return false;
+                    }
+                    if(this.isDynamic == false && other.isDynamic == false) {
+                        return false;
+                    }
+                    if(!(this.maskBits & other.categoryBits) || !(other.maskBits & this.categoryBits)) {
+                        return false;
+                    }
+                    for(var i = 0; i < this.joints.length; i++) {
+                        var joint = this.joints[i];
+                        if(!joint) {
+                            continue;
+                        }
+                        if(!joint.collideConnected && other.jointHash[joint.id] != undefined) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+                return Body;
+            })();
+            Advanced.Body = Body;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        (function (Advanced) {
+            /// <reference path="../../../math/Vec2.ts" />
+            /// <reference path="../Manager.ts" />
+            /// <reference path="../Body.ts" />
+            /// <reference path="Shape.ts" />
+            /// <reference path="Poly.ts" />
+            /**
+            * Phaser - Advanced Physics - Shapes - Box
+            *
+            * Based on the work Ju Hyung Lee started in JS PhyRus.
+            */
+            (function (Shapes) {
+                var Box = (function (_super) {
+                    __extends(Box, _super);
+                    //  Give in pixels
+                    function Box(x, y, width, height) {
+                        x = Advanced.Manager.pixelsToMeters(x);
+                        y = Advanced.Manager.pixelsToMeters(y);
+                        width = Advanced.Manager.pixelsToMeters(width);
+                        height = Advanced.Manager.pixelsToMeters(height);
+                        var hw = width * 0.5;
+                        var hh = height * 0.5;
+                                        _super.call(this, [
+                    new Phaser.Vec2(-hw + x, +hh + y), 
+                    new Phaser.Vec2(-hw + x, -hh + y), 
+                    new Phaser.Vec2(+hw + x, -hh + y), 
+                    new Phaser.Vec2(+hw + x, +hh + y)
+                ]);
+                    }
+                    return Box;
+                })(Phaser.Physics.Advanced.Shapes.Poly);
+                Shapes.Box = Box;                
+            })(Advanced.Shapes || (Advanced.Shapes = {}));
+            var Shapes = Advanced.Shapes;
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        (function (Advanced) {
+            /// <reference path="../../../math/Vec2.ts" />
+            /// <reference path="../Manager.ts" />
+            /// <reference path="../Body.ts" />
+            /// <reference path="Shape.ts" />
+            /// <reference path="Poly.ts" />
+            /**
+            * Phaser - Advanced Physics - Shapes - Triangle
+            *
+            * Based on the work Ju Hyung Lee started in JS PhyRus.
+            */
+            (function (Shapes) {
+                var Triangle = (function (_super) {
+                    __extends(Triangle, _super);
+                    function Triangle(p1, p2, p3) {
+                                        _super.call(this, [
+                    new Phaser.Vec2(p1.x, p1.y), 
+                    new Phaser.Vec2(p2.x, p2.y), 
+                    new Phaser.Vec2(p3.x, p3.y)
+                ]);
+                    }
+                    return Triangle;
+                })(Phaser.Physics.Advanced.Shapes.Poly);
+                Shapes.Triangle = Triangle;                
+            })(Advanced.Shapes || (Advanced.Shapes = {}));
+            var Shapes = Advanced.Shapes;
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../geom/Point.ts" />

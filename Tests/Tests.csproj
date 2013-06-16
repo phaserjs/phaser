@@ -186,6 +186,14 @@
     <Content Include="physics\aabb vs aabb 1.js">
       <DependentUpon>aabb vs aabb 1.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="physics\obb vs obb.ts" />
+    <TypeScriptCompile Include="physics\body1.ts" />
+    <Content Include="physics\body1.js">
+      <DependentUpon>body1.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\obb vs obb.js">
+      <DependentUpon>obb vs obb.ts</DependentUpon>
+    </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>
     </Content>

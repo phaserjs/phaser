@@ -75,7 +75,7 @@ module Phaser {
         }
 
         /**
-         * Called one by Game during the boot process.
+         * Called once by Game during the boot process.
          */
         public boot() {
 
