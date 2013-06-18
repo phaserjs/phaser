@@ -71,6 +71,22 @@ module Phaser.Physics.Advanced {
 
         }
 
+        public get x(): number {
+            return Phaser.Physics.Advanced.Manager.metersToPixels(this.mins.x);
+        }
+
+        public get y(): number {
+            return Phaser.Physics.Advanced.Manager.metersToPixels(this.mins.y);
+        }
+
+        public get width(): number {
+            return Phaser.Physics.Advanced.Manager.metersToPixels(this.maxs.x - this.mins.x);
+        }
+
+        public get height(): number {
+            return Phaser.Physics.Advanced.Manager.metersToPixels(this.maxs.y - this.mins.y);
+        }
+
         public isEmpty(): bool {
             return (this.mins.x > this.maxs.x || this.mins.y > this.maxs.y);
         }

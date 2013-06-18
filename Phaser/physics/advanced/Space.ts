@@ -560,6 +560,7 @@ module Phaser.Physics.Advanced {
             //stats.timeCollision = Date.now() - t0;
 
             return newContactSolverArr;
+
         }
 
         public initSolver(dt, dt_inv, warmStarting) {

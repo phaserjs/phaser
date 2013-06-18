@@ -14,7 +14,9 @@ module Phaser.Physics.Advanced.Shapes {
 
     export class Poly extends Phaser.Physics.Advanced.Shape implements IShape {
 
-        constructor(verts?:Phaser.Vec2[]) {
+        //  Verts is an optional array of objects, the objects must have public x and y properties which will be used
+        //  to seed this polygon (i.e. Vec2 objects, or just straight JS objects) and must wind COUNTER clockwise
+        constructor(verts?) {
 
             super(Manager.SHAPE_TYPE_POLY);
 
@@ -28,7 +30,7 @@ module Phaser.Physics.Advanced.Shapes {
             {
                 for (var i = 0; i < verts.length; i++)
                 {
-                    this.verts[i] = Phaser.Vec2Utils.clone(verts[i]);
+                    this.verts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
                     this.tverts[i] = this.verts[i];
 
                     this.tplanes[i] = {};
@@ -91,6 +93,7 @@ module Phaser.Physics.Advanced.Shapes {
                     this.convexity = false;
                 }
             }
+
         }
 
         public duplicate() {
@@ -138,7 +141,7 @@ module Phaser.Physics.Advanced.Shapes {
 
             var numVerts = this.verts.length;
 
-            //console.log('shapePoly cacheData', numVerts);
+            console.log('Poly cacheData', numVerts, this.body.name);
 
             if (numVerts == 0)
             {

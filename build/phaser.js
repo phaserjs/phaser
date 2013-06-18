@@ -16057,6 +16057,10 @@ var Phaser;
             this.camera = this._game.camera;
             this.activePointer = this.mousePointer;
             this.currentPointers = 0;
+            this.hitCanvas = document.createElement('canvas');
+            this.hitCanvas.width = 1;
+            this.hitCanvas.height = 1;
+            this.hitContext = this.hitCanvas.getContext('2d');
         }
         Input.MOUSE_OVERRIDES_TOUCH = 0;
         Input.TOUCH_OVERRIDES_MOUSE = 1;
@@ -16495,7 +16499,16 @@ var Phaser;
         return Input;
     })();
     Phaser.Input = Input;    
-})(Phaser || (Phaser = {}));
+    /*
+    public pixelPerfectCheck(sprite: Phaser.Sprite, pointer: Phaser.Pointer, alpha: number = 255): bool {
+    
+    this.hitContext.clearRect(0, 0, 1, 1);
+    
+    return true;
+    
+    }
+    */
+    })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../cameras/Camera.ts" />
 /// <reference path="IRenderer.ts" />
@@ -19387,6 +19400,34 @@ var Phaser;
                     this.maxs.setTo(-999999, -999999);
                     return this;
                 };
+                Object.defineProperty(Bounds.prototype, "x", {
+                    get: function () {
+                        return Phaser.Physics.Advanced.Manager.metersToPixels(this.mins.x);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Bounds.prototype, "y", {
+                    get: function () {
+                        return Phaser.Physics.Advanced.Manager.metersToPixels(this.mins.y);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Bounds.prototype, "width", {
+                    get: function () {
+                        return Phaser.Physics.Advanced.Manager.metersToPixels(this.maxs.x - this.mins.x);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Bounds.prototype, "height", {
+                    get: function () {
+                        return Phaser.Physics.Advanced.Manager.metersToPixels(this.maxs.y - this.mins.y);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 Bounds.prototype.isEmpty = function () {
                     return (this.mins.x > this.maxs.x || this.mins.y > this.maxs.y);
                 };
@@ -19845,6 +19886,9 @@ var Phaser;
                         if (typeof x === "undefined") { x = 0; }
                         if (typeof y === "undefined") { y = 0; }
                                         _super.call(this, Advanced.Manager.SHAPE_TYPE_CIRCLE);
+                        x = Advanced.Manager.pixelsToMeters(x);
+                        y = Advanced.Manager.pixelsToMeters(y);
+                        radius = Advanced.Manager.pixelsToMeters(radius);
                         this.center = new Phaser.Vec2(x, y);
                         this.radius = radius;
                         this.tc = new Phaser.Vec2();
@@ -19923,6 +19967,8 @@ var Phaser;
             (function (Shapes) {
                 var Poly = (function (_super) {
                     __extends(Poly, _super);
+                    //  Verts is an optional array of objects, the objects must have public x and y properties which will be used
+                    //  to seed this polygon (i.e. Vec2 objects, or just straight JS objects) and must wind COUNTER clockwise
                     function Poly(verts) {
                                         _super.call(this, Advanced.Manager.SHAPE_TYPE_POLY);
                         this.verts = [];
@@ -19931,7 +19977,7 @@ var Phaser;
                         this.tplanes = [];
                         if(verts) {
                             for(var i = 0; i < verts.length; i++) {
-                                this.verts[i] = Phaser.Vec2Utils.clone(verts[i]);
+                                this.verts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
                                 this.tverts[i] = this.verts[i];
                                 this.tplanes[i] = {
                                 };
@@ -20004,7 +20050,7 @@ var Phaser;
                     Poly.prototype.cacheData = function (xf) {
                         this.bounds.clear();
                         var numVerts = this.verts.length;
-                        //console.log('shapePoly cacheData', numVerts);
+                        console.log('Poly cacheData', numVerts, this.body.name);
                         if(numVerts == 0) {
                             return;
                         }
@@ -21158,6 +21204,109 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (Physics) {
+        (function (Advanced) {
+            /// <reference path="../../../math/Vec2.ts" />
+            /// <reference path="../Manager.ts" />
+            /// <reference path="../Body.ts" />
+            /// <reference path="Shape.ts" />
+            /// <reference path="Poly.ts" />
+            /**
+            * Phaser - Advanced Physics - Shapes - Triangle
+            *
+            * Based on the work Ju Hyung Lee started in JS PhyRus.
+            */
+            (function (Shapes) {
+                var Triangle = (function (_super) {
+                    __extends(Triangle, _super);
+                    function Triangle(x1, y1, x2, y2, x3, y3) {
+                        x1 = Advanced.Manager.pixelsToMeters(x1);
+                        y1 = Advanced.Manager.pixelsToMeters(y1);
+                        x2 = Advanced.Manager.pixelsToMeters(x2);
+                        y2 = Advanced.Manager.pixelsToMeters(y2);
+                        x3 = Advanced.Manager.pixelsToMeters(x3);
+                        y3 = Advanced.Manager.pixelsToMeters(y3);
+                                        _super.call(this, [
+                    {
+                        x: x1,
+                        y: y1
+                    }, 
+                    {
+                        x: x2,
+                        y: y2
+                    }, 
+                    {
+                        x: x3,
+                        y: y3
+                    }
+                ]);
+                    }
+                    return Triangle;
+                })(Phaser.Physics.Advanced.Shapes.Poly);
+                Shapes.Triangle = Triangle;                
+            })(Advanced.Shapes || (Advanced.Shapes = {}));
+            var Shapes = Advanced.Shapes;
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        (function (Advanced) {
+            /// <reference path="../../../math/Vec2.ts" />
+            /// <reference path="../Manager.ts" />
+            /// <reference path="../Body.ts" />
+            /// <reference path="Shape.ts" />
+            /// <reference path="Poly.ts" />
+            /**
+            * Phaser - Advanced Physics - Shapes - Box
+            *
+            * Based on the work Ju Hyung Lee started in JS PhyRus.
+            */
+            (function (Shapes) {
+                var Box = (function (_super) {
+                    __extends(Box, _super);
+                    //  Give in pixels
+                    function Box(x, y, width, height) {
+                        x = Advanced.Manager.pixelsToMeters(x);
+                        y = Advanced.Manager.pixelsToMeters(y);
+                        width = Advanced.Manager.pixelsToMeters(width);
+                        height = Advanced.Manager.pixelsToMeters(height);
+                        var hw = width * 0.5;
+                        var hh = height * 0.5;
+                                        _super.call(this, [
+                    {
+                        x: -hw + x,
+                        y: +hh + y
+                    }, 
+                    {
+                        x: -hw + x,
+                        y: -hh + y
+                    }, 
+                    {
+                        x: +hw + x,
+                        y: -hh + y
+                    }, 
+                    {
+                        x: +hw + x,
+                        y: +hh + y
+                    }
+                ]);
+                    }
+                    return Box;
+                })(Phaser.Physics.Advanced.Shapes.Poly);
+                Shapes.Box = Box;                
+            })(Advanced.Shapes || (Advanced.Shapes = {}));
+            var Shapes = Advanced.Shapes;
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
         /// <reference path="../../math/Vec2.ts" />
         /// <reference path="../../geom/Point.ts" />
         /// <reference path="../../math/Vec2Utils.ts" />
@@ -21168,6 +21317,11 @@ var Phaser;
         /// <reference path="Bounds.ts" />
         /// <reference path="Space.ts" />
         /// <reference path="shapes/IShape.ts" />
+        /// <reference path="shapes/Triangle.ts" />
+        /// <reference path="shapes/Circle.ts" />
+        /// <reference path="shapes/Box.ts" />
+        /// <reference path="shapes/Poly.ts" />
+        /// <reference path="shapes/Segment.ts" />
         /**
         * Phaser - Advanced Physics - Body
         *
@@ -21178,6 +21332,7 @@ var Phaser;
                 function Body(sprite, type, x, y) {
                     if (typeof x === "undefined") { x = 0; }
                     if (typeof y === "undefined") { y = 0; }
+                    this._tempVec2 = new Phaser.Vec2();
                     //  Shapes
                     this.shapes = [];
                     //  Joints
@@ -21188,17 +21343,16 @@ var Phaser;
                     this.categoryBits = 0x0001;
                     this.maskBits = 0xFFFF;
                     this.stepCount = 0;
-                    this._tempVec2 = new Phaser.Vec2();
                     this.id = Phaser.Physics.Advanced.Manager.bodyCounter++;
                     this.name = 'body' + this.id;
                     this.type = type;
                     if(sprite) {
                         this.sprite = sprite;
                         this.game = sprite.game;
-                        this.position = new Phaser.Vec2(sprite.x, sprite.y);
+                        this.position = new Phaser.Vec2(Phaser.Physics.Advanced.Manager.pixelsToMeters(sprite.x), Phaser.Physics.Advanced.Manager.pixelsToMeters(sprite.y));
                         this.angle = sprite.rotation;
                     } else {
-                        this.position = new Phaser.Vec2(x, y);
+                        this.position = new Phaser.Vec2(Phaser.Physics.Advanced.Manager.pixelsToMeters(x), Phaser.Physics.Advanced.Manager.pixelsToMeters(y));
                         this.angle = 0;
                     }
                     this.transform = new Phaser.Transform(this.position, this.angle);
@@ -21269,6 +21423,56 @@ var Phaser;
                     this.angularVelocity = 0;
                     this.type = type;
                     this.awake(true);
+                };
+                Body.prototype.addPoly = function (verts, elasticity, friction, density) {
+                    if (typeof elasticity === "undefined") { elasticity = 1; }
+                    if (typeof friction === "undefined") { friction = 1; }
+                    if (typeof density === "undefined") { density = 1; }
+                    var poly = new Phaser.Physics.Advanced.Shapes.Poly(verts);
+                    poly.elasticity = elasticity;
+                    poly.friction = friction;
+                    poly.density = density;
+                    this.addShape(poly);
+                    this.resetMassData();
+                    return poly;
+                };
+                Body.prototype.addTriangle = function (x1, y1, x2, y2, x3, y3, elasticity, friction, density) {
+                    if (typeof elasticity === "undefined") { elasticity = 1; }
+                    if (typeof friction === "undefined") { friction = 1; }
+                    if (typeof density === "undefined") { density = 1; }
+                    var tri = new Phaser.Physics.Advanced.Shapes.Triangle(x1, y1, x2, y2, x3, y3);
+                    tri.elasticity = elasticity;
+                    tri.friction = friction;
+                    tri.density = density;
+                    this.addShape(tri);
+                    this.resetMassData();
+                    return tri;
+                };
+                Body.prototype.addBox = function (x, y, width, height, elasticity, friction, density) {
+                    if (typeof elasticity === "undefined") { elasticity = 1; }
+                    if (typeof friction === "undefined") { friction = 1; }
+                    if (typeof density === "undefined") { density = 1; }
+                    var box = new Phaser.Physics.Advanced.Shapes.Box(x, y, width, height);
+                    box.elasticity = elasticity;
+                    box.friction = friction;
+                    box.density = density;
+                    this.addShape(box);
+                    this.resetMassData();
+                    return box;
+                };
+                Body.prototype.addCircle = function (radius, x, y, elasticity, friction, density) {
+                    if (typeof x === "undefined") { x = 0; }
+                    if (typeof y === "undefined") { y = 0; }
+                    if (typeof elasticity === "undefined") { elasticity = 1; }
+                    if (typeof friction === "undefined") { friction = 1; }
+                    if (typeof density === "undefined") { density = 1; }
+                    var circle = new Phaser.Physics.Advanced.Shapes.Circle(radius, x, y);
+                    circle.elasticity = elasticity;
+                    circle.friction = friction;
+                    circle.density = density;
+                    this.addShape(circle);
+                    this.resetMassData();
+                    return circle;
                 };
                 Body.prototype.addShape = function (shape) {
                     //  Check not already part of this body
@@ -21519,82 +21723,6 @@ var Phaser;
                 return Body;
             })();
             Advanced.Body = Body;            
-        })(Physics.Advanced || (Physics.Advanced = {}));
-        var Advanced = Physics.Advanced;
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    (function (Physics) {
-        (function (Advanced) {
-            /// <reference path="../../../math/Vec2.ts" />
-            /// <reference path="../Manager.ts" />
-            /// <reference path="../Body.ts" />
-            /// <reference path="Shape.ts" />
-            /// <reference path="Poly.ts" />
-            /**
-            * Phaser - Advanced Physics - Shapes - Box
-            *
-            * Based on the work Ju Hyung Lee started in JS PhyRus.
-            */
-            (function (Shapes) {
-                var Box = (function (_super) {
-                    __extends(Box, _super);
-                    //  Give in pixels
-                    function Box(x, y, width, height) {
-                        x = Advanced.Manager.pixelsToMeters(x);
-                        y = Advanced.Manager.pixelsToMeters(y);
-                        width = Advanced.Manager.pixelsToMeters(width);
-                        height = Advanced.Manager.pixelsToMeters(height);
-                        var hw = width * 0.5;
-                        var hh = height * 0.5;
-                                        _super.call(this, [
-                    new Phaser.Vec2(-hw + x, +hh + y), 
-                    new Phaser.Vec2(-hw + x, -hh + y), 
-                    new Phaser.Vec2(+hw + x, -hh + y), 
-                    new Phaser.Vec2(+hw + x, +hh + y)
-                ]);
-                    }
-                    return Box;
-                })(Phaser.Physics.Advanced.Shapes.Poly);
-                Shapes.Box = Box;                
-            })(Advanced.Shapes || (Advanced.Shapes = {}));
-            var Shapes = Advanced.Shapes;
-        })(Physics.Advanced || (Physics.Advanced = {}));
-        var Advanced = Physics.Advanced;
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    (function (Physics) {
-        (function (Advanced) {
-            /// <reference path="../../../math/Vec2.ts" />
-            /// <reference path="../Manager.ts" />
-            /// <reference path="../Body.ts" />
-            /// <reference path="Shape.ts" />
-            /// <reference path="Poly.ts" />
-            /**
-            * Phaser - Advanced Physics - Shapes - Triangle
-            *
-            * Based on the work Ju Hyung Lee started in JS PhyRus.
-            */
-            (function (Shapes) {
-                var Triangle = (function (_super) {
-                    __extends(Triangle, _super);
-                    function Triangle(p1, p2, p3) {
-                                        _super.call(this, [
-                    new Phaser.Vec2(p1.x, p1.y), 
-                    new Phaser.Vec2(p2.x, p2.y), 
-                    new Phaser.Vec2(p3.x, p3.y)
-                ]);
-                    }
-                    return Triangle;
-                })(Phaser.Physics.Advanced.Shapes.Poly);
-                Shapes.Triangle = Triangle;                
-            })(Advanced.Shapes || (Advanced.Shapes = {}));
-            var Shapes = Advanced.Shapes;
         })(Physics.Advanced || (Physics.Advanced = {}));
         var Advanced = Physics.Advanced;
     })(Phaser.Physics || (Phaser.Physics = {}));

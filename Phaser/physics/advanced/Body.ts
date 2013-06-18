@@ -8,6 +8,11 @@
 /// <reference path="Bounds.ts" />
 /// <reference path="Space.ts" />
 /// <reference path="shapes/IShape.ts" />
+/// <reference path="shapes/Triangle.ts" />
+/// <reference path="shapes/Circle.ts" />
+/// <reference path="shapes/Box.ts" />
+/// <reference path="shapes/Poly.ts" />
+/// <reference path="shapes/Segment.ts" />
 
 /**
 * Phaser - Advanced Physics - Body
@@ -29,12 +34,12 @@ module Phaser.Physics.Advanced {
             {
                 this.sprite = sprite;
                 this.game = sprite.game;
-                this.position = new Phaser.Vec2(sprite.x, sprite.y);
+                this.position = new Phaser.Vec2(Phaser.Physics.Advanced.Manager.pixelsToMeters(sprite.x), Phaser.Physics.Advanced.Manager.pixelsToMeters(sprite.y));
                 this.angle = sprite.rotation;
             }
             else
             {
-                this.position = new Phaser.Vec2(x, y);
+                this.position = new Phaser.Vec2(Phaser.Physics.Advanced.Manager.pixelsToMeters(x), Phaser.Physics.Advanced.Manager.pixelsToMeters(y));
                 this.angle = 0;
             }
 
@@ -63,6 +68,8 @@ module Phaser.Physics.Advanced {
             this.stepCount = 0;
 
         }
+
+	    private _tempVec2: Phaser.Vec2 = new Phaser.Vec2;
 
         /**
          * Reference to Phaser.Game
@@ -139,6 +146,11 @@ module Phaser.Physics.Advanced {
 	    // Bounds of all shapes
 	    public bounds: Bounds;
 
+	    public mass: number;
+	    public massInverted: number;
+	    public inertia: number;
+	    public inertiaInverted: number;
+
 	    public fixedRotation = false;
 	    public categoryBits = 0x0001;
 	    public maskBits = 0xFFFF;
@@ -195,6 +207,62 @@ module Phaser.Physics.Advanced {
 
 	    }
 
+	    public addPoly(verts, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Advanced.Shapes.Poly {
+
+	        var poly: Phaser.Physics.Advanced.Shapes.Poly = new Phaser.Physics.Advanced.Shapes.Poly(verts);
+	        poly.elasticity = elasticity;
+	        poly.friction = friction;
+	        poly.density = density;
+
+	        this.addShape(poly);
+	        this.resetMassData();
+
+	        return poly;
+
+	    }
+
+	    public addTriangle(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Advanced.Shapes.Triangle {
+
+	        var tri: Phaser.Physics.Advanced.Shapes.Triangle = new Phaser.Physics.Advanced.Shapes.Triangle(x1, y1, x2, y2, x3, y3);
+	        tri.elasticity = elasticity;
+	        tri.friction = friction;
+	        tri.density = density;
+
+	        this.addShape(tri);
+	        this.resetMassData();
+
+	        return tri;
+
+	    }
+
+	    public addBox(x: number, y: number, width: number, height: number, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Advanced.Shapes.Box {
+
+	        var box: Phaser.Physics.Advanced.Shapes.Box = new Phaser.Physics.Advanced.Shapes.Box(x, y, width, height);
+	        box.elasticity = elasticity;
+	        box.friction = friction;
+	        box.density = density;
+
+	        this.addShape(box);
+	        this.resetMassData();
+
+	        return box;
+
+	    }
+
+	    public addCircle(radius: number, x?: number = 0, y?: number = 0, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Advanced.Shapes.Circle {
+
+	        var circle: Phaser.Physics.Advanced.Shapes.Circle = new Phaser.Physics.Advanced.Shapes.Circle(radius, x, y);
+	        circle.elasticity = elasticity;
+	        circle.friction = friction;
+	        circle.density = density;
+
+	        this.addShape(circle);
+	        this.resetMassData();
+
+	        return circle;
+
+	    }
+
 	    public addShape(shape) {
 
             //  Check not already part of this body
@@ -218,10 +286,6 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    public mass: number;
-	    public massInverted: number;
-	    public inertia: number;
-	    public inertiaInverted: number;
 
 	    private setMass(mass) {
 
@@ -381,7 +445,6 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    private _tempVec2: Phaser.Vec2 = new Phaser.Vec2;
 
 	    public updateVelocity(gravity, dt, damping) {
 

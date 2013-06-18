@@ -53,12 +53,29 @@ module Phaser {
             this.activePointer = this.mousePointer;
             this.currentPointers = 0;
 
+            this.hitCanvas = <HTMLCanvasElement> document.createElement('canvas');
+            this.hitCanvas.width = 1;
+            this.hitCanvas.height = 1;
+            this.hitContext = this.hitCanvas.getContext('2d');
+
         }
 
         /**
          * Local private reference to game.
          */
         private _game: Game;
+
+        /**
+         * A 1x1 sized canvas used for pixel-perfect checks
+         * @type {HTMLCanvasElement}
+         */
+        public hitCanvas: HTMLCanvasElement;
+
+        /**
+         * The context of the 1x1 pixel check canvas
+         * @type {CanvasRenderingContext2D}
+         */
+        public hitContext: CanvasRenderingContext2D;
 
         /**
         * A vector object representing the previous position of the Pointer.
@@ -959,6 +976,14 @@ module Phaser {
         **/
         public getAngle(pointer1: Pointer, pointer2: Pointer): number {
             return Vec2Utils.angle(pointer1.position, pointer2.position);
+        }
+
+        public pixelPerfectCheck(sprite: Phaser.Sprite, pointer: Phaser.Pointer, alpha: number = 255): bool {
+
+            this.hitContext.clearRect(0, 0, 1, 1);
+
+            return true;
+
         }
 
     }

@@ -8473,6 +8473,16 @@ module Phaser {
         */
         private _game;
         /**
+        * A 1x1 sized canvas used for pixel-perfect checks
+        * @type {HTMLCanvasElement}
+        */
+        public hitCanvas: HTMLCanvasElement;
+        /**
+        * The context of the 1x1 pixel check canvas
+        * @type {CanvasRenderingContext2D}
+        */
+        public hitContext: CanvasRenderingContext2D;
+        /**
         * A vector object representing the previous position of the Pointer.
         * @property vector
         * @type {Vec2}
@@ -9668,6 +9678,10 @@ module Phaser.Physics.Advanced {
         public setTo(mins: Vec2, maxs: Vec2): void;
         public copy(b: Bounds): Bounds;
         public clear(): Bounds;
+        public x : number;
+        public y : number;
+        public width : number;
+        public height : number;
         public isEmpty(): bool;
         public getPerimeter(): number;
         public addPoint(p: Vec2): Bounds;
@@ -9792,7 +9806,7 @@ module Phaser.Physics.Advanced.Shapes {
 */
 module Phaser.Physics.Advanced.Shapes {
     class Poly extends Shape implements IShape {
-        constructor(verts?: Vec2[]);
+        constructor(verts?);
         public verts: Vec2[];
         public planes;
         public tverts;
@@ -9938,6 +9952,26 @@ module Phaser.Physics.Advanced {
     }
 }
 /**
+* Phaser - Advanced Physics - Shapes - Triangle
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced.Shapes {
+    class Triangle extends Poly {
+        constructor(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number);
+    }
+}
+/**
+* Phaser - Advanced Physics - Shapes - Box
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced.Shapes {
+    class Box extends Poly {
+        constructor(x, y, width, height);
+    }
+}
+/**
 * Phaser - Advanced Physics - Body
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
@@ -9945,6 +9979,7 @@ module Phaser.Physics.Advanced {
 module Phaser.Physics.Advanced {
     class Body {
         constructor(sprite: Sprite, type: number, x?: number, y?: number);
+        private _tempVec2;
         /**
         * Reference to Phaser.Game
         */
@@ -9986,6 +10021,10 @@ module Phaser.Physics.Advanced {
         public joints: IJoint[];
         public jointHash: {};
         public bounds: Bounds;
+        public mass: number;
+        public massInverted: number;
+        public inertia: number;
+        public inertiaInverted: number;
         public fixedRotation: bool;
         public categoryBits: number;
         public maskBits: number;
@@ -9997,12 +10036,12 @@ module Phaser.Physics.Advanced {
         public isKinetic : bool;
         public isDynamic : bool;
         public setType(type: number): void;
+        public addPoly(verts, elasticity?: number, friction?: number, density?: number): Shapes.Poly;
+        public addTriangle(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, elasticity?: number, friction?: number, density?: number): Shapes.Triangle;
+        public addBox(x: number, y: number, width: number, height: number, elasticity?: number, friction?: number, density?: number): Shapes.Box;
+        public addCircle(radius: number, x?: number, y?: number, elasticity?: number, friction?: number, density?: number): Shapes.Circle;
         public addShape(shape);
         public removeShape(shape): void;
-        public mass: number;
-        public massInverted: number;
-        public inertia: number;
-        public inertiaInverted: number;
         private setMass(mass);
         private setInertia(inertia);
         public setTransform(pos, angle): void;
@@ -10015,7 +10054,6 @@ module Phaser.Physics.Advanced {
         public resetMassData(): void;
         public resetJointAnchors(): void;
         public cacheData(): void;
-        private _tempVec2;
         public updateVelocity(gravity, dt, damping): void;
         public updatePosition(dt): void;
         public resetForce(): void;
@@ -10028,26 +10066,6 @@ module Phaser.Physics.Advanced {
         public isAwake : bool;
         public awake(flag): void;
         public isCollidable(other): bool;
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Box
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Box extends Poly {
-        constructor(x, y, width, height);
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Triangle
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Triangle extends Poly {
-        constructor(p1, p2, p3);
     }
 }
 /**

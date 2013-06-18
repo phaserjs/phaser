@@ -26,10 +26,10 @@ module Phaser.Physics.Advanced.Shapes {
 	        var hh = height * 0.5;
 
 	        super([
-                new Phaser.Vec2(-hw + x, +hh + y),
-                new Phaser.Vec2(-hw + x, -hh + y),
-                new Phaser.Vec2(+hw + x, -hh + y),
-                new Phaser.Vec2(+hw + x, +hh + y)
+                { x: -hw + x, y: +hh + y },
+                { x: -hw + x, y: -hh + y },
+                { x: +hw + x, y: -hh + y },
+                { x: +hw + x, y: +hh + y }
 	        ]);
 
         }

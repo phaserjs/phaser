@@ -21,44 +21,49 @@
     var physics: Phaser.Physics.Advanced.Manager;
     var circle: Phaser.Physics.Advanced.Body;
     var walls: Phaser.Physics.Advanced.Body;
-
-    var ground: Phaser.Physics.Advanced.Shapes.Box;
+    var t: Phaser.Physics.Advanced.Body;
 
     function create() {
 
         atari = game.add.sprite(200, 100, 'atari');
+        
+        //  need to get the physics bounds around the sprite center, regardless of origin
         atari.transform.origin.setTo(0.5, 0.5);
         //card = game.add.sprite(500, 300, 'card');
 
         physics = new Phaser.Physics.Advanced.Manager(game);
 
-        walls = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_STATIC);
+        walls = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_KINETIC);
         walls.game = game;
 
+        walls.addBox(500, 500, 500, 20);
+        walls.addBox(100, 250, 250, 20);
+        walls.transform.setRotation(game.math.degreesToRadians(3));
+        //walls.fixedRotation = true;
+
         //  position is in relation to the containing body! don't forget this
-        ground = walls.addShape(new Phaser.Physics.Advanced.Shapes.Box(400, 500, 500, 20));
+        //ground = walls.addShape(new Phaser.Physics.Advanced.Shapes.Box(400, 500, 500, 20));
 
         //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 0.2, 20.48, 0.4));
         //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(0, 15.16, 20.48, 0.4));
         //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(-10.04, 7.68, 0.4, 14.56));
         //walls.addShape(new Phaser.Physics.Advanced.ShapeBox(10.04, 7.68, 0.4, 14.56));
-        walls.resetMassData();
+        //walls.resetMassData();
 
         physics.space.addBody(walls);
 
         //  Add a circle
-
-        circle = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_DYNAMIC, physics.pixelsToMeters(300), physics.pixelsToMeters(200));
+        circle = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_DYNAMIC, 100, 200);
         circle.game = game;
-
-        var shape = new Phaser.Physics.Advanced.Shapes.Circle(0.4, 0, 0);
-        shape.elasticity = 0.8;
-        shape.friction = 1;
-        shape.density = 1;
-        circle.addShape(shape);
-        circle.resetMassData();
-
+        circle.addCircle(32, 0, 0, 0.8);
         physics.space.addBody(circle);
+
+        t = new Phaser.Physics.Advanced.Body(null, Phaser.Types.BODY_KINETIC, 500, 400);
+        t.game = game;
+        //t.addCircle(32, 0, 0, 0.8);
+        //t.addTriangle(0, 0, 1, 1, 2, 2);
+        t.addPoly([{ x: -0.8, y: 0.48 }, { x: -0.8, y: 0 }, { x: 0.8, y: 0 }, { x: 0.8, y: 0.32 }, { x: 0, y: 0.84 }, { x: -0.56, y: 0.84 }], 0.5, 1, 6);
+        physics.space.addBody(t);
 
     }
 
@@ -104,6 +109,14 @@
 
         //console.log(circle.velocity.x, circle.velocity.y);
         //console.log('p', circle.position.x, circle.position.y);
+    }
+
+    function renderBounds(body: Phaser.Physics.Advanced.Body) {
+
+        game.stage.context.fillStyle = 'rgba(0,255,200,0.2)';
+
+        game.stage.context.fillRect(body.bounds.x, body.bounds.y, body.bounds.width, body.bounds.height);
+
     }
 
     function renderCircle(shape) {
@@ -152,8 +165,14 @@
         game.stage.context.fillText('vx: ' + circle.velocity.x + ' vy: ' + circle.velocity.y, 32, 64);
 
         renderCircle(circle.shapes[0]);
+        renderBounds(circle);
 
         drawPolygon(game.stage.context, walls.shapes[0], 1, 'rgb(0,255,255)');
+        drawPolygon(game.stage.context, walls.shapes[1], 1, 'rgb(0,255,255)');
+
+        //renderCircle(t.shapes[0]);
+        drawPolygon(game.stage.context, t.shapes[0], 1, 'rgb(255,255,255)');
+        renderBounds(t);
 
     }
 

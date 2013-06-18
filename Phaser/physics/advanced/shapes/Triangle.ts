@@ -14,9 +14,16 @@ module Phaser.Physics.Advanced.Shapes {
 
     export class Triangle extends Phaser.Physics.Advanced.Shapes.Poly {
 
-        constructor(p1, p2, p3) {
+        constructor(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
 
-            super( [ new Phaser.Vec2(p1.x, p1.y), new Phaser.Vec2(p2.x, p2.y), new Phaser.Vec2(p3.x, p3.y) ] );
+            x1 = Manager.pixelsToMeters(x1);
+            y1 = Manager.pixelsToMeters(y1);
+            x2 = Manager.pixelsToMeters(x2);
+            y2 = Manager.pixelsToMeters(y2);
+            x3 = Manager.pixelsToMeters(x3);
+            y3 = Manager.pixelsToMeters(y3);
+
+            super([{ x: x1, y: y1 }, { x: x2, y: y2 }, { x: x3, y: y3 }]);
 
         }
 
