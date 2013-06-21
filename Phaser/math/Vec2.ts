@@ -288,7 +288,8 @@ module Phaser {
         * @return {string} a string representation of the object.
         **/
         public toString(): string {
-            return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
+            //return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
+            return "x=" + this.x + " y=" + this.y;
         }
 
     }

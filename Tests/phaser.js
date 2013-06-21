@@ -955,7 +955,8 @@ var Phaser;
         * @return {string} a string representation of the object.
         **/
         function () {
-            return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
+            //return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
+            return "x=" + this.x + " y=" + this.y;
         };
         return Vec2;
     })();
@@ -16496,19 +16497,15 @@ var Phaser;
         function (pointer1, pointer2) {
             return Phaser.Vec2Utils.angle(pointer1.position, pointer2.position);
         };
+        Input.prototype.pixelPerfectCheck = function (sprite, pointer, alpha) {
+            if (typeof alpha === "undefined") { alpha = 255; }
+            this.hitContext.clearRect(0, 0, 1, 1);
+            return true;
+        };
         return Input;
     })();
     Phaser.Input = Input;    
-    /*
-    public pixelPerfectCheck(sprite: Phaser.Sprite, pointer: Phaser.Pointer, alpha: number = 255): bool {
-    
-    this.hitContext.clearRect(0, 0, 1, 1);
-    
-    return true;
-    
-    }
-    */
-    })(Phaser || (Phaser = {}));
+})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../cameras/Camera.ts" />
 /// <reference path="IRenderer.ts" />
@@ -18073,7 +18070,11 @@ var Phaser;
             this.t = Phaser.Vec2Utils.clone(pos);
             this.c = Math.cos(angle);
             this.s = Math.sin(angle);
+            this.angle = angle;
         }
+        Transform.prototype.toString = function () {
+            return 't=' + this.t.toString() + ' c=' + this.c + ' s=' + this.s + ' a=' + this.angle;
+        };
         Transform.prototype.setTo = function (pos, angle) {
             this.t.copyFrom(pos);
             this.c = Math.cos(angle);
@@ -18081,8 +18082,11 @@ var Phaser;
             return this;
         };
         Transform.prototype.setRotation = function (angle) {
-            this.c = Math.cos(angle);
-            this.s = Math.sin(angle);
+            if(angle !== this.angle) {
+                this.c = Math.cos(angle);
+                this.s = Math.sin(angle);
+                this.angle = angle;
+            }
             return this;
         };
         Transform.prototype.setPosition = function (p) {
@@ -18114,20 +18118,24 @@ var Phaser;
         function TransformUtils() { }
         TransformUtils.rotate = function rotate(t, v, out) {
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            //return new vec2(v.x * this.c - v.y * this.s, v.x * this.s + v.y * this.c);
             return out.setTo(v.x * t.c - v.y * t.s, v.x * t.s + v.y * t.c);
         };
         TransformUtils.unrotate = function unrotate(t, v, out) {
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            //return new vec2(v.x * this.c + v.y * this.s, -v.x * this.s + v.y * this.c);
             return out.setTo(v.x * t.c + v.y * t.s, -v.x * t.s + v.y * t.c);
         };
         TransformUtils.transform = function transform(t, v, out) {
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            //return new vec2(v.x * this.c - v.y * this.s + this.t.x, v.x * this.s + v.y * this.c + this.t.y);
             return out.setTo(v.x * t.c - v.y * t.s + t.t.x, v.x * t.s + v.y * t.c + t.t.y);
         };
         TransformUtils.untransform = function untransform(t, v, out) {
             if (typeof out === "undefined") { out = new Phaser.Vec2(); }
             var px = v.x - t.t.x;
             var py = v.y - t.t.y;
+            //return new vec2(px * this.c + py * this.s, -px * this.s + py * this.c);
             return out.setTo(px * t.c + py * t.s, -px * t.s + py * t.c);
         };
         return TransformUtils;
@@ -19150,14 +19158,58 @@ var Phaser;
                     this.paused = false;
                     this.step = false;
                     // step through the simulation (i.e. per click)
+                    //public paused: bool = true;
+                    //public step: bool = false; // step through the simulation (i.e. per click)
                     this.velocityIterations = 8;
                     this.positionIterations = 4;
+                    //public velocityIterations: number = 1;
+                    //public positionIterations: number = 1;
                     this.allowSleep = true;
                     this.warmStarting = true;
                     this.game = game;
                     this.space = new Advanced.Space();
                     Manager.collision = new Advanced.Collision();
                 }
+                Manager.clear = function clear() {
+                    Manager.debug.textContent = "";
+                    Manager.log = [];
+                };
+                Manager.write = function write(s) {
+                    //Manager.debug.textContent += s + "\n";
+                                    };
+                Manager.writeAll = function writeAll() {
+                    for(var i = 0; i < Manager.log.length; i++) {
+                        //Manager.debug.textContent += Manager.log[i];
+                                            }
+                };
+                Manager.log = [];
+                Manager.dump = function dump(phase, body) {
+                    var s = "\n\nPhase: " + phase + "\n";
+                    s += "Position: " + body.position.toString() + "\n";
+                    s += "Velocity: " + body.velocity.toString() + "\n";
+                    s += "Angle: " + body.angle + "\n";
+                    s += "Force: " + body.force.toString() + "\n";
+                    s += "Torque: " + body.torque + "\n";
+                    s += "Bounds: " + body.bounds.toString() + "\n";
+                    s += "Shape ***\n";
+                    s += "Vert 0: " + body.shapes[0].verts[0].toString() + "\n";
+                    s += "Vert 1: " + body.shapes[0].verts[1].toString() + "\n";
+                    s += "Vert 2: " + body.shapes[0].verts[2].toString() + "\n";
+                    s += "Vert 3: " + body.shapes[0].verts[3].toString() + "\n";
+                    s += "TVert 0: " + body.shapes[0].tverts[0].toString() + "\n";
+                    s += "TVert 1: " + body.shapes[0].tverts[1].toString() + "\n";
+                    s += "TVert 2: " + body.shapes[0].tverts[2].toString() + "\n";
+                    s += "TVert 3: " + body.shapes[0].tverts[3].toString() + "\n";
+                    s += "Plane 0: " + body.shapes[0].planes[0].normal.toString() + "\n";
+                    s += "Plane 1: " + body.shapes[0].planes[1].normal.toString() + "\n";
+                    s += "Plane 2: " + body.shapes[0].planes[2].normal.toString() + "\n";
+                    s += "Plane 3: " + body.shapes[0].planes[3].normal.toString() + "\n";
+                    s += "TPlane 0: " + body.shapes[0].tplanes[0].normal.toString() + "\n";
+                    s += "TPlane 1: " + body.shapes[0].tplanes[1].normal.toString() + "\n";
+                    s += "TPlane 2: " + body.shapes[0].tplanes[2].normal.toString() + "\n";
+                    s += "TPlane 3: " + body.shapes[0].tplanes[3].normal.toString() + "\n";
+                    Manager.log.push(s);
+                };
                 Manager.SHAPE_TYPE_CIRCLE = 0;
                 Manager.SHAPE_TYPE_SEGMENT = 1;
                 Manager.SHAPE_TYPE_POLY = 2;
@@ -19197,6 +19249,7 @@ var Phaser;
                     //    //domCanvas.style.cursor = body ? "pointer" : "default";
                     //}
                     if(!this.paused || this.step) {
+                        Manager.clear();
                         var h = 1 / this.frameRateHz;
                         this.timeDelta += frameTime;
                         if(this.step) {
@@ -19649,7 +19702,6 @@ var Phaser;
         (function (Advanced) {
             var ContactSolver = (function () {
                 function ContactSolver(shape1, shape2) {
-                    //console.log('ContactSolver super');
                     this.shape1 = shape1;
                     this.shape2 = shape2;
                     this.contacts = [];
@@ -19733,24 +19785,32 @@ var Phaser;
                         //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
                         //var impulse = new vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
                         var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
+                        //console.log('phaser warmStart impulse ' + i + ' = ' + impulse.toString());
                         body1.velocity.multiplyAddByScalar(impulse, -body1.massInverted);
                         //body1.v.mad(impulse, -body1.m_inv);
                         body1.angularVelocity -= Phaser.Vec2Utils.cross(con.r1, impulse) * body1.inertiaInverted;
                         //body1.w -= vec2.cross(con.r1, impulse) * body1.i_inv;
-                        body2.velocity.multiplyAddByScalar(impulse, -body2.massInverted);
+                        body2.velocity.multiplyAddByScalar(impulse, body2.massInverted);
                         //body2.v.mad(impulse, body2.m_inv);
-                        body2.angularVelocity -= Phaser.Vec2Utils.cross(con.r2, impulse) * body2.inertiaInverted;
+                        body2.angularVelocity += Phaser.Vec2Utils.cross(con.r2, impulse) * body2.inertiaInverted;
                         //body2.w += vec2.cross(con.r2, impulse) * body2.i_inv;
                                             }
                 };
                 ContactSolver.prototype.solveVelocityConstraints = function () {
                     var body1 = this.shape1.body;
                     var body2 = this.shape2.body;
+                    Advanced.Manager.write('solveVelocityConstraints. Body1: ' + body1.name + ' Body2: ' + body2.name);
+                    Advanced.Manager.write('Shape 1: ' + this.shape1.type + ' Shape 2: ' + this.shape2.type);
                     var m1_inv = body1.massInverted;
                     var i1_inv = body1.inertiaInverted;
                     var m2_inv = body2.massInverted;
                     var i2_inv = body2.inertiaInverted;
+                    Advanced.Manager.write('m1_inv: ' + m1_inv);
+                    Advanced.Manager.write('i1_inv: ' + i1_inv);
+                    Advanced.Manager.write('m2_inv: ' + m2_inv);
+                    Advanced.Manager.write('i2_inv: ' + i2_inv);
                     for(var i = 0; i < this.contacts.length; i++) {
+                        Advanced.Manager.write('------------ solve con ' + i);
                         var con = this.contacts[i];
                         var n = con.normal;
                         var t = Phaser.Vec2Utils.perp(n);
@@ -19762,19 +19822,25 @@ var Phaser;
                         var v2 = new Phaser.Vec2();
                         Phaser.Vec2Utils.multiplyAdd(body1.velocity, Phaser.Vec2Utils.perp(r1), body1.angularVelocity, v1);
                         //var v1 = vec2.mad(body1.v, vec2.perp(r1), body1.w);
+                        Advanced.Manager.write('v1 ' + v1.toString());
                         Phaser.Vec2Utils.multiplyAdd(body2.velocity, Phaser.Vec2Utils.perp(r2), body2.angularVelocity, v2);
                         //var v2 = vec2.mad(body2.v, vec2.perp(r2), body2.w);
+                        Advanced.Manager.write('v2 ' + v2.toString());
                         // Relative velocity at contact point
                         var rv = new Phaser.Vec2();
                         Phaser.Vec2Utils.subtract(v2, v1, rv);
                         //var rv = vec2.sub(v2, v1);
+                        Advanced.Manager.write('rv ' + rv.toString());
                         // Compute normal constraint impulse + adding bounce as a velocity bias
                         // lambda_n = -EMn * J * V
                         var lambda_n = -con.emn * (Phaser.Vec2Utils.dot(n, rv) + con.bounce);
+                        Advanced.Manager.write('lambda_n: ' + lambda_n);
                         // Accumulate and clamp
                         var lambda_n_old = con.lambdaNormal;
                         con.lambdaNormal = Math.max(lambda_n_old + lambda_n, 0);
+                        //con.lambdaNormal = this.clamp(lambda_n_old + lambda_n, 0);
                         lambda_n = con.lambdaNormal - lambda_n_old;
+                        Advanced.Manager.write('lambda_n clamped: ' + lambda_n);
                         // Compute frictional constraint impulse
                         // lambda_t = -EMt * J * V
                         var lambda_t = -con.emt * Phaser.Vec2Utils.dot(t, rv);
@@ -19787,19 +19853,23 @@ var Phaser;
                         // Apply the final impulses
                         //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
                         var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
+                        Advanced.Manager.write('impulse: ' + impulse.toString());
                         body1.velocity.multiplyAddByScalar(impulse, -m1_inv);
                         //body1.v.mad(impulse, -m1_inv);
                         body1.angularVelocity -= Phaser.Vec2Utils.cross(r1, impulse) * i1_inv;
                         //body1.w -= vec2.cross(r1, impulse) * i1_inv;
                         body2.velocity.multiplyAddByScalar(impulse, m2_inv);
                         //body2.v.mad(impulse, m2_inv);
-                        body1.angularVelocity += Phaser.Vec2Utils.cross(r2, impulse) * i2_inv;
+                        body2.angularVelocity += Phaser.Vec2Utils.cross(r2, impulse) * i2_inv;
                         //body2.w += vec2.cross(r2, impulse) * i2_inv;
-                                            }
+                        Advanced.Manager.write('body1: ' + body1.toString());
+                        Advanced.Manager.write('body2: ' + body2.toString());
+                    }
                 };
                 ContactSolver.prototype.solvePositionConstraints = function () {
                     var body1 = this.shape1.body;
                     var body2 = this.shape2.body;
+                    Advanced.Manager.write('solvePositionConstraints');
                     var m1_inv = body1.massInverted;
                     var i1_inv = body1.inertiaInverted;
                     var m2_inv = body2.massInverted;
@@ -19807,6 +19877,7 @@ var Phaser;
                     var sum_m_inv = m1_inv + m2_inv;
                     var max_penetration = 0;
                     for(var i = 0; i < this.contacts.length; i++) {
+                        Advanced.Manager.write('------------- solvePositionConstraints ' + i);
                         var con = this.contacts[i];
                         var n = con.normal;
                         var r1 = new Phaser.Vec2();
@@ -19816,6 +19887,10 @@ var Phaser;
                         //var r1 = vec2.rotate(con.r1_local, body1.a);
                         Phaser.Vec2Utils.rotate(con.r2_local, body2.angle, r2);
                         //var r2 = vec2.rotate(con.r2_local, body2.a);
+                        Advanced.Manager.write('r1_local.x = ' + con.r1_local.x + ' r1_local.y = ' + con.r1_local.y + ' angle: ' + body1.angle);
+                        Advanced.Manager.write('r1 rotated: r1.x = ' + r1.x + ' r1.y = ' + r1.y);
+                        Advanced.Manager.write('r2_local.x = ' + con.r2_local.x + ' r2_local.y = ' + con.r2_local.y + ' angle: ' + body2.angle);
+                        Advanced.Manager.write('r2 rotated: r2.x = ' + r2.x + ' r2.y = ' + r2.y);
                         // Contact points (corrected)
                         var p1 = new Phaser.Vec2();
                         var p2 = new Phaser.Vec2();
@@ -19823,9 +19898,11 @@ var Phaser;
                         //var p1 = vec2.add(body1.p, r1);
                         Phaser.Vec2Utils.add(body2.position, r2, p2);
                         //var p2 = vec2.add(body2.p, r2);
+                        Advanced.Manager.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
+                        Advanced.Manager.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
                         // Corrected delta vector
                         var dp = new Phaser.Vec2();
-                        Phaser.Vec2Utils.subtract(p2, p1);
+                        Phaser.Vec2Utils.subtract(p2, p1, dp);
                         //var dp = vec2.sub(p2, p1);
                         // Position constraint
                         var c = Phaser.Vec2Utils.dot(dp, n) + con.depth;
@@ -19851,7 +19928,10 @@ var Phaser;
                         body2.position.multiplyAddByScalar(impulse_dt, m2_inv);
                         //body2.p.mad(impulse_dt, m2_inv);
                         body2.angle += sn2 * lambda_dt * i2_inv;
+                        Advanced.Manager.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
+                        Advanced.Manager.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
                     }
+                    Advanced.Manager.write('max_penetration: ' + max_penetration);
                     return max_penetration <= Advanced.Manager.CONTACT_SOLVER_COLLISION_SLOP * 3;
                 };
                 ContactSolver.prototype.clamp = function (v, min, max) {
@@ -19953,11 +20033,38 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (Physics) {
+        /// <reference path="../../math/Vec2.ts" />
+        /// <reference path="../../math/Vec2Utils.ts" />
+        /// <reference path="Manager.ts" />
+        /// <reference path="Body.ts" />
+        /**
+        * Phaser - Advanced Physics - Plane
+        *
+        * Based on the work Ju Hyung Lee started in JS PhyRus.
+        */
+        (function (Advanced) {
+            var Plane = (function () {
+                function Plane(normal, d) {
+                    this.normal = normal;
+                    this.d = d;
+                }
+                return Plane;
+            })();
+            Advanced.Plane = Plane;            
+        })(Physics.Advanced || (Physics.Advanced = {}));
+        var Advanced = Physics.Advanced;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
         (function (Advanced) {
             /// <reference path="../../../math/Vec2.ts" />
             /// <reference path="../../../math/Vec2Utils.ts" />
             /// <reference path="../Manager.ts" />
             /// <reference path="../Body.ts" />
+            /// <reference path="../Plane.ts" />
             /// <reference path="Shape.ts" />
             /**
             * Phaser - Advanced Physics - Shapes - Convex Polygon
@@ -19979,10 +20086,8 @@ var Phaser;
                             for(var i = 0; i < verts.length; i++) {
                                 this.verts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
                                 this.tverts[i] = this.verts[i];
-                                this.tplanes[i] = {
-                                };
-                                this.tplanes[i].n = new Phaser.Vec2();
-                                this.tplanes[i].d = 0;
+                                //this.tverts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
+                                this.tplanes[i] = new Phaser.Physics.Advanced.Plane(new Phaser.Vec2(), 0);
                             }
                         }
                         this.finishVerts();
@@ -20001,21 +20106,17 @@ var Phaser;
                             var a = this.verts[i];
                             var b = this.verts[(i + 1) % this.verts.length];
                             var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
-                            this.planes[i] = {
-                            };
-                            this.planes[i].n = n;
-                            this.planes[i].d = Phaser.Vec2Utils.dot(n, a);
-                            this.tverts[i] = this.verts[i];
-                            this.tplanes[i] = {
-                            };
-                            this.tplanes[i].n = new Phaser.Vec2();
-                            this.tplanes[i].d = 0;
+                            this.planes[i] = new Phaser.Physics.Advanced.Plane(n, Phaser.Vec2Utils.dot(n, a));
+                            this.tverts[i] = Phaser.Vec2Utils.clone(this.verts[i])// reference???
+                            ;
+                            //this.tverts[i] = this.verts[i]; // reference???
+                            this.tplanes[i] = new Phaser.Physics.Advanced.Plane(new Phaser.Vec2(), 0);
                         }
                         for(var i = 0; i < this.verts.length; i++) {
-                            var b = this.verts[(i + 2) % this.verts.length];
-                            var n = this.planes[i].n;
-                            var d = this.planes[i].d;
-                            if(Phaser.Vec2Utils.dot(n, b) - d > 0) {
+                            //var b = this.verts[(i + 2) % this.verts.length];
+                            //var n = this.planes[i].normal;
+                            //var d = this.planes[i].d;
+                            if(Phaser.Vec2Utils.dot(this.planes[i].normal, this.verts[(i + 2) % this.verts.length]) - this.planes[i].d > 0) {
                                 this.convexity = false;
                             }
                         }
@@ -20030,13 +20131,15 @@ var Phaser;
                     };
                     Poly.prototype.transform = function (xf) {
                         for(var i = 0; i < this.verts.length; i++) {
-                            this.verts[i] = xf.transform(this.verts[i]);
-                        }
+                            this.verts[i] = Phaser.TransformUtils.transform(xf, this.verts[i]);
+                            //this.verts[i] = xf.transform(this.verts[i]);
+                                                    }
                     };
                     Poly.prototype.untransform = function (xf) {
                         for(var i = 0; i < this.verts.length; i++) {
-                            this.verts[i] = xf.untransform(this.verts[i]);
-                        }
+                            this.verts[i] = Phaser.TransformUtils.untransform(xf, this.verts[i]);
+                            //this.verts[i] = xf.untransform(this.verts[i]);
+                                                    }
                     };
                     Poly.prototype.area = function () {
                         return Advanced.Manager.areaForPoly(this.verts);
@@ -20050,14 +20153,15 @@ var Phaser;
                     Poly.prototype.cacheData = function (xf) {
                         this.bounds.clear();
                         var numVerts = this.verts.length;
-                        console.log('Poly cacheData', numVerts, this.body.name);
+                        Advanced.Manager.write('----------- Poly cacheData = ' + numVerts);
                         if(numVerts == 0) {
                             return;
                         }
                         for(var i = 0; i < numVerts; i++) {
-                            Phaser.TransformUtils.transform(xf, this.tverts[i], this.tverts[i]);
+                            this.tverts[i] = Phaser.TransformUtils.transform(xf, this.verts[i]);
                             //this.tverts[i] = xf.transform(this.verts[i]);
-                                                    }
+                            Advanced.Manager.write('tvert' + i + ' = ' + this.tverts[i].toString());
+                        }
                         if(numVerts < 2) {
                             this.bounds.addPoint(this.tverts[0]);
                             return;
@@ -20066,8 +20170,13 @@ var Phaser;
                             var a = this.tverts[i];
                             var b = this.tverts[(i + 1) % numVerts];
                             var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
-                            this.tplanes[i].n = n;
+                            Advanced.Manager.write('a = ' + a.toString());
+                            Advanced.Manager.write('b = ' + b.toString());
+                            Advanced.Manager.write('n = ' + n.toString());
+                            this.tplanes[i].normal = n;
                             this.tplanes[i].d = Phaser.Vec2Utils.dot(n, a);
+                            Advanced.Manager.write('tplanes' + i + ' n = ' + this.tplanes[i].normal.toString());
+                            Advanced.Manager.write('tplanes' + i + ' d = ' + this.tplanes[i].d.toString());
                             this.bounds.addPoint(a);
                         }
                     };
@@ -20092,7 +20201,7 @@ var Phaser;
                         for(var i = 0; i < this.tverts.length; i++) {
                             var v1 = this.tverts[i];
                             var v2 = this.tverts[(i + 1) % numVerts];
-                            var n = this.tplanes[i].n;
+                            var n = this.tplanes[i].normal;
                             var dtv1 = Phaser.Vec2Utils.cross(v1, n);
                             var dtv2 = Phaser.Vec2Utils.cross(v2, n);
                             var dt = Phaser.Vec2Utils.cross(p, n);
@@ -20123,7 +20232,7 @@ var Phaser;
                     Poly.prototype.containPoint = function (p) {
                         for(var i = 0; i < this.verts.length; i++) {
                             var plane = this.tplanes[i];
-                            if(Phaser.Vec2Utils.dot(plane.n, p) - plane.d > 0) {
+                            if(Phaser.Vec2Utils.dot(plane.normal, p) - plane.d > 0) {
                                 return false;
                             }
                         }
@@ -20132,10 +20241,10 @@ var Phaser;
                     Poly.prototype.containPointPartial = function (p, n) {
                         for(var i = 0; i < this.verts.length; i++) {
                             var plane = this.tplanes[i];
-                            if(Phaser.Vec2Utils.dot(plane.n, n) < 0.0001) {
+                            if(Phaser.Vec2Utils.dot(plane.normal, n) < 0.0001) {
                                 continue;
                             }
-                            if(Phaser.Vec2Utils.dot(plane.n, p) - plane.d > 0) {
+                            if(Phaser.Vec2Utils.dot(plane.normal, p) - plane.d > 0) {
                                 return false;
                             }
                         }
@@ -20412,7 +20521,7 @@ var Phaser;
                     var minIdx = -1;
                     for(var i = 0; i < poly.verts.length; i++) {
                         var plane = poly.tplanes[i];
-                        var dist = Phaser.Vec2Utils.dot(circ.tc, plane.n) - plane.d - circ.radius;
+                        var dist = Phaser.Vec2Utils.dot(circ.tc, plane.normal) - plane.d - circ.radius;
                         if(dist > 0) {
                             return 0;
                         } else if(dist > minDist) {
@@ -20420,7 +20529,7 @@ var Phaser;
                             minIdx = i;
                         }
                     }
-                    var n = poly.tplanes[minIdx].n;
+                    var n = poly.tplanes[minIdx].normal;
                     var a = poly.tverts[minIdx];
                     var b = poly.tverts[(minIdx + 1) % poly.verts.length];
                     var dta = Phaser.Vec2Utils.cross(a, n);
@@ -20529,7 +20638,7 @@ var Phaser;
                     var poly_i = -1;
                     for(var i = 0; i < poly.verts.length; i++) {
                         var plane = poly.tplanes[i];
-                        var dist = seg.distanceOnPlane(plane.n, plane.d);
+                        var dist = seg.distanceOnPlane(plane.normal, plane.d);
                         if(dist > 0) {
                             return 0;
                         }
@@ -20539,7 +20648,7 @@ var Phaser;
                         }
                     }
                     var poly_n = new Phaser.Vec2();
-                    Phaser.Vec2Utils.negative(poly.tplanes[poly_i].n, poly_n);
+                    Phaser.Vec2Utils.negative(poly.tplanes[poly_i].normal, poly_n);
                     //var poly_n = vec2.neg(poly.tplanes[poly_i].n);
                     var va = new Phaser.Vec2();
                     Phaser.Vec2Utils.multiplyAdd(seg.ta, poly_n, seg.radius, va);
@@ -20587,7 +20696,7 @@ var Phaser;
                     var min_dist = -999999;
                     var min_index = -1;
                     for(var i = 0; i < num; i++) {
-                        var dist = poly.distanceOnPlane(planes[i].n, planes[i].d);
+                        var dist = poly.distanceOnPlane(planes[i].normal, planes[i].d);
                         if(dist > 0) {
                             // no collision
                             return {
@@ -20645,17 +20754,19 @@ var Phaser;
                 Collision.prototype.poly2Poly = function (poly1, poly2, contactArr) {
                     var msa1 = this.findMSA(poly2, poly1.tplanes, poly1.verts.length);
                     if(msa1.index == -1) {
+                        console.log('poly2poly 0', msa1);
                         return 0;
                     }
                     var msa2 = this.findMSA(poly1, poly2.tplanes, poly2.verts.length);
                     if(msa2.index == -1) {
+                        console.log('poly2poly 1', msa2);
                         return 0;
                     }
-                    // Penetration normal direction shoud be from poly1 to poly2
+                    // Penetration normal direction should be from poly1 to poly2
                     if(msa1.dist > msa2.dist) {
-                        return this.findVerts(contactArr, poly1, poly2, poly1.tplanes[msa1.index].n, msa1.dist);
+                        return this.findVerts(contactArr, poly1, poly2, poly1.tplanes[msa1.index].normal, msa1.dist);
                     }
-                    return this.findVerts(contactArr, poly1, poly2, Phaser.Vec2Utils.negative(poly2.tplanes[msa2.index].n), msa2.dist);
+                    return this.findVerts(contactArr, poly1, poly2, Phaser.Vec2Utils.negative(poly2.tplanes[msa2.index].normal), msa2.dist);
                 };
                 return Collision;
             })();
@@ -20729,12 +20840,11 @@ var Phaser;
                     if(this.bodyHash[body.id] != undefined) {
                         return;
                     }
-                    //console.log('Body added to space', body.name);
                     var index = this.bodyArr.push(body) - 1;
                     this.bodyHash[body.id] = index;
                     body.awake(true);
                     body.space = this;
-                    body.cacheData();
+                    body.cacheData('addBody');
                 };
                 Space.prototype.removeBody = function (body) {
                     if(this.bodyHash[body.id] == undefined) {
@@ -20939,6 +21049,7 @@ var Phaser;
                     return firstJointId;
                 };
                 Space.prototype.findContactSolver = function (shape1, shape2) {
+                    Advanced.Manager.write('findContactSolver. Length: ' + this.contactSolvers.length);
                     for(var i = 0; i < this.contactSolvers.length; i++) {
                         var contactSolver = this.contactSolvers[i];
                         if(shape1 == contactSolver.shape1 && shape2 == contactSolver.shape2) {
@@ -20948,41 +21059,22 @@ var Phaser;
                     return null;
                 };
                 Space.prototype.genTemporalContactSolvers = function () {
-                    //console.log('genTemporalContactSolvers');
-                    //var t0 = Date.now();
+                    Advanced.Manager.write('genTemporalContactSolvers');
                     var newContactSolverArr = [];
+                    var bl = this.bodyArr.length;
                     this.numContacts = 0;
-                    for(var body1_index = 0; body1_index < this.bodyArr.length; body1_index++) {
+                    for(var body1_index = 0; body1_index < bl; body1_index++) {
                         var body1 = this.bodyArr[body1_index];
-                        //console.log('body1', body1_index, body1.type);
                         if(!body1) {
                             continue;
                         }
                         body1.stepCount = this.stepCount;
-                        for(var body2_index = 0; body2_index < this.bodyArr.length; body2_index++) {
+                        for(var body2_index = 0; body2_index < bl; body2_index++) {
                             var body2 = this.bodyArr[body2_index];
-                            //console.log('body2', body2_index, body2.type);
-                            if(!body2) {
+                            if(body1.inContact(body2) == false) {
                                 continue;
                             }
-                            if(body1.stepCount == body2.stepCount) {
-                                continue;
-                            }
-                            //console.log('step');
-                            var active1 = body1.isAwake && !body1.isStatic;
-                            var active2 = body2.isAwake && !body2.isStatic;
-                            if(!active1 && !active2) {
-                                continue;
-                            }
-                            //console.log('active');
-                            if(!body1.isCollidable(body2)) {
-                                continue;
-                            }
-                            //console.log('collideable');
-                            if(!body1.bounds.intersectsBounds(body2.bounds)) {
-                                continue;
-                            }
-                            //console.log('>>>>>>>>>> intersects');
+                            Advanced.Manager.write('body1 and body2 intersect');
                             for(var i = 0; i < body1.shapes.length; i++) {
                                 for(var j = 0; j < body2.shapes.length; j++) {
                                     var shape1 = body1.shapes[i];
@@ -20998,10 +21090,12 @@ var Phaser;
                                     }
                                     this.numContacts += contactArr.length;
                                     var contactSolver = this.findContactSolver(shape1, shape2);
+                                    Advanced.Manager.write('findContactSolver result: ' + contactSolver);
                                     if(contactSolver) {
                                         contactSolver.update(contactArr);
                                         newContactSolverArr.push(contactSolver);
                                     } else {
+                                        Advanced.Manager.write('awake both bodies');
                                         body1.awake(true);
                                         body2.awake(true);
                                         var newContactSolver = new Advanced.ContactSolver(shape1, shape2);
@@ -21009,15 +21103,18 @@ var Phaser;
                                         newContactSolver.elasticity = Math.max(shape1.elasticity, shape2.elasticity);
                                         newContactSolver.friction = Math.sqrt(shape1.friction * shape2.friction);
                                         newContactSolverArr.push(newContactSolver);
-                                    }
+                                        Advanced.Manager.write('new contact solver');
+                                        //console.log(newContactSolver);
+                                                                            }
                                 }
                             }
                         }
                     }
-                    //stats.timeCollision = Date.now() - t0;
                     return newContactSolverArr;
                 };
                 Space.prototype.initSolver = function (dt, dt_inv, warmStarting) {
+                    Advanced.Manager.write('initSolver');
+                    Advanced.Manager.write('contactSolvers.length: ' + this.contactSolvers.length);
                     //var t0 = Date.now();
                     // Initialize contact solvers
                     for(var i = 0; i < this.contactSolvers.length; i++) {
@@ -21038,6 +21135,7 @@ var Phaser;
                     //stats.timeInitSolver = Date.now() - t0;
                                     };
                 Space.prototype.velocitySolver = function (iteration) {
+                    Advanced.Manager.write('velocitySolver, iterations: ' + iteration + ' csa len: ' + this.contactSolvers.length);
                     //var t0 = Date.now();
                     for(var i = 0; i < iteration; i++) {
                         for(var j = 0; j < this.jointArr.length; j++) {
@@ -21049,12 +21147,9 @@ var Phaser;
                             this.contactSolvers[j].solveVelocityConstraints();
                         }
                     }
-                    //stats.timeVelocitySolver = Date.now() - t0;
-                                    };
+                };
                 Space.prototype.positionSolver = function (iteration) {
-                    //var t0 = Date.now();
                     var positionSolved = false;
-                    //stats.positionIterations = 0;
                     for(var i = 0; i < iteration; i++) {
                         var contactsOk = true;
                         var jointsOk = true;
@@ -21073,126 +21168,147 @@ var Phaser;
                             positionSolved = true;
                             break;
                         }
-                        //stats.positionIterations++;
-                                            }
-                    //stats.timePositionSolver = Date.now() - t0;
+                    }
                     return positionSolved;
                 };
                 Space.prototype.step = function (dt, vel_iteration, pos_iteration, warmStarting, allowSleep) {
+                    Advanced.Manager.clear();
+                    Advanced.Manager.write('Space step ' + this.stepCount);
                     var dt_inv = 1 / dt;
+                    var bl = this.bodyArr.length;
+                    var jl = this.jointArr.length;
                     this.stepCount++;
-                    // Generate contact & contactSolver
+                    //  1) Generate Contact Solvers
                     this.contactSolvers = this.genTemporalContactSolvers();
-                    // Initialize contacts & joints solver
+                    Advanced.Manager.dump("Contact Solvers", this.bodyArr[1]);
+                    //  2) Initialize the Contact Solvers
                     this.initSolver(dt, dt_inv, warmStarting);
-                    // Intergrate velocity
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
-                        if(!body) {
-                            continue;
-                        }
-                        if(body.isDynamic && body.isAwake) {
-                            body.updateVelocity(this.gravity, dt, this.damping);
+                    Advanced.Manager.dump("Init Solver", this.bodyArr[1]);
+                    //  3) Intergrate velocity
+                    for(var i = 0; i < bl; i++) {
+                        if(this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake) {
+                            this.bodyArr[i].updateVelocity(this.gravity, dt, this.damping);
                         }
                     }
-                    for(var i = 0; i < this.jointArr.length; i++) {
-                        var joint = this.jointArr[i];
-                        if(!joint) {
-                            continue;
-                        }
-                        var body1 = joint.body1;
-                        var body2 = joint.body2;
-                        var awake1 = body1.isAwake && !body1.isStatic;
-                        var awake2 = body2.isAwake && !body2.isStatic;
-                        if(awake1 ^ awake2) {
-                            if(!awake1) {
-                                body1.awake(true);
-                            }
-                            if(!awake2) {
-                                body2.awake(true);
-                            }
-                        }
+                    Advanced.Manager.dump("Update Velocity", this.bodyArr[1]);
+                    /*
+                    //  4) Awaken bodies
+                    for (var j = 0; i < jl; j++)
+                    {
+                    var joint = this.jointArr[j];
+                    
+                    if (!joint)
+                    {
+                    continue;
                     }
-                    // Iterative velocity constraints solver
+                    
+                    var body1 = joint.body1;
+                    var body2 = joint.body2;
+                    
+                    var awake1 = body1.isAwake && !body1.isStatic;
+                    var awake2 = body2.isAwake && !body2.isStatic;
+                    
+                    if (awake1 ^ awake2)
+                    {
+                    if (!awake1)
+                    {
+                    body1.awake(true);
+                    }
+                    
+                    if (!awake2)
+                    {
+                    body2.awake(true);
+                    }
+                    }
+                    }
+                    */
+                    //  5) Iterative velocity constraints solver
                     this.velocitySolver(vel_iteration);
-                    // Intergrate position
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
-                        if(!body) {
-                            continue;
-                        }
-                        if(body.isDynamic && body.isAwake) {
-                            body.updatePosition(dt);
+                    Advanced.Manager.dump("Velocity Solvers", this.bodyArr[1]);
+                    // 6) Intergrate position
+                    for(var i = 0; i < bl; i++) {
+                        if(this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake) {
+                            this.bodyArr[i].updatePosition(dt);
                         }
                     }
-                    // Process breakable joint
-                    for(var i = 0; i < this.jointArr.length; i++) {
-                        var joint = this.jointArr[i];
-                        if(!joint) {
-                            continue;
-                        }
-                        if(joint.breakable) {
-                            if(joint.getReactionForce(dt_inv).lengthsq() >= joint.maxForce * joint.maxForce) {
-                                this.removeJoint(joint);
-                            }
+                    Advanced.Manager.dump("Update Position", this.bodyArr[1]);
+                    //  7) Process breakable joint
+                    for(var i = 0; i < jl; i++) {
+                        if(this.jointArr[i] && this.jointArr[i].breakable && (this.jointArr[i].getReactionForce(dt_inv).lengthSq() >= this.jointArr[i].maxForce * this.jointArr[i].maxForce)) {
+                            this.removeJoint(this.jointArr[i]);
                         }
                     }
-                    // Iterative position constraints solver
+                    // 8) Iterative position constraints solver
                     var positionSolved = this.positionSolver(pos_iteration);
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
-                        if(!body) {
-                            continue;
+                    Advanced.Manager.dump("Position Solver", this.bodyArr[1]);
+                    // 9) Sync the Transforms
+                    for(var i = 0; i < bl; i++) {
+                        if(this.bodyArr[i]) {
+                            this.bodyArr[i].syncTransform();
                         }
-                        body.syncTransform();
                     }
-                    // Post solve collision callback
+                    Advanced.Manager.dump("Sync Transform", this.bodyArr[1]);
+                    // 10) Post solve collision callback
                     for(var i = 0; i < this.contactSolvers.length; i++) {
                         var arb = this.contactSolvers[i];
                         //  Re-enable this
                         //this.postSolve(arb);
                                             }
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
-                        if(!body) {
-                            continue;
-                        }
-                        if(body.isDynamic && body.isAwake) {
-                            body.cacheData();
+                    // 11) Cache Body Data
+                    for(var i = 0; i < bl; i++) {
+                        if(this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake) {
+                            this.bodyArr[i].cacheData('post solve collision callback');
                         }
                     }
-                    // Process sleeping
-                    if(allowSleep) {
-                        var minSleepTime = 999999;
-                        var linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
-                        var angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
-                        for(var i = 0; i < this.bodyArr.length; i++) {
-                            var body = this.bodyArr[i];
-                            if(!body) {
-                                continue;
-                            }
-                            if(!body.isDynamic) {
-                                continue;
-                            }
-                            if(body.angularVelocity * body.angularVelocity > angTolSqr || body.velocity.dot(body.velocity) > linTolSqr) {
-                                body.sleepTime = 0;
-                                minSleepTime = 0;
-                            } else {
-                                body.sleepTime += dt;
-                                minSleepTime = Math.min(minSleepTime, body.sleepTime);
-                            }
-                        }
-                        if(positionSolved && minSleepTime >= Space.TIME_TO_SLEEP) {
-                            for(var i = 0; i < this.bodyArr.length; i++) {
-                                var body = this.bodyArr[i];
-                                if(!body) {
-                                    continue;
-                                }
-                                body.awake(false);
-                            }
-                        }
+                    Advanced.Manager.dump("Cache Data", this.bodyArr[1]);
+                    Advanced.Manager.writeAll();
+                    //  12) Process sleeping
+                    /*
+                    if (allowSleep)
+                    {
+                    var minSleepTime = 999999;
+                    
+                    var linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
+                    var angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
+                    
+                    for (var i = 0; i < bl; i++)
+                    {
+                    var body = this.bodyArr[i];
+                    
+                    if (!this.bodyArr[i] || this.bodyArr[i].isDynamic == false)
+                    {
+                    continue;
                     }
-                };
+                    
+                    if (body.angularVelocity * body.angularVelocity > angTolSqr || body.velocity.dot(body.velocity) > linTolSqr)
+                    {
+                    body.sleepTime = 0;
+                    minSleepTime = 0;
+                    }
+                    else
+                    {
+                    body.sleepTime += dt;
+                    minSleepTime = Math.min(minSleepTime, body.sleepTime);
+                    }
+                    }
+                    
+                    if (positionSolved && minSleepTime >= Space.TIME_TO_SLEEP)
+                    {
+                    for (var i = 0; i < this.bodyArr.length; i++)
+                    {
+                    var body = this.bodyArr[i];
+                    
+                    if (!body)
+                    {
+                    continue;
+                    }
+                    
+                    body.awake(false);
+                    }
+                    }
+                    }
+                    */
+                                    };
                 return Space;
             })();
             Advanced.Space = Space;            
@@ -21269,10 +21385,10 @@ var Phaser;
                     __extends(Box, _super);
                     //  Give in pixels
                     function Box(x, y, width, height) {
-                        x = Advanced.Manager.pixelsToMeters(x);
-                        y = Advanced.Manager.pixelsToMeters(y);
-                        width = Advanced.Manager.pixelsToMeters(width);
-                        height = Advanced.Manager.pixelsToMeters(height);
+                        //x = Manager.pixelsToMeters(x);
+                        //y = Manager.pixelsToMeters(y);
+                        //width = Manager.pixelsToMeters(width);
+                        //height = Manager.pixelsToMeters(height);
                         var hw = width * 0.5;
                         var hh = height * 0.5;
                                         _super.call(this, [
@@ -21375,6 +21491,9 @@ var Phaser;
                     this.maskBits = 0xFFFF;
                     this.stepCount = 0;
                 }
+                Body.prototype.toString = function () {
+                    return "[{Body (name=" + this.name + " velocity=" + this.velocity.toString() + " angularVelocity: " + this.angularVelocity + ")}]";
+                };
                 Body.prototype.duplicate = function () {
                     //console.log('body duplicate called');
                     //var body = new Body(this.type, this.transform.t, this.angle);
@@ -21498,19 +21617,25 @@ var Phaser;
                 Body.prototype.setTransform = function (pos, angle) {
                     this.transform.setTo(pos, angle);
                     //  inject the transform into this.position
+                    Advanced.Manager.write('setTransform: ' + this.position.toString());
+                    Advanced.Manager.write('centroid: ' + this.centroid.toString());
                     Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
+                    Advanced.Manager.write('post setTransform: ' + this.position.toString());
                     //this.position.copyFrom(this.transform.transform(this.centroid));
                     this.angle = angle;
                 };
                 Body.prototype.syncTransform = function () {
+                    Advanced.Manager.write('syncTransform:');
+                    Advanced.Manager.write('p: ' + this.position.toString());
+                    Advanced.Manager.write('centroid: ' + this.centroid.toString());
+                    Advanced.Manager.write('xf: ' + this.transform.toString());
+                    Advanced.Manager.write('a: ' + this.angle);
                     this.transform.setRotation(this.angle);
-                    //var rotc: Phaser.Vec2 = this.transform.rotate(this.centroid);
-                    //var sub: Phaser.Vec2 = Phaser.Vec2Utils.subtract(this.position, rotc);
-                    //this.transform.setPosition(sub);
-                    //  this.transform.setPosition(vec2.sub(this.position, this.transform.rotate(this.centroid)));
-                    //Phaser.Vec2Utils.subtract(this.position, this.transform.rotate(this.centroid), this.transform.t);
                     //  OPTIMISE: Creating new vector
                     Phaser.Vec2Utils.subtract(this.position, Phaser.TransformUtils.rotate(this.transform, this.centroid), this.transform.t);
+                    Advanced.Manager.write('--------------------');
+                    Advanced.Manager.write('xf: ' + this.transform.toString());
+                    Advanced.Manager.write('--------------------');
                 };
                 Body.prototype.getWorldPoint = function (p) {
                     //  OPTIMISE: Creating new vector
@@ -21585,14 +21710,21 @@ var Phaser;
                         joint.setWorldAnchor2(anchor2);
                     }
                 };
-                Body.prototype.cacheData = function () {
-                    //console.log('Body cacheData', this.name, 'len', this.shapes.length);
+                Body.prototype.cacheData = function (source) {
+                    if (typeof source === "undefined") { source = ''; }
+                    Advanced.Manager.write('cacheData -- start');
+                    Advanced.Manager.write('p: ' + this.position.toString());
+                    Advanced.Manager.write('xf: ' + this.transform.toString());
                     this.bounds.clear();
                     for(var i = 0; i < this.shapes.length; i++) {
                         var shape = this.shapes[i];
                         shape.cacheData(this.transform);
                         this.bounds.addBounds(shape.bounds);
                     }
+                    Advanced.Manager.write('bounds: ' + this.bounds.toString());
+                    Advanced.Manager.write('p: ' + this.position.toString());
+                    Advanced.Manager.write('xf: ' + this.transform.toString());
+                    Advanced.Manager.write('cacheData -- stop');
                 };
                 Body.prototype.updateVelocity = function (gravity, dt, damping) {
                     // this.velocity = vec2.mad(this.velocity, vec2.mad(gravity, this.force, this.massInverted), dt);
@@ -21606,10 +21738,28 @@ var Phaser;
                     // v2 = exp(-c * dt) * v1
                     // Taylor expansion:
                     // v2 = (1.0f - c * dt) * v1
-                    this.velocity.scale(this.game.math.clamp(1 - dt * (damping + this.linearDamping), 0, 1));
-                    this.angularVelocity *= this.game.math.clamp(1 - dt * (damping + this.angularDamping), 0, 1);
+                    this.velocity.scale(this.clamp(1 - dt * (damping + this.linearDamping), 0, 1));
+                    this.angularVelocity *= this.clamp(1 - dt * (damping + this.angularDamping), 0, 1);
                     this.force.setTo(0, 0);
                     this.torque = 0;
+                };
+                Body.prototype.inContact = function (body2) {
+                    if(!body2 || this.stepCount == body2.stepCount) {
+                        return false;
+                    }
+                    if(!(this.isAwake && this.isStatic == false) && !(body2.isAwake && body2.isStatic == false)) {
+                        return false;
+                    }
+                    if(this.isCollidable(body2) == false) {
+                        return false;
+                    }
+                    if(!this.bounds.intersectsBounds(body2.bounds)) {
+                        return false;
+                    }
+                    return true;
+                };
+                Body.prototype.clamp = function (v, min, max) {
+                    return v < min ? min : (v > max ? max : v);
                 };
                 Body.prototype.updatePosition = function (dt) {
                     //console.log('body update pos', this.position.y);
@@ -21711,10 +21861,7 @@ var Phaser;
                     }
                     for(var i = 0; i < this.joints.length; i++) {
                         var joint = this.joints[i];
-                        if(!joint) {
-                            continue;
-                        }
-                        if(!joint.collideConnected && other.jointHash[joint.id] != undefined) {
+                        if(!this.joints[i] || (!this.joints[i].collideConnected && other.jointHash[this.joints[i].id] != undefined)) {
                             return false;
                         }
                     }

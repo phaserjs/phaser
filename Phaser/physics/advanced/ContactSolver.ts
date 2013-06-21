@@ -38,8 +38,6 @@ module Phaser.Physics.Advanced {
 
         constructor(shape1, shape2) {
 
-            //console.log('ContactSolver super');
-
             this.shape1 = shape1;
             this.shape2 = shape2;
 
@@ -160,7 +158,7 @@ module Phaser.Physics.Advanced {
 
             for (var i = 0; i < this.contacts.length; i++)
             {
-                var con = this.contacts[i];
+                var con:Contact = this.contacts[i];
                 var n = con.normal;
                 var lambda_n = con.lambdaNormal;
                 var lambda_t = con.lambdaTangential;
@@ -170,16 +168,18 @@ module Phaser.Physics.Advanced {
                 //var impulse = new vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
                 var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
 
+                //console.log('phaser warmStart impulse ' + i + ' = ' + impulse.toString());
+
                 body1.velocity.multiplyAddByScalar(impulse, -body1.massInverted);
                 //body1.v.mad(impulse, -body1.m_inv);
 
                 body1.angularVelocity -= Phaser.Vec2Utils.cross(con.r1, impulse) * body1.inertiaInverted;
                 //body1.w -= vec2.cross(con.r1, impulse) * body1.i_inv;
 
-                body2.velocity.multiplyAddByScalar(impulse, -body2.massInverted);
+                body2.velocity.multiplyAddByScalar(impulse, body2.massInverted);
                 //body2.v.mad(impulse, body2.m_inv);
 
-                body2.angularVelocity -= Phaser.Vec2Utils.cross(con.r2, impulse) * body2.inertiaInverted;
+                body2.angularVelocity += Phaser.Vec2Utils.cross(con.r2, impulse) * body2.inertiaInverted;
                 //body2.w += vec2.cross(con.r2, impulse) * body2.i_inv;
             }
 
@@ -190,15 +190,25 @@ module Phaser.Physics.Advanced {
             var body1: Body = this.shape1.body;
             var body2: Body = this.shape2.body;
 
+        	Manager.write('solveVelocityConstraints. Body1: ' + body1.name + ' Body2: ' + body2.name);
+        	Manager.write('Shape 1: ' + this.shape1.type + ' Shape 2: ' + this.shape2.type);
+
             var m1_inv = body1.massInverted;
             var i1_inv = body1.inertiaInverted;
             var m2_inv = body2.massInverted;
             var i2_inv = body2.inertiaInverted;
 
+            Manager.write('m1_inv: ' + m1_inv);
+            Manager.write('i1_inv: ' + i1_inv);
+            Manager.write('m2_inv: ' + m2_inv);
+            Manager.write('i2_inv: ' + i2_inv);
+            
             for (var i = 0; i < this.contacts.length; i++)
             {
-                var con = this.contacts[i];
-                var n = con.normal;
+                Manager.write('------------ solve con ' + i);
+
+                var con: Contact = this.contacts[i];
+                var n: Phaser.Vec2 = con.normal;
                 var t = Phaser.Vec2Utils.perp(n);
                 var r1 = con.r1;
                 var r2 = con.r2;
@@ -212,22 +222,33 @@ module Phaser.Physics.Advanced {
                 Phaser.Vec2Utils.multiplyAdd(body1.velocity, Phaser.Vec2Utils.perp(r1), body1.angularVelocity, v1);
                 //var v1 = vec2.mad(body1.v, vec2.perp(r1), body1.w);
 
+                Manager.write('v1 ' + v1.toString());
+
                 Phaser.Vec2Utils.multiplyAdd(body2.velocity, Phaser.Vec2Utils.perp(r2), body2.angularVelocity, v2);
                 //var v2 = vec2.mad(body2.v, vec2.perp(r2), body2.w);
+
+                Manager.write('v2 ' + v2.toString());
 
                 // Relative velocity at contact point
                 var rv = new Phaser.Vec2;
                 Phaser.Vec2Utils.subtract(v2, v1, rv);
                 //var rv = vec2.sub(v2, v1);
 
+                Manager.write('rv ' + rv.toString());
+
                 // Compute normal constraint impulse + adding bounce as a velocity bias
                 // lambda_n = -EMn * J * V
                 var lambda_n = -con.emn * (Phaser.Vec2Utils.dot(n, rv) + con.bounce);
 
+                Manager.write('lambda_n: ' + lambda_n);
+
                 // Accumulate and clamp
                 var lambda_n_old = con.lambdaNormal;
                 con.lambdaNormal = Math.max(lambda_n_old + lambda_n, 0);
+                //con.lambdaNormal = this.clamp(lambda_n_old + lambda_n, 0);
                 lambda_n = con.lambdaNormal - lambda_n_old;
+
+                Manager.write('lambda_n clamped: ' + lambda_n);
 
                 // Compute frictional constraint impulse
                 // lambda_t = -EMt * J * V
@@ -245,6 +266,7 @@ module Phaser.Physics.Advanced {
                 //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
                 var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
 
+                Manager.write('impulse: ' + impulse.toString());
 
                 body1.velocity.multiplyAddByScalar(impulse, -m1_inv);
                 //body1.v.mad(impulse, -m1_inv);
@@ -255,8 +277,11 @@ module Phaser.Physics.Advanced {
                 body2.velocity.multiplyAddByScalar(impulse, m2_inv);
                 //body2.v.mad(impulse, m2_inv);
 
-                body1.angularVelocity += Phaser.Vec2Utils.cross(r2, impulse) * i2_inv;
+                body2.angularVelocity += Phaser.Vec2Utils.cross(r2, impulse) * i2_inv;
                 //body2.w += vec2.cross(r2, impulse) * i2_inv;
+
+                Manager.write('body1: ' + body1.toString());
+                Manager.write('body2: ' + body2.toString());
 
             }
 
@@ -266,6 +291,8 @@ module Phaser.Physics.Advanced {
 
             var body1: Body = this.shape1.body;
             var body2: Body = this.shape2.body;
+
+        	Manager.write('solvePositionConstraints');
 
             var m1_inv = body1.massInverted;
             var i1_inv = body1.inertiaInverted;
@@ -277,8 +304,10 @@ module Phaser.Physics.Advanced {
 
             for (var i = 0; i < this.contacts.length; i++)
             {
-                var con = this.contacts[i];
-                var n = con.normal;
+        	   	Manager.write('------------- solvePositionConstraints ' + i);
+                
+                var con:Contact = this.contacts[i];
+                var n:Phaser.Vec2 = con.normal;
 
                 var r1 = new Phaser.Vec2;
                 var r2 = new Phaser.Vec2;
@@ -288,9 +317,13 @@ module Phaser.Physics.Advanced {
                 Phaser.Vec2Utils.rotate(con.r1_local, body1.angle, r1);
                 //var r1 = vec2.rotate(con.r1_local, body1.a);
 
-
                 Phaser.Vec2Utils.rotate(con.r2_local, body2.angle, r2);
                 //var r2 = vec2.rotate(con.r2_local, body2.a);
+
+		        Manager.write('r1_local.x = ' + con.r1_local.x + ' r1_local.y = ' + con.r1_local.y + ' angle: ' + body1.angle);
+		        Manager.write('r1 rotated: r1.x = ' + r1.x + ' r1.y = ' + r1.y);
+		        Manager.write('r2_local.x = ' + con.r2_local.x + ' r2_local.y = ' + con.r2_local.y + ' angle: ' + body2.angle);
+		        Manager.write('r2 rotated: r2.x = ' + r2.x + ' r2.y = ' + r2.y);
 
                 // Contact points (corrected)
                 var p1 = new Phaser.Vec2;
@@ -302,9 +335,12 @@ module Phaser.Physics.Advanced {
                 Phaser.Vec2Utils.add(body2.position, r2, p2);
                 //var p2 = vec2.add(body2.p, r2);
 
+		        Manager.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
+		        Manager.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
+
                 // Corrected delta vector
                 var dp = new Phaser.Vec2;
-                Phaser.Vec2Utils.subtract(p2, p1);
+                Phaser.Vec2Utils.subtract(p2, p1, dp);
                 //var dp = vec2.sub(p2, p1);
 
                 // Position constraint
@@ -343,7 +379,12 @@ module Phaser.Physics.Advanced {
                 //body2.p.mad(impulse_dt, m2_inv);
 
                 body2.angle += sn2 * lambda_dt * i2_inv;
+
+		        Manager.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
+		        Manager.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
             }
+
+        	Manager.write('max_penetration: ' + max_penetration);
 
             return max_penetration <= Manager.CONTACT_SOLVER_COLLISION_SLOP * 3;
 
@@ -352,7 +393,6 @@ module Phaser.Physics.Advanced {
         public clamp(v, min, max) {
             return v < min ? min : (v > max ? max : v);
         }
-
 
     }
 

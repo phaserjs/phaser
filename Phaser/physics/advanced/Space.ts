@@ -84,14 +84,12 @@ module Phaser.Physics.Advanced {
                 return;
             }
 
-            //console.log('Body added to space', body.name);
-
             var index = this.bodyArr.push(body) - 1;
             this.bodyHash[body.id] = index;
 
             body.awake(true);
             body.space = this;
-            body.cacheData();
+            body.cacheData('addBody');
 
         }
 
@@ -433,6 +431,8 @@ module Phaser.Physics.Advanced {
 
         public findContactSolver(shape1, shape2) {
 
+            Manager.write('findContactSolver. Length: ' + this.contactSolvers.length);
+
             for (var i = 0; i < this.contactSolvers.length; i++)
             {
                 var contactSolver = this.contactSolvers[i];
@@ -448,19 +448,16 @@ module Phaser.Physics.Advanced {
 
         public genTemporalContactSolvers() {
 
-            //console.log('genTemporalContactSolvers');
-
-            //var t0 = Date.now();
+            Manager.write('genTemporalContactSolvers');
 
             var newContactSolverArr = [];
+            var bl: number = this.bodyArr.length;
 
             this.numContacts = 0;
 
-            for (var body1_index = 0; body1_index < this.bodyArr.length; body1_index++)
+            for (var body1_index = 0; body1_index < bl; body1_index++)
             {
                 var body1: Body = this.bodyArr[body1_index];
-
-                //console.log('body1', body1_index, body1.type);
 
                 if (!body1)
                 {
@@ -469,47 +466,16 @@ module Phaser.Physics.Advanced {
 
                 body1.stepCount = this.stepCount;
 
-                for (var body2_index = 0; body2_index < this.bodyArr.length; body2_index++)
+                for (var body2_index = 0; body2_index < bl; body2_index++)
                 {
                     var body2: Body = this.bodyArr[body2_index];
 
-                    //console.log('body2', body2_index, body2.type);
-
-                    if (!body2)
+                    if (body1.inContact(body2) == false)
                     {
                         continue;
                     }
 
-                    if (body1.stepCount == body2.stepCount)
-                    {
-                        continue;
-                    }
-
-                    //console.log('step');
-
-                    var active1 = body1.isAwake && !body1.isStatic;
-                    var active2 = body2.isAwake && !body2.isStatic;
-
-                    if (!active1 && !active2)
-                    {
-                        continue;
-                    }
-
-                    //console.log('active');
-
-                    if (!body1.isCollidable(body2))
-                    {
-                        continue;
-                    }
-
-                    //console.log('collideable');
-
-                    if (!body1.bounds.intersectsBounds(body2.bounds))
-                    {
-                        continue;
-                    }
-
-                    //console.log('>>>>>>>>>> intersects');
+                    Manager.write('body1 and body2 intersect');
 
                     for (var i = 0; i < body1.shapes.length; i++)
                     {
@@ -536,6 +502,8 @@ module Phaser.Physics.Advanced {
 
                             var contactSolver = this.findContactSolver(shape1, shape2);
 
+                            Manager.write('findContactSolver result: ' + contactSolver);
+
                             if (contactSolver)
                             {
                                 contactSolver.update(contactArr);
@@ -543,6 +511,8 @@ module Phaser.Physics.Advanced {
                             }
                             else
                             {
+                                Manager.write('awake both bodies');
+
                                 body1.awake(true);
                                 body2.awake(true);
 
@@ -551,19 +521,22 @@ module Phaser.Physics.Advanced {
                                 newContactSolver.elasticity = Math.max(shape1.elasticity, shape2.elasticity);
                                 newContactSolver.friction = Math.sqrt(shape1.friction * shape2.friction);
                                 newContactSolverArr.push(newContactSolver);
+                                Manager.write('new contact solver');
+                                //console.log(newContactSolver);
                             }
                         }
                     }
                 }
             }
 
-            //stats.timeCollision = Date.now() - t0;
-
             return newContactSolverArr;
 
         }
 
         public initSolver(dt, dt_inv, warmStarting) {
+
+            Manager.write('initSolver');
+            Manager.write('contactSolvers.length: ' + this.contactSolvers.length);
 
             //var t0 = Date.now();
 
@@ -596,6 +569,8 @@ module Phaser.Physics.Advanced {
 
         public velocitySolver(iteration) {
 
+            Manager.write('velocitySolver, iterations: ' + iteration + ' csa len: ' + this.contactSolvers.length);
+
             //var t0 = Date.now();
 
             for (var i = 0; i < iteration; i++)
@@ -614,16 +589,11 @@ module Phaser.Physics.Advanced {
                 }
             }
 
-            //stats.timeVelocitySolver = Date.now() - t0;
         }
 
         public positionSolver(iteration) {
 
-            //var t0 = Date.now();
-
             var positionSolved = false;
-
-            //stats.positionIterations = 0;
 
             for (var i = 0; i < iteration; i++)
             {
@@ -651,47 +621,51 @@ module Phaser.Physics.Advanced {
                     positionSolved = true;
                     break;
                 }
-
-                //stats.positionIterations++;
             }
-
-            //stats.timePositionSolver = Date.now() - t0;
 
             return positionSolved;
 
         }
 
+
+
         public step(dt, vel_iteration, pos_iteration, warmStarting, allowSleep) {
 
-            var dt_inv = 1 / dt;
+            Manager.clear();
+            Manager.write('Space step ' + this.stepCount);
+
+            var dt_inv: number = 1 / dt;
+            var bl: number = this.bodyArr.length;
+            var jl: number = this.jointArr.length;
 
             this.stepCount++;
 
-            // Generate contact & contactSolver
+            //  1) Generate Contact Solvers
             this.contactSolvers = this.genTemporalContactSolvers();
 
-            // Initialize contacts & joints solver
+            Manager.dump("Contact Solvers", this.bodyArr[1]);
+
+            //  2) Initialize the Contact Solvers
             this.initSolver(dt, dt_inv, warmStarting);
 
-            // Intergrate velocity
-            for (var i = 0; i < this.bodyArr.length; i++)
+            Manager.dump("Init Solver", this.bodyArr[1]);
+
+            //  3) Intergrate velocity
+            for (var i = 0; i < bl; i++)
             {
-                var body = this.bodyArr[i];
-
-                if (!body)
+                if (this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake)
                 {
-                    continue;
-                }
-
-                if (body.isDynamic && body.isAwake)
-                {
-                    body.updateVelocity(this.gravity, dt, this.damping);
+                    this.bodyArr[i].updateVelocity(this.gravity, dt, this.damping);
                 }
             }
 
-            for (var i = 0; i < this.jointArr.length; i++)
+            Manager.dump("Update Velocity", this.bodyArr[1]);
+
+            /*
+            //  4) Awaken bodies
+            for (var j = 0; i < jl; j++)
             {
-                var joint = this.jointArr[i];
+                var joint = this.jointArr[j];
 
                 if (!joint)
                 {
@@ -717,85 +691,72 @@ module Phaser.Physics.Advanced {
                     }
                 }
             }
+            */
 
-            // Iterative velocity constraints solver
+            //  5) Iterative velocity constraints solver
             this.velocitySolver(vel_iteration);
 
-            // Intergrate position
-            for (var i = 0; i < this.bodyArr.length; i++)
+            Manager.dump("Velocity Solvers", this.bodyArr[1]);
+
+            // 6) Intergrate position
+            for (var i = 0; i < bl; i++)
             {
-                var body = this.bodyArr[i];
-
-                if (!body)
+                if (this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake)
                 {
-                    continue
-                }
-
-                if (body.isDynamic && body.isAwake)
-                {
-                    body.updatePosition(dt);
+                    this.bodyArr[i].updatePosition(dt);
                 }
             }
 
-            // Process breakable joint
-            for (var i = 0; i < this.jointArr.length; i++)
+            Manager.dump("Update Position", this.bodyArr[1]);
+
+            //  7) Process breakable joint
+            for (var i = 0; i < jl; i++)
             {
-                var joint = this.jointArr[i];
-
-                if (!joint)
+                if (this.jointArr[i] && this.jointArr[i].breakable && (this.jointArr[i].getReactionForce(dt_inv).lengthSq() >= this.jointArr[i].maxForce * this.jointArr[i].maxForce))
                 {
-                    continue;
-                }
-
-                if (joint.breakable)
-                {
-                    if (joint.getReactionForce(dt_inv).lengthsq() >= joint.maxForce * joint.maxForce)
-                    {
-                        this.removeJoint(joint);
-                    }
+                    this.removeJoint(this.jointArr[i]);
                 }
             }
 
-            // Iterative position constraints solver
+            // 8) Iterative position constraints solver
             var positionSolved = this.positionSolver(pos_iteration);
 
-            for (var i = 0; i < this.bodyArr.length; i++)
+            Manager.dump("Position Solver", this.bodyArr[1]);
+
+            // 9) Sync the Transforms
+            for (var i = 0; i < bl; i++)
             {
-                var body = this.bodyArr[i];
-
-                if (!body)
+                if (this.bodyArr[i])
                 {
-                    continue;
+                    this.bodyArr[i].syncTransform();
                 }
-
-                body.syncTransform();
             }
 
-            // Post solve collision callback
+            Manager.dump("Sync Transform", this.bodyArr[1]);
+
+            // 10) Post solve collision callback
             for (var i = 0; i < this.contactSolvers.length; i++)
             {
                 var arb = this.contactSolvers[i];
-
                 //  Re-enable this
                 //this.postSolve(arb);
             }
 
-            for (var i = 0; i < this.bodyArr.length; i++)
+            // 11) Cache Body Data
+            for (var i = 0; i < bl; i++)
             {
-                var body = this.bodyArr[i];
-
-                if (!body)
+                if (this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake)
                 {
-                    continue;
-                }
-
-                if (body.isDynamic && body.isAwake)
-                {
-                    body.cacheData();
+                    this.bodyArr[i].cacheData('post solve collision callback');
                 }
             }
 
-            // Process sleeping
+            Manager.dump("Cache Data", this.bodyArr[1]);
+
+            Manager.writeAll();
+
+            //  12) Process sleeping
+            /*
             if (allowSleep)
             {
                 var minSleepTime = 999999;
@@ -803,16 +764,11 @@ module Phaser.Physics.Advanced {
                 var linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
                 var angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
 
-                for (var i = 0; i < this.bodyArr.length; i++)
+                for (var i = 0; i < bl; i++)
                 {
                     var body = this.bodyArr[i];
 
-                    if (!body)
-                    {
-                        continue;
-                    }
-
-                    if (!body.isDynamic)
+                    if (!this.bodyArr[i] || this.bodyArr[i].isDynamic == false)
                     {
                         continue;
                     }
@@ -844,6 +800,7 @@ module Phaser.Physics.Advanced {
                     }
                 }
             }
+    */
         }
 
     }

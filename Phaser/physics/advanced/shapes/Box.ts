@@ -17,10 +17,10 @@ module Phaser.Physics.Advanced.Shapes {
         //  Give in pixels
         constructor(x, y, width, height) {
 
-            x = Manager.pixelsToMeters(x);
-            y = Manager.pixelsToMeters(y);
-            width = Manager.pixelsToMeters(width);
-            height = Manager.pixelsToMeters(height);
+            //x = Manager.pixelsToMeters(x);
+            //y = Manager.pixelsToMeters(y);
+            //width = Manager.pixelsToMeters(width);
+            //height = Manager.pixelsToMeters(height);
 
 	        var hw = width * 0.5;
 	        var hh = height * 0.5;

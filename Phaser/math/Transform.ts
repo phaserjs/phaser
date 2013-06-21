@@ -22,12 +22,20 @@ module Phaser {
             this.t = Phaser.Vec2Utils.clone(pos);
             this.c = Math.cos(angle);
             this.s = Math.sin(angle);
+            this.angle = angle;
 
         }
 
         public t: Phaser.Vec2;
         public c: number;
         public s: number;
+        public angle: number;
+
+        public toString() {
+
+    	    return 't=' + this.t.toString() + ' c=' + this.c + ' s=' + this.s + ' a=' + this.angle;
+
+        }
 
         public setTo(pos:Phaser.Vec2, angle:number) {
 
@@ -41,8 +49,13 @@ module Phaser {
 
         public setRotation(angle:number) {
 
-            this.c = Math.cos(angle);
-            this.s = Math.sin(angle);
+            if (angle !== this.angle)
+            {
+                this.c = Math.cos(angle);
+                this.s = Math.sin(angle);
+                this.angle = angle;
+            }
+
             return this;
 
         }
@@ -50,6 +63,7 @@ module Phaser {
         public setPosition(p:Phaser.Vec2) {
 
             this.t.copyFrom(p);
+
             return this;
 
         }
