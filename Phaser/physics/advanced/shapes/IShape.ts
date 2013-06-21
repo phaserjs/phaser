@@ -33,6 +33,12 @@ module Phaser.Physics.Advanced {
         findEdgeByPoint(p: Phaser.Vec2, minDist: number): number;
         findVertexByPoint(p: Phaser.Vec2, minDist: number): number;
 
+        verts: Phaser.Vec2[];
+        planes: Phaser.Physics.Advanced.Plane[];
+        tverts: Phaser.Vec2[];
+        tplanes: Phaser.Physics.Advanced.Plane[];
+        convexity: bool;
+
     }
 
 }

@@ -32,6 +32,14 @@ module Phaser.Physics.Advanced {
         public type: number;
         public body: Body;
 
+        public verts: Phaser.Vec2[];
+        public planes: Phaser.Physics.Advanced.Plane[];
+
+        public tverts: Phaser.Vec2[];
+        public tplanes: Phaser.Physics.Advanced.Plane[];
+
+        public convexity: bool;
+
     	// Coefficient of restitution (elasticity)
         public elasticity: number;
 

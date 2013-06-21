@@ -28,6 +28,59 @@ module Phaser.Physics.Advanced {
          */
         public game: Game;
 
+        public static debug: HTMLTextAreaElement;
+
+        public static clear() {
+            Manager.debug.textContent = "";
+            Manager.log = [];
+        }
+
+        public static write(s: string) {
+            //Manager.debug.textContent += s + "\n";
+        }
+
+        public static writeAll() {
+
+            for (var i = 0; i < Manager.log.length; i++)
+            {
+                //Manager.debug.textContent += Manager.log[i];
+            }
+
+        }
+
+        public static log = [];
+
+        public static dump(phase: string, body: Body) {
+
+            var s = "\n\nPhase: " + phase + "\n";
+            s += "Position: " + body.position.toString() + "\n";
+            s += "Velocity: " + body.velocity.toString() + "\n";
+            s += "Angle: " + body.angle + "\n";
+            s += "Force: " + body.force.toString() + "\n";
+            s += "Torque: " + body.torque + "\n";
+            s += "Bounds: " + body.bounds.toString() + "\n";
+            s += "Shape ***\n";
+            s += "Vert 0: " + body.shapes[0].verts[0].toString() + "\n";
+            s += "Vert 1: " + body.shapes[0].verts[1].toString() + "\n";
+            s += "Vert 2: " + body.shapes[0].verts[2].toString() + "\n";
+            s += "Vert 3: " + body.shapes[0].verts[3].toString() + "\n";
+            s += "TVert 0: " + body.shapes[0].tverts[0].toString() + "\n";
+            s += "TVert 1: " + body.shapes[0].tverts[1].toString() + "\n";
+            s += "TVert 2: " + body.shapes[0].tverts[2].toString() + "\n";
+            s += "TVert 3: " + body.shapes[0].tverts[3].toString() + "\n";
+            s += "Plane 0: " + body.shapes[0].planes[0].normal.toString() + "\n";
+            s += "Plane 1: " + body.shapes[0].planes[1].normal.toString() + "\n";
+            s += "Plane 2: " + body.shapes[0].planes[2].normal.toString() + "\n";
+            s += "Plane 3: " + body.shapes[0].planes[3].normal.toString() + "\n";
+            s += "TPlane 0: " + body.shapes[0].tplanes[0].normal.toString() + "\n";
+            s += "TPlane 1: " + body.shapes[0].tplanes[1].normal.toString() + "\n";
+            s += "TPlane 2: " + body.shapes[0].tplanes[2].normal.toString() + "\n";
+            s += "TPlane 3: " + body.shapes[0].tplanes[3].normal.toString() + "\n";
+
+            Manager.log.push(s);
+
+        }
+
         public static collision: Collision;
 
         public static SHAPE_TYPE_CIRCLE: number = 0;
@@ -68,8 +121,12 @@ module Phaser.Physics.Advanced {
         public timeDelta: number = 0;
         public paused: bool = false;
         public step: bool = false; // step through the simulation (i.e. per click)
+        //public paused: bool = true;
+        //public step: bool = false; // step through the simulation (i.e. per click)
         public velocityIterations: number = 8;
         public positionIterations: number = 4;
+        //public velocityIterations: number = 1;
+        //public positionIterations: number = 1;
         public allowSleep: bool = true;
         public warmStarting: bool = true;
 
@@ -91,6 +148,8 @@ module Phaser.Physics.Advanced {
 
             if (!this.paused || this.step)
             {
+                Manager.clear();
+
                 var h = 1 / this.frameRateHz;
 
                 this.timeDelta += frameTime;
@@ -123,29 +182,6 @@ module Phaser.Physics.Advanced {
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public pixelsToMeters(value: number): number {
             return value * 0.02;
         }
@@ -170,31 +206,32 @@ module Phaser.Physics.Advanced {
             return value * 50;
         }
 
-        public static areaForCircle(radius_outer, radius_inner): number {
+        public static areaForCircle(radius_outer: number, radius_inner: number): number {
             return Math.PI * (radius_outer * radius_outer - radius_inner * radius_inner);
         }
 
-        public static inertiaForCircle(mass, center, radius_outer, radius_inner): number {
+        public static inertiaForCircle(mass: number, center: Phaser.Vec2, radius_outer: number, radius_inner: number): number {
             return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthSq());
         }
 
-        public static areaForSegment(a, b, radius): number {
+        public static areaForSegment(a: Phaser.Vec2, b: Phaser.Vec2, radius: number): number {
             return radius * (Math.PI * radius + 2 * Phaser.Vec2Utils.distance(a, b));
         }
 
-        public static centroidForSegment(a, b): Phaser.Vec2 {
+        public static centroidForSegment(a: Phaser.Vec2, b: Phaser.Vec2): Phaser.Vec2 {
             return Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
         }
 
-        public static inertiaForSegment(mass, a, b): number {
+        public static inertiaForSegment(mass: number, a: Phaser.Vec2, b: Phaser.Vec2): number {
 
             var distsq = Phaser.Vec2Utils.distanceSq(b, a);
             var offset: Phaser.Vec2 = Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
 
             return mass * (distsq / 12 + offset.lengthSq());
+
         }
 
-        public static areaForPoly(verts): number {
+        public static areaForPoly(verts: Phaser.Vec2[]): number {
 
             var area = 0;
 
@@ -206,7 +243,7 @@ module Phaser.Physics.Advanced {
             return area / 2;
         }
 
-        public static centroidForPoly(verts): Phaser.Vec2 {
+        public static centroidForPoly(verts: Phaser.Vec2[]): Phaser.Vec2 {
 
             var area = 0;
             var vsum = new Phaser.Vec2;
@@ -224,9 +261,10 @@ module Phaser.Physics.Advanced {
             }
 
             return Phaser.Vec2Utils.scale(vsum, 1 / (3 * area));
+
         }
 
-        public static inertiaForPoly(mass, verts, offset): number {
+        public static inertiaForPoly(mass: number, verts: Phaser.Vec2[], offset: Phaser.Vec2): number {
 
             var sum1 = 0;
             var sum2 = 0;
@@ -244,9 +282,10 @@ module Phaser.Physics.Advanced {
             }
 
             return (mass * sum1) / (6 * sum2);
+
         }
 
-        public static inertiaForBox(mass, w, h) {
+        public static inertiaForBox(mass: number, w: number, h: number) {
             return mass * (w * w + h * h) / 12;
         }
 

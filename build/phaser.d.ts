@@ -8473,6 +8473,16 @@ module Phaser {
         */
         private _game;
         /**
+        * A 1x1 sized canvas used for pixel-perfect checks
+        * @type {HTMLCanvasElement}
+        */
+        public hitCanvas: HTMLCanvasElement;
+        /**
+        * The context of the 1x1 pixel check canvas
+        * @type {CanvasRenderingContext2D}
+        */
+        public hitContext: CanvasRenderingContext2D;
+        /**
         * A vector object representing the previous position of the Pointer.
         * @property vector
         * @type {Vec2}
@@ -8852,6 +8862,7 @@ module Phaser {
         * @param {Pointer} pointer2
         **/
         public getAngle(pointer1: Pointer, pointer2: Pointer): number;
+        public pixelPerfectCheck(sprite: Sprite, pointer: Pointer, alpha?: number): bool;
     }
 }
 module Phaser {
@@ -9429,6 +9440,8 @@ module Phaser {
         public t: Vec2;
         public c: number;
         public s: number;
+        public angle: number;
+        public toString(): string;
         public setTo(pos: Vec2, angle: number): Transform;
         public setRotation(angle: number): Transform;
         public setPosition(p: Vec2): Transform;
@@ -9592,6 +9605,12 @@ module Phaser.Physics.Advanced {
         * Local reference to Game.
         */
         public game: Game;
+        static debug: HTMLTextAreaElement;
+        static clear(): void;
+        static write(s: string): void;
+        static writeAll(): void;
+        static log: any[];
+        static dump(phase: string, body: Body): void;
         static collision: Collision;
         static SHAPE_TYPE_CIRCLE: number;
         static SHAPE_TYPE_SEGMENT: number;
@@ -9636,15 +9655,15 @@ module Phaser.Physics.Advanced {
         static metersToPixels(value: number): number;
         static p2m(value: number): number;
         static m2p(value: number): number;
-        static areaForCircle(radius_outer, radius_inner): number;
-        static inertiaForCircle(mass, center, radius_outer, radius_inner): number;
-        static areaForSegment(a, b, radius): number;
-        static centroidForSegment(a, b): Vec2;
-        static inertiaForSegment(mass, a, b): number;
-        static areaForPoly(verts): number;
-        static centroidForPoly(verts): Vec2;
-        static inertiaForPoly(mass, verts, offset): number;
-        static inertiaForBox(mass, w, h): number;
+        static areaForCircle(radius_outer: number, radius_inner: number): number;
+        static inertiaForCircle(mass: number, center: Vec2, radius_outer: number, radius_inner: number): number;
+        static areaForSegment(a: Vec2, b: Vec2, radius: number): number;
+        static centroidForSegment(a: Vec2, b: Vec2): Vec2;
+        static inertiaForSegment(mass: number, a: Vec2, b: Vec2): number;
+        static areaForPoly(verts: Vec2[]): number;
+        static centroidForPoly(verts: Vec2[]): Vec2;
+        static inertiaForPoly(mass: number, verts: Vec2[], offset: Vec2): number;
+        static inertiaForBox(mass: number, w: number, h: number): number;
         static createConvexHull(points): any[];
     }
 }
@@ -9668,6 +9687,10 @@ module Phaser.Physics.Advanced {
         public setTo(mins: Vec2, maxs: Vec2): void;
         public copy(b: Bounds): Bounds;
         public clear(): Bounds;
+        public x : number;
+        public y : number;
+        public width : number;
+        public height : number;
         public isEmpty(): bool;
         public getPerimeter(): number;
         public addPoint(p: Vec2): Bounds;
@@ -9701,6 +9724,11 @@ module Phaser.Physics.Advanced {
         pointQuery(p: Vec2): bool;
         findEdgeByPoint(p: Vec2, minDist: number): number;
         findVertexByPoint(p: Vec2, minDist: number): number;
+        verts: Vec2[];
+        planes: Plane[];
+        tverts: Vec2[];
+        tplanes: Plane[];
+        convexity: bool;
     }
 }
 /**
@@ -9714,6 +9742,11 @@ module Phaser.Physics.Advanced {
         public id: number;
         public type: number;
         public body: Body;
+        public verts: Vec2[];
+        public planes: Plane[];
+        public tverts: Vec2[];
+        public tplanes: Plane[];
+        public convexity: bool;
         public elasticity: number;
         public friction: number;
         public density: number;
@@ -9786,23 +9819,30 @@ module Phaser.Physics.Advanced.Shapes {
     }
 }
 /**
+* Phaser - Advanced Physics - Plane
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced {
+    class Plane {
+        constructor(normal: Vec2, d: number);
+        public normal: Vec2;
+        public d: number;
+    }
+}
+/**
 * Phaser - Advanced Physics - Shapes - Convex Polygon
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 module Phaser.Physics.Advanced.Shapes {
     class Poly extends Shape implements IShape {
-        constructor(verts?: Vec2[]);
-        public verts: Vec2[];
-        public planes;
-        public tverts;
-        public tplanes;
-        public convexity: bool;
+        constructor(verts?);
         public finishVerts(): void;
         public duplicate(): Poly;
         public recenter(c): void;
-        public transform(xf): void;
-        public untransform(xf): void;
+        public transform(xf: Transform): void;
+        public untransform(xf: Transform): void;
         public area(): number;
         public centroid(): Vec2;
         public inertia(mass: number): number;
@@ -9810,8 +9850,8 @@ module Phaser.Physics.Advanced.Shapes {
         public pointQuery(p: Vec2): bool;
         public findVertexByPoint(p: Vec2, minDist: number): number;
         public findEdgeByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n, d): number;
-        public containPoint(p): bool;
+        public distanceOnPlane(n: Vec2, d: number): number;
+        public containPoint(p: Vec2): bool;
         public containPointPartial(p, n): bool;
     }
 }
@@ -9861,7 +9901,7 @@ module Phaser.Physics.Advanced {
         public segment2Segment(seg1: Shapes.Segment, seg2: Shapes.Segment, contactArr: Contact[]): number;
         public findPointsBehindSeg(contactArr: Contact[], seg: Shapes.Segment, poly: Shapes.Poly, dist: number, coef: number): void;
         public segment2Poly(seg: Shapes.Segment, poly: Shapes.Poly, contactArr: Contact[]): number;
-        public findMSA(poly: Shapes.Poly, planes, num: number): {
+        public findMSA(poly: Shapes.Poly, planes: Plane[], num: number): {
             dist: number;
             index: number;
         };
@@ -9938,6 +9978,26 @@ module Phaser.Physics.Advanced {
     }
 }
 /**
+* Phaser - Advanced Physics - Shapes - Triangle
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced.Shapes {
+    class Triangle extends Poly {
+        constructor(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number);
+    }
+}
+/**
+* Phaser - Advanced Physics - Shapes - Box
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Advanced.Shapes {
+    class Box extends Poly {
+        constructor(x, y, width, height);
+    }
+}
+/**
 * Phaser - Advanced Physics - Body
 *
 * Based on the work Ju Hyung Lee started in JS PhyRus.
@@ -9945,6 +10005,8 @@ module Phaser.Physics.Advanced {
 module Phaser.Physics.Advanced {
     class Body {
         constructor(sprite: Sprite, type: number, x?: number, y?: number);
+        public toString(): string;
+        private _tempVec2;
         /**
         * Reference to Phaser.Game
         */
@@ -9986,6 +10048,10 @@ module Phaser.Physics.Advanced {
         public joints: IJoint[];
         public jointHash: {};
         public bounds: Bounds;
+        public mass: number;
+        public massInverted: number;
+        public inertia: number;
+        public inertiaInverted: number;
         public fixedRotation: bool;
         public categoryBits: number;
         public maskBits: number;
@@ -9997,57 +10063,38 @@ module Phaser.Physics.Advanced {
         public isKinetic : bool;
         public isDynamic : bool;
         public setType(type: number): void;
+        public addPoly(verts, elasticity?: number, friction?: number, density?: number): Shapes.Poly;
+        public addTriangle(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, elasticity?: number, friction?: number, density?: number): Shapes.Triangle;
+        public addBox(x: number, y: number, width: number, height: number, elasticity?: number, friction?: number, density?: number): Shapes.Box;
+        public addCircle(radius: number, x?: number, y?: number, elasticity?: number, friction?: number, density?: number): Shapes.Circle;
         public addShape(shape);
         public removeShape(shape): void;
-        public mass: number;
-        public massInverted: number;
-        public inertia: number;
-        public inertiaInverted: number;
         private setMass(mass);
         private setInertia(inertia);
         public setTransform(pos, angle): void;
         public syncTransform(): void;
         public getWorldPoint(p: Vec2): Vec2;
-        public getWorldVector(v): Vec2;
-        public getLocalPoint(p): Vec2;
-        public getLocalVector(v): Vec2;
+        public getWorldVector(v: Vec2): Vec2;
+        public getLocalPoint(p: Vec2): Vec2;
+        public getLocalVector(v: Vec2): Vec2;
         public setFixedRotation(flag): void;
         public resetMassData(): void;
         public resetJointAnchors(): void;
-        public cacheData(): void;
-        private _tempVec2;
+        public cacheData(source?: string): void;
         public updateVelocity(gravity, dt, damping): void;
+        public inContact(body2: Body): bool;
+        public clamp(v, min, max);
         public updatePosition(dt): void;
         public resetForce(): void;
-        public applyForce(force, p): void;
-        public applyForceToCenter(force): void;
-        public applyTorque(torque): void;
-        public applyLinearImpulse(impulse, p): void;
+        public applyForce(force: Vec2, p: Vec2): void;
+        public applyForceToCenter(force: Vec2): void;
+        public applyTorque(torque: number): void;
+        public applyLinearImpulse(impulse: Vec2, p: Vec2): void;
         public applyAngularImpulse(impulse: number): void;
         public kineticEnergy(): number;
         public isAwake : bool;
         public awake(flag): void;
-        public isCollidable(other): bool;
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Box
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Box extends Poly {
-        constructor(x, y, width, height);
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Triangle
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Triangle extends Poly {
-        constructor(p1, p2, p3);
+        public isCollidable(other: Body): bool;
     }
 }
 /**

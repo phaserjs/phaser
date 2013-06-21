@@ -8,6 +8,11 @@
 /// <reference path="Bounds.ts" />
 /// <reference path="Space.ts" />
 /// <reference path="shapes/IShape.ts" />
+/// <reference path="shapes/Triangle.ts" />
+/// <reference path="shapes/Circle.ts" />
+/// <reference path="shapes/Box.ts" />
+/// <reference path="shapes/Poly.ts" />
+/// <reference path="shapes/Segment.ts" />
 
 /**
 * Phaser - Advanced Physics - Body
@@ -29,12 +34,12 @@ module Phaser.Physics.Advanced {
             {
                 this.sprite = sprite;
                 this.game = sprite.game;
-                this.position = new Phaser.Vec2(sprite.x, sprite.y);
+                this.position = new Phaser.Vec2(Phaser.Physics.Advanced.Manager.pixelsToMeters(sprite.x), Phaser.Physics.Advanced.Manager.pixelsToMeters(sprite.y));
                 this.angle = sprite.rotation;
             }
             else
             {
-                this.position = new Phaser.Vec2(x, y);
+                this.position = new Phaser.Vec2(Phaser.Physics.Advanced.Manager.pixelsToMeters(x), Phaser.Physics.Advanced.Manager.pixelsToMeters(y));
                 this.angle = 0;
             }
 
@@ -63,6 +68,12 @@ module Phaser.Physics.Advanced {
             this.stepCount = 0;
 
         }
+
+        public toString(): string {
+            return "[{Body (name=" + this.name + " velocity=" + this.velocity.toString() + " angularVelocity: " + this.angularVelocity + ")}]";
+        }
+
+	    private _tempVec2: Phaser.Vec2 = new Phaser.Vec2;
 
         /**
          * Reference to Phaser.Game
@@ -139,6 +150,11 @@ module Phaser.Physics.Advanced {
 	    // Bounds of all shapes
 	    public bounds: Bounds;
 
+	    public mass: number;
+	    public massInverted: number;
+	    public inertia: number;
+	    public inertiaInverted: number;
+
 	    public fixedRotation = false;
 	    public categoryBits = 0x0001;
 	    public maskBits = 0xFFFF;
@@ -195,6 +211,62 @@ module Phaser.Physics.Advanced {
 
 	    }
 
+	    public addPoly(verts, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Advanced.Shapes.Poly {
+
+	        var poly: Phaser.Physics.Advanced.Shapes.Poly = new Phaser.Physics.Advanced.Shapes.Poly(verts);
+	        poly.elasticity = elasticity;
+	        poly.friction = friction;
+	        poly.density = density;
+
+	        this.addShape(poly);
+	        this.resetMassData();
+
+	        return poly;
+
+	    }
+
+	    public addTriangle(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Advanced.Shapes.Triangle {
+
+	        var tri: Phaser.Physics.Advanced.Shapes.Triangle = new Phaser.Physics.Advanced.Shapes.Triangle(x1, y1, x2, y2, x3, y3);
+	        tri.elasticity = elasticity;
+	        tri.friction = friction;
+	        tri.density = density;
+
+	        this.addShape(tri);
+	        this.resetMassData();
+
+	        return tri;
+
+	    }
+
+	    public addBox(x: number, y: number, width: number, height: number, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Advanced.Shapes.Box {
+
+	        var box: Phaser.Physics.Advanced.Shapes.Box = new Phaser.Physics.Advanced.Shapes.Box(x, y, width, height);
+	        box.elasticity = elasticity;
+	        box.friction = friction;
+	        box.density = density;
+
+	        this.addShape(box);
+	        this.resetMassData();
+
+	        return box;
+
+	    }
+
+	    public addCircle(radius: number, x?: number = 0, y?: number = 0, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Advanced.Shapes.Circle {
+
+	        var circle: Phaser.Physics.Advanced.Shapes.Circle = new Phaser.Physics.Advanced.Shapes.Circle(radius, x, y);
+	        circle.elasticity = elasticity;
+	        circle.friction = friction;
+	        circle.density = density;
+
+	        this.addShape(circle);
+	        this.resetMassData();
+
+	        return circle;
+
+	    }
+
 	    public addShape(shape) {
 
             //  Check not already part of this body
@@ -218,10 +290,6 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    public mass: number;
-	    public massInverted: number;
-	    public inertia: number;
-	    public inertiaInverted: number;
 
 	    private setMass(mass) {
 
@@ -241,7 +309,10 @@ module Phaser.Physics.Advanced {
 
 	        this.transform.setTo(pos, angle);
             //  inject the transform into this.position
+	        Manager.write('setTransform: ' + this.position.toString());
+        	Manager.write('centroid: ' + this.centroid.toString());
             Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
+	        Manager.write('post setTransform: ' + this.position.toString());
             //this.position.copyFrom(this.transform.transform(this.centroid));
 	        this.angle = angle;
 
@@ -249,17 +320,17 @@ module Phaser.Physics.Advanced {
 
 	    public syncTransform() {
 
+	        Manager.write('syncTransform:');
+	        Manager.write('p: ' + this.position.toString());
+	        Manager.write('centroid: ' + this.centroid.toString());
+	        Manager.write('xf: ' + this.transform.toString());
+	        Manager.write('a: ' + this.angle);
             this.transform.setRotation(this.angle);
-
-            //var rotc: Phaser.Vec2 = this.transform.rotate(this.centroid);
-            //var sub: Phaser.Vec2 = Phaser.Vec2Utils.subtract(this.position, rotc);
-            //this.transform.setPosition(sub);
-
-            //  this.transform.setPosition(vec2.sub(this.position, this.transform.rotate(this.centroid)));
-            //Phaser.Vec2Utils.subtract(this.position, this.transform.rotate(this.centroid), this.transform.t);
-
             //  OPTIMISE: Creating new vector
             Phaser.Vec2Utils.subtract(this.position, Phaser.TransformUtils.rotate(this.transform, this.centroid), this.transform.t);
+	        Manager.write('--------------------');
+	        Manager.write('xf: ' + this.transform.toString());
+	        Manager.write('--------------------');
 
 	    }
 
@@ -268,17 +339,17 @@ module Phaser.Physics.Advanced {
 	        return Phaser.TransformUtils.transform(this.transform, p);
 	    }
 
-	    public getWorldVector(v) {
+	    public getWorldVector(v:Phaser.Vec2) {
             //  OPTIMISE: Creating new vector
 	        return Phaser.TransformUtils.rotate(this.transform, v);
 	    }
 
-	    public getLocalPoint(p) {
+	    public getLocalPoint(p:Phaser.Vec2) {
             //  OPTIMISE: Creating new vector
 	        return Phaser.TransformUtils.untransform(this.transform, p);
 	    }
 
-	    public getLocalVector(v) {
+	    public getLocalVector(v:Phaser.Vec2) {
             //  OPTIMISE: Creating new vector
 	        return Phaser.TransformUtils.unrotate(this.transform, v);
 	    }
@@ -366,22 +437,28 @@ module Phaser.Physics.Advanced {
 	        }
 	    }
 
-	    public cacheData() {
+	    public cacheData(source:string = '') {
 
-	        //console.log('Body cacheData', this.name, 'len', this.shapes.length);
+	        Manager.write('cacheData -- start');
+	        Manager.write('p: ' + this.position.toString());
+	        Manager.write('xf: ' + this.transform.toString());
 
 	        this.bounds.clear();
 
 	        for (var i = 0; i < this.shapes.length; i++)
 	        {
-	            var shape = this.shapes[i];
+	            var shape: IShape = this.shapes[i];
 	            shape.cacheData(this.transform);
 	            this.bounds.addBounds(shape.bounds);
 	        }
 
-	    }
+	        Manager.write('bounds: ' + this.bounds.toString());
 
-	    private _tempVec2: Phaser.Vec2 = new Phaser.Vec2;
+	        Manager.write('p: ' + this.position.toString());
+	        Manager.write('xf: ' + this.transform.toString());
+	        Manager.write('cacheData -- stop');
+
+	    }
 
 	    public updateVelocity(gravity, dt, damping) {
 
@@ -398,13 +475,43 @@ module Phaser.Physics.Advanced {
 	        // v2 = exp(-c * dt) * v1
 	        // Taylor expansion:
 	        // v2 = (1.0f - c * dt) * v1
-	        this.velocity.scale(this.game.math.clamp(1 - dt * (damping + this.linearDamping), 0, 1));
-	        this.angularVelocity *= this.game.math.clamp(1 - dt * (damping + this.angularDamping), 0, 1);
+	        this.velocity.scale(this.clamp(1 - dt * (damping + this.linearDamping), 0, 1));
+	        this.angularVelocity *= this.clamp(1 - dt * (damping + this.angularDamping), 0, 1);
 
 	        this.force.setTo(0, 0);
 	        this.torque = 0;
 
 	    }
+
+	    public inContact(body2: Body): bool {
+
+	        if (!body2 || this.stepCount == body2.stepCount)
+	        {
+	            return false;
+	        }
+
+	        if (!(this.isAwake && this.isStatic == false) && !(body2.isAwake && body2.isStatic == false))
+	        {
+	            return false;
+	        }
+
+	        if (this.isCollidable(body2) == false)
+	        {
+	            return false;
+	        }
+
+            if (!this.bounds.intersectsBounds(body2.bounds))
+            {
+                return false;
+            }
+
+            return true;
+
+	    }
+
+        public clamp(v, min, max) {
+            return v < min ? min : (v > max ? max : v);
+        }
 
 	    public updatePosition(dt) {
 
@@ -426,7 +533,7 @@ module Phaser.Physics.Advanced {
 	        this.torque = 0;
 	    }
 
-	    public applyForce(force, p) {
+	    public applyForce(force:Phaser.Vec2, p:Phaser.Vec2) {
 
 	        if (this.isDynamic == false)
 	        {
@@ -448,7 +555,7 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    public applyForceToCenter(force) {
+	    public applyForceToCenter(force:Phaser.Vec2) {
 
 	        if (this.isDynamic == false)
 	        {
@@ -464,7 +571,7 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    public applyTorque(torque) {
+	    public applyTorque(torque:number) {
 
 	        if (this.isDynamic == false)
 	        {
@@ -480,7 +587,7 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    public applyLinearImpulse(impulse, p) {
+	    public applyLinearImpulse(impulse:Phaser.Vec2, p:Phaser.Vec2) {
 
 	        if (this.isDynamic == false)
 	        {
@@ -497,6 +604,7 @@ module Phaser.Physics.Advanced {
 	        //  this.angularVelocity += vec2.cross(vec2.sub(p, this.position), impulse) * this.inertiaInverted;
 
             Phaser.Vec2Utils.subtract(p, this.position, this._tempVec2);
+
 	        this.angularVelocity += Phaser.Vec2Utils.cross(this._tempVec2, impulse) * this.inertiaInverted;
 
 	    }
@@ -548,7 +656,7 @@ module Phaser.Physics.Advanced {
 
 	    }
 
-	    public isCollidable(other) {
+	    public isCollidable(other:Body) {
 
 	        if (this == other)
 	        {
@@ -569,12 +677,7 @@ module Phaser.Physics.Advanced {
 	        {
 	            var joint = this.joints[i];
 
-	            if (!joint)
-	            {
-	                continue;
-	            }
-
-	            if (!joint.collideConnected && other.jointHash[joint.id] != undefined)
+	            if (!this.joints[i] || (!this.joints[i].collideConnected && other.jointHash[this.joints[i].id] != undefined))
 	            {
 	                return false;
 	            }

@@ -2,6 +2,7 @@
 /// <reference path="../../../math/Vec2Utils.ts" />
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
+/// <reference path="../Plane.ts" />
 /// <reference path="Shape.ts" />
 
 /**
@@ -14,13 +15,14 @@ module Phaser.Physics.Advanced.Shapes {
 
     export class Poly extends Phaser.Physics.Advanced.Shape implements IShape {
 
-        constructor(verts?:Phaser.Vec2[]) {
+        //  Verts is an optional array of objects, the objects must have public x and y properties which will be used
+        //  to seed this polygon (i.e. Vec2 objects, or just straight JS objects) and must wind COUNTER clockwise
+        constructor(verts?) {
 
             super(Manager.SHAPE_TYPE_POLY);
 
             this.verts = [];
             this.planes = [];
-
             this.tverts = [];
             this.tplanes = [];
 
@@ -28,12 +30,10 @@ module Phaser.Physics.Advanced.Shapes {
             {
                 for (var i = 0; i < verts.length; i++)
                 {
-                    this.verts[i] = Phaser.Vec2Utils.clone(verts[i]);
+                    this.verts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
                     this.tverts[i] = this.verts[i];
-
-                    this.tplanes[i] = {};
-                    this.tplanes[i].n = new Phaser.Vec2;
-                    this.tplanes[i].d = 0;
+                    //this.tverts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
+                    this.tplanes[i] = new Phaser.Physics.Advanced.Plane(new Phaser.Vec2, 0);
                 }
             }
 
@@ -41,13 +41,6 @@ module Phaser.Physics.Advanced.Shapes {
 
         }
 
-        public verts: Phaser.Vec2[];
-        public planes;
-
-        public tverts;
-        public tplanes;
-
-        public convexity: bool;
 
         public finishVerts() {
 
@@ -69,28 +62,26 @@ module Phaser.Physics.Advanced.Shapes {
                 var b = this.verts[(i + 1) % this.verts.length];
                 var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
 
-                this.planes[i] = {};
-                this.planes[i].n = n;
-                this.planes[i].d = Phaser.Vec2Utils.dot(n, a);
+                this.planes[i] = new Phaser.Physics.Advanced.Plane(n, Phaser.Vec2Utils.dot(n, a));
 
-                this.tverts[i] = this.verts[i];
+                this.tverts[i] = Phaser.Vec2Utils.clone(this.verts[i]); // reference???
+                //this.tverts[i] = this.verts[i]; // reference???
 
-                this.tplanes[i] = {};
-                this.tplanes[i].n = new Phaser.Vec2;
-                this.tplanes[i].d = 0;
+                this.tplanes[i] = new Phaser.Physics.Advanced.Plane(new Phaser.Vec2, 0);
             }
 
             for (var i = 0; i < this.verts.length; i++)
             {
-                var b = this.verts[(i + 2) % this.verts.length];
-                var n = this.planes[i].n;
-                var d = this.planes[i].d;
+                //var b = this.verts[(i + 2) % this.verts.length];
+                //var n = this.planes[i].normal;
+                //var d = this.planes[i].d;
 
-                if (Phaser.Vec2Utils.dot(n, b) - d > 0)
+                if (Phaser.Vec2Utils.dot(this.planes[i].normal, this.verts[(i + 2) % this.verts.length]) - this.planes[i].d > 0)
                 {
                     this.convexity = false;
                 }
             }
+
         }
 
         public duplicate() {
@@ -106,18 +97,23 @@ module Phaser.Physics.Advanced.Shapes {
 
         }
 
-        public transform(xf) {
+        public transform(xf:Phaser.Transform) {
+
             for (var i = 0; i < this.verts.length; i++)
             {
-                this.verts[i] = xf.transform(this.verts[i]);
+                this.verts[i] = Phaser.TransformUtils.transform(xf, this.verts[i]);
+                //this.verts[i] = xf.transform(this.verts[i]);
             }
         }
 
-        public untransform(xf) {
+        public untransform(xf:Phaser.Transform) {
+
             for (var i = 0; i < this.verts.length; i++)
             {
-                this.verts[i] = xf.untransform(this.verts[i]);
+                this.verts[i] = Phaser.TransformUtils.untransform(xf, this.verts[i]);
+                //this.verts[i] = xf.untransform(this.verts[i]);
             }
+
         }
 
         public area(): number {
@@ -138,7 +134,7 @@ module Phaser.Physics.Advanced.Shapes {
 
             var numVerts = this.verts.length;
 
-            //console.log('shapePoly cacheData', numVerts);
+            Manager.write('----------- Poly cacheData = ' + numVerts);
 
             if (numVerts == 0)
             {
@@ -147,8 +143,9 @@ module Phaser.Physics.Advanced.Shapes {
 
             for (var i = 0; i < numVerts; i++)
             {
-                Phaser.TransformUtils.transform(xf, this.tverts[i], this.tverts[i]);
+                this.tverts[i] = Phaser.TransformUtils.transform(xf, this.verts[i]);
                 //this.tverts[i] = xf.transform(this.verts[i]);
+                Manager.write('tvert' + i + ' = ' + this.tverts[i].toString());
             }
 
             if (numVerts < 2)
@@ -161,13 +158,20 @@ module Phaser.Physics.Advanced.Shapes {
             {
                 var a = this.tverts[i];
                 var b = this.tverts[(i + 1) % numVerts];
-
                 var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
 
-                this.tplanes[i].n = n;
+		        Manager.write('a = ' + a.toString());
+		        Manager.write('b = ' + b.toString());
+		        Manager.write('n = ' + n.toString());
+
+                this.tplanes[i].normal = n;
                 this.tplanes[i].d = Phaser.Vec2Utils.dot(n, a);
 
+		        Manager.write('tplanes' + i + ' n = ' + this.tplanes[i].normal.toString());
+		        Manager.write('tplanes' + i + ' d = ' + this.tplanes[i].d.toString());
+
                 this.bounds.addPoint(a);
+
             }
 
         }
@@ -206,7 +210,7 @@ module Phaser.Physics.Advanced.Shapes {
             {
                 var v1 = this.tverts[i];
                 var v2 = this.tverts[(i + 1) % numVerts];
-                var n = this.tplanes[i].n;
+                var n = this.tplanes[i].normal;
 
                 var dtv1 = Phaser.Vec2Utils.cross(v1, n);
                 var dtv2 = Phaser.Vec2Utils.cross(v2, n);
@@ -241,9 +245,9 @@ module Phaser.Physics.Advanced.Shapes {
 
         }
 
-        public distanceOnPlane(n, d) {
+        public distanceOnPlane(n: Phaser.Vec2, d:number) {
 
-            var min = 999999;
+            var min: number = 999999;
 
             for (var i = 0; i < this.verts.length; i++)
             {
@@ -254,13 +258,13 @@ module Phaser.Physics.Advanced.Shapes {
 
         }
 
-        public containPoint(p) {
+        public containPoint(p: Phaser.Vec2) {
 
             for (var i = 0; i < this.verts.length; i++)
             {
                 var plane = this.tplanes[i];
 
-                if (Phaser.Vec2Utils.dot(plane.n, p) - plane.d > 0)
+                if (Phaser.Vec2Utils.dot(plane.normal, p) - plane.d > 0)
                 {
                     return false;
                 }
@@ -276,12 +280,12 @@ module Phaser.Physics.Advanced.Shapes {
             {
                 var plane = this.tplanes[i];
 
-                if (Phaser.Vec2Utils.dot(plane.n, n) < 0.0001)
+                if (Phaser.Vec2Utils.dot(plane.normal, n) < 0.0001)
                 {
                     continue;
                 }
 
-                if (Phaser.Vec2Utils.dot(plane.n, p) - plane.d > 0)
+                if (Phaser.Vec2Utils.dot(plane.normal, p) - plane.d > 0)
                 {
                     return false;
                 }

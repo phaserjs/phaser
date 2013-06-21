@@ -213,6 +213,10 @@
     <TypeScriptCompile Include="physics\advanced\shapes\Shape.ts" />
     <TypeScriptCompile Include="physics\advanced\shapes\IShape.ts" />
     <TypeScriptCompile Include="physics\advanced\shapes\Box.ts" />
+    <TypeScriptCompile Include="physics\advanced\Plane.ts" />
+    <Content Include="physics\advanced\Plane.js">
+      <DependentUpon>Plane.ts</DependentUpon>
+    </Content>
     <Content Include="physics\advanced\shapes\Box.js">
       <DependentUpon>Box.ts</DependentUpon>
     </Content>

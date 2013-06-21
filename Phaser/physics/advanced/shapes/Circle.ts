@@ -18,6 +18,10 @@ module Phaser.Physics.Advanced.Shapes {
 
             super(Manager.SHAPE_TYPE_CIRCLE);
 
+            x = Manager.pixelsToMeters(x);
+            y = Manager.pixelsToMeters(y);
+            radius = Manager.pixelsToMeters(radius);
+
             this.center = new Phaser.Vec2(x, y);
             this.radius = radius;
             this.tc = new Phaser.Vec2;

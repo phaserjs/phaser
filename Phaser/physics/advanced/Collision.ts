@@ -187,20 +187,20 @@ module Phaser.Physics.Advanced {
             for (var i = 0; i < poly.verts.length; i++)
             {
                 var plane = poly.tplanes[i];
-                var dist = Phaser.Vec2Utils.dot(circ.tc, plane.n) - plane.d - circ.radius;
+                var dist = Phaser.Vec2Utils.dot(circ.tc, plane.normal) - plane.d - circ.radius;
 
                 if (dist > 0)
                 {
                     return 0;
                 }
                 else if (dist > minDist)
-                    {
+                {
                     minDist = dist;
                     minIdx = i;
                 }
             }
 
-            var n = poly.tplanes[minIdx].n;
+            var n = poly.tplanes[minIdx].normal;
             var a = poly.tverts[minIdx];
             var b = poly.tverts[(minIdx + 1) % poly.verts.length];
             var dta = Phaser.Vec2Utils.cross(a, n);
@@ -358,7 +358,7 @@ module Phaser.Physics.Advanced {
             for (var i = 0; i < poly.verts.length; i++)
             {
                 var plane = poly.tplanes[i];
-                var dist = seg.distanceOnPlane(plane.n, plane.d);
+                var dist = seg.distanceOnPlane(plane.normal, plane.d);
 
                 if (dist > 0)
                 {
@@ -373,7 +373,7 @@ module Phaser.Physics.Advanced {
             }
 
             var poly_n: Phaser.Vec2 = new Phaser.Vec2;
-            Phaser.Vec2Utils.negative(poly.tplanes[poly_i].n, poly_n);
+            Phaser.Vec2Utils.negative(poly.tplanes[poly_i].normal, poly_n);
             //var poly_n = vec2.neg(poly.tplanes[poly_i].n);
 
             var va: Phaser.Vec2 = new Phaser.Vec2;
@@ -397,6 +397,7 @@ module Phaser.Physics.Advanced {
             // Floating point precision problems here.
             // This will have to do for now.
             poly_d -= 0.1
+
             if (seg_d1 >= poly_d || seg_d2 >= poly_d)
             {
                 if (seg_d1 > seg_d2)
@@ -441,14 +442,14 @@ module Phaser.Physics.Advanced {
         }
 
         // Find the minimum separating axis for the given poly and plane list.
-        public findMSA(poly: Phaser.Physics.Advanced.Shapes.Poly, planes, num: number) {
+        public findMSA(poly: Phaser.Physics.Advanced.Shapes.Poly, planes: Phaser.Physics.Advanced.Plane[], num: number) {
 
-            var min_dist = -999999;
-            var min_index = -1;
+            var min_dist: number = -999999;
+            var min_index: number = -1;
 
-            for (var i = 0; i < num; i++)
+            for (var i: number = 0; i < num; i++)
             {
-                var dist = poly.distanceOnPlane(planes[i].n, planes[i].d);
+                var dist: number = poly.distanceOnPlane(planes[i].normal, planes[i].d);
 
                 if (dist > 0)
                 {
@@ -456,7 +457,7 @@ module Phaser.Physics.Advanced {
                     return { dist: 0, index: -1 };
                 }
                 else if (dist > min_dist)
-                    {
+                {
                     min_dist = dist;
                     min_index = i;
                 }
@@ -534,22 +535,25 @@ module Phaser.Physics.Advanced {
 
             if (msa1.index == -1)
             {
+                console.log('poly2poly 0', msa1);
                 return 0;
             }
 
             var msa2 = this.findMSA(poly1, poly2.tplanes, poly2.verts.length);
+
             if (msa2.index == -1)
             {
+                console.log('poly2poly 1', msa2);
                 return 0;
             }
 
-            // Penetration normal direction shoud be from poly1 to poly2
+            // Penetration normal direction should be from poly1 to poly2
             if (msa1.dist > msa2.dist)
             {
-                return this.findVerts(contactArr, poly1, poly2, poly1.tplanes[msa1.index].n, msa1.dist);
+                return this.findVerts(contactArr, poly1, poly2, poly1.tplanes[msa1.index].normal, msa1.dist);
             }
 
-            return this.findVerts(contactArr, poly1, poly2, Phaser.Vec2Utils.negative(poly2.tplanes[msa2.index].n), msa2.dist);
+            return this.findVerts(contactArr, poly1, poly2, Phaser.Vec2Utils.negative(poly2.tplanes[msa2.index].normal), msa2.dist);
 
         }
 
