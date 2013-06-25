@@ -93,12 +93,13 @@ module Phaser {
          */
         public checkFrameName(name: string): bool {
 
-            if (this._frameNames[name])
+
+            if (this._frameNames[name] == null)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
 
         }
 

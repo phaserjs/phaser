@@ -20,33 +20,61 @@ module Phaser.Physics.Advanced {
 
         constructor() {
 
-            this.bodyArr = [];
+            this.bodies = [];
             this.bodyHash = {};
 
-            this.jointArr = [];
+            this.joints = [];
             this.jointHash = {};
 
             this.numContacts = 0;
             this.contactSolvers = [];
 
-            //this.postSolve(arb) { };
-
             this.gravity = new Phaser.Vec2(0, 10);
             this.damping = 0;
 
+            this._linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
+            this._angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
+
         }
+
+        //  Delta Timer
+        private _delta: number;
+        private _deltaInv: number;
+
+        //  Body array length
+        private _bl: number;
+
+        //  Joints array length
+        private _jl: number;
+
+        //  Contact Solvers array length
+        private _cl: number;
+
+        private _linTolSqr: number;
+        private _angTolSqr: number;
+
+        //  Minimum sleep time (used in the sleep process solver)
+        private _minSleepTime: number;
+
+        private _positionSolved: bool;
+
+        private _shape1: IShape;
+        private _shape2: IShape;
+        private _contactsOk: bool;
+        private _jointsOk: bool;
+
+        private bodyHash;
+        private jointHash;
 
         public static TIME_TO_SLEEP = 0.5;
         public static SLEEP_LINEAR_TOLERANCE = 0.5;
         public static SLEEP_ANGULAR_TOLERANCE = 2 * Phaser.GameMath.DEG_TO_RAD;
 
-        public bodyArr: Body[];
-        public bodyHash;
-        public jointArr: IJoint[];
-        public jointHash;
+        public bodies: Body[];
+        public joints: IJoint[];
         public numContacts: number;
         public contactSolvers: ContactSolver[];
-        public postSolve;
+        public postSolve = null;
         public gravity: Phaser.Vec2;
         public damping: number;
         public stepCount: number = 0;
@@ -57,18 +85,18 @@ module Phaser.Physics.Advanced {
             Manager.bodyCounter = 0;
             Manager.jointCounter = 0;
 
-            for (var i = 0; i < this.bodyArr.length; i++)
+            for (var i = 0; i < this.bodies.length; i++)
             {
-                if (this.bodyArr[i])
+                if (this.bodies[i])
                 {
-                    this.removeBody(this.bodyArr[i]);
+                    this.removeBody(this.bodies[i]);
                 }
             }
 
-            this.bodyArr = [];
+            this.bodies = [];
             this.bodyHash = {};
 
-            this.jointArr = [];
+            this.joints = [];
             this.jointHash = {};
 
             this.contactSolvers = [];
@@ -84,7 +112,7 @@ module Phaser.Physics.Advanced {
                 return;
             }
 
-            var index = this.bodyArr.push(body) - 1;
+            var index = this.bodies.push(body) - 1;
             this.bodyHash[body.id] = index;
 
             body.awake(true);
@@ -100,7 +128,7 @@ module Phaser.Physics.Advanced {
                 return;
             }
 
-            // Remove linked joint
+            // Remove linked joints
             for (var i = 0; i < body.joints.length; i++)
             {
                 if (body.joints[i])
@@ -113,7 +141,7 @@ module Phaser.Physics.Advanced {
 
             var index = this.bodyHash[body.id];
             delete this.bodyHash[body.id];
-            delete this.bodyArr[index];
+            delete this.bodies[index];
 
         }
 
@@ -127,7 +155,7 @@ module Phaser.Physics.Advanced {
             joint.body1.awake(true);
             joint.body2.awake(true);
 
-            var index = this.jointArr.push(joint) - 1;
+            var index = this.joints.push(joint) - 1;
             this.jointHash[joint.id] = index;
 
             var index = joint.body1.joints.push(joint) - 1;
@@ -158,7 +186,7 @@ module Phaser.Physics.Advanced {
 
             var index = this.jointHash[joint.id];
             delete this.jointHash[joint.id];
-            delete this.jointArr[index];
+            delete this.joints[index];
 
         }
 
@@ -166,9 +194,9 @@ module Phaser.Physics.Advanced {
 
             var firstShape;
 
-            for (var i = 0; i < this.bodyArr.length; i++)
+            for (var i = 0; i < this.bodies.length; i++)
             {
-                var body = this.bodyArr[i];
+                var body = this.bodies[i];
 
                 if (!body)
                 {
@@ -206,9 +234,9 @@ module Phaser.Physics.Advanced {
 
             var firstBody;
 
-            for (var i = 0; i < this.bodyArr.length; i++)
+            for (var i = 0; i < this.bodies.length; i++)
             {
-                var body = this.bodyArr[i];
+                var body = this.bodies[i];
 
                 if (!body)
                 {
@@ -245,14 +273,14 @@ module Phaser.Physics.Advanced {
 
         }
 
-        // TODO: Replace this function to shape hashing
         public shapeById(id) {
 
             var shape;
 
-            for (var i = 0; i < this.bodyArr.length; i++)
+            for (var i = 0; i < this.bodies.length; i++)
             {
-                var body = this.bodyArr[i];
+                var body: Body = this.bodies[i];
+
                 if (!body)
                 {
                     continue;
@@ -276,7 +304,7 @@ module Phaser.Physics.Advanced {
 
             if (index != undefined)
             {
-                return this.jointArr[index];
+                return this.joints[index];
             }
 
             return null;
@@ -288,9 +316,9 @@ module Phaser.Physics.Advanced {
 
             refVertexId = refVertexId || -1;
 
-            for (var i = 0; i < this.bodyArr.length; i++)
+            for (var i = 0; i < this.bodies.length; i++)
             {
-                var body = this.bodyArr[i];
+                var body = this.bodies[i];
 
                 if (!body)
                 {
@@ -334,9 +362,9 @@ module Phaser.Physics.Advanced {
 
             refEdgeId = refEdgeId || -1;
 
-            for (var i = 0; i < this.bodyArr.length; i++)
+            for (var i = 0; i < this.bodies.length; i++)
             {
-                var body = this.bodyArr[i];
+                var body = this.bodies[i];
 
                 if (!body)
                 {
@@ -387,9 +415,9 @@ module Phaser.Physics.Advanced {
 
             refJointId = refJointId || -1;
 
-            for (var i = 0; i < this.jointArr.length; i++)
+            for (var i = 0; i < this.joints.length; i++)
             {
-                var joint = this.jointArr[i];
+                var joint = this.joints[i];
 
                 if (!joint)
                 {
@@ -429,13 +457,13 @@ module Phaser.Physics.Advanced {
             return firstJointId;
         }
 
-        public findContactSolver(shape1, shape2) {
+        private findContactSolver(shape1:IShape, shape2:IShape):ContactSolver {
 
-            Manager.write('findContactSolver. Length: ' + this.contactSolvers.length);
+            Manager.write('findContactSolver. Length: ' + this._cl);
 
-            for (var i = 0; i < this.contactSolvers.length; i++)
+            for (var i = 0; i < this._cl; i++)
             {
-                var contactSolver = this.contactSolvers[i];
+                var contactSolver: ContactSolver = this.contactSolvers[i];
 
                 if (shape1 == contactSolver.shape1 && shape2 == contactSolver.shape2)
                 {
@@ -444,363 +472,346 @@ module Phaser.Physics.Advanced {
             }
 
             return null;
+
         }
 
-        public genTemporalContactSolvers() {
+        private genTemporalContactSolvers() {
 
             Manager.write('genTemporalContactSolvers');
 
-            var newContactSolverArr = [];
-            var bl: number = this.bodyArr.length;
-
+            this._cl = 0;
+            this.contactSolvers.length = 0;
             this.numContacts = 0;
 
-            for (var body1_index = 0; body1_index < bl; body1_index++)
+            for (var body1Index = 0; body1Index < this._bl; body1Index++)
             {
-                var body1: Body = this.bodyArr[body1_index];
-
-                if (!body1)
+                if (!this.bodies[body1Index])
                 {
                     continue;
                 }
 
-                body1.stepCount = this.stepCount;
+                this.bodies[body1Index].stepCount = this.stepCount;
 
-                for (var body2_index = 0; body2_index < bl; body2_index++)
+                for (var body2Index = 0; body2Index < this._bl; body2Index++)
                 {
-                    var body2: Body = this.bodyArr[body2_index];
-
-                    if (body1.inContact(body2) == false)
+                    if (this.bodies[body1Index].inContact(this.bodies[body2Index]) == false)
                     {
                         continue;
                     }
 
                     Manager.write('body1 and body2 intersect');
 
-                    for (var i = 0; i < body1.shapes.length; i++)
+                    for (var i = 0; i < this.bodies[body1Index].shapesLength; i++)
                     {
-                        for (var j = 0; j < body2.shapes.length; j++)
+                        for (var j = 0; j < this.bodies[body2Index].shapesLength; j++)
                         {
-                            var shape1 = body1.shapes[i];
-                            var shape2 = body2.shapes[j];
+                            this._shape1 = this.bodies[body1Index].shapes[i];
+                            this._shape2 = this.bodies[body2Index].shapes[j];
 
                             var contactArr = [];
 
-                            if (!Manager.collision.collide(shape1, shape2, contactArr))
+                            if (!Manager.collision.collide(this._shape1, this._shape2, contactArr))
                             {
                                 continue;
                             }
 
-                            if (shape1.type > shape2.type)
+                            if (this._shape1.type > this._shape2.type)
                             {
-                                var temp = shape1;
-                                shape1 = shape2;
-                                shape2 = temp;
+                                var temp = this._shape1;
+                                this._shape1 = this._shape2;
+                                this._shape2 = temp;
                             }
 
                             this.numContacts += contactArr.length;
 
-                            var contactSolver = this.findContactSolver(shape1, shape2);
+                            //  Result stored in this._contactSolver (see what we can do about generating some re-usable solvers)
+                            var contactSolver: ContactSolver = this.findContactSolver(this._shape1, this._shape2);
 
                             Manager.write('findContactSolver result: ' + contactSolver);
 
                             if (contactSolver)
                             {
                                 contactSolver.update(contactArr);
-                                newContactSolverArr.push(contactSolver);
+                                this.contactSolvers.push(contactSolver);
                             }
                             else
                             {
                                 Manager.write('awake both bodies');
 
-                                body1.awake(true);
-                                body2.awake(true);
+                                this.bodies[body1Index].awake(true);
+                                this.bodies[body2Index].awake(true);
 
-                                var newContactSolver = new ContactSolver(shape1, shape2);
+                                var newContactSolver = new ContactSolver(this._shape1, this._shape2);
                                 newContactSolver.contacts = contactArr;
-                                newContactSolver.elasticity = Math.max(shape1.elasticity, shape2.elasticity);
-                                newContactSolver.friction = Math.sqrt(shape1.friction * shape2.friction);
-                                newContactSolverArr.push(newContactSolver);
+                                newContactSolver.elasticity = Math.max(this._shape1.elasticity, this._shape2.elasticity);
+                                newContactSolver.friction = Math.sqrt(this._shape1.friction * this._shape2.friction);
+
+                                this.contactSolvers.push(newContactSolver);
                                 Manager.write('new contact solver');
-                                //console.log(newContactSolver);
                             }
                         }
                     }
                 }
             }
 
-            return newContactSolverArr;
+            this._cl = this.contactSolvers.length;
 
         }
 
-        public initSolver(dt, dt_inv, warmStarting) {
+        private initSolver(warmStarting) {
 
             Manager.write('initSolver');
-            Manager.write('contactSolvers.length: ' + this.contactSolvers.length);
-
-            //var t0 = Date.now();
+            Manager.write('contactSolvers.length: ' + this._cl);
 
             // Initialize contact solvers
-            for (var i = 0; i < this.contactSolvers.length; i++)
+            for (var c = 0; c < this._cl; c++)
             {
-                this.contactSolvers[i].initSolver(dt_inv);
+                this.contactSolvers[c].initSolver(this._deltaInv);
+
+                // Warm starting (apply cached impulse)
+                if (warmStarting)
+                {
+                    this.contactSolvers[c].warmStart();
+                }
+
             }
 
             // Initialize joint solver
-            for (var i = 0; i < this.jointArr.length; i++)
+            for (var j = 0; j < this.joints.length; j++)
             {
-                if (this.jointArr[i])
+                if (this.joints[j])
                 {
-                    this.jointArr[i].initSolver(dt, warmStarting);
+                    this.joints[j].initSolver(this._delta, warmStarting);
                 }
             }
 
             // Warm starting (apply cached impulse)
+            /*
             if (warmStarting)
             {
-                for (var i = 0; i < this.contactSolvers.length; i++)
+                for (var c = 0; c < this._cl; c++)
                 {
-                    this.contactSolvers[i].warmStart();
+                    this.contactSolvers[c].warmStart();
                 }
             }
-
-            //stats.timeInitSolver = Date.now() - t0;
-        }
-
-        public velocitySolver(iteration) {
-
-            Manager.write('velocitySolver, iterations: ' + iteration + ' csa len: ' + this.contactSolvers.length);
-
-            //var t0 = Date.now();
-
-            for (var i = 0; i < iteration; i++)
-            {
-                for (var j = 0; j < this.jointArr.length; j++)
-                {
-                    if (this.jointArr[j])
-                    {
-                        this.jointArr[j].solveVelocityConstraints();
-                    }
-                }
-
-                for (var j = 0; j < this.contactSolvers.length; j++)
-                {
-                    this.contactSolvers[j].solveVelocityConstraints();
-                }
-            }
+            */
 
         }
 
-        public positionSolver(iteration) {
+        private velocitySolver(iterations:number) {
 
-            var positionSolved = false;
+            Manager.write('velocitySolver, iterations: ' + iterations + ' csa len: ' + this._cl);
 
-            for (var i = 0; i < iteration; i++)
+            for (var i = 0; i < iterations; i++)
             {
-                var contactsOk = true;
-                var jointsOk = true;
-
-                for (var j = 0; j < this.contactSolvers.length; j++)
+                for (var j = 0; j < this._jl; j++)
                 {
-                    var contactOk = this.contactSolvers[j].solvePositionConstraints();
-                    contactsOk = contactOk && contactsOk;
-                }
-
-                for (var j = 0; j < this.jointArr.length; j++)
-                {
-                    if (this.jointArr[j])
+                    if (this.joints[j])
                     {
-                        var jointOk = this.jointArr[j].solvePositionConstraints();
-                        jointsOk = jointOk && jointsOk;
+                        this.joints[j].solveVelocityConstraints();
                     }
                 }
 
-                if (contactsOk && jointsOk)
+                for (var c = 0; c < this._cl; c++)
+                {
+                    this.contactSolvers[c].solveVelocityConstraints();
+                }
+            }
+
+        }
+
+        private positionSolver(iterations:number):bool {
+
+            this._positionSolved = false;
+
+            for (var i = 0; i < iterations; i++)
+            {
+                this._contactsOk = true;
+                this._jointsOk = true;
+
+                for (var c = 0; c < this._cl; c++)
+                {
+                    this._contactsOk = this.contactSolvers[c].solvePositionConstraints() && this._contactsOk;
+                }
+
+                for (var j = 0; j < this._jl; j++)
+                {
+                    if (this.joints[j])
+                    {
+                        this._jointsOk = this.joints[j].solvePositionConstraints() && this._jointsOk;
+                    }
+                }
+
+                if (this._contactsOk && this._jointsOk)
                 {
                     // exit early if the position errors are small
-                    positionSolved = true;
+                    this._positionSolved = true;
                     break;
                 }
             }
 
-            return positionSolved;
+            return this._positionSolved;
 
         }
 
-
-
-        public step(dt, vel_iteration, pos_iteration, warmStarting, allowSleep) {
+        //  Step through the physics simulation
+        public step(dt: number, velocityIterations: number, positionIterations: number, warmStarting: bool, allowSleep: bool) {
 
             Manager.clear();
             Manager.write('Space step ' + this.stepCount);
 
-            var dt_inv: number = 1 / dt;
-            var bl: number = this.bodyArr.length;
-            var jl: number = this.jointArr.length;
+            this._delta = dt;
+            this._deltaInv = 1 / dt;
+            this._bl = this.bodies.length;
+            this._jl = this.joints.length;
 
             this.stepCount++;
 
-            //  1) Generate Contact Solvers
-            this.contactSolvers = this.genTemporalContactSolvers();
+            //  1) Generate Contact Solvers (into the this.contactSolvers array)
+            this.genTemporalContactSolvers();
 
-            Manager.dump("Contact Solvers", this.bodyArr[1]);
+            Manager.dump("Contact Solvers", this.bodies[1]);
 
             //  2) Initialize the Contact Solvers
-            this.initSolver(dt, dt_inv, warmStarting);
+            this.initSolver(warmStarting);
 
-            Manager.dump("Init Solver", this.bodyArr[1]);
+            Manager.dump("Init Solver", this.bodies[1]);
 
             //  3) Intergrate velocity
-            for (var i = 0; i < bl; i++)
+            for (var i = 0; i < this._bl; i++)
             {
-                if (this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake)
+                if (this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake)
                 {
-                    this.bodyArr[i].updateVelocity(this.gravity, dt, this.damping);
+                    this.bodies[i].updateVelocity(this.gravity, this._delta, this.damping);
                 }
             }
 
-            Manager.dump("Update Velocity", this.bodyArr[1]);
+            Manager.dump("Update Velocity", this.bodies[1]);
 
-            /*
-            //  4) Awaken bodies
-            for (var j = 0; i < jl; j++)
+            //  4) Awaken bodies via joints
+            for (var j = 0; i < this._jl; j++)
             {
-                var joint = this.jointArr[j];
-
-                if (!joint)
+                if (!this.joints[j])
                 {
                     continue;
                 }
 
-                var body1 = joint.body1;
-                var body2 = joint.body2;
-
-                var awake1 = body1.isAwake && !body1.isStatic;
-                var awake2 = body2.isAwake && !body2.isStatic;
+                //  combine
+                var awake1 = this.joints[j].body1.isAwake && !this.joints[j].body1.isStatic;
+                var awake2 = this.joints[j].body2.isAwake && !this.joints[j].body2.isStatic;
 
                 if (awake1 ^ awake2)
                 {
                     if (!awake1)
                     {
-                        body1.awake(true);
+                        this.joints[j].body1.awake(true);
                     }
-                    
+
                     if (!awake2)
                     {
-                        body2.awake(true);
+                        this.joints[j].body2.awake(true);
                     }
                 }
             }
-            */
 
             //  5) Iterative velocity constraints solver
-            this.velocitySolver(vel_iteration);
+            this.velocitySolver(velocityIterations);
 
-            Manager.dump("Velocity Solvers", this.bodyArr[1]);
+            Manager.dump("Velocity Solvers", this.bodies[1]);
 
             // 6) Intergrate position
-            for (var i = 0; i < bl; i++)
+            for (var i = 0; i < this._bl; i++)
             {
-                if (this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake)
+                if (this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake)
                 {
-                    this.bodyArr[i].updatePosition(dt);
+                    this.bodies[i].updatePosition(this._delta);
                 }
             }
 
-            Manager.dump("Update Position", this.bodyArr[1]);
+            Manager.dump("Update Position", this.bodies[1]);
 
             //  7) Process breakable joint
-            for (var i = 0; i < jl; i++)
+            for (var i = 0; i < this._jl; i++)
             {
-                if (this.jointArr[i] && this.jointArr[i].breakable && (this.jointArr[i].getReactionForce(dt_inv).lengthSq() >= this.jointArr[i].maxForce * this.jointArr[i].maxForce))
+                if (this.joints[i] && this.joints[i].breakable && (this.joints[i].getReactionForce(this._deltaInv).lengthSq() >= this.joints[i].maxForce * this.joints[i].maxForce))
                 {
-                    this.removeJoint(this.jointArr[i]);
+                    this.removeJoint(this.joints[i]);
                 }
             }
 
-            // 8) Iterative position constraints solver
-            var positionSolved = this.positionSolver(pos_iteration);
+            // 8) Iterative position constraints solver (result stored in this._positionSolved)
+            this.positionSolver(positionIterations);
 
-            Manager.dump("Position Solver", this.bodyArr[1]);
+            Manager.dump("Position Solver", this.bodies[1]);
 
             // 9) Sync the Transforms
-            for (var i = 0; i < bl; i++)
+            for (var i = 0; i < this._bl; i++)
             {
-                if (this.bodyArr[i])
+                if (this.bodies[i])
                 {
-                    this.bodyArr[i].syncTransform();
+                    this.bodies[i].syncTransform();
                 }
             }
 
-            Manager.dump("Sync Transform", this.bodyArr[1]);
+            Manager.dump("Sync Transform", this.bodies[1]);
 
             // 10) Post solve collision callback
-            for (var i = 0; i < this.contactSolvers.length; i++)
+            if (this.postSolve)
             {
-                var arb = this.contactSolvers[i];
-                //  Re-enable this
-                //this.postSolve(arb);
+                for (var i = 0; i < this._cl; i++)
+                {
+                    this.postSolve(this.contactSolvers[i]);
+                }
             }
 
             // 11) Cache Body Data
-            for (var i = 0; i < bl; i++)
+            for (var i = 0; i < this._bl; i++)
             {
-                if (this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake)
+                if (this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake)
                 {
-                    this.bodyArr[i].cacheData('post solve collision callback');
+                    this.bodies[i].cacheData('post solve collision callback');
                 }
             }
 
-            Manager.dump("Cache Data", this.bodyArr[1]);
+            Manager.dump("Cache Data", this.bodies[1]);
 
             Manager.writeAll();
 
             //  12) Process sleeping
-            /*
             if (allowSleep)
             {
-                var minSleepTime = 999999;
+                this._minSleepTime = 999999;
 
-                var linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
-                var angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
-
-                for (var i = 0; i < bl; i++)
+                for (var i = 0; i < this._bl; i++)
                 {
-                    var body = this.bodyArr[i];
-
-                    if (!this.bodyArr[i] || this.bodyArr[i].isDynamic == false)
+                    if (!this.bodies[i] || this.bodies[i].isDynamic == false)
                     {
                         continue;
                     }
 
-                    if (body.angularVelocity * body.angularVelocity > angTolSqr || body.velocity.dot(body.velocity) > linTolSqr)
+                    if (this.bodies[i].angularVelocity * this.bodies[i].angularVelocity > this._angTolSqr || this.bodies[i].velocity.dot(this.bodies[i].velocity) > this._linTolSqr)
                     {
-                        body.sleepTime = 0;
-                        minSleepTime = 0;
+                        this.bodies[i].sleepTime = 0;
+                        this._minSleepTime = 0;
                     }
                     else
                     {
-                        body.sleepTime += dt;
-                        minSleepTime = Math.min(minSleepTime, body.sleepTime);
+                        this.bodies[i].sleepTime += this._delta;
+                        this._minSleepTime = Math.min(this._minSleepTime, this.bodies[i].sleepTime);
                     }
                 }
 
-                if (positionSolved && minSleepTime >= Space.TIME_TO_SLEEP)
+                if (this._positionSolved && this._minSleepTime >= Space.TIME_TO_SLEEP)
                 {
-                    for (var i = 0; i < this.bodyArr.length; i++)
+                    for (var i = 0; i < this._bl; i++)
                     {
-                        var body = this.bodyArr[i];
-
-                        if (!body)
+                        if (this.bodies[i])
                         {
-                            continue;
+                            this.bodies[i].awake(false);
                         }
-
-                        body.awake(false);
                     }
                 }
             }
-    */
         }
 
     }

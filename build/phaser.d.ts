@@ -9944,13 +9944,26 @@ module Phaser.Physics.Advanced {
 module Phaser.Physics.Advanced {
     class Space {
         constructor();
+        private _delta;
+        private _deltaInv;
+        private _bl;
+        private _jl;
+        private _cl;
+        private _linTolSqr;
+        private _angTolSqr;
+        private _minSleepTime;
+        private _positionSolved;
+        private _shape1;
+        private _shape2;
+        private _contactsOk;
+        private _jointsOk;
         static TIME_TO_SLEEP: number;
         static SLEEP_LINEAR_TOLERANCE: number;
         static SLEEP_ANGULAR_TOLERANCE: number;
-        public bodyArr: Body[];
-        public bodyHash;
-        public jointArr: IJoint[];
-        public jointHash;
+        public bodies: Body[];
+        private bodyHash;
+        public joints: IJoint[];
+        private jointHash;
         public numContacts: number;
         public contactSolvers: ContactSolver[];
         public postSolve;
@@ -9969,12 +9982,12 @@ module Phaser.Physics.Advanced {
         public findVertexByPoint(p, minDist, refVertexId): number;
         public findEdgeByPoint(p, minDist, refEdgeId): number;
         public findJointByPoint(p, minDist, refJointId): number;
-        public findContactSolver(shape1, shape2): ContactSolver;
-        public genTemporalContactSolvers(): any[];
-        public initSolver(dt, dt_inv, warmStarting): void;
-        public velocitySolver(iteration): void;
-        public positionSolver(iteration): bool;
-        public step(dt, vel_iteration, pos_iteration, warmStarting, allowSleep): void;
+        private findContactSolver(shape1, shape2);
+        private genTemporalContactSolvers();
+        private initSolver(warmStarting);
+        private velocitySolver(iterations);
+        private positionSolver(iterations);
+        public step(dt: number, velocityIterations: number, positionIterations: number, warmStarting: bool, allowSleep: bool): void;
     }
 }
 /**
@@ -10045,6 +10058,7 @@ module Phaser.Physics.Advanced {
         public sleepTime: number;
         public awaked: bool;
         public shapes: IShape[];
+        public shapesLength: number;
         public joints: IJoint[];
         public jointHash: {};
         public bounds: Bounds;
@@ -10084,7 +10098,7 @@ module Phaser.Physics.Advanced {
         public updateVelocity(gravity, dt, damping): void;
         public inContact(body2: Body): bool;
         public clamp(v, min, max);
-        public updatePosition(dt): void;
+        public updatePosition(dt: number): void;
         public resetForce(): void;
         public applyForce(force: Vec2, p: Vec2): void;
         public applyForceToCenter(force: Vec2): void;

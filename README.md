@@ -41,6 +41,10 @@ TODO:
 * Add clip support + shape options to Texture Component.
 * Make sure I'm using Point and not Vec2 when it's not a directional vector I need
 * Bug with setting scale or anything on a Sprite inside a Group, or maybe group.addNewSprite issue
+* Drag Sprite with "snap to center" uses local coords not world, so fails on scrolling world (no center lock works fine)
+* Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
+* Pointer worldX/Y don't appear to be correct for some reason
+
 
 * Sprite collision events
 * See which functions in the input component can move elsewhere (utils)
@@ -117,6 +121,9 @@ V1.0.0
 * Added Cache.getImageKeys (and similar) to return an array of all the keys for all currently cached objects.
 * Added Group.bringToTop feature. Will sort the Group, move the given sprites z-index to the top and shift the rest down by one.
 * Brand new Advanced Physics system added and working! Woohoo :)
+* Fixed issue in Tilemap.parseTiledJSON where it would accidentally think image and object layers were map data.
+* Fixed bug in Group.bringToTop if the child didn't have a group property yet.
+* Fixed bug in FrameData.checkFrameName where the first index of the _frameNames array would be skipped.
 
 
 

@@ -2539,10 +2539,10 @@ var Phaser;
         * @return {boolean} True if frame with given name found, otherwise return false.
         */
         function (name) {
-            if(this._frameNames[name]) {
-                return true;
+            if(this._frameNames[name] == null) {
+                return false;
             }
-            return false;
+            return true;
         };
         FrameData.prototype.getFrameRange = /**
         * Get ranges of frames in an array.
@@ -3534,6 +3534,7 @@ var Phaser;
                 */
                 function () {
                     if(this.enabled) {
+                        this.enabled = false;
                         this.game.input.removeGameObject(this.indexID);
                     }
                 };
@@ -3766,7 +3767,9 @@ var Phaser;
                     this._pointerData[pointer.id].isDragged = true;
                     if(this.dragFromCenter) {
                         //	Move the sprite to the middle of the pointer
-                        this._dragPoint.setTo(-this.sprite.worldView.halfWidth, -this.sprite.worldView.halfHeight);
+                        //this._dragPoint.setTo(-this.sprite.worldView.halfWidth, -this.sprite.worldView.halfHeight);
+                        //this._dragPoint.setTo(this.sprite.transform.center.x, this.sprite.transform.center.y);
+                        this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
                     } else {
                         this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
                     }
@@ -5516,6 +5519,7 @@ var Phaser;
         */
         function (object, splice) {
             if (typeof splice === "undefined") { splice = false; }
+            console.log('removing from group');
             this._i = this.members.indexOf(object);
             if(this._i < 0 || (this._i >= this.members.length)) {
                 return null;
@@ -5526,6 +5530,7 @@ var Phaser;
             } else {
                 this.members[this._i] = null;
             }
+            console.log('nulled');
             if(object['events']) {
                 object['events'].onRemovedFromGroup.dispatch(object, this);
             }
@@ -5575,7 +5580,7 @@ var Phaser;
         };
         Group.prototype.bringToTop = function (child) {
             //  If child not in this group, or is already at the top of the group, return false
-            if(child.group.ID != this.ID || child.z == this._zCounter) {
+            if(!child || child.group == null || child.group.ID != this.ID || child.z == this._zCounter) {
                 return false;
             }
             this.sort();
@@ -10716,6 +10721,10 @@ var Phaser;
             var json = JSON.parse(data);
             for(var i = 0; i < json.layers.length; i++) {
                 var layer = new Phaser.TilemapLayer(this.game, this, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
+                //  Check it's a data layer
+                if(!json.layers[i].data) {
+                    continue;
+                }
                 layer.alpha = json.layers[i].opacity;
                 layer.visible = json.layers[i].visible;
                 layer.tileMargin = json.tilesets[0].margin;
@@ -16166,6 +16175,7 @@ var Phaser;
         **/
         function (index) {
             if(this.inputObjects[index]) {
+                console.log('object removed from the input manager', index);
                 this.inputObjects[index] = null;
             }
         };
@@ -19155,11 +19165,11 @@ var Phaser;
                     this.lastTime = Date.now();
                     this.frameRateHz = 60;
                     this.timeDelta = 0;
-                    this.paused = false;
+                    //public paused: bool = false;
+                    //public step: bool = false; // step through the simulation (i.e. per click)
+                    this.paused = true;
                     this.step = false;
                     // step through the simulation (i.e. per click)
-                    //public paused: bool = true;
-                    //public step: bool = false; // step through the simulation (i.e. per click)
                     this.velocityIterations = 8;
                     this.positionIterations = 4;
                     //public velocityIterations: number = 1;
@@ -19175,8 +19185,8 @@ var Phaser;
                     Manager.log = [];
                 };
                 Manager.write = function write(s) {
-                    //Manager.debug.textContent += s + "\n";
-                                    };
+                    Manager.debug.textContent += s + "\n";
+                };
                 Manager.writeAll = function writeAll() {
                     for(var i = 0; i < Manager.log.length; i++) {
                         //Manager.debug.textContent += Manager.log[i];
@@ -19263,12 +19273,7 @@ var Phaser;
                         if(this.timeDelta > h) {
                             this.timeDelta = 0;
                         }
-                        //if (sceneIndex < demoArr.length)
-                        //{
-                        //    demo = demoArr[sceneIndex];
-                        //    demo.runFrame();
-                        //}
-                                            }
+                    }
                     //frameCount++;
                                     };
                 Manager.prototype.pixelsToMeters = function (value) {
@@ -20803,10 +20808,10 @@ var Phaser;
             var Space = (function () {
                 function Space() {
                     this.stepCount = 0;
-                    this.bodyArr = [];
+                    this.bodies = [];
                     this.bodyHash = {
                     };
-                    this.jointArr = [];
+                    this.joints = [];
                     this.jointHash = {
                     };
                     this.numContacts = 0;
@@ -20814,6 +20819,8 @@ var Phaser;
                     //this.postSolve(arb) { };
                     this.gravity = new Phaser.Vec2(0, 10);
                     this.damping = 0;
+                    this._linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
+                    this._angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
                 }
                 Space.TIME_TO_SLEEP = 0.5;
                 Space.SLEEP_LINEAR_TOLERANCE = 0.5;
@@ -20822,15 +20829,15 @@ var Phaser;
                     Advanced.Manager.shapeCounter = 0;
                     Advanced.Manager.bodyCounter = 0;
                     Advanced.Manager.jointCounter = 0;
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        if(this.bodyArr[i]) {
-                            this.removeBody(this.bodyArr[i]);
+                    for(var i = 0; i < this.bodies.length; i++) {
+                        if(this.bodies[i]) {
+                            this.removeBody(this.bodies[i]);
                         }
                     }
-                    this.bodyArr = [];
+                    this.bodies = [];
                     this.bodyHash = {
                     };
-                    this.jointArr = [];
+                    this.joints = [];
                     this.jointHash = {
                     };
                     this.contactSolvers = [];
@@ -20840,7 +20847,7 @@ var Phaser;
                     if(this.bodyHash[body.id] != undefined) {
                         return;
                     }
-                    var index = this.bodyArr.push(body) - 1;
+                    var index = this.bodies.push(body) - 1;
                     this.bodyHash[body.id] = index;
                     body.awake(true);
                     body.space = this;
@@ -20850,7 +20857,7 @@ var Phaser;
                     if(this.bodyHash[body.id] == undefined) {
                         return;
                     }
-                    // Remove linked joint
+                    // Remove linked joints
                     for(var i = 0; i < body.joints.length; i++) {
                         if(body.joints[i]) {
                             this.removeJoint(body.joints[i]);
@@ -20859,7 +20866,7 @@ var Phaser;
                     body.space = null;
                     var index = this.bodyHash[body.id];
                     delete this.bodyHash[body.id];
-                    delete this.bodyArr[index];
+                    delete this.bodies[index];
                 };
                 Space.prototype.addJoint = function (joint) {
                     if(this.jointHash[joint.id] != undefined) {
@@ -20867,7 +20874,7 @@ var Phaser;
                     }
                     joint.body1.awake(true);
                     joint.body2.awake(true);
-                    var index = this.jointArr.push(joint) - 1;
+                    var index = this.joints.push(joint) - 1;
                     this.jointHash[joint.id] = index;
                     var index = joint.body1.joints.push(joint) - 1;
                     joint.body1.jointHash[joint.id] = index;
@@ -20888,12 +20895,12 @@ var Phaser;
                     delete joint.body2.joints[index];
                     var index = this.jointHash[joint.id];
                     delete this.jointHash[joint.id];
-                    delete this.jointArr[index];
+                    delete this.joints[index];
                 };
                 Space.prototype.findShapeByPoint = function (p, refShape) {
                     var firstShape;
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
+                    for(var i = 0; i < this.bodies.length; i++) {
+                        var body = this.bodies[i];
                         if(!body) {
                             continue;
                         }
@@ -20916,8 +20923,8 @@ var Phaser;
                 };
                 Space.prototype.findBodyByPoint = function (p, refBody) {
                     var firstBody;
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
+                    for(var i = 0; i < this.bodies.length; i++) {
+                        var body = this.bodies[i];
                         if(!body) {
                             continue;
                         }
@@ -20939,11 +20946,10 @@ var Phaser;
                     }
                     return firstBody;
                 };
-                Space.prototype.shapeById = // TODO: Replace this function to shape hashing
-                function (id) {
+                Space.prototype.shapeById = function (id) {
                     var shape;
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
+                    for(var i = 0; i < this.bodies.length; i++) {
+                        var body = this.bodies[i];
                         if(!body) {
                             continue;
                         }
@@ -20958,15 +20964,15 @@ var Phaser;
                 Space.prototype.jointById = function (id) {
                     var index = this.jointHash[id];
                     if(index != undefined) {
-                        return this.jointArr[index];
+                        return this.joints[index];
                     }
                     return null;
                 };
                 Space.prototype.findVertexByPoint = function (p, minDist, refVertexId) {
                     var firstVertexId = -1;
                     refVertexId = refVertexId || -1;
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
+                    for(var i = 0; i < this.bodies.length; i++) {
+                        var body = this.bodies[i];
                         if(!body) {
                             continue;
                         }
@@ -20992,8 +20998,8 @@ var Phaser;
                 Space.prototype.findEdgeByPoint = function (p, minDist, refEdgeId) {
                     var firstEdgeId = -1;
                     refEdgeId = refEdgeId || -1;
-                    for(var i = 0; i < this.bodyArr.length; i++) {
-                        var body = this.bodyArr[i];
+                    for(var i = 0; i < this.bodies.length; i++) {
+                        var body = this.bodies[i];
                         if(!body) {
                             continue;
                         }
@@ -21023,8 +21029,8 @@ var Phaser;
                     var firstJointId = -1;
                     var dsq = minDist * minDist;
                     refJointId = refJointId || -1;
-                    for(var i = 0; i < this.jointArr.length; i++) {
-                        var joint = this.jointArr[i];
+                    for(var i = 0; i < this.joints.length; i++) {
+                        var joint = this.joints[i];
                         if(!joint) {
                             continue;
                         }
@@ -21049,8 +21055,8 @@ var Phaser;
                     return firstJointId;
                 };
                 Space.prototype.findContactSolver = function (shape1, shape2) {
-                    Advanced.Manager.write('findContactSolver. Length: ' + this.contactSolvers.length);
-                    for(var i = 0; i < this.contactSolvers.length; i++) {
+                    Advanced.Manager.write('findContactSolver. Length: ' + this._cl);
+                    for(var i = 0; i < this._cl; i++) {
                         var contactSolver = this.contactSolvers[i];
                         if(shape1 == contactSolver.shape1 && shape2 == contactSolver.shape2) {
                             return contactSolver;
@@ -21060,255 +21066,221 @@ var Phaser;
                 };
                 Space.prototype.genTemporalContactSolvers = function () {
                     Advanced.Manager.write('genTemporalContactSolvers');
-                    var newContactSolverArr = [];
-                    var bl = this.bodyArr.length;
+                    this._cl = 0;
+                    this.contactSolvers.length = 0;
                     this.numContacts = 0;
-                    for(var body1_index = 0; body1_index < bl; body1_index++) {
-                        var body1 = this.bodyArr[body1_index];
-                        if(!body1) {
+                    for(var body1Index = 0; body1Index < this._bl; body1Index++) {
+                        if(!this.bodies[body1Index]) {
                             continue;
                         }
-                        body1.stepCount = this.stepCount;
-                        for(var body2_index = 0; body2_index < bl; body2_index++) {
-                            var body2 = this.bodyArr[body2_index];
-                            if(body1.inContact(body2) == false) {
+                        this.bodies[body1Index].stepCount = this.stepCount;
+                        for(var body2Index = 0; body2Index < this._bl; body2Index++) {
+                            if(this.bodies[body1Index].inContact(this.bodies[body2Index]) == false) {
                                 continue;
                             }
                             Advanced.Manager.write('body1 and body2 intersect');
-                            for(var i = 0; i < body1.shapes.length; i++) {
-                                for(var j = 0; j < body2.shapes.length; j++) {
-                                    var shape1 = body1.shapes[i];
-                                    var shape2 = body2.shapes[j];
+                            for(var i = 0; i < this.bodies[body1Index].shapesLength; i++) {
+                                for(var j = 0; j < this.bodies[body2Index].shapesLength; j++) {
+                                    this._shape1 = this.bodies[body1Index].shapes[i];
+                                    this._shape2 = this.bodies[body2Index].shapes[j];
                                     var contactArr = [];
-                                    if(!Advanced.Manager.collision.collide(shape1, shape2, contactArr)) {
+                                    if(!Advanced.Manager.collision.collide(this._shape1, this._shape2, contactArr)) {
                                         continue;
                                     }
-                                    if(shape1.type > shape2.type) {
-                                        var temp = shape1;
-                                        shape1 = shape2;
-                                        shape2 = temp;
+                                    if(this._shape1.type > this._shape2.type) {
+                                        var temp = this._shape1;
+                                        this._shape1 = this._shape2;
+                                        this._shape2 = temp;
                                     }
                                     this.numContacts += contactArr.length;
-                                    var contactSolver = this.findContactSolver(shape1, shape2);
+                                    //  Result stored in this._contactSolver (see what we can do about generating some re-usable solvers)
+                                    var contactSolver = this.findContactSolver(this._shape1, this._shape2);
                                     Advanced.Manager.write('findContactSolver result: ' + contactSolver);
                                     if(contactSolver) {
                                         contactSolver.update(contactArr);
-                                        newContactSolverArr.push(contactSolver);
+                                        this.contactSolvers.push(contactSolver);
                                     } else {
                                         Advanced.Manager.write('awake both bodies');
-                                        body1.awake(true);
-                                        body2.awake(true);
-                                        var newContactSolver = new Advanced.ContactSolver(shape1, shape2);
+                                        this.bodies[body1Index].awake(true);
+                                        this.bodies[body2Index].awake(true);
+                                        var newContactSolver = new Advanced.ContactSolver(this._shape1, this._shape2);
                                         newContactSolver.contacts = contactArr;
-                                        newContactSolver.elasticity = Math.max(shape1.elasticity, shape2.elasticity);
-                                        newContactSolver.friction = Math.sqrt(shape1.friction * shape2.friction);
-                                        newContactSolverArr.push(newContactSolver);
+                                        newContactSolver.elasticity = Math.max(this._shape1.elasticity, this._shape2.elasticity);
+                                        newContactSolver.friction = Math.sqrt(this._shape1.friction * this._shape2.friction);
+                                        this.contactSolvers.push(newContactSolver);
                                         Advanced.Manager.write('new contact solver');
-                                        //console.log(newContactSolver);
-                                                                            }
+                                    }
                                 }
                             }
                         }
                     }
-                    return newContactSolverArr;
+                    this._cl = this.contactSolvers.length;
                 };
-                Space.prototype.initSolver = function (dt, dt_inv, warmStarting) {
+                Space.prototype.initSolver = function (warmStarting) {
                     Advanced.Manager.write('initSolver');
-                    Advanced.Manager.write('contactSolvers.length: ' + this.contactSolvers.length);
-                    //var t0 = Date.now();
+                    Advanced.Manager.write('contactSolvers.length: ' + this._cl);
                     // Initialize contact solvers
-                    for(var i = 0; i < this.contactSolvers.length; i++) {
-                        this.contactSolvers[i].initSolver(dt_inv);
+                    for(var c = 0; c < this._cl; c++) {
+                        this.contactSolvers[c].initSolver(this._deltaInv);
+                        // Warm starting (apply cached impulse)
+                        if(warmStarting) {
+                            this.contactSolvers[c].warmStart();
+                        }
                     }
                     // Initialize joint solver
-                    for(var i = 0; i < this.jointArr.length; i++) {
-                        if(this.jointArr[i]) {
-                            this.jointArr[i].initSolver(dt, warmStarting);
+                    for(var j = 0; j < this.joints.length; j++) {
+                        if(this.joints[j]) {
+                            this.joints[j].initSolver(this._delta, warmStarting);
                         }
                     }
                     // Warm starting (apply cached impulse)
-                    if(warmStarting) {
-                        for(var i = 0; i < this.contactSolvers.length; i++) {
-                            this.contactSolvers[i].warmStart();
-                        }
+                    /*
+                    if (warmStarting)
+                    {
+                    for (var c = 0; c < this._cl; c++)
+                    {
+                    this.contactSolvers[c].warmStart();
                     }
-                    //stats.timeInitSolver = Date.now() - t0;
+                    }
+                    */
                                     };
-                Space.prototype.velocitySolver = function (iteration) {
-                    Advanced.Manager.write('velocitySolver, iterations: ' + iteration + ' csa len: ' + this.contactSolvers.length);
-                    //var t0 = Date.now();
-                    for(var i = 0; i < iteration; i++) {
-                        for(var j = 0; j < this.jointArr.length; j++) {
-                            if(this.jointArr[j]) {
-                                this.jointArr[j].solveVelocityConstraints();
+                Space.prototype.velocitySolver = function (iterations) {
+                    Advanced.Manager.write('velocitySolver, iterations: ' + iterations + ' csa len: ' + this._cl);
+                    for(var i = 0; i < iterations; i++) {
+                        for(var j = 0; j < this._jl; j++) {
+                            if(this.joints[j]) {
+                                this.joints[j].solveVelocityConstraints();
                             }
                         }
-                        for(var j = 0; j < this.contactSolvers.length; j++) {
-                            this.contactSolvers[j].solveVelocityConstraints();
+                        for(var c = 0; c < this._cl; c++) {
+                            this.contactSolvers[c].solveVelocityConstraints();
                         }
                     }
                 };
-                Space.prototype.positionSolver = function (iteration) {
-                    var positionSolved = false;
-                    for(var i = 0; i < iteration; i++) {
-                        var contactsOk = true;
-                        var jointsOk = true;
-                        for(var j = 0; j < this.contactSolvers.length; j++) {
-                            var contactOk = this.contactSolvers[j].solvePositionConstraints();
-                            contactsOk = contactOk && contactsOk;
+                Space.prototype.positionSolver = function (iterations) {
+                    this._positionSolved = false;
+                    for(var i = 0; i < iterations; i++) {
+                        this._contactsOk = true;
+                        this._jointsOk = true;
+                        for(var c = 0; c < this._cl; c++) {
+                            this._contactsOk = this.contactSolvers[c].solvePositionConstraints() && this._contactsOk;
                         }
-                        for(var j = 0; j < this.jointArr.length; j++) {
-                            if(this.jointArr[j]) {
-                                var jointOk = this.jointArr[j].solvePositionConstraints();
-                                jointsOk = jointOk && jointsOk;
+                        for(var j = 0; j < this._jl; j++) {
+                            if(this.joints[j]) {
+                                this._jointsOk = this.joints[j].solvePositionConstraints() && this._jointsOk;
                             }
                         }
-                        if(contactsOk && jointsOk) {
+                        if(this._contactsOk && this._jointsOk) {
                             // exit early if the position errors are small
-                            positionSolved = true;
+                            this._positionSolved = true;
                             break;
                         }
                     }
-                    return positionSolved;
+                    return this._positionSolved;
                 };
-                Space.prototype.step = function (dt, vel_iteration, pos_iteration, warmStarting, allowSleep) {
+                Space.prototype.step = //  Step through the physics simulation
+                function (dt, velocityIterations, positionIterations, warmStarting, allowSleep) {
                     Advanced.Manager.clear();
                     Advanced.Manager.write('Space step ' + this.stepCount);
-                    var dt_inv = 1 / dt;
-                    var bl = this.bodyArr.length;
-                    var jl = this.jointArr.length;
+                    this._delta = dt;
+                    this._deltaInv = 1 / dt;
+                    this._bl = this.bodies.length;
+                    this._jl = this.joints.length;
                     this.stepCount++;
-                    //  1) Generate Contact Solvers
-                    this.contactSolvers = this.genTemporalContactSolvers();
-                    Advanced.Manager.dump("Contact Solvers", this.bodyArr[1]);
+                    //  1) Generate Contact Solvers (into the this.contactSolvers array)
+                    this.genTemporalContactSolvers();
+                    Advanced.Manager.dump("Contact Solvers", this.bodies[1]);
                     //  2) Initialize the Contact Solvers
-                    this.initSolver(dt, dt_inv, warmStarting);
-                    Advanced.Manager.dump("Init Solver", this.bodyArr[1]);
+                    this.initSolver(warmStarting);
+                    Advanced.Manager.dump("Init Solver", this.bodies[1]);
                     //  3) Intergrate velocity
-                    for(var i = 0; i < bl; i++) {
-                        if(this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake) {
-                            this.bodyArr[i].updateVelocity(this.gravity, dt, this.damping);
+                    for(var i = 0; i < this._bl; i++) {
+                        if(this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake) {
+                            this.bodies[i].updateVelocity(this.gravity, this._delta, this.damping);
                         }
                     }
-                    Advanced.Manager.dump("Update Velocity", this.bodyArr[1]);
-                    /*
-                    //  4) Awaken bodies
-                    for (var j = 0; i < jl; j++)
-                    {
-                    var joint = this.jointArr[j];
-                    
-                    if (!joint)
-                    {
-                    continue;
+                    Advanced.Manager.dump("Update Velocity", this.bodies[1]);
+                    //  4) Awaken bodies via joints
+                    for(var j = 0; i < this._jl; j++) {
+                        if(!this.joints[j]) {
+                            continue;
+                        }
+                        //  combine
+                        var awake1 = this.joints[j].body1.isAwake && !this.joints[j].body1.isStatic;
+                        var awake2 = this.joints[j].body2.isAwake && !this.joints[j].body2.isStatic;
+                        if(awake1 ^ awake2) {
+                            if(!awake1) {
+                                this.joints[j].body1.awake(true);
+                            }
+                            if(!awake2) {
+                                this.joints[j].body2.awake(true);
+                            }
+                        }
                     }
-                    
-                    var body1 = joint.body1;
-                    var body2 = joint.body2;
-                    
-                    var awake1 = body1.isAwake && !body1.isStatic;
-                    var awake2 = body2.isAwake && !body2.isStatic;
-                    
-                    if (awake1 ^ awake2)
-                    {
-                    if (!awake1)
-                    {
-                    body1.awake(true);
-                    }
-                    
-                    if (!awake2)
-                    {
-                    body2.awake(true);
-                    }
-                    }
-                    }
-                    */
                     //  5) Iterative velocity constraints solver
-                    this.velocitySolver(vel_iteration);
-                    Advanced.Manager.dump("Velocity Solvers", this.bodyArr[1]);
+                    this.velocitySolver(velocityIterations);
+                    Advanced.Manager.dump("Velocity Solvers", this.bodies[1]);
                     // 6) Intergrate position
-                    for(var i = 0; i < bl; i++) {
-                        if(this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake) {
-                            this.bodyArr[i].updatePosition(dt);
+                    for(var i = 0; i < this._bl; i++) {
+                        if(this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake) {
+                            this.bodies[i].updatePosition(this._delta);
                         }
                     }
-                    Advanced.Manager.dump("Update Position", this.bodyArr[1]);
+                    Advanced.Manager.dump("Update Position", this.bodies[1]);
                     //  7) Process breakable joint
-                    for(var i = 0; i < jl; i++) {
-                        if(this.jointArr[i] && this.jointArr[i].breakable && (this.jointArr[i].getReactionForce(dt_inv).lengthSq() >= this.jointArr[i].maxForce * this.jointArr[i].maxForce)) {
-                            this.removeJoint(this.jointArr[i]);
+                    for(var i = 0; i < this._jl; i++) {
+                        if(this.joints[i] && this.joints[i].breakable && (this.joints[i].getReactionForce(this._deltaInv).lengthSq() >= this.joints[i].maxForce * this.joints[i].maxForce)) {
+                            this.removeJoint(this.joints[i]);
                         }
                     }
-                    // 8) Iterative position constraints solver
-                    var positionSolved = this.positionSolver(pos_iteration);
-                    Advanced.Manager.dump("Position Solver", this.bodyArr[1]);
+                    // 8) Iterative position constraints solver (result stored in this._positionSolved)
+                    this.positionSolver(positionIterations);
+                    Advanced.Manager.dump("Position Solver", this.bodies[1]);
                     // 9) Sync the Transforms
-                    for(var i = 0; i < bl; i++) {
-                        if(this.bodyArr[i]) {
-                            this.bodyArr[i].syncTransform();
+                    for(var i = 0; i < this._bl; i++) {
+                        if(this.bodies[i]) {
+                            this.bodies[i].syncTransform();
                         }
                     }
-                    Advanced.Manager.dump("Sync Transform", this.bodyArr[1]);
+                    Advanced.Manager.dump("Sync Transform", this.bodies[1]);
                     // 10) Post solve collision callback
-                    for(var i = 0; i < this.contactSolvers.length; i++) {
-                        var arb = this.contactSolvers[i];
-                        //  Re-enable this
-                        //this.postSolve(arb);
-                                            }
-                    // 11) Cache Body Data
-                    for(var i = 0; i < bl; i++) {
-                        if(this.bodyArr[i] && this.bodyArr[i].isDynamic && this.bodyArr[i].isAwake) {
-                            this.bodyArr[i].cacheData('post solve collision callback');
+                    if(this.postSolve) {
+                        for(var i = 0; i < this._cl; i++) {
+                            this.postSolve(this.contactSolvers[i]);
                         }
                     }
-                    Advanced.Manager.dump("Cache Data", this.bodyArr[1]);
+                    // 11) Cache Body Data
+                    for(var i = 0; i < this._bl; i++) {
+                        if(this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake) {
+                            this.bodies[i].cacheData('post solve collision callback');
+                        }
+                    }
+                    Advanced.Manager.dump("Cache Data", this.bodies[1]);
                     Advanced.Manager.writeAll();
                     //  12) Process sleeping
-                    /*
-                    if (allowSleep)
-                    {
-                    var minSleepTime = 999999;
-                    
-                    var linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
-                    var angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
-                    
-                    for (var i = 0; i < bl; i++)
-                    {
-                    var body = this.bodyArr[i];
-                    
-                    if (!this.bodyArr[i] || this.bodyArr[i].isDynamic == false)
-                    {
-                    continue;
+                    if(allowSleep) {
+                        this._minSleepTime = 999999;
+                        for(var i = 0; i < this._bl; i++) {
+                            if(!this.bodies[i] || this.bodies[i].isDynamic == false) {
+                                continue;
+                            }
+                            if(this.bodies[i].angularVelocity * this.bodies[i].angularVelocity > this._angTolSqr || this.bodies[i].velocity.dot(this.bodies[i].velocity) > this._linTolSqr) {
+                                this.bodies[i].sleepTime = 0;
+                                this._minSleepTime = 0;
+                            } else {
+                                this.bodies[i].sleepTime += this._delta;
+                                this._minSleepTime = Math.min(this._minSleepTime, this.bodies[i].sleepTime);
+                            }
+                        }
+                        if(this._positionSolved && this._minSleepTime >= Space.TIME_TO_SLEEP) {
+                            for(var i = 0; i < this._bl; i++) {
+                                if(this.bodies[i]) {
+                                    this.bodies[i].awake(false);
+                                }
+                            }
+                        }
                     }
-                    
-                    if (body.angularVelocity * body.angularVelocity > angTolSqr || body.velocity.dot(body.velocity) > linTolSqr)
-                    {
-                    body.sleepTime = 0;
-                    minSleepTime = 0;
-                    }
-                    else
-                    {
-                    body.sleepTime += dt;
-                    minSleepTime = Math.min(minSleepTime, body.sleepTime);
-                    }
-                    }
-                    
-                    if (positionSolved && minSleepTime >= Space.TIME_TO_SLEEP)
-                    {
-                    for (var i = 0; i < this.bodyArr.length; i++)
-                    {
-                    var body = this.bodyArr[i];
-                    
-                    if (!body)
-                    {
-                    continue;
-                    }
-                    
-                    body.awake(false);
-                    }
-                    }
-                    }
-                    */
-                                    };
+                };
                 return Space;
             })();
             Advanced.Space = Space;            
@@ -21597,6 +21569,7 @@ var Phaser;
                     //  Check not already part of this body
                     shape.body = this;
                     this.shapes.push(shape);
+                    this.shapesLength = this.shapes.length;
                     return shape;
                 };
                 Body.prototype.removeShape = function (shape) {
@@ -21605,6 +21578,7 @@ var Phaser;
                         this.shapes.splice(index, 1);
                         shape.body = undefined;
                     }
+                    this.shapesLength = this.shapes.length;
                 };
                 Body.prototype.setMass = function (mass) {
                     this.mass = mass;

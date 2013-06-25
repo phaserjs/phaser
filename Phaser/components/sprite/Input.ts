@@ -263,6 +263,7 @@ module Phaser.Components.Sprite {
 
 		    if (this.enabled)
 		    {
+		        this.enabled = false;
 		        this.game.input.removeGameObject(this.indexID);
 		    }
 
@@ -578,7 +579,9 @@ module Phaser.Components.Sprite {
             if (this.dragFromCenter)
             {
                 //	Move the sprite to the middle of the pointer
-                this._dragPoint.setTo(-this.sprite.worldView.halfWidth, -this.sprite.worldView.halfHeight);
+                //this._dragPoint.setTo(-this.sprite.worldView.halfWidth, -this.sprite.worldView.halfHeight);
+                //this._dragPoint.setTo(this.sprite.transform.center.x, this.sprite.transform.center.y);
+                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
             }
             else
             {

@@ -527,6 +527,8 @@ module Phaser {
          */
         public remove(object, splice: bool = false) {
 
+            console.log('removing from group');
+
             this._i = this.members.indexOf(object);
 
             if (this._i < 0 || (this._i >= this.members.length))
@@ -543,6 +545,8 @@ module Phaser {
             {
                 this.members[this._i] = null;
             }
+
+            console.log('nulled');
 
             if (object['events'])
             {
@@ -615,7 +619,7 @@ module Phaser {
         public bringToTop(child): bool {
 
             //  If child not in this group, or is already at the top of the group, return false
-            if (child.group.ID != this.ID || child.z == this._zCounter)
+            if (!child || child.group == null || child.group.ID != this.ID || child.z == this._zCounter)
             {
                 return false;
             }

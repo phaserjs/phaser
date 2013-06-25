@@ -143,6 +143,9 @@ module Phaser.Physics.Advanced {
         //  Shapes
         public shapes: IShape[] = [];
 
+        //  Length of the shapes array
+        public shapesLength: number;
+
         //  Joints
         public joints: IJoint[] = [];
         public jointHash = {};
@@ -163,7 +166,7 @@ module Phaser.Physics.Advanced {
 
 	    public duplicate() {
 
-	        //console.log('body duplicate called');
+	        console.log('body duplicate called');
 
 	        //var body = new Body(this.type, this.transform.t, this.angle);
 	        
@@ -274,6 +277,8 @@ module Phaser.Physics.Advanced {
 
 	        this.shapes.push(shape);
 
+	        this.shapesLength = this.shapes.length;
+
 	        return shape;
 
 	    }
@@ -288,8 +293,9 @@ module Phaser.Physics.Advanced {
 	            shape.body = undefined;
 	        }
 
-	    }
+	        this.shapesLength = this.shapes.length;
 
+	    }
 
 	    private setMass(mass) {
 
@@ -307,8 +313,8 @@ module Phaser.Physics.Advanced {
 
 	    public setTransform(pos, angle) {
 
-	        this.transform.setTo(pos, angle);
             //  inject the transform into this.position
+	        this.transform.setTo(pos, angle);
 	        Manager.write('setTransform: ' + this.position.toString());
         	Manager.write('centroid: ' + this.centroid.toString());
             Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
@@ -399,20 +405,14 @@ module Phaser.Physics.Advanced {
 
 	        if (!this.fixedRotation)
 	        {
-	            //this.setInertia(totalInertia - totalMass * vec2.dot(this.centroid, this.centroid));
 	            this.setInertia(totalInertia - totalMass * Phaser.Vec2Utils.dot(this.centroid, this.centroid));
 	        }
 
-	        //console.log("mass = " + this.m + " inertia = " + this.i);
-
 	        // Move center of mass
 	        var oldPosition: Phaser.Vec2 =  Phaser.Vec2Utils.clone(this.position);
-	        //this.position.copyFrom(this.transform.transform(this.centroid));
             Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
 
 	        // Update center of mass velocity
-
-	        //this.velocity.mad(vec2.perp(vec2.sub(this.position, old_p)), this.angularVelocity);
 	        oldPosition.subtract(this.position);
 	        this.velocity.multiplyAddByScalar(Phaser.Vec2Utils.perp(oldPosition, oldPosition), this.angularVelocity);
 
@@ -462,7 +462,6 @@ module Phaser.Physics.Advanced {
 
 	    public updateVelocity(gravity, dt, damping) {
 
-            // this.velocity = vec2.mad(this.velocity, vec2.mad(gravity, this.force, this.massInverted), dt);
             Phaser.Vec2Utils.multiplyAdd(gravity, this.force, this.massInverted, this._tempVec2);
             Phaser.Vec2Utils.multiplyAdd(this.velocity, this._tempVec2, dt, this.velocity);
 
@@ -513,16 +512,9 @@ module Phaser.Physics.Advanced {
             return v < min ? min : (v > max ? max : v);
         }
 
-	    public updatePosition(dt) {
+	    public updatePosition(dt:number) {
 
-	        //console.log('body update pos', this.position.y);
-	        //console.log('pre add temp', this._tempVec2.y);
-
-	        //this.position.addself(vec2.scale(this.velocity, dt));
 	        this.position.add(Phaser.Vec2Utils.scale(this.velocity, dt, this._tempVec2));
-
-	        //console.log('post add temp', this._tempVec2.y);
-	        //console.log('post add', this.position.y);
 
 	        this.angle += this.angularVelocity * dt;
 
@@ -547,10 +539,8 @@ module Phaser.Physics.Advanced {
 
 	        this.force.add(force);
 
-        	//  this.f.addself(force);
-	        //  this.torque += vec2.cross(vec2.sub(p, this.p), force);
-
             Phaser.Vec2Utils.subtract(p, this.position, this._tempVec2);
+
             this.torque += Phaser.Vec2Utils.cross(this._tempVec2, force);
 
 	    }
@@ -600,8 +590,6 @@ module Phaser.Physics.Advanced {
 	        }
 
             this.velocity.multiplyAddByScalar(impulse, this.massInverted);
-
-	        //  this.angularVelocity += vec2.cross(vec2.sub(p, this.position), impulse) * this.inertiaInverted;
 
             Phaser.Vec2Utils.subtract(p, this.position, this._tempVec2);
 

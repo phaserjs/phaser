@@ -36,7 +36,7 @@ module Phaser.Physics.Advanced {
         }
 
         public static write(s: string) {
-            //Manager.debug.textContent += s + "\n";
+            Manager.debug.textContent += s + "\n";
         }
 
         public static writeAll() {
@@ -119,10 +119,10 @@ module Phaser.Physics.Advanced {
         public lastTime: number = Date.now();
         public frameRateHz: number = 60;
         public timeDelta: number = 0;
-        public paused: bool = false;
-        public step: bool = false; // step through the simulation (i.e. per click)
-        //public paused: bool = true;
+        //public paused: bool = false;
         //public step: bool = false; // step through the simulation (i.e. per click)
+        public paused: bool = true;
+        public step: bool = false; // step through the simulation (i.e. per click)
         public velocityIterations: number = 8;
         public positionIterations: number = 4;
         //public velocityIterations: number = 1;
@@ -170,12 +170,6 @@ module Phaser.Physics.Advanced {
                 {
                     this.timeDelta = 0;
                 }
-
-                //if (sceneIndex < demoArr.length)
-                //{
-                //    demo = demoArr[sceneIndex];
-                //    demo.runFrame();
-                //}
             }
 
             //frameCount++;
