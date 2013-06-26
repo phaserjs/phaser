@@ -23,7 +23,7 @@ module Phaser {
          * @param {Number} height		Desired height of this node.
          * @param {Number} parent		The parent branch or node.  Pass null to create a root.
          */
-        constructor(manager: Phaser.Physics.PhysicsManager, x: number, y: number, width: number, height: number, parent: QuadTree = null) {
+        constructor(manager: Phaser.Physics.Manager, x: number, y: number, width: number, height: number, parent: QuadTree = null) {
 
             super(x, y, width, height);
 
@@ -104,7 +104,7 @@ module Phaser {
         private _overlapProcessed: bool;
         private _checkObject;
 
-        public static physics: Phaser.Physics.PhysicsManager;
+        public static physics: Phaser.Physics.Manager;
 
         /**
          * Flag for specifying that you want to add an object to the A list.
@@ -625,7 +625,7 @@ module Phaser {
                     continue;
                 }
 
-                //if (QuadTree._object.body.bounds.checkHullIntersection(this._checkObject.body.bounds))
+                /*
                 if (QuadTree.physics.checkHullIntersection(QuadTree._object.body, this._checkObject.body))
                 {
                     //Execute callback functions if they exist
@@ -646,6 +646,7 @@ module Phaser {
                         }
                     }
                 }
+                */
 
                 QuadTree._iterator = QuadTree._iterator.next;
 

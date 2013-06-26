@@ -238,19 +238,19 @@ module Phaser {
 
                 if (collide > 0)
                 {
-                    particle.body.allowCollisions = Types.ANY;
+                    //particle.body.allowCollisions = Types.ANY;
                     particle.body.type = Types.BODY_DYNAMIC;
                     particle.width *= collide;
                     particle.height *= collide;
                 }
                 else
                 {
-                    particle.body.allowCollisions = Types.NONE;
+                    //particle.body.allowCollisions = Types.NONE;
                 }
 
                 particle.exists = false;
                 //  Center the origin for rotation assistance
-                particle.transform.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
+                //particle.transform.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
 
                 this.add(particle);
 
@@ -363,7 +363,7 @@ module Phaser {
             var particle: Particle = this.recycle(Particle);
 
             particle.lifespan = this.lifespan;
-            particle.body.bounce.setTo(this.bounce, this.bounce);
+            //particle.body.bounce.setTo(this.bounce, this.bounce);
             SpriteUtils.reset(particle, this.x - (particle.width >> 1) + this.game.math.random() * this.width, this.y - (particle.height >> 1) + this.game.math.random() * this.height);
             particle.visible = true;
 
@@ -385,7 +385,7 @@ module Phaser {
                 particle.body.velocity.y = this.minParticleSpeed.y;
             }
 
-            particle.body.acceleration.y = this.gravity;
+            //particle.body.acceleration.y = this.gravity;
 
             if (this.minRotation != this.maxRotation && this.minRotation !== 0 && this.maxRotation !== 0)
             {
@@ -401,8 +401,8 @@ module Phaser {
                 particle.rotation = this.game.math.random() * 360 - 180;
             }
 
-            particle.body.drag.x = this.particleDrag.x;
-            particle.body.drag.y = this.particleDrag.y;
+            //particle.body.drag.x = this.particleDrag.x;
+            //particle.body.drag.y = this.particleDrag.y;
             particle.onEmit();
 
         }
@@ -457,8 +457,8 @@ module Phaser {
          * @param Object {object} The <code>Object</code> that you want to sync up with.
          */
         public at(object: Sprite) {
-            this.x = object.body.bounds.halfWidth - (this.width >> 1);
-            this.y = object.body.bounds.halfHeight - (this.height >> 1);
+            //this.x = object.body.bounds.halfWidth - (this.width >> 1);
+            //this.y = object.body.bounds.halfHeight - (this.height >> 1);
         }
     }
 

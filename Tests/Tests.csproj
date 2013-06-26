@@ -65,7 +65,6 @@
     <Content Include="cameras\scrollfactor 2.js">
       <DependentUpon>scrollfactor 2.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="physics\aabb 1.ts" />
     <TypeScriptCompile Include="particles\graphic emitter.ts" />
     <TypeScriptCompile Include="input\over sprite 1.ts" />
     <TypeScriptCompile Include="groups\create group 1.ts" />
@@ -174,25 +173,14 @@
     <Content Include="particles\when particles collide.js">
       <DependentUpon>when particles collide.ts</DependentUpon>
     </Content>
-    <Content Include="physics\aabb 1.js">
-      <DependentUpon>aabb 1.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scrollzones\simple scrollzone.ts" />
     <TypeScriptCompile Include="scrollzones\scroll window.ts" />
     <TypeScriptCompile Include="scrollzones\region demo.ts" />
     <TypeScriptCompile Include="scrollzones\parallax.ts" />
     <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
-    <TypeScriptCompile Include="physics\aabb vs aabb 1.ts" />
-    <Content Include="physics\aabb vs aabb 1.js">
-      <DependentUpon>aabb vs aabb 1.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\obb vs obb.ts" />
-    <TypeScriptCompile Include="physics\body1.ts" />
-    <Content Include="physics\body1.js">
-      <DependentUpon>body1.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\obb vs obb.js">
-      <DependentUpon>obb vs obb.ts</DependentUpon>
+    <TypeScriptCompile Include="physics\simple test 1.ts" />
+    <Content Include="physics\simple test 1.js">
+      <DependentUpon>simple test 1.ts</DependentUpon>
     </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>

@@ -1,5 +1,5 @@
-/// <reference path="../../../math/Vec2.ts" />
-/// <reference path="../../../math/Vec2Utils.ts" />
+/// <reference path="../../math/Vec2.ts" />
+/// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
@@ -10,9 +10,9 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced.Shapes {
+module Phaser.Physics.Shapes {
 
-    export class Segment extends Phaser.Physics.Advanced.Shape implements IShape {
+    export class Segment extends Phaser.Physics.Shape implements IShape {
 
         constructor(a, b, radius: number) {
 
@@ -52,7 +52,7 @@ module Phaser.Physics.Advanced.Shapes {
         }
 
         public duplicate() {
-            return new Phaser.Physics.Advanced.Shapes.Segment(this.a, this.b, this.radius);
+            return new Phaser.Physics.Shapes.Segment(this.a, this.b, this.radius);
         }
 
         public recenter(c) {

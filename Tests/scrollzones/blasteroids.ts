@@ -122,7 +122,7 @@
 
     function render() {
 
-        ship.body.renderDebugInfo(32, 32);
+        //ship.body.renderDebugInfo(32, 32);
 
     }
 

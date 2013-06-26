@@ -183,7 +183,7 @@ module Phaser.Components {
                 dirty = true;
             }
 
-            //  If it has moved, updated the edges and center
+            //  If it has moved, update the edges and center
             if (dirty || this.parent.x != this._pos.x || this.parent.y != this._pos.y)
             {
                 this.center.x = this.parent.x + this._distance * this._scA.y;

@@ -375,8 +375,7 @@ module Phaser {
             this._tempBlockResults = [];
             this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
 
-            Phaser.Physics.PhysicsManager.TILE_OVERLAP = false;
-
+            /*
             for (var r = 0; r < this._tempTileBlock.length; r++)
             {
                 if (this._game.world.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
@@ -384,6 +383,7 @@ module Phaser {
                     this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
                 }
             }
+            */
 
             return this._tempBlockResults;
 

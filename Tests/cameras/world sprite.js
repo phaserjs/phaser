@@ -12,9 +12,6 @@
     function create() {
         game.add.sprite(0, 0, 'backdrop');
         ball = game.add.sprite(200, 200, 'ball');
-        ball.body.offset.setTo(-16, -16);
-        ball.body.width = 100;
-        ball.body.height = 100;
         ball.body.velocity.x = 50;
         ball.transform.scale.setTo(2, 2);
     }
@@ -56,7 +53,5 @@
     function render() {
         game.camera.renderDebugInfo(32, 32);
         Phaser.DebugUtils.renderSpriteInfo(ball, 32, 200);
-        //Phaser.DebugUtils.renderSpriteBounds(ball);
-        Phaser.DebugUtils.renderSpritePhysicsBody(ball);
     }
 })();

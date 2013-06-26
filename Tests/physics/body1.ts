@@ -26,14 +26,6 @@
 
     function create() {
 
-        //debug = <HTMLTextAreaElement> document.createElement('textarea');
-        //debug.style.position = 'absolute';
-        //debug.style.left = '850px';
-        //debug.style.top = '32px';
-        //debug.style.width = '600px';
-        //debug.style.height = '600px';
-        //document.body.appendChild(debug);
-
         //atari = game.add.sprite(200, 100, 'atari');
         
         //  need to get the physics bounds around the sprite center, regardless of origin

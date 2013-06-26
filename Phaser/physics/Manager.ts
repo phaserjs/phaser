@@ -1,15 +1,15 @@
-/// <reference path="../../Game.ts" />
+/// <reference path="../Game.ts" />
 /// <reference path="Body.ts" />
 /// <reference path="joints/Joint.ts" />
 
 /**
-* Phaser - Advanced Physics Manager
+* Phaser - Physics Manager
 *
-* Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
-* all of the physics objects in the world.
+* The Physics Manager is responsible for looking after, creating and colliding
+* all of the physics bodies and joints in the world.
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export class Manager {
 
@@ -17,7 +17,9 @@ module Phaser.Physics.Advanced {
 
             this.game = game;
 
-            this.space = new Space();
+            this.gravity = new Phaser.Vec2;
+
+            this.space = new Space(this);
 
             Manager.collision = new Collision();
 
@@ -31,12 +33,12 @@ module Phaser.Physics.Advanced {
         public static debug: HTMLTextAreaElement;
 
         public static clear() {
-            Manager.debug.textContent = "";
+            //Manager.debug.textContent = "";
             Manager.log = [];
         }
 
         public static write(s: string) {
-            Manager.debug.textContent += s + "\n";
+            //Manager.debug.textContent += s + "\n";
         }
 
         public static writeAll() {
@@ -52,6 +54,7 @@ module Phaser.Physics.Advanced {
 
         public static dump(phase: string, body: Body) {
 
+            /*
             var s = "\n\nPhase: " + phase + "\n";
             s += "Position: " + body.position.toString() + "\n";
             s += "Velocity: " + body.velocity.toString() + "\n";
@@ -78,6 +81,7 @@ module Phaser.Physics.Advanced {
             s += "TPlane 3: " + body.shapes[0].tplanes[3].normal.toString() + "\n";
 
             Manager.log.push(s);
+            */
 
         }
 
@@ -98,9 +102,9 @@ module Phaser.Physics.Advanced {
         public static JOINT_TYPE_MOUSE: number = 7;
 
         public static JOINT_LINEAR_SLOP: number = 0.0008;
-        public static JOINT_ANGULAR_SLOP: number = 2 * Phaser.GameMath.DEG_TO_RAD;
+        public static JOINT_ANGULAR_SLOP: number = 2 * 0.017453292519943294444444444444444;
         public static JOINT_MAX_LINEAR_CORRECTION: number = 0.5;
-        public static JOINT_MAX_ANGULAR_CORRECTION: number = 8 * Phaser.GameMath.DEG_TO_RAD;
+        public static JOINT_MAX_ANGULAR_CORRECTION: number = 8 * 0.017453292519943294444444444444444;
 
         public static JOINT_LIMIT_STATE_INACTIVE: number = 0;
         public static JOINT_LIMIT_STATE_AT_LOWER: number = 1;
@@ -119,19 +123,21 @@ module Phaser.Physics.Advanced {
         public lastTime: number = Date.now();
         public frameRateHz: number = 60;
         public timeDelta: number = 0;
-        //public paused: bool = false;
-        //public step: bool = false; // step through the simulation (i.e. per click)
-        public paused: bool = true;
+        public paused: bool = false;
         public step: bool = false; // step through the simulation (i.e. per click)
+        //public paused: bool = true;
+        //public step: bool = false; // step through the simulation (i.e. per click)
         public velocityIterations: number = 8;
         public positionIterations: number = 4;
-        //public velocityIterations: number = 1;
-        //public positionIterations: number = 1;
         public allowSleep: bool = true;
         public warmStarting: bool = true;
 
+        public gravity: Phaser.Vec2;
+
+
         public update() {
 
+            //  Get these from Phaser.Time instead
             var time = Date.now();
             var frameTime = (time - this.lastTime) / 1000;
             this.lastTime = time;
@@ -174,6 +180,22 @@ module Phaser.Physics.Advanced {
 
             //frameCount++;
 
+        }
+
+        public addBody(body: Body) {
+            this.space.addBody(body);
+        }
+
+        public removeBody(body: Body) {
+            this.space.removeBody(body);
+        }
+
+        public addJoint(joint: IJoint) {
+            this.space.addJoint(joint);
+        }
+
+        public removeJoint(joint: IJoint) {
+            this.space.removeJoint(joint);
         }
 
         public pixelsToMeters(value: number): number {

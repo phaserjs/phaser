@@ -33,7 +33,6 @@
     }
     function render() {
         game.camera.renderDebugInfo(32, 32);
-        test.body.renderDebugInfo(300, 32);
         Phaser.DebugUtils.renderSpriteInfo(test, 32, 200);
         game.input.renderDebugInfo(300, 200);
     }

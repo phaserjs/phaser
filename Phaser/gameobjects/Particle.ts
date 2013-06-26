@@ -22,7 +22,6 @@ module Phaser {
 
             this.body.type = Types.BODY_DYNAMIC;
             this.lifespan = 0;
-            this.friction = 500;
 
         }
 
@@ -34,15 +33,7 @@ module Phaser {
         public lifespan: number;
 
         /**
-         * Determines how quickly the particles come to rest on the ground.
-         * Only used if the particle has gravity-like acceleration applied.
-         * @default 500
-         */
-        public friction: number;
-
-        /**
-         * The particle's main update logic.  Basically it checks to see if it should
-         * be dead yet, and then has some special bounce behavior if there is some gravity on it.
+         * The particle's main update logic.  Basically it checks to see if it should be dead yet.
          */
         public update() {
 
@@ -59,42 +50,6 @@ module Phaser {
                 this.kill();
             }
 
-            //simpler bounce/spin behavior for now
-            if (this.body.touching)
-            {
-                if (this.body.angularVelocity != 0)
-                {
-                    this.body.angularVelocity = -this.body.angularVelocity;
-                }
-            }
-
-            if (this.body.acceleration.y > 0) //special behavior for particles with gravity
-            {
-                if (this.body.touching & Types.FLOOR)
-                {
-                    this.body.drag.x = this.friction;
-
-                    if (!(this.body.wasTouching & Types.FLOOR))
-                    {
-                        if (this.body.velocity.y < -this.body.bounce.y * 10)
-                        {
-                            if (this.body.angularVelocity != 0)
-                            {
-                                this.body.angularVelocity *= -this.body.bounce.y;
-                            }
-                        }
-                        else
-                        {
-                            this.body.velocity.y = 0;
-                            this.body.angularVelocity = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    this.body.drag.x = 0;
-                }
-            }
         }
 
         /**

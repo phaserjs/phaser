@@ -23,9 +23,10 @@ module Phaser {
          * @param [x] {number} the initial x position of the sprite.
          * @param [y] {number} the initial y position of the sprite.
          * @param [key] {string} Key of the graphic you want to load for this sprite.
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+         * @param [shapeType] {number} The physics shape the body will consist of (either Box (0) or Circle (1), for custom types see body.addShape)
          */
-        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC) {
+        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED, shapeType?:number = 0) {
 
             this.game = game;
             this.type = Phaser.Types.SPRITE;
@@ -67,7 +68,13 @@ module Phaser {
                 }
             }
 
-            this.body = new Phaser.Physics.Body(this, bodyType);
+            if (bodyType !== Phaser.Types.BODY_DISABLED)
+            {
+                this.body = new Phaser.Physics.Body(this, bodyType, 0, 0, shapeType);
+                this.game.physics.addBody(this.body);
+                this.transform.origin.setTo(0.5, 0.5);
+            }
+
             this.worldView = new Rectangle(x, y, this.width, this.height);
             this.cameraView = new Rectangle(x, y, this.width, this.height);
 
@@ -118,7 +125,7 @@ module Phaser {
         /**
          * Sprite physics body.
          */
-        public body: Phaser.Physics.Body;
+        public body: Phaser.Physics.Body = null;
 
         /**
          * The texture used to render the Sprite.
@@ -268,8 +275,6 @@ module Phaser {
 
             this.worldView.x = (this.x * this.transform.scrollFactor.x) - (this.width * this.transform.origin.x);
             this.worldView.y = (this.y * this.transform.scrollFactor.y) - (this.height * this.transform.origin.y);
-            //this.worldView.x = this.x * this.transform.scrollFactor.x;
-            //this.worldView.y = this.y * this.transform.scrollFactor.y;
             this.worldView.width = this.width;
             this.worldView.height = this.height;
 
@@ -281,7 +286,7 @@ module Phaser {
         }
 
         /**
-         * Override this function to update your class's position and appearance.
+         * Override this function to update your sprites position and appearance.
          */
         public update() {
         }
@@ -292,7 +297,6 @@ module Phaser {
         public postUpdate() {
 
             this.animations.update();
-            this.body.postUpdate();
 
             /*
             if (this.worldBounds != null)

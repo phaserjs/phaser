@@ -1,5 +1,5 @@
-/// <reference path="../../../math/Vec2.ts" />
-/// <reference path="../../../math/Vec2Utils.ts" />
+/// <reference path="../../math/Vec2.ts" />
+/// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
@@ -10,9 +10,9 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced.Shapes {
+module Phaser.Physics.Shapes {
 
-    export class Circle extends Phaser.Physics.Advanced.Shape implements IShape {
+    export class Circle extends Phaser.Physics.Shape implements IShape {
 
         constructor(radius: number, x?: number = 0, y?: number = 0) {
 

@@ -44,15 +44,17 @@ TODO:
 * Drag Sprite with "snap to center" uses local coords not world, so fails on scrolling world (no center lock works fine)
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
 * Pointer worldX/Y don't appear to be correct for some reason
-
-
+* Create a Pixel game object type (useful for particles / fx)
 * Sprite collision events
 * See which functions in the input component can move elsewhere (utils)
 * Move all of the renderDebugInfo methods to the DebugUtils class
 * Check bounds/edge points when sprite is only 1x1 sized :)
-
 * See what I can move out of Body and into a BodyUtils class.
 * See about optimising Advanced Physics a lot more, so it doesn't create lots of Vec2s everywhere.
+* QuadTree.physics.checkHullIntersection
+* Fix the Motion methods for the new physics system
+* Moved findShapeByPoint etc from Space to Manager (or at least add a proxy to them)
+
 
 V1.0.0
 
@@ -71,7 +73,7 @@ V1.0.0
 * Added Tween.loop property so they can now re-run themselves indefinitely.
 * Added Tween.yoyo property so they can reverse themselves after completing.
 * Added Gravity to the Physics component.
-* Removed Sprite.rotation - use Sprite.angle instead
+* Removed Sprite.angle - use Sprite.rotation instead
 * Optimised separateX/Y and overlap so they don't use any temporary vars any more.
 * Added the new Physics.Body object to all Sprites. Used for all physics calculations in-game. Will be extended for Fixtures/Joints in future.
 * Added SpriteUtils.setOriginToCenter to quickly set the origin of a sprite based on either frameBounds or body.bounds
@@ -83,7 +85,7 @@ V1.0.0
 * Added Group.addNewSprite(x,y,key) for quick addition of new Sprites to a Group
 * Fixed Group.sort so the sortHandler is called correctly
 * Added Group.swap(a,b) to swap the z-index of 2 objects with optional rendering update boolean
-* Sprites dispatch killed/revived and added to and removed from Group events.
+* Sprites dispatch new events for: killed, revived, added to Group and removed from Group.
 * Added Input drag, bounds, sprite bounds and snapping support.
 * Added the new ColorUtils class full of lots of handy color manipulation functions.
 * Fixed issue in Camera.inCamera check where it wouldn't take into consideration the Sprites scrollFactor.

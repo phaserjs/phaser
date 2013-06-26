@@ -77,8 +77,8 @@
         }
     }
     function render() {
-        ship.body.renderDebugInfo(32, 32);
-    }
+        //ship.body.renderDebugInfo(32, 32);
+            }
     function recycleBullet(bullet) {
         if(bullet.exists && bullet.x < -40 || bullet.x > 840 || bullet.y < -40 || bullet.y > 640) {
             bullet.exists = false;

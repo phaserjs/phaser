@@ -1,6 +1,6 @@
-/// <reference path="../../math/Vec2.ts" />
-/// <reference path="../../geom/Point.ts" />
-/// <reference path="../../math/Vec2Utils.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../math/Vec2Utils.ts" />
 /// <reference path="shapes/Shape.ts" />
 /// <reference path="shapes/Circle.ts" />
 /// <reference path="shapes/Poly.ts" />
@@ -15,12 +15,9 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export class Collision {
-
-        constructor() {
-        }
 
         public collide(a, b, contacts: Contact[]) {
 
@@ -114,11 +111,11 @@ module Phaser.Physics.Advanced {
 
         }
 
-        public circle2Circle(circ1: Phaser.Physics.Advanced.Shapes.Circle, circ2: Phaser.Physics.Advanced.Shapes.Circle, contactArr: Contact[]) {
+        public circle2Circle(circ1: Phaser.Physics.Shapes.Circle, circ2: Phaser.Physics.Shapes.Circle, contactArr: Contact[]) {
             return this._circle2Circle(circ1.tc, circ1.radius, circ2.tc, circ2.radius, contactArr);
         }
 
-        public circle2Segment(circ: Phaser.Physics.Advanced.Shapes.Circle, seg: Phaser.Physics.Advanced.Shapes.Segment, contactArr: Contact[]) {
+        public circle2Segment(circ: Phaser.Physics.Shapes.Circle, seg: Phaser.Physics.Shapes.Segment, contactArr: Contact[]) {
 
             var rsum = circ.radius + seg.radius;
 
@@ -179,7 +176,7 @@ module Phaser.Physics.Advanced {
 
         }
 
-        public circle2Poly(circ: Phaser.Physics.Advanced.Shapes.Circle, poly: Phaser.Physics.Advanced.Shapes.Poly, contactArr: Contact[]) {
+        public circle2Poly(circ: Phaser.Physics.Shapes.Circle, poly: Phaser.Physics.Shapes.Poly, contactArr: Contact[]) {
 
             var minDist = -999999;
             var minIdx = -1;
@@ -230,7 +227,7 @@ module Phaser.Physics.Advanced {
 
         }
 
-        public segmentPointDistanceSq(seg: Phaser.Physics.Advanced.Shapes.Segment, p) {
+        public segmentPointDistanceSq(seg: Phaser.Physics.Shapes.Segment, p) {
 
             var w: Phaser.Vec2 = new Phaser.Vec2;
             var d: Phaser.Vec2 = new Phaser.Vec2;
@@ -259,7 +256,7 @@ module Phaser.Physics.Advanced {
         }
 
         // FIXME and optimise me lots!!!
-        public segment2Segment(seg1: Phaser.Physics.Advanced.Shapes.Segment, seg2: Phaser.Physics.Advanced.Shapes.Segment, contactArr: Contact[]) {
+        public segment2Segment(seg1: Phaser.Physics.Shapes.Segment, seg2: Phaser.Physics.Shapes.Segment, contactArr: Contact[]) {
 
             var d = [];
             d[0] = this.segmentPointDistanceSq(seg1, seg2.ta);
@@ -307,7 +304,7 @@ module Phaser.Physics.Advanced {
         }
 
         // Identify vertexes that have penetrated the segment.
-        public findPointsBehindSeg(contactArr: Contact[], seg: Phaser.Physics.Advanced.Shapes.Segment, poly: Phaser.Physics.Advanced.Shapes.Poly, dist: number, coef: number) {
+        public findPointsBehindSeg(contactArr: Contact[], seg: Phaser.Physics.Shapes.Segment, poly: Phaser.Physics.Shapes.Poly, dist: number, coef: number) {
 
             var dta = Phaser.Vec2Utils.cross(seg.tn, seg.ta);
             var dtb = Phaser.Vec2Utils.cross(seg.tn, seg.tb);
@@ -332,7 +329,7 @@ module Phaser.Physics.Advanced {
             }
         }
 
-        public segment2Poly(seg: Phaser.Physics.Advanced.Shapes.Segment, poly: Phaser.Physics.Advanced.Shapes.Poly, contactArr: Contact[]) {
+        public segment2Poly(seg: Phaser.Physics.Shapes.Segment, poly: Phaser.Physics.Shapes.Poly, contactArr: Contact[]) {
 
             var seg_td = Phaser.Vec2Utils.dot(seg.tn, seg.ta);
             var seg_d1 = poly.distanceOnPlane(seg.tn, seg_td) - seg.radius;
@@ -442,7 +439,7 @@ module Phaser.Physics.Advanced {
         }
 
         // Find the minimum separating axis for the given poly and plane list.
-        public findMSA(poly: Phaser.Physics.Advanced.Shapes.Poly, planes: Phaser.Physics.Advanced.Plane[], num: number) {
+        public findMSA(poly: Phaser.Physics.Shapes.Poly, planes: Phaser.Physics.Plane[], num: number) {
 
             var min_dist: number = -999999;
             var min_index: number = -1;
@@ -468,7 +465,7 @@ module Phaser.Physics.Advanced {
 
         }
 
-        public findVertsFallback(contactArr: Contact[], poly1: Phaser.Physics.Advanced.Shapes.Poly, poly2: Phaser.Physics.Advanced.Shapes.Poly, n, dist: number) {
+        public findVertsFallback(contactArr: Contact[], poly1: Phaser.Physics.Shapes.Poly, poly2: Phaser.Physics.Shapes.Poly, n, dist: number) {
 
             var num = 0;
 
@@ -499,7 +496,7 @@ module Phaser.Physics.Advanced {
         }
 
         // Find the overlapped vertices.
-        public findVerts(contactArr: Contact[], poly1: Phaser.Physics.Advanced.Shapes.Poly, poly2: Phaser.Physics.Advanced.Shapes.Poly, n, dist: number) {
+        public findVerts(contactArr: Contact[], poly1: Phaser.Physics.Shapes.Poly, poly2: Phaser.Physics.Shapes.Poly, n, dist: number) {
 
             var num = 0;
 
@@ -529,7 +526,7 @@ module Phaser.Physics.Advanced {
 
         }
 
-        public poly2Poly(poly1: Phaser.Physics.Advanced.Shapes.Poly, poly2: Phaser.Physics.Advanced.Shapes.Poly, contactArr: Contact[]) {
+        public poly2Poly(poly1: Phaser.Physics.Shapes.Poly, poly2: Phaser.Physics.Shapes.Poly, contactArr: Contact[]) {
 
             var msa1 = this.findMSA(poly2, poly1.tplanes, poly1.verts.length);
 

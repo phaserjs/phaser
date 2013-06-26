@@ -1,5 +1,5 @@
-/// <reference path="../../math/Vec2.ts" />
-/// <reference path="../../math/Vec2Utils.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../math/Vec2Utils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
 /// <reference path="shapes/Shape.ts" />
@@ -14,11 +14,13 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export class Space {
 
-        constructor() {
+        constructor(manager: Phaser.Physics.Manager) {
+
+            this._manager = manager;
 
             this.bodies = [];
             this.bodyHash = {};
@@ -29,13 +31,15 @@ module Phaser.Physics.Advanced {
             this.numContacts = 0;
             this.contactSolvers = [];
 
-            this.gravity = new Phaser.Vec2(0, 10);
+            this.gravity = this._manager.gravity;
             this.damping = 0;
 
             this._linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
             this._angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
 
         }
+
+        private _manager: Phaser.Physics.Manager;
 
         //  Delta Timer
         private _delta: number;
@@ -68,7 +72,7 @@ module Phaser.Physics.Advanced {
 
         public static TIME_TO_SLEEP = 0.5;
         public static SLEEP_LINEAR_TOLERANCE = 0.5;
-        public static SLEEP_ANGULAR_TOLERANCE = 2 * Phaser.GameMath.DEG_TO_RAD;
+        public static SLEEP_ANGULAR_TOLERANCE = 2 * 0.017453292519943294444444444444444;
 
         public bodies: Body[];
         public joints: IJoint[];

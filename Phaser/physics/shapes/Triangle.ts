@@ -1,4 +1,4 @@
-/// <reference path="../../../math/Vec2.ts" />
+/// <reference path="../../math/Vec2.ts" />
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
@@ -10,9 +10,9 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced.Shapes {
+module Phaser.Physics.Shapes {
 
-    export class Triangle extends Phaser.Physics.Advanced.Shapes.Poly {
+    export class Triangle extends Phaser.Physics.Shapes.Poly {
 
         constructor(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
 

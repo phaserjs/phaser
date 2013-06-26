@@ -56,9 +56,7 @@
     <TypeScriptOutFile>../build/phaser.js</TypeScriptOutFile>
     <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="physics\arcade\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="components\animation\AnimationManager.js">
       <DependentUpon>AnimationManager.ts</DependentUpon>
@@ -143,7 +141,6 @@
     <TypeScriptCompile Include="renderers\CanvasRenderer.ts" />
     <TypeScriptCompile Include="Statics.ts" />
     <TypeScriptCompile Include="renderers\HeadlessRenderer.ts" />
-    <TypeScriptCompile Include="physics\PhysicsManager.ts" />
     <TypeScriptCompile Include="physics\Body.ts" />
     <TypeScriptCompile Include="math\QuadTree.ts" />
     <TypeScriptCompile Include="math\Mat3.ts" />
@@ -177,83 +174,72 @@
     <Content Include="Motion.js">
       <DependentUpon>Motion.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="physics\ArcadePhysics.ts" />
-    <TypeScriptCompile Include="physics\advanced\Body.ts" />
-    <Content Include="physics\advanced\Body.js">
-      <DependentUpon>Body.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\Bounds.ts" />
-    <Content Include="physics\advanced\Bounds.js">
-      <DependentUpon>Bounds.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\Contact.ts" />
-    <TypeScriptCompile Include="physics\advanced\Collision.ts" />
-    <Content Include="physics\advanced\Collision.js">
-      <DependentUpon>Collision.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\advanced\Contact.js">
-      <DependentUpon>Contact.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\ContactSolver.ts" />
-    <Content Include="physics\advanced\ContactSolver.js">
-      <DependentUpon>ContactSolver.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\Manager.ts" />
-    <TypeScriptCompile Include="physics\advanced\joints\IJoint.ts" />
-    <Content Include="physics\advanced\joints\IJoint.js">
-      <DependentUpon>IJoint.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\joints\Joint.ts" />
-    <Content Include="physics\advanced\joints\Joint.js">
-      <DependentUpon>Joint.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\advanced\Manager.js">
-      <DependentUpon>Manager.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\shapes\Shape.ts" />
-    <TypeScriptCompile Include="physics\advanced\shapes\IShape.ts" />
-    <TypeScriptCompile Include="physics\advanced\shapes\Box.ts" />
-    <TypeScriptCompile Include="physics\advanced\Plane.ts" />
-    <Content Include="physics\advanced\Plane.js">
-      <DependentUpon>Plane.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\advanced\shapes\Box.js">
-      <DependentUpon>Box.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\shapes\Circle.ts" />
-    <Content Include="physics\advanced\shapes\Circle.js">
-      <DependentUpon>Circle.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\advanced\shapes\IShape.js">
-      <DependentUpon>IShape.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\shapes\Poly.ts" />
-    <Content Include="physics\advanced\shapes\Poly.js">
-      <DependentUpon>Poly.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\shapes\Segment.ts" />
-    <Content Include="physics\advanced\shapes\Segment.js">
-      <DependentUpon>Segment.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\advanced\shapes\Shape.js">
-      <DependentUpon>Shape.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\shapes\Triangle.ts" />
-    <Content Include="physics\advanced\shapes\Triangle.js">
-      <DependentUpon>Triangle.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="physics\advanced\Space.ts" />
-    <Content Include="physics\advanced\Space.js">
-      <DependentUpon>Space.ts</DependentUpon>
-    </Content>
-    <Content Include="physics\ArcadePhysics.js">
-      <DependentUpon>ArcadePhysics.ts</DependentUpon>
-    </Content>
     <Content Include="physics\Body.js">
       <DependentUpon>Body.ts</DependentUpon>
     </Content>
-    <Content Include="physics\PhysicsManager.js">
-      <DependentUpon>PhysicsManager.ts</DependentUpon>
+    <TypeScriptCompile Include="physics\Bounds.ts" />
+    <Content Include="physics\Bounds.js">
+      <DependentUpon>Bounds.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\Collision.ts" />
+    <Content Include="physics\Collision.js">
+      <DependentUpon>Collision.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\Contact.ts" />
+    <Content Include="physics\Contact.js">
+      <DependentUpon>Contact.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\ContactSolver.ts" />
+    <Content Include="physics\ContactSolver.js">
+      <DependentUpon>ContactSolver.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\Manager.ts" />
+    <TypeScriptCompile Include="physics\joints\IJoint.ts" />
+    <Content Include="physics\joints\IJoint.js">
+      <DependentUpon>IJoint.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\joints\Joint.ts" />
+    <Content Include="physics\joints\Joint.js">
+      <DependentUpon>Joint.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\Manager.js">
+      <DependentUpon>Manager.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\Plane.ts" />
+    <Content Include="physics\Plane.js">
+      <DependentUpon>Plane.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\Space.ts" />
+    <TypeScriptCompile Include="physics\shapes\Box.ts" />
+    <Content Include="physics\shapes\Box.js">
+      <DependentUpon>Box.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\shapes\Circle.ts" />
+    <Content Include="physics\shapes\Circle.js">
+      <DependentUpon>Circle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\shapes\IShape.ts" />
+    <Content Include="physics\shapes\IShape.js">
+      <DependentUpon>IShape.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\shapes\Poly.ts" />
+    <Content Include="physics\shapes\Poly.js">
+      <DependentUpon>Poly.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\shapes\Segment.ts" />
+    <Content Include="physics\shapes\Segment.js">
+      <DependentUpon>Segment.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\shapes\Shape.ts" />
+    <Content Include="physics\shapes\Shape.js">
+      <DependentUpon>Shape.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\shapes\Triangle.ts" />
+    <Content Include="physics\shapes\Triangle.js">
+      <DependentUpon>Triangle.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\Space.js">
+      <DependentUpon>Space.ts</DependentUpon>
     </Content>
     <Content Include="renderers\HeadlessRenderer.js">
       <DependentUpon>HeadlessRenderer.ts</DependentUpon>

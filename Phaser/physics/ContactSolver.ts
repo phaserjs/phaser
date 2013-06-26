@@ -1,6 +1,6 @@
-/// <reference path="../../math/Vec2.ts" />
-/// <reference path="../../geom/Point.ts" />
-/// <reference path="../../math/Vec2Utils.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../geom/Point.ts" />
+/// <reference path="../math/Vec2Utils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
 /// <reference path="shapes/Shape.ts" />
@@ -32,7 +32,7 @@
 // NOTE: lambda is an impulse in constraint space.
 //-------------------------------------------------------------------------------------------------
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export class ContactSolver {
 
