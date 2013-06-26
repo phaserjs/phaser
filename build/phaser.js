@@ -760,6 +760,7 @@ var Phaser;
             if (typeof y === "undefined") { y = 0; }
             this.x = x;
             this.y = y;
+            return this;
         }
         Vec2.prototype.copyFrom = /**
         * Copies the x and y properties from any given object to this Vec2.
@@ -3086,6 +3087,7 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../Game.ts" />
     /// <reference path="../math/Mat3.ts" />
+    /// <reference path="../geom/Point.ts" />
     /**
     * Phaser - Components - Transform
     */
@@ -3138,7 +3140,7 @@ var Phaser;
                 this._halfSize.y = this.parent.height / 2;
                 this._offset.x = this.origin.x * this.parent.width;
                 this._offset.y = this.origin.y * this.parent.height;
-                this._angle = Math.atan2(this.halfHeight - this._offset.y, this.halfWidth - this._offset.x);
+                this._angle = Math.atan2(this.halfHeight - this._offset.x, this.halfWidth - this._offset.y);
                 this._distance = Math.sqrt(((this._offset.x - this._halfSize.x) * (this._offset.x - this._halfSize.x)) + ((this._offset.y - this._halfSize.y) * (this._offset.y - this._halfSize.y)));
                 this._size.x = this.parent.width;
                 this._size.y = this.parent.height;
@@ -4123,7 +4125,7 @@ var Phaser;
         * @return {Vec2} A Vec2.
         */
         function normalRightHand(a, out) {
-            if (typeof out === "undefined") { out = this; }
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
             return out.setTo(a.y * -1, a.x);
         };
         Vec2Utils.normalize = /**
@@ -6466,7 +6468,7 @@ var Phaser;
                 //  5) Iterative velocity constraints solver
                 this.velocitySolver(velocityIterations);
                 Physics.Manager.dump("Velocity Solvers", this.bodies[1]);
-                // 6) Intergrate position
+                // 6) Integrate position
                 for(var i = 0; i < this._bl; i++) {
                     if(this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake) {
                         this.bodies[i].updatePosition(this._delta);
@@ -6597,12 +6599,15 @@ var Phaser;
                 __extends(Box, _super);
                 //  Give in pixels
                 function Box(x, y, width, height) {
+                    console.log('Box px', x, y, width, height);
                     x = Physics.Manager.pixelsToMeters(x);
                     y = Physics.Manager.pixelsToMeters(y);
                     width = Physics.Manager.pixelsToMeters(width);
                     height = Physics.Manager.pixelsToMeters(height);
+                    console.log('Box m', x, y, width, height);
                     var hw = width * 0.5;
                     var hh = height * 0.5;
+                    console.log('Box hh', hw, hh);
                                 _super.call(this, [
                 {
                     x: -hw + x,
@@ -6932,7 +6937,7 @@ var Phaser;
                 Physics.Manager.write('p: ' + this.position.toString());
                 Physics.Manager.write('xf: ' + this.transform.toString());
                 this.bounds.clear();
-                for(var i = 0; i < this.shapes.length; i++) {
+                for(var i = 0; i < this.shapesLength; i++) {
                     var shape = this.shapes[i];
                     shape.cacheData(this.transform);
                     this.bounds.addBounds(shape.bounds);
@@ -13573,14 +13578,16 @@ var Phaser;
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
         * @param [shapeType] The default body shape is either 0 for a Box or 1 for a Circle. See Sprite.body.addShape for custom shapes (polygons, etc)
         * @returns {Sprite} The newly created sprite object.
         */
-        function (x, y, key, frame, shapeType) {
+        function (x, y, key, frame, bodyType, shapeType) {
             if (typeof key === "undefined") { key = ''; }
             if (typeof frame === "undefined") { frame = null; }
+            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DYNAMIC; }
             if (typeof shapeType === "undefined") { shapeType = 0; }
-            return this._world.group.add(new Phaser.Sprite(this._game, x, y, key, frame, Phaser.Types.BODY_DYNAMIC, shapeType));
+            return this._world.group.add(new Phaser.Sprite(this._game, x, y, key, frame, bodyType, shapeType));
         };
         GameObjectFactory.prototype.dynamicTexture = /**
         * Create a new DynamicTexture with specific size.
@@ -18582,6 +18589,32 @@ var Phaser;
             DebugUtils.context.fillText('cx: ' + sprite.cameraView.x + ' cy: ' + sprite.cameraView.y + ' cw: ' + sprite.cameraView.width + ' ch: ' + sprite.cameraView.height + ' cb: ' + sprite.cameraView.bottom + ' cr: ' + sprite.cameraView.right, x, y + 70);
             DebugUtils.context.fillText('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite), x, y + 84);
         };
+        DebugUtils.renderPhysicsBodyInfo = /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function renderPhysicsBodyInfo(body, x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.context.fillStyle = color;
+            DebugUtils.context.fillText('Body ID: ' + body.name, x, y);
+            DebugUtils.context.fillText('Position x: ' + body.position.x.toFixed(1) + ' y: ' + body.position.y.toFixed(1) + ' rotation: ' + body.angle.toFixed(1), x, y + 14);
+            DebugUtils.context.fillText('World x: ' + (body.position.x * 50).toFixed(1) + ' y: ' + (body.position.y * 50).toFixed(1), x, y + 28);
+            DebugUtils.context.fillText('Velocity x: ' + body.velocity.x.toFixed(1) + ' y: ' + body.velocity.y.toFixed(1), x, y + 42);
+            if(body.shapes[0].verts.length > 0) {
+                DebugUtils.context.fillText('Vert 1 x: ' + (body.shapes[0].verts[0].x * 50) + ' y: ' + (body.shapes[0].verts[0].y * 50), x, y + 56);
+                DebugUtils.context.fillText('Vert 2 x: ' + (body.shapes[0].verts[1].x * 50) + ' y: ' + (body.shapes[0].verts[1].y * 50), x, y + 70);
+                DebugUtils.context.fillText('Vert 3 x: ' + (body.shapes[0].tverts[2].x * 50) + ' y: ' + (body.shapes[0].tverts[2].y * 50), x, y + 84);
+                DebugUtils.context.fillText('Vert 4 x: ' + (body.shapes[0].tverts[3].x * 50) + ' y: ' + (body.shapes[0].tverts[3].y * 50), x, y + 98);
+                /*
+                DebugUtils.context.fillText('Vert 1 x: ' + body.shapes[0].verts[0].x.toFixed(1) + ' y: ' + body.shapes[0].verts[0].y.toFixed(1), x, y + 56);
+                DebugUtils.context.fillText('Vert 2 x: ' + body.shapes[0].verts[1].x.toFixed(1) + ' y: ' + body.shapes[0].verts[1].y.toFixed(1), x, y + 70);
+                DebugUtils.context.fillText('Vert 3 x: ' + body.shapes[0].verts[2].x.toFixed(1) + ' y: ' + body.shapes[0].verts[2].y.toFixed(1), x, y + 84);
+                DebugUtils.context.fillText('Vert 4 x: ' + body.shapes[0].verts[3].x.toFixed(1) + ' y: ' + body.shapes[0].verts[3].y.toFixed(1), x, y + 98);
+                */
+                            }
+        };
         DebugUtils.renderSpriteBounds = function renderSpriteBounds(sprite, camera, color) {
             if (typeof camera === "undefined") { camera = null; }
             if (typeof color === "undefined") { color = 'rgba(0,255,0,0.2)'; }
@@ -18597,15 +18630,18 @@ var Phaser;
             if (typeof lineWidth === "undefined") { lineWidth = 1; }
             if (typeof fillStyle === "undefined") { fillStyle = 'rgba(0,255,0,0.2)'; }
             if (typeof sleepStyle === "undefined") { sleepStyle = 'rgba(100,100,100,0.2)'; }
-            for(var s = 0; s < body.shapes.length; s++) {
+            for(var s = 0; s < body.shapesLength; s++) {
                 DebugUtils.context.beginPath();
                 if(body.shapes[s].type == Phaser.Physics.Manager.SHAPE_TYPE_POLY) {
                     var verts = body.shapes[s].tverts;
-                    DebugUtils.context.moveTo((body.position.x + verts[0].x) * 50, (body.position.y + verts[0].y) * 50);
-                    for(var i = 0; i < verts.length; i++) {
-                        DebugUtils.context.lineTo((body.position.x + verts[i].x) * 50, (body.position.y + verts[i].y) * 50);
+                    //		            DebugUtils.context.moveTo(body.position.x * 50 + verts[0].x, body.position.y * 50 + verts[0].y);
+                    DebugUtils.context.moveTo(verts[0].x * 50, verts[0].y * 50);
+                    for(var i = 1; i < verts.length; i++) {
+                        //			            DebugUtils.context.lineTo(body.position.x * 50 + verts[i].x, body.position.y * 50 + verts[i].y);
+                        DebugUtils.context.lineTo(verts[i].x * 50, verts[i].y * 50);
                     }
-                    DebugUtils.context.lineTo((body.position.x + verts[verts.length - 1].x) * 50, (body.position.y + verts[verts.length - 1].y) * 50);
+                    //		            DebugUtils.context.lineTo(body.position.x * 50 + verts[0].x, body.position.y * 50 + verts[0].y);
+                    DebugUtils.context.lineTo(verts[0].x * 50, verts[0].y * 50);
                 } else if(body.shapes[s].type == Phaser.Physics.Manager.SHAPE_TYPE_CIRCLE) {
                     var circle = body.shapes[s];
                     DebugUtils.context.arc(circle.tc.x * 50, circle.tc.y * 50, circle.radius * 50, 0, Math.PI * 2, false);
@@ -19058,6 +19094,84 @@ var Phaser;
     })();
     Phaser.Game = Game;    
 })(Phaser || (Phaser = {}));
+/// <reference path="Game.ts" />
+/**
+* Phaser - State
+*
+* This is a base State class which can be extended if you are creating your game using TypeScript.
+*/
+var Phaser;
+(function (Phaser) {
+    var State = (function () {
+        /**
+        * State constructor
+        * Create a new <code>State</code>.
+        */
+        function State(game) {
+            this.game = game;
+            this.add = game.add;
+            this.camera = game.camera;
+            this.cache = game.cache;
+            this.input = game.input;
+            this.load = game.load;
+            this.math = game.math;
+            this.motion = game.motion;
+            this.sound = game.sound;
+            this.stage = game.stage;
+            this.time = game.time;
+            this.tweens = game.tweens;
+            this.world = game.world;
+        }
+        State.prototype.init = //  Override these in your own States
+        /**
+        * Override this method to add some load operations.
+        * If you need to use the loader, you may need to use them here.
+        */
+        function () {
+        };
+        State.prototype.create = /**
+        * This method is called after the game engine successfully switches states.
+        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+        */
+        function () {
+        };
+        State.prototype.update = /**
+        * Put update logic here.
+        */
+        function () {
+        };
+        State.prototype.render = /**
+        * Put render operations here.
+        */
+        function () {
+        };
+        State.prototype.paused = /**
+        * This method will be called when game paused.
+        */
+        function () {
+        };
+        State.prototype.destroy = /**
+        * This method will be called when the state is destroyed
+        */
+        function () {
+        };
+        return State;
+    })();
+    Phaser.State = State;    
+    /**
+    * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+    * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+    * @param object1 The first GameObject or Group to check. If null the world.group is used.
+    * @param object2 The second GameObject or Group to check.
+    * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+    * @param context The context in which the callbacks will be called
+    * @returns {boolean} true if the objects overlap, otherwise false.
+    */
+    //public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.game.callbackContext): bool {
+    //    return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
+    //}
+    })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
     /**
@@ -19400,6 +19514,206 @@ var Phaser;
     Phaser.Line = Line;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/**
+* Phaser - IntersectResult
+*
+* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
+*/
+var Phaser;
+(function (Phaser) {
+    var IntersectResult = (function () {
+        function IntersectResult() {
+            /**
+            * Did they intersect or not?
+            * @property result
+            * @type {Boolean}
+            */
+            this.result = false;
+        }
+        IntersectResult.prototype.setTo = /**
+        *
+        * @method setTo
+        * @param {Number} x1
+        * @param {Number} y1
+        * @param {Number} [x2]
+        * @param {Number} [y2]
+        * @param {Number} [width]
+        * @param {Number} [height]
+        */
+        function (x1, y1, x2, y2, width, height) {
+            if (typeof x2 === "undefined") { x2 = 0; }
+            if (typeof y2 === "undefined") { y2 = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
+            this.x = x1;
+            this.y = y1;
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.width = width;
+            this.height = height;
+        };
+        return IntersectResult;
+    })();
+    Phaser.IntersectResult = IntersectResult;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../math/Mat3.ts" />
+/**
+* Phaser - Mat3Utils
+*
+* A collection of methods useful for manipulating and performing operations on Mat3 objects.
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var Mat3Utils = (function () {
+        function Mat3Utils() { }
+        Mat3Utils.transpose = /**
+        * Transpose the values of a Mat3
+        **/
+        function transpose(source, dest) {
+            if (typeof dest === "undefined") { dest = null; }
+            if(dest === null) {
+                //  Transpose ourselves
+                var a01 = source.data[1];
+                var a02 = source.data[2];
+                var a12 = source.data[5];
+                source.data[1] = source.data[3];
+                source.data[2] = source.data[6];
+                source.data[3] = a01;
+                source.data[5] = source.data[7];
+                source.data[6] = a02;
+                source.data[7] = a12;
+            } else {
+                source.data[0] = dest.data[0];
+                source.data[1] = dest.data[3];
+                source.data[2] = dest.data[6];
+                source.data[3] = dest.data[1];
+                source.data[4] = dest.data[4];
+                source.data[5] = dest.data[7];
+                source.data[6] = dest.data[2];
+                source.data[7] = dest.data[5];
+                source.data[8] = dest.data[8];
+            }
+            return source;
+        };
+        Mat3Utils.invert = /**
+        * Inverts a Mat3
+        **/
+        function invert(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            var b01 = a22 * a11 - a12 * a21;
+            var b11 = -a22 * a10 + a12 * a20;
+            var b21 = a21 * a10 - a11 * a20;
+            //  Determinant
+            var det = a00 * b01 + a01 * b11 + a02 * b21;
+            if(!det) {
+                return null;
+            }
+            det = 1.0 / det;
+            source.data[0] = b01 * det;
+            source.data[1] = (-a22 * a01 + a02 * a21) * det;
+            source.data[2] = (a12 * a01 - a02 * a11) * det;
+            source.data[3] = b11 * det;
+            source.data[4] = (a22 * a00 - a02 * a20) * det;
+            source.data[5] = (-a12 * a00 + a02 * a10) * det;
+            source.data[6] = b21 * det;
+            source.data[7] = (-a21 * a00 + a01 * a20) * det;
+            source.data[8] = (a11 * a00 - a01 * a10) * det;
+            return source;
+        };
+        Mat3Utils.adjoint = /**
+        * Calculates the adjugate of a Mat3
+        **/
+        function adjoint(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            source.data[0] = (a11 * a22 - a12 * a21);
+            source.data[1] = (a02 * a21 - a01 * a22);
+            source.data[2] = (a01 * a12 - a02 * a11);
+            source.data[3] = (a12 * a20 - a10 * a22);
+            source.data[4] = (a00 * a22 - a02 * a20);
+            source.data[5] = (a02 * a10 - a00 * a12);
+            source.data[6] = (a10 * a21 - a11 * a20);
+            source.data[7] = (a01 * a20 - a00 * a21);
+            source.data[8] = (a00 * a11 - a01 * a10);
+            return source;
+        };
+        Mat3Utils.determinant = /**
+        * Calculates the adjugate of a Mat3
+        **/
+        function determinant(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
+        };
+        Mat3Utils.multiply = /**
+        * Multiplies two Mat3s
+        **/
+        function multiply(source, b) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            var b00 = b.data[0];
+            var b01 = b.data[1];
+            var b02 = b.data[2];
+            var b10 = b.data[3];
+            var b11 = b.data[4];
+            var b12 = b.data[5];
+            var b20 = b.data[6];
+            var b21 = b.data[7];
+            var b22 = b.data[8];
+            source.data[0] = b00 * a00 + b01 * a10 + b02 * a20;
+            source.data[1] = b00 * a01 + b01 * a11 + b02 * a21;
+            source.data[2] = b00 * a02 + b01 * a12 + b02 * a22;
+            source.data[3] = b10 * a00 + b11 * a10 + b12 * a20;
+            source.data[4] = b10 * a01 + b11 * a11 + b12 * a21;
+            source.data[5] = b10 * a02 + b11 * a12 + b12 * a22;
+            source.data[6] = b20 * a00 + b21 * a10 + b22 * a20;
+            source.data[7] = b20 * a01 + b21 * a11 + b22 * a21;
+            source.data[8] = b20 * a02 + b21 * a12 + b22 * a22;
+            return source;
+        };
+        Mat3Utils.fromQuaternion = function fromQuaternion() {
+        };
+        Mat3Utils.normalFromMat4 = function normalFromMat4() {
+        };
+        return Mat3Utils;
+    })();
+    Phaser.Mat3Utils = Mat3Utils;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
 /// <reference path="../geom/Point.ts" />
 /// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../geom/Circle.ts" />
@@ -19563,161 +19877,6 @@ var Phaser;
     Phaser.CircleUtils = CircleUtils;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../math/Vec2.ts" />
-/// <reference path="../math/Mat3.ts" />
-/**
-* Phaser - Mat3Utils
-*
-* A collection of methods useful for manipulating and performing operations on Mat3 objects.
-*
-*/
-var Phaser;
-(function (Phaser) {
-    var Mat3Utils = (function () {
-        function Mat3Utils() { }
-        Mat3Utils.transpose = /**
-        * Transpose the values of a Mat3
-        **/
-        function transpose(source, dest) {
-            if (typeof dest === "undefined") { dest = null; }
-            if(dest === null) {
-                //  Transpose ourselves
-                var a01 = source.data[1];
-                var a02 = source.data[2];
-                var a12 = source.data[5];
-                source.data[1] = source.data[3];
-                source.data[2] = source.data[6];
-                source.data[3] = a01;
-                source.data[5] = source.data[7];
-                source.data[6] = a02;
-                source.data[7] = a12;
-            } else {
-                source.data[0] = dest.data[0];
-                source.data[1] = dest.data[3];
-                source.data[2] = dest.data[6];
-                source.data[3] = dest.data[1];
-                source.data[4] = dest.data[4];
-                source.data[5] = dest.data[7];
-                source.data[6] = dest.data[2];
-                source.data[7] = dest.data[5];
-                source.data[8] = dest.data[8];
-            }
-            return source;
-        };
-        Mat3Utils.invert = /**
-        * Inverts a Mat3
-        **/
-        function invert(source) {
-            var a00 = source.data[0];
-            var a01 = source.data[1];
-            var a02 = source.data[2];
-            var a10 = source.data[3];
-            var a11 = source.data[4];
-            var a12 = source.data[5];
-            var a20 = source.data[6];
-            var a21 = source.data[7];
-            var a22 = source.data[8];
-            var b01 = a22 * a11 - a12 * a21;
-            var b11 = -a22 * a10 + a12 * a20;
-            var b21 = a21 * a10 - a11 * a20;
-            //  Determinant
-            var det = a00 * b01 + a01 * b11 + a02 * b21;
-            if(!det) {
-                return null;
-            }
-            det = 1.0 / det;
-            source.data[0] = b01 * det;
-            source.data[1] = (-a22 * a01 + a02 * a21) * det;
-            source.data[2] = (a12 * a01 - a02 * a11) * det;
-            source.data[3] = b11 * det;
-            source.data[4] = (a22 * a00 - a02 * a20) * det;
-            source.data[5] = (-a12 * a00 + a02 * a10) * det;
-            source.data[6] = b21 * det;
-            source.data[7] = (-a21 * a00 + a01 * a20) * det;
-            source.data[8] = (a11 * a00 - a01 * a10) * det;
-            return source;
-        };
-        Mat3Utils.adjoint = /**
-        * Calculates the adjugate of a Mat3
-        **/
-        function adjoint(source) {
-            var a00 = source.data[0];
-            var a01 = source.data[1];
-            var a02 = source.data[2];
-            var a10 = source.data[3];
-            var a11 = source.data[4];
-            var a12 = source.data[5];
-            var a20 = source.data[6];
-            var a21 = source.data[7];
-            var a22 = source.data[8];
-            source.data[0] = (a11 * a22 - a12 * a21);
-            source.data[1] = (a02 * a21 - a01 * a22);
-            source.data[2] = (a01 * a12 - a02 * a11);
-            source.data[3] = (a12 * a20 - a10 * a22);
-            source.data[4] = (a00 * a22 - a02 * a20);
-            source.data[5] = (a02 * a10 - a00 * a12);
-            source.data[6] = (a10 * a21 - a11 * a20);
-            source.data[7] = (a01 * a20 - a00 * a21);
-            source.data[8] = (a00 * a11 - a01 * a10);
-            return source;
-        };
-        Mat3Utils.determinant = /**
-        * Calculates the adjugate of a Mat3
-        **/
-        function determinant(source) {
-            var a00 = source.data[0];
-            var a01 = source.data[1];
-            var a02 = source.data[2];
-            var a10 = source.data[3];
-            var a11 = source.data[4];
-            var a12 = source.data[5];
-            var a20 = source.data[6];
-            var a21 = source.data[7];
-            var a22 = source.data[8];
-            return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
-        };
-        Mat3Utils.multiply = /**
-        * Multiplies two Mat3s
-        **/
-        function multiply(source, b) {
-            var a00 = source.data[0];
-            var a01 = source.data[1];
-            var a02 = source.data[2];
-            var a10 = source.data[3];
-            var a11 = source.data[4];
-            var a12 = source.data[5];
-            var a20 = source.data[6];
-            var a21 = source.data[7];
-            var a22 = source.data[8];
-            var b00 = b.data[0];
-            var b01 = b.data[1];
-            var b02 = b.data[2];
-            var b10 = b.data[3];
-            var b11 = b.data[4];
-            var b12 = b.data[5];
-            var b20 = b.data[6];
-            var b21 = b.data[7];
-            var b22 = b.data[8];
-            source.data[0] = b00 * a00 + b01 * a10 + b02 * a20;
-            source.data[1] = b00 * a01 + b01 * a11 + b02 * a21;
-            source.data[2] = b00 * a02 + b01 * a12 + b02 * a22;
-            source.data[3] = b10 * a00 + b11 * a10 + b12 * a20;
-            source.data[4] = b10 * a01 + b11 * a11 + b12 * a21;
-            source.data[5] = b10 * a02 + b11 * a12 + b12 * a22;
-            source.data[6] = b20 * a00 + b21 * a10 + b22 * a20;
-            source.data[7] = b20 * a01 + b21 * a11 + b22 * a21;
-            source.data[8] = b20 * a02 + b21 * a12 + b22 * a22;
-            return source;
-        };
-        Mat3Utils.fromQuaternion = function fromQuaternion() {
-        };
-        Mat3Utils.normalFromMat4 = function normalFromMat4() {
-        };
-        return Mat3Utils;
-    })();
-    Phaser.Mat3Utils = Mat3Utils;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
 /// <reference path="../geom/Point.ts" />
 /// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../geom/Circle.ts" />
@@ -19745,126 +19904,3 @@ var Phaser;
     })();
     Phaser.PixelUtils = PixelUtils;    
 })(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/**
-* Phaser - IntersectResult
-*
-* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
-*/
-var Phaser;
-(function (Phaser) {
-    var IntersectResult = (function () {
-        function IntersectResult() {
-            /**
-            * Did they intersect or not?
-            * @property result
-            * @type {Boolean}
-            */
-            this.result = false;
-        }
-        IntersectResult.prototype.setTo = /**
-        *
-        * @method setTo
-        * @param {Number} x1
-        * @param {Number} y1
-        * @param {Number} [x2]
-        * @param {Number} [y2]
-        * @param {Number} [width]
-        * @param {Number} [height]
-        */
-        function (x1, y1, x2, y2, width, height) {
-            if (typeof x2 === "undefined") { x2 = 0; }
-            if (typeof y2 === "undefined") { y2 = 0; }
-            if (typeof width === "undefined") { width = 0; }
-            if (typeof height === "undefined") { height = 0; }
-            this.x = x1;
-            this.y = y1;
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.width = width;
-            this.height = height;
-        };
-        return IntersectResult;
-    })();
-    Phaser.IntersectResult = IntersectResult;    
-})(Phaser || (Phaser = {}));
-/// <reference path="Game.ts" />
-/**
-* Phaser - State
-*
-* This is a base State class which can be extended if you are creating your game using TypeScript.
-*/
-var Phaser;
-(function (Phaser) {
-    var State = (function () {
-        /**
-        * State constructor
-        * Create a new <code>State</code>.
-        */
-        function State(game) {
-            this.game = game;
-            this.add = game.add;
-            this.camera = game.camera;
-            this.cache = game.cache;
-            this.input = game.input;
-            this.load = game.load;
-            this.math = game.math;
-            this.motion = game.motion;
-            this.sound = game.sound;
-            this.stage = game.stage;
-            this.time = game.time;
-            this.tweens = game.tweens;
-            this.world = game.world;
-        }
-        State.prototype.init = //  Override these in your own States
-        /**
-        * Override this method to add some load operations.
-        * If you need to use the loader, you may need to use them here.
-        */
-        function () {
-        };
-        State.prototype.create = /**
-        * This method is called after the game engine successfully switches states.
-        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
-        */
-        function () {
-        };
-        State.prototype.update = /**
-        * Put update logic here.
-        */
-        function () {
-        };
-        State.prototype.render = /**
-        * Put render operations here.
-        */
-        function () {
-        };
-        State.prototype.paused = /**
-        * This method will be called when game paused.
-        */
-        function () {
-        };
-        State.prototype.destroy = /**
-        * This method will be called when the state is destroyed
-        */
-        function () {
-        };
-        return State;
-    })();
-    Phaser.State = State;    
-    /**
-    * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
-    * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-    * @param object1 The first GameObject or Group to check. If null the world.group is used.
-    * @param object2 The second GameObject or Group to check.
-    * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-    * @param context The context in which the callbacks will be called
-    * @returns {boolean} true if the objects overlap, otherwise false.
-    */
-    //public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.game.callbackContext): bool {
-    //    return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
-    //}
-    })(Phaser || (Phaser = {}));

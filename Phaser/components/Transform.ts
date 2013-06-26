@@ -1,5 +1,6 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../math/Mat3.ts" />
+/// <reference path="../geom/Point.ts" />
 
 /**
 * Phaser - Components - Transform
@@ -98,7 +99,7 @@ module Phaser.Components {
             this._halfSize.y = this.parent.height / 2;
             this._offset.x = this.origin.x * this.parent.width;
             this._offset.y = this.origin.y * this.parent.height;
-            this._angle = Math.atan2(this.halfHeight - this._offset.y, this.halfWidth - this._offset.x);
+            this._angle = Math.atan2(this.halfHeight - this._offset.x, this.halfWidth - this._offset.y);
             this._distance = Math.sqrt(((this._offset.x - this._halfSize.x) * (this._offset.x - this._halfSize.x)) + ((this._offset.y - this._halfSize.y) * (this._offset.y - this._halfSize.y)));
             this._size.x = this.parent.width;
             this._size.y = this.parent.height;
@@ -240,22 +241,22 @@ module Phaser.Components {
         /**
          * Scale of the object. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
          */
-        public scale: Phaser.Vec2;
+        public scale: Vec2;
 
         /**
          * Skew the object along the x and y axis. A skew value of 0 is no skew.
          */
-        public skew: Phaser.Vec2;
+        public skew: Vec2;
 
         /**
          * The influence of camera movement upon the object, if supported.
          */
-        public scrollFactor: Phaser.Vec2;
+        public scrollFactor: Vec2;
 
         /**
          * The origin is the point around which scale and rotation takes place and defaults to the top-left of the sprite.
          */
-        public origin: Phaser.Vec2;
+        public origin: Vec2;
 
         /**
          * This value is added to the rotation of the object.

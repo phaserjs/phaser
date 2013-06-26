@@ -33,8 +33,10 @@ module Phaser.Physics {
         findEdgeByPoint(p: Phaser.Vec2, minDist: number): number;
         findVertexByPoint(p: Phaser.Vec2, minDist: number): number;
 
+        //  The verts of the shape (in local coordinate space)
         verts: Phaser.Vec2[];
         planes: Phaser.Physics.Plane[];
+        //  The translated verts (in world space)
         tverts: Phaser.Vec2[];
         tplanes: Phaser.Physics.Plane[];
         convexity: bool;

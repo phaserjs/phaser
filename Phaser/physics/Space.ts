@@ -723,7 +723,7 @@ module Phaser.Physics {
 
             Manager.dump("Velocity Solvers", this.bodies[1]);
 
-            // 6) Intergrate position
+            // 6) Integrate position
             for (var i = 0; i < this._bl; i++)
             {
                 if (this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake)

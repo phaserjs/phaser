@@ -51,15 +51,23 @@ module.exports = function (grunt) {
                     comments: true
                 }
             },
-            fx: {
-                src: ['SpecialFX/**/*.ts'],
-                dest: 'build/phaser-fx.js',
-                options: {
-                    target: 'ES5',
-                    declaration: true,
-                    comments: true
-                }
-            }
+	    //tests: {
+	//	src: ['Tests/**/*.ts'],
+	//	options: {
+	//	    target: 'ES5',
+	//	    declaration: true,
+	//	    comments: true
+	//	}
+	  //  }
+            //fx: {
+            //    src: ['SpecialFX/**/*.ts'],
+            //    dest: 'build/phaser-fx.js',
+            //    options: {
+            //        target: 'ES5',
+            //        declaration: true,
+            //        comments: true
+            //    }
+            //}
         },
         copy: {
             main: {

@@ -6666,10 +6666,11 @@ module Phaser {
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
         * @param [shapeType] The default body shape is either 0 for a Box or 1 for a Circle. See Sprite.body.addShape for custom shapes (polygons, etc)
         * @returns {Sprite} The newly created sprite object.
         */
-        public physicsSprite(x: number, y: number, key?: string, frame?, shapeType?: number): Sprite;
+        public physicsSprite(x: number, y: number, key?: string, frame?, bodyType?: number, shapeType?: number): Sprite;
         /**
         * Create a new DynamicTexture with specific size.
         *
@@ -9300,6 +9301,13 @@ module Phaser {
         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
         static renderSpriteInfo(sprite: Sprite, x: number, y: number, color?: string): void;
+        /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        static renderPhysicsBodyInfo(body: Physics.Body, x: number, y: number, color?: string): void;
         static renderSpriteBounds(sprite: Sprite, camera?: Camera, color?: string): void;
         static renderPhysicsBody(body: Physics.Body, lineWidth?: number, fillStyle?: string, sleepStyle?: string): void;
     }
@@ -9543,6 +9551,110 @@ module Phaser {
     }
 }
 /**
+* Phaser - State
+*
+* This is a base State class which can be extended if you are creating your game using TypeScript.
+*/
+module Phaser {
+    class State {
+        /**
+        * State constructor
+        * Create a new <code>State</code>.
+        */
+        constructor(game: Game);
+        /**
+        * Reference to Game.
+        */
+        public game: Game;
+        /**
+        * Currently used camera.
+        * @type {Camera}
+        */
+        public camera: Camera;
+        /**
+        * Reference to the assets cache.
+        * @type {Cache}
+        */
+        public cache: Cache;
+        /**
+        * Reference to the GameObject Factory.
+        * @type {GameObjectFactory}
+        */
+        public add: GameObjectFactory;
+        /**
+        * Reference to the input manager
+        * @type {Input}
+        */
+        public input: Input;
+        /**
+        * Reference to the assets loader.
+        * @type {Loader}
+        */
+        public load: Loader;
+        /**
+        * Reference to the math helper.
+        * @type {GameMath}
+        */
+        public math: GameMath;
+        /**
+        * Reference to the motion helper.
+        * @type {Motion}
+        */
+        public motion: Motion;
+        /**
+        * Reference to the sound manager.
+        * @type {SoundManager}
+        */
+        public sound: SoundManager;
+        /**
+        * Reference to the stage.
+        * @type {Stage}
+        */
+        public stage: Stage;
+        /**
+        * Reference to game clock.
+        * @type {Time}
+        */
+        public time: Time;
+        /**
+        * Reference to the tween manager.
+        * @type {TweenManager}
+        */
+        public tweens: TweenManager;
+        /**
+        * Reference to the world.
+        * @type {World}
+        */
+        public world: World;
+        /**
+        * Override this method to add some load operations.
+        * If you need to use the loader, you may need to use them here.
+        */
+        public init(): void;
+        /**
+        * This method is called after the game engine successfully switches states.
+        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+        */
+        public create(): void;
+        /**
+        * Put update logic here.
+        */
+        public update(): void;
+        /**
+        * Put render operations here.
+        */
+        public render(): void;
+        /**
+        * This method will be called when game paused.
+        */
+        public paused(): void;
+        /**
+        * This method will be called when the state is destroyed
+        */
+        public destroy(): void;
+    }
+}
+/**
 * Phaser - Components - Debug
 *
 *
@@ -9723,6 +9835,104 @@ module Phaser {
     }
 }
 /**
+* Phaser - IntersectResult
+*
+* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
+*/
+module Phaser {
+    class IntersectResult {
+        /**
+        * Did they intersect or not?
+        * @property result
+        * @type {Boolean}
+        */
+        public result: bool;
+        /**
+        * @property x
+        * @type {Number}
+        */
+        public x: number;
+        /**
+        * @property y
+        * @type {Number}
+        */
+        public y: number;
+        /**
+        * @property x1
+        * @type {Number}
+        */
+        public x1: number;
+        /**
+        * @property y1
+        * @type {Number}
+        */
+        public y1: number;
+        /**
+        * @property x2
+        * @type {Number}
+        */
+        public x2: number;
+        /**
+        * @property y2
+        * @type {Number}
+        */
+        public y2: number;
+        /**
+        * @property width
+        * @type {Number}
+        */
+        public width: number;
+        /**
+        * @property height
+        * @type {Number}
+        */
+        public height: number;
+        /**
+        *
+        * @method setTo
+        * @param {Number} x1
+        * @param {Number} y1
+        * @param {Number} [x2]
+        * @param {Number} [y2]
+        * @param {Number} [width]
+        * @param {Number} [height]
+        */
+        public setTo(x1: number, y1: number, x2?: number, y2?: number, width?: number, height?: number): void;
+    }
+}
+/**
+* Phaser - Mat3Utils
+*
+* A collection of methods useful for manipulating and performing operations on Mat3 objects.
+*
+*/
+module Phaser {
+    class Mat3Utils {
+        /**
+        * Transpose the values of a Mat3
+        **/
+        static transpose(source: Mat3, dest?: Mat3): Mat3;
+        /**
+        * Inverts a Mat3
+        **/
+        static invert(source: Mat3): Mat3;
+        /**
+        * Calculates the adjugate of a Mat3
+        **/
+        static adjoint(source: Mat3): Mat3;
+        /**
+        * Calculates the adjugate of a Mat3
+        **/
+        static determinant(source: Mat3): number;
+        /**
+        * Multiplies two Mat3s
+        **/
+        static multiply(source: Mat3, b: Mat3): Mat3;
+        static fromQuaternion(): void;
+        static normalFromMat4(): void;
+    }
+}
+/**
 * Phaser - CircleUtils
 *
 * A collection of methods useful for manipulating and comparing Circle objects.
@@ -9806,38 +10016,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - Mat3Utils
-*
-* A collection of methods useful for manipulating and performing operations on Mat3 objects.
-*
-*/
-module Phaser {
-    class Mat3Utils {
-        /**
-        * Transpose the values of a Mat3
-        **/
-        static transpose(source: Mat3, dest?: Mat3): Mat3;
-        /**
-        * Inverts a Mat3
-        **/
-        static invert(source: Mat3): Mat3;
-        /**
-        * Calculates the adjugate of a Mat3
-        **/
-        static adjoint(source: Mat3): Mat3;
-        /**
-        * Calculates the adjugate of a Mat3
-        **/
-        static determinant(source: Mat3): number;
-        /**
-        * Multiplies two Mat3s
-        **/
-        static multiply(source: Mat3, b: Mat3): Mat3;
-        static fromQuaternion(): void;
-        static normalFromMat4(): void;
-    }
-}
-/**
 * Phaser - PixelUtils
 *
 * A collection of methods useful for manipulating pixels.
@@ -9856,175 +10034,5 @@ module Phaser {
         */
         static pixelContext: CanvasRenderingContext2D;
         static getPixel(key: string, x: number, y: number): number;
-    }
-}
-/**
-* Phaser - IntersectResult
-*
-* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
-*/
-module Phaser {
-    class IntersectResult {
-        /**
-        * Did they intersect or not?
-        * @property result
-        * @type {Boolean}
-        */
-        public result: bool;
-        /**
-        * @property x
-        * @type {Number}
-        */
-        public x: number;
-        /**
-        * @property y
-        * @type {Number}
-        */
-        public y: number;
-        /**
-        * @property x1
-        * @type {Number}
-        */
-        public x1: number;
-        /**
-        * @property y1
-        * @type {Number}
-        */
-        public y1: number;
-        /**
-        * @property x2
-        * @type {Number}
-        */
-        public x2: number;
-        /**
-        * @property y2
-        * @type {Number}
-        */
-        public y2: number;
-        /**
-        * @property width
-        * @type {Number}
-        */
-        public width: number;
-        /**
-        * @property height
-        * @type {Number}
-        */
-        public height: number;
-        /**
-        *
-        * @method setTo
-        * @param {Number} x1
-        * @param {Number} y1
-        * @param {Number} [x2]
-        * @param {Number} [y2]
-        * @param {Number} [width]
-        * @param {Number} [height]
-        */
-        public setTo(x1: number, y1: number, x2?: number, y2?: number, width?: number, height?: number): void;
-    }
-}
-/**
-* Phaser - State
-*
-* This is a base State class which can be extended if you are creating your game using TypeScript.
-*/
-module Phaser {
-    class State {
-        /**
-        * State constructor
-        * Create a new <code>State</code>.
-        */
-        constructor(game: Game);
-        /**
-        * Reference to Game.
-        */
-        public game: Game;
-        /**
-        * Currently used camera.
-        * @type {Camera}
-        */
-        public camera: Camera;
-        /**
-        * Reference to the assets cache.
-        * @type {Cache}
-        */
-        public cache: Cache;
-        /**
-        * Reference to the GameObject Factory.
-        * @type {GameObjectFactory}
-        */
-        public add: GameObjectFactory;
-        /**
-        * Reference to the input manager
-        * @type {Input}
-        */
-        public input: Input;
-        /**
-        * Reference to the assets loader.
-        * @type {Loader}
-        */
-        public load: Loader;
-        /**
-        * Reference to the math helper.
-        * @type {GameMath}
-        */
-        public math: GameMath;
-        /**
-        * Reference to the motion helper.
-        * @type {Motion}
-        */
-        public motion: Motion;
-        /**
-        * Reference to the sound manager.
-        * @type {SoundManager}
-        */
-        public sound: SoundManager;
-        /**
-        * Reference to the stage.
-        * @type {Stage}
-        */
-        public stage: Stage;
-        /**
-        * Reference to game clock.
-        * @type {Time}
-        */
-        public time: Time;
-        /**
-        * Reference to the tween manager.
-        * @type {TweenManager}
-        */
-        public tweens: TweenManager;
-        /**
-        * Reference to the world.
-        * @type {World}
-        */
-        public world: World;
-        /**
-        * Override this method to add some load operations.
-        * If you need to use the loader, you may need to use them here.
-        */
-        public init(): void;
-        /**
-        * This method is called after the game engine successfully switches states.
-        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
-        */
-        public create(): void;
-        /**
-        * Put update logic here.
-        */
-        public update(): void;
-        /**
-        * Put render operations here.
-        */
-        public render(): void;
-        /**
-        * This method will be called when game paused.
-        */
-        public paused(): void;
-        /**
-        * This method will be called when the state is destroyed
-        */
-        public destroy(): void;
     }
 }

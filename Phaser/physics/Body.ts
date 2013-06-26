@@ -91,7 +91,7 @@ module Phaser.Physics {
         /**
          * Reference to Phaser.Game
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Reference to the parent Sprite
@@ -461,7 +461,7 @@ module Phaser.Physics {
 
 	        this.bounds.clear();
 
-	        for (var i = 0; i < this.shapes.length; i++)
+	        for (var i = 0; i < this.shapesLength; i++)
 	        {
 	            var shape: IShape = this.shapes[i];
 	            shape.cacheData(this.transform);
@@ -534,13 +534,13 @@ module Phaser.Physics {
 
 	        this.angle += this.angularVelocity * dt;
 
-	        if (this.sprite)
-	        {
-	            this.sprite.x = this.position.x * 50;
-	            this.sprite.y = this.position.y * 50;
+            if (this.sprite)
+            {
+                this.sprite.x = this.position.x * 50;
+                this.sprite.y = this.position.y * 50;
                 //  Obey fixed rotation?
-	            this.sprite.rotation = this.game.math.radiansToDegrees(this.angle);
-	        }
+                this.sprite.rotation = this.game.math.radiansToDegrees(this.angle);
+            }
 
 	    }
 

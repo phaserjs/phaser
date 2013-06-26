@@ -1,12 +1,6 @@
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../build/phaser.d.ts" />
-        /**
-        * Phaser - FX - Camera - Flash
-        *
-        * The camera is filled with the given color and returns to normal at the given duration.
-        */
         (function (Camera) {
             var Flash = (function () {
                 function Flash(game) {
@@ -15,21 +9,12 @@ var Phaser;
                     this._fxFlashAlpha = 0;
                     this._game = game;
                 }
-                Flash.prototype.start = /**
-                * The camera is filled with this color and returns to normal at the given duration.
-                *
-                * @param	Color		The color you want to use in 0xRRGGBB format, i.e. 0xffffff for white.
-                * @param	Duration	How long it takes for the flash to fade.
-                * @param	OnComplete	An optional function you want to run when the flash finishes. Set to null for no callback.
-                * @param	Force		Force an already running flash effect to reset.
-                */
-                function (color, duration, onComplete, force) {
+                Flash.prototype.start = function (color, duration, onComplete, force) {
                     if (typeof color === "undefined") { color = 0xffffff; }
                     if (typeof duration === "undefined") { duration = 1; }
                     if (typeof onComplete === "undefined") { onComplete = null; }
                     if (typeof force === "undefined") { force = false; }
                     if(force === false && this._fxFlashAlpha > 0) {
-                        //  You can't flash again unless you force it
                         return;
                     }
                     if(duration <= 0) {
@@ -44,7 +29,6 @@ var Phaser;
                     this._fxFlashComplete = onComplete;
                 };
                 Flash.prototype.postUpdate = function () {
-                    //  Update the Flash effect
                     if(this._fxFlashAlpha > 0) {
                         this._fxFlashAlpha -= this._game.time.elapsed / this._fxFlashDuration;
                         if(this._game.math.roundTo(this._fxFlashAlpha, -2) <= 0) {
@@ -72,38 +56,17 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../build/phaser.d.ts" />
-        /**
-        * Phaser - FX - Camera - Border
-        *
-        * Creates a border around a camera.
-        */
         (function (Camera) {
             var Border = (function () {
                 function Border(game, parent) {
-                    /**
-                    * Whether render border of this camera or not. (default is false)
-                    * @type {boolean}
-                    */
                     this.showBorder = false;
-                    /**
-                    * Color of border of this camera. (in css color string)
-                    * @type {string}
-                    */
                     this.borderColor = 'rgb(255,255,255)';
                     this._game = game;
                     this._parent = parent;
                 }
-                Border.prototype.start = /**
-                * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
-                */
-                function () {
+                Border.prototype.start = function () {
                 };
-                Border.prototype.postRender = /**
-                * Post-render is called during the objects render cycle, after the children/image data has been rendered.
-                * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
-                */
-                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                Border.prototype.postRender = function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
                     if(this.showBorder == true) {
                         this._game.stage.context.strokeStyle = this.borderColor;
                         this._game.stage.context.lineWidth = 1;
@@ -122,50 +85,23 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../build/phaser.d.ts" />
-        /**
-        * Phaser - FX - Camera - Template
-        *
-        * A Template FX file you can use to create your own Camera FX.
-        * If you don't use any of the methods below (i.e. preUpdate, render, etc) then DELETE THEM to avoid un-necessary calls by the FXManager.
-        */
         (function (Camera) {
             var Template = (function () {
                 function Template(game, parent) {
                     this._game = game;
                     this._parent = parent;
                 }
-                Template.prototype.start = /**
-                * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
-                */
-                function () {
+                Template.prototype.start = function () {
                 };
-                Template.prototype.preUpdate = /**
-                * Pre-update is called at the start of the objects update cycle, before any other updates have taken place.
-                */
-                function () {
+                Template.prototype.preUpdate = function () {
                 };
-                Template.prototype.postUpdate = /**
-                * Post-update is called at the end of the objects update cycle, after other update logic has taken place.
-                */
-                function () {
+                Template.prototype.postUpdate = function () {
                 };
-                Template.prototype.preRender = /**
-                * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
-                * It happens directly AFTER a canvas context.save has happened if added to a Camera.
-                */
-                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                Template.prototype.preRender = function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
                 };
-                Template.prototype.render = /**
-                * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
-                */
-                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                Template.prototype.render = function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
                 };
-                Template.prototype.postRender = /**
-                * Post-render is called during the objects render cycle, after the children/image data has been rendered.
-                * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
-                */
-                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+                Template.prototype.postRender = function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
                 };
                 return Template;
             })();
@@ -178,13 +114,6 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../build/phaser.d.ts" />
-        /**
-        * Phaser - FX - Camera - Mirror
-        *
-        * Creates a mirror effect for a camera.
-        * Can mirror the camera image horizontally, vertically or both with an optional fill color overlay.
-        */
         (function (Camera) {
             var Mirror = (function () {
                 function Mirror(game, parent) {
@@ -199,11 +128,7 @@ var Phaser;
                     this._canvas.height = parent.height;
                     this._context = this._canvas.getContext('2d');
                 }
-                Mirror.prototype.start = /**
-                * This is the rectangular region to grab from the Camera used in the Mirror effect
-                * It is rendered to the Stage at Mirror.x/y (note the use of Stage coordinates, not World coordinates)
-                */
-                function (x, y, region, fillColor) {
+                Mirror.prototype.start = function (x, y, region, fillColor) {
                     if (typeof fillColor === "undefined") { fillColor = 'rgba(0, 0, 100, 0.5)'; }
                     this.x = x;
                     this.y = y;
@@ -216,15 +141,7 @@ var Phaser;
                         this._context.fillStyle = this._mirrorColor;
                     }
                 };
-                Mirror.prototype.postRender = /**
-                * Post-render is called during the objects render cycle, after the children/image data has been rendered.
-                * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
-                */
-                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
-                    //if (this.cls)
-                    //{
-                    //    this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
-                    //}
+                Mirror.prototype.postRender = function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
                     this._sx = cameraX + this._mirrorX;
                     this._sy = cameraY + this._mirrorY;
                     if(this.flipX == true && this.flipY == false) {
@@ -232,16 +149,7 @@ var Phaser;
                     } else if(this.flipY == true && this.flipX == false) {
                         this._sy = 0;
                     }
-                    this._context.drawImage(this._game.stage.canvas, //	Source Image
-                    this._sx, //	Source X (location within the source image)
-                    this._sy, //	Source Y
-                    this._mirrorWidth, //	Source Width
-                    this._mirrorHeight, //	Source Height
-                    0, //	Destination X (where on the canvas it'll be drawn)
-                    0, //	Destination Y
-                    this._mirrorWidth, //	Destination Width (always same as Source Width unless scaled)
-                    this._mirrorHeight);
-                    //	Destination Height (always same as Source Height unless scaled)
+                    this._context.drawImage(this._game.stage.canvas, this._sx, this._sy, this._mirrorWidth, this._mirrorHeight, 0, 0, this._mirrorWidth, this._mirrorHeight);
                     if(this._mirrorColor) {
                         this._context.fillRect(0, 0, this._mirrorWidth, this._mirrorHeight);
                     }
@@ -267,49 +175,19 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../build/phaser.d.ts" />
-        /**
-        * Phaser - FX - Camera - Shadow
-        *
-        * Creates a drop-shadow effect on the camera window.
-        */
         (function (Camera) {
             var Shadow = (function () {
                 function Shadow(game, parent) {
-                    /**
-                    * Render camera shadow or not. (default is false)
-                    * @type {boolean}
-                    */
                     this.showShadow = false;
-                    /**
-                    * Color of shadow, in css color string.
-                    * @type {string}
-                    */
                     this.shadowColor = 'rgb(0,0,0)';
-                    /**
-                    * Blur factor of shadow.
-                    * @type {number}
-                    */
                     this.shadowBlur = 10;
-                    /**
-                    * Offset of the shadow from camera's position.
-                    * @type {Point}
-                    */
                     this.shadowOffset = new Phaser.Point(4, 4);
                     this._game = game;
                     this._parent = parent;
                 }
-                Shadow.prototype.start = /**
-                * You can name the function that starts the effect whatever you like, but we used 'start' in our effects.
-                */
-                function () {
+                Shadow.prototype.start = function () {
                 };
-                Shadow.prototype.preRender = /**
-                * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
-                * It happens directly AFTER a canvas context.save has happened if added to a Camera.
-                */
-                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
-                    //  Shadow
+                Shadow.prototype.preRender = function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
                     if(this.showShadow == true) {
                         this._game.stage.context.shadowColor = this.shadowColor;
                         this._game.stage.context.shadowBlur = this.shadowBlur;
@@ -317,11 +195,7 @@ var Phaser;
                         this._game.stage.context.shadowOffsetY = this.shadowOffset.y;
                     }
                 };
-                Shadow.prototype.render = /**
-                * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
-                */
-                function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
-                    //  Shadow off
+                Shadow.prototype.render = function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
                     if(this.showShadow == true) {
                         this._game.stage.context.shadowBlur = 0;
                         this._game.stage.context.shadowOffsetX = 0;
@@ -339,12 +213,6 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../build/phaser.d.ts" />
-        /**
-        * Phaser - FX - Camera - Scanlines
-        *
-        * Give your game that classic retro feel!
-        */
         (function (Camera) {
             var Scanlines = (function () {
                 function Scanlines(game, parent) {
@@ -370,12 +238,6 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../build/phaser.d.ts" />
-        /**
-        * Phaser - FX - Camera - Shake
-        *
-        * A simple camera shake effect.
-        */
         (function (Camera) {
             var Shake = (function () {
                 function Shake(game, camera) {
@@ -392,16 +254,7 @@ var Phaser;
                 Shake.SHAKE_BOTH_AXES = 0;
                 Shake.SHAKE_HORIZONTAL_ONLY = 1;
                 Shake.SHAKE_VERTICAL_ONLY = 2;
-                Shake.prototype.start = /**
-                * A simple camera shake effect.
-                *
-                * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
-                * @param	Duration	The length in seconds that the shaking effect should last.
-                * @param	OnComplete	A function you want to run when the shake effect finishes.
-                * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-                * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
-                */
-                function (intensity, duration, onComplete, force, direction) {
+                Shake.prototype.start = function (intensity, duration, onComplete, force, direction) {
                     if (typeof intensity === "undefined") { intensity = 0.05; }
                     if (typeof duration === "undefined") { duration = 0.5; }
                     if (typeof onComplete === "undefined") { onComplete = null; }
@@ -410,7 +263,6 @@ var Phaser;
                     if(!force && ((this._fxShakeOffset.x != 0) || (this._fxShakeOffset.y != 0))) {
                         return;
                     }
-                    //  If a shake is not already running we need to store the offsets here
                     if(this._fxShakeOffset.x == 0 && this._fxShakeOffset.y == 0) {
                         this._fxShakePrevX = this._parent.x;
                         this._fxShakePrevY = this._parent.y;
@@ -422,7 +274,6 @@ var Phaser;
                     this._fxShakeOffset.setTo(0, 0);
                 };
                 Shake.prototype.postUpdate = function () {
-                    //  Update the "shake" special effect
                     if(this._fxShakeDuration > 0) {
                         this._fxShakeDuration -= this._game.time.elapsed;
                         if(this._game.math.roundTo(this._fxShakeDuration, -2) <= 0) {
@@ -435,11 +286,9 @@ var Phaser;
                             }
                         } else {
                             if((this._fxShakeDirection == Shake.SHAKE_BOTH_AXES) || (this._fxShakeDirection == Shake.SHAKE_HORIZONTAL_ONLY)) {
-                                //this._fxShakeOffset.x = ((this._game.math.random() * this._fxShakeIntensity * this.worldView.width * 2 - this._fxShakeIntensity * this.worldView.width) * this._zoom;
                                 this._fxShakeOffset.x = (this._game.math.random() * this._fxShakeIntensity * this._parent.worldView.width * 2 - this._fxShakeIntensity * this._parent.worldView.width);
                             }
                             if((this._fxShakeDirection == Shake.SHAKE_BOTH_AXES) || (this._fxShakeDirection == Shake.SHAKE_VERTICAL_ONLY)) {
-                                //this._fxShakeOffset.y = (this._game.math.random() * this._fxShakeIntensity * this.worldView.height * 2 - this._fxShakeIntensity * this.worldView.height) * this._zoom;
                                 this._fxShakeOffset.y = (this._game.math.random() * this._fxShakeIntensity * this._parent.worldView.height * 2 - this._fxShakeIntensity * this._parent.worldView.height);
                             }
                         }
@@ -462,12 +311,6 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     (function (FX) {
-        /// <reference path="../../build/phaser.d.ts" />
-        /**
-        * Phaser - FX - Camera - Fade
-        *
-        * The camera is filled with the given color and returns to normal at the given duration.
-        */
         (function (Camera) {
             var Fade = (function () {
                 function Fade(game) {
@@ -476,21 +319,12 @@ var Phaser;
                     this._fxFadeAlpha = 0;
                     this._game = game;
                 }
-                Fade.prototype.start = /**
-                * The camera is gradually filled with this color.
-                *
-                * @param	Color		The color you want to use in 0xRRGGBB format, i.e. 0xffffff for white.
-                * @param	Duration	How long it takes for the flash to fade.
-                * @param	OnComplete	An optional function you want to run when the flash finishes. Set to null for no callback.
-                * @param	Force		Force an already running flash effect to reset.
-                */
-                function (color, duration, onComplete, force) {
+                Fade.prototype.start = function (color, duration, onComplete, force) {
                     if (typeof color === "undefined") { color = 0x000000; }
                     if (typeof duration === "undefined") { duration = 1; }
                     if (typeof onComplete === "undefined") { onComplete = null; }
                     if (typeof force === "undefined") { force = false; }
                     if(force === false && this._fxFadeAlpha > 0) {
-                        //  You can't fade again unless you force it
                         return;
                     }
                     if(duration <= 0) {
@@ -505,7 +339,6 @@ var Phaser;
                     this._fxFadeComplete = onComplete;
                 };
                 Fade.prototype.postUpdate = function () {
-                    //  Update the Fade effect
                     if(this._fxFadeAlpha > 0) {
                         this._fxFadeAlpha += this._game.time.elapsed / this._fxFadeDuration;
                         if(this._game.math.roundTo(this._fxFadeAlpha, -2) >= 1) {
@@ -517,7 +350,6 @@ var Phaser;
                     }
                 };
                 Fade.prototype.postRender = function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
-                    //  "Fade" FX
                     if(this._fxFadeAlpha > 0) {
                         this._game.stage.context.fillStyle = this._fxFadeColor + this._fxFadeAlpha + ')';
                         this._game.stage.context.fillRect(cameraX, cameraY, cameraWidth, cameraHeight);

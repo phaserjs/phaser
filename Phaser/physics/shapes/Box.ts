@@ -17,13 +17,19 @@ module Phaser.Physics.Shapes {
         //  Give in pixels
         constructor(x, y, width, height) {
 
+            console.log('Box px', x, y, width, height);
+
             x = Manager.pixelsToMeters(x);
             y = Manager.pixelsToMeters(y);
             width = Manager.pixelsToMeters(width);
             height = Manager.pixelsToMeters(height);
 
+            console.log('Box m', x, y, width, height);
+
 	        var hw = width * 0.5;
 	        var hh = height * 0.5;
+
+            console.log('Box hh', hw, hh);
 
 	        super([
                 { x: -hw + x, y: +hh + y },

@@ -68,7 +68,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the scaled vector.
         */
-        static scale(a: Vec2, s: number, out?: Vec2 = new Vec2): Vec2 {
+        static scale(a: Phaser.Vec2, s: number, out?: Phaser.Vec2 = new Phaser.Vec2): Phaser.Vec2 {
             return out.setTo(a.x * s, a.y * s);
         }
 
@@ -212,7 +212,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static normalRightHand(a: Vec2, out?: Vec2 = this): Vec2 {
+        static normalRightHand(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.y * -1, a.x);
         }
 
