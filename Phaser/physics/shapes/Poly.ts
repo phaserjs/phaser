@@ -1,5 +1,5 @@
-/// <reference path="../../../math/Vec2.ts" />
-/// <reference path="../../../math/Vec2Utils.ts" />
+/// <reference path="../../math/Vec2.ts" />
+/// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="../Plane.ts" />
@@ -11,9 +11,9 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced.Shapes {
+module Phaser.Physics.Shapes {
 
-    export class Poly extends Phaser.Physics.Advanced.Shape implements IShape {
+    export class Poly extends Phaser.Physics.Shape implements IShape {
 
         //  Verts is an optional array of objects, the objects must have public x and y properties which will be used
         //  to seed this polygon (i.e. Vec2 objects, or just straight JS objects) and must wind COUNTER clockwise
@@ -33,7 +33,7 @@ module Phaser.Physics.Advanced.Shapes {
                     this.verts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
                     this.tverts[i] = this.verts[i];
                     //this.tverts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
-                    this.tplanes[i] = new Phaser.Physics.Advanced.Plane(new Phaser.Vec2, 0);
+                    this.tplanes[i] = new Phaser.Physics.Plane(new Phaser.Vec2, 0);
                 }
             }
 
@@ -62,12 +62,12 @@ module Phaser.Physics.Advanced.Shapes {
                 var b = this.verts[(i + 1) % this.verts.length];
                 var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
 
-                this.planes[i] = new Phaser.Physics.Advanced.Plane(n, Phaser.Vec2Utils.dot(n, a));
+                this.planes[i] = new Phaser.Physics.Plane(n, Phaser.Vec2Utils.dot(n, a));
 
                 this.tverts[i] = Phaser.Vec2Utils.clone(this.verts[i]); // reference???
                 //this.tverts[i] = this.verts[i]; // reference???
 
-                this.tplanes[i] = new Phaser.Physics.Advanced.Plane(new Phaser.Vec2, 0);
+                this.tplanes[i] = new Phaser.Physics.Plane(new Phaser.Vec2, 0);
             }
 
             for (var i = 0; i < this.verts.length; i++)
@@ -85,7 +85,7 @@ module Phaser.Physics.Advanced.Shapes {
         }
 
         public duplicate() {
-            return new Phaser.Physics.Advanced.Shapes.Poly(this.verts);
+            return new Phaser.Physics.Shapes.Poly(this.verts);
         }
 
         public recenter(c) {

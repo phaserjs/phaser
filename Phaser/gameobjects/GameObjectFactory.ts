@@ -72,8 +72,23 @@ module Phaser {
          * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
          * @returns {Sprite} The newly created sprite object.
          */
-        public sprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC): Sprite {
+        public sprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED): Sprite {
             return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key, frame, bodyType));
+        }
+
+        /**
+         * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
+         *
+         * @param x {number} X position of the new sprite.
+         * @param y {number} Y position of the new sprite.
+         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
+         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
+         * @param [shapeType] The default body shape is either 0 for a Box or 1 for a Circle. See Sprite.body.addShape for custom shapes (polygons, etc)
+         * @returns {Sprite} The newly created sprite object.
+         */
+        public physicsSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC, shapeType?:number = 0): Sprite {
+            return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key, frame, bodyType, shapeType));
         }
 
         /**

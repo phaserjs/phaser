@@ -272,8 +272,8 @@ module Phaser {
         static reset(sprite: Sprite, x: number, y: number) {
 
             sprite.revive();
-            sprite.body.touching = Types.NONE;
-            sprite.body.wasTouching = Types.NONE;
+            //sprite.body.touching = Types.NONE;
+            //sprite.body.wasTouching = Types.NONE;
             sprite.x = x;
             sprite.y = y;
             sprite.body.velocity.x = 0;

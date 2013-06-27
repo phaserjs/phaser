@@ -2,7 +2,7 @@
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="core/Group.ts" />
 /// <reference path="geom/Rectangle.ts" />
-/// <reference path="physics/PhysicsManager.ts" />
+/// <reference path="physics/Manager.ts" />
 
 /**
 * Phaser - World
@@ -59,10 +59,10 @@ module Phaser {
         public bounds: Rectangle;
 
         /**
-         * Reference to the physics manager.
-         * @type {Physics.PhysicsManager}
+         * The Gravity of the World (defaults to 0,0, or no gravity at all)
+         * @type {Vec2}
          */
-        public physics: Physics.PhysicsManager;
+        public gravity: Phaser.Vec2;
 
         /**
          * Object container stores every object created with `create*` methods.
@@ -81,8 +81,6 @@ module Phaser {
 
             this.group = new Group(this._game, 0);
 
-            this.physics = new Physics.PhysicsManager(this._game, this.width, this.height);
-
         }
 
         /**
@@ -90,7 +88,6 @@ module Phaser {
          */
         public update() {
 
-            //this.physics.update();
             this.group.update();
             this.cameras.update();
 
@@ -101,7 +98,6 @@ module Phaser {
          */
         public postUpdate() {
 
-            //this.physics.postUpdate();
             this.group.postUpdate();
             this.cameras.postUpdate();
 
@@ -112,7 +108,6 @@ module Phaser {
          */
         public destroy() {
 
-            //this.physics.destroy();
             this.group.destroy();
             this.cameras.destroy();
 
@@ -125,7 +120,7 @@ module Phaser {
          * @param height {number} New height of the world.
          * @param [updateCameraBounds] {boolean} Update camera bounds automatically or not. Default to true.
          */
-        public setSize(width: number, height: number, updateCameraBounds: bool = true, updatePhysicsBounds: bool = true) {
+        public setSize(width: number, height: number, updateCameraBounds: bool = true) {
 
             this.bounds.width = width;
             this.bounds.height = height;
@@ -133,11 +128,6 @@ module Phaser {
             if (updateCameraBounds == true)
             {
                 this._game.camera.setBounds(0, 0, width, height);
-            }
-
-            if (updatePhysicsBounds == true)
-            {
-                //this.physics.bounds.copyFrom(this.bounds);
             }
 
             // dispatch world resize event

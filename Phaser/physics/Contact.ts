@@ -1,5 +1,5 @@
-/// <reference path="../../math/Vec2.ts" />
-/// <reference path="../../math/Vec2Utils.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../math/Vec2Utils.ts" />
 /// <reference path="Manager.ts" />
 /// <reference path="Body.ts" />
 /// <reference path="shapes/Shape.ts" />
@@ -10,7 +10,7 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export class Contact {
 

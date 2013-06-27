@@ -1,5 +1,5 @@
-/// <reference path="../../../math/Vec2.ts" />
-/// <reference path="../../../math/Vec2Utils.ts" />
+/// <reference path="../../math/Vec2.ts" />
+/// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="../Bounds.ts" />
@@ -11,13 +11,13 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export class Shape {
 
         constructor(type: number) {
 
-            this.id = Phaser.Physics.Advanced.Manager.shapeCounter++;
+            this.id = Phaser.Physics.Manager.shapeCounter++;
             this.type = type;
 
             this.elasticity = 0.0;
@@ -33,10 +33,10 @@ module Phaser.Physics.Advanced {
         public body: Body;
 
         public verts: Phaser.Vec2[];
-        public planes: Phaser.Physics.Advanced.Plane[];
+        public planes: Phaser.Physics.Plane[];
 
         public tverts: Phaser.Vec2[];
-        public tplanes: Phaser.Physics.Advanced.Plane[];
+        public tplanes: Phaser.Physics.Plane[];
 
         public convexity: bool;
 

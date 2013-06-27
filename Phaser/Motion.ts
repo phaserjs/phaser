@@ -52,6 +52,7 @@ module Phaser {
 		 * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 		 */
         public moveTowardsObject(source: Sprite, dest: Sprite, speed: number = 60, maxTime: number = 0) {
+
             var a: number = this.angleBetween(source, dest);
 
             if (maxTime > 0)
@@ -79,6 +80,8 @@ module Phaser {
 		 * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
 		 */
         public accelerateTowardsObject(source: Sprite, dest: Sprite, speed: number, xSpeedMax: number, ySpeedMax: number) {
+
+            /*
             var a: number = this.angleBetween(source, dest);
 
             source.body.velocity.x = 0;
@@ -89,6 +92,7 @@ module Phaser {
 
             source.body.maxVelocity.x = xSpeedMax;
             source.body.maxVelocity.y = ySpeedMax;
+            */
 
         }
 
@@ -103,6 +107,7 @@ module Phaser {
 		 * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 		 */
         public moveTowardsMouse(source: Sprite, speed: number = 60, maxTime: number = 0) {
+
             var a: number = this.angleBetweenMouse(source);
 
             if (maxTime > 0)
@@ -129,6 +134,8 @@ module Phaser {
 		 * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
 		 */
         public accelerateTowardsMouse(source: Sprite, speed: number, xSpeedMax: number, ySpeedMax: number) {
+
+            /*
             var a: number = this.angleBetweenMouse(source);
 
             source.body.velocity.x = 0;
@@ -139,6 +146,8 @@ module Phaser {
 
             source.body.maxVelocity.x = xSpeedMax;
             source.body.maxVelocity.y = ySpeedMax;
+            */
+
         }
 
         /**
@@ -153,6 +162,7 @@ module Phaser {
 		 * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
 		 */
         public moveTowardsPoint(source: Sprite, target: Point, speed: number = 60, maxTime: number = 0) {
+
             var a: number = this.angleBetweenPoint(source, target);
 
             if (maxTime > 0)
@@ -179,6 +189,8 @@ module Phaser {
 		 * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
 		 */
         public accelerateTowardsPoint(source: Sprite, target: Point, speed: number, xSpeedMax: number, ySpeedMax: number) {
+
+            /*
             var a: number = this.angleBetweenPoint(source, target);
 
             source.body.velocity.x = 0;
@@ -189,6 +201,8 @@ module Phaser {
 
             source.body.maxVelocity.x = xSpeedMax;
             source.body.maxVelocity.y = ySpeedMax;
+            */
+
         }
 
         /**
@@ -240,6 +254,7 @@ module Phaser {
 		 * @return {number} The angle (in radians unless asDegrees is true)
 		 */
         public angleBetweenPoint(a: Sprite, target: Point, asDegrees: bool = false): number {
+
             var dx: number = (target.x) - (a.x + a.transform.origin.x);
             var dy: number = (target.y) - (a.y + a.transform.origin.y);
 
@@ -251,6 +266,7 @@ module Phaser {
             {
                 return Math.atan2(dy, dx);
             }
+
         }
 
         /**
@@ -287,6 +303,8 @@ module Phaser {
 		 * @return {Point} An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
 		 */
         public velocityFromFacing(parent: Sprite, speed: number): Point {
+
+            /*
             var a: number;
 
             if (parent.body.facing == Types.LEFT)
@@ -307,6 +325,9 @@ module Phaser {
             }
 
             return new Point(Math.cos(a) * speed, Math.sin(a) * speed);
+            */
+
+            return new Point;
 
         }
 

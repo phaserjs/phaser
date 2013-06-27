@@ -1,6 +1,6 @@
-/// <reference path="../../../math/Vec2.ts" />
-/// <reference path="../../../geom/Point.ts" />
-/// <reference path="../../../math/Vec2Utils.ts" />
+/// <reference path="../../math/Vec2.ts" />
+/// <reference path="../../geom/Point.ts" />
+/// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
@@ -11,7 +11,7 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export interface IShape {
 
@@ -33,10 +33,12 @@ module Phaser.Physics.Advanced {
         findEdgeByPoint(p: Phaser.Vec2, minDist: number): number;
         findVertexByPoint(p: Phaser.Vec2, minDist: number): number;
 
+        //  The verts of the shape (in local coordinate space)
         verts: Phaser.Vec2[];
-        planes: Phaser.Physics.Advanced.Plane[];
+        planes: Phaser.Physics.Plane[];
+        //  The translated verts (in world space)
         tverts: Phaser.Vec2[];
-        tplanes: Phaser.Physics.Advanced.Plane[];
+        tplanes: Phaser.Physics.Plane[];
         convexity: bool;
 
     }

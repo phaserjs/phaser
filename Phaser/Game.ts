@@ -83,18 +83,6 @@ module Phaser {
         public _raf: RequestAnimationFrame;
 
         /**
-         * Max allowable accumulation.
-         * @type {number}
-         */
-        private _maxAccumulation: number = 32;
-
-        /**
-         * Total number of milliseconds elapsed since last update loop.
-         * @type {number}
-         */
-        private _accumulator: number = 0;
-
-        /**
          * Milliseconds of time per step of the game loop.
          * @type {number}
          */
@@ -232,6 +220,12 @@ module Phaser {
         public world: World;
 
         /**
+         * Reference to the physics manager.
+         * @type {Physics.Manager}
+         */
+        public physics: Physics.Manager;
+
+        /**
          * Instance of repeatable random data generator helper.
          * @type {RandomDataGenerator}
          */
@@ -293,6 +287,7 @@ module Phaser {
                 this.tweens = new TweenManager(this);
                 this.input = new Input(this);
                 this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
+                this.physics = new Physics.Manager(this);
 
                 this.setRenderer(Phaser.Types.RENDERER_CANVAS);
 
@@ -300,12 +295,12 @@ module Phaser {
                 this.stage.boot();
                 this.input.boot();
 
-                this.framerate = 60;
                 this.isBooted = true;
 
                 //  Set-up some static helper references
                 DebugUtils.game = this;
                 ColorUtils.game = this;
+                DebugUtils.context = this.stage.context;
 
                 //  Display the default game screen?
                 if (this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
@@ -396,20 +391,8 @@ module Phaser {
             this.tweens.update();
             this.input.update();
             this.stage.update();
-
-            this._accumulator += this.time.delta;
-
-            if (this._accumulator > this._maxAccumulation)
-            {
-                this._accumulator = this._maxAccumulation;
-            }
-
-            while (this._accumulator >= this._step)
-            {
-                this.time.elapsed = this.time.timeScale * (this._step / 1000);
-                this.world.update();
-                this._accumulator = this._accumulator - this._step;
-            }
+            this.physics.update();
+            this.world.update();
 
             if (this._loadComplete && this.onUpdateCallback)
             {
@@ -624,21 +607,6 @@ module Phaser {
 
         }
 
-        public get framerate(): number {
-            return 1000 / this._step;
-        }
-
-        public set framerate(value: number) {
-
-            this._step = 1000 / value;
-
-            if (this._maxAccumulation < this._step)
-            {
-                this._maxAccumulation = this._step;
-            }
-
-        }
-
         /**
          * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
          * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
@@ -650,7 +618,8 @@ module Phaser {
          * @returns {boolean} true if the objects overlap, otherwise false.
          */
         public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.callbackContext): bool {
-            return this.world.physics.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, this.world.physics.separate, context);
+            //return this.world.physics.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, this.world.physics.separate, context);
+            return false;
         }
 
         public get camera(): Camera {

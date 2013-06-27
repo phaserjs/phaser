@@ -229,6 +229,12 @@ module Phaser {
             {
                 var layer: TilemapLayer = new TilemapLayer(this.game, this, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
 
+                //  Check it's a data layer
+                if (!json.layers[i].data)
+                {
+                    continue;
+                }
+
                 layer.alpha = json.layers[i].opacity;
                 layer.visible = json.layers[i].visible;
                 layer.tileMargin = json.tilesets[0].margin;

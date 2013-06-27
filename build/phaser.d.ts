@@ -316,7 +316,7 @@ module Phaser {
         * @param {Number} height		Desired height of this node.
         * @param {Number} parent		The parent branch or node.  Pass null to create a root.
         */
-        constructor(manager: Physics.PhysicsManager, x: number, y: number, width: number, height: number, parent?: QuadTree);
+        constructor(manager: Physics.Manager, x: number, y: number, width: number, height: number, parent?: QuadTree);
         private _iterator;
         private _ot;
         private _i;
@@ -325,7 +325,7 @@ module Phaser {
         private _l;
         private _overlapProcessed;
         private _checkObject;
-        static physics: Physics.PhysicsManager;
+        static physics: Physics.Manager;
         /**
         * Flag for specifying that you want to add an object to the A list.
         */
@@ -2555,11 +2555,502 @@ module Phaser {
     }
 }
 /**
-* Phaser - Physics - Body
+* Phaser - 2D Transform
+*
+* A 2D Transform
+*/
+module Phaser {
+    class Transform {
+        /**
+        * Creates a new 2D Transform object.
+        * @class Transform
+        * @constructor
+        * @return {Transform} This object
+        **/
+        constructor(pos: Vec2, angle: number);
+        public t: Vec2;
+        public c: number;
+        public s: number;
+        public angle: number;
+        public toString(): string;
+        public setTo(pos: Vec2, angle: number): Transform;
+        public setRotation(angle: number): Transform;
+        public setPosition(p: Vec2): Transform;
+        public identity(): Transform;
+    }
+}
+/**
+* Phaser - TransformUtils
+*
+* A collection of methods useful for manipulating and performing operations on 2D Transforms.
+*
+*/
+module Phaser {
+    class TransformUtils {
+        static rotate(t: Transform, v: Vec2, out?: Vec2): Vec2;
+        static unrotate(t: Transform, v: Vec2, out?: Vec2): Vec2;
+        static transform(t: Transform, v: Vec2, out?: Vec2): Vec2;
+        static untransform(t: Transform, v: Vec2, out?: Vec2): Vec2;
+    }
+}
+/**
+* Phaser - Advanced Physics - Joint
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics {
+    class Joint {
+        constructor(type: number, body1: Body, body2: Body, collideConnected);
+        public id: number;
+        public type: number;
+        public body1: Body;
+        public body2: Body;
+        public collideConnected;
+        public maxForce: number;
+        public breakable: bool;
+        public anchor1: Vec2;
+        public anchor2: Vec2;
+        public getWorldAnchor1(): Vec2;
+        public getWorldAnchor2(): Vec2;
+        public setWorldAnchor1(anchor1): void;
+        public setWorldAnchor2(anchor2): void;
+    }
+}
+/**
+* Phaser - Physics Manager
+*
+* The Physics Manager is responsible for looking after, creating and colliding
+* all of the physics bodies and joints in the world.
+*/
+module Phaser.Physics {
+    class Manager {
+        constructor(game: Game);
+        /**
+        * Local reference to Game.
+        */
+        public game: Game;
+        static debug: HTMLTextAreaElement;
+        static clear(): void;
+        static write(s: string): void;
+        static writeAll(): void;
+        static log: any[];
+        static dump(phase: string, body: Body): void;
+        static collision: Collision;
+        static SHAPE_TYPE_CIRCLE: number;
+        static SHAPE_TYPE_SEGMENT: number;
+        static SHAPE_TYPE_POLY: number;
+        static SHAPE_NUM_TYPES: number;
+        static JOINT_TYPE_ANGLE: number;
+        static JOINT_TYPE_REVOLUTE: number;
+        static JOINT_TYPE_WELD: number;
+        static JOINT_TYPE_WHEEL: number;
+        static JOINT_TYPE_PRISMATIC: number;
+        static JOINT_TYPE_DISTANCE: number;
+        static JOINT_TYPE_ROPE: number;
+        static JOINT_TYPE_MOUSE: number;
+        static JOINT_LINEAR_SLOP: number;
+        static JOINT_ANGULAR_SLOP: number;
+        static JOINT_MAX_LINEAR_CORRECTION: number;
+        static JOINT_MAX_ANGULAR_CORRECTION: number;
+        static JOINT_LIMIT_STATE_INACTIVE: number;
+        static JOINT_LIMIT_STATE_AT_LOWER: number;
+        static JOINT_LIMIT_STATE_AT_UPPER: number;
+        static JOINT_LIMIT_STATE_EQUAL_LIMITS: number;
+        static CONTACT_SOLVER_COLLISION_SLOP: number;
+        static CONTACT_SOLVER_BAUMGARTE: number;
+        static CONTACT_SOLVER_MAX_LINEAR_CORRECTION: number;
+        static bodyCounter: number;
+        static jointCounter: number;
+        static shapeCounter: number;
+        public space: Space;
+        public lastTime: number;
+        public frameRateHz: number;
+        public timeDelta: number;
+        public paused: bool;
+        public step: bool;
+        public velocityIterations: number;
+        public positionIterations: number;
+        public allowSleep: bool;
+        public warmStarting: bool;
+        public gravity: Vec2;
+        public update(): void;
+        public addBody(body: Body): void;
+        public removeBody(body: Body): void;
+        public addJoint(joint: IJoint): void;
+        public removeJoint(joint: IJoint): void;
+        public pixelsToMeters(value: number): number;
+        public metersToPixels(value: number): number;
+        static pixelsToMeters(value: number): number;
+        static metersToPixels(value: number): number;
+        static p2m(value: number): number;
+        static m2p(value: number): number;
+        static areaForCircle(radius_outer: number, radius_inner: number): number;
+        static inertiaForCircle(mass: number, center: Vec2, radius_outer: number, radius_inner: number): number;
+        static areaForSegment(a: Vec2, b: Vec2, radius: number): number;
+        static centroidForSegment(a: Vec2, b: Vec2): Vec2;
+        static inertiaForSegment(mass: number, a: Vec2, b: Vec2): number;
+        static areaForPoly(verts: Vec2[]): number;
+        static centroidForPoly(verts: Vec2[]): Vec2;
+        static inertiaForPoly(mass: number, verts: Vec2[], offset: Vec2): number;
+        static inertiaForBox(mass: number, w: number, h: number): number;
+        static createConvexHull(points): any[];
+    }
+}
+/**
+* Phaser - 2D AABB
+*
+* A 2D AABB object
+*/
+module Phaser.Physics {
+    class Bounds {
+        /**
+        * Creates a new 2D AABB object.
+        * @class Bounds
+        * @constructor
+        * @return {Bounds} This object
+        **/
+        constructor(mins?: Vec2, maxs?: Vec2);
+        public mins: Vec2;
+        public maxs: Vec2;
+        public toString(): string;
+        public setTo(mins: Vec2, maxs: Vec2): void;
+        public copy(b: Bounds): Bounds;
+        public clear(): Bounds;
+        public x : number;
+        public y : number;
+        public width : number;
+        public height : number;
+        public right : number;
+        public bottom : number;
+        public isEmpty(): bool;
+        public getPerimeter(): number;
+        public addPoint(p: Vec2): Bounds;
+        public addBounds(b: Bounds): Bounds;
+        public addBounds2(mins, maxs): Bounds;
+        public addExtents(center: Vec2, extent_x: number, extent_y: number): Bounds;
+        public expand(ax: number, ay: number): Bounds;
+        public containPoint(p: Vec2): bool;
+        public intersectsBounds(b: Bounds): bool;
+        static expand(b: Bounds, ax, ay);
+    }
+}
+/**
+* Phaser - Advanced Physics - IShape
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics {
+    interface IShape {
+        id: number;
+        type: number;
+        elasticity: number;
+        friction: number;
+        density: number;
+        body: Body;
+        bounds: Bounds;
+        area(): number;
+        centroid(): Vec2;
+        inertia(mass: number): number;
+        cacheData(xf: Transform);
+        pointQuery(p: Vec2): bool;
+        findEdgeByPoint(p: Vec2, minDist: number): number;
+        findVertexByPoint(p: Vec2, minDist: number): number;
+        verts: Vec2[];
+        planes: Plane[];
+        tverts: Vec2[];
+        tplanes: Plane[];
+        convexity: bool;
+    }
+}
+/**
+* Phaser - Advanced Physics - Shape
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics {
+    class Shape {
+        constructor(type: number);
+        public id: number;
+        public type: number;
+        public body: Body;
+        public verts: Vec2[];
+        public planes: Plane[];
+        public tverts: Vec2[];
+        public tplanes: Plane[];
+        public convexity: bool;
+        public elasticity: number;
+        public friction: number;
+        public density: number;
+        public bounds: Bounds;
+        public findEdgeByPoint(p: Vec2, minDist: number): number;
+    }
+}
+/**
+* Phaser - Advanced Physics - Contact
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics {
+    class Contact {
+        constructor(p, n, d, hash);
+        public hash;
+        public r1: Vec2;
+        public r2: Vec2;
+        public r1_local: Vec2;
+        public r2_local: Vec2;
+        public bounce: number;
+        public emn: number;
+        public emt: number;
+        public point;
+        public normal: Vec2;
+        public depth;
+        public lambdaNormal;
+        public lambdaTangential;
+    }
+}
+module Phaser.Physics {
+    class ContactSolver {
+        constructor(shape1, shape2);
+        public shape1;
+        public shape2;
+        public contacts: Contact[];
+        public elasticity: number;
+        public friction: number;
+        public update(newContactArr: Contact[]): void;
+        public initSolver(dt_inv): void;
+        public warmStart(): void;
+        public solveVelocityConstraints(): void;
+        public solvePositionConstraints(): bool;
+        public clamp(v, min, max);
+    }
+}
+/**
+* Phaser - Advanced Physics - Shape - Circle
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Shapes {
+    class Circle extends Shape implements IShape {
+        constructor(radius: number, x?: number, y?: number);
+        public radius: number;
+        public center: Vec2;
+        public tc: Vec2;
+        public finishVerts(): void;
+        public duplicate(): Circle;
+        public recenter(c: Vec2): void;
+        public transform(xf: Transform): void;
+        public untransform(xf: Transform): void;
+        public area(): number;
+        public centroid(): Vec2;
+        public inertia(mass: number): number;
+        public cacheData(xf: Transform): void;
+        public pointQuery(p: Vec2): bool;
+        public findVertexByPoint(p: Vec2, minDist: number): number;
+        public distanceOnPlane(n, d): void;
+    }
+}
+/**
+* Phaser - Advanced Physics - Plane
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics {
+    class Plane {
+        constructor(normal: Vec2, d: number);
+        public normal: Vec2;
+        public d: number;
+    }
+}
+/**
+* Phaser - Advanced Physics - Shapes - Convex Polygon
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Shapes {
+    class Poly extends Shape implements IShape {
+        constructor(verts?);
+        public finishVerts(): void;
+        public duplicate(): Poly;
+        public recenter(c): void;
+        public transform(xf: Transform): void;
+        public untransform(xf: Transform): void;
+        public area(): number;
+        public centroid(): Vec2;
+        public inertia(mass: number): number;
+        public cacheData(xf: Transform): void;
+        public pointQuery(p: Vec2): bool;
+        public findVertexByPoint(p: Vec2, minDist: number): number;
+        public findEdgeByPoint(p: Vec2, minDist: number): number;
+        public distanceOnPlane(n: Vec2, d: number): number;
+        public containPoint(p: Vec2): bool;
+        public containPointPartial(p, n): bool;
+    }
+}
+/**
+* Phaser - Advanced Physics - Shapes - Segment
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Shapes {
+    class Segment extends Shape implements IShape {
+        constructor(a, b, radius: number);
+        public a: Vec2;
+        public b: Vec2;
+        public radius: number;
+        public normal: Vec2;
+        public ta: Vec2;
+        public tb: Vec2;
+        public tn: Vec2;
+        public finishVerts(): void;
+        public duplicate(): Segment;
+        public recenter(c): void;
+        public transform(xf: Transform): void;
+        public untransform(xf: Transform): void;
+        public area(): number;
+        public centroid(): Vec2;
+        public inertia(mass: number): number;
+        public cacheData(xf: Transform): void;
+        public pointQuery(p: Vec2): bool;
+        public findVertexByPoint(p: Vec2, minDist: number): number;
+        public distanceOnPlane(n, d): number;
+    }
+}
+/**
+* Phaser - Advanced Physics - Collision Handlers
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics {
+    class Collision {
+        public collide(a, b, contacts: Contact[]): number;
+        private _circle2Circle(c1, r1, c2, r2, contactArr);
+        public circle2Circle(circ1: Shapes.Circle, circ2: Shapes.Circle, contactArr: Contact[]): number;
+        public circle2Segment(circ: Shapes.Circle, seg: Shapes.Segment, contactArr: Contact[]): number;
+        public circle2Poly(circ: Shapes.Circle, poly: Shapes.Poly, contactArr: Contact[]): number;
+        public segmentPointDistanceSq(seg: Shapes.Segment, p): number;
+        public segment2Segment(seg1: Shapes.Segment, seg2: Shapes.Segment, contactArr: Contact[]): number;
+        public findPointsBehindSeg(contactArr: Contact[], seg: Shapes.Segment, poly: Shapes.Poly, dist: number, coef: number): void;
+        public segment2Poly(seg: Shapes.Segment, poly: Shapes.Poly, contactArr: Contact[]): number;
+        public findMSA(poly: Shapes.Poly, planes: Plane[], num: number): {
+            dist: number;
+            index: number;
+        };
+        public findVertsFallback(contactArr: Contact[], poly1: Shapes.Poly, poly2: Shapes.Poly, n, dist: number): number;
+        public findVerts(contactArr: Contact[], poly1: Shapes.Poly, poly2: Shapes.Poly, n, dist: number): number;
+        public poly2Poly(poly1: Shapes.Poly, poly2: Shapes.Poly, contactArr: Contact[]): number;
+    }
+}
+/**
+* Phaser - Advanced Physics - Joint
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics {
+    interface IJoint {
+        id: number;
+        type: number;
+        body1: Body;
+        body2: Body;
+        collideConnected;
+        maxForce: number;
+        breakable: bool;
+        anchor1: Vec2;
+        anchor2: Vec2;
+        getWorldAnchor1();
+        getWorldAnchor2();
+        setWorldAnchor1(anchor1);
+        setWorldAnchor2(anchor2);
+        initSolver(dt, warmStarting);
+        solveVelocityConstraints();
+        solvePositionConstraints();
+        getReactionForce(dt_inv);
+    }
+}
+/**
+* Phaser - Advanced Physics - Space
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics {
+    class Space {
+        constructor(manager: Manager);
+        private _manager;
+        private _delta;
+        private _deltaInv;
+        private _bl;
+        private _jl;
+        private _cl;
+        private _linTolSqr;
+        private _angTolSqr;
+        private _minSleepTime;
+        private _positionSolved;
+        private _shape1;
+        private _shape2;
+        private _contactsOk;
+        private _jointsOk;
+        private bodyHash;
+        private jointHash;
+        static TIME_TO_SLEEP: number;
+        static SLEEP_LINEAR_TOLERANCE: number;
+        static SLEEP_ANGULAR_TOLERANCE: number;
+        public bodies: Body[];
+        public joints: IJoint[];
+        public numContacts: number;
+        public contactSolvers: ContactSolver[];
+        public postSolve;
+        public gravity: Vec2;
+        public damping: number;
+        public stepCount: number;
+        public clear(): void;
+        public addBody(body: Body): void;
+        public removeBody(body: Body): void;
+        public addJoint(joint: IJoint): void;
+        public removeJoint(joint: IJoint): void;
+        public findShapeByPoint(p, refShape);
+        public findBodyByPoint(p, refBody: Body);
+        public shapeById(id): IShape;
+        public jointById(id): IJoint;
+        public findVertexByPoint(p, minDist, refVertexId): number;
+        public findEdgeByPoint(p, minDist, refEdgeId): number;
+        public findJointByPoint(p, minDist, refJointId): number;
+        private findContactSolver(shape1, shape2);
+        private genTemporalContactSolvers();
+        private initSolver(warmStarting);
+        private velocitySolver(iterations);
+        private positionSolver(iterations);
+        public step(dt: number, velocityIterations: number, positionIterations: number, warmStarting: bool, allowSleep: bool): void;
+    }
+}
+/**
+* Phaser - Advanced Physics - Shapes - Triangle
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Shapes {
+    class Triangle extends Poly {
+        constructor(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number);
+    }
+}
+/**
+* Phaser - Advanced Physics - Shapes - Box
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
+*/
+module Phaser.Physics.Shapes {
+    class Box extends Poly {
+        constructor(x, y, width, height);
+    }
+}
+/**
+* Phaser - Advanced Physics - Body
+*
+* Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 module Phaser.Physics {
     class Body {
-        constructor(sprite: Sprite, type: number);
+        constructor(sprite: Sprite, type: number, x?: number, y?: number, shapeType?: number);
+        public toString(): string;
+        private _tempVec2;
         /**
         * Reference to Phaser.Game
         */
@@ -2569,6 +3060,14 @@ module Phaser.Physics {
         */
         public sprite: Sprite;
         /**
+        * The Body ID
+        */
+        public id: number;
+        /**
+        * The Body name
+        */
+        public name: string;
+        /**
         * The type of Body (disabled, dynamic, static or kinematic)
         * Disabled = skips all physics operations / tests (default)
         * Dynamic = gives and receives impacts
@@ -2577,53 +3076,71 @@ module Phaser.Physics {
         * @type {number}
         */
         public type: number;
-        public gravity: Vec2;
-        public bounce: Vec2;
-        public velocity: Vec2;
-        public acceleration: Vec2;
-        public drag: Vec2;
-        public maxVelocity: Vec2;
-        public angularVelocity: number;
-        public angularAcceleration: number;
-        public angularDrag: number;
-        public maxAngular: number;
-        /**
-        * Orientation of the object.
-        * @type {number}
-        */
-        public facing: number;
-        public touching: number;
-        public allowCollisions: number;
-        public wasTouching: number;
-        public mass: number;
+        public angle: number;
+        public transform: Transform;
+        public centroid: Vec2;
         public position: Vec2;
-        public oldPosition: Vec2;
-        public offset: Vec2;
-        public bounds: Rectangle;
-        private _width;
-        private _height;
-        public x : number;
-        public y : number;
-        public width : number;
-        public height : number;
-        public preUpdate(): void;
-        public postUpdate(): void;
-        public hullWidth : number;
-        public hullHeight : number;
-        public hullX : number;
-        public hullY : number;
-        public deltaXAbs : number;
-        public deltaYAbs : number;
-        public deltaX : number;
-        public deltaY : number;
-        public render(context: CanvasRenderingContext2D): void;
-        /**
-        * Render debug infos. (including name, bounds info, position and some other properties)
-        * @param x {number} X position of the debug info to be rendered.
-        * @param y {number} Y position of the debug info to be rendered.
-        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-        */
-        public renderDebugInfo(x: number, y: number, color?: string): void;
+        public velocity: Vec2;
+        public force: Vec2;
+        public angularVelocity: number;
+        public torque: number;
+        public linearDamping: number;
+        public angularDamping: number;
+        public sleepTime: number;
+        public awaked: bool;
+        public allowCollisions: number;
+        public shapes: IShape[];
+        public shapesLength: number;
+        public joints: IJoint[];
+        public jointHash: {};
+        public bounds: Bounds;
+        public mass: number;
+        public massInverted: number;
+        public inertia: number;
+        public inertiaInverted: number;
+        public fixedRotation: bool;
+        public categoryBits: number;
+        public maskBits: number;
+        public stepCount: number;
+        public space: Space;
+        public duplicate(): void;
+        public isDisabled : bool;
+        public isStatic : bool;
+        public isKinetic : bool;
+        public isDynamic : bool;
+        public setType(type: number): void;
+        public addPoly(verts, elasticity?: number, friction?: number, density?: number): Shapes.Poly;
+        public addTriangle(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, elasticity?: number, friction?: number, density?: number): Shapes.Triangle;
+        public addBox(x: number, y: number, width: number, height: number, elasticity?: number, friction?: number, density?: number): Shapes.Box;
+        public addCircle(radius: number, x?: number, y?: number, elasticity?: number, friction?: number, density?: number): Shapes.Circle;
+        public addShape(shape);
+        public removeShape(shape): void;
+        private setMass(mass);
+        private setInertia(inertia);
+        public setTransform(pos, angle): void;
+        public syncTransform(): void;
+        public getWorldPoint(p: Vec2): Vec2;
+        public getWorldVector(v: Vec2): Vec2;
+        public getLocalPoint(p: Vec2): Vec2;
+        public getLocalVector(v: Vec2): Vec2;
+        public setFixedRotation(flag): void;
+        public resetMassData(): void;
+        public resetJointAnchors(): void;
+        public cacheData(source?: string): void;
+        public updateVelocity(gravity, dt, damping): void;
+        public inContact(body2: Body): bool;
+        public clamp(v, min, max);
+        public updatePosition(dt: number): void;
+        public resetForce(): void;
+        public applyForce(force: Vec2, p: Vec2): void;
+        public applyForceToCenter(force: Vec2): void;
+        public applyTorque(torque: number): void;
+        public applyLinearImpulse(impulse: Vec2, p: Vec2): void;
+        public applyAngularImpulse(impulse: number): void;
+        public kineticEnergy(): number;
+        public isAwake : bool;
+        public awake(flag): void;
+        public isCollidable(other: Body): bool;
     }
 }
 /**
@@ -2638,9 +3155,10 @@ module Phaser {
         * @param [x] {number} the initial x position of the sprite.
         * @param [y] {number} the initial y position of the sprite.
         * @param [key] {string} Key of the graphic you want to load for this sprite.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @param [shapeType] {number} The physics shape the body will consist of (either Box (0) or Circle (1), for custom types see body.addShape)
         */
-        constructor(game: Game, x?: number, y?: number, key?: string, frame?, bodyType?: number);
+        constructor(game: Game, x?: number, y?: number, key?: string, frame?, bodyType?: number, shapeType?: number);
         /**
         * Reference to the main game object
         */
@@ -2767,7 +3285,7 @@ module Phaser {
         */
         public preUpdate(): void;
         /**
-        * Override this function to update your class's position and appearance.
+        * Override this function to update your sprites position and appearance.
         */
         public update(): void;
         /**
@@ -5192,14 +5710,7 @@ module Phaser {
         */
         public lifespan: number;
         /**
-        * Determines how quickly the particles come to rest on the ground.
-        * Only used if the particle has gravity-like acceleration applied.
-        * @default 500
-        */
-        public friction: number;
-        /**
-        * The particle's main update logic.  Basically it checks to see if it should
-        * be dead yet, and then has some special bounce behavior if there is some gravity on it.
+        * The particle's main update logic.  Basically it checks to see if it should be dead yet.
         */
         public update(): void;
         /**
@@ -6149,6 +6660,18 @@ module Phaser {
         */
         public sprite(x: number, y: number, key?: string, frame?, bodyType?: number): Sprite;
         /**
+        * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
+        *
+        * @param x {number} X position of the new sprite.
+        * @param y {number} Y position of the new sprite.
+        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
+        * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
+        * @param [shapeType] The default body shape is either 0 for a Box or 1 for a Circle. See Sprite.body.addShape for custom shapes (polygons, etc)
+        * @returns {Sprite} The newly created sprite object.
+        */
+        public physicsSprite(x: number, y: number, key?: string, frame?, bodyType?: number, shapeType?: number): Sprite;
+        /**
         * Create a new DynamicTexture with specific size.
         *
         * @param width {number} Width of the texture.
@@ -7040,196 +7563,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - CircleUtils
-*
-* A collection of methods useful for manipulating and comparing Circle objects.
-*
-* TODO:
-*/
-module Phaser {
-    class CircleUtils {
-        /**
-        * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
-        * @method clone
-        * @param {Circle} a - The Circle object.
-        * @param {Circle} [optional] out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
-        * @return {Phaser.Circle}
-        **/
-        static clone(a: Circle, out?: Circle): Circle;
-        /**
-        * Return true if the given x/y coordinates are within the Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
-        * @method contains
-        * @param {Circle} a - The Circle object.
-        * @param {Number} The X value of the coordinate to test.
-        * @param {Number} The Y value of the coordinate to test.
-        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
-        static contains(a: Circle, x: number, y: number): bool;
-        /**
-        * Return true if the coordinates of the given Point object are within this Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
-        * @method containsPoint
-        * @param {Circle} a - The Circle object.
-        * @param {Point} The Point object to test.
-        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
-        static containsPoint(a: Circle, point: Point): bool;
-        /**
-        * Return true if the given Circle is contained entirely within this Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleToCircle instead.
-        * @method containsCircle
-        * @param {Circle} The Circle object to test.
-        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
-        static containsCircle(a: Circle, b: Circle): bool;
-        /**
-        * Returns the distance from the center of the Circle object to the given object (can be Circle, Point or anything with x/y properties)
-        * @method distanceBetween
-        * @param {Circle} a - The Circle object.
-        * @param {Circle} b - The target object. Must have visible x and y properties that represent the center of the object.
-        * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
-        * @return {Number} The distance between this Point object and the destination Point object.
-        **/
-        static distanceBetween(a: Circle, target: any, round?: bool): number;
-        /**
-        * Determines whether the two Circle objects match. This method compares the x, y and diameter properties.
-        * @method equals
-        * @param {Circle} a - The first Circle object.
-        * @param {Circle} b - The second Circle object.
-        * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
-        **/
-        static equals(a: Circle, b: Circle): bool;
-        /**
-        * Determines whether the two Circle objects intersect.
-        * This method checks the radius distances between the two Circle objects to see if they intersect.
-        * @method intersects
-        * @param {Circle} a - The first Circle object.
-        * @param {Circle} b - The second Circle object.
-        * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
-        **/
-        static intersects(a: Circle, b: Circle): bool;
-        /**
-        * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
-        * @method circumferencePoint
-        * @param {Circle} a - The first Circle object.
-        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
-        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
-        * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
-        * @return {Phaser.Point} The Point object holding the result.
-        **/
-        static circumferencePoint(a: Circle, angle: number, asDegrees?: bool, out?: Point): Point;
-        static intersectsRectangle(c: Circle, r: Rectangle): bool;
-    }
-}
-/**
-* Phaser - PhysicsManager
-*
-* Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
-* all of the physics objects in the world.
-*/
-module Phaser.Physics {
-    class PhysicsManager {
-        constructor(game: Game, width: number, height: number);
-        /**
-        * Local private reference to Game.
-        */
-        public game: Game;
-        /**
-        * Physics object pool
-        */
-        public members: Group;
-        private _drag;
-        private _delta;
-        private _velocityDelta;
-        private _length;
-        private _distance;
-        private _tangent;
-        private _separatedX;
-        private _separatedY;
-        private _overlap;
-        private _maxOverlap;
-        private _obj1Velocity;
-        private _obj2Velocity;
-        private _obj1NewVelocity;
-        private _obj2NewVelocity;
-        private _average;
-        private _quadTree;
-        private _quadTreeResult;
-        public bounds: Rectangle;
-        public gravity: Vec2;
-        public drag: Vec2;
-        public bounce: Vec2;
-        public angularDrag: number;
-        /**
-        * The overlap bias is used when calculating hull overlap before separation - change it if you have especially small or large GameObjects
-        * @type {number}
-        */
-        static OVERLAP_BIAS: number;
-        /**
-        * The overlap bias is used when calculating hull overlap before separation - change it if you have especially small or large GameObjects
-        * @type {number}
-        */
-        static TILE_OVERLAP: bool;
-        /**
-        * @type {number}
-        */
-        public worldDivisions: number;
-        public updateMotion(body: Body): void;
-        /**
-        * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
-        *
-        * @param {number} Velocity Any component of velocity (e.g. 20).
-        * @param {number} Acceleration Rate at which the velocity is changing.
-        * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-        * @param {number} Max An absolute value cap for the velocity.
-        *
-        * @return {number} The altered Velocity value.
-        */
-        public computeVelocity(velocity: number, gravity?: number, acceleration?: number, drag?: number, max?: number): number;
-        /**
-        * The core Collision separation method.
-        * @param body1 The first Physics.Body to separate
-        * @param body2 The second Physics.Body to separate
-        * @returns {boolean} Returns true if the bodies were separated, otherwise false.
-        */
-        public separate(body1: Body, body2: Body): bool;
-        public checkHullIntersection(body1: Body, body2: Body): bool;
-        /**
-        * Separates the two objects on their x axis
-        * @param object1 The first GameObject to separate
-        * @param object2 The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-        */
-        public separateBodyX(body1: Body, body2: Body): bool;
-        /**
-        * Separates the two objects on their y axis
-        * @param object1 The first GameObject to separate
-        * @param object2 The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
-        */
-        public separateBodyY(body1: Body, body2: Body): bool;
-        /**
-        * Checks for overlaps between two objects using the world QuadTree. Can be Sprite vs. Sprite, Sprite vs. Group or Group vs. Group.
-        * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-        * @param object1 The first Sprite or Group to check. If null the world.group is used.
-        * @param object2 The second Sprite or Group to check.
-        * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-        * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-        * @param context The context in which the callbacks will be called
-        * @returns {boolean} true if the objects overlap, otherwise false.
-        */
-        public overlap(object1?, object2?, notifyCallback?, processCallback?, context?): bool;
-        /**
-        * Collision resolution specifically for GameObjects vs. Tiles.
-        * @param object The GameObject to separate
-        * @param tile The Tile to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated
-        */
-        public separateTile(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool, separateX: bool, separateY: bool): bool;
-    }
-}
-/**
 * Phaser - World
 *
 * "This world is but a canvas to our imagination." - Henry David Thoreau
@@ -7268,10 +7601,10 @@ module Phaser {
         */
         public bounds: Rectangle;
         /**
-        * Reference to the physics manager.
-        * @type {Physics.PhysicsManager}
+        * The Gravity of the World (defaults to 0,0, or no gravity at all)
+        * @type {Vec2}
         */
-        public physics: Physics.PhysicsManager;
+        public gravity: Vec2;
         /**
         * Object container stores every object created with `create*` methods.
         * @type {Group}
@@ -7301,7 +7634,7 @@ module Phaser {
         * @param height {number} New height of the world.
         * @param [updateCameraBounds] {boolean} Update camera bounds automatically or not. Default to true.
         */
-        public setSize(width: number, height: number, updateCameraBounds?: bool, updatePhysicsBounds?: bool): void;
+        public setSize(width: number, height: number, updateCameraBounds?: bool): void;
         public width : number;
         public height : number;
         public centerX : number;
@@ -8957,14 +9290,26 @@ module Phaser {
     class DebugUtils {
         static game: Game;
         /**
+        * Render context of stage's canvas.
+        * @type {CanvasRenderingContext2D}
+        */
+        static context: CanvasRenderingContext2D;
+        /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.
         * @param y {number} Y position of the debug info to be rendered.
         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
         static renderSpriteInfo(sprite: Sprite, x: number, y: number, color?: string): void;
+        /**
+        * Render debug infos. (including name, bounds info, position and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        static renderPhysicsBodyInfo(body: Physics.Body, x: number, y: number, color?: string): void;
         static renderSpriteBounds(sprite: Sprite, camera?: Camera, color?: string): void;
-        static renderSpritePhysicsBody(sprite: Sprite, camera?: Camera, color?: string): void;
+        static renderPhysicsBody(body: Physics.Body, lineWidth?: number, fillStyle?: string, sleepStyle?: string): void;
     }
 }
 /**
@@ -8998,16 +9343,6 @@ module Phaser {
         * Game loop trigger wrapper.
         */
         public _raf: RequestAnimationFrame;
-        /**
-        * Max allowable accumulation.
-        * @type {number}
-        */
-        private _maxAccumulation;
-        /**
-        * Total number of milliseconds elapsed since last update loop.
-        * @type {number}
-        */
-        private _accumulator;
         /**
         * Milliseconds of time per step of the game loop.
         * @type {number}
@@ -9123,6 +9458,11 @@ module Phaser {
         */
         public world: World;
         /**
+        * Reference to the physics manager.
+        * @type {Physics.Manager}
+        */
+        public physics: Physics.Manager;
+        /**
         * Instance of repeatable random data generator helper.
         * @type {RandomDataGenerator}
         */
@@ -9196,7 +9536,6 @@ module Phaser {
         */
         public destroy(): void;
         public paused : bool;
-        public framerate : number;
         /**
         * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
         * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
@@ -9209,6 +9548,110 @@ module Phaser {
         */
         public collide(objectOrGroup1?, objectOrGroup2?, notifyCallback?, context?): bool;
         public camera : Camera;
+    }
+}
+/**
+* Phaser - State
+*
+* This is a base State class which can be extended if you are creating your game using TypeScript.
+*/
+module Phaser {
+    class State {
+        /**
+        * State constructor
+        * Create a new <code>State</code>.
+        */
+        constructor(game: Game);
+        /**
+        * Reference to Game.
+        */
+        public game: Game;
+        /**
+        * Currently used camera.
+        * @type {Camera}
+        */
+        public camera: Camera;
+        /**
+        * Reference to the assets cache.
+        * @type {Cache}
+        */
+        public cache: Cache;
+        /**
+        * Reference to the GameObject Factory.
+        * @type {GameObjectFactory}
+        */
+        public add: GameObjectFactory;
+        /**
+        * Reference to the input manager
+        * @type {Input}
+        */
+        public input: Input;
+        /**
+        * Reference to the assets loader.
+        * @type {Loader}
+        */
+        public load: Loader;
+        /**
+        * Reference to the math helper.
+        * @type {GameMath}
+        */
+        public math: GameMath;
+        /**
+        * Reference to the motion helper.
+        * @type {Motion}
+        */
+        public motion: Motion;
+        /**
+        * Reference to the sound manager.
+        * @type {SoundManager}
+        */
+        public sound: SoundManager;
+        /**
+        * Reference to the stage.
+        * @type {Stage}
+        */
+        public stage: Stage;
+        /**
+        * Reference to game clock.
+        * @type {Time}
+        */
+        public time: Time;
+        /**
+        * Reference to the tween manager.
+        * @type {TweenManager}
+        */
+        public tweens: TweenManager;
+        /**
+        * Reference to the world.
+        * @type {World}
+        */
+        public world: World;
+        /**
+        * Override this method to add some load operations.
+        * If you need to use the loader, you may need to use them here.
+        */
+        public init(): void;
+        /**
+        * This method is called after the game engine successfully switches states.
+        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+        */
+        public create(): void;
+        /**
+        * Put update logic here.
+        */
+        public update(): void;
+        /**
+        * Put render operations here.
+        */
+        public render(): void;
+        /**
+        * This method will be called when game paused.
+        */
+        public paused(): void;
+        /**
+        * This method will be called when the state is destroyed
+        */
+        public destroy(): void;
     }
 }
 /**
@@ -9392,733 +9835,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - Mat3Utils
-*
-* A collection of methods useful for manipulating and performing operations on Mat3 objects.
-*
-*/
-module Phaser {
-    class Mat3Utils {
-        /**
-        * Transpose the values of a Mat3
-        **/
-        static transpose(source: Mat3, dest?: Mat3): Mat3;
-        /**
-        * Inverts a Mat3
-        **/
-        static invert(source: Mat3): Mat3;
-        /**
-        * Calculates the adjugate of a Mat3
-        **/
-        static adjoint(source: Mat3): Mat3;
-        /**
-        * Calculates the adjugate of a Mat3
-        **/
-        static determinant(source: Mat3): number;
-        /**
-        * Multiplies two Mat3s
-        **/
-        static multiply(source: Mat3, b: Mat3): Mat3;
-        static fromQuaternion(): void;
-        static normalFromMat4(): void;
-    }
-}
-/**
-* Phaser - 2D Transform
-*
-* A 2D Transform
-*/
-module Phaser {
-    class Transform {
-        /**
-        * Creates a new 2D Transform object.
-        * @class Transform
-        * @constructor
-        * @return {Transform} This object
-        **/
-        constructor(pos: Vec2, angle: number);
-        public t: Vec2;
-        public c: number;
-        public s: number;
-        public angle: number;
-        public toString(): string;
-        public setTo(pos: Vec2, angle: number): Transform;
-        public setRotation(angle: number): Transform;
-        public setPosition(p: Vec2): Transform;
-        public identity(): Transform;
-    }
-}
-/**
-* Phaser - TransformUtils
-*
-* A collection of methods useful for manipulating and performing operations on 2D Transforms.
-*
-*/
-module Phaser {
-    class TransformUtils {
-        static rotate(t: Transform, v: Vec2, out?: Vec2): Vec2;
-        static unrotate(t: Transform, v: Vec2, out?: Vec2): Vec2;
-        static transform(t: Transform, v: Vec2, out?: Vec2): Vec2;
-        static untransform(t: Transform, v: Vec2, out?: Vec2): Vec2;
-    }
-}
-/**
-* Phaser - PhysicsManager
-*
-* Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
-* all of the physics objects in the world.
-*/
-module Phaser.Physics {
-    class ArcadePhysics {
-        constructor(game: Game, width: number, height: number);
-        /**
-        * Local private reference to Game.
-        */
-        public game: Game;
-        /**
-        * Physics object pool
-        */
-        public members: Group;
-        private _drag;
-        private _delta;
-        private _velocityDelta;
-        private _length;
-        private _distance;
-        private _tangent;
-        private _separatedX;
-        private _separatedY;
-        private _overlap;
-        private _maxOverlap;
-        private _obj1Velocity;
-        private _obj2Velocity;
-        private _obj1NewVelocity;
-        private _obj2NewVelocity;
-        private _average;
-        private _quadTree;
-        private _quadTreeResult;
-        public bounds: Rectangle;
-        public gravity: Vec2;
-        public drag: Vec2;
-        public bounce: Vec2;
-        public angularDrag: number;
-        /**
-        * The overlap bias is used when calculating hull overlap before separation - change it if you have especially small or large GameObjects
-        * @type {number}
-        */
-        static OVERLAP_BIAS: number;
-        /**
-        * The overlap bias is used when calculating hull overlap before separation - change it if you have especially small or large GameObjects
-        * @type {number}
-        */
-        static TILE_OVERLAP: bool;
-        /**
-        * @type {number}
-        */
-        public worldDivisions: number;
-        public updateMotion(body: Body): void;
-        /**
-        * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
-        *
-        * @param {number} Velocity Any component of velocity (e.g. 20).
-        * @param {number} Acceleration Rate at which the velocity is changing.
-        * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-        * @param {number} Max An absolute value cap for the velocity.
-        *
-        * @return {number} The altered Velocity value.
-        */
-        public computeVelocity(velocity: number, gravity?: number, acceleration?: number, drag?: number, max?: number): number;
-        /**
-        * The core Collision separation method.
-        * @param body1 The first Physics.Body to separate
-        * @param body2 The second Physics.Body to separate
-        * @returns {boolean} Returns true if the bodies were separated, otherwise false.
-        */
-        public separate(body1: Body, body2: Body): bool;
-        public checkHullIntersection(body1: Body, body2: Body): bool;
-        /**
-        * Separates the two objects on their x axis
-        * @param object1 The first GameObject to separate
-        * @param object2 The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-        */
-        public separateBodyX(body1: Body, body2: Body): bool;
-        /**
-        * Separates the two objects on their y axis
-        * @param object1 The first GameObject to separate
-        * @param object2 The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
-        */
-        public separateBodyY(body1: Body, body2: Body): bool;
-        /**
-        * Checks for overlaps between two objects using the world QuadTree. Can be Sprite vs. Sprite, Sprite vs. Group or Group vs. Group.
-        * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-        * @param object1 The first Sprite or Group to check. If null the world.group is used.
-        * @param object2 The second Sprite or Group to check.
-        * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-        * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-        * @param context The context in which the callbacks will be called
-        * @returns {boolean} true if the objects overlap, otherwise false.
-        */
-        public overlap(object1?, object2?, notifyCallback?, processCallback?, context?): bool;
-        /**
-        * Collision resolution specifically for GameObjects vs. Tiles.
-        * @param object The GameObject to separate
-        * @param tile The Tile to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated
-        */
-        public separateTile(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool, separateX: bool, separateY: bool): bool;
-    }
-}
-/**
-* Phaser - Advanced Physics - Joint
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class Joint {
-        constructor(type: number, body1: Body, body2: Body, collideConnected);
-        public id: number;
-        public type: number;
-        public body1: Body;
-        public body2: Body;
-        public collideConnected;
-        public maxForce: number;
-        public breakable: bool;
-        public anchor1: Vec2;
-        public anchor2: Vec2;
-        public getWorldAnchor1(): Vec2;
-        public getWorldAnchor2(): Vec2;
-        public setWorldAnchor1(anchor1): void;
-        public setWorldAnchor2(anchor2): void;
-    }
-}
-/**
-* Phaser - Advanced Physics Manager
-*
-* Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
-* all of the physics objects in the world.
-*/
-module Phaser.Physics.Advanced {
-    class Manager {
-        constructor(game: Game);
-        /**
-        * Local reference to Game.
-        */
-        public game: Game;
-        static debug: HTMLTextAreaElement;
-        static clear(): void;
-        static write(s: string): void;
-        static writeAll(): void;
-        static log: any[];
-        static dump(phase: string, body: Body): void;
-        static collision: Collision;
-        static SHAPE_TYPE_CIRCLE: number;
-        static SHAPE_TYPE_SEGMENT: number;
-        static SHAPE_TYPE_POLY: number;
-        static SHAPE_NUM_TYPES: number;
-        static JOINT_TYPE_ANGLE: number;
-        static JOINT_TYPE_REVOLUTE: number;
-        static JOINT_TYPE_WELD: number;
-        static JOINT_TYPE_WHEEL: number;
-        static JOINT_TYPE_PRISMATIC: number;
-        static JOINT_TYPE_DISTANCE: number;
-        static JOINT_TYPE_ROPE: number;
-        static JOINT_TYPE_MOUSE: number;
-        static JOINT_LINEAR_SLOP: number;
-        static JOINT_ANGULAR_SLOP: number;
-        static JOINT_MAX_LINEAR_CORRECTION: number;
-        static JOINT_MAX_ANGULAR_CORRECTION: number;
-        static JOINT_LIMIT_STATE_INACTIVE: number;
-        static JOINT_LIMIT_STATE_AT_LOWER: number;
-        static JOINT_LIMIT_STATE_AT_UPPER: number;
-        static JOINT_LIMIT_STATE_EQUAL_LIMITS: number;
-        static CONTACT_SOLVER_COLLISION_SLOP: number;
-        static CONTACT_SOLVER_BAUMGARTE: number;
-        static CONTACT_SOLVER_MAX_LINEAR_CORRECTION: number;
-        static bodyCounter: number;
-        static jointCounter: number;
-        static shapeCounter: number;
-        public space: Space;
-        public lastTime: number;
-        public frameRateHz: number;
-        public timeDelta: number;
-        public paused: bool;
-        public step: bool;
-        public velocityIterations: number;
-        public positionIterations: number;
-        public allowSleep: bool;
-        public warmStarting: bool;
-        public update(): void;
-        public pixelsToMeters(value: number): number;
-        public metersToPixels(value: number): number;
-        static pixelsToMeters(value: number): number;
-        static metersToPixels(value: number): number;
-        static p2m(value: number): number;
-        static m2p(value: number): number;
-        static areaForCircle(radius_outer: number, radius_inner: number): number;
-        static inertiaForCircle(mass: number, center: Vec2, radius_outer: number, radius_inner: number): number;
-        static areaForSegment(a: Vec2, b: Vec2, radius: number): number;
-        static centroidForSegment(a: Vec2, b: Vec2): Vec2;
-        static inertiaForSegment(mass: number, a: Vec2, b: Vec2): number;
-        static areaForPoly(verts: Vec2[]): number;
-        static centroidForPoly(verts: Vec2[]): Vec2;
-        static inertiaForPoly(mass: number, verts: Vec2[], offset: Vec2): number;
-        static inertiaForBox(mass: number, w: number, h: number): number;
-        static createConvexHull(points): any[];
-    }
-}
-/**
-* Phaser - 2D AABB
-*
-* A 2D AABB object
-*/
-module Phaser.Physics.Advanced {
-    class Bounds {
-        /**
-        * Creates a new 2D AABB object.
-        * @class Bounds
-        * @constructor
-        * @return {Bounds} This object
-        **/
-        constructor(mins?: Vec2, maxs?: Vec2);
-        public mins: Vec2;
-        public maxs: Vec2;
-        public toString(): string;
-        public setTo(mins: Vec2, maxs: Vec2): void;
-        public copy(b: Bounds): Bounds;
-        public clear(): Bounds;
-        public x : number;
-        public y : number;
-        public width : number;
-        public height : number;
-        public isEmpty(): bool;
-        public getPerimeter(): number;
-        public addPoint(p: Vec2): Bounds;
-        public addBounds(b: Bounds): Bounds;
-        public addBounds2(mins, maxs): Bounds;
-        public addExtents(center: Vec2, extent_x: number, extent_y: number): Bounds;
-        public expand(ax: number, ay: number): Bounds;
-        public containPoint(p: Vec2): bool;
-        public intersectsBounds(b: Bounds): bool;
-        static expand(b: Bounds, ax, ay);
-    }
-}
-/**
-* Phaser - Advanced Physics - IShape
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    interface IShape {
-        id: number;
-        type: number;
-        elasticity: number;
-        friction: number;
-        density: number;
-        body: Body;
-        bounds: Bounds;
-        area(): number;
-        centroid(): Vec2;
-        inertia(mass: number): number;
-        cacheData(xf: Transform);
-        pointQuery(p: Vec2): bool;
-        findEdgeByPoint(p: Vec2, minDist: number): number;
-        findVertexByPoint(p: Vec2, minDist: number): number;
-        verts: Vec2[];
-        planes: Plane[];
-        tverts: Vec2[];
-        tplanes: Plane[];
-        convexity: bool;
-    }
-}
-/**
-* Phaser - Advanced Physics - Shape
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class Shape {
-        constructor(type: number);
-        public id: number;
-        public type: number;
-        public body: Body;
-        public verts: Vec2[];
-        public planes: Plane[];
-        public tverts: Vec2[];
-        public tplanes: Plane[];
-        public convexity: bool;
-        public elasticity: number;
-        public friction: number;
-        public density: number;
-        public bounds: Bounds;
-        public findEdgeByPoint(p: Vec2, minDist: number): number;
-    }
-}
-/**
-* Phaser - Advanced Physics - Contact
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class Contact {
-        constructor(p, n, d, hash);
-        public hash;
-        public r1: Vec2;
-        public r2: Vec2;
-        public r1_local: Vec2;
-        public r2_local: Vec2;
-        public bounce: number;
-        public emn: number;
-        public emt: number;
-        public point;
-        public normal: Vec2;
-        public depth;
-        public lambdaNormal;
-        public lambdaTangential;
-    }
-}
-module Phaser.Physics.Advanced {
-    class ContactSolver {
-        constructor(shape1, shape2);
-        public shape1;
-        public shape2;
-        public contacts: Contact[];
-        public elasticity: number;
-        public friction: number;
-        public update(newContactArr: Contact[]): void;
-        public initSolver(dt_inv): void;
-        public warmStart(): void;
-        public solveVelocityConstraints(): void;
-        public solvePositionConstraints(): bool;
-        public clamp(v, min, max);
-    }
-}
-/**
-* Phaser - Advanced Physics - Shape - Circle
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Circle extends Shape implements IShape {
-        constructor(radius: number, x?: number, y?: number);
-        public radius: number;
-        public center: Vec2;
-        public tc: Vec2;
-        public finishVerts(): void;
-        public duplicate(): Circle;
-        public recenter(c: Vec2): void;
-        public transform(xf: Transform): void;
-        public untransform(xf: Transform): void;
-        public area(): number;
-        public centroid(): Vec2;
-        public inertia(mass: number): number;
-        public cacheData(xf: Transform): void;
-        public pointQuery(p: Vec2): bool;
-        public findVertexByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n, d): void;
-    }
-}
-/**
-* Phaser - Advanced Physics - Plane
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class Plane {
-        constructor(normal: Vec2, d: number);
-        public normal: Vec2;
-        public d: number;
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Convex Polygon
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Poly extends Shape implements IShape {
-        constructor(verts?);
-        public finishVerts(): void;
-        public duplicate(): Poly;
-        public recenter(c): void;
-        public transform(xf: Transform): void;
-        public untransform(xf: Transform): void;
-        public area(): number;
-        public centroid(): Vec2;
-        public inertia(mass: number): number;
-        public cacheData(xf: Transform): void;
-        public pointQuery(p: Vec2): bool;
-        public findVertexByPoint(p: Vec2, minDist: number): number;
-        public findEdgeByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n: Vec2, d: number): number;
-        public containPoint(p: Vec2): bool;
-        public containPointPartial(p, n): bool;
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Segment
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Segment extends Shape implements IShape {
-        constructor(a, b, radius: number);
-        public a: Vec2;
-        public b: Vec2;
-        public radius: number;
-        public normal: Vec2;
-        public ta: Vec2;
-        public tb: Vec2;
-        public tn: Vec2;
-        public finishVerts(): void;
-        public duplicate(): Segment;
-        public recenter(c): void;
-        public transform(xf: Transform): void;
-        public untransform(xf: Transform): void;
-        public area(): number;
-        public centroid(): Vec2;
-        public inertia(mass: number): number;
-        public cacheData(xf: Transform): void;
-        public pointQuery(p: Vec2): bool;
-        public findVertexByPoint(p: Vec2, minDist: number): number;
-        public distanceOnPlane(n, d): number;
-    }
-}
-/**
-* Phaser - Advanced Physics - Collision Handlers
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class Collision {
-        constructor();
-        public collide(a, b, contacts: Contact[]): number;
-        private _circle2Circle(c1, r1, c2, r2, contactArr);
-        public circle2Circle(circ1: Shapes.Circle, circ2: Shapes.Circle, contactArr: Contact[]): number;
-        public circle2Segment(circ: Shapes.Circle, seg: Shapes.Segment, contactArr: Contact[]): number;
-        public circle2Poly(circ: Shapes.Circle, poly: Shapes.Poly, contactArr: Contact[]): number;
-        public segmentPointDistanceSq(seg: Shapes.Segment, p): number;
-        public segment2Segment(seg1: Shapes.Segment, seg2: Shapes.Segment, contactArr: Contact[]): number;
-        public findPointsBehindSeg(contactArr: Contact[], seg: Shapes.Segment, poly: Shapes.Poly, dist: number, coef: number): void;
-        public segment2Poly(seg: Shapes.Segment, poly: Shapes.Poly, contactArr: Contact[]): number;
-        public findMSA(poly: Shapes.Poly, planes: Plane[], num: number): {
-            dist: number;
-            index: number;
-        };
-        public findVertsFallback(contactArr: Contact[], poly1: Shapes.Poly, poly2: Shapes.Poly, n, dist: number): number;
-        public findVerts(contactArr: Contact[], poly1: Shapes.Poly, poly2: Shapes.Poly, n, dist: number): number;
-        public poly2Poly(poly1: Shapes.Poly, poly2: Shapes.Poly, contactArr: Contact[]): number;
-    }
-}
-/**
-* Phaser - Advanced Physics - Joint
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    interface IJoint {
-        id: number;
-        type: number;
-        body1: Body;
-        body2: Body;
-        collideConnected;
-        maxForce: number;
-        breakable: bool;
-        anchor1: Vec2;
-        anchor2: Vec2;
-        getWorldAnchor1();
-        getWorldAnchor2();
-        setWorldAnchor1(anchor1);
-        setWorldAnchor2(anchor2);
-        initSolver(dt, warmStarting);
-        solveVelocityConstraints();
-        solvePositionConstraints();
-        getReactionForce(dt_inv);
-    }
-}
-/**
-* Phaser - Advanced Physics - Space
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class Space {
-        constructor();
-        static TIME_TO_SLEEP: number;
-        static SLEEP_LINEAR_TOLERANCE: number;
-        static SLEEP_ANGULAR_TOLERANCE: number;
-        public bodyArr: Body[];
-        public bodyHash;
-        public jointArr: IJoint[];
-        public jointHash;
-        public numContacts: number;
-        public contactSolvers: ContactSolver[];
-        public postSolve;
-        public gravity: Vec2;
-        public damping: number;
-        public stepCount: number;
-        public clear(): void;
-        public addBody(body: Body): void;
-        public removeBody(body: Body): void;
-        public addJoint(joint: IJoint): void;
-        public removeJoint(joint: IJoint): void;
-        public findShapeByPoint(p, refShape);
-        public findBodyByPoint(p, refBody: Body);
-        public shapeById(id): IShape;
-        public jointById(id): IJoint;
-        public findVertexByPoint(p, minDist, refVertexId): number;
-        public findEdgeByPoint(p, minDist, refEdgeId): number;
-        public findJointByPoint(p, minDist, refJointId): number;
-        public findContactSolver(shape1, shape2): ContactSolver;
-        public genTemporalContactSolvers(): any[];
-        public initSolver(dt, dt_inv, warmStarting): void;
-        public velocitySolver(iteration): void;
-        public positionSolver(iteration): bool;
-        public step(dt, vel_iteration, pos_iteration, warmStarting, allowSleep): void;
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Triangle
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Triangle extends Poly {
-        constructor(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number);
-    }
-}
-/**
-* Phaser - Advanced Physics - Shapes - Box
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced.Shapes {
-    class Box extends Poly {
-        constructor(x, y, width, height);
-    }
-}
-/**
-* Phaser - Advanced Physics - Body
-*
-* Based on the work Ju Hyung Lee started in JS PhyRus.
-*/
-module Phaser.Physics.Advanced {
-    class Body {
-        constructor(sprite: Sprite, type: number, x?: number, y?: number);
-        public toString(): string;
-        private _tempVec2;
-        /**
-        * Reference to Phaser.Game
-        */
-        public game: Game;
-        /**
-        * Reference to the parent Sprite
-        */
-        public sprite: Sprite;
-        /**
-        * The Body ID
-        */
-        public id: number;
-        /**
-        * The Body name
-        */
-        public name: string;
-        /**
-        * The type of Body (disabled, dynamic, static or kinematic)
-        * Disabled = skips all physics operations / tests (default)
-        * Dynamic = gives and receives impacts
-        * Static = gives but doesn't receive impacts, cannot be moved by physics
-        * Kinematic = gives impacts, but never receives, can be moved by physics
-        * @type {number}
-        */
-        public type: number;
-        public angle: number;
-        public transform: Transform;
-        public centroid: Vec2;
-        public position: Vec2;
-        public velocity: Vec2;
-        public force: Vec2;
-        public angularVelocity: number;
-        public torque: number;
-        public linearDamping: number;
-        public angularDamping: number;
-        public sleepTime: number;
-        public awaked: bool;
-        public shapes: IShape[];
-        public joints: IJoint[];
-        public jointHash: {};
-        public bounds: Bounds;
-        public mass: number;
-        public massInverted: number;
-        public inertia: number;
-        public inertiaInverted: number;
-        public fixedRotation: bool;
-        public categoryBits: number;
-        public maskBits: number;
-        public stepCount: number;
-        public space: Space;
-        public duplicate(): void;
-        public isDisabled : bool;
-        public isStatic : bool;
-        public isKinetic : bool;
-        public isDynamic : bool;
-        public setType(type: number): void;
-        public addPoly(verts, elasticity?: number, friction?: number, density?: number): Shapes.Poly;
-        public addTriangle(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, elasticity?: number, friction?: number, density?: number): Shapes.Triangle;
-        public addBox(x: number, y: number, width: number, height: number, elasticity?: number, friction?: number, density?: number): Shapes.Box;
-        public addCircle(radius: number, x?: number, y?: number, elasticity?: number, friction?: number, density?: number): Shapes.Circle;
-        public addShape(shape);
-        public removeShape(shape): void;
-        private setMass(mass);
-        private setInertia(inertia);
-        public setTransform(pos, angle): void;
-        public syncTransform(): void;
-        public getWorldPoint(p: Vec2): Vec2;
-        public getWorldVector(v: Vec2): Vec2;
-        public getLocalPoint(p: Vec2): Vec2;
-        public getLocalVector(v: Vec2): Vec2;
-        public setFixedRotation(flag): void;
-        public resetMassData(): void;
-        public resetJointAnchors(): void;
-        public cacheData(source?: string): void;
-        public updateVelocity(gravity, dt, damping): void;
-        public inContact(body2: Body): bool;
-        public clamp(v, min, max);
-        public updatePosition(dt): void;
-        public resetForce(): void;
-        public applyForce(force: Vec2, p: Vec2): void;
-        public applyForceToCenter(force: Vec2): void;
-        public applyTorque(torque: number): void;
-        public applyLinearImpulse(impulse: Vec2, p: Vec2): void;
-        public applyAngularImpulse(impulse: number): void;
-        public kineticEnergy(): number;
-        public isAwake : bool;
-        public awake(flag): void;
-        public isCollidable(other: Body): bool;
-    }
-}
-/**
-* Phaser - PixelUtils
-*
-* A collection of methods useful for manipulating pixels.
-*/
-module Phaser {
-    class PixelUtils {
-        static boot(): void;
-        /**
-        * Canvas element used in 1x1 pixel checks.
-        * @type {HTMLCanvasElement}
-        */
-        static pixelCanvas: HTMLCanvasElement;
-        /**
-        * Render context of pixelCanvas
-        * @type {CanvasRenderingContext2D}
-        */
-        static pixelContext: CanvasRenderingContext2D;
-        static getPixel(key: string, x: number, y: number): number;
-    }
-}
-/**
 * Phaser - IntersectResult
 *
 * A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
@@ -10185,106 +9901,138 @@ module Phaser {
     }
 }
 /**
-* Phaser - State
+* Phaser - Mat3Utils
 *
-* This is a base State class which can be extended if you are creating your game using TypeScript.
+* A collection of methods useful for manipulating and performing operations on Mat3 objects.
+*
 */
 module Phaser {
-    class State {
+    class Mat3Utils {
         /**
-        * State constructor
-        * Create a new <code>State</code>.
-        */
-        constructor(game: Game);
+        * Transpose the values of a Mat3
+        **/
+        static transpose(source: Mat3, dest?: Mat3): Mat3;
         /**
-        * Reference to Game.
-        */
-        public game: Game;
+        * Inverts a Mat3
+        **/
+        static invert(source: Mat3): Mat3;
         /**
-        * Currently used camera.
-        * @type {Camera}
-        */
-        public camera: Camera;
+        * Calculates the adjugate of a Mat3
+        **/
+        static adjoint(source: Mat3): Mat3;
         /**
-        * Reference to the assets cache.
-        * @type {Cache}
-        */
-        public cache: Cache;
+        * Calculates the adjugate of a Mat3
+        **/
+        static determinant(source: Mat3): number;
         /**
-        * Reference to the GameObject Factory.
-        * @type {GameObjectFactory}
-        */
-        public add: GameObjectFactory;
+        * Multiplies two Mat3s
+        **/
+        static multiply(source: Mat3, b: Mat3): Mat3;
+        static fromQuaternion(): void;
+        static normalFromMat4(): void;
+    }
+}
+/**
+* Phaser - CircleUtils
+*
+* A collection of methods useful for manipulating and comparing Circle objects.
+*
+* TODO:
+*/
+module Phaser {
+    class CircleUtils {
         /**
-        * Reference to the input manager
-        * @type {Input}
-        */
-        public input: Input;
+        * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
+        * @method clone
+        * @param {Circle} a - The Circle object.
+        * @param {Circle} [optional] out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+        * @return {Phaser.Circle}
+        **/
+        static clone(a: Circle, out?: Circle): Circle;
         /**
-        * Reference to the assets loader.
-        * @type {Loader}
-        */
-        public load: Loader;
+        * Return true if the given x/y coordinates are within the Circle object.
+        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
+        * @method contains
+        * @param {Circle} a - The Circle object.
+        * @param {Number} The X value of the coordinate to test.
+        * @param {Number} The Y value of the coordinate to test.
+        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+        **/
+        static contains(a: Circle, x: number, y: number): bool;
         /**
-        * Reference to the math helper.
-        * @type {GameMath}
-        */
-        public math: GameMath;
+        * Return true if the coordinates of the given Point object are within this Circle object.
+        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
+        * @method containsPoint
+        * @param {Circle} a - The Circle object.
+        * @param {Point} The Point object to test.
+        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+        **/
+        static containsPoint(a: Circle, point: Point): bool;
         /**
-        * Reference to the motion helper.
-        * @type {Motion}
-        */
-        public motion: Motion;
+        * Return true if the given Circle is contained entirely within this Circle object.
+        * If you need details about the intersection then use Phaser.Intersect.circleToCircle instead.
+        * @method containsCircle
+        * @param {Circle} The Circle object to test.
+        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+        **/
+        static containsCircle(a: Circle, b: Circle): bool;
         /**
-        * Reference to the sound manager.
-        * @type {SoundManager}
-        */
-        public sound: SoundManager;
+        * Returns the distance from the center of the Circle object to the given object (can be Circle, Point or anything with x/y properties)
+        * @method distanceBetween
+        * @param {Circle} a - The Circle object.
+        * @param {Circle} b - The target object. Must have visible x and y properties that represent the center of the object.
+        * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
+        * @return {Number} The distance between this Point object and the destination Point object.
+        **/
+        static distanceBetween(a: Circle, target: any, round?: bool): number;
         /**
-        * Reference to the stage.
-        * @type {Stage}
-        */
-        public stage: Stage;
+        * Determines whether the two Circle objects match. This method compares the x, y and diameter properties.
+        * @method equals
+        * @param {Circle} a - The first Circle object.
+        * @param {Circle} b - The second Circle object.
+        * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
+        **/
+        static equals(a: Circle, b: Circle): bool;
         /**
-        * Reference to game clock.
-        * @type {Time}
-        */
-        public time: Time;
+        * Determines whether the two Circle objects intersect.
+        * This method checks the radius distances between the two Circle objects to see if they intersect.
+        * @method intersects
+        * @param {Circle} a - The first Circle object.
+        * @param {Circle} b - The second Circle object.
+        * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
+        **/
+        static intersects(a: Circle, b: Circle): bool;
         /**
-        * Reference to the tween manager.
-        * @type {TweenManager}
-        */
-        public tweens: TweenManager;
+        * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
+        * @method circumferencePoint
+        * @param {Circle} a - The first Circle object.
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
+        * @return {Phaser.Point} The Point object holding the result.
+        **/
+        static circumferencePoint(a: Circle, angle: number, asDegrees?: bool, out?: Point): Point;
+        static intersectsRectangle(c: Circle, r: Rectangle): bool;
+    }
+}
+/**
+* Phaser - PixelUtils
+*
+* A collection of methods useful for manipulating pixels.
+*/
+module Phaser {
+    class PixelUtils {
+        static boot(): void;
         /**
-        * Reference to the world.
-        * @type {World}
+        * Canvas element used in 1x1 pixel checks.
+        * @type {HTMLCanvasElement}
         */
-        public world: World;
+        static pixelCanvas: HTMLCanvasElement;
         /**
-        * Override this method to add some load operations.
-        * If you need to use the loader, you may need to use them here.
+        * Render context of pixelCanvas
+        * @type {CanvasRenderingContext2D}
         */
-        public init(): void;
-        /**
-        * This method is called after the game engine successfully switches states.
-        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
-        */
-        public create(): void;
-        /**
-        * Put update logic here.
-        */
-        public update(): void;
-        /**
-        * Put render operations here.
-        */
-        public render(): void;
-        /**
-        * This method will be called when game paused.
-        */
-        public paused(): void;
-        /**
-        * This method will be called when the state is destroyed
-        */
-        public destroy(): void;
+        static pixelContext: CanvasRenderingContext2D;
+        static getPixel(key: string, x: number, y: number): number;
     }
 }

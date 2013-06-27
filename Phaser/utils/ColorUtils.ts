@@ -124,7 +124,7 @@ module Phaser {
 
             if (threshold >= 359 || threshold <= 0)
             {
-                throw Error("FlxColor Warning: Invalid threshold given to getSplitComplementHarmony()");
+                throw Error("ColorUtils Warning: Invalid threshold given to getSplitComplementHarmony()");
             }
 
             var opposite: number = ColorUtils.game.math.wrapValue(hsv.hue, 180, 359);

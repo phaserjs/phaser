@@ -1,6 +1,6 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../math/Vec2.ts" />
-/// <reference path="../../math/Vec2Utils.ts" />
+/// <reference path="../Game.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../math/Vec2Utils.ts" />
 
 /**
 * Phaser - 2D AABB
@@ -8,7 +8,7 @@
 * A 2D AABB object
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export class Bounds {
 
@@ -72,19 +72,27 @@ module Phaser.Physics.Advanced {
         }
 
         public get x(): number {
-            return Phaser.Physics.Advanced.Manager.metersToPixels(this.mins.x);
+            return Phaser.Physics.Manager.metersToPixels(this.mins.x);
         }
 
         public get y(): number {
-            return Phaser.Physics.Advanced.Manager.metersToPixels(this.mins.y);
+            return Phaser.Physics.Manager.metersToPixels(this.mins.y);
         }
 
         public get width(): number {
-            return Phaser.Physics.Advanced.Manager.metersToPixels(this.maxs.x - this.mins.x);
+            return Phaser.Physics.Manager.metersToPixels(this.maxs.x - this.mins.x);
         }
 
         public get height(): number {
-            return Phaser.Physics.Advanced.Manager.metersToPixels(this.maxs.y - this.mins.y);
+            return Phaser.Physics.Manager.metersToPixels(this.maxs.y - this.mins.y);
+        }
+
+        public get right(): number {
+            return this.x + this.width;
+        }
+
+        public get bottom(): number {
+            return this.y + this.height;
         }
 
         public isEmpty(): bool {
@@ -125,11 +133,13 @@ module Phaser.Physics.Advanced {
             return this;
         }
 
-        public addBounds2(mins, maxs) {
+        public addBounds2(mins, maxs): Bounds {
+
             if (this.mins.x > mins.x) this.mins.x = mins.x;
             if (this.maxs.x < maxs.x) this.maxs.x = maxs.x;
             if (this.mins.y > mins.y) this.mins.y = mins.y;
             if (this.maxs.y < maxs.y) this.maxs.y = maxs.y;
+
             return this;
         }
 

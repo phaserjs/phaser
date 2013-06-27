@@ -1,6 +1,6 @@
-/// <reference path="../../../math/Vec2.ts" />
-/// <reference path="../../../geom/Point.ts" />
-/// <reference path="../../../math/Vec2Utils.ts" />
+/// <reference path="../../math/Vec2.ts" />
+/// <reference path="../../geom/Point.ts" />
+/// <reference path="../../math/Vec2Utils.ts" />
 /// <reference path="../Manager.ts" />
 /// <reference path="../Body.ts" />
 
@@ -10,15 +10,15 @@
 * Based on the work Ju Hyung Lee started in JS PhyRus.
 */
 
-module Phaser.Physics.Advanced {
+module Phaser.Physics {
 
     export interface IJoint {
 
         id: number;
         type: number;
 
-        body1: Phaser.Physics.Advanced.Body;
-        body2: Phaser.Physics.Advanced.Body;
+        body1: Phaser.Physics.Body;
+        body2: Phaser.Physics.Body;
 
         collideConnected; // bool?
         maxForce: number;
