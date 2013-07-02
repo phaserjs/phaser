@@ -240,6 +240,10 @@ module Phaser {
         */
         group: Group;
         /**
+        * The name of the Game Object. Typically not set by Phaser, but extremely useful for debugging / logic.
+        */
+        name: string;
+        /**
         * x value of the object.
         */
         x: number;
@@ -2335,6 +2339,14 @@ module Phaser.Components.Sprite {
         * Dispatched by the Input component when a pointer is released over an Input enabled sprite
         */
         public onInputUp: Signal;
+        /**
+        * Dispatched by the Input component when the Sprite starts being dragged
+        */
+        public onDragStart: Signal;
+        /**
+        * Dispatched by the Input component when the Sprite stops being dragged
+        */
+        public onDragStop: Signal;
         public onOutOfBounds: Signal;
     }
 }
@@ -3049,8 +3061,8 @@ module Phaser.Physics.Shapes {
 module Phaser.Physics {
     class Body {
         constructor(sprite: Sprite, type: number, x?: number, y?: number, shapeType?: number);
-        public toString(): string;
         private _tempVec2;
+        private _fixedRotation;
         /**
         * Reference to Phaser.Game
         */
@@ -3076,7 +3088,18 @@ module Phaser.Physics {
         * @type {number}
         */
         public type: number;
+        /**
+        * The angle of the body in radians. Used by all of the internal physics methods.
+        */
         public angle: number;
+        /**
+        * The rotation of the body in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        /**
+        * Set the rotation of the body in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The value is automatically wrapped to be between 0 and 360.
+        */
+        public rotation : number;
         public transform: Transform;
         public centroid: Vec2;
         public position: Vec2;
@@ -3098,7 +3121,6 @@ module Phaser.Physics {
         public massInverted: number;
         public inertia: number;
         public inertiaInverted: number;
-        public fixedRotation: bool;
         public categoryBits: number;
         public maskBits: number;
         public stepCount: number;
@@ -3117,13 +3139,13 @@ module Phaser.Physics {
         public removeShape(shape): void;
         private setMass(mass);
         private setInertia(inertia);
-        public setTransform(pos, angle): void;
+        public setTransform(pos: Vec2, angle: number): void;
         public syncTransform(): void;
         public getWorldPoint(p: Vec2): Vec2;
         public getWorldVector(v: Vec2): Vec2;
         public getLocalPoint(p: Vec2): Vec2;
         public getLocalVector(v: Vec2): Vec2;
-        public setFixedRotation(flag): void;
+        public fixedRotation : bool;
         public resetMassData(): void;
         public resetJointAnchors(): void;
         public cacheData(source?: string): void;
@@ -3141,6 +3163,7 @@ module Phaser.Physics {
         public isAwake : bool;
         public awake(flag): void;
         public isCollidable(other: Body): bool;
+        public toString(): string;
     }
 }
 /**
@@ -3155,7 +3178,7 @@ module Phaser {
         * @param [x] {number} the initial x position of the sprite.
         * @param [y] {number} the initial y position of the sprite.
         * @param [key] {string} Key of the graphic you want to load for this sprite.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED, i.e. no physics)
         * @param [shapeType] {number} The physics shape the body will consist of (either Box (0) or Circle (1), for custom types see body.addShape)
         */
         constructor(game: Game, x?: number, y?: number, key?: string, frame?, bodyType?: number, shapeType?: number);
@@ -3167,6 +3190,10 @@ module Phaser {
         * The type of game object.
         */
         public type: number;
+        /**
+        * The name of game object.
+        */
+        public name: string;
         /**
         * The Group this Sprite belongs to.
         */
@@ -3485,6 +3512,11 @@ module Phaser.Components {
         * @type {boolean}
         */
         public renderRotation: bool;
+        /**
+        * The direction the animation frame is facing (can be Phaser.Types.RIGHT, LEFT, UP, DOWN).
+        * Very useful when hooking animation to Sprite directions.
+        */
+        public facing: number;
         /**
         * Flip the graphic horizontally (defaults to false)
         * @type {boolean}
@@ -5661,6 +5693,7 @@ module Phaser {
         public to(properties, duration?: number, ease?: any, autoStart?: bool, delay?: number, loop?: bool, yoyo?: bool): Tween;
         public loop(value: bool): Tween;
         public yoyo(value: bool): Tween;
+        public isRunning: bool;
         /**
         * Start to tween.
         */
@@ -6065,31 +6098,6 @@ module Phaser {
         * @param tileHeight {number} Height of tiles in this map.
         */
         constructor(game: Game, parent: Tilemap, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number);
-        /**
-        * Local private reference to game.
-        */
-        private _game;
-        /**
-        * The tilemap that contains this layer.
-        * @type {Tilemap}
-        */
-        private _parent;
-        /**
-        * Tileset of this layer.
-        */
-        private _texture;
-        private _tileOffsets;
-        private _startX;
-        private _startY;
-        private _maxX;
-        private _maxY;
-        private _tx;
-        private _ty;
-        private _dx;
-        private _dy;
-        private _oldCameraX;
-        private _oldCameraY;
-        private _columnData;
         private _tempTileX;
         private _tempTileY;
         private _tempTileW;
@@ -6097,25 +6105,32 @@ module Phaser {
         private _tempTileBlock;
         private _tempBlockResults;
         /**
+        * Local private reference to game.
+        */
+        public game: Game;
+        /**
+        * The tilemap that contains this layer.
+        * @type {Tilemap}
+        */
+        public parent: Tilemap;
+        /**
+        * The texture used to render the Sprite.
+        */
+        public texture: Components.Texture;
+        /**
+        * The Sprite transform component.
+        */
+        public transform: Components.Transform;
+        public tileOffsets;
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public alpha: number;
+        /**
         * Name of this layer, so you can get this layer by its name.
         * @type {string}
         */
         public name: string;
-        /**
-        * A reference to the Canvas this GameObject will render to
-        * @type {HTMLCanvasElement}
-        */
-        public canvas: HTMLCanvasElement;
-        /**
-        * A reference to the Canvas Context2D this GameObject will render to
-        * @type {CanvasRenderingContext2D}
-        */
-        public context: CanvasRenderingContext2D;
-        /**
-        * Opacity of this layer.
-        * @type {number}
-        */
-        public alpha: number;
         /**
         * Controls whether update() and draw() are automatically called.
         * @type {boolean}
@@ -6126,10 +6141,6 @@ module Phaser {
         * @type {boolean}
         */
         public visible: bool;
-        /**
-        * @type {string}
-        */
-        public orientation: string;
         /**
         * Properties of this map layer. (normally set by map editors)
         */
@@ -6282,18 +6293,9 @@ module Phaser {
         public updateBounds(): void;
         /**
         * Parse tile offsets from map data.
-        * @return {number} length of _tileOffsets array.
+        * @return {number} length of tileOffsets array.
         */
         public parseTileOffsets(): number;
-        public renderDebugInfo(x: number, y: number, color?: string): void;
-        /**
-        * Render this layer to a specific camera with offset to camera.
-        * @param camera {Camera} The camera the layer is going to be rendered.
-        * @param dx {number} X offset to the camera.
-        * @param dy {number} Y offset to the camera.
-        * @return {boolean} Return false if layer is invisible or has a too low opacity(will stop rendering), return true if succeed.
-        */
-        public render(camera: Camera, dx, dy): bool;
     }
 }
 /**
@@ -6439,6 +6441,14 @@ module Phaser {
         */
         public type: number;
         /**
+        * The name of game object.
+        */
+        public name: string;
+        /**
+        * The Group this Sprite belongs to.
+        */
+        public group: Group;
+        /**
         * Controls if both <code>update</code> and render are called by the core game loop.
         */
         public exists: bool;
@@ -6451,9 +6461,25 @@ module Phaser {
         */
         public visible: bool;
         /**
-        *
+        * A useful state for many game objects. Kill and revive both flip this switch.
         */
         public alive: bool;
+        /**
+        * The texture used to render the Sprite.
+        */
+        public texture: Components.Texture;
+        /**
+        * The Sprite transform component.
+        */
+        public transform: Components.Transform;
+        /**
+        * z order value of the object.
+        */
+        public z: number;
+        /**
+        * Render iteration counter
+        */
+        public renderOrderID: number;
         /**
         * Tilemap data format enum: CSV.
         * @type {number}
@@ -6499,21 +6525,11 @@ module Phaser {
         */
         public mapFormat: number;
         /**
-        * An Array of Cameras to which this GameObject won't render
-        * @type {Array}
+        * Inherited methods for overriding.
         */
-        public cameraBlacklist: number[];
-        /**
-        * Inherited update method.
-        */
+        public preUpdate(): void;
         public update(): void;
-        /**
-        * Render this tilemap to a specific camera with specific offset.
-        * @param camera {Camera} The camera this tilemap will be rendered to.
-        * @param cameraOffsetX {number} X offset of the camera.
-        * @param cameraOffsetY {number} Y offset of the camera.
-        */
-        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number): void;
+        public postUpdate(): void;
         /**
         * Parset csv map data and generate tiles.
         * @param data {string} CSV map data.
@@ -8122,6 +8138,118 @@ module Phaser {
 * TODO: interpolate & polar
 */
 module Phaser {
+    class PointUtils {
+        /**
+        * Adds the coordinates of two points together to create a new point.
+        * @method add
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        static add(a: Point, b: Point, out?: Point): Point;
+        /**
+        * Subtracts the coordinates of two points to create a new point.
+        * @method subtract
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        static subtract(a: Point, b: Point, out?: Point): Point;
+        /**
+        * Multiplies the coordinates of two points to create a new point.
+        * @method subtract
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        static multiply(a: Point, b: Point, out?: Point): Point;
+        /**
+        * Divides the coordinates of two points to create a new point.
+        * @method subtract
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Point} The new Point object.
+        **/
+        static divide(a: Point, b: Point, out?: Point): Point;
+        /**
+        * Clamps the Point object values to be between the given min and max
+        * @method clamp
+        * @param {Point} a - The point.
+        * @param {number} The minimum value to clamp this Point to
+        * @param {number} The maximum value to clamp this Point to
+        * @return {Point} This Point object.
+        **/
+        static clamp(a: Point, min: number, max: number): Point;
+        /**
+        * Clamps the x value of the given Point object to be between the min and max values.
+        * @method clampX
+        * @param {Point} a - The point.
+        * @param {number} The minimum value to clamp this Point to
+        * @param {number} The maximum value to clamp this Point to
+        * @return {Point} This Point object.
+        **/
+        static clampX(a: Point, min: number, max: number): Point;
+        /**
+        * Clamps the y value of the given Point object to be between the min and max values.
+        * @method clampY
+        * @param {Point} a - The point.
+        * @param {number} The minimum value to clamp this Point to
+        * @param {number} The maximum value to clamp this Point to
+        * @return {Point} This Point object.
+        **/
+        static clampY(a: Point, min: number, max: number): Point;
+        /**
+        * Creates a copy of the given Point.
+        * @method clone
+        * @param {Point} output Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
+        * @return {Point} The new Point object.
+        **/
+        static clone(a: Point, output?: Point): Point;
+        /**
+        * Returns the distance between the two given Point objects.
+        * @method distanceBetween
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @param {Boolean} round - Round the distance to the nearest integer (default false)
+        * @return {Number} The distance between the two Point objects.
+        **/
+        static distanceBetween(a: Point, b: Point, round?: bool): number;
+        /**
+        * Determines whether the two given Point objects are equal. They are considered equal if they have the same x and y values.
+        * @method equals
+        * @param {Point} a - The first Point object.
+        * @param {Point} b - The second Point object.
+        * @return {Boolean} A value of true if the Points are equal, otherwise false.
+        **/
+        static equals(a: Point, b: Point): bool;
+        /**
+        * Rotates a Point around the x/y coordinates given to the desired angle.
+        * @param a {Point} The Point object to rotate.
+        * @param x {number} The x coordinate of the anchor point
+        * @param y {number} The y coordinate of the anchor point
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
+        * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the Point and the anchor.
+        * @return The modified point object
+        */
+        static rotate(a: Point, x: number, y: number, angle: number, asDegrees?: bool, distance?: number): Point;
+        /**
+        * Rotates a Point around the given Point to the desired angle.
+        * @param a {Point} The Point object to rotate.
+        * @param b {Point} The Point object to serve as point of rotation.
+        * @param x {number} The x coordinate of the anchor point
+        * @param y {number} The y coordinate of the anchor point
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
+        * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
+        * @param {Number} distance An optional distance constraint between the Point and the anchor.
+        * @return The modified point object
+        */
+        static rotateAroundPoint(a: Point, b: Point, angle: number, asDegrees?: bool, distance?: number): Point;
+    }
 }
 /**
 * Phaser - Pointer
@@ -9246,8 +9374,15 @@ module Phaser {
         private _dh;
         private _fx;
         private _fy;
+        private _tx;
+        private _ty;
         private _sin;
         private _cos;
+        private _maxX;
+        private _maxY;
+        private _startX;
+        private _startY;
+        private _columnData;
         private _cameraList;
         private _camera;
         private _groupLength;
@@ -9279,6 +9414,11 @@ module Phaser {
         */
         public renderSprite(camera: Camera, sprite: Sprite): bool;
         public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
+        /**
+        * Render a tilemap to a specific camera.
+        * @param camera {Camera} The camera this tilemap will be rendered to.
+        */
+        public renderTilemap(camera: Camera, tilemap: Tilemap): bool;
     }
 }
 /**
@@ -9309,6 +9449,7 @@ module Phaser {
         */
         static renderPhysicsBodyInfo(body: Physics.Body, x: number, y: number, color?: string): void;
         static renderSpriteBounds(sprite: Sprite, camera?: Camera, color?: string): void;
+        static renderRectangle(rect: Rectangle, fillStyle?: string): void;
         static renderPhysicsBody(body: Physics.Body, lineWidth?: number, fillStyle?: string, sleepStyle?: string): void;
     }
 }
@@ -9551,110 +9692,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - State
-*
-* This is a base State class which can be extended if you are creating your game using TypeScript.
-*/
-module Phaser {
-    class State {
-        /**
-        * State constructor
-        * Create a new <code>State</code>.
-        */
-        constructor(game: Game);
-        /**
-        * Reference to Game.
-        */
-        public game: Game;
-        /**
-        * Currently used camera.
-        * @type {Camera}
-        */
-        public camera: Camera;
-        /**
-        * Reference to the assets cache.
-        * @type {Cache}
-        */
-        public cache: Cache;
-        /**
-        * Reference to the GameObject Factory.
-        * @type {GameObjectFactory}
-        */
-        public add: GameObjectFactory;
-        /**
-        * Reference to the input manager
-        * @type {Input}
-        */
-        public input: Input;
-        /**
-        * Reference to the assets loader.
-        * @type {Loader}
-        */
-        public load: Loader;
-        /**
-        * Reference to the math helper.
-        * @type {GameMath}
-        */
-        public math: GameMath;
-        /**
-        * Reference to the motion helper.
-        * @type {Motion}
-        */
-        public motion: Motion;
-        /**
-        * Reference to the sound manager.
-        * @type {SoundManager}
-        */
-        public sound: SoundManager;
-        /**
-        * Reference to the stage.
-        * @type {Stage}
-        */
-        public stage: Stage;
-        /**
-        * Reference to game clock.
-        * @type {Time}
-        */
-        public time: Time;
-        /**
-        * Reference to the tween manager.
-        * @type {TweenManager}
-        */
-        public tweens: TweenManager;
-        /**
-        * Reference to the world.
-        * @type {World}
-        */
-        public world: World;
-        /**
-        * Override this method to add some load operations.
-        * If you need to use the loader, you may need to use them here.
-        */
-        public init(): void;
-        /**
-        * This method is called after the game engine successfully switches states.
-        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
-        */
-        public create(): void;
-        /**
-        * Put update logic here.
-        */
-        public update(): void;
-        /**
-        * Put render operations here.
-        */
-        public render(): void;
-        /**
-        * This method will be called when game paused.
-        */
-        public paused(): void;
-        /**
-        * This method will be called when the state is destroyed
-        */
-        public destroy(): void;
-    }
-}
-/**
 * Phaser - Components - Debug
 *
 *
@@ -9835,104 +9872,6 @@ module Phaser {
     }
 }
 /**
-* Phaser - IntersectResult
-*
-* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
-*/
-module Phaser {
-    class IntersectResult {
-        /**
-        * Did they intersect or not?
-        * @property result
-        * @type {Boolean}
-        */
-        public result: bool;
-        /**
-        * @property x
-        * @type {Number}
-        */
-        public x: number;
-        /**
-        * @property y
-        * @type {Number}
-        */
-        public y: number;
-        /**
-        * @property x1
-        * @type {Number}
-        */
-        public x1: number;
-        /**
-        * @property y1
-        * @type {Number}
-        */
-        public y1: number;
-        /**
-        * @property x2
-        * @type {Number}
-        */
-        public x2: number;
-        /**
-        * @property y2
-        * @type {Number}
-        */
-        public y2: number;
-        /**
-        * @property width
-        * @type {Number}
-        */
-        public width: number;
-        /**
-        * @property height
-        * @type {Number}
-        */
-        public height: number;
-        /**
-        *
-        * @method setTo
-        * @param {Number} x1
-        * @param {Number} y1
-        * @param {Number} [x2]
-        * @param {Number} [y2]
-        * @param {Number} [width]
-        * @param {Number} [height]
-        */
-        public setTo(x1: number, y1: number, x2?: number, y2?: number, width?: number, height?: number): void;
-    }
-}
-/**
-* Phaser - Mat3Utils
-*
-* A collection of methods useful for manipulating and performing operations on Mat3 objects.
-*
-*/
-module Phaser {
-    class Mat3Utils {
-        /**
-        * Transpose the values of a Mat3
-        **/
-        static transpose(source: Mat3, dest?: Mat3): Mat3;
-        /**
-        * Inverts a Mat3
-        **/
-        static invert(source: Mat3): Mat3;
-        /**
-        * Calculates the adjugate of a Mat3
-        **/
-        static adjoint(source: Mat3): Mat3;
-        /**
-        * Calculates the adjugate of a Mat3
-        **/
-        static determinant(source: Mat3): number;
-        /**
-        * Multiplies two Mat3s
-        **/
-        static multiply(source: Mat3, b: Mat3): Mat3;
-        static fromQuaternion(): void;
-        static normalFromMat4(): void;
-    }
-}
-/**
 * Phaser - CircleUtils
 *
 * A collection of methods useful for manipulating and comparing Circle objects.
@@ -10016,6 +9955,38 @@ module Phaser {
     }
 }
 /**
+* Phaser - Mat3Utils
+*
+* A collection of methods useful for manipulating and performing operations on Mat3 objects.
+*
+*/
+module Phaser {
+    class Mat3Utils {
+        /**
+        * Transpose the values of a Mat3
+        **/
+        static transpose(source: Mat3, dest?: Mat3): Mat3;
+        /**
+        * Inverts a Mat3
+        **/
+        static invert(source: Mat3): Mat3;
+        /**
+        * Calculates the adjugate of a Mat3
+        **/
+        static adjoint(source: Mat3): Mat3;
+        /**
+        * Calculates the adjugate of a Mat3
+        **/
+        static determinant(source: Mat3): number;
+        /**
+        * Multiplies two Mat3s
+        **/
+        static multiply(source: Mat3, b: Mat3): Mat3;
+        static fromQuaternion(): void;
+        static normalFromMat4(): void;
+    }
+}
+/**
 * Phaser - PixelUtils
 *
 * A collection of methods useful for manipulating pixels.
@@ -10034,5 +10005,175 @@ module Phaser {
         */
         static pixelContext: CanvasRenderingContext2D;
         static getPixel(key: string, x: number, y: number): number;
+    }
+}
+/**
+* Phaser - IntersectResult
+*
+* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
+*/
+module Phaser {
+    class IntersectResult {
+        /**
+        * Did they intersect or not?
+        * @property result
+        * @type {Boolean}
+        */
+        public result: bool;
+        /**
+        * @property x
+        * @type {Number}
+        */
+        public x: number;
+        /**
+        * @property y
+        * @type {Number}
+        */
+        public y: number;
+        /**
+        * @property x1
+        * @type {Number}
+        */
+        public x1: number;
+        /**
+        * @property y1
+        * @type {Number}
+        */
+        public y1: number;
+        /**
+        * @property x2
+        * @type {Number}
+        */
+        public x2: number;
+        /**
+        * @property y2
+        * @type {Number}
+        */
+        public y2: number;
+        /**
+        * @property width
+        * @type {Number}
+        */
+        public width: number;
+        /**
+        * @property height
+        * @type {Number}
+        */
+        public height: number;
+        /**
+        *
+        * @method setTo
+        * @param {Number} x1
+        * @param {Number} y1
+        * @param {Number} [x2]
+        * @param {Number} [y2]
+        * @param {Number} [width]
+        * @param {Number} [height]
+        */
+        public setTo(x1: number, y1: number, x2?: number, y2?: number, width?: number, height?: number): void;
+    }
+}
+/**
+* Phaser - State
+*
+* This is a base State class which can be extended if you are creating your game using TypeScript.
+*/
+module Phaser {
+    class State {
+        /**
+        * State constructor
+        * Create a new <code>State</code>.
+        */
+        constructor(game: Game);
+        /**
+        * Reference to Game.
+        */
+        public game: Game;
+        /**
+        * Currently used camera.
+        * @type {Camera}
+        */
+        public camera: Camera;
+        /**
+        * Reference to the assets cache.
+        * @type {Cache}
+        */
+        public cache: Cache;
+        /**
+        * Reference to the GameObject Factory.
+        * @type {GameObjectFactory}
+        */
+        public add: GameObjectFactory;
+        /**
+        * Reference to the input manager
+        * @type {Input}
+        */
+        public input: Input;
+        /**
+        * Reference to the assets loader.
+        * @type {Loader}
+        */
+        public load: Loader;
+        /**
+        * Reference to the math helper.
+        * @type {GameMath}
+        */
+        public math: GameMath;
+        /**
+        * Reference to the motion helper.
+        * @type {Motion}
+        */
+        public motion: Motion;
+        /**
+        * Reference to the sound manager.
+        * @type {SoundManager}
+        */
+        public sound: SoundManager;
+        /**
+        * Reference to the stage.
+        * @type {Stage}
+        */
+        public stage: Stage;
+        /**
+        * Reference to game clock.
+        * @type {Time}
+        */
+        public time: Time;
+        /**
+        * Reference to the tween manager.
+        * @type {TweenManager}
+        */
+        public tweens: TweenManager;
+        /**
+        * Reference to the world.
+        * @type {World}
+        */
+        public world: World;
+        /**
+        * Override this method to add some load operations.
+        * If you need to use the loader, you may need to use them here.
+        */
+        public init(): void;
+        /**
+        * This method is called after the game engine successfully switches states.
+        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+        */
+        public create(): void;
+        /**
+        * Put update logic here.
+        */
+        public update(): void;
+        /**
+        * Put render operations here.
+        */
+        public render(): void;
+        /**
+        * This method will be called when game paused.
+        */
+        public paused(): void;
+        /**
+        * This method will be called when the state is destroyed
+        */
+        public destroy(): void;
     }
 }

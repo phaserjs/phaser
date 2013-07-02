@@ -35,9 +35,15 @@ module Phaser {
             this.visible = true;
             this.alive = true;
 
+            this.z = -1;
+            this.group = null;
+            this.name = '';
+
+            this.texture = new Phaser.Components.Texture(this);
+            this.transform = new Phaser.Components.Transform(this);
+
             this.tiles = [];
             this.layers = [];
-            this.cameraBlacklist = [];
 
             this.mapFormat = format;
 
@@ -72,6 +78,16 @@ module Phaser {
         public type: number;
 
         /**
+         * The name of game object.
+         */
+        public name: string;
+
+        /**
+         * The Group this Sprite belongs to.
+         */
+        public group: Group;
+
+        /**
          * Controls if both <code>update</code> and render are called by the core game loop.
          */
         public exists: bool;
@@ -87,9 +103,43 @@ module Phaser {
         public visible: bool;
 
         /**
-         * 
+         * A useful state for many game objects. Kill and revive both flip this switch.
          */
         public alive: bool;
+
+        /**
+         * The texture used to render the Sprite.
+         */
+        public texture: Phaser.Components.Texture;
+
+        /**
+         * The Sprite transform component.
+         */
+        public transform: Phaser.Components.Transform;
+
+        /**
+         * The Input component
+         */
+        //public input: Phaser.Components.Sprite.Input;
+
+        /**
+         * The Events component
+         */
+        //public events: Phaser.Components.Sprite.Events;
+
+        /**
+         * z order value of the object.
+         */
+        public z: number = -1;
+
+        /**
+         * Render iteration counter
+         */
+        public renderOrderID: number = 0;
+
+
+
+
 
         /**
          * Tilemap data format enum: CSV.
@@ -145,34 +195,15 @@ module Phaser {
         public mapFormat: number;
 
         /**
-         * An Array of Cameras to which this GameObject won't render
-         * @type {Array}
+         * Inherited methods for overriding.
          */
-        public cameraBlacklist: number[];
-
-        /**
-         * Inherited update method.
-         */
-        public update() {
+        public preUpdate() {
         }
 
-        /**
-         * Render this tilemap to a specific camera with specific offset.
-         * @param camera {Camera} The camera this tilemap will be rendered to.
-         * @param cameraOffsetX {number} X offset of the camera.
-         * @param cameraOffsetY {number} Y offset of the camera.
-         */
-        public render(camera: Camera, cameraOffsetX: number, cameraOffsetY: number) {
-
-            if (this.cameraBlacklist.indexOf(camera.ID) == -1)
-            {
-                //  Loop through the layers
-                for (var i = 0; i < this.layers.length; i++)
-                {
-                    this.layers[i].render(camera, cameraOffsetX, cameraOffsetY);
-                }
-            }
-
+        public update() {
+        }
+        
+        public postUpdate() {
         }
 
         /**
@@ -202,6 +233,7 @@ module Phaser {
             }
 
             layer.updateBounds();
+
             var tileQuantity = layer.parseTileOffsets();
 
             this.currentLayer = layer;

@@ -11,7 +11,7 @@
 
 module Phaser {
 
-    class PointUtils {
+    export class PointUtils {
 
         /**
          * Adds the coordinates of two points together to create a new point.

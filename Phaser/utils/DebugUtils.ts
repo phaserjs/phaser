@@ -91,6 +91,13 @@ module Phaser {
 
         }
 
+        static renderRectangle(rect: Phaser.Rectangle, fillStyle: string = 'rgba(0,255,0,0.3)') {
+
+            DebugUtils.context.fillStyle = fillStyle;
+            DebugUtils.context.fillRect(rect.x, rect.y, rect.width, rect.height);
+
+        }
+
         static renderPhysicsBody(body: Phaser.Physics.Body, lineWidth: number = 1, fillStyle: string = 'rgba(0,255,0,0.2)', sleepStyle: string = 'rgba(100,100,100,0.2)') {
 
             for (var s = 0; s < body.shapesLength; s++)

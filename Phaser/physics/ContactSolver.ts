@@ -313,12 +313,8 @@ module Phaser.Physics {
                 var r2 = new Phaser.Vec2;
 
                 // Transformed r1, r2
-
                 Phaser.Vec2Utils.rotate(con.r1_local, body1.angle, r1);
-                //var r1 = vec2.rotate(con.r1_local, body1.a);
-
                 Phaser.Vec2Utils.rotate(con.r2_local, body2.angle, r2);
-                //var r2 = vec2.rotate(con.r2_local, body2.a);
 
 		        Manager.write('r1_local.x = ' + con.r1_local.x + ' r1_local.y = ' + con.r1_local.y + ' angle: ' + body1.angle);
 		        Manager.write('r1 rotated: r1.x = ' + r1.x + ' r1.y = ' + r1.y);
@@ -330,10 +326,7 @@ module Phaser.Physics {
                 var p2 = new Phaser.Vec2;
 
                 Phaser.Vec2Utils.add(body1.position, r1, p1);
-                //var p1 = vec2.add(body1.p, r1);
-
                 Phaser.Vec2Utils.add(body2.position, r2, p2);
-                //var p2 = vec2.add(body2.p, r2);
 
 		        Manager.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
 		        Manager.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
@@ -341,7 +334,6 @@ module Phaser.Physics {
                 // Corrected delta vector
                 var dp = new Phaser.Vec2;
                 Phaser.Vec2Utils.subtract(p2, p1, dp);
-                //var dp = vec2.sub(p2, p1);
 
                 // Position constraint
                 var c = Phaser.Vec2Utils.dot(dp, n) + con.depth;
@@ -368,16 +360,11 @@ module Phaser.Physics {
                 // Apply correction impulses
                 var impulse_dt = new Phaser.Vec2;
                 Phaser.Vec2Utils.scale(n, lambda_dt, impulse_dt);
-                //var impulse_dt = vec2.scale(n, lambda_dt);
 
                 body1.position.multiplyAddByScalar(impulse_dt, -m1_inv);
-                //body1.p.mad(impulse_dt, -m1_inv);
-
                 body1.angle -= sn1 * lambda_dt * i1_inv;
 
                 body2.position.multiplyAddByScalar(impulse_dt, m2_inv);
-                //body2.p.mad(impulse_dt, m2_inv);
-
                 body2.angle += sn2 * lambda_dt * i2_inv;
 
 		        Manager.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);

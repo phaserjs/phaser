@@ -35,7 +35,7 @@ module Phaser.Physics {
                 this.sprite = sprite;
                 this.game = sprite.game;
                 this.position = new Phaser.Vec2(Phaser.Physics.Manager.pixelsToMeters(sprite.x), Phaser.Physics.Manager.pixelsToMeters(sprite.y));
-                this.angle = sprite.rotation;
+                this.angle = this.game.math.degreesToRadians(sprite.rotation);
             }
             else
             {
@@ -61,7 +61,6 @@ module Phaser.Physics {
             this.bounds = new Bounds;
 
             this.allowCollisions = Phaser.Types.ANY;
-            this.fixedRotation = false;
 
             this.categoryBits = 0x0001;
             this.maskBits = 0xFFFF;
@@ -82,11 +81,8 @@ module Phaser.Physics {
 
         }
 
-        public toString(): string {
-            return "[{Body (name=" + this.name + " velocity=" + this.velocity.toString() + " angularVelocity: " + this.angularVelocity + ")}]";
-        }
-
 	    private _tempVec2: Phaser.Vec2 = new Phaser.Vec2;
+	    private _fixedRotation: bool = false;
 
         /**
          * Reference to Phaser.Game
@@ -118,7 +114,25 @@ module Phaser.Physics {
          */
         public type: number;
 
+        /**
+        * The angle of the body in radians. Used by all of the internal physics methods.
+        */
         public angle: number;
+
+        /**
+        * The rotation of the body in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        public get rotation(): number {
+            return this.game.math.radiansToDegrees(this.angle);
+        }
+
+        /**
+        * Set the rotation of the body in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        * The value is automatically wrapped to be between 0 and 360.
+        */
+        public set rotation(value: number) {
+            this.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
+        }
 
         //  Local to world transform
         public transform: Phaser.Transform;
@@ -174,17 +188,16 @@ module Phaser.Physics {
 	    public inertia: number;
 	    public inertiaInverted: number;
 
-	    public fixedRotation = false;
-	    public categoryBits = 0x0001;
-	    public maskBits = 0xFFFF;
-	    public stepCount = 0;
+	    public categoryBits: number = 0x0001;
+	    public maskBits: number = 0xFFFF;
+	    public stepCount: number = 0;
 	    public space: Space;
 
 	    public duplicate() {
 
 	        console.log('body duplicate called');
 
-	        //var body = new Body(this.type, this.transform.t, this.angle);
+	        //var body = new Body(this.type, this.transform.t, this.rotation);
 	        
             //for (var i = 0; i < this.shapes.length; i++)
 	        //{
@@ -313,28 +326,28 @@ module Phaser.Physics {
 
 	    }
 
-	    private setMass(mass) {
+	    private setMass(mass:number) {
 
 	        this.mass = mass;
 	        this.massInverted = mass > 0 ? 1 / mass : 0;
 
 	    }
 
-	    private setInertia(inertia) {
+	    private setInertia(inertia:number) {
 
 	        this.inertia = inertia;
 	        this.inertiaInverted = inertia > 0 ? 1 / inertia : 0;
 
 	    }
 
-	    public setTransform(pos, angle) {
+	    public setTransform(pos:Phaser.Vec2, angle:number) {
 
             //  inject the transform into this.position
 	        this.transform.setTo(pos, angle);
-	        Manager.write('setTransform: ' + this.position.toString());
-        	Manager.write('centroid: ' + this.centroid.toString());
+	        //Manager.write('setTransform: ' + this.position.toString());
+        	//Manager.write('centroid: ' + this.centroid.toString());
             Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
-	        Manager.write('post setTransform: ' + this.position.toString());
+	        //Manager.write('post setTransform: ' + this.position.toString());
             //this.position.copyFrom(this.transform.transform(this.centroid));
 	        this.angle = angle;
 
@@ -342,17 +355,17 @@ module Phaser.Physics {
 
 	    public syncTransform() {
 
-	        Manager.write('syncTransform:');
-	        Manager.write('p: ' + this.position.toString());
-	        Manager.write('centroid: ' + this.centroid.toString());
-	        Manager.write('xf: ' + this.transform.toString());
-	        Manager.write('a: ' + this.angle);
+	        //Manager.write('syncTransform:');
+	        //Manager.write('p: ' + this.position.toString());
+	        //Manager.write('centroid: ' + this.centroid.toString());
+	        //Manager.write('xf: ' + this.transform.toString());
+	        //Manager.write('a: ' + this.angle);
             this.transform.setRotation(this.angle);
             //  OPTIMISE: Creating new vector
             Phaser.Vec2Utils.subtract(this.position, Phaser.TransformUtils.rotate(this.transform, this.centroid), this.transform.t);
-	        Manager.write('--------------------');
-	        Manager.write('xf: ' + this.transform.toString());
-	        Manager.write('--------------------');
+	        //Manager.write('--------------------');
+	        //Manager.write('xf: ' + this.transform.toString());
+	        //Manager.write('--------------------');
 
 	    }
 
@@ -376,9 +389,16 @@ module Phaser.Physics {
 	        return Phaser.TransformUtils.unrotate(this.transform, v);
 	    }
 
-	    public setFixedRotation(flag) {
-	        this.fixedRotation = flag;
+	    public set fixedRotation(value:bool) {
+
+	        this._fixedRotation = value;
+
 	        this.resetMassData();
+
+	    }
+
+	    public get fixedRotation(): bool {
+	        return this._fixedRotation;
 	    }
 
 	    public resetMassData() {
@@ -392,7 +412,6 @@ module Phaser.Physics {
 	        if (this.isDynamic == false)
 	        {
 	            Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
-	            //this.position.copyFrom(this.transform.transform(this.centroid));
 	            return;
 	        }
 
@@ -407,14 +426,11 @@ module Phaser.Physics {
 	            var mass = shape.area() * shape.density;
 	            var inertia = shape.inertia(mass);
 
-	            //console.log('rmd', centroid, shape);
-
                 totalMassCentroid.multiplyAddByScalar(centroid, mass);
 	            totalMass += mass;
 	            totalInertia += inertia;
 	        }
 
-	        //this.centroid.copy(vec2.scale(totalMassCentroid, 1 / totalMass));
 	        Phaser.Vec2Utils.scale(totalMassCentroid, 1 / totalMass, this.centroid);
 
 	        this.setMass(totalMass);
@@ -455,9 +471,9 @@ module Phaser.Physics {
 
 	    public cacheData(source:string = '') {
 
-	        Manager.write('cacheData -- start');
-	        Manager.write('p: ' + this.position.toString());
-	        Manager.write('xf: ' + this.transform.toString());
+	        //Manager.write('cacheData -- start');
+	        //Manager.write('p: ' + this.position.toString());
+	        //Manager.write('xf: ' + this.transform.toString());
 
 	        this.bounds.clear();
 
@@ -468,11 +484,11 @@ module Phaser.Physics {
 	            this.bounds.addBounds(shape.bounds);
 	        }
 
-	        Manager.write('bounds: ' + this.bounds.toString());
+	        //Manager.write('bounds: ' + this.bounds.toString());
 
-	        Manager.write('p: ' + this.position.toString());
-	        Manager.write('xf: ' + this.transform.toString());
-	        Manager.write('cacheData -- stop');
+	        //Manager.write('p: ' + this.position.toString());
+	        //Manager.write('xf: ' + this.transform.toString());
+	        //Manager.write('cacheData -- stop');
 
 	    }
 
@@ -538,15 +554,16 @@ module Phaser.Physics {
             {
                 this.sprite.x = this.position.x * 50;
                 this.sprite.y = this.position.y * 50;
-                //  Obey fixed rotation?
-                this.sprite.rotation = this.game.math.radiansToDegrees(this.angle);
+                this.sprite.transform.rotation = this.game.math.radiansToDegrees(this.angle);
             }
 
 	    }
 
 	    public resetForce() {
+
 	        this.force.setTo(0, 0);
 	        this.torque = 0;
+
 	    }
 
 	    public applyForce(force:Phaser.Vec2, p:Phaser.Vec2) {
@@ -638,11 +655,8 @@ module Phaser.Physics {
 	    }
 
 	    public kineticEnergy() {
-
-	        var vsq = this.velocity.dot(this.velocity);
-	        var wsq = this.angularVelocity * this.angularVelocity;
 	        
-            return 0.5 * (this.mass * vsq + this.inertia * wsq);
+            return 0.5 * (this.mass * this.velocity.dot(this.velocity) + this.inertia * (this.angularVelocity * this.angularVelocity));
 
 	    }
 
@@ -670,12 +684,7 @@ module Phaser.Physics {
 
 	    public isCollidable(other:Body) {
 
-	        if (this == other)
-	        {
-	            return false;
-	        }
-
-	        if (this.isDynamic == false && other.isDynamic == false)
+	        if ((this.isDynamic == false && other.isDynamic == false) || this == other)
 	        {
 	            return false;
 	        }
@@ -698,6 +707,10 @@ module Phaser.Physics {
 	        return true;
 
 	    }
+
+        public toString(): string {
+            return "[{Body (name=" + this.name + " velocity=" + this.velocity.toString() + " angularVelocity: " + this.angularVelocity + ")}]";
+        }
 
     }
 

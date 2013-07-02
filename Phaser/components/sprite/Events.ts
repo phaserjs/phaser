@@ -24,10 +24,13 @@ module Phaser.Components.Sprite {
             this.onKilled = new Phaser.Signal;
             this.onRevived = new Phaser.Signal;
 
+            //  Only create these if Sprite input is enabled?
             this.onInputOver = new Phaser.Signal;
             this.onInputOut = new Phaser.Signal;
             this.onInputDown = new Phaser.Signal;
             this.onInputUp = new Phaser.Signal;
+            this.onDragStart = new Phaser.Signal;
+            this.onDragStop = new Phaser.Signal;
 
         }
 
@@ -81,6 +84,15 @@ module Phaser.Components.Sprite {
          */
         public onInputUp: Phaser.Signal;
 
+        /**
+         * Dispatched by the Input component when the Sprite starts being dragged
+         */
+        public onDragStart: Phaser.Signal;
+
+        /**
+         * Dispatched by the Input component when the Sprite stops being dragged
+         */
+        public onDragStop: Phaser.Signal;
 
 
 
