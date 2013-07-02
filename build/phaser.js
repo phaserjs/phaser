@@ -3787,6 +3787,7 @@ var Phaser;
                     if(this.bringToTop) {
                         this.sprite.group.bringToTop(this.sprite);
                     }
+                    this.sprite.events.onDragStart.dispatch(this.sprite, pointer);
                 };
                 Input.prototype.stopDrag = /**
                 * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
@@ -3799,8 +3800,8 @@ var Phaser;
                         this.sprite.x = Math.floor(this.sprite.x / this.snapX) * this.snapX;
                         this.sprite.y = Math.floor(this.sprite.y / this.snapY) * this.snapY;
                     }
-                    //pointer.draggedObject = null;
-                                    };
+                    this.sprite.events.onDragStop.dispatch(this.sprite, pointer);
+                };
                 Input.prototype.setDragLock = /**
                 * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
                 *
@@ -3913,10 +3914,13 @@ var Phaser;
                     this.onRemovedFromGroup = new Phaser.Signal();
                     this.onKilled = new Phaser.Signal();
                     this.onRevived = new Phaser.Signal();
+                    //  Only create these if Sprite input is enabled?
                     this.onInputOver = new Phaser.Signal();
                     this.onInputOut = new Phaser.Signal();
                     this.onInputDown = new Phaser.Signal();
                     this.onInputUp = new Phaser.Signal();
+                    this.onDragStart = new Phaser.Signal();
+                    this.onDragStop = new Phaser.Signal();
                 }
                 return Events;
             })();
@@ -5158,9 +5162,7 @@ var Phaser;
                     var r2 = new Phaser.Vec2();
                     // Transformed r1, r2
                     Phaser.Vec2Utils.rotate(con.r1_local, body1.angle, r1);
-                    //var r1 = vec2.rotate(con.r1_local, body1.a);
                     Phaser.Vec2Utils.rotate(con.r2_local, body2.angle, r2);
-                    //var r2 = vec2.rotate(con.r2_local, body2.a);
                     Physics.Manager.write('r1_local.x = ' + con.r1_local.x + ' r1_local.y = ' + con.r1_local.y + ' angle: ' + body1.angle);
                     Physics.Manager.write('r1 rotated: r1.x = ' + r1.x + ' r1.y = ' + r1.y);
                     Physics.Manager.write('r2_local.x = ' + con.r2_local.x + ' r2_local.y = ' + con.r2_local.y + ' angle: ' + body2.angle);
@@ -5169,15 +5171,12 @@ var Phaser;
                     var p1 = new Phaser.Vec2();
                     var p2 = new Phaser.Vec2();
                     Phaser.Vec2Utils.add(body1.position, r1, p1);
-                    //var p1 = vec2.add(body1.p, r1);
                     Phaser.Vec2Utils.add(body2.position, r2, p2);
-                    //var p2 = vec2.add(body2.p, r2);
                     Physics.Manager.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
                     Physics.Manager.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
                     // Corrected delta vector
                     var dp = new Phaser.Vec2();
                     Phaser.Vec2Utils.subtract(p2, p1, dp);
-                    //var dp = vec2.sub(p2, p1);
                     // Position constraint
                     var c = Phaser.Vec2Utils.dot(dp, n) + con.depth;
                     var correction = this.clamp(Physics.Manager.CONTACT_SOLVER_BAUMGARTE * (c + Physics.Manager.CONTACT_SOLVER_COLLISION_SLOP), -Physics.Manager.CONTACT_SOLVER_MAX_LINEAR_CORRECTION, 0);
@@ -5195,12 +5194,9 @@ var Phaser;
                     // Apply correction impulses
                     var impulse_dt = new Phaser.Vec2();
                     Phaser.Vec2Utils.scale(n, lambda_dt, impulse_dt);
-                    //var impulse_dt = vec2.scale(n, lambda_dt);
                     body1.position.multiplyAddByScalar(impulse_dt, -m1_inv);
-                    //body1.p.mad(impulse_dt, -m1_inv);
                     body1.angle -= sn1 * lambda_dt * i1_inv;
                     body2.position.multiplyAddByScalar(impulse_dt, m2_inv);
-                    //body2.p.mad(impulse_dt, m2_inv);
                     body2.angle += sn2 * lambda_dt * i2_inv;
                     Physics.Manager.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
                     Physics.Manager.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
@@ -6664,13 +6660,13 @@ var Phaser;
                 if (typeof y === "undefined") { y = 0; }
                 if (typeof shapeType === "undefined") { shapeType = 0; }
                 this._tempVec2 = new Phaser.Vec2();
+                this._fixedRotation = false;
                 //  Shapes
                 this.shapes = [];
                 //  Joints
                 this.joints = [];
                 this.jointHash = {
                 };
-                this.fixedRotation = false;
                 this.categoryBits = 0x0001;
                 this.maskBits = 0xFFFF;
                 this.stepCount = 0;
@@ -6681,7 +6677,7 @@ var Phaser;
                     this.sprite = sprite;
                     this.game = sprite.game;
                     this.position = new Phaser.Vec2(Phaser.Physics.Manager.pixelsToMeters(sprite.x), Phaser.Physics.Manager.pixelsToMeters(sprite.y));
-                    this.angle = sprite.rotation;
+                    this.angle = this.game.math.degreesToRadians(sprite.rotation);
                 } else {
                     this.position = new Phaser.Vec2(Phaser.Physics.Manager.pixelsToMeters(x), Phaser.Physics.Manager.pixelsToMeters(y));
                     this.angle = 0;
@@ -6702,7 +6698,6 @@ var Phaser;
                 };
                 this.bounds = new Physics.Bounds();
                 this.allowCollisions = Phaser.Types.ANY;
-                this.fixedRotation = false;
                 this.categoryBits = 0x0001;
                 this.maskBits = 0xFFFF;
                 this.stepCount = 0;
@@ -6714,12 +6709,26 @@ var Phaser;
                     }
                 }
             }
-            Body.prototype.toString = function () {
-                return "[{Body (name=" + this.name + " velocity=" + this.velocity.toString() + " angularVelocity: " + this.angularVelocity + ")}]";
-            };
+            Object.defineProperty(Body.prototype, "rotation", {
+                get: /**
+                * The rotation of the body in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+                */
+                function () {
+                    return this.game.math.radiansToDegrees(this.angle);
+                },
+                set: /**
+                * Set the rotation of the body in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+                * The value is automatically wrapped to be between 0 and 360.
+                */
+                function (value) {
+                    this.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
+                },
+                enumerable: true,
+                configurable: true
+            });
             Body.prototype.duplicate = function () {
                 console.log('body duplicate called');
-                //var body = new Body(this.type, this.transform.t, this.angle);
+                //var body = new Body(this.type, this.transform.t, this.rotation);
                 //for (var i = 0; i < this.shapes.length; i++)
                 //{
                 //    body.addShape(this.shapes[i].duplicate());
@@ -6842,26 +6851,26 @@ var Phaser;
             Body.prototype.setTransform = function (pos, angle) {
                 //  inject the transform into this.position
                 this.transform.setTo(pos, angle);
-                Physics.Manager.write('setTransform: ' + this.position.toString());
-                Physics.Manager.write('centroid: ' + this.centroid.toString());
+                //Manager.write('setTransform: ' + this.position.toString());
+                //Manager.write('centroid: ' + this.centroid.toString());
                 Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
-                Physics.Manager.write('post setTransform: ' + this.position.toString());
+                //Manager.write('post setTransform: ' + this.position.toString());
                 //this.position.copyFrom(this.transform.transform(this.centroid));
                 this.angle = angle;
             };
             Body.prototype.syncTransform = function () {
-                Physics.Manager.write('syncTransform:');
-                Physics.Manager.write('p: ' + this.position.toString());
-                Physics.Manager.write('centroid: ' + this.centroid.toString());
-                Physics.Manager.write('xf: ' + this.transform.toString());
-                Physics.Manager.write('a: ' + this.angle);
+                //Manager.write('syncTransform:');
+                //Manager.write('p: ' + this.position.toString());
+                //Manager.write('centroid: ' + this.centroid.toString());
+                //Manager.write('xf: ' + this.transform.toString());
+                //Manager.write('a: ' + this.angle);
                 this.transform.setRotation(this.angle);
                 //  OPTIMISE: Creating new vector
                 Phaser.Vec2Utils.subtract(this.position, Phaser.TransformUtils.rotate(this.transform, this.centroid), this.transform.t);
-                Physics.Manager.write('--------------------');
-                Physics.Manager.write('xf: ' + this.transform.toString());
-                Physics.Manager.write('--------------------');
-            };
+                //Manager.write('--------------------');
+                //Manager.write('xf: ' + this.transform.toString());
+                //Manager.write('--------------------');
+                            };
             Body.prototype.getWorldPoint = function (p) {
                 //  OPTIMISE: Creating new vector
                 return Phaser.TransformUtils.transform(this.transform, p);
@@ -6878,10 +6887,17 @@ var Phaser;
                 //  OPTIMISE: Creating new vector
                 return Phaser.TransformUtils.unrotate(this.transform, v);
             };
-            Body.prototype.setFixedRotation = function (flag) {
-                this.fixedRotation = flag;
-                this.resetMassData();
-            };
+            Object.defineProperty(Body.prototype, "fixedRotation", {
+                get: function () {
+                    return this._fixedRotation;
+                },
+                set: function (value) {
+                    this._fixedRotation = value;
+                    this.resetMassData();
+                },
+                enumerable: true,
+                configurable: true
+            });
             Body.prototype.resetMassData = function () {
                 this.centroid.setTo(0, 0);
                 this.mass = 0;
@@ -6890,7 +6906,6 @@ var Phaser;
                 this.inertiaInverted = 0;
                 if(this.isDynamic == false) {
                     Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
-                    //this.position.copyFrom(this.transform.transform(this.centroid));
                     return;
                 }
                 var totalMassCentroid = new Phaser.Vec2(0, 0);
@@ -6901,12 +6916,10 @@ var Phaser;
                     var centroid = shape.centroid();
                     var mass = shape.area() * shape.density;
                     var inertia = shape.inertia(mass);
-                    //console.log('rmd', centroid, shape);
                     totalMassCentroid.multiplyAddByScalar(centroid, mass);
                     totalMass += mass;
                     totalInertia += inertia;
                 }
-                //this.centroid.copy(vec2.scale(totalMassCentroid, 1 / totalMass));
                 Phaser.Vec2Utils.scale(totalMassCentroid, 1 / totalMass, this.centroid);
                 this.setMass(totalMass);
                 if(!this.fixedRotation) {
@@ -6933,20 +6946,20 @@ var Phaser;
             };
             Body.prototype.cacheData = function (source) {
                 if (typeof source === "undefined") { source = ''; }
-                Physics.Manager.write('cacheData -- start');
-                Physics.Manager.write('p: ' + this.position.toString());
-                Physics.Manager.write('xf: ' + this.transform.toString());
+                //Manager.write('cacheData -- start');
+                //Manager.write('p: ' + this.position.toString());
+                //Manager.write('xf: ' + this.transform.toString());
                 this.bounds.clear();
                 for(var i = 0; i < this.shapesLength; i++) {
                     var shape = this.shapes[i];
                     shape.cacheData(this.transform);
                     this.bounds.addBounds(shape.bounds);
                 }
-                Physics.Manager.write('bounds: ' + this.bounds.toString());
-                Physics.Manager.write('p: ' + this.position.toString());
-                Physics.Manager.write('xf: ' + this.transform.toString());
-                Physics.Manager.write('cacheData -- stop');
-            };
+                //Manager.write('bounds: ' + this.bounds.toString());
+                //Manager.write('p: ' + this.position.toString());
+                //Manager.write('xf: ' + this.transform.toString());
+                //Manager.write('cacheData -- stop');
+                            };
             Body.prototype.updateVelocity = function (gravity, dt, damping) {
                 Phaser.Vec2Utils.multiplyAdd(gravity, this.force, this.massInverted, this._tempVec2);
                 Phaser.Vec2Utils.multiplyAdd(this.velocity, this._tempVec2, dt, this.velocity);
@@ -6987,8 +7000,7 @@ var Phaser;
                 if(this.sprite) {
                     this.sprite.x = this.position.x * 50;
                     this.sprite.y = this.position.y * 50;
-                    //  Obey fixed rotation?
-                    this.sprite.rotation = this.game.math.radiansToDegrees(this.angle);
+                    this.sprite.transform.rotation = this.game.math.radiansToDegrees(this.angle);
                 }
             };
             Body.prototype.resetForce = function () {
@@ -7045,9 +7057,7 @@ var Phaser;
                 this.angularVelocity += impulse * this.inertiaInverted;
             };
             Body.prototype.kineticEnergy = function () {
-                var vsq = this.velocity.dot(this.velocity);
-                var wsq = this.angularVelocity * this.angularVelocity;
-                return 0.5 * (this.mass * vsq + this.inertia * wsq);
+                return 0.5 * (this.mass * this.velocity.dot(this.velocity) + this.inertia * (this.angularVelocity * this.angularVelocity));
             };
             Object.defineProperty(Body.prototype, "isAwake", {
                 get: function () {
@@ -7068,10 +7078,7 @@ var Phaser;
                 }
             };
             Body.prototype.isCollidable = function (other) {
-                if(this == other) {
-                    return false;
-                }
-                if(this.isDynamic == false && other.isDynamic == false) {
+                if((this.isDynamic == false && other.isDynamic == false) || this == other) {
                     return false;
                 }
                 if(!(this.maskBits & other.categoryBits) || !(other.maskBits & this.categoryBits)) {
@@ -7084,6 +7091,9 @@ var Phaser;
                     }
                 }
                 return true;
+            };
+            Body.prototype.toString = function () {
+                return "[{Body (name=" + this.name + " velocity=" + this.velocity.toString() + " angularVelocity: " + this.angularVelocity + ")}]";
             };
             return Body;
         })();
@@ -7113,7 +7123,7 @@ var Phaser;
         * @param [x] {number} the initial x position of the sprite.
         * @param [y] {number} the initial y position of the sprite.
         * @param [key] {string} Key of the graphic you want to load for this sprite.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED, i.e. no physics)
         * @param [shapeType] {number} The physics shape the body will consist of (either Box (0) or Circle (1), for custom types see body.addShape)
         */
         function Sprite(game, x, y, key, frame, bodyType, shapeType) {
@@ -7142,7 +7152,7 @@ var Phaser;
             /**
             * z order value of the object.
             */
-            this.z = 0;
+            this.z = -1;
             /**
             * Render iteration counter
             */
@@ -7157,6 +7167,7 @@ var Phaser;
             this.y = y;
             this.z = -1;
             this.group = null;
+            this.name = '';
             this.animations = new Phaser.Components.AnimationManager(this);
             this.input = new Phaser.Components.Sprite.Input(this);
             this.events = new Phaser.Components.Sprite.Events(this);
@@ -7200,6 +7211,9 @@ var Phaser;
             */
             function (value) {
                 this.transform.rotation = this.game.math.wrap(value, 360, 0);
+                if(this.body) {
+                    this.body.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
+                }
             },
             enumerable: true,
             configurable: true
@@ -8185,29 +8199,70 @@ var Phaser;
             return true;
         };
         Group.prototype.bringToTop = function (child) {
+            //console.log('bringToTop', child.name,'current z', child.z);
+            var oldZ = child.z;
             //  If child not in this group, or is already at the top of the group, return false
-            if(!child || child.group == null || child.group.ID != this.ID || child.z == this._zCounter) {
+            //if (!child || child.group == null || child.group.ID != this.ID || child.z == this._zCounter)
+            if(!child || child.group == null || child.group.ID != this.ID) {
+                //console.log('If child not in this group, or is already at the top of the group, return false');
                 return false;
             }
-            this.sort();
-            //  What's the z index of the top most child?
-            var childIndex = this._zCounter;
-            this._i = 0;
-            while(this._i < this.length) {
-                this._member = this.members[this._i++];
-                if(this._member) {
-                    if(this._i > childIndex) {
-                        this._member.z--;
-                    } else if(this._member.z == child.z) {
-                        childIndex = this._i;
-                        this._member.z = this._zCounter;
-                    }
+            //  Find out the largest z index
+            var topZ = -1;
+            for(var i = 0; i < this.length; i++) {
+                if(this.members[i] && this.members[i].z > topZ) {
+                    topZ = this.members[i].z;
                 }
             }
+            //  Child is already at the top
+            if(child.z == topZ) {
+                return false;
+            }
+            child.z = topZ + 1;
+            //  Sort them out based on the current z indexes
+            this.sort();
+            //  Now tidy-up the z indexes, removing gaps, etc
+            for(var i = 0; i < this.length; i++) {
+                if(this.members[i]) {
+                    this.members[i].z = i;
+                }
+            }
+            //console.log('bringToTop', child.name, 'old z', oldZ, 'new z', child.z);
+            return true;
+            //  What's the z index of the top most child?
+            /*
+            var childIndex: number = this._zCounter;
+            
+            console.log('childIndex', childIndex);
+            
+            this._i = 0;
+            
+            while (this._i < this.length)
+            {
+            this._member = this.members[this._i++];
+            
+            if (this._member)
+            {
+            if (this._i > childIndex)
+            {
+            this._member.z--;
+            }
+            else if (this._member.z == child.z)
+            {
+            childIndex = this._i;
+            this._member.z = this._zCounter;
+            }
+            }
+            }
+            
+            console.log('child inserted at index', child.z);
+            
             //  Maybe redundant?
             this.sort();
+            
             return true;
-        };
+            */
+                    };
         Group.prototype.sort = /**
         * Call this function to sort the group according to a particular value and order.
         * For example, to sort game objects for Zelda-style overlaps you might call
@@ -11782,6 +11837,7 @@ var Phaser;
             * @type {Tweens[]}
             */
             this._chainedTweens = [];
+            this.isRunning = false;
             this._object = object;
             this._game = game;
             this._manager = this._game.tweens;
@@ -11849,6 +11905,7 @@ var Phaser;
                 this.onStart.dispatch(this._object);
             }
             this._startTime = this._game.time.now + this._delayTime;
+            this.isRunning = true;
             for(var property in this._valuesEnd) {
                 // This prevents the interpolation of null values or of non-existing properties
                 if(this._object[property] === null || !(property in this._object)) {
@@ -11903,6 +11960,7 @@ var Phaser;
             if(this._manager !== null) {
                 this._manager.remove(this);
             }
+            this.isRunning = false;
             this.onComplete.dispose();
             return this;
         };
@@ -12012,6 +12070,9 @@ var Phaser;
                     this.onComplete.dispatch(this._object);
                     for(var i = 0; i < this._chainedTweens.length; i++) {
                         this._chainedTweens[i].start();
+                    }
+                    if(this._chainedTweens.length == 0) {
+                        this.isRunning = false;
                     }
                     return false;
                 }
@@ -12633,21 +12694,6 @@ var Phaser;
         * @param tileHeight {number} Height of tiles in this map.
         */
         function TilemapLayer(game, parent, key, mapFormat, name, tileWidth, tileHeight) {
-            this._startX = 0;
-            this._startY = 0;
-            this._maxX = 0;
-            this._maxY = 0;
-            this._tx = 0;
-            this._ty = 0;
-            this._dx = 0;
-            this._dy = 0;
-            this._oldCameraX = 0;
-            this._oldCameraY = 0;
-            /**
-            * Opacity of this layer.
-            * @type {number}
-            */
-            this.alpha = 1;
             /**
             * Controls whether update() and draw() are automatically called.
             * @type {boolean}
@@ -12690,19 +12736,24 @@ var Phaser;
             * @type {number}
             */
             this.tileSpacing = 0;
-            this._game = game;
-            this._parent = parent;
+            this.game = game;
+            this.parent = parent;
             this.name = name;
             this.mapFormat = mapFormat;
             this.tileWidth = tileWidth;
             this.tileHeight = tileHeight;
             this.boundsInTiles = new Phaser.Rectangle();
-            //this.scrollFactor = new MicroPoint(1, 1);
-            this.canvas = game.stage.canvas;
-            this.context = game.stage.context;
+            this.texture = new Phaser.Components.Texture(this);
+            this.transform = new Phaser.Components.Transform(this);
+            if(key !== null) {
+                this.texture.loadImage(key, false);
+            } else {
+                this.texture.opaque = true;
+            }
+            //  Handy proxies
+            this.alpha = this.texture.alpha;
             this.mapData = [];
             this._tempTileBlock = [];
-            this._texture = this._game.cache.getImage(key);
         }
         TilemapLayer.prototype.putTile = /**
         * Set a specific tile with its x and y in tiles.
@@ -12711,8 +12762,8 @@ var Phaser;
         * @param index {number} The index of this tile type in the core map data.
         */
         function (x, y, index) {
-            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+            x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
             if(y >= 0 && y < this.mapData.length) {
                 if(x >= 0 && x < this.mapData[y].length) {
                     this.mapData[y][x] = index;
@@ -12784,7 +12835,7 @@ var Phaser;
             if (typeof height === "undefined") { height = this.heightInTiles; }
             this.getTempBlock(x, y, width, height);
             for(var r = 0; r < this._tempTileBlock.length; r++) {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this._game.math.getRandom(tiles);
+                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this.game.math.getRandom(tiles);
             }
         };
         TilemapLayer.prototype.replaceTile = /**
@@ -12833,8 +12884,8 @@ var Phaser;
         * @param x {number} Y position of the point in target tile.
         */
         function (x, y) {
-            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+            x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
             return this.getTileIndex(x, y);
         };
         TilemapLayer.prototype.getTileOverlaps = /**
@@ -12848,17 +12899,17 @@ var Phaser;
                 return;
             }
             //  What tiles do we need to check against?
-            this._tempTileX = this._game.math.snapToFloor(object.body.bounds.x, this.tileWidth) / this.tileWidth;
-            this._tempTileY = this._game.math.snapToFloor(object.body.bounds.y, this.tileHeight) / this.tileHeight;
-            this._tempTileW = (this._game.math.snapToCeil(object.body.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-            this._tempTileH = (this._game.math.snapToCeil(object.body.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
+            this._tempTileX = this.game.math.snapToFloor(object.body.bounds.x, this.tileWidth) / this.tileWidth;
+            this._tempTileY = this.game.math.snapToFloor(object.body.bounds.y, this.tileHeight) / this.tileHeight;
+            this._tempTileW = (this.game.math.snapToCeil(object.body.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
+            this._tempTileH = (this.game.math.snapToCeil(object.body.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
             //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
             this._tempBlockResults = [];
             this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
             /*
             for (var r = 0; r < this._tempTileBlock.length; r++)
             {
-            if (this._game.world.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
+            if (this.game.world.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
             {
             this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
             }
@@ -12893,11 +12944,11 @@ var Phaser;
                 for(var tx = x; tx < x + width; tx++) {
                     if(collisionOnly) {
                         //  We only want to consider the tile for checking if you can actually collide with it
-                        if(this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Phaser.Types.NONE) {
+                        if(this.mapData[ty] && this.mapData[ty][tx] && this.parent.tiles[this.mapData[ty][tx]].allowCollisions != Phaser.Types.NONE) {
                             this._tempTileBlock.push({
                                 x: tx,
                                 y: ty,
-                                tile: this._parent.tiles[this.mapData[ty][tx]]
+                                tile: this.parent.tiles[this.mapData[ty][tx]]
                             });
                         }
                     } else {
@@ -12905,7 +12956,7 @@ var Phaser;
                             this._tempTileBlock.push({
                                 x: tx,
                                 y: ty,
-                                tile: this._parent.tiles[this.mapData[ty][tx]]
+                                tile: this.parent.tiles[this.mapData[ty][tx]]
                             });
                         }
                     }
@@ -12951,120 +13002,42 @@ var Phaser;
         };
         TilemapLayer.prototype.parseTileOffsets = /**
         * Parse tile offsets from map data.
-        * @return {number} length of _tileOffsets array.
+        * @return {number} length of tileOffsets array.
         */
         function () {
-            this._tileOffsets = [];
+            this.tileOffsets = [];
             var i = 0;
             if(this.mapFormat == Phaser.Tilemap.FORMAT_TILED_JSON) {
                 //  For some reason Tiled counts from 1 not 0
-                this._tileOffsets[0] = null;
+                this.tileOffsets[0] = null;
                 i = 1;
             }
-            for(var ty = this.tileMargin; ty < this._texture.height; ty += (this.tileHeight + this.tileSpacing)) {
-                for(var tx = this.tileMargin; tx < this._texture.width; tx += (this.tileWidth + this.tileSpacing)) {
-                    this._tileOffsets[i] = {
+            for(var ty = this.tileMargin; ty < this.texture.height; ty += (this.tileHeight + this.tileSpacing)) {
+                for(var tx = this.tileMargin; tx < this.texture.width; tx += (this.tileWidth + this.tileSpacing)) {
+                    this.tileOffsets[i] = {
                         x: tx,
                         y: ty
                     };
                     i++;
                 }
             }
-            return this._tileOffsets.length;
-        };
-        TilemapLayer.prototype.renderDebugInfo = function (x, y, color) {
-            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this.context.fillStyle = color;
-            this.context.fillText('TilemapLayer: ' + this.name, x, y);
-            this.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
-            this.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
-            this.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
-        };
-        TilemapLayer.prototype.render = /**
-        * Render this layer to a specific camera with offset to camera.
-        * @param camera {Camera} The camera the layer is going to be rendered.
-        * @param dx {number} X offset to the camera.
-        * @param dy {number} Y offset to the camera.
-        * @return {boolean} Return false if layer is invisible or has a too low opacity(will stop rendering), return true if succeed.
-        */
-        function (camera, dx, dy) {
-            if(this.visible === false || this.alpha < 0.1) {
-                return false;
-            }
-            //  Work out how many tiles we can fit into our camera and round it up for the edges
-            this._maxX = this._game.math.ceil(camera.width / this.tileWidth) + 1;
-            this._maxY = this._game.math.ceil(camera.height / this.tileHeight) + 1;
-            //  And now work out where in the tilemap the camera actually is
-            this._startX = this._game.math.floor(camera.worldView.x / this.tileWidth);
-            this._startY = this._game.math.floor(camera.worldView.y / this.tileHeight);
-            //  Tilemap bounds check
-            if(this._startX < 0) {
-                this._startX = 0;
-            }
-            if(this._startY < 0) {
-                this._startY = 0;
-            }
-            if(this._maxX > this.widthInTiles) {
-                this._maxX = this.widthInTiles;
-            }
-            if(this._maxY > this.heightInTiles) {
-                this._maxY = this.heightInTiles;
-            }
-            if(this._startX + this._maxX > this.widthInTiles) {
-                this._startX = this.widthInTiles - this._maxX;
-            }
-            if(this._startY + this._maxY > this.heightInTiles) {
-                this._startY = this.heightInTiles - this._maxY;
-            }
-            //  Finally get the offset to avoid the blocky movement
-            this._dx = dx;
-            this._dy = dy;
-            this._dx += -(camera.worldView.x - (this._startX * this.tileWidth));
-            this._dy += -(camera.worldView.y - (this._startY * this.tileHeight));
-            this._tx = this._dx;
-            this._ty = this._dy;
-            //	Apply camera difference
-            /*
-            if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
-            {
-            this._dx -= (camera.worldView.x * this.scrollFactor.x);
-            this._dy -= (camera.worldView.y * this.scrollFactor.y);
-            }
-            */
-            //  Alpha
-            if(this.alpha !== 1) {
-                var globalAlpha = this.context.globalAlpha;
-                this.context.globalAlpha = this.alpha;
-            }
-            for(var row = this._startY; row < this._startY + this._maxY; row++) {
-                this._columnData = this.mapData[row];
-                for(var tile = this._startX; tile < this._startX + this._maxX; tile++) {
-                    if(this._tileOffsets[this._columnData[tile]]) {
-                        this.context.drawImage(this._texture, //  Source Image
-                        this._tileOffsets[this._columnData[tile]].x, //  Source X (location within the source image)
-                        this._tileOffsets[this._columnData[tile]].y, //  Source Y
-                        this.tileWidth, //	Source Width
-                        this.tileHeight, //	Source Height
-                        this._tx, //	Destination X (where on the canvas it'll be drawn)
-                        this._ty, //	Destination Y
-                        this.tileWidth, //	Destination Width (always same as Source Width unless scaled)
-                        this.tileHeight);
-                        //	Destination Height (always same as Source Height unless scaled)
-                                            }
-                    this._tx += this.tileWidth;
-                }
-                this._tx = this._dx;
-                this._ty += this.tileHeight;
-            }
-            if(globalAlpha > -1) {
-                this.context.globalAlpha = globalAlpha;
-            }
-            return true;
+            return this.tileOffsets.length;
         };
         return TilemapLayer;
     })();
     Phaser.TilemapLayer = TilemapLayer;    
-})(Phaser || (Phaser = {}));
+    /*
+    public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
+    
+    this.context.fillStyle = color;
+    this.context.fillText('TilemapLayer: ' + this.name, x, y);
+    this.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
+    this.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
+    this.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
+    
+    }
+    */
+    })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
 * Phaser - Tile
@@ -13217,6 +13190,22 @@ var Phaser;
             if (typeof tileWidth === "undefined") { tileWidth = 0; }
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
             /**
+            * The Input component
+            */
+            //public input: Phaser.Components.Sprite.Input;
+            /**
+            * The Events component
+            */
+            //public events: Phaser.Components.Sprite.Events;
+            /**
+            * z order value of the object.
+            */
+            this.z = -1;
+            /**
+            * Render iteration counter
+            */
+            this.renderOrderID = 0;
+            /**
             * Tilemap collision callback.
             * @type {function}
             */
@@ -13227,9 +13216,13 @@ var Phaser;
             this.active = true;
             this.visible = true;
             this.alive = true;
+            this.z = -1;
+            this.group = null;
+            this.name = '';
+            this.texture = new Phaser.Components.Texture(this);
+            this.transform = new Phaser.Components.Transform(this);
             this.tiles = [];
             this.layers = [];
-            this.cameraBlacklist = [];
             this.mapFormat = format;
             switch(format) {
                 case Tilemap.FORMAT_CSV:
@@ -13245,24 +13238,14 @@ var Phaser;
         }
         Tilemap.FORMAT_CSV = 0;
         Tilemap.FORMAT_TILED_JSON = 1;
-        Tilemap.prototype.update = /**
-        * Inherited update method.
+        Tilemap.prototype.preUpdate = /**
+        * Inherited methods for overriding.
         */
         function () {
         };
-        Tilemap.prototype.render = /**
-        * Render this tilemap to a specific camera with specific offset.
-        * @param camera {Camera} The camera this tilemap will be rendered to.
-        * @param cameraOffsetX {number} X offset of the camera.
-        * @param cameraOffsetY {number} Y offset of the camera.
-        */
-        function (camera, cameraOffsetX, cameraOffsetY) {
-            if(this.cameraBlacklist.indexOf(camera.ID) == -1) {
-                //  Loop through the layers
-                for(var i = 0; i < this.layers.length; i++) {
-                    this.layers[i].render(camera, cameraOffsetX, cameraOffsetY);
-                }
-            }
+        Tilemap.prototype.update = function () {
+        };
+        Tilemap.prototype.postUpdate = function () {
         };
         Tilemap.prototype.parseCSV = /**
         * Parset csv map data and generate tiles.
@@ -16253,7 +16236,8 @@ var Phaser;
             return PointUtils.rotate(a, b.x, b.y, angle, asDegrees, distance);
         };
         return PointUtils;
-    })();    
+    })();
+    Phaser.PointUtils = PointUtils;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../math/Vec2.ts" />
@@ -18083,7 +18067,7 @@ var Phaser;
 (function (Phaser) {
     var CanvasRenderer = (function () {
         function CanvasRenderer(game) {
-            //  local rendering related temp vars to help avoid gc spikes with var creation
+            //  Local rendering related temp vars to help avoid gc spikes through var creation
             this._ga = 1;
             this._sx = 0;
             this._sy = 0;
@@ -18095,8 +18079,14 @@ var Phaser;
             this._dh = 0;
             this._fx = 1;
             this._fy = 1;
+            this._tx = 0;
+            this._ty = 0;
             this._sin = 0;
             this._cos = 1;
+            this._maxX = 0;
+            this._maxY = 0;
+            this._startX = 0;
+            this._startY = 0;
             this._game = game;
         }
         CanvasRenderer.prototype.render = function () {
@@ -18117,6 +18107,8 @@ var Phaser;
                 this.renderSprite(this._camera, object);
             } else if(object.type == Phaser.Types.SCROLLZONE) {
                 this.renderScrollZone(this._camera, object);
+            } else if(object.type == Phaser.Types.TILEMAP) {
+                this.renderTilemap(this._camera, object);
             }
         };
         CanvasRenderer.prototype.preRenderGroup = function (camera, group) {
@@ -18553,6 +18545,75 @@ var Phaser;
             }
             return true;
         };
+        CanvasRenderer.prototype.renderTilemap = /**
+        * Render a tilemap to a specific camera.
+        * @param camera {Camera} The camera this tilemap will be rendered to.
+        */
+        function (camera, tilemap) {
+            //  Loop through the layers
+            for(var i = 0; i < tilemap.layers.length; i++) {
+                var layer = tilemap.layers[i];
+                if(layer.visible == false || layer.alpha < 0.1) {
+                    continue;
+                }
+                //  Work out how many tiles we can fit into our camera and round it up for the edges
+                this._maxX = this._game.math.ceil(camera.width / layer.tileWidth) + 1;
+                this._maxY = this._game.math.ceil(camera.height / layer.tileHeight) + 1;
+                //  And now work out where in the tilemap the camera actually is
+                this._startX = this._game.math.floor(camera.worldView.x / layer.tileWidth);
+                this._startY = this._game.math.floor(camera.worldView.y / layer.tileHeight);
+                //  Tilemap bounds check
+                if(this._startX < 0) {
+                    this._startX = 0;
+                }
+                if(this._startY < 0) {
+                    this._startY = 0;
+                }
+                if(this._maxX > layer.widthInTiles) {
+                    this._maxX = layer.widthInTiles;
+                }
+                if(this._maxY > layer.heightInTiles) {
+                    this._maxY = layer.heightInTiles;
+                }
+                if(this._startX + this._maxX > layer.widthInTiles) {
+                    this._startX = layer.widthInTiles - this._maxX;
+                }
+                if(this._startY + this._maxY > layer.heightInTiles) {
+                    this._startY = layer.heightInTiles - this._maxY;
+                }
+                //  Finally get the offset to avoid the blocky movement
+                //this._dx = (camera.screenView.x * layer.transform.scrollFactor.x) - (camera.worldView.x * layer.transform.scrollFactor.x);
+                //this._dy = (camera.screenView.y * layer.transform.scrollFactor.y) - (camera.worldView.y * layer.transform.scrollFactor.y);
+                //this._dx = (camera.screenView.x * this.scrollFactor.x) + this.x - (camera.worldView.x * this.scrollFactor.x);
+                //this._dy = (camera.screenView.y * this.scrollFactor.y) + this.y - (camera.worldView.y * this.scrollFactor.y);
+                this._dx = 0;
+                this._dy = 0;
+                this._dx += -(camera.worldView.x - (this._startX * layer.tileWidth));
+                this._dy += -(camera.worldView.y - (this._startY * layer.tileHeight));
+                this._tx = this._dx;
+                this._ty = this._dy;
+                //  Alpha
+                if(layer.texture.alpha !== 1) {
+                    this._ga = layer.texture.context.globalAlpha;
+                    layer.texture.context.globalAlpha = layer.texture.alpha;
+                }
+                for(var row = this._startY; row < this._startY + this._maxY; row++) {
+                    this._columnData = layer.mapData[row];
+                    for(var tile = this._startX; tile < this._startX + this._maxX; tile++) {
+                        if(layer.tileOffsets[this._columnData[tile]]) {
+                            layer.texture.context.drawImage(layer.texture.texture, layer.tileOffsets[this._columnData[tile]].x, layer.tileOffsets[this._columnData[tile]].y, layer.tileWidth, layer.tileHeight, this._tx, this._ty, layer.tileWidth, layer.tileHeight);
+                        }
+                        this._tx += layer.tileWidth;
+                    }
+                    this._tx = this._dx;
+                    this._ty += layer.tileHeight;
+                }
+                if(this._ga > -1) {
+                    layer.texture.context.globalAlpha = this._ga;
+                }
+            }
+            return true;
+        };
         return CanvasRenderer;
     })();
     Phaser.CanvasRenderer = CanvasRenderer;    
@@ -18625,6 +18686,11 @@ var Phaser;
             var dy = sprite.worldView.y;
             DebugUtils.context.fillStyle = color;
             DebugUtils.context.fillRect(dx, dy, sprite.width, sprite.height);
+        };
+        DebugUtils.renderRectangle = function renderRectangle(rect, fillStyle) {
+            if (typeof fillStyle === "undefined") { fillStyle = 'rgba(0,255,0,0.3)'; }
+            DebugUtils.context.fillStyle = fillStyle;
+            DebugUtils.context.fillRect(rect.x, rect.y, rect.width, rect.height);
         };
         DebugUtils.renderPhysicsBody = function renderPhysicsBody(body, lineWidth, fillStyle, sleepStyle) {
             if (typeof lineWidth === "undefined") { lineWidth = 1; }
@@ -19094,84 +19160,6 @@ var Phaser;
     })();
     Phaser.Game = Game;    
 })(Phaser || (Phaser = {}));
-/// <reference path="Game.ts" />
-/**
-* Phaser - State
-*
-* This is a base State class which can be extended if you are creating your game using TypeScript.
-*/
-var Phaser;
-(function (Phaser) {
-    var State = (function () {
-        /**
-        * State constructor
-        * Create a new <code>State</code>.
-        */
-        function State(game) {
-            this.game = game;
-            this.add = game.add;
-            this.camera = game.camera;
-            this.cache = game.cache;
-            this.input = game.input;
-            this.load = game.load;
-            this.math = game.math;
-            this.motion = game.motion;
-            this.sound = game.sound;
-            this.stage = game.stage;
-            this.time = game.time;
-            this.tweens = game.tweens;
-            this.world = game.world;
-        }
-        State.prototype.init = //  Override these in your own States
-        /**
-        * Override this method to add some load operations.
-        * If you need to use the loader, you may need to use them here.
-        */
-        function () {
-        };
-        State.prototype.create = /**
-        * This method is called after the game engine successfully switches states.
-        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
-        */
-        function () {
-        };
-        State.prototype.update = /**
-        * Put update logic here.
-        */
-        function () {
-        };
-        State.prototype.render = /**
-        * Put render operations here.
-        */
-        function () {
-        };
-        State.prototype.paused = /**
-        * This method will be called when game paused.
-        */
-        function () {
-        };
-        State.prototype.destroy = /**
-        * This method will be called when the state is destroyed
-        */
-        function () {
-        };
-        return State;
-    })();
-    Phaser.State = State;    
-    /**
-    * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
-    * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-    * @param object1 The first GameObject or Group to check. If null the world.group is used.
-    * @param object2 The second GameObject or Group to check.
-    * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-    * @param context The context in which the callbacks will be called
-    * @returns {boolean} true if the objects overlap, otherwise false.
-    */
-    //public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.game.callbackContext): bool {
-    //    return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
-    //}
-    })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
     /**
@@ -19514,206 +19502,6 @@ var Phaser;
     Phaser.Line = Line;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/**
-* Phaser - IntersectResult
-*
-* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
-*/
-var Phaser;
-(function (Phaser) {
-    var IntersectResult = (function () {
-        function IntersectResult() {
-            /**
-            * Did they intersect or not?
-            * @property result
-            * @type {Boolean}
-            */
-            this.result = false;
-        }
-        IntersectResult.prototype.setTo = /**
-        *
-        * @method setTo
-        * @param {Number} x1
-        * @param {Number} y1
-        * @param {Number} [x2]
-        * @param {Number} [y2]
-        * @param {Number} [width]
-        * @param {Number} [height]
-        */
-        function (x1, y1, x2, y2, width, height) {
-            if (typeof x2 === "undefined") { x2 = 0; }
-            if (typeof y2 === "undefined") { y2 = 0; }
-            if (typeof width === "undefined") { width = 0; }
-            if (typeof height === "undefined") { height = 0; }
-            this.x = x1;
-            this.y = y1;
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.width = width;
-            this.height = height;
-        };
-        return IntersectResult;
-    })();
-    Phaser.IntersectResult = IntersectResult;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="../math/Vec2.ts" />
-/// <reference path="../math/Mat3.ts" />
-/**
-* Phaser - Mat3Utils
-*
-* A collection of methods useful for manipulating and performing operations on Mat3 objects.
-*
-*/
-var Phaser;
-(function (Phaser) {
-    var Mat3Utils = (function () {
-        function Mat3Utils() { }
-        Mat3Utils.transpose = /**
-        * Transpose the values of a Mat3
-        **/
-        function transpose(source, dest) {
-            if (typeof dest === "undefined") { dest = null; }
-            if(dest === null) {
-                //  Transpose ourselves
-                var a01 = source.data[1];
-                var a02 = source.data[2];
-                var a12 = source.data[5];
-                source.data[1] = source.data[3];
-                source.data[2] = source.data[6];
-                source.data[3] = a01;
-                source.data[5] = source.data[7];
-                source.data[6] = a02;
-                source.data[7] = a12;
-            } else {
-                source.data[0] = dest.data[0];
-                source.data[1] = dest.data[3];
-                source.data[2] = dest.data[6];
-                source.data[3] = dest.data[1];
-                source.data[4] = dest.data[4];
-                source.data[5] = dest.data[7];
-                source.data[6] = dest.data[2];
-                source.data[7] = dest.data[5];
-                source.data[8] = dest.data[8];
-            }
-            return source;
-        };
-        Mat3Utils.invert = /**
-        * Inverts a Mat3
-        **/
-        function invert(source) {
-            var a00 = source.data[0];
-            var a01 = source.data[1];
-            var a02 = source.data[2];
-            var a10 = source.data[3];
-            var a11 = source.data[4];
-            var a12 = source.data[5];
-            var a20 = source.data[6];
-            var a21 = source.data[7];
-            var a22 = source.data[8];
-            var b01 = a22 * a11 - a12 * a21;
-            var b11 = -a22 * a10 + a12 * a20;
-            var b21 = a21 * a10 - a11 * a20;
-            //  Determinant
-            var det = a00 * b01 + a01 * b11 + a02 * b21;
-            if(!det) {
-                return null;
-            }
-            det = 1.0 / det;
-            source.data[0] = b01 * det;
-            source.data[1] = (-a22 * a01 + a02 * a21) * det;
-            source.data[2] = (a12 * a01 - a02 * a11) * det;
-            source.data[3] = b11 * det;
-            source.data[4] = (a22 * a00 - a02 * a20) * det;
-            source.data[5] = (-a12 * a00 + a02 * a10) * det;
-            source.data[6] = b21 * det;
-            source.data[7] = (-a21 * a00 + a01 * a20) * det;
-            source.data[8] = (a11 * a00 - a01 * a10) * det;
-            return source;
-        };
-        Mat3Utils.adjoint = /**
-        * Calculates the adjugate of a Mat3
-        **/
-        function adjoint(source) {
-            var a00 = source.data[0];
-            var a01 = source.data[1];
-            var a02 = source.data[2];
-            var a10 = source.data[3];
-            var a11 = source.data[4];
-            var a12 = source.data[5];
-            var a20 = source.data[6];
-            var a21 = source.data[7];
-            var a22 = source.data[8];
-            source.data[0] = (a11 * a22 - a12 * a21);
-            source.data[1] = (a02 * a21 - a01 * a22);
-            source.data[2] = (a01 * a12 - a02 * a11);
-            source.data[3] = (a12 * a20 - a10 * a22);
-            source.data[4] = (a00 * a22 - a02 * a20);
-            source.data[5] = (a02 * a10 - a00 * a12);
-            source.data[6] = (a10 * a21 - a11 * a20);
-            source.data[7] = (a01 * a20 - a00 * a21);
-            source.data[8] = (a00 * a11 - a01 * a10);
-            return source;
-        };
-        Mat3Utils.determinant = /**
-        * Calculates the adjugate of a Mat3
-        **/
-        function determinant(source) {
-            var a00 = source.data[0];
-            var a01 = source.data[1];
-            var a02 = source.data[2];
-            var a10 = source.data[3];
-            var a11 = source.data[4];
-            var a12 = source.data[5];
-            var a20 = source.data[6];
-            var a21 = source.data[7];
-            var a22 = source.data[8];
-            return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
-        };
-        Mat3Utils.multiply = /**
-        * Multiplies two Mat3s
-        **/
-        function multiply(source, b) {
-            var a00 = source.data[0];
-            var a01 = source.data[1];
-            var a02 = source.data[2];
-            var a10 = source.data[3];
-            var a11 = source.data[4];
-            var a12 = source.data[5];
-            var a20 = source.data[6];
-            var a21 = source.data[7];
-            var a22 = source.data[8];
-            var b00 = b.data[0];
-            var b01 = b.data[1];
-            var b02 = b.data[2];
-            var b10 = b.data[3];
-            var b11 = b.data[4];
-            var b12 = b.data[5];
-            var b20 = b.data[6];
-            var b21 = b.data[7];
-            var b22 = b.data[8];
-            source.data[0] = b00 * a00 + b01 * a10 + b02 * a20;
-            source.data[1] = b00 * a01 + b01 * a11 + b02 * a21;
-            source.data[2] = b00 * a02 + b01 * a12 + b02 * a22;
-            source.data[3] = b10 * a00 + b11 * a10 + b12 * a20;
-            source.data[4] = b10 * a01 + b11 * a11 + b12 * a21;
-            source.data[5] = b10 * a02 + b11 * a12 + b12 * a22;
-            source.data[6] = b20 * a00 + b21 * a10 + b22 * a20;
-            source.data[7] = b20 * a01 + b21 * a11 + b22 * a21;
-            source.data[8] = b20 * a02 + b21 * a12 + b22 * a22;
-            return source;
-        };
-        Mat3Utils.fromQuaternion = function fromQuaternion() {
-        };
-        Mat3Utils.normalFromMat4 = function normalFromMat4() {
-        };
-        return Mat3Utils;
-    })();
-    Phaser.Mat3Utils = Mat3Utils;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
 /// <reference path="../geom/Point.ts" />
 /// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../geom/Circle.ts" />
@@ -19877,6 +19665,161 @@ var Phaser;
     Phaser.CircleUtils = CircleUtils;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../math/Mat3.ts" />
+/**
+* Phaser - Mat3Utils
+*
+* A collection of methods useful for manipulating and performing operations on Mat3 objects.
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var Mat3Utils = (function () {
+        function Mat3Utils() { }
+        Mat3Utils.transpose = /**
+        * Transpose the values of a Mat3
+        **/
+        function transpose(source, dest) {
+            if (typeof dest === "undefined") { dest = null; }
+            if(dest === null) {
+                //  Transpose ourselves
+                var a01 = source.data[1];
+                var a02 = source.data[2];
+                var a12 = source.data[5];
+                source.data[1] = source.data[3];
+                source.data[2] = source.data[6];
+                source.data[3] = a01;
+                source.data[5] = source.data[7];
+                source.data[6] = a02;
+                source.data[7] = a12;
+            } else {
+                source.data[0] = dest.data[0];
+                source.data[1] = dest.data[3];
+                source.data[2] = dest.data[6];
+                source.data[3] = dest.data[1];
+                source.data[4] = dest.data[4];
+                source.data[5] = dest.data[7];
+                source.data[6] = dest.data[2];
+                source.data[7] = dest.data[5];
+                source.data[8] = dest.data[8];
+            }
+            return source;
+        };
+        Mat3Utils.invert = /**
+        * Inverts a Mat3
+        **/
+        function invert(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            var b01 = a22 * a11 - a12 * a21;
+            var b11 = -a22 * a10 + a12 * a20;
+            var b21 = a21 * a10 - a11 * a20;
+            //  Determinant
+            var det = a00 * b01 + a01 * b11 + a02 * b21;
+            if(!det) {
+                return null;
+            }
+            det = 1.0 / det;
+            source.data[0] = b01 * det;
+            source.data[1] = (-a22 * a01 + a02 * a21) * det;
+            source.data[2] = (a12 * a01 - a02 * a11) * det;
+            source.data[3] = b11 * det;
+            source.data[4] = (a22 * a00 - a02 * a20) * det;
+            source.data[5] = (-a12 * a00 + a02 * a10) * det;
+            source.data[6] = b21 * det;
+            source.data[7] = (-a21 * a00 + a01 * a20) * det;
+            source.data[8] = (a11 * a00 - a01 * a10) * det;
+            return source;
+        };
+        Mat3Utils.adjoint = /**
+        * Calculates the adjugate of a Mat3
+        **/
+        function adjoint(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            source.data[0] = (a11 * a22 - a12 * a21);
+            source.data[1] = (a02 * a21 - a01 * a22);
+            source.data[2] = (a01 * a12 - a02 * a11);
+            source.data[3] = (a12 * a20 - a10 * a22);
+            source.data[4] = (a00 * a22 - a02 * a20);
+            source.data[5] = (a02 * a10 - a00 * a12);
+            source.data[6] = (a10 * a21 - a11 * a20);
+            source.data[7] = (a01 * a20 - a00 * a21);
+            source.data[8] = (a00 * a11 - a01 * a10);
+            return source;
+        };
+        Mat3Utils.determinant = /**
+        * Calculates the adjugate of a Mat3
+        **/
+        function determinant(source) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
+        };
+        Mat3Utils.multiply = /**
+        * Multiplies two Mat3s
+        **/
+        function multiply(source, b) {
+            var a00 = source.data[0];
+            var a01 = source.data[1];
+            var a02 = source.data[2];
+            var a10 = source.data[3];
+            var a11 = source.data[4];
+            var a12 = source.data[5];
+            var a20 = source.data[6];
+            var a21 = source.data[7];
+            var a22 = source.data[8];
+            var b00 = b.data[0];
+            var b01 = b.data[1];
+            var b02 = b.data[2];
+            var b10 = b.data[3];
+            var b11 = b.data[4];
+            var b12 = b.data[5];
+            var b20 = b.data[6];
+            var b21 = b.data[7];
+            var b22 = b.data[8];
+            source.data[0] = b00 * a00 + b01 * a10 + b02 * a20;
+            source.data[1] = b00 * a01 + b01 * a11 + b02 * a21;
+            source.data[2] = b00 * a02 + b01 * a12 + b02 * a22;
+            source.data[3] = b10 * a00 + b11 * a10 + b12 * a20;
+            source.data[4] = b10 * a01 + b11 * a11 + b12 * a21;
+            source.data[5] = b10 * a02 + b11 * a12 + b12 * a22;
+            source.data[6] = b20 * a00 + b21 * a10 + b22 * a20;
+            source.data[7] = b20 * a01 + b21 * a11 + b22 * a21;
+            source.data[8] = b20 * a02 + b21 * a12 + b22 * a22;
+            return source;
+        };
+        Mat3Utils.fromQuaternion = function fromQuaternion() {
+        };
+        Mat3Utils.normalFromMat4 = function normalFromMat4() {
+        };
+        return Mat3Utils;
+    })();
+    Phaser.Mat3Utils = Mat3Utils;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
 /// <reference path="../geom/Point.ts" />
 /// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../geom/Circle.ts" />
@@ -19904,3 +19847,126 @@ var Phaser;
     })();
     Phaser.PixelUtils = PixelUtils;    
 })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/**
+* Phaser - IntersectResult
+*
+* A light-weight result object to hold the results of an intersection. For when you need more than just true/false.
+*/
+var Phaser;
+(function (Phaser) {
+    var IntersectResult = (function () {
+        function IntersectResult() {
+            /**
+            * Did they intersect or not?
+            * @property result
+            * @type {Boolean}
+            */
+            this.result = false;
+        }
+        IntersectResult.prototype.setTo = /**
+        *
+        * @method setTo
+        * @param {Number} x1
+        * @param {Number} y1
+        * @param {Number} [x2]
+        * @param {Number} [y2]
+        * @param {Number} [width]
+        * @param {Number} [height]
+        */
+        function (x1, y1, x2, y2, width, height) {
+            if (typeof x2 === "undefined") { x2 = 0; }
+            if (typeof y2 === "undefined") { y2 = 0; }
+            if (typeof width === "undefined") { width = 0; }
+            if (typeof height === "undefined") { height = 0; }
+            this.x = x1;
+            this.y = y1;
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.width = width;
+            this.height = height;
+        };
+        return IntersectResult;
+    })();
+    Phaser.IntersectResult = IntersectResult;    
+})(Phaser || (Phaser = {}));
+/// <reference path="Game.ts" />
+/**
+* Phaser - State
+*
+* This is a base State class which can be extended if you are creating your game using TypeScript.
+*/
+var Phaser;
+(function (Phaser) {
+    var State = (function () {
+        /**
+        * State constructor
+        * Create a new <code>State</code>.
+        */
+        function State(game) {
+            this.game = game;
+            this.add = game.add;
+            this.camera = game.camera;
+            this.cache = game.cache;
+            this.input = game.input;
+            this.load = game.load;
+            this.math = game.math;
+            this.motion = game.motion;
+            this.sound = game.sound;
+            this.stage = game.stage;
+            this.time = game.time;
+            this.tweens = game.tweens;
+            this.world = game.world;
+        }
+        State.prototype.init = //  Override these in your own States
+        /**
+        * Override this method to add some load operations.
+        * If you need to use the loader, you may need to use them here.
+        */
+        function () {
+        };
+        State.prototype.create = /**
+        * This method is called after the game engine successfully switches states.
+        * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+        */
+        function () {
+        };
+        State.prototype.update = /**
+        * Put update logic here.
+        */
+        function () {
+        };
+        State.prototype.render = /**
+        * Put render operations here.
+        */
+        function () {
+        };
+        State.prototype.paused = /**
+        * This method will be called when game paused.
+        */
+        function () {
+        };
+        State.prototype.destroy = /**
+        * This method will be called when the state is destroyed
+        */
+        function () {
+        };
+        return State;
+    })();
+    Phaser.State = State;    
+    /**
+    * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+    * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+    * @param object1 The first GameObject or Group to check. If null the world.group is used.
+    * @param object2 The second GameObject or Group to check.
+    * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+    * @param context The context in which the callbacks will be called
+    * @returns {boolean} true if the objects overlap, otherwise false.
+    */
+    //public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.game.callbackContext): bool {
+    //    return this.collision.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, Collision.separate, context);
+    //}
+    })(Phaser || (Phaser = {}));

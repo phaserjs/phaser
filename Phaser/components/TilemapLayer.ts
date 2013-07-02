@@ -26,53 +26,36 @@ module Phaser {
          */
         constructor(game: Game, parent:Tilemap, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number) {
 
-            this._game = game;
-            this._parent = parent;
+            this.game = game;
+            this.parent = parent;
 
             this.name = name;
             this.mapFormat = mapFormat;
             this.tileWidth = tileWidth;
             this.tileHeight = tileHeight;
             this.boundsInTiles = new Rectangle();
-            //this.scrollFactor = new MicroPoint(1, 1);
 
-            this.canvas = game.stage.canvas;
-            this.context = game.stage.context;
+            this.texture = new Phaser.Components.Texture(this);
+            this.transform = new Phaser.Components.Transform(this);
+
+            if (key !== null)
+            {
+                this.texture.loadImage(key, false);
+            }
+            else
+            {
+                this.texture.opaque = true;
+            }
+
+            //  Handy proxies
+            this.alpha = this.texture.alpha;
 
             this.mapData = [];
             this._tempTileBlock = [];
-            this._texture = this._game.cache.getImage(key);
 
         }
 
-        /**
-         * Local private reference to game.
-         */
-        private _game: Game;
-
-        /**
-         * The tilemap that contains this layer.
-         * @type {Tilemap}
-         */
-        private _parent: Tilemap;
-
-        /**
-         * Tileset of this layer.
-         */
-        private _texture;
-        private _tileOffsets;
-        private _startX: number = 0;
-        private _startY: number = 0;
-        private _maxX: number = 0;
-        private _maxY: number = 0;
-        private _tx: number = 0;
-        private _ty: number = 0;
-        private _dx: number = 0;
-        private _dy: number = 0;
-        private _oldCameraX: number = 0;
-        private _oldCameraY: number = 0;
-        private _columnData;
-
+        //  Private vars to help avoid gc spikes
         private _tempTileX: number;
         private _tempTileY: number;
         private _tempTileW: number;
@@ -81,28 +64,38 @@ module Phaser {
         private _tempBlockResults;
 
         /**
+         * Local private reference to game.
+         */
+        public game: Game;
+
+        /**
+         * The tilemap that contains this layer.
+         * @type {Tilemap}
+         */
+        public parent: Tilemap;
+
+        /**
+         * The texture used to render the Sprite.
+         */
+        public texture: Phaser.Components.Texture;
+
+        /**
+         * The Sprite transform component.
+         */
+        public transform: Phaser.Components.Transform;
+
+        public tileOffsets;
+
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public alpha: number;
+
+        /**
          * Name of this layer, so you can get this layer by its name.
          * @type {string}
          */
         public name: string;
-
-        /**
-        * A reference to the Canvas this GameObject will render to
-        * @type {HTMLCanvasElement}
-        */
-        public canvas: HTMLCanvasElement;
-
-        /**
-        * A reference to the Canvas Context2D this GameObject will render to
-        * @type {CanvasRenderingContext2D}
-        */
-        public context: CanvasRenderingContext2D;
-
-        /**
-         * Opacity of this layer.
-         * @type {number}
-         */
-        public alpha: number = 1;
 
         /**
          * Controls whether update() and draw() are automatically called.
@@ -116,11 +109,10 @@ module Phaser {
          */
         public visible: bool = true;
 
-        //public scrollFactor: MicroPoint;
         /**
          * @type {string}
          */
-        public orientation: string;
+        //public orientation: string;
 
         /**
          * Properties of this map layer. (normally set by map editors)
@@ -202,8 +194,8 @@ module Phaser {
          */
         public putTile(x: number, y: number, index: number) {
 
-            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+            x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
 
             if (y >= 0 && y < this.mapData.length)
             {
@@ -287,7 +279,7 @@ module Phaser {
 
             for (var r = 0; r < this._tempTileBlock.length; r++)
             {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this._game.math.getRandom(tiles);
+                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this.game.math.getRandom(tiles);
             }
 
         }
@@ -344,8 +336,8 @@ module Phaser {
          */
         public getTileFromWorldXY(x: number, y: number): number {
 
-            x = this._game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-            y = this._game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+            x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
 
             return this.getTileIndex(x, y);
 
@@ -365,10 +357,10 @@ module Phaser {
             }
 
             //  What tiles do we need to check against?
-            this._tempTileX = this._game.math.snapToFloor(object.body.bounds.x, this.tileWidth) / this.tileWidth;
-            this._tempTileY = this._game.math.snapToFloor(object.body.bounds.y, this.tileHeight) / this.tileHeight;
-            this._tempTileW = (this._game.math.snapToCeil(object.body.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-            this._tempTileH = (this._game.math.snapToCeil(object.body.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
+            this._tempTileX = this.game.math.snapToFloor(object.body.bounds.x, this.tileWidth) / this.tileWidth;
+            this._tempTileY = this.game.math.snapToFloor(object.body.bounds.y, this.tileHeight) / this.tileHeight;
+            this._tempTileW = (this.game.math.snapToCeil(object.body.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
+            this._tempTileH = (this.game.math.snapToCeil(object.body.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
 
             //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
 
@@ -378,7 +370,7 @@ module Phaser {
             /*
             for (var r = 0; r < this._tempTileBlock.length; r++)
             {
-                if (this._game.world.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
+                if (this.game.world.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
                 {
                     this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
                 }
@@ -428,16 +420,16 @@ module Phaser {
                     if (collisionOnly)
                     {
                         //  We only want to consider the tile for checking if you can actually collide with it
-                        if (this.mapData[ty] && this.mapData[ty][tx] && this._parent.tiles[this.mapData[ty][tx]].allowCollisions != Types.NONE)
+                        if (this.mapData[ty] && this.mapData[ty][tx] && this.parent.tiles[this.mapData[ty][tx]].allowCollisions != Types.NONE)
                         {
-                            this._tempTileBlock.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                            this._tempTileBlock.push({ x: tx, y: ty, tile: this.parent.tiles[this.mapData[ty][tx]] });
                         }
                     }
                     else
                     {
                         if (this.mapData[ty] && this.mapData[ty][tx])
                         {
-                            this._tempTileBlock.push({ x: tx, y: ty, tile: this._parent.tiles[this.mapData[ty][tx]] });
+                            this._tempTileBlock.push({ x: tx, y: ty, tile: this.parent.tiles[this.mapData[ty][tx]] });
                         }
                     }
                 }
@@ -502,34 +494,35 @@ module Phaser {
 
         /**
          * Parse tile offsets from map data.
-         * @return {number} length of _tileOffsets array.
+         * @return {number} length of tileOffsets array.
          */
         public parseTileOffsets():number {
 
-            this._tileOffsets = [];
+            this.tileOffsets = [];
 
             var i = 0;
 
             if (this.mapFormat == Tilemap.FORMAT_TILED_JSON)
             {
                 //  For some reason Tiled counts from 1 not 0
-                this._tileOffsets[0] = null;
+                this.tileOffsets[0] = null;
                 i = 1;
             }
 
-            for (var ty = this.tileMargin; ty < this._texture.height; ty += (this.tileHeight + this.tileSpacing))
+            for (var ty = this.tileMargin; ty < this.texture.height; ty += (this.tileHeight + this.tileSpacing))
             {
-                for (var tx = this.tileMargin; tx < this._texture.width; tx += (this.tileWidth + this.tileSpacing))
+                for (var tx = this.tileMargin; tx < this.texture.width; tx += (this.tileWidth + this.tileSpacing))
                 {
-                    this._tileOffsets[i] = { x: tx, y: ty };
+                    this.tileOffsets[i] = { x: tx, y: ty };
                     i++;
                 }
             }
 
-            return this._tileOffsets.length;
+            return this.tileOffsets.length;
 
         }
 
+        /*
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
             this.context.fillStyle = color;
@@ -539,125 +532,7 @@ module Phaser {
             this.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
 
         }
-
-        /**
-         * Render this layer to a specific camera with offset to camera.
-         * @param camera {Camera} The camera the layer is going to be rendered.
-         * @param dx {number} X offset to the camera.
-         * @param dy {number} Y offset to the camera.
-         * @return {boolean} Return false if layer is invisible or has a too low opacity(will stop rendering), return true if succeed.
-         */
-        public render(camera: Camera, dx, dy): bool {
-
-            if (this.visible === false || this.alpha < 0.1)
-            {
-                return false;
-            }
-
-            //  Work out how many tiles we can fit into our camera and round it up for the edges
-            this._maxX = this._game.math.ceil(camera.width / this.tileWidth) + 1;
-            this._maxY = this._game.math.ceil(camera.height / this.tileHeight) + 1;
-
-            //  And now work out where in the tilemap the camera actually is
-            this._startX = this._game.math.floor(camera.worldView.x / this.tileWidth);
-            this._startY = this._game.math.floor(camera.worldView.y / this.tileHeight);
-
-            //  Tilemap bounds check
-            if (this._startX < 0)
-            {
-                this._startX = 0;
-            }
-
-            if (this._startY < 0)
-            {
-                this._startY = 0;
-            }
-
-            if (this._maxX > this.widthInTiles)
-            {
-                this._maxX = this.widthInTiles;
-            }
-
-            if (this._maxY > this.heightInTiles)
-            {
-                this._maxY = this.heightInTiles;
-            }
-
-            if (this._startX + this._maxX > this.widthInTiles)
-            {
-                this._startX = this.widthInTiles - this._maxX;
-            }
-
-            if (this._startY + this._maxY > this.heightInTiles)
-            {
-                this._startY = this.heightInTiles - this._maxY;
-            }
-
-            //  Finally get the offset to avoid the blocky movement
-            this._dx = dx;
-            this._dy = dy;
-
-            this._dx += -(camera.worldView.x - (this._startX * this.tileWidth));
-            this._dy += -(camera.worldView.y - (this._startY * this.tileHeight));
-
-            this._tx = this._dx;
-            this._ty = this._dy;
-
-            //	Apply camera difference
-            /*
-            if (this.scrollFactor.x !== 1.0 || this.scrollFactor.y !== 1.0)
-            {
-                this._dx -= (camera.worldView.x * this.scrollFactor.x);
-                this._dy -= (camera.worldView.y * this.scrollFactor.y);
-            }
-            */
-
-            //  Alpha
-            if (this.alpha !== 1)
-            {
-                var globalAlpha = this.context.globalAlpha;
-                this.context.globalAlpha = this.alpha;
-            }
-
-            for (var row = this._startY; row < this._startY + this._maxY; row++)
-            {
-                this._columnData = this.mapData[row];
-
-                for (var tile = this._startX; tile < this._startX + this._maxX; tile++)
-                {
-                    if (this._tileOffsets[this._columnData[tile]])
-                    {
-                        this.context.drawImage(
-                            this._texture,	                                //  Source Image
-                            this._tileOffsets[this._columnData[tile]].x,    //  Source X (location within the source image)
-                            this._tileOffsets[this._columnData[tile]].y,    //  Source Y
-                            this.tileWidth, 	                            //	Source Width
-                            this.tileHeight, 	                            //	Source Height
-                            this._tx, 	    	                            //	Destination X (where on the canvas it'll be drawn)
-                            this._ty,	    	                            //	Destination Y
-                            this.tileWidth, 	                            //	Destination Width (always same as Source Width unless scaled)
-                            this.tileHeight	                                //	Destination Height (always same as Source Height unless scaled)
-                        );
-
-                    }
-
-                    this._tx += this.tileWidth;
-
-                }
-
-                this._tx = this._dx;
-                this._ty += this.tileHeight;
-
-            }
-
-            if (globalAlpha > -1)
-            {
-                this.context.globalAlpha = globalAlpha;
-            }
-
-            return true;
-
-        }
+        */
 
     }
 }

@@ -79,7 +79,7 @@ module Phaser.Components {
         public cameraBlacklist: number[];
 
         /**
-         * Whether the Sprite background is opaque or not. If set to true the Sprite is filled with
+         * Whether the texture background is opaque or not. If set to true the object is filled with
          * the value of Texture.backgroundColor every frame. Normally you wouldn't enable this but
          * for some effects it can be handy.
          * @type {boolean}
@@ -135,6 +135,12 @@ module Phaser.Components {
          * @type {boolean}
          */
         public renderRotation: bool = true;
+
+        /**
+         * The direction the animation frame is facing (can be Phaser.Types.RIGHT, LEFT, UP, DOWN).
+         * Very useful when hooking animation to Sprite directions.
+         */
+        public facing: number;
 
         /**
          * Flip the graphic horizontally (defaults to false)

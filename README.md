@@ -53,7 +53,13 @@ TODO:
 * See about optimising Advanced Physics a lot more, so it doesn't create lots of Vec2s everywhere.
 * QuadTree.physics.checkHullIntersection
 * Fix the Motion methods for the new physics system
-* Moved findShapeByPoint etc from Space to Manager (or at least add a proxy to them)
+* Move findShapeByPoint etc from Space to Manager (or at least add a proxy to them)
+* Make onInput events created only if input component is started
+* Add button mode linked to sprite frames
+* Add visible toggle if tween property is alpha <> 01
+* Camera.isHidden uses an array and length check, faster to swap for a single counter, also try to remove indexOf check
+* Tilemap.render - move layers length to var
+* Camera control method (touch/keyboard)
 
 
 V1.0.0
@@ -126,7 +132,10 @@ V1.0.0
 * Fixed issue in Tilemap.parseTiledJSON where it would accidentally think image and object layers were map data.
 * Fixed bug in Group.bringToTop if the child didn't have a group property yet.
 * Fixed bug in FrameData.checkFrameName where the first index of the _frameNames array would be skipped.
-
+* Added isRunning boolean property to Phaser.Tween
+* Moved 'facing' property from Sprite.body to Sprite.texture (may move to Sprite core)
+* Added Sprite.events.onDragStart and onDragStop
+* A tilemap can now be loaded without a tile sheet, should you just want to get the tile data from it and not render.
 
 
 V0.9.6

@@ -595,6 +595,8 @@ module Phaser.Components.Sprite {
                 this.sprite.group.bringToTop(this.sprite);
             }
 
+            this.sprite.events.onDragStart.dispatch(this.sprite, pointer);
+
 		}
 
 		/**
@@ -612,7 +614,7 @@ module Phaser.Components.Sprite {
 				this.sprite.y = Math.floor(this.sprite.y / this.snapY) * this.snapY;
 			}
 
-		    //pointer.draggedObject = null;
+            this.sprite.events.onDragStop.dispatch(this.sprite, pointer);
 		}
 
 		/**

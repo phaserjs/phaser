@@ -217,6 +217,22 @@
     <Content Include="sprites\origin 5.js">
       <DependentUpon>origin 5.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="tilemaps\csv tilemap.ts" />
+    <Content Include="tilemaps\csv tilemap.js">
+      <DependentUpon>csv tilemap.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="tilemaps\tiled tilemap.ts" />
+    <TypeScriptCompile Include="tilemaps\tiled layers.ts" />
+    <TypeScriptCompile Include="tilemaps\map draw.ts" />
+    <Content Include="tilemaps\map draw.js">
+      <DependentUpon>map draw.ts</DependentUpon>
+    </Content>
+    <Content Include="tilemaps\tiled layers.js">
+      <DependentUpon>tiled layers.ts</DependentUpon>
+    </Content>
+    <Content Include="tilemaps\tiled tilemap.js">
+      <DependentUpon>tiled tilemap.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\tween loop 1.js">
       <DependentUpon>tween loop 1.ts</DependentUpon>
     </Content>

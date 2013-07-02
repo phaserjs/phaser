@@ -23,12 +23,18 @@
 
         //  We'll make the atari sprite a static body, so it won't be influenced by gravity or other forces
         atari = game.add.physicsSprite(300, 450, 'atari', null, Phaser.Types.BODY_STATIC);
+        //atari.rotation = 10;
+        //atari.body.transform.setRotation(1);
+        atari.body.angle = 1;
 
         //  atari = 220px width (110 = center x)
         //  ball = 32px width (16 = center x)
 
         //  Ball will be a dynamic body and fall based on gravity
         ball = game.add.physicsSprite(300-20, 0, 'ball');
+        ball.body.angle = 1;
+        //ball.body.transform.setRotation(1);
+        //ball.body.fixedRotation = true;
 
     }
 

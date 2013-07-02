@@ -20,6 +20,11 @@ module Phaser {
         group: Group;
 
         /**
+         * The name of the Game Object. Typically not set by Phaser, but extremely useful for debugging / logic.
+         */
+        name: string;
+
+        /**
          * x value of the object.
          */
         x: number;

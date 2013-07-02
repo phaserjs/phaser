@@ -187,6 +187,8 @@ module Phaser {
 
 	    }
 
+        public isRunning: bool = false;
+
 	    /**
 	     * Start to tween.
 	     */
@@ -205,6 +207,7 @@ module Phaser {
 	        }
 
 	        this._startTime = this._game.time.now + this._delayTime;
+	        this.isRunning = true;
 
 	        for (var property in this._valuesEnd)
 	        {
@@ -288,6 +291,8 @@ module Phaser {
 	        {
 	            this._manager.remove(this);
 	        }
+
+	        this.isRunning = false;
 
 	        this.onComplete.dispose();
 
@@ -430,6 +435,11 @@ module Phaser {
 	                for (var i = 0; i < this._chainedTweens.length; i++)
 	                {
 	                    this._chainedTweens[i].start();
+	                }
+
+	                if (this._chainedTweens.length == 0)
+	                {
+            	        this.isRunning = false;
 	                }
 
 	                return false;

@@ -23,7 +23,7 @@ module Phaser {
          * @param [x] {number} the initial x position of the sprite.
          * @param [y] {number} the initial y position of the sprite.
          * @param [key] {string} Key of the graphic you want to load for this sprite.
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED, i.e. no physics)
          * @param [shapeType] {number} The physics shape the body will consist of (either Box (0) or Circle (1), for custom types see body.addShape)
          */
         constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED, shapeType?:number = 0) {
@@ -40,6 +40,7 @@ module Phaser {
             this.y = y;
             this.z = -1;
             this.group = null;
+            this.name = '';
 
             this.animations = new Phaser.Components.AnimationManager(this);
             this.input = new Phaser.Components.Sprite.Input(this);
@@ -96,6 +97,11 @@ module Phaser {
          * The type of game object.
          */
         public type: number;
+
+        /**
+         * The name of game object.
+         */
+        public name: string;
 
         /**
          * The Group this Sprite belongs to.
@@ -183,7 +189,7 @@ module Phaser {
         /**
          * z order value of the object.
          */
-        public z: number = 0;
+        public z: number = -1;
 
         /**
          * Render iteration counter
@@ -202,7 +208,14 @@ module Phaser {
         * The value is automatically wrapped to be between 0 and 360.
         */
         public set rotation(value: number) {
+
             this.transform.rotation = this.game.math.wrap(value, 360, 0);
+
+            if (this.body)
+            {
+                this.body.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
+            }
+
         }
 
         /**

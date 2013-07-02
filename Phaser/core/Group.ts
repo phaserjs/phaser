@@ -618,16 +618,57 @@ module Phaser {
 
         public bringToTop(child): bool {
 
+            //console.log('bringToTop', child.name,'current z', child.z);
+            var oldZ = child.z;
+
             //  If child not in this group, or is already at the top of the group, return false
-            if (!child || child.group == null || child.group.ID != this.ID || child.z == this._zCounter)
+            //if (!child || child.group == null || child.group.ID != this.ID || child.z == this._zCounter)
+            if (!child || child.group == null || child.group.ID != this.ID)
+            {
+                //console.log('If child not in this group, or is already at the top of the group, return false');
+                return false;
+            }
+
+            //  Find out the largest z index
+            var topZ: number = -1;
+
+            for (var i = 0; i < this.length; i++)
+            {
+                if (this.members[i] && this.members[i].z > topZ)
+                {
+                    topZ = this.members[i].z;
+                }
+            }
+
+            //  Child is already at the top
+            if (child.z == topZ)
             {
                 return false;
             }
 
+            child.z = topZ + 1;
+
+            //  Sort them out based on the current z indexes
             this.sort();
 
+            //  Now tidy-up the z indexes, removing gaps, etc
+            for (var i = 0; i < this.length; i++)
+            {
+                if (this.members[i])
+                {
+                    this.members[i].z = i;
+                }
+            }
+
+            //console.log('bringToTop', child.name, 'old z', oldZ, 'new z', child.z);
+
+            return true;
+
             //  What's the z index of the top most child?
+            /*
             var childIndex: number = this._zCounter;
+
+            console.log('childIndex', childIndex);
 
             this._i = 0;
 
@@ -649,10 +690,13 @@ module Phaser {
                 }
             }
 
+            console.log('child inserted at index', child.z);
+
             //  Maybe redundant?
             this.sort();
 
             return true;
+            */
 
         }
 
