@@ -54,6 +54,18 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="cameras\basic camera 1.ts" />
+    <TypeScriptCompile Include="buttons\basic button.ts" />
+    <TypeScriptCompile Include="buttons\basic button 2.ts" />
+    <Content Include="buttons\basic button 2.js">
+      <DependentUpon>basic button 2.ts</DependentUpon>
+    </Content>
+    <Content Include="buttons\basic button.js">
+      <DependentUpon>basic button.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="buttons\rotated buttons.ts" />
+    <Content Include="buttons\rotated buttons.js">
+      <DependentUpon>rotated buttons.ts</DependentUpon>
+    </Content>
     <Content Include="cameras\basic camera 1.js">
       <DependentUpon>basic camera 1.ts</DependentUpon>
     </Content>
@@ -206,6 +218,10 @@
       <DependentUpon>skewed scroller.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="sprites\atlas 1.ts" />
+    <TypeScriptCompile Include="sprites\alpha.ts" />
+    <Content Include="sprites\alpha.js">
+      <DependentUpon>alpha.ts</DependentUpon>
+    </Content>
     <Content Include="sprites\atlas 1.js">
       <DependentUpon>atlas 1.ts</DependentUpon>
     </Content>

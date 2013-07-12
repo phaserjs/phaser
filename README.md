@@ -30,12 +30,9 @@ TODO:
 * Game.Time should monitor pause duration
 * Investigate bug re: tilemap collision and animation frames
 * Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
-* If the Camera is larger than the Stage size then the rotation offset isn't correct
 * Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
-* Bug: Sprite x/y gets shifted if dynamic from the original value
 * Stage CSS3 transforms!!! Color tints, sepia, greyscale, all of those cool things :)
 * Add JSON Texture Atlas object support.
-* Swap to using time based motion (like the tweens) rather than delta timer - it just doesn't work well on slow phones
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
 * If stage.clear set to false and game pauses, when it unpauses you still see the pause arrow - resolve this
 * Add clip support + shape options to Texture Component.
@@ -54,13 +51,12 @@ TODO:
 * QuadTree.physics.checkHullIntersection
 * Fix the Motion methods for the new physics system
 * Move findShapeByPoint etc from Space to Manager (or at least add a proxy to them)
-* Make onInput events created only if input component is started
-* Add button mode linked to sprite frames
 * Add visible toggle if tween property is alpha <> 01
 * Camera.isHidden uses an array and length check, faster to swap for a single counter, also try to remove indexOf check
 * Tilemap.render - move layers length to var
 * Camera control method (touch/keyboard)
-
+* Tilemap.destroy needs doing
+* Look at the input targetObject - it doesn't seem to get cleared down all the time, maybe just a priority/alpha issue (check vis/alpha?)
 
 V1.0.0
 
@@ -136,6 +132,16 @@ V1.0.0
 * Moved 'facing' property from Sprite.body to Sprite.texture (may move to Sprite core)
 * Added Sprite.events.onDragStart and onDragStop
 * A tilemap can now be loaded without a tile sheet, should you just want to get the tile data from it and not render.
+* Added new Sprite.events: onAnimationStart, onAnimationComplete, onAnimationLoop
+* Added in support for the Input component PriorityID value and refactored Input.Pointer to respect it. Rollovers are perfect now :)
+* Added 2 new State functions: loadRender and loadUpdate, are called the same as render and update but only during the load process
+* Fixed Input.stopDrag so it fires an onInputUp event as well from the sprite.
+* Added support for a preRender state - very useful for certain types of special effects.
+* Cameras are now limited so they can never be larger than the Game.Stage size.
+* Added a new Button Game Object for easily creating in-game UI and menu systems.
+* Fixed bug where Sprite.alpha wasn't properly reflecting Sprite.texture.alpha.
+* Fixed bug where the hand cursor would be reset on input up, even if the mouse was still over the sprite.
+* Fixed bug where pressing down then moving out of the sprite area wouldn't properly reset the input state next time you moved over the sprite.
 
 
 V0.9.6

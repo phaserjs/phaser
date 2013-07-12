@@ -42,9 +42,9 @@ module Phaser {
             this.group = null;
             this.name = '';
 
+            this.events = new Phaser.Components.Sprite.Events(this);
             this.animations = new Phaser.Components.AnimationManager(this);
             this.input = new Phaser.Components.Sprite.Input(this);
-            this.events = new Phaser.Components.Sprite.Events(this);
             this.texture = new Phaser.Components.Texture(this);
             this.transform = new Phaser.Components.Transform(this);
 
@@ -225,15 +225,24 @@ module Phaser {
         public scale: Phaser.Vec2;
 
         /**
-        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
-        */
-        public alpha: number;
-
-        /**
         * The origin of the Sprite around which rotation and positioning takes place.
         * This is a reference to Sprite.transform.origin
         */
         public origin: Phaser.Vec2;
+
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public set alpha(value: number) {
+            this.texture.alpha = value;
+        }
+
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public get alpha(): number {
+            return this.texture.alpha;
+        }
 
         /**
         * Set the animation frame by frame number.

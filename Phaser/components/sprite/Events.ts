@@ -11,26 +11,18 @@ module Phaser.Components.Sprite {
     export class Events {
 
         /**
-         * The Events component is a collection of events fired by the parent Sprite and its other components.
-         * @param parent The Sprite using this Input component
+         * The Events component is a collection of events fired by the parent game object and its components.
+         * @param parent The game object using this Input component
          */
         constructor(parent: Phaser.Sprite) {
 
             this.game = parent.game;
-            this.sprite = parent;
+            this._parent = parent;
 
             this.onAddedToGroup = new Phaser.Signal;
             this.onRemovedFromGroup = new Phaser.Signal;
             this.onKilled = new Phaser.Signal;
             this.onRevived = new Phaser.Signal;
-
-            //  Only create these if Sprite input is enabled?
-            this.onInputOver = new Phaser.Signal;
-            this.onInputOut = new Phaser.Signal;
-            this.onInputDown = new Phaser.Signal;
-            this.onInputUp = new Phaser.Signal;
-            this.onDragStart = new Phaser.Signal;
-            this.onDragStop = new Phaser.Signal;
 
         }
 
@@ -40,9 +32,9 @@ module Phaser.Components.Sprite {
         public game: Game;
 
         /**
-         * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+         * Local private reference to its parent game object.
          */
-        private sprite: Phaser.Sprite;
+        private _parent: Phaser.Sprite;
 
         /**
          * Dispatched by the Group this Sprite is added to.
@@ -94,7 +86,20 @@ module Phaser.Components.Sprite {
          */
         public onDragStop: Phaser.Signal;
 
+        /**
+         * Dispatched by the Animation component when the Sprite starts being animated
+         */
+        public onAnimationStart: Phaser.Signal;
 
+        /**
+         * Dispatched by the Animation component when the Sprite animation completes
+         */
+        public onAnimationComplete: Phaser.Signal;
+
+        /**
+         * Dispatched by the Animation component when the Sprite animation loops
+         */
+        public onAnimationLoop: Phaser.Signal;
 
         public onOutOfBounds: Phaser.Signal;
 

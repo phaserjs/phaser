@@ -71,7 +71,7 @@ module Phaser {
         public hasLoaded: bool;
 
         /**
-         * Loading progress (from 0 to 1)
+         * Loading progress (from 0 to 100)
          * @type {number}
          */
         public progress: number;
@@ -97,9 +97,7 @@ module Phaser {
         }
 
         public get queueSize(): number {
-
             return this._queueSize;
-
         }
 
         /**
@@ -107,9 +105,9 @@ module Phaser {
          * @param key {string} Unique asset key of this image file.
          * @param url {string} URL of image file.
          */
-        public image(key: string, url: string) {
+        public image(key: string, url: string, overwrite: bool = false) {
 
-            if (this.checkKeyExists(key) === false)
+            if (overwrite == true || this.checkKeyExists(key) == false)
             {
                 this._queueSize++;
                 this._fileList[key] = { type: 'image', key: key, url: url, data: null, error: false, loaded: false };
@@ -294,7 +292,7 @@ module Phaser {
             }
             else
             {
-                this.progress = 1;
+                this.progress = 100;
                 this.hasLoaded = true;
                 this._gameCreateComplete.call(this._game);
 

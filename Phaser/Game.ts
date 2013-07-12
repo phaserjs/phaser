@@ -130,16 +130,34 @@ module Phaser {
         public onCreateCallback = null;
 
         /**
-         * This will be called when update states.
+         * This will be called when State is updated, this doesn't happen during load (see onLoadUpdateCallback)
          * @type {function}
          */
         public onUpdateCallback = null;
 
         /**
-         * This will be called when render states.
+         * This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback)
          * @type {function}
          */
         public onRenderCallback = null;
+
+        /**
+         * This will be called before the State is rendered and before the stage is cleared
+         * @type {function}
+         */
+        public onPreRenderCallback = null;
+
+        /**
+         * This will be called when the State is updated but only during the load process
+         * @type {function}
+         */
+        public onLoadUpdateCallback = null;
+
+        /**
+         * This will be called when the State is rendered but only during the load process
+         * @type {function}
+         */
+        public onLoadRenderCallback = null;
 
         /**
          * This will be called when states paused.
@@ -351,9 +369,7 @@ module Phaser {
          * Called when the load has finished after init was run.
          */
         private loadComplete() {
-
             this._loadComplete = true;
-
         }
 
         /**
@@ -398,14 +414,27 @@ module Phaser {
             {
                 this.onUpdateCallback.call(this.callbackContext);
             }
+            else if (this._loadComplete == false && this.onLoadUpdateCallback)
+            {
+                this.onLoadUpdateCallback.call(this.callbackContext);
+            }
 
             this.world.postUpdate();
+
+            if (this._loadComplete && this.onPreRenderCallback)
+            {
+                this.onPreRenderCallback.call(this.callbackContext);
+            }
 
             this.renderer.render();
 
             if (this._loadComplete && this.onRenderCallback)
             {
                 this.onRenderCallback.call(this.callbackContext);
+            }
+            else if (this._loadComplete == false && this.onLoadRenderCallback)
+            {
+                this.onLoadRenderCallback.call(this.callbackContext);
             }
 
         }
@@ -446,7 +475,7 @@ module Phaser {
         }
 
         /**
-         * Set all state callbacks (init, create, update, render).
+         * Set the most common state callbacks (init, create, update, render).
          * @param initCallback {function} Init callback invoked when init state.
          * @param createCallback {function} Create callback invoked when create state.
          * @param updateCallback {function} Update callback invoked when update state.
@@ -497,9 +526,12 @@ module Phaser {
                 this.callbackContext = this.state;
 
                 this.onInitCallback = null;
+                this.onLoadRenderCallback = null;
+                this.onLoadUpdateCallback = null;
                 this.onCreateCallback = null;
                 this.onUpdateCallback = null;
                 this.onRenderCallback = null;
+                this.onPreRenderCallback = null;
                 this.onPausedCallback = null;
                 this.onDestroyCallback = null;
 
@@ -507,6 +539,16 @@ module Phaser {
                 if (this.state['init'])
                 {
                     this.onInitCallback = this.state['init'];
+                }
+
+                if (this.state['loadRender'])
+                {
+                    this.onLoadRenderCallback = this.state['loadRender'];
+                }
+
+                if (this.state['loadUpdate'])
+                {
+                    this.onLoadUpdateCallback = this.state['loadUpdate'];
                 }
 
                 if (this.state['create'])
@@ -517,6 +559,11 @@ module Phaser {
                 if (this.state['update'])
                 {
                     this.onUpdateCallback = this.state['update'];
+                }
+
+                if (this.state['preRender'])
+                {
+                    this.onPreRenderCallback = this.state['preRender'];
                 }
 
                 if (this.state['render'])
@@ -562,6 +609,8 @@ module Phaser {
 
             this.callbackContext = null;
             this.onInitCallback = null;
+            this.onLoadRenderCallback = null;
+            this.onLoadUpdateCallback = null;
             this.onCreateCallback = null;
             this.onUpdateCallback = null;
             this.onRenderCallback = null;

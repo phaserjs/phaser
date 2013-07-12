@@ -20,7 +20,7 @@ module Phaser.Components.Sprite {
         constructor(parent: Phaser.Sprite) {
 
             this.game = parent.game;
-            this.sprite = parent;
+            this._parent = parent;
             this.enabled = false;
 
         }
@@ -31,9 +31,9 @@ module Phaser.Components.Sprite {
         public game: Game;
 
         /**
-         * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+         * Local private reference to its parent game object.
          */
-        private sprite: Phaser.Sprite;
+        private _parent: Phaser.Sprite;
 
         private _pointerData;
 
@@ -103,6 +103,13 @@ module Phaser.Components.Sprite {
          * @type {Boolean}
          */
         public useHandCursor: bool;
+
+        /**
+         * If this object is set to consume the pointer event then it will stop all propogation from this object on.
+         * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
+         * @type {Boolean}
+         */
+        public consumePointerEvent: bool = false;
 
         /**
          * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
@@ -222,10 +229,22 @@ module Phaser.Components.Sprite {
                 this.snapOffset = new Point;
 		        this.enabled = true;
 
-		        this.game.input.addGameObject(this.sprite);
+		        this.game.input.addGameObject(this._parent);
+
+                //  Create the signals the Input component will emit
+		        if (this._parent.events.onInputOver == null)
+		        {
+		            this._parent.events.onInputOver = new Phaser.Signal;
+		            this._parent.events.onInputOut = new Phaser.Signal;
+		            this._parent.events.onInputDown = new Phaser.Signal;
+		            this._parent.events.onInputUp = new Phaser.Signal;
+		            this._parent.events.onDragStart = new Phaser.Signal;
+		            this._parent.events.onDragStop = new Phaser.Signal;
+		        }
+
 		    }
 
-            return this.sprite;
+            return this._parent;
 
 		}
 
@@ -274,13 +293,13 @@ module Phaser.Components.Sprite {
          */
 		public checkPointerOver(pointer: Phaser.Pointer): bool {
 
-		    if (this.enabled == false || this.sprite.visible == false)
+		    if (this.enabled == false || this._parent.visible == false)
 		    {
 		        return false;
 		    }
 		    else
 		    {
-                return SpriteUtils.overlapsXY(this.sprite, pointer.worldX(), pointer.worldY());
+                return SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY());
 		    }
 
 		}
@@ -290,7 +309,7 @@ module Phaser.Components.Sprite {
          */
         public update(pointer: Phaser.Pointer): bool {
 
-            if (this.enabled == false || this.sprite.visible == false)
+            if (this.enabled == false || this._parent.visible == false)
             {
                 return false;
             }
@@ -301,10 +320,10 @@ module Phaser.Components.Sprite {
             }
             else if (this._pointerData[pointer.id].isOver == true)
             {
-                if (SpriteUtils.overlapsXY(this.sprite, pointer.worldX(), pointer.worldY()))
+                if (SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY()))
                 {
-                    this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
-                    this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
+                    this._pointerData[pointer.id].x = pointer.x - this._parent.x;
+                    this._pointerData[pointer.id].y = pointer.y - this._parent.y;
                     return true;
                 }
                 else
@@ -325,15 +344,15 @@ module Phaser.Components.Sprite {
                 this._pointerData[pointer.id].isOver = true;
                 this._pointerData[pointer.id].isOut = false;
                 this._pointerData[pointer.id].timeOver = this.game.time.now;
-                this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
-                this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
+                this._pointerData[pointer.id].x = pointer.x - this._parent.x;
+                this._pointerData[pointer.id].y = pointer.y - this._parent.y;
 
                 if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
                 {
                     this.game.stage.canvas.style.cursor = "pointer";
                 }
 
-                this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
+                this._parent.events.onInputOver.dispatch(this._parent, pointer);
             }
 
         }
@@ -349,11 +368,9 @@ module Phaser.Components.Sprite {
                 this.game.stage.canvas.style.cursor = "default";
             }
 
-            this.sprite.events.onInputOut.dispatch(this.sprite, pointer);
+            this._parent.events.onInputOut.dispatch(this._parent, pointer);
 
         }
-
-        public consumePointerEvent: bool = false;
 
         public _touchedHandler(pointer: Pointer): bool {
 
@@ -363,7 +380,7 @@ module Phaser.Components.Sprite {
                 this._pointerData[pointer.id].isUp = false;
                 this._pointerData[pointer.id].timeDown = this.game.time.now;
 
-                this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
+                this._parent.events.onInputDown.dispatch(this._parent, pointer);
 
                 //  Start drag
                 //if (this.draggable && this.isDragged == false && pointer.targetObject == null)
@@ -374,7 +391,7 @@ module Phaser.Components.Sprite {
 
                 if (this.bringToTop)
                 {
-                    this.sprite.group.bringToTop(this.sprite);
+                    this._parent.group.bringToTop(this._parent);
                 }
 
             }
@@ -386,7 +403,7 @@ module Phaser.Components.Sprite {
 
         public _releasedHandler(pointer: Pointer) {
 
-            //  If was previously touched by this Pointer, check if still is
+            //  If was previously touched by this Pointer, check if still is AND still over this item
             if (this._pointerData[pointer.id].isDown && pointer.isUp)
             {
                 this._pointerData[pointer.id].isDown = false;
@@ -394,7 +411,19 @@ module Phaser.Components.Sprite {
                 this._pointerData[pointer.id].timeUp = this.game.time.now;
                 this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
 
-                this.sprite.events.onInputUp.dispatch(this.sprite, pointer);
+                //  Only release the InputUp signal if the pointer is still over this sprite
+                if (SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY()))
+                {
+                    this._parent.events.onInputUp.dispatch(this._parent, pointer);
+                }
+                else
+                {
+                    //  Pointer outside the sprite? Reset the cursor
+                    if (this.useHandCursor)
+                    {
+                        this.game.stage.canvas.style.cursor = "default";
+                    }
+                }
 
                 //  Stop drag
                 if (this.draggable && this.isDragged && this._draggedPointerID == pointer.id)
@@ -402,10 +431,6 @@ module Phaser.Components.Sprite {
                     this.stopDrag(pointer);
                 }
 
-                if (this.useHandCursor)
-                {
-                    this.game.stage.canvas.style.cursor = "default";
-                }
             }
 
         }
@@ -423,12 +448,12 @@ module Phaser.Components.Sprite {
 
 			if (this.allowHorizontalDrag)
 			{
-			    this.sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
+			    this._parent.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
 			}
 			
 			if (this.allowVerticalDrag)
 			{
-			    this.sprite.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
+			    this._parent.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
 			}
 			
 			if (this.boundsRect)
@@ -443,8 +468,8 @@ module Phaser.Components.Sprite {
 			
 			if (this.snapOnDrag)
 			{
-				this.sprite.x = Math.floor(this.sprite.x / this.snapX) * this.snapX;
-				this.sprite.y = Math.floor(this.sprite.y / this.snapY) * this.snapY;
+				this._parent.x = Math.floor(this._parent.x / this.snapX) * this.snapX;
+				this._parent.y = Math.floor(this._parent.y / this.snapY) * this.snapY;
 			}
 
 			return true;
@@ -579,23 +604,23 @@ module Phaser.Components.Sprite {
             if (this.dragFromCenter)
             {
                 //	Move the sprite to the middle of the pointer
-                //this._dragPoint.setTo(-this.sprite.worldView.halfWidth, -this.sprite.worldView.halfHeight);
-                //this._dragPoint.setTo(this.sprite.transform.center.x, this.sprite.transform.center.y);
-                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+                //this._dragPoint.setTo(-this._parent.worldView.halfWidth, -this._parent.worldView.halfHeight);
+                //this._dragPoint.setTo(this._parent.transform.center.x, this._parent.transform.center.y);
+                this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
             }
             else
             {
-                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+                this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
             }
 
             this.updateDrag(pointer);
 
             if (this.bringToTop)
             {
-                this.sprite.group.bringToTop(this.sprite);
+                this._parent.group.bringToTop(this._parent);
             }
 
-            this.sprite.events.onDragStart.dispatch(this.sprite, pointer);
+            this._parent.events.onDragStart.dispatch(this._parent, pointer);
 
 		}
 
@@ -610,11 +635,12 @@ module Phaser.Components.Sprite {
 			
 			if (this.snapOnRelease)
 			{
-				this.sprite.x = Math.floor(this.sprite.x / this.snapX) * this.snapX;
-				this.sprite.y = Math.floor(this.sprite.y / this.snapY) * this.snapY;
+				this._parent.x = Math.floor(this._parent.x / this.snapX) * this.snapX;
+				this._parent.y = Math.floor(this._parent.y / this.snapY) * this.snapY;
 			}
 
-            this.sprite.events.onDragStop.dispatch(this.sprite, pointer);
+            this._parent.events.onDragStop.dispatch(this._parent, pointer);
+            this._parent.events.onInputUp.dispatch(this._parent, pointer);
 		}
 
 		/**
@@ -660,22 +686,22 @@ module Phaser.Components.Sprite {
 		 */
 		private checkBoundsRect():void
 		{
-			if (this.sprite.x < this.boundsRect.left)
+			if (this._parent.x < this.boundsRect.left)
 			{
-				this.sprite.x = this.boundsRect.x;
+				this._parent.x = this.boundsRect.x;
 			}
-			else if ((this.sprite.x + this.sprite.width) > this.boundsRect.right)
+			else if ((this._parent.x + this._parent.width) > this.boundsRect.right)
 			{
-				this.sprite.x = this.boundsRect.right - this.sprite.width;
+				this._parent.x = this.boundsRect.right - this._parent.width;
 			}
 			
-			if (this.sprite.y < this.boundsRect.top)
+			if (this._parent.y < this.boundsRect.top)
 			{
-				this.sprite.y = this.boundsRect.top;
+				this._parent.y = this.boundsRect.top;
 			}
-			else if ((this.sprite.y + this.sprite.height) > this.boundsRect.bottom)
+			else if ((this._parent.y + this._parent.height) > this.boundsRect.bottom)
 			{
-				this.sprite.y = this.boundsRect.bottom - this.sprite.height;
+				this._parent.y = this.boundsRect.bottom - this._parent.height;
 			}
 		}
 		
@@ -684,22 +710,22 @@ module Phaser.Components.Sprite {
 		 */
 		private checkBoundsSprite():void
 		{
-			if (this.sprite.x < this.boundsSprite.x)
+			if (this._parent.x < this.boundsSprite.x)
 			{
-				this.sprite.x = this.boundsSprite.x;
+				this._parent.x = this.boundsSprite.x;
 			}
-			else if ((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width))
+			else if ((this._parent.x + this._parent.width) > (this.boundsSprite.x + this.boundsSprite.width))
 			{
-				this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
+				this._parent.x = (this.boundsSprite.x + this.boundsSprite.width) - this._parent.width;
 			}
 			
-			if (this.sprite.y < this.boundsSprite.y)
+			if (this._parent.y < this.boundsSprite.y)
 			{
-				this.sprite.y = this.boundsSprite.y;
+				this._parent.y = this.boundsSprite.y;
 			}
-			else if ((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height))
+			else if ((this._parent.y + this._parent.height) > (this.boundsSprite.y + this.boundsSprite.height))
 			{
-				this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
+				this._parent.y = (this.boundsSprite.y + this.boundsSprite.height) - this._parent.height;
 			}
 		}
 
@@ -711,13 +737,13 @@ module Phaser.Components.Sprite {
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this.sprite.texture.context.font = '14px Courier';
-            this.sprite.texture.context.fillStyle = color;
-            this.sprite.texture.context.fillText('Sprite Input: (' + this.sprite.worldView.width + ' x ' + this.sprite.worldView.height + ')', x, y);
-            this.sprite.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
-            this.sprite.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
-            this.sprite.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
-            this.sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
+            this._parent.texture.context.font = '14px Courier';
+            this._parent.texture.context.fillStyle = color;
+            this._parent.texture.context.fillText('Sprite Input: (' + this._parent.worldView.width + ' x ' + this._parent.worldView.height + ')', x, y);
+            this._parent.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
+            this._parent.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
+            this._parent.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
+            this._parent.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
 
         }
 

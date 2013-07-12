@@ -72,7 +72,7 @@ module Phaser {
 
         public renderGameObject(object) {
 
-            if (object.type == Types.SPRITE)
+            if (object.type == Types.SPRITE || object.type == Types.BUTTON)
             {
                 this.renderSprite(this._camera, object);
             }

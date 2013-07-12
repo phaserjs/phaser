@@ -78,6 +78,14 @@ module Phaser {
         public context: CanvasRenderingContext2D;
 
         /**
+         * You can set a globalCompositeOperation that will be applied before the render method is called on this Sprite.
+         * This is useful if you wish to apply an effect like 'lighten'.
+         * If this value is set it will call a canvas context save and restore before and after the render pass, so use it sparingly.
+         * Set to null to disable.
+         */
+        public globalCompositeOperation: string = null;
+
+        /**
          * Get a color of a specific pixel.
          * @param x {number} X position of the pixel in this texture.
          * @param y {number} Y position of the pixel in this texture.
@@ -252,12 +260,15 @@ module Phaser {
          * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
          * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
          */
-        public assignCanvasToGameObjects(objects: IGameObject[]) {
+        public assignCanvasToGameObjects(objects) {
 
             for (var i = 0; i < objects.length; i++)
             {
-                objects[i].texture.canvas = this.canvas;
-                objects[i].texture.context = this.context;
+                if (objects[i].texture)
+                {
+                    objects[i].texture.canvas = this.canvas;
+                    objects[i].texture.context = this.context;
+                }
             }
 
         }
@@ -278,7 +289,20 @@ module Phaser {
         * @param y {number} The Y coordinate to render on the stage to (given in screen coordinates, not world)
         */
         public render(x?: number = 0, y?: number = 0) {
+
+            if (this.globalCompositeOperation)
+            {
+                this.game.stage.context.save();
+                this.game.stage.context.globalCompositeOperation = this.globalCompositeOperation;
+            }
+
             this.game.stage.context.drawImage(this.canvas, x, y);
+
+            if (this.globalCompositeOperation)
+            {
+                this.game.stage.context.restore();
+            }
+
         }
 
         public get width(): number {
