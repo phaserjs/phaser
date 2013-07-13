@@ -56,19 +56,28 @@ module Phaser {
         }
 
         /**
-         * Create a tween object for a specific object.
+         * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
          *
-         * @param object {object} Object you wish the tween will affect.
+         * @param obj {object} Object the tween will be run on.
+         * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
          * @return {Phaser.Tween} The newly created tween object.
          */
-        public create(object): Phaser.Tween {
+        public create(object, localReference?:bool = false): Phaser.Tween {
 
-            return new Phaser.Tween(object, this._game);
+            if (localReference)
+            {
+                object['tween'] = new Phaser.Tween(object, this._game);
+                return object['tween'];
+            }
+            else
+            {
+                return new Phaser.Tween(object, this._game);
+            }
 
         }
 
         /**
-         * Add an exist tween object to the manager.
+         * Add a new tween into the TweenManager.
          *
          * @param tween {Phaser.Tween} The tween object you want to add.
          * @return {Phaser.Tween} The tween object you added to the manager.

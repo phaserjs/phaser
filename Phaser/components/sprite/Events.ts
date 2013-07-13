@@ -23,6 +23,7 @@ module Phaser.Components.Sprite {
             this.onRemovedFromGroup = new Phaser.Signal;
             this.onKilled = new Phaser.Signal;
             this.onRevived = new Phaser.Signal;
+            this.onOutOfBounds = new Phaser.Signal;
 
         }
 
@@ -101,6 +102,9 @@ module Phaser.Components.Sprite {
          */
         public onAnimationLoop: Phaser.Signal;
 
+        /**
+         * Dispatched by the Sprite when it first leaves the world bounds
+         */
         public onOutOfBounds: Phaser.Signal;
 
     }

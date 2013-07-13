@@ -1284,6 +1284,9 @@ var Phaser;
         Types.BODY_STATIC = 1;
         Types.BODY_KINETIC = 2;
         Types.BODY_DYNAMIC = 3;
+        Types.OUT_OF_BOUNDS_KILL = 0;
+        Types.OUT_OF_BOUNDS_DESTROY = 1;
+        Types.OUT_OF_BOUNDS_PERSIST = 2;
         Types.LEFT = 0x0001;
         Types.RIGHT = 0x0010;
         Types.UP = 0x0100;
@@ -3961,6 +3964,7 @@ var Phaser;
                     this.onRemovedFromGroup = new Phaser.Signal();
                     this.onKilled = new Phaser.Signal();
                     this.onRevived = new Phaser.Signal();
+                    this.onOutOfBounds = new Phaser.Signal();
                 }
                 return Events;
             })();
@@ -6710,6 +6714,7 @@ var Phaser;
                 this.categoryBits = 0x0001;
                 this.maskBits = 0xFFFF;
                 this.stepCount = 0;
+                this._newPosition = new Phaser.Vec2();
                 this.id = Phaser.Physics.Manager.bodyCounter++;
                 this.name = 'body' + this.id;
                 this.type = type;
@@ -6887,6 +6892,10 @@ var Phaser;
             Body.prototype.setInertia = function (inertia) {
                 this.inertia = inertia;
                 this.inertiaInverted = inertia > 0 ? 1 / inertia : 0;
+            };
+            Body.prototype.setPosition = function (x, y) {
+                this._newPosition.setTo(this.game.physics.pixelsToMeters(x), this.game.physics.pixelsToMeters(y));
+                this.setTransform(this._newPosition, this.angle);
             };
             Body.prototype.setTransform = function (pos, angle) {
                 //  inject the transform into this.position
@@ -7233,6 +7242,8 @@ var Phaser;
             this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.cameraView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.transform.setCache();
+            this.outOfBounds = false;
+            this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_KILL;
             //  Handy proxies
             this.scale = this.transform.scale;
             this.alpha = this.texture.alpha;
@@ -7345,42 +7356,23 @@ var Phaser;
         function () {
         };
         Sprite.prototype.postUpdate = /**
-        * Automatically called after update() by the game loop.
+        * Automatically called after update() by the game loop for all 'alive' objects.
         */
         function () {
             this.animations.update();
-            /*
-            if (this.worldBounds != null)
-            {
-            if (this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL)
-            {
-            if (this.x < this.worldBounds.x || this.x > this.worldBounds.right || this.y < this.worldBounds.y || this.y > this.worldBounds.bottom)
-            {
-            this.kill();
+            if(Phaser.RectangleUtils.intersects(this.worldView, this.game.world.bounds)) {
+                this.outOfBounds = false;
+            } else {
+                if(this.outOfBounds == false) {
+                    this.events.onOutOfBounds.dispatch(this);
+                }
+                this.outOfBounds = true;
+                if(this.outOfBoundsAction == Phaser.Types.OUT_OF_BOUNDS_KILL) {
+                    this.kill();
+                } else if(this.outOfBoundsAction == Phaser.Types.OUT_OF_BOUNDS_DESTROY) {
+                    this.destroy();
+                }
             }
-            }
-            else
-            {
-            if (this.x < this.worldBounds.x)
-            {
-            this.x = this.worldBounds.x;
-            }
-            else if (this.x > this.worldBounds.right)
-            {
-            this.x = this.worldBounds.right;
-            }
-            
-            if (this.y < this.worldBounds.y)
-            {
-            this.y = this.worldBounds.y;
-            }
-            else if (this.y > this.worldBounds.bottom)
-            {
-            this.y = this.worldBounds.bottom;
-            }
-            }
-            }
-            */
             if(this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
                 this.modified = false;
             }
@@ -12502,9 +12494,14 @@ var Phaser;
         * Create a new <code>Button</code> object.
         *
         * @param game {Phaser.Game} Current game instance.
-        * @param [x] {number} the initial x position of the button.
-        * @param [y] {number} the initial y position of the button.
-        * @param [key] {string} Key of the graphic you want to load for this button.
+        * @param [x] {number} X position of the button.
+        * @param [y] {number} Y position of the button.
+        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
+        * @param [callback] {function} The function to call when this button is pressed
+        * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
+        * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
         */
         function Button(game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
             if (typeof x === "undefined") { x = 0; }
@@ -13910,6 +13907,16 @@ var Phaser;
         function (sprite) {
             return this._world.group.add(sprite);
         };
+        GameObjectFactory.prototype.existingButton = /**
+        * Add an existing Button to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param button The Button to add to the Game World
+        * @return {Phaser.Button} The Button object
+        */
+        function (button) {
+            return this._world.group.add(button);
+        };
         GameObjectFactory.prototype.existingEmitter = /**
         * Add an existing GeomSprite to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
@@ -15253,7 +15260,7 @@ var Phaser;
             return new Phaser.Tween(object, this._game);
         };
         TweenManager.prototype.add = /**
-        * Add an exist tween object to the manager.
+        * Add a new tween into the TweenManager.
         *
         * @param tween {Phaser.Tween} The tween object you want to add.
         * @return {Phaser.Tween} The tween object you added to the manager.

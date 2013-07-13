@@ -142,6 +142,7 @@ V1.0.0
 * Fixed bug where Sprite.alpha wasn't properly reflecting Sprite.texture.alpha.
 * Fixed bug where the hand cursor would be reset on input up, even if the mouse was still over the sprite.
 * Fixed bug where pressing down then moving out of the sprite area wouldn't properly reset the input state next time you moved over the sprite.
+* Added the Sprite.tween property, really useful to avoid creating new tween vars in your local scope if you don't need them.
 
 
 V0.9.6

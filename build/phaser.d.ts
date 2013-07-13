@@ -856,6 +856,9 @@ module Phaser {
         static BODY_STATIC: number;
         static BODY_KINETIC: number;
         static BODY_DYNAMIC: number;
+        static OUT_OF_BOUNDS_KILL: number;
+        static OUT_OF_BOUNDS_DESTROY: number;
+        static OUT_OF_BOUNDS_PERSIST: number;
         /**
         * Flag used to allow GameObjects to collide on their left side
         * @type {number}
@@ -2384,6 +2387,9 @@ module Phaser.Components.Sprite {
         * Dispatched by the Animation component when the Sprite animation loops
         */
         public onAnimationLoop: Signal;
+        /**
+        * Dispatched by the Sprite when it first leaves the world bounds
+        */
         public onOutOfBounds: Signal;
     }
 }
@@ -3176,6 +3182,8 @@ module Phaser.Physics {
         public removeShape(shape): void;
         private setMass(mass);
         private setInertia(inertia);
+        private _newPosition;
+        public setPosition(x: number, y: number): void;
         public setTransform(pos: Vec2, angle: number): void;
         public syncTransform(): void;
         public getWorldPoint(p: Vec2): Vec2;
@@ -3252,6 +3260,15 @@ module Phaser {
         */
         public alive: bool;
         /**
+        * Is the Sprite out of the world bounds or not?
+        */
+        public outOfBounds: bool;
+        /**
+        * The action to be taken when the sprite is fully out of the world bounds
+        * Defaults to Phaser.Types.OUT_OF_BOUNDS_KILL
+        */
+        public outOfBoundsAction: number;
+        /**
         * Sprite physics body.
         */
         public body: Physics.Body;
@@ -3286,6 +3303,10 @@ module Phaser {
         * This value is constantly updated and modified during the internal render pass, it is not meant to be accessed directly.
         */
         public cameraView: Rectangle;
+        /**
+        * A local tween variable. Used by the TweenManager when setting a tween on this sprite or a property of it.
+        */
+        public tween: Tween;
         /**
         * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
         */
@@ -3356,7 +3377,7 @@ module Phaser {
         */
         public update(): void;
         /**
-        * Automatically called after update() by the game loop.
+        * Automatically called after update() by the game loop for all 'alive' objects.
         */
         public postUpdate(): void;
         /**
@@ -5998,9 +6019,14 @@ module Phaser {
         * Create a new <code>Button</code> object.
         *
         * @param game {Phaser.Game} Current game instance.
-        * @param [x] {number} the initial x position of the button.
-        * @param [y] {number} the initial y position of the button.
-        * @param [key] {string} Key of the graphic you want to load for this button.
+        * @param [x] {number} X position of the button.
+        * @param [y] {number} Y position of the button.
+        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
+        * @param [callback] {function} The function to call when this button is pressed
+        * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
+        * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
         */
         constructor(game: Game, x?: number, y?: number, key?: string, callback?, callbackContext?, overFrame?, outFrame?, downFrame?);
         private _onOverFrameName;
@@ -6846,12 +6872,13 @@ module Phaser {
         */
         public tilemap(key: string, mapData: string, format: number, resizeWorld?: bool, tileWidth?: number, tileHeight?: number): Tilemap;
         /**
-        * Create a tween object for a specific object.
+        * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
         *
-        * @param obj Object you wish the tween will affect.
+        * @param obj {object} Object the tween will be run on.
+        * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
         * @return {Phaser.Tween} The newly created tween object.
         */
-        public tween(obj): Tween;
+        public tween(obj, localReference?: bool): Tween;
         /**
         * Add an existing Sprite to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
@@ -6860,6 +6887,14 @@ module Phaser {
         * @return {Phaser.Sprite} The Sprite object
         */
         public existingSprite(sprite: Sprite): Sprite;
+        /**
+        * Add an existing Button to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param button The Button to add to the Game World
+        * @return {Phaser.Button} The Button object
+        */
+        public existingButton(button: Button): Button;
         /**
         * Add an existing Emitter to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
@@ -7656,14 +7691,15 @@ module Phaser {
         */
         public removeAll(): void;
         /**
-        * Create a tween object for a specific object.
+        * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
         *
-        * @param object {object} Object you wish the tween will affect.
+        * @param obj {object} Object the tween will be run on.
+        * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
         * @return {Phaser.Tween} The newly created tween object.
         */
-        public create(object): Tween;
+        public create(object, localReference?: bool): Tween;
         /**
-        * Add an exist tween object to the manager.
+        * Add a new tween into the TweenManager.
         *
         * @param tween {Phaser.Tween} The tween object you want to add.
         * @return {Phaser.Tween} The tween object you added to the manager.

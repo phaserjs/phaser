@@ -340,6 +340,16 @@ module Phaser.Physics {
 
 	    }
 
+	    private _newPosition: Phaser.Vec2 = new Phaser.Vec2;
+
+	    public setPosition(x: number, y: number) {
+
+	        this._newPosition.setTo(this.game.physics.pixelsToMeters(x), this.game.physics.pixelsToMeters(y));
+	        
+            this.setTransform(this._newPosition, this.angle);
+
+	    }
+
 	    public setTransform(pos:Phaser.Vec2, angle:number) {
 
             //  inject the transform into this.position

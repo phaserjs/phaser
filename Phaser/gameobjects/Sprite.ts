@@ -81,6 +81,9 @@ module Phaser {
 
             this.transform.setCache();
 
+            this.outOfBounds = false;
+            this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_KILL;
+
             //  Handy proxies
             this.scale = this.transform.scale;
             this.alpha = this.texture.alpha;
@@ -129,6 +132,17 @@ module Phaser {
         public alive: bool;
 
         /**
+         * Is the Sprite out of the world bounds or not?
+         */
+        public outOfBounds: bool;
+
+        /**
+         * The action to be taken when the sprite is fully out of the world bounds
+         * Defaults to Phaser.Types.OUT_OF_BOUNDS_KILL
+         */
+        public outOfBoundsAction: number;
+
+        /**
          * Sprite physics body.
          */
         public body: Phaser.Physics.Body = null;
@@ -170,6 +184,11 @@ module Phaser {
          * This value is constantly updated and modified during the internal render pass, it is not meant to be accessed directly.
          */
         public cameraView: Phaser.Rectangle;
+
+        /**
+         * A local tween variable. Used by the TweenManager when setting a tween on this sprite or a property of it.
+         */
+        public tween: Phaser.Tween;
 
         /**
          * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
@@ -314,44 +333,34 @@ module Phaser {
         }
 
         /**
-         * Automatically called after update() by the game loop.
+         * Automatically called after update() by the game loop for all 'alive' objects.
          */
         public postUpdate() {
 
             this.animations.update();
 
-            /*
-            if (this.worldBounds != null)
+            if (Phaser.RectangleUtils.intersects(this.worldView, this.game.world.bounds))
             {
-                if (this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL)
+                this.outOfBounds = false;
+            }
+            else
+            {
+                if (this.outOfBounds == false)
                 {
-                    if (this.x < this.worldBounds.x || this.x > this.worldBounds.right || this.y < this.worldBounds.y || this.y > this.worldBounds.bottom)
-                    {
-                        this.kill();
-                    }
+                    this.events.onOutOfBounds.dispatch(this);
                 }
-                else
-                {
-                    if (this.x < this.worldBounds.x)
-                    {
-                        this.x = this.worldBounds.x;
-                    }
-                    else if (this.x > this.worldBounds.right)
-                    {
-                        this.x = this.worldBounds.right;
-                    }
 
-                    if (this.y < this.worldBounds.y)
-                    {
-                        this.y = this.worldBounds.y;
-                    }
-                    else if (this.y > this.worldBounds.bottom)
-                    {
-                        this.y = this.worldBounds.bottom;
-                    }
+                this.outOfBounds = true;
+
+                if (this.outOfBoundsAction == Phaser.Types.OUT_OF_BOUNDS_KILL)
+                {
+                    this.kill();
+                }
+                else if (this.outOfBoundsAction == Phaser.Types.OUT_OF_BOUNDS_DESTROY)
+                {
+                    this.destroy();
                 }
             }
-            */
 
             if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
             {
