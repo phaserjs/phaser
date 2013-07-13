@@ -19,17 +19,24 @@
         circle3 = game.add.sprite(221, 318, 'magenta');
 
         circle1.input.start(0, false, true);
+        circle1.events.onInputUp.add(fade1, this);
 
-        fx = game.camera.fx.add(Phaser.FX.Camera.Shake);
+        fx = game.camera.fx.add(Phaser.FX.Camera.Fade);
     }
     function update() {
-        if (circle1.input.justReleased(0, 20)) {
-            console.log('pressed');
-            fx.start(0.05, 0.5, function() {
-                console.log('fin');
-            });
-        }
     }
     function render() {
+        game.camera.fx.render(game.camera,
+            game.camera.x, game.camera.y,
+            game.camera.width, game.camera.height);
+        game.camera.fx.postRender(game.camera,
+            game.camera.x, game.camera.y,
+            game.camera.width, game.camera.height);
+    }
+    function fade1(pointer) {
+        console.log('pressed');
+        fx.start(0.05, 0.5, function() {
+            console.log('fin');
+        });
     }
 })();
