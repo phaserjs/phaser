@@ -14,28 +14,28 @@
     function create() {
         // background sky, which does not move at all
         game.add.sprite(0, 0, 'sky')
-            .scrollFactor.setTo(0, 0);
+            .transform.scrollFactor.setTo(0, 0);
 
         // clouds with different scroll factor which moves slower than camera
         game.add.sprite(200, 120, 'cloud0')
-            .scrollFactor.setTo(0.3, 0.3);
+            .transform.scrollFactor.setTo(0.3, 0.3);
         game.add.sprite(-60, 120, 'cloud1')
-            .scrollFactor.setTo(0.5, 0.3);
+            .transform.scrollFactor.setTo(0.5, 0.3);
         game.add.sprite(900, 170, 'cloud2')
-            .scrollFactor.setTo(0.7, 0.3);
+            .transform.scrollFactor.setTo(0.7, 0.3);
 
         // forground objects which moves equal or faster than camera
         game.add.sprite(0, 360, 'ground')
-            .scrollFactor.setTo(0.5, 0.5);
+            .transform.scrollFactor.setTo(0.5, 0.5);
         game.add.sprite(0, 400, 'river')
-            .scrollFactor.setTo(1.3, 1.3);
+            .transform.scrollFactor.setTo(1.3, 1.3);
     }
     function update() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            game.camera.scroll.x -= 3;
+            game.camera.x -= 3;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            game.camera.scroll.x += 3;
+            game.camera.x += 3;
         }
     }
     function render() {
