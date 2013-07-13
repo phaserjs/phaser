@@ -25,18 +25,18 @@ module Phaser.Components {
         constructor(parent: Phaser.Sprite) {
 
             this._parent = parent;
-            this._game = parent.game;
+            this.game = parent.game;
             this._anims = {};
 
         }
 
         /**
-         * Local private reference to game.
+         * Reference to Phaser.Game
          */
-        private _game: Game;
+        public game: Game;
 
         /**
-         * Local private reference to its owner sprite.
+         * Local private reference to its parent game object.
          */
         private _parent: Phaser.Sprite;
 
@@ -103,6 +103,14 @@ module Phaser.Components {
                 return;
             }
 
+            //  Create the signals the AnimationManager will emit
+            if (this._parent.events.onAnimationStart == null)
+            {
+                this._parent.events.onAnimationStart = new Phaser.Signal;
+                this._parent.events.onAnimationComplete = new Phaser.Signal;
+                this._parent.events.onAnimationLoop = new Phaser.Signal;
+            }
+
             if (frames == null)
             {
                 frames = this._frameData.getFrameIndexes();
@@ -121,7 +129,7 @@ module Phaser.Components {
                 frames = this._frameData.getFrameIndexesByName(frames);
             }
 
-            this._anims[name] = new Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
+            this._anims[name] = new Animation(this.game, this._parent, this._frameData, name, frames, frameRate, loop);
 
             this.currentAnim = this._anims[name];
             this.currentFrame = this.currentAnim.currentFrame;
@@ -166,7 +174,7 @@ module Phaser.Components {
          * @param frameRate {number} FrameRate you want to specify instead of using default.
          * @param loop {boolean} Whether or not the animation is looped or just plays once.
          */
-        public play(name: string, frameRate?: number = null, loop?: bool) {
+        public play(name: string, frameRate?: number = null, loop?: bool): Animation {
 
             if (this._anims[name])
             {
@@ -174,13 +182,13 @@ module Phaser.Components {
                 {
                     if (this.currentAnim.isPlaying == false)
                     {
-                        this.currentAnim.play(frameRate, loop);
+                        return this.currentAnim.play(frameRate, loop);
                     }
                 }
                 else
                 {
                     this.currentAnim = this._anims[name];
-                    this.currentAnim.play(frameRate, loop);
+                    return this.currentAnim.play(frameRate, loop);
                 }
             }
 
@@ -236,7 +244,7 @@ module Phaser.Components {
 
         public set frame(value: number) {
 
-            if (this._frameData.getFrame(value) !== null)
+            if (this._frameData && this._frameData.getFrame(value) !== null)
             {
                 this.currentFrame = this._frameData.getFrame(value);
 
@@ -260,7 +268,7 @@ module Phaser.Components {
 
         public set frameName(value: string) {
 
-            if (this._frameData.getFrameByName(value) !== null)
+            if (this._frameData.getFrameByName(value))
             {
                 this.currentFrame = this._frameData.getFrameByName(value);
 

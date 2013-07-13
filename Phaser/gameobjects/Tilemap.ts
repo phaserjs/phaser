@@ -206,6 +206,9 @@ module Phaser {
         public postUpdate() {
         }
 
+        public destroy() {
+        }
+
         /**
          * Parset csv map data and generate tiles.
          * @param data {string} CSV map data.

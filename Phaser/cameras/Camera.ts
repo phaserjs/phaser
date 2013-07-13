@@ -36,6 +36,9 @@ module Phaser {
             this.ID = id;
             this.z = id;
 
+            width = this.game.math.clamp(width, this.game.stage.width, 1);
+            height = this.game.math.clamp(height, this.game.stage.height, 1);
+
             //  The view into the world we wish to render (by default the full game world size)
             //  The size of this Rect is the same as screenView, but the values are all in world coordinates instead of screen coordinates
             this.worldView = new Rectangle(0, 0, width, height);

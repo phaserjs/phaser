@@ -14,9 +14,11 @@
 
     function create() {
 
-        //  This will create a Sprite positioned at the top-left of the game (0,0)
-        //  Try changing the 0, 0 values
-        game.add.sprite(0, 0, 'bunny');
+        //  Here we'll assign the new sprite to the local bunny variable
+        var bunny = game.add.sprite(0, 0, 'bunny');
+
+        //  And this sets the alpha of the sprite to 0.5, which is 50% opaque
+        bunny.alpha = 0.5;
 
     }
 

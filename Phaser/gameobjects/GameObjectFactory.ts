@@ -3,6 +3,7 @@
 /// <reference path="../gameobjects/Emitter.ts" />
 /// <reference path="../gameobjects/Particle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="../gameobjects/Button.ts" />
 /// <reference path="../gameobjects/ScrollZone.ts" />
 /// <reference path="../gameobjects/DynamicTexture.ts" />
 /// <reference path="../gameobjects/Tilemap.ts" />
@@ -61,6 +62,23 @@ module Phaser {
         //public geomSprite(x: number, y: number): GeomSprite {
         //    return <GeomSprite> this._world.group.add(new GeomSprite(this._game, x, y));
         //}
+
+        /**
+         * Create a new Button game object.
+         *
+         * @param [x] {number} X position of the button.
+         * @param [y] {number} Y position of the button.
+         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
+         * @param [callback] {function} The function to call when this button is pressed
+         * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
+         * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+         * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+         * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+         * @returns {Button} The newly created button object.
+         */
+        public button(x?: number = 0, y?: number = 0, key?: string = null, callback? = null, callbackContext? = null, overFrame? = null, outFrame? = null, downFrame? = null): Button {
+            return <Button> this._world.group.add(new Button(this._game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        }
 
         /**
          * Create a new Sprite with specific position and sprite sheet key.

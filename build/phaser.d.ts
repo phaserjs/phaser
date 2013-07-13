@@ -268,6 +268,18 @@ module Phaser {
         */
         visible: bool;
         /**
+        * The animation manager component
+        */
+        animations: Components.AnimationManager;
+        /**
+        * Associated events
+        */
+        events;
+        /**
+        * The input component
+        */
+        input;
+        /**
         * The texture used to render.
         */
         texture: Components.Texture;
@@ -834,6 +846,7 @@ module Phaser {
         static EMITTER: number;
         static TILEMAP: number;
         static SCROLLZONE: number;
+        static BUTTON: number;
         static GEOM_POINT: number;
         static GEOM_CIRCLE: number;
         static GEOM_Rectangle: number;
@@ -1324,6 +1337,13 @@ module Phaser {
         */
         public context: CanvasRenderingContext2D;
         /**
+        * You can set a globalCompositeOperation that will be applied before the render method is called on this Sprite.
+        * This is useful if you wish to apply an effect like 'lighten'.
+        * If this value is set it will call a canvas context save and restore before and after the render pass, so use it sparingly.
+        * Set to null to disable.
+        */
+        public globalCompositeOperation: string;
+        /**
         * Get a color of a specific pixel.
         * @param x {number} X position of the pixel in this texture.
         * @param y {number} Y position of the pixel in this texture.
@@ -1384,7 +1404,7 @@ module Phaser {
         * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
         * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
         */
-        public assignCanvasToGameObjects(objects: IGameObject[]): void;
+        public assignCanvasToGameObjects(objects): void;
         /**
         * Clear the whole canvas.
         */
@@ -1515,7 +1535,7 @@ module Phaser {
         * @param frameRate {number} FrameRate you want to specify instead of using default.
         * @param loop {boolean} Whether or not the animation is looped or just plays once.
         */
-        public play(frameRate?: number, loop?: bool): void;
+        public play(frameRate?: number, loop?: bool): Animation;
         /**
         * Play this animation from the first frame.
         */
@@ -1738,11 +1758,11 @@ module Phaser.Components {
         */
         constructor(parent: Sprite);
         /**
-        * Local private reference to game.
+        * Reference to Phaser.Game
         */
-        private _game;
+        public game: Game;
         /**
-        * Local private reference to its owner sprite.
+        * Local private reference to its parent game object.
         */
         private _parent;
         /**
@@ -1802,7 +1822,7 @@ module Phaser.Components {
         * @param frameRate {number} FrameRate you want to specify instead of using default.
         * @param loop {boolean} Whether or not the animation is looped or just plays once.
         */
-        public play(name: string, frameRate?: number, loop?: bool): void;
+        public play(name: string, frameRate?: number, loop?: bool): Animation;
         /**
         * Stop animation by name.
         * Current animation will be automatically set to the stopped one.
@@ -2044,9 +2064,9 @@ module Phaser.Components.Sprite {
         */
         public game: Game;
         /**
-        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+        * Local private reference to its parent game object.
         */
-        private sprite;
+        private _parent;
         private _pointerData;
         /**
         * If enabled the Input component will be updated by the parent Sprite
@@ -2103,6 +2123,12 @@ module Phaser.Components.Sprite {
         * @type {Boolean}
         */
         public useHandCursor: bool;
+        /**
+        * If this object is set to consume the pointer event then it will stop all propogation from this object on.
+        * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
+        * @type {Boolean}
+        */
+        public consumePointerEvent: bool;
         /**
         * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
         * This value is only set when the pointer is over this Sprite.
@@ -2185,7 +2211,6 @@ module Phaser.Components.Sprite {
         public update(pointer: Pointer): bool;
         public _pointerOverHandler(pointer: Pointer): void;
         public _pointerOutHandler(pointer: Pointer): void;
-        public consumePointerEvent: bool;
         public _touchedHandler(pointer: Pointer): bool;
         public _releasedHandler(pointer: Pointer): void;
         /**
@@ -2295,8 +2320,8 @@ module Phaser.Components.Sprite {
 module Phaser.Components.Sprite {
     class Events {
         /**
-        * The Events component is a collection of events fired by the parent Sprite and its other components.
-        * @param parent The Sprite using this Input component
+        * The Events component is a collection of events fired by the parent game object and its components.
+        * @param parent The game object using this Input component
         */
         constructor(parent: Sprite);
         /**
@@ -2304,9 +2329,9 @@ module Phaser.Components.Sprite {
         */
         public game: Game;
         /**
-        * Reference to the Image stored in the Game.Cache that is used as the texture for the Sprite.
+        * Local private reference to its parent game object.
         */
-        private sprite;
+        private _parent;
         /**
         * Dispatched by the Group this Sprite is added to.
         */
@@ -2347,6 +2372,18 @@ module Phaser.Components.Sprite {
         * Dispatched by the Input component when the Sprite stops being dragged
         */
         public onDragStop: Signal;
+        /**
+        * Dispatched by the Animation component when the Sprite starts being animated
+        */
+        public onAnimationStart: Signal;
+        /**
+        * Dispatched by the Animation component when the Sprite animation completes
+        */
+        public onAnimationComplete: Signal;
+        /**
+        * Dispatched by the Animation component when the Sprite animation loops
+        */
+        public onAnimationLoop: Signal;
         public onOutOfBounds: Signal;
     }
 }
@@ -3283,14 +3320,17 @@ module Phaser {
         */
         public scale: Vec2;
         /**
-        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
-        */
-        public alpha: number;
-        /**
         * The origin of the Sprite around which rotation and positioning takes place.
         * This is a reference to Sprite.transform.origin
         */
         public origin: Vec2;
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public alpha : number;
         /**
         * Get the animation frame number.
         */
@@ -3464,7 +3504,7 @@ module Phaser.Components {
         */
         public cameraBlacklist: number[];
         /**
-        * Whether the Sprite background is opaque or not. If set to true the Sprite is filled with
+        * Whether the texture background is opaque or not. If set to true the object is filled with
         * the value of Texture.backgroundColor every frame. Normally you wouldn't enable this but
         * for some effects it can be handy.
         * @type {boolean}
@@ -4191,7 +4231,7 @@ module Phaser {
         */
         public hasLoaded: bool;
         /**
-        * Loading progress (from 0 to 1)
+        * Loading progress (from 0 to 100)
         * @type {number}
         */
         public progress: number;
@@ -4216,7 +4256,7 @@ module Phaser {
         * @param key {string} Unique asset key of this image file.
         * @param url {string} URL of image file.
         */
-        public image(key: string, url: string): void;
+        public image(key: string, url: string, overwrite?: bool): void;
         /**
         * Add a new sprite sheet loading request.
         * @param key {string} Unique asset key of the sheet file.
@@ -4447,6 +4487,10 @@ module Phaser {
         * @return {Array} The string based keys in the Cache.
         */
         public getTextKeys(): any[];
+        public removeCanvas(key: string): void;
+        public removeImage(key: string): void;
+        public removeSound(key: string): void;
+        public removeText(key: string): void;
         /**
         * Clean up cache memory.
         */
@@ -5946,6 +5990,52 @@ module Phaser {
     }
 }
 /**
+* Phaser - Button
+*/
+module Phaser {
+    class Button extends Sprite {
+        /**
+        * Create a new <code>Button</code> object.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param [x] {number} the initial x position of the button.
+        * @param [y] {number} the initial y position of the button.
+        * @param [key] {string} Key of the graphic you want to load for this button.
+        */
+        constructor(game: Game, x?: number, y?: number, key?: string, callback?, callbackContext?, overFrame?, outFrame?, downFrame?);
+        private _onOverFrameName;
+        private _onOutFrameName;
+        private _onDownFrameName;
+        private _onUpFrameName;
+        private _onOverFrameID;
+        private _onOutFrameID;
+        private _onDownFrameID;
+        private _onUpFrameID;
+        /**
+        * Dispatched when a pointer moves over an Input enabled sprite.
+        */
+        public onInputOver: Signal;
+        /**
+        * Dispatched when a pointer moves out of an Input enabled sprite.
+        */
+        public onInputOut: Signal;
+        /**
+        * Dispatched when a pointer is pressed down on an Input enabled sprite.
+        */
+        public onInputDown: Signal;
+        /**
+        * Dispatched when a pointer is released over an Input enabled sprite
+        */
+        public onInputUp: Signal;
+        private onInputOverHandler(pointer);
+        private onInputOutHandler(pointer);
+        private onInputDownHandler(pointer);
+        private onInputUpHandler(pointer);
+        public priorityID : number;
+        public useHandCursor : bool;
+    }
+}
+/**
 * Phaser - ScrollRegion
 *
 * Creates a scrolling region within a ScrollZone.
@@ -6530,6 +6620,7 @@ module Phaser {
         public preUpdate(): void;
         public update(): void;
         public postUpdate(): void;
+        public destroy(): void;
         /**
         * Parset csv map data and generate tiles.
         * @param data {string} CSV map data.
@@ -6664,6 +6755,20 @@ module Phaser {
         * @returns {Camera} The newly created camera object.
         */
         public camera(x: number, y: number, width: number, height: number): Camera;
+        /**
+        * Create a new Button game object.
+        *
+        * @param [x] {number} X position of the button.
+        * @param [y] {number} Y position of the button.
+        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
+        * @param [callback] {function} The function to call when this button is pressed
+        * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
+        * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+        * @returns {Button} The newly created button object.
+        */
+        public button(x?: number, y?: number, key?: string, callback?, callbackContext?, overFrame?, outFrame?, downFrame?): Button;
         /**
         * Create a new Sprite with specific position and sprite sheet key.
         *
@@ -8469,6 +8574,9 @@ module Phaser {
         */
         public start(event): Pointer;
         public update(): void;
+        private _highestRenderOrderID;
+        private _highestRenderObject;
+        private _highestInputPriorityID;
         /**
         * Called when the Pointer is moved on the touchscreen
         * @method move
@@ -9524,15 +9632,30 @@ module Phaser {
         */
         public onCreateCallback;
         /**
-        * This will be called when update states.
+        * This will be called when State is updated, this doesn't happen during load (see onLoadUpdateCallback)
         * @type {function}
         */
         public onUpdateCallback;
         /**
-        * This will be called when render states.
+        * This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback)
         * @type {function}
         */
         public onRenderCallback;
+        /**
+        * This will be called before the State is rendered and before the stage is cleared
+        * @type {function}
+        */
+        public onPreRenderCallback;
+        /**
+        * This will be called when the State is updated but only during the load process
+        * @type {function}
+        */
+        public onLoadUpdateCallback;
+        /**
+        * This will be called when the State is rendered but only during the load process
+        * @type {function}
+        */
+        public onLoadRenderCallback;
         /**
         * This will be called when states paused.
         * @type {function}
@@ -9657,7 +9780,7 @@ module Phaser {
         */
         private startState();
         /**
-        * Set all state callbacks (init, create, update, render).
+        * Set the most common state callbacks (init, create, update, render).
         * @param initCallback {function} Init callback invoked when init state.
         * @param createCallback {function} Create callback invoked when create state.
         * @param updateCallback {function} Update callback invoked when update state.

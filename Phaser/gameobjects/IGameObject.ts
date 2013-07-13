@@ -55,6 +55,21 @@ module Phaser {
         visible: bool;
 
         /**
+         * The animation manager component
+         */
+        animations: Phaser.Components.AnimationManager;
+
+        /**
+         * Associated events
+         */
+        events;
+
+        /**
+         * The input component
+         */
+        input;
+
+        /**
          * The texture used to render.
          */
         texture: Phaser.Components.Texture;

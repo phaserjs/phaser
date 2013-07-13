@@ -171,7 +171,12 @@ module Phaser {
             this._timeNextFrame = this._game.time.now + this.delay;
 
             this._frameIndex = 0;
+
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            this._parent.events.onAnimationStart.dispatch(this._parent, this);
+
+            return this;
 
         }
 
@@ -216,6 +221,7 @@ module Phaser {
                     {
                         this._frameIndex = 0;
                         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                        this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                     }
                     else
                     {
@@ -258,7 +264,8 @@ module Phaser {
 
             this.isPlaying = false;
             this.isFinished = true;
-            //  callback goes here
+            
+            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
 
         }
 

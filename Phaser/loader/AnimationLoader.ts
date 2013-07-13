@@ -44,6 +44,7 @@ module Phaser {
             //  Zero or smaller than frame sizes?
             if (width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0)
             {
+                throw new Error("AnimationLoader.parseSpriteSheet: width/height zero or width/height < given frameWidth/frameHeight");
                 return null;
             }
 

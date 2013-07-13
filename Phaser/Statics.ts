@@ -17,6 +17,7 @@ module Phaser {
         static EMITTER: number = 4;
         static TILEMAP: number = 5;
         static SCROLLZONE: number = 6;
+        static BUTTON: number = 7;
 
         static GEOM_POINT: number = 0;
         static GEOM_CIRCLE: number = 1;

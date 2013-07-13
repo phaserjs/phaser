@@ -507,7 +507,6 @@ module Phaser {
 
             if (this.inputObjects[index])
             {
-                console.log('object removed from the input manager', index);
                 this.inputObjects[index] = null;
             }
 
@@ -580,7 +579,10 @@ module Phaser {
 
                 for (var i = 0; i < this.totalTrackedObjects; i++)
                 {
-                    this.inputObjects[i].input.reset();
+                    if (this.inputObjects[i] && this.inputObjects[i].input)
+                    {
+                        this.inputObjects[i].input.reset();
+                    }
                 }
 
                 this.inputObjects.length = 0;

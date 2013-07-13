@@ -371,6 +371,10 @@ module Phaser {
 
         }
 
+        private _highestRenderOrderID: number;
+        private _highestRenderObject: number;
+        private _highestInputPriorityID: number;
+
         /**
         * Called when the Pointer is moved on the touchscreen
         * @method move
@@ -407,35 +411,73 @@ module Phaser {
                 this.game.input.circle.y = this.game.input.y;
             }
 
-            if (this.targetObject !== null)
+            //  Easy out if we're dragging something and it still exists
+            if (this.targetObject !== null && this.targetObject.input && this.targetObject.input.isDragged == true)
             {
                 if (this.targetObject.input.update(this) == false)
                 {
                     this.targetObject = null;
                 }
+                return this;
+            }
+
+            //  Work out which object is on the top
+            this._highestRenderOrderID = -1;
+            this._highestRenderObject = -1;
+            this._highestInputPriorityID = -1;
+
+            for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+            {
+                if (this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.checkPointerOver(this))
+                {
+                    //  If the object has a higher Input.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
+                    if (this.game.input.inputObjects[i].input.priorityID > this._highestInputPriorityID || (this.game.input.inputObjects[i].input.priorityID == this._highestInputPriorityID && this.game.input.inputObjects[i].renderOrderID > this._highestRenderOrderID))
+                    {
+                        this._highestRenderOrderID = this.game.input.inputObjects[i].renderOrderID;
+                        this._highestRenderObject = i;
+                        this._highestInputPriorityID = this.game.input.inputObjects[i].input.priorityID;
+                    }
+                }
+            }
+
+            if (this._highestRenderObject == -1)
+            {
+                //  The pointer isn't over anything, check if we've got a lingering previous target
+                if (this.targetObject !== null)
+                {
+                    this.targetObject.input._pointerOutHandler(this);
+                    this.targetObject = null;
+                }
             }
             else
             {
-                //  Build our temporary click stack
-                var _highestRenderID = -1;
-                var _highestRenderObject: number = -1;
-
-                for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+                if (this.targetObject == null)
                 {
-                    if (this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID)
-                    {
-                        _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
-                        _highestRenderObject = i;
-                    }
-                }
-
-                if (_highestRenderObject !== -1)
-                {
-                    //console.log('setting target');
-                    this.targetObject = this.game.input.inputObjects[_highestRenderObject];
+                    //  And now set the new one
+                    this.targetObject = this.game.input.inputObjects[this._highestRenderObject];
                     this.targetObject.input._pointerOverHandler(this);
                 }
+                else
+                {
+                    //  We've got a target from the last update
+                    if (this.targetObject == this.game.input.inputObjects[this._highestRenderObject])
+                    {
+                        //  Same target as before, so update it
+                        if (this.targetObject.input.update(this) == false)
+                        {
+                            this.targetObject = null;
+                        }
+                    }
+                    else
+                    {
+                        //  The target has changed, so tell the old one we've left it
+                        this.targetObject.input._pointerOutHandler(this);
 
+                        //  And now set the new one
+                        this.targetObject = this.game.input.inputObjects[this._highestRenderObject];
+                        this.targetObject.input._pointerOverHandler(this);
+                    }
+                }
             }
 
             return this;
@@ -510,7 +552,7 @@ module Phaser {
 
             for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
             {
-                if (this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.enabled)
+                if (this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.enabled)
                 {
                     this.game.input.inputObjects[i].input._releasedHandler(this);
                 }
@@ -584,7 +626,7 @@ module Phaser {
             this._history.length = 0;
             this._stateReset = true;
 
-            if (this.targetObject)
+            if (this.targetObject && this.targetObject.input)
             {
                 this.targetObject.input._releasedHandler(this);
             }

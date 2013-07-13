@@ -1274,6 +1274,7 @@ var Phaser;
         Types.EMITTER = 4;
         Types.TILEMAP = 5;
         Types.SCROLLZONE = 6;
+        Types.BUTTON = 7;
         Types.GEOM_POINT = 0;
         Types.GEOM_CIRCLE = 1;
         Types.GEOM_Rectangle = 2;
@@ -1987,6 +1988,13 @@ var Phaser;
             this._dy = 0;
             this._dw = 0;
             this._dh = 0;
+            /**
+            * You can set a globalCompositeOperation that will be applied before the render method is called on this Sprite.
+            * This is useful if you wish to apply an effect like 'lighten'.
+            * If this value is set it will call a canvas context save and restore before and after the render pass, so use it sparingly.
+            * Set to null to disable.
+            */
+            this.globalCompositeOperation = null;
             this.game = game;
             this.type = Phaser.Types.GEOMSPRITE;
             this.canvas = document.createElement('canvas');
@@ -2133,8 +2141,10 @@ var Phaser;
         */
         function (objects) {
             for(var i = 0; i < objects.length; i++) {
-                objects[i].texture.canvas = this.canvas;
-                objects[i].texture.context = this.context;
+                if(objects[i].texture) {
+                    objects[i].texture.canvas = this.canvas;
+                    objects[i].texture.context = this.context;
+                }
             }
         };
         DynamicTexture.prototype.clear = /**
@@ -2152,7 +2162,14 @@ var Phaser;
         function (x, y) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
+            if(this.globalCompositeOperation) {
+                this.game.stage.context.save();
+                this.game.stage.context.globalCompositeOperation = this.globalCompositeOperation;
+            }
             this.game.stage.context.drawImage(this.canvas, x, y);
+            if(this.globalCompositeOperation) {
+                this.game.stage.context.restore();
+            }
         };
         Object.defineProperty(DynamicTexture.prototype, "width", {
             get: function () {
@@ -2206,6 +2223,7 @@ var Phaser;
             }
             //  Zero or smaller than frame sizes?
             if(width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0) {
+                throw new Error("AnimationLoader.parseSpriteSheet: width/height zero or width/height < given frameWidth/frameHeight");
                 return null;
             }
             //  Let's create some frames then
@@ -2345,6 +2363,8 @@ var Phaser;
             this._timeNextFrame = this._game.time.now + this.delay;
             this._frameIndex = 0;
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+            this._parent.events.onAnimationStart.dispatch(this._parent, this);
+            return this;
         };
         Animation.prototype.restart = /**
         * Play this animation from the first frame.
@@ -2374,6 +2394,7 @@ var Phaser;
                     if(this.looped) {
                         this._frameIndex = 0;
                         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                        this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                     } else {
                         this.onComplete();
                     }
@@ -2403,8 +2424,8 @@ var Phaser;
         function () {
             this.isPlaying = false;
             this.isFinished = true;
-            //  callback goes here
-                    };
+            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+        };
         return Animation;
     })();
     Phaser.Animation = Animation;    
@@ -2657,7 +2678,7 @@ var Phaser;
                 */
                 this.currentFrame = null;
                 this._parent = parent;
-                this._game = parent.game;
+                this.game = parent.game;
                 this._anims = {
                 };
             }
@@ -2686,6 +2707,12 @@ var Phaser;
                 if(this._frameData == null) {
                     return;
                 }
+                //  Create the signals the AnimationManager will emit
+                if(this._parent.events.onAnimationStart == null) {
+                    this._parent.events.onAnimationStart = new Phaser.Signal();
+                    this._parent.events.onAnimationComplete = new Phaser.Signal();
+                    this._parent.events.onAnimationLoop = new Phaser.Signal();
+                }
                 if(frames == null) {
                     frames = this._frameData.getFrameIndexes();
                 } else {
@@ -2697,7 +2724,7 @@ var Phaser;
                 if(useNumericIndex == false) {
                     frames = this._frameData.getFrameIndexesByName(frames);
                 }
-                this._anims[name] = new Phaser.Animation(this._game, this._parent, this._frameData, name, frames, frameRate, loop);
+                this._anims[name] = new Phaser.Animation(this.game, this._parent, this._frameData, name, frames, frameRate, loop);
                 this.currentAnim = this._anims[name];
                 this.currentFrame = this.currentAnim.currentFrame;
                 return this._anims[name];
@@ -2733,11 +2760,11 @@ var Phaser;
                 if(this._anims[name]) {
                     if(this.currentAnim == this._anims[name]) {
                         if(this.currentAnim.isPlaying == false) {
-                            this.currentAnim.play(frameRate, loop);
+                            return this.currentAnim.play(frameRate, loop);
                         }
                     } else {
                         this.currentAnim = this._anims[name];
-                        this.currentAnim.play(frameRate, loop);
+                        return this.currentAnim.play(frameRate, loop);
                     }
                 }
             };
@@ -2784,7 +2811,7 @@ var Phaser;
                     return this._frameIndex;
                 },
                 set: function (value) {
-                    if(this._frameData.getFrame(value) !== null) {
+                    if(this._frameData && this._frameData.getFrame(value) !== null) {
                         this.currentFrame = this._frameData.getFrame(value);
                         this._parent.texture.width = this.currentFrame.width;
                         this._parent.texture.height = this.currentFrame.height;
@@ -2803,7 +2830,7 @@ var Phaser;
                     return this.currentFrame.name;
                 },
                 set: function (value) {
-                    if(this._frameData.getFrameByName(value) !== null) {
+                    if(this._frameData.getFrameByName(value)) {
                         this.currentFrame = this._frameData.getFrameByName(value);
                         this._parent.texture.width = this.currentFrame.width;
                         this._parent.texture.height = this.currentFrame.height;
@@ -3372,9 +3399,14 @@ var Phaser;
                     * @default null
                     */
                     this.boundsSprite = null;
+                    /**
+                    * If this object is set to consume the pointer event then it will stop all propogation from this object on.
+                    * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
+                    * @type {Boolean}
+                    */
                     this.consumePointerEvent = false;
                     this.game = parent.game;
-                    this.sprite = parent;
+                    this._parent = parent;
                     this.enabled = false;
                 }
                 Input.prototype.pointerX = /**
@@ -3505,9 +3537,18 @@ var Phaser;
                         }
                         this.snapOffset = new Phaser.Point();
                         this.enabled = true;
-                        this.game.input.addGameObject(this.sprite);
+                        this.game.input.addGameObject(this._parent);
+                        //  Create the signals the Input component will emit
+                        if(this._parent.events.onInputOver == null) {
+                            this._parent.events.onInputOver = new Phaser.Signal();
+                            this._parent.events.onInputOut = new Phaser.Signal();
+                            this._parent.events.onInputDown = new Phaser.Signal();
+                            this._parent.events.onInputUp = new Phaser.Signal();
+                            this._parent.events.onDragStart = new Phaser.Signal();
+                            this._parent.events.onDragStop = new Phaser.Signal();
+                        }
                     }
-                    return this.sprite;
+                    return this._parent;
                 };
                 Input.prototype.reset = function () {
                     this.enabled = false;
@@ -3552,25 +3593,25 @@ var Phaser;
                 * Checks if the given pointer is over this Sprite. All checks are done in world coordinates.
                 */
                 function (pointer) {
-                    if(this.enabled == false || this.sprite.visible == false) {
+                    if(this.enabled == false || this._parent.visible == false) {
                         return false;
                     } else {
-                        return Phaser.SpriteUtils.overlapsXY(this.sprite, pointer.worldX(), pointer.worldY());
+                        return Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY());
                     }
                 };
                 Input.prototype.update = /**
                 * Update
                 */
                 function (pointer) {
-                    if(this.enabled == false || this.sprite.visible == false) {
+                    if(this.enabled == false || this._parent.visible == false) {
                         return false;
                     }
                     if(this.draggable && this._draggedPointerID == pointer.id) {
                         return this.updateDrag(pointer);
                     } else if(this._pointerData[pointer.id].isOver == true) {
-                        if(Phaser.SpriteUtils.overlapsXY(this.sprite, pointer.worldX(), pointer.worldY())) {
-                            this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
-                            this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
+                        if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY())) {
+                            this._pointerData[pointer.id].x = pointer.x - this._parent.x;
+                            this._pointerData[pointer.id].y = pointer.y - this._parent.y;
                             return true;
                         } else {
                             this._pointerOutHandler(pointer);
@@ -3584,12 +3625,12 @@ var Phaser;
                         this._pointerData[pointer.id].isOver = true;
                         this._pointerData[pointer.id].isOut = false;
                         this._pointerData[pointer.id].timeOver = this.game.time.now;
-                        this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
-                        this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
+                        this._pointerData[pointer.id].x = pointer.x - this._parent.x;
+                        this._pointerData[pointer.id].y = pointer.y - this._parent.y;
                         if(this.useHandCursor && this._pointerData[pointer.id].isDragged == false) {
                             this.game.stage.canvas.style.cursor = "pointer";
                         }
-                        this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
+                        this._parent.events.onInputOver.dispatch(this._parent, pointer);
                     }
                 };
                 Input.prototype._pointerOutHandler = function (pointer) {
@@ -3599,40 +3640,45 @@ var Phaser;
                     if(this.useHandCursor && this._pointerData[pointer.id].isDragged == false) {
                         this.game.stage.canvas.style.cursor = "default";
                     }
-                    this.sprite.events.onInputOut.dispatch(this.sprite, pointer);
+                    this._parent.events.onInputOut.dispatch(this._parent, pointer);
                 };
                 Input.prototype._touchedHandler = function (pointer) {
                     if(this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true) {
                         this._pointerData[pointer.id].isDown = true;
                         this._pointerData[pointer.id].isUp = false;
                         this._pointerData[pointer.id].timeDown = this.game.time.now;
-                        this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
+                        this._parent.events.onInputDown.dispatch(this._parent, pointer);
                         //  Start drag
                         //if (this.draggable && this.isDragged == false && pointer.targetObject == null)
                         if(this.draggable && this.isDragged == false) {
                             this.startDrag(pointer);
                         }
                         if(this.bringToTop) {
-                            this.sprite.group.bringToTop(this.sprite);
+                            this._parent.group.bringToTop(this._parent);
                         }
                     }
                     //  Consume the event?
                     return this.consumePointerEvent;
                 };
                 Input.prototype._releasedHandler = function (pointer) {
-                    //  If was previously touched by this Pointer, check if still is
+                    //  If was previously touched by this Pointer, check if still is AND still over this item
                     if(this._pointerData[pointer.id].isDown && pointer.isUp) {
                         this._pointerData[pointer.id].isDown = false;
                         this._pointerData[pointer.id].isUp = true;
                         this._pointerData[pointer.id].timeUp = this.game.time.now;
                         this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
-                        this.sprite.events.onInputUp.dispatch(this.sprite, pointer);
+                        //  Only release the InputUp signal if the pointer is still over this sprite
+                        if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY())) {
+                            this._parent.events.onInputUp.dispatch(this._parent, pointer);
+                        } else {
+                            //  Pointer outside the sprite? Reset the cursor
+                            if(this.useHandCursor) {
+                                this.game.stage.canvas.style.cursor = "default";
+                            }
+                        }
                         //  Stop drag
                         if(this.draggable && this.isDragged && this._draggedPointerID == pointer.id) {
                             this.stopDrag(pointer);
-                        }
-                        if(this.useHandCursor) {
-                            this.game.stage.canvas.style.cursor = "default";
                         }
                     }
                 };
@@ -3645,10 +3691,10 @@ var Phaser;
                         return false;
                     }
                     if(this.allowHorizontalDrag) {
-                        this.sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
+                        this._parent.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
                     }
                     if(this.allowVerticalDrag) {
-                        this.sprite.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
+                        this._parent.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
                     }
                     if(this.boundsRect) {
                         this.checkBoundsRect();
@@ -3657,8 +3703,8 @@ var Phaser;
                         this.checkBoundsSprite();
                     }
                     if(this.snapOnDrag) {
-                        this.sprite.x = Math.floor(this.sprite.x / this.snapX) * this.snapX;
-                        this.sprite.y = Math.floor(this.sprite.y / this.snapY) * this.snapY;
+                        this._parent.x = Math.floor(this._parent.x / this.snapX) * this.snapX;
+                        this._parent.y = Math.floor(this._parent.y / this.snapY) * this.snapY;
                     }
                     return true;
                 };
@@ -3777,17 +3823,17 @@ var Phaser;
                     this._pointerData[pointer.id].isDragged = true;
                     if(this.dragFromCenter) {
                         //	Move the sprite to the middle of the pointer
-                        //this._dragPoint.setTo(-this.sprite.worldView.halfWidth, -this.sprite.worldView.halfHeight);
-                        //this._dragPoint.setTo(this.sprite.transform.center.x, this.sprite.transform.center.y);
-                        this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+                        //this._dragPoint.setTo(-this._parent.worldView.halfWidth, -this._parent.worldView.halfHeight);
+                        //this._dragPoint.setTo(this._parent.transform.center.x, this._parent.transform.center.y);
+                        this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
                     } else {
-                        this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+                        this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
                     }
                     this.updateDrag(pointer);
                     if(this.bringToTop) {
-                        this.sprite.group.bringToTop(this.sprite);
+                        this._parent.group.bringToTop(this._parent);
                     }
-                    this.sprite.events.onDragStart.dispatch(this.sprite, pointer);
+                    this._parent.events.onDragStart.dispatch(this._parent, pointer);
                 };
                 Input.prototype.stopDrag = /**
                 * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
@@ -3797,10 +3843,11 @@ var Phaser;
                     this._draggedPointerID = -1;
                     this._pointerData[pointer.id].isDragged = false;
                     if(this.snapOnRelease) {
-                        this.sprite.x = Math.floor(this.sprite.x / this.snapX) * this.snapX;
-                        this.sprite.y = Math.floor(this.sprite.y / this.snapY) * this.snapY;
+                        this._parent.x = Math.floor(this._parent.x / this.snapX) * this.snapX;
+                        this._parent.y = Math.floor(this._parent.y / this.snapY) * this.snapY;
                     }
-                    this.sprite.events.onDragStop.dispatch(this.sprite, pointer);
+                    this._parent.events.onDragStop.dispatch(this._parent, pointer);
+                    this._parent.events.onInputUp.dispatch(this._parent, pointer);
                 };
                 Input.prototype.setDragLock = /**
                 * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
@@ -3842,30 +3889,30 @@ var Phaser;
                 * Bounds Rect check for the sprite drag
                 */
                 function () {
-                    if(this.sprite.x < this.boundsRect.left) {
-                        this.sprite.x = this.boundsRect.x;
-                    } else if((this.sprite.x + this.sprite.width) > this.boundsRect.right) {
-                        this.sprite.x = this.boundsRect.right - this.sprite.width;
+                    if(this._parent.x < this.boundsRect.left) {
+                        this._parent.x = this.boundsRect.x;
+                    } else if((this._parent.x + this._parent.width) > this.boundsRect.right) {
+                        this._parent.x = this.boundsRect.right - this._parent.width;
                     }
-                    if(this.sprite.y < this.boundsRect.top) {
-                        this.sprite.y = this.boundsRect.top;
-                    } else if((this.sprite.y + this.sprite.height) > this.boundsRect.bottom) {
-                        this.sprite.y = this.boundsRect.bottom - this.sprite.height;
+                    if(this._parent.y < this.boundsRect.top) {
+                        this._parent.y = this.boundsRect.top;
+                    } else if((this._parent.y + this._parent.height) > this.boundsRect.bottom) {
+                        this._parent.y = this.boundsRect.bottom - this._parent.height;
                     }
                 };
                 Input.prototype.checkBoundsSprite = /**
                 * Parent Sprite Bounds check for the sprite drag
                 */
                 function () {
-                    if(this.sprite.x < this.boundsSprite.x) {
-                        this.sprite.x = this.boundsSprite.x;
-                    } else if((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width)) {
-                        this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
+                    if(this._parent.x < this.boundsSprite.x) {
+                        this._parent.x = this.boundsSprite.x;
+                    } else if((this._parent.x + this._parent.width) > (this.boundsSprite.x + this.boundsSprite.width)) {
+                        this._parent.x = (this.boundsSprite.x + this.boundsSprite.width) - this._parent.width;
                     }
-                    if(this.sprite.y < this.boundsSprite.y) {
-                        this.sprite.y = this.boundsSprite.y;
-                    } else if((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height)) {
-                        this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
+                    if(this._parent.y < this.boundsSprite.y) {
+                        this._parent.y = this.boundsSprite.y;
+                    } else if((this._parent.y + this._parent.height) > (this.boundsSprite.y + this.boundsSprite.height)) {
+                        this._parent.y = (this.boundsSprite.y + this.boundsSprite.height) - this._parent.height;
                     }
                 };
                 Input.prototype.renderDebugInfo = /**
@@ -3876,13 +3923,13 @@ var Phaser;
                 */
                 function (x, y, color) {
                     if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-                    this.sprite.texture.context.font = '14px Courier';
-                    this.sprite.texture.context.fillStyle = color;
-                    this.sprite.texture.context.fillText('Sprite Input: (' + this.sprite.worldView.width + ' x ' + this.sprite.worldView.height + ')', x, y);
-                    this.sprite.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
-                    this.sprite.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
-                    this.sprite.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
-                    this.sprite.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
+                    this._parent.texture.context.font = '14px Courier';
+                    this._parent.texture.context.fillStyle = color;
+                    this._parent.texture.context.fillText('Sprite Input: (' + this._parent.worldView.width + ' x ' + this._parent.worldView.height + ')', x, y);
+                    this._parent.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
+                    this._parent.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
+                    this._parent.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
+                    this._parent.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
                 };
                 return Input;
             })();
@@ -3904,23 +3951,16 @@ var Phaser;
         (function (Sprite) {
             var Events = (function () {
                 /**
-                * The Events component is a collection of events fired by the parent Sprite and its other components.
-                * @param parent The Sprite using this Input component
+                * The Events component is a collection of events fired by the parent game object and its components.
+                * @param parent The game object using this Input component
                 */
                 function Events(parent) {
                     this.game = parent.game;
-                    this.sprite = parent;
+                    this._parent = parent;
                     this.onAddedToGroup = new Phaser.Signal();
                     this.onRemovedFromGroup = new Phaser.Signal();
                     this.onKilled = new Phaser.Signal();
                     this.onRevived = new Phaser.Signal();
-                    //  Only create these if Sprite input is enabled?
-                    this.onInputOver = new Phaser.Signal();
-                    this.onInputOut = new Phaser.Signal();
-                    this.onInputDown = new Phaser.Signal();
-                    this.onInputUp = new Phaser.Signal();
-                    this.onDragStart = new Phaser.Signal();
-                    this.onDragStop = new Phaser.Signal();
                 }
                 return Events;
             })();
@@ -7168,9 +7208,9 @@ var Phaser;
             this.z = -1;
             this.group = null;
             this.name = '';
+            this.events = new Phaser.Components.Sprite.Events(this);
             this.animations = new Phaser.Components.AnimationManager(this);
             this.input = new Phaser.Components.Sprite.Input(this);
-            this.events = new Phaser.Components.Sprite.Events(this);
             this.texture = new Phaser.Components.Texture(this);
             this.transform = new Phaser.Components.Transform(this);
             if(key !== null) {
@@ -7214,6 +7254,22 @@ var Phaser;
                 if(this.body) {
                     this.body.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
                 }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Sprite.prototype, "alpha", {
+            get: /**
+            * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+            */
+            function () {
+                return this.texture.alpha;
+            },
+            set: /**
+            * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+            */
+            function (value) {
+                this.texture.alpha = value;
             },
             enumerable: true,
             configurable: true
@@ -7658,7 +7714,7 @@ var Phaser;
                 */
                 this.loaded = false;
                 /**
-                * Whether the Sprite background is opaque or not. If set to true the Sprite is filled with
+                * Whether the texture background is opaque or not. If set to true the object is filled with
                 * the value of Texture.backgroundColor every frame. Normally you wouldn't enable this but
                 * for some effects it can be handy.
                 * @type {boolean}
@@ -8957,8 +9013,9 @@ var Phaser;
         * @param key {string} Unique asset key of this image file.
         * @param url {string} URL of image file.
         */
-        function (key, url) {
-            if(this.checkKeyExists(key) === false) {
+        function (key, url, overwrite) {
+            if (typeof overwrite === "undefined") { overwrite = false; }
+            if(overwrite == true || this.checkKeyExists(key) == false) {
                 this._queueSize++;
                 this._fileList[key] = {
                     type: 'image',
@@ -9154,7 +9211,7 @@ var Phaser;
                 this._progressChunk = 100 / this._keys.length;
                 this.loadFile();
             } else {
-                this.progress = 1;
+                this.progress = 100;
                 this.hasLoaded = true;
                 this._gameCreateComplete.call(this._game);
                 if(this._onComplete !== null) {
@@ -9579,6 +9636,18 @@ var Phaser;
                 output.push(item);
             }
             return output;
+        };
+        Cache.prototype.removeCanvas = function (key) {
+            delete this._canvases[key];
+        };
+        Cache.prototype.removeImage = function (key) {
+            delete this._images[key];
+        };
+        Cache.prototype.removeSound = function (key) {
+            delete this._sounds[key];
+        };
+        Cache.prototype.removeText = function (key) {
+            delete this._text[key];
         };
         Cache.prototype.destroy = /**
         * Clean up cache memory.
@@ -10959,6 +11028,8 @@ var Phaser;
             this.game = game;
             this.ID = id;
             this.z = id;
+            width = this.game.math.clamp(width, this.game.stage.width, 1);
+            height = this.game.math.clamp(height, this.game.stage.height, 1);
             //  The view into the world we wish to render (by default the full game world size)
             //  The size of this Rect is the same as screenView, but the values are all in world coordinates instead of screen coordinates
             this.worldView = new Phaser.Rectangle(0, 0, width, height);
@@ -12413,6 +12484,151 @@ var Phaser;
     Phaser.Emitter = Emitter;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
+/// <reference path="../math/Vec2.ts" />
+/// <reference path="../geom/Rectangle.ts" />
+/// <reference path="../components/animation/AnimationManager.ts" />
+/// <reference path="../components/Texture.ts" />
+/// <reference path="../components/Transform.ts" />
+/// <reference path="../components/sprite/Input.ts" />
+/// <reference path="../components/sprite/Events.ts" />
+/**
+* Phaser - Button
+*/
+var Phaser;
+(function (Phaser) {
+    var Button = (function (_super) {
+        __extends(Button, _super);
+        /**
+        * Create a new <code>Button</code> object.
+        *
+        * @param game {Phaser.Game} Current game instance.
+        * @param [x] {number} the initial x position of the button.
+        * @param [y] {number} the initial y position of the button.
+        * @param [key] {string} Key of the graphic you want to load for this button.
+        */
+        function Button(game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof key === "undefined") { key = null; }
+            if (typeof callback === "undefined") { callback = null; }
+            if (typeof callbackContext === "undefined") { callbackContext = null; }
+            if (typeof overFrame === "undefined") { overFrame = null; }
+            if (typeof outFrame === "undefined") { outFrame = null; }
+            if (typeof downFrame === "undefined") { downFrame = null; }
+                _super.call(this, game, x, y, key, outFrame);
+            this._onOverFrameName = null;
+            this._onOutFrameName = null;
+            this._onDownFrameName = null;
+            this._onUpFrameName = null;
+            this._onOverFrameID = null;
+            this._onOutFrameID = null;
+            this._onDownFrameID = null;
+            this._onUpFrameID = null;
+            this.type = Phaser.Types.BUTTON;
+            if(typeof overFrame == 'string') {
+                this._onOverFrameName = overFrame;
+            } else {
+                this._onOverFrameID = overFrame;
+            }
+            if(typeof outFrame == 'string') {
+                this._onOutFrameName = outFrame;
+                this._onUpFrameName = outFrame;
+            } else {
+                this._onOutFrameID = outFrame;
+                this._onUpFrameID = outFrame;
+            }
+            if(typeof downFrame == 'string') {
+                this._onDownFrameName = downFrame;
+            } else {
+                this._onDownFrameID = downFrame;
+            }
+            //  These are the signals the game will subscribe to
+            this.onInputOver = new Phaser.Signal();
+            this.onInputOut = new Phaser.Signal();
+            this.onInputDown = new Phaser.Signal();
+            this.onInputUp = new Phaser.Signal();
+            //  Set a default signal for them
+            if(callback) {
+                this.onInputUp.add(callback, callbackContext);
+            }
+            this.input.start(0, false, true);
+            //  Redirect the input events to here so we can handle animation updates, etc
+            this.events.onInputOver.add(this.onInputOverHandler, this);
+            this.events.onInputOut.add(this.onInputOutHandler, this);
+            this.events.onInputDown.add(this.onInputDownHandler, this);
+            this.events.onInputUp.add(this.onInputUpHandler, this);
+            //  By default we'll position it using screen space, not world space.
+            this.transform.scrollFactor.setTo(0, 0);
+        }
+        Button.prototype.onInputOverHandler = //  TODO
+        //public tabIndex: number;
+        //public tabEnabled: bool;
+        //  ENTER or SPACE can activate this button if it has focus
+        function (pointer) {
+            if(this._onOverFrameName != null) {
+                this.frameName = this._onOverFrameName;
+            } else if(this._onOverFrameID != null) {
+                this.frame = this._onOverFrameID;
+            }
+            if(this.onInputOver) {
+                this.onInputOver.dispatch(this, pointer);
+            }
+        };
+        Button.prototype.onInputOutHandler = function (pointer) {
+            if(this._onOutFrameName != null) {
+                this.frameName = this._onOutFrameName;
+            } else if(this._onOutFrameID != null) {
+                this.frame = this._onOutFrameID;
+            }
+            if(this.onInputOut) {
+                this.onInputOut.dispatch(this, pointer);
+            }
+        };
+        Button.prototype.onInputDownHandler = function (pointer) {
+            if(this._onDownFrameName != null) {
+                this.frameName = this._onDownFrameName;
+            } else if(this._onDownFrameID != null) {
+                this.frame = this._onDownFrameID;
+            }
+            if(this.onInputDown) {
+                this.onInputDown.dispatch(this, pointer);
+            }
+        };
+        Button.prototype.onInputUpHandler = function (pointer) {
+            if(this._onUpFrameName != null) {
+                this.frameName = this._onUpFrameName;
+            } else if(this._onUpFrameID != null) {
+                this.frame = this._onUpFrameID;
+            }
+            if(this.onInputUp) {
+                this.onInputUp.dispatch(this, pointer);
+            }
+        };
+        Object.defineProperty(Button.prototype, "priorityID", {
+            get: function () {
+                return this.input.priorityID;
+            },
+            set: function (value) {
+                this.input.priorityID = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Button.prototype, "useHandCursor", {
+            get: function () {
+                return this.input.useHandCursor;
+            },
+            set: function (value) {
+                this.input.useHandCursor = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Button;
+    })(Phaser.Sprite);
+    Phaser.Button = Button;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
 /// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../math/Vec2.ts" />
 /**
@@ -13247,6 +13463,8 @@ var Phaser;
         };
         Tilemap.prototype.postUpdate = function () {
         };
+        Tilemap.prototype.destroy = function () {
+        };
         Tilemap.prototype.parseCSV = /**
         * Parset csv map data and generate tiles.
         * @param data {string} CSV map data.
@@ -13497,6 +13715,7 @@ var Phaser;
 /// <reference path="../gameobjects/Emitter.ts" />
 /// <reference path="../gameobjects/Particle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="../gameobjects/Button.ts" />
 /// <reference path="../gameobjects/ScrollZone.ts" />
 /// <reference path="../gameobjects/DynamicTexture.ts" />
 /// <reference path="../gameobjects/Tilemap.ts" />
@@ -13528,7 +13747,7 @@ var Phaser;
         function (x, y, width, height) {
             return this._world.cameras.addCamera(x, y, width, height);
         };
-        GameObjectFactory.prototype.sprite = /**
+        GameObjectFactory.prototype.button = /**
         * Create a new GeomSprite with specific position.
         *
         * @param x {number} X position of the new geom sprite.
@@ -13539,6 +13758,30 @@ var Phaser;
         //    return <GeomSprite> this._world.group.add(new GeomSprite(this._game, x, y));
         //}
         /**
+        * Create a new Button game object.
+        *
+        * @param [x] {number} X position of the button.
+        * @param [y] {number} Y position of the button.
+        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
+        * @param [callback] {function} The function to call when this button is pressed
+        * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
+        * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+        * @returns {Button} The newly created button object.
+        */
+        function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof key === "undefined") { key = null; }
+            if (typeof callback === "undefined") { callback = null; }
+            if (typeof callbackContext === "undefined") { callbackContext = null; }
+            if (typeof overFrame === "undefined") { overFrame = null; }
+            if (typeof outFrame === "undefined") { outFrame = null; }
+            if (typeof downFrame === "undefined") { downFrame = null; }
+            return this._world.group.add(new Phaser.Button(this._game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        };
+        GameObjectFactory.prototype.sprite = /**
         * Create a new Sprite with specific position and sprite sheet key.
         *
         * @param x {number} X position of the new sprite.
@@ -16533,24 +16776,52 @@ var Phaser;
                 this.game.input.circle.x = this.game.input.x;
                 this.game.input.circle.y = this.game.input.y;
             }
-            if(this.targetObject !== null) {
+            //  Easy out if we're dragging something and it still exists
+            if(this.targetObject !== null && this.targetObject.input && this.targetObject.input.isDragged == true) {
                 if(this.targetObject.input.update(this) == false) {
                     this.targetObject = null;
                 }
-            } else {
-                //  Build our temporary click stack
-                var _highestRenderID = -1;
-                var _highestRenderObject = -1;
-                for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
-                    if(this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.checkPointerOver(this) && this.game.input.inputObjects[i].renderOrderID > _highestRenderID) {
-                        _highestRenderID = this.game.input.inputObjects[i].renderOrderID;
-                        _highestRenderObject = i;
+                return this;
+            }
+            //  Work out which object is on the top
+            this._highestRenderOrderID = -1;
+            this._highestRenderObject = -1;
+            this._highestInputPriorityID = -1;
+            for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
+                if(this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.checkPointerOver(this)) {
+                    //  If the object has a higher Input.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
+                    if(this.game.input.inputObjects[i].input.priorityID > this._highestInputPriorityID || (this.game.input.inputObjects[i].input.priorityID == this._highestInputPriorityID && this.game.input.inputObjects[i].renderOrderID > this._highestRenderOrderID)) {
+                        this._highestRenderOrderID = this.game.input.inputObjects[i].renderOrderID;
+                        this._highestRenderObject = i;
+                        this._highestInputPriorityID = this.game.input.inputObjects[i].input.priorityID;
                     }
                 }
-                if(_highestRenderObject !== -1) {
-                    //console.log('setting target');
-                    this.targetObject = this.game.input.inputObjects[_highestRenderObject];
+            }
+            if(this._highestRenderObject == -1) {
+                //  The pointer isn't over anything, check if we've got a lingering previous target
+                if(this.targetObject !== null) {
+                    this.targetObject.input._pointerOutHandler(this);
+                    this.targetObject = null;
+                }
+            } else {
+                if(this.targetObject == null) {
+                    //  And now set the new one
+                    this.targetObject = this.game.input.inputObjects[this._highestRenderObject];
                     this.targetObject.input._pointerOverHandler(this);
+                } else {
+                    //  We've got a target from the last update
+                    if(this.targetObject == this.game.input.inputObjects[this._highestRenderObject]) {
+                        //  Same target as before, so update it
+                        if(this.targetObject.input.update(this) == false) {
+                            this.targetObject = null;
+                        }
+                    } else {
+                        //  The target has changed, so tell the old one we've left it
+                        this.targetObject.input._pointerOutHandler(this);
+                        //  And now set the new one
+                        this.targetObject = this.game.input.inputObjects[this._highestRenderObject];
+                        this.targetObject.input._pointerOverHandler(this);
+                    }
                 }
             }
             return this;
@@ -16601,7 +16872,7 @@ var Phaser;
                 this.game.input.currentPointers--;
             }
             for(var i = 0; i < this.game.input.totalTrackedObjects; i++) {
-                if(this.game.input.inputObjects[i] !== null && this.game.input.inputObjects[i].input.enabled) {
+                if(this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.enabled) {
                     this.game.input.inputObjects[i].input._releasedHandler(this);
                 }
             }
@@ -16654,7 +16925,7 @@ var Phaser;
             this._holdSent = false;
             this._history.length = 0;
             this._stateReset = true;
-            if(this.targetObject) {
+            if(this.targetObject && this.targetObject.input) {
                 this.targetObject.input._releasedHandler(this);
             }
             this.targetObject = null;
@@ -17675,7 +17946,6 @@ var Phaser;
         **/
         function (index) {
             if(this.inputObjects[index]) {
-                console.log('object removed from the input manager', index);
                 this.inputObjects[index] = null;
             }
         };
@@ -17750,7 +18020,9 @@ var Phaser;
                 this.onTap = new Phaser.Signal();
                 this.onHold = new Phaser.Signal();
                 for(var i = 0; i < this.totalTrackedObjects; i++) {
-                    this.inputObjects[i].input.reset();
+                    if(this.inputObjects[i] && this.inputObjects[i].input) {
+                        this.inputObjects[i].input.reset();
+                    }
                 }
                 this.inputObjects.length = 0;
                 this.totalTrackedObjects = 0;
@@ -18103,7 +18375,7 @@ var Phaser;
             this.renderTotal = this._count;
         };
         CanvasRenderer.prototype.renderGameObject = function (object) {
-            if(object.type == Phaser.Types.SPRITE) {
+            if(object.type == Phaser.Types.SPRITE || object.type == Phaser.Types.BUTTON) {
                 this.renderSprite(this._camera, object);
             } else if(object.type == Phaser.Types.SCROLLZONE) {
                 this.renderScrollZone(this._camera, object);
@@ -18826,15 +19098,30 @@ var Phaser;
             */
             this.onCreateCallback = null;
             /**
-            * This will be called when update states.
+            * This will be called when State is updated, this doesn't happen during load (see onLoadUpdateCallback)
             * @type {function}
             */
             this.onUpdateCallback = null;
             /**
-            * This will be called when render states.
+            * This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback)
             * @type {function}
             */
             this.onRenderCallback = null;
+            /**
+            * This will be called before the State is rendered and before the stage is cleared
+            * @type {function}
+            */
+            this.onPreRenderCallback = null;
+            /**
+            * This will be called when the State is updated but only during the load process
+            * @type {function}
+            */
+            this.onLoadUpdateCallback = null;
+            /**
+            * This will be called when the State is rendered but only during the load process
+            * @type {function}
+            */
+            this.onLoadRenderCallback = null;
             /**
             * This will be called when states paused.
             * @type {function}
@@ -18978,11 +19265,18 @@ var Phaser;
             this.world.update();
             if(this._loadComplete && this.onUpdateCallback) {
                 this.onUpdateCallback.call(this.callbackContext);
+            } else if(this._loadComplete == false && this.onLoadUpdateCallback) {
+                this.onLoadUpdateCallback.call(this.callbackContext);
             }
             this.world.postUpdate();
+            if(this._loadComplete && this.onPreRenderCallback) {
+                this.onPreRenderCallback.call(this.callbackContext);
+            }
             this.renderer.render();
             if(this._loadComplete && this.onRenderCallback) {
                 this.onRenderCallback.call(this.callbackContext);
+            } else if(this._loadComplete == false && this.onLoadRenderCallback) {
+                this.onLoadRenderCallback.call(this.callbackContext);
             }
         };
         Game.prototype.startState = /**
@@ -19008,7 +19302,7 @@ var Phaser;
             }
         };
         Game.prototype.setCallbacks = /**
-        * Set all state callbacks (init, create, update, render).
+        * Set the most common state callbacks (init, create, update, render).
         * @param initCallback {function} Init callback invoked when init state.
         * @param createCallback {function} Create callback invoked when create state.
         * @param updateCallback {function} Update callback invoked when update state.
@@ -19053,20 +19347,32 @@ var Phaser;
             if(this.state['create'] || this.state['update']) {
                 this.callbackContext = this.state;
                 this.onInitCallback = null;
+                this.onLoadRenderCallback = null;
+                this.onLoadUpdateCallback = null;
                 this.onCreateCallback = null;
                 this.onUpdateCallback = null;
                 this.onRenderCallback = null;
+                this.onPreRenderCallback = null;
                 this.onPausedCallback = null;
                 this.onDestroyCallback = null;
                 //  Bingo, let's set them up
                 if(this.state['init']) {
                     this.onInitCallback = this.state['init'];
                 }
+                if(this.state['loadRender']) {
+                    this.onLoadRenderCallback = this.state['loadRender'];
+                }
+                if(this.state['loadUpdate']) {
+                    this.onLoadUpdateCallback = this.state['loadUpdate'];
+                }
                 if(this.state['create']) {
                     this.onCreateCallback = this.state['create'];
                 }
                 if(this.state['update']) {
                     this.onUpdateCallback = this.state['update'];
+                }
+                if(this.state['preRender']) {
+                    this.onPreRenderCallback = this.state['preRender'];
                 }
                 if(this.state['render']) {
                     this.onRenderCallback = this.state['render'];
@@ -19095,6 +19401,8 @@ var Phaser;
         function () {
             this.callbackContext = null;
             this.onInitCallback = null;
+            this.onLoadRenderCallback = null;
+            this.onLoadUpdateCallback = null;
             this.onCreateCallback = null;
             this.onUpdateCallback = null;
             this.onRenderCallback = null;

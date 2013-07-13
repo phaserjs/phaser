@@ -92,6 +92,10 @@
       <DependentUpon>CameraFX.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="components\ScrollRegion.ts" />
+    <TypeScriptCompile Include="gameobjects\Button.ts" />
+    <Content Include="gameobjects\Button.js">
+      <DependentUpon>Button.ts</DependentUpon>
+    </Content>
     <Content Include="gameobjects\DynamicTexture.js">
       <DependentUpon>DynamicTexture.ts</DependentUpon>
     </Content>

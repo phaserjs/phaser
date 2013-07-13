@@ -312,6 +312,22 @@ module Phaser {
 
         }
 
+        public removeCanvas(key: string) {
+            delete this._canvases[key];
+        }
+
+        public removeImage(key: string) {
+            delete this._images[key];
+        }
+
+        public removeSound(key: string) {
+            delete this._sounds[key];
+        }
+
+        public removeText(key: string) {
+            delete this._text[key];
+        }
+
         /**
          * Clean up cache memory.
          */
