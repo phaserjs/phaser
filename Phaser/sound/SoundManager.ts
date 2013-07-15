@@ -66,28 +66,44 @@ module Phaser {
          */
         private _volume: number;
 
+        private _muteVolume: number;
+        private _muted: bool = false;
+
         /**
          * Mute sounds.
          */
-        public mute() {
-
-            this._gainNode.gain.value = 0;
-
+        public get mute():bool {
+            return this._muted;
         }
 
-        /**
-         * Enable sounds.
-         */
-        public unmute() {
+        public set mute(value: bool) {
 
-            this._gainNode.gain.value = this._volume;
+            if (value && this._muted == false)
+            {
+                this._muteVolume = this._gainNode.gain.value;
+                this._gainNode.gain.value = 0;
+                this._muted = true;
+            }
+            else
+            {
+                this._gainNode.gain.value = this._muteVolume;
+                this._muted = false;
+            }
 
         }
 
         public set volume(value: number) {
 
             this._volume = value;
-            this._gainNode.gain.value = this._volume;
+
+            if (this._muted)
+            {
+                this._muteVolume = this._volume;
+            }
+            else
+            {
+                this._gainNode.gain.value = this._volume;
+            }
 
         }
 

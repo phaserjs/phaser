@@ -82,7 +82,7 @@ module Phaser {
             this.transform.setCache();
 
             this.outOfBounds = false;
-            this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_KILL;
+            this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_PERSIST;
 
             //  Handy proxies
             this.scale = this.transform.scale;

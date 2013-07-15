@@ -57,6 +57,11 @@ TODO:
 * Camera control method (touch/keyboard)
 * Tilemap.destroy needs doing
 * Look at the input targetObject - it doesn't seem to get cleared down all the time, maybe just a priority/alpha issue (check vis/alpha?)
+* Sprite.transform.bottomRight/Left doesn't seem to take origin into account
+* When you toggle visible of a button that is over, it doesn't disable that 'over' state (should it? probably yes)
+* Stage.opaqueBackground = 'rgb()' or null, alpha, blendMode, filters, mask, rotation+XYZ,scaleXYZ,visible
+
+
 
 V1.0.0
 

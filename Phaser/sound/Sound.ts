@@ -50,26 +50,34 @@ module Phaser {
          * Local private reference to AudioContext.
          */
         private _context;
+
         /**
          * Reference to gain node of SoundManager.
          */
         private _gainNode;
+
         /**
          * GainNode of this sound.
          */
         private _localGainNode;
+
         /**
          * Decoded data buffer.
          */
         private _buffer;
+
         /**
          * Volume of this sound.
          */
         private _volume: number;
+
         /**
          * The real sound object (buffer source).
          */
         private _sound;
+
+        private _muteVolume: number;
+        private _muted: bool = false;
 
         loop: bool = false;
         duration: number;
@@ -125,27 +133,40 @@ module Phaser {
         }
 
         /**
-         * Mute the sound.
+         * Mute sounds.
          */
-        public mute() {
-
-            this._localGainNode.gain.value = 0;
-
+        public get mute():bool {
+            return this._muted;
         }
 
-        /**
-         * Enable the sound.
-         */
-        public unmute() {
+        public set mute(value: bool) {
 
-            this._localGainNode.gain.value = this._volume;
+            if (value && this._muted == false)
+            {
+                this._muteVolume = this._localGainNode.gain.value;
+                this._localGainNode.gain.value = 0;
+                this._muted = true;
+            }
+            else
+            {
+                this._localGainNode.gain.value = this._muteVolume;
+                this._muted = false;
+            }
 
         }
 
         public set volume(value: number) {
 
             this._volume = value;
-            this._localGainNode.gain.value = this._volume;
+
+            if (this._muted)
+            {
+                this._muteVolume = this._volume;
+            }
+            else
+            {
+                this._localGainNode.gain.value = this._volume;
+            }
 
         }
 
