@@ -28,6 +28,21 @@ module Phaser {
                 this.channels = 1;
             }
 
+            if (this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
+            {
+                console.log('iOS Touch Locked');
+                this.game.input.touch.callbackContext = this;
+                this.game.input.touch.touchStartCallback = this.unlock;
+                this.game.input.mouse.callbackContext = this;
+                this.game.input.mouse.mouseDownCallback = this.unlock;
+                this.touchLocked = true;
+            }
+            else
+            {
+                //  What about iOS5?
+                this.touchLocked = false;
+            }
+
             if (window['PhaserGlobal'])
             {
                 //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
@@ -48,17 +63,6 @@ module Phaser {
                 }
             }
 
-            if (this.game.device.iOS && this.game.device.webAudio)
-            {
-                this.game.input.touch.callbackContext = this;
-                this.game.input.touch.touchStartCallback = this.unlock;
-                this.touchLocked = true;
-            }
-            else
-            {
-                //  What about iOS5?
-                this.touchLocked = false;
-            }
 
             this.usingWebAudio = true;
             this.noAudio = false;
@@ -137,19 +141,34 @@ module Phaser {
 
         public unlock() {
 
-            if (this.touchLocked == false || this.game.device.iOS == false)
+            if (this.touchLocked == false)
             {
                 return;
             }
 
-            //  Create Audio tag?
+            console.log('SoundManager touch unlocked');
 
-            // Create empty buffer and play it
-	        var buffer = this.context.createBuffer(1, 1, 22050);
-	        this._unlockSource = this.context.createBufferSource();
-	        this._unlockSource.buffer = buffer;
-	        this._unlockSource.connect(this.context.destination);
-        	this._unlockSource.noteOn(0);
+            if (this.game.device.webAudio && (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == false))
+            {
+                console.log('create empty buffer');
+                // Create empty buffer and play it
+                var buffer = this.context.createBuffer(1, 1, 22050);
+                this._unlockSource = this.context.createBufferSource();
+                this._unlockSource.buffer = buffer;
+                this._unlockSource.connect(this.context.destination);
+                this._unlockSource.noteOn(0);
+            }
+            else
+            {
+                //  Create an Audio tag?
+                console.log('create audio tag');
+                this.touchLocked = false;
+                this._unlockSource = null;
+                this.game.input.touch.callbackContext = null;
+                this.game.input.touch.touchStartCallback = null;
+                this.game.input.mouse.callbackContext = null;
+                this.game.input.mouse.mouseDownCallback = null;
+            }
 
         }
 
@@ -180,7 +199,7 @@ module Phaser {
                 //  Loop through sounds
                 for (var i = 0; i < this._sounds.length; i++)
                 {
-                    if (this._sounds[i].usingAudioTag)
+                    if (this._sounds[i])
                     {
                         this._sounds[i].mute = true;
                     }
@@ -203,7 +222,7 @@ module Phaser {
                 //  Loop through sounds
                 for (var i = 0; i < this._sounds.length; i++)
                 {
-                    if (this._sounds[i].usingAudioTag)
+                    if (this._sounds[i])
                     {
                         this._sounds[i].mute = false;
                     }
@@ -250,6 +269,42 @@ module Phaser {
 
         }
 
+        public stopAll() {
+
+            for (var i = 0; i < this._sounds.length; i++)
+            {
+                if (this._sounds[i])
+                {
+                    this._sounds[i].stop();
+                }
+            }
+
+        }
+
+        public pauseAll() {
+
+            for (var i = 0; i < this._sounds.length; i++)
+            {
+                if (this._sounds[i])
+                {
+                    this._sounds[i].pause();
+                }
+            }
+
+        }
+
+        public resumeAll() {
+
+            for (var i = 0; i < this._sounds.length; i++)
+            {
+                if (this._sounds[i])
+                {
+                    this._sounds[i].resume();
+                }
+            }
+
+        }
+
         /**
          * Decode a sound with its assets key.
          * @param key {string} Assets key of the sound to be decoded.
@@ -285,14 +340,17 @@ module Phaser {
 
         public update() {
 
-            if (this.touchLocked && this._unlockSource !== null)
+            if (this.touchLocked)
             {
-                if ((this._unlockSource.playbackState === this._unlockSource.PLAYING_STATE || this._unlockSource.playbackState === this._unlockSource.FINISHED_STATE))
+                if (this.game.device.webAudio && this._unlockSource !== null)
                 {
-                    this.touchLocked = false;
-                    this._unlockSource = null;
-                    this.game.input.touch.callbackContext = null;
-                    this.game.input.touch.touchStartCallback = null;
+                    if ((this._unlockSource.playbackState === this._unlockSource.PLAYING_STATE || this._unlockSource.playbackState === this._unlockSource.FINISHED_STATE))
+                    {
+                        this.touchLocked = false;
+                        this._unlockSource = null;
+                        this.game.input.touch.callbackContext = null;
+                        this.game.input.touch.touchStartCallback = null;
+                    }
                 }
             }
 

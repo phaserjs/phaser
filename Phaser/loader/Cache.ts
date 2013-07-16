@@ -124,15 +124,43 @@ module Phaser {
          */
         public addSound(key: string, url: string, data, webAudio: bool = true, audioTag: bool = false) {
 
-            console.log('Cache addSound', key, url, webAudio, audioTag);
+            console.log('Cache addSound: ' + key + ' url: ' + url, webAudio, audioTag);
 
+            var locked: bool = this._game.sound.touchLocked;
             var decoded: bool = false;
 
             if (audioTag) {
                 decoded = true;
             }
 
-            this._sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag };
+            this._sounds[key] = { url: url, data: data, locked: locked, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag };
+
+        }
+
+        public reloadSound(key: string) {
+
+            console.log('reloadSound', key);
+
+            if (this._sounds[key])
+            {
+                this._sounds[key].data.src = this._sounds[key].url;
+                this._sounds[key].data.addEventListener('canplaythrough', () => this.reloadSoundComplete(key), false);
+                this._sounds[key].data.load();
+            }
+
+        }
+
+        public onSoundUnlock: Phaser.Signal = new Phaser.Signal;
+
+        public reloadSoundComplete(key: string) {
+
+            console.log('reloadSoundComplete', key);
+
+            if (this._sounds[key])
+            {
+                this._sounds[key].locked = false;
+                this.onSoundUnlock.dispatch(key);
+            }
 
         }
 
@@ -262,6 +290,22 @@ module Phaser {
             {
                 return this._sounds[key].decoded;
             }
+
+        }
+
+        /**
+         * Check whether an asset is decoded sound.
+         * @param key Asset key of the sound you want.
+         * @return {object} The sound data you want.
+         */
+        public isSoundReady(key: string): bool {
+
+            if (this._sounds[key] && this._sounds[key].decoded == true && this._sounds[key].locked == false)
+            {
+                return true;
+            }
+
+            return false;
 
         }
 

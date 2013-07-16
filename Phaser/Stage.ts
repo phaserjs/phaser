@@ -213,23 +213,26 @@ module Phaser {
          */
         private visibilityChange(event) {
 
-            if (this.disablePauseScreen)
-            {
-                return;
-            }
-
             if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
             {
-                if (this._game.paused == false)
+                if (this._game.paused == false && this.disablePauseScreen == false)
                 {
                     this.pauseGame();
+                }
+                else
+                {
+                    this._game.paused = true;
                 }
             }
             else
             {
-                if (this._game.paused == true)
+                if (this._game.paused == true && this.disablePauseScreen == false)
                 {
                     this.resumeGame();
+                }
+                else
+                {
+                    this._game.paused = false;
                 }
             }
 

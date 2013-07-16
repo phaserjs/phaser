@@ -4439,6 +4439,9 @@ module Phaser {
         * @param data {object} Extra sound data.
         */
         public addSound(key: string, url: string, data, webAudio?: bool, audioTag?: bool): void;
+        public reloadSound(key: string): void;
+        public onSoundUnlock: Signal;
+        public reloadSoundComplete(key: string): void;
         public updateSound(key: string, property: string, value): void;
         /**
         * Add a new decoded sound.
@@ -4489,6 +4492,12 @@ module Phaser {
         * @return {object} The sound data you want.
         */
         public isSoundDecoded(key: string): bool;
+        /**
+        * Check whether an asset is decoded sound.
+        * @param key Asset key of the sound you want.
+        * @return {object} The sound data you want.
+        */
+        public isSoundReady(key: string): bool;
         /**
         * Check whether an asset is sprite sheet.
         * @param key Asset key of the sprite sheet you want.
@@ -6951,6 +6960,7 @@ module Phaser {
         * @param [loop] {boolean} loop this sound when playing? (Default to false)
         */
         constructor(game: Game, key: string, volume?: number, loop?: bool);
+        private soundHasUnlocked(key);
         /**
         * Local reference to the current Phaser.Game.
         */
@@ -7088,6 +7098,9 @@ module Phaser {
         * The global audio volume. A value between 0 (silence) and 1 (full volume)
         */
         public volume : number;
+        public stopAll(): void;
+        public pauseAll(): void;
+        public resumeAll(): void;
         /**
         * Decode a sound with its assets key.
         * @param key {string} Assets key of the sound to be decoded.

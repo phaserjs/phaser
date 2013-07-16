@@ -43,8 +43,15 @@ module Phaser {
             }
             else
             {
-                this._sound = this.game.cache.getSoundData(key);
-                this.totalDuration = this._sound.duration;
+                if (this.game.cache.getSound(key).locked == false)
+                {
+                    this._sound = this.game.cache.getSoundData(key);
+                    this.totalDuration = this._sound.duration;
+                }
+                else
+                {
+                    this.game.cache.onSoundUnlock.add(this.soundHasUnlocked, this);
+                }
             }
 
             this._volume = volume;
@@ -58,6 +65,17 @@ module Phaser {
             this.onLoop = new Phaser.Signal;
             this.onStop = new Phaser.Signal;
             this.onMute = new Phaser.Signal;
+
+        }
+
+        private soundHasUnlocked(key:string) {
+
+            if (key == this.key)
+            {
+                this._sound = this.game.cache.getSoundData(this.key);
+                this.totalDuration = this._sound.duration;
+                console.log('sound has unlocked', this._sound);
+            }
 
         }
 
@@ -151,8 +169,9 @@ module Phaser {
 
         public update() {
 
-            if (this.pendingPlayback && this.game.cache.isSoundDecoded(this.key))
+            if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
             {
+                console.log('pending over');
                 this.pendingPlayback = false;
                 this.play(this._tempMarker, this._tempPosition, this._tempVolume, this._tempLoop);
             }
@@ -213,18 +232,23 @@ module Phaser {
 
             if (marker !== '' && this.markers[marker])
             {
-                this.loop = this.markers[marker].loop;
-                this.volume = this.markers[marker].volume;
                 this.position = this.markers[marker].start;
+                this.volume = this.markers[marker].volume;
+                this.loop = this.markers[marker].loop;
                 this.duration = this.markers[marker].duration * 1000;
             }
             else
             {
-                this.loop = loop;
-                this.volume = volume;
                 this.position = position;
+                this.volume = volume;
+                this.loop = loop;
                 this.duration = 0;
             }
+
+            this._tempMarker = marker;
+            this._tempPosition = position;
+            this._tempVolume = volume;
+            this._tempLoop = loop;
 
             if (this.usingWebAudio)
             {
@@ -267,10 +291,6 @@ module Phaser {
                 }
                 else
                 {
-                    this._tempVolume = volume;
-                    this._tempLoop = loop;
-                    this._tempPosition = position;
-                    this._tempMarker = marker;
                     this.pendingPlayback = true;
 
                     if (this.game.cache.getSound(this.key).isDecoding == false)
@@ -281,19 +301,42 @@ module Phaser {
             }
             else
             {
-                if (this._sound.readyState == 4)
-                {
-                    this._sound.currentTime = this.position;
-                    this._sound.muted = this._muted;
-                    this._sound.volume = this._volume;
-                    this._sound.play();
+                console.log('Sound play Audio');
 
-                    this.isPlaying = true;
-                    this.startTime = this.game.time.now;
-                    this.currentTime = 0;
-                    this.stopTime = this.startTime + this.duration;
-                    this.onPlay.dispatch(this);
+                if (this.game.cache.getSound(this.key).locked)
+                {
+                    console.log('tried playing locked sound, pending set, reload started');
+                    this.game.cache.reloadSound(this.key);
+                    this.pendingPlayback = true;
                 }
+                else
+                {
+                    console.log('sound not locked, state?', this._sound.readyState);
+                    if (this._sound && this._sound.readyState == 4)
+                    {
+                        if (this.duration == 0)
+                        {
+                            this.duration = this.totalDuration * 1000;
+                        }
+
+                        console.log('playing', this._sound);
+                        this._sound.currentTime = this.position;
+                        this._sound.muted = this._muted;
+                        this._sound.volume = this._volume;
+                        this._sound.play();
+
+                        this.isPlaying = true;
+                        this.startTime = this.game.time.now;
+                        this.currentTime = 0;
+                        this.stopTime = this.startTime + this.duration;
+                        this.onPlay.dispatch(this);
+                    }
+                    else
+                    {
+                        this.pendingPlayback = true;
+                    }
+                }
+
             }
 
         }
@@ -316,7 +359,8 @@ module Phaser {
 
         public resume() {
 
-            if (this.isPlaying == false && this._sound)
+            //if (this.isPlaying == false && this._sound)
+            if (this.paused && this._sound)
             {
                 if (this.usingWebAudio)
                 {
@@ -392,8 +436,8 @@ module Phaser {
                     this._muteVolume = this.gainNode.gain.value;
                     this.gainNode.gain.value = 0;
                 }
-                else if (this.usingAudioTag)
-                    {
+                else if (this.usingAudioTag && this._sound)
+                {
                     this._muteVolume = this._sound.volume;
                     this._sound.volume = 0;
                 }
@@ -406,7 +450,7 @@ module Phaser {
                 {
                     this.gainNode.gain.value = this._muteVolume;
                 }
-                else if (this.usingAudioTag)
+                else if (this.usingAudioTag && this._sound)
                 {
                     this._sound.volume = this._muteVolume;
                 }
@@ -424,7 +468,7 @@ module Phaser {
             {
                 this.gainNode.gain.value = value;
             }
-            else if (this.usingAudioTag)
+            else if (this.usingAudioTag && this._sound)
             {
                 this._sound.volume = value;
             }

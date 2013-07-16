@@ -639,6 +639,7 @@ module Phaser {
             if (value == true && this._paused == false)
             {
                 this._paused = true;
+                this.sound.pauseAll();
                 this._raf.callback = this.pausedLoop;
             }
             else if (value == false && this._paused == true)
@@ -646,6 +647,7 @@ module Phaser {
                 this._paused = false;
                 //this.time.time = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
                 this.input.reset();
+                this.sound.resumeAll();
 
                 if (this.isRunning == false)
                 {
