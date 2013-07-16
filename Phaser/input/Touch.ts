@@ -79,9 +79,7 @@ module Phaser {
         * @param {Any} event
         **/
         private consumeTouchMove(event) {
-
             event.preventDefault();
-
         }
 
         /**

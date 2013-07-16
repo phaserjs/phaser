@@ -4299,9 +4299,10 @@ module Phaser {
         /**
         * Add a new audio file loading request.
         * @param key {string} Unique asset key of the audio file.
-        * @param url {string} URL of audio file.
+        * @param urls {Array} An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ]
+        * @param autoDecode {boolean} When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
         */
-        public audio(key: string, url: string): void;
+        public audio(key: string, urls: string[], autoDecode?: bool): void;
         /**
         * Add a new text file loading request.
         * @param key {string} Unique asset key of the text file.
@@ -4327,6 +4328,7 @@ module Phaser {
         * Load files. Private method ONLY used by loader.
         */
         private loadFile();
+        private getAudioURL(urls);
         /**
         * Error occured when load a file.
         * @param key {string} Key of the error loading file.
@@ -4436,11 +4438,11 @@ module Phaser {
         * @param url {string} URL of this sound file.
         * @param data {object} Extra sound data.
         */
-        public addSound(key: string, url: string, data): void;
+        public addSound(key: string, url: string, data, webAudio?: bool, audioTag?: bool): void;
+        public updateSound(key: string, property: string, value): void;
         /**
         * Add a new decoded sound.
         * @param key {string} Asset key for the sound.
-        * @param url {string} URL of this sound file.
         * @param data {object} Extra sound data.
         */
         public decodedSound(key: string, data): void;
@@ -4470,11 +4472,17 @@ module Phaser {
         */
         public getFrameData(key: string): FrameData;
         /**
+        * Get sound by key.
+        * @param key Asset key of the sound you want.
+        * @return {object} The sound you want.
+        */
+        public getSound(key: string);
+        /**
         * Get sound data by key.
         * @param key Asset key of the sound you want.
         * @return {object} The sound data you want.
         */
-        public getSound(key: string);
+        public getSoundData(key: string);
         /**
         * Check whether an asset is decoded sound.
         * @param key Asset key of the sound you want.
@@ -6806,6 +6814,7 @@ module Phaser {
         * @returns {Sprite} The newly created sprite object.
         */
         public sprite(x: number, y: number, key?: string, frame?, bodyType?: number): Sprite;
+        public audio(key: string, volume?: number, loop?: bool): Sound;
         /**
         * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
         *
@@ -6938,27 +6947,28 @@ module Phaser {
     class Sound {
         /**
         * Sound constructor
-        * @param context {object} The AudioContext instance.
-        * @param gainNode {object} Gain node instance.
-        * @param data {object} Sound data.
         * @param [volume] {number} volume of this sound when playing.
         * @param [loop] {boolean} loop this sound when playing? (Default to false)
         */
-        constructor(context, gainNode, data, volume?: number, loop?: bool);
+        constructor(game: Game, key: string, volume?: number, loop?: bool);
         /**
-        * Local private reference to AudioContext.
+        * Local reference to the current Phaser.Game.
         */
-        private _context;
+        public game: Game;
+        /**
+        * Reference to AudioContext instance.
+        */
+        public context;
         /**
         * Reference to gain node of SoundManager.
         */
-        private _gainNode;
+        public masterGainNode;
         /**
         * GainNode of this sound.
         */
-        private _localGainNode;
+        public gainNode;
         /**
-        * Decoded data buffer.
+        * Decoded data buffer / Audio tag.
         */
         private _buffer;
         /**
@@ -6969,28 +6979,66 @@ module Phaser {
         * The real sound object (buffer source).
         */
         private _sound;
-        public loop: bool;
+        private _muteVolume;
+        private _muted;
+        private _tempPosition;
+        private _tempVolume;
+        private _tempLoop;
+        private _tempMarker;
+        public usingWebAudio: bool;
+        public usingAudioTag: bool;
+        public name: string;
+        public autoplay: bool;
+        public totalDuration: number;
+        public startTime: number;
+        public currentTime: number;
         public duration: number;
+        public stopTime: number;
+        public position: number;
+        public paused: bool;
+        public loop: bool;
         public isPlaying: bool;
-        public isDecoding: bool;
-        public setDecodedBuffer(data): void;
+        public key: string;
+        public markers;
+        public currentMarker: string;
+        public onDecoded: Signal;
+        public onPlay: Signal;
+        public onPause: Signal;
+        public onResume: Signal;
+        public onLoop: Signal;
+        public onStop: Signal;
+        public onMute: Signal;
+        public pendingPlayback: bool;
+        public isDecoding : bool;
+        public isDecoded : bool;
+        public addMarker(name: string, start: number, stop: number, volume?: number, loop?: bool): void;
+        public removeMarker(name: string): void;
+        public update(): void;
         /**
-        * Play this sound.
+        * Play this sound, or a marked section of it.
+        * @param marker {string} Assets key of the sound you want to play.
+        * @param [volume] {number} volume of the sound you want to play.
+        * @param [loop] {boolean} loop when it finished playing? (Default to false)
+        * @return {Sound} The playing sound object.
         */
-        public play(): void;
+        public play(marker?: string, position?: number, volume?: number, loop?: bool, forceRestart?: bool): void;
+        public restart(marker?: string, position?: number, volume?: number, loop?: bool): void;
+        public pause(): void;
+        public resume(): void;
         /**
         * Stop playing this sound.
         */
         public stop(): void;
         /**
-        * Mute the sound.
+        * Mute sounds.
         */
-        public mute(): void;
-        /**
-        * Enable the sound.
-        */
-        public unmute(): void;
+        public mute : bool;
         public volume : number;
+        /**
+        * Renders the Pointer.circle object onto the stage in green if down or red if up.
+        * @method renderDebug
+        */
+        public renderDebug(x: number, y: number): void;
     }
 }
 /**
@@ -7005,47 +7053,50 @@ module Phaser {
         * Create a new <code>SoundManager</code>.
         */
         constructor(game: Game);
+        public usingWebAudio: bool;
+        public usingAudioTag: bool;
+        public noAudio: bool;
         /**
-        * Local private reference to game.
+        * Local reference to the current Phaser.Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Reference to AudioContext instance.
         */
-        private _context;
+        public context;
         /**
-        * Gain node created from audio context.
+        * The Master Gain node through which all sounds
         */
-        private _gainNode;
+        public masterGain;
         /**
         * Volume of sounds.
         * @type {number}
         */
         private _volume;
+        private _sounds;
+        private _muteVolume;
+        private _muted;
+        public channels: number;
+        public touchLocked: bool;
+        private _unlockSource;
+        public unlock(): void;
         /**
-        * Mute sounds.
+        * A global audio mute toggle.
         */
-        public mute(): void;
+        public mute : bool;
         /**
-        * Enable sounds.
+        * The global audio volume. A value between 0 (silence) and 1 (full volume)
         */
-        public unmute(): void;
         public volume : number;
         /**
         * Decode a sound with its assets key.
         * @param key {string} Assets key of the sound to be decoded.
-        * @param callback {function} This will be invoked when finished decoding.
         * @param [sound] {Sound} its bufer will be set to decoded data.
         */
-        public decode(key: string, callback?, sound?: Sound): void;
-        /**
-        * Play a sound with its assets key.
-        * @param key {string} Assets key of the sound you want to play.
-        * @param [volume] {number} volume of the sound you want to play.
-        * @param [loop] {boolean} loop when it finished playing? (Default to false)
-        * @return {Sound} The playing sound object.
-        */
-        public play(key: string, volume?: number, loop?: bool): Sound;
+        public decode(key: string, sound?: Sound): void;
+        public onSoundDecode: Signal;
+        public update(): void;
+        public add(key: string, volume?: number, loop?: bool): Sound;
     }
 }
 /**
@@ -8106,35 +8157,45 @@ module Phaser {
         public safari: bool;
         public webApp: bool;
         /**
-        * Is audioData available?
+        * Are Audio tags available?
         * @type {boolean}
         */
         public audioData: bool;
         /**
-        * Is webaudio available?
+        * Is the WebAudio API available?
         * @type {boolean}
         */
-        public webaudio: bool;
+        public webAudio: bool;
         /**
-        * Is ogg available?
+        * Can this device play ogg files?
         * @type {boolean}
         */
         public ogg: bool;
         /**
-        * Is mp3 available?
+        * Can this device play opus files?
+        * @type {boolean}
+        */
+        public opus: bool;
+        /**
+        * Can this device play mp3 files?
         * @type {boolean}
         */
         public mp3: bool;
         /**
-        * Is wav available?
+        * Can this device play wav files?
         * @type {boolean}
         */
         public wav: bool;
         /**
-        * Is m4a available?
+        * Can this device play m4a files?
         * @type {boolean}
         */
         public m4a: bool;
+        /**
+        * Can this device play webm files?
+        * @type {boolean}
+        */
+        public webm: bool;
         /**
         * Is running on iPhone?
         * @type {boolean}
@@ -8170,6 +8231,7 @@ module Phaser {
         * @private
         */
         private _checkBrowser();
+        public canPlayAudio(type: string): bool;
         /**
         * Check audio support.
         * @private
@@ -8405,6 +8467,9 @@ module Phaser {
         * @return {Phaser.Pointer} This object.
         */
         constructor(game: Game, id: number);
+        private _highestRenderOrderID;
+        private _highestRenderObject;
+        private _highestInputPriorityID;
         /**
         * Local private reference to game.
         * @property game
@@ -8582,6 +8647,12 @@ module Phaser {
         **/
         public totalTouches: number;
         /**
+        * The number of miliseconds since the last click
+        * @property msSinceLastClick
+        * @type {Number}
+        **/
+        public msSinceLastClick: number;
+        /**
         * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
         * @property duration
         * @type {Number}
@@ -8610,9 +8681,6 @@ module Phaser {
         */
         public start(event): Pointer;
         public update(): void;
-        private _highestRenderOrderID;
-        private _highestRenderObject;
-        private _highestInputPriorityID;
         /**
         * Called when the Pointer is moved on the touchscreen
         * @method move
@@ -9265,7 +9333,7 @@ module Phaser {
         public recordRate: number;
         /**
         * The total number of entries that can be recorded into the Pointer objects tracking history.
-        * The the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
+        * If the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
         * @property recordLimit
         * @type {Number}
         */

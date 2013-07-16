@@ -122,22 +122,40 @@ module Phaser {
          * @param url {string} URL of this sound file.
          * @param data {object} Extra sound data.
          */
-        public addSound(key: string, url: string, data) {
+        public addSound(key: string, url: string, data, webAudio: bool = true, audioTag: bool = false) {
 
-            this._sounds[key] = { url: url, data: data, decoded: false };
+            console.log('Cache addSound', key, url, webAudio, audioTag);
+
+            var decoded: bool = false;
+
+            if (audioTag) {
+                decoded = true;
+            }
+
+            this._sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag };
+
+        }
+
+        public updateSound(key: string, property: string, value) {
+
+            if (this._sounds[key])
+            {
+                this._sounds[key][property] = value;
+            }
 
         }
 
         /**
          * Add a new decoded sound.
          * @param key {string} Asset key for the sound.
-         * @param url {string} URL of this sound file.
          * @param data {object} Extra sound data.
          */
         public decodedSound(key: string, data) {
 
+            console.log('decoded sound', key);
             this._sounds[key].data = data;
             this._sounds[key].decoded = true;
+            this._sounds[key].isDecoding = false;
 
         }
 
@@ -202,11 +220,27 @@ module Phaser {
         }
 
         /**
+         * Get sound by key.
+         * @param key Asset key of the sound you want.
+         * @return {object} The sound you want.
+         */
+        public getSound(key: string) {
+
+            if (this._sounds[key])
+            {
+                return this._sounds[key];
+            }
+
+            return null;
+
+        }
+
+        /**
          * Get sound data by key.
          * @param key Asset key of the sound you want.
          * @return {object} The sound data you want.
          */
-        public getSound(key: string) {
+        public getSoundData(key: string) {
 
             if (this._sounds[key])
             {

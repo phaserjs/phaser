@@ -61,6 +61,8 @@ module Phaser {
 
             document.addEventListener('visibilitychange', (event) => this.visibilityChange(event), false);
             document.addEventListener('webkitvisibilitychange', (event) => this.visibilityChange(event), false);
+            document.addEventListener('pagehide', (event) => this.visibilityChange(event), false);
+            document.addEventListener('pageshow', (event) => this.visibilityChange(event), false);
             window.onblur = (event) => this.visibilityChange(event);
             window.onfocus = (event) => this.visibilityChange(event);
 
@@ -216,7 +218,7 @@ module Phaser {
                 return;
             }
 
-            if (event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
+            if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
             {
                 if (this._game.paused == false)
                 {

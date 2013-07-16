@@ -61,6 +61,11 @@ TODO:
 * When you toggle visible of a button that is over, it doesn't disable that 'over' state (should it? probably yes)
 * Stage.opaqueBackground = 'rgb()' or null, alpha, blendMode, filters, mask, rotation+XYZ,scaleXYZ,visible
 
+* Need a way for Input event to redirect to audio to unlock playback
+* AudioSprite object?
+* How to get web audio to playback from an offset
+* Stage lost to mute
+
 
 
 V1.0.0
@@ -148,6 +153,12 @@ V1.0.0
 * Fixed bug where the hand cursor would be reset on input up, even if the mouse was still over the sprite.
 * Fixed bug where pressing down then moving out of the sprite area wouldn't properly reset the input state next time you moved over the sprite.
 * Added the Sprite.tween property, really useful to avoid creating new tween vars in your local scope if you don't need them.
+* Added support for pagehide and pageshow events to Stage, hooked in to the pause/resume game methods.
+* Extended Device audio checks to include opus and webm.
+* Updated Loader and Cache so they now support loading of Audio() tags as well as Web Audio.
+* Set Input.recordPointerHistory to false, you now need to enable the pointer tracking if you wish to use it.
+* SoundManager will now automatically handle iOS touch unlocking.
+
 
 
 V0.9.6

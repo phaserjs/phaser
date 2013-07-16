@@ -94,6 +94,10 @@ module Phaser {
             return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key, frame, bodyType));
         }
 
+        public audio(key: string, volume?: number = 1, loop?: bool = false) {
+            return <Sound> this._game.sound.add(key, volume, loop);
+        }
+
         /**
          * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
          *

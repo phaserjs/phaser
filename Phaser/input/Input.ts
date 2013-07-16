@@ -275,7 +275,7 @@ module Phaser {
         * @property recordPointerHistory
         * @type {Boolean}
         **/
-        public recordPointerHistory: bool = true;
+        public recordPointerHistory: bool = false;
 
         /**
         * The rate in milliseconds at which the Pointer objects should update their tracking history
@@ -286,7 +286,7 @@ module Phaser {
 
         /**
         * The total number of entries that can be recorded into the Pointer objects tracking history.
-        * The the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
+        * If the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
         * @property recordLimit
         * @type {Number}
         */
