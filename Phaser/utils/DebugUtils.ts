@@ -58,12 +58,10 @@ module Phaser {
 
             if (body.shapes[0].verts.length > 0)
             {
-
                 DebugUtils.context.fillText('Vert 1 x: ' + (body.shapes[0].verts[0].x * 50) + ' y: ' + (body.shapes[0].verts[0].y * 50), x, y + 56);
                 DebugUtils.context.fillText('Vert 2 x: ' + (body.shapes[0].verts[1].x * 50) + ' y: ' + (body.shapes[0].verts[1].y * 50), x, y + 70);
                 DebugUtils.context.fillText('Vert 3 x: ' + (body.shapes[0].tverts[2].x * 50) + ' y: ' + (body.shapes[0].tverts[2].y * 50), x, y + 84);
                 DebugUtils.context.fillText('Vert 4 x: ' + (body.shapes[0].tverts[3].x * 50) + ' y: ' + (body.shapes[0].tverts[3].y * 50), x, y + 98);
-
 
 /*
                 DebugUtils.context.fillText('Vert 1 x: ' + body.shapes[0].verts[0].x.toFixed(1) + ' y: ' + body.shapes[0].verts[0].y.toFixed(1), x, y + 56);

@@ -33,6 +33,10 @@ module Phaser {
 
         }
 
+        private _highestRenderOrderID: number;
+        private _highestRenderObject: number;
+        private _highestInputPriorityID: number;
+
         /**
         * Local private reference to game.
         * @property game
@@ -240,6 +244,13 @@ module Phaser {
         public totalTouches: number = 0;
 
         /**
+        * The number of miliseconds since the last click
+        * @property msSinceLastClick
+        * @type {Number}
+        **/
+        public msSinceLastClick: number = Number.MAX_VALUE;
+
+        /**
         * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
         * @property duration
         * @type {Number}
@@ -306,7 +317,12 @@ module Phaser {
             this.withinGame = true;
             this.isDown = true;
             this.isUp = false;
+
+            //  Work out how long it has been since the last click
+            this.msSinceLastClick = this.game.time.now - this.timeDown;
+
             this.timeDown = this.game.time.now;
+
             this._holdSent = false;
 
             //  This sets the x/y and other local values
@@ -370,10 +386,6 @@ module Phaser {
             }
 
         }
-
-        private _highestRenderOrderID: number;
-        private _highestRenderObject: number;
-        private _highestInputPriorityID: number;
 
         /**
         * Called when the Pointer is moved on the touchscreen

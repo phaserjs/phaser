@@ -30,6 +30,10 @@ module Phaser {
         static BODY_KINETIC: number = 2;
         static BODY_DYNAMIC: number = 3;
 
+        static OUT_OF_BOUNDS_KILL: number = 0;
+        static OUT_OF_BOUNDS_DESTROY: number = 1;
+        static OUT_OF_BOUNDS_PERSIST: number = 2;
+
         /**
          * Flag used to allow GameObjects to collide on their left side
          * @type {number}

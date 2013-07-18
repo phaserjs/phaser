@@ -94,6 +94,10 @@ module Phaser {
             return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key, frame, bodyType));
         }
 
+        public audio(key: string, volume?: number = 1, loop?: bool = false) {
+            return <Sound> this._game.sound.add(key, volume, loop);
+        }
+
         /**
          * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
          *
@@ -182,13 +186,14 @@ module Phaser {
         }
 
         /**
-         * Create a tween object for a specific object.
+         * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
          *
-         * @param obj Object you wish the tween will affect.
+         * @param obj {object} Object the tween will be run on.
+         * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
          * @return {Phaser.Tween} The newly created tween object.
          */
-        public tween(obj): Tween {
-            return this._game.tweens.create(obj);
+        public tween(obj, localReference?:bool = false): Tween {
+            return this._game.tweens.create(obj, localReference);
         }
 
         /**
@@ -200,6 +205,17 @@ module Phaser {
          */
         public existingSprite(sprite: Sprite): Sprite {
             return this._world.group.add(sprite);
+        }
+
+        /**
+         * Add an existing Button to the current world.
+         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+         *
+         * @param button The Button to add to the Game World
+         * @return {Phaser.Button} The Button object
+         */
+        public existingButton(button: Button): Button {
+            return this._world.group.add(button);
         }
 
         /**

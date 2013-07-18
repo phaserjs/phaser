@@ -191,40 +191,52 @@ module Phaser {
         //  Audio
 
         /**
-         * Is audioData available?
+         * Are Audio tags available?
          * @type {boolean}
          */
         public audioData: bool = false;
 
         /**
-         * Is webaudio available?
+         * Is the WebAudio API available?
          * @type {boolean}
          */
-        public webaudio: bool = false;
+        public webAudio: bool = false;
 
         /**
-         * Is ogg available?
+         * Can this device play ogg files?
          * @type {boolean}
          */
         public ogg: bool = false;
 
         /**
-         * Is mp3 available?
+         * Can this device play opus files?
+         * @type {boolean}
+         */
+        public opus: bool = false;
+
+        /**
+         * Can this device play mp3 files?
          * @type {boolean}
          */
         public mp3: bool = false;
 
         /**
-         * Is wav available?
+         * Can this device play wav files?
          * @type {boolean}
          */
         public wav: bool = false;
 
         /**
-         * Is m4a available?
+         * Can this device play m4a files?
          * @type {boolean}
          */
         public m4a: bool = false;
+
+        /**
+         * Can this device play webm files?
+         * @type {boolean}
+         */
+        public webm: bool = false;
 
         //  Device
 
@@ -355,7 +367,7 @@ module Phaser {
                 this.mobileSafari = true;
             }
             else if (/MSIE (\d+\.\d+);/.test(ua))
-                {
+            {
                 this.ie = true;
                 this.ieVersion = parseInt(RegExp.$1);
             }
@@ -380,6 +392,33 @@ module Phaser {
 
         }
 
+        public canPlayAudio(type: string): bool {
+
+            if (type == 'mp3' && this.mp3)
+            {
+                return true;
+            }
+            else if (type == 'ogg' && (this.ogg || this.opus))
+            {
+                return true;
+            }
+            else if (type == 'm4a' && this.m4a)
+            {
+                return true;
+            }
+            else if (type == 'wav' && this.wav)
+            {
+                return true;
+            }
+            else if (type == 'webm' && this.webm)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
         /**
          * Check audio support.
          * @private
@@ -387,7 +426,7 @@ module Phaser {
         private _checkAudio() {
 
             this.audioData = !!(window['Audio']);
-            this.webaudio = !!(window['webkitAudioContext'] || window['AudioContext']);
+            this.webAudio = !!(window['webkitAudioContext'] || window['AudioContext']);
 
             var audioElement: HTMLAudioElement = <HTMLAudioElement> document.createElement('audio');
             var result = false;
@@ -399,6 +438,11 @@ module Phaser {
                     if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''))
                     {
                         this.ogg = true;
+                    }
+
+                    if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, ''))
+                    {
+                        this.opus = true;
                     }
 
                     if (audioElement.canPlayType('audio/mpeg;').replace(/^no$/, ''))
@@ -417,6 +461,11 @@ module Phaser {
                     if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, ''))
                     {
                         this.m4a = true;
+                    }
+
+                    if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, ''))
+                    {
+                        this.webm = true;
                     }
                 }
             } catch (e) { }

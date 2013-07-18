@@ -122,22 +122,68 @@ module Phaser {
          * @param url {string} URL of this sound file.
          * @param data {object} Extra sound data.
          */
-        public addSound(key: string, url: string, data) {
+        public addSound(key: string, url: string, data, webAudio: bool = true, audioTag: bool = false) {
 
-            this._sounds[key] = { url: url, data: data, decoded: false };
+            console.log('Cache addSound: ' + key + ' url: ' + url, webAudio, audioTag);
+
+            var locked: bool = this._game.sound.touchLocked;
+            var decoded: bool = false;
+
+            if (audioTag) {
+                decoded = true;
+            }
+
+            this._sounds[key] = { url: url, data: data, locked: locked, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag };
+
+        }
+
+        public reloadSound(key: string) {
+
+            console.log('reloadSound', key);
+
+            if (this._sounds[key])
+            {
+                this._sounds[key].data.src = this._sounds[key].url;
+                this._sounds[key].data.addEventListener('canplaythrough', () => this.reloadSoundComplete(key), false);
+                this._sounds[key].data.load();
+            }
+
+        }
+
+        public onSoundUnlock: Phaser.Signal = new Phaser.Signal;
+
+        public reloadSoundComplete(key: string) {
+
+            console.log('reloadSoundComplete', key);
+
+            if (this._sounds[key])
+            {
+                this._sounds[key].locked = false;
+                this.onSoundUnlock.dispatch(key);
+            }
+
+        }
+
+        public updateSound(key: string, property: string, value) {
+
+            if (this._sounds[key])
+            {
+                this._sounds[key][property] = value;
+            }
 
         }
 
         /**
          * Add a new decoded sound.
          * @param key {string} Asset key for the sound.
-         * @param url {string} URL of this sound file.
          * @param data {object} Extra sound data.
          */
         public decodedSound(key: string, data) {
 
+            console.log('decoded sound', key);
             this._sounds[key].data = data;
             this._sounds[key].decoded = true;
+            this._sounds[key].isDecoding = false;
 
         }
 
@@ -202,11 +248,27 @@ module Phaser {
         }
 
         /**
+         * Get sound by key.
+         * @param key Asset key of the sound you want.
+         * @return {object} The sound you want.
+         */
+        public getSound(key: string) {
+
+            if (this._sounds[key])
+            {
+                return this._sounds[key];
+            }
+
+            return null;
+
+        }
+
+        /**
          * Get sound data by key.
          * @param key Asset key of the sound you want.
          * @return {object} The sound data you want.
          */
-        public getSound(key: string) {
+        public getSoundData(key: string) {
 
             if (this._sounds[key])
             {
@@ -228,6 +290,22 @@ module Phaser {
             {
                 return this._sounds[key].decoded;
             }
+
+        }
+
+        /**
+         * Check whether an asset is decoded sound.
+         * @param key Asset key of the sound you want.
+         * @return {object} The sound data you want.
+         */
+        public isSoundReady(key: string): bool {
+
+            if (this._sounds[key] && this._sounds[key].decoded == true && this._sounds[key].locked == false)
+            {
+                return true;
+            }
+
+            return false;
 
         }
 

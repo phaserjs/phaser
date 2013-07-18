@@ -19,9 +19,14 @@ module Phaser {
          * Create a new <code>Button</code> object.
          *
          * @param game {Phaser.Game} Current game instance.
-         * @param [x] {number} the initial x position of the button.
-         * @param [y] {number} the initial y position of the button.
-         * @param [key] {string} Key of the graphic you want to load for this button.
+         * @param [x] {number} X position of the button.
+         * @param [y] {number} Y position of the button.
+         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
+         * @param [callback] {function} The function to call when this button is pressed
+         * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
+         * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+         * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+         * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
          */
         constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, callback? = null, callbackContext? = null, overFrame? = null, outFrame? = null, downFrame? = null) {
 

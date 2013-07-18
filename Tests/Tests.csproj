@@ -56,6 +56,14 @@
     <TypeScriptCompile Include="cameras\basic camera 1.ts" />
     <TypeScriptCompile Include="buttons\basic button.ts" />
     <TypeScriptCompile Include="buttons\basic button 2.ts" />
+    <TypeScriptCompile Include="audio\play sound 1.ts" />
+    <TypeScriptCompile Include="audio\audio sprites 1.ts" />
+    <Content Include="audio\audio sprites 1.js">
+      <DependentUpon>audio sprites 1.ts</DependentUpon>
+    </Content>
+    <Content Include="audio\play sound 1.js">
+      <DependentUpon>play sound 1.ts</DependentUpon>
+    </Content>
     <Content Include="buttons\basic button 2.js">
       <DependentUpon>basic button 2.ts</DependentUpon>
     </Content>

@@ -218,14 +218,15 @@ module Phaser {
         /**
          * Add a new audio file loading request.
          * @param key {string} Unique asset key of the audio file.
-         * @param url {string} URL of audio file.
+         * @param urls {Array} An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ]
+         * @param autoDecode {boolean} When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
          */
-        public audio(key: string, url: string) {
+        public audio(key: string, urls: string[], autoDecode: bool = true) {
 
             if (this.checkKeyExists(key) === false)
             {
                 this._queueSize++;
-                this._fileList[key] = { type: 'audio', key: key, url: url, data: null, buffer: null, error: false, loaded: false };
+                this._fileList[key] = { type: 'audio', key: key, url: urls, data: null, buffer: null, error: false, loaded: false, autoDecode: autoDecode };
                 this._keys.push(key);
             }
 
@@ -327,11 +328,48 @@ module Phaser {
                     break;
 
                 case 'audio':
-                    this._xhr.open("GET", file.url, true);
-                    this._xhr.responseType = "arraybuffer";
-                    this._xhr.onload = () => this.fileComplete(file.key);
-                    this._xhr.onerror = () => this.fileError(file.key);
-                    this._xhr.send();
+
+                    file.url = this.getAudioURL(file.url);
+                    console.log('Loader audio');
+                    console.log(file.url);
+
+                    if (file.url !== null)
+                    {
+                        //  WebAudio or Audio Tag?
+                        if (this._game.sound.usingWebAudio)
+                        {
+                            this._xhr.open("GET", file.url, true);
+                            this._xhr.responseType = "arraybuffer";
+                            this._xhr.onload = () => this.fileComplete(file.key);
+                            this._xhr.onerror = () => this.fileError(file.key);
+                            this._xhr.send();
+                        }
+                        else if (this._game.sound.usingAudioTag)
+                        {
+                            if (this._game.sound.touchLocked)
+                            {
+                                //  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
+                                console.log('Audio is touch locked');
+                                file.data = new Audio();
+                                file.data.name = file.key;
+                                file.data.preload = 'auto';
+                                file.data.src = file.url;
+                                this.fileComplete(file.key);
+                            }
+                            else
+                            {
+                                console.log('Audio not touch locked');
+                                file.data = new Audio();
+                                file.data.name = file.key;
+                                file.data.onerror = () => this.fileError(file.key);
+                                file.data.preload = 'auto';
+                                file.data.src = file.url;
+                                file.data.addEventListener('canplaythrough', () => this.fileComplete(file.key), false);
+                                file.data.load();
+                            }
+                        }
+                    }
+
                     break;
 
                 case 'text':
@@ -342,6 +380,28 @@ module Phaser {
                     this._xhr.send();
                     break;
             }
+
+        }
+
+        private getAudioURL(urls): string {
+
+            var extension: string;
+
+            for (var i = 0; i < urls.length; i++)
+            {
+                extension = urls[i].toLowerCase();
+                extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
+
+                if (this._game.device.canPlayAudio(extension))
+                {
+                    console.log('getAudioURL', urls[i]);
+                    console.log(urls[i]);
+                    return urls[i];
+                }
+
+            }
+
+            return null;
 
         }
 
@@ -406,8 +466,32 @@ module Phaser {
                     break;
 
                 case 'audio':
-                    file.data = this._xhr.response;
-                    this._game.cache.addSound(file.key, file.url, file.data);
+
+                    if (this._game.sound.usingWebAudio)
+                    {
+                        file.data = this._xhr.response;
+
+                        this._game.cache.addSound(file.key, file.url, file.data, true, false);
+
+                        if (file.autoDecode)
+                        {
+                            this._game.cache.updateSound(key, 'isDecoding', true);
+
+                            var that = this;
+                            var key = file.key;
+
+                            this._game.sound.context.decodeAudioData(file.data, function (buffer) {
+                                if (buffer)
+                                {
+                                    that._game.cache.decodedSound(key, buffer);
+                                }
+                            });
+                        }
+                    }
+                    else
+                    {
+                        this._game.cache.addSound(file.key, file.url, file.data, false, true);
+                    }
                     break;
 
                 case 'text':

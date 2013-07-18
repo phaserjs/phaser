@@ -14,6 +14,7 @@
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="gameobjects/GameObjectFactory.ts" />
 /// <reference path="sound/SoundManager.ts" />
+/// <reference path="sound/Sound.ts" />
 /// <reference path="Stage.ts" />
 /// <reference path="Time.ts" />
 /// <reference path="tweens/TweenManager.ts" />
@@ -298,12 +299,12 @@ module Phaser {
                 this.stage = new Stage(this, parent, width, height);
                 this.world = new World(this, width, height);
                 this.add = new GameObjectFactory(this);
-                this.sound = new SoundManager(this);
                 this.cache = new Cache(this);
                 this.load = new Loader(this, this.loadComplete);
                 this.time = new Time(this);
                 this.tweens = new TweenManager(this);
                 this.input = new Input(this);
+                this.sound = new SoundManager(this);
                 this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
                 this.physics = new Physics.Manager(this);
 
@@ -391,6 +392,7 @@ module Phaser {
             this.tweens.update();
             this.input.update();
             this.stage.update();
+            this.sound.update();
 
             if (this.onPausedCallback !== null)
             {
@@ -407,6 +409,7 @@ module Phaser {
             this.tweens.update();
             this.input.update();
             this.stage.update();
+            this.sound.update();
             this.physics.update();
             this.world.update();
 
@@ -636,6 +639,7 @@ module Phaser {
             if (value == true && this._paused == false)
             {
                 this._paused = true;
+                this.sound.pauseAll();
                 this._raf.callback = this.pausedLoop;
             }
             else if (value == false && this._paused == true)
@@ -643,6 +647,7 @@ module Phaser {
                 this._paused = false;
                 //this.time.time = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
                 this.input.reset();
+                this.sound.resumeAll();
 
                 if (this.isRunning == false)
                 {

@@ -1284,6 +1284,9 @@ var Phaser;
         Types.BODY_STATIC = 1;
         Types.BODY_KINETIC = 2;
         Types.BODY_DYNAMIC = 3;
+        Types.OUT_OF_BOUNDS_KILL = 0;
+        Types.OUT_OF_BOUNDS_DESTROY = 1;
+        Types.OUT_OF_BOUNDS_PERSIST = 2;
         Types.LEFT = 0x0001;
         Types.RIGHT = 0x0010;
         Types.UP = 0x0100;
@@ -3961,6 +3964,7 @@ var Phaser;
                     this.onRemovedFromGroup = new Phaser.Signal();
                     this.onKilled = new Phaser.Signal();
                     this.onRevived = new Phaser.Signal();
+                    this.onOutOfBounds = new Phaser.Signal();
                 }
                 return Events;
             })();
@@ -6710,6 +6714,7 @@ var Phaser;
                 this.categoryBits = 0x0001;
                 this.maskBits = 0xFFFF;
                 this.stepCount = 0;
+                this._newPosition = new Phaser.Vec2();
                 this.id = Phaser.Physics.Manager.bodyCounter++;
                 this.name = 'body' + this.id;
                 this.type = type;
@@ -6887,6 +6892,10 @@ var Phaser;
             Body.prototype.setInertia = function (inertia) {
                 this.inertia = inertia;
                 this.inertiaInverted = inertia > 0 ? 1 / inertia : 0;
+            };
+            Body.prototype.setPosition = function (x, y) {
+                this._newPosition.setTo(this.game.physics.pixelsToMeters(x), this.game.physics.pixelsToMeters(y));
+                this.setTransform(this._newPosition, this.angle);
             };
             Body.prototype.setTransform = function (pos, angle) {
                 //  inject the transform into this.position
@@ -7233,6 +7242,8 @@ var Phaser;
             this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.cameraView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.transform.setCache();
+            this.outOfBounds = false;
+            this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_PERSIST;
             //  Handy proxies
             this.scale = this.transform.scale;
             this.alpha = this.texture.alpha;
@@ -7345,42 +7356,23 @@ var Phaser;
         function () {
         };
         Sprite.prototype.postUpdate = /**
-        * Automatically called after update() by the game loop.
+        * Automatically called after update() by the game loop for all 'alive' objects.
         */
         function () {
             this.animations.update();
-            /*
-            if (this.worldBounds != null)
-            {
-            if (this.outOfBoundsAction == GameObject.OUT_OF_BOUNDS_KILL)
-            {
-            if (this.x < this.worldBounds.x || this.x > this.worldBounds.right || this.y < this.worldBounds.y || this.y > this.worldBounds.bottom)
-            {
-            this.kill();
+            if(Phaser.RectangleUtils.intersects(this.worldView, this.game.world.bounds)) {
+                this.outOfBounds = false;
+            } else {
+                if(this.outOfBounds == false) {
+                    this.events.onOutOfBounds.dispatch(this);
+                }
+                this.outOfBounds = true;
+                if(this.outOfBoundsAction == Phaser.Types.OUT_OF_BOUNDS_KILL) {
+                    this.kill();
+                } else if(this.outOfBoundsAction == Phaser.Types.OUT_OF_BOUNDS_DESTROY) {
+                    this.destroy();
+                }
             }
-            }
-            else
-            {
-            if (this.x < this.worldBounds.x)
-            {
-            this.x = this.worldBounds.x;
-            }
-            else if (this.x > this.worldBounds.right)
-            {
-            this.x = this.worldBounds.right;
-            }
-            
-            if (this.y < this.worldBounds.y)
-            {
-            this.y = this.worldBounds.y;
-            }
-            else if (this.y > this.worldBounds.bottom)
-            {
-            this.y = this.worldBounds.bottom;
-            }
-            }
-            }
-            */
             if(this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
                 this.modified = false;
             }
@@ -9142,19 +9134,22 @@ var Phaser;
         Loader.prototype.audio = /**
         * Add a new audio file loading request.
         * @param key {string} Unique asset key of the audio file.
-        * @param url {string} URL of audio file.
+        * @param urls {Array} An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ]
+        * @param autoDecode {boolean} When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
         */
-        function (key, url) {
+        function (key, urls, autoDecode) {
+            if (typeof autoDecode === "undefined") { autoDecode = true; }
             if(this.checkKeyExists(key) === false) {
                 this._queueSize++;
                 this._fileList[key] = {
                     type: 'audio',
                     key: key,
-                    url: url,
+                    url: urls,
                     data: null,
                     buffer: null,
                     error: false,
-                    loaded: false
+                    loaded: false,
+                    autoDecode: autoDecode
                 };
                 this._keys.push(key);
             }
@@ -9242,15 +9237,46 @@ var Phaser;
                     file.data.src = file.url;
                     break;
                 case 'audio':
-                    this._xhr.open("GET", file.url, true);
-                    this._xhr.responseType = "arraybuffer";
-                    this._xhr.onload = function () {
-                        return _this.fileComplete(file.key);
-                    };
-                    this._xhr.onerror = function () {
-                        return _this.fileError(file.key);
-                    };
-                    this._xhr.send();
+                    file.url = this.getAudioURL(file.url);
+                    console.log('Loader audio');
+                    console.log(file.url);
+                    if(file.url !== null) {
+                        //  WebAudio or Audio Tag?
+                        if(this._game.sound.usingWebAudio) {
+                            this._xhr.open("GET", file.url, true);
+                            this._xhr.responseType = "arraybuffer";
+                            this._xhr.onload = function () {
+                                return _this.fileComplete(file.key);
+                            };
+                            this._xhr.onerror = function () {
+                                return _this.fileError(file.key);
+                            };
+                            this._xhr.send();
+                        } else if(this._game.sound.usingAudioTag) {
+                            if(this._game.sound.touchLocked) {
+                                //  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
+                                console.log('Audio is touch locked');
+                                file.data = new Audio();
+                                file.data.name = file.key;
+                                file.data.preload = 'auto';
+                                file.data.src = file.url;
+                                this.fileComplete(file.key);
+                            } else {
+                                console.log('Audio not touch locked');
+                                file.data = new Audio();
+                                file.data.name = file.key;
+                                file.data.onerror = function () {
+                                    return _this.fileError(file.key);
+                                };
+                                file.data.preload = 'auto';
+                                file.data.src = file.url;
+                                file.data.addEventListener('canplaythrough', function () {
+                                    return _this.fileComplete(file.key);
+                                }, false);
+                                file.data.load();
+                            }
+                        }
+                    }
                     break;
                 case 'text':
                     this._xhr.open("GET", file.url, true);
@@ -9264,6 +9290,19 @@ var Phaser;
                     this._xhr.send();
                     break;
             }
+        };
+        Loader.prototype.getAudioURL = function (urls) {
+            var extension;
+            for(var i = 0; i < urls.length; i++) {
+                extension = urls[i].toLowerCase();
+                extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
+                if(this._game.device.canPlayAudio(extension)) {
+                    console.log('getAudioURL', urls[i]);
+                    console.log(urls[i]);
+                    return urls[i];
+                }
+            }
+            return null;
         };
         Loader.prototype.fileError = /**
         * Error occured when load a file.
@@ -9314,8 +9353,22 @@ var Phaser;
                     }
                     break;
                 case 'audio':
-                    file.data = this._xhr.response;
-                    this._game.cache.addSound(file.key, file.url, file.data);
+                    if(this._game.sound.usingWebAudio) {
+                        file.data = this._xhr.response;
+                        this._game.cache.addSound(file.key, file.url, file.data, true, false);
+                        if(file.autoDecode) {
+                            this._game.cache.updateSound(key, 'isDecoding', true);
+                            var that = this;
+                            var key = file.key;
+                            this._game.sound.context.decodeAudioData(file.data, function (buffer) {
+                                if(buffer) {
+                                    that._game.cache.decodedSound(key, buffer);
+                                }
+                            });
+                        }
+                    } else {
+                        this._game.cache.addSound(file.key, file.url, file.data, false, true);
+                    }
                     break;
                 case 'text':
                     file.data = this._xhr.response;
@@ -9421,6 +9474,7 @@ var Phaser;
         * Cache constructor
         */
         function Cache(game) {
+            this.onSoundUnlock = new Phaser.Signal();
             this._game = game;
             this._canvases = {
             };
@@ -9500,22 +9554,58 @@ var Phaser;
         * @param url {string} URL of this sound file.
         * @param data {object} Extra sound data.
         */
-        function (key, url, data) {
+        function (key, url, data, webAudio, audioTag) {
+            if (typeof webAudio === "undefined") { webAudio = true; }
+            if (typeof audioTag === "undefined") { audioTag = false; }
+            console.log('Cache addSound: ' + key + ' url: ' + url, webAudio, audioTag);
+            var locked = this._game.sound.touchLocked;
+            var decoded = false;
+            if(audioTag) {
+                decoded = true;
+            }
             this._sounds[key] = {
                 url: url,
                 data: data,
-                decoded: false
+                locked: locked,
+                isDecoding: false,
+                decoded: decoded,
+                webAudio: webAudio,
+                audioTag: audioTag
             };
+        };
+        Cache.prototype.reloadSound = function (key) {
+            var _this = this;
+            console.log('reloadSound', key);
+            if(this._sounds[key]) {
+                this._sounds[key].data.src = this._sounds[key].url;
+                this._sounds[key].data.addEventListener('canplaythrough', function () {
+                    return _this.reloadSoundComplete(key);
+                }, false);
+                this._sounds[key].data.load();
+            }
+        };
+        Cache.prototype.reloadSoundComplete = function (key) {
+            console.log('reloadSoundComplete', key);
+            if(this._sounds[key]) {
+                this._sounds[key].locked = false;
+                this.onSoundUnlock.dispatch(key);
+            }
+        };
+        Cache.prototype.updateSound = function (key, property, value) {
+            if(this._sounds[key]) {
+                this._sounds[key][property] = value;
+            }
         };
         Cache.prototype.decodedSound = /**
         * Add a new decoded sound.
         * @param key {string} Asset key for the sound.
-        * @param url {string} URL of this sound file.
         * @param data {object} Extra sound data.
         */
         function (key, data) {
+            console.log('decoded sound', key);
             this._sounds[key].data = data;
             this._sounds[key].decoded = true;
+            this._sounds[key].isDecoding = false;
         };
         Cache.prototype.addText = /**
         * Add a new text data.
@@ -9563,6 +9653,17 @@ var Phaser;
             return null;
         };
         Cache.prototype.getSound = /**
+        * Get sound by key.
+        * @param key Asset key of the sound you want.
+        * @return {object} The sound you want.
+        */
+        function (key) {
+            if(this._sounds[key]) {
+                return this._sounds[key];
+            }
+            return null;
+        };
+        Cache.prototype.getSoundData = /**
         * Get sound data by key.
         * @param key Asset key of the sound you want.
         * @return {object} The sound data you want.
@@ -9582,6 +9683,17 @@ var Phaser;
             if(this._sounds[key]) {
                 return this._sounds[key].decoded;
             }
+        };
+        Cache.prototype.isSoundReady = /**
+        * Check whether an asset is decoded sound.
+        * @param key Asset key of the sound you want.
+        * @return {object} The sound data you want.
+        */
+        function (key) {
+            if(this._sounds[key] && this._sounds[key].decoded == true && this._sounds[key].locked == false) {
+                return true;
+            }
+            return false;
         };
         Cache.prototype.isSpriteSheet = /**
         * Check whether an asset is sprite sheet.
@@ -12502,9 +12614,14 @@ var Phaser;
         * Create a new <code>Button</code> object.
         *
         * @param game {Phaser.Game} Current game instance.
-        * @param [x] {number} the initial x position of the button.
-        * @param [y] {number} the initial y position of the button.
-        * @param [key] {string} Key of the graphic you want to load for this button.
+        * @param [x] {number} X position of the button.
+        * @param [y] {number} Y position of the button.
+        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
+        * @param [callback] {function} The function to call when this button is pressed
+        * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
+        * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+        * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
         */
         function Button(game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
             if (typeof x === "undefined") { x = 0; }
@@ -13797,6 +13914,11 @@ var Phaser;
             if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
             return this._world.group.add(new Phaser.Sprite(this._game, x, y, key, frame, bodyType));
         };
+        GameObjectFactory.prototype.audio = function (key, volume, loop) {
+            if (typeof volume === "undefined") { volume = 1; }
+            if (typeof loop === "undefined") { loop = false; }
+            return this._game.sound.add(key, volume, loop);
+        };
         GameObjectFactory.prototype.physicsSprite = /**
         * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
         *
@@ -13892,13 +14014,15 @@ var Phaser;
             return this._world.group.add(new Phaser.Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
         };
         GameObjectFactory.prototype.tween = /**
-        * Create a tween object for a specific object.
+        * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
         *
-        * @param obj Object you wish the tween will affect.
+        * @param obj {object} Object the tween will be run on.
+        * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
         * @return {Phaser.Tween} The newly created tween object.
         */
-        function (obj) {
-            return this._game.tweens.create(obj);
+        function (obj, localReference) {
+            if (typeof localReference === "undefined") { localReference = false; }
+            return this._game.tweens.create(obj, localReference);
         };
         GameObjectFactory.prototype.existingSprite = /**
         * Add an existing Sprite to the current world.
@@ -13909,6 +14033,16 @@ var Phaser;
         */
         function (sprite) {
             return this._world.group.add(sprite);
+        };
+        GameObjectFactory.prototype.existingButton = /**
+        * Add an existing Button to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param button The Button to add to the Game World
+        * @return {Phaser.Button} The Button object
+        */
+        function (button) {
+            return this._world.group.add(button);
         };
         GameObjectFactory.prototype.existingEmitter = /**
         * Add an existing GeomSprite to the current world.
@@ -13976,90 +14110,340 @@ var Phaser;
     var Sound = (function () {
         /**
         * Sound constructor
-        * @param context {object} The AudioContext instance.
-        * @param gainNode {object} Gain node instance.
-        * @param data {object} Sound data.
         * @param [volume] {number} volume of this sound when playing.
         * @param [loop] {boolean} loop this sound when playing? (Default to false)
         */
-        function Sound(context, gainNode, data, volume, loop) {
+        function Sound(game, key, volume, loop) {
             if (typeof volume === "undefined") { volume = 1; }
             if (typeof loop === "undefined") { loop = false; }
+            /**
+            * Reference to AudioContext instance.
+            */
+            this.context = null;
+            this._muted = false;
+            this.usingWebAudio = false;
+            this.usingAudioTag = false;
+            this.name = '';
+            this.autoplay = false;
+            this.totalDuration = 0;
+            this.startTime = 0;
+            this.currentTime = 0;
+            this.duration = 0;
+            this.stopTime = 0;
+            this.paused = false;
             this.loop = false;
             this.isPlaying = false;
-            this.isDecoding = false;
-            this._context = context;
-            this._gainNode = gainNode;
-            this._buffer = data;
+            this.currentMarker = '';
+            this.pendingPlayback = false;
+            this.game = game;
+            this.usingWebAudio = this.game.sound.usingWebAudio;
+            this.usingAudioTag = this.game.sound.usingAudioTag;
+            this.key = key;
+            if(this.usingWebAudio) {
+                this.context = this.game.sound.context;
+                this.masterGainNode = this.game.sound.masterGain;
+                if(typeof this.context.createGain === 'undefined') {
+                    this.gainNode = this.context.createGainNode();
+                } else {
+                    this.gainNode = this.context.createGain();
+                }
+                this.gainNode.gain.value = volume * this.game.sound.volume;
+                this.gainNode.connect(this.masterGainNode);
+            } else {
+                if(this.game.cache.getSound(key).locked == false) {
+                    this._sound = this.game.cache.getSoundData(key);
+                    this.totalDuration = this._sound.duration;
+                } else {
+                    this.game.cache.onSoundUnlock.add(this.soundHasUnlocked, this);
+                }
+            }
             this._volume = volume;
             this.loop = loop;
-            //  Local volume control
-            if(this._context !== null) {
-                this._localGainNode = this._context.createGainNode();
-                this._localGainNode.connect(this._gainNode);
-                this._localGainNode.gain.value = this._volume;
-            }
-            if(this._buffer === null) {
-                this.isDecoding = true;
-            } else {
-                this.play();
-            }
+            this.markers = {
+            };
+            this.onDecoded = new Phaser.Signal();
+            this.onPlay = new Phaser.Signal();
+            this.onPause = new Phaser.Signal();
+            this.onResume = new Phaser.Signal();
+            this.onLoop = new Phaser.Signal();
+            this.onStop = new Phaser.Signal();
+            this.onMute = new Phaser.Signal();
         }
-        Sound.prototype.setDecodedBuffer = function (data) {
-            this._buffer = data;
-            this.isDecoding = false;
-            //this.play();
-                    };
+        Sound.prototype.soundHasUnlocked = function (key) {
+            if(key == this.key) {
+                this._sound = this.game.cache.getSoundData(this.key);
+                this.totalDuration = this._sound.duration;
+                console.log('sound has unlocked', this._sound);
+            }
+        };
+        Object.defineProperty(Sound.prototype, "isDecoding", {
+            get: function () {
+                return this.game.cache.getSound(this.key).isDecoding;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Sound.prototype, "isDecoded", {
+            get: function () {
+                return this.game.cache.isSoundDecoded(this.key);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Sound.prototype.addMarker = function (name, start, stop, volume, loop) {
+            if (typeof volume === "undefined") { volume = 1; }
+            if (typeof loop === "undefined") { loop = false; }
+            this.markers[name] = {
+                name: name,
+                start: start,
+                stop: stop,
+                volume: volume,
+                duration: stop - start,
+                loop: loop
+            };
+        };
+        Sound.prototype.removeMarker = function (name) {
+            delete this.markers[name];
+        };
+        Sound.prototype.update = function () {
+            if(this.pendingPlayback && this.game.cache.isSoundReady(this.key)) {
+                console.log('pending over');
+                this.pendingPlayback = false;
+                this.play(this._tempMarker, this._tempPosition, this._tempVolume, this._tempLoop);
+            }
+            if(this.isPlaying) {
+                this.currentTime = this.game.time.now - this.startTime;
+                if(this.currentTime >= this.duration) {
+                    if(this.usingWebAudio) {
+                        if(this.loop) {
+                            this.onLoop.dispatch(this);
+                            this.currentTime = 0;
+                            this.startTime = this.game.time.now;
+                        } else {
+                            this.stop();
+                        }
+                    } else {
+                        if(this.loop) {
+                            this.onLoop.dispatch(this);
+                            this.play(this.currentMarker, 0, this.volume, true, true);
+                        } else {
+                            this.stop();
+                        }
+                    }
+                }
+            }
+        };
         Sound.prototype.play = /**
-        * Play this sound.
+        * Play this sound, or a marked section of it.
+        * @param marker {string} Assets key of the sound you want to play.
+        * @param [volume] {number} volume of the sound you want to play.
+        * @param [loop] {boolean} loop when it finished playing? (Default to false)
+        * @return {Sound} The playing sound object.
         */
-        function () {
-            if(this._buffer === null || this.isDecoding === true) {
+        function (marker, position, volume, loop, forceRestart) {
+            if (typeof marker === "undefined") { marker = ''; }
+            if (typeof position === "undefined") { position = 0; }
+            if (typeof volume === "undefined") { volume = 1; }
+            if (typeof loop === "undefined") { loop = false; }
+            if (typeof forceRestart === "undefined") { forceRestart = false; }
+            if(this.isPlaying == true && forceRestart == false) {
+                //  Use Restart instead
                 return;
             }
-            this._sound = this._context.createBufferSource();
-            this._sound.buffer = this._buffer;
-            this._sound.connect(this._localGainNode);
-            if(this.loop) {
-                this._sound.loop = true;
+            this.currentMarker = marker;
+            if(marker !== '' && this.markers[marker]) {
+                this.position = this.markers[marker].start;
+                this.volume = this.markers[marker].volume;
+                this.loop = this.markers[marker].loop;
+                this.duration = this.markers[marker].duration * 1000;
+            } else {
+                this.position = position;
+                this.volume = volume;
+                this.loop = loop;
+                this.duration = 0;
             }
-            this._sound.noteOn(0)// the zero is vitally important, crashes iOS6 without it
-            ;
-            this.duration = this._sound.buffer.duration;
-            this.isPlaying = true;
+            this._tempMarker = marker;
+            this._tempPosition = position;
+            this._tempVolume = volume;
+            this._tempLoop = loop;
+            if(this.usingWebAudio) {
+                //  Does the sound need decoding?
+                if(this.game.cache.isSoundDecoded(this.key)) {
+                    //  Do we need to do this every time we play? How about just if the buffer is empty?
+                    this._buffer = this.game.cache.getSoundData(this.key);
+                    this._sound = this.context.createBufferSource();
+                    this._sound.buffer = this._buffer;
+                    this._sound.connect(this.gainNode);
+                    this.totalDuration = this._sound.buffer.duration;
+                    if(this.duration == 0) {
+                        this.duration = this.totalDuration * 1000;
+                    }
+                    if(this.loop) {
+                        this._sound.loop = true;
+                    }
+                    //  Useful to cache this somewhere perhaps?
+                    if(typeof this._sound.start === 'undefined') {
+                        this._sound.noteGrainOn(0, this.position, this.duration / 1000);
+                        //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
+                                            } else {
+                        this._sound.start(0, this.position, this.duration / 1000);
+                    }
+                    this.isPlaying = true;
+                    this.startTime = this.game.time.now;
+                    this.currentTime = 0;
+                    this.stopTime = this.startTime + this.duration;
+                    this.onPlay.dispatch(this);
+                } else {
+                    this.pendingPlayback = true;
+                    if(this.game.cache.getSound(this.key).isDecoding == false) {
+                        this.game.sound.decode(this.key, this);
+                    }
+                }
+            } else {
+                console.log('Sound play Audio');
+                if(this.game.cache.getSound(this.key).locked) {
+                    console.log('tried playing locked sound, pending set, reload started');
+                    this.game.cache.reloadSound(this.key);
+                    this.pendingPlayback = true;
+                } else {
+                    console.log('sound not locked, state?', this._sound.readyState);
+                    if(this._sound && this._sound.readyState == 4) {
+                        if(this.duration == 0) {
+                            this.duration = this.totalDuration * 1000;
+                        }
+                        console.log('playing', this._sound);
+                        this._sound.currentTime = this.position;
+                        this._sound.muted = this._muted;
+                        this._sound.volume = this._volume;
+                        this._sound.play();
+                        this.isPlaying = true;
+                        this.startTime = this.game.time.now;
+                        this.currentTime = 0;
+                        this.stopTime = this.startTime + this.duration;
+                        this.onPlay.dispatch(this);
+                    } else {
+                        this.pendingPlayback = true;
+                    }
+                }
+            }
+        };
+        Sound.prototype.restart = function (marker, position, volume, loop) {
+            if (typeof marker === "undefined") { marker = ''; }
+            if (typeof position === "undefined") { position = 0; }
+            if (typeof volume === "undefined") { volume = 1; }
+            if (typeof loop === "undefined") { loop = false; }
+            this.play(marker, position, volume, loop, true);
+        };
+        Sound.prototype.pause = function () {
+            if(this.isPlaying && this._sound) {
+                this.stop();
+                this.isPlaying = false;
+                this.paused = true;
+                this.onPause.dispatch(this);
+            }
+        };
+        Sound.prototype.resume = function () {
+            //if (this.isPlaying == false && this._sound)
+            if(this.paused && this._sound) {
+                if(this.usingWebAudio) {
+                    if(typeof this._sound.start === 'undefined') {
+                        this._sound.noteGrainOn(0, this.position, this.duration);
+                        //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
+                                            } else {
+                        this._sound.start(0, this.position, this.duration);
+                    }
+                } else {
+                    this._sound.play();
+                }
+                this.isPlaying = true;
+                this.paused = false;
+                this.onResume.dispatch(this);
+            }
         };
         Sound.prototype.stop = /**
         * Stop playing this sound.
         */
         function () {
-            if(this.isPlaying === true) {
+            if(this.isPlaying && this._sound) {
+                if(this.usingWebAudio) {
+                    if(typeof this._sound.stop === 'undefined') {
+                        this._sound.noteOff(0);
+                    } else {
+                        this._sound.stop(0);
+                    }
+                } else if(this.usingAudioTag) {
+                    this._sound.pause();
+                    this._sound.currentTime = 0;
+                }
                 this.isPlaying = false;
-                this._sound.noteOff(0);
+                this.currentMarker = '';
+                this.onStop.dispatch(this);
             }
         };
-        Sound.prototype.mute = /**
-        * Mute the sound.
-        */
-        function () {
-            this._localGainNode.gain.value = 0;
-        };
-        Sound.prototype.unmute = /**
-        * Enable the sound.
-        */
-        function () {
-            this._localGainNode.gain.value = this._volume;
-        };
+        Object.defineProperty(Sound.prototype, "mute", {
+            get: /**
+            * Mute sounds.
+            */
+            function () {
+                return this._muted;
+            },
+            set: function (value) {
+                if(value) {
+                    this._muted = true;
+                    if(this.usingWebAudio) {
+                        this._muteVolume = this.gainNode.gain.value;
+                        this.gainNode.gain.value = 0;
+                    } else if(this.usingAudioTag && this._sound) {
+                        this._muteVolume = this._sound.volume;
+                        this._sound.volume = 0;
+                    }
+                } else {
+                    this._muted = false;
+                    if(this.usingWebAudio) {
+                        this.gainNode.gain.value = this._muteVolume;
+                    } else if(this.usingAudioTag && this._sound) {
+                        this._sound.volume = this._muteVolume;
+                    }
+                }
+                this.onMute.dispatch(this);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Sound.prototype, "volume", {
             get: function () {
                 return this._volume;
             },
             set: function (value) {
                 this._volume = value;
-                this._localGainNode.gain.value = this._volume;
+                if(this.usingWebAudio) {
+                    this.gainNode.gain.value = value;
+                } else if(this.usingAudioTag && this._sound) {
+                    this._sound.volume = value;
+                }
             },
             enumerable: true,
             configurable: true
         });
+        Sound.prototype.renderDebug = /**
+        * Renders the Pointer.circle object onto the stage in green if down or red if up.
+        * @method renderDebug
+        */
+        function (x, y) {
+            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
+            this.game.stage.context.font = '16px Courier';
+            this.game.stage.context.fillText('Sound: ' + this.key + ' Locked: ' + this.game.sound.touchLocked + ' Pending Playback: ' + this.pendingPlayback, x, y);
+            this.game.stage.context.fillText('Decoded: ' + this.isDecoded + ' Decoding: ' + this.isDecoding, x, y + 20);
+            this.game.stage.context.fillText('Total Duration: ' + this.totalDuration + ' Playing: ' + this.isPlaying, x, y + 40);
+            this.game.stage.context.fillText('Time: ' + this.currentTime, x, y + 60);
+            this.game.stage.context.fillText('Volume: ' + this.volume + ' Muted: ' + this.mute, x, y + 80);
+            this.game.stage.context.fillText('WebAudio: ' + this.usingWebAudio + ' Audio: ' + this.usingAudioTag, x, y + 100);
+            if(this.currentMarker !== '') {
+                this.game.stage.context.fillText('Marker: ' + this.currentMarker + ' Duration: ' + this.duration, x, y + 120);
+                this.game.stage.context.fillText('Start: ' + this.markers[this.currentMarker].start + ' Stop: ' + this.markers[this.currentMarker].stop, x, y + 140);
+                this.game.stage.context.fillText('Position: ' + this.position, x, y + 160);
+            }
+        };
         return Sound;
     })();
     Phaser.Sound = Sound;    
@@ -14079,100 +14463,229 @@ var Phaser;
         * Create a new <code>SoundManager</code>.
         */
         function SoundManager(game) {
+            this.usingWebAudio = false;
+            this.usingAudioTag = false;
+            this.noAudio = false;
             /**
             * Reference to AudioContext instance.
             */
-            this._context = null;
-            this._game = game;
-            if(window['PhaserGlobal'] && window['PhaserGlobal'].disableAudio == true) {
-                return;
+            this.context = null;
+            this._muted = false;
+            this.touchLocked = false;
+            this._unlockSource = null;
+            this.onSoundDecode = new Phaser.Signal();
+            this.game = game;
+            this._volume = 1;
+            this._muted = false;
+            this._sounds = [];
+            if(this.game.device.iOS && this.game.device.webAudio == false) {
+                this.channels = 1;
             }
-            if(game.device.webaudio == true) {
-                if(!!window['AudioContext']) {
-                    this._context = new window['AudioContext']();
-                } else if(!!window['webkitAudioContext']) {
-                    this._context = new window['webkitAudioContext']();
+            if(this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock)) {
+                console.log('iOS Touch Locked');
+                this.game.input.touch.callbackContext = this;
+                this.game.input.touch.touchStartCallback = this.unlock;
+                this.game.input.mouse.callbackContext = this;
+                this.game.input.mouse.mouseDownCallback = this.unlock;
+                this.touchLocked = true;
+            } else {
+                //  What about iOS5?
+                this.touchLocked = false;
+            }
+            if(window['PhaserGlobal']) {
+                //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
+                if(window['PhaserGlobal'].disableAudio == true) {
+                    this.usingWebAudio = false;
+                    this.noAudio = true;
+                    return;
                 }
-                if(this._context !== null) {
-                    this._gainNode = this._context.createGainNode();
-                    this._gainNode.connect(this._context.destination);
-                    this._volume = 1;
+                //  Check if the Web Audio API is disabled (for testing Audio Tag playback during development)
+                if(window['PhaserGlobal'].disableWebAudio == true) {
+                    this.usingWebAudio = false;
+                    this.usingAudioTag = true;
+                    this.noAudio = false;
+                    return;
                 }
+            }
+            this.usingWebAudio = true;
+            this.noAudio = false;
+            if(!!window['AudioContext']) {
+                this.context = new window['AudioContext']();
+            } else if(!!window['webkitAudioContext']) {
+                this.context = new window['webkitAudioContext']();
+            } else if(!!window['Audio']) {
+                this.usingWebAudio = false;
+                this.usingAudioTag = true;
+            } else {
+                this.usingWebAudio = false;
+                this.noAudio = true;
+            }
+            if(this.context !== null) {
+                if(typeof this.context.createGain === 'undefined') {
+                    this.masterGain = this.context.createGainNode();
+                } else {
+                    this.masterGain = this.context.createGain();
+                }
+                this.masterGain.gain.value = 1;
+                this.masterGain.connect(this.context.destination);
             }
         }
-        SoundManager.prototype.mute = /**
-        * Mute sounds.
-        */
-        function () {
-            this._gainNode.gain.value = 0;
+        SoundManager.prototype.unlock = function () {
+            if(this.touchLocked == false) {
+                return;
+            }
+            console.log('SoundManager touch unlocked');
+            if(this.game.device.webAudio && (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == false)) {
+                console.log('create empty buffer');
+                // Create empty buffer and play it
+                var buffer = this.context.createBuffer(1, 1, 22050);
+                this._unlockSource = this.context.createBufferSource();
+                this._unlockSource.buffer = buffer;
+                this._unlockSource.connect(this.context.destination);
+                this._unlockSource.noteOn(0);
+            } else {
+                //  Create an Audio tag?
+                console.log('create audio tag');
+                this.touchLocked = false;
+                this._unlockSource = null;
+                this.game.input.touch.callbackContext = null;
+                this.game.input.touch.touchStartCallback = null;
+                this.game.input.mouse.callbackContext = null;
+                this.game.input.mouse.mouseDownCallback = null;
+            }
         };
-        SoundManager.prototype.unmute = /**
-        * Enable sounds.
-        */
-        function () {
-            this._gainNode.gain.value = this._volume;
-        };
-        Object.defineProperty(SoundManager.prototype, "volume", {
-            get: function () {
-                return this._volume;
+        Object.defineProperty(SoundManager.prototype, "mute", {
+            get: /**
+            * A global audio mute toggle.
+            */
+            function () {
+                return this._muted;
             },
             set: function (value) {
-                this._volume = value;
-                this._gainNode.gain.value = this._volume;
+                if(value) {
+                    if(this._muted) {
+                        return;
+                    }
+                    this._muted = true;
+                    if(this.usingWebAudio) {
+                        this._muteVolume = this.masterGain.gain.value;
+                        this.masterGain.gain.value = 0;
+                    }
+                    //  Loop through sounds
+                    for(var i = 0; i < this._sounds.length; i++) {
+                        if(this._sounds[i]) {
+                            this._sounds[i].mute = true;
+                        }
+                    }
+                } else {
+                    if(this._muted == false) {
+                        return;
+                    }
+                    this._muted = false;
+                    if(this.usingWebAudio) {
+                        this.masterGain.gain.value = this._muteVolume;
+                    }
+                    //  Loop through sounds
+                    for(var i = 0; i < this._sounds.length; i++) {
+                        if(this._sounds[i]) {
+                            this._sounds[i].mute = false;
+                        }
+                    }
+                }
             },
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(SoundManager.prototype, "volume", {
+            get: function () {
+                if(this.usingWebAudio) {
+                    return this.masterGain.gain.value;
+                } else {
+                    return this._volume;
+                }
+            },
+            set: /**
+            * The global audio volume. A value between 0 (silence) and 1 (full volume)
+            */
+            function (value) {
+                value = this.game.math.clamp(value, 1, 0);
+                this._volume = value;
+                if(this.usingWebAudio) {
+                    this.masterGain.gain.value = value;
+                }
+                //  Loop through the sound cache and change the volume of all html audio tags
+                for(var i = 0; i < this._sounds.length; i++) {
+                    if(this._sounds[i].usingAudioTag) {
+                        this._sounds[i].volume = this._sounds[i].volume * value;
+                    }
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SoundManager.prototype.stopAll = function () {
+            for(var i = 0; i < this._sounds.length; i++) {
+                if(this._sounds[i]) {
+                    this._sounds[i].stop();
+                }
+            }
+        };
+        SoundManager.prototype.pauseAll = function () {
+            for(var i = 0; i < this._sounds.length; i++) {
+                if(this._sounds[i]) {
+                    this._sounds[i].pause();
+                }
+            }
+        };
+        SoundManager.prototype.resumeAll = function () {
+            for(var i = 0; i < this._sounds.length; i++) {
+                if(this._sounds[i]) {
+                    this._sounds[i].resume();
+                }
+            }
+        };
         SoundManager.prototype.decode = /**
         * Decode a sound with its assets key.
         * @param key {string} Assets key of the sound to be decoded.
-        * @param callback {function} This will be invoked when finished decoding.
         * @param [sound] {Sound} its bufer will be set to decoded data.
         */
-        function (key, callback, sound) {
-            if (typeof callback === "undefined") { callback = null; }
+        function (key, sound) {
             if (typeof sound === "undefined") { sound = null; }
-            var soundData = this._game.cache.getSound(key);
+            var soundData = this.game.cache.getSoundData(key);
             if(soundData) {
-                if(this._game.cache.isSoundDecoded(key) === false) {
+                if(this.game.cache.isSoundDecoded(key) === false) {
+                    this.game.cache.updateSound(key, 'isDecoding', true);
                     var that = this;
-                    this._context.decodeAudioData(soundData, function (buffer) {
-                        that._game.cache.decodedSound(key, buffer);
+                    this.context.decodeAudioData(soundData, function (buffer) {
+                        that.game.cache.decodedSound(key, buffer);
                         if(sound) {
-                            sound.setDecodedBuffer(buffer);
+                            that.onSoundDecode.dispatch(sound);
                         }
-                        callback();
                     });
                 }
             }
         };
-        SoundManager.prototype.play = /**
-        * Play a sound with its assets key.
-        * @param key {string} Assets key of the sound you want to play.
-        * @param [volume] {number} volume of the sound you want to play.
-        * @param [loop] {boolean} loop when it finished playing? (Default to false)
-        * @return {Sound} The playing sound object.
-        */
-        function (key, volume, loop) {
-            if (typeof volume === "undefined") { volume = 1; }
-            if (typeof loop === "undefined") { loop = false; }
-            if(this._context === null) {
-                return;
-            }
-            var soundData = this._game.cache.getSound(key);
-            if(soundData) {
-                //  Does the sound need decoding?
-                if(this._game.cache.isSoundDecoded(key) === true) {
-                    return new Phaser.Sound(this._context, this._gainNode, soundData, volume, loop);
-                } else {
-                    var tempSound = new Phaser.Sound(this._context, this._gainNode, null, volume, loop);
-                    //  this is an async process, so we can return the Sound object anyway, it just won't be playing yet
-                    this.decode(key, function () {
-                        return tempSound.play();
-                    }, tempSound);
-                    return tempSound;
+        SoundManager.prototype.update = function () {
+            if(this.touchLocked) {
+                if(this.game.device.webAudio && this._unlockSource !== null) {
+                    if((this._unlockSource.playbackState === this._unlockSource.PLAYING_STATE || this._unlockSource.playbackState === this._unlockSource.FINISHED_STATE)) {
+                        this.touchLocked = false;
+                        this._unlockSource = null;
+                        this.game.input.touch.callbackContext = null;
+                        this.game.input.touch.touchStartCallback = null;
+                    }
                 }
             }
+            for(var i = 0; i < this._sounds.length; i++) {
+                this._sounds[i].update();
+            }
+        };
+        SoundManager.prototype.add = function (key, volume, loop) {
+            if (typeof volume === "undefined") { volume = 1; }
+            if (typeof loop === "undefined") { loop = false; }
+            var sound = new Phaser.Sound(this.game, key, volume, loop);
+            this._sounds.push(sound);
+            return sound;
         };
         return SoundManager;
     })();
@@ -14861,6 +15374,12 @@ var Phaser;
             document.addEventListener('webkitvisibilitychange', function (event) {
                 return _this.visibilityChange(event);
             }, false);
+            document.addEventListener('pagehide', function (event) {
+                return _this.visibilityChange(event);
+            }, false);
+            document.addEventListener('pageshow', function (event) {
+                return _this.visibilityChange(event);
+            }, false);
             window.onblur = function (event) {
                 return _this.visibilityChange(event);
             };
@@ -14905,16 +15424,17 @@ var Phaser;
         * This method is called when the canvas elements visibility is changed.
         */
         function (event) {
-            if(this.disablePauseScreen) {
-                return;
-            }
-            if(event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true) {
-                if(this._game.paused == false) {
+            if(event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true) {
+                if(this._game.paused == false && this.disablePauseScreen == false) {
                     this.pauseGame();
+                } else {
+                    this._game.paused = true;
                 }
             } else {
-                if(this._game.paused == true) {
+                if(this._game.paused == true && this.disablePauseScreen == false) {
                     this.resumeGame();
+                } else {
+                    this._game.paused = false;
                 }
             }
         };
@@ -15244,16 +15764,23 @@ var Phaser;
             this._tweens.length = 0;
         };
         TweenManager.prototype.create = /**
-        * Create a tween object for a specific object.
+        * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
         *
-        * @param object {object} Object you wish the tween will affect.
+        * @param obj {object} Object the tween will be run on.
+        * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
         * @return {Phaser.Tween} The newly created tween object.
         */
-        function (object) {
-            return new Phaser.Tween(object, this._game);
+        function (object, localReference) {
+            if (typeof localReference === "undefined") { localReference = false; }
+            if(localReference) {
+                object['tween'] = new Phaser.Tween(object, this._game);
+                return object['tween'];
+            } else {
+                return new Phaser.Tween(object, this._game);
+            }
         };
         TweenManager.prototype.add = /**
-        * Add an exist tween object to the manager.
+        * Add a new tween into the TweenManager.
         *
         * @param tween {Phaser.Tween} The tween object you want to add.
         * @return {Phaser.Tween} The tween object you added to the manager.
@@ -15892,35 +16419,45 @@ var Phaser;
             this.webApp = false;
             //  Audio
             /**
-            * Is audioData available?
+            * Are Audio tags available?
             * @type {boolean}
             */
             this.audioData = false;
             /**
-            * Is webaudio available?
+            * Is the WebAudio API available?
             * @type {boolean}
             */
-            this.webaudio = false;
+            this.webAudio = false;
             /**
-            * Is ogg available?
+            * Can this device play ogg files?
             * @type {boolean}
             */
             this.ogg = false;
             /**
-            * Is mp3 available?
+            * Can this device play opus files?
+            * @type {boolean}
+            */
+            this.opus = false;
+            /**
+            * Can this device play mp3 files?
             * @type {boolean}
             */
             this.mp3 = false;
             /**
-            * Is wav available?
+            * Can this device play wav files?
             * @type {boolean}
             */
             this.wav = false;
             /**
-            * Is m4a available?
+            * Can this device play m4a files?
             * @type {boolean}
             */
             this.m4a = false;
+            /**
+            * Can this device play webm files?
+            * @type {boolean}
+            */
+            this.webm = false;
             //  Device
             /**
             * Is running on iPhone?
@@ -16025,19 +16562,36 @@ var Phaser;
                 this.webApp = true;
             }
         };
+        Device.prototype.canPlayAudio = function (type) {
+            if(type == 'mp3' && this.mp3) {
+                return true;
+            } else if(type == 'ogg' && (this.ogg || this.opus)) {
+                return true;
+            } else if(type == 'm4a' && this.m4a) {
+                return true;
+            } else if(type == 'wav' && this.wav) {
+                return true;
+            } else if(type == 'webm' && this.webm) {
+                return true;
+            }
+            return false;
+        };
         Device.prototype._checkAudio = /**
         * Check audio support.
         * @private
         */
         function () {
             this.audioData = !!(window['Audio']);
-            this.webaudio = !!(window['webkitAudioContext'] || window['AudioContext']);
+            this.webAudio = !!(window['webkitAudioContext'] || window['AudioContext']);
             var audioElement = document.createElement('audio');
             var result = false;
             try  {
                 if(result = !!audioElement.canPlayType) {
                     if(audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, '')) {
                         this.ogg = true;
+                    }
+                    if(audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '')) {
+                        this.opus = true;
                     }
                     if(audioElement.canPlayType('audio/mpeg;').replace(/^no$/, '')) {
                         this.mp3 = true;
@@ -16050,6 +16604,9 @@ var Phaser;
                     }
                     if(audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, '')) {
                         this.m4a = true;
+                    }
+                    if(audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')) {
+                        this.webm = true;
                     }
                 }
             } catch (e) {
@@ -16637,6 +17194,12 @@ var Phaser;
             **/
             this.totalTouches = 0;
             /**
+            * The number of miliseconds since the last click
+            * @property msSinceLastClick
+            * @type {Number}
+            **/
+            this.msSinceLastClick = Number.MAX_VALUE;
+            /**
             * The Game Object this Pointer is currently over / touching / dragging.
             * @property targetObject
             * @type {Any}
@@ -16704,6 +17267,8 @@ var Phaser;
             this.withinGame = true;
             this.isDown = true;
             this.isUp = false;
+            //  Work out how long it has been since the last click
+            this.msSinceLastClick = this.game.time.now - this.timeDown;
             this.timeDown = this.game.time.now;
             this._holdSent = false;
             //  This sets the x/y and other local values
@@ -17761,7 +18326,7 @@ var Phaser;
             * @property recordPointerHistory
             * @type {Boolean}
             **/
-            this.recordPointerHistory = true;
+            this.recordPointerHistory = false;
             /**
             * The rate in milliseconds at which the Pointer objects should update their tracking history
             * @property recordRate
@@ -17770,7 +18335,7 @@ var Phaser;
             this.recordRate = 100;
             /**
             * The total number of entries that can be recorded into the Pointer objects tracking history.
-            * The the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
+            * If the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
             * @property recordLimit
             * @type {Number}
             */
@@ -19013,6 +19578,7 @@ var Phaser;
 /// <reference path="cameras/CameraManager.ts" />
 /// <reference path="gameobjects/GameObjectFactory.ts" />
 /// <reference path="sound/SoundManager.ts" />
+/// <reference path="sound/Sound.ts" />
 /// <reference path="Stage.ts" />
 /// <reference path="Time.ts" />
 /// <reference path="tweens/TweenManager.ts" />
@@ -19183,12 +19749,12 @@ var Phaser;
                 this.stage = new Phaser.Stage(this, parent, width, height);
                 this.world = new Phaser.World(this, width, height);
                 this.add = new Phaser.GameObjectFactory(this);
-                this.sound = new Phaser.SoundManager(this);
                 this.cache = new Phaser.Cache(this);
                 this.load = new Phaser.Loader(this, this.loadComplete);
                 this.time = new Phaser.Time(this);
                 this.tweens = new Phaser.TweenManager(this);
                 this.input = new Phaser.Input(this);
+                this.sound = new Phaser.SoundManager(this);
                 this.rnd = new Phaser.RandomDataGenerator([
                     (Date.now() * Math.random()).toString()
                 ]);
@@ -19250,6 +19816,7 @@ var Phaser;
             this.tweens.update();
             this.input.update();
             this.stage.update();
+            this.sound.update();
             if(this.onPausedCallback !== null) {
                 this.onPausedCallback.call(this.callbackContext);
             }
@@ -19261,6 +19828,7 @@ var Phaser;
             this.tweens.update();
             this.input.update();
             this.stage.update();
+            this.sound.update();
             this.physics.update();
             this.world.update();
             if(this._loadComplete && this.onUpdateCallback) {
@@ -19424,11 +19992,13 @@ var Phaser;
             set: function (value) {
                 if(value == true && this._paused == false) {
                     this._paused = true;
+                    this.sound.pauseAll();
                     this._raf.callback = this.pausedLoop;
                 } else if(value == false && this._paused == true) {
                     this._paused = false;
                     //this.time.time = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
                     this.input.reset();
+                    this.sound.resumeAll();
                     if(this.isRunning == false) {
                         this._raf.callback = this.bootLoop;
                     } else {
