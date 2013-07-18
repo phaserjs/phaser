@@ -12,39 +12,39 @@ class customParticle extends Phaser.Particle {
 
         var s = ['carrot', 'melon', 'eggplant', 'mushroom', 'pineapple'];
 
-        this.loadGraphic(game.math.getRandom(s));
+        this.texture.loadImage(game.math.getRandom(s));
     }
 
 }
 
 (function () {
 
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
 
     var emitter: Phaser.Emitter;
 
     function init() {
 
-        myGame.loader.addImageFile('carrot', 'assets/sprites/carrot.png');
-        myGame.loader.addImageFile('melon', 'assets/sprites/melon.png');
-        myGame.loader.addImageFile('eggplant', 'assets/sprites/eggplant.png');
-        myGame.loader.addImageFile('mushroom', 'assets/sprites/mushroom.png');
-        myGame.loader.addImageFile('pineapple', 'assets/sprites/pineapple.png');
+        game.load.image('carrot', 'assets/sprites/carrot.png');
+        game.load.image('melon', 'assets/sprites/melon.png');
+        game.load.image('eggplant', 'assets/sprites/eggplant.png');
+        game.load.image('mushroom', 'assets/sprites/mushroom.png');
+        game.load.image('pineapple', 'assets/sprites/pineapple.png');
 
-        myGame.loader.load();
+        game.load.start();
 
     }
 
     function create() {
 
-        emitter = myGame.createEmitter(myGame.stage.centerX, 50);
+        emitter = game.add.emitter(game.stage.centerX, 50);
         emitter.gravity = 100;
 
         //  Here we tell the emitter to use our customParticle class
         //  The customParticle needs to extend Particle and must take game:Game as the first constructor parameter, otherwise it's free as a bird
         emitter.particleClass = customParticle;
 
-        emitter.makeParticles(null, 500, 0, false, 0);
+        emitter.makeParticles(null, 500, false, 0);
         emitter.start(false, 10, 0.05);
 
     }

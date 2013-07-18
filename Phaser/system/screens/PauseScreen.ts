@@ -10,6 +10,13 @@ module Phaser {
 
     export class PauseScreen {
 
+        /**
+         * PauseScreen constructor
+         * Create a new <code>PauseScreen</code> with specific width and height.
+         *
+         * @param width {number} Screen canvas width.
+         * @param height {number} Screen canvas height.
+         */
         constructor(game: Game, width: number, height: number) {
 
             this._game = game;
@@ -20,14 +27,37 @@ module Phaser {
 
         }
 
+        /**
+         * Local private reference to game.
+         */
         private _game: Game;
+
+        /**
+         * Canvas element used by engine.
+         * @type {HTMLCanvasElement}
+         */
         private _canvas: HTMLCanvasElement;
+
+        /**
+         * Render context of stage's canvas.
+         * @type {CanvasRenderingContext2D}
+         */
         private _context: CanvasRenderingContext2D;
 
+        /**
+         * Background color.
+         */
         private _color;
+
+        /**
+         * Fade effect tween.
+         * @type {Phaser.Tween}
+         */
         private _fade: Phaser.Tween;
 
-        //  Called when the game enters pause mode
+        /**
+         * Called when the game enters pause mode.
+         */
         public onPaused() {
 
             //  Take a grab of the current canvas to our temporary one
@@ -38,17 +68,26 @@ module Phaser {
 
         }
 
+        /**
+         * Called when the game resume from pause mode.
+         */
         public onResume() {
             this._fade.stop();
             this._game.tweens.remove(this._fade);
         }
 
+        /**
+         * Update background color.
+         */
         public update() {
             this._color.r = Math.round(this._color.r);
             this._color.g = Math.round(this._color.g);
             this._color.b = Math.round(this._color.b);
         }
 
+        /**
+         * Render PauseScreen.
+         */
         public render() {
 
             this._game.stage.context.drawImage(this._canvas, 0, 0);
@@ -73,9 +112,12 @@ module Phaser {
 
         }
 
+        /**
+         * Start fadeOut effect.
+         */
         private fadeOut() {
 
-            this._fade = this._game.createTween(this._color);
+            this._fade = this._game.add.tween(this._color);
 
             this._fade.to({ r: 50, g: 50, b: 50 }, 1000, Phaser.Easing.Linear.None);
             this._fade.onComplete.add(this.fadeIn, this);
@@ -83,9 +125,12 @@ module Phaser {
 
         }
 
+        /**
+         * Start fadeIn effect.
+         */
         private fadeIn() {
 
-            this._fade = this._game.createTween(this._color);
+            this._fade = this._game.add.tween(this._color);
 
             this._fade.to({ r: 255, g: 255, b: 255 }, 1000, Phaser.Easing.Linear.None);
             this._fade.onComplete.add(this.fadeOut, this);

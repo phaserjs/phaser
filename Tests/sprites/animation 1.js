@@ -1,32 +1,23 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        myGame.loader.addSpriteSheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
-        //myGame.loader.addSpriteSheet('coin', 'assets/sprites/coin.png', 32, 32);
-        myGame.loader.addSpriteSheet('monster', 'assets/sprites/metalslug_monster39x40.png', 39, 40);
-        myGame.loader.load();
+        //  Using Phasers asset loader we load up a PNG from the assets folder
+        //  The sprite sheet is a standard frame-by-frame sheet, and each frame is 37 x 45 pixels in size.
+        //  The final parameter (18) is the number of frames there are. You can omit this if your frames fill the entire sheet.
+        game.load.spritesheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
+        game.load.start();
     }
-    var car;
+    var mummy;
     function create() {
-        car = myGame.createSprite(200, 300, 'monster');
-        car.animations.add('spin', null, 30, true);
-        //car.animations.play('spin', 30, true);
-        car.animations.play('spin');
-    }
-    function update() {
-        car.renderDebugInfo(16, 16);
-        car.velocity.x = 0;
-        car.velocity.y = 0;
-        car.angularVelocity = 0;
-        car.angularAcceleration = 0;
-        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            car.angularVelocity = -200;
-        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            car.angularVelocity = 200;
-        }
-        if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-            car.velocity.copyFrom(myGame.motion.velocityFromAngle(car.angle, 200));
-        }
+        mummy = game.add.sprite(game.stage.centerX, game.stage.centerY, 'mummy');
+        //  Here we add new animation called 'walk'.
+        // As it's the only animation in our sprite sheet we don't need to define the frames being used.
+        mummy.animations.add('walk');
+        //  This plays the animation at 20 frames per second on a loop (the 3rd parameter)
+        //  Try changing the 20 value to something low to slow the speed down, or higher to make it play faster.
+        mummy.animations.play('walk', 20, true);
+        //  This just scales the sprite up so you can see the animation better
+        mummy.transform.scale.setTo(4, 4);
     }
 })();

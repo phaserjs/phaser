@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -62,6 +62,10 @@
     <TypeScriptCompile Include="Camera\Flash.ts" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Camera\Border.ts" />
+    <Content Include="Camera\Border.js">
+      <DependentUpon>Border.ts</DependentUpon>
+    </Content>
     <Content Include="Camera\Fade.js">
       <DependentUpon>Fade.ts</DependentUpon>
     </Content>
@@ -69,6 +73,10 @@
     <TypeScriptCompile Include="Camera\Mirror.ts" />
     <Content Include="Camera\Mirror.js">
       <DependentUpon>Mirror.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Camera\Shadow.ts" />
+    <Content Include="Camera\Shadow.js">
+      <DependentUpon>Shadow.ts</DependentUpon>
     </Content>
     <Content Include="Camera\Template.js">
       <DependentUpon>Template.ts</DependentUpon>

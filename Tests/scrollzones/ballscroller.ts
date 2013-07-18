@@ -3,13 +3,13 @@
 
 (function () {
 
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     function init() {
 
-        myGame.loader.addImageFile('balls', 'assets/sprites/balls.png');
+        game.load.image('balls', 'assets/sprites/balls.png');
 
-        myGame.loader.load();
+        game.load.start();
 
     }
 
@@ -23,18 +23,18 @@
         //  for rendering.
 
         //  We've rounded the height up to 612 because in order to have a seamless pattern it needs to be a multiple of 17 (the height of the source image)
-        scroller = myGame.createScrollZone('balls', 0, 0, 800, 612);
+        scroller = game.add.scrollZone('balls', 0, 0, 800, 612);
 
         //  Some sin/cos data for the movement
-		myGame.math.sinCosGenerator(256, 4, 4, 2);
+		game.math.sinCosGenerator(256, 4, 4, 2);
 
     }
 
     function update() {
 
 		//	Cycle through the wave data and apply it to the scroll speed (causes the circular wave motion)
-        scroller.currentRegion.scrollSpeed.x = myGame.math.shiftSinTable();
-        scroller.currentRegion.scrollSpeed.y = myGame.math.shiftCosTable();
+        scroller.currentRegion.scrollSpeed.x = game.math.shiftSinTable();
+        scroller.currentRegion.scrollSpeed.y = game.math.shiftCosTable();
 
     }
 

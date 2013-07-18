@@ -2,23 +2,23 @@
 
 (function () {
 
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
 
     var emitter: Phaser.Emitter;
 
     function init() {
 
-        myGame.loader.addImageFile('jet', 'assets/sprites/jets.png');
+        game.load.image('jet', 'assets/sprites/jets.png');
 
-        myGame.loader.load();
+        game.load.start();
 
     }
 
     function create() {
 
-        emitter = myGame.createEmitter(myGame.stage.centerX, myGame.stage.centerY);
-        emitter.makeParticles('jet', 50, 0, false, 0);
-        emitter.start(false, 10, 0.1);
+        emitter = game.add.emitter(game.stage.centerX, game.stage.centerY);
+        emitter.makeParticles('jet', 100, false, 0);
+        emitter.start(false, 20, 0.1);
 
     }
 

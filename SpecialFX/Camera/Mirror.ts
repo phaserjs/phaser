@@ -1,6 +1,4 @@
-/// <reference path="../../Phaser/Game.d.ts" />
-/// <reference path="../../Phaser/system/Camera.d.ts" />
-/// <reference path="../../Phaser/FXManager.d.ts" />
+/// <reference path="../../build/phaser.d.ts" />
 
 /**
 * Phaser - FX - Camera - Mirror
@@ -49,7 +47,7 @@ module Phaser.FX.Camera {
         * This is the rectangular region to grab from the Camera used in the Mirror effect
         * It is rendered to the Stage at Mirror.x/y (note the use of Stage coordinates, not World coordinates)
         */
-        public start(x: number, y: number, region: Phaser.Quad, fillColor?: string = 'rgba(0, 0, 100, 0.5)') {
+        public start(x: number, y: number, region: Phaser.Rectangle, fillColor?: string = 'rgba(0, 0, 100, 0.5)') {
 
             this.x = x;
             this.y = y;
@@ -73,10 +71,10 @@ module Phaser.FX.Camera {
          */
         public postRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
 
-            if (this.cls)
-            {
-                this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
-            }
+            //if (this.cls)
+            //{
+            //    this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
+            //}
 
             this._sx = cameraX + this._mirrorX;
             this._sy = cameraY + this._mirrorY;

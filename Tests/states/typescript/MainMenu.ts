@@ -16,10 +16,10 @@ class MainMenu extends State {
 
     public init() {
 
-        this.loader.addImageFile('car', '../../assets/pics/supercars_parsec.png');
+        this.load.image('car', '../../assets/pics/supercars_parsec.png');
         this.loader.addSpriteSheet('monster', '../../assets/sprites/metalslug_monster39x40.png', 39, 40);
 
-        this.loader.load();
+        this.load.start();
 
     }
 
@@ -27,9 +27,9 @@ class MainMenu extends State {
 
 		this.camera.backgroundColor = 'rgb(85,85,85)';
 
-		this.createSprite(80, 150, 'car');
+		this.add.sprite(80, 150, 'car');
 
-        this.monster = this.game.createSprite(80, 60, 'monster');
+        this.monster = this.game.add.sprite(80, 60, 'monster');
 
         this.monster.animations.add('walk');
         this.monster.animations.play('walk', 30, true);

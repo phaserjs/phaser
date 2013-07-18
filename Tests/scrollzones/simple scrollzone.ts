@@ -3,13 +3,12 @@
 
 (function () {
 
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
 
     function init() {
 
-        myGame.loader.addImageFile('crystal', 'assets/pics/jim_sachs_time_crystal.png');
-
-        myGame.loader.load();
+        game.load.image('crystal', 'assets/pics/jim_sachs_time_crystal.png');
+        game.load.start();
 
     }
 
@@ -21,7 +20,7 @@
         //  The default is for the scroll zone to create 1 new scrolling region the size of the whole image you gave it.
         //  For this example we'll keep that, but look at the other tests to see reasons why you may not want to.
 
-        myGame.createScrollZone('crystal').setSpeed(4, 2);
+        game.add.scrollZone('crystal').setSpeed(4, 2);
 
     }
 

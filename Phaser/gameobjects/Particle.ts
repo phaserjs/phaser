@@ -20,8 +20,8 @@ module Phaser {
 
             super(game);
 
+            this.body.type = Types.BODY_DYNAMIC;
             this.lifespan = 0;
-            this.friction = 500;
 
         }
 
@@ -33,67 +33,23 @@ module Phaser {
         public lifespan: number;
 
         /**
-         * Determines how quickly the particles come to rest on the ground.
-         * Only used if the particle has gravity-like acceleration applied.
-         * @default 500
-         */
-        public friction: number;
-
-        /**
-         * The particle's main update logic.  Basically it checks to see if it should
-         * be dead yet, and then has some special bounce behavior if there is some gravity on it.
+         * The particle's main update logic.  Basically it checks to see if it should be dead yet.
          */
         public update() {
 
-            //lifespan behavior
+            //  Lifespan behavior
             if (this.lifespan <= 0)
             {
                 return;
             }
 
-            this.lifespan -= this._game.time.elapsed;
+            this.lifespan -= this.game.time.elapsed;
 
             if (this.lifespan <= 0)
             {
                 this.kill();
             }
 
-            //simpler bounce/spin behavior for now
-            if (this.touching)
-            {
-                if (this.angularVelocity != 0)
-                {
-                    this.angularVelocity = -this.angularVelocity;
-                }
-            }
-
-            if (this.acceleration.y > 0) //special behavior for particles with gravity
-            {
-                if (this.touching & Collision.FLOOR)
-                {
-                    this.drag.x = this.friction;
-
-                    if (!(this.wasTouching & Collision.FLOOR))
-                    {
-                        if (this.velocity.y < -this.elasticity * 10)
-                        {
-                            if (this.angularVelocity != 0)
-                            {
-                                this.angularVelocity *= -this.elasticity;
-                            }
-                        }
-                        else
-                        {
-                            this.velocity.y = 0;
-                            this.angularVelocity = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    this.drag.x = 0;
-                }
-            }
         }
 
         /**

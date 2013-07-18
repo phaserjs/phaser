@@ -1,5 +1,4 @@
-/// <reference path="../../Phaser/Game.d.ts" />
-/// <reference path="../../Phaser/FXManager.d.ts" />
+/// <reference path="../../build/phaser.d.ts" />
 
 /**
 * Phaser - FX - Camera - Flash

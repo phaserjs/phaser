@@ -1,13 +1,13 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Phaser/gameobjects/ScrollZone.ts" />
 (function () {
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
     function init() {
-        myGame.loader.addImageFile('nashwan', 'assets/sprites/xenon2_ship.png');
-        myGame.loader.addImageFile('starfield', 'assets/misc/starfield.jpg');
-        myGame.loader.addImageFile('jet', 'assets/sprites/particle1.png');
-        myGame.loader.addImageFile('bullet', 'assets/misc/bullet1.png');
-        myGame.loader.load();
+        game.load.image('nashwan', 'assets/sprites/xenon2_ship.png');
+        game.load.image('starfield', 'assets/misc/starfield.jpg');
+        game.load.image('jet', 'assets/sprites/particle1.png');
+        game.load.image('bullet', 'assets/misc/bullet1.png');
+        game.load.start();
     }
     var scroller;
     var emitter;
@@ -17,32 +17,41 @@
     var fireRate = 0;
     var shipMotion;
     function create() {
-        scroller = myGame.createScrollZone('starfield', 0, 0, 1024, 1024);
-        emitter = myGame.createEmitter(myGame.stage.centerX + 16, myGame.stage.centerY + 12);
-        emitter.makeParticles('jet', 250, 0, false, 0);
+        scroller = game.add.scrollZone('starfield', 0, 0, 1024, 1024);
+        emitter = game.add.emitter(game.stage.centerX + 16, game.stage.centerY + 12);
+        emitter.makeParticles('jet', 250, false, 0);
         emitter.setRotation(0, 0);
-        bullets = myGame.createGroup(50);
+        //  Looks like a smoke trail!
+        //emitter.globalCompositeOperation = 'xor';
+        //  Looks way cool :)
+        emitter.texture.globalCompositeOperation = 'lighter';
+        bullets = game.add.group(50);
         //  Create our bullet pool
         for(var i = 0; i < 50; i++) {
-            var tempBullet = new Phaser.Sprite(myGame, myGame.stage.centerX, myGame.stage.centerY, 'bullet');
+            var tempBullet = new Phaser.Sprite(game, game.stage.centerX, game.stage.centerY, 'bullet');
             tempBullet.exists = false;
-            tempBullet.rotationOffset = 90;
-            tempBullet.setBounds(-100, -100, 900, 700);
-            tempBullet.outOfBoundsAction = Phaser.GameObject.OUT_OF_BOUNDS_KILL;
+            tempBullet.transform.rotationOffset = 90;
+            //tempBullet.setBounds(-100, -100, 900, 700);
+            //tempBullet.outOfBoundsAction = Phaser.GameObject.OUT_OF_BOUNDS_KILL;
             bullets.add(tempBullet);
         }
-        ship = myGame.createSprite(myGame.stage.centerX, myGame.stage.centerY, 'nashwan');
+        ship = game.add.sprite(game.stage.centerX, game.stage.centerY, 'nashwan', Phaser.Types.BODY_DYNAMIC);
+        ship.transform.origin.setTo(0.5, 0.5);
         //  We do this because the ship was drawn facing up, but 0 degrees is pointing to the right
-        ship.rotationOffset = 90;
+        ship.transform.rotationOffset = 90;
+        game.input.onDown.add(test, this);
+    }
+    function test(event) {
+        game.stage.scale.startFullScreen();
     }
     function update() {
-        ship.angularVelocity = 0;
-        if(myGame.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            ship.angularVelocity = -200;
-        } else if(myGame.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            ship.angularVelocity = 200;
+        ship.body.angularVelocity = 0;
+        if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+            ship.body.angularVelocity = -200;
+        } else if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+            ship.body.angularVelocity = 200;
         }
-        if(myGame.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+        if(game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
             speed += 0.1;
             if(speed > 10) {
                 speed = 10;
@@ -53,7 +62,7 @@
                 speed = 0;
             }
         }
-        shipMotion = myGame.motion.velocityFromAngle(ship.angle, speed);
+        shipMotion = game.motion.velocityFromAngle(ship.rotation, speed);
         scroller.setSpeed(shipMotion.x, shipMotion.y);
         //  emit particles
         if(speed > 2) {
@@ -63,25 +72,28 @@
             emitter.setYSpeed(-(shipMotion.y * 20), -(shipMotion.y * 30));
             emitter.emitParticle();
         }
-        if(myGame.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+        if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
             fire();
         }
     }
+    function render() {
+        //ship.body.renderDebugInfo(32, 32);
+            }
     function recycleBullet(bullet) {
         if(bullet.exists && bullet.x < -40 || bullet.x > 840 || bullet.y < -40 || bullet.y > 640) {
             bullet.exists = false;
         }
     }
     function fire() {
-        if(myGame.time.now > fireRate) {
+        if(game.time.now > fireRate) {
             var b = bullets.getFirstAvailable();
             b.x = ship.x;
             b.y = ship.y - 26;
-            var bulletMotion = myGame.motion.velocityFromAngle(ship.angle, 400);
+            var bulletMotion = game.motion.velocityFromAngle(ship.rotation, 400);
             b.revive();
-            b.angle = ship.angle;
-            b.velocity.setTo(bulletMotion.x, bulletMotion.y);
-            fireRate = myGame.time.now + 100;
+            b.rotation = ship.rotation;
+            b.body.velocity.setTo(bulletMotion.x, bulletMotion.y);
+            fireRate = game.time.now + 100;
         }
     }
 })();

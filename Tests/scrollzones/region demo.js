@@ -1,15 +1,15 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Phaser/gameobjects/ScrollZone.ts" />
 (function () {
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        myGame.loader.addImageFile('angelDawn', 'assets/pics/game14_angel_dawn.png');
-        myGame.loader.load();
+        game.load.image('angelDawn', 'assets/pics/game14_angel_dawn.png');
+        game.load.start();
     }
     var scroller;
     function create() {
         //  This creates our ScrollZone centered in the middle of the stage.
-        scroller = myGame.createScrollZone('angelDawn', myGame.stage.centerX - 320, 100);
+        scroller = game.add.scrollZone('angelDawn', game.stage.centerX - 320, 100);
         //  By default we won't scroll the full image, but we will create 3 ScrollRegions within it:
         //  This creates a ScrollRegion which can be thought of as a rectangle within the ScrollZone that can be scrolled
         //  independantly - this one scrolls the image of the spacemans head

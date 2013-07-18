@@ -12,10 +12,8 @@ module Phaser {
     export class Device {
 
         /**
-        *
-        * @constructor
-        * @return {Device} This Object
-        */
+         * Device constructor
+         */
         constructor() {
 
             this._checkAudio();
@@ -29,260 +27,247 @@ module Phaser {
 
         //  Operating System
 
+        /**
+         * Is running desktop?
+         * @type {boolean}
+         */
         public desktop: bool = false;
 
         /**
-        * 
-        * @property iOS 
-        * @type Boolean
-        */
+         * Is running on iOS?
+         * @type {boolean}
+         */
         public iOS: bool = false;
 
-        /**
-        * 
-        * @property android
-        * @type Boolean
-        */
+         /**
+          * Is running on android?
+          * @type {boolean}
+          */
         public android: bool = false;
 
         /**
-        * 
-        * @property chromeOS
-        * @type Boolean
-        */
+         * Is running on chromeOS?
+         * @type {boolean}
+         */
         public chromeOS: bool = false;
 
         /**
-        * 
-        * @property linux
-        * @type Boolean
-        */
+         * Is running on linux?
+         * @type {boolean}
+         */
         public linux: bool = false;
 
         /**
-        * 
-        * @property maxOS
-        * @type Boolean
-        */
+         * Is running on maxOS?
+         * @type {boolean}
+         */
         public macOS: bool = false;
 
         /**
-        * 
-        * @property windows
-        * @type Boolean
-        */
+         * Is running on windows?
+         * @type {boolean}
+         */
         public windows: bool = false;
 
         //  Features
 
         /**
-        * 
-        * @property canvas
-        * @type Boolean
-        */
+         * Is canvas available?
+         * @type {boolean}
+         */
         public canvas: bool = false;
 
         /**
-        * 
-        * @property file
-        * @type Boolean
-        */
+         * Is file available?
+         * @type {boolean}
+         */
         public file: bool = false;
 
         /**
-        * 
-        * @property fileSystem
-        * @type Boolean
-        */
+         * Is fileSystem available?
+         * @type {boolean}
+         */
         public fileSystem: bool = false;
 
         /**
-        * 
-        * @property localStorage
-        * @type Boolean
-        */
+         * Is localStorage available?
+         * @type {boolean}
+         */
         public localStorage: bool = false;
 
         /**
-        * 
-        * @property webGL
-        * @type Boolean
-        */
+         * Is webGL available?
+         * @type {boolean}
+         */
         public webGL: bool = false;
 
         /**
-        * 
-        * @property worker
-        * @type Boolean
-        */
+         * Is worker available?
+         * @type {boolean}
+         */
         public worker: bool = false;
 
         /**
-        * 
-        * @property touch
-        * @type Boolean
-        */
+         * Is touch available?
+         * @type {boolean}
+         */
         public touch: bool = false;
 
         /**
-        * 
-        * @property css3D
-        * @type Boolean
-        */
+         * Is mspointer available?
+         * @type {boolean}
+         */
+        public mspointer: bool = false;
+
+        /**
+         * Is css3D available?
+         * @type {boolean}
+         */
         public css3D: bool = false;
 
         //  Browser
 
         /**
-        * 
-        * @property arora
-        * @type Boolean
-        */
+         * Is running in arora?
+         * @type {boolean}
+         */
         public arora: bool = false;
 
         /**
-        * 
-        * @property chrome
-        * @type Boolean
-        */
+         * Is running in chrome?
+         * @type {boolean}
+         */
         public chrome: bool = false;
 
         /**
-        * 
-        * @property epiphany
-        * @type Boolean
-        */
+         * Is running in epiphany?
+         * @type {boolean}
+         */
         public epiphany: bool = false;
 
         /**
-        * 
-        * @property firefox
-        * @type Boolean
-        */
+         * Is running in firefox?
+         * @type {boolean}
+         */
         public firefox: bool = false;
 
         /**
-        * 
-        * @property ie
-        * @type Boolean
-        */
+         * Is running in ie?
+         * @type {boolean}
+         */
         public ie: bool = false;
 
         /**
-        * 
-        * @property ieVersion
-        * @type Number
-        */
+         * Version of ie?
+         * @type Number
+         */
         public ieVersion: number = 0;
 
         /**
-        * 
-        * @property mobileSafari
-        * @type Boolean
-        */
+         * Is running in mobileSafari?
+         * @type {boolean}
+         */
         public mobileSafari: bool = false;
 
         /**
-        * 
-        * @property midori
-        * @type Boolean
-        */
+         * Is running in midori?
+         * @type {boolean}
+         */
         public midori: bool = false;
 
         /**
-        * 
-        * @property opera
-        * @type Boolean
-        */
+         * Is running in opera?
+         * @type {boolean}
+         */
         public opera: bool = false;
 
         /**
-        * 
-        * @property safari
-        * @type Boolean 
-        */
+         * Is running in safari?
+         * @type {boolean}
+         */
         public safari: bool = false;
         public webApp: bool = false;
 
         //  Audio
 
         /**
-        * 
-        * @property audioData
-        * @type Boolean
-        */
+         * Are Audio tags available?
+         * @type {boolean}
+         */
         public audioData: bool = false;
 
         /**
-        * 
-        * @property webaudio
-        * @type Boolean
-        */
-        public webaudio: bool = false;
+         * Is the WebAudio API available?
+         * @type {boolean}
+         */
+        public webAudio: bool = false;
 
         /**
-        * 
-        * @property ogg
-        * @type Boolean
-        */
+         * Can this device play ogg files?
+         * @type {boolean}
+         */
         public ogg: bool = false;
 
         /**
-        * 
-        * @property mp3
-        * @type Boolean
-        */
+         * Can this device play opus files?
+         * @type {boolean}
+         */
+        public opus: bool = false;
+
+        /**
+         * Can this device play mp3 files?
+         * @type {boolean}
+         */
         public mp3: bool = false;
 
         /**
-        * 
-        * @property wav
-        * @type Boolean
-        */
+         * Can this device play wav files?
+         * @type {boolean}
+         */
         public wav: bool = false;
 
         /**
-        * 
-        * @property m4a
-        * @type Boolean
-        */
+         * Can this device play m4a files?
+         * @type {boolean}
+         */
         public m4a: bool = false;
+
+        /**
+         * Can this device play webm files?
+         * @type {boolean}
+         */
+        public webm: bool = false;
 
         //  Device
 
         /**
-        * 
-        * @property iPhone
-        * @type Boolean
-        */
+         * Is running on iPhone?
+         * @type {boolean}
+         */
         public iPhone: bool = false;
 
         /**
-        * 
-        * @property iPhone4
-        * @type Boolean
-        */
+         * Is running on iPhone4?
+         * @type {boolean}
+         */
         public iPhone4: bool = false;
 
         /**
-        * 
-        * @property iPad
-        * @type Boolean
-        */
+         * Is running on iPad?
+         * @type {boolean}
+         */
         public iPad: bool = false;
 
         /**
-        * 
-        * @property pixelRatio
-        * @type Number
-        */
+         * PixelRatio of the host device?
+         * @type Number
+         */
         public pixelRatio: number = 0;
 
         /**
-        * 
-        * @method _checkOS
-        * @private
-        */
+         * Check which OS is game running on.
+         * @private
+         */
         private _checkOS() {
 
             var ua = navigator.userAgent;
@@ -320,10 +305,9 @@ module Phaser {
         }
 
         /**
-        * 
-        * @method _checkFeatures
-        * @private
-        */
+         * Check HTML5 features of the host environment.
+         * @private
+         */
         private _checkFeatures() {
 
             this.canvas = !!window['CanvasRenderingContext2D'];
@@ -347,13 +331,17 @@ module Phaser {
                 this.touch = true;
             }
 
+            if (window.navigator.msPointerEnabled)
+            {
+                this.mspointer = true;
+            }
+
         }
 
         /**
-        * 
-        * @method _checkBrowser
-        * @private
-        */
+         * Check what browser is game running in.
+         * @private
+         */
         private _checkBrowser() {
 
             var ua = navigator.userAgent;
@@ -379,7 +367,7 @@ module Phaser {
                 this.mobileSafari = true;
             }
             else if (/MSIE (\d+\.\d+);/.test(ua))
-                {
+            {
                 this.ie = true;
                 this.ieVersion = parseInt(RegExp.$1);
             }
@@ -404,15 +392,41 @@ module Phaser {
 
         }
 
+        public canPlayAudio(type: string): bool {
+
+            if (type == 'mp3' && this.mp3)
+            {
+                return true;
+            }
+            else if (type == 'ogg' && (this.ogg || this.opus))
+            {
+                return true;
+            }
+            else if (type == 'm4a' && this.m4a)
+            {
+                return true;
+            }
+            else if (type == 'wav' && this.wav)
+            {
+                return true;
+            }
+            else if (type == 'webm' && this.webm)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
         /**
-        * 
-        * @method _checkAudio
-        * @private
-        */
+         * Check audio support.
+         * @private
+         */
         private _checkAudio() {
 
             this.audioData = !!(window['Audio']);
-            this.webaudio = !!(window['webkitAudioContext'] || window['AudioContext']);
+            this.webAudio = !!(window['webkitAudioContext'] || window['AudioContext']);
 
             var audioElement: HTMLAudioElement = <HTMLAudioElement> document.createElement('audio');
             var result = false;
@@ -424,6 +438,11 @@ module Phaser {
                     if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''))
                     {
                         this.ogg = true;
+                    }
+
+                    if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, ''))
+                    {
+                        this.opus = true;
                     }
 
                     if (audioElement.canPlayType('audio/mpeg;').replace(/^no$/, ''))
@@ -443,16 +462,20 @@ module Phaser {
                     {
                         this.m4a = true;
                     }
+
+                    if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, ''))
+                    {
+                        this.webm = true;
+                    }
                 }
             } catch (e) { }
 
         }
 
         /**
-        * 
-        * @method _checkDevice
-        * @private
-        */
+         * Check PixelRatio of devices.
+         * @private
+         */
         private _checkDevice() {
 
             this.pixelRatio = window['devicePixelRatio'] || 1;
@@ -463,10 +486,9 @@ module Phaser {
         }
 
         /**
-        * 
-        * @method _checkCSS3D
-        * @private
-        */
+         * Check whether the host environment support 3D CSS.
+         * @private
+         */
         private _checkCSS3D() {
 
             var el = document.createElement('p');
@@ -497,11 +519,31 @@ module Phaser {
 
         }
 
+        public isConsoleOpen(): bool {
+
+            if (window.console && window.console['firebug'])
+            {
+                return true;
+            }
+
+            if (window.console)
+            {
+                console.profile(); 
+                console.profileEnd(); 
+            
+                if (console.clear) console.clear();
+            
+                return console['profiles'].length > 0;
+            }
+
+            return false;
+
+        }
+
         /**
-        * 
-        * @method getAll
-        * @return {String}
-        */
+         * Get all informations of host device.
+         * @return {string} Informations in a string.
+         */
         public getAll(): string {
 
             var output: string = '';
@@ -541,6 +583,7 @@ module Phaser {
             output = output.concat('WebGL: ' + this.webGL + '\n');
             output = output.concat('Worker: ' + this.worker + '\n');
             output = output.concat('Touch: ' + this.touch + '\n');
+            output = output.concat('MSPointer: ' + this.mspointer + '\n');
             output = output.concat('CSS 3D: ' + this.css3D + '\n');
 
             output = output.concat('\n');

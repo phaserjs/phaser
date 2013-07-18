@@ -1,13 +1,13 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Phaser/gameobjects/ScrollZone.ts" />
 (function () {
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
     function init() {
-        myGame.loader.addImageFile('starray', 'assets/pics/auto_scroll_landscape.png');
-        myGame.loader.load();
+        game.load.image('starray', 'assets/pics/auto_scroll_landscape.png');
+        game.load.start();
     }
     function create() {
-        var zone = myGame.createScrollZone('starray');
+        var zone = game.add.scrollZone('starray');
         //  Hide the default region (the full image)
         zone.currentRegion.visible = false;
         var y = 0;

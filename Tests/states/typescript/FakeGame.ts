@@ -14,23 +14,23 @@ class FakeGame extends State {
 
     public init() {
 
-        this.loader.addImageFile('track', '../../assets/games/f1/track.png');
-        this.loader.addImageFile('car', '../../assets/games/f1/car1.png');
+        this.load.image('track', '../../assets/games/f1/track.png');
+        this.load.image('car', '../../assets/games/f1/car1.png');
 
-        this.loader.load();
+        this.load.start();
 
     }
 
     public create() {
 
         this.camera.setBounds(0, 0, this.stage.width, this.stage.height);
-        this.createSprite(0, 0, 'track');
+        this.add.sprite(0, 0, 'track');
 
-        this.car = this.game.createSprite(180, 298, 'car');
+        this.car = this.game.add.sprite(180, 298, 'car');
         this.car.rotation = 180;
         this.car.maxVelocity.setTo(150, 150);
 
-        this.bigCam = this.createCamera(640, 0, 100, 200);
+        this.bigCam = this.add.camera(640, 0, 100, 200);
         this.bigCam.follow(this.car, Camera.STYLE_LOCKON);
         this.bigCam.setBounds(0, 0, this.stage.width, this.stage.height);
         this.bigCam.showBorder = true;

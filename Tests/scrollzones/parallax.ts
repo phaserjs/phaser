@@ -3,19 +3,19 @@
 
 (function () {
 
-    var myGame = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
 
     function init() {
 
-        myGame.loader.addImageFile('starray', 'assets/pics/auto_scroll_landscape.png');
+        game.load.image('starray', 'assets/pics/auto_scroll_landscape.png');
 
-        myGame.loader.load();
+        game.load.start();
 
     }
 
     function create() {
 
-        var zone: Phaser.ScrollZone = myGame.createScrollZone('starray');
+        var zone: Phaser.ScrollZone = game.add.scrollZone('starray');
 
         //  Hide the default region (the full image)
         zone.currentRegion.visible = false;
