@@ -19,22 +19,27 @@
         game.load.start();
     }
     function create() {
-        // background images
+        // Add background images.
         game.add.sprite(0, 0, 'sky');
         game.add.sprite(0, 360, 'ground');
         game.add.sprite(0, 400, 'river');
 
-        // zombie spirte
+        // Create zombie spirte
         zombie = game.add.sprite(480, 336, 'zombie');
         zombie.animations.add('walk', null, 30, true);
         zombie.animations.play('walk');
 
-        // create a small camera which looks at the zombie
+        // Create a small camera which looks at the zombie.
+        // Use the same settings as the default camera.
         zombieCamera = game.add.camera(0, 0, 800, 600);
+        // Use x and y properties to set the target area.
         zombieCamera.x = 420;
         zombieCamera.y = 240;
-        zombieCamera.setPosition(0, 0);
+        // Resize the camera so that it will only look at 200x200 area.
         zombieCamera.setSize(200, 200);
+        // Use setPosition() method to set where the camera rendered
+        // on the screen.
+        zombieCamera.setPosition(0, 0);
     }
     function update() {
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
@@ -52,8 +57,10 @@
         // zombie wandering update
         zombie.x += walkSpeed * direction;
         if (zombie.x > 540 || zombie.x < 440) {
+            // Change walk direction.
             direction *= -1;
-            zombie.transform.scale.setTo(direction, 1);
+            // Flip zombie's animation.
+            zombie.texture.flippedX = !zombie.texture.flippedX;
         }
     }
     function render() {
