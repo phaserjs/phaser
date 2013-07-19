@@ -1326,6 +1326,7 @@ module Phaser {
         private _dh;
         /**
         * Controls the CSS3 Filters applied to the textures canvas object.
+        * Only really useful if you attach this canvas to the DOM.
         * @type {Phaser.Components.CSS3Filters}
         */
         public css3: Components.CSS3Filters;
