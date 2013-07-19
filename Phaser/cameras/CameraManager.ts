@@ -27,8 +27,8 @@ module Phaser {
 
             this._cameras = [];
 
-            this.default = this.addCamera(x, y, width, height);
-            this.current = this.default;
+            this.defaultCamera = this.addCamera(x, y, width, height);
+            this.current = this.defaultCamera;
 
         }
 
@@ -68,7 +68,7 @@ module Phaser {
         /**
          * The default created camera.
          */
-        public default: Camera;
+        public defaultCamera: Camera;
 
         /**
          * Get all the cameras.

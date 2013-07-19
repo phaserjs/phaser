@@ -9238,8 +9238,8 @@ var Phaser;
                     break;
                 case 'audio':
                     file.url = this.getAudioURL(file.url);
-                    console.log('Loader audio');
-                    console.log(file.url);
+                    //console.log('Loader audio');
+                    //console.log(file.url);
                     if(file.url !== null) {
                         //  WebAudio or Audio Tag?
                         if(this._game.sound.usingWebAudio) {
@@ -9255,14 +9255,13 @@ var Phaser;
                         } else if(this._game.sound.usingAudioTag) {
                             if(this._game.sound.touchLocked) {
                                 //  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
-                                console.log('Audio is touch locked');
+                                //console.log('Audio is touch locked');
                                 file.data = new Audio();
                                 file.data.name = file.key;
                                 file.data.preload = 'auto';
                                 file.data.src = file.url;
                                 this.fileComplete(file.key);
                             } else {
-                                console.log('Audio not touch locked');
                                 file.data = new Audio();
                                 file.data.name = file.key;
                                 file.data.onerror = function () {
@@ -9297,8 +9296,8 @@ var Phaser;
                 extension = urls[i].toLowerCase();
                 extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
                 if(this._game.device.canPlayAudio(extension)) {
-                    console.log('getAudioURL', urls[i]);
-                    console.log(urls[i]);
+                    //console.log('getAudioURL', urls[i]);
+                    //console.log(urls[i]);
                     return urls[i];
                 }
             }
@@ -9557,7 +9556,6 @@ var Phaser;
         function (key, url, data, webAudio, audioTag) {
             if (typeof webAudio === "undefined") { webAudio = true; }
             if (typeof audioTag === "undefined") { audioTag = false; }
-            console.log('Cache addSound: ' + key + ' url: ' + url, webAudio, audioTag);
             var locked = this._game.sound.touchLocked;
             var decoded = false;
             if(audioTag) {
@@ -9575,7 +9573,6 @@ var Phaser;
         };
         Cache.prototype.reloadSound = function (key) {
             var _this = this;
-            console.log('reloadSound', key);
             if(this._sounds[key]) {
                 this._sounds[key].data.src = this._sounds[key].url;
                 this._sounds[key].data.addEventListener('canplaythrough', function () {
@@ -9585,7 +9582,6 @@ var Phaser;
             }
         };
         Cache.prototype.reloadSoundComplete = function (key) {
-            console.log('reloadSoundComplete', key);
             if(this._sounds[key]) {
                 this._sounds[key].locked = false;
                 this.onSoundUnlock.dispatch(key);
@@ -9602,7 +9598,6 @@ var Phaser;
         * @param data {object} Extra sound data.
         */
         function (key, data) {
-            console.log('decoded sound', key);
             this._sounds[key].data = data;
             this._sounds[key].decoded = true;
             this._sounds[key].isDecoding = false;
@@ -11468,8 +11463,8 @@ var Phaser;
             this._sortIndex = '';
             this._game = game;
             this._cameras = [];
-            this.default = this.addCamera(x, y, width, height);
-            this.current = this.default;
+            this.defaultCamera = this.addCamera(x, y, width, height);
+            this.current = this.defaultCamera;
         }
         CameraManager.CAMERA_TYPE_ORTHOGRAPHIC = 0;
         CameraManager.CAMERA_TYPE_ISOMETRIC = 1;
@@ -13088,6 +13083,21 @@ var Phaser;
             this.mapData = [];
             this._tempTileBlock = [];
         }
+        TilemapLayer.prototype.putTileWorldXY = /**
+        * Set a specific tile with its x and y in tiles.
+        * @param x {number} X position of this tile in world coordinates.
+        * @param y {number} Y position of this tile in world coordinates.
+        * @param index {number} The index of this tile type in the core map data.
+        */
+        function (x, y, index) {
+            x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+            if(y >= 0 && y < this.mapData.length) {
+                if(x >= 0 && x < this.mapData[y].length) {
+                    this.mapData[y][x] = index;
+                }
+            }
+        };
         TilemapLayer.prototype.putTile = /**
         * Set a specific tile with its x and y in tiles.
         * @param x {number} X position of this tile.
@@ -13095,8 +13105,6 @@ var Phaser;
         * @param index {number} The index of this tile type in the core map data.
         */
         function (x, y, index) {
-            x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-            y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
             if(y >= 0 && y < this.mapData.length) {
                 if(x >= 0 && x < this.mapData[y].length) {
                     this.mapData[y][x] = index;
@@ -14120,6 +14128,10 @@ var Phaser;
             * Reference to AudioContext instance.
             */
             this.context = null;
+            /**
+            * Decoded data buffer / Audio tag.
+            */
+            this._buffer = null;
             this._muted = false;
             this.usingWebAudio = false;
             this.usingAudioTag = false;
@@ -14135,6 +14147,7 @@ var Phaser;
             this.isPlaying = false;
             this.currentMarker = '';
             this.pendingPlayback = false;
+            this.override = false;
             this.game = game;
             this.usingWebAudio = this.game.sound.usingWebAudio;
             this.usingAudioTag = this.game.sound.usingAudioTag;
@@ -14150,7 +14163,7 @@ var Phaser;
                 this.gainNode.gain.value = volume * this.game.sound.volume;
                 this.gainNode.connect(this.masterGainNode);
             } else {
-                if(this.game.cache.getSound(key).locked == false) {
+                if(this.game.cache.getSound(key) && this.game.cache.getSound(key).locked == false) {
                     this._sound = this.game.cache.getSoundData(key);
                     this.totalDuration = this._sound.duration;
                 } else {
@@ -14168,6 +14181,7 @@ var Phaser;
             this.onLoop = new Phaser.Signal();
             this.onStop = new Phaser.Signal();
             this.onMute = new Phaser.Signal();
+            this.onMarkerComplete = new Phaser.Signal();
         }
         Sound.prototype.soundHasUnlocked = function (key) {
             if(key == this.key) {
@@ -14207,19 +14221,28 @@ var Phaser;
         };
         Sound.prototype.update = function () {
             if(this.pendingPlayback && this.game.cache.isSoundReady(this.key)) {
-                console.log('pending over');
                 this.pendingPlayback = false;
                 this.play(this._tempMarker, this._tempPosition, this._tempVolume, this._tempLoop);
             }
             if(this.isPlaying) {
                 this.currentTime = this.game.time.now - this.startTime;
                 if(this.currentTime >= this.duration) {
+                    console.log(this.currentMarker, 'has hit duration');
                     if(this.usingWebAudio) {
                         if(this.loop) {
+                            console.log('loop1');
+                            //  won't work with markers, needs to reset the position
                             this.onLoop.dispatch(this);
-                            this.currentTime = 0;
-                            this.startTime = this.game.time.now;
+                            if(this.currentMarker == '') {
+                                console.log('loop2');
+                                this.currentTime = 0;
+                                this.startTime = this.game.time.now;
+                            } else {
+                                console.log('loop3');
+                                this.play(this.currentMarker, 0, this.volume, true, true);
+                            }
                         } else {
+                            console.log('stopping, no loop for marker');
                             this.stop();
                         }
                     } else {
@@ -14246,9 +14269,23 @@ var Phaser;
             if (typeof volume === "undefined") { volume = 1; }
             if (typeof loop === "undefined") { loop = false; }
             if (typeof forceRestart === "undefined") { forceRestart = false; }
-            if(this.isPlaying == true && forceRestart == false) {
+            console.log('play', marker, 'current is', this.currentMarker);
+            if(this.isPlaying == true && forceRestart == false && this.override == false) {
                 //  Use Restart instead
                 return;
+            }
+            if(this.isPlaying && this.override) {
+                console.log('asked to play', marker, 'but already playing', this.currentMarker);
+                if(this.usingWebAudio) {
+                    if(typeof this._sound.stop === 'undefined') {
+                        this._sound.noteOff(0);
+                    } else {
+                        this._sound.stop(0);
+                    }
+                } else if(this.usingAudioTag) {
+                    this._sound.pause();
+                    this._sound.currentTime = 0;
+                }
             }
             this.currentMarker = marker;
             if(marker !== '' && this.markers[marker]) {
@@ -14256,29 +14293,39 @@ var Phaser;
                 this.volume = this.markers[marker].volume;
                 this.loop = this.markers[marker].loop;
                 this.duration = this.markers[marker].duration * 1000;
+                console.log('marker info loaded', this.loop, this.duration);
+                this._tempMarker = marker;
+                this._tempPosition = this.position;
+                this._tempVolume = this.volume;
+                this._tempLoop = this.loop;
             } else {
                 this.position = position;
                 this.volume = volume;
                 this.loop = loop;
                 this.duration = 0;
+                this._tempMarker = marker;
+                this._tempPosition = position;
+                this._tempVolume = volume;
+                this._tempLoop = loop;
             }
-            this._tempMarker = marker;
-            this._tempPosition = position;
-            this._tempVolume = volume;
-            this._tempLoop = loop;
             if(this.usingWebAudio) {
                 //  Does the sound need decoding?
                 if(this.game.cache.isSoundDecoded(this.key)) {
                     //  Do we need to do this every time we play? How about just if the buffer is empty?
-                    this._buffer = this.game.cache.getSoundData(this.key);
+                    if(this._buffer == null) {
+                        this._buffer = this.game.cache.getSoundData(this.key);
+                    }
+                    //if (this._sound == null)
+                    //{
                     this._sound = this.context.createBufferSource();
                     this._sound.buffer = this._buffer;
                     this._sound.connect(this.gainNode);
                     this.totalDuration = this._sound.buffer.duration;
+                    //}
                     if(this.duration == 0) {
                         this.duration = this.totalDuration * 1000;
                     }
-                    if(this.loop) {
+                    if(this.loop && marker == '') {
                         this._sound.loop = true;
                     }
                     //  Useful to cache this somewhere perhaps?
@@ -14293,25 +14340,26 @@ var Phaser;
                     this.currentTime = 0;
                     this.stopTime = this.startTime + this.duration;
                     this.onPlay.dispatch(this);
+                    console.log('playing, start', this.startTime, 'stop');
                 } else {
                     this.pendingPlayback = true;
-                    if(this.game.cache.getSound(this.key).isDecoding == false) {
+                    if(this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding == false) {
                         this.game.sound.decode(this.key, this);
                     }
                 }
             } else {
-                console.log('Sound play Audio');
+                //console.log('Sound play Audio');
                 if(this.game.cache.getSound(this.key).locked) {
-                    console.log('tried playing locked sound, pending set, reload started');
+                    //console.log('tried playing locked sound, pending set, reload started');
                     this.game.cache.reloadSound(this.key);
                     this.pendingPlayback = true;
                 } else {
-                    console.log('sound not locked, state?', this._sound.readyState);
+                    //console.log('sound not locked, state?', this._sound.readyState);
                     if(this._sound && this._sound.readyState == 4) {
                         if(this.duration == 0) {
                             this.duration = this.totalDuration * 1000;
                         }
-                        console.log('playing', this._sound);
+                        //console.log('playing', this._sound);
                         this._sound.currentTime = this.position;
                         this._sound.muted = this._muted;
                         this._sound.volume = this._volume;
@@ -14364,6 +14412,7 @@ var Phaser;
         * Stop playing this sound.
         */
         function () {
+            console.log('Sound.stop', this.currentMarker);
             if(this.isPlaying && this._sound) {
                 if(this.usingWebAudio) {
                     if(typeof this._sound.stop === 'undefined') {
@@ -14375,10 +14424,11 @@ var Phaser;
                     this._sound.pause();
                     this._sound.currentTime = 0;
                 }
-                this.isPlaying = false;
-                this.currentMarker = '';
-                this.onStop.dispatch(this);
             }
+            this.isPlaying = false;
+            var prevMarker = this.currentMarker;
+            this.currentMarker = '';
+            this.onStop.dispatch(this, prevMarker);
         };
         Object.defineProperty(Sound.prototype, "mute", {
             get: /**
@@ -14482,7 +14532,7 @@ var Phaser;
                 this.channels = 1;
             }
             if(this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock)) {
-                console.log('iOS Touch Locked');
+                //console.log('iOS Touch Locked');
                 this.game.input.touch.callbackContext = this;
                 this.game.input.touch.touchStartCallback = this.unlock;
                 this.game.input.mouse.callbackContext = this;
@@ -14534,9 +14584,9 @@ var Phaser;
             if(this.touchLocked == false) {
                 return;
             }
-            console.log('SoundManager touch unlocked');
+            //console.log('SoundManager touch unlocked');
             if(this.game.device.webAudio && (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == false)) {
-                console.log('create empty buffer');
+                //console.log('create empty buffer');
                 // Create empty buffer and play it
                 var buffer = this.context.createBuffer(1, 1, 22050);
                 this._unlockSource = this.context.createBufferSource();
@@ -14545,7 +14595,7 @@ var Phaser;
                 this._unlockSource.noteOn(0);
             } else {
                 //  Create an Audio tag?
-                console.log('create audio tag');
+                //console.log('create audio tag');
                 this.touchLocked = false;
                 this._unlockSource = null;
                 this.game.input.touch.callbackContext = null;
@@ -14936,7 +14986,7 @@ var Phaser;
             var _this = this;
             //  We can't do anything about the status bars in iPads, web apps or desktops
             if(this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false) {
-                document.documentElement.style.minHeight = '5000px';
+                document.documentElement.style.minHeight = '2000px';
                 this._startHeight = window.innerHeight;
                 if(this._game.device.android && this._game.device.chrome == false) {
                     window.scrollTo(0, 1);
@@ -14945,7 +14995,7 @@ var Phaser;
                 }
             }
             if(this._check == null) {
-                this._iterations = 40;
+                this._iterations = 10;
                 this._check = window.setInterval(function () {
                     return _this.setScreenSize();
                 }, 10);
@@ -15425,16 +15475,12 @@ var Phaser;
         */
         function (event) {
             if(event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true) {
-                if(this._game.paused == false && this.disablePauseScreen == false) {
+                if(this._game.paused == false) {
                     this.pauseGame();
-                } else {
-                    this._game.paused = true;
                 }
             } else {
-                if(this._game.paused == true && this.disablePauseScreen == false) {
+                if(this._game.paused == true) {
                     this.resumeGame();
-                } else {
-                    this._game.paused = false;
                 }
             }
         };

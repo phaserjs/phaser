@@ -183,8 +183,16 @@ module Phaser {
 
             if (this.clear)
             {
-                //  implement dirty rect? could take up more cpu time than it saves. needs benching.
-                this.context.clearRect(0, 0, this.width, this.height);
+                //  A 'fix' for the horrendous Android stock browser bug: https://code.google.com/p/android/issues/detail?id=39247
+                if (this._game.device.android && this._game.device.chrome == false)
+                {
+                    this.context.fillStyle = 'rgb(0,0,0)';
+                    this.context.fillRect(0, 0, this.width, this.height);
+                }
+                else
+                {
+                    this.context.clearRect(0, 0, this.width, this.height);
+                }
             }
 
             if (this._game.paused && this.scale.incorrectOrientation)
@@ -215,24 +223,16 @@ module Phaser {
 
             if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
             {
-                if (this._game.paused == false && this.disablePauseScreen == false)
+                if (this._game.paused == false)
                 {
                     this.pauseGame();
-                }
-                else
-                {
-                    this._game.paused = true;
                 }
             }
             else
             {
-                if (this._game.paused == true && this.disablePauseScreen == false)
+                if (this._game.paused == true)
                 {
                     this.resumeGame();
-                }
-                else
-                {
-                    this._game.paused = false;
                 }
             }
 

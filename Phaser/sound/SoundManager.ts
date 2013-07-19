@@ -30,7 +30,7 @@ module Phaser {
 
             if (this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
             {
-                console.log('iOS Touch Locked');
+                //console.log('iOS Touch Locked');
                 this.game.input.touch.callbackContext = this;
                 this.game.input.touch.touchStartCallback = this.unlock;
                 this.game.input.mouse.callbackContext = this;
@@ -146,11 +146,11 @@ module Phaser {
                 return;
             }
 
-            console.log('SoundManager touch unlocked');
+            //console.log('SoundManager touch unlocked');
 
             if (this.game.device.webAudio && (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == false))
             {
-                console.log('create empty buffer');
+                //console.log('create empty buffer');
                 // Create empty buffer and play it
                 var buffer = this.context.createBuffer(1, 1, 22050);
                 this._unlockSource = this.context.createBufferSource();
@@ -161,7 +161,7 @@ module Phaser {
             else
             {
                 //  Create an Audio tag?
-                console.log('create audio tag');
+                //console.log('create audio tag');
                 this.touchLocked = false;
                 this._unlockSource = null;
                 this.game.input.touch.callbackContext = null;
@@ -181,6 +181,8 @@ module Phaser {
 
         public set mute(value: bool) {
 
+            console.log('SoundManager mute', value);
+
             if (value)
             {
                 if (this._muted)
@@ -199,7 +201,7 @@ module Phaser {
                 //  Loop through sounds
                 for (var i = 0; i < this._sounds.length; i++)
                 {
-                    if (this._sounds[i])
+                    if (this._sounds[i].usingAudioTag)
                     {
                         this._sounds[i].mute = true;
                     }
@@ -222,7 +224,7 @@ module Phaser {
                 //  Loop through sounds
                 for (var i = 0; i < this._sounds.length; i++)
                 {
-                    if (this._sounds[i])
+                    if (this._sounds[i].usingAudioTag)
                     {
                         this._sounds[i].mute = false;
                     }

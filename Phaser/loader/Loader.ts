@@ -330,8 +330,8 @@ module Phaser {
                 case 'audio':
 
                     file.url = this.getAudioURL(file.url);
-                    console.log('Loader audio');
-                    console.log(file.url);
+                    //console.log('Loader audio');
+                    //console.log(file.url);
 
                     if (file.url !== null)
                     {
@@ -349,7 +349,7 @@ module Phaser {
                             if (this._game.sound.touchLocked)
                             {
                                 //  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
-                                console.log('Audio is touch locked');
+                                //console.log('Audio is touch locked');
                                 file.data = new Audio();
                                 file.data.name = file.key;
                                 file.data.preload = 'auto';
@@ -358,7 +358,6 @@ module Phaser {
                             }
                             else
                             {
-                                console.log('Audio not touch locked');
                                 file.data = new Audio();
                                 file.data.name = file.key;
                                 file.data.onerror = () => this.fileError(file.key);
@@ -394,8 +393,8 @@ module Phaser {
 
                 if (this._game.device.canPlayAudio(extension))
                 {
-                    console.log('getAudioURL', urls[i]);
-                    console.log(urls[i]);
+                    //console.log('getAudioURL', urls[i]);
+                    //console.log(urls[i]);
                     return urls[i];
                 }
 

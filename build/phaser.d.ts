@@ -5490,7 +5490,7 @@ module Phaser {
         /**
         * The default created camera.
         */
-        public default: Camera;
+        public defaultCamera: Camera;
         /**
         * Get all the cameras.
         *
@@ -6336,6 +6336,13 @@ module Phaser {
         public tileSpacing: number;
         /**
         * Set a specific tile with its x and y in tiles.
+        * @param x {number} X position of this tile in world coordinates.
+        * @param y {number} Y position of this tile in world coordinates.
+        * @param index {number} The index of this tile type in the core map data.
+        */
+        public putTileWorldXY(x: number, y: number, index: number): void;
+        /**
+        * Set a specific tile with its x and y in tiles.
         * @param x {number} X position of this tile.
         * @param y {number} Y position of this tile.
         * @param index {number} The index of this tile type in the core map data.
@@ -7018,12 +7025,14 @@ module Phaser {
         public onLoop: Signal;
         public onStop: Signal;
         public onMute: Signal;
+        public onMarkerComplete: Signal;
         public pendingPlayback: bool;
         public isDecoding : bool;
         public isDecoded : bool;
         public addMarker(name: string, start: number, stop: number, volume?: number, loop?: bool): void;
         public removeMarker(name: string): void;
         public update(): void;
+        public override: bool;
         /**
         * Play this sound, or a marked section of it.
         * @param marker {string} Assets key of the sound you want to play.

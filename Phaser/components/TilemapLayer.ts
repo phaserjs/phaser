@@ -188,14 +188,32 @@ module Phaser {
 
         /**
          * Set a specific tile with its x and y in tiles.
+         * @param x {number} X position of this tile in world coordinates.
+         * @param y {number} Y position of this tile in world coordinates.
+         * @param index {number} The index of this tile type in the core map data.
+         */
+        public putTileWorldXY(x: number, y: number, index: number) {
+
+            x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+            y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+
+            if (y >= 0 && y < this.mapData.length)
+            {
+                if (x >= 0 && x < this.mapData[y].length)
+                {
+                    this.mapData[y][x] = index;
+                }
+            }
+
+        }
+
+        /**
+         * Set a specific tile with its x and y in tiles.
          * @param x {number} X position of this tile.
          * @param y {number} Y position of this tile.
          * @param index {number} The index of this tile type in the core map data.
          */
         public putTile(x: number, y: number, index: number) {
-
-            x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-            y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
 
             if (y >= 0 && y < this.mapData.length)
             {
