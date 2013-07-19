@@ -20,6 +20,7 @@
             cokecan, 
             mushroom
         ]);
+        //  Rats, filters don't get applied when the canvas is drawn to another canvas. Oh well :)
         texture.css3.grayscale = 100;
     }
     function update() {
