@@ -31,7 +31,6 @@ TODO:
 * Investigate bug re: tilemap collision and animation frames
 * Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
 * Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
-* Stage CSS3 transforms!!! Color tints, sepia, greyscale, all of those cool things :)
 * Add JSON Texture Atlas object support.
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
 * If stage.clear set to false and game pauses, when it unpauses you still see the pause arrow - resolve this
@@ -56,11 +55,10 @@ TODO:
 * Tilemap.render - move layers length to var
 * Camera control method (touch/keyboard)
 * Tilemap.destroy needs doing
-* Look at the input targetObject - it doesn't seem to get cleared down all the time, maybe just a priority/alpha issue (check vis/alpha?)
 * Sprite.transform.bottomRight/Left doesn't seem to take origin into account
-* When you toggle visible of a button that is over, it doesn't disable that 'over' state (should it? probably yes)
 * Stage.opaqueBackground = 'rgb()' or null, alpha, blendMode, filters, mask, rotation+XYZ,scaleXYZ,visible
-
+* Stage CSS3 Transforms?
+* Ability to layer another DOM object and have it controlled by the game somehow. Can then do stacked canvas effects.
 * Stage lost to mute
 
 
@@ -157,6 +155,8 @@ V1.0.0
 * SoundManager will now automatically handle iOS touch unlocking.
 * Added TilemapLayer.putTileWorldXY to place a tile based on pixel values, and putTile based on tile map coordinates.
 * Dropped the StageScaleMode.setScreenSize iterations count from 40 down to 10 and document min body height to 2000px.
+* Added Phaser.Net for browser and network specific functions, currently includes query string parsing and updating methods.
+* Added a new CSS3 Filters component. Apply blur, grayscale, sepia, brightness, contrast, hue rotation, invert, opacity and saturate filters to the games stage.
 
 
 

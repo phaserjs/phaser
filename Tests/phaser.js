@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+﻿/// <reference path="../Game.ts" />
 /**
 * Phaser - Point
 *
@@ -2004,6 +2004,7 @@ var Phaser;
             this.canvas.width = width;
             this.canvas.height = height;
             this.context = this.canvas.getContext('2d');
+            this.css3 = new Phaser.Components.CSS3Filters(this.canvas);
             this.bounds = new Phaser.Rectangle(0, 0, width, height);
         }
         DynamicTexture.prototype.getPixel = /**
@@ -3607,6 +3608,7 @@ var Phaser;
                 */
                 function (pointer) {
                     if(this.enabled == false || this._parent.visible == false) {
+                        this._pointerOutHandler(pointer);
                         return false;
                     }
                     if(this.draggable && this._draggedPointerID == pointer.id) {
@@ -9461,6 +9463,97 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
+* Phaser - Net
+*
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var Net = (function () {
+        /**
+        * Net constructor
+        */
+        function Net(game) {
+            this.game = game;
+        }
+        Net.prototype.checkDomainName = /**
+        * Compares the given domain name against the hostname of the browser containing the game.
+        * If the domain name is found it returns true.
+        * You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
+        * Do not include 'http://' at the start.
+        */
+        function (domain) {
+            return window.location.hostname.indexOf(domain) !== -1;
+        };
+        Net.prototype.updateQueryString = /**
+        * Updates a value on the Query String and returns it in full.
+        * If the value doesn't already exist it is set.
+        * If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
+        * Optionally you can redirect to the new url, or just return it as a string.
+        */
+        function (key, value, redirect, url) {
+            if (typeof redirect === "undefined") { redirect = false; }
+            if (typeof url === "undefined") { url = ''; }
+            if(url == '') {
+                url = window.location.href;
+            }
+            var output = '';
+            var re = new RegExp("([?|&])" + key + "=.*?(&|#|$)(.*)", "gi");
+            if(re.test(url)) {
+                if(typeof value !== 'undefined' && value !== null) {
+                    output = url.replace(re, '$1' + key + "=" + value + '$2$3');
+                } else {
+                    output = url.replace(re, '$1$3').replace(/(&|\?)$/, '');
+                }
+            } else {
+                if(typeof value !== 'undefined' && value !== null) {
+                    var separator = url.indexOf('?') !== -1 ? '&' : '?';
+                    var hash = url.split('#');
+                    url = hash[0] + separator + key + '=' + value;
+                    if(hash[1]) {
+                        url += '#' + hash[1];
+                    }
+                    output = url;
+                } else {
+                    output = url;
+                }
+            }
+            if(redirect) {
+                window.location.href = output;
+            } else {
+                return output;
+            }
+        };
+        Net.prototype.getQueryString = /**
+        * Returns the Query String as an object.
+        * If you specify a parameter it will return just the value of that parameter, should it exist.
+        */
+        function (parameter) {
+            if (typeof parameter === "undefined") { parameter = ''; }
+            var output = {
+            };
+            var keyValues = location.search.substring(1).split('&');
+            for(var i in keyValues) {
+                var key = keyValues[i].split('=');
+                if(key.length > 1) {
+                    if(parameter && parameter == this.decodeURI(key[0])) {
+                        return this.decodeURI(key[1]);
+                    } else {
+                        output[this.decodeURI(key[0])] = this.decodeURI(key[1]);
+                    }
+                }
+            }
+            return output;
+        };
+        Net.prototype.decodeURI = function (value) {
+            return decodeURIComponent(value.replace(/\+/g, " "));
+        };
+        return Net;
+    })();
+    Phaser.Net = Net;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/**
 * Phaser - Cache
 *
 * A game only has one instance of a Cache and it is used to store all externally loaded assets such
@@ -14349,7 +14442,7 @@ var Phaser;
                 }
             } else {
                 //console.log('Sound play Audio');
-                if(this.game.cache.getSound(this.key).locked) {
+                if(this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).locked) {
                     //console.log('tried playing locked sound, pending set, reload started');
                     this.game.cache.reloadSound(this.key);
                     this.pendingPlayback = true;
@@ -14362,7 +14455,11 @@ var Phaser;
                         //console.log('playing', this._sound);
                         this._sound.currentTime = this.position;
                         this._sound.muted = this._muted;
-                        this._sound.volume = this._volume;
+                        if(this._muted) {
+                            this._sound.volume = 0;
+                        } else {
+                            this._sound.volume = this._volume;
+                        }
                         this._sound.play();
                         this.isPlaying = true;
                         this.startTime = this.game.time.now;
@@ -14503,7 +14600,6 @@ var Phaser;
 /**
 * Phaser - SoundManager
 *
-* This is an embroyonic web audio sound management class. There is a lot of work still to do here.
 */
 var Phaser;
 (function (Phaser) {
@@ -14612,6 +14708,7 @@ var Phaser;
                 return this._muted;
             },
             set: function (value) {
+                console.log('SoundManager mute', value);
                 if(value) {
                     if(this._muted) {
                         return;
@@ -14623,7 +14720,7 @@ var Phaser;
                     }
                     //  Loop through sounds
                     for(var i = 0; i < this._sounds.length; i++) {
-                        if(this._sounds[i]) {
+                        if(this._sounds[i].usingAudioTag) {
                             this._sounds[i].mute = true;
                         }
                     }
@@ -14637,7 +14734,7 @@ var Phaser;
                     }
                     //  Loop through sounds
                     for(var i = 0; i < this._sounds.length; i++) {
-                        if(this._sounds[i]) {
+                        if(this._sounds[i].usingAudioTag) {
                             this._sounds[i].mute = false;
                         }
                     }
@@ -14761,6 +14858,192 @@ var Phaser;
 (function (Phaser) {
     Phaser.VERSION = 'Phaser version 1.0.0';
 })(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../Game.ts" />
+    /**
+    * Phaser - Components - CSS3Filters
+    *
+    * Allows for easy addition and modification of CSS3 Filters on DOM objects (typically the Game.Stage.canvas).
+    */
+    (function (Components) {
+        var CSS3Filters = (function () {
+            /**
+            * Creates a new CSS3 Filter component
+            * @param parent The DOM object to apply the filters to.
+            */
+            function CSS3Filters(parent) {
+                this._blur = 0;
+                this._grayscale = 0;
+                this._sepia = 0;
+                this._brightness = 0;
+                this._contrast = 0;
+                this._hueRotate = 0;
+                this._invert = 0;
+                this._opacity = 0;
+                this._saturate = 0;
+                this.parent = parent;
+            }
+            CSS3Filters.prototype.setFilter = function (local, prefix, value, unit) {
+                this[local] = value;
+                if(this.parent) {
+                    this.parent.style['-webkit-filter'] = prefix + '(' + value + unit + ')';
+                }
+            };
+            Object.defineProperty(CSS3Filters.prototype, "blur", {
+                get: function () {
+                    return this._blur;
+                },
+                set: /**
+                * Applies a Gaussian blur to the DOM element. The value of ‘radius’ defines the value of the standard deviation to the Gaussian function,
+                * or how many pixels on the screen blend into each other, so a larger value will create more blur.
+                * If no parameter is provided, then a value 0 is used. The parameter is specified as a CSS length, but does not accept percentage values.
+                */
+                function (radius) {
+                    if (typeof radius === "undefined") { radius = 0; }
+                    this.setFilter('_blur', 'blur', radius, 'px');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CSS3Filters.prototype, "grayscale", {
+                get: function () {
+                    return this._grayscale;
+                },
+                set: /**
+                * Converts the input image to grayscale. The value of ‘amount’ defines the proportion of the conversion.
+                * A value of 100% is completely grayscale. A value of 0% leaves the input unchanged.
+                * Values between 0% and 100% are linear multipliers on the effect. If the ‘amount’ parameter is missing, a value of 100% is used.
+                */
+                function (amount) {
+                    if (typeof amount === "undefined") { amount = 100; }
+                    this.setFilter('_grayscale', 'grayscale', amount, '%');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CSS3Filters.prototype, "sepia", {
+                get: function () {
+                    return this._sepia;
+                },
+                set: /**
+                * Converts the input image to sepia. The value of ‘amount’ defines the proportion of the conversion.
+                * A value of 100% is completely sepia. A value of 0 leaves the input unchanged.
+                * Values between 0% and 100% are linear multipliers on the effect. If the ‘amount’ parameter is missing, a value of 100% is used.
+                */
+                function (amount) {
+                    if (typeof amount === "undefined") { amount = 100; }
+                    this.setFilter('_sepia', 'sepia', amount, '%');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CSS3Filters.prototype, "brightness", {
+                get: function () {
+                    return this._brightness;
+                },
+                set: /**
+                * Applies a linear multiplier to input image, making it appear more or less bright.
+                * A value of 0% will create an image that is completely black. A value of 100% leaves the input unchanged.
+                * Other values are linear multipliers on the effect. Values of an amount over 100% are allowed, providing brighter results.
+                * If the ‘amount’ parameter is missing, a value of 100% is used.
+                */
+                function (amount) {
+                    if (typeof amount === "undefined") { amount = 100; }
+                    this.setFilter('_brightness', 'brightness', amount, '%');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CSS3Filters.prototype, "contrast", {
+                get: function () {
+                    return this._contrast;
+                },
+                set: /**
+                * Adjusts the contrast of the input. A value of 0% will create an image that is completely black.
+                * A value of 100% leaves the input unchanged. Values of amount over 100% are allowed, providing results with less contrast.
+                * If the ‘amount’ parameter is missing, a value of 100% is used.
+                */
+                function (amount) {
+                    if (typeof amount === "undefined") { amount = 100; }
+                    this.setFilter('_contrast', 'contrast', amount, '%');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CSS3Filters.prototype, "hueRotate", {
+                get: function () {
+                    return this._hueRotate;
+                },
+                set: /**
+                * Applies a hue rotation on the input image. The value of ‘angle’ defines the number of degrees around the color circle
+                * the input samples will be adjusted. A value of 0deg leaves the input unchanged. If the ‘angle’ parameter is missing,
+                * a value of 0deg is used. Maximum value is 360deg.
+                */
+                function (angle) {
+                    if (typeof angle === "undefined") { angle = 0; }
+                    this.setFilter('_hueRotate', 'hue-rotate', angle, 'deg');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CSS3Filters.prototype, "invert", {
+                get: function () {
+                    return this._invert;
+                },
+                set: /**
+                * Inverts the samples in the input image. The value of ‘amount’ defines the proportion of the conversion.
+                * A value of 100% is completely inverted. A value of 0% leaves the input unchanged.
+                * Values between 0% and 100% are linear multipliers on the effect. If the ‘amount’ parameter is missing, a value of 100% is used.
+                */
+                function (value) {
+                    if (typeof value === "undefined") { value = 100; }
+                    this.setFilter('_invert', 'invert', value, '%');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CSS3Filters.prototype, "opacity", {
+                get: function () {
+                    return this._opacity;
+                },
+                set: /**
+                * Applies transparency to the samples in the input image. The value of ‘amount’ defines the proportion of the conversion.
+                * A value of 0% is completely transparent. A value of 100% leaves the input unchanged.
+                * Values between 0% and 100% are linear multipliers on the effect. This is equivalent to multiplying the input image samples by amount.
+                * If the ‘amount’ parameter is missing, a value of 100% is used.
+                * This function is similar to the more established opacity property; the difference is that with filters, some browsers provide hardware acceleration for better performance.
+                */
+                function (value) {
+                    if (typeof value === "undefined") { value = 100; }
+                    this.setFilter('_opacity', 'opacity', value, '%');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(CSS3Filters.prototype, "saturate", {
+                get: function () {
+                    return this._saturate;
+                },
+                set: /**
+                * Saturates the input image. The value of ‘amount’ defines the proportion of the conversion.
+                * A value of 0% is completely un-saturated. A value of 100% leaves the input unchanged.
+                * Other values are linear multipliers on the effect. Values of amount over 100% are allowed, providing super-saturated results.
+                * If the ‘amount’ parameter is missing, a value of 100% is used.
+                */
+                function (value) {
+                    if (typeof value === "undefined") { value = 100; }
+                    this.setFilter('_saturate', 'saturate', value, '%');
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return CSS3Filters;
+        })();
+        Components.CSS3Filters = CSS3Filters;        
+    })(Phaser.Components || (Phaser.Components = {}));
+    var Components = Phaser.Components;
+})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
 * Phaser - StageScaleMode
@@ -14843,6 +15126,11 @@ var Phaser;
             * @type {number}
             */
             this.height = 0;
+            /**
+            * The maximum number of times it will try to resize the canvas to fill the browser (default is 10)
+            * @type {number}
+            */
+            this.maxIterations = 10;
             this._game = game;
             this.enterLandscape = new Phaser.Signal();
             this.enterPortrait = new Phaser.Signal();
@@ -14994,8 +15282,8 @@ var Phaser;
                     window.scrollTo(0, 0);
                 }
             }
-            if(this._check == null) {
-                this._iterations = 10;
+            if(this._check == null && this.maxIterations > 0) {
+                this._iterations = this.maxIterations;
                 this._check = window.setInterval(function () {
                     return _this.setScreenSize();
                 }, 10);
@@ -15348,6 +15636,7 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="Phaser.ts" />
 /// <reference path="Game.ts" />
+/// <reference path="components/CSS3Filters.ts" />
 /// <reference path="system/StageScaleMode.ts" />
 /// <reference path="system/screens/BootScreen.ts" />
 /// <reference path="system/screens/PauseScreen.ts" />
@@ -15413,6 +15702,7 @@ var Phaser;
                 event.preventDefault();
             };
             this.context = this.canvas.getContext('2d');
+            this.css3 = new Phaser.Components.CSS3Filters(this.canvas);
             this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
             this.scale = new Phaser.StageScaleMode(this._game, width, height);
             this.getOffset(this.canvas);
@@ -15453,8 +15743,13 @@ var Phaser;
         function () {
             this.scale.update();
             if(this.clear) {
-                //  implement dirty rect? could take up more cpu time than it saves. needs benching.
-                this.context.clearRect(0, 0, this.width, this.height);
+                //  A 'fix' for the horrendous Android stock browser bug: https://code.google.com/p/android/issues/detail?id=39247
+                if(this._game.device.android && this._game.device.chrome == false) {
+                    this.context.fillStyle = 'rgb(0,0,0)';
+                    this.context.fillRect(0, 0, this.width, this.height);
+                } else {
+                    this.context.clearRect(0, 0, this.width, this.height);
+                }
             }
             if(this._game.paused && this.scale.incorrectOrientation) {
                 this.orientationScreen.update();
@@ -19618,6 +19913,7 @@ var Phaser;
 /// <reference path="core/Signal.ts" />
 /// <reference path="core/SignalBinding.ts" />
 /// <reference path="loader/Loader.ts" />
+/// <reference path="net/Net.ts" />
 /// <reference path="loader/Cache.ts" />
 /// <reference path="math/GameMath.ts" />
 /// <reference path="math/RandomDataGenerator.ts" />
@@ -19790,6 +20086,7 @@ var Phaser;
                 }, 13);
             } else {
                 this.device = new Phaser.Device();
+                this.net = new Phaser.Net(this);
                 this.motion = new Phaser.Motion(this);
                 this.math = new Phaser.GameMath(this);
                 this.stage = new Phaser.Stage(this, parent, width, height);

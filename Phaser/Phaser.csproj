@@ -64,6 +64,10 @@
     <TypeScriptCompile Include="Game.ts" />
     <TypeScriptCompile Include="components\sprite\Events.ts" />
     <TypeScriptCompile Include="components\sprite\Debug.ts" />
+    <TypeScriptCompile Include="components\CSS3Filters.ts" />
+    <Content Include="components\CSS3Filters.js">
+      <DependentUpon>CSS3Filters.ts</DependentUpon>
+    </Content>
     <Content Include="components\sprite\Debug.js">
       <DependentUpon>Debug.ts</DependentUpon>
     </Content>
@@ -177,6 +181,10 @@
     </Content>
     <Content Include="Motion.js">
       <DependentUpon>Motion.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="net\Net.ts" />
+    <Content Include="net\Net.js">
+      <DependentUpon>Net.ts</DependentUpon>
     </Content>
     <Content Include="physics\Body.js">
       <DependentUpon>Body.ts</DependentUpon>

@@ -1,5 +1,6 @@
 /// <reference path="Phaser.ts" />
 /// <reference path="Game.ts" />
+/// <reference path="components/CSS3Filters.ts" />
 /// <reference path="system/StageScaleMode.ts" />
 /// <reference path="system/screens/BootScreen.ts" />
 /// <reference path="system/screens/PauseScreen.ts" />
@@ -52,6 +53,8 @@ module Phaser {
 
             this.context = this.canvas.getContext('2d');
 
+            this.css3 = new Phaser.Components.CSS3Filters(this.canvas);
+
             this.scaleMode = StageScaleMode.NO_SCALE;
             this.scale = new StageScaleMode(this._game, width, height);
 
@@ -96,6 +99,12 @@ module Phaser {
          * @type {OrientationScreen}
          */
         public orientationScreen;
+
+        /**
+         * Controls the CSS3 Filters applied to the Stages canvas object.
+         * @type {Phaser.Components.CSS3Filters}
+         */
+        public css3: Phaser.Components.CSS3Filters;
 
         /**
          * Bound of this stage.

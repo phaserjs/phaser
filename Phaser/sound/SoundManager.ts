@@ -4,7 +4,6 @@
 /**
 * Phaser - SoundManager
 *
-* This is an embroyonic web audio sound management class. There is a lot of work still to do here.
 */
 
 module Phaser {

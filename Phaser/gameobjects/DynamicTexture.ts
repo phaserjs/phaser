@@ -34,6 +34,8 @@ module Phaser {
             this.canvas.height = height;
             this.context = this.canvas.getContext('2d');
 
+            this.css3 = new Phaser.Components.CSS3Filters(this.canvas);
+
             this.bounds = new Rectangle(0, 0, width, height);
 
         }
@@ -58,6 +60,13 @@ module Phaser {
         private _dh: number = 0;
 
         //  Input / Output nodes?
+
+        /**
+         * Controls the CSS3 Filters applied to the textures canvas object.
+         * Only really useful if you attach this canvas to the DOM.
+         * @type {Phaser.Components.CSS3Filters}
+         */
+        public css3: Phaser.Components.CSS3Filters;
 
         /**
          * Bound of this texture with width and height info.
