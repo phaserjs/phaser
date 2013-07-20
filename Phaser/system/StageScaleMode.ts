@@ -160,6 +160,12 @@ module Phaser {
         public aspectRatio: number;
 
         /**
+         * The maximum number of times it will try to resize the canvas to fill the browser (default is 10)
+         * @type {number}
+         */
+        public maxIterations: number = 10;
+
+        /**
          * The scale factor of the scaled game width
          * @type {Vec2}
          */
@@ -348,7 +354,7 @@ module Phaser {
             //  We can't do anything about the status bars in iPads, web apps or desktops
             if (this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false)
             {
-                document.documentElement.style.minHeight = '5000px';
+                document.documentElement.style.minHeight = '2000px';
 
                 this._startHeight = window.innerHeight;
 
@@ -362,9 +368,9 @@ module Phaser {
                 }
             }
 
-            if (this._check == null)
+            if (this._check == null && this.maxIterations > 0)
             {
-                this._iterations = 40;
+                this._iterations = this.maxIterations;
                 this._check = window.setInterval(() => this.setScreenSize(), 10);
                 this.setScreenSize();
             }

@@ -1,4 +1,4 @@
-/**
+﻿/**
 * Phaser - Point
 *
 * The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
@@ -1324,6 +1324,12 @@ module Phaser {
         private _dy;
         private _dw;
         private _dh;
+        /**
+        * Controls the CSS3 Filters applied to the textures canvas object.
+        * Only really useful if you attach this canvas to the DOM.
+        * @type {Phaser.Components.CSS3Filters}
+        */
+        public css3: Components.CSS3Filters;
         /**
         * Bound of this texture with width and height info.
         * @type {Rectangle}
@@ -4365,6 +4371,43 @@ module Phaser {
     }
 }
 /**
+* Phaser - Net
+*
+*
+*/
+module Phaser {
+    class Net {
+        /**
+        * Net constructor
+        */
+        constructor(game: Game);
+        /**
+        * Local reference to the current Phaser.Game.
+        */
+        public game: Game;
+        /**
+        * Compares the given domain name against the hostname of the browser containing the game.
+        * If the domain name is found it returns true.
+        * You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
+        * Do not include 'http://' at the start.
+        */
+        public checkDomainName(domain: string): bool;
+        /**
+        * Updates a value on the Query String and returns it in full.
+        * If the value doesn't already exist it is set.
+        * If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
+        * Optionally you can redirect to the new url, or just return it as a string.
+        */
+        public updateQueryString(key: string, value: string, redirect?: bool, url?: string): string;
+        /**
+        * Returns the Query String as an object.
+        * If you specify a parameter it will return just the value of that parameter, should it exist.
+        */
+        public getQueryString(parameter?: string): {};
+        private decodeURI(value);
+    }
+}
+/**
 * Phaser - Cache
 *
 * A game only has one instance of a Cache and it is used to store all externally loaded assets such
@@ -5490,7 +5533,7 @@ module Phaser {
         /**
         * The default created camera.
         */
-        public default: Camera;
+        public defaultCamera: Camera;
         /**
         * Get all the cameras.
         *
@@ -6336,6 +6379,13 @@ module Phaser {
         public tileSpacing: number;
         /**
         * Set a specific tile with its x and y in tiles.
+        * @param x {number} X position of this tile in world coordinates.
+        * @param y {number} Y position of this tile in world coordinates.
+        * @param index {number} The index of this tile type in the core map data.
+        */
+        public putTileWorldXY(x: number, y: number, index: number): void;
+        /**
+        * Set a specific tile with its x and y in tiles.
         * @param x {number} X position of this tile.
         * @param y {number} Y position of this tile.
         * @param index {number} The index of this tile type in the core map data.
@@ -7018,12 +7068,14 @@ module Phaser {
         public onLoop: Signal;
         public onStop: Signal;
         public onMute: Signal;
+        public onMarkerComplete: Signal;
         public pendingPlayback: bool;
         public isDecoding : bool;
         public isDecoded : bool;
         public addMarker(name: string, start: number, stop: number, volume?: number, loop?: bool): void;
         public removeMarker(name: string): void;
         public update(): void;
+        public override: bool;
         /**
         * Play this sound, or a marked section of it.
         * @param marker {string} Assets key of the sound you want to play.
@@ -7054,7 +7106,6 @@ module Phaser {
 /**
 * Phaser - SoundManager
 *
-* This is an embroyonic web audio sound management class. There is a lot of work still to do here.
 */
 module Phaser {
     class SoundManager {
@@ -7130,6 +7181,92 @@ module Phaser {
 */
 module Phaser {
     var VERSION: string;
+}
+/**
+* Phaser - Components - CSS3Filters
+*
+* Allows for easy addition and modification of CSS3 Filters on DOM objects (typically the Game.Stage.canvas).
+*/
+module Phaser.Components {
+    class CSS3Filters {
+        /**
+        * Creates a new CSS3 Filter component
+        * @param parent The DOM object to apply the filters to.
+        */
+        constructor(parent);
+        /**
+        * Reference to the parent DOM object (stage.canvas for example)
+        */
+        public parent;
+        private _blur;
+        private _grayscale;
+        private _sepia;
+        private _brightness;
+        private _contrast;
+        private _hueRotate;
+        private _invert;
+        private _opacity;
+        private _saturate;
+        private setFilter(local, prefix, value, unit);
+        /**
+        * Applies a Gaussian blur to the DOM element. The value of ‘radius’ defines the value of the standard deviation to the Gaussian function,
+        * or how many pixels on the screen blend into each other, so a larger value will create more blur.
+        * If no parameter is provided, then a value 0 is used. The parameter is specified as a CSS length, but does not accept percentage values.
+        */
+        public blur : number;
+        /**
+        * Converts the input image to grayscale. The value of ‘amount’ defines the proportion of the conversion.
+        * A value of 100% is completely grayscale. A value of 0% leaves the input unchanged.
+        * Values between 0% and 100% are linear multipliers on the effect. If the ‘amount’ parameter is missing, a value of 100% is used.
+        */
+        public grayscale : number;
+        /**
+        * Converts the input image to sepia. The value of ‘amount’ defines the proportion of the conversion.
+        * A value of 100% is completely sepia. A value of 0 leaves the input unchanged.
+        * Values between 0% and 100% are linear multipliers on the effect. If the ‘amount’ parameter is missing, a value of 100% is used.
+        */
+        public sepia : number;
+        /**
+        * Applies a linear multiplier to input image, making it appear more or less bright.
+        * A value of 0% will create an image that is completely black. A value of 100% leaves the input unchanged.
+        * Other values are linear multipliers on the effect. Values of an amount over 100% are allowed, providing brighter results.
+        * If the ‘amount’ parameter is missing, a value of 100% is used.
+        */
+        public brightness : number;
+        /**
+        * Adjusts the contrast of the input. A value of 0% will create an image that is completely black.
+        * A value of 100% leaves the input unchanged. Values of amount over 100% are allowed, providing results with less contrast.
+        * If the ‘amount’ parameter is missing, a value of 100% is used.
+        */
+        public contrast : number;
+        /**
+        * Applies a hue rotation on the input image. The value of ‘angle’ defines the number of degrees around the color circle
+        * the input samples will be adjusted. A value of 0deg leaves the input unchanged. If the ‘angle’ parameter is missing,
+        * a value of 0deg is used. Maximum value is 360deg.
+        */
+        public hueRotate : number;
+        /**
+        * Inverts the samples in the input image. The value of ‘amount’ defines the proportion of the conversion.
+        * A value of 100% is completely inverted. A value of 0% leaves the input unchanged.
+        * Values between 0% and 100% are linear multipliers on the effect. If the ‘amount’ parameter is missing, a value of 100% is used.
+        */
+        public invert : number;
+        /**
+        * Applies transparency to the samples in the input image. The value of ‘amount’ defines the proportion of the conversion.
+        * A value of 0% is completely transparent. A value of 100% leaves the input unchanged.
+        * Values between 0% and 100% are linear multipliers on the effect. This is equivalent to multiplying the input image samples by amount.
+        * If the ‘amount’ parameter is missing, a value of 100% is used.
+        * This function is similar to the more established opacity property; the difference is that with filters, some browsers provide hardware acceleration for better performance.
+        */
+        public opacity : number;
+        /**
+        * Saturates the input image. The value of ‘amount’ defines the proportion of the conversion.
+        * A value of 0% is completely un-saturated. A value of 100% leaves the input unchanged.
+        * Other values are linear multipliers on the effect. Values of amount over 100% are allowed, providing super-saturated results.
+        * If the ‘amount’ parameter is missing, a value of 100% is used.
+        */
+        public saturate : number;
+    }
 }
 /**
 * Phaser - StageScaleMode
@@ -7236,6 +7373,11 @@ module Phaser {
         * @type {number}
         */
         public aspectRatio: number;
+        /**
+        * The maximum number of times it will try to resize the canvas to fill the browser (default is 10)
+        * @type {number}
+        */
+        public maxIterations: number;
         /**
         * The scale factor of the scaled game width
         * @type {Vec2}
@@ -7492,6 +7634,11 @@ module Phaser {
         * @type {OrientationScreen}
         */
         public orientationScreen;
+        /**
+        * Controls the CSS3 Filters applied to the Stages canvas object.
+        * @type {Phaser.Components.CSS3Filters}
+        */
+        public css3: Components.CSS3Filters;
         /**
         * Bound of this stage.
         * @type {Rectangle}
@@ -9813,6 +9960,11 @@ module Phaser {
         * @type {Motion}
         */
         public motion: Motion;
+        /**
+        * Reference to the network class.
+        * @type {Net}
+        */
+        public net: Net;
         /**
         * Reference to the sound manager.
         * @type {SoundManager}

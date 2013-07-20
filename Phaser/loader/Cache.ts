@@ -124,8 +124,6 @@ module Phaser {
          */
         public addSound(key: string, url: string, data, webAudio: bool = true, audioTag: bool = false) {
 
-            console.log('Cache addSound: ' + key + ' url: ' + url, webAudio, audioTag);
-
             var locked: bool = this._game.sound.touchLocked;
             var decoded: bool = false;
 
@@ -139,8 +137,6 @@ module Phaser {
 
         public reloadSound(key: string) {
 
-            console.log('reloadSound', key);
-
             if (this._sounds[key])
             {
                 this._sounds[key].data.src = this._sounds[key].url;
@@ -153,8 +149,6 @@ module Phaser {
         public onSoundUnlock: Phaser.Signal = new Phaser.Signal;
 
         public reloadSoundComplete(key: string) {
-
-            console.log('reloadSoundComplete', key);
 
             if (this._sounds[key])
             {
@@ -180,7 +174,6 @@ module Phaser {
          */
         public decodedSound(key: string, data) {
 
-            console.log('decoded sound', key);
             this._sounds[key].data = data;
             this._sounds[key].decoded = true;
             this._sounds[key].isDecoding = false;

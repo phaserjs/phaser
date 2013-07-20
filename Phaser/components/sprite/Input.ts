@@ -311,6 +311,7 @@ module Phaser.Components.Sprite {
 
             if (this.enabled == false || this._parent.visible == false)
             {
+                this._pointerOutHandler(pointer);
                 return false;
             }
 

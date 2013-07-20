@@ -8,6 +8,7 @@
 /// <reference path="core/Signal.ts" />
 /// <reference path="core/SignalBinding.ts" />
 /// <reference path="loader/Loader.ts" />
+/// <reference path="net/Net.ts" />
 /// <reference path="loader/Cache.ts" />
 /// <reference path="math/GameMath.ts" />
 /// <reference path="math/RandomDataGenerator.ts" />
@@ -209,6 +210,12 @@ module Phaser {
         public motion: Motion;
 
         /**
+         * Reference to the network class.
+         * @type {Net}
+         */
+        public net: Net;
+
+        /**
          * Reference to the sound manager.
          * @type {SoundManager}
          */
@@ -294,6 +301,7 @@ module Phaser {
             else
             {
                 this.device = new Device();
+                this.net = new Net(this);
                 this.motion = new Motion(this);
                 this.math = new GameMath(this);
                 this.stage = new Stage(this, parent, width, height);

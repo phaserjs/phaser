@@ -242,6 +242,34 @@
       <DependentUpon>origin 5.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="tilemaps\csv tilemap.ts" />
+    <TypeScriptCompile Include="stage\blur filter.ts" />
+    <Content Include="stage\blur filter.js">
+      <DependentUpon>blur filter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="stage\sepia filter.ts" />
+    <TypeScriptCompile Include="stage\brightness filter.ts" />
+    <Content Include="stage\brightness filter.js">
+      <DependentUpon>brightness filter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="stage\contrast filter.ts" />
+    <Content Include="stage\contrast filter.js">
+      <DependentUpon>contrast filter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="stage\grayscale filter.ts" />
+    <Content Include="stage\grayscale filter.js">
+      <DependentUpon>grayscale filter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="stage\hue rotate filter.ts" />
+    <Content Include="stage\hue rotate filter.js">
+      <DependentUpon>hue rotate filter.ts</DependentUpon>
+    </Content>
+    <Content Include="stage\sepia filter.js">
+      <DependentUpon>sepia filter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="textures\filter test.ts" />
+    <Content Include="textures\filter test.js">
+      <DependentUpon>filter test.ts</DependentUpon>
+    </Content>
     <Content Include="tilemaps\csv tilemap.js">
       <DependentUpon>csv tilemap.ts</DependentUpon>
     </Content>

@@ -43,7 +43,7 @@ module Phaser {
             }
             else
             {
-                if (this.game.cache.getSound(key).locked == false)
+                if (this.game.cache.getSound(key) && this.game.cache.getSound(key).locked == false)
                 {
                     this._sound = this.game.cache.getSoundData(key);
                     this.totalDuration = this._sound.duration;
@@ -65,6 +65,7 @@ module Phaser {
             this.onLoop = new Phaser.Signal;
             this.onStop = new Phaser.Signal;
             this.onMute = new Phaser.Signal;
+            this.onMarkerComplete = new Phaser.Signal;
 
         }
 
@@ -102,7 +103,7 @@ module Phaser {
         /**
          * Decoded data buffer / Audio tag.
          */
-        private _buffer;
+        private _buffer = null;
 
         /**
          * Volume of this sound.
@@ -148,6 +149,7 @@ module Phaser {
         public onLoop: Phaser.Signal;
         public onStop: Phaser.Signal;
         public onMute: Phaser.Signal;
+        public onMarkerComplete: Phaser.Signal;
 
         public pendingPlayback: bool = false;
 
@@ -171,7 +173,6 @@ module Phaser {
 
             if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
             {
-                console.log('pending over');
                 this.pendingPlayback = false;
                 this.play(this._tempMarker, this._tempPosition, this._tempVolume, this._tempLoop);
             }
@@ -182,16 +183,32 @@ module Phaser {
 
                 if (this.currentTime >= this.duration)
                 {
+                    console.log(this.currentMarker, 'has hit duration');
+
                     if (this.usingWebAudio)
                     {
                         if (this.loop)
                         {
+                            console.log('loop1');
+
+                            //  won't work with markers, needs to reset the position
                             this.onLoop.dispatch(this);
-                            this.currentTime = 0;
-                            this.startTime = this.game.time.now;
+
+                            if (this.currentMarker == '')
+                            {
+                                console.log('loop2');
+                                this.currentTime = 0;
+                                this.startTime = this.game.time.now;
+                            }
+                            else
+                            {
+                                console.log('loop3');
+                                this.play(this.currentMarker, 0, this.volume, true, true);
+                            }
                         }
                         else
                         {
+                            console.log('stopping, no loop for marker');
                             this.stop();
                         }
                     }
@@ -213,6 +230,8 @@ module Phaser {
 
         }
 
+        public override: bool = false;
+
         /**
          * Play this sound, or a marked section of it.
          * @param marker {string} Assets key of the sound you want to play.
@@ -222,10 +241,33 @@ module Phaser {
          */
         public play(marker: string = '', position?: number = 0, volume?: number = 1, loop?: bool = false, forceRestart: bool = false) {
 
-            if (this.isPlaying == true && forceRestart == false)
+            console.log('play', marker, 'current is', this.currentMarker);
+
+            if (this.isPlaying == true && forceRestart == false && this.override == false)
             {
                 //  Use Restart instead
                 return;
+            }
+
+            if (this.isPlaying && this.override)
+            {
+                console.log('asked to play', marker, 'but already playing', this.currentMarker);
+                if (this.usingWebAudio)
+                {
+                    if (typeof this._sound.stop === 'undefined')
+                    {
+                        this._sound.noteOff(0);
+                    }
+                    else
+                    {
+                        this._sound.stop(0);
+                    }
+                }
+                else if (this.usingAudioTag)
+                {
+                    this._sound.pause();
+                    this._sound.currentTime = 0;
+                }
             }
 
             this.currentMarker = marker;
@@ -236,6 +278,13 @@ module Phaser {
                 this.volume = this.markers[marker].volume;
                 this.loop = this.markers[marker].loop;
                 this.duration = this.markers[marker].duration * 1000;
+
+                console.log('marker info loaded', this.loop, this.duration);
+
+                this._tempMarker = marker;
+                this._tempPosition = this.position;
+                this._tempVolume = this.volume;
+                this._tempLoop = this.loop;
             }
             else
             {
@@ -243,12 +292,12 @@ module Phaser {
                 this.volume = volume;
                 this.loop = loop;
                 this.duration = 0;
-            }
 
-            this._tempMarker = marker;
-            this._tempPosition = position;
-            this._tempVolume = volume;
-            this._tempLoop = loop;
+                this._tempMarker = marker;
+                this._tempPosition = position;
+                this._tempVolume = volume;
+                this._tempLoop = loop;
+            }
 
             if (this.usingWebAudio)
             {
@@ -256,18 +305,25 @@ module Phaser {
                 if (this.game.cache.isSoundDecoded(this.key))
                 {
                     //  Do we need to do this every time we play? How about just if the buffer is empty?
-                    this._buffer = this.game.cache.getSoundData(this.key);
-                    this._sound = this.context.createBufferSource();
-                    this._sound.buffer = this._buffer;
-                    this._sound.connect(this.gainNode);
-                    this.totalDuration = this._sound.buffer.duration;
+                    if (this._buffer == null)
+                    {
+                        this._buffer = this.game.cache.getSoundData(this.key);
+                    }
+
+                    //if (this._sound == null)
+                    //{
+                        this._sound = this.context.createBufferSource();
+                        this._sound.buffer = this._buffer;
+                        this._sound.connect(this.gainNode);
+                        this.totalDuration = this._sound.buffer.duration;
+                    //}
 
                     if (this.duration == 0)
                     {
                         this.duration = this.totalDuration * 1000;
                     }
 
-                    if (this.loop)
+                    if (this.loop && marker == '')
                     {
                         this._sound.loop = true;
                     }
@@ -288,12 +344,15 @@ module Phaser {
                     this.currentTime = 0;
                     this.stopTime = this.startTime + this.duration;
                     this.onPlay.dispatch(this);
+
+                    console.log('playing, start', this.startTime, 'stop');
+
                 }
                 else
                 {
                     this.pendingPlayback = true;
 
-                    if (this.game.cache.getSound(this.key).isDecoding == false)
+                    if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding == false)
                     {
                         this.game.sound.decode(this.key, this);
                     }
@@ -301,17 +360,17 @@ module Phaser {
             }
             else
             {
-                console.log('Sound play Audio');
+                //console.log('Sound play Audio');
 
-                if (this.game.cache.getSound(this.key).locked)
+                if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).locked)
                 {
-                    console.log('tried playing locked sound, pending set, reload started');
+                    //console.log('tried playing locked sound, pending set, reload started');
                     this.game.cache.reloadSound(this.key);
                     this.pendingPlayback = true;
                 }
                 else
                 {
-                    console.log('sound not locked, state?', this._sound.readyState);
+                    //console.log('sound not locked, state?', this._sound.readyState);
                     if (this._sound && this._sound.readyState == 4)
                     {
                         if (this.duration == 0)
@@ -319,10 +378,19 @@ module Phaser {
                             this.duration = this.totalDuration * 1000;
                         }
 
-                        console.log('playing', this._sound);
+                        //console.log('playing', this._sound);
                         this._sound.currentTime = this.position;
                         this._sound.muted = this._muted;
-                        this._sound.volume = this._volume;
+
+                        if (this._muted)
+                        {
+                            this._sound.volume = 0;
+                        }
+                        else
+                        {
+                            this._sound.volume = this._volume;
+                        }
+
                         this._sound.play();
 
                         this.isPlaying = true;
@@ -391,6 +459,8 @@ module Phaser {
          */
         public stop() {
 
+            console.log('Sound.stop', this.currentMarker);
+
             if (this.isPlaying && this._sound)
             {
                 if (this.usingWebAudio)
@@ -405,16 +475,19 @@ module Phaser {
                     }
                 }
                 else if (this.usingAudioTag)
-                    {
+                {
                     this._sound.pause();
                     this._sound.currentTime = 0;
                 }
-
-                this.isPlaying = false;
-                this.currentMarker = '';
-                this.onStop.dispatch(this);
-
             }
+
+            this.isPlaying = false;
+
+            var prevMarker:string = this.currentMarker;
+
+            this.currentMarker = '';
+
+            this.onStop.dispatch(this, prevMarker);
 
         }
 
