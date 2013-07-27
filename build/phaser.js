@@ -20758,8 +20758,18 @@ var Phaser;
         * @return {Boolean} True if the coordinates are within this circle, otherwise false.
         **/
         function contains(a, x, y) {
-            //return (a.radius * a.radius >= Collision.distanceSquared(a.x, a.y, x, y));
-            return true;
+            //  Check if x/y are within the bounds first
+            if(x >= a.left && x <= a.right && y >= a.top && y <= a.bottom) {
+                var dx = a.x - x;
+                var dy = a.y - y;
+                dx *= dx;
+                dy *= dy;
+                var radSqr = a.radius * a.radius;
+                console.log('within bounds', dx, dy, radSqr);
+                return (dx + dy) <= radSqr;
+                //return (a.left * a.left + a.top * a.top) <= (a.radius * a.radius);
+                            }
+            return false;
         };
         CircleUtils.containsPoint = /**
         * Return true if the coordinates of the given Point object are within this Circle object.

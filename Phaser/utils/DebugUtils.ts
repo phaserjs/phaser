@@ -96,6 +96,14 @@ module Phaser {
 
         }
 
+        static renderCircle(circle: Phaser.Circle, fillStyle: string = 'rgba(0,255,0,0.3)') {
+
+            DebugUtils.context.fillStyle = fillStyle;
+            DebugUtils.context.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false);
+            DebugUtils.context.fill();
+
+        }
+
         static renderPhysicsBody(body: Phaser.Physics.Body, lineWidth: number = 1, fillStyle: string = 'rgba(0,255,0,0.2)', sleepStyle: string = 'rgba(100,100,100,0.2)') {
 
             for (var s = 0; s < body.shapesLength; s++)

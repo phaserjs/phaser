@@ -60,6 +60,7 @@ TODO:
 * Stage CSS3 Transforms?
 * Ability to layer another DOM object and have it controlled by the game somehow. Can then do stacked canvas effects.
 * Stage lost to mute
+* When game is paused Pointer shouldn't process targetObjects / change cursor
 
 
 
@@ -157,6 +158,7 @@ V1.0.0
 * Dropped the StageScaleMode.setScreenSize iterations count from 40 down to 10 and document min body height to 2000px.
 * Added Phaser.Net for browser and network specific functions, currently includes query string parsing and updating methods.
 * Added a new CSS3 Filters component. Apply blur, grayscale, sepia, brightness, contrast, hue rotation, invert, opacity and saturate filters to the games stage.
+* Fixed the CircleUtils.contains and containsPoint methods
 
 
 
