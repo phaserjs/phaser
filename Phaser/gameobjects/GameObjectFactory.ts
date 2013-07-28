@@ -134,7 +134,6 @@ module Phaser {
             return <Group> this._world.group.add(new Group(this._game, maxSize));
         }
 
-
         /**
          * Create a new Particle.
          *
@@ -205,6 +204,17 @@ module Phaser {
          */
         public existingSprite(sprite: Sprite): Sprite {
             return this._world.group.add(sprite);
+        }
+
+        /**
+         * Add an existing Group to the current world.
+         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+         *
+         * @param group The Group to add to the Game World
+         * @return {Phaser.Group} The Group object
+         */
+        public existingGroup(group: Group): Group {
+            return this._world.group.add(group);
         }
 
         /**

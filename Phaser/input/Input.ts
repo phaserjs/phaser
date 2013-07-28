@@ -377,6 +377,10 @@ module Phaser {
         **/
         public activePointer: Pointer = null;
 
+        public inputObjects = [];
+
+        public totalTrackedObjects: number = 0;
+
         /**
         * The X coordinate of the most recently active pointer.
         * This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
@@ -469,9 +473,6 @@ module Phaser {
 
         }
 
-        public inputObjects = [];
-        public totalTrackedObjects: number = 0;
-
         /**
         * Adds a new game object to be tracked by the Input Manager. Called by the Sprite.Input component, should not usually be called directly.
         * @method addGameObject
@@ -536,7 +537,6 @@ module Phaser {
             if (this.pointer9) { this.pointer9.update(); }
             if (this.pointer10) { this.pointer10.update(); }
 
-
         }
 
         /**
@@ -589,6 +589,11 @@ module Phaser {
                 this.totalTrackedObjects = 0;
             }
 
+        }
+
+        public resetSpeed(x: number, y: number) {
+            this._oldPosition.setTo(x, y);
+            this.speed.setTo(0, 0);
         }
 
         /**

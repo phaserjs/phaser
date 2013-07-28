@@ -238,6 +238,18 @@ module Phaser {
         }
 
         /**
+        * Brings this Sprite to the top of its current Group, if set.
+        */
+        public bringToTop() {
+
+            if (this.group)
+            {
+                this.group.bringToTop(this);
+            }
+
+        }
+
+        /**
         * The scale of the Sprite. A value of 1 is original scale. 0.5 is half size. 2 is double the size.
         * This is a reference to Sprite.transform.scale
         */

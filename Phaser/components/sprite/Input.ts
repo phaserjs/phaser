@@ -392,7 +392,7 @@ module Phaser.Components.Sprite {
 
                 if (this.bringToTop)
                 {
-                    this._parent.group.bringToTop(this._parent);
+                    this._parent.bringToTop();
                 }
 
             }
@@ -618,7 +618,7 @@ module Phaser.Components.Sprite {
 
             if (this.bringToTop)
             {
-                this._parent.group.bringToTop(this._parent);
+                this._parent.bringToTop();
             }
 
             this._parent.events.onDragStart.dispatch(this._parent, pointer);
