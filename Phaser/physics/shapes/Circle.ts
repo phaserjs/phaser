@@ -1,6 +1,6 @@
 /// <reference path="../../math/Vec2.ts" />
 /// <reference path="../../math/Vec2Utils.ts" />
-/// <reference path="../Manager.ts" />
+/// <reference path="../AdvancedPhysics.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
 
@@ -16,11 +16,11 @@ module Phaser.Physics.Shapes {
 
         constructor(radius: number, x?: number = 0, y?: number = 0) {
 
-            super(Manager.SHAPE_TYPE_CIRCLE);
+            super(AdvancedPhysics.SHAPE_TYPE_CIRCLE);
 
-            x = Manager.pixelsToMeters(x);
-            y = Manager.pixelsToMeters(y);
-            radius = Manager.pixelsToMeters(radius);
+            x = AdvancedPhysics.pixelsToMeters(x);
+            y = AdvancedPhysics.pixelsToMeters(y);
+            radius = AdvancedPhysics.pixelsToMeters(radius);
 
             this.center = new Phaser.Vec2(x, y);
             this.radius = radius;
@@ -58,7 +58,7 @@ module Phaser.Physics.Shapes {
         }
 
         public area(): number {
-            return Manager.areaForCircle(this.radius, 0);
+            return AdvancedPhysics.areaForCircle(this.radius, 0);
         }
 
         public centroid(): Phaser.Vec2 {
@@ -66,7 +66,7 @@ module Phaser.Physics.Shapes {
         }
 
         public inertia(mass: number): number {
-            return Manager.inertiaForCircle(mass, this.center, this.radius, 0);
+            return AdvancedPhysics.inertiaForCircle(mass, this.center, this.radius, 0);
         }
 
         public cacheData(xf: Transform) {

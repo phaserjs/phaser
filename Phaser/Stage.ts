@@ -170,6 +170,12 @@ module Phaser {
         public scaleMode: number;
 
         /**
+         * If set to true the game will never pause when the browser or browser tab loses focuses
+         * @type {boolean}
+         */
+        public disableVisibilityChange: bool = false;
+
+        /**
          * Stage boot
          */
         public boot() {
@@ -229,6 +235,11 @@ module Phaser {
          * This method is called when the canvas elements visibility is changed.
          */
         private visibilityChange(event) {
+
+            if (this.disableVisibilityChange)
+            {
+                return;
+            }
 
             if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
             {

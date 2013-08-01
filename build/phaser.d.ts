@@ -3342,10 +3342,20 @@ module Phaser {
         */
         public rotation : number;
         /**
+        * Brings this Sprite to the top of its current Group, if set.
+        */
+        public bringToTop(): void;
+        /**
         * The scale of the Sprite. A value of 1 is original scale. 0.5 is half size. 2 is double the size.
         * This is a reference to Sprite.transform.scale
         */
         public scale: Vec2;
+        /**
+        * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
+        * Set to null to disable, set to a Phaser.Rectangle object to control the region that will be rendered, anything outside the rectangle is ignored.
+        * @type {Phaser.Rectangle}
+        */
+        public crop: Rectangle;
         /**
         * The origin of the Sprite around which rotation and positioning takes place.
         * This is a reference to Sprite.transform.origin
@@ -3600,6 +3610,12 @@ module Phaser.Components {
         */
         public isDynamic: bool;
         /**
+        * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
+        * Set to null to disable, set to a Phaser.Rectangle object to control the region that will be rendered, anything outside the rectangle is ignored.
+        * @type {Phaser.Rectangle}
+        */
+        public crop: Rectangle;
+        /**
         * Updates the texture being used to render the Sprite.
         * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
         */
@@ -3732,7 +3748,7 @@ module Phaser {
         public getNextZIndex(): number;
         /**
         * Override this function to handle any deleting or "shutdown" type operations you might need,
-        * such as removing traditional Flash children like Basic objects.
+        * such as removing traditional children like Basic objects.
         */
         public destroy(): void;
         /**
@@ -3782,7 +3798,7 @@ module Phaser {
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
         * @returns {Sprite} The newly created sprite object.
         */
         public addNewSprite(x: number, y: number, key?: string, frame?, bodyType?: number): Sprite;
@@ -6956,6 +6972,14 @@ module Phaser {
         */
         public existingSprite(sprite: Sprite): Sprite;
         /**
+        * Add an existing Group to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param group The Group to add to the Game World
+        * @return {Phaser.Group} The Group object
+        */
+        public existingGroup(group: Group): Group;
+        /**
         * Add an existing Button to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
         *
@@ -7692,6 +7716,11 @@ module Phaser {
         * @type {number}
         */
         public scaleMode: number;
+        /**
+        * If set to true the game will never pause when the browser or browser tab loses focuses
+        * @type {boolean}
+        */
+        public disableVisibilityChange: bool;
         /**
         * Stage boot
         */
@@ -9571,6 +9600,8 @@ module Phaser {
         * @type {Pointer}
         **/
         public activePointer: Pointer;
+        public inputObjects: any[];
+        public totalTrackedObjects: number;
         /**
         * The X coordinate of the most recently active pointer.
         * This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
@@ -9597,8 +9628,6 @@ module Phaser {
         * @method start
         **/
         public boot(): void;
-        public inputObjects: any[];
-        public totalTrackedObjects: number;
         /**
         * Adds a new game object to be tracked by the Input Manager. Called by the Sprite.Input component, should not usually be called directly.
         * @method addGameObject
@@ -9620,6 +9649,7 @@ module Phaser {
         * @param hard {Boolean} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
         **/
         public reset(hard?: bool): void;
+        public resetSpeed(x: number, y: number): void;
         /**
         * Get the total number of inactive Pointers
         * @method totalInactivePointers
@@ -9822,6 +9852,14 @@ module Phaser {
         static renderPhysicsBodyInfo(body: Physics.Body, x: number, y: number, color?: string): void;
         static renderSpriteBounds(sprite: Sprite, camera?: Camera, color?: string): void;
         static renderRectangle(rect: Rectangle, fillStyle?: string): void;
+        static renderCircle(circle: Circle, fillStyle?: string): void;
+        /**
+        * Render text
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        static renderText(text: string, x: number, y: number, color?: string): void;
         static renderPhysicsBody(body: Physics.Body, lineWidth?: number, fillStyle?: string, sleepStyle?: string): void;
     }
 }
@@ -10378,6 +10416,20 @@ module Phaser {
         static normalFromMat4(): void;
     }
 }
+interface IPoint {
+    getDist(): number;
+}
+module Shapes {
+    class Point implements IPoint {
+        public x: number;
+        public y: number;
+        constructor(x: number, y: number);
+        public getDist(): number;
+        static origin: Point;
+    }
+}
+var p: IPoint;
+var dist: number;
 /**
 * Phaser - PixelUtils
 *

@@ -3659,7 +3659,8 @@ var Phaser;
                             this.startDrag(pointer);
                         }
                         if(this.bringToTop) {
-                            this._parent.group.bringToTop(this._parent);
+                            //this._parent.bringToTop();
+                            this._parent.game.world.group.bringToTop(this._parent);
                         }
                     }
                     //  Consume the event?
@@ -3836,7 +3837,7 @@ var Phaser;
                     }
                     this.updateDrag(pointer);
                     if(this.bringToTop) {
-                        this._parent.group.bringToTop(this._parent);
+                        this._parent.bringToTop();
                     }
                     this._parent.events.onDragStart.dispatch(this._parent, pointer);
                 };
@@ -7271,6 +7272,14 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
+        Sprite.prototype.bringToTop = /**
+        * Brings this Sprite to the top of its current Group, if set.
+        */
+        function () {
+            if(this.group) {
+                this.group.bringToTop(this);
+            }
+        };
         Object.defineProperty(Sprite.prototype, "alpha", {
             get: /**
             * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
@@ -8103,13 +8112,13 @@ var Phaser;
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
+        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
         * @returns {Sprite} The newly created sprite object.
         */
         function (x, y, key, frame, bodyType) {
             if (typeof key === "undefined") { key = ''; }
             if (typeof frame === "undefined") { frame = null; }
-            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DYNAMIC; }
+            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
             return this.add(new Phaser.Sprite(this.game, x, y, key, frame, bodyType));
         };
         Group.prototype.setObjectIDs = /**
@@ -8189,7 +8198,7 @@ var Phaser;
         */
         function (object, splice) {
             if (typeof splice === "undefined") { splice = false; }
-            console.log('removing from group');
+            console.log('removing from group: ', object.name);
             this._i = this.members.indexOf(object);
             if(this._i < 0 || (this._i >= this.members.length)) {
                 return null;
@@ -8342,6 +8351,10 @@ var Phaser;
         * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
         */
         function (obj1, obj2) {
+            if(!obj1 || !obj2) {
+                //console.log('null objects in sort', obj1, obj2);
+                return 0;
+            }
             if(obj1[this._sortIndex] < obj2[this._sortIndex]) {
                 return this._sortOrder;
             } else if(obj1[this._sortIndex] > obj2[this._sortIndex]) {
@@ -14135,6 +14148,16 @@ var Phaser;
         function (sprite) {
             return this._world.group.add(sprite);
         };
+        GameObjectFactory.prototype.existingGroup = /**
+        * Add an existing Group to the current world.
+        * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
+        *
+        * @param group The Group to add to the Game World
+        * @return {Phaser.Group} The Group object
+        */
+        function (group) {
+            return this._world.group.add(group);
+        };
         GameObjectFactory.prototype.existingButton = /**
         * Add an existing Button to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
@@ -17621,7 +17644,9 @@ var Phaser;
                 //this.game.input.y = this.y * this.game.input.scale.y;
                 this.game.input.x = this.x;
                 this.game.input.y = this.y;
+                this.game.input.position.setTo(this.x, this.y);
                 this.game.input.onDown.dispatch(this);
+                this.game.input.resetSpeed(this.x, this.y);
             }
             this._stateReset = false;
             this.totalTouches++;
@@ -18934,6 +18959,10 @@ var Phaser;
                 this.totalTrackedObjects = 0;
             }
         };
+        Input.prototype.resetSpeed = function (x, y) {
+            this._oldPosition.setTo(x, y);
+            this.speed.setTo(0, 0);
+        };
         Object.defineProperty(Input.prototype, "totalInactivePointers", {
             get: /**
             * Get the total number of inactive Pointers
@@ -19870,6 +19899,24 @@ var Phaser;
             DebugUtils.context.fillStyle = fillStyle;
             DebugUtils.context.fillRect(rect.x, rect.y, rect.width, rect.height);
         };
+        DebugUtils.renderCircle = function renderCircle(circle, fillStyle) {
+            if (typeof fillStyle === "undefined") { fillStyle = 'rgba(0,255,0,0.3)'; }
+            DebugUtils.context.fillStyle = fillStyle;
+            DebugUtils.context.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false);
+            DebugUtils.context.fill();
+        };
+        DebugUtils.renderText = /**
+        * Render text
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function renderText(text, x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.context.font = '16px Courier';
+            DebugUtils.context.fillStyle = color;
+            DebugUtils.context.fillText(text, x, y);
+        };
         DebugUtils.renderPhysicsBody = function renderPhysicsBody(body, lineWidth, fillStyle, sleepStyle) {
             if (typeof lineWidth === "undefined") { lineWidth = 1; }
             if (typeof fillStyle === "undefined") { fillStyle = 'rgba(0,255,0,0.2)'; }
@@ -20760,15 +20807,10 @@ var Phaser;
         function contains(a, x, y) {
             //  Check if x/y are within the bounds first
             if(x >= a.left && x <= a.right && y >= a.top && y <= a.bottom) {
-                var dx = a.x - x;
-                var dy = a.y - y;
-                dx *= dx;
-                dy *= dy;
-                var radSqr = a.radius * a.radius;
-                console.log('within bounds', dx, dy, radSqr);
-                return (dx + dy) <= radSqr;
-                //return (a.left * a.left + a.top * a.top) <= (a.radius * a.radius);
-                            }
+                var dx = (a.x - x) * (a.x - x);
+                var dy = (a.y - y) * (a.y - y);
+                return (dx + dy) <= (a.radius * a.radius);
+            }
             return false;
         };
         CircleUtils.containsPoint = /**

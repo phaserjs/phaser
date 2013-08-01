@@ -186,6 +186,14 @@
     <Content Include="net\Net.js">
       <DependentUpon>Net.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="physics\ArcadePhysics.ts" />
+    <TypeScriptCompile Include="physics\AdvancedPhysics.ts" />
+    <Content Include="physics\AdvancedPhysics.js">
+      <DependentUpon>AdvancedPhysics.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\ArcadePhysics.js">
+      <DependentUpon>ArcadePhysics.ts</DependentUpon>
+    </Content>
     <Content Include="physics\Body.js">
       <DependentUpon>Body.ts</DependentUpon>
     </Content>
@@ -269,6 +277,10 @@
     <TypeScriptCompile Include="system\screens\OrientationScreen.ts" />
     <Content Include="system\screens\OrientationScreen.js">
       <DependentUpon>OrientationScreen.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="utils\BodyUtils.ts" />
+    <Content Include="utils\BodyUtils.js">
+      <DependentUpon>BodyUtils.ts</DependentUpon>
     </Content>
     <Content Include="utils\CircleUtils.js">
       <DependentUpon>CircleUtils.ts</DependentUpon>

@@ -72,19 +72,19 @@ module Phaser.Physics {
         }
 
         public get x(): number {
-            return Phaser.Physics.Manager.metersToPixels(this.mins.x);
+            return AdvancedPhysics.metersToPixels(this.mins.x);
         }
 
         public get y(): number {
-            return Phaser.Physics.Manager.metersToPixels(this.mins.y);
+            return AdvancedPhysics.metersToPixels(this.mins.y);
         }
 
         public get width(): number {
-            return Phaser.Physics.Manager.metersToPixels(this.maxs.x - this.mins.x);
+            return AdvancedPhysics.metersToPixels(this.maxs.x - this.mins.x);
         }
 
         public get height(): number {
-            return Phaser.Physics.Manager.metersToPixels(this.maxs.y - this.mins.y);
+            return AdvancedPhysics.metersToPixels(this.maxs.y - this.mins.y);
         }
 
         public get right(): number {

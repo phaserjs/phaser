@@ -161,6 +161,13 @@ module Phaser.Components {
         public isDynamic: bool = false;
 
         /**
+         * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
+         * Set to null to disable, set to a Phaser.Rectangle object to control the region that will be rendered, anything outside the rectangle is ignored.
+         * @type {Phaser.Rectangle}
+         */
+        public crop: Phaser.Rectangle;
+
+        /**
          * Updates the texture being used to render the Sprite.
          * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
          */

@@ -3,7 +3,8 @@
 /// <reference path="../math/Vec2Utils.ts" />
 /// <reference path="../math/Transform.ts" />
 /// <reference path="../math/TransformUtils.ts" />
-/// <reference path="Manager.ts" />
+/// <reference path="../utils/BodyUtils.ts" />
+/// <reference path="AdvancedPhysics.ts" />
 /// <reference path="joints/Joint.ts" />
 /// <reference path="Bounds.ts" />
 /// <reference path="Space.ts" />
@@ -26,7 +27,7 @@ module Phaser.Physics {
 
         constructor(sprite: Phaser.Sprite, type: number, x?: number = 0, y?: number = 0, shapeType?: number = 0) {
 
-            this.id = Phaser.Physics.Manager.bodyCounter++;
+            this.id = Phaser.Physics.AdvancedPhysics.bodyCounter++;
             this.name = 'body' + this.id;
             this.type = type;
 
@@ -34,12 +35,12 @@ module Phaser.Physics {
             {
                 this.sprite = sprite;
                 this.game = sprite.game;
-                this.position = new Phaser.Vec2(Phaser.Physics.Manager.pixelsToMeters(sprite.x), Phaser.Physics.Manager.pixelsToMeters(sprite.y));
+                this.position = new Phaser.Vec2(Phaser.Physics.AdvancedPhysics.pixelsToMeters(sprite.x), Phaser.Physics.AdvancedPhysics.pixelsToMeters(sprite.y));
                 this.angle = this.game.math.degreesToRadians(sprite.rotation);
             }
             else
             {
-                this.position = new Phaser.Vec2(Phaser.Physics.Manager.pixelsToMeters(x), Phaser.Physics.Manager.pixelsToMeters(y));
+                this.position = new Phaser.Vec2(Phaser.Physics.AdvancedPhysics.pixelsToMeters(x), Phaser.Physics.AdvancedPhysics.pixelsToMeters(y));
                 this.angle = 0;
             }
 
@@ -71,11 +72,11 @@ module Phaser.Physics {
             {
                 if (shapeType == 0)
                 {
-                    this.addBox(0, 0, this.sprite.width, this.sprite.height, 1, 1, 1);
+                    Phaser.BodyUtils.addBox(this, 0, 0, this.sprite.width, this.sprite.height, 1, 1, 1);
                 }
                 else
                 {
-                    this.addCircle(Math.max(this.sprite.width, this.sprite.height) / 2, 0, 0, 1, 1, 1);
+                    Phaser.BodyUtils.addCircle(this, Math.max(this.sprite.width, this.sprite.height) / 2, 0, 0, 1, 1, 1);
                 }
             }
 
@@ -193,22 +194,6 @@ module Phaser.Physics {
 	    public stepCount: number = 0;
 	    public space: Space;
 
-	    public duplicate() {
-
-	        console.log('body duplicate called');
-
-	        //var body = new Body(this.type, this.transform.t, this.rotation);
-	        
-            //for (var i = 0; i < this.shapes.length; i++)
-	        //{
-	        //    body.addShape(this.shapes[i].duplicate());
-	        //}
-
-	        //body.resetMassData();
-
-	        //return body;
-
-	    }
 
 	    public get isDisabled(): bool {
 	        return this.type == Phaser.Types.BODY_DISABLED ? true : false;
@@ -243,61 +228,6 @@ module Phaser.Physics {
 
 	    }
 
-	    public addPoly(verts, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Shapes.Poly {
-
-	        var poly: Phaser.Physics.Shapes.Poly = new Phaser.Physics.Shapes.Poly(verts);
-	        poly.elasticity = elasticity;
-	        poly.friction = friction;
-	        poly.density = density;
-
-	        this.addShape(poly);
-	        this.resetMassData();
-
-	        return poly;
-
-	    }
-
-	    public addTriangle(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Shapes.Triangle {
-
-	        var tri: Phaser.Physics.Shapes.Triangle = new Phaser.Physics.Shapes.Triangle(x1, y1, x2, y2, x3, y3);
-	        tri.elasticity = elasticity;
-	        tri.friction = friction;
-	        tri.density = density;
-
-	        this.addShape(tri);
-	        this.resetMassData();
-
-	        return tri;
-
-	    }
-
-	    public addBox(x: number, y: number, width: number, height: number, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Shapes.Box {
-
-	        var box: Phaser.Physics.Shapes.Box = new Phaser.Physics.Shapes.Box(x, y, width, height);
-	        box.elasticity = elasticity;
-	        box.friction = friction;
-	        box.density = density;
-
-	        this.addShape(box);
-	        this.resetMassData();
-
-	        return box;
-
-	    }
-
-	    public addCircle(radius: number, x?: number = 0, y?: number = 0, elasticity?: number = 1, friction?: number = 1, density?: number = 1): Phaser.Physics.Shapes.Circle {
-
-	        var circle: Phaser.Physics.Shapes.Circle = new Phaser.Physics.Shapes.Circle(radius, x, y);
-	        circle.elasticity = elasticity;
-	        circle.friction = friction;
-	        circle.density = density;
-
-	        this.addShape(circle);
-	        this.resetMassData();
-
-	        return circle;
-
-	    }
 
 	    public addShape(shape) {
 
@@ -344,7 +274,7 @@ module Phaser.Physics {
 
 	    public setPosition(x: number, y: number) {
 
-	        this._newPosition.setTo(this.game.physics.pixelsToMeters(x), this.game.physics.pixelsToMeters(y));
+	        this._newPosition.setTo(Phaser.Physics.AdvancedPhysics.pixelsToMeters(x), Phaser.Physics.AdvancedPhysics.pixelsToMeters(y));
 	        
             this.setTransform(this._newPosition, this.angle);
 

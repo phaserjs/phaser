@@ -1,5 +1,5 @@
 /// <reference path="../../math/Vec2.ts" />
-/// <reference path="../Manager.ts" />
+/// <reference path="../AdvancedPhysics.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
 /// <reference path="Poly.ts" />
@@ -19,10 +19,10 @@ module Phaser.Physics.Shapes {
 
             console.log('Box px', x, y, width, height);
 
-            x = Manager.pixelsToMeters(x);
-            y = Manager.pixelsToMeters(y);
-            width = Manager.pixelsToMeters(width);
-            height = Manager.pixelsToMeters(height);
+            x = Phaser.Physics.AdvancedPhysics.pixelsToMeters(x);
+            y = Phaser.Physics.AdvancedPhysics.pixelsToMeters(y);
+            width = Phaser.Physics.AdvancedPhysics.pixelsToMeters(width);
+            height = Phaser.Physics.AdvancedPhysics.pixelsToMeters(height);
 
             console.log('Box m', x, y, width, height);
 

@@ -393,6 +393,7 @@ module Phaser.Components.Sprite {
                 if (this.bringToTop)
                 {
                     this._parent.bringToTop();
+                    //this._parent.game.world.group.bringToTop(this._parent);
                 }
 
             }

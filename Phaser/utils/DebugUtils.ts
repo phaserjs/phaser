@@ -124,7 +124,7 @@ module Phaser {
             {
                 DebugUtils.context.beginPath();
 
-                if (body.shapes[s].type == Phaser.Physics.Manager.SHAPE_TYPE_POLY)
+                if (body.shapes[s].type == Phaser.Physics.AdvancedPhysics.SHAPE_TYPE_POLY)
                 {
                     var verts = body.shapes[s].tverts;
 
@@ -140,7 +140,7 @@ module Phaser {
                     //		            DebugUtils.context.lineTo(body.position.x * 50 + verts[0].x, body.position.y * 50 + verts[0].y);
                     DebugUtils.context.lineTo(verts[0].x * 50, verts[0].y * 50);
                 }
-                else if (body.shapes[s].type == Phaser.Physics.Manager.SHAPE_TYPE_CIRCLE)
+                else if (body.shapes[s].type == Phaser.Physics.AdvancedPhysics.SHAPE_TYPE_CIRCLE)
                     {
                     var circle = <Phaser.Physics.Shapes.Circle> body.shapes[s];
                     DebugUtils.context.arc(circle.tc.x * 50, circle.tc.y * 50, circle.radius * 50, 0, Math.PI * 2, false);

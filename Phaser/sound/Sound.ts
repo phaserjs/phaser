@@ -75,7 +75,7 @@ module Phaser {
             {
                 this._sound = this.game.cache.getSoundData(this.key);
                 this.totalDuration = this._sound.duration;
-                console.log('sound has unlocked', this._sound);
+                //console.log('sound has unlocked', this._sound);
             }
 
         }
@@ -183,32 +183,32 @@ module Phaser {
 
                 if (this.currentTime >= this.duration)
                 {
-                    console.log(this.currentMarker, 'has hit duration');
+                    //console.log(this.currentMarker, 'has hit duration');
 
                     if (this.usingWebAudio)
                     {
                         if (this.loop)
                         {
-                            console.log('loop1');
+                            //console.log('loop1');
 
                             //  won't work with markers, needs to reset the position
                             this.onLoop.dispatch(this);
 
                             if (this.currentMarker == '')
                             {
-                                console.log('loop2');
+                                //console.log('loop2');
                                 this.currentTime = 0;
                                 this.startTime = this.game.time.now;
                             }
                             else
                             {
-                                console.log('loop3');
+                                //console.log('loop3');
                                 this.play(this.currentMarker, 0, this.volume, true, true);
                             }
                         }
                         else
                         {
-                            console.log('stopping, no loop for marker');
+                            //console.log('stopping, no loop for marker');
                             this.stop();
                         }
                     }
@@ -241,7 +241,7 @@ module Phaser {
          */
         public play(marker: string = '', position?: number = 0, volume?: number = 1, loop?: bool = false, forceRestart: bool = false) {
 
-            console.log('play', marker, 'current is', this.currentMarker);
+            //console.log('play', marker, 'current is', this.currentMarker);
 
             if (this.isPlaying == true && forceRestart == false && this.override == false)
             {
@@ -251,7 +251,7 @@ module Phaser {
 
             if (this.isPlaying && this.override)
             {
-                console.log('asked to play', marker, 'but already playing', this.currentMarker);
+                //console.log('asked to play', marker, 'but already playing', this.currentMarker);
                 if (this.usingWebAudio)
                 {
                     if (typeof this._sound.stop === 'undefined')
@@ -279,7 +279,7 @@ module Phaser {
                 this.loop = this.markers[marker].loop;
                 this.duration = this.markers[marker].duration * 1000;
 
-                console.log('marker info loaded', this.loop, this.duration);
+                //console.log('marker info loaded', this.loop, this.duration);
 
                 this._tempMarker = marker;
                 this._tempPosition = this.position;
@@ -345,7 +345,7 @@ module Phaser {
                     this.stopTime = this.startTime + this.duration;
                     this.onPlay.dispatch(this);
 
-                    console.log('playing, start', this.startTime, 'stop');
+                    //console.log('playing, start', this.startTime, 'stop');
 
                 }
                 else
@@ -459,7 +459,7 @@ module Phaser {
          */
         public stop() {
 
-            console.log('Sound.stop', this.currentMarker);
+            //console.log('Sound.stop', this.currentMarker);
 
             if (this.isPlaying && this._sound)
             {

@@ -92,6 +92,10 @@
     <Content Include="cameras\world sprite.js">
       <DependentUpon>world sprite.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="groups\bring to top 1.ts" />
+    <Content Include="groups\bring to top 1.js">
+      <DependentUpon>bring to top 1.ts</DependentUpon>
+    </Content>
     <Content Include="groups\create group 1.js">
       <DependentUpon>create group 1.ts</DependentUpon>
     </Content>

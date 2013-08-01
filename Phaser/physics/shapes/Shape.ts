@@ -1,6 +1,6 @@
 /// <reference path="../../math/Vec2.ts" />
 /// <reference path="../../math/Vec2Utils.ts" />
-/// <reference path="../Manager.ts" />
+/// <reference path="../AdvancedPhysics.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="../Bounds.ts" />
 /// <reference path="IShape.ts" />
@@ -17,7 +17,7 @@ module Phaser.Physics {
 
         constructor(type: number) {
 
-            this.id = Phaser.Physics.Manager.shapeCounter++;
+            this.id = AdvancedPhysics.shapeCounter++;
             this.type = type;
 
             this.elasticity = 0.0;

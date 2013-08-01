@@ -1,6 +1,6 @@
 /// <reference path="../../math/Vec2.ts" />
 /// <reference path="../../math/Vec2Utils.ts" />
-/// <reference path="../Manager.ts" />
+/// <reference path="../AdvancedPhysics.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
 
@@ -16,7 +16,7 @@ module Phaser.Physics.Shapes {
 
         constructor(a, b, radius: number) {
 
-            super(Manager.SHAPE_TYPE_SEGMENT);
+            super(AdvancedPhysics.SHAPE_TYPE_SEGMENT);
 
             this.a = a.duplicate();
             this.b = b.duplicate();
@@ -81,15 +81,15 @@ module Phaser.Physics.Shapes {
         }
 
         public area(): number {
-            return Manager.areaForSegment(this.a, this.b, this.radius);
+            return AdvancedPhysics.areaForSegment(this.a, this.b, this.radius);
         }
 
         public centroid(): Phaser.Vec2 {
-            return Manager.centroidForSegment(this.a, this.b);
+            return AdvancedPhysics.centroidForSegment(this.a, this.b);
         }
 
         public inertia(mass: number): number {
-            return Manager.inertiaForSegment(mass, this.a, this.b);
+            return AdvancedPhysics.inertiaForSegment(mass, this.a, this.b);
         }
 
         public cacheData(xf:Transform) {

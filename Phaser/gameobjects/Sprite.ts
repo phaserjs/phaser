@@ -71,9 +71,9 @@ module Phaser {
 
             if (bodyType !== Phaser.Types.BODY_DISABLED)
             {
-                this.body = new Phaser.Physics.Body(this, bodyType, 0, 0, shapeType);
-                this.game.physics.addBody(this.body);
-                this.transform.origin.setTo(0.5, 0.5);
+                //this.body = new Phaser.Physics.Body(this, bodyType, 0, 0, shapeType);
+                //this.game.physics.addBody(this.body);
+                //this.transform.origin.setTo(0.5, 0.5);
             }
 
             this.worldView = new Rectangle(x, y, this.width, this.height);
@@ -88,6 +88,7 @@ module Phaser {
             this.scale = this.transform.scale;
             this.alpha = this.texture.alpha;
             this.origin = this.transform.origin;
+            this.crop = this.texture.crop;
 
         }
 
@@ -254,6 +255,13 @@ module Phaser {
         * This is a reference to Sprite.transform.scale
         */
         public scale: Phaser.Vec2;
+
+        /**
+         * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
+         * Set to null to disable, set to a Phaser.Rectangle object to control the region that will be rendered, anything outside the rectangle is ignored.
+         * @type {Phaser.Rectangle}
+         */
+        public crop: Phaser.Rectangle;
 
         /**
         * The origin of the Sprite around which rotation and positioning takes place.

@@ -151,7 +151,7 @@ module Phaser {
 
         /**
          * Override this function to handle any deleting or "shutdown" type operations you might need,
-         * such as removing traditional Flash children like Basic objects.
+         * such as removing traditional children like Basic objects.
          */
         public destroy() {
 
@@ -417,10 +417,10 @@ module Phaser {
          * @param y {number} Y position of the new sprite.
          * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
          * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
+         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
          * @returns {Sprite} The newly created sprite object.
          */
-        public addNewSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC): Sprite {
+        public addNewSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED): Sprite {
             return <Sprite> this.add(new Sprite(this.game, x, y, key, frame, bodyType));
         }
 
@@ -527,7 +527,7 @@ module Phaser {
          */
         public remove(object, splice: bool = false) {
 
-            console.log('removing from group');
+            //console.log('removing from group: ', object.name);
 
             this._i = this.members.indexOf(object);
 
@@ -546,7 +546,7 @@ module Phaser {
                 this.members[this._i] = null;
             }
 
-            console.log('nulled');
+            //console.log('nulled');
 
             if (object['events'])
             {
@@ -727,6 +727,12 @@ module Phaser {
          * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
          */
         public sortHandler(obj1, obj2): number {
+
+            if (!obj1 || !obj2)
+            {
+                //console.log('null objects in sort', obj1, obj2);
+                return 0;
+            }
 
             if (obj1[this._sortIndex] < obj2[this._sortIndex])
             {

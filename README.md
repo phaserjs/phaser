@@ -36,7 +36,6 @@ TODO:
 * If stage.clear set to false and game pauses, when it unpauses you still see the pause arrow - resolve this
 * Add clip support + shape options to Texture Component.
 * Make sure I'm using Point and not Vec2 when it's not a directional vector I need
-* Bug with setting scale or anything on a Sprite inside a Group, or maybe group.addNewSprite issue
 * Drag Sprite with "snap to center" uses local coords not world, so fails on scrolling world (no center lock works fine)
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
 * Pointer worldX/Y don't appear to be correct for some reason
@@ -62,8 +61,16 @@ TODO:
 * Stage lost to mute
 * When game is paused Pointer shouldn't process targetObjects / change cursor
 * Need to limit touch priority of items in groups?
-* Bring to Top doesn't seem to respect the group they are in
-* Add crop support
+* Check if it works from an iFrame
+* Bitmap Font support
+* Basic Window component (maybe a propogating Group?)
+* Put ArcadePhysics back in
+* Look at the N+ tile support maybe with ArcadePhysics?
+* Pixel-perfect click check
+* Check Flash atlas export is supported
+* Plug-in Support
+
+
 
 V1.0.0
 
@@ -160,10 +167,10 @@ V1.0.0
 * Added Phaser.Net for browser and network specific functions, currently includes query string parsing and updating methods.
 * Added a new CSS3 Filters component. Apply blur, grayscale, sepia, brightness, contrast, hue rotation, invert, opacity and saturate filters to the games stage.
 * Fixed the CircleUtils.contains and containsPoint methods.
-* Fixed issue with Input.speed values being too high on touch events.
-
-
-
+* Fixed issue with Input.speed values being too high on new touch events.
+* Added Sprite.bringToTop()
+* Added Stage.disableVisibilityChange to stop the auto pause/resume from ever firing.
+* Added crop support to the Texture component, so you can do Sprite.crop to restrict rendering to a specified Rectangle without distortion.
 
 V0.9.6
 

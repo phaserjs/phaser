@@ -1,6 +1,6 @@
 /// <reference path="../math/Vec2.ts" />
 /// <reference path="../math/Vec2Utils.ts" />
-/// <reference path="Manager.ts" />
+/// <reference path="AdvancedPhysics.ts" />
 /// <reference path="Body.ts" />
 /// <reference path="shapes/Shape.ts" />
 /// <reference path="ContactSolver.ts" />
@@ -18,7 +18,7 @@ module Phaser.Physics {
 
     export class Space {
 
-        constructor(manager: Phaser.Physics.Manager) {
+        constructor(manager: Phaser.Physics.AdvancedPhysics) {
 
             this._manager = manager;
 
@@ -39,7 +39,7 @@ module Phaser.Physics {
 
         }
 
-        private _manager: Phaser.Physics.Manager;
+        private _manager: Phaser.Physics.AdvancedPhysics;
 
         //  Delta Timer
         private _delta: number;
@@ -85,9 +85,9 @@ module Phaser.Physics {
 
         public clear() {
 
-            Manager.shapeCounter = 0;
-            Manager.bodyCounter = 0;
-            Manager.jointCounter = 0;
+            AdvancedPhysics.shapeCounter = 0;
+            AdvancedPhysics.bodyCounter = 0;
+            AdvancedPhysics.jointCounter = 0;
 
             for (var i = 0; i < this.bodies.length; i++)
             {
@@ -379,7 +379,7 @@ module Phaser.Physics {
                 {
                     var shape = body.shapes[j];
 
-                    if (shape.type != Manager.SHAPE_TYPE_POLY)
+                    if (shape.type != AdvancedPhysics.SHAPE_TYPE_POLY)
                     {
                         continue;
                     }
@@ -514,7 +514,7 @@ module Phaser.Physics {
 
                             var contactArr = [];
 
-                            if (!Manager.collision.collide(this._shape1, this._shape2, contactArr))
+                            if (!AdvancedPhysics.collision.collide(this._shape1, this._shape2, contactArr))
                             {
                                 continue;
                             }

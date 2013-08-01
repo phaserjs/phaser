@@ -1,6 +1,6 @@
 /// <reference path="../math/Vec2.ts" />
 /// <reference path="../math/Vec2Utils.ts" />
-/// <reference path="Manager.ts" />
+/// <reference path="AdvancedPhysics.ts" />
 /// <reference path="Body.ts" />
 /// <reference path="shapes/Shape.ts" />
 

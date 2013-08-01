@@ -459,6 +459,7 @@ module Phaser {
             }
 
             sprite.renderOrderID = this._count;
+
             this._count++;
 
             //  Reset our temp vars
@@ -522,6 +523,18 @@ module Phaser {
             {
                 this._dx -= (this._dw * sprite.transform.origin.x);
                 this._dy -= (this._dh * sprite.transform.origin.y);
+            }
+
+            if (sprite.crop)
+            {
+                this._sx += sprite.crop.x * sprite.transform.scale.x;
+                this._sy += sprite.crop.y * sprite.transform.scale.y;
+                this._sw = sprite.crop.width * sprite.transform.scale.x;
+                this._sh = sprite.crop.height * sprite.transform.scale.y;
+                this._dx += sprite.crop.x * sprite.transform.scale.x;
+                this._dy += sprite.crop.y * sprite.transform.scale.y;
+                this._dw = sprite.crop.width * sprite.transform.scale.x;
+                this._dh = sprite.crop.height * sprite.transform.scale.y;
             }
 
             this._sx = Math.round(this._sx);

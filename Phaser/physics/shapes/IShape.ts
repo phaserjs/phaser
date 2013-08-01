@@ -1,7 +1,7 @@
 /// <reference path="../../math/Vec2.ts" />
 /// <reference path="../../geom/Point.ts" />
 /// <reference path="../../math/Vec2Utils.ts" />
-/// <reference path="../Manager.ts" />
+/// <reference path="../AdvancedPhysics.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="Shape.ts" />
 

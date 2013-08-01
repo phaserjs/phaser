@@ -1,7 +1,7 @@
 /// <reference path="../../math/Vec2.ts" />
 /// <reference path="../../geom/Point.ts" />
 /// <reference path="../../math/Vec2Utils.ts" />
-/// <reference path="../Manager.ts" />
+/// <reference path="../AdvancedPhysics.ts" />
 /// <reference path="../Body.ts" />
 
 /**
@@ -16,7 +16,7 @@ module Phaser.Physics {
 
         constructor(type: number, body1:Phaser.Physics.Body, body2:Phaser.Physics.Body, collideConnected) {
 
-            this.id = Phaser.Physics.Manager.jointCounter++;
+            this.id = AdvancedPhysics.jointCounter++;
             this.type = type;
 
             this.body1 = body1;

@@ -1,6 +1,6 @@
 /// <reference path="../../math/Vec2.ts" />
 /// <reference path="../../math/Vec2Utils.ts" />
-/// <reference path="../Manager.ts" />
+/// <reference path="../AdvancedPhysics.ts" />
 /// <reference path="../Body.ts" />
 /// <reference path="../Plane.ts" />
 /// <reference path="Shape.ts" />
@@ -19,7 +19,7 @@ module Phaser.Physics.Shapes {
         //  to seed this polygon (i.e. Vec2 objects, or just straight JS objects) and must wind COUNTER clockwise
         constructor(verts?) {
 
-            super(Manager.SHAPE_TYPE_POLY);
+            super(AdvancedPhysics.SHAPE_TYPE_POLY);
 
             this.verts = [];
             this.planes = [];
@@ -117,15 +117,15 @@ module Phaser.Physics.Shapes {
         }
 
         public area(): number {
-            return Manager.areaForPoly(this.verts);
+            return AdvancedPhysics.areaForPoly(this.verts);
         }
 
         public centroid(): Phaser.Vec2 {
-            return Manager.centroidForPoly(this.verts);
+            return AdvancedPhysics.centroidForPoly(this.verts);
         }
 
         public inertia(mass: number): number {
-            return Manager.inertiaForPoly(mass, this.verts, new Phaser.Vec2);
+            return AdvancedPhysics.inertiaForPoly(mass, this.verts, new Phaser.Vec2);
         }
 
         public cacheData(xf:Transform) {
@@ -134,7 +134,7 @@ module Phaser.Physics.Shapes {
 
             var numVerts = this.verts.length;
 
-            Manager.write('----------- Poly cacheData = ' + numVerts);
+            AdvancedPhysics.write('----------- Poly cacheData = ' + numVerts);
 
             if (numVerts == 0)
             {
@@ -145,7 +145,7 @@ module Phaser.Physics.Shapes {
             {
                 this.tverts[i] = Phaser.TransformUtils.transform(xf, this.verts[i]);
                 //this.tverts[i] = xf.transform(this.verts[i]);
-                Manager.write('tvert' + i + ' = ' + this.tverts[i].toString());
+                AdvancedPhysics.write('tvert' + i + ' = ' + this.tverts[i].toString());
             }
 
             if (numVerts < 2)
@@ -160,15 +160,15 @@ module Phaser.Physics.Shapes {
                 var b = this.tverts[(i + 1) % numVerts];
                 var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
 
-		        Manager.write('a = ' + a.toString());
-		        Manager.write('b = ' + b.toString());
-		        Manager.write('n = ' + n.toString());
+		        AdvancedPhysics.write('a = ' + a.toString());
+		        AdvancedPhysics.write('b = ' + b.toString());
+		        AdvancedPhysics.write('n = ' + n.toString());
 
                 this.tplanes[i].normal = n;
                 this.tplanes[i].d = Phaser.Vec2Utils.dot(n, a);
 
-		        Manager.write('tplanes' + i + ' n = ' + this.tplanes[i].normal.toString());
-		        Manager.write('tplanes' + i + ' d = ' + this.tplanes[i].d.toString());
+		        AdvancedPhysics.write('tplanes' + i + ' n = ' + this.tplanes[i].normal.toString());
+		        AdvancedPhysics.write('tplanes' + i + ' d = ' + this.tplanes[i].d.toString());
 
                 this.bounds.addPoint(a);
 

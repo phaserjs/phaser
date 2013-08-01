@@ -5,7 +5,7 @@
 /// <reference path="shapes/Circle.ts" />
 /// <reference path="shapes/Poly.ts" />
 /// <reference path="shapes/Segment.ts" />
-/// <reference path="Manager.ts" />
+/// <reference path="AdvancedPhysics.ts" />
 /// <reference path="Body.ts" />
 /// <reference path="Contact.ts" />
 
@@ -22,51 +22,51 @@ module Phaser.Physics {
         public collide(a, b, contacts: Contact[]) {
 
             //  Circle (a is the circle)
-            if (a.type == Manager.SHAPE_TYPE_CIRCLE)
+            if (a.type == AdvancedPhysics.SHAPE_TYPE_CIRCLE)
             {
-                if (b.type == Manager.SHAPE_TYPE_CIRCLE)
+                if (b.type == AdvancedPhysics.SHAPE_TYPE_CIRCLE)
                 {
                     return this.circle2Circle(a, b, contacts);
                 }
-                else if (b.type == Manager.SHAPE_TYPE_SEGMENT)
+                else if (b.type == AdvancedPhysics.SHAPE_TYPE_SEGMENT)
                 {
                     return this.circle2Segment(a, b, contacts);
                 }
-                else if (b.type == Manager.SHAPE_TYPE_POLY)
+                else if (b.type == AdvancedPhysics.SHAPE_TYPE_POLY)
                 {
                     return this.circle2Poly(a, b, contacts);
                 }
             }
 
             //  Segment (a is the segment)
-            if (a.type == Manager.SHAPE_TYPE_SEGMENT)
+            if (a.type == AdvancedPhysics.SHAPE_TYPE_SEGMENT)
             {
-                if (b.type == Manager.SHAPE_TYPE_CIRCLE)
+                if (b.type == AdvancedPhysics.SHAPE_TYPE_CIRCLE)
                 {
                     return this.circle2Segment(b, a, contacts);
                 }
-                else if (b.type == Manager.SHAPE_TYPE_SEGMENT)
+                else if (b.type == AdvancedPhysics.SHAPE_TYPE_SEGMENT)
                 {
                     return this.segment2Segment(a, b, contacts);
                 }
-                else if (b.type == Manager.SHAPE_TYPE_POLY)
+                else if (b.type == AdvancedPhysics.SHAPE_TYPE_POLY)
                 {
                     return this.segment2Poly(a, b, contacts);
                 }
             }
 
             //  Poly (a is the poly)
-            if (a.type == Manager.SHAPE_TYPE_POLY)
+            if (a.type == AdvancedPhysics.SHAPE_TYPE_POLY)
             {
-                if (b.type == Manager.SHAPE_TYPE_CIRCLE)
+                if (b.type == AdvancedPhysics.SHAPE_TYPE_CIRCLE)
                 {
                     return this.circle2Poly(b, a, contacts);
                 }
-                else if (b.type == Manager.SHAPE_TYPE_SEGMENT)
+                else if (b.type == AdvancedPhysics.SHAPE_TYPE_SEGMENT)
                 {
                     return this.segment2Poly(b, a, contacts);
                 }
-                else if (b.type == Manager.SHAPE_TYPE_POLY)
+                else if (b.type == AdvancedPhysics.SHAPE_TYPE_POLY)
                 {
                     return this.poly2Poly(a, b, contacts);
                 }
