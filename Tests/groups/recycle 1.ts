@@ -2,8 +2,8 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
 
-    var friendAndFoe,
-        enemies;
+    var friendAndFoe: Phaser.Group,
+        enemies: Phaser.Group;
 
     function init() {
         game.load.image('ufo', 'assets/sprites/ufo.png');
@@ -29,7 +29,7 @@
         game.add.button(16, 130, 'button', killBaddie, 1, 1, 1);
     }
     function killBaddie() {
-        var baddie = enemies.getFirstAlive();
+        var baddie: Phaser.Sprite = enemies.getFirstAlive();
         if (baddie) baddie.kill();
     }
     function createBaddie() {
@@ -37,7 +37,7 @@
         // you did not pass an objectClass parameter.
         // It will create new object instance of the given class if no "dead"
         // object can be found inside the group.
-        var enemy = enemies.recycle(Phaser.Sprite);
+        var enemy: Phaser.Sprite = enemies.recycle(Phaser.Sprite);
         enemy.texture.loadImage('baddie', false);
         enemy.texture.opaque = false;
         enemy.x = 360 + Math.random() * 200;

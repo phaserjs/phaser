@@ -1,8 +1,9 @@
 (function() {
     var game = new Phaser.Game(this, 'game', 800, 600, null, create, update, render);
 
-    var rects = [],
-        rect, lastCreated;
+    var rects: Phaser.Rectangle[] = [],
+        rect: Phaser.Rectangle,
+        lastCreated: Phaser.Rectangle;
 
     function create() {
         // Create a rect first.
@@ -17,7 +18,7 @@
         // body...
     }
     function render() {
-        var context = Phaser.DebugUtils.context;
+        var context: CanvasRenderingContext2D = Phaser.DebugUtils.context;
 
         // Render rectangles.
         context.strokeStyle = '#fff';
