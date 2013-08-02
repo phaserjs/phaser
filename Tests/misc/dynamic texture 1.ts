@@ -1,3 +1,5 @@
+/// <reference path="../../Phaser/Game.ts" />
+
 (function() {
     var game = new Phaser.Game(this, 'game', 800, 600, null, create, null, render);
 

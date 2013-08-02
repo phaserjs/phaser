@@ -14,7 +14,7 @@
         //  The sprite is 320 x 200 pixels in size
         //  Here we set the origin to the center of the sprite (half of its width and height, so 160x100)
         //  This will cause it to rotate on its center
-        fuji.transform.origin.setTo(160, 100);
+        fuji.transform.origin.setTo(0.5, 0.5);
         game.add.tween(fuji).to({
             rotation: 360
         }, 2000, Phaser.Easing.Linear.None, true, 0, true);

@@ -274,7 +274,7 @@ var Phaser;
             get: /**
             * Determines whether or not this Rectangle object is empty.
             * @method isEmpty
-            * @return {Boolean} A value of true if the Rectangle object's width or height is less than or equal to 0; otherwise false.
+            * @return {Boolean} A value of true if the Rectangle objects width or height is less than or equal to 0; otherwise false.
             **/
             function () {
                 return (!this.width || !this.height);
@@ -2139,6 +2139,10 @@ var Phaser;
                 this.context.putImageData(sourceTexture.getPixels(sourceRect), destPoint.x, destPoint.y);
             }
         };
+        DynamicTexture.prototype.add = function (sprite) {
+            sprite.texture.canvas = this.canvas;
+            sprite.texture.context = this.context;
+        };
         DynamicTexture.prototype.assignCanvasToGameObjects = /**
         * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
         * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
@@ -2834,11 +2838,13 @@ var Phaser;
                     return this.currentFrame.name;
                 },
                 set: function (value) {
-                    if(this._frameData.getFrameByName(value)) {
+                    if(this._frameData && this._frameData.getFrameByName(value)) {
                         this.currentFrame = this._frameData.getFrameByName(value);
                         this._parent.texture.width = this.currentFrame.width;
                         this._parent.texture.height = this.currentFrame.height;
                         this._frameIndex = this.currentFrame.index;
+                    } else {
+                        throw new Error("Cannot set frameName: " + value);
                     }
                 },
                 enumerable: true,
@@ -3652,6 +3658,7 @@ var Phaser;
                         this._pointerData[pointer.id].isDown = true;
                         this._pointerData[pointer.id].isUp = false;
                         this._pointerData[pointer.id].timeDown = this.game.time.now;
+                        //console.log('touchedHandler: ' + Date.now());
                         this._parent.events.onInputDown.dispatch(this._parent, pointer);
                         //  Start drag
                         //if (this.draggable && this.isDragged == false && pointer.targetObject == null)
@@ -3675,6 +3682,7 @@ var Phaser;
                         this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
                         //  Only release the InputUp signal if the pointer is still over this sprite
                         if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY())) {
+                            //console.log('releasedHandler: ' + Date.now());
                             this._parent.events.onInputUp.dispatch(this._parent, pointer);
                         } else {
                             //  Pointer outside the sprite? Reset the cursor
@@ -7844,6 +7852,7 @@ var Phaser;
         function (key) {
             this._fileList[key].loaded = true;
             this._fileList[key].error = true;
+            throw new Error("Phaser.Loader error loading file: " + key);
             this.nextFile(key, false);
         };
         Loader.prototype.fileComplete = /**
@@ -7929,6 +7938,7 @@ var Phaser;
         function (key) {
             var file = this._fileList[key];
             file.error = true;
+            throw new Error("Phaser.Loader dataLoadError: " + key);
             this.nextFile(key, true);
         };
         Loader.prototype.xmlLoadComplete = function (key) {
@@ -11322,6 +11332,7 @@ var Phaser;
             }
         };
         Button.prototype.onInputDownHandler = function (pointer) {
+            //console.log('Button onInputDownHandler: ' + Date.now());
             if(this._onDownFrameName != null) {
                 this.frameName = this._onDownFrameName;
             } else if(this._onDownFrameID != null) {
@@ -11332,6 +11343,7 @@ var Phaser;
             }
         };
         Button.prototype.onInputUpHandler = function (pointer) {
+            //console.log('Button onInputUpHandler: ' + Date.now());
             if(this._onUpFrameName != null) {
                 this.frameName = this._onUpFrameName;
             } else if(this._onUpFrameID != null) {
@@ -16323,6 +16335,10 @@ var Phaser;
         */
         function () {
             var _this = this;
+            if(this._game.device.android && this._game.device.chrome == false) {
+                //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
+                return;
+            }
             this._game.stage.canvas.addEventListener('mousedown', function (event) {
                 return _this.onMouseDown(event);
             }, true);
@@ -17846,9 +17862,6 @@ var Phaser;
             if(sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
                 return false;
             }
-            if(sprite.crop && sprite.crop.empty) {
-                return;
-            }
             sprite.renderOrderID = this._count;
             this._count++;
             //  Reset our temp vars
@@ -17861,16 +17874,6 @@ var Phaser;
             this._dy = camera.screenView.y + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
             this._dw = sprite.texture.width;
             this._dh = sprite.texture.height;
-            //  Global Composite Ops
-            if(sprite.texture.globalCompositeOperation) {
-                sprite.texture.context.save();
-                sprite.texture.context.globalCompositeOperation = sprite.texture.globalCompositeOperation;
-            }
-            //  Alpha
-            if(sprite.texture.alpha !== 1 && sprite.texture.context.globalAlpha != sprite.texture.alpha) {
-                this._ga = sprite.texture.context.globalAlpha;
-                sprite.texture.context.globalAlpha = sprite.texture.alpha;
-            }
             if(sprite.animations.currentFrame !== null) {
                 this._sx = sprite.animations.currentFrame.x;
                 this._sy = sprite.animations.currentFrame.y;
@@ -17907,15 +17910,36 @@ var Phaser;
                 this._dy += sprite.crop.y * sprite.transform.scale.y;
                 this._dw = sprite.crop.width * sprite.transform.scale.x;
                 this._dh = sprite.crop.height * sprite.transform.scale.y;
+                //this._sx += sprite.crop.x;
+                //this._sy += sprite.crop.y;
+                //this._sw = sprite.crop.width;
+                //this._sh = sprite.crop.height;
+                //this._dx += sprite.crop.x;
+                //this._dy += sprite.crop.y;
+                //this._dw = sprite.crop.width;
+                //this._dh = sprite.crop.height;
+                            }
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
+            if(this._sw <= 0 || this._sh <= 0 || this._dw <= 0 || this._dh <= 0) {
+                return false;
             }
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            //  Global Composite Ops
+            if(sprite.texture.globalCompositeOperation) {
+                sprite.texture.context.save();
+                sprite.texture.context.globalCompositeOperation = sprite.texture.globalCompositeOperation;
+            }
+            //  Alpha
+            if(sprite.texture.alpha !== 1 && sprite.texture.context.globalAlpha != sprite.texture.alpha) {
+                this._ga = sprite.texture.context.globalAlpha;
+                sprite.texture.context.globalAlpha = sprite.texture.alpha;
+            }
             if(sprite.texture.opaque) {
                 sprite.texture.context.fillStyle = sprite.texture.backgroundColor;
                 sprite.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
@@ -19622,7 +19646,6 @@ var Phaser;
             this.input = game.input;
             this.load = game.load;
             this.math = game.math;
-            //this.motion = game.motion;
             this.sound = game.sound;
             this.stage = game.stage;
             this.time = game.time;

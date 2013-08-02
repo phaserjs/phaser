@@ -99,7 +99,7 @@
             }
         }
 
-        shipMotion = game.motion.velocityFromAngle(ship.rotation, speed);
+        //shipMotion = game.motion.velocityFromAngle(ship.rotation, speed);
 
         scroller.setSpeed(shipMotion.x, shipMotion.y);
 
@@ -144,7 +144,8 @@
             b.x = ship.x;
             b.y = ship.y - 26;
 
-            var bulletMotion = game.motion.velocityFromAngle(ship.rotation, 400);
+            //var bulletMotion = game.motion.velocityFromAngle(ship.rotation, 400);
+            var bulletMotion = {x:0,y:0};
 
             b.revive();
             b.rotation = ship.rotation;

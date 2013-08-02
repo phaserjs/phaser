@@ -241,7 +241,6 @@ module Phaser.Components.Sprite {
 		            this._parent.events.onDragStart = new Phaser.Signal;
 		            this._parent.events.onDragStop = new Phaser.Signal;
 		        }
-
 		    }
 
             return this._parent;
@@ -381,6 +380,7 @@ module Phaser.Components.Sprite {
                 this._pointerData[pointer.id].isUp = false;
                 this._pointerData[pointer.id].timeDown = this.game.time.now;
 
+                //console.log('touchedHandler: ' + Date.now());
                 this._parent.events.onInputDown.dispatch(this._parent, pointer);
 
                 //  Start drag
@@ -416,6 +416,7 @@ module Phaser.Components.Sprite {
                 //  Only release the InputUp signal if the pointer is still over this sprite
                 if (SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY()))
                 {
+                    //console.log('releasedHandler: ' + Date.now());
                     this._parent.events.onInputUp.dispatch(this._parent, pointer);
                 }
                 else

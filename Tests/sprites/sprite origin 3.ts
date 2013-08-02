@@ -24,7 +24,7 @@
 
         //  The sprite is 320 x 200 pixels in size
         //  Here we set the origin to be the bottom-right of the sprite
-        fuji.origin.setTo(320, 200);
+        fuji.origin.setTo(1, 1);
 
         game.add.tween(fuji).to({ rotation: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, true);
 

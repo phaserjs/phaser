@@ -177,7 +177,7 @@ module Phaser {
         /**
         * Determines whether or not this Rectangle object is empty.
         * @method isEmpty
-        * @return {Boolean} A value of true if the Rectangle object's width or height is less than or equal to 0; otherwise false.
+        * @return {Boolean} A value of true if the Rectangle objects width or height is less than or equal to 0; otherwise false.
         **/
         /**
         * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
@@ -1409,6 +1409,7 @@ module Phaser {
         * @param destPoint {Point} Top-left point the target image data will be paste at.
         */
         public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point): void;
+        public add(sprite: Sprite): void;
         /**
         * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
         * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites
@@ -2706,7 +2707,7 @@ module Phaser.Physics {
     class ArcadePhysics {
         constructor(game: Game, width: number, height: number);
         /**
-        * Local private reference to Game.
+        * Local reference to Game.
         */
         public game: Game;
         /**
@@ -2929,7 +2930,7 @@ module Phaser {
         public outOfBounds: bool;
         /**
         * The action to be taken when the sprite is fully out of the world bounds
-        * Defaults to Phaser.Types.OUT_OF_BOUNDS_KILL
+        * Defaults to Phaser.Types.OUT_OF_BOUNDS_PERSIST
         */
         public outOfBoundsAction: number;
         /**

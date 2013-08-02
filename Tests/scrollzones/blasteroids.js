@@ -62,7 +62,7 @@
                 speed = 0;
             }
         }
-        shipMotion = game.motion.velocityFromAngle(ship.rotation, speed);
+        //shipMotion = game.motion.velocityFromAngle(ship.rotation, speed);
         scroller.setSpeed(shipMotion.x, shipMotion.y);
         //  emit particles
         if(speed > 2) {
@@ -89,7 +89,11 @@
             var b = bullets.getFirstAvailable();
             b.x = ship.x;
             b.y = ship.y - 26;
-            var bulletMotion = game.motion.velocityFromAngle(ship.rotation, 400);
+            //var bulletMotion = game.motion.velocityFromAngle(ship.rotation, 400);
+            var bulletMotion = {
+                x: 0,
+                y: 0
+            };
             b.revive();
             b.rotation = ship.rotation;
             b.body.velocity.setTo(bulletMotion.x, bulletMotion.y);

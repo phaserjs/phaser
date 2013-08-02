@@ -265,6 +265,13 @@ module Phaser {
 
         }
 
+        public add(sprite: Sprite) {
+
+            sprite.texture.canvas = this.canvas;
+            sprite.texture.context = this.context;
+
+        }
+
         /**
          * Given an array of Sprites it will update each of them so that their canvas/contexts reference this DynamicTexture
          * @param objects {Array} An array of GameObjects, or objects that inherit from it such as Sprites

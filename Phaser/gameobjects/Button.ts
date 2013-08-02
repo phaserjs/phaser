@@ -161,6 +161,8 @@ module Phaser {
 
         private onInputDownHandler(pointer:Phaser.Pointer) {
 
+            //console.log('Button onInputDownHandler: ' + Date.now());
+
             if (this._onDownFrameName != null)
             {
                 this.frameName = this._onDownFrameName;
@@ -178,6 +180,8 @@ module Phaser {
         }
 
         private onInputUpHandler(pointer:Phaser.Pointer) {
+
+            //console.log('Button onInputUpHandler: ' + Date.now());
 
             if (this._onUpFrameName != null)
             {

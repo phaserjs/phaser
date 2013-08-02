@@ -50,6 +50,12 @@ module Phaser {
         */
         public start() {
 
+            if (this._game.device.android && this._game.device.chrome == false)
+            {
+                //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
+                return;
+            }
+
             this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
             this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
             this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);

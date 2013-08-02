@@ -74,10 +74,27 @@
     <Content Include="buttons\rotated buttons.js">
       <DependentUpon>rotated buttons.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="camera fx\fade.ts" />
+    <Content Include="camera fx\fade.js">
+      <DependentUpon>fade.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="camera fx\scanlines.ts" />
+    <Content Include="camera fx\scanlines.js">
+      <DependentUpon>scanlines.ts</DependentUpon>
+    </Content>
     <Content Include="cameras\basic camera 1.js">
       <DependentUpon>basic camera 1.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="cameras\scrollfactor 1.ts" />
+    <Content Include="cameras\basic follow.ts" />
+    <Content Include="cameras\camera fx 1.ts" />
+    <Content Include="cameras\camera fx 2.ts" />
+    <Content Include="cameras\camera fx 3.ts" />
+    <Content Include="cameras\camera scale.ts" />
+    <Content Include="cameras\camera texture.ts" />
+    <Content Include="cameras\follow styles.ts" />
+    <Content Include="cameras\hide from camera.ts" />
+    <Content Include="cameras\multi camera.ts" />
     <Content Include="cameras\scrollfactor 1.js">
       <DependentUpon>scrollfactor 1.ts</DependentUpon>
     </Content>
@@ -89,21 +106,43 @@
     <TypeScriptCompile Include="input\over sprite 1.ts" />
     <TypeScriptCompile Include="groups\create group 1.ts" />
     <TypeScriptCompile Include="cameras\world sprite.ts" />
+    <Content Include="cameras\scrollfactor compare.ts" />
     <Content Include="cameras\world sprite.js">
       <DependentUpon>world sprite.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="groups\bring to top 1.ts" />
+    <Content Include="groups\add to group 1.ts" />
+    <Content Include="groups\add to group 2.ts" />
     <Content Include="groups\bring to top 1.js">
       <DependentUpon>bring to top 1.ts</DependentUpon>
     </Content>
+    <Content Include="groups\bring to top.ts" />
+    <Content Include="groups\call all.ts" />
     <Content Include="groups\create group 1.js">
       <DependentUpon>create group 1.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="groups\display order.ts" />
+    <Content Include="groups\direct render.ts" />
     <Content Include="groups\display order.js">
       <DependentUpon>display order.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="groups\swap children.ts" />
+    <Content Include="groups\for each.ts" />
+    <Content Include="groups\get first 1.ts" />
+    <Content Include="groups\get first 2.ts" />
+    <Content Include="groups\get first 3.ts" />
+    <Content Include="groups\group as layer.ts" />
+    <Content Include="groups\group transform 1.ts" />
+    <Content Include="groups\group transform 2.ts" />
+    <Content Include="groups\group transform 3.ts" />
+    <Content Include="groups\recycle 1.ts" />
+    <Content Include="groups\recycle 2.ts" />
+    <Content Include="groups\remove.ts" />
+    <Content Include="groups\replace.ts" />
+    <Content Include="groups\set all.ts" />
+    <Content Include="groups\sort 1.ts" />
+    <Content Include="groups\sort 2.ts" />
+    <Content Include="groups\sub groups.ts" />
     <Content Include="groups\swap children.js">
       <DependentUpon>swap children.ts</DependentUpon>
     </Content>
@@ -122,9 +161,12 @@
     <TypeScriptCompile Include="input\motion lock.ts" />
     <TypeScriptCompile Include="input\motion lock 2.ts" />
     <TypeScriptCompile Include="input\game scale 1.ts" />
+    <Content Include="input\drop limitation.ts" />
     <Content Include="input\game scale 1.js">
       <DependentUpon>game scale 1.ts</DependentUpon>
     </Content>
+    <Content Include="input\keyboard 1.ts" />
+    <Content Include="input\keyboard 2.ts" />
     <Content Include="input\motion lock 2.js">
       <DependentUpon>motion lock 2.ts</DependentUpon>
     </Content>
@@ -164,6 +206,12 @@
     </Content>
     <TypeScriptCompile Include="mobile\sprite test 1.ts" />
     <TypeScriptCompile Include="misc\point1.ts" />
+    <Content Include="misc\color utils 1.ts" />
+    <Content Include="misc\color utils 2.ts" />
+    <Content Include="misc\color utils 3.ts" />
+    <Content Include="misc\dynamic texture 1.ts" />
+    <Content Include="misc\dynamic texture 2.ts" />
+    <Content Include="misc\dynamic texture 3.ts" />
     <Content Include="misc\point1.js">
       <DependentUpon>point1.ts</DependentUpon>
     </Content>
@@ -175,6 +223,8 @@
     <Content Include="misc\point3.js">
       <DependentUpon>point3.ts</DependentUpon>
     </Content>
+    <Content Include="misc\rectangle utils 1.ts" />
+    <Content Include="misc\rectangle utils 2.ts" />
     <Content Include="mobile\sprite test 1.js">
       <DependentUpon>sprite test 1.ts</DependentUpon>
     </Content>
@@ -202,10 +252,6 @@
     <TypeScriptCompile Include="scrollzones\region demo.ts" />
     <TypeScriptCompile Include="scrollzones\parallax.ts" />
     <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
-    <TypeScriptCompile Include="physics\simple test 1.ts" />
-    <Content Include="physics\simple test 1.js">
-      <DependentUpon>simple test 1.ts</DependentUpon>
-    </Content>
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>
     </Content>
@@ -229,17 +275,13 @@
     <Content Include="scrollzones\skewed scroller.js">
       <DependentUpon>skewed scroller.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="sprites\atlas 1.ts" />
     <TypeScriptCompile Include="sprites\alpha.ts" />
     <Content Include="sprites\alpha.js">
       <DependentUpon>alpha.ts</DependentUpon>
     </Content>
-    <Content Include="sprites\atlas 1.js">
-      <DependentUpon>atlas 1.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="sprites\atlas 2.ts" />
-    <Content Include="sprites\atlas 2.js">
-      <DependentUpon>atlas 2.ts</DependentUpon>
+    <TypeScriptCompile Include="sprites\animate by framename.ts" />
+    <Content Include="sprites\animate by framename.js">
+      <DependentUpon>animate by framename.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="sprites\origin 5.ts" />
     <Content Include="sprites\origin 5.js">
@@ -247,6 +289,8 @@
     </Content>
     <TypeScriptCompile Include="tilemaps\csv tilemap.ts" />
     <TypeScriptCompile Include="stage\blur filter.ts" />
+    <Content Include="sprites\out of screen.ts" />
+    <Content Include="sprites\rotate around.ts" />
     <Content Include="stage\blur filter.js">
       <DependentUpon>blur filter.ts</DependentUpon>
     </Content>
@@ -271,8 +315,36 @@
       <DependentUpon>sepia filter.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="textures\filter test.ts" />
+    <TypeScriptCompile Include="textures\dynamic texture 1.ts" />
+    <Content Include="textures\dynamic texture 1.js">
+      <DependentUpon>dynamic texture 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="textures\dynamic texture 2.ts" />
+    <Content Include="textures\dynamic texture 2.js">
+      <DependentUpon>dynamic texture 2.ts</DependentUpon>
+    </Content>
     <Content Include="textures\filter test.js">
       <DependentUpon>filter test.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="textures\starling texture atlas.ts" />
+    <Content Include="textures\starling texture atlas.js">
+      <DependentUpon>starling texture atlas.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="textures\texture atlas 1.ts" />
+    <Content Include="textures\texture atlas 1.js">
+      <DependentUpon>texture atlas 1.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="textures\texture atlas 2.ts" />
+    <Content Include="textures\texture atlas 2.js">
+      <DependentUpon>texture atlas 2.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="textures\texture atlas 3.ts" />
+    <Content Include="textures\texture atlas 3.js">
+      <DependentUpon>texture atlas 3.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="textures\texture atlas 4.ts" />
+    <Content Include="textures\texture atlas 4.js">
+      <DependentUpon>texture atlas 4.ts</DependentUpon>
     </Content>
     <Content Include="tilemaps\csv tilemap.js">
       <DependentUpon>csv tilemap.ts</DependentUpon>
@@ -289,6 +361,16 @@
     <Content Include="tilemaps\tiled tilemap.js">
       <DependentUpon>tiled tilemap.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="tweens\bounce.ts" />
+    <Content Include="tweens\bounce.js">
+      <DependentUpon>bounce.ts</DependentUpon>
+    </Content>
+    <Content Include="tweens\easing example 1.ts" />
+    <Content Include="tweens\easing example 2.ts" />
+    <Content Include="tweens\easing example 3.ts" />
+    <Content Include="tweens\easing example 4.ts" />
+    <Content Include="tweens\easing example 5.ts" />
+    <Content Include="tweens\easing example 6.ts" />
     <Content Include="tweens\tween loop 1.js">
       <DependentUpon>tween loop 1.ts</DependentUpon>
     </Content>
@@ -350,6 +432,9 @@
       <DependentUpon>boot screen.ts</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="animation\" />
+    <Folder Include="physics\" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

@@ -24,7 +24,6 @@ module Phaser {
             this.input = game.input;
             this.load = game.load;
             this.math = game.math;
-            //this.motion = game.motion;
             this.sound = game.sound;
             this.stage = game.stage;
             this.time = game.time;
@@ -73,12 +72,6 @@ module Phaser {
          * @type {GameMath}
          */
         public math: GameMath;
-
-        /**
-         * Reference to the motion helper.
-         * @type {Motion}
-         */
-        //public motion: Motion;
 
         /**
          * Reference to the sound manager.

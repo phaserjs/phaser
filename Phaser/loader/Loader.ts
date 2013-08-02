@@ -413,6 +413,8 @@ module Phaser {
             this._fileList[key].loaded = true;
             this._fileList[key].error = true;
 
+            throw new Error("Phaser.Loader error loading file: " + key);
+
             this.nextFile(key, false);
 
         }
@@ -530,6 +532,8 @@ module Phaser {
             var file = this._fileList[key];
 
             file.error = true;
+
+            throw new Error("Phaser.Loader dataLoadError: " + key);
 
             this.nextFile(key, true);
 

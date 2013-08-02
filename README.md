@@ -25,13 +25,10 @@ TODO:
 * Dispatch world resize event
 * Investigate why tweens don't restart after the game pauses
 * Fix bug in Tween yoyo + loop combo
-* Apply Sprite scaling to Body.bounds
 * Check that tween pausing works with the new performance.now
 * Game.Time should monitor pause duration
 * Investigate bug re: tilemap collision and animation frames
 * Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
-* Texture Repeat doesn't scroll, because it's part of the camera not the world, need to think about this more
-* Add JSON Texture Atlas object support.
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
 * If stage.clear set to false and game pauses, when it unpauses you still see the pause arrow - resolve this
 * Add clip support + shape options to Texture Component.
@@ -44,11 +41,7 @@ TODO:
 * See which functions in the input component can move elsewhere (utils)
 * Move all of the renderDebugInfo methods to the DebugUtils class
 * Check bounds/edge points when sprite is only 1x1 sized :)
-* See what I can move out of Body and into a BodyUtils class.
-* See about optimising Advanced Physics a lot more, so it doesn't create lots of Vec2s everywhere.
 * QuadTree.physics.checkHullIntersection
-* Fix the Motion methods for the new physics system
-* Move findShapeByPoint etc from Space to Manager (or at least add a proxy to them)
 * Add visible toggle if tween property is alpha <> 01
 * Camera.isHidden uses an array and length check, faster to swap for a single counter, also try to remove indexOf check
 * Tilemap.render - move layers length to var
@@ -69,6 +62,7 @@ TODO:
 * Pixel-perfect click check
 * Check Flash atlas export is supported
 * Plug-in Support
+* DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
 
 
 

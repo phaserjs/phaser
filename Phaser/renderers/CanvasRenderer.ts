@@ -458,11 +458,6 @@ module Phaser {
                 return false;
             }
 
-            if (sprite.crop && sprite.crop.empty)
-            {
-                return;
-            }
-
             sprite.renderOrderID = this._count;
 
             this._count++;
@@ -477,20 +472,6 @@ module Phaser {
             this._dy = camera.screenView.y + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
             this._dw = sprite.texture.width;
             this._dh = sprite.texture.height;
-
-            //  Global Composite Ops
-            if (sprite.texture.globalCompositeOperation)
-            {
-                sprite.texture.context.save();
-                sprite.texture.context.globalCompositeOperation = sprite.texture.globalCompositeOperation;
-            }
-
-            //  Alpha
-            if (sprite.texture.alpha !== 1 && sprite.texture.context.globalAlpha != sprite.texture.alpha)
-            {
-                this._ga = sprite.texture.context.globalAlpha;
-                sprite.texture.context.globalAlpha = sprite.texture.alpha;
-            }
 
             if (sprite.animations.currentFrame !== null)
             {
@@ -540,16 +521,43 @@ module Phaser {
                 this._dy += sprite.crop.y * sprite.transform.scale.y;
                 this._dw = sprite.crop.width * sprite.transform.scale.x;
                 this._dh = sprite.crop.height * sprite.transform.scale.y;
+                //this._sx += sprite.crop.x;
+                //this._sy += sprite.crop.y;
+                //this._sw = sprite.crop.width;
+                //this._sh = sprite.crop.height;
+                //this._dx += sprite.crop.x;
+                //this._dy += sprite.crop.y;
+                //this._dw = sprite.crop.width;
+                //this._dh = sprite.crop.height;
             }
 
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
+
+            if (this._sw <= 0 || this._sh <= 0 || this._dw <= 0 || this._dh <= 0)
+            {
+                return false;
+            }
+
+            //  Global Composite Ops
+            if (sprite.texture.globalCompositeOperation)
+            {
+                sprite.texture.context.save();
+                sprite.texture.context.globalCompositeOperation = sprite.texture.globalCompositeOperation;
+            }
+
+            //  Alpha
+            if (sprite.texture.alpha !== 1 && sprite.texture.context.globalAlpha != sprite.texture.alpha)
+            {
+                this._ga = sprite.texture.context.globalAlpha;
+                sprite.texture.context.globalAlpha = sprite.texture.alpha;
+            }
 
             if (sprite.texture.opaque)
             {

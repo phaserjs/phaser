@@ -139,7 +139,7 @@ module Phaser {
 
         /**
          * The action to be taken when the sprite is fully out of the world bounds
-         * Defaults to Phaser.Types.OUT_OF_BOUNDS_KILL
+         * Defaults to Phaser.Types.OUT_OF_BOUNDS_PERSIST
          */
         public outOfBoundsAction: number;
 

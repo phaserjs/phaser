@@ -268,7 +268,7 @@ module Phaser.Components {
 
         public set frameName(value: string) {
 
-            if (this._frameData.getFrameByName(value))
+            if (this._frameData && this._frameData.getFrameByName(value))
             {
                 this.currentFrame = this._frameData.getFrameByName(value);
 
@@ -276,6 +276,10 @@ module Phaser.Components {
                 this._parent.texture.height = this.currentFrame.height;
 
                 this._frameIndex = this.currentFrame.index;
+            }
+            else
+            {
+                throw new Error("Cannot set frameName: " + value);
             }
 
         }

@@ -32,7 +32,7 @@ module Phaser.Physics {
         }
 
         /**
-         * Local private reference to Game.
+         * Local reference to Game.
          */
         public game: Game;
 
