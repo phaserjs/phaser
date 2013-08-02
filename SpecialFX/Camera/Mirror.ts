@@ -69,15 +69,10 @@ module Phaser.FX.Camera {
          * Post-render is called during the objects render cycle, after the children/image data has been rendered.
          * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
          */
-        public postRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public postRender(camera: Phaser.Camera) {
 
-            //if (this.cls)
-            //{
-            //    this._context.clearRect(0, 0, this._mirrorWidth, this._mirrorHeight);
-            //}
-
-            this._sx = cameraX + this._mirrorX;
-            this._sy = cameraY + this._mirrorY;
+            this._sx = camera.screenView.x + this._mirrorX;
+            this._sy = camera.screenView.y + this._mirrorY;
 
             if (this.flipX == true && this.flipY == false)
             {
@@ -105,6 +100,11 @@ module Phaser.FX.Camera {
                 this._context.fillRect(0, 0, this._mirrorWidth, this._mirrorHeight);
             }
 
+            if (this.flipX || this.flipY)
+            {
+                this._game.stage.context.save();
+            }
+
             if (this.flipX && this.flipY)
             {
                 this._game.stage.context.transform(-1, 0, 0, -1, this._mirrorWidth, this._mirrorHeight);
@@ -119,6 +119,11 @@ module Phaser.FX.Camera {
             {
                 this._game.stage.context.transform(1, 0, 0, -1, 0, this._mirrorHeight);
                 this._game.stage.context.drawImage(this._canvas, this.x, -this.y);
+            }
+
+            if (this.flipX || this.flipY)
+            {
+                this._game.stage.context.restore();
             }
 
         }

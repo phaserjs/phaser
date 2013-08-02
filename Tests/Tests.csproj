@@ -79,6 +79,10 @@
       <DependentUpon>fade.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="camera fx\scanlines.ts" />
+    <TypeScriptCompile Include="camera fx\mirror.ts" />
+    <Content Include="camera fx\mirror.js">
+      <DependentUpon>mirror.ts</DependentUpon>
+    </Content>
     <Content Include="camera fx\scanlines.js">
       <DependentUpon>scanlines.ts</DependentUpon>
     </Content>

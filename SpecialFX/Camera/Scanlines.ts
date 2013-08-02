@@ -23,13 +23,13 @@ module Phaser.FX.Camera {
         public spacing: number = 4;
         public color: string = 'rgba(0, 0, 0, 0.3)';
 
-        public postRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public postRender(camera: Phaser.Camera) {
 
             this._game.stage.context.fillStyle = this.color;
 
-            for (var y = cameraY; y < cameraHeight; y += this.spacing)
+            for (var y = camera.screenView.y; y < camera.screenView.height; y += this.spacing)
             {
-                this._game.stage.context.fillRect(cameraX, y, cameraWidth, 1);
+                this._game.stage.context.fillRect(camera.screenView.x, y, camera.screenView.width, 1);
             }
 
         }
