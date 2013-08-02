@@ -4949,26 +4949,18 @@ module Phaser {
         * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
         * It happens directly AFTER a canvas context.save has happened if added to a Camera.
         * @param {Camera} camera
-        * @param {number} cameraX
-        * @param {number} cameraY
-        * @param {number} cameraWidth
-        * @param {number} cameraHeight
         */
-        public preRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
+        public preRender(camera: Camera): void;
         /**
         * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
         * @param {Camera} camera
-        * @param {number} cameraX
-        * @param {number} cameraY
-        * @param {number} cameraWidth
-        * @param {number} cameraHeight
         */
-        public render(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
+        public render(camera: Camera): void;
         /**
         * Post-render is called during the objects render cycle, after the children/image data has been rendered.
         * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
         */
-        public postRender(camera: Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number): void;
+        public postRender(camera: Camera): void;
         /**
         * Clear down this FXManager and null out references
         */
@@ -9383,6 +9375,18 @@ module Phaser {
         static renderText(text: string, x: number, y: number, color?: string): void;
     }
 }
+module Phaser {
+    interface IPlugin {
+        game: Game;
+        active: bool;
+        visible: bool;
+        preUpdate();
+        postUpdate();
+        preRender();
+        postRender();
+        destroy();
+    }
+}
 /**
 * Phaser - Game
 *
@@ -9434,6 +9438,21 @@ module Phaser {
         * @type {State}
         */
         private _pendingState;
+        /**
+        * Plugin loop pointer
+        * @type {number}
+        */
+        private _p;
+        /**
+        * Plugins array counter
+        * @type {number}
+        */
+        private _pluginsLength;
+        /**
+        * An Array of Phaser Plugins
+        * @type {Array}
+        */
+        public plugins: IPlugin[];
         /**
         * The current State object (defaults to null)
         * @type {State}
@@ -9581,6 +9600,8 @@ module Phaser {
         */
         private boot(parent, width, height);
         public setRenderer(type: number): void;
+        public addPlugin(plugin): void;
+        public removePlugin(plugin: IPlugin): void;
         /**
         * Called when the load has finished after init was run.
         */

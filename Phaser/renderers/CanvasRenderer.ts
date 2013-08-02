@@ -169,14 +169,14 @@ module Phaser {
                 }
             }
 
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
 
             if (group.texture.opaque)
             {
@@ -326,14 +326,14 @@ module Phaser {
                 }
             }
 
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
 
             //  Clip the camera so we don't get sprites appearing outside the edges
             if (camera.clip == true && camera.disableClipping == false)
@@ -350,7 +350,7 @@ module Phaser {
                 camera.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
 
-            //camera.fx.render(camera);
+            camera.fx.preRender(camera);
 
             if (camera.texture.loaded)
             {
@@ -373,7 +373,7 @@ module Phaser {
 
         public postRenderCamera(camera: Camera) {
 
-            //camera.fx.postRender(camera);
+            camera.fx.postRender(camera);
 
             if (camera.modified || camera.texture.globalCompositeOperation)
             {
@@ -406,14 +406,14 @@ module Phaser {
             this._dw = circle.diameter;
             this._dh = circle.diameter;
 
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
 
             this._game.stage.saveCanvasValues();
 
@@ -669,14 +669,14 @@ module Phaser {
                 }
             }
 
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
 
             for (var i = 0; i < scrollZone.regions.length; i++)
             {

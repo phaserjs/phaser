@@ -158,12 +158,8 @@ module Phaser {
          * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
          * It happens directly AFTER a canvas context.save has happened if added to a Camera.
          * @param {Camera} camera
-         * @param {number} cameraX
-         * @param {number} cameraY
-         * @param {number} cameraWidth
-         * @param {number} cameraHeight
          */
-        public preRender(camera:Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public preRender(camera:Camera) {
 
             if (this.visible)
             {
@@ -171,7 +167,7 @@ module Phaser {
                 {
                     if (this._fx[i].preRender)
                     {
-                        this._fx[i].effect.preRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                        this._fx[i].effect.preRender(camera);
                     }
                 }
             }
@@ -181,12 +177,8 @@ module Phaser {
         /**
          * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
          * @param {Camera} camera
-         * @param {number} cameraX
-         * @param {number} cameraY
-         * @param {number} cameraWidth
-         * @param {number} cameraHeight
          */
-        public render(camera:Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public render(camera:Camera) {
 
             if (this.visible)
             {
@@ -194,7 +186,7 @@ module Phaser {
                 {
                     if (this._fx[i].preRender)
                     {
-                        this._fx[i].effect.preRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                        this._fx[i].effect.preRender(camera);
                     }
                 }
             }
@@ -205,7 +197,7 @@ module Phaser {
          * Post-render is called during the objects render cycle, after the children/image data has been rendered.
          * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
          */
-        public postRender(camera:Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public postRender(camera:Camera) {
 
             if (this.visible)
             {
@@ -213,7 +205,7 @@ module Phaser {
                 {
                     if (this._fx[i].postRender)
                     {
-                        this._fx[i].effect.postRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                        this._fx[i].effect.postRender(camera);
                     }
                 }
             }

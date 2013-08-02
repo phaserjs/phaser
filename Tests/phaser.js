@@ -9650,16 +9650,12 @@ var Phaser;
         * Pre-render is called at the start of the object render cycle, before any transforms have taken place.
         * It happens directly AFTER a canvas context.save has happened if added to a Camera.
         * @param {Camera} camera
-        * @param {number} cameraX
-        * @param {number} cameraY
-        * @param {number} cameraWidth
-        * @param {number} cameraHeight
         */
-        function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+        function (camera) {
             if(this.visible) {
                 for(var i = 0; i < this._length; i++) {
                     if(this._fx[i].preRender) {
-                        this._fx[i].effect.preRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                        this._fx[i].effect.preRender(camera);
                     }
                 }
             }
@@ -9667,16 +9663,12 @@ var Phaser;
         CameraFX.prototype.render = /**
         * render is called during the objects render cycle, right after all transforms have finished, but before any children/image data is rendered.
         * @param {Camera} camera
-        * @param {number} cameraX
-        * @param {number} cameraY
-        * @param {number} cameraWidth
-        * @param {number} cameraHeight
         */
-        function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+        function (camera) {
             if(this.visible) {
                 for(var i = 0; i < this._length; i++) {
                     if(this._fx[i].preRender) {
-                        this._fx[i].effect.preRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                        this._fx[i].effect.preRender(camera);
                     }
                 }
             }
@@ -9685,11 +9677,11 @@ var Phaser;
         * Post-render is called during the objects render cycle, after the children/image data has been rendered.
         * It happens directly BEFORE a canvas context.restore has happened if added to a Camera.
         */
-        function (camera, cameraX, cameraY, cameraWidth, cameraHeight) {
+        function (camera) {
             if(this.visible) {
                 for(var i = 0; i < this._length; i++) {
                     if(this._fx[i].postRender) {
-                        this._fx[i].effect.postRender(camera, cameraX, cameraY, cameraWidth, cameraHeight);
+                        this._fx[i].effect.postRender(camera);
                     }
                 }
             }
@@ -17648,14 +17640,14 @@ var Phaser;
                     this._dy -= group.transform.origin.y;
                 }
             }
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
             if(group.texture.opaque) {
                 group.texture.context.fillStyle = group.texture.backgroundColor;
                 group.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
@@ -17762,14 +17754,14 @@ var Phaser;
                     this._dy -= camera.transform.origin.y;
                 }
             }
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
             //  Clip the camera so we don't get sprites appearing outside the edges
             if(camera.clip == true && camera.disableClipping == false) {
                 camera.texture.context.beginPath();
@@ -17781,7 +17773,7 @@ var Phaser;
                 camera.texture.context.fillStyle = camera.texture.backgroundColor;
                 camera.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
-            //camera.fx.render(camera);
+            camera.fx.preRender(camera);
             if(camera.texture.loaded) {
                 camera.texture.context.drawImage(camera.texture.texture, //	Source Image
                 this._sx, //	Source X (location within the source image)
@@ -17797,7 +17789,7 @@ var Phaser;
             return true;
         };
         CanvasRenderer.prototype.postRenderCamera = function (camera) {
-            //camera.fx.postRender(camera);
+            camera.fx.postRender(camera);
             if(camera.modified || camera.texture.globalCompositeOperation) {
                 camera.texture.context.restore();
             }
@@ -17826,14 +17818,14 @@ var Phaser;
             this._dy = camera.screenView.y + circle.y - camera.worldView.y;
             this._dw = circle.diameter;
             this._dh = circle.diameter;
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
             this._game.stage.saveCanvasValues();
             context.save();
             context.lineWidth = lineWidth;
@@ -18019,14 +18011,14 @@ var Phaser;
                     this._dy -= scrollZone.transform.origin.y;
                 }
             }
-            this._sx = Math.round(this._sx);
-            this._sy = Math.round(this._sy);
-            this._sw = Math.round(this._sw);
-            this._sh = Math.round(this._sh);
-            this._dx = Math.round(this._dx);
-            this._dy = Math.round(this._dy);
-            this._dw = Math.round(this._dw);
-            this._dh = Math.round(this._dh);
+            this._sx = Math.floor(this._sx);
+            this._sy = Math.floor(this._sy);
+            this._sw = Math.floor(this._sw);
+            this._sh = Math.floor(this._sh);
+            this._dx = Math.floor(this._dx);
+            this._dy = Math.floor(this._dy);
+            this._dw = Math.floor(this._dw);
+            this._dh = Math.floor(this._dh);
             for(var i = 0; i < scrollZone.regions.length; i++) {
                 if(scrollZone.texture.isDynamic) {
                     scrollZone.regions[i].render(scrollZone.texture.context, scrollZone.texture.texture, this._dx, this._dy, this._dw, this._dh);
@@ -18214,6 +18206,7 @@ var Phaser;
 /// <reference path="renderers/HeadlessRenderer.ts" />
 /// <reference path="renderers/CanvasRenderer.ts" />
 /// <reference path="utils/DebugUtils.ts" />
+/// <reference path="../Plugins/IPlugin.ts" />
 /**
 * Phaser - Game
 *
@@ -18418,6 +18411,20 @@ var Phaser;
                     // WebGL coming soon :)
                                 }
         };
+        Game.prototype.addPlugin = function (plugin) {
+            //  Prototype?
+            if(typeof plugin === 'function') {
+                this.plugins.push(new plugin(this));
+            } else {
+                plugin.game = this;
+                this.plugins.push(plugin);
+            }
+            this._pluginsLength++;
+        };
+        Game.prototype.removePlugin = function (plugin) {
+            //  TODO :)
+            this._pluginsLength--;
+        };
         Game.prototype.loadComplete = /**
         * Called when the load has finished after init was run.
         */
@@ -18448,6 +18455,11 @@ var Phaser;
         * Game loop method will be called when it's running.
         */
         function () {
+            for(this._p = 0; this._p < this._pluginsLength; this._p++) {
+                if(this.plugins[this._p].active) {
+                    this.plugins[this._p].preUpdate();
+                }
+            }
             this.tweens.update();
             this.input.update();
             this.stage.update();
@@ -18460,6 +18472,16 @@ var Phaser;
                 this.onLoadUpdateCallback.call(this.callbackContext);
             }
             this.world.postUpdate();
+            for(this._p = 0; this._p < this._pluginsLength; this._p++) {
+                if(this.plugins[this._p].active) {
+                    this.plugins[this._p].postUpdate();
+                }
+            }
+            for(this._p = 0; this._p < this._pluginsLength; this._p++) {
+                if(this.plugins[this._p].visible) {
+                    this.plugins[this._p].preRender();
+                }
+            }
             if(this._loadComplete && this.onPreRenderCallback) {
                 this.onPreRenderCallback.call(this.callbackContext);
             }
@@ -18468,6 +18490,11 @@ var Phaser;
                 this.onRenderCallback.call(this.callbackContext);
             } else if(this._loadComplete == false && this.onLoadRenderCallback) {
                 this.onLoadRenderCallback.call(this.callbackContext);
+            }
+            for(this._p = 0; this._p < this._pluginsLength; this._p++) {
+                if(this.plugins[this._p].visible) {
+                    this.plugins[this._p].postRender();
+                }
             }
         };
         Game.prototype.startState = /**

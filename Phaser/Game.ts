@@ -27,6 +27,7 @@
 /// <reference path="renderers/HeadlessRenderer.ts" />
 /// <reference path="renderers/CanvasRenderer.ts" />
 /// <reference path="utils/DebugUtils.ts" />
+/// <reference path="../Plugins/IPlugin.ts" />
 
 /**
 * Phaser - Game
@@ -106,6 +107,24 @@ module Phaser {
          * @type {State}
          */
         private _pendingState = null;
+
+        /**
+         * Plugin loop pointer
+         * @type {number}
+         */
+        private _p: number;
+
+        /**
+         * Plugins array counter
+         * @type {number}
+         */
+        private _pluginsLength: number;
+
+        /**
+         * An Array of Phaser Plugins
+         * @type {Array}
+         */
+        public plugins: Phaser.IPlugin[];
 
         /**
          * The current State object (defaults to null)
@@ -366,6 +385,30 @@ module Phaser {
 
         }
 
+        public addPlugin(plugin) {
+
+            //  Prototype?
+            if (typeof plugin === 'function')
+            {
+                this.plugins.push(new plugin(this));
+            }
+            else
+            {
+                plugin.game = this;
+                this.plugins.push(plugin);
+            }
+
+            this._pluginsLength++;
+
+        }
+
+        public removePlugin(plugin: Phaser.IPlugin) {
+
+            //  TODO :)
+            this._pluginsLength--;
+
+        }
+
         /**
          * Called when the load has finished after init was run.
          */
@@ -406,6 +449,14 @@ module Phaser {
          */
         private loop() {
 
+            for (this._p = 0; this._p < this._pluginsLength; this._p++)
+            {
+                if (this.plugins[this._p].active)
+                {
+                    this.plugins[this._p].preUpdate();
+                }
+            }
+
             this.tweens.update();
             this.input.update();
             this.stage.update();
@@ -424,6 +475,22 @@ module Phaser {
 
             this.world.postUpdate();
 
+            for (this._p = 0; this._p < this._pluginsLength; this._p++)
+            {
+                if (this.plugins[this._p].active)
+                {
+                    this.plugins[this._p].postUpdate();
+                }
+            }
+
+            for (this._p = 0; this._p < this._pluginsLength; this._p++)
+            {
+                if (this.plugins[this._p].visible)
+                {
+                    this.plugins[this._p].preRender();
+                }
+            }
+
             if (this._loadComplete && this.onPreRenderCallback)
             {
                 this.onPreRenderCallback.call(this.callbackContext);
@@ -438,6 +505,14 @@ module Phaser {
             else if (this._loadComplete == false && this.onLoadRenderCallback)
             {
                 this.onLoadRenderCallback.call(this.callbackContext);
+            }
+
+            for (this._p = 0; this._p < this._pluginsLength; this._p++)
+            {
+                if (this.plugins[this._p].visible)
+                {
+                    this.plugins[this._p].postRender();
+                }
             }
 
         }
