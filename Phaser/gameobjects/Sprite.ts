@@ -6,7 +6,7 @@
 /// <reference path="../components/Transform.ts" />
 /// <reference path="../components/sprite/Input.ts" />
 /// <reference path="../components/sprite/Events.ts" />
-/// <reference path="../physics/Body.ts" />
+/// <reference path="../physics/arcade/Body.ts" />
 
 /**
 * Phaser - Sprite
@@ -233,7 +233,7 @@ module Phaser {
 
             if (this.body)
             {
-                this.body.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
+                //this.body.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
             }
 
         }

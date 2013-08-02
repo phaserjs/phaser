@@ -1,9 +1,9 @@
 /**
 * Phaser
 *
-* v1.0.0 - June XX 2013
+* v1.0.0 - August 12th 2013
 *
-* A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
+* A feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
 * Richard Davey (@photonstorm)
 *

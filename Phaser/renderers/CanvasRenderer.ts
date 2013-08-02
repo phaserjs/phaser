@@ -458,6 +458,11 @@ module Phaser {
                 return false;
             }
 
+            if (sprite.crop && sprite.crop.empty)
+            {
+                return;
+            }
+
             sprite.renderOrderID = this._count;
 
             this._count++;

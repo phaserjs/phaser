@@ -1,5 +1,5 @@
-/// <reference path="Game.ts" />
-/// <reference path="gameobjects/Sprite.ts" />
+/// <reference path="../../Game.ts" />
+/// <reference path="../../gameobjects/Sprite.ts" />
 
 /**
 * Phaser - Motion

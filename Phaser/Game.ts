@@ -20,7 +20,6 @@
 /// <reference path="Time.ts" />
 /// <reference path="tweens/TweenManager.ts" />
 /// <reference path="World.ts" />
-/// <reference path="Motion.ts" />
 /// <reference path="system/Device.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
 /// <reference path="input/Input.ts" />
@@ -204,12 +203,6 @@ module Phaser {
         public math: GameMath;
 
         /**
-         * Reference to the motion helper.
-         * @type {Motion}
-         */
-        public motion: Motion;
-
-        /**
          * Reference to the network class.
          * @type {Net}
          */
@@ -302,7 +295,6 @@ module Phaser {
             {
                 this.device = new Device();
                 this.net = new Net(this);
-                this.motion = new Motion(this);
                 this.math = new GameMath(this);
                 this.stage = new Stage(this, parent, width, height);
                 this.world = new World(this, width, height);

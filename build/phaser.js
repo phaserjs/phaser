@@ -4322,2855 +4322,1348 @@ var Phaser;
     */
     })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="Vec2Utils.ts" />
-/**
-* Phaser - 2D Transform
-*
-* A 2D Transform
-*/
-var Phaser;
-(function (Phaser) {
-    var Transform = (function () {
-        /**
-        * Creates a new 2D Transform object.
-        * @class Transform
-        * @constructor
-        * @return {Transform} This object
-        **/
-        function Transform(pos, angle) {
-            this.t = Phaser.Vec2Utils.clone(pos);
-            this.c = Math.cos(angle);
-            this.s = Math.sin(angle);
-            this.angle = angle;
-        }
-        Transform.prototype.toString = function () {
-            return 't=' + this.t.toString() + ' c=' + this.c + ' s=' + this.s + ' a=' + this.angle;
-        };
-        Transform.prototype.setTo = function (pos, angle) {
-            this.t.copyFrom(pos);
-            this.c = Math.cos(angle);
-            this.s = Math.sin(angle);
-            return this;
-        };
-        Transform.prototype.setRotation = function (angle) {
-            if(angle !== this.angle) {
-                this.c = Math.cos(angle);
-                this.s = Math.sin(angle);
-                this.angle = angle;
-            }
-            return this;
-        };
-        Transform.prototype.setPosition = function (p) {
-            this.t.copyFrom(p);
-            return this;
-        };
-        Transform.prototype.identity = function () {
-            this.t.setTo(0, 0);
-            this.c = 1;
-            this.s = 0;
-            return this;
-        };
-        return Transform;
-    })();
-    Phaser.Transform = Transform;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="Vec2.ts" />
-/// <reference path="Transform.ts" />
-/**
-* Phaser - TransformUtils
-*
-* A collection of methods useful for manipulating and performing operations on 2D Transforms.
-*
-*/
-var Phaser;
-(function (Phaser) {
-    var TransformUtils = (function () {
-        function TransformUtils() { }
-        TransformUtils.rotate = function rotate(t, v, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            //return new vec2(v.x * this.c - v.y * this.s, v.x * this.s + v.y * this.c);
-            return out.setTo(v.x * t.c - v.y * t.s, v.x * t.s + v.y * t.c);
-        };
-        TransformUtils.unrotate = function unrotate(t, v, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            //return new vec2(v.x * this.c + v.y * this.s, -v.x * this.s + v.y * this.c);
-            return out.setTo(v.x * t.c + v.y * t.s, -v.x * t.s + v.y * t.c);
-        };
-        TransformUtils.transform = function transform(t, v, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            //return new vec2(v.x * this.c - v.y * this.s + this.t.x, v.x * this.s + v.y * this.c + this.t.y);
-            return out.setTo(v.x * t.c - v.y * t.s + t.t.x, v.x * t.s + v.y * t.c + t.t.y);
-        };
-        TransformUtils.untransform = function untransform(t, v, out) {
-            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
-            var px = v.x - t.t.x;
-            var py = v.y - t.t.y;
-            //return new vec2(px * this.c + py * this.s, -px * this.s + py * this.c);
-            return out.setTo(px * t.c + py * t.s, -px * t.s + py * t.c);
-        };
-        return TransformUtils;
-    })();
-    Phaser.TransformUtils = TransformUtils;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
 /// <reference path="../geom/Point.ts" />
 /// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../geom/Circle.ts" />
-/// <reference path="../physics/Body.ts" />
 /**
-* Phaser - BodyUtils
+* Phaser - CircleUtils
 *
-* A collection of methods useful for manipulating AdvancedPhysics Body objects.
+* A collection of methods useful for manipulating and comparing Circle objects.
+*
+* TODO:
 */
 var Phaser;
 (function (Phaser) {
-    var BodyUtils = (function () {
-        function BodyUtils() { }
-        BodyUtils.duplicate = function duplicate(source, output) {
-            /*
-            console.log('body duplicate called');
+    var CircleUtils = (function () {
+        function CircleUtils() { }
+        CircleUtils.clone = /**
+        * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
+        * @method clone
+        * @param {Circle} a - The Circle object.
+        * @param {Circle} [optional] out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+        * @return {Phaser.Circle}
+        **/
+        function clone(a, out) {
+            if (typeof out === "undefined") { out = new Phaser.Circle(); }
+            return out.setTo(a.x, a.y, a.diameter);
+        };
+        CircleUtils.contains = /**
+        * Return true if the given x/y coordinates are within the Circle object.
+        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
+        * @method contains
+        * @param {Circle} a - The Circle object.
+        * @param {Number} The X value of the coordinate to test.
+        * @param {Number} The Y value of the coordinate to test.
+        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+        **/
+        function contains(a, x, y) {
+            //  Check if x/y are within the bounds first
+            if(x >= a.left && x <= a.right && y >= a.top && y <= a.bottom) {
+                var dx = (a.x - x) * (a.x - x);
+                var dy = (a.y - y) * (a.y - y);
+                return (dx + dy) <= (a.radius * a.radius);
+            }
+            return false;
+        };
+        CircleUtils.containsPoint = /**
+        * Return true if the coordinates of the given Point object are within this Circle object.
+        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
+        * @method containsPoint
+        * @param {Circle} a - The Circle object.
+        * @param {Point} The Point object to test.
+        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+        **/
+        function containsPoint(a, point) {
+            return CircleUtils.contains(a, point.x, point.y);
+        };
+        CircleUtils.containsCircle = /**
+        * Return true if the given Circle is contained entirely within this Circle object.
+        * If you need details about the intersection then use Phaser.Intersect.circleToCircle instead.
+        * @method containsCircle
+        * @param {Circle} The Circle object to test.
+        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+        **/
+        function containsCircle(a, b) {
+            //return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
+            return true;
+        };
+        CircleUtils.distanceBetween = /**
+        * Returns the distance from the center of the Circle object to the given object (can be Circle, Point or anything with x/y properties)
+        * @method distanceBetween
+        * @param {Circle} a - The Circle object.
+        * @param {Circle} b - The target object. Must have visible x and y properties that represent the center of the object.
+        * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
+        * @return {Number} The distance between this Point object and the destination Point object.
+        **/
+        function distanceBetween(a, target, round) {
+            if (typeof round === "undefined") { round = false; }
+            var dx = a.x - target.x;
+            var dy = a.y - target.y;
+            if(round === true) {
+                return Math.round(Math.sqrt(dx * dx + dy * dy));
+            } else {
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+        };
+        CircleUtils.equals = /**
+        * Determines whether the two Circle objects match. This method compares the x, y and diameter properties.
+        * @method equals
+        * @param {Circle} a - The first Circle object.
+        * @param {Circle} b - The second Circle object.
+        * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
+        **/
+        function equals(a, b) {
+            return (a.x == b.x && a.y == b.y && a.diameter == b.diameter);
+        };
+        CircleUtils.intersects = /**
+        * Determines whether the two Circle objects intersect.
+        * This method checks the radius distances between the two Circle objects to see if they intersect.
+        * @method intersects
+        * @param {Circle} a - The first Circle object.
+        * @param {Circle} b - The second Circle object.
+        * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
+        **/
+        function intersects(a, b) {
+            return (CircleUtils.distanceBetween(a, b) <= (a.radius + b.radius));
+        };
+        CircleUtils.circumferencePoint = /**
+        * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
+        * @method circumferencePoint
+        * @param {Circle} a - The first Circle object.
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
+        * @return {Phaser.Point} The Point object holding the result.
+        **/
+        function circumferencePoint(a, angle, asDegrees, out) {
+            if (typeof asDegrees === "undefined") { asDegrees = false; }
+            if (typeof out === "undefined") { out = new Phaser.Point(); }
+            if(asDegrees === true) {
+                angle = angle * Phaser.GameMath.DEG_TO_RAD;
+            }
+            return out.setTo(a.x + a.radius * Math.cos(angle), a.y + a.radius * Math.sin(angle));
+        };
+        CircleUtils.intersectsRectangle = /*
+        public static boolean intersect(Rectangle r, Circle c)
+        {
+        float cx = Math.abs(c.x - r.x - r.halfWidth);
+        float xDist = r.halfWidth + c.radius;
+        if (cx > xDist)
+        return false;
+        float cy = Math.abs(c.y - r.y - r.halfHeight);
+        float yDist = r.halfHeight + c.radius;
+        if (cy > yDist)
+        return false;
+        if (cx <= r.halfWidth || cy <= r.halfHeight)
+        return true;
+        float xCornerDist = cx - r.halfWidth;
+        float yCornerDist = cy - r.halfHeight;
+        float xCornerDistSq = xCornerDist * xCornerDist;
+        float yCornerDistSq = yCornerDist * yCornerDist;
+        float maxCornerDistSq = c.radius * c.radius;
+        return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
+        }
+        */
+        function intersectsRectangle(c, r) {
+            var cx = Math.abs(c.x - r.x - r.halfWidth);
+            var xDist = r.halfWidth + c.radius;
+            if(cx > xDist) {
+                return false;
+            }
+            var cy = Math.abs(c.y - r.y - r.halfHeight);
+            var yDist = r.halfHeight + c.radius;
+            if(cy > yDist) {
+                return false;
+            }
+            if(cx <= r.halfWidth || cy <= r.halfHeight) {
+                return true;
+            }
+            var xCornerDist = cx - r.halfWidth;
+            var yCornerDist = cy - r.halfHeight;
+            var xCornerDistSq = xCornerDist * xCornerDist;
+            var yCornerDistSq = yCornerDist * yCornerDist;
+            var maxCornerDistSq = c.radius * c.radius;
+            return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
+        };
+        return CircleUtils;
+    })();
+    Phaser.CircleUtils = CircleUtils;    
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../../Game.ts" />
+    /// <reference path="../../utils/RectangleUtils.ts" />
+    /// <reference path="../../utils/CircleUtils.ts" />
+    /// <reference path="Body.ts" />
+    /// <reference path="../../math/QuadTree.ts" />
+    /**
+    * Phaser - ArcadePhysics Manager
+    *
+    */
+    (function (Physics) {
+        var ArcadePhysics = (function () {
+            function ArcadePhysics(game, width, height) {
+                this._length = 0;
+                /**
+                * @type {number}
+                */
+                this.worldDivisions = 6;
+                this.game = game;
+                this.gravity = new Phaser.Vec2();
+                this.drag = new Phaser.Vec2();
+                this.bounce = new Phaser.Vec2();
+                this.angularDrag = 0;
+                this.bounds = new Phaser.Rectangle(0, 0, width, height);
+                this._distance = new Phaser.Vec2();
+                this._tangent = new Phaser.Vec2();
+                //this.members = new Group(game);
+                            }
+            ArcadePhysics.OVERLAP_BIAS = 4;
+            ArcadePhysics.TILE_OVERLAP = false;
+            ArcadePhysics.prototype.updateMotion = /*
+            public update() {
             
-            var newBody = new Phaser.Physics.Body(source.type, source.transform.t, source.rotation);
+            this._length = this._objects.length;
             
-            for (var i = 0; i < source.shapes.length; i++)
+            for (var i = 0; i < this._length; i++)
             {
-            output.addShape(source.shapes[i].duplicate());
+            if (this._objects[i])
+            {
+            this._objects[i].preUpdate();
+            this.updateMotion(this._objects[i]);
+            this.collideWorld(this._objects[i]);
+            
+            for (var x = 0; x < this._length; x++)
+            {
+            if (this._objects[x] && this._objects[x] !== this._objects[i])
+            {
+            //this.collideShapes(this._objects[i], this._objects[x]);
+            var r = this.NEWseparate(this._objects[i], this._objects[x]);
+            //console.log('sep', r);
+            }
             }
             
-            output.resetMassData();
+            }
+            }
+            
+            }
+            
+            public render() {
+            
+            //  iterate through the objects here, updating and colliding
+            for (var i = 0; i < this._length; i++)
+            {
+            if (this._objects[i])
+            {
+            this._objects[i].render(this.game.stage.context);
+            }
+            }
+            
+            }
             */
-            return output;
-        };
-        BodyUtils.addPoly = function addPoly(body, verts, elasticity, friction, density) {
-            if (typeof elasticity === "undefined") { elasticity = 1; }
-            if (typeof friction === "undefined") { friction = 1; }
-            if (typeof density === "undefined") { density = 1; }
-            var poly = new Phaser.Physics.Shapes.Poly(verts);
-            poly.elasticity = elasticity;
-            poly.friction = friction;
-            poly.density = density;
-            body.addShape(poly);
-            body.resetMassData();
-            return poly;
-        };
-        BodyUtils.addTriangle = function addTriangle(body, x1, y1, x2, y2, x3, y3, elasticity, friction, density) {
-            if (typeof elasticity === "undefined") { elasticity = 1; }
-            if (typeof friction === "undefined") { friction = 1; }
-            if (typeof density === "undefined") { density = 1; }
-            var tri = new Phaser.Physics.Shapes.Triangle(x1, y1, x2, y2, x3, y3);
-            tri.elasticity = elasticity;
-            tri.friction = friction;
-            tri.density = density;
-            body.addShape(tri);
-            body.resetMassData();
-            return tri;
-        };
-        BodyUtils.addBox = function addBox(body, x, y, width, height, elasticity, friction, density) {
-            if (typeof elasticity === "undefined") { elasticity = 1; }
-            if (typeof friction === "undefined") { friction = 1; }
-            if (typeof density === "undefined") { density = 1; }
-            var box = new Phaser.Physics.Shapes.Box(x, y, width, height);
-            box.elasticity = elasticity;
-            box.friction = friction;
-            box.density = density;
-            body.addShape(box);
-            body.resetMassData();
-            return box;
-        };
-        BodyUtils.addCircle = function addCircle(body, radius, x, y, elasticity, friction, density) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof elasticity === "undefined") { elasticity = 1; }
-            if (typeof friction === "undefined") { friction = 1; }
-            if (typeof density === "undefined") { density = 1; }
-            var circle = new Phaser.Physics.Shapes.Circle(radius, x, y);
-            circle.elasticity = elasticity;
-            circle.friction = friction;
-            circle.density = density;
-            body.addShape(circle);
-            body.resetMassData();
-            return circle;
-        };
-        return BodyUtils;
-    })();
-    Phaser.BodyUtils = BodyUtils;    
+            function (body) {
+                if(body.type == Phaser.Types.BODY_DISABLED) {
+                    return;
+                }
+                this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.gravity.x, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
+                body.angularVelocity += this._velocityDelta;
+                body.sprite.transform.rotation += body.angularVelocity * this.game.time.elapsed;
+                body.angularVelocity += this._velocityDelta;
+                this._velocityDelta = (this.computeVelocity(body.velocity.x, body.gravity.x, body.acceleration.x, body.drag.x) - body.velocity.x) / 2;
+                body.velocity.x += this._velocityDelta;
+                this._delta = body.velocity.x * this.game.time.elapsed;
+                body.velocity.x += this._velocityDelta;
+                //body.position.x += this._delta;
+                body.sprite.x += this._delta;
+                this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
+                body.velocity.y += this._velocityDelta;
+                this._delta = body.velocity.y * this.game.time.elapsed;
+                body.velocity.y += this._velocityDelta;
+                //body.position.y += this._delta;
+                body.sprite.y += this._delta;
+            };
+            ArcadePhysics.prototype.computeVelocity = /**
+            * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+            *
+            * @param {number} Velocity Any component of velocity (e.g. 20).
+            * @param {number} Acceleration Rate at which the velocity is changing.
+            * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+            * @param {number} Max An absolute value cap for the velocity.
+            *
+            * @return {number} The altered Velocity value.
+            */
+            function (velocity, gravity, acceleration, drag, max) {
+                if (typeof gravity === "undefined") { gravity = 0; }
+                if (typeof acceleration === "undefined") { acceleration = 0; }
+                if (typeof drag === "undefined") { drag = 0; }
+                if (typeof max === "undefined") { max = 10000; }
+                if(acceleration !== 0) {
+                    velocity += (acceleration + gravity) * this.game.time.elapsed;
+                } else if(drag !== 0) {
+                    this._drag = drag * this.game.time.elapsed;
+                    if(velocity - this._drag > 0) {
+                        velocity = velocity - this._drag;
+                    } else if(velocity + this._drag < 0) {
+                        velocity += this._drag;
+                    } else {
+                        velocity = 0;
+                    }
+                    velocity += gravity;
+                }
+                if((velocity != 0) && (max != 10000)) {
+                    if(velocity > max) {
+                        velocity = max;
+                    } else if(velocity < -max) {
+                        velocity = -max;
+                    }
+                }
+                return velocity;
+            };
+            ArcadePhysics.prototype.separate = /**
+            * The core Collision separation method.
+            * @param body1 The first Physics.Body to separate
+            * @param body2 The second Physics.Body to separate
+            * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+            */
+            function (body1, body2) {
+                this._separatedX = this.separateBodyX(body1, body2);
+                this._separatedY = this.separateBodyY(body1, body2);
+                return this._separatedX || this._separatedY;
+            };
+            ArcadePhysics.prototype.checkHullIntersection = function (body1, body2) {
+                return ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight));
+            };
+            ArcadePhysics.prototype.separateBodyX = /**
+            * Separates the two objects on their x axis
+            * @param object1 The first GameObject to separate
+            * @param object2 The second GameObject to separate
+            * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+            */
+            function (body1, body2) {
+                //  Can't separate two disabled or static objects
+                if((body1.type == Phaser.Types.BODY_DISABLED || body1.type == Phaser.Types.BODY_STATIC) && (body2.type == Phaser.Types.BODY_DISABLED || body2.type == Phaser.Types.BODY_STATIC)) {
+                    return false;
+                }
+                //  First, get the two object deltas
+                this._overlap = 0;
+                if(body1.deltaX != body2.deltaX) {
+                    if(Phaser.RectangleUtils.intersects(body1.bounds, body2.bounds)) {
+                        this._maxOverlap = body1.deltaXAbs + body2.deltaXAbs + ArcadePhysics.OVERLAP_BIAS;
+                        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                        if(body1.deltaX > body2.deltaX) {
+                            this._overlap = body1.bounds.right - body2.bounds.x;
+                            if((this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.RIGHT) || !(body2.allowCollisions & Phaser.Types.LEFT)) {
+                                this._overlap = 0;
+                            } else {
+                                body1.touching |= Phaser.Types.RIGHT;
+                                body2.touching |= Phaser.Types.LEFT;
+                            }
+                        } else if(body1.deltaX < body2.deltaX) {
+                            this._overlap = body1.bounds.x - body2.bounds.width - body2.bounds.x;
+                            if((-this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.LEFT) || !(body2.allowCollisions & Phaser.Types.RIGHT)) {
+                                this._overlap = 0;
+                            } else {
+                                body1.touching |= Phaser.Types.LEFT;
+                                body2.touching |= Phaser.Types.RIGHT;
+                            }
+                        }
+                    }
+                }
+                //  Then adjust their positions and velocities accordingly (if there was any overlap)
+                if(this._overlap != 0) {
+                    this._obj1Velocity = body1.velocity.x;
+                    this._obj2Velocity = body2.velocity.x;
+                    /**
+                    * Dynamic = gives and receives impacts
+                    * Static = gives but doesn't receive impacts, cannot be moved by physics
+                    * Kinematic = gives impacts, but never receives, can be moved by physics
+                    */
+                    //  2 dynamic bodies will exchange velocities
+                    if(body1.type == Phaser.Types.BODY_DYNAMIC && body2.type == Phaser.Types.BODY_DYNAMIC) {
+                        this._overlap *= 0.5;
+                        body1.position.x = body1.position.x - this._overlap;
+                        body2.position.x += this._overlap;
+                        this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                        this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                        this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
+                        this._obj1NewVelocity -= this._average;
+                        this._obj2NewVelocity -= this._average;
+                        body1.velocity.x = this._average + this._obj1NewVelocity * body1.bounce.x;
+                        body2.velocity.x = this._average + this._obj2NewVelocity * body2.bounce.x;
+                    } else if(body2.type != Phaser.Types.BODY_DYNAMIC) {
+                        //  Body 2 is Static or Kinematic
+                        this._overlap *= 2;
+                        body1.position.x -= this._overlap;
+                        body1.velocity.x = this._obj2Velocity - this._obj1Velocity * body1.bounce.x;
+                    } else if(body1.type != Phaser.Types.BODY_DYNAMIC) {
+                        //  Body 1 is Static or Kinematic
+                        this._overlap *= 2;
+                        body2.position.x += this._overlap;
+                        body2.velocity.x = this._obj1Velocity - this._obj2Velocity * body2.bounce.x;
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+            ArcadePhysics.prototype.separateBodyY = /**
+            * Separates the two objects on their y axis
+            * @param object1 The first GameObject to separate
+            * @param object2 The second GameObject to separate
+            * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+            */
+            function (body1, body2) {
+                //  Can't separate two immovable objects
+                if((body1.type == Phaser.Types.BODY_DISABLED || body1.type == Phaser.Types.BODY_STATIC) && (body2.type == Phaser.Types.BODY_DISABLED || body2.type == Phaser.Types.BODY_STATIC)) {
+                    return false;
+                }
+                //  First, get the two object deltas
+                this._overlap = 0;
+                if(body1.deltaY != body2.deltaY) {
+                    if(Phaser.RectangleUtils.intersects(body1.bounds, body2.bounds)) {
+                        //  This is the only place to use the DeltaAbs values
+                        this._maxOverlap = body1.deltaYAbs + body2.deltaYAbs + ArcadePhysics.OVERLAP_BIAS;
+                        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+                        if(body1.deltaY > body2.deltaY) {
+                            this._overlap = body1.bounds.bottom - body2.bounds.y;
+                            if((this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.DOWN) || !(body2.allowCollisions & Phaser.Types.UP)) {
+                                this._overlap = 0;
+                            } else {
+                                body1.touching |= Phaser.Types.DOWN;
+                                body2.touching |= Phaser.Types.UP;
+                            }
+                        } else if(body1.deltaY < body2.deltaY) {
+                            this._overlap = body1.bounds.y - body2.bounds.height - body2.bounds.y;
+                            if((-this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.UP) || !(body2.allowCollisions & Phaser.Types.DOWN)) {
+                                this._overlap = 0;
+                            } else {
+                                body1.touching |= Phaser.Types.UP;
+                                body2.touching |= Phaser.Types.DOWN;
+                            }
+                        }
+                    }
+                }
+                //  Then adjust their positions and velocities accordingly (if there was any overlap)
+                if(this._overlap != 0) {
+                    this._obj1Velocity = body1.velocity.y;
+                    this._obj2Velocity = body2.velocity.y;
+                    /**
+                    * Dynamic = gives and receives impacts
+                    * Static = gives but doesn't receive impacts, cannot be moved by physics
+                    * Kinematic = gives impacts, but never receives, can be moved by physics
+                    */
+                    if(body1.type == Phaser.Types.BODY_DYNAMIC && body2.type == Phaser.Types.BODY_DYNAMIC) {
+                        this._overlap *= 0.5;
+                        body1.position.y = body1.position.y - this._overlap;
+                        body2.position.y += this._overlap;
+                        this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                        this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                        var average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
+                        this._obj1NewVelocity -= average;
+                        this._obj2NewVelocity -= average;
+                        body1.velocity.y = average + this._obj1NewVelocity * body1.bounce.y;
+                        body2.velocity.y = average + this._obj2NewVelocity * body2.bounce.y;
+                    } else if(body2.type != Phaser.Types.BODY_DYNAMIC) {
+                        this._overlap *= 2;
+                        body1.position.y -= this._overlap;
+                        body1.velocity.y = this._obj2Velocity - this._obj1Velocity * body1.bounce.y;
+                        //  This is special case code that handles things like horizontal moving platforms you can ride
+                        //if (body2.parent.active && body2.moves && (body1.deltaY > body2.deltaY))
+                        if(body2.sprite.active && (body1.deltaY > body2.deltaY)) {
+                            body1.position.x += body2.position.x - body2.oldPosition.x;
+                        }
+                    } else if(body1.type != Phaser.Types.BODY_DYNAMIC) {
+                        this._overlap *= 2;
+                        body2.position.y += this._overlap;
+                        body2.velocity.y = this._obj1Velocity - this._obj2Velocity * body2.bounce.y;
+                        //  This is special case code that handles things like horizontal moving platforms you can ride
+                        //if (object1.active && body1.moves && (body1.deltaY < body2.deltaY))
+                        if(body1.sprite.active && (body1.deltaY < body2.deltaY)) {
+                            body2.position.x += body1.position.x - body1.oldPosition.x;
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+            ArcadePhysics.prototype.overlap = /*
+            private TILEseparate(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.x == 1)
+            {
+            console.log('1 The left side of ShapeA hit the right side of ShapeB', Math.floor(distance.x));
+            shapeA.physics.touching |= Phaser.Types.LEFT;
+            shapeB.physics.touching |= Phaser.Types.RIGHT;
+            }
+            else if (tangent.x == -1)
+            {
+            console.log('2 The right side of ShapeA hit the left side of ShapeB', Math.floor(distance.x));
+            shapeA.physics.touching |= Phaser.Types.RIGHT;
+            shapeB.physics.touching |= Phaser.Types.LEFT;
+            }
+            
+            if (tangent.y == 1)
+            {
+            console.log('3 The top of ShapeA hit the bottom of ShapeB', Math.floor(distance.y));
+            shapeA.physics.touching |= Phaser.Types.UP;
+            shapeB.physics.touching |= Phaser.Types.DOWN;
+            }
+            else if (tangent.y == -1)
+            {
+            console.log('4 The bottom of ShapeA hit the top of ShapeB', Math.floor(distance.y));
+            shapeA.physics.touching |= Phaser.Types.DOWN;
+            shapeB.physics.touching |= Phaser.Types.UP;
+            }
+            
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            var dot = Vec2Utils.dot(shapeA.physics.velocity, tangent);
+            
+            if (dot < 0)
+            {
+            console.log('in to', dot);
+            
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.x > 0)
+            {
+            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
+            }
+            else
+            {
+            shapeA.physics.velocity.x = 0;
+            }
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.y > 0)
+            {
+            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
+            }
+            else
+            {
+            shapeA.physics.velocity.y = 0;
+            }
+            }
+            else
+            {
+            console.log('out of', dot);
+            }
+            
+            shapeA.position.x += Math.floor(distance.x);
+            //shapeA.bounds.x += Math.floor(distance.x);
+            
+            shapeA.position.y += Math.floor(distance.y);
+            //shapeA.bounds.y += distance.y;
+            
+            console.log('------------------------------------------------');
+            
+            }
+            
+            private collideWorld(shape:IPhysicsShape) {
+            
+            //  Collide on the x-axis
+            this._distance.x = shape.world.bounds.x - (shape.position.x - shape.bounds.halfWidth);
+            
+            if (0 < this._distance.x)
+            {
+            //  Hit Left
+            this._tangent.setTo(1, 0);
+            this.separateXWall(shape, this._distance, this._tangent);
+            }
+            else
+            {
+            this._distance.x = (shape.position.x + shape.bounds.halfWidth) - shape.world.bounds.right;
+            
+            if (0 < this._distance.x)
+            {
+            //  Hit Right
+            this._tangent.setTo(-1, 0);
+            this._distance.reverse();
+            this.separateXWall(shape, this._distance, this._tangent);
+            }
+            }
+            
+            //  Collide on the y-axis
+            this._distance.y = shape.world.bounds.y - (shape.position.y - shape.bounds.halfHeight);
+            
+            if (0 < this._distance.y)
+            {
+            //  Hit Top
+            this._tangent.setTo(0, 1);
+            this.separateYWall(shape, this._distance, this._tangent);
+            }
+            else
+            {
+            this._distance.y = (shape.position.y + shape.bounds.halfHeight) - shape.world.bounds.bottom;
+            
+            if (0 < this._distance.y)
+            {
+            //  Hit Bottom
+            this._tangent.setTo(0, -1);
+            this._distance.reverse();
+            this.separateYWall(shape, this._distance, this._tangent);
+            }
+            }
+            
+            }
+            
+            private separateX(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.x == 1)
+            {
+            console.log('The left side of ShapeA hit the right side of ShapeB', distance.x);
+            shapeA.physics.touching |= Phaser.Types.LEFT;
+            shapeB.physics.touching |= Phaser.Types.RIGHT;
+            }
+            else
+            {
+            console.log('The right side of ShapeA hit the left side of ShapeB', distance.x);
+            shapeA.physics.touching |= Phaser.Types.RIGHT;
+            shapeB.physics.touching |= Phaser.Types.LEFT;
+            }
+            
+            //  collision edges
+            //shapeA.oH = tangent.x;
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
+            {
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.x > 0)
+            {
+            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
+            }
+            else
+            {
+            shapeA.physics.velocity.x = 0;
+            }
+            }
+            
+            shapeA.position.x += distance.x;
+            shapeA.bounds.x += distance.x;
+            
+            }
+            
+            private separateY(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.y == 1)
+            {
+            console.log('The top of ShapeA hit the bottom of ShapeB', distance.y);
+            shapeA.physics.touching |= Phaser.Types.UP;
+            shapeB.physics.touching |= Phaser.Types.DOWN;
+            }
+            else
+            {
+            console.log('The bottom of ShapeA hit the top of ShapeB', distance.y);
+            shapeA.physics.touching |= Phaser.Types.DOWN;
+            shapeB.physics.touching |= Phaser.Types.UP;
+            }
+            
+            //  collision edges
+            //shapeA.oV = tangent.y;
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
+            {
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.y > 0)
+            {
+            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
+            }
+            else
+            {
+            shapeA.physics.velocity.y = 0;
+            }
+            }
+            
+            shapeA.position.y += distance.y;
+            shapeA.bounds.y += distance.y;
+            
+            }
+            
+            private separateXWall(shapeA: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.x == 1)
+            {
+            console.log('The left side of ShapeA hit the right side of ShapeB', distance.x);
+            shapeA.physics.touching |= Phaser.Types.LEFT;
+            }
+            else
+            {
+            console.log('The right side of ShapeA hit the left side of ShapeB', distance.x);
+            shapeA.physics.touching |= Phaser.Types.RIGHT;
+            }
+            
+            //  collision edges
+            //shapeA.oH = tangent.x;
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
+            {
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.x > 0)
+            {
+            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
+            }
+            else
+            {
+            shapeA.physics.velocity.x = 0;
+            }
+            }
+            
+            shapeA.position.x += distance.x;
+            
+            }
+            
+            private separateYWall(shapeA: IPhysicsShape, distance: Vec2, tangent: Vec2) {
+            
+            if (tangent.y == 1)
+            {
+            console.log('The top of ShapeA hit the bottom of ShapeB', distance.y);
+            shapeA.physics.touching |= Phaser.Types.UP;
+            }
+            else
+            {
+            console.log('The bottom of ShapeA hit the top of ShapeB', distance.y);
+            shapeA.physics.touching |= Phaser.Types.DOWN;
+            }
+            
+            //  collision edges
+            //shapeA.oV = tangent.y;
+            
+            //  only apply collision response forces if the object is travelling into, and not out of, the collision
+            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
+            {
+            //  Apply horizontal bounce
+            if (shapeA.physics.bounce.y > 0)
+            {
+            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
+            }
+            else
+            {
+            shapeA.physics.velocity.y = 0;
+            }
+            }
+            
+            shapeA.position.y += distance.y;
+            
+            }
+            */
+            /**
+            * Checks for overlaps between two objects using the world QuadTree. Can be Sprite vs. Sprite, Sprite vs. Group or Group vs. Group.
+            * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+            * @param object1 The first Sprite or Group to check. If null the world.group is used.
+            * @param object2 The second Sprite or Group to check.
+            * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+            * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+            * @param context The context in which the callbacks will be called
+            * @returns {boolean} true if the objects overlap, otherwise false.
+            */
+            function (object1, object2, notifyCallback, processCallback, context) {
+                if (typeof object1 === "undefined") { object1 = null; }
+                if (typeof object2 === "undefined") { object2 = null; }
+                if (typeof notifyCallback === "undefined") { notifyCallback = null; }
+                if (typeof processCallback === "undefined") { processCallback = null; }
+                if (typeof context === "undefined") { context = null; }
+                /*
+                if (object1 == null)
+                {
+                object1 = this.game.world.group;
+                }
+                
+                if (object2 == object1)
+                {
+                object2 = null;
+                }
+                
+                QuadTree.divisions = this.worldDivisions;
+                
+                this._quadTree = new Phaser.QuadTree(this, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+                
+                this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
+                
+                this._quadTreeResult = this._quadTree.execute();
+                
+                console.log('over', this._quadTreeResult);
+                
+                this._quadTree.destroy();
+                
+                this._quadTree = null;
+                
+                return this._quadTreeResult;
+                */
+                return false;
+            };
+            ArcadePhysics.prototype.separateTile = /**
+            * Collision resolution specifically for GameObjects vs. Tiles.
+            * @param object The GameObject to separate
+            * @param tile The Tile to separate
+            * @returns {boolean} Whether the objects in fact touched and were separated
+            */
+            function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
+                //var separatedX: bool = this.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
+                //var separatedY: bool = this.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
+                //return separatedX || separatedY;
+                return false;
+            };
+            return ArcadePhysics;
+        })();
+        Physics.ArcadePhysics = ArcadePhysics;        
+        /**
+        * Separates the two objects on their x axis
+        * @param object The GameObject to separate
+        * @param tile The Tile to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        /*
+        public separateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+        
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+        return false;
+        }
+        
+        //  First, get the object delta
+        var overlap: number = 0;
+        var objDelta: number = object.x - object.last.x;
+        //var objDelta: number = object.collisionMask.deltaX;
+        
+        if (objDelta != 0)
+        {
+        //  Check if the X hulls actually overlap
+        var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+        //var objDeltaAbs: number = object.collisionMask.deltaXAbs;
+        var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+        
+        if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+        {
+        var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+        
+        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+        if (objDelta > 0)
+        {
+        overlap = object.x + object.width - x;
+        
+        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.RIGHT;
+        }
+        }
+        else if (objDelta < 0)
+        {
+        overlap = object.x - width - x;
+        
+        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.LEFT;
+        }
+        
+        }
+        
+        }
+        }
+        
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (overlap != 0)
+        {
+        if (separate == true)
+        {
+        //console.log('
+        object.x = object.x - overlap;
+        object.velocity.x = -(object.velocity.x * object.elasticity);
+        }
+        
+        Collision.TILE_OVERLAP = true;
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+        
+        }
+        */
+        /**
+        * Separates the two objects on their y axis
+        * @param object The first GameObject to separate
+        * @param tile The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        /*
+        public separateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+        
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+        return false;
+        }
+        
+        //  First, get the two object deltas
+        var overlap: number = 0;
+        var objDelta: number = object.y - object.last.y;
+        
+        if (objDelta != 0)
+        {
+        //  Check if the Y hulls actually overlap
+        var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+        var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+        
+        if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+        {
+        var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+        
+        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+        if (objDelta > 0)
+        {
+        overlap = object.y + object.height - y;
+        
+        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.DOWN;
+        }
+        }
+        else if (objDelta < 0)
+        {
+        overlap = object.y - height - y;
+        
+        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.UP;
+        }
+        }
+        }
+        }
+        
+        // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+        
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (overlap != 0)
+        {
+        if (separate == true)
+        {
+        object.y = object.y - overlap;
+        object.velocity.y = -(object.velocity.y * object.elasticity);
+        }
+        
+        Collision.TILE_OVERLAP = true;
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+        }
+        */
+        /**
+        * Separates the two objects on their x axis
+        * @param object The GameObject to separate
+        * @param tile The Tile to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        */
+        /*
+        public static NEWseparateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+        
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+        return false;
+        }
+        
+        //  First, get the object delta
+        var overlap: number = 0;
+        
+        if (object.collisionMask.deltaX != 0)
+        {
+        //  Check if the X hulls actually overlap
+        //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+        //var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
+        
+        //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+        if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
+        {
+        var maxOverlap: number = object.collisionMask.deltaXAbs + Collision.OVERLAP_BIAS;
+        
+        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+        if (object.collisionMask.deltaX > 0)
+        {
+        //overlap = object.x + object.width - x;
+        overlap = object.collisionMask.right - x;
+        
+        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.RIGHT;
+        }
+        }
+        else if (object.collisionMask.deltaX < 0)
+        {
+        //overlap = object.x - width - x;
+        overlap = object.collisionMask.x - width - x;
+        
+        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.LEFT;
+        }
+        
+        }
+        
+        }
+        }
+        
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (overlap != 0)
+        {
+        if (separate == true)
+        {
+        object.x = object.x - overlap;
+        object.velocity.x = -(object.velocity.x * object.elasticity);
+        }
+        
+        Collision.TILE_OVERLAP = true;
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+        
+        }
+        */
+        /**
+        * Separates the two objects on their y axis
+        * @param object The first GameObject to separate
+        * @param tile The second GameObject to separate
+        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        */
+        /*
+        public NEWseparateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+        
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+        return false;
+        }
+        
+        //  First, get the two object deltas
+        var overlap: number = 0;
+        //var objDelta: number = object.y - object.last.y;
+        
+        if (object.collisionMask.deltaY != 0)
+        {
+        //  Check if the Y hulls actually overlap
+        //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
+        //var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
+        
+        //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
+        if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
+        {
+        //var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
+        var maxOverlap: number = object.collisionMask.deltaYAbs + Collision.OVERLAP_BIAS;
+        
+        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
+        if (object.collisionMask.deltaY > 0)
+        {
+        //overlap = object.y + object.height - y;
+        overlap = object.collisionMask.bottom - y;
+        
+        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.DOWN;
+        }
+        }
+        else if (object.collisionMask.deltaY < 0)
+        {
+        //overlap = object.y - height - y;
+        overlap = object.collisionMask.y - height - y;
+        
+        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
+        {
+        overlap = 0;
+        }
+        else
+        {
+        object.touching |= Collision.UP;
+        }
+        }
+        }
+        }
+        
+        // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
+        
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (overlap != 0)
+        {
+        if (separate == true)
+        {
+        object.y = object.y - overlap;
+        object.velocity.y = -(object.velocity.y * object.elasticity);
+        }
+        
+        Collision.TILE_OVERLAP = true;
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+        }
+        */
+            })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
 })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
     /// <reference path="../../math/Vec2.ts" />
     /// <reference path="../../geom/Point.ts" />
     /// <reference path="../../math/Vec2Utils.ts" />
-    /// <reference path="../AdvancedPhysics.ts" />
-    /// <reference path="../Body.ts" />
+    /// <reference path="ArcadePhysics.ts" />
     /**
-    * Phaser - Advanced Physics - Joint
-    *
-    * Based on the work Ju Hyung Lee started in JS PhyRus.
-    */
-    (function (Physics) {
-        var Joint = (function () {
-            function Joint(type, body1, body2, collideConnected) {
-                this.id = Physics.AdvancedPhysics.jointCounter++;
-                this.type = type;
-                this.body1 = body1;
-                this.body2 = body2;
-                this.collideConnected = collideConnected;
-                this.maxForce = 9999999999;
-                this.breakable = false;
-            }
-            Joint.prototype.getWorldAnchor1 = function () {
-                return this.body1.getWorldPoint(this.anchor1);
-            };
-            Joint.prototype.getWorldAnchor2 = function () {
-                return this.body2.getWorldPoint(this.anchor2);
-            };
-            Joint.prototype.setWorldAnchor1 = function (anchor1) {
-                this.anchor1 = this.body1.getLocalPoint(anchor1);
-            };
-            Joint.prototype.setWorldAnchor2 = function (anchor2) {
-                this.anchor2 = this.body2.getLocalPoint(anchor2);
-            };
-            return Joint;
-        })();
-        Physics.Joint = Joint;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../Game.ts" />
-    /// <reference path="../math/Vec2.ts" />
-    /// <reference path="../math/Vec2Utils.ts" />
-    /**
-    * Phaser - 2D AABB
-    *
-    * A 2D AABB object
-    */
-    (function (Physics) {
-        var Bounds = (function () {
-            /**
-            * Creates a new 2D AABB object.
-            * @class Bounds
-            * @constructor
-            * @return {Bounds} This object
-            **/
-            function Bounds(mins, maxs) {
-                if (typeof mins === "undefined") { mins = null; }
-                if (typeof maxs === "undefined") { maxs = null; }
-                if(mins) {
-                    this.mins = Phaser.Vec2Utils.clone(mins);
-                } else {
-                    this.mins = new Phaser.Vec2(999999, 999999);
-                }
-                if(maxs) {
-                    this.maxs = Phaser.Vec2Utils.clone(maxs);
-                } else {
-                    this.maxs = new Phaser.Vec2(999999, 999999);
-                }
-            }
-            Bounds.prototype.toString = function () {
-                return [
-                    "mins:", 
-                    this.mins.toString(), 
-                    "maxs:", 
-                    this.maxs.toString()
-                ].join(" ");
-            };
-            Bounds.prototype.setTo = function (mins, maxs) {
-                this.mins.setTo(mins.x, mins.y);
-                this.maxs.setTo(maxs.x, maxs.y);
-            };
-            Bounds.prototype.copy = function (b) {
-                this.mins.copyFrom(b.mins);
-                this.maxs.copyFrom(b.maxs);
-                return this;
-            };
-            Bounds.prototype.clear = function () {
-                this.mins.setTo(999999, 999999);
-                this.maxs.setTo(-999999, -999999);
-                return this;
-            };
-            Object.defineProperty(Bounds.prototype, "x", {
-                get: function () {
-                    return Physics.AdvancedPhysics.metersToPixels(this.mins.x);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Bounds.prototype, "y", {
-                get: function () {
-                    return Physics.AdvancedPhysics.metersToPixels(this.mins.y);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Bounds.prototype, "width", {
-                get: function () {
-                    return Physics.AdvancedPhysics.metersToPixels(this.maxs.x - this.mins.x);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Bounds.prototype, "height", {
-                get: function () {
-                    return Physics.AdvancedPhysics.metersToPixels(this.maxs.y - this.mins.y);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Bounds.prototype, "right", {
-                get: function () {
-                    return this.x + this.width;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Bounds.prototype, "bottom", {
-                get: function () {
-                    return this.y + this.height;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Bounds.prototype.isEmpty = function () {
-                return (this.mins.x > this.maxs.x || this.mins.y > this.maxs.y);
-            };
-            Bounds.prototype.getPerimeter = /*
-            public getCenter() {
-            return vec2.scale(vec2.add(this.mins, this.maxs), 0.5);
-            }
-            
-            public getExtent() {
-            return vec2.scale(vec2.sub(this.maxs, this.mins), 0.5);
-            }
-            */
-            function () {
-                return (this.maxs.x - this.mins.x + this.maxs.y - this.mins.y) * 2;
-            };
-            Bounds.prototype.addPoint = function (p) {
-                if(this.mins.x > p.x) {
-                    this.mins.x = p.x;
-                }
-                if(this.maxs.x < p.x) {
-                    this.maxs.x = p.x;
-                }
-                if(this.mins.y > p.y) {
-                    this.mins.y = p.y;
-                }
-                if(this.maxs.y < p.y) {
-                    this.maxs.y = p.y;
-                }
-                return this;
-            };
-            Bounds.prototype.addBounds = function (b) {
-                if(this.mins.x > b.mins.x) {
-                    this.mins.x = b.mins.x;
-                }
-                if(this.maxs.x < b.maxs.x) {
-                    this.maxs.x = b.maxs.x;
-                }
-                if(this.mins.y > b.mins.y) {
-                    this.mins.y = b.mins.y;
-                }
-                if(this.maxs.y < b.maxs.y) {
-                    this.maxs.y = b.maxs.y;
-                }
-                return this;
-            };
-            Bounds.prototype.addBounds2 = function (mins, maxs) {
-                if(this.mins.x > mins.x) {
-                    this.mins.x = mins.x;
-                }
-                if(this.maxs.x < maxs.x) {
-                    this.maxs.x = maxs.x;
-                }
-                if(this.mins.y > mins.y) {
-                    this.mins.y = mins.y;
-                }
-                if(this.maxs.y < maxs.y) {
-                    this.maxs.y = maxs.y;
-                }
-                return this;
-            };
-            Bounds.prototype.addExtents = function (center, extent_x, extent_y) {
-                if(this.mins.x > center.x - extent_x) {
-                    this.mins.x = center.x - extent_x;
-                }
-                if(this.maxs.x < center.x + extent_x) {
-                    this.maxs.x = center.x + extent_x;
-                }
-                if(this.mins.y > center.y - extent_y) {
-                    this.mins.y = center.y - extent_y;
-                }
-                if(this.maxs.y < center.y + extent_y) {
-                    this.maxs.y = center.y + extent_y;
-                }
-                return this;
-            };
-            Bounds.prototype.expand = function (ax, ay) {
-                this.mins.x -= ax;
-                this.mins.y -= ay;
-                this.maxs.x += ax;
-                this.maxs.y += ay;
-                return this;
-            };
-            Bounds.prototype.containPoint = function (p) {
-                if(p.x < this.mins.x || p.x > this.maxs.x || p.y < this.mins.y || p.y > this.maxs.y) {
-                    return false;
-                }
-                return true;
-            };
-            Bounds.prototype.intersectsBounds = function (b) {
-                if(this.mins.x > b.maxs.x || this.maxs.x < b.mins.x || this.mins.y > b.maxs.y || this.maxs.y < b.mins.y) {
-                    return false;
-                }
-                return true;
-            };
-            Bounds.expand = function expand(b, ax, ay) {
-                var b = new Bounds(b.mins, b.maxs);
-                b.expand(ax, ay);
-                return b;
-            };
-            return Bounds;
-        })();
-        Physics.Bounds = Bounds;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    })(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../../math/Vec2.ts" />
-    /// <reference path="../../math/Vec2Utils.ts" />
-    /// <reference path="../AdvancedPhysics.ts" />
-    /// <reference path="../Body.ts" />
-    /// <reference path="../Bounds.ts" />
-    /// <reference path="IShape.ts" />
-    /**
-    * Phaser - Advanced Physics - Shape
-    *
-    * Based on the work Ju Hyung Lee started in JS PhyRus.
-    */
-    (function (Physics) {
-        var Shape = (function () {
-            function Shape(type) {
-                this.id = Physics.AdvancedPhysics.shapeCounter++;
-                this.type = type;
-                this.elasticity = 0.0;
-                this.friction = 1.0;
-                this.density = 1;
-                this.bounds = new Physics.Bounds();
-            }
-            Shape.prototype.findEdgeByPoint = //  Over-ridden by ShapePoly
-            function (p, minDist) {
-                return -1;
-            };
-            return Shape;
-        })();
-        Physics.Shape = Shape;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../math/Vec2.ts" />
-    /// <reference path="../math/Vec2Utils.ts" />
-    /// <reference path="AdvancedPhysics.ts" />
-    /// <reference path="Body.ts" />
-    /// <reference path="shapes/Shape.ts" />
-    /**
-    * Phaser - Advanced Physics - Contact
-    *
-    * Based on the work Ju Hyung Lee started in JS PhyRus.
-    */
-    (function (Physics) {
-        var Contact = (function () {
-            function Contact(p, n, d, hash) {
-                this.hash = hash;
-                this.point = p;
-                this.normal = n;
-                this.depth = d;
-                this.lambdaNormal = 0;
-                this.lambdaTangential = 0;
-                this.r1 = new Phaser.Vec2();
-                this.r2 = new Phaser.Vec2();
-                this.r1_local = new Phaser.Vec2();
-                this.r2_local = new Phaser.Vec2();
-            }
-            return Contact;
-        })();
-        Physics.Contact = Contact;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../math/Vec2.ts" />
-    /// <reference path="../geom/Point.ts" />
-    /// <reference path="../math/Vec2Utils.ts" />
-    /// <reference path="AdvancedPhysics.ts" />
-    /// <reference path="Body.ts" />
-    /// <reference path="shapes/Shape.ts" />
-    /// <reference path="Contact.ts" />
-    /**
-    * Phaser - Advanced Physics - ContactSolver
-    *
-    * Based on the work Ju Hyung Lee started in JS PhyRus.
-    */
-    //-------------------------------------------------------------------------------------------------
-    // Contact Constraint
-    //
-    // Non-penetration constraint:
-    // C = dot(p2 - p1, n)
-    // Cdot = dot(v2 - v1, n)
-    // J = [ -n, -cross(r1, n), n, cross(r2, n) ]
-    //
-    // impulse = JT * lambda = [ -n * lambda, -cross(r1, n) * lambda, n * lambda, cross(r1, n) * lambda ]
-    //
-    // Friction constraint:
-    // C = dot(p2 - p1, t)
-    // Cdot = dot(v2 - v1, t)
-    // J = [ -t, -cross(r1, t), t, cross(r2, t) ]
-    //
-    // impulse = JT * lambda = [ -t * lambda, -cross(r1, t) * lambda, t * lambda, cross(r1, t) * lambda ]
-    //
-    // NOTE: lambda is an impulse in constraint space.
-    //-------------------------------------------------------------------------------------------------
-    (function (Physics) {
-        var ContactSolver = (function () {
-            function ContactSolver(shape1, shape2) {
-                this.shape1 = shape1;
-                this.shape2 = shape2;
-                this.contacts = [];
-                this.elasticity = 1;
-                this.friction = 1;
-            }
-            ContactSolver.prototype.update = function (newContactArr) {
-                for(var i = 0; i < newContactArr.length; i++) {
-                    var newContact = newContactArr[i];
-                    var k = -1;
-                    for(var j = 0; j < this.contacts.length; j++) {
-                        if(newContact.hash == this.contacts[j].hash) {
-                            k = j;
-                            break;
-                        }
-                    }
-                    if(k > -1) {
-                        newContact.lambdaNormal = this.contacts[k].lambdaNormal;
-                        newContact.lambdaTangential = this.contacts[k].lambdaTangential;
-                    }
-                }
-                this.contacts = newContactArr;
-            };
-            ContactSolver.prototype.initSolver = function (dt_inv) {
-                var body1 = this.shape1.body;
-                var body2 = this.shape2.body;
-                var sum_m_inv = body1.massInverted + body2.massInverted;
-                for(var i = 0; i < this.contacts.length; i++) {
-                    var con = this.contacts[i];
-                    //console.log('initSolver con');
-                    //console.log(con);
-                    // Transformed r1, r2
-                    Phaser.Vec2Utils.subtract(con.point, body1.position, con.r1);
-                    Phaser.Vec2Utils.subtract(con.point, body2.position, con.r2);
-                    //con.r1 = vec2.sub(con.point, body1.p);
-                    //con.r2 = vec2.sub(con.point, body2.p);
-                    // Local r1, r2
-                    Phaser.TransformUtils.unrotate(body1.transform, con.r1, con.r1_local);
-                    Phaser.TransformUtils.unrotate(body2.transform, con.r2, con.r2_local);
-                    //con.r1_local = body1.transform.unrotate(con.r1);
-                    //con.r2_local = body2.transform.unrotate(con.r2);
-                    var n = con.normal;
-                    var t = Phaser.Vec2Utils.perp(con.normal);
-                    // invEMn = J * invM * JT
-                    // J = [ -n, -cross(r1, n), n, cross(r2, n) ]
-                    var sn1 = Phaser.Vec2Utils.cross(con.r1, n);
-                    var sn2 = Phaser.Vec2Utils.cross(con.r2, n);
-                    var emn_inv = sum_m_inv + body1.inertiaInverted * sn1 * sn1 + body2.inertiaInverted * sn2 * sn2;
-                    con.emn = emn_inv == 0 ? 0 : 1 / emn_inv;
-                    // invEMt = J * invM * JT
-                    // J = [ -t, -cross(r1, t), t, cross(r2, t) ]
-                    var st1 = Phaser.Vec2Utils.cross(con.r1, t);
-                    var st2 = Phaser.Vec2Utils.cross(con.r2, t);
-                    var emt_inv = sum_m_inv + body1.inertiaInverted * st1 * st1 + body2.inertiaInverted * st2 * st2;
-                    con.emt = emt_inv == 0 ? 0 : 1 / emt_inv;
-                    // Linear velocities at contact point
-                    // in 2D: cross(w, r) = perp(r) * w
-                    var v1 = new Phaser.Vec2();
-                    var v2 = new Phaser.Vec2();
-                    Phaser.Vec2Utils.multiplyAdd(body1.velocity, Phaser.Vec2Utils.perp(con.r1), body1.angularVelocity, v1);
-                    Phaser.Vec2Utils.multiplyAdd(body2.velocity, Phaser.Vec2Utils.perp(con.r2), body2.angularVelocity, v2);
-                    //var v1 = vec2.mad(body1.v, vec2.perp(con.r1), body1.w);
-                    //var v2 = vec2.mad(body2.v, vec2.perp(con.r2), body2.w);
-                    // relative velocity at contact point
-                    var rv = new Phaser.Vec2();
-                    Phaser.Vec2Utils.subtract(v2, v1, rv);
-                    //var rv = vec2.sub(v2, v1);
-                    // bounce velocity dot n
-                    con.bounce = Phaser.Vec2Utils.dot(rv, con.normal) * this.elasticity;
-                }
-            };
-            ContactSolver.prototype.warmStart = function () {
-                var body1 = this.shape1.body;
-                var body2 = this.shape2.body;
-                for(var i = 0; i < this.contacts.length; i++) {
-                    var con = this.contacts[i];
-                    var n = con.normal;
-                    var lambda_n = con.lambdaNormal;
-                    var lambda_t = con.lambdaTangential;
-                    // Apply accumulated impulses
-                    //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
-                    //var impulse = new vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
-                    var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
-                    //console.log('phaser warmStart impulse ' + i + ' = ' + impulse.toString());
-                    body1.velocity.multiplyAddByScalar(impulse, -body1.massInverted);
-                    //body1.v.mad(impulse, -body1.m_inv);
-                    body1.angularVelocity -= Phaser.Vec2Utils.cross(con.r1, impulse) * body1.inertiaInverted;
-                    //body1.w -= vec2.cross(con.r1, impulse) * body1.i_inv;
-                    body2.velocity.multiplyAddByScalar(impulse, body2.massInverted);
-                    //body2.v.mad(impulse, body2.m_inv);
-                    body2.angularVelocity += Phaser.Vec2Utils.cross(con.r2, impulse) * body2.inertiaInverted;
-                    //body2.w += vec2.cross(con.r2, impulse) * body2.i_inv;
-                                    }
-            };
-            ContactSolver.prototype.solveVelocityConstraints = function () {
-                var body1 = this.shape1.body;
-                var body2 = this.shape2.body;
-                Physics.AdvancedPhysics.write('solveVelocityConstraints. Body1: ' + body1.name + ' Body2: ' + body2.name);
-                Physics.AdvancedPhysics.write('Shape 1: ' + this.shape1.type + ' Shape 2: ' + this.shape2.type);
-                var m1_inv = body1.massInverted;
-                var i1_inv = body1.inertiaInverted;
-                var m2_inv = body2.massInverted;
-                var i2_inv = body2.inertiaInverted;
-                Physics.AdvancedPhysics.write('m1_inv: ' + m1_inv);
-                Physics.AdvancedPhysics.write('i1_inv: ' + i1_inv);
-                Physics.AdvancedPhysics.write('m2_inv: ' + m2_inv);
-                Physics.AdvancedPhysics.write('i2_inv: ' + i2_inv);
-                for(var i = 0; i < this.contacts.length; i++) {
-                    Physics.AdvancedPhysics.write('------------ solve con ' + i);
-                    var con = this.contacts[i];
-                    var n = con.normal;
-                    var t = Phaser.Vec2Utils.perp(n);
-                    var r1 = con.r1;
-                    var r2 = con.r2;
-                    // Linear velocities at contact point
-                    // in 2D: cross(w, r) = perp(r) * w
-                    var v1 = new Phaser.Vec2();
-                    var v2 = new Phaser.Vec2();
-                    Phaser.Vec2Utils.multiplyAdd(body1.velocity, Phaser.Vec2Utils.perp(r1), body1.angularVelocity, v1);
-                    //var v1 = vec2.mad(body1.v, vec2.perp(r1), body1.w);
-                    Physics.AdvancedPhysics.write('v1 ' + v1.toString());
-                    Phaser.Vec2Utils.multiplyAdd(body2.velocity, Phaser.Vec2Utils.perp(r2), body2.angularVelocity, v2);
-                    //var v2 = vec2.mad(body2.v, vec2.perp(r2), body2.w);
-                    Physics.AdvancedPhysics.write('v2 ' + v2.toString());
-                    // Relative velocity at contact point
-                    var rv = new Phaser.Vec2();
-                    Phaser.Vec2Utils.subtract(v2, v1, rv);
-                    //var rv = vec2.sub(v2, v1);
-                    Physics.AdvancedPhysics.write('rv ' + rv.toString());
-                    // Compute normal constraint impulse + adding bounce as a velocity bias
-                    // lambda_n = -EMn * J * V
-                    var lambda_n = -con.emn * (Phaser.Vec2Utils.dot(n, rv) + con.bounce);
-                    Physics.AdvancedPhysics.write('lambda_n: ' + lambda_n);
-                    // Accumulate and clamp
-                    var lambda_n_old = con.lambdaNormal;
-                    con.lambdaNormal = Math.max(lambda_n_old + lambda_n, 0);
-                    //con.lambdaNormal = this.clamp(lambda_n_old + lambda_n, 0);
-                    lambda_n = con.lambdaNormal - lambda_n_old;
-                    Physics.AdvancedPhysics.write('lambda_n clamped: ' + lambda_n);
-                    // Compute frictional constraint impulse
-                    // lambda_t = -EMt * J * V
-                    var lambda_t = -con.emt * Phaser.Vec2Utils.dot(t, rv);
-                    // Max friction constraint impulse (Coulomb's Law)
-                    var lambda_t_max = con.lambdaNormal * this.friction;
-                    // Accumulate and clamp
-                    var lambda_t_old = con.lambdaTangential;
-                    con.lambdaTangential = this.clamp(lambda_t_old + lambda_t, -lambda_t_max, lambda_t_max);
-                    lambda_t = con.lambdaTangential - lambda_t_old;
-                    // Apply the final impulses
-                    //var impulse = vec2.rotate_vec(new vec2(lambda_n, lambda_t), n);
-                    var impulse = new Phaser.Vec2(lambda_n * n.x - lambda_t * n.y, lambda_t * n.x + lambda_n * n.y);
-                    Physics.AdvancedPhysics.write('impulse: ' + impulse.toString());
-                    body1.velocity.multiplyAddByScalar(impulse, -m1_inv);
-                    //body1.v.mad(impulse, -m1_inv);
-                    body1.angularVelocity -= Phaser.Vec2Utils.cross(r1, impulse) * i1_inv;
-                    //body1.w -= vec2.cross(r1, impulse) * i1_inv;
-                    body2.velocity.multiplyAddByScalar(impulse, m2_inv);
-                    //body2.v.mad(impulse, m2_inv);
-                    body2.angularVelocity += Phaser.Vec2Utils.cross(r2, impulse) * i2_inv;
-                    //body2.w += vec2.cross(r2, impulse) * i2_inv;
-                    Physics.AdvancedPhysics.write('body1: ' + body1.toString());
-                    Physics.AdvancedPhysics.write('body2: ' + body2.toString());
-                }
-            };
-            ContactSolver.prototype.solvePositionConstraints = function () {
-                var body1 = this.shape1.body;
-                var body2 = this.shape2.body;
-                Physics.AdvancedPhysics.write('solvePositionConstraints');
-                var m1_inv = body1.massInverted;
-                var i1_inv = body1.inertiaInverted;
-                var m2_inv = body2.massInverted;
-                var i2_inv = body2.inertiaInverted;
-                var sum_m_inv = m1_inv + m2_inv;
-                var max_penetration = 0;
-                for(var i = 0; i < this.contacts.length; i++) {
-                    Physics.AdvancedPhysics.write('------------- solvePositionConstraints ' + i);
-                    var con = this.contacts[i];
-                    var n = con.normal;
-                    var r1 = new Phaser.Vec2();
-                    var r2 = new Phaser.Vec2();
-                    // Transformed r1, r2
-                    Phaser.Vec2Utils.rotate(con.r1_local, body1.angle, r1);
-                    Phaser.Vec2Utils.rotate(con.r2_local, body2.angle, r2);
-                    Physics.AdvancedPhysics.write('r1_local.x = ' + con.r1_local.x + ' r1_local.y = ' + con.r1_local.y + ' angle: ' + body1.angle);
-                    Physics.AdvancedPhysics.write('r1 rotated: r1.x = ' + r1.x + ' r1.y = ' + r1.y);
-                    Physics.AdvancedPhysics.write('r2_local.x = ' + con.r2_local.x + ' r2_local.y = ' + con.r2_local.y + ' angle: ' + body2.angle);
-                    Physics.AdvancedPhysics.write('r2 rotated: r2.x = ' + r2.x + ' r2.y = ' + r2.y);
-                    // Contact points (corrected)
-                    var p1 = new Phaser.Vec2();
-                    var p2 = new Phaser.Vec2();
-                    Phaser.Vec2Utils.add(body1.position, r1, p1);
-                    Phaser.Vec2Utils.add(body2.position, r2, p2);
-                    Physics.AdvancedPhysics.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
-                    Physics.AdvancedPhysics.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
-                    // Corrected delta vector
-                    var dp = new Phaser.Vec2();
-                    Phaser.Vec2Utils.subtract(p2, p1, dp);
-                    // Position constraint
-                    var c = Phaser.Vec2Utils.dot(dp, n) + con.depth;
-                    var correction = this.clamp(Physics.AdvancedPhysics.CONTACT_SOLVER_BAUMGARTE * (c + Physics.AdvancedPhysics.CONTACT_SOLVER_COLLISION_SLOP), -Physics.AdvancedPhysics.CONTACT_SOLVER_MAX_LINEAR_CORRECTION, 0);
-                    if(correction == 0) {
-                        continue;
-                    }
-                    // We don't need max_penetration less than or equal slop
-                    max_penetration = Math.max(max_penetration, -c);
-                    // Compute lambda for position constraint
-                    // Solve (J * invM * JT) * lambda = -C / dt
-                    var sn1 = Phaser.Vec2Utils.cross(r1, n);
-                    var sn2 = Phaser.Vec2Utils.cross(r2, n);
-                    var em_inv = sum_m_inv + body1.inertiaInverted * sn1 * sn1 + body2.inertiaInverted * sn2 * sn2;
-                    var lambda_dt = em_inv == 0 ? 0 : -correction / em_inv;
-                    // Apply correction impulses
-                    var impulse_dt = new Phaser.Vec2();
-                    Phaser.Vec2Utils.scale(n, lambda_dt, impulse_dt);
-                    body1.position.multiplyAddByScalar(impulse_dt, -m1_inv);
-                    body1.angle -= sn1 * lambda_dt * i1_inv;
-                    body2.position.multiplyAddByScalar(impulse_dt, m2_inv);
-                    body2.angle += sn2 * lambda_dt * i2_inv;
-                    Physics.AdvancedPhysics.write('body1.pos.x=' + body1.position.x + ' y=' + body1.position.y);
-                    Physics.AdvancedPhysics.write('body2.pos.x=' + body2.position.x + ' y=' + body2.position.y);
-                }
-                Physics.AdvancedPhysics.write('max_penetration: ' + max_penetration);
-                return max_penetration <= Physics.AdvancedPhysics.CONTACT_SOLVER_COLLISION_SLOP * 3;
-            };
-            ContactSolver.prototype.clamp = function (v, min, max) {
-                return v < min ? min : (v > max ? max : v);
-            };
-            return ContactSolver;
-        })();
-        Physics.ContactSolver = ContactSolver;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    (function (Physics) {
-        /// <reference path="../../math/Vec2.ts" />
-        /// <reference path="../../math/Vec2Utils.ts" />
-        /// <reference path="../AdvancedPhysics.ts" />
-        /// <reference path="../Body.ts" />
-        /// <reference path="Shape.ts" />
-        /**
-        * Phaser - Advanced Physics - Shape - Circle
-        *
-        * Based on the work Ju Hyung Lee started in JS PhyRus.
-        */
-        (function (Shapes) {
-            var Circle = (function (_super) {
-                __extends(Circle, _super);
-                function Circle(radius, x, y) {
-                    if (typeof x === "undefined") { x = 0; }
-                    if (typeof y === "undefined") { y = 0; }
-                                _super.call(this, Physics.AdvancedPhysics.SHAPE_TYPE_CIRCLE);
-                    x = Physics.AdvancedPhysics.pixelsToMeters(x);
-                    y = Physics.AdvancedPhysics.pixelsToMeters(y);
-                    radius = Physics.AdvancedPhysics.pixelsToMeters(radius);
-                    this.center = new Phaser.Vec2(x, y);
-                    this.radius = radius;
-                    this.tc = new Phaser.Vec2();
-                    this.finishVerts();
-                }
-                Circle.prototype.finishVerts = function () {
-                    this.radius = Math.abs(this.radius);
-                };
-                Circle.prototype.duplicate = function () {
-                    return new Circle(this.center.x, this.center.y, this.radius);
-                };
-                Circle.prototype.recenter = function (c) {
-                    this.center.subtract(c);
-                };
-                Circle.prototype.transform = function (xf) {
-                    Phaser.TransformUtils.transform(xf, this.center, this.center);
-                    //this.center = xf.transform(this.center);
-                                    };
-                Circle.prototype.untransform = function (xf) {
-                    Phaser.TransformUtils.untransform(xf, this.center, this.center);
-                    //this.center = xf.untransform(this.center);
-                                    };
-                Circle.prototype.area = function () {
-                    return Physics.AdvancedPhysics.areaForCircle(this.radius, 0);
-                };
-                Circle.prototype.centroid = function () {
-                    return Phaser.Vec2Utils.clone(this.center);
-                };
-                Circle.prototype.inertia = function (mass) {
-                    return Physics.AdvancedPhysics.inertiaForCircle(mass, this.center, this.radius, 0);
-                };
-                Circle.prototype.cacheData = function (xf) {
-                    Phaser.TransformUtils.transform(xf, this.center, this.tc);
-                    //this.tc = xf.transform(this.center);
-                    this.bounds.mins.setTo(this.tc.x - this.radius, this.tc.y - this.radius);
-                    this.bounds.maxs.setTo(this.tc.x + this.radius, this.tc.y + this.radius);
-                };
-                Circle.prototype.pointQuery = function (p) {
-                    //return vec2.distsq(this.tc, p) < (this.r * this.r);
-                    return Phaser.Vec2Utils.distanceSq(this.tc, p) < (this.radius * this.radius);
-                };
-                Circle.prototype.findVertexByPoint = function (p, minDist) {
-                    var dsq = minDist * minDist;
-                    if(Phaser.Vec2Utils.distanceSq(this.tc, p) < dsq) {
-                        return 0;
-                    }
-                    return -1;
-                };
-                Circle.prototype.distanceOnPlane = function (n, d) {
-                    Phaser.Vec2Utils.dot(n, this.tc) - this.radius - d;
-                };
-                return Circle;
-            })(Phaser.Physics.Shape);
-            Shapes.Circle = Circle;            
-        })(Physics.Shapes || (Physics.Shapes = {}));
-        var Shapes = Physics.Shapes;
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../math/Vec2.ts" />
-    /// <reference path="../math/Vec2Utils.ts" />
-    /// <reference path="AdvancedPhysics.ts" />
-    /// <reference path="Body.ts" />
-    /**
-    * Phaser - Advanced Physics - Plane
-    *
-    * Based on the work Ju Hyung Lee started in JS PhyRus.
-    */
-    (function (Physics) {
-        var Plane = (function () {
-            function Plane(normal, d) {
-                this.normal = normal;
-                this.d = d;
-            }
-            return Plane;
-        })();
-        Physics.Plane = Plane;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    (function (Physics) {
-        /// <reference path="../../math/Vec2.ts" />
-        /// <reference path="../../math/Vec2Utils.ts" />
-        /// <reference path="../AdvancedPhysics.ts" />
-        /// <reference path="../Body.ts" />
-        /// <reference path="../Plane.ts" />
-        /// <reference path="Shape.ts" />
-        /**
-        * Phaser - Advanced Physics - Shapes - Convex Polygon
-        *
-        * Based on the work Ju Hyung Lee started in JS PhyRus.
-        */
-        (function (Shapes) {
-            var Poly = (function (_super) {
-                __extends(Poly, _super);
-                //  Verts is an optional array of objects, the objects must have public x and y properties which will be used
-                //  to seed this polygon (i.e. Vec2 objects, or just straight JS objects) and must wind COUNTER clockwise
-                function Poly(verts) {
-                                _super.call(this, Physics.AdvancedPhysics.SHAPE_TYPE_POLY);
-                    this.verts = [];
-                    this.planes = [];
-                    this.tverts = [];
-                    this.tplanes = [];
-                    if(verts) {
-                        for(var i = 0; i < verts.length; i++) {
-                            this.verts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
-                            this.tverts[i] = this.verts[i];
-                            //this.tverts[i] = new Phaser.Vec2(verts[i].x, verts[i].y);
-                            this.tplanes[i] = new Phaser.Physics.Plane(new Phaser.Vec2(), 0);
-                        }
-                    }
-                    this.finishVerts();
-                }
-                Poly.prototype.finishVerts = function () {
-                    if(this.verts.length < 2) {
-                        this.convexity = false;
-                        this.planes = [];
-                        return;
-                    }
-                    this.convexity = true;
-                    this.tverts = [];
-                    this.tplanes = [];
-                    // Must be counter-clockwise verts
-                    for(var i = 0; i < this.verts.length; i++) {
-                        var a = this.verts[i];
-                        var b = this.verts[(i + 1) % this.verts.length];
-                        var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
-                        this.planes[i] = new Phaser.Physics.Plane(n, Phaser.Vec2Utils.dot(n, a));
-                        this.tverts[i] = Phaser.Vec2Utils.clone(this.verts[i])// reference???
-                        ;
-                        //this.tverts[i] = this.verts[i]; // reference???
-                        this.tplanes[i] = new Phaser.Physics.Plane(new Phaser.Vec2(), 0);
-                    }
-                    for(var i = 0; i < this.verts.length; i++) {
-                        //var b = this.verts[(i + 2) % this.verts.length];
-                        //var n = this.planes[i].normal;
-                        //var d = this.planes[i].d;
-                        if(Phaser.Vec2Utils.dot(this.planes[i].normal, this.verts[(i + 2) % this.verts.length]) - this.planes[i].d > 0) {
-                            this.convexity = false;
-                        }
-                    }
-                };
-                Poly.prototype.duplicate = function () {
-                    return new Phaser.Physics.Shapes.Poly(this.verts);
-                };
-                Poly.prototype.recenter = function (c) {
-                    for(var i = 0; i < this.verts.length; i++) {
-                        this.verts[i].subtract(c);
-                    }
-                };
-                Poly.prototype.transform = function (xf) {
-                    for(var i = 0; i < this.verts.length; i++) {
-                        this.verts[i] = Phaser.TransformUtils.transform(xf, this.verts[i]);
-                        //this.verts[i] = xf.transform(this.verts[i]);
-                                            }
-                };
-                Poly.prototype.untransform = function (xf) {
-                    for(var i = 0; i < this.verts.length; i++) {
-                        this.verts[i] = Phaser.TransformUtils.untransform(xf, this.verts[i]);
-                        //this.verts[i] = xf.untransform(this.verts[i]);
-                                            }
-                };
-                Poly.prototype.area = function () {
-                    return Physics.AdvancedPhysics.areaForPoly(this.verts);
-                };
-                Poly.prototype.centroid = function () {
-                    return Physics.AdvancedPhysics.centroidForPoly(this.verts);
-                };
-                Poly.prototype.inertia = function (mass) {
-                    return Physics.AdvancedPhysics.inertiaForPoly(mass, this.verts, new Phaser.Vec2());
-                };
-                Poly.prototype.cacheData = function (xf) {
-                    this.bounds.clear();
-                    var numVerts = this.verts.length;
-                    Physics.AdvancedPhysics.write('----------- Poly cacheData = ' + numVerts);
-                    if(numVerts == 0) {
-                        return;
-                    }
-                    for(var i = 0; i < numVerts; i++) {
-                        this.tverts[i] = Phaser.TransformUtils.transform(xf, this.verts[i]);
-                        //this.tverts[i] = xf.transform(this.verts[i]);
-                        Physics.AdvancedPhysics.write('tvert' + i + ' = ' + this.tverts[i].toString());
-                    }
-                    if(numVerts < 2) {
-                        this.bounds.addPoint(this.tverts[0]);
-                        return;
-                    }
-                    for(var i = 0; i < numVerts; i++) {
-                        var a = this.tverts[i];
-                        var b = this.tverts[(i + 1) % numVerts];
-                        var n = Phaser.Vec2Utils.normalize(Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(a, b)));
-                        Physics.AdvancedPhysics.write('a = ' + a.toString());
-                        Physics.AdvancedPhysics.write('b = ' + b.toString());
-                        Physics.AdvancedPhysics.write('n = ' + n.toString());
-                        this.tplanes[i].normal = n;
-                        this.tplanes[i].d = Phaser.Vec2Utils.dot(n, a);
-                        Physics.AdvancedPhysics.write('tplanes' + i + ' n = ' + this.tplanes[i].normal.toString());
-                        Physics.AdvancedPhysics.write('tplanes' + i + ' d = ' + this.tplanes[i].d.toString());
-                        this.bounds.addPoint(a);
-                    }
-                };
-                Poly.prototype.pointQuery = function (p) {
-                    if(!this.bounds.containPoint(p)) {
-                        return false;
-                    }
-                    return this.containPoint(p);
-                };
-                Poly.prototype.findVertexByPoint = function (p, minDist) {
-                    var dsq = minDist * minDist;
-                    for(var i = 0; i < this.tverts.length; i++) {
-                        if(Phaser.Vec2Utils.distanceSq(this.tverts[i], p) < dsq) {
-                            return i;
-                        }
-                    }
-                    return -1;
-                };
-                Poly.prototype.findEdgeByPoint = function (p, minDist) {
-                    var dsq = minDist * minDist;
-                    var numVerts = this.tverts.length;
-                    for(var i = 0; i < this.tverts.length; i++) {
-                        var v1 = this.tverts[i];
-                        var v2 = this.tverts[(i + 1) % numVerts];
-                        var n = this.tplanes[i].normal;
-                        var dtv1 = Phaser.Vec2Utils.cross(v1, n);
-                        var dtv2 = Phaser.Vec2Utils.cross(v2, n);
-                        var dt = Phaser.Vec2Utils.cross(p, n);
-                        if(dt > dtv1) {
-                            if(Phaser.Vec2Utils.distanceSq(v1, p) < dsq) {
-                                return i;
-                            }
-                        } else if(dt < dtv2) {
-                            if(Phaser.Vec2Utils.distanceSq(v2, p) < dsq) {
-                                return i;
-                            }
-                        } else {
-                            var dist = Phaser.Vec2Utils.dot(n, p) - Phaser.Vec2Utils.dot(n, v1);
-                            if(dist * dist < dsq) {
-                                return i;
-                            }
-                        }
-                    }
-                    return -1;
-                };
-                Poly.prototype.distanceOnPlane = function (n, d) {
-                    var min = 999999;
-                    for(var i = 0; i < this.verts.length; i++) {
-                        min = Math.min(min, Phaser.Vec2Utils.dot(n, this.tverts[i]));
-                    }
-                    return min - d;
-                };
-                Poly.prototype.containPoint = function (p) {
-                    for(var i = 0; i < this.verts.length; i++) {
-                        var plane = this.tplanes[i];
-                        if(Phaser.Vec2Utils.dot(plane.normal, p) - plane.d > 0) {
-                            return false;
-                        }
-                    }
-                    return true;
-                };
-                Poly.prototype.containPointPartial = function (p, n) {
-                    for(var i = 0; i < this.verts.length; i++) {
-                        var plane = this.tplanes[i];
-                        if(Phaser.Vec2Utils.dot(plane.normal, n) < 0.0001) {
-                            continue;
-                        }
-                        if(Phaser.Vec2Utils.dot(plane.normal, p) - plane.d > 0) {
-                            return false;
-                        }
-                    }
-                    return true;
-                };
-                return Poly;
-            })(Phaser.Physics.Shape);
-            Shapes.Poly = Poly;            
-        })(Physics.Shapes || (Physics.Shapes = {}));
-        var Shapes = Physics.Shapes;
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    (function (Physics) {
-        /// <reference path="../../math/Vec2.ts" />
-        /// <reference path="../../math/Vec2Utils.ts" />
-        /// <reference path="../AdvancedPhysics.ts" />
-        /// <reference path="../Body.ts" />
-        /// <reference path="Shape.ts" />
-        /**
-        * Phaser - Advanced Physics - Shapes - Segment
-        *
-        * Based on the work Ju Hyung Lee started in JS PhyRus.
-        */
-        (function (Shapes) {
-            var Segment = (function (_super) {
-                __extends(Segment, _super);
-                function Segment(a, b, radius) {
-                                _super.call(this, Physics.AdvancedPhysics.SHAPE_TYPE_SEGMENT);
-                    this.a = a.duplicate();
-                    this.b = b.duplicate();
-                    this.radius = radius;
-                    this.normal = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(b, a));
-                    this.normal.normalize();
-                    this.ta = new Phaser.Vec2();
-                    this.tb = new Phaser.Vec2();
-                    this.tn = new Phaser.Vec2();
-                    this.finishVerts();
-                }
-                Segment.prototype.finishVerts = function () {
-                    this.normal = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(this.b, this.a));
-                    this.normal.normalize();
-                    this.radius = Math.abs(this.radius);
-                };
-                Segment.prototype.duplicate = function () {
-                    return new Phaser.Physics.Shapes.Segment(this.a, this.b, this.radius);
-                };
-                Segment.prototype.recenter = function (c) {
-                    this.a.subtract(c);
-                    this.b.subtract(c);
-                };
-                Segment.prototype.transform = function (xf) {
-                    Phaser.TransformUtils.transform(xf, this.a, this.a);
-                    Phaser.TransformUtils.transform(xf, this.b, this.b);
-                    //this.a = xf.transform(this.a);
-                    //this.b = xf.transform(this.b);
-                                    };
-                Segment.prototype.untransform = function (xf) {
-                    Phaser.TransformUtils.untransform(xf, this.a, this.a);
-                    Phaser.TransformUtils.untransform(xf, this.b, this.b);
-                    //this.a = xf.untransform(this.a);
-                    //this.b = xf.untransform(this.b);
-                                    };
-                Segment.prototype.area = function () {
-                    return Physics.AdvancedPhysics.areaForSegment(this.a, this.b, this.radius);
-                };
-                Segment.prototype.centroid = function () {
-                    return Physics.AdvancedPhysics.centroidForSegment(this.a, this.b);
-                };
-                Segment.prototype.inertia = function (mass) {
-                    return Physics.AdvancedPhysics.inertiaForSegment(mass, this.a, this.b);
-                };
-                Segment.prototype.cacheData = function (xf) {
-                    Phaser.TransformUtils.transform(xf, this.a, this.ta);
-                    Phaser.TransformUtils.transform(xf, this.b, this.tb);
-                    //this.ta = xf.transform(this.a);
-                    //this.tb = xf.transform(this.b);
-                    this.tn = Phaser.Vec2Utils.perp(Phaser.Vec2Utils.subtract(this.tb, this.ta)).normalize();
-                    var l;
-                    var r;
-                    var t;
-                    var b;
-                    if(this.ta.x < this.tb.x) {
-                        l = this.ta.x;
-                        r = this.tb.x;
-                    } else {
-                        l = this.tb.x;
-                        r = this.ta.x;
-                    }
-                    if(this.ta.y < this.tb.y) {
-                        b = this.ta.y;
-                        t = this.tb.y;
-                    } else {
-                        b = this.tb.y;
-                        t = this.ta.y;
-                    }
-                    this.bounds.mins.setTo(l - this.radius, b - this.radius);
-                    this.bounds.maxs.setTo(r + this.radius, t + this.radius);
-                };
-                Segment.prototype.pointQuery = function (p) {
-                    if(!this.bounds.containPoint(p)) {
-                        return false;
-                    }
-                    var dn = Phaser.Vec2Utils.dot(this.tn, p) - Phaser.Vec2Utils.dot(this.ta, this.tn);
-                    var dist = Math.abs(dn);
-                    if(dist > this.radius) {
-                        return false;
-                    }
-                    var dt = Phaser.Vec2Utils.cross(p, this.tn);
-                    var dta = Phaser.Vec2Utils.cross(this.ta, this.tn);
-                    var dtb = Phaser.Vec2Utils.cross(this.tb, this.tn);
-                    if(dt <= dta) {
-                        if(dt < dta - this.radius) {
-                            return false;
-                        }
-                        return Phaser.Vec2Utils.distanceSq(this.ta, p) < (this.radius * this.radius);
-                    } else if(dt > dtb) {
-                        if(dt > dtb + this.radius) {
-                            return false;
-                        }
-                        return Phaser.Vec2Utils.distanceSq(this.tb, p) < (this.radius * this.radius);
-                    }
-                    return true;
-                };
-                Segment.prototype.findVertexByPoint = function (p, minDist) {
-                    var dsq = minDist * minDist;
-                    if(Phaser.Vec2Utils.distanceSq(this.ta, p) < dsq) {
-                        return 0;
-                    }
-                    if(Phaser.Vec2Utils.distanceSq(this.tb, p) < dsq) {
-                        return 1;
-                    }
-                    return -1;
-                };
-                Segment.prototype.distanceOnPlane = function (n, d) {
-                    var a = Phaser.Vec2Utils.dot(n, this.ta) - this.radius;
-                    var b = Phaser.Vec2Utils.dot(n, this.tb) - this.radius;
-                    return Math.min(a, b) - d;
-                };
-                return Segment;
-            })(Phaser.Physics.Shape);
-            Shapes.Segment = Segment;            
-        })(Physics.Shapes || (Physics.Shapes = {}));
-        var Shapes = Physics.Shapes;
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../math/Vec2.ts" />
-    /// <reference path="../geom/Point.ts" />
-    /// <reference path="../math/Vec2Utils.ts" />
-    /// <reference path="shapes/Shape.ts" />
-    /// <reference path="shapes/Circle.ts" />
-    /// <reference path="shapes/Poly.ts" />
-    /// <reference path="shapes/Segment.ts" />
-    /// <reference path="AdvancedPhysics.ts" />
-    /// <reference path="Body.ts" />
-    /// <reference path="Contact.ts" />
-    /**
-    * Phaser - Advanced Physics - Collision Handlers
-    *
-    * Based on the work Ju Hyung Lee started in JS PhyRus.
-    */
-    (function (Physics) {
-        var Collision = (function () {
-            function Collision() { }
-            Collision.prototype.collide = function (a, b, contacts) {
-                //  Circle (a is the circle)
-                if(a.type == Physics.AdvancedPhysics.SHAPE_TYPE_CIRCLE) {
-                    if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_CIRCLE) {
-                        return this.circle2Circle(a, b, contacts);
-                    } else if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_SEGMENT) {
-                        return this.circle2Segment(a, b, contacts);
-                    } else if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_POLY) {
-                        return this.circle2Poly(a, b, contacts);
-                    }
-                }
-                //  Segment (a is the segment)
-                if(a.type == Physics.AdvancedPhysics.SHAPE_TYPE_SEGMENT) {
-                    if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_CIRCLE) {
-                        return this.circle2Segment(b, a, contacts);
-                    } else if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_SEGMENT) {
-                        return this.segment2Segment(a, b, contacts);
-                    } else if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_POLY) {
-                        return this.segment2Poly(a, b, contacts);
-                    }
-                }
-                //  Poly (a is the poly)
-                if(a.type == Physics.AdvancedPhysics.SHAPE_TYPE_POLY) {
-                    if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_CIRCLE) {
-                        return this.circle2Poly(b, a, contacts);
-                    } else if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_SEGMENT) {
-                        return this.segment2Poly(b, a, contacts);
-                    } else if(b.type == Physics.AdvancedPhysics.SHAPE_TYPE_POLY) {
-                        return this.poly2Poly(a, b, contacts);
-                    }
-                }
-            };
-            Collision.prototype._circle2Circle = function (c1, r1, c2, r2, contactArr) {
-                var rmax = r1 + r2;
-                var t = new Phaser.Vec2();
-                //var t = vec2.sub(c2, c1);
-                Phaser.Vec2Utils.subtract(c2, c1, t);
-                var distsq = t.lengthSq();
-                if(distsq > rmax * rmax) {
-                    return 0;
-                }
-                var dist = Math.sqrt(distsq);
-                var p = new Phaser.Vec2();
-                Phaser.Vec2Utils.multiplyAdd(c1, t, 0.5 + (r1 - r2) * 0.5 / dist, p);
-                //var p = vec2.mad(c1, t, 0.5 + (r1 - r2) * 0.5 / dist);
-                var n = new Phaser.Vec2();
-                //var n = (dist != 0) ? vec2.scale(t, 1 / dist) : vec2.zero;
-                if(dist != 0) {
-                    Phaser.Vec2Utils.scale(t, 1 / dist, n);
-                }
-                var d = dist - rmax;
-                contactArr.push(new Physics.Contact(p, n, d, 0));
-                return 1;
-            };
-            Collision.prototype.circle2Circle = function (circ1, circ2, contactArr) {
-                return this._circle2Circle(circ1.tc, circ1.radius, circ2.tc, circ2.radius, contactArr);
-            };
-            Collision.prototype.circle2Segment = function (circ, seg, contactArr) {
-                var rsum = circ.radius + seg.radius;
-                // Normal distance from segment
-                var dn = Phaser.Vec2Utils.dot(circ.tc, seg.tn) - Phaser.Vec2Utils.dot(seg.ta, seg.tn);
-                var dist = (dn < 0 ? dn * -1 : dn) - rsum;
-                if(dist > 0) {
-                    return 0;
-                }
-                // Tangential distance along segment
-                var dt = Phaser.Vec2Utils.cross(circ.tc, seg.tn);
-                var dtMin = Phaser.Vec2Utils.cross(seg.ta, seg.tn);
-                var dtMax = Phaser.Vec2Utils.cross(seg.tb, seg.tn);
-                if(dt < dtMin) {
-                    if(dt < dtMin - rsum) {
-                        return 0;
-                    }
-                    return this._circle2Circle(circ.tc, circ.radius, seg.ta, seg.radius, contactArr);
-                } else if(dt > dtMax) {
-                    if(dt > dtMax + rsum) {
-                        return 0;
-                    }
-                    return this._circle2Circle(circ.tc, circ.radius, seg.tb, seg.radius, contactArr);
-                }
-                var n = new Phaser.Vec2();
-                if(dn > 0) {
-                    n.copyFrom(seg.tn);
-                } else {
-                    Phaser.Vec2Utils.negative(seg.tn, n);
-                }
-                //var n = (dn > 0) ? seg.tn : vec2.neg(seg.tn);
-                var c1 = new Phaser.Vec2();
-                Phaser.Vec2Utils.multiplyAdd(circ.tc, n, -(circ.radius + dist * 0.5), c1);
-                var c2 = new Phaser.Vec2();
-                Phaser.Vec2Utils.negative(n, c2);
-                contactArr.push(new Physics.Contact(c1, c2, dist, 0));
-                //contactArr.push(new Contact(vec2.mad(circ.tc, n, -(circ.r + dist * 0.5)), vec2.neg(n), dist, 0));
-                return 1;
-            };
-            Collision.prototype.circle2Poly = function (circ, poly, contactArr) {
-                var minDist = -999999;
-                var minIdx = -1;
-                for(var i = 0; i < poly.verts.length; i++) {
-                    var plane = poly.tplanes[i];
-                    var dist = Phaser.Vec2Utils.dot(circ.tc, plane.normal) - plane.d - circ.radius;
-                    if(dist > 0) {
-                        return 0;
-                    } else if(dist > minDist) {
-                        minDist = dist;
-                        minIdx = i;
-                    }
-                }
-                var n = poly.tplanes[minIdx].normal;
-                var a = poly.tverts[minIdx];
-                var b = poly.tverts[(minIdx + 1) % poly.verts.length];
-                var dta = Phaser.Vec2Utils.cross(a, n);
-                var dtb = Phaser.Vec2Utils.cross(b, n);
-                var dt = Phaser.Vec2Utils.cross(circ.tc, n);
-                if(dt > dta) {
-                    return this._circle2Circle(circ.tc, circ.radius, a, 0, contactArr);
-                } else if(dt < dtb) {
-                    return this._circle2Circle(circ.tc, circ.radius, b, 0, contactArr);
-                }
-                var c1 = new Phaser.Vec2();
-                Phaser.Vec2Utils.multiplyAdd(circ.tc, n, -(circ.radius + minDist * 0.5), c1);
-                var c2 = new Phaser.Vec2();
-                Phaser.Vec2Utils.negative(n, c2);
-                contactArr.push(new Physics.Contact(c1, c2, minDist, 0));
-                //contactArr.push(new Contact(vec2.mad(circ.tc, n, -(circ.r + minDist * 0.5)), vec2.neg(n), minDist, 0));
-                return 1;
-            };
-            Collision.prototype.segmentPointDistanceSq = function (seg, p) {
-                var w = new Phaser.Vec2();
-                var d = new Phaser.Vec2();
-                Phaser.Vec2Utils.subtract(p, seg.ta, w);
-                Phaser.Vec2Utils.subtract(seg.tb, seg.ta, d);
-                //var w = vec2.sub(p, seg.ta);
-                //var d = vec2.sub(seg.tb, seg.ta);
-                var proj = w.dot(d);
-                if(proj <= 0) {
-                    return w.dot(w);
-                }
-                var vsq = d.dot(d);
-                if(proj >= vsq) {
-                    return w.dot(w) - 2 * proj + vsq;
-                }
-                return w.dot(w) - proj * proj / vsq;
-            };
-            Collision.prototype.segment2Segment = // FIXME and optimise me lots!!!
-            function (seg1, seg2, contactArr) {
-                var d = [];
-                d[0] = this.segmentPointDistanceSq(seg1, seg2.ta);
-                d[1] = this.segmentPointDistanceSq(seg1, seg2.tb);
-                d[2] = this.segmentPointDistanceSq(seg2, seg1.ta);
-                d[3] = this.segmentPointDistanceSq(seg2, seg1.tb);
-                var idx1 = d[0] < d[1] ? 0 : 1;
-                var idx2 = d[2] < d[3] ? 2 : 3;
-                var idxm = d[idx1] < d[idx2] ? idx1 : idx2;
-                var s, t;
-                var u = Phaser.Vec2Utils.subtract(seg1.tb, seg1.ta);
-                var v = Phaser.Vec2Utils.subtract(seg2.tb, seg2.ta);
-                switch(idxm) {
-                    case 0:
-                        s = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg2.ta, seg1.ta), u) / Phaser.Vec2Utils.dot(u, u);
-                        s = s < 0 ? 0 : (s > 1 ? 1 : s);
-                        t = 0;
-                        break;
-                    case 1:
-                        s = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg2.tb, seg1.ta), u) / Phaser.Vec2Utils.dot(u, u);
-                        s = s < 0 ? 0 : (s > 1 ? 1 : s);
-                        t = 1;
-                        break;
-                    case 2:
-                        s = 0;
-                        t = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg1.ta, seg2.ta), v) / Phaser.Vec2Utils.dot(v, v);
-                        t = t < 0 ? 0 : (t > 1 ? 1 : t);
-                        break;
-                    case 3:
-                        s = 1;
-                        t = Phaser.Vec2Utils.dot(Phaser.Vec2Utils.subtract(seg1.tb, seg2.ta), v) / Phaser.Vec2Utils.dot(v, v);
-                        t = t < 0 ? 0 : (t > 1 ? 1 : t);
-                        break;
-                }
-                var minp1 = Phaser.Vec2Utils.multiplyAdd(seg1.ta, u, s);
-                var minp2 = Phaser.Vec2Utils.multiplyAdd(seg2.ta, v, t);
-                return this._circle2Circle(minp1, seg1.radius, minp2, seg2.radius, contactArr);
-            };
-            Collision.prototype.findPointsBehindSeg = // Identify vertexes that have penetrated the segment.
-            function (contactArr, seg, poly, dist, coef) {
-                var dta = Phaser.Vec2Utils.cross(seg.tn, seg.ta);
-                var dtb = Phaser.Vec2Utils.cross(seg.tn, seg.tb);
-                var n = new Phaser.Vec2();
-                Phaser.Vec2Utils.scale(seg.tn, coef, n);
-                //var n = vec2.scale(seg.tn, coef);
-                for(var i = 0; i < poly.verts.length; i++) {
-                    var v = poly.tverts[i];
-                    if(Phaser.Vec2Utils.dot(v, n) < Phaser.Vec2Utils.dot(seg.tn, seg.ta) * coef + seg.radius) {
-                        var dt = Phaser.Vec2Utils.cross(seg.tn, v);
-                        if(dta >= dt && dt >= dtb) {
-                            contactArr.push(new Physics.Contact(v, n, dist, (poly.id << 16) | i));
-                        }
-                    }
-                }
-            };
-            Collision.prototype.segment2Poly = function (seg, poly, contactArr) {
-                var seg_td = Phaser.Vec2Utils.dot(seg.tn, seg.ta);
-                var seg_d1 = poly.distanceOnPlane(seg.tn, seg_td) - seg.radius;
-                if(seg_d1 > 0) {
-                    return 0;
-                }
-                var n = new Phaser.Vec2();
-                Phaser.Vec2Utils.negative(seg.tn, n);
-                var seg_d2 = poly.distanceOnPlane(n, -seg_td) - seg.radius;
-                //var seg_d2 = poly.distanceOnPlane(vec2.neg(seg.tn), -seg_td) - seg.r;
-                if(seg_d2 > 0) {
-                    return 0;
-                }
-                var poly_d = -999999;
-                var poly_i = -1;
-                for(var i = 0; i < poly.verts.length; i++) {
-                    var plane = poly.tplanes[i];
-                    var dist = seg.distanceOnPlane(plane.normal, plane.d);
-                    if(dist > 0) {
-                        return 0;
-                    }
-                    if(dist > poly_d) {
-                        poly_d = dist;
-                        poly_i = i;
-                    }
-                }
-                var poly_n = new Phaser.Vec2();
-                Phaser.Vec2Utils.negative(poly.tplanes[poly_i].normal, poly_n);
-                //var poly_n = vec2.neg(poly.tplanes[poly_i].n);
-                var va = new Phaser.Vec2();
-                Phaser.Vec2Utils.multiplyAdd(seg.ta, poly_n, seg.radius, va);
-                //var va = vec2.mad(seg.ta, poly_n, seg.r);
-                var vb = new Phaser.Vec2();
-                Phaser.Vec2Utils.multiplyAdd(seg.tb, poly_n, seg.radius, vb);
-                //var vb = vec2.mad(seg.tb, poly_n, seg.r);
-                if(poly.containPoint(va)) {
-                    contactArr.push(new Physics.Contact(va, poly_n, poly_d, (seg.id << 16) | 0));
-                }
-                if(poly.containPoint(vb)) {
-                    contactArr.push(new Physics.Contact(vb, poly_n, poly_d, (seg.id << 16) | 1));
-                }
-                // Floating point precision problems here.
-                // This will have to do for now.
-                poly_d -= 0.1;
-                if(seg_d1 >= poly_d || seg_d2 >= poly_d) {
-                    if(seg_d1 > seg_d2) {
-                        this.findPointsBehindSeg(contactArr, seg, poly, seg_d1, 1);
-                    } else {
-                        this.findPointsBehindSeg(contactArr, seg, poly, seg_d2, -1);
-                    }
-                }
-                // If no other collision points are found, try colliding endpoints.
-                if(contactArr.length == 0) {
-                    var poly_a = poly.tverts[poly_i];
-                    var poly_b = poly.tverts[(poly_i + 1) % poly.verts.length];
-                    if(this._circle2Circle(seg.ta, seg.radius, poly_a, 0, contactArr)) {
-                        return 1;
-                    }
-                    if(this._circle2Circle(seg.tb, seg.radius, poly_a, 0, contactArr)) {
-                        return 1;
-                    }
-                    if(this._circle2Circle(seg.ta, seg.radius, poly_b, 0, contactArr)) {
-                        return 1;
-                    }
-                    if(this._circle2Circle(seg.tb, seg.radius, poly_b, 0, contactArr)) {
-                        return 1;
-                    }
-                }
-                return contactArr.length;
-            };
-            Collision.prototype.findMSA = // Find the minimum separating axis for the given poly and plane list.
-            function (poly, planes, num) {
-                var min_dist = -999999;
-                var min_index = -1;
-                for(var i = 0; i < num; i++) {
-                    var dist = poly.distanceOnPlane(planes[i].normal, planes[i].d);
-                    if(dist > 0) {
-                        // no collision
-                        return {
-                            dist: 0,
-                            index: -1
-                        };
-                    } else if(dist > min_dist) {
-                        min_dist = dist;
-                        min_index = i;
-                    }
-                }
-                //  new object - see what we can do here
-                return {
-                    dist: min_dist,
-                    index: min_index
-                };
-            };
-            Collision.prototype.findVertsFallback = function (contactArr, poly1, poly2, n, dist) {
-                var num = 0;
-                for(var i = 0; i < poly1.verts.length; i++) {
-                    var v = poly1.tverts[i];
-                    if(poly2.containPointPartial(v, n)) {
-                        contactArr.push(new Physics.Contact(v, n, dist, (poly1.id << 16) | i));
-                        num++;
-                    }
-                }
-                for(var i = 0; i < poly2.verts.length; i++) {
-                    var v = poly2.tverts[i];
-                    if(poly1.containPointPartial(v, n)) {
-                        contactArr.push(new Physics.Contact(v, n, dist, (poly2.id << 16) | i));
-                        num++;
-                    }
-                }
-                return num;
-            };
-            Collision.prototype.findVerts = // Find the overlapped vertices.
-            function (contactArr, poly1, poly2, n, dist) {
-                var num = 0;
-                for(var i = 0; i < poly1.verts.length; i++) {
-                    var v = poly1.tverts[i];
-                    if(poly2.containPoint(v)) {
-                        contactArr.push(new Physics.Contact(v, n, dist, (poly1.id << 16) | i));
-                        num++;
-                    }
-                }
-                for(var i = 0; i < poly2.verts.length; i++) {
-                    var v = poly2.tverts[i];
-                    if(poly1.containPoint(v)) {
-                        contactArr.push(new Physics.Contact(v, n, dist, (poly2.id << 16) | i));
-                        num++;
-                    }
-                }
-                return num > 0 ? num : this.findVertsFallback(contactArr, poly1, poly2, n, dist);
-            };
-            Collision.prototype.poly2Poly = function (poly1, poly2, contactArr) {
-                var msa1 = this.findMSA(poly2, poly1.tplanes, poly1.verts.length);
-                if(msa1.index == -1) {
-                    console.log('poly2poly 0', msa1);
-                    return 0;
-                }
-                var msa2 = this.findMSA(poly1, poly2.tplanes, poly2.verts.length);
-                if(msa2.index == -1) {
-                    console.log('poly2poly 1', msa2);
-                    return 0;
-                }
-                // Penetration normal direction should be from poly1 to poly2
-                if(msa1.dist > msa2.dist) {
-                    return this.findVerts(contactArr, poly1, poly2, poly1.tplanes[msa1.index].normal, msa1.dist);
-                }
-                return this.findVerts(contactArr, poly1, poly2, Phaser.Vec2Utils.negative(poly2.tplanes[msa2.index].normal), msa2.dist);
-            };
-            return Collision;
-        })();
-        Physics.Collision = Collision;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    })(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../math/Vec2.ts" />
-    /// <reference path="../math/Vec2Utils.ts" />
-    /// <reference path="AdvancedPhysics.ts" />
-    /// <reference path="Body.ts" />
-    /// <reference path="shapes/Shape.ts" />
-    /// <reference path="ContactSolver.ts" />
-    /// <reference path="Contact.ts" />
-    /// <reference path="Collision.ts" />
-    /// <reference path="joints/IJoint.ts" />
-    /**
-    * Phaser - Advanced Physics - Space
-    *
-    * Based on the work Ju Hyung Lee started in JS PhyRus.
-    */
-    (function (Physics) {
-        var Space = (function () {
-            function Space(manager) {
-                this.postSolve = null;
-                this.stepCount = 0;
-                this._manager = manager;
-                this.bodies = [];
-                this.bodyHash = {
-                };
-                this.joints = [];
-                this.jointHash = {
-                };
-                this.numContacts = 0;
-                this.contactSolvers = [];
-                this.gravity = this._manager.gravity;
-                this.damping = 0;
-                this._linTolSqr = Space.SLEEP_LINEAR_TOLERANCE * Space.SLEEP_LINEAR_TOLERANCE;
-                this._angTolSqr = Space.SLEEP_ANGULAR_TOLERANCE * Space.SLEEP_ANGULAR_TOLERANCE;
-            }
-            Space.TIME_TO_SLEEP = 0.5;
-            Space.SLEEP_LINEAR_TOLERANCE = 0.5;
-            Space.SLEEP_ANGULAR_TOLERANCE = 2 * 0.017453292519943294444444444444444;
-            Space.prototype.clear = function () {
-                Physics.AdvancedPhysics.shapeCounter = 0;
-                Physics.AdvancedPhysics.bodyCounter = 0;
-                Physics.AdvancedPhysics.jointCounter = 0;
-                for(var i = 0; i < this.bodies.length; i++) {
-                    if(this.bodies[i]) {
-                        this.removeBody(this.bodies[i]);
-                    }
-                }
-                this.bodies = [];
-                this.bodyHash = {
-                };
-                this.joints = [];
-                this.jointHash = {
-                };
-                this.contactSolvers = [];
-                this.stepCount = 0;
-            };
-            Space.prototype.addBody = function (body) {
-                if(this.bodyHash[body.id] != undefined) {
-                    return;
-                }
-                var index = this.bodies.push(body) - 1;
-                this.bodyHash[body.id] = index;
-                body.awake(true);
-                body.space = this;
-                body.cacheData('addBody');
-            };
-            Space.prototype.removeBody = function (body) {
-                if(this.bodyHash[body.id] == undefined) {
-                    return;
-                }
-                // Remove linked joints
-                for(var i = 0; i < body.joints.length; i++) {
-                    if(body.joints[i]) {
-                        this.removeJoint(body.joints[i]);
-                    }
-                }
-                body.space = null;
-                var index = this.bodyHash[body.id];
-                delete this.bodyHash[body.id];
-                delete this.bodies[index];
-            };
-            Space.prototype.addJoint = function (joint) {
-                if(this.jointHash[joint.id] != undefined) {
-                    return;
-                }
-                joint.body1.awake(true);
-                joint.body2.awake(true);
-                var index = this.joints.push(joint) - 1;
-                this.jointHash[joint.id] = index;
-                var index = joint.body1.joints.push(joint) - 1;
-                joint.body1.jointHash[joint.id] = index;
-                var index = joint.body2.joints.push(joint) - 1;
-                joint.body2.jointHash[joint.id] = index;
-            };
-            Space.prototype.removeJoint = function (joint) {
-                if(this.jointHash[joint.id] == undefined) {
-                    return;
-                }
-                joint.body1.awake(true);
-                joint.body2.awake(true);
-                var index = joint.body1.jointHash[joint.id];
-                delete joint.body1.jointHash[joint.id];
-                delete joint.body1.joints[index];
-                var index = joint.body2.jointHash[joint.id];
-                delete joint.body2.jointHash[joint.id];
-                delete joint.body2.joints[index];
-                var index = this.jointHash[joint.id];
-                delete this.jointHash[joint.id];
-                delete this.joints[index];
-            };
-            Space.prototype.findShapeByPoint = function (p, refShape) {
-                var firstShape;
-                for(var i = 0; i < this.bodies.length; i++) {
-                    var body = this.bodies[i];
-                    if(!body) {
-                        continue;
-                    }
-                    for(var j = 0; j < body.shapes.length; j++) {
-                        var shape = body.shapes[j];
-                        if(shape.pointQuery(p)) {
-                            if(!refShape) {
-                                return shape;
-                            }
-                            if(!firstShape) {
-                                firstShape = shape;
-                            }
-                            if(shape == refShape) {
-                                refShape = null;
-                            }
-                        }
-                    }
-                }
-                return firstShape;
-            };
-            Space.prototype.findBodyByPoint = function (p, refBody) {
-                var firstBody;
-                for(var i = 0; i < this.bodies.length; i++) {
-                    var body = this.bodies[i];
-                    if(!body) {
-                        continue;
-                    }
-                    for(var j = 0; j < body.shapes.length; j++) {
-                        var shape = body.shapes[j];
-                        if(shape.pointQuery(p)) {
-                            if(!refBody) {
-                                return shape.body;
-                            }
-                            if(!firstBody) {
-                                firstBody = shape.body;
-                            }
-                            if(shape.body == refBody) {
-                                refBody = null;
-                            }
-                            break;
-                        }
-                    }
-                }
-                return firstBody;
-            };
-            Space.prototype.shapeById = function (id) {
-                var shape;
-                for(var i = 0; i < this.bodies.length; i++) {
-                    var body = this.bodies[i];
-                    if(!body) {
-                        continue;
-                    }
-                    for(var j = 0; j < body.shapes.length; j++) {
-                        if(body.shapes[j].id == id) {
-                            return body.shapes[j];
-                        }
-                    }
-                }
-                return null;
-            };
-            Space.prototype.jointById = function (id) {
-                var index = this.jointHash[id];
-                if(index != undefined) {
-                    return this.joints[index];
-                }
-                return null;
-            };
-            Space.prototype.findVertexByPoint = function (p, minDist, refVertexId) {
-                var firstVertexId = -1;
-                refVertexId = refVertexId || -1;
-                for(var i = 0; i < this.bodies.length; i++) {
-                    var body = this.bodies[i];
-                    if(!body) {
-                        continue;
-                    }
-                    for(var j = 0; j < body.shapes.length; j++) {
-                        var shape = body.shapes[j];
-                        var index = shape.findVertexByPoint(p, minDist);
-                        if(index != -1) {
-                            var vertex = (shape.id << 16) | index;
-                            if(refVertexId == -1) {
-                                return vertex;
-                            }
-                            if(firstVertexId == -1) {
-                                firstVertexId = vertex;
-                            }
-                            if(vertex == refVertexId) {
-                                refVertexId = -1;
-                            }
-                        }
-                    }
-                }
-                return firstVertexId;
-            };
-            Space.prototype.findEdgeByPoint = function (p, minDist, refEdgeId) {
-                var firstEdgeId = -1;
-                refEdgeId = refEdgeId || -1;
-                for(var i = 0; i < this.bodies.length; i++) {
-                    var body = this.bodies[i];
-                    if(!body) {
-                        continue;
-                    }
-                    for(var j = 0; j < body.shapes.length; j++) {
-                        var shape = body.shapes[j];
-                        if(shape.type != Physics.AdvancedPhysics.SHAPE_TYPE_POLY) {
-                            continue;
-                        }
-                        var index = shape.findEdgeByPoint(p, minDist);
-                        if(index != -1) {
-                            var edge = (shape.id << 16) | index;
-                            if(refEdgeId == -1) {
-                                return edge;
-                            }
-                            if(firstEdgeId == -1) {
-                                firstEdgeId = edge;
-                            }
-                            if(edge == refEdgeId) {
-                                refEdgeId = -1;
-                            }
-                        }
-                    }
-                }
-                return firstEdgeId;
-            };
-            Space.prototype.findJointByPoint = function (p, minDist, refJointId) {
-                var firstJointId = -1;
-                var dsq = minDist * minDist;
-                refJointId = refJointId || -1;
-                for(var i = 0; i < this.joints.length; i++) {
-                    var joint = this.joints[i];
-                    if(!joint) {
-                        continue;
-                    }
-                    var jointId = -1;
-                    if(Phaser.Vec2Utils.distanceSq(p, joint.getWorldAnchor1()) < dsq) {
-                        jointId = (joint.id << 16 | 0);
-                    } else if(Phaser.Vec2Utils.distanceSq(p, joint.getWorldAnchor2()) < dsq) {
-                        jointId = (joint.id << 16 | 1);
-                    }
-                    if(jointId != -1) {
-                        if(refJointId == -1) {
-                            return jointId;
-                        }
-                        if(firstJointId == -1) {
-                            firstJointId = jointId;
-                        }
-                        if(jointId == refJointId) {
-                            refJointId = -1;
-                        }
-                    }
-                }
-                return firstJointId;
-            };
-            Space.prototype.findContactSolver = function (shape1, shape2) {
-                Physics.Manager.write('findContactSolver. Length: ' + this._cl);
-                for(var i = 0; i < this._cl; i++) {
-                    var contactSolver = this.contactSolvers[i];
-                    if(shape1 == contactSolver.shape1 && shape2 == contactSolver.shape2) {
-                        return contactSolver;
-                    }
-                }
-                return null;
-            };
-            Space.prototype.genTemporalContactSolvers = function () {
-                Physics.Manager.write('genTemporalContactSolvers');
-                this._cl = 0;
-                this.contactSolvers.length = 0;
-                this.numContacts = 0;
-                for(var body1Index = 0; body1Index < this._bl; body1Index++) {
-                    if(!this.bodies[body1Index]) {
-                        continue;
-                    }
-                    this.bodies[body1Index].stepCount = this.stepCount;
-                    for(var body2Index = 0; body2Index < this._bl; body2Index++) {
-                        if(this.bodies[body1Index].inContact(this.bodies[body2Index]) == false) {
-                            continue;
-                        }
-                        Physics.Manager.write('body1 and body2 intersect');
-                        for(var i = 0; i < this.bodies[body1Index].shapesLength; i++) {
-                            for(var j = 0; j < this.bodies[body2Index].shapesLength; j++) {
-                                this._shape1 = this.bodies[body1Index].shapes[i];
-                                this._shape2 = this.bodies[body2Index].shapes[j];
-                                var contactArr = [];
-                                if(!Physics.AdvancedPhysics.collision.collide(this._shape1, this._shape2, contactArr)) {
-                                    continue;
-                                }
-                                if(this._shape1.type > this._shape2.type) {
-                                    var temp = this._shape1;
-                                    this._shape1 = this._shape2;
-                                    this._shape2 = temp;
-                                }
-                                this.numContacts += contactArr.length;
-                                //  Result stored in this._contactSolver (see what we can do about generating some re-usable solvers)
-                                var contactSolver = this.findContactSolver(this._shape1, this._shape2);
-                                Physics.Manager.write('findContactSolver result: ' + contactSolver);
-                                if(contactSolver) {
-                                    contactSolver.update(contactArr);
-                                    this.contactSolvers.push(contactSolver);
-                                } else {
-                                    Physics.Manager.write('awake both bodies');
-                                    this.bodies[body1Index].awake(true);
-                                    this.bodies[body2Index].awake(true);
-                                    var newContactSolver = new Physics.ContactSolver(this._shape1, this._shape2);
-                                    newContactSolver.contacts = contactArr;
-                                    newContactSolver.elasticity = Math.max(this._shape1.elasticity, this._shape2.elasticity);
-                                    newContactSolver.friction = Math.sqrt(this._shape1.friction * this._shape2.friction);
-                                    this.contactSolvers.push(newContactSolver);
-                                    Physics.Manager.write('new contact solver');
-                                }
-                            }
-                        }
-                    }
-                }
-                this._cl = this.contactSolvers.length;
-            };
-            Space.prototype.initSolver = function (warmStarting) {
-                Physics.Manager.write('initSolver');
-                Physics.Manager.write('contactSolvers.length: ' + this._cl);
-                // Initialize contact solvers
-                for(var c = 0; c < this._cl; c++) {
-                    this.contactSolvers[c].initSolver(this._deltaInv);
-                    // Warm starting (apply cached impulse)
-                    if(warmStarting) {
-                        this.contactSolvers[c].warmStart();
-                    }
-                }
-                // Initialize joint solver
-                for(var j = 0; j < this.joints.length; j++) {
-                    if(this.joints[j]) {
-                        this.joints[j].initSolver(this._delta, warmStarting);
-                    }
-                }
-                // Warm starting (apply cached impulse)
-                /*
-                if (warmStarting)
-                {
-                for (var c = 0; c < this._cl; c++)
-                {
-                this.contactSolvers[c].warmStart();
-                }
-                }
-                */
-                            };
-            Space.prototype.velocitySolver = function (iterations) {
-                Physics.Manager.write('velocitySolver, iterations: ' + iterations + ' csa len: ' + this._cl);
-                for(var i = 0; i < iterations; i++) {
-                    for(var j = 0; j < this._jl; j++) {
-                        if(this.joints[j]) {
-                            this.joints[j].solveVelocityConstraints();
-                        }
-                    }
-                    for(var c = 0; c < this._cl; c++) {
-                        this.contactSolvers[c].solveVelocityConstraints();
-                    }
-                }
-            };
-            Space.prototype.positionSolver = function (iterations) {
-                this._positionSolved = false;
-                for(var i = 0; i < iterations; i++) {
-                    this._contactsOk = true;
-                    this._jointsOk = true;
-                    for(var c = 0; c < this._cl; c++) {
-                        this._contactsOk = this.contactSolvers[c].solvePositionConstraints() && this._contactsOk;
-                    }
-                    for(var j = 0; j < this._jl; j++) {
-                        if(this.joints[j]) {
-                            this._jointsOk = this.joints[j].solvePositionConstraints() && this._jointsOk;
-                        }
-                    }
-                    if(this._contactsOk && this._jointsOk) {
-                        // exit early if the position errors are small
-                        this._positionSolved = true;
-                        break;
-                    }
-                }
-                return this._positionSolved;
-            };
-            Space.prototype.step = //  Step through the physics simulation
-            function (dt, velocityIterations, positionIterations, warmStarting, allowSleep) {
-                Physics.Manager.clear();
-                Physics.Manager.write('Space step ' + this.stepCount);
-                this._delta = dt;
-                this._deltaInv = 1 / dt;
-                this._bl = this.bodies.length;
-                this._jl = this.joints.length;
-                this.stepCount++;
-                //  1) Generate Contact Solvers (into the this.contactSolvers array)
-                this.genTemporalContactSolvers();
-                Physics.Manager.dump("Contact Solvers", this.bodies[1]);
-                //  2) Initialize the Contact Solvers
-                this.initSolver(warmStarting);
-                Physics.Manager.dump("Init Solver", this.bodies[1]);
-                //  3) Intergrate velocity
-                for(var i = 0; i < this._bl; i++) {
-                    if(this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake) {
-                        this.bodies[i].updateVelocity(this.gravity, this._delta, this.damping);
-                    }
-                }
-                Physics.Manager.dump("Update Velocity", this.bodies[1]);
-                //  4) Awaken bodies via joints
-                for(var j = 0; i < this._jl; j++) {
-                    if(!this.joints[j]) {
-                        continue;
-                    }
-                    //  combine
-                    var awake1 = this.joints[j].body1.isAwake && !this.joints[j].body1.isStatic;
-                    var awake2 = this.joints[j].body2.isAwake && !this.joints[j].body2.isStatic;
-                    if(awake1 ^ awake2) {
-                        if(!awake1) {
-                            this.joints[j].body1.awake(true);
-                        }
-                        if(!awake2) {
-                            this.joints[j].body2.awake(true);
-                        }
-                    }
-                }
-                //  5) Iterative velocity constraints solver
-                this.velocitySolver(velocityIterations);
-                Physics.Manager.dump("Velocity Solvers", this.bodies[1]);
-                // 6) Integrate position
-                for(var i = 0; i < this._bl; i++) {
-                    if(this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake) {
-                        this.bodies[i].updatePosition(this._delta);
-                    }
-                }
-                Physics.Manager.dump("Update Position", this.bodies[1]);
-                //  7) Process breakable joint
-                for(var i = 0; i < this._jl; i++) {
-                    if(this.joints[i] && this.joints[i].breakable && (this.joints[i].getReactionForce(this._deltaInv).lengthSq() >= this.joints[i].maxForce * this.joints[i].maxForce)) {
-                        this.removeJoint(this.joints[i]);
-                    }
-                }
-                // 8) Iterative position constraints solver (result stored in this._positionSolved)
-                this.positionSolver(positionIterations);
-                Physics.Manager.dump("Position Solver", this.bodies[1]);
-                // 9) Sync the Transforms
-                for(var i = 0; i < this._bl; i++) {
-                    if(this.bodies[i]) {
-                        this.bodies[i].syncTransform();
-                    }
-                }
-                Physics.Manager.dump("Sync Transform", this.bodies[1]);
-                // 10) Post solve collision callback
-                if(this.postSolve) {
-                    for(var i = 0; i < this._cl; i++) {
-                        this.postSolve(this.contactSolvers[i]);
-                    }
-                }
-                // 11) Cache Body Data
-                for(var i = 0; i < this._bl; i++) {
-                    if(this.bodies[i] && this.bodies[i].isDynamic && this.bodies[i].isAwake) {
-                        this.bodies[i].cacheData('post solve collision callback');
-                    }
-                }
-                Physics.Manager.dump("Cache Data", this.bodies[1]);
-                Physics.Manager.writeAll();
-                //  12) Process sleeping
-                if(allowSleep) {
-                    this._minSleepTime = 999999;
-                    for(var i = 0; i < this._bl; i++) {
-                        if(!this.bodies[i] || this.bodies[i].isDynamic == false) {
-                            continue;
-                        }
-                        if(this.bodies[i].angularVelocity * this.bodies[i].angularVelocity > this._angTolSqr || this.bodies[i].velocity.dot(this.bodies[i].velocity) > this._linTolSqr) {
-                            this.bodies[i].sleepTime = 0;
-                            this._minSleepTime = 0;
-                        } else {
-                            this.bodies[i].sleepTime += this._delta;
-                            this._minSleepTime = Math.min(this._minSleepTime, this.bodies[i].sleepTime);
-                        }
-                    }
-                    if(this._positionSolved && this._minSleepTime >= Space.TIME_TO_SLEEP) {
-                        for(var i = 0; i < this._bl; i++) {
-                            if(this.bodies[i]) {
-                                this.bodies[i].awake(false);
-                            }
-                        }
-                    }
-                }
-            };
-            return Space;
-        })();
-        Physics.Space = Space;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../Game.ts" />
-    /// <reference path="Body.ts" />
-    /// <reference path="joints/Joint.ts" />
-    /// <reference path="Space.ts" />
-    /**
-    * Phaser - Physics Manager
-    *
-    * The Physics Manager is responsible for looking after, creating and colliding
-    * all of the physics bodies and joints in the world.
-    */
-    (function (Physics) {
-        var AdvancedPhysics = (function () {
-            function AdvancedPhysics(game) {
-                this.lastTime = Date.now();
-                this.frameRateHz = 60;
-                this.timeDelta = 0;
-                this.paused = false;
-                this.step = false;
-                // step through the simulation (i.e. per click)
-                //public paused: bool = true;
-                //public step: bool = false; // step through the simulation (i.e. per click)
-                this.velocityIterations = 8;
-                this.positionIterations = 4;
-                this.allowSleep = true;
-                this.warmStarting = true;
-                this.game = game;
-                this.gravity = new Phaser.Vec2();
-                this.space = new Physics.Space(this);
-                this.collision = new Physics.Collision();
-            }
-            AdvancedPhysics.clear = function clear() {
-                //Manager.debug.textContent = "";
-                Physics.Manager.log = [];
-            };
-            AdvancedPhysics.write = function write(s) {
-                //Manager.debug.textContent += s + "\n";
-                            };
-            AdvancedPhysics.writeAll = function writeAll() {
-                for(var i = 0; i < Physics.Manager.log.length; i++) {
-                    //Manager.debug.textContent += Manager.log[i];
-                                    }
-            };
-            AdvancedPhysics.log = [];
-            AdvancedPhysics.dump = function dump(phase, body) {
-                /*
-                var s = "\n\nPhase: " + phase + "\n";
-                s += "Position: " + body.position.toString() + "\n";
-                s += "Velocity: " + body.velocity.toString() + "\n";
-                s += "Angle: " + body.angle + "\n";
-                s += "Force: " + body.force.toString() + "\n";
-                s += "Torque: " + body.torque + "\n";
-                s += "Bounds: " + body.bounds.toString() + "\n";
-                s += "Shape ***\n";
-                s += "Vert 0: " + body.shapes[0].verts[0].toString() + "\n";
-                s += "Vert 1: " + body.shapes[0].verts[1].toString() + "\n";
-                s += "Vert 2: " + body.shapes[0].verts[2].toString() + "\n";
-                s += "Vert 3: " + body.shapes[0].verts[3].toString() + "\n";
-                s += "TVert 0: " + body.shapes[0].tverts[0].toString() + "\n";
-                s += "TVert 1: " + body.shapes[0].tverts[1].toString() + "\n";
-                s += "TVert 2: " + body.shapes[0].tverts[2].toString() + "\n";
-                s += "TVert 3: " + body.shapes[0].tverts[3].toString() + "\n";
-                s += "Plane 0: " + body.shapes[0].planes[0].normal.toString() + "\n";
-                s += "Plane 1: " + body.shapes[0].planes[1].normal.toString() + "\n";
-                s += "Plane 2: " + body.shapes[0].planes[2].normal.toString() + "\n";
-                s += "Plane 3: " + body.shapes[0].planes[3].normal.toString() + "\n";
-                s += "TPlane 0: " + body.shapes[0].tplanes[0].normal.toString() + "\n";
-                s += "TPlane 1: " + body.shapes[0].tplanes[1].normal.toString() + "\n";
-                s += "TPlane 2: " + body.shapes[0].tplanes[2].normal.toString() + "\n";
-                s += "TPlane 3: " + body.shapes[0].tplanes[3].normal.toString() + "\n";
-                
-                Manager.log.push(s);
-                */
-                            };
-            AdvancedPhysics.SHAPE_TYPE_CIRCLE = 0;
-            AdvancedPhysics.SHAPE_TYPE_SEGMENT = 1;
-            AdvancedPhysics.SHAPE_TYPE_POLY = 2;
-            AdvancedPhysics.SHAPE_NUM_TYPES = 3;
-            AdvancedPhysics.JOINT_TYPE_ANGLE = 0;
-            AdvancedPhysics.JOINT_TYPE_REVOLUTE = 1;
-            AdvancedPhysics.JOINT_TYPE_WELD = 2;
-            AdvancedPhysics.JOINT_TYPE_WHEEL = 3;
-            AdvancedPhysics.JOINT_TYPE_PRISMATIC = 4;
-            AdvancedPhysics.JOINT_TYPE_DISTANCE = 5;
-            AdvancedPhysics.JOINT_TYPE_ROPE = 6;
-            AdvancedPhysics.JOINT_TYPE_MOUSE = 7;
-            AdvancedPhysics.JOINT_LINEAR_SLOP = 0.0008;
-            AdvancedPhysics.JOINT_ANGULAR_SLOP = 2 * 0.017453292519943294444444444444444;
-            AdvancedPhysics.JOINT_MAX_LINEAR_CORRECTION = 0.5;
-            AdvancedPhysics.JOINT_MAX_ANGULAR_CORRECTION = 8 * 0.017453292519943294444444444444444;
-            AdvancedPhysics.JOINT_LIMIT_STATE_INACTIVE = 0;
-            AdvancedPhysics.JOINT_LIMIT_STATE_AT_LOWER = 1;
-            AdvancedPhysics.JOINT_LIMIT_STATE_AT_UPPER = 2;
-            AdvancedPhysics.JOINT_LIMIT_STATE_EQUAL_LIMITS = 3;
-            AdvancedPhysics.CONTACT_SOLVER_COLLISION_SLOP = 0.0008;
-            AdvancedPhysics.CONTACT_SOLVER_BAUMGARTE = 0.28;
-            AdvancedPhysics.CONTACT_SOLVER_MAX_LINEAR_CORRECTION = 1;
-            AdvancedPhysics.bodyCounter = 0;
-            AdvancedPhysics.jointCounter = 0;
-            AdvancedPhysics.shapeCounter = 0;
-            AdvancedPhysics.prototype.update = function () {
-                //  Get these from Phaser.Time instead
-                var time = Date.now();
-                var frameTime = (time - this.lastTime) / 1000;
-                this.lastTime = time;
-                //  if rAf - why?
-                frameTime = Math.floor(frameTime * 60 + 0.5) / 60;
-                //if (!mouseDown)
-                //{
-                //    var p = canvasToWorld(mousePosition);
-                //    var body = space.findBodyByPoint(p);
-                //    //domCanvas.style.cursor = body ? "pointer" : "default";
-                //}
-                if(!this.paused || this.step) {
-                    Physics.Manager.clear();
-                    var h = 1 / this.frameRateHz;
-                    this.timeDelta += frameTime;
-                    if(this.step) {
-                        this.step = false;
-                        this.timeDelta = h;
-                    }
-                    for(var maxSteps = 4; maxSteps > 0 && this.timeDelta >= h; maxSteps--) {
-                        this.space.step(h, this.velocityIterations, this.positionIterations, this.warmStarting, this.allowSleep);
-                        this.timeDelta -= h;
-                    }
-                    if(this.timeDelta > h) {
-                        this.timeDelta = 0;
-                    }
-                }
-                //frameCount++;
-                            };
-            AdvancedPhysics.prototype.addBody = function (body) {
-                this.space.addBody(body);
-            };
-            AdvancedPhysics.prototype.removeBody = function (body) {
-                this.space.removeBody(body);
-            };
-            AdvancedPhysics.prototype.addJoint = function (joint) {
-                this.space.addJoint(joint);
-            };
-            AdvancedPhysics.prototype.removeJoint = function (joint) {
-                this.space.removeJoint(joint);
-            };
-            AdvancedPhysics.prototype.pixelsToMeters = function (value) {
-                return value * 0.02;
-            };
-            AdvancedPhysics.prototype.metersToPixels = function (value) {
-                return value * 50;
-            };
-            AdvancedPhysics.pixelsToMeters = function pixelsToMeters(value) {
-                return value * 0.02;
-            };
-            AdvancedPhysics.metersToPixels = function metersToPixels(value) {
-                return value * 50;
-            };
-            AdvancedPhysics.p2m = function p2m(value) {
-                return value * 0.02;
-            };
-            AdvancedPhysics.m2p = function m2p(value) {
-                return value * 50;
-            };
-            AdvancedPhysics.areaForCircle = function areaForCircle(radius_outer, radius_inner) {
-                return Math.PI * (radius_outer * radius_outer - radius_inner * radius_inner);
-            };
-            AdvancedPhysics.inertiaForCircle = function inertiaForCircle(mass, center, radius_outer, radius_inner) {
-                return mass * ((radius_outer * radius_outer + radius_inner * radius_inner) * 0.5 + center.lengthSq());
-            };
-            AdvancedPhysics.areaForSegment = function areaForSegment(a, b, radius) {
-                return radius * (Math.PI * radius + 2 * Phaser.Vec2Utils.distance(a, b));
-            };
-            AdvancedPhysics.centroidForSegment = function centroidForSegment(a, b) {
-                return Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
-            };
-            AdvancedPhysics.inertiaForSegment = function inertiaForSegment(mass, a, b) {
-                var distsq = Phaser.Vec2Utils.distanceSq(b, a);
-                var offset = Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(a, b), 0.5);
-                return mass * (distsq / 12 + offset.lengthSq());
-            };
-            AdvancedPhysics.areaForPoly = function areaForPoly(verts) {
-                var area = 0;
-                for(var i = 0; i < verts.length; i++) {
-                    area += Phaser.Vec2Utils.cross(verts[i], verts[(i + 1) % verts.length]);
-                }
-                return area / 2;
-            };
-            AdvancedPhysics.centroidForPoly = function centroidForPoly(verts) {
-                var area = 0;
-                var vsum = new Phaser.Vec2();
-                for(var i = 0; i < verts.length; i++) {
-                    var v1 = verts[i];
-                    var v2 = verts[(i + 1) % verts.length];
-                    var cross = Phaser.Vec2Utils.cross(v1, v2);
-                    area += cross;
-                    //  SO many vecs created here - unroll these bad boys
-                    vsum.add(Phaser.Vec2Utils.scale(Phaser.Vec2Utils.add(v1, v2), cross));
-                }
-                return Phaser.Vec2Utils.scale(vsum, 1 / (3 * area));
-            };
-            AdvancedPhysics.inertiaForPoly = function inertiaForPoly(mass, verts, offset) {
-                var sum1 = 0;
-                var sum2 = 0;
-                for(var i = 0; i < verts.length; i++) {
-                    var v1 = Phaser.Vec2Utils.add(verts[i], offset);
-                    var v2 = Phaser.Vec2Utils.add(verts[(i + 1) % verts.length], offset);
-                    var a = Phaser.Vec2Utils.cross(v2, v1);
-                    var b = Phaser.Vec2Utils.dot(v1, v1) + Phaser.Vec2Utils.dot(v1, v2) + Phaser.Vec2Utils.dot(v2, v2);
-                    sum1 += a * b;
-                    sum2 += a;
-                }
-                return (mass * sum1) / (6 * sum2);
-            };
-            AdvancedPhysics.inertiaForBox = function inertiaForBox(mass, w, h) {
-                return mass * (w * w + h * h) / 12;
-            };
-            AdvancedPhysics.createConvexHull = // Create the convex hull using the Gift wrapping algorithm (http://en.wikipedia.org/wiki/Gift_wrapping_algorithm)
-            function createConvexHull(points) {
-                // Find the right most point on the hull
-                var i0 = 0;
-                var x0 = points[0].x;
-                for(var i = 1; i < points.length; i++) {
-                    var x = points[i].x;
-                    if(x > x0 || (x == x0 && points[i].y < points[i0].y)) {
-                        i0 = i;
-                        x0 = x;
-                    }
-                }
-                var n = points.length;
-                var hull = [];
-                var m = 0;
-                var ih = i0;
-                while(1) {
-                    hull[m] = ih;
-                    var ie = 0;
-                    for(var j = 1; j < n; j++) {
-                        if(ie == ih) {
-                            ie = j;
-                            continue;
-                        }
-                        var r = Phaser.Vec2Utils.subtract(points[ie], points[hull[m]]);
-                        var v = Phaser.Vec2Utils.subtract(points[j], points[hull[m]]);
-                        var c = Phaser.Vec2Utils.cross(r, v);
-                        if(c < 0) {
-                            ie = j;
-                        }
-                        // Collinearity check
-                        if(c == 0 && v.lengthSq() > r.lengthSq()) {
-                            ie = j;
-                        }
-                    }
-                    m++;
-                    ih = ie;
-                    if(ie == i0) {
-                        break;
-                    }
-                }
-                // Copy vertices
-                var newPoints = [];
-                for(var i = 0; i < m; ++i) {
-                    newPoints.push(points[hull[i]]);
-                }
-                return newPoints;
-            };
-            return AdvancedPhysics;
-        })();
-        Physics.AdvancedPhysics = AdvancedPhysics;        
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    (function (Physics) {
-        /// <reference path="../../math/Vec2.ts" />
-        /// <reference path="../AdvancedPhysics.ts" />
-        /// <reference path="../Body.ts" />
-        /// <reference path="Shape.ts" />
-        /// <reference path="Poly.ts" />
-        /**
-        * Phaser - Advanced Physics - Shapes - Triangle
-        *
-        * Based on the work Ju Hyung Lee started in JS PhyRus.
-        */
-        (function (Shapes) {
-            var Triangle = (function (_super) {
-                __extends(Triangle, _super);
-                function Triangle(x1, y1, x2, y2, x3, y3) {
-                    x1 = Phaser.Physics.AdvancedPhysics.pixelsToMeters(x1);
-                    y1 = Phaser.Physics.AdvancedPhysics.pixelsToMeters(y1);
-                    x2 = Phaser.Physics.AdvancedPhysics.pixelsToMeters(x2);
-                    y2 = Phaser.Physics.AdvancedPhysics.pixelsToMeters(y2);
-                    x3 = Phaser.Physics.AdvancedPhysics.pixelsToMeters(x3);
-                    y3 = Phaser.Physics.AdvancedPhysics.pixelsToMeters(y3);
-                                _super.call(this, [
-                {
-                    x: x1,
-                    y: y1
-                }, 
-                {
-                    x: x2,
-                    y: y2
-                }, 
-                {
-                    x: x3,
-                    y: y3
-                }
-            ]);
-                }
-                return Triangle;
-            })(Phaser.Physics.Shapes.Poly);
-            Shapes.Triangle = Triangle;            
-        })(Physics.Shapes || (Physics.Shapes = {}));
-        var Shapes = Physics.Shapes;
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    (function (Physics) {
-        /// <reference path="../../math/Vec2.ts" />
-        /// <reference path="../AdvancedPhysics.ts" />
-        /// <reference path="../Body.ts" />
-        /// <reference path="Shape.ts" />
-        /// <reference path="Poly.ts" />
-        /**
-        * Phaser - Advanced Physics - Shapes - Box
-        *
-        * Based on the work Ju Hyung Lee started in JS PhyRus.
-        */
-        (function (Shapes) {
-            var Box = (function (_super) {
-                __extends(Box, _super);
-                //  Give in pixels
-                function Box(x, y, width, height) {
-                    console.log('Box px', x, y, width, height);
-                    x = Phaser.Physics.AdvancedPhysics.pixelsToMeters(x);
-                    y = Phaser.Physics.AdvancedPhysics.pixelsToMeters(y);
-                    width = Phaser.Physics.AdvancedPhysics.pixelsToMeters(width);
-                    height = Phaser.Physics.AdvancedPhysics.pixelsToMeters(height);
-                    console.log('Box m', x, y, width, height);
-                    var hw = width * 0.5;
-                    var hh = height * 0.5;
-                    console.log('Box hh', hw, hh);
-                                _super.call(this, [
-                {
-                    x: -hw + x,
-                    y: +hh + y
-                }, 
-                {
-                    x: -hw + x,
-                    y: -hh + y
-                }, 
-                {
-                    x: +hw + x,
-                    y: -hh + y
-                }, 
-                {
-                    x: +hw + x,
-                    y: +hh + y
-                }
-            ]);
-                }
-                return Box;
-            })(Phaser.Physics.Shapes.Poly);
-            Shapes.Box = Box;            
-        })(Physics.Shapes || (Physics.Shapes = {}));
-        var Shapes = Physics.Shapes;
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
-    /// <reference path="../math/Vec2.ts" />
-    /// <reference path="../geom/Point.ts" />
-    /// <reference path="../math/Vec2Utils.ts" />
-    /// <reference path="../math/Transform.ts" />
-    /// <reference path="../math/TransformUtils.ts" />
-    /// <reference path="../utils/BodyUtils.ts" />
-    /// <reference path="AdvancedPhysics.ts" />
-    /// <reference path="joints/Joint.ts" />
-    /// <reference path="Bounds.ts" />
-    /// <reference path="Space.ts" />
-    /// <reference path="shapes/IShape.ts" />
-    /// <reference path="shapes/Triangle.ts" />
-    /// <reference path="shapes/Circle.ts" />
-    /// <reference path="shapes/Box.ts" />
-    /// <reference path="shapes/Poly.ts" />
-    /// <reference path="shapes/Segment.ts" />
-    /**
-    * Phaser - Advanced Physics - Body
-    *
-    * Based on the work Ju Hyung Lee started in JS PhyRus.
+    * Phaser - ArcadePhysics - Body
     */
     (function (Physics) {
         var Body = (function () {
-            function Body(sprite, type, x, y, shapeType) {
-                if (typeof x === "undefined") { x = 0; }
-                if (typeof y === "undefined") { y = 0; }
-                if (typeof shapeType === "undefined") { shapeType = 0; }
-                this._tempVec2 = new Phaser.Vec2();
-                this._fixedRotation = false;
-                //  Shapes
-                this.shapes = [];
-                //  Joints
-                this.joints = [];
-                this.jointHash = {
-                };
-                this.categoryBits = 0x0001;
-                this.maskBits = 0xFFFF;
-                this.stepCount = 0;
-                this._newPosition = new Phaser.Vec2();
-                this.id = Phaser.Physics.AdvancedPhysics.bodyCounter++;
-                this.name = 'body' + this.id;
+            function Body(sprite, type) {
+                this.angularVelocity = 0;
+                this.angularAcceleration = 0;
+                this.angularDrag = 0;
+                this.maxAngular = 10000;
+                this.mass = 1;
+                this._width = 0;
+                this._height = 0;
+                this.sprite = sprite;
+                this.game = sprite.game;
                 this.type = type;
-                if(sprite) {
-                    this.sprite = sprite;
-                    this.game = sprite.game;
-                    this.position = new Phaser.Vec2(Phaser.Physics.AdvancedPhysics.pixelsToMeters(sprite.x), Phaser.Physics.AdvancedPhysics.pixelsToMeters(sprite.y));
-                    this.angle = this.game.math.degreesToRadians(sprite.rotation);
-                } else {
-                    this.position = new Phaser.Vec2(Phaser.Physics.AdvancedPhysics.pixelsToMeters(x), Phaser.Physics.AdvancedPhysics.pixelsToMeters(y));
-                    this.angle = 0;
-                }
-                this.transform = new Phaser.Transform(this.position, this.angle);
-                this.centroid = new Phaser.Vec2();
+                //  Fixture properties
+                //  Will extend into its own class at a later date - can move the fixture defs there and add shape support, but this will do for 1.0 release
+                this.bounds = new Phaser.Rectangle();
+                this._width = sprite.width;
+                this._height = sprite.height;
+                //  Body properties
+                //this.gravity = Vec2Utils.clone(ArcadePhysics.gravity);
+                //this.bounce = Vec2Utils.clone(ArcadePhysics.bounce);
                 this.velocity = new Phaser.Vec2();
-                this.force = new Phaser.Vec2();
+                this.acceleration = new Phaser.Vec2();
+                //this.drag = Vec2Utils.clone(ArcadePhysics.drag);
+                this.maxVelocity = new Phaser.Vec2(10000, 10000);
                 this.angularVelocity = 0;
-                this.torque = 0;
-                this.linearDamping = 0;
-                this.angularDamping = 0;
-                this.sleepTime = 0;
-                this.awaked = false;
-                this.shapes = [];
-                this.joints = [];
-                this.jointHash = {
-                };
-                this.bounds = new Physics.Bounds();
+                this.angularAcceleration = 0;
+                this.angularDrag = 0;
+                this.touching = Phaser.Types.NONE;
+                this.wasTouching = Phaser.Types.NONE;
                 this.allowCollisions = Phaser.Types.ANY;
-                this.categoryBits = 0x0001;
-                this.maskBits = 0xFFFF;
-                this.stepCount = 0;
-                if(sprite) {
-                    if(shapeType == 0) {
-                        Phaser.BodyUtils.addBox(this, 0, 0, this.sprite.width, this.sprite.height, 1, 1, 1);
-                    } else {
-                        Phaser.BodyUtils.addCircle(this, Math.max(this.sprite.width, this.sprite.height) / 2, 0, 0, 1, 1, 1);
-                    }
-                }
+                this.position = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+                this.oldPosition = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+                this.offset = new Phaser.Vec2();
             }
-            Object.defineProperty(Body.prototype, "rotation", {
-                get: /**
-                * The rotation of the body in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
-                */
-                function () {
-                    return this.game.math.radiansToDegrees(this.angle);
-                },
-                set: /**
-                * Set the rotation of the body in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
-                * The value is automatically wrapped to be between 0 and 360.
-                */
-                function (value) {
-                    this.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
+            Object.defineProperty(Body.prototype, "x", {
+                get: function () {
+                    return this.sprite.x + this.offset.x;
                 },
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(Body.prototype, "isDisabled", {
+            Object.defineProperty(Body.prototype, "y", {
                 get: function () {
-                    return this.type == Phaser.Types.BODY_DISABLED ? true : false;
+                    return this.sprite.y + this.offset.y;
                 },
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(Body.prototype, "isStatic", {
+            Object.defineProperty(Body.prototype, "width", {
                 get: function () {
-                    return this.type == Phaser.Types.BODY_STATIC ? true : false;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Body.prototype, "isKinetic", {
-                get: function () {
-                    return this.type == Phaser.Types.BODY_KINETIC ? true : false;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Body.prototype, "isDynamic", {
-                get: function () {
-                    return this.type == Phaser.Types.BODY_DYNAMIC ? true : false;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Body.prototype.setType = function (type) {
-                if(type == this.type) {
-                    return;
-                }
-                this.force.setTo(0, 0);
-                this.velocity.setTo(0, 0);
-                this.torque = 0;
-                this.angularVelocity = 0;
-                this.type = type;
-                this.awake(true);
-            };
-            Body.prototype.addShape = function (shape) {
-                //  Check not already part of this body
-                shape.body = this;
-                this.shapes.push(shape);
-                this.shapesLength = this.shapes.length;
-                return shape;
-            };
-            Body.prototype.removeShape = function (shape) {
-                var index = this.shapes.indexOf(shape);
-                if(index != -1) {
-                    this.shapes.splice(index, 1);
-                    shape.body = undefined;
-                }
-                this.shapesLength = this.shapes.length;
-            };
-            Body.prototype.setMass = function (mass) {
-                this.mass = mass;
-                this.massInverted = mass > 0 ? 1 / mass : 0;
-            };
-            Body.prototype.setInertia = function (inertia) {
-                this.inertia = inertia;
-                this.inertiaInverted = inertia > 0 ? 1 / inertia : 0;
-            };
-            Body.prototype.setPosition = function (x, y) {
-                this._newPosition.setTo(Phaser.Physics.AdvancedPhysics.pixelsToMeters(x), Phaser.Physics.AdvancedPhysics.pixelsToMeters(y));
-                this.setTransform(this._newPosition, this.angle);
-            };
-            Body.prototype.setTransform = function (pos, angle) {
-                //  inject the transform into this.position
-                this.transform.setTo(pos, angle);
-                //Manager.write('setTransform: ' + this.position.toString());
-                //Manager.write('centroid: ' + this.centroid.toString());
-                Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
-                //Manager.write('post setTransform: ' + this.position.toString());
-                //this.position.copyFrom(this.transform.transform(this.centroid));
-                this.angle = angle;
-            };
-            Body.prototype.syncTransform = function () {
-                //Manager.write('syncTransform:');
-                //Manager.write('p: ' + this.position.toString());
-                //Manager.write('centroid: ' + this.centroid.toString());
-                //Manager.write('xf: ' + this.transform.toString());
-                //Manager.write('a: ' + this.angle);
-                this.transform.setRotation(this.angle);
-                //  OPTIMISE: Creating new vector
-                Phaser.Vec2Utils.subtract(this.position, Phaser.TransformUtils.rotate(this.transform, this.centroid), this.transform.t);
-                //Manager.write('--------------------');
-                //Manager.write('xf: ' + this.transform.toString());
-                //Manager.write('--------------------');
-                            };
-            Body.prototype.getWorldPoint = function (p) {
-                //  OPTIMISE: Creating new vector
-                return Phaser.TransformUtils.transform(this.transform, p);
-            };
-            Body.prototype.getWorldVector = function (v) {
-                //  OPTIMISE: Creating new vector
-                return Phaser.TransformUtils.rotate(this.transform, v);
-            };
-            Body.prototype.getLocalPoint = function (p) {
-                //  OPTIMISE: Creating new vector
-                return Phaser.TransformUtils.untransform(this.transform, p);
-            };
-            Body.prototype.getLocalVector = function (v) {
-                //  OPTIMISE: Creating new vector
-                return Phaser.TransformUtils.unrotate(this.transform, v);
-            };
-            Object.defineProperty(Body.prototype, "fixedRotation", {
-                get: function () {
-                    return this._fixedRotation;
+                    return this._width * this.sprite.transform.scale.x;
                 },
                 set: function (value) {
-                    this._fixedRotation = value;
-                    this.resetMassData();
+                    this._width = value;
                 },
                 enumerable: true,
                 configurable: true
             });
-            Body.prototype.resetMassData = function () {
-                this.centroid.setTo(0, 0);
-                this.mass = 0;
-                this.massInverted = 0;
-                this.inertia = 0;
-                this.inertiaInverted = 0;
-                if(this.isDynamic == false) {
-                    Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
-                    return;
-                }
-                var totalMassCentroid = new Phaser.Vec2(0, 0);
-                var totalMass = 0;
-                var totalInertia = 0;
-                for(var i = 0; i < this.shapes.length; i++) {
-                    var shape = this.shapes[i];
-                    var centroid = shape.centroid();
-                    var mass = shape.area() * shape.density;
-                    var inertia = shape.inertia(mass);
-                    totalMassCentroid.multiplyAddByScalar(centroid, mass);
-                    totalMass += mass;
-                    totalInertia += inertia;
-                }
-                Phaser.Vec2Utils.scale(totalMassCentroid, 1 / totalMass, this.centroid);
-                this.setMass(totalMass);
-                if(!this.fixedRotation) {
-                    this.setInertia(totalInertia - totalMass * Phaser.Vec2Utils.dot(this.centroid, this.centroid));
-                }
-                // Move center of mass
-                var oldPosition = Phaser.Vec2Utils.clone(this.position);
-                Phaser.TransformUtils.transform(this.transform, this.centroid, this.position);
-                // Update center of mass velocity
-                oldPosition.subtract(this.position);
-                this.velocity.multiplyAddByScalar(Phaser.Vec2Utils.perp(oldPosition, oldPosition), this.angularVelocity);
-            };
-            Body.prototype.resetJointAnchors = function () {
-                for(var i = 0; i < this.joints.length; i++) {
-                    var joint = this.joints[i];
-                    if(!joint) {
-                        continue;
-                    }
-                    var anchor1 = joint.getWorldAnchor1();
-                    var anchor2 = joint.getWorldAnchor2();
-                    joint.setWorldAnchor1(anchor1);
-                    joint.setWorldAnchor2(anchor2);
-                }
-            };
-            Body.prototype.cacheData = function (source) {
-                if (typeof source === "undefined") { source = ''; }
-                //Manager.write('cacheData -- start');
-                //Manager.write('p: ' + this.position.toString());
-                //Manager.write('xf: ' + this.transform.toString());
-                this.bounds.clear();
-                for(var i = 0; i < this.shapesLength; i++) {
-                    var shape = this.shapes[i];
-                    shape.cacheData(this.transform);
-                    this.bounds.addBounds(shape.bounds);
-                }
-                //Manager.write('bounds: ' + this.bounds.toString());
-                //Manager.write('p: ' + this.position.toString());
-                //Manager.write('xf: ' + this.transform.toString());
-                //Manager.write('cacheData -- stop');
-                            };
-            Body.prototype.updateVelocity = function (gravity, dt, damping) {
-                Phaser.Vec2Utils.multiplyAdd(gravity, this.force, this.massInverted, this._tempVec2);
-                Phaser.Vec2Utils.multiplyAdd(this.velocity, this._tempVec2, dt, this.velocity);
-                this.angularVelocity = this.angularVelocity + this.torque * this.inertiaInverted * dt;
-                // Apply damping.
-                // ODE: dv/dt + c * v = 0
-                // Solution: v(t) = v0 * exp(-c * t)
-                // Time step: v(t + dt) = v0 * exp(-c * (t + dt)) = v0 * exp(-c * t) * exp(-c * dt) = v * exp(-c * dt)
-                // v2 = exp(-c * dt) * v1
-                // Taylor expansion:
-                // v2 = (1.0f - c * dt) * v1
-                this.velocity.scale(this.clamp(1 - dt * (damping + this.linearDamping), 0, 1));
-                this.angularVelocity *= this.clamp(1 - dt * (damping + this.angularDamping), 0, 1);
-                this.force.setTo(0, 0);
-                this.torque = 0;
-            };
-            Body.prototype.inContact = function (body2) {
-                if(!body2 || this.stepCount == body2.stepCount) {
-                    return false;
-                }
-                if(!(this.isAwake && this.isStatic == false) && !(body2.isAwake && body2.isStatic == false)) {
-                    return false;
-                }
-                if(this.isCollidable(body2) == false) {
-                    return false;
-                }
-                if(!this.bounds.intersectsBounds(body2.bounds)) {
-                    return false;
-                }
-                return true;
-            };
-            Body.prototype.clamp = function (v, min, max) {
-                return v < min ? min : (v > max ? max : v);
-            };
-            Body.prototype.updatePosition = function (dt) {
-                this.position.add(Phaser.Vec2Utils.scale(this.velocity, dt, this._tempVec2));
-                this.angle += this.angularVelocity * dt;
-                if(this.sprite) {
-                    this.sprite.x = this.position.x * 50;
-                    this.sprite.y = this.position.y * 50;
-                    this.sprite.transform.rotation = this.game.math.radiansToDegrees(this.angle);
-                }
-            };
-            Body.prototype.resetForce = function () {
-                this.force.setTo(0, 0);
-                this.torque = 0;
-            };
-            Body.prototype.applyForce = function (force, p) {
-                if(this.isDynamic == false) {
-                    return;
-                }
-                if(this.isAwake == false) {
-                    this.awake(true);
-                }
-                this.force.add(force);
-                Phaser.Vec2Utils.subtract(p, this.position, this._tempVec2);
-                this.torque += Phaser.Vec2Utils.cross(this._tempVec2, force);
-            };
-            Body.prototype.applyForceToCenter = function (force) {
-                if(this.isDynamic == false) {
-                    return;
-                }
-                if(this.isAwake == false) {
-                    this.awake(true);
-                }
-                this.force.add(force);
-            };
-            Body.prototype.applyTorque = function (torque) {
-                if(this.isDynamic == false) {
-                    return;
-                }
-                if(this.isAwake == false) {
-                    this.awake(true);
-                }
-                this.torque += torque;
-            };
-            Body.prototype.applyLinearImpulse = function (impulse, p) {
-                if(this.isDynamic == false) {
-                    return;
-                }
-                if(this.isAwake == false) {
-                    this.awake(true);
-                }
-                this.velocity.multiplyAddByScalar(impulse, this.massInverted);
-                Phaser.Vec2Utils.subtract(p, this.position, this._tempVec2);
-                this.angularVelocity += Phaser.Vec2Utils.cross(this._tempVec2, impulse) * this.inertiaInverted;
-            };
-            Body.prototype.applyAngularImpulse = function (impulse) {
-                if(this.isDynamic == false) {
-                    return;
-                }
-                if(this.isAwake == false) {
-                    this.awake(true);
-                }
-                this.angularVelocity += impulse * this.inertiaInverted;
-            };
-            Body.prototype.kineticEnergy = function () {
-                return 0.5 * (this.mass * this.velocity.dot(this.velocity) + this.inertia * (this.angularVelocity * this.angularVelocity));
-            };
-            Object.defineProperty(Body.prototype, "isAwake", {
+            Object.defineProperty(Body.prototype, "height", {
                 get: function () {
-                    return this.awaked;
+                    return this._height * this.sprite.transform.scale.y;
+                },
+                set: function (value) {
+                    this._height = value;
                 },
                 enumerable: true,
                 configurable: true
             });
-            Body.prototype.awake = function (flag) {
-                this.awaked = flag;
-                if(flag) {
-                    this.sleepTime = 0;
-                } else {
-                    this.velocity.setTo(0, 0);
-                    this.angularVelocity = 0;
-                    this.force.setTo(0, 0);
-                    this.torque = 0;
-                }
+            Body.prototype.preUpdate = function () {
+                this.oldPosition.copyFrom(this.position);
+                this.bounds.x = this.x;
+                this.bounds.y = this.y;
+                this.bounds.width = this.width;
+                this.bounds.height = this.height;
             };
-            Body.prototype.isCollidable = function (other) {
-                if((this.isDynamic == false && other.isDynamic == false) || this == other) {
-                    return false;
+            Body.prototype.postUpdate = //  Shall we do this? Or just update the values directly in the separate functions? But then the bounds will be out of sync - as long as
+            //  the bounds are updated and used in calculations then we can do one final sprite movement here I guess?
+            function () {
+                //  if this is all it does maybe move elsewhere? Sprite postUpdate?
+                if(this.type !== Phaser.Types.BODY_DISABLED) {
+                    //this.game.world.physics.updateMotion(this);
+                    this.wasTouching = this.touching;
+                    this.touching = Phaser.Types.NONE;
                 }
-                if(!(this.maskBits & other.categoryBits) || !(other.maskBits & this.categoryBits)) {
-                    return false;
-                }
-                for(var i = 0; i < this.joints.length; i++) {
-                    var joint = this.joints[i];
-                    if(!this.joints[i] || (!this.joints[i].collideConnected && other.jointHash[this.joints[i].id] != undefined)) {
-                        return false;
+                this.position.setTo(this.x, this.y);
+            };
+            Object.defineProperty(Body.prototype, "hullWidth", {
+                get: function () {
+                    if(this.deltaX > 0) {
+                        return this.bounds.width + this.deltaX;
+                    } else {
+                        return this.bounds.width - this.deltaX;
                     }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "hullHeight", {
+                get: function () {
+                    if(this.deltaY > 0) {
+                        return this.bounds.height + this.deltaY;
+                    } else {
+                        return this.bounds.height - this.deltaY;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "hullX", {
+                get: function () {
+                    if(this.position.x < this.oldPosition.x) {
+                        return this.position.x;
+                    } else {
+                        return this.oldPosition.x;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "hullY", {
+                get: function () {
+                    if(this.position.y < this.oldPosition.y) {
+                        return this.position.y;
+                    } else {
+                        return this.oldPosition.y;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "deltaXAbs", {
+                get: function () {
+                    return (this.deltaX > 0 ? this.deltaX : -this.deltaX);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "deltaYAbs", {
+                get: function () {
+                    return (this.deltaY > 0 ? this.deltaY : -this.deltaY);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "deltaX", {
+                get: function () {
+                    return this.position.x - this.oldPosition.x;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Body.prototype, "deltaY", {
+                get: function () {
+                    return this.position.y - this.oldPosition.y;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Body.prototype.render = //  MOVE THESE TO A UTIL
+            function (context) {
+                context.beginPath();
+                context.strokeStyle = 'rgb(0,255,0)';
+                context.strokeRect(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight, this.bounds.width, this.bounds.height);
+                context.stroke();
+                context.closePath();
+                //  center point
+                context.fillStyle = 'rgb(0,255,0)';
+                context.fillRect(this.position.x, this.position.y, 2, 2);
+                if(this.touching & Phaser.Types.LEFT) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.stroke();
+                    context.closePath();
                 }
-                return true;
+                if(this.touching & Phaser.Types.RIGHT) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.stroke();
+                    context.closePath();
+                }
+                if(this.touching & Phaser.Types.UP) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
+                    context.stroke();
+                    context.closePath();
+                }
+                if(this.touching & Phaser.Types.DOWN) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
+                    context.stroke();
+                    context.closePath();
+                }
             };
-            Body.prototype.toString = function () {
-                return "[{Body (name=" + this.name + " velocity=" + this.velocity.toString() + " angularVelocity: " + this.angularVelocity + ")}]";
+            Body.prototype.renderDebugInfo = /**
+            * Render debug infos. (including name, bounds info, position and some other properties)
+            * @param x {number} X position of the debug info to be rendered.
+            * @param y {number} Y position of the debug info to be rendered.
+            * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+            */
+            function (x, y, color) {
+                if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+                this.sprite.texture.context.fillStyle = color;
+                this.sprite.texture.context.fillText('Sprite: (' + this.sprite.width + ' x ' + this.sprite.height + ')', x, y);
+                //this.sprite.texture.context.fillText('x: ' + this._sprite.frameBounds.x.toFixed(1) + ' y: ' + this._sprite.frameBounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
+                this.sprite.texture.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.sprite.transform.rotation.toFixed(0), x, y + 14);
+                this.sprite.texture.context.fillText('vx: ' + this.velocity.x.toFixed(1) + ' vy: ' + this.velocity.y.toFixed(1), x, y + 28);
+                this.sprite.texture.context.fillText('acx: ' + this.acceleration.x.toFixed(1) + ' acy: ' + this.acceleration.y.toFixed(1), x, y + 42);
+                this.sprite.texture.context.fillText('angVx: ' + this.angularVelocity.toFixed(1) + ' angAc: ' + this.angularAcceleration.toFixed(1), x, y + 56);
             };
             return Body;
         })();
@@ -7186,7 +5679,7 @@ var Phaser;
 /// <reference path="../components/Transform.ts" />
 /// <reference path="../components/sprite/Input.ts" />
 /// <reference path="../components/sprite/Events.ts" />
-/// <reference path="../physics/Body.ts" />
+/// <reference path="../physics/arcade/Body.ts" />
 /**
 * Phaser - Sprite
 */
@@ -7292,8 +5785,8 @@ var Phaser;
             function (value) {
                 this.transform.rotation = this.game.math.wrap(value, 360, 0);
                 if(this.body) {
-                    this.body.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
-                }
+                    //this.body.angle = this.game.math.degreesToRadians(this.game.math.wrap(value, 360, 0));
+                                    }
             },
             enumerable: true,
             configurable: true
@@ -14890,9 +13383,9 @@ var Phaser;
 /**
 * Phaser
 *
-* v1.0.0 - June XX 2013
+* v1.0.0 - August 12th 2013
 *
-* A small and feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
+* A feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
 *
 * Richard Davey (@photonstorm)
 *
@@ -16227,64 +14720,26 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     /// <reference path="../Game.ts" />
-    /// <reference path="Body.ts" />
-    /// <reference path="joints/Joint.ts" />
     /**
     * Phaser - Physics Manager
     *
-    * The Physics Manager is responsible for looking after, creating and colliding
-    * all of the physics bodies and joints in the world.
+    * Eventually this will handle switching between the default ArcadePhysics manager or the new AdvancedPhysics manager.
+    * For now we direct everything through ArcadePhysics.
     */
     (function (Physics) {
         var Manager = (function () {
             function Manager(game) {
                 this.game = game;
+                this.arcade = new Phaser.Physics.ArcadePhysics(this.game, this.game.stage.width, this.game.stage.height);
+                this.gravity = this.arcade.gravity;
+                this.bounds = this.arcade.bounds;
             }
-            Manager.clear = function clear() {
-                //Manager.debug.textContent = "";
-                Manager.log = [];
-            };
-            Manager.write = function write(s) {
-                //Manager.debug.textContent += s + "\n";
+            Manager.prototype.update = /**
+            * Called by the main Game.loop
+            */
+            function () {
+                //this.arcade.updateMotion
                             };
-            Manager.writeAll = function writeAll() {
-                for(var i = 0; i < Manager.log.length; i++) {
-                    //Manager.debug.textContent += Manager.log[i];
-                                    }
-            };
-            Manager.log = [];
-            Manager.dump = function dump(phase, body) {
-                /*
-                var s = "\n\nPhase: " + phase + "\n";
-                s += "Position: " + body.position.toString() + "\n";
-                s += "Velocity: " + body.velocity.toString() + "\n";
-                s += "Angle: " + body.angle + "\n";
-                s += "Force: " + body.force.toString() + "\n";
-                s += "Torque: " + body.torque + "\n";
-                s += "Bounds: " + body.bounds.toString() + "\n";
-                s += "Shape ***\n";
-                s += "Vert 0: " + body.shapes[0].verts[0].toString() + "\n";
-                s += "Vert 1: " + body.shapes[0].verts[1].toString() + "\n";
-                s += "Vert 2: " + body.shapes[0].verts[2].toString() + "\n";
-                s += "Vert 3: " + body.shapes[0].verts[3].toString() + "\n";
-                s += "TVert 0: " + body.shapes[0].tverts[0].toString() + "\n";
-                s += "TVert 1: " + body.shapes[0].tverts[1].toString() + "\n";
-                s += "TVert 2: " + body.shapes[0].tverts[2].toString() + "\n";
-                s += "TVert 3: " + body.shapes[0].tverts[3].toString() + "\n";
-                s += "Plane 0: " + body.shapes[0].planes[0].normal.toString() + "\n";
-                s += "Plane 1: " + body.shapes[0].planes[1].normal.toString() + "\n";
-                s += "Plane 2: " + body.shapes[0].planes[2].normal.toString() + "\n";
-                s += "Plane 3: " + body.shapes[0].planes[3].normal.toString() + "\n";
-                s += "TPlane 0: " + body.shapes[0].tplanes[0].normal.toString() + "\n";
-                s += "TPlane 1: " + body.shapes[0].tplanes[1].normal.toString() + "\n";
-                s += "TPlane 2: " + body.shapes[0].tplanes[2].normal.toString() + "\n";
-                s += "TPlane 3: " + body.shapes[0].tplanes[3].normal.toString() + "\n";
-                
-                Manager.log.push(s);
-                */
-                            };
-            Manager.prototype.update = function () {
-            };
             return Manager;
         })();
         Physics.Manager = Manager;        
@@ -16430,309 +14885,6 @@ var Phaser;
         return World;
     })();
     Phaser.World = World;    
-})(Phaser || (Phaser = {}));
-/// <reference path="Game.ts" />
-/// <reference path="gameobjects/Sprite.ts" />
-/**
-* Phaser - Motion
-*
-* The Motion class contains lots of useful functions for moving game objects around in world space.
-*/
-var Phaser;
-(function (Phaser) {
-    var Motion = (function () {
-        function Motion(game) {
-            this.game = game;
-        }
-        Motion.prototype.velocityFromAngle = /**
-        * Given the angle and speed calculate the velocity and return it as a Point
-        *
-        * @param {number} angle The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-        * @param {number} speed The speed it will move, in pixels per second sq
-        *
-        * @return {Point} A Point where Point.x contains the velocity x value and Point.y contains the velocity y value
-        */
-        function (angle, speed) {
-            if(isNaN(speed)) {
-                speed = 0;
-            }
-            var a = this.game.math.degreesToRadians(angle);
-            return new Phaser.Point((Math.cos(a) * speed), (Math.sin(a) * speed));
-        };
-        Motion.prototype.moveTowardsObject = /**
-        * Sets the source Sprite x/y velocity so it will move directly towards the destination Sprite at the speed given (in pixels per second)<br>
-        * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
-        * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
-        * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
-        * If you need the object to accelerate, see accelerateTowardsObject() instead
-        * Note: Doesn't take into account acceleration, maxVelocity or drag (if you set drag or acceleration too high this object may not move at all)
-        *
-        * @param {Sprite} source The Sprite on which the velocity will be set
-        * @param {Sprite} dest The Sprite where the source object will move to
-        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
-        */
-        function (source, dest, speed, maxTime) {
-            if (typeof speed === "undefined") { speed = 60; }
-            if (typeof maxTime === "undefined") { maxTime = 0; }
-            var a = this.angleBetween(source, dest);
-            if(maxTime > 0) {
-                var d = this.distanceBetween(source, dest);
-                //	We know how many pixels we need to move, but how fast?
-                speed = d / (maxTime / 1000);
-            }
-            source.body.velocity.x = Math.cos(a) * speed;
-            source.body.velocity.y = Math.sin(a) * speed;
-        };
-        Motion.prototype.accelerateTowardsObject = /**
-        * Sets the x/y acceleration on the source Sprite so it will move towards the destination Sprite at the speed given (in pixels per second)<br>
-        * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
-        * If you don't need acceleration look at moveTowardsObject() instead.
-        *
-        * @param {Sprite} source The Sprite on which the acceleration will be set
-        * @param {Sprite} dest The Sprite where the source object will move towards
-        * @param {number} speed The speed it will accelerate in pixels per second
-        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
-        */
-        function (source, dest, speed, xSpeedMax, ySpeedMax) {
-            /*
-            var a: number = this.angleBetween(source, dest);
-            
-            source.body.velocity.x = 0;
-            source.body.velocity.y = 0;
-            
-            source.body.acceleration.x = Math.cos(a) * speed;
-            source.body.acceleration.y = Math.sin(a) * speed;
-            
-            source.body.maxVelocity.x = xSpeedMax;
-            source.body.maxVelocity.y = ySpeedMax;
-            */
-                    };
-        Motion.prototype.moveTowardsMouse = /**
-        * Move the given Sprite towards the mouse pointer coordinates at a steady velocity
-        * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
-        * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
-        * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
-        *
-        * @param {Sprite} source The Sprite to move
-        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
-        */
-        function (source, speed, maxTime) {
-            if (typeof speed === "undefined") { speed = 60; }
-            if (typeof maxTime === "undefined") { maxTime = 0; }
-            var a = this.angleBetweenMouse(source);
-            if(maxTime > 0) {
-                var d = this.distanceToMouse(source);
-                //	We know how many pixels we need to move, but how fast?
-                speed = d / (maxTime / 1000);
-            }
-            source.body.velocity.x = Math.cos(a) * speed;
-            source.body.velocity.y = Math.sin(a) * speed;
-        };
-        Motion.prototype.accelerateTowardsMouse = /**
-        * Sets the x/y acceleration on the source Sprite so it will move towards the mouse coordinates at the speed given (in pixels per second)<br>
-        * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
-        * If you don't need acceleration look at moveTowardsMouse() instead.
-        *
-        * @param {Sprite} source The Sprite on which the acceleration will be set
-        * @param {number} speed The speed it will accelerate in pixels per second
-        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
-        */
-        function (source, speed, xSpeedMax, ySpeedMax) {
-            /*
-            var a: number = this.angleBetweenMouse(source);
-            
-            source.body.velocity.x = 0;
-            source.body.velocity.y = 0;
-            
-            source.body.acceleration.x = Math.cos(a) * speed;
-            source.body.acceleration.y = Math.sin(a) * speed;
-            
-            source.body.maxVelocity.x = xSpeedMax;
-            source.body.maxVelocity.y = ySpeedMax;
-            */
-                    };
-        Motion.prototype.moveTowardsPoint = /**
-        * Sets the x/y velocity on the source Sprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
-        * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
-        * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
-        * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
-        *
-        * @param {Sprite} source The Sprite to move
-        * @param {Point} target The Point coordinates to move the source Sprite towards
-        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
-        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
-        */
-        function (source, target, speed, maxTime) {
-            if (typeof speed === "undefined") { speed = 60; }
-            if (typeof maxTime === "undefined") { maxTime = 0; }
-            var a = this.angleBetweenPoint(source, target);
-            if(maxTime > 0) {
-                var d = this.distanceToPoint(source, target);
-                //	We know how many pixels we need to move, but how fast?
-                speed = d / (maxTime / 1000);
-            }
-            source.body.velocity.x = Math.cos(a) * speed;
-            source.body.velocity.y = Math.sin(a) * speed;
-        };
-        Motion.prototype.accelerateTowardsPoint = /**
-        * Sets the x/y acceleration on the source Sprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
-        * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
-        * If you don't need acceleration look at moveTowardsPoint() instead.
-        *
-        * @param {Sprite} source The Sprite on which the acceleration will be set
-        * @param {Point} target The Point coordinates to move the source Sprite towards
-        * @param {number} speed The speed it will accelerate in pixels per second
-        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
-        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
-        */
-        function (source, target, speed, xSpeedMax, ySpeedMax) {
-            /*
-            var a: number = this.angleBetweenPoint(source, target);
-            
-            source.body.velocity.x = 0;
-            source.body.velocity.y = 0;
-            
-            source.body.acceleration.x = Math.cos(a) * speed;
-            source.body.acceleration.y = Math.sin(a) * speed;
-            
-            source.body.maxVelocity.x = xSpeedMax;
-            source.body.maxVelocity.y = ySpeedMax;
-            */
-                    };
-        Motion.prototype.distanceBetween = /**
-        * Find the distance between two Sprites, taking their origin into account
-        *
-        * @param {Sprite} a The first Sprite
-        * @param {Sprite} b The second Sprite
-        * @return {number} int Distance (in pixels)
-        */
-        function (a, b) {
-            return Phaser.Vec2Utils.distance(a.body.position, b.body.position);
-        };
-        Motion.prototype.distanceToPoint = /**
-        * Find the distance from an Sprite to the given Point, taking the source origin into account
-        *
-        * @param {Sprite} a The Sprite
-        * @param {Point} target The Point
-        * @return {number} Distance (in pixels)
-        */
-        function (a, target) {
-            var dx = (a.x + a.transform.origin.x) - (target.x);
-            var dy = (a.y + a.transform.origin.y) - (target.y);
-            return this.game.math.vectorLength(dx, dy);
-        };
-        Motion.prototype.distanceToMouse = /**
-        * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
-        *
-        * @param {Sprite} a  Sprite to test against
-        * @return {number} The distance between the given sprite and the mouse coordinates
-        */
-        function (a) {
-            var dx = (a.x + a.transform.origin.x) - this.game.input.x;
-            var dy = (a.y + a.transform.origin.y) - this.game.input.y;
-            return this.game.math.vectorLength(dx, dy);
-        };
-        Motion.prototype.angleBetweenPoint = /**
-        * Find the angle (in radians) between an Sprite and an Point. The source sprite takes its x/y and origin into account.
-        * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-        *
-        * @param {Sprite} a The Sprite to test from
-        * @param {Point} target The Point to angle the Sprite towards
-        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
-        *
-        * @return {number} The angle (in radians unless asDegrees is true)
-        */
-        function (a, target, asDegrees) {
-            if (typeof asDegrees === "undefined") { asDegrees = false; }
-            var dx = (target.x) - (a.x + a.transform.origin.x);
-            var dy = (target.y) - (a.y + a.transform.origin.y);
-            if(asDegrees) {
-                return this.game.math.radiansToDegrees(Math.atan2(dy, dx));
-            } else {
-                return Math.atan2(dy, dx);
-            }
-        };
-        Motion.prototype.angleBetween = /**
-        * Find the angle (in radians) between the two Sprite, taking their x/y and origin into account.
-        * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-        *
-        * @param {Sprite} a The Sprite to test from
-        * @param {Sprite} b The Sprite to test to
-        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
-        *
-        * @return {number} The angle (in radians unless asDegrees is true)
-        */
-        function (a, b, asDegrees) {
-            if (typeof asDegrees === "undefined") { asDegrees = false; }
-            var dx = (b.x + b.transform.origin.x) - (a.x + a.transform.origin.x);
-            var dy = (b.y + b.transform.origin.y) - (a.y + a.transform.origin.y);
-            if(asDegrees) {
-                return this.game.math.radiansToDegrees(Math.atan2(dy, dx));
-            } else {
-                return Math.atan2(dy, dx);
-            }
-        };
-        Motion.prototype.velocityFromFacing = /**
-        * Given the Sprite and speed calculate the velocity and return it as an Point based on the direction the sprite is facing
-        *
-        * @param {Sprite} parent The Sprite to get the facing value from
-        * @param {number} speed The speed it will move, in pixels per second sq
-        *
-        * @return {Point} An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
-        */
-        function (parent, speed) {
-            /*
-            var a: number;
-            
-            if (parent.body.facing == Types.LEFT)
-            {
-            a = this.game.math.degreesToRadians(180);
-            }
-            else if (parent.body.facing == Types.RIGHT)
-            {
-            a = this.game.math.degreesToRadians(0);
-            }
-            else if (parent.body.facing == Types.UP)
-            {
-            a = this.game.math.degreesToRadians(-90);
-            }
-            else if (parent.body.facing == Types.DOWN)
-            {
-            a = this.game.math.degreesToRadians(90);
-            }
-            
-            return new Point(Math.cos(a) * speed, Math.sin(a) * speed);
-            */
-            return new Phaser.Point();
-        };
-        Motion.prototype.angleBetweenMouse = /**
-        * Find the angle (in radians) between an Sprite and the mouse, taking their x/y and origin into account.
-        * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-        *
-        * @param {Sprite} a The Object to test from
-        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
-        *
-        * @return {number} The angle (in radians unless asDegrees is true)
-        */
-        function (a, asDegrees) {
-            if (typeof asDegrees === "undefined") { asDegrees = false; }
-            //	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
-            var p = Phaser.SpriteUtils.getScreenXY(a);
-            var dx = a.game.input.x - p.x;
-            var dy = a.game.input.y - p.y;
-            if(asDegrees) {
-                return this.game.math.radiansToDegrees(Math.atan2(dy, dx));
-            } else {
-                return Math.atan2(dy, dx);
-            }
-        };
-        return Motion;
-    })();
-    Phaser.Motion = Motion;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
@@ -19694,6 +17846,9 @@ var Phaser;
             if(sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
                 return false;
             }
+            if(sprite.crop && sprite.crop.empty) {
+                return;
+            }
             sprite.renderOrderID = this._count;
             this._count++;
             //  Reset our temp vars
@@ -19968,32 +18123,6 @@ var Phaser;
             DebugUtils.context.fillText('cx: ' + sprite.cameraView.x + ' cy: ' + sprite.cameraView.y + ' cw: ' + sprite.cameraView.width + ' ch: ' + sprite.cameraView.height + ' cb: ' + sprite.cameraView.bottom + ' cr: ' + sprite.cameraView.right, x, y + 70);
             DebugUtils.context.fillText('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite), x, y + 84);
         };
-        DebugUtils.renderPhysicsBodyInfo = /**
-        * Render debug infos. (including name, bounds info, position and some other properties)
-        * @param x {number} X position of the debug info to be rendered.
-        * @param y {number} Y position of the debug info to be rendered.
-        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-        */
-        function renderPhysicsBodyInfo(body, x, y, color) {
-            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            DebugUtils.context.fillStyle = color;
-            DebugUtils.context.fillText('Body ID: ' + body.name, x, y);
-            DebugUtils.context.fillText('Position x: ' + body.position.x.toFixed(1) + ' y: ' + body.position.y.toFixed(1) + ' rotation: ' + body.angle.toFixed(1), x, y + 14);
-            DebugUtils.context.fillText('World x: ' + (body.position.x * 50).toFixed(1) + ' y: ' + (body.position.y * 50).toFixed(1), x, y + 28);
-            DebugUtils.context.fillText('Velocity x: ' + body.velocity.x.toFixed(1) + ' y: ' + body.velocity.y.toFixed(1), x, y + 42);
-            if(body.shapes[0].verts.length > 0) {
-                DebugUtils.context.fillText('Vert 1 x: ' + (body.shapes[0].verts[0].x * 50) + ' y: ' + (body.shapes[0].verts[0].y * 50), x, y + 56);
-                DebugUtils.context.fillText('Vert 2 x: ' + (body.shapes[0].verts[1].x * 50) + ' y: ' + (body.shapes[0].verts[1].y * 50), x, y + 70);
-                DebugUtils.context.fillText('Vert 3 x: ' + (body.shapes[0].tverts[2].x * 50) + ' y: ' + (body.shapes[0].tverts[2].y * 50), x, y + 84);
-                DebugUtils.context.fillText('Vert 4 x: ' + (body.shapes[0].tverts[3].x * 50) + ' y: ' + (body.shapes[0].tverts[3].y * 50), x, y + 98);
-                /*
-                DebugUtils.context.fillText('Vert 1 x: ' + body.shapes[0].verts[0].x.toFixed(1) + ' y: ' + body.shapes[0].verts[0].y.toFixed(1), x, y + 56);
-                DebugUtils.context.fillText('Vert 2 x: ' + body.shapes[0].verts[1].x.toFixed(1) + ' y: ' + body.shapes[0].verts[1].y.toFixed(1), x, y + 70);
-                DebugUtils.context.fillText('Vert 3 x: ' + body.shapes[0].verts[2].x.toFixed(1) + ' y: ' + body.shapes[0].verts[2].y.toFixed(1), x, y + 84);
-                DebugUtils.context.fillText('Vert 4 x: ' + body.shapes[0].verts[3].x.toFixed(1) + ' y: ' + body.shapes[0].verts[3].y.toFixed(1), x, y + 98);
-                */
-                            }
-        };
         DebugUtils.renderSpriteBounds = function renderSpriteBounds(sprite, camera, color) {
             if (typeof camera === "undefined") { camera = null; }
             if (typeof color === "undefined") { color = 'rgba(0,255,0,0.2)'; }
@@ -20028,35 +18157,6 @@ var Phaser;
             DebugUtils.context.fillStyle = color;
             DebugUtils.context.fillText(text, x, y);
         };
-        DebugUtils.renderPhysicsBody = function renderPhysicsBody(body, lineWidth, fillStyle, sleepStyle) {
-            if (typeof lineWidth === "undefined") { lineWidth = 1; }
-            if (typeof fillStyle === "undefined") { fillStyle = 'rgba(0,255,0,0.2)'; }
-            if (typeof sleepStyle === "undefined") { sleepStyle = 'rgba(100,100,100,0.2)'; }
-            for(var s = 0; s < body.shapesLength; s++) {
-                DebugUtils.context.beginPath();
-                if(body.shapes[s].type == Phaser.Physics.AdvancedPhysics.SHAPE_TYPE_POLY) {
-                    var verts = body.shapes[s].tverts;
-                    //		            DebugUtils.context.moveTo(body.position.x * 50 + verts[0].x, body.position.y * 50 + verts[0].y);
-                    DebugUtils.context.moveTo(verts[0].x * 50, verts[0].y * 50);
-                    for(var i = 1; i < verts.length; i++) {
-                        //			            DebugUtils.context.lineTo(body.position.x * 50 + verts[i].x, body.position.y * 50 + verts[i].y);
-                        DebugUtils.context.lineTo(verts[i].x * 50, verts[i].y * 50);
-                    }
-                    //		            DebugUtils.context.lineTo(body.position.x * 50 + verts[0].x, body.position.y * 50 + verts[0].y);
-                    DebugUtils.context.lineTo(verts[0].x * 50, verts[0].y * 50);
-                } else if(body.shapes[s].type == Phaser.Physics.AdvancedPhysics.SHAPE_TYPE_CIRCLE) {
-                    var circle = body.shapes[s];
-                    DebugUtils.context.arc(circle.tc.x * 50, circle.tc.y * 50, circle.radius * 50, 0, Math.PI * 2, false);
-                }
-                DebugUtils.context.closePath();
-                if(body.isAwake) {
-                    DebugUtils.context.fillStyle = fillStyle;
-                } else {
-                    DebugUtils.context.fillStyle = sleepStyle;
-                }
-                DebugUtils.context.fill();
-            }
-        };
         return DebugUtils;
     })();
     Phaser.DebugUtils = DebugUtils;    
@@ -20083,7 +18183,6 @@ var Phaser;
 /// <reference path="Time.ts" />
 /// <reference path="tweens/TweenManager.ts" />
 /// <reference path="World.ts" />
-/// <reference path="Motion.ts" />
 /// <reference path="system/Device.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
 /// <reference path="input/Input.ts" />
@@ -20245,7 +18344,6 @@ var Phaser;
             } else {
                 this.device = new Phaser.Device();
                 this.net = new Phaser.Net(this);
-                this.motion = new Phaser.Motion(this);
                 this.math = new Phaser.GameMath(this);
                 this.stage = new Phaser.Stage(this, parent, width, height);
                 this.world = new Phaser.World(this, width, height);
@@ -20881,174 +18979,6 @@ var Phaser;
     Phaser.Line = Line;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
-/// <reference path="../geom/Point.ts" />
-/// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../geom/Circle.ts" />
-/**
-* Phaser - CircleUtils
-*
-* A collection of methods useful for manipulating and comparing Circle objects.
-*
-* TODO:
-*/
-var Phaser;
-(function (Phaser) {
-    var CircleUtils = (function () {
-        function CircleUtils() { }
-        CircleUtils.clone = /**
-        * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
-        * @method clone
-        * @param {Circle} a - The Circle object.
-        * @param {Circle} [optional] out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
-        * @return {Phaser.Circle}
-        **/
-        function clone(a, out) {
-            if (typeof out === "undefined") { out = new Phaser.Circle(); }
-            return out.setTo(a.x, a.y, a.diameter);
-        };
-        CircleUtils.contains = /**
-        * Return true if the given x/y coordinates are within the Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
-        * @method contains
-        * @param {Circle} a - The Circle object.
-        * @param {Number} The X value of the coordinate to test.
-        * @param {Number} The Y value of the coordinate to test.
-        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
-        function contains(a, x, y) {
-            //  Check if x/y are within the bounds first
-            if(x >= a.left && x <= a.right && y >= a.top && y <= a.bottom) {
-                var dx = (a.x - x) * (a.x - x);
-                var dy = (a.y - y) * (a.y - y);
-                return (dx + dy) <= (a.radius * a.radius);
-            }
-            return false;
-        };
-        CircleUtils.containsPoint = /**
-        * Return true if the coordinates of the given Point object are within this Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
-        * @method containsPoint
-        * @param {Circle} a - The Circle object.
-        * @param {Point} The Point object to test.
-        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
-        function containsPoint(a, point) {
-            return CircleUtils.contains(a, point.x, point.y);
-        };
-        CircleUtils.containsCircle = /**
-        * Return true if the given Circle is contained entirely within this Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleToCircle instead.
-        * @method containsCircle
-        * @param {Circle} The Circle object to test.
-        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
-        function containsCircle(a, b) {
-            //return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
-            return true;
-        };
-        CircleUtils.distanceBetween = /**
-        * Returns the distance from the center of the Circle object to the given object (can be Circle, Point or anything with x/y properties)
-        * @method distanceBetween
-        * @param {Circle} a - The Circle object.
-        * @param {Circle} b - The target object. Must have visible x and y properties that represent the center of the object.
-        * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
-        * @return {Number} The distance between this Point object and the destination Point object.
-        **/
-        function distanceBetween(a, target, round) {
-            if (typeof round === "undefined") { round = false; }
-            var dx = a.x - target.x;
-            var dy = a.y - target.y;
-            if(round === true) {
-                return Math.round(Math.sqrt(dx * dx + dy * dy));
-            } else {
-                return Math.sqrt(dx * dx + dy * dy);
-            }
-        };
-        CircleUtils.equals = /**
-        * Determines whether the two Circle objects match. This method compares the x, y and diameter properties.
-        * @method equals
-        * @param {Circle} a - The first Circle object.
-        * @param {Circle} b - The second Circle object.
-        * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
-        **/
-        function equals(a, b) {
-            return (a.x == b.x && a.y == b.y && a.diameter == b.diameter);
-        };
-        CircleUtils.intersects = /**
-        * Determines whether the two Circle objects intersect.
-        * This method checks the radius distances between the two Circle objects to see if they intersect.
-        * @method intersects
-        * @param {Circle} a - The first Circle object.
-        * @param {Circle} b - The second Circle object.
-        * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
-        **/
-        function intersects(a, b) {
-            return (CircleUtils.distanceBetween(a, b) <= (a.radius + b.radius));
-        };
-        CircleUtils.circumferencePoint = /**
-        * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
-        * @method circumferencePoint
-        * @param {Circle} a - The first Circle object.
-        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
-        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
-        * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
-        * @return {Phaser.Point} The Point object holding the result.
-        **/
-        function circumferencePoint(a, angle, asDegrees, out) {
-            if (typeof asDegrees === "undefined") { asDegrees = false; }
-            if (typeof out === "undefined") { out = new Phaser.Point(); }
-            if(asDegrees === true) {
-                angle = angle * Phaser.GameMath.DEG_TO_RAD;
-            }
-            return out.setTo(a.x + a.radius * Math.cos(angle), a.y + a.radius * Math.sin(angle));
-        };
-        CircleUtils.intersectsRectangle = /*
-        public static boolean intersect(Rectangle r, Circle c)
-        {
-        float cx = Math.abs(c.x - r.x - r.halfWidth);
-        float xDist = r.halfWidth + c.radius;
-        if (cx > xDist)
-        return false;
-        float cy = Math.abs(c.y - r.y - r.halfHeight);
-        float yDist = r.halfHeight + c.radius;
-        if (cy > yDist)
-        return false;
-        if (cx <= r.halfWidth || cy <= r.halfHeight)
-        return true;
-        float xCornerDist = cx - r.halfWidth;
-        float yCornerDist = cy - r.halfHeight;
-        float xCornerDistSq = xCornerDist * xCornerDist;
-        float yCornerDistSq = yCornerDist * yCornerDist;
-        float maxCornerDistSq = c.radius * c.radius;
-        return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
-        }
-        */
-        function intersectsRectangle(c, r) {
-            var cx = Math.abs(c.x - r.x - r.halfWidth);
-            var xDist = r.halfWidth + c.radius;
-            if(cx > xDist) {
-                return false;
-            }
-            var cy = Math.abs(c.y - r.y - r.halfHeight);
-            var yDist = r.halfHeight + c.radius;
-            if(cy > yDist) {
-                return false;
-            }
-            if(cx <= r.halfWidth || cy <= r.halfHeight) {
-                return true;
-            }
-            var xCornerDist = cx - r.halfWidth;
-            var yCornerDist = cy - r.halfHeight;
-            var xCornerDistSq = xCornerDist * xCornerDist;
-            var yCornerDistSq = yCornerDist * yCornerDist;
-            var maxCornerDistSq = c.radius * c.radius;
-            return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
-        };
-        return CircleUtils;
-    })();
-    Phaser.CircleUtils = CircleUtils;    
-})(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
 /// <reference path="../math/Vec2.ts" />
 /// <reference path="../math/Mat3.ts" />
 /**
@@ -21203,956 +19133,400 @@ var Phaser;
     })();
     Phaser.Mat3Utils = Mat3Utils;    
 })(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="Vec2Utils.ts" />
+/**
+* Phaser - 2D Transform
+*
+* A 2D Transform
+*/
 var Phaser;
 (function (Phaser) {
-    /// <reference path="../Game.ts" />
-    /// <reference path="../utils/RectangleUtils.ts" />
-    /// <reference path="../utils/CircleUtils.ts" />
-    /// <reference path="Body.ts" />
-    /// <reference path="../math/QuadTree.ts" />
-    /**
-    * Phaser - PhysicsManager
-    *
-    * Your game only has one PhysicsManager instance and it's responsible for looking after, creating and colliding
-    * all of the physics objects in the world.
-    */
-    (function (Physics) {
-        var ArcadePhysics = (function () {
-            function ArcadePhysics(game, width, height) {
-                this._length = 0;
-                /**
-                * @type {number}
-                */
-                this.worldDivisions = 6;
-                this.game = game;
-                this.gravity = new Phaser.Vec2();
-                this.drag = new Phaser.Vec2();
-                this.bounce = new Phaser.Vec2();
-                this.angularDrag = 0;
-                this.bounds = new Phaser.Rectangle(0, 0, width, height);
-                this._distance = new Phaser.Vec2();
-                this._tangent = new Phaser.Vec2();
-                this.members = new Phaser.Group(game);
-            }
-            ArcadePhysics.OVERLAP_BIAS = 4;
-            ArcadePhysics.TILE_OVERLAP = false;
-            ArcadePhysics.prototype.updateMotion = /*
-            public update() {
-            
-            this._length = this._objects.length;
-            
-            for (var i = 0; i < this._length; i++)
-            {
-            if (this._objects[i])
-            {
-            this._objects[i].preUpdate();
-            this.updateMotion(this._objects[i]);
-            this.collideWorld(this._objects[i]);
-            
-            for (var x = 0; x < this._length; x++)
-            {
-            if (this._objects[x] && this._objects[x] !== this._objects[i])
-            {
-            //this.collideShapes(this._objects[i], this._objects[x]);
-            var r = this.NEWseparate(this._objects[i], this._objects[x]);
-            //console.log('sep', r);
-            }
-            }
-            
-            }
-            }
-            
-            }
-            
-            public render() {
-            
-            //  iterate through the objects here, updating and colliding
-            for (var i = 0; i < this._length; i++)
-            {
-            if (this._objects[i])
-            {
-            this._objects[i].render(this.game.stage.context);
-            }
-            }
-            
-            }
-            */
-            function (body) {
-                if(body.type == Phaser.Types.BODY_DISABLED) {
-                    return;
-                }
-                this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.gravity.x, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
-                body.angularVelocity += this._velocityDelta;
-                body.sprite.transform.rotation += body.angularVelocity * this.game.time.elapsed;
-                body.angularVelocity += this._velocityDelta;
-                this._velocityDelta = (this.computeVelocity(body.velocity.x, body.gravity.x, body.acceleration.x, body.drag.x) - body.velocity.x) / 2;
-                body.velocity.x += this._velocityDelta;
-                this._delta = body.velocity.x * this.game.time.elapsed;
-                body.velocity.x += this._velocityDelta;
-                //body.position.x += this._delta;
-                body.sprite.x += this._delta;
-                this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
-                body.velocity.y += this._velocityDelta;
-                this._delta = body.velocity.y * this.game.time.elapsed;
-                body.velocity.y += this._velocityDelta;
-                //body.position.y += this._delta;
-                body.sprite.y += this._delta;
-            };
-            ArcadePhysics.prototype.computeVelocity = /**
-            * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
-            *
-            * @param {number} Velocity Any component of velocity (e.g. 20).
-            * @param {number} Acceleration Rate at which the velocity is changing.
-            * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-            * @param {number} Max An absolute value cap for the velocity.
-            *
-            * @return {number} The altered Velocity value.
-            */
-            function (velocity, gravity, acceleration, drag, max) {
-                if (typeof gravity === "undefined") { gravity = 0; }
-                if (typeof acceleration === "undefined") { acceleration = 0; }
-                if (typeof drag === "undefined") { drag = 0; }
-                if (typeof max === "undefined") { max = 10000; }
-                if(acceleration !== 0) {
-                    velocity += (acceleration + gravity) * this.game.time.elapsed;
-                } else if(drag !== 0) {
-                    this._drag = drag * this.game.time.elapsed;
-                    if(velocity - this._drag > 0) {
-                        velocity = velocity - this._drag;
-                    } else if(velocity + this._drag < 0) {
-                        velocity += this._drag;
-                    } else {
-                        velocity = 0;
-                    }
-                    velocity += gravity;
-                }
-                if((velocity != 0) && (max != 10000)) {
-                    if(velocity > max) {
-                        velocity = max;
-                    } else if(velocity < -max) {
-                        velocity = -max;
-                    }
-                }
-                return velocity;
-            };
-            ArcadePhysics.prototype.separate = /**
-            * The core Collision separation method.
-            * @param body1 The first Physics.Body to separate
-            * @param body2 The second Physics.Body to separate
-            * @returns {boolean} Returns true if the bodies were separated, otherwise false.
-            */
-            function (body1, body2) {
-                this._separatedX = this.separateBodyX(body1, body2);
-                this._separatedY = this.separateBodyY(body1, body2);
-                return this._separatedX || this._separatedY;
-            };
-            ArcadePhysics.prototype.checkHullIntersection = function (body1, body2) {
-                return ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight));
-            };
-            ArcadePhysics.prototype.separateBodyX = /**
-            * Separates the two objects on their x axis
-            * @param object1 The first GameObject to separate
-            * @param object2 The second GameObject to separate
-            * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-            */
-            function (body1, body2) {
-                //  Can't separate two disabled or static objects
-                if((body1.type == Phaser.Types.BODY_DISABLED || body1.type == Phaser.Types.BODY_STATIC) && (body2.type == Phaser.Types.BODY_DISABLED || body2.type == Phaser.Types.BODY_STATIC)) {
-                    return false;
-                }
-                //  First, get the two object deltas
-                this._overlap = 0;
-                if(body1.deltaX != body2.deltaX) {
-                    if(Phaser.RectangleUtils.intersects(body1.bounds, body2.bounds)) {
-                        this._maxOverlap = body1.deltaXAbs + body2.deltaXAbs + PhysicsManager.OVERLAP_BIAS;
-                        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                        if(body1.deltaX > body2.deltaX) {
-                            this._overlap = body1.bounds.right - body2.bounds.x;
-                            if((this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.RIGHT) || !(body2.allowCollisions & Phaser.Types.LEFT)) {
-                                this._overlap = 0;
-                            } else {
-                                body1.touching |= Phaser.Types.RIGHT;
-                                body2.touching |= Phaser.Types.LEFT;
-                            }
-                        } else if(body1.deltaX < body2.deltaX) {
-                            this._overlap = body1.bounds.x - body2.bounds.width - body2.bounds.x;
-                            if((-this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.LEFT) || !(body2.allowCollisions & Phaser.Types.RIGHT)) {
-                                this._overlap = 0;
-                            } else {
-                                body1.touching |= Phaser.Types.LEFT;
-                                body2.touching |= Phaser.Types.RIGHT;
-                            }
-                        }
-                    }
-                }
-                //  Then adjust their positions and velocities accordingly (if there was any overlap)
-                if(this._overlap != 0) {
-                    this._obj1Velocity = body1.velocity.x;
-                    this._obj2Velocity = body2.velocity.x;
-                    /**
-                    * Dynamic = gives and receives impacts
-                    * Static = gives but doesn't receive impacts, cannot be moved by physics
-                    * Kinematic = gives impacts, but never receives, can be moved by physics
-                    */
-                    //  2 dynamic bodies will exchange velocities
-                    if(body1.type == Phaser.Types.BODY_DYNAMIC && body2.type == Phaser.Types.BODY_DYNAMIC) {
-                        this._overlap *= 0.5;
-                        body1.position.x = body1.position.x - this._overlap;
-                        body2.position.x += this._overlap;
-                        this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
-                        this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
-                        this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
-                        this._obj1NewVelocity -= this._average;
-                        this._obj2NewVelocity -= this._average;
-                        body1.velocity.x = this._average + this._obj1NewVelocity * body1.bounce.x;
-                        body2.velocity.x = this._average + this._obj2NewVelocity * body2.bounce.x;
-                    } else if(body2.type != Phaser.Types.BODY_DYNAMIC) {
-                        //  Body 2 is Static or Kinematic
-                        this._overlap *= 2;
-                        body1.position.x -= this._overlap;
-                        body1.velocity.x = this._obj2Velocity - this._obj1Velocity * body1.bounce.x;
-                    } else if(body1.type != Phaser.Types.BODY_DYNAMIC) {
-                        //  Body 1 is Static or Kinematic
-                        this._overlap *= 2;
-                        body2.position.x += this._overlap;
-                        body2.velocity.x = this._obj1Velocity - this._obj2Velocity * body2.bounce.x;
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            };
-            ArcadePhysics.prototype.separateBodyY = /**
-            * Separates the two objects on their y axis
-            * @param object1 The first GameObject to separate
-            * @param object2 The second GameObject to separate
-            * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
-            */
-            function (body1, body2) {
-                //  Can't separate two immovable objects
-                if((body1.type == Phaser.Types.BODY_DISABLED || body1.type == Phaser.Types.BODY_STATIC) && (body2.type == Phaser.Types.BODY_DISABLED || body2.type == Phaser.Types.BODY_STATIC)) {
-                    return false;
-                }
-                //  First, get the two object deltas
-                this._overlap = 0;
-                if(body1.deltaY != body2.deltaY) {
-                    if(Phaser.RectangleUtils.intersects(body1.bounds, body2.bounds)) {
-                        //  This is the only place to use the DeltaAbs values
-                        this._maxOverlap = body1.deltaYAbs + body2.deltaYAbs + PhysicsManager.OVERLAP_BIAS;
-                        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                        if(body1.deltaY > body2.deltaY) {
-                            this._overlap = body1.bounds.bottom - body2.bounds.y;
-                            if((this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.DOWN) || !(body2.allowCollisions & Phaser.Types.UP)) {
-                                this._overlap = 0;
-                            } else {
-                                body1.touching |= Phaser.Types.DOWN;
-                                body2.touching |= Phaser.Types.UP;
-                            }
-                        } else if(body1.deltaY < body2.deltaY) {
-                            this._overlap = body1.bounds.y - body2.bounds.height - body2.bounds.y;
-                            if((-this._overlap > this._maxOverlap) || !(body1.allowCollisions & Phaser.Types.UP) || !(body2.allowCollisions & Phaser.Types.DOWN)) {
-                                this._overlap = 0;
-                            } else {
-                                body1.touching |= Phaser.Types.UP;
-                                body2.touching |= Phaser.Types.DOWN;
-                            }
-                        }
-                    }
-                }
-                //  Then adjust their positions and velocities accordingly (if there was any overlap)
-                if(this._overlap != 0) {
-                    this._obj1Velocity = body1.velocity.y;
-                    this._obj2Velocity = body2.velocity.y;
-                    /**
-                    * Dynamic = gives and receives impacts
-                    * Static = gives but doesn't receive impacts, cannot be moved by physics
-                    * Kinematic = gives impacts, but never receives, can be moved by physics
-                    */
-                    if(body1.type == Phaser.Types.BODY_DYNAMIC && body2.type == Phaser.Types.BODY_DYNAMIC) {
-                        this._overlap *= 0.5;
-                        body1.position.y = body1.position.y - this._overlap;
-                        body2.position.y += this._overlap;
-                        this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
-                        this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
-                        var average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
-                        this._obj1NewVelocity -= average;
-                        this._obj2NewVelocity -= average;
-                        body1.velocity.y = average + this._obj1NewVelocity * body1.bounce.y;
-                        body2.velocity.y = average + this._obj2NewVelocity * body2.bounce.y;
-                    } else if(body2.type != Phaser.Types.BODY_DYNAMIC) {
-                        this._overlap *= 2;
-                        body1.position.y -= this._overlap;
-                        body1.velocity.y = this._obj2Velocity - this._obj1Velocity * body1.bounce.y;
-                        //  This is special case code that handles things like horizontal moving platforms you can ride
-                        //if (body2.parent.active && body2.moves && (body1.deltaY > body2.deltaY))
-                        if(body2.sprite.active && (body1.deltaY > body2.deltaY)) {
-                            body1.position.x += body2.position.x - body2.oldPosition.x;
-                        }
-                    } else if(body1.type != Phaser.Types.BODY_DYNAMIC) {
-                        this._overlap *= 2;
-                        body2.position.y += this._overlap;
-                        body2.velocity.y = this._obj1Velocity - this._obj2Velocity * body2.bounce.y;
-                        //  This is special case code that handles things like horizontal moving platforms you can ride
-                        //if (object1.active && body1.moves && (body1.deltaY < body2.deltaY))
-                        if(body1.sprite.active && (body1.deltaY < body2.deltaY)) {
-                            body2.position.x += body1.position.x - body1.oldPosition.x;
-                        }
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            };
-            ArcadePhysics.prototype.overlap = /*
-            private TILEseparate(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
-            
-            if (tangent.x == 1)
-            {
-            console.log('1 The left side of ShapeA hit the right side of ShapeB', Math.floor(distance.x));
-            shapeA.physics.touching |= Phaser.Types.LEFT;
-            shapeB.physics.touching |= Phaser.Types.RIGHT;
-            }
-            else if (tangent.x == -1)
-            {
-            console.log('2 The right side of ShapeA hit the left side of ShapeB', Math.floor(distance.x));
-            shapeA.physics.touching |= Phaser.Types.RIGHT;
-            shapeB.physics.touching |= Phaser.Types.LEFT;
-            }
-            
-            if (tangent.y == 1)
-            {
-            console.log('3 The top of ShapeA hit the bottom of ShapeB', Math.floor(distance.y));
-            shapeA.physics.touching |= Phaser.Types.UP;
-            shapeB.physics.touching |= Phaser.Types.DOWN;
-            }
-            else if (tangent.y == -1)
-            {
-            console.log('4 The bottom of ShapeA hit the top of ShapeB', Math.floor(distance.y));
-            shapeA.physics.touching |= Phaser.Types.DOWN;
-            shapeB.physics.touching |= Phaser.Types.UP;
-            }
-            
-            
-            //  only apply collision response forces if the object is travelling into, and not out of, the collision
-            var dot = Vec2Utils.dot(shapeA.physics.velocity, tangent);
-            
-            if (dot < 0)
-            {
-            console.log('in to', dot);
-            
-            //  Apply horizontal bounce
-            if (shapeA.physics.bounce.x > 0)
-            {
-            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
-            }
-            else
-            {
-            shapeA.physics.velocity.x = 0;
-            }
-            //  Apply horizontal bounce
-            if (shapeA.physics.bounce.y > 0)
-            {
-            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
-            }
-            else
-            {
-            shapeA.physics.velocity.y = 0;
-            }
-            }
-            else
-            {
-            console.log('out of', dot);
-            }
-            
-            shapeA.position.x += Math.floor(distance.x);
-            //shapeA.bounds.x += Math.floor(distance.x);
-            
-            shapeA.position.y += Math.floor(distance.y);
-            //shapeA.bounds.y += distance.y;
-            
-            console.log('------------------------------------------------');
-            
-            }
-            
-            private collideWorld(shape:IPhysicsShape) {
-            
-            //  Collide on the x-axis
-            this._distance.x = shape.world.bounds.x - (shape.position.x - shape.bounds.halfWidth);
-            
-            if (0 < this._distance.x)
-            {
-            //  Hit Left
-            this._tangent.setTo(1, 0);
-            this.separateXWall(shape, this._distance, this._tangent);
-            }
-            else
-            {
-            this._distance.x = (shape.position.x + shape.bounds.halfWidth) - shape.world.bounds.right;
-            
-            if (0 < this._distance.x)
-            {
-            //  Hit Right
-            this._tangent.setTo(-1, 0);
-            this._distance.reverse();
-            this.separateXWall(shape, this._distance, this._tangent);
-            }
-            }
-            
-            //  Collide on the y-axis
-            this._distance.y = shape.world.bounds.y - (shape.position.y - shape.bounds.halfHeight);
-            
-            if (0 < this._distance.y)
-            {
-            //  Hit Top
-            this._tangent.setTo(0, 1);
-            this.separateYWall(shape, this._distance, this._tangent);
-            }
-            else
-            {
-            this._distance.y = (shape.position.y + shape.bounds.halfHeight) - shape.world.bounds.bottom;
-            
-            if (0 < this._distance.y)
-            {
-            //  Hit Bottom
-            this._tangent.setTo(0, -1);
-            this._distance.reverse();
-            this.separateYWall(shape, this._distance, this._tangent);
-            }
-            }
-            
-            }
-            
-            private separateX(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
-            
-            if (tangent.x == 1)
-            {
-            console.log('The left side of ShapeA hit the right side of ShapeB', distance.x);
-            shapeA.physics.touching |= Phaser.Types.LEFT;
-            shapeB.physics.touching |= Phaser.Types.RIGHT;
-            }
-            else
-            {
-            console.log('The right side of ShapeA hit the left side of ShapeB', distance.x);
-            shapeA.physics.touching |= Phaser.Types.RIGHT;
-            shapeB.physics.touching |= Phaser.Types.LEFT;
-            }
-            
-            //  collision edges
-            //shapeA.oH = tangent.x;
-            
-            //  only apply collision response forces if the object is travelling into, and not out of, the collision
-            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
-            {
-            //  Apply horizontal bounce
-            if (shapeA.physics.bounce.x > 0)
-            {
-            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
-            }
-            else
-            {
-            shapeA.physics.velocity.x = 0;
-            }
-            }
-            
-            shapeA.position.x += distance.x;
-            shapeA.bounds.x += distance.x;
-            
-            }
-            
-            private separateY(shapeA: IPhysicsShape, shapeB: IPhysicsShape, distance: Vec2, tangent: Vec2) {
-            
-            if (tangent.y == 1)
-            {
-            console.log('The top of ShapeA hit the bottom of ShapeB', distance.y);
-            shapeA.physics.touching |= Phaser.Types.UP;
-            shapeB.physics.touching |= Phaser.Types.DOWN;
-            }
-            else
-            {
-            console.log('The bottom of ShapeA hit the top of ShapeB', distance.y);
-            shapeA.physics.touching |= Phaser.Types.DOWN;
-            shapeB.physics.touching |= Phaser.Types.UP;
-            }
-            
-            //  collision edges
-            //shapeA.oV = tangent.y;
-            
-            //  only apply collision response forces if the object is travelling into, and not out of, the collision
-            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
-            {
-            //  Apply horizontal bounce
-            if (shapeA.physics.bounce.y > 0)
-            {
-            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
-            }
-            else
-            {
-            shapeA.physics.velocity.y = 0;
-            }
-            }
-            
-            shapeA.position.y += distance.y;
-            shapeA.bounds.y += distance.y;
-            
-            }
-            
-            private separateXWall(shapeA: IPhysicsShape, distance: Vec2, tangent: Vec2) {
-            
-            if (tangent.x == 1)
-            {
-            console.log('The left side of ShapeA hit the right side of ShapeB', distance.x);
-            shapeA.physics.touching |= Phaser.Types.LEFT;
-            }
-            else
-            {
-            console.log('The right side of ShapeA hit the left side of ShapeB', distance.x);
-            shapeA.physics.touching |= Phaser.Types.RIGHT;
-            }
-            
-            //  collision edges
-            //shapeA.oH = tangent.x;
-            
-            //  only apply collision response forces if the object is travelling into, and not out of, the collision
-            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
-            {
-            //  Apply horizontal bounce
-            if (shapeA.physics.bounce.x > 0)
-            {
-            shapeA.physics.velocity.x *= -(shapeA.physics.bounce.x);
-            }
-            else
-            {
-            shapeA.physics.velocity.x = 0;
-            }
-            }
-            
-            shapeA.position.x += distance.x;
-            
-            }
-            
-            private separateYWall(shapeA: IPhysicsShape, distance: Vec2, tangent: Vec2) {
-            
-            if (tangent.y == 1)
-            {
-            console.log('The top of ShapeA hit the bottom of ShapeB', distance.y);
-            shapeA.physics.touching |= Phaser.Types.UP;
-            }
-            else
-            {
-            console.log('The bottom of ShapeA hit the top of ShapeB', distance.y);
-            shapeA.physics.touching |= Phaser.Types.DOWN;
-            }
-            
-            //  collision edges
-            //shapeA.oV = tangent.y;
-            
-            //  only apply collision response forces if the object is travelling into, and not out of, the collision
-            if (Vec2Utils.dot(shapeA.physics.velocity, tangent) < 0)
-            {
-            //  Apply horizontal bounce
-            if (shapeA.physics.bounce.y > 0)
-            {
-            shapeA.physics.velocity.y *= -(shapeA.physics.bounce.y);
-            }
-            else
-            {
-            shapeA.physics.velocity.y = 0;
-            }
-            }
-            
-            shapeA.position.y += distance.y;
-            
-            }
-            */
-            /**
-            * Checks for overlaps between two objects using the world QuadTree. Can be Sprite vs. Sprite, Sprite vs. Group or Group vs. Group.
-            * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-            * @param object1 The first Sprite or Group to check. If null the world.group is used.
-            * @param object2 The second Sprite or Group to check.
-            * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-            * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-            * @param context The context in which the callbacks will be called
-            * @returns {boolean} true if the objects overlap, otherwise false.
-            */
-            function (object1, object2, notifyCallback, processCallback, context) {
-                if (typeof object1 === "undefined") { object1 = null; }
-                if (typeof object2 === "undefined") { object2 = null; }
-                if (typeof notifyCallback === "undefined") { notifyCallback = null; }
-                if (typeof processCallback === "undefined") { processCallback = null; }
-                if (typeof context === "undefined") { context = null; }
-                /*
-                if (object1 == null)
-                {
-                object1 = this.game.world.group;
-                }
-                
-                if (object2 == object1)
-                {
-                object2 = null;
-                }
-                
-                QuadTree.divisions = this.worldDivisions;
-                
-                this._quadTree = new Phaser.QuadTree(this, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-                
-                this._quadTree.load(object1, object2, notifyCallback, processCallback, context);
-                
-                this._quadTreeResult = this._quadTree.execute();
-                
-                console.log('over', this._quadTreeResult);
-                
-                this._quadTree.destroy();
-                
-                this._quadTree = null;
-                
-                return this._quadTreeResult;
-                */
-                return false;
-            };
-            ArcadePhysics.prototype.separateTile = /**
-            * Collision resolution specifically for GameObjects vs. Tiles.
-            * @param object The GameObject to separate
-            * @param tile The Tile to separate
-            * @returns {boolean} Whether the objects in fact touched and were separated
-            */
-            function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
-                //var separatedX: bool = this.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
-                //var separatedY: bool = this.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
-                //return separatedX || separatedY;
-                return false;
-            };
-            return ArcadePhysics;
-        })();
-        Physics.ArcadePhysics = ArcadePhysics;        
+    var Transform = (function () {
         /**
-        * Separates the two objects on their x axis
-        * @param object The GameObject to separate
-        * @param tile The Tile to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        * Creates a new 2D Transform object.
+        * @class Transform
+        * @constructor
+        * @return {Transform} This object
+        **/
+        function Transform(pos, angle) {
+            this.t = Phaser.Vec2Utils.clone(pos);
+            this.c = Math.cos(angle);
+            this.s = Math.sin(angle);
+            this.angle = angle;
+        }
+        Transform.prototype.toString = function () {
+            return 't=' + this.t.toString() + ' c=' + this.c + ' s=' + this.s + ' a=' + this.angle;
+        };
+        Transform.prototype.setTo = function (pos, angle) {
+            this.t.copyFrom(pos);
+            this.c = Math.cos(angle);
+            this.s = Math.sin(angle);
+            return this;
+        };
+        Transform.prototype.setRotation = function (angle) {
+            if(angle !== this.angle) {
+                this.c = Math.cos(angle);
+                this.s = Math.sin(angle);
+                this.angle = angle;
+            }
+            return this;
+        };
+        Transform.prototype.setPosition = function (p) {
+            this.t.copyFrom(p);
+            return this;
+        };
+        Transform.prototype.identity = function () {
+            this.t.setTo(0, 0);
+            this.c = 1;
+            this.s = 0;
+            return this;
+        };
+        return Transform;
+    })();
+    Phaser.Transform = Transform;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../Game.ts" />
+/// <reference path="Vec2.ts" />
+/// <reference path="Transform.ts" />
+/**
+* Phaser - TransformUtils
+*
+* A collection of methods useful for manipulating and performing operations on 2D Transforms.
+*
+*/
+var Phaser;
+(function (Phaser) {
+    var TransformUtils = (function () {
+        function TransformUtils() { }
+        TransformUtils.rotate = function rotate(t, v, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            //return new vec2(v.x * this.c - v.y * this.s, v.x * this.s + v.y * this.c);
+            return out.setTo(v.x * t.c - v.y * t.s, v.x * t.s + v.y * t.c);
+        };
+        TransformUtils.unrotate = function unrotate(t, v, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            //return new vec2(v.x * this.c + v.y * this.s, -v.x * this.s + v.y * this.c);
+            return out.setTo(v.x * t.c + v.y * t.s, -v.x * t.s + v.y * t.c);
+        };
+        TransformUtils.transform = function transform(t, v, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            //return new vec2(v.x * this.c - v.y * this.s + this.t.x, v.x * this.s + v.y * this.c + this.t.y);
+            return out.setTo(v.x * t.c - v.y * t.s + t.t.x, v.x * t.s + v.y * t.c + t.t.y);
+        };
+        TransformUtils.untransform = function untransform(t, v, out) {
+            if (typeof out === "undefined") { out = new Phaser.Vec2(); }
+            var px = v.x - t.t.x;
+            var py = v.y - t.t.y;
+            //return new vec2(px * this.c + py * this.s, -px * this.s + py * this.c);
+            return out.setTo(px * t.c + py * t.s, -px * t.s + py * t.c);
+        };
+        return TransformUtils;
+    })();
+    Phaser.TransformUtils = TransformUtils;    
+})(Phaser || (Phaser = {}));
+/// <reference path="../../Game.ts" />
+/// <reference path="../../gameobjects/Sprite.ts" />
+/**
+* Phaser - Motion
+*
+* The Motion class contains lots of useful functions for moving game objects around in world space.
+*/
+var Phaser;
+(function (Phaser) {
+    var Motion = (function () {
+        function Motion(game) {
+            this.game = game;
+        }
+        Motion.prototype.velocityFromAngle = /**
+        * Given the angle and speed calculate the velocity and return it as a Point
+        *
+        * @param {number} angle The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+        * @param {number} speed The speed it will move, in pixels per second sq
+        *
+        * @return {Point} A Point where Point.x contains the velocity x value and Point.y contains the velocity y value
         */
-        /*
-        public separateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
-        
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
-        {
-        return false;
-        }
-        
-        //  First, get the object delta
-        var overlap: number = 0;
-        var objDelta: number = object.x - object.last.x;
-        //var objDelta: number = object.collisionMask.deltaX;
-        
-        if (objDelta != 0)
-        {
-        //  Check if the X hulls actually overlap
-        var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-        //var objDeltaAbs: number = object.collisionMask.deltaXAbs;
-        var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
-        
-        if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
-        {
-        var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
-        
-        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-        if (objDelta > 0)
-        {
-        overlap = object.x + object.width - x;
-        
-        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
-        {
-        overlap = 0;
-        }
-        else
-        {
-        object.touching |= Collision.RIGHT;
-        }
-        }
-        else if (objDelta < 0)
-        {
-        overlap = object.x - width - x;
-        
-        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
-        {
-        overlap = 0;
-        }
-        else
-        {
-        object.touching |= Collision.LEFT;
-        }
-        
-        }
-        
-        }
-        }
-        
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (overlap != 0)
-        {
-        if (separate == true)
-        {
-        //console.log('
-        object.x = object.x - overlap;
-        object.velocity.x = -(object.velocity.x * object.elasticity);
-        }
-        
-        Collision.TILE_OVERLAP = true;
-        return true;
-        }
-        else
-        {
-        return false;
-        }
-        
-        }
+        function (angle, speed) {
+            if(isNaN(speed)) {
+                speed = 0;
+            }
+            var a = this.game.math.degreesToRadians(angle);
+            return new Phaser.Point((Math.cos(a) * speed), (Math.sin(a) * speed));
+        };
+        Motion.prototype.moveTowardsObject = /**
+        * Sets the source Sprite x/y velocity so it will move directly towards the destination Sprite at the speed given (in pixels per second)<br>
+        * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
+        * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
+        * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+        * If you need the object to accelerate, see accelerateTowardsObject() instead
+        * Note: Doesn't take into account acceleration, maxVelocity or drag (if you set drag or acceleration too high this object may not move at all)
+        *
+        * @param {Sprite} source The Sprite on which the velocity will be set
+        * @param {Sprite} dest The Sprite where the source object will move to
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
-        /**
-        * Separates the two objects on their y axis
-        * @param object The first GameObject to separate
-        * @param tile The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        function (source, dest, speed, maxTime) {
+            if (typeof speed === "undefined") { speed = 60; }
+            if (typeof maxTime === "undefined") { maxTime = 0; }
+            var a = this.angleBetween(source, dest);
+            if(maxTime > 0) {
+                var d = this.distanceBetween(source, dest);
+                //	We know how many pixels we need to move, but how fast?
+                speed = d / (maxTime / 1000);
+            }
+            source.body.velocity.x = Math.cos(a) * speed;
+            source.body.velocity.y = Math.sin(a) * speed;
+        };
+        Motion.prototype.accelerateTowardsObject = /**
+        * Sets the x/y acceleration on the source Sprite so it will move towards the destination Sprite at the speed given (in pixels per second)<br>
+        * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
+        * If you don't need acceleration look at moveTowardsObject() instead.
+        *
+        * @param {Sprite} source The Sprite on which the acceleration will be set
+        * @param {Sprite} dest The Sprite where the source object will move towards
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
-        /*
-        public separateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
-        
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
-        {
-        return false;
-        }
-        
-        //  First, get the two object deltas
-        var overlap: number = 0;
-        var objDelta: number = object.y - object.last.y;
-        
-        if (objDelta != 0)
-        {
-        //  Check if the Y hulls actually overlap
-        var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-        var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
-        
-        if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
-        {
-        var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
-        
-        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-        if (objDelta > 0)
-        {
-        overlap = object.y + object.height - y;
-        
-        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
-        {
-        overlap = 0;
-        }
-        else
-        {
-        object.touching |= Collision.DOWN;
-        }
-        }
-        else if (objDelta < 0)
-        {
-        overlap = object.y - height - y;
-        
-        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
-        {
-        overlap = 0;
-        }
-        else
-        {
-        object.touching |= Collision.UP;
-        }
-        }
-        }
-        }
-        
-        // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
-        
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (overlap != 0)
-        {
-        if (separate == true)
-        {
-        object.y = object.y - overlap;
-        object.velocity.y = -(object.velocity.y * object.elasticity);
-        }
-        
-        Collision.TILE_OVERLAP = true;
-        return true;
-        }
-        else
-        {
-        return false;
-        }
-        }
+        function (source, dest, speed, xSpeedMax, ySpeedMax) {
+            /*
+            var a: number = this.angleBetween(source, dest);
+            
+            source.body.velocity.x = 0;
+            source.body.velocity.y = 0;
+            
+            source.body.acceleration.x = Math.cos(a) * speed;
+            source.body.acceleration.y = Math.sin(a) * speed;
+            
+            source.body.maxVelocity.x = xSpeedMax;
+            source.body.maxVelocity.y = ySpeedMax;
+            */
+                    };
+        Motion.prototype.moveTowardsMouse = /**
+        * Move the given Sprite towards the mouse pointer coordinates at a steady velocity
+        * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
+        * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
+        * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+        *
+        * @param {Sprite} source The Sprite to move
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
-        /**
-        * Separates the two objects on their x axis
-        * @param object The GameObject to separate
-        * @param tile The Tile to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+        function (source, speed, maxTime) {
+            if (typeof speed === "undefined") { speed = 60; }
+            if (typeof maxTime === "undefined") { maxTime = 0; }
+            var a = this.angleBetweenMouse(source);
+            if(maxTime > 0) {
+                var d = this.distanceToMouse(source);
+                //	We know how many pixels we need to move, but how fast?
+                speed = d / (maxTime / 1000);
+            }
+            source.body.velocity.x = Math.cos(a) * speed;
+            source.body.velocity.y = Math.sin(a) * speed;
+        };
+        Motion.prototype.accelerateTowardsMouse = /**
+        * Sets the x/y acceleration on the source Sprite so it will move towards the mouse coordinates at the speed given (in pixels per second)<br>
+        * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
+        * If you don't need acceleration look at moveTowardsMouse() instead.
+        *
+        * @param {Sprite} source The Sprite on which the acceleration will be set
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
-        /*
-        public static NEWseparateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
-        
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
-        {
-        return false;
-        }
-        
-        //  First, get the object delta
-        var overlap: number = 0;
-        
-        if (object.collisionMask.deltaX != 0)
-        {
-        //  Check if the X hulls actually overlap
-        //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-        //var objBounds: Rectangle = new Rectangle(object.x - ((objDelta > 0) ? objDelta : 0), object.last.y, object.width + ((objDelta > 0) ? objDelta : -objDelta), object.height);
-        
-        //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
-        if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
-        {
-        var maxOverlap: number = object.collisionMask.deltaXAbs + Collision.OVERLAP_BIAS;
-        
-        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-        if (object.collisionMask.deltaX > 0)
-        {
-        //overlap = object.x + object.width - x;
-        overlap = object.collisionMask.right - x;
-        
-        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.RIGHT) || collideLeft == false)
-        {
-        overlap = 0;
-        }
-        else
-        {
-        object.touching |= Collision.RIGHT;
-        }
-        }
-        else if (object.collisionMask.deltaX < 0)
-        {
-        //overlap = object.x - width - x;
-        overlap = object.collisionMask.x - width - x;
-        
-        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.LEFT) || collideRight == false)
-        {
-        overlap = 0;
-        }
-        else
-        {
-        object.touching |= Collision.LEFT;
-        }
-        
-        }
-        
-        }
-        }
-        
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (overlap != 0)
-        {
-        if (separate == true)
-        {
-        object.x = object.x - overlap;
-        object.velocity.x = -(object.velocity.x * object.elasticity);
-        }
-        
-        Collision.TILE_OVERLAP = true;
-        return true;
-        }
-        else
-        {
-        return false;
-        }
-        
-        }
+        function (source, speed, xSpeedMax, ySpeedMax) {
+            /*
+            var a: number = this.angleBetweenMouse(source);
+            
+            source.body.velocity.x = 0;
+            source.body.velocity.y = 0;
+            
+            source.body.acceleration.x = Math.cos(a) * speed;
+            source.body.acceleration.y = Math.sin(a) * speed;
+            
+            source.body.maxVelocity.x = xSpeedMax;
+            source.body.maxVelocity.y = ySpeedMax;
+            */
+                    };
+        Motion.prototype.moveTowardsPoint = /**
+        * Sets the x/y velocity on the source Sprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
+        * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
+        * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
+        * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+        *
+        * @param {Sprite} source The Sprite to move
+        * @param {Point} target The Point coordinates to move the source Sprite towards
+        * @param {number} speed The speed it will move, in pixels per second (default is 60 pixels/sec)
+        * @param {number} maxTime Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
         */
-        /**
-        * Separates the two objects on their y axis
-        * @param object The first GameObject to separate
-        * @param tile The second GameObject to separate
-        * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+        function (source, target, speed, maxTime) {
+            if (typeof speed === "undefined") { speed = 60; }
+            if (typeof maxTime === "undefined") { maxTime = 0; }
+            var a = this.angleBetweenPoint(source, target);
+            if(maxTime > 0) {
+                var d = this.distanceToPoint(source, target);
+                //	We know how many pixels we need to move, but how fast?
+                speed = d / (maxTime / 1000);
+            }
+            source.body.velocity.x = Math.cos(a) * speed;
+            source.body.velocity.y = Math.sin(a) * speed;
+        };
+        Motion.prototype.accelerateTowardsPoint = /**
+        * Sets the x/y acceleration on the source Sprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
+        * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
+        * If you don't need acceleration look at moveTowardsPoint() instead.
+        *
+        * @param {Sprite} source The Sprite on which the acceleration will be set
+        * @param {Point} target The Point coordinates to move the source Sprite towards
+        * @param {number} speed The speed it will accelerate in pixels per second
+        * @param {number} xSpeedMax The maximum speed in pixels per second in which the sprite can move horizontally
+        * @param {number} ySpeedMax The maximum speed in pixels per second in which the sprite can move vertically
         */
-        /*
-        public NEWseparateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
-        
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
-        {
-        return false;
-        }
-        
-        //  First, get the two object deltas
-        var overlap: number = 0;
-        //var objDelta: number = object.y - object.last.y;
-        
-        if (object.collisionMask.deltaY != 0)
-        {
-        //  Check if the Y hulls actually overlap
-        //var objDeltaAbs: number = (objDelta > 0) ? objDelta : -objDelta;
-        //var objBounds: Rectangle = new Rectangle(object.x, object.y - ((objDelta > 0) ? objDelta : 0), object.width, object.height + objDeltaAbs);
-        
-        //if ((objBounds.x + objBounds.width > x) && (objBounds.x < x + width) && (objBounds.y + objBounds.height > y) && (objBounds.y < y + height))
-        if (object.collisionMask.intersectsRaw(x, x + width, y, y + height))
-        {
-        //var maxOverlap: number = objDeltaAbs + Collision.OVERLAP_BIAS;
-        var maxOverlap: number = object.collisionMask.deltaYAbs + Collision.OVERLAP_BIAS;
-        
-        //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-        if (object.collisionMask.deltaY > 0)
-        {
-        //overlap = object.y + object.height - y;
-        overlap = object.collisionMask.bottom - y;
-        
-        if ((overlap > maxOverlap) || !(object.allowCollisions & Collision.DOWN) || collideUp == false)
-        {
-        overlap = 0;
-        }
-        else
-        {
-        object.touching |= Collision.DOWN;
-        }
-        }
-        else if (object.collisionMask.deltaY < 0)
-        {
-        //overlap = object.y - height - y;
-        overlap = object.collisionMask.y - height - y;
-        
-        if ((-overlap > maxOverlap) || !(object.allowCollisions & Collision.UP) || collideDown == false)
-        {
-        overlap = 0;
-        }
-        else
-        {
-        object.touching |= Collision.UP;
-        }
-        }
-        }
-        }
-        
-        // TODO - with super low velocities you get lots of stuttering, set some kind of base minimum here
-        
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (overlap != 0)
-        {
-        if (separate == true)
-        {
-        object.y = object.y - overlap;
-        object.velocity.y = -(object.velocity.y * object.elasticity);
-        }
-        
-        Collision.TILE_OVERLAP = true;
-        return true;
-        }
-        else
-        {
-        return false;
-        }
-        }
+        function (source, target, speed, xSpeedMax, ySpeedMax) {
+            /*
+            var a: number = this.angleBetweenPoint(source, target);
+            
+            source.body.velocity.x = 0;
+            source.body.velocity.y = 0;
+            
+            source.body.acceleration.x = Math.cos(a) * speed;
+            source.body.acceleration.y = Math.sin(a) * speed;
+            
+            source.body.maxVelocity.x = xSpeedMax;
+            source.body.maxVelocity.y = ySpeedMax;
+            */
+                    };
+        Motion.prototype.distanceBetween = /**
+        * Find the distance between two Sprites, taking their origin into account
+        *
+        * @param {Sprite} a The first Sprite
+        * @param {Sprite} b The second Sprite
+        * @return {number} int Distance (in pixels)
         */
-            })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
+        function (a, b) {
+            return Phaser.Vec2Utils.distance(a.body.position, b.body.position);
+        };
+        Motion.prototype.distanceToPoint = /**
+        * Find the distance from an Sprite to the given Point, taking the source origin into account
+        *
+        * @param {Sprite} a The Sprite
+        * @param {Point} target The Point
+        * @return {number} Distance (in pixels)
+        */
+        function (a, target) {
+            var dx = (a.x + a.transform.origin.x) - (target.x);
+            var dy = (a.y + a.transform.origin.y) - (target.y);
+            return this.game.math.vectorLength(dx, dy);
+        };
+        Motion.prototype.distanceToMouse = /**
+        * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
+        *
+        * @param {Sprite} a  Sprite to test against
+        * @return {number} The distance between the given sprite and the mouse coordinates
+        */
+        function (a) {
+            var dx = (a.x + a.transform.origin.x) - this.game.input.x;
+            var dy = (a.y + a.transform.origin.y) - this.game.input.y;
+            return this.game.math.vectorLength(dx, dy);
+        };
+        Motion.prototype.angleBetweenPoint = /**
+        * Find the angle (in radians) between an Sprite and an Point. The source sprite takes its x/y and origin into account.
+        * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+        *
+        * @param {Sprite} a The Sprite to test from
+        * @param {Point} target The Point to angle the Sprite towards
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
+        *
+        * @return {number} The angle (in radians unless asDegrees is true)
+        */
+        function (a, target, asDegrees) {
+            if (typeof asDegrees === "undefined") { asDegrees = false; }
+            var dx = (target.x) - (a.x + a.transform.origin.x);
+            var dy = (target.y) - (a.y + a.transform.origin.y);
+            if(asDegrees) {
+                return this.game.math.radiansToDegrees(Math.atan2(dy, dx));
+            } else {
+                return Math.atan2(dy, dx);
+            }
+        };
+        Motion.prototype.angleBetween = /**
+        * Find the angle (in radians) between the two Sprite, taking their x/y and origin into account.
+        * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+        *
+        * @param {Sprite} a The Sprite to test from
+        * @param {Sprite} b The Sprite to test to
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
+        *
+        * @return {number} The angle (in radians unless asDegrees is true)
+        */
+        function (a, b, asDegrees) {
+            if (typeof asDegrees === "undefined") { asDegrees = false; }
+            var dx = (b.x + b.transform.origin.x) - (a.x + a.transform.origin.x);
+            var dy = (b.y + b.transform.origin.y) - (a.y + a.transform.origin.y);
+            if(asDegrees) {
+                return this.game.math.radiansToDegrees(Math.atan2(dy, dx));
+            } else {
+                return Math.atan2(dy, dx);
+            }
+        };
+        Motion.prototype.velocityFromFacing = /**
+        * Given the Sprite and speed calculate the velocity and return it as an Point based on the direction the sprite is facing
+        *
+        * @param {Sprite} parent The Sprite to get the facing value from
+        * @param {number} speed The speed it will move, in pixels per second sq
+        *
+        * @return {Point} An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
+        */
+        function (parent, speed) {
+            /*
+            var a: number;
+            
+            if (parent.body.facing == Types.LEFT)
+            {
+            a = this.game.math.degreesToRadians(180);
+            }
+            else if (parent.body.facing == Types.RIGHT)
+            {
+            a = this.game.math.degreesToRadians(0);
+            }
+            else if (parent.body.facing == Types.UP)
+            {
+            a = this.game.math.degreesToRadians(-90);
+            }
+            else if (parent.body.facing == Types.DOWN)
+            {
+            a = this.game.math.degreesToRadians(90);
+            }
+            
+            return new Point(Math.cos(a) * speed, Math.sin(a) * speed);
+            */
+            return new Phaser.Point();
+        };
+        Motion.prototype.angleBetweenMouse = /**
+        * Find the angle (in radians) between an Sprite and the mouse, taking their x/y and origin into account.
+        * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+        *
+        * @param {Sprite} a The Object to test from
+        * @param {boolean} asDegrees If you need the value in degrees instead of radians, set to true
+        *
+        * @return {number} The angle (in radians unless asDegrees is true)
+        */
+        function (a, asDegrees) {
+            if (typeof asDegrees === "undefined") { asDegrees = false; }
+            //	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
+            var p = Phaser.SpriteUtils.getScreenXY(a);
+            var dx = a.game.input.x - p.x;
+            var dy = a.game.input.y - p.y;
+            if(asDegrees) {
+                return this.game.math.radiansToDegrees(Math.atan2(dy, dx));
+            } else {
+                return Math.atan2(dy, dx);
+            }
+        };
+        return Motion;
+    })();
+    Phaser.Motion = Motion;    
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../geom/Point.ts" />
@@ -22248,7 +19622,7 @@ var Phaser;
             this.input = game.input;
             this.load = game.load;
             this.math = game.math;
-            this.motion = game.motion;
+            //this.motion = game.motion;
             this.sound = game.sound;
             this.stage = game.stage;
             this.time = game.time;
