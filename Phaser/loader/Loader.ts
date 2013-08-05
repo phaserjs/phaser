@@ -330,8 +330,6 @@ module Phaser {
                 case 'audio':
 
                     file.url = this.getAudioURL(file.url);
-                    //console.log('Loader audio');
-                    //console.log(file.url);
 
                     if (file.url !== null)
                     {
@@ -349,7 +347,6 @@ module Phaser {
                             if (this._game.sound.touchLocked)
                             {
                                 //  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
-                                //console.log('Audio is touch locked');
                                 file.data = new Audio();
                                 file.data.name = file.key;
                                 file.data.preload = 'auto';
@@ -363,7 +360,7 @@ module Phaser {
                                 file.data.onerror = () => this.fileError(file.key);
                                 file.data.preload = 'auto';
                                 file.data.src = file.url;
-                                file.data.addEventListener('canplaythrough', () => this.fileComplete(file.key), false);
+                                file.data.addEventListener('canplaythrough', Phaser.GAMES[this._game.id].load.fileComplete(file.key), false);
                                 file.data.load();
                             }
                         }
@@ -425,6 +422,12 @@ module Phaser {
          */
         private fileComplete(key: string) {
 
+            if (!this._fileList[key])
+            {
+                throw new Error('Phaser.Loader fileComplete invalid key ' + key);
+                return;
+            }
+            
             this._fileList[key].loaded = true;
 
             var file = this._fileList[key];
@@ -491,6 +494,7 @@ module Phaser {
                     }
                     else
                     {
+                        file.data.removeEventListener('canplaythrough', Phaser.GAMES[this._game.id].load.fileComplete);
                         this._game.cache.addSound(file.key, file.url, file.data, false, true);
                     }
                     break;

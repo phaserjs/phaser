@@ -22,8 +22,10 @@
         //  Finally we set the fill color that is put over the top of the mirror effect.
         mirror.start(0, 400, new Phaser.Rectangle(0, 0, 800, 400), 'rgba(0, 0, 100, 0.7)');
         //  Experiment with variations on these to see the different mirror effects that can be achieved.
-        mirror.flipX = true;
+        //mirror.flipX = true;
         //mirror.flipY = true;
+        //  The Mirror FX will literally mirror EVERYTHING that was rendered to the camera, in the case of this test it's
+        //  just a single image, but when used on a full game it can look really quite neat.
         game.add.sprite(0, 0, 'backdrop');
     }
     function update() {

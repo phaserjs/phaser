@@ -7780,8 +7780,6 @@ var Phaser;
                     break;
                 case 'audio':
                     file.url = this.getAudioURL(file.url);
-                    //console.log('Loader audio');
-                    //console.log(file.url);
                     if(file.url !== null) {
                         //  WebAudio or Audio Tag?
                         if(this._game.sound.usingWebAudio) {
@@ -7797,7 +7795,6 @@ var Phaser;
                         } else if(this._game.sound.usingAudioTag) {
                             if(this._game.sound.touchLocked) {
                                 //  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
-                                //console.log('Audio is touch locked');
                                 file.data = new Audio();
                                 file.data.name = file.key;
                                 file.data.preload = 'auto';
@@ -7811,9 +7808,7 @@ var Phaser;
                                 };
                                 file.data.preload = 'auto';
                                 file.data.src = file.url;
-                                file.data.addEventListener('canplaythrough', function () {
-                                    return _this.fileComplete(file.key);
-                                }, false);
+                                file.data.addEventListener('canplaythrough', Phaser.GAMES[this._game.id].load.fileComplete(file.key), false);
                                 file.data.load();
                             }
                         }
@@ -7861,6 +7856,10 @@ var Phaser;
         */
         function (key) {
             var _this = this;
+            if(!this._fileList[key]) {
+                throw new Error('Phaser.Loader fileComplete invalid key ' + key);
+                return;
+            }
             this._fileList[key].loaded = true;
             var file = this._fileList[key];
             var loadNext = true;
@@ -7909,6 +7908,7 @@ var Phaser;
                             });
                         }
                     } else {
+                        file.data.removeEventListener('canplaythrough', Phaser.GAMES[this._game.id].load.fileComplete);
                         this._game.cache.addSound(file.key, file.url, file.data, false, true);
                     }
                     break;
@@ -8433,7 +8433,10 @@ var Phaser;
             this.game = game;
             GameMath.sinA = [];
             GameMath.cosA = [];
-            for(var i = 0; i < 360; i++) {
+            //  Android 4 stock browser bug fix
+            GameMath.sinA.push(0);
+            GameMath.cosA.push(0);
+            for(var i = 1; i < 360; i++) {
                 GameMath.sinA.push(Math.sin(this.degreesToRadians(i)));
                 GameMath.cosA.push(Math.cos(this.degreesToRadians(i)));
             }
@@ -13403,6 +13406,7 @@ var Phaser;
 var Phaser;
 (function (Phaser) {
     Phaser.VERSION = 'Phaser version 1.0.0';
+    Phaser.GAMES = [];
 })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
@@ -15407,14 +15411,16 @@ var Phaser;
             }
             if(!window.requestAnimationFrame) {
                 this._isSetTimeOut = true;
-                this._timeOutID = window.setTimeout(function () {
+                this._onLoop = function () {
                     return _this.SetTimeoutUpdate();
-                }, 0);
+                };
+                this._timeOutID = window.setTimeout(this._onLoop, 0);
             } else {
                 this._isSetTimeOut = false;
-                window.requestAnimationFrame(function () {
+                this._onLoop = function () {
                     return _this.RAFUpdate(0);
-                });
+                };
+                window.requestAnimationFrame(this._onLoop);
             }
             this.isRunning = true;
         };
@@ -15435,14 +15441,13 @@ var Phaser;
         * @method RAFUpdate
         **/
         function (time) {
-            var _this = this;
             this._game.time.update(time);
             if(this.callback) {
                 this.callback.call(this._game);
             }
-            window.requestAnimationFrame(function (time) {
-                return _this.RAFUpdate(time);
-            });
+            //this._onLoop = (time) => this.RAFUpdate(time);
+            //window.requestAnimationFrame(this._onLoop);
+            window.requestAnimationFrame();
         };
         RequestAnimationFrame.prototype.SetTimeoutUpdate = /**
         * The update method for the setTimeout
@@ -16331,15 +16336,18 @@ var Phaser;
                 //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
                 return;
             }
-            this._game.stage.canvas.addEventListener('mousedown', function (event) {
+            this._onMouseDown = function (event) {
                 return _this.onMouseDown(event);
-            }, true);
-            this._game.stage.canvas.addEventListener('mousemove', function (event) {
+            };
+            this._onMouseMove = function (event) {
                 return _this.onMouseMove(event);
-            }, true);
-            this._game.stage.canvas.addEventListener('mouseup', function (event) {
+            };
+            this._onMouseUp = function (event) {
                 return _this.onMouseUp(event);
-            }, true);
+            };
+            this._game.stage.canvas.addEventListener('mousedown', this._onMouseDown, true);
+            this._game.stage.canvas.addEventListener('mousemove', this._onMouseMove, true);
+            this._game.stage.canvas.addEventListener('mouseup', this._onMouseUp, true);
         };
         Mouse.prototype.onMouseDown = /**
         * @param {MouseEvent} event
@@ -16385,10 +16393,10 @@ var Phaser;
         * @method stop
         */
         function () {
-            //this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
-            //this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
-            //this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);
-                    };
+            this._game.stage.canvas.removeEventListener('mousedown', this._onMouseDown);
+            this._game.stage.canvas.removeEventListener('mousemove', this._onMouseMove);
+            this._game.stage.canvas.removeEventListener('mouseup', this._onMouseUp);
+        };
         return Mouse;
     })();
     Phaser.Mouse = Mouse;    
@@ -16417,13 +16425,14 @@ var Phaser;
             this._game = game;
         }
         Keyboard.prototype.start = function () {
-            var _this = this;
-            document.body.addEventListener('keydown', function (event) {
-                return _this.onKeyDown(event);
-            }, false);
-            document.body.addEventListener('keyup', function (event) {
-                return _this.onKeyUp(event);
-            }, false);
+            document.body.addEventListener('keydown', Phaser.GAMES[this._game.id].input.keyboard.onKeyDown, false);
+            document.body.addEventListener('keyup', Phaser.GAMES[this._game.id].input.keyboard.onKeyUp, false);
+            //document.body.addEventListener('keydown', (event: KeyboardEvent) => this.onKeyDown(event), false);
+            //document.body.addEventListener('keyup', (event: KeyboardEvent) => this.onKeyUp(event), false);
+                    };
+        Keyboard.prototype.stop = function () {
+            document.body.removeEventListener('keydown', Phaser.GAMES[this._game.id].input.keyboard.onKeyDown);
+            document.body.removeEventListener('keyup', Phaser.GAMES[this._game.id].input.keyboard.onKeyUp);
         };
         Keyboard.prototype.addKeyCapture = /**
         * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
@@ -16676,30 +16685,22 @@ var Phaser;
         * @method start
         */
         function () {
-            var _this = this;
             if(this._game.device.touch) {
-                this._game.stage.canvas.addEventListener('touchstart', function (event) {
-                    return _this.onTouchStart(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchmove', function (event) {
-                    return _this.onTouchMove(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchend', function (event) {
-                    return _this.onTouchEnd(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchenter', function (event) {
-                    return _this.onTouchEnter(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchleave', function (event) {
-                    return _this.onTouchLeave(event);
-                }, false);
-                this._game.stage.canvas.addEventListener('touchcancel', function (event) {
-                    return _this.onTouchCancel(event);
-                }, false);
-                document.addEventListener('touchmove', function (event) {
-                    return _this.consumeTouchMove(event);
-                }, false);
-            }
+                this._game.stage.canvas.addEventListener('touchstart', Phaser.GAMES[this._game.id].input.touch.onTouchStart, false);
+                this._game.stage.canvas.addEventListener('touchmove', Phaser.GAMES[this._game.id].input.touch.onTouchMove, false);
+                this._game.stage.canvas.addEventListener('touchend', Phaser.GAMES[this._game.id].input.touch.onTouchEnd, false);
+                this._game.stage.canvas.addEventListener('touchenter', Phaser.GAMES[this._game.id].input.touch.onTouchEnter, false);
+                this._game.stage.canvas.addEventListener('touchleave', Phaser.GAMES[this._game.id].input.touch.onTouchLeave, false);
+                this._game.stage.canvas.addEventListener('touchcancel', Phaser.GAMES[this._game.id].input.touch.onTouchCancel, false);
+                document.addEventListener('touchmove', Phaser.GAMES[this._game.id].input.touch.consumeTouchMove, false);
+                //this._game.stage.canvas.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
+                //this._game.stage.canvas.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
+                //this._game.stage.canvas.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
+                //this._game.stage.canvas.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
+                //this._game.stage.canvas.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
+                //this._game.stage.canvas.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+                //document.addEventListener('touchmove', (event) => this.consumeTouchMove(event), false);
+                            }
         };
         Touch.prototype.consumeTouchMove = /**
         * Prevent iOS bounce-back (doesn't work?)
@@ -16819,13 +16820,14 @@ var Phaser;
         */
         function () {
             if(this._game.device.touch) {
-                //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
-                //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
-                //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
-                //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
-                //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
-                //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
-                            }
+                this._game.stage.canvas.removeEventListener('touchstart', Phaser.GAMES[this._game.id].input.touch.onTouchStart);
+                this._game.stage.canvas.removeEventListener('touchmove', Phaser.GAMES[this._game.id].input.touch.onTouchMove);
+                this._game.stage.canvas.removeEventListener('touchend', Phaser.GAMES[this._game.id].input.touch.onTouchEnd);
+                this._game.stage.canvas.removeEventListener('touchenter', Phaser.GAMES[this._game.id].input.touch.onTouchEnter);
+                this._game.stage.canvas.removeEventListener('touchleave', Phaser.GAMES[this._game.id].input.touch.onTouchLeave);
+                this._game.stage.canvas.removeEventListener('touchcancel', Phaser.GAMES[this._game.id].input.touch.onTouchCancel);
+                document.removeEventListener('touchmove', Phaser.GAMES[this._game.id].input.touch.consumeTouchMove);
+            }
         };
         return Touch;
     })();
@@ -18324,6 +18326,7 @@ var Phaser;
             * @type {boolean}
             */
             this.isRunning = false;
+            this.id = Phaser.GAMES.push(this) - 1;
             this.callbackContext = callbackContext;
             this.onInitCallback = initCallback;
             this.onCreateCallback = createCallback;
@@ -18331,16 +18334,15 @@ var Phaser;
             this.onRenderCallback = renderCallback;
             this.onDestroyCallback = destroyCallback;
             if(document.readyState === 'complete' || document.readyState === 'interactive') {
+                //setTimeout(() => this.boot(parent, width, height));
                 setTimeout(function () {
-                    return _this.boot(parent, width, height);
+                    return Phaser.GAMES[_this.id].boot(parent, width, height);
                 });
             } else {
-                document.addEventListener('DOMContentLoaded', function () {
-                    return _this.boot(parent, width, height);
-                }, false);
-                window.addEventListener('load', function () {
-                    return _this.boot(parent, width, height);
-                }, false);
+                //document.addEventListener('DOMContentLoaded', () => this.boot(parent, width, height), false);
+                //window.addEventListener('load', () => this.boot(parent, width, height), false);
+                document.addEventListener('DOMContentLoaded', Phaser.GAMES[this.id].boot(parent, width, height), false);
+                window.addEventListener('load', Phaser.GAMES[this.id].boot(parent, width, height), false);
             }
         }
         Game.prototype.boot = /**
@@ -18355,10 +18357,13 @@ var Phaser;
                 return;
             }
             if(!document.body) {
-                window.setTimeout(function () {
-                    return _this.boot(parent, width, height);
+                //window.setTimeout(() => this.boot(parent, width, height), 13);
+                setTimeout(function () {
+                    return Phaser.GAMES[_this.id].boot(parent, width, height);
                 }, 13);
             } else {
+                document.removeEventListener('DOMContentLoaded', Phaser.GAMES[this.id].boot);
+                window.removeEventListener('load', Phaser.GAMES[this.id].boot);
                 this.device = new Phaser.Device();
                 this.net = new Phaser.Net(this);
                 this.math = new Phaser.GameMath(this);

@@ -22,20 +22,20 @@ module Phaser {
 
         constructor(game: Game) {
 
-            this._game = game;
+            this.game = game;
 
-            this.mousePointer = new Pointer(this._game, 0);
-            this.pointer1 = new Pointer(this._game, 1);
-            this.pointer2 = new Pointer(this._game, 2);
-            this.pointer3 = new Pointer(this._game, 3);
-            this.pointer4 = new Pointer(this._game, 4);
-            this.pointer5 = new Pointer(this._game, 5);
+            this.mousePointer = new Pointer(this.game, 0);
+            this.pointer1 = new Pointer(this.game, 1);
+            this.pointer2 = new Pointer(this.game, 2);
+            this.pointer3 = new Pointer(this.game, 3);
+            this.pointer4 = new Pointer(this.game, 4);
+            this.pointer5 = new Pointer(this.game, 5);
 
-            this.mouse = new Mouse(this._game);
-            this.keyboard = new Keyboard(this._game);
-            this.touch = new Touch(this._game);
-            this.mspointer = new MSPointer(this._game);
-            this.gestures = new Gestures(this._game);
+            this.mouse = new Mouse(this.game);
+            this.keyboard = new Keyboard(this.game);
+            this.touch = new Touch(this.game);
+            this.mspointer = new MSPointer(this.game);
+            this.gestures = new Gestures(this.game);
 
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
@@ -48,7 +48,7 @@ module Phaser {
             this._oldPosition = new Vec2;
             this.circle = new Circle(0, 0, 44);
 
-            this.camera = this._game.camera;
+            this.camera = this.game.camera;
 
             this.activePointer = this.mousePointer;
             this.currentPointers = 0;
@@ -61,9 +61,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * A 1x1 sized canvas used for pixel-perfect checks
@@ -451,7 +451,7 @@ module Phaser {
             }
             else
             {
-                this['pointer' + next] = new Pointer(this._game, next);
+                this['pointer' + next] = new Pointer(this.game, next);
                 return this['pointer' + next];
             }
 
@@ -563,7 +563,7 @@ module Phaser {
 
             this.currentPointers = 0;
 
-            this._game.stage.canvas.style.cursor = "default";
+            this.game.stage.canvas.style.cursor = "default";
 
             if (hard == true)
             {
@@ -939,14 +939,14 @@ module Phaser {
         /**
          * @param {Camera} [camera]
          */
-        public getWorldX(camera?: Camera = this._game.camera) {
+        public getWorldX(camera?: Camera = this.game.camera) {
             return camera.worldView.x + this.x;
         }
 
         /**
          * @param {Camera} [camera]
          */
-        public getWorldY(camera?: Camera = this._game.camera) {
+        public getWorldY(camera?: Camera = this.game.camera) {
             return camera.worldView.y + this.y;
         }
 
@@ -957,12 +957,12 @@ module Phaser {
          */
         public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
-            this._game.stage.context.fillStyle = color;
-            this._game.stage.context.fillText('Input', x, y);
-            this._game.stage.context.fillText('X: ' + this.x + ' Y: ' + this.y, x, y + 14);
-            this._game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
-            this._game.stage.context.fillText('Scale X: ' + this.scale.x.toFixed(1) + ' Scale Y: ' + this.scale.x.toFixed(1), x, y + 42);
-            this._game.stage.context.fillText('Screen X: ' + this.activePointer.screenX + ' Screen Y: ' + this.activePointer.screenY, x, y + 56);
+            this.game.stage.context.fillStyle = color;
+            this.game.stage.context.fillText('Input', x, y);
+            this.game.stage.context.fillText('X: ' + this.x + ' Y: ' + this.y, x, y + 14);
+            this.game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
+            this.game.stage.context.fillText('Scale X: ' + this.scale.x.toFixed(1) + ' Scale Y: ' + this.scale.x.toFixed(1), x, y + 42);
+            this.game.stage.context.fillText('Screen X: ' + this.activePointer.screenX + ' Screen Y: ' + this.activePointer.screenY, x, y + 56);
 
         }
 

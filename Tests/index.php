@@ -136,6 +136,19 @@ if ($state == false && $mobile == false)
     <div id="links">
 <?php
     $files = dirToArray(dirname(__FILE__));
+    $total = 0;
+
+    foreach ($files as $key => $value) {
+        
+        //  If $key is an array, output it as an h2 or something
+        if (is_array($value) && count($value) > 0)
+        {
+            $total += count($value);
+        }
+
+    }
+
+    echo "<h2>Total Tests: $total </h2>";
 
     foreach ($files as $key => $value) {
         

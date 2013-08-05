@@ -14,11 +14,17 @@ module Phaser {
 
         constructor(game: Game) {
 
-            this._game = game;
+            this.game = game;
 
         }
 
-        private _game: Game;
+        /**
+        * Local reference to game.
+        * @property game
+        * @type {Phaser.Game}
+        **/
+        public game: Game;
+
         private _keys = {};
         private _capture = {};
 
@@ -28,10 +34,26 @@ module Phaser {
         */
         public disabled: bool = false;
 
+        /**
+        * A reference to the event handlers to allow removeEventListener support
+        */
+        public _onKeyDown;
+        public _onKeyUp;
+
         public start() {
 
-            document.body.addEventListener('keydown', (event: KeyboardEvent) => this.onKeyDown(event), false);
-            document.body.addEventListener('keyup', (event: KeyboardEvent) => this.onKeyUp(event), false);
+            this._onKeyDown = (event: KeyboardEvent) => this.onKeyDown(event);
+            this._onKeyUp = (event: KeyboardEvent) => this.onKeyUp(event);
+
+            document.body.addEventListener('keydown', this._onKeyDown , false);
+            document.body.addEventListener('keyup', this._onKeyUp, false);
+
+        }
+
+        public stop() {
+
+            document.body.removeEventListener('keydown', this._onKeyDown);
+            document.body.removeEventListener('keyup', this._onKeyUp);
 
         }
 
@@ -78,7 +100,7 @@ module Phaser {
          */
         public onKeyDown(event: KeyboardEvent) {
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
@@ -90,12 +112,12 @@ module Phaser {
 
             if (!this._keys[event.keyCode])
             {
-                this._keys[event.keyCode] = { isDown: true, timeDown: this._game.time.now, timeUp: 0 };
+                this._keys[event.keyCode] = { isDown: true, timeDown: this.game.time.now, timeUp: 0 };
             }
             else
             {
                 this._keys[event.keyCode].isDown = true;
-                this._keys[event.keyCode].timeDown = this._game.time.now;
+                this._keys[event.keyCode].timeDown = this.game.time.now;
             }
 
         }
@@ -105,7 +127,7 @@ module Phaser {
          */
         public onKeyUp(event: KeyboardEvent) {
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
@@ -117,12 +139,12 @@ module Phaser {
 
             if (!this._keys[event.keyCode])
             {
-                this._keys[event.keyCode] = { isDown: false, timeDown: 0, timeUp: this._game.time.now };
+                this._keys[event.keyCode] = { isDown: false, timeDown: 0, timeUp: this.game.time.now };
             }
             else
             {
                 this._keys[event.keyCode].isDown = false;
-                this._keys[event.keyCode].timeUp = this._game.time.now;
+                this._keys[event.keyCode].timeUp = this.game.time.now;
             }
 
         }
@@ -143,7 +165,7 @@ module Phaser {
          */
         public justPressed(keycode: number, duration?: number = 250): bool {
 
-            if (this._keys[keycode] && this._keys[keycode].isDown === true && (this._game.time.now - this._keys[keycode].timeDown < duration))
+            if (this._keys[keycode] && this._keys[keycode].isDown === true && (this.game.time.now - this._keys[keycode].timeDown < duration))
             {
                 return true;
             }
@@ -161,7 +183,7 @@ module Phaser {
          */
         public justReleased(keycode: number, duration?: number = 250): bool {
 
-            if (this._keys[keycode] && this._keys[keycode].isDown === false && (this._game.time.now - this._keys[keycode].timeUp < duration))
+            if (this._keys[keycode] && this._keys[keycode].isDown === false && (this.game.time.now - this._keys[keycode].timeUp < duration))
             {
                 return true;
             }

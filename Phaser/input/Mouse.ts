@@ -12,18 +12,17 @@ module Phaser {
 
         constructor(game: Game) {
 
-            this._game = game;
-            this.callbackContext = this._game;
+            this.game = game;
+            this.callbackContext = this.game;
 
         }
 
         /**
-        * Local private reference to game.
-        * @property _game
+        * Local reference to game.
+        * @property game
         * @type {Phaser.Game}
-        * @private
         **/
-        private _game: Game;
+        public game: Game;
 
         public static LEFT_BUTTON: number = 0;
         public static MIDDLE_BUTTON: number = 1;
@@ -45,20 +44,31 @@ module Phaser {
         public mouseUpCallback = null;
 
         /**
+        * A reference to the event handlers to allow removeEventListener support
+        */
+        public _onMouseDown;
+        public _onMouseMove;
+        public _onMouseUp;
+
+        /**
         * Starts the event listeners running
         * @method start
         */
         public start() {
 
-            if (this._game.device.android && this._game.device.chrome == false)
+            if (this.game.device.android && this.game.device.chrome == false)
             {
                 //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
                 return;
             }
 
-            this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
-            this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
-            this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);
+            this._onMouseDown = (event: MouseEvent) => this.onMouseDown(event);
+            this._onMouseMove = (event: MouseEvent) => this.onMouseMove(event);
+            this._onMouseUp = (event: MouseEvent) => this.onMouseUp(event);
+
+            this.game.stage.canvas.addEventListener('mousedown', this._onMouseDown, true);
+            this.game.stage.canvas.addEventListener('mousemove', this._onMouseMove, true);
+            this.game.stage.canvas.addEventListener('mouseup', this._onMouseUp, true);
 
         }
 
@@ -72,14 +82,14 @@ module Phaser {
                 this.mouseDownCallback.call(this.callbackContext, event);
             }
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
 
             event['identifier'] = 0;
 
-            this._game.input.mousePointer.start(event);
+            this.game.input.mousePointer.start(event);
 
         }
 
@@ -93,14 +103,14 @@ module Phaser {
                 this.mouseMoveCallback.call(this.callbackContext, event);
             }
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
 
             event['identifier'] = 0;
 
-            this._game.input.mousePointer.move(event);
+            this.game.input.mousePointer.move(event);
 
         }
 
@@ -114,14 +124,14 @@ module Phaser {
                 this.mouseUpCallback.call(this.callbackContext, event);
             }
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
 
             event['identifier'] = 0;
 
-            this._game.input.mousePointer.stop(event);
+            this.game.input.mousePointer.stop(event);
 
         }
 
@@ -131,9 +141,9 @@ module Phaser {
         */
         public stop() {
 
-            //this._game.stage.canvas.addEventListener('mousedown', (event: MouseEvent) => this.onMouseDown(event), true);
-            //this._game.stage.canvas.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event), true);
-            //this._game.stage.canvas.addEventListener('mouseup', (event: MouseEvent) => this.onMouseUp(event), true);
+            this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown);
+            this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove);
+            this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp);
 
         }
 

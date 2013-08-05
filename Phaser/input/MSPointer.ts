@@ -20,17 +20,16 @@ module Phaser {
         */
         constructor(game: Game) {
 
-            this._game = game;
+            this.game = game;
 
         }
 
         /** 
-        * Local private reference to game.
-        * @property _game
+        * Local reference to game.
+        * @property game
         * @type Game
-        * @private
         **/
-        private _game: Game;
+        public game: Game;
 
         /**
         * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
@@ -38,17 +37,28 @@ module Phaser {
         */
         public disabled: bool = false;
 
+        /**
+        * A reference to the event handlers to allow removeEventListener support
+        */
+        public _onMSPointerDown;
+        public _onMSPointerMove;
+        public _onMSPointerUp;
+
         /** 
         * Starts the event listeners running
         * @method start 
         */
         public start() {
 
-            if (this._game.device.mspointer == true)
+            if (this.game.device.mspointer == true)
             {
-                this._game.stage.canvas.addEventListener('MSPointerDown', (event) => this.onPointerDown(event), false);
-                this._game.stage.canvas.addEventListener('MSPointerMove', (event) => this.onPointerMove(event), false);
-                this._game.stage.canvas.addEventListener('MSPointerUp', (event) => this.onPointerUp(event), false);
+                this._onMSPointerDown = (event) => this.onPointerDown(event);
+                this._onMSPointerMove = (event) => this.onPointerMove(event);
+                this._onMSPointerUp = (event) => this.onPointerUp(event);
+
+                this.game.stage.canvas.addEventListener('MSPointerDown', this._onMSPointerDown, false);
+                this.game.stage.canvas.addEventListener('MSPointerMove', this._onMSPointerMove, false);
+                this.game.stage.canvas.addEventListener('MSPointerUp', this._onMSPointerUp, false);
             }
 
         }
@@ -60,7 +70,7 @@ module Phaser {
         **/
         private onPointerDown(event) {
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
@@ -68,7 +78,7 @@ module Phaser {
             event.preventDefault();
             event.identifier = event.pointerId;
 
-            this._game.input.startPointer(event);
+            this.game.input.startPointer(event);
 
         }
 
@@ -79,7 +89,7 @@ module Phaser {
         **/
         private onPointerMove(event) {
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
@@ -87,7 +97,7 @@ module Phaser {
             event.preventDefault();
             event.identifier = event.pointerId;
 
-            this._game.input.updatePointer(event);
+            this.game.input.updatePointer(event);
 
         }
 
@@ -98,7 +108,7 @@ module Phaser {
         **/
         private onPointerUp(event) {
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
@@ -106,7 +116,7 @@ module Phaser {
             event.preventDefault();
             event.identifier = event.pointerId;
 
-            this._game.input.stopPointer(event);
+            this.game.input.stopPointer(event);
 
         }
 
@@ -116,11 +126,11 @@ module Phaser {
         */
         public stop() {
 
-            if (this._game.device.mspointer == true)
+            if (this.game.device.mspointer == true)
             {
-                //this._game.stage.canvas.addEventListener('MSPointerDown', (event) => this.onPointerDown(event), false);
-                //this._game.stage.canvas.addEventListener('MSPointerMove', (event) => this.onPointerMove(event), false);
-                //this._game.stage.canvas.addEventListener('MSPointerUp', (event) => this.onPointerUp(event), false);
+                this.game.stage.canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
+                this.game.stage.canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
+                this.game.stage.canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
             }
 
         }

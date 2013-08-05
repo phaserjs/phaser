@@ -22,18 +22,17 @@ module Phaser {
         */
         constructor(game: Game) {
 
-            this._game = game;
-            this.callbackContext = this._game;
+            this.game = game;
+            this.callbackContext = this.game;
 
         }
 
         /**
-        * Local private reference to game.
-        * @property _game
+        * Local reference to game.
+        * @property game
         * @type {Phaser.Game}
-        * @private
         **/
-        private _game: Game;
+        public game: Game;
 
         /**
         * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
@@ -54,21 +53,40 @@ module Phaser {
         public touchCancelCallback = null;
 
         /**
+        * A reference to the event handlers to allow removeEventListener support
+        */
+        public _onTouchStart;
+        public _onTouchMove;
+        public _onTouchEnd;
+        public _onTouchEnter;
+        public _onTouchLeave;
+        public _onTouchCancel;
+        public _documentTouchMove;
+
+        /**
         * Starts the event listeners running
         * @method start
         */
         public start() {
 
-            if (this._game.device.touch)
+            if (this.game.device.touch)
             {
-                this._game.stage.canvas.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
-                this._game.stage.canvas.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
-                this._game.stage.canvas.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
-                this._game.stage.canvas.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
-                this._game.stage.canvas.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
-                this._game.stage.canvas.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+                this._onTouchStart = (event) => this.onTouchStart(event);
+                this._onTouchMove = (event) => this.onTouchMove(event);
+                this._onTouchEnd = (event) => this.onTouchEnd(event);
+                this._onTouchEnter = (event) => this.onTouchEnter(event);
+                this._onTouchLeave = (event) => this.onTouchLeave(event);
+                this._onTouchCancel = (event) => this.onTouchCancel(event);
+                this._documentTouchMove = (event) => this.consumeTouchMove(event);
 
-                document.addEventListener('touchmove', (event) => this.consumeTouchMove(event), false);
+                this.game.stage.canvas.addEventListener('touchstart', this._onTouchStart, false);
+                this.game.stage.canvas.addEventListener('touchmove', this._onTouchMove, false);
+                this.game.stage.canvas.addEventListener('touchend', this._onTouchEnd, false);
+                this.game.stage.canvas.addEventListener('touchenter', this._onTouchEnter, false);
+                this.game.stage.canvas.addEventListener('touchleave', this._onTouchLeave, false);
+                this.game.stage.canvas.addEventListener('touchcancel', this._onTouchCancel, false);
+
+                document.addEventListener('touchmove', this._documentTouchMove, false);
             }
 
         }
@@ -94,7 +112,7 @@ module Phaser {
                 this.touchStartCallback.call(this.callbackContext, event);
             }
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
@@ -106,7 +124,7 @@ module Phaser {
             //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
             for (var i = 0; i < event.changedTouches.length; i++)
             {
-                this._game.input.startPointer(event.changedTouches[i]);
+                this.game.input.startPointer(event.changedTouches[i]);
             }
 
         }
@@ -124,7 +142,7 @@ module Phaser {
                 this.touchCancelCallback.call(this.callbackContext, event);
             }
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
@@ -135,7 +153,7 @@ module Phaser {
             //  http://www.w3.org/TR/touch-events/#dfn-touchcancel
             for (var i = 0; i < event.changedTouches.length; i++)
             {
-                this._game.input.stopPointer(event.changedTouches[i]);
+                this.game.input.stopPointer(event.changedTouches[i]);
             }
 
         }
@@ -153,7 +171,7 @@ module Phaser {
                 this.touchEnterCallback.call(this.callbackContext, event);
             }
 
-            if (this._game.input.disabled || this.disabled)
+            if (this.game.input.disabled || this.disabled)
             {
                 return;
             }
@@ -205,7 +223,7 @@ module Phaser {
 
             for (var i = 0; i < event.changedTouches.length; i++)
             {
-                this._game.input.updatePointer(event.changedTouches[i]);
+                this.game.input.updatePointer(event.changedTouches[i]);
             }
 
         }
@@ -230,7 +248,7 @@ module Phaser {
             //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
             for (var i = 0; i < event.changedTouches.length; i++)
             {
-                this._game.input.stopPointer(event.changedTouches[i]);
+                this.game.input.stopPointer(event.changedTouches[i]);
             }
 
         }
@@ -241,14 +259,16 @@ module Phaser {
         */
         public stop() {
 
-            if (this._game.device.touch)
+            if (this.game.device.touch)
             {
-                //this._domElement.addEventListener('touchstart', (event) => this.onTouchStart(event), false);
-                //this._domElement.addEventListener('touchmove', (event) => this.onTouchMove(event), false);
-                //this._domElement.addEventListener('touchend', (event) => this.onTouchEnd(event), false);
-                //this._domElement.addEventListener('touchenter', (event) => this.onTouchEnter(event), false);
-                //this._domElement.addEventListener('touchleave', (event) => this.onTouchLeave(event), false);
-                //this._domElement.addEventListener('touchcancel', (event) => this.onTouchCancel(event), false);
+                this.game.stage.canvas.removeEventListener('touchstart', this._onTouchStart);
+                this.game.stage.canvas.removeEventListener('touchmove', this._onTouchMove);
+                this.game.stage.canvas.removeEventListener('touchend', this._onTouchEnd);
+                this.game.stage.canvas.removeEventListener('touchenter', this._onTouchEnter);
+                this.game.stage.canvas.removeEventListener('touchleave', this._onTouchLeave);
+                this.game.stage.canvas.removeEventListener('touchcancel', this._onTouchCancel);
+
+                document.removeEventListener('touchmove', this._documentTouchMove);
             }
 
         }

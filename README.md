@@ -165,6 +165,9 @@ V1.0.0
 * Added Sprite.bringToTop()
 * Added Stage.disableVisibilityChange to stop the auto pause/resume from ever firing.
 * Added crop support to the Texture component, so you can do Sprite.crop to restrict rendering to a specified Rectangle without distortion.
+* Added references to all the event listener functions so they can be cleanly destroyed.
+* Fixed interesting Firefox bug when an audio track ended it fired another 'canplaythrough' event, confusing the Loader.
+
 
 V0.9.6
 

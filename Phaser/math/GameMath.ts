@@ -18,7 +18,11 @@ module Phaser {
             GameMath.sinA = [];
             GameMath.cosA = [];
 
-            for (var i = 0; i < 360; i++)
+            //  Android 4 stock browser bug fix
+            GameMath.sinA.push(0);
+            GameMath.cosA.push(0);
+
+            for (var i = 1; i < 360; i++)
             {
                 GameMath.sinA.push(Math.sin(this.degreesToRadians(i)));
                 GameMath.cosA.push(Math.cos(this.degreesToRadians(i)));

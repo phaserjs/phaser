@@ -60,6 +60,8 @@ module Phaser {
          */
         constructor(callbackContext, parent?: string = '', width?: number = 800, height?: number = 600, initCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
 
+            this.id = Phaser.GAMES.push(this) - 1;
+
             this.callbackContext = callbackContext;
             this.onInitCallback = initCallback;
             this.onCreateCallback = createCallback;
@@ -69,15 +71,20 @@ module Phaser {
 
             if (document.readyState === 'complete' || document.readyState === 'interactive')
             {
-                setTimeout(() => this.boot(parent, width, height));
+                //setTimeout(() => this.boot(parent, width, height));
+                setTimeout(() => Phaser.GAMES[this.id].boot(parent, width, height));
             }
             else
             {
-                document.addEventListener('DOMContentLoaded', () => this.boot(parent, width, height), false);
-                window.addEventListener('load', () => this.boot(parent, width, height), false);
+                //document.addEventListener('DOMContentLoaded', () => this.boot(parent, width, height), false);
+                //window.addEventListener('load', () => this.boot(parent, width, height), false);
+                document.addEventListener('DOMContentLoaded', Phaser.GAMES[this.id].boot(parent, width, height), false);
+                window.addEventListener('load', Phaser.GAMES[this.id].boot(parent, width, height), false);
             }
 
         }
+
+        public id: number;
 
         /**
          * Game loop trigger wrapper.
@@ -308,10 +315,14 @@ module Phaser {
 
             if (!document.body)
             {
-                window.setTimeout(() => this.boot(parent, width, height), 13);
+                //window.setTimeout(() => this.boot(parent, width, height), 13);
+                setTimeout(() => Phaser.GAMES[this.id].boot(parent, width, height), 13);
             }
             else
             {
+                document.removeEventListener('DOMContentLoaded', Phaser.GAMES[this.id].boot);
+                window.removeEventListener('load', Phaser.GAMES[this.id].boot);
+
                 this.device = new Device();
                 this.net = new Net(this);
                 this.math = new GameMath(this);

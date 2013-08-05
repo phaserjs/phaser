@@ -90,6 +90,11 @@ module Phaser {
         public isRunning: bool = false;
 
         /**
+        * A reference to the RAF/setTimeout to avoid constant anonymous function creation
+        */
+        public _onLoop;
+
+        /**
         * Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
         * @method start
         * @param {Any} [callback] 
@@ -104,12 +109,14 @@ module Phaser {
             if (!window.requestAnimationFrame)
             {
                 this._isSetTimeOut = true;
-                this._timeOutID = window.setTimeout(() => this.SetTimeoutUpdate(), 0);
+                this._onLoop = () => this.SetTimeoutUpdate();
+                this._timeOutID = window.setTimeout(this._onLoop, 0);
             }
             else
             {
                 this._isSetTimeOut = false;
-                window.requestAnimationFrame(() => this.RAFUpdate(0));
+                this._onLoop = () => this.RAFUpdate(0);
+                window.requestAnimationFrame(this._onLoop);
             }
 
             this.isRunning = true;
@@ -148,7 +155,9 @@ module Phaser {
                 this.callback.call(this._game);
             }
 
-            window.requestAnimationFrame((time) => this.RAFUpdate(time));
+            this._onLoop = (time) => this.RAFUpdate(time);
+
+            window.requestAnimationFrame(this._onLoop);
 
         }
 
@@ -160,7 +169,9 @@ module Phaser {
 
             this._game.time.update(Date.now());
 
-            this._timeOutID = window.setTimeout(() => this.SetTimeoutUpdate(), 16.7);
+            this._onLoop = () => this.SetTimeoutUpdate();
+
+            this._timeOutID = window.setTimeout(this._onLoop, 16);
 
             if (this.callback)
             {

@@ -19,4 +19,6 @@ module Phaser {
 
     export var VERSION: string = 'Phaser version 1.0.0';
 
+    export var GAMES = [];
+
 }
