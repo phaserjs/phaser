@@ -35,7 +35,7 @@
     }
 
     function render() {
-        game.input.renderDebugInfo(32, 32);
+        Phaser.DebugUtils.renderInputInfo(32, 32);
     }
 
 })();

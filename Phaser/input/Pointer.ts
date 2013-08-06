@@ -656,51 +656,6 @@ module Phaser {
         }
 
         /**
-        * Renders the Pointer.circle object onto the stage in green if down or red if up.
-        * @method renderDebug
-        */
-        public renderDebug(hideIfUp: bool = false) {
-
-            if (hideIfUp == true && this.isUp == true)
-            {
-                return;
-            }
-
-            this.game.stage.context.beginPath();
-            this.game.stage.context.arc(this.x, this.y, this.circle.radius, 0, Math.PI * 2);
-
-            if (this.active)
-            {
-                this.game.stage.context.fillStyle = 'rgba(0,255,0,0.5)';
-                this.game.stage.context.strokeStyle = 'rgb(0,255,0)';
-            }
-            else
-            {
-                this.game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
-                this.game.stage.context.strokeStyle = 'rgb(100,0,0)';
-            }
-
-            this.game.stage.context.fill();
-            this.game.stage.context.closePath();
-
-            //  Render the points
-            this.game.stage.context.beginPath();
-            this.game.stage.context.moveTo(this.positionDown.x, this.positionDown.y);
-            this.game.stage.context.lineTo(this.position.x, this.position.y);
-            this.game.stage.context.lineWidth = 2;
-            this.game.stage.context.stroke();
-            this.game.stage.context.closePath();
-
-            //  Render the text
-            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
-            this.game.stage.context.font = 'Arial 16px';
-            this.game.stage.context.fillText('ID: ' + this.id + " Active: " + this.active, this.x, this.y - 100);
-            this.game.stage.context.fillText('Screen X: ' + this.x + " Screen Y: " + this.y, this.x, this.y - 80);
-            this.game.stage.context.fillText('Duration: ' + this.duration + " ms", this.x, this.y - 60);
-
-        }
-
-        /**
          * Returns a string representation of this object.
          * @method toString
          * @return {String} a string representation of the instance.

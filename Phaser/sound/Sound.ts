@@ -427,7 +427,6 @@ module Phaser {
 
         public resume() {
 
-            //if (this.isPlaying == false && this._sound)
             if (this.paused && this._sound)
             {
                 if (this.usingWebAudio)
@@ -458,8 +457,6 @@ module Phaser {
          * Stop playing this sound.
          */
         public stop() {
-
-            //console.log('Sound.stop', this.currentMarker);
 
             if (this.isPlaying && this._sound)
             {
@@ -550,30 +547,6 @@ module Phaser {
 
         public get volume(): number {
             return this._volume;
-        }
-
-        /**
-        * Renders the Pointer.circle object onto the stage in green if down or red if up.
-        * @method renderDebug
-        */
-        public renderDebug(x: number, y: number) {
-
-            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
-            this.game.stage.context.font = '16px Courier';
-            this.game.stage.context.fillText('Sound: ' + this.key + ' Locked: ' + this.game.sound.touchLocked + ' Pending Playback: ' + this.pendingPlayback, x, y);
-            this.game.stage.context.fillText('Decoded: ' + this.isDecoded + ' Decoding: ' + this.isDecoding, x, y + 20);
-            this.game.stage.context.fillText('Total Duration: ' + this.totalDuration + ' Playing: ' + this.isPlaying, x, y + 40);
-            this.game.stage.context.fillText('Time: ' + this.currentTime, x, y + 60);
-            this.game.stage.context.fillText('Volume: ' + this.volume + ' Muted: ' + this.mute, x, y + 80);
-            this.game.stage.context.fillText('WebAudio: ' + this.usingWebAudio + ' Audio: ' + this.usingAudioTag, x, y + 100);
-
-            if (this.currentMarker !== '')
-            {
-                this.game.stage.context.fillText('Marker: ' + this.currentMarker + ' Duration: ' + this.duration, x, y + 120);
-                this.game.stage.context.fillText('Start: ' + this.markers[this.currentMarker].start + ' Stop: ' + this.markers[this.currentMarker].stop, x, y + 140);
-                this.game.stage.context.fillText('Position: ' + this.position, x, y + 160);
-            }
-
         }
 
     }

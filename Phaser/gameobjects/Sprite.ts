@@ -250,6 +250,7 @@ module Phaser {
         /**
          * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
          * Set to null to disable, set to a Phaser.Rectangle object to control the region that will be rendered, anything outside the rectangle is ignored.
+         * This is a reference to Sprite.texture.crop
          * @type {Phaser.Rectangle}
          */
         public crop: Phaser.Rectangle;

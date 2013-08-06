@@ -49,7 +49,7 @@
         game.stage.context.fillText('x: ' + Math.round(sprite.transform.bottomLeft.x) + ' y: ' + Math.round(sprite.transform.bottomLeft.y), sprite.transform.bottomLeft.x, sprite.transform.bottomLeft.y);
         game.stage.context.fillText('x: ' + Math.round(sprite.transform.bottomRight.x) + ' y: ' + Math.round(sprite.transform.bottomRight.y), sprite.transform.bottomRight.x, sprite.transform.bottomRight.y);
 
-        game.input.renderDebugInfo(32, 32);
+        Phaser.DebugUtils.renderInputInfo(32, 32);
 
         game.stage.context.fillText('in: ' + inPoint, 300, 32);
 

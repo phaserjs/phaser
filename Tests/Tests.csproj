@@ -165,6 +165,10 @@
     <TypeScriptCompile Include="input\motion lock.ts" />
     <TypeScriptCompile Include="input\motion lock 2.ts" />
     <TypeScriptCompile Include="input\game scale 1.ts" />
+    <TypeScriptCompile Include="input\drag sprite 3.ts" />
+    <Content Include="input\drag sprite 3.js">
+      <DependentUpon>drag sprite 3.ts</DependentUpon>
+    </Content>
     <Content Include="input\drop limitation.ts" />
     <Content Include="input\game scale 1.js">
       <DependentUpon>game scale 1.ts</DependentUpon>
@@ -205,6 +209,10 @@
       <DependentUpon>touch priority.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="input\world drag.ts" />
+    <TypeScriptCompile Include="input\world coordinates.ts" />
+    <Content Include="input\world coordinates.js">
+      <DependentUpon>world coordinates.ts</DependentUpon>
+    </Content>
     <Content Include="input\world drag.js">
       <DependentUpon>world drag.ts</DependentUpon>
     </Content>

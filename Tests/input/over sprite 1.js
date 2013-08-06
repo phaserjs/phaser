@@ -13,7 +13,7 @@
         sprite.input.start(0, false, true);
     }
     function render() {
-        game.input.renderDebugInfo(32, 32);
-        sprite.input.renderDebugInfo(300, 32);
+        Phaser.DebugUtils.renderInputInfo(32, 32);
+        Phaser.DebugUtils.renderSpriteInputInfo(sprite, 300, 32);
     }
 })();

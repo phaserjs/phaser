@@ -45,20 +45,20 @@ module Phaser.Components {
         /**
          * The PriorityID controls which Sprite receives an Input event first if they should overlap.
          */
-		public priorityID:number = 0;
+        public priorityID: number = 0;
 
         /**
          * The index of this Input component entry in the Game.Input manager.
          */
-		public indexID:number = 0;
+        public indexID: number = 0;
 
         private _dragPoint: Point;
         private _draggedPointerID: number;
         public dragOffset: Point;
         public isDragged: bool = false;
         public dragFromCenter: bool;
-		public dragPixelPerfect:bool = false;
-		public dragPixelPerfectAlpha:number;
+        public dragPixelPerfect: bool = false;
+        public dragPixelPerfectAlpha: number;
 
         public allowHorizontalDrag: bool = true;
         public allowVerticalDrag: bool = true;
@@ -208,11 +208,11 @@ module Phaser.Components {
             return this._pointerData[pointer].isDragged;
         }
 
-		public start(priority:number = 0, checkBody?:bool = false, useHandCursor?:bool = false): Phaser.Sprite {
+        public start(priority: number = 0, checkBody?: bool = false, useHandCursor?: bool = false): Phaser.Sprite {
 
-		    //  Turning on
-		    if (this.enabled == false)
-		    {
+            //  Turning on
+            if (this.enabled == false)
+            {
                 //  Register, etc
                 this.checkBody = checkBody;
                 this.useHandCursor = useHandCursor;
@@ -226,81 +226,81 @@ module Phaser.Components {
                 }
 
                 this.snapOffset = new Point;
-		        this.enabled = true;
+                this.enabled = true;
 
-		        this.game.input.addGameObject(this._parent);
+                this.game.input.addGameObject(this._parent);
 
                 //  Create the signals the Input component will emit
-		        if (this._parent.events.onInputOver == null)
-		        {
-		            this._parent.events.onInputOver = new Phaser.Signal;
-		            this._parent.events.onInputOut = new Phaser.Signal;
-		            this._parent.events.onInputDown = new Phaser.Signal;
-		            this._parent.events.onInputUp = new Phaser.Signal;
-		            this._parent.events.onDragStart = new Phaser.Signal;
-		            this._parent.events.onDragStop = new Phaser.Signal;
-		        }
-		    }
+                if (this._parent.events.onInputOver == null)
+                {
+                    this._parent.events.onInputOver = new Phaser.Signal;
+                    this._parent.events.onInputOut = new Phaser.Signal;
+                    this._parent.events.onInputDown = new Phaser.Signal;
+                    this._parent.events.onInputUp = new Phaser.Signal;
+                    this._parent.events.onDragStart = new Phaser.Signal;
+                    this._parent.events.onDragStop = new Phaser.Signal;
+                }
+            }
 
             return this._parent;
 
-		}
+        }
 
-		public reset() {
+        public reset() {
 
-		    this.enabled = false;
+            this.enabled = false;
 
             for (var i = 0; i < 10; i++)
             {
                 this._pointerData[i] = { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, timeDown: 0, timeUp: 0, downDuration: 0, isDragged: false };
             }
 
-		}
+        }
 
-		public stop() {
+        public stop() {
 
-		    //  Turning off
-		    if (this.enabled == false)
-		    {
-		        return;
-		    }
-		    else
-		    {
+            //  Turning off
+            if (this.enabled == false)
+            {
+                return;
+            }
+            else
+            {
                 //  De-register, etc
-		        this.enabled = false;
-		        this.game.input.removeGameObject(this.indexID);
-		    }
+                this.enabled = false;
+                this.game.input.removeGameObject(this.indexID);
+            }
 
-		}
+        }
 
         /**
          * Clean up memory.
          */
         public destroy() {
 
-		    if (this.enabled)
-		    {
-		        this.enabled = false;
-		        this.game.input.removeGameObject(this.indexID);
-		    }
+            if (this.enabled)
+            {
+                this.enabled = false;
+                this.game.input.removeGameObject(this.indexID);
+            }
 
         }
 
         /**
          * Checks if the given pointer is over this Sprite. All checks are done in world coordinates.
          */
-		public checkPointerOver(pointer: Phaser.Pointer): bool {
+        public checkPointerOver(pointer: Phaser.Pointer): bool {
 
-		    if (this.enabled == false || this._parent.visible == false)
-		    {
-		        return false;
-		    }
-		    else
-		    {
+            if (this.enabled == false || this._parent.visible == false)
+            {
+                return false;
+            }
+            else
+            {
                 return SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY());
-		    }
+            }
 
-		}
+        }
 
         /**
          * Update
@@ -437,45 +437,45 @@ module Phaser.Components {
 
         }
 
-		/**
+        /**
 		 * Updates the Pointer drag on this Sprite.
 		 */
-		private updateDrag(pointer: Pointer):bool
-		{
-		    if (pointer.isUp)
-		    {
-		        this.stopDrag(pointer);
-		        return false;
-		    }
+        private updateDrag(pointer: Pointer): bool {
 
-			if (this.allowHorizontalDrag)
-			{
-			    this._parent.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
-			}
-			
-			if (this.allowVerticalDrag)
-			{
-			    this._parent.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
-			}
-			
-			if (this.boundsRect)
-			{
-				this.checkBoundsRect();
-			}
+            if (pointer.isUp)
+            {
+                this.stopDrag(pointer);
+                return false;
+            }
 
-			if (this.boundsSprite)
-			{
-				this.checkBoundsSprite();
-			}
-			
-			if (this.snapOnDrag)
-			{
-				this._parent.x = Math.floor(this._parent.x / this.snapX) * this.snapX;
-				this._parent.y = Math.floor(this._parent.y / this.snapY) * this.snapY;
-			}
+            if (this.allowHorizontalDrag)
+            {
+                this._parent.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
+            }
 
-			return true;
-		}
+            if (this.allowVerticalDrag)
+            {
+                this._parent.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
+            }
+
+            if (this.boundsRect)
+            {
+                this.checkBoundsRect();
+            }
+
+            if (this.boundsSprite)
+            {
+                this.checkBoundsSprite();
+            }
+
+            if (this.snapOnDrag)
+            {
+                this._parent.x = Math.floor(this._parent.x / this.snapX) * this.snapX;
+                this._parent.y = Math.floor(this._parent.y / this.snapY) * this.snapY;
+            }
+
+            return true;
+        }
 
         /**
          * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
@@ -543,7 +543,7 @@ module Phaser.Components {
 
         }
 
-		/**
+        /**
 		 * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
 		 * 
 		 * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
@@ -553,61 +553,59 @@ module Phaser.Components {
 		 * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
 		 * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
 		 */
-		public enableDrag(lockCenter:bool = false, bringToTop:bool = false, pixelPerfect:bool = false, alphaThreshold:number = 255, boundsRect:Rectangle = null, boundsSprite:Phaser.Sprite = null):void
-		{
+        public enableDrag(lockCenter: bool = false, bringToTop: bool = false, pixelPerfect: bool = false, alphaThreshold: number = 255, boundsRect: Rectangle = null, boundsSprite: Phaser.Sprite = null): void {
             this._dragPoint = new Point;
 
-			this.draggable = true;
-			this.bringToTop = bringToTop;
-			
+            this.draggable = true;
+            this.bringToTop = bringToTop;
+
             this.dragOffset = new Point;
-			this.dragFromCenter = lockCenter;
-			this.dragPixelPerfect = pixelPerfect;
-			this.dragPixelPerfectAlpha = alphaThreshold;
-			
-			if (boundsRect)
-			{
-				this.boundsRect = boundsRect;
-			}
-			
-			if (boundsSprite)
-			{
-				this.boundsSprite = boundsSprite;
-			}
-		}
-		
-		/**
+            this.dragFromCenter = lockCenter;
+            this.dragPixelPerfect = pixelPerfect;
+            this.dragPixelPerfectAlpha = alphaThreshold;
+
+            if (boundsRect)
+            {
+                this.boundsRect = boundsRect;
+            }
+
+            if (boundsSprite)
+            {
+                this.boundsSprite = boundsSprite;
+            }
+        }
+
+        /**
 		 * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
 		 */
-		public disableDrag():void
-		{
-		    if (this._pointerData)
-		    {
-		        for (var i = 0; i < 10; i++)
-		        {
-    		        this._pointerData[i].isDragged = false;
-		        }
-		    }
+        public disableDrag(): void {
 
-			this.draggable = false;
-		    this.isDragged = false;
-		    this._draggedPointerID = -1;
-		}
+            if (this._pointerData)
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    this._pointerData[i].isDragged = false;
+                }
+            }
 
-		/**
+            this.draggable = false;
+            this.isDragged = false;
+            this._draggedPointerID = -1;
+
+        }
+
+        /**
 		 * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
 		 */
-		public startDrag(pointer: Pointer):void
-		{
-		    this.isDragged = true;
-		    this._draggedPointerID = pointer.id;
+        public startDrag(pointer: Pointer): void {
+
+            this.isDragged = true;
+            this._draggedPointerID = pointer.id;
             this._pointerData[pointer.id].isDragged = true;
-			
+
             if (this.dragFromCenter)
             {
-                //	Move the sprite to the middle of the pointer
-                //this._dragPoint.setTo(-this._parent.worldView.halfWidth, -this._parent.worldView.halfHeight);
-                //this._dragPoint.setTo(this._parent.transform.center.x, this._parent.transform.center.y);
+                this._parent.transform.centerOn(pointer.worldX(), pointer.worldY());
                 this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
             }
             else
@@ -624,40 +622,40 @@ module Phaser.Components {
 
             this._parent.events.onDragStart.dispatch(this._parent, pointer);
 
-		}
+        }
 
-		/**
+        /**
 		 * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
 		 */
-		public stopDrag(pointer: Pointer):void
-		{
-		    this.isDragged = false;
-		    this._draggedPointerID = -1;
+        public stopDrag(pointer: Pointer): void {
+
+            this.isDragged = false;
+            this._draggedPointerID = -1;
             this._pointerData[pointer.id].isDragged = false;
-			
-			if (this.snapOnRelease)
-			{
-				this._parent.x = Math.floor(this._parent.x / this.snapX) * this.snapX;
-				this._parent.y = Math.floor(this._parent.y / this.snapY) * this.snapY;
-			}
+
+            if (this.snapOnRelease)
+            {
+                this._parent.x = Math.floor(this._parent.x / this.snapX) * this.snapX;
+                this._parent.y = Math.floor(this._parent.y / this.snapY) * this.snapY;
+            }
 
             this._parent.events.onDragStop.dispatch(this._parent, pointer);
             this._parent.events.onInputUp.dispatch(this._parent, pointer);
-		}
 
-		/**
+        }
+
+        /**
 		* Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
 		 * 
 		 * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
 		 * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
 		 */
-		public setDragLock(allowHorizontal:bool = true, allowVertical:bool = true):void
-		{
-			this.allowHorizontalDrag = allowHorizontal;
-			this.allowVerticalDrag = allowVertical;
-		}
+        public setDragLock(allowHorizontal: bool = true, allowVertical: bool = true): void {
+            this.allowHorizontalDrag = allowHorizontal;
+            this.allowVerticalDrag = allowVertical;
+        }
 
-		/**
+        /**
 		 * Make this Sprite snap to the given grid either during drag or when it's released.
 		 * For example 16x16 as the snapX and snapY would make the sprite snap to every 16 pixels.
 		 * 
@@ -666,87 +664,65 @@ module Phaser.Components {
 		 * @param	onDrag		If true the sprite will snap to the grid while being dragged
 		 * @param	onRelease	If true the sprite will snap to the grid when released
 		 */
-		public enableSnap(snapX:number , snapY:number, onDrag:bool = true, onRelease:bool = false):void
-		{
-			this.snapOnDrag = onDrag;
-			this.snapOnRelease = onRelease;
-			this.snapX = snapX;
-			this.snapY = snapY;
-		}
-		
-		/**
-		 * Stops the sprite from snapping to a grid during drag or release.
-		 */
-		public disableSnap():void
-		{
-			this.snapOnDrag = false;
-			this.snapOnRelease = false;
-		}
-		
-		/**
-		 * Bounds Rect check for the sprite drag
-		 */
-		private checkBoundsRect():void
-		{
-			if (this._parent.x < this.boundsRect.left)
-			{
-				this._parent.x = this.boundsRect.x;
-			}
-			else if ((this._parent.x + this._parent.width) > this.boundsRect.right)
-			{
-				this._parent.x = this.boundsRect.right - this._parent.width;
-			}
-			
-			if (this._parent.y < this.boundsRect.top)
-			{
-				this._parent.y = this.boundsRect.top;
-			}
-			else if ((this._parent.y + this._parent.height) > this.boundsRect.bottom)
-			{
-				this._parent.y = this.boundsRect.bottom - this._parent.height;
-			}
-		}
-		
-		/**
-		 * Parent Sprite Bounds check for the sprite drag
-		 */
-		private checkBoundsSprite():void
-		{
-			if (this._parent.x < this.boundsSprite.x)
-			{
-				this._parent.x = this.boundsSprite.x;
-			}
-			else if ((this._parent.x + this._parent.width) > (this.boundsSprite.x + this.boundsSprite.width))
-			{
-				this._parent.x = (this.boundsSprite.x + this.boundsSprite.width) - this._parent.width;
-			}
-			
-			if (this._parent.y < this.boundsSprite.y)
-			{
-				this._parent.y = this.boundsSprite.y;
-			}
-			else if ((this._parent.y + this._parent.height) > (this.boundsSprite.y + this.boundsSprite.height))
-			{
-				this._parent.y = (this.boundsSprite.y + this.boundsSprite.height) - this._parent.height;
-			}
-		}
+        public enableSnap(snapX: number, snapY: number, onDrag: bool = true, onRelease: bool = false): void {
+            this.snapOnDrag = onDrag;
+            this.snapOnRelease = onRelease;
+            this.snapX = snapX;
+            this.snapY = snapY;
+        }
 
         /**
-         * Render debug infos. (including name, bounds info, position and some other properties)
-         * @param x {number} X position of the debug info to be rendered.
-         * @param y {number} Y position of the debug info to be rendered.
-         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-         */
-        public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
+		 * Stops the sprite from snapping to a grid during drag or release.
+		 */
+        public disableSnap(): void {
+            this.snapOnDrag = false;
+            this.snapOnRelease = false;
+        }
 
-            this._parent.texture.context.font = '14px Courier';
-            this._parent.texture.context.fillStyle = color;
-            this._parent.texture.context.fillText('Sprite Input: (' + this._parent.worldView.width + ' x ' + this._parent.worldView.height + ')', x, y);
-            this._parent.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
-            this._parent.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
-            this._parent.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
-            this._parent.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
+        /**
+		 * Bounds Rect check for the sprite drag
+		 */
+        private checkBoundsRect(): void {
+            if (this._parent.x < this.boundsRect.left)
+            {
+                this._parent.x = this.boundsRect.x;
+            }
+            else if ((this._parent.x + this._parent.width) > this.boundsRect.right)
+            {
+                this._parent.x = this.boundsRect.right - this._parent.width;
+            }
 
+            if (this._parent.y < this.boundsRect.top)
+            {
+                this._parent.y = this.boundsRect.top;
+            }
+            else if ((this._parent.y + this._parent.height) > this.boundsRect.bottom)
+            {
+                this._parent.y = this.boundsRect.bottom - this._parent.height;
+            }
+        }
+
+        /**
+		 * Parent Sprite Bounds check for the sprite drag
+		 */
+        private checkBoundsSprite(): void {
+            if (this._parent.x < this.boundsSprite.x)
+            {
+                this._parent.x = this.boundsSprite.x;
+            }
+            else if ((this._parent.x + this._parent.width) > (this.boundsSprite.x + this.boundsSprite.width))
+            {
+                this._parent.x = (this.boundsSprite.x + this.boundsSprite.width) - this._parent.width;
+            }
+
+            if (this._parent.y < this.boundsSprite.y)
+            {
+                this._parent.y = this.boundsSprite.y;
+            }
+            else if ((this._parent.y + this._parent.height) > (this.boundsSprite.y + this.boundsSprite.height))
+            {
+                this._parent.y = (this.boundsSprite.y + this.boundsSprite.height) - this._parent.height;
+            }
         }
 
     }

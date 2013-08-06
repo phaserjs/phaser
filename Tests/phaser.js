@@ -2492,9 +2492,8 @@ var Phaser;
                 this._draggedPointerID = pointer.id;
                 this._pointerData[pointer.id].isDragged = true;
                 if(this.dragFromCenter) {
-                    //	Move the sprite to the middle of the pointer
-                    //this._dragPoint.setTo(-this._parent.worldView.halfWidth, -this._parent.worldView.halfHeight);
-                    //this._dragPoint.setTo(this._parent.transform.center.x, this._parent.transform.center.y);
+                    this._parent.transform.centerOn(pointer.worldX(), pointer.worldY());
+                    //this._dragPoint.setTo(this._parent.x - this._parent.transform.center.x, this._parent.y - this._parent.transform.center.y);
                     this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
                 } else {
                     this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
@@ -2584,22 +2583,6 @@ var Phaser;
                 } else if((this._parent.y + this._parent.height) > (this.boundsSprite.y + this.boundsSprite.height)) {
                     this._parent.y = (this.boundsSprite.y + this.boundsSprite.height) - this._parent.height;
                 }
-            };
-            InputHandler.prototype.renderDebugInfo = /**
-            * Render debug infos. (including name, bounds info, position and some other properties)
-            * @param x {number} X position of the debug info to be rendered.
-            * @param y {number} Y position of the debug info to be rendered.
-            * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-            */
-            function (x, y, color) {
-                if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-                this._parent.texture.context.font = '14px Courier';
-                this._parent.texture.context.fillStyle = color;
-                this._parent.texture.context.fillText('Sprite Input: (' + this._parent.worldView.width + ' x ' + this._parent.worldView.height + ')', x, y);
-                this._parent.texture.context.fillText('x: ' + this.pointerX().toFixed(1) + ' y: ' + this.pointerY().toFixed(1), x, y + 14);
-                this._parent.texture.context.fillText('over: ' + this.pointerOver() + ' duration: ' + this.overDuration().toFixed(0), x, y + 28);
-                this._parent.texture.context.fillText('down: ' + this.pointerDown() + ' duration: ' + this.downDuration().toFixed(0), x, y + 42);
-                this._parent.texture.context.fillText('just over: ' + this.justOver() + ' just out: ' + this.justOut(), x, y + 56);
             };
             return InputHandler;
         })();
@@ -2875,6 +2858,7 @@ var Phaser;
             * @param parent The game object using this transform
             */
             function TransformManager(parent) {
+                this._dirty = false;
                 /**
                 * This value is added to the rotation of the object.
                 * For example if you had a texture drawn facing straight up then you could set
@@ -2929,7 +2913,8 @@ var Phaser;
             });
             Object.defineProperty(TransformManager.prototype, "offsetX", {
                 get: /**
-                * The offset on the X axis of the origin
+                * The offset on the X axis of the origin That is the difference between the top left of the Sprite and the origin.x.
+                * So if the origin.x is 0 the offsetX will be 0. If the origin.x is 0.5 then offsetX will be sprite width / 2, and so on.
                 */
                 function () {
                     return this._offset.x;
@@ -2987,6 +2972,16 @@ var Phaser;
                 enumerable: true,
                 configurable: true
             });
+            TransformManager.prototype.centerOn = /**
+            * Moves the sprite so its center is located on the given x and y coordinates.
+            * Doesn't change the origin of the sprite.
+            */
+            function (x, y) {
+                console.log('centerOn', x, y);
+                this.parent.x = x + (this.parent.x - this.center.x);
+                this.parent.y = y + (this.parent.y - this.center.y);
+                this.setCache();
+            };
             TransformManager.prototype.setCache = /**
             * Populates the transform cache. Called by the parent object on creation.
             */
@@ -3029,7 +3024,7 @@ var Phaser;
             */
             function () {
                 //  Check cache
-                var dirty = false;
+                this._dirty = false;
                 //  1) Height or Width change (also triggered by a change in scale) or an Origin change
                 if(this.parent.width !== this._size.x || this.parent.height !== this._size.y || this.origin.x !== this._origin.x || this.origin.y !== this._origin.y) {
                     this._halfSize.x = this.parent.width / 2;
@@ -3043,7 +3038,7 @@ var Phaser;
                     this._size.y = this.parent.height;
                     this._origin.x = this.origin.x;
                     this._origin.y = this.origin.y;
-                    dirty = true;
+                    this._dirty = true;
                 }
                 //  2) Rotation change
                 if(this.rotation != this._prevRotation) {
@@ -3060,10 +3055,10 @@ var Phaser;
                     }
                     //  Store
                     this._prevRotation = this.rotation;
-                    dirty = true;
+                    this._dirty = true;
                 }
                 //  If it has moved, update the edges and center
-                if(dirty || this.parent.x != this._pos.x || this.parent.y != this._pos.y) {
+                if(this._dirty || this.parent.x != this._pos.x || this.parent.y != this._pos.y) {
                     this.center.x = this.parent.x + this._distance * this._scA.y;
                     this.center.y = this.parent.y + this._distance * this._scA.x;
                     this.upperLeft.setTo(this.center.x - this._halfSize.x * this._sc.y + this._halfSize.y * this._sc.x, this.center.y - this._halfSize.y * this._sc.y - this._halfSize.x * this._sc.x);
@@ -9801,23 +9796,6 @@ var Phaser;
             }
             this.plugins.postUpdate();
         };
-        Camera.prototype.renderDebugInfo = /**
-        * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
-        * @param x {number} X position of the debug info to be rendered.
-        * @param y {number} Y position of the debug info to be rendered.
-        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-        */
-        function (x, y, color) {
-            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this.game.stage.context.fillStyle = color;
-            this.game.stage.context.fillText('Camera ID: ' + this.ID + ' (' + this.screenView.width + ' x ' + this.screenView.height + ')', x, y);
-            this.game.stage.context.fillText('X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' rotation: ' + this.transform.rotation, x, y + 14);
-            this.game.stage.context.fillText('World X: ' + this.worldView.x + ' World Y: ' + this.worldView.y + ' W: ' + this.worldView.width + ' H: ' + this.worldView.height + ' R: ' + this.worldView.right + ' B: ' + this.worldView.bottom, x, y + 28);
-            this.game.stage.context.fillText('ScreenView X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' W: ' + this.screenView.width + ' H: ' + this.screenView.height, x, y + 42);
-            if(this.worldBounds) {
-                this.game.stage.context.fillText('Bounds: ' + this.worldBounds.width + ' x ' + this.worldBounds.height, x, y + 56);
-            }
-        };
         Camera.prototype.destroy = /**
         * Destroys this camera, associated FX and removes itself from the CameraManager.
         */
@@ -11845,18 +11823,7 @@ var Phaser;
         return TilemapLayer;
     })();
     Phaser.TilemapLayer = TilemapLayer;    
-    /*
-    public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
-    
-    this.context.fillStyle = color;
-    this.context.fillText('TilemapLayer: ' + this.name, x, y);
-    this.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
-    this.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
-    this.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
-    
-    }
-    */
-    })(Phaser || (Phaser = {}));
+})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /**
 * Phaser - Tile
@@ -12873,7 +12840,6 @@ var Phaser;
             }
         };
         Sound.prototype.resume = function () {
-            //if (this.isPlaying == false && this._sound)
             if(this.paused && this._sound) {
                 if(this.usingWebAudio) {
                     if(typeof this._sound.start === 'undefined') {
@@ -12894,7 +12860,6 @@ var Phaser;
         * Stop playing this sound.
         */
         function () {
-            //console.log('Sound.stop', this.currentMarker);
             if(this.isPlaying && this._sound) {
                 if(this.usingWebAudio) {
                     if(typeof this._sound.stop === 'undefined') {
@@ -12957,25 +12922,6 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Sound.prototype.renderDebug = /**
-        * Renders the Pointer.circle object onto the stage in green if down or red if up.
-        * @method renderDebug
-        */
-        function (x, y) {
-            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
-            this.game.stage.context.font = '16px Courier';
-            this.game.stage.context.fillText('Sound: ' + this.key + ' Locked: ' + this.game.sound.touchLocked + ' Pending Playback: ' + this.pendingPlayback, x, y);
-            this.game.stage.context.fillText('Decoded: ' + this.isDecoded + ' Decoding: ' + this.isDecoding, x, y + 20);
-            this.game.stage.context.fillText('Total Duration: ' + this.totalDuration + ' Playing: ' + this.isPlaying, x, y + 40);
-            this.game.stage.context.fillText('Time: ' + this.currentTime, x, y + 60);
-            this.game.stage.context.fillText('Volume: ' + this.volume + ' Muted: ' + this.mute, x, y + 80);
-            this.game.stage.context.fillText('WebAudio: ' + this.usingWebAudio + ' Audio: ' + this.usingAudioTag, x, y + 100);
-            if(this.currentMarker !== '') {
-                this.game.stage.context.fillText('Marker: ' + this.currentMarker + ' Duration: ' + this.duration, x, y + 120);
-                this.game.stage.context.fillText('Start: ' + this.markers[this.currentMarker].start + ' Stop: ' + this.markers[this.currentMarker].stop, x, y + 140);
-                this.game.stage.context.fillText('Position: ' + this.position, x, y + 160);
-            }
-        };
         return Sound;
     })();
     Phaser.Sound = Sound;    
@@ -15977,40 +15923,6 @@ var Phaser;
             }
             this.targetObject = null;
         };
-        Pointer.prototype.renderDebug = /**
-        * Renders the Pointer.circle object onto the stage in green if down or red if up.
-        * @method renderDebug
-        */
-        function (hideIfUp) {
-            if (typeof hideIfUp === "undefined") { hideIfUp = false; }
-            if(hideIfUp == true && this.isUp == true) {
-                return;
-            }
-            this.game.stage.context.beginPath();
-            this.game.stage.context.arc(this.x, this.y, this.circle.radius, 0, Math.PI * 2);
-            if(this.active) {
-                this.game.stage.context.fillStyle = 'rgba(0,255,0,0.5)';
-                this.game.stage.context.strokeStyle = 'rgb(0,255,0)';
-            } else {
-                this.game.stage.context.fillStyle = 'rgba(255,0,0,0.5)';
-                this.game.stage.context.strokeStyle = 'rgb(100,0,0)';
-            }
-            this.game.stage.context.fill();
-            this.game.stage.context.closePath();
-            //  Render the points
-            this.game.stage.context.beginPath();
-            this.game.stage.context.moveTo(this.positionDown.x, this.positionDown.y);
-            this.game.stage.context.lineTo(this.position.x, this.position.y);
-            this.game.stage.context.lineWidth = 2;
-            this.game.stage.context.stroke();
-            this.game.stage.context.closePath();
-            //  Render the text
-            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
-            this.game.stage.context.font = 'Arial 16px';
-            this.game.stage.context.fillText('ID: ' + this.id + " Active: " + this.active, this.x, this.y - 100);
-            this.game.stage.context.fillText('Screen X: ' + this.x + " Screen Y: " + this.y, this.x, this.y - 80);
-            this.game.stage.context.fillText('Duration: ' + this.duration + " ms", this.x, this.y - 60);
-        };
         Pointer.prototype.toString = /**
         * Returns a string representation of this object.
         * @method toString
@@ -17322,20 +17234,6 @@ var Phaser;
             if (typeof camera === "undefined") { camera = this.game.camera; }
             return camera.worldView.y + this.y;
         };
-        InputManager.prototype.renderDebugInfo = /**
-        * @param {Number} x
-        * @param {Number} y
-        * @param {String} [color]
-        */
-        function (x, y, color) {
-            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            this.game.stage.context.fillStyle = color;
-            this.game.stage.context.fillText('Input', x, y);
-            this.game.stage.context.fillText('X: ' + this.x + ' Y: ' + this.y, x, y + 14);
-            this.game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
-            this.game.stage.context.fillText('Scale X: ' + this.scale.x.toFixed(1) + ' Scale Y: ' + this.scale.x.toFixed(1), x, y + 42);
-            this.game.stage.context.fillText('Screen X: ' + this.activePointer.screenX + ' Screen Y: ' + this.activePointer.screenY, x, y + 56);
-        };
         InputManager.prototype.getDistance = /**
         * Get the distance between two Pointer objects
         * @method getDistance
@@ -18002,6 +17900,145 @@ var Phaser;
 (function (Phaser) {
     var DebugUtils = (function () {
         function DebugUtils() { }
+        DebugUtils.font = '14px Courier';
+        DebugUtils.lineHeight = 16;
+        DebugUtils.renderShadow = true;
+        DebugUtils.start = function start(x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.currentX = x;
+            DebugUtils.currentY = y;
+            DebugUtils.currentColor = color;
+            DebugUtils.context.fillStyle = color;
+            DebugUtils.context.font = DebugUtils.font;
+        };
+        DebugUtils.line = function line(text, x, y) {
+            if (typeof x === "undefined") { x = null; }
+            if (typeof y === "undefined") { y = null; }
+            if(x !== null) {
+                DebugUtils.currentX = x;
+            }
+            if(y !== null) {
+                DebugUtils.currentY = y;
+            }
+            if(DebugUtils.renderShadow) {
+                DebugUtils.context.fillStyle = 'rgb(0,0,0)';
+                DebugUtils.context.fillText(text, DebugUtils.currentX + 1, DebugUtils.currentY + 1);
+                DebugUtils.context.fillStyle = DebugUtils.currentColor;
+            }
+            DebugUtils.context.fillText(text, DebugUtils.currentX, DebugUtils.currentY);
+            DebugUtils.currentY += DebugUtils.lineHeight;
+        };
+        DebugUtils.renderSpriteCorners = function renderSpriteCorners(sprite, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,0,255)'; }
+            DebugUtils.start(0, 0, color);
+            DebugUtils.line('x: ' + Math.floor(sprite.transform.upperLeft.x) + ' y: ' + Math.floor(sprite.transform.upperLeft.y), sprite.transform.upperLeft.x, sprite.transform.upperLeft.y);
+            DebugUtils.line('x: ' + Math.floor(sprite.transform.upperRight.x) + ' y: ' + Math.floor(sprite.transform.upperRight.y), sprite.transform.upperRight.x, sprite.transform.upperRight.y);
+            DebugUtils.line('x: ' + Math.floor(sprite.transform.bottomLeft.x) + ' y: ' + Math.floor(sprite.transform.bottomLeft.y), sprite.transform.bottomLeft.x, sprite.transform.bottomLeft.y);
+            DebugUtils.line('x: ' + Math.floor(sprite.transform.bottomRight.x) + ' y: ' + Math.floor(sprite.transform.bottomRight.y), sprite.transform.bottomRight.x, sprite.transform.bottomRight.y);
+        };
+        DebugUtils.renderSoundInfo = /**
+        * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function renderSoundInfo(sound, x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.start(x, y, color);
+            DebugUtils.line('Sound: ' + sound.key + ' Locked: ' + sound.game.sound.touchLocked + ' Pending Playback: ' + sound.pendingPlayback);
+            DebugUtils.line('Decoded: ' + sound.isDecoded + ' Decoding: ' + sound.isDecoding);
+            DebugUtils.line('Total Duration: ' + sound.totalDuration + ' Playing: ' + sound.isPlaying);
+            DebugUtils.line('Time: ' + sound.currentTime);
+            DebugUtils.line('Volume: ' + sound.volume + ' Muted: ' + sound.mute);
+            DebugUtils.line('WebAudio: ' + sound.usingWebAudio + ' Audio: ' + sound.usingAudioTag);
+            if(sound.currentMarker !== '') {
+                DebugUtils.line('Marker: ' + sound.currentMarker + ' Duration: ' + sound.duration);
+                DebugUtils.line('Start: ' + sound.markers[sound.currentMarker].start + ' Stop: ' + sound.markers[sound.currentMarker].stop);
+                DebugUtils.line('Position: ' + sound.position);
+            }
+        };
+        DebugUtils.renderCameraInfo = /**
+        * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function renderCameraInfo(camera, x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.start(x, y, color);
+            DebugUtils.line('Camera ID: ' + camera.ID + ' (' + camera.screenView.width + ' x ' + camera.screenView.height + ')');
+            DebugUtils.line('X: ' + camera.screenView.x + ' Y: ' + camera.screenView.y + ' rotation: ' + camera.transform.rotation);
+            DebugUtils.line('World X: ' + camera.worldView.x + ' World Y: ' + camera.worldView.y + ' W: ' + camera.worldView.width + ' H: ' + camera.worldView.height + ' R: ' + camera.worldView.right + ' B: ' + camera.worldView.bottom);
+            DebugUtils.line('ScreenView X: ' + camera.screenView.x + ' Y: ' + camera.screenView.y + ' W: ' + camera.screenView.width + ' H: ' + camera.screenView.height);
+            if(camera.worldBounds) {
+                DebugUtils.line('Bounds: ' + camera.worldBounds.width + ' x ' + camera.worldBounds.height);
+            }
+        };
+        DebugUtils.renderPointer = /**
+        * Renders the Pointer.circle object onto the stage in green if down or red if up.
+        * @method renderDebug
+        */
+        function renderPointer(pointer, hideIfUp, downColor, upColor, color) {
+            if (typeof hideIfUp === "undefined") { hideIfUp = false; }
+            if (typeof downColor === "undefined") { downColor = 'rgba(0,255,0,0.5)'; }
+            if (typeof upColor === "undefined") { upColor = 'rgba(255,0,0,0.5)'; }
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            if(hideIfUp == true && pointer.isUp == true) {
+                return;
+            }
+            DebugUtils.context.beginPath();
+            DebugUtils.context.arc(pointer.x, pointer.y, pointer.circle.radius, 0, Math.PI * 2);
+            if(pointer.active) {
+                DebugUtils.context.fillStyle = downColor;
+            } else {
+                DebugUtils.context.fillStyle = upColor;
+            }
+            DebugUtils.context.fill();
+            DebugUtils.context.closePath();
+            //  Render the points
+            DebugUtils.context.beginPath();
+            DebugUtils.context.moveTo(pointer.positionDown.x, pointer.positionDown.y);
+            DebugUtils.context.lineTo(pointer.position.x, pointer.position.y);
+            DebugUtils.context.lineWidth = 2;
+            DebugUtils.context.stroke();
+            DebugUtils.context.closePath();
+            //  Render the text
+            DebugUtils.start(pointer.x, pointer.y - 100, color);
+            DebugUtils.line('ID: ' + pointer.id + " Active: " + pointer.active);
+            DebugUtils.line('World X: ' + pointer.worldX() + " World Y: " + pointer.worldY());
+            DebugUtils.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
+            DebugUtils.line('Duration: ' + pointer.duration + " ms");
+        };
+        DebugUtils.renderSpriteInputInfo = /**
+        * Render Sprite Input Debug information
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function renderSpriteInputInfo(sprite, x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.start(x, y, color);
+            DebugUtils.line('Sprite Input: (' + sprite.width + ' x ' + sprite.height + ')');
+            DebugUtils.line('x: ' + sprite.input.pointerX().toFixed(1) + ' y: ' + sprite.input.pointerY().toFixed(1));
+            DebugUtils.line('over: ' + sprite.input.pointerOver() + ' duration: ' + sprite.input.overDuration().toFixed(0));
+            DebugUtils.line('down: ' + sprite.input.pointerDown() + ' duration: ' + sprite.input.downDuration().toFixed(0));
+            DebugUtils.line('just over: ' + sprite.input.justOver() + ' just out: ' + sprite.input.justOut());
+        };
+        DebugUtils.renderInputInfo = /**
+        * Render debug information about the Input object.
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        function renderInputInfo(x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.start(x, y, color);
+            DebugUtils.line('Input');
+            DebugUtils.line('X: ' + DebugUtils.game.input.x + ' Y: ' + DebugUtils.game.input.y);
+            DebugUtils.line('World X: ' + DebugUtils.game.input.getWorldX() + ' World Y: ' + DebugUtils.game.input.getWorldY());
+            DebugUtils.line('Scale X: ' + DebugUtils.game.input.scale.x.toFixed(1) + ' Scale Y: ' + DebugUtils.game.input.scale.x.toFixed(1));
+            DebugUtils.line('Screen X: ' + DebugUtils.game.input.activePointer.screenX + ' Screen Y: ' + DebugUtils.game.input.activePointer.screenY);
+        };
         DebugUtils.renderSpriteInfo = /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.
@@ -18010,14 +18047,16 @@ var Phaser;
         */
         function renderSpriteInfo(sprite, x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            DebugUtils.context.fillStyle = color;
-            DebugUtils.context.fillText('Sprite: ' + ' (' + sprite.width + ' x ' + sprite.height + ') origin: ' + sprite.transform.origin.x + ' x ' + sprite.transform.origin.y, x, y);
-            DebugUtils.context.fillText('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1), x, y + 14);
-            DebugUtils.context.fillText('wx: ' + sprite.worldView.x + ' wy: ' + sprite.worldView.y + ' ww: ' + sprite.worldView.width.toFixed(1) + ' wh: ' + sprite.worldView.height.toFixed(1) + ' wb: ' + sprite.worldView.bottom + ' wr: ' + sprite.worldView.right, x, y + 28);
-            DebugUtils.context.fillText('sx: ' + sprite.transform.scale.x.toFixed(1) + ' sy: ' + sprite.transform.scale.y.toFixed(1), x, y + 42);
-            DebugUtils.context.fillText('tx: ' + sprite.texture.width.toFixed(1) + ' ty: ' + sprite.texture.height.toFixed(1), x, y + 56);
-            DebugUtils.context.fillText('cx: ' + sprite.cameraView.x + ' cy: ' + sprite.cameraView.y + ' cw: ' + sprite.cameraView.width + ' ch: ' + sprite.cameraView.height + ' cb: ' + sprite.cameraView.bottom + ' cr: ' + sprite.cameraView.right, x, y + 70);
-            DebugUtils.context.fillText('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite), x, y + 84);
+            DebugUtils.start(x, y, color);
+            DebugUtils.line('Sprite: ' + ' (' + sprite.width + ' x ' + sprite.height + ') origin: ' + sprite.transform.origin.x + ' x ' + sprite.transform.origin.y);
+            DebugUtils.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
+            DebugUtils.line('wx: ' + sprite.worldView.x + ' wy: ' + sprite.worldView.y + ' ww: ' + sprite.worldView.width.toFixed(1) + ' wh: ' + sprite.worldView.height.toFixed(1) + ' wb: ' + sprite.worldView.bottom + ' wr: ' + sprite.worldView.right);
+            DebugUtils.line('sx: ' + sprite.transform.scale.x.toFixed(1) + ' sy: ' + sprite.transform.scale.y.toFixed(1));
+            DebugUtils.line('tx: ' + sprite.texture.width.toFixed(1) + ' ty: ' + sprite.texture.height.toFixed(1));
+            DebugUtils.line('center x: ' + sprite.transform.center.x + ' y: ' + sprite.transform.center.y);
+            //line('cameraView x: ' + sprite.cameraView.x + ' y: ' + sprite.cameraView.y + ' width: ' + sprite.cameraView.width + ' height: ' + sprite.cameraView.height + ' bottom: ' + sprite.cameraView.bottom + ' right: ' + sprite.cameraView.right);
+            DebugUtils.line('cameraView x: ' + sprite.cameraView.x + ' y: ' + sprite.cameraView.y + ' width: ' + sprite.cameraView.width + ' height: ' + sprite.cameraView.height);
+            DebugUtils.line('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite));
         };
         DebugUtils.renderSpriteBounds = function renderSpriteBounds(sprite, camera, color) {
             if (typeof camera === "undefined") { camera = null; }
@@ -18029,6 +18068,16 @@ var Phaser;
             var dy = sprite.worldView.y;
             DebugUtils.context.fillStyle = color;
             DebugUtils.context.fillRect(dx, dy, sprite.width, sprite.height);
+        };
+        DebugUtils.renderPixel = function renderPixel(x, y, fillStyle) {
+            if (typeof fillStyle === "undefined") { fillStyle = 'rgba(0,255,0,1)'; }
+            DebugUtils.context.fillStyle = fillStyle;
+            DebugUtils.context.fillRect(x, y, 1, 1);
+        };
+        DebugUtils.renderPoint = function renderPoint(point, fillStyle) {
+            if (typeof fillStyle === "undefined") { fillStyle = 'rgba(0,255,0,1)'; }
+            DebugUtils.context.fillStyle = fillStyle;
+            DebugUtils.context.fillRect(point.x, point.y, 1, 1);
         };
         DebugUtils.renderRectangle = function renderRectangle(rect, fillStyle) {
             if (typeof fillStyle === "undefined") { fillStyle = 'rgba(0,255,0,0.3)'; }
@@ -18047,9 +18096,10 @@ var Phaser;
         * @param y {number} Y position of the debug info to be rendered.
         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
-        function renderText(text, x, y, color) {
+        function renderText(text, x, y, color, font) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-            DebugUtils.context.font = '16px Courier';
+            if (typeof font === "undefined") { font = '16px Courier'; }
+            DebugUtils.context.font = font;
             DebugUtils.context.fillStyle = color;
             DebugUtils.context.fillText(text, x, y);
         };

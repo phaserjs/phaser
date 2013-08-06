@@ -1,7 +1,7 @@
 Phaser
 ======
 
-Version: 1.0.0 - Released: In Progress
+Version: 1.0.0 - Released: August 12th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -30,24 +30,19 @@ TODO:
 * Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
 * Add clip support + shape options to Texture Component.
-* Drag Sprite with "snap to center" uses local coords not world, so fails on scrolling world (no center lock works fine)
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
-* Pointer worldX/Y don't appear to be correct for some reason
 * Sprite collision events
-* Move all of the renderDebugInfo methods to the DebugUtils class
 * Check bounds/edge points when sprite is only 1x1 sized :)
 * QuadTree.physics.checkHullIntersection
 * Add visible toggle if tween property is alpha <> 01
 * Camera.isHidden uses an array and length check, faster to swap for a single counter, also try to remove indexOf check
 * Tilemap.render - move layers length to var
-* Camera control method (touch/keyboard)
 * Tilemap.destroy needs doing
 * Sprite.transform.bottomRight/Left doesn't seem to take origin into account
 * Stage.opaqueBackground = 'rgb()' or null, alpha, blendMode, filters, mask, rotation+XYZ,scaleXYZ,visible
 * Stage CSS3 Transforms?
 * Ability to layer another DOM object and have it controlled by the game somehow. Can then do stacked canvas effects.
 * Stage lost to mute
-* Need to limit touch priority of items in groups?
 * Bitmap Font support
 * Basic Window component (maybe a propogating Group?)
 * Put ArcadePhysics back in
@@ -160,6 +155,7 @@ V1.0.0
 * Added references to all the event listener functions so they can be cleanly destroyed.
 * Fixed interesting Firefox issue when an audio track ended it fired another 'canplaythrough' event, confusing the Loader.
 * Added the new PluginManager. Moved all the Camera FX over to plugins. Everything will be a plugin from now on.
+* Added Sprite.transform.centerOn(x,y) to quickly center a sprite on a coordinate without messing with the sprite origin and regardless of rotation.
 
 
 V0.9.6

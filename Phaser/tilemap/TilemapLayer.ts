@@ -540,17 +540,5 @@ module Phaser {
 
         }
 
-        /*
-        public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
-
-            this.context.fillStyle = color;
-            this.context.fillText('TilemapLayer: ' + this.name, x, y);
-            this.context.fillText('startX: ' + this._startX + ' endX: ' + this._maxX, x, y + 14);
-            this.context.fillText('startY: ' + this._startY + ' endY: ' + this._maxY, x, y + 28);
-            this.context.fillText('dx: ' + this._dx + ' dy: ' + this._dy, x, y + 42);
-
-        }
-        */
-
     }
 }

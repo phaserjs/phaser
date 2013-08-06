@@ -25,7 +25,17 @@
         {
             var sprite: Phaser.Sprite = game.add.sprite(game.world.randomX, game.world.randomY, 'diamond');
             sprite.input.start(i, false, true);
-            sprite.input.enableDrag();
+
+            if (i < 25)
+            {
+                sprite.input.enableDrag(false);
+            }
+            else
+            {
+                sprite.input.enableDrag(true);
+                sprite.alpha = 0.5;
+            }
+
         }
 
     }
@@ -54,9 +64,8 @@
 
     function render() {
 
-        game.camera.renderDebugInfo(32, 32);
-
-        game.input.renderDebugInfo(300, 200);
+        Phaser.DebugUtils.renderCameraInfo(game.camera, 16, 32);
+        Phaser.DebugUtils.renderInputInfo(16, 200);
 
     }
 

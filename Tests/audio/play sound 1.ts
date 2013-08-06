@@ -35,7 +35,7 @@
     }
 
     function render() {
-        this.music.renderDebug(0, 300);
+        Phaser.DebugUtils.renderSoundInfo(this.music, 0, 300);
     }
 
     function togglePause() {

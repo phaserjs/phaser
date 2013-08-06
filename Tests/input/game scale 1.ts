@@ -55,7 +55,7 @@
 
     function render() {
 
-        game.input.renderDebugInfo(16, 16);
+        Phaser.DebugUtils.renderInputInfo(16, 16);
 
     }
 

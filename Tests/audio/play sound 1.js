@@ -30,7 +30,7 @@ Phaser.UI.Button
         //this.pause = game.add.button(200, 200, 'button', togglePause, this, 2, 1, 0);
             }
     function render() {
-        this.music.renderDebug(0, 300);
+        Phaser.DebugUtils.renderSoundInfo(this.music, 0, 300);
     }
     function togglePause() {
         if(this.music.paused) {

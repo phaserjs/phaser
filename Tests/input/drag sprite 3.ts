@@ -7,7 +7,7 @@
     function init() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
-        game.load.image('sprite', 'assets/sprites/atari130xe.png');
+        game.load.image('sprite', 'assets/sprites/atari800.png');
         game.load.start();
 
     }
@@ -16,22 +16,22 @@
 
     function create() {
 
-        sprite = game.add.sprite(200, 200, 'sprite');
+        sprite = game.add.sprite(500, 300, 'sprite');
 
-        //  Enable Input detection. Sprites have this disabled by default, 
-        //  so you have to start it if you want to interact with them.
         sprite.input.start(0, false, true);
 
-        //  This allows you to drag the sprite. The parameter controls if you drag from the position you touched it (false)
-        //  or if it will snap to the center (true)
+        //  This will ensure the sprite is dragged from its center
         sprite.input.enableDrag(true);
 
     }
 
     function render() {
 
+        Phaser.DebugUtils.renderSpriteCorners(sprite);
+
         Phaser.DebugUtils.renderInputInfo(32, 32);
-        Phaser.DebugUtils.renderSpriteInputInfo(sprite, 300, 32);
+
+        Phaser.DebugUtils.renderSpriteInfo(sprite, 32, 200);
 
     }
 

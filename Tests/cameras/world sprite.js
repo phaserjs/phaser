@@ -51,7 +51,7 @@
         }
     }
     function render() {
-        game.camera.renderDebugInfo(32, 32);
+        Phaser.DebugUtils.renderCameraInfo(game.camera, 32, 32);
         Phaser.DebugUtils.renderSpriteInfo(ball, 32, 200);
     }
 })();

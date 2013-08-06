@@ -6,10 +6,10 @@
 
     function render() {
 
-        game.input.pointer1.renderDebug();
-        game.input.pointer2.renderDebug();
-        game.input.pointer3.renderDebug();
-        game.input.pointer4.renderDebug();
+        Phaser.DebugUtils.renderPointer(game.input.pointer1);
+        Phaser.DebugUtils.renderPointer(game.input.pointer2);
+        Phaser.DebugUtils.renderPointer(game.input.pointer3);
+        Phaser.DebugUtils.renderPointer(game.input.pointer4);
 
     }
 

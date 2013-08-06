@@ -407,27 +407,6 @@ module Phaser {
         }
 
         /**
-         * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
-         * @param x {number} X position of the debug info to be rendered.
-         * @param y {number} Y position of the debug info to be rendered.
-         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-         */
-        public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
-
-            this.game.stage.context.fillStyle = color;
-            this.game.stage.context.fillText('Camera ID: ' + this.ID + ' (' + this.screenView.width + ' x ' + this.screenView.height + ')', x, y);
-            this.game.stage.context.fillText('X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' rotation: ' + this.transform.rotation, x, y + 14);
-            this.game.stage.context.fillText('World X: ' + this.worldView.x + ' World Y: ' + this.worldView.y + ' W: ' + this.worldView.width + ' H: ' + this.worldView.height + ' R: ' + this.worldView.right + ' B: ' + this.worldView.bottom, x, y + 28);
-            this.game.stage.context.fillText('ScreenView X: ' + this.screenView.x + ' Y: ' + this.screenView.y + ' W: ' + this.screenView.width + ' H: ' + this.screenView.height, x, y + 42);
-
-            if (this.worldBounds)
-            {
-                this.game.stage.context.fillText('Bounds: ' + this.worldBounds.width + ' x ' + this.worldBounds.height, x, y + 56);
-            }
-
-        }
-
-        /**
          * Destroys this camera, associated FX and removes itself from the CameraManager.
          */
         public destroy() {

@@ -951,22 +951,6 @@ module Phaser {
         }
 
         /**
-         * @param {Number} x
-         * @param {Number} y
-         * @param {String} [color]
-         */
-        public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
-
-            this.game.stage.context.fillStyle = color;
-            this.game.stage.context.fillText('Input', x, y);
-            this.game.stage.context.fillText('X: ' + this.x + ' Y: ' + this.y, x, y + 14);
-            this.game.stage.context.fillText('World X: ' + this.getWorldX() + ' World Y: ' + this.getWorldY(), x, y + 28);
-            this.game.stage.context.fillText('Scale X: ' + this.scale.x.toFixed(1) + ' Scale Y: ' + this.scale.x.toFixed(1), x, y + 42);
-            this.game.stage.context.fillText('Screen X: ' + this.activePointer.screenX + ' Screen Y: ' + this.activePointer.screenY, x, y + 56);
-
-        }
-
-        /**
         * Get the distance between two Pointer objects
         * @method getDistance
         * @param {Pointer} pointer1

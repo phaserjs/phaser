@@ -45,6 +45,8 @@ module Phaser.Components {
 
         private _rotation: number;
 
+        private _dirty: bool = false;
+
         //  Cache vars
         private _pos: Phaser.Point;
         private _scale: Phaser.Point;
@@ -146,7 +148,8 @@ module Phaser.Components {
         }
 
         /**
-        * The offset on the X axis of the origin
+        * The offset on the X axis of the origin That is the difference between the top left of the Sprite and the origin.x.
+        * So if the origin.x is 0 the offsetX will be 0. If the origin.x is 0.5 then offsetX will be sprite width / 2, and so on.
         */
         public get offsetX(): number {
             return this._offset.x;
@@ -185,6 +188,19 @@ module Phaser.Components {
          */
         public get cos(): number {
             return this._sc.y;
+        }
+
+        /**
+         * Moves the sprite so its center is located on the given x and y coordinates.
+         * Doesn't change the origin of the sprite.
+         */
+        public centerOn(x: number, y: number) {
+
+            this.parent.x = x + (this.parent.x - this.center.x);
+            this.parent.y = y + (this.parent.y - this.center.y);
+
+            this.setCache();
+
         }
 
         /**
@@ -240,7 +256,7 @@ module Phaser.Components {
         public update() {
 
             //  Check cache
-            var dirty: bool = false;
+            this._dirty = false;
 
             //  1) Height or Width change (also triggered by a change in scale) or an Origin change
             if (this.parent.width !== this._size.x || this.parent.height !== this._size.y || this.origin.x !== this._origin.x|| this.origin.y !== this._origin.y)
@@ -256,7 +272,7 @@ module Phaser.Components {
                 this._size.y = this.parent.height;
                 this._origin.x = this.origin.x;
                 this._origin.y = this.origin.y;
-                dirty = true;
+                this._dirty = true;
             }
 
             //  2) Rotation change
@@ -280,11 +296,11 @@ module Phaser.Components {
 
                 //  Store
                 this._prevRotation = this.rotation;
-                dirty = true;
+                this._dirty = true;
             }
 
             //  If it has moved, update the edges and center
-            if (dirty || this.parent.x != this._pos.x || this.parent.y != this._pos.y)
+            if (this._dirty || this.parent.x != this._pos.x || this.parent.y != this._pos.y)
             {
                 this.center.x = this.parent.x + this._distance * this._scA.y;
                 this.center.y = this.parent.y + this._distance * this._scA.x;

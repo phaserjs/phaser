@@ -1605,13 +1605,6 @@ module Phaser.Components {
         * Parent Sprite Bounds check for the sprite drag
         */
         private checkBoundsSprite();
-        /**
-        * Render debug infos. (including name, bounds info, position and some other properties)
-        * @param x {number} X position of the debug info to be rendered.
-        * @param y {number} Y position of the debug info to be rendered.
-        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-        */
-        public renderDebugInfo(x: number, y: number, color?: string): void;
     }
 }
 /**
@@ -1707,6 +1700,7 @@ module Phaser.Components {
         */
         constructor(parent);
         private _rotation;
+        private _dirty;
         private _pos;
         private _scale;
         private _size;
@@ -1786,7 +1780,8 @@ module Phaser.Components {
         */
         public angleToCenter : number;
         /**
-        * The offset on the X axis of the origin
+        * The offset on the X axis of the origin That is the difference between the top left of the Sprite and the origin.x.
+        * So if the origin.x is 0 the offsetX will be 0. If the origin.x is 0.5 then offsetX will be sprite width / 2, and so on.
         */
         public offsetX : number;
         /**
@@ -1809,6 +1804,11 @@ module Phaser.Components {
         * The equivalent of Math.cos(rotation + rotationOffset)
         */
         public cos : number;
+        /**
+        * Moves the sprite so its center is located on the given x and y coordinates.
+        * Doesn't change the origin of the sprite.
+        */
+        public centerOn(x: number, y: number): void;
         /**
         * Populates the transform cache. Called by the parent object on creation.
         */
@@ -2507,6 +2507,7 @@ module Phaser {
         /**
         * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
         * Set to null to disable, set to a Phaser.Rectangle object to control the region that will be rendered, anything outside the rectangle is ignored.
+        * This is a reference to Sprite.texture.crop
         * @type {Phaser.Rectangle}
         */
         public crop: Rectangle;
@@ -5023,13 +5024,6 @@ module Phaser {
         */
         public postUpdate(): void;
         /**
-        * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
-        * @param x {number} X position of the debug info to be rendered.
-        * @param y {number} Y position of the debug info to be rendered.
-        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-        */
-        public renderDebugInfo(x: number, y: number, color?: string): void;
-        /**
         * Destroys this camera, associated FX and removes itself from the CameraManager.
         */
         public destroy(): void;
@@ -6655,11 +6649,6 @@ module Phaser {
         */
         public mute : bool;
         public volume : number;
-        /**
-        * Renders the Pointer.circle object onto the stage in green if down or red if up.
-        * @method renderDebug
-        */
-        public renderDebug(x: number, y: number): void;
     }
 }
 /**
@@ -8323,11 +8312,6 @@ module Phaser {
         */
         public reset(): void;
         /**
-        * Renders the Pointer.circle object onto the stage in green if down or red if up.
-        * @method renderDebug
-        */
-        public renderDebug(hideIfUp?: bool): void;
-        /**
         * Returns a string representation of this object.
         * @method toString
         * @return {String} a string representation of the instance.
@@ -9151,12 +9135,6 @@ module Phaser {
         */
         public getWorldY(camera?: Camera): number;
         /**
-        * @param {Number} x
-        * @param {Number} y
-        * @param {String} [color]
-        */
-        public renderDebugInfo(x: number, y: number, color?: string): void;
-        /**
         * Get the distance between two Pointer objects
         * @method getDistance
         * @param {Pointer} pointer1
@@ -9277,10 +9255,53 @@ module Phaser {
     class DebugUtils {
         static game: Game;
         /**
-        * Render context of stage's canvas.
+        * The context to which the render debug info will be drawn.
+        * Defaults to the Game.Stage.context, but can be redirected anywhere.
         * @type {CanvasRenderingContext2D}
         */
         static context: CanvasRenderingContext2D;
+        static currentX: number;
+        static currentY: number;
+        static font: string;
+        static lineHeight: number;
+        static currentColor: string;
+        static renderShadow: bool;
+        static start(x: number, y: number, color?: string): void;
+        static line(text: string, x?: number, y?: number): void;
+        static renderSpriteCorners(sprite: Sprite, color?: string): void;
+        /**
+        * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        static renderSoundInfo(sound: Sound, x: number, y: number, color?: string): void;
+        /**
+        * Render debug infos. (including id, position, rotation, scrolling factor, worldBounds and some other properties)
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        static renderCameraInfo(camera: Camera, x: number, y: number, color?: string): void;
+        /**
+        * Renders the Pointer.circle object onto the stage in green if down or red if up.
+        * @method renderDebug
+        */
+        static renderPointer(pointer: Pointer, hideIfUp?: bool, downColor?: string, upColor?: string, color?: string): void;
+        /**
+        * Render Sprite Input Debug information
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        static renderSpriteInputInfo(sprite: Sprite, x: number, y: number, color?: string): void;
+        /**
+        * Render debug information about the Input object.
+        * @param x {number} X position of the debug info to be rendered.
+        * @param y {number} Y position of the debug info to be rendered.
+        * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+        */
+        static renderInputInfo(x: number, y: number, color?: string): void;
         /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.
@@ -9289,6 +9310,8 @@ module Phaser {
         */
         static renderSpriteInfo(sprite: Sprite, x: number, y: number, color?: string): void;
         static renderSpriteBounds(sprite: Sprite, camera?: Camera, color?: string): void;
+        static renderPixel(x: number, y: number, fillStyle?: string): void;
+        static renderPoint(point: Point, fillStyle?: string): void;
         static renderRectangle(rect: Rectangle, fillStyle?: string): void;
         static renderCircle(circle: Circle, fillStyle?: string): void;
         /**
@@ -9297,7 +9320,7 @@ module Phaser {
         * @param y {number} Y position of the debug info to be rendered.
         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
-        static renderText(text: string, x: number, y: number, color?: string): void;
+        static renderText(text: string, x: number, y: number, color?: string, font?: string): void;
     }
 }
 /**

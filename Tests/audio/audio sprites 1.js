@@ -32,7 +32,7 @@ Phaser.UI.Button
         this.audioSprite.play('help');
     }
     function render() {
-        this.audioSprite.renderDebug(32, 32);
+        Phaser.DebugUtils.renderSoundInfo(this.audioSprite, 32, 32);
     }
     function togglePause() {
         if(this.music.paused) {

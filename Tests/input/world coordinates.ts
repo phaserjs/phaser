@@ -9,20 +9,16 @@
         game.world.setSize(1920, 1200, true);
 
         game.load.image('backdrop', 'assets/pics/remember-me.jpg');
-        game.load.image('melon', 'assets/sprites/melon.png');
 
         game.load.start();
 
     }
 
+    var test: Phaser.Sprite;
+
     function create() {
 
         game.add.sprite(0, 0, 'backdrop');
-
-        for (var i = 0; i < 100; i++)
-        {
-            game.add.sprite(game.world.randomX, game.world.randomY, 'melon');
-        }
 
     }
 
@@ -50,7 +46,8 @@
 
     function render() {
 
-        Phaser.DebugUtils.renderCameraInfo(game.camera, 32, 32);
+        Phaser.DebugUtils.renderInputInfo(32, 32);
+        Phaser.DebugUtils.renderPointer(game.input.activePointer);
 
     }
 
