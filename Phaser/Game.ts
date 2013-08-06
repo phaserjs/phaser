@@ -17,17 +17,17 @@
 /// <reference path="sound/SoundManager.ts" />
 /// <reference path="sound/Sound.ts" />
 /// <reference path="Stage.ts" />
-/// <reference path="Time.ts" />
+/// <reference path="time/TimeManager.ts" />
 /// <reference path="tweens/TweenManager.ts" />
 /// <reference path="World.ts" />
 /// <reference path="system/Device.ts" />
 /// <reference path="system/RequestAnimationFrame.ts" />
-/// <reference path="input/Input.ts" />
+/// <reference path="input/InputManager.ts" />
 /// <reference path="renderers/IRenderer.ts" />
 /// <reference path="renderers/HeadlessRenderer.ts" />
 /// <reference path="renderers/CanvasRenderer.ts" />
 /// <reference path="utils/DebugUtils.ts" />
-/// <reference path="../Plugins/IPlugin.ts" />
+/// <reference path="core/PluginManager.ts" />
 
 /**
 * Phaser - Game
@@ -71,13 +71,10 @@ module Phaser {
 
             if (document.readyState === 'complete' || document.readyState === 'interactive')
             {
-                //setTimeout(() => this.boot(parent, width, height));
                 setTimeout(() => Phaser.GAMES[this.id].boot(parent, width, height));
             }
             else
             {
-                //document.addEventListener('DOMContentLoaded', () => this.boot(parent, width, height), false);
-                //window.addEventListener('load', () => this.boot(parent, width, height), false);
                 document.addEventListener('DOMContentLoaded', Phaser.GAMES[this.id].boot(parent, width, height), false);
                 window.addEventListener('load', Phaser.GAMES[this.id].boot(parent, width, height), false);
             }
@@ -116,22 +113,10 @@ module Phaser {
         private _pendingState = null;
 
         /**
-         * Plugin loop pointer
-         * @type {number}
+         * The PluginManager for the Game
+         * @type {PluginManager}
          */
-        private _p: number;
-
-        /**
-         * Plugins array counter
-         * @type {number}
-         */
-        private _pluginsLength: number;
-
-        /**
-         * An Array of Phaser Plugins
-         * @type {Array}
-         */
-        public plugins: Phaser.IPlugin[];
+        public plugins: PluginManager;
 
         /**
          * The current State object (defaults to null)
@@ -214,7 +199,7 @@ module Phaser {
          * Reference to the input manager
          * @type {Input}
          */
-        public input: Input;
+        public input: InputManager;
 
         /**
          * Reference to the assets loader.
@@ -250,7 +235,7 @@ module Phaser {
          * Reference to game clock.
          * @type {Time}
          */
-        public time: Time;
+        public time: TimeManager;
 
         /**
          * Reference to the tween manager.
@@ -315,7 +300,6 @@ module Phaser {
 
             if (!document.body)
             {
-                //window.setTimeout(() => this.boot(parent, width, height), 13);
                 setTimeout(() => Phaser.GAMES[this.id].boot(parent, width, height), 13);
             }
             else
@@ -331,12 +315,13 @@ module Phaser {
                 this.add = new GameObjectFactory(this);
                 this.cache = new Cache(this);
                 this.load = new Loader(this, this.loadComplete);
-                this.time = new Time(this);
+                this.time = new TimeManager(this);
                 this.tweens = new TweenManager(this);
-                this.input = new Input(this);
+                this.input = new InputManager(this);
                 this.sound = new SoundManager(this);
                 this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
                 this.physics = new Physics.Manager(this);
+                this.plugins = new PluginManager(this, this);
 
                 this.setRenderer(Phaser.Types.RENDERER_CANVAS);
 
@@ -396,30 +381,6 @@ module Phaser {
 
         }
 
-        public addPlugin(plugin) {
-
-            //  Prototype?
-            if (typeof plugin === 'function')
-            {
-                this.plugins.push(new plugin(this));
-            }
-            else
-            {
-                plugin.game = this;
-                this.plugins.push(plugin);
-            }
-
-            this._pluginsLength++;
-
-        }
-
-        public removePlugin(plugin: Phaser.IPlugin) {
-
-            //  TODO :)
-            this._pluginsLength--;
-
-        }
-
         /**
          * Called when the load has finished after init was run.
          */
@@ -455,25 +416,24 @@ module Phaser {
 
         }
 
+        private emptyCallback() {
+            //   Called by onUpdateCallback etc
+        }
+
        /**
          * Game loop method will be called when it's running.
          */
         private loop() {
 
-            for (this._p = 0; this._p < this._pluginsLength; this._p++)
-            {
-                if (this.plugins[this._p].active)
-                {
-                    this.plugins[this._p].preUpdate();
-                }
-            }
+            this.plugins.preUpdate();
 
             this.tweens.update();
             this.input.update();
             this.stage.update();
             this.sound.update();
-            this.physics.update();
+            //this.physics.update();
             this.world.update();
+            this.plugins.update();
 
             if (this._loadComplete && this.onUpdateCallback)
             {
@@ -486,21 +446,8 @@ module Phaser {
 
             this.world.postUpdate();
 
-            for (this._p = 0; this._p < this._pluginsLength; this._p++)
-            {
-                if (this.plugins[this._p].active)
-                {
-                    this.plugins[this._p].postUpdate();
-                }
-            }
-
-            for (this._p = 0; this._p < this._pluginsLength; this._p++)
-            {
-                if (this.plugins[this._p].visible)
-                {
-                    this.plugins[this._p].preRender();
-                }
-            }
+            this.plugins.postUpdate();
+            this.plugins.preRender();
 
             if (this._loadComplete && this.onPreRenderCallback)
             {
@@ -508,6 +455,7 @@ module Phaser {
             }
 
             this.renderer.render();
+            this.plugins.render();
 
             if (this._loadComplete && this.onRenderCallback)
             {
@@ -518,13 +466,7 @@ module Phaser {
                 this.onLoadRenderCallback.call(this.callbackContext);
             }
 
-            for (this._p = 0; this._p < this._pluginsLength; this._p++)
-            {
-                if (this.plugins[this._p].visible)
-                {
-                    this.plugins[this._p].postRender();
-                }
-            }
+            this.plugins.postRender();
 
         }
 
@@ -745,21 +687,6 @@ module Phaser {
                 }
             }
 
-        }
-
-        /**
-         * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
-         * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-         * @param object1 The first GameObject or Group to check. If null the world.group is used.
-         * @param object2 The second GameObject or Group to check.
-         * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-         * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-         * @param context The context in which the callbacks will be called
-         * @returns {boolean} true if the objects overlap, otherwise false.
-         */
-        public collide(objectOrGroup1 = null, objectOrGroup2 = null, notifyCallback = null, context? = this.callbackContext): bool {
-            //return this.world.physics.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, this.world.physics.separate, context);
-            return false;
         }
 
         public get camera(): Camera {

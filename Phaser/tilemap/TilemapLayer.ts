@@ -1,5 +1,5 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../gameobjects/Tilemap.ts" />
+/// <reference path="Tilemap.ts" />
 /// <reference path="../gameobjects/IGameObject.ts" />
 
 /**
@@ -35,8 +35,8 @@ module Phaser {
             this.tileHeight = tileHeight;
             this.boundsInTiles = new Rectangle();
 
-            this.texture = new Phaser.Components.Texture(this);
-            this.transform = new Phaser.Components.Transform(this);
+            this.texture = new Phaser.Display.Texture(this);
+            this.transform = new Phaser.Components.TransformManager(this);
 
             if (key !== null)
             {
@@ -77,12 +77,12 @@ module Phaser {
         /**
          * The texture used to render the Sprite.
          */
-        public texture: Phaser.Components.Texture;
+        public texture: Phaser.Display.Texture;
 
         /**
          * The Sprite transform component.
          */
-        public transform: Phaser.Components.Transform;
+        public transform: Phaser.Components.TransformManager;
 
         public tileOffsets;
 

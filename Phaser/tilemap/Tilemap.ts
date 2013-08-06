@@ -1,6 +1,6 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../components/TilemapLayer.ts" />
-/// <reference path="../components/Tile.ts" />
+/// <reference path="TilemapLayer.ts" />
+/// <reference path="Tile.ts" />
 
 /**
 * Phaser - Tilemap
@@ -39,8 +39,8 @@ module Phaser {
             this.group = null;
             this.name = '';
 
-            this.texture = new Phaser.Components.Texture(this);
-            this.transform = new Phaser.Components.Transform(this);
+            this.texture = new Phaser.Display.Texture(this);
+            this.transform = new Phaser.Components.TransformManager(this);
 
             this.tiles = [];
             this.layers = [];
@@ -110,17 +110,12 @@ module Phaser {
         /**
          * The texture used to render the Sprite.
          */
-        public texture: Phaser.Components.Texture;
+        public texture: Phaser.Display.Texture;
 
         /**
          * The Sprite transform component.
          */
-        public transform: Phaser.Components.Transform;
-
-        /**
-         * The Input component
-         */
-        //public input: Phaser.Components.Sprite.Input;
+        public transform: Phaser.Components.TransformManager;
 
         /**
          * The Events component

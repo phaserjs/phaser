@@ -1,4 +1,4 @@
-/// <reference path="../../Phaser/gameobjects/Tilemap.ts" />
+/// <reference path="../../Phaser/tilemap/Tilemap.ts" />
 /// <reference path="../../Phaser/Game.ts" />
 
 (function () {
@@ -16,7 +16,7 @@
     }
 
     var map: Phaser.Tilemap;
-    var emitter: Phaser.Emitter;
+    var emitter: Phaser.ArcadeEmitter;
     var marker: Phaser.Sprite;
 
     function create() {

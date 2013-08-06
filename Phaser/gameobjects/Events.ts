@@ -1,4 +1,4 @@
-/// <reference path="../../Game.ts" />
+/// <reference path="../Game.ts" />
 
 /**
 * Phaser - Components - Events
@@ -6,7 +6,7 @@
 * Signals that are dispatched by the Sprite and its various components
 */
 
-module Phaser.Components.Sprite {
+module Phaser.Components {
 
     export class Events {
 

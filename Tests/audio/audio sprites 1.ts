@@ -17,8 +17,8 @@
     }
 
     audioSprite: Phaser.Sound;
-    button: Phaser.Button;
-    pause: Phaser.Button;
+    button: Phaser.UI.Button;
+    pause: Phaser.UI.Button;
 
     function create() {
 

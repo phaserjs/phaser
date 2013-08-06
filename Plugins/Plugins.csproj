@@ -56,10 +56,14 @@
     <TypeScriptCompile Include="Template.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="IPlugin.js">
-      <DependentUpon>IPlugin.ts</DependentUpon>
+    <TypeScriptCompile Include="CameraFX\Scanlines.ts" />
+    <TypeScriptCompile Include="CameraFX\Mirror.ts" />
+    <Content Include="CameraFX\Mirror.js">
+      <DependentUpon>Mirror.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="IPlugin.ts" />
+    <Content Include="CameraFX\Scanlines.js">
+      <DependentUpon>Scanlines.ts</DependentUpon>
+    </Content>
     <Content Include="Template.js">
       <DependentUpon>Template.ts</DependentUpon>
     </Content>

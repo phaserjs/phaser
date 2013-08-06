@@ -2,10 +2,10 @@
 /// <reference path="../geom/Point.ts" />
 /// <reference path="../geom/Rectangle.ts" />
 /// <reference path="../math/Vec2.ts" />
-/// <reference path="../components/camera/CameraFX.ts" />
-/// <reference path="../components/Texture.ts" />
-/// <reference path="../components/Transform.ts" />
+/// <reference path="../display/Texture.ts" />
+/// <reference path="../gameobjects/TransformManager.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
+/// <reference path="../core/PluginManager.ts" />
 
 /**
 * Phaser - Camera
@@ -46,10 +46,10 @@ module Phaser {
             //  The rect of the area being rendered in stage/screen coordinates
             this.screenView = new Rectangle(x, y, width, height);
 
-            this.fx = new CameraFX(this.game, this);
+            this.plugins = new PluginManager(this.game, this);
 
-            this.transform = new Phaser.Components.Transform(this);
-            this.texture = new Phaser.Components.Texture(this);
+            this.transform = new Phaser.Components.TransformManager(this);
+            this.texture = new Phaser.Display.Texture(this);
 
             this.texture.opaque = false;
 
@@ -60,19 +60,25 @@ module Phaser {
         private _target: Sprite = null;
 
         /**
-         * Local private reference to Game.
+         * Local reference to Game.
          */
         public game: Game;
 
         /**
+         * The PluginManager for the Game
+         * @type {PluginManager}
+         */
+        public plugins: PluginManager;
+
+        /**
          * Optional texture used in the background of the Camera.
          */
-        public texture: Phaser.Components.Texture;
+        public texture: Phaser.Display.Texture;
 
         /**
          * The transform component.
          */
-        public transform: Phaser.Components.Transform;
+        public transform: Phaser.Components.TransformManager;
 
         /**
          * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
@@ -153,12 +159,6 @@ module Phaser {
          * The z value of this Camera. Cameras are rendered in z-index order by the Renderer.
          */
         public z: number = -1;
-
-        /**
-         * Effects manager.
-         * @type {CameraFX}
-         */
-        public fx: CameraFX;
 
         /**
         * Hides an object from this Camera. Hidden objects are not rendered.
@@ -295,7 +295,7 @@ module Phaser {
                 this.modified = true;
             }
 
-            this.fx.preUpdate();
+            this.plugins.preUpdate();
 
             if (this._target !== null)
             {
@@ -364,6 +364,8 @@ module Phaser {
                 }
             }
 
+            this.plugins.update();
+
         }
 
         /**
@@ -400,7 +402,7 @@ module Phaser {
                 }
             }
 
-            this.fx.postUpdate();
+            this.plugins.postUpdate();
 
         }
 
@@ -431,7 +433,7 @@ module Phaser {
         public destroy() {
 
             this.game.world.cameras.removeCamera(this.ID);
-            this.fx.destroy();
+            this.plugins.destroy();
         }
 
         public get x(): number {

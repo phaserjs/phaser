@@ -1,5 +1,5 @@
 /// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../build/phaser-fx.d.ts" />
+/// <reference path="../../Plugins/CameraFX/Scanlines.ts" />
 
 (function () {
 
@@ -13,14 +13,14 @@
 
     }
 
-    var scanlines: Phaser.FX.Camera.Scanlines;
+    var scanlines: Phaser.Plugins.CameraFX.Scanlines;
 
     function create() {
 
         game.world.setSize(1216, 896);
 
         //  Add our effect to the camera
-        scanlines = <Phaser.FX.Camera.Scanlines> game.camera.fx.add(Phaser.FX.Camera.Scanlines);
+        scanlines = <Phaser.Plugins.CameraFX.Scanlines> game.camera.plugins.add(Phaser.Plugins.CameraFX.Scanlines);
 
         //  We'll have the scanlines spaced out every 2 pixels
         scanlines.spacing = 2;

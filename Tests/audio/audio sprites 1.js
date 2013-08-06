@@ -16,9 +16,9 @@
     audioSprite:
 Phaser.Sound
     button:
-Phaser.Button
+Phaser.UI.Button
     pause:
-Phaser.Button
+Phaser.UI.Button
     function create() {
         this.audioSprite = game.add.audio('rabbit');
         this.audioSprite.addMarker('title', 3.00, 5.00, 1, true);

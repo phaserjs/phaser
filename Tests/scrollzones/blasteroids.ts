@@ -17,7 +17,7 @@
     }
 
     var scroller: Phaser.ScrollZone;
-    var emitter: Phaser.Emitter;
+    var emitter: Phaser.ArcadeEmitter;
     var ship: Phaser.Sprite;
     var bullets: Phaser.Group;
 

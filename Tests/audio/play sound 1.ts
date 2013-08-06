@@ -17,11 +17,11 @@
 
     }
 
-    button: Phaser.Button;
+    button: Phaser.UI.Button;
     music: Phaser.Sound;
-    volumeUp: Phaser.Button;
-    volumeDown: Phaser.Button;
-    pause: Phaser.Button;
+    volumeUp: Phaser.UI.Button;
+    volumeDown: Phaser.UI.Button;
+    pause: Phaser.UI.Button;
 
     function create() {
 

@@ -1,6 +1,6 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../components/ScrollRegion.ts" />
+/// <reference path="ScrollRegion.ts" />
 
 /**
 * Phaser - ScrollZone

@@ -1,5 +1,5 @@
 /// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/gameobjects/Button.ts" />
+/// <reference path="../../Phaser/ui/Button.ts" />
 
 (function () {
 
@@ -14,7 +14,7 @@
     }
 
     image: Phaser.Sprite;
-    button: Phaser.Button;
+    button: Phaser.UI.Button;
 
     function create() {
 

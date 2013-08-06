@@ -1,4 +1,4 @@
-/// <reference path="../../Phaser/gameobjects/Tilemap.ts" />
+/// <reference path="../../Phaser/tilemap/Tilemap.ts" />
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);

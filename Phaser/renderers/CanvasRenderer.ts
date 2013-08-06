@@ -253,6 +253,8 @@ module Phaser {
                 return false;
             }
 
+            camera.plugins.preRender();
+
             //  Reset our temp vars
             this._ga = -1;
             this._sx = 0;
@@ -350,8 +352,6 @@ module Phaser {
                 camera.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
             }
 
-            camera.fx.preRender(camera);
-
             if (camera.texture.loaded)
             {
                 camera.texture.context.drawImage(
@@ -367,13 +367,13 @@ module Phaser {
                 );
             }
 
+            camera.plugins.render();
+
             return true;
 
         }
 
         public postRenderCamera(camera: Camera) {
-
-            camera.fx.postRender(camera);
 
             if (camera.modified || camera.texture.globalCompositeOperation)
             {
@@ -385,6 +385,8 @@ module Phaser {
             {
                 camera.texture.context.globalAlpha = this._ga;
             }
+
+            camera.plugins.postRender();
 
         }
 

@@ -59,7 +59,7 @@ module Phaser {
          * Reference to the input manager
          * @type {Input}
          */
-        public input: Input;
+        public input: InputManager;
 
         /**
          * Reference to the assets loader.
@@ -89,7 +89,7 @@ module Phaser {
          * Reference to game clock.
          * @type {Time}
          */
-        public time: Time;
+        public time: TimeManager;
 
         /**
          * Reference to the tween manager.

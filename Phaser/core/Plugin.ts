@@ -1,20 +1,20 @@
-/// <reference path="../Phaser/Game.ts" />
-/// <reference path="../Phaser/core/Plugin.ts" />
+/// <reference path="../Game.ts" />
 
 /**
-* Phaser - Example Plugin
+* Phaser - Plugin
 */
 
-module Phaser.Plugins {
+module Phaser {
 
-    export class Example extends Phaser.Plugin {
+    export class Plugin {
 
         constructor(game: Phaser.Game, parent) {
 
-            super(game, parent);
+            this.game = game;
+            this.parent = parent;
 
-            this.active = true;
-            this.visible = true;
+            this.active = false;
+            this.visible = false;
 
             this.hasPreUpdate = false;
             this.hasUpdate = false;
@@ -27,6 +27,37 @@ module Phaser.Plugins {
         }
 
         /**
+         * Local reference to Game.
+         */
+        public game: Game;
+
+        /**
+         * The object that owns this Plugin (i.e. Camera, Game, Stage, etc).
+         */
+        public parent;
+
+        /**
+         * Controls whether preUpdate, update or postUpdate are called
+         */
+        public active: bool;
+
+        /**
+         * Controls whether preRender, render or postRender are called
+         */
+        public visible: bool;
+
+        /**
+         * Quick access booleans to avoid having to do a function existence check during tight inner loops
+         */
+        public hasPreUpdate: bool;
+        public hasUpdate: bool;
+        public hasPostUpdate: bool;
+
+        public hasPreRender: bool;
+        public hasRender: bool;
+        public hasPostRender: bool;
+
+        /**
          * Pre-update is called at the start of the update cycle, before any other updates have taken place.
          * It is only called if active is set to true.
          */
@@ -34,7 +65,7 @@ module Phaser.Plugins {
         }
 
         /**
-         * Pre-update is called at the start of the update cycle, after all the core system updates have taken place, but before the world update.
+         * Pre-update is called at the start of the update cycle, before any other updates have taken place.
          * It is only called if active is set to true.
          */
         public update() {
@@ -68,6 +99,18 @@ module Phaser.Plugins {
         public postRender() {
         }
 
+        /**
+         * Clear down this Plugin and null out references
+         */
+        public destroy() {
+
+            this.game = null;
+            this.parent = null;
+
+            this.active = false;
+            this.visible = false;
+
+        }
 
     }
 

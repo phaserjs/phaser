@@ -12,17 +12,13 @@ module Phaser {
     export class GameMath {
 
         constructor(game: Game) {
-            
+
             this.game = game;
 
             GameMath.sinA = [];
             GameMath.cosA = [];
 
-            //  Android 4 stock browser bug fix
-            GameMath.sinA.push(0);
-            GameMath.cosA.push(0);
-
-            for (var i = 1; i < 360; i++)
+            for (var i = 0; i < 360; i++)
             {
                 GameMath.sinA.push(Math.sin(this.degreesToRadians(i)));
                 GameMath.cosA.push(Math.cos(this.degreesToRadians(i)));
@@ -842,34 +838,6 @@ module Phaser {
         }
 
         /**
-        * The global random number generator seed (for deterministic behavior in recordings and saves).
-        */
-        public globalSeed: number = Math.random();
-
-        /**
-        * Generates a random number.  Deterministic, meaning safe
-        * to use if you want to record replays in random environments.
-        *
-        * @return	A <code>Number</code> between 0 and 1.
-        */
-        public random(): number {
-            return this.globalSeed = this.srand(this.globalSeed);
-        }
-
-        /**
-        * Generates a random number based on the seed provided.
-        *
-        * @param	Seed	A number between 0 and 1, used to generate a predictable random number (very optional).
-        *
-        * @return	A <code>Number</code> between 0 and 1.
-        */
-        public srand(Seed: number): number {
-
-            return ((69621 * (Seed * 0x7FFFFFFF)) % 0x7FFFFFFF) / 0x7FFFFFFF;
-
-        }
-
-        /**
         * Fetch a random entry from the given array.
         * Will return null if random selection is missing, or array has no entries.
         *
@@ -907,9 +875,9 @@ module Phaser {
          *
          * @return	The rounded value of that number.
          */
-        public floor(Value: number): number {
-            var n: number = Value | 0;
-            return (Value > 0) ? (n) : ((n != Value) ? (n - 1) : (n));
+        public floor(value: number): number {
+            var n: number = value | 0;
+            return (value > 0) ? (n) : ((n != value) ? (n - 1) : (n));
         }
 
         /**
@@ -919,9 +887,9 @@ module Phaser {
          *
          * @return	The rounded value of that number.
          */
-        public ceil(Value: number): number {
-            var n: number = Value | 0;
-            return (Value > 0) ? ((n != Value) ? (n + 1) : (n)) : (n);
+        public ceil(value: number): number {
+            var n: number = value | 0;
+            return (value > 0) ? ((n != value) ? (n + 1) : (n)) : (n);
         }
 
         /**
@@ -1035,39 +1003,8 @@ module Phaser {
 		 * 
 		 * @return
 		 */
-        public vectorLength(dx:number, dy:number):number
-        {
+        public vectorLength(dx: number, dy: number): number {
             return Math.sqrt(dx * dx + dy * dy);
-        }
-
-        /**
-        * Rotates the point around the x/y coordinates given to the desired rotation and distance
-	    * @param point {Object} Any object with exposed x and y properties
-	    * @param x {number} The x coordinate of the anchor point
-	    * @param y {number} The y coordinate of the anchor point
-        * @param {Number} rotation The rotation in radians (unless asDegrees is true) to return the point from.
-	    * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
-        * @param {Number} distance An optional distance constraint between the point and the anchor
-        * @return The modified point object
-        */
-        public rotatePoint(point, x1: number, y1: number, rotation: number, asDegrees: bool = false, distance?:number = null) {
-
-            if (asDegrees)
-            {
-                rotation = rotation * GameMath.DEG_TO_RAD;
-            }
-
-            //  Get distance from origin to the point
-            if (distance === null)
-            {
-                distance = Math.sqrt(((x1 - point.x) * (x1 - point.x)) + ((y1 - point.y) * (y1 - point.y)));
-            }
-
-            point.x = x1 + distance * Math.cos(rotation);
-            point.y = y1 + distance * Math.sin(rotation);
-
-            return point;
-
         }
 
     }

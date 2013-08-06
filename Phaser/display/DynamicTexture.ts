@@ -1,10 +1,9 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../utils/RectangleUtils.ts" />
 /// <reference path="../utils/ColorUtils.ts" />
-/// <reference path="IGameObject.ts" />
 
 /**
-* Phaser - DynamicTexture
+* Phaser - Display - DynamicTexture
 *
 * A DynamicTexture can be thought of as a mini canvas into which you can draw anything.
 * Game Objects can be assigned a DynamicTexture, so when they render in the world they do so
@@ -34,7 +33,7 @@ module Phaser {
             this.canvas.height = height;
             this.context = this.canvas.getContext('2d');
 
-            this.css3 = new Phaser.Components.CSS3Filters(this.canvas);
+            this.css3 = new Phaser.Display.CSS3Filters(this.canvas);
 
             this.bounds = new Rectangle(0, 0, width, height);
 
@@ -66,7 +65,7 @@ module Phaser {
          * Only really useful if you attach this canvas to the DOM.
          * @type {Phaser.Components.CSS3Filters}
          */
-        public css3: Phaser.Components.CSS3Filters;
+        public css3: Phaser.Display.CSS3Filters;
 
         /**
          * Bound of this texture with width and height info.

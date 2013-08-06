@@ -1,14 +1,14 @@
-/// <reference path="Game.ts" />
+/// <reference path="../Game.ts" />
 
 /**
-* Phaser - Time
+* Phaser - TimeManager
 *
 * This is the game clock and it manages elapsed time and calculation of delta values, used for game object motion.
 */
 
 module Phaser {
 
-    export class Time {
+    export class TimeManager {
 
         /**
          * Time constructor
@@ -18,17 +18,18 @@ module Phaser {
          */
         constructor(game: Game) {
 
+            this.game = game;
+
             this._started = 0;
             this._timeLastSecond = this._started;
             this.time = this._started;
-            this._game = game;
 
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * Time when this object created.

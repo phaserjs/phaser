@@ -1,6 +1,6 @@
 /// <reference path="Phaser.ts" />
 /// <reference path="Game.ts" />
-/// <reference path="components/CSS3Filters.ts" />
+/// <reference path="display/CSS3Filters.ts" />
 /// <reference path="system/StageScaleMode.ts" />
 /// <reference path="system/screens/BootScreen.ts" />
 /// <reference path="system/screens/PauseScreen.ts" />
@@ -53,7 +53,7 @@ module Phaser {
 
             this.context = this.canvas.getContext('2d');
 
-            this.css3 = new Phaser.Components.CSS3Filters(this.canvas);
+            this.css3 = new Phaser.Display.CSS3Filters(this.canvas);
 
             this.scaleMode = StageScaleMode.NO_SCALE;
             this.scale = new StageScaleMode(this._game, width, height);
@@ -102,9 +102,9 @@ module Phaser {
 
         /**
          * Controls the CSS3 Filters applied to the Stages canvas object.
-         * @type {Phaser.Components.CSS3Filters}
+         * @type {Phaser.Display.CSS3Filters}
          */
-        public css3: Phaser.Components.CSS3Filters;
+        public css3: Phaser.Display.CSS3Filters;
 
         /**
          * Bound of this stage.
@@ -176,6 +176,13 @@ module Phaser {
         public disableVisibilityChange: bool = false;
 
         /**
+         * An optional 'fix' for the horrendous Android stock browser bug
+         * https://code.google.com/p/android/issues/detail?id=39247
+         * @type {boolean}
+         */
+        public patchAndroidClearRectBug: bool = false;
+
+        /**
          * Stage boot
          */
         public boot() {
@@ -196,10 +203,9 @@ module Phaser {
 
             this.scale.update();
 
-            if (this.clear)
+            if (this.clear || (this._game.paused && this.disablePauseScreen == false))
             {
-                //  A 'fix' for the horrendous Android stock browser bug: https://code.google.com/p/android/issues/detail?id=39247
-                if (this._game.device.android && this._game.device.chrome == false)
+                if (this.patchAndroidClearRectBug)
                 {
                     this.context.fillStyle = 'rgb(0,0,0)';
                     this.context.fillRect(0, 0, this.width, this.height);
@@ -295,6 +301,7 @@ module Phaser {
             }
 
             this.saveCanvasValues();
+
             this._game.paused = true;
 
         }
@@ -307,6 +314,7 @@ module Phaser {
             }
 
             this.restoreCanvasValues();
+
             this._game.paused = false;
 
         }
@@ -373,11 +381,23 @@ module Phaser {
             this.context.lineWidth = this.lineWidth;
             this.context.fillStyle = this.fillStyle;
 
+            if (this.patchAndroidClearRectBug)
+            {
+                this.context.fillStyle = 'rgb(0,0,0)';
+                this.context.fillRect(0, 0, this.width, this.height);
+            }
+            else
+            {
+                this.context.clearRect(0, 0, this.width, this.height);
+            }
+
         }
 
         public set backgroundColor(color: string) {
+
             this.canvas.style.backgroundColor = color;
             this._backgroundColor = color;
+
         }
 
         public get backgroundColor(): string {

@@ -72,12 +72,12 @@ module Phaser {
         /**
          * The texture used to render.
          */
-        texture: Phaser.Components.Texture;
+        texture: Phaser.Display.Texture;
 
         /**
          * The transform component.
          */
-        transform: Phaser.Components.Transform;
+        transform: Phaser.Components.TransformManager;
 
     }
 

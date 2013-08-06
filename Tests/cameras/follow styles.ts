@@ -5,10 +5,10 @@
     var ufo: Phaser.Sprite,
         speed: Number = 4;
 
-    var btn0: Phaser.Button,
-        btn1: Phaser.Button,
-        btn2: Phaser.Button,
-        btn3: Phaser.Button;
+    var btn0: Phaser.UI.Button,
+        btn1: Phaser.UI.Button,
+        btn2: Phaser.UI.Button,
+        btn3: Phaser.UI.Button;
     var style: String = 'default';
 
     function init() {

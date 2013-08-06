@@ -1,12 +1,12 @@
 /// <reference path="../Game.ts" />
 
 /**
-* Phaser - Components - CSS3Filters
+* Phaser - Display - CSS3Filters
 *
 * Allows for easy addition and modification of CSS3 Filters on DOM objects (typically the Game.Stage.canvas).
 */
 
-module Phaser.Components {
+module Phaser.Display {
 
     export class CSS3Filters {
 

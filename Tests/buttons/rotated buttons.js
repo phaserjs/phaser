@@ -1,5 +1,5 @@
 /// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/gameobjects/Button.ts" />
+/// <reference path="../../Phaser/ui/Button.ts" />
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
     function init() {
@@ -10,7 +10,7 @@
     image:
 Phaser.Sprite
     button:
-Phaser.Button
+Phaser.UI.Button
     function create() {
         //  This is just an image that we'll toggle the display of when you click the button
         this.image = game.add.sprite(game.stage.centerX, 0, 'beast');

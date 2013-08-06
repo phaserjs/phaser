@@ -1,14 +1,14 @@
 /// <reference path="../Game.ts" />
-/// <reference path="../gameobjects/DynamicTexture.ts" />
 /// <reference path="../utils/SpriteUtils.ts" />
+/// <reference path="DynamicTexture.ts" />
 
 /**
-* Phaser - Components - Texture
+* Phaser - Display - Texture
 *
 * The Texture being used to render the object (Sprite, Group background, etc). Either Image based on a DynamicTexture.
 */
 
-module Phaser.Components {
+module Phaser.Display {
 
     export class Texture {
 

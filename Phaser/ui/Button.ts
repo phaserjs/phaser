@@ -1,17 +1,17 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../math/Vec2.ts" />
 /// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../components/animation/AnimationManager.ts" />
-/// <reference path="../components/Texture.ts" />
-/// <reference path="../components/Transform.ts" />
-/// <reference path="../components/sprite/Input.ts" />
-/// <reference path="../components/sprite/Events.ts" />
+/// <reference path="../animation/AnimationManager.ts" />
+/// <reference path="../input/InputHandler.ts" />
+/// <reference path="../display/Texture.ts" />
+/// <reference path="../gameobjects/TransformManager.ts" />
+/// <reference path="../gameobjects/Events.ts" />
 
 /**
-* Phaser - Button
+* Phaser - UI - Button
 */
 
-module Phaser {
+module Phaser.UI {
 
     export class Button extends Sprite {
 

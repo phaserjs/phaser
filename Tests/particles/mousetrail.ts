@@ -4,7 +4,7 @@
 
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
-    var emitter: Phaser.Emitter;
+    var emitter: Phaser.ArcadeEmitter;
 
     function init() {
 
@@ -15,7 +15,7 @@
     }
 
     var scroller: Phaser.ScrollZone;
-    var emitter: Phaser.Emitter;
+    var emitter: Phaser.ArcadeEmitter;
 
     function create() {
 

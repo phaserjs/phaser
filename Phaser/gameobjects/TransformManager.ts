@@ -3,15 +3,15 @@
 /// <reference path="../geom/Point.ts" />
 
 /**
-* Phaser - Components - Transform
+* Phaser - Components - TransformManager
 */
 
 module Phaser.Components {
 
-    export class Transform {
+    export class TransformManager {
 
         /**
-         * Creates a new Transform component
+         * Creates a new TransformManager component
          * @param parent The game object using this transform
          */
         constructor(parent) {
@@ -59,6 +59,49 @@ module Phaser.Components {
         private _prevRotation: number;
 
         /**
+         * Reference to Phaser.Game
+         */
+        public game: Game;
+
+        /**
+         * Reference to the parent object (Sprite, Group, etc)
+         */
+        public parent: Phaser.Sprite;
+
+        /**
+         * Scale of the object. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
+         */
+        public scale: Vec2;
+
+        /**
+         * Skew the object along the x and y axis. A skew value of 0 is no skew.
+         */
+        public skew: Vec2;
+
+        /**
+         * The influence of camera movement upon the object, if supported.
+         */
+        public scrollFactor: Vec2;
+
+        /**
+         * The origin is the point around which scale and rotation takes place and defaults to the top-left of the sprite.
+         */
+        public origin: Vec2;
+
+        /**
+         * This value is added to the rotation of the object.
+         * For example if you had a texture drawn facing straight up then you could set
+         * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
+         * @type {number}
+         */
+        public rotationOffset: number = 0;
+
+        /**
+        * The rotation of the object in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
+        */
+        public rotation: number = 0;
+
+        /**
          * The center of the Sprite in world coordinates, after taking scaling and rotation into consideration
          */
         public center: Phaser.Point;
@@ -87,6 +130,62 @@ module Phaser.Components {
          * The local transform matrix
          */
         public local: Mat3;
+
+        /**
+        * The distance from the center of the transform to the rotation origin.
+        */
+        public get distance(): number {
+            return this._distance;
+        }
+
+        /**
+        * The angle between the center of the transform to the rotation origin.
+        */
+        public get angleToCenter(): number {
+            return this._angle;
+        }
+
+        /**
+        * The offset on the X axis of the origin
+        */
+        public get offsetX(): number {
+            return this._offset.x;
+        }
+
+        /**
+        * The offset on the Y axis of the origin
+        */
+        public get offsetY(): number {
+            return this._offset.y;
+        }
+
+        /**
+        * Half the width of the parent sprite, taking into consideration scaling
+        */
+        public get halfWidth(): number {
+            return this._halfSize.x;
+        }
+
+        /**
+        * Half the height of the parent sprite, taking into consideration scaling
+        */
+        public get halfHeight(): number {
+            return this._halfSize.y;
+        }
+
+        /**
+         * The equivalent of Math.sin(rotation + rotationOffset)
+         */
+        public get sin(): number {
+            return this._sc.x;
+        }
+
+        /**
+         * The equivalent of Math.cos(rotation + rotationOffset)
+         */
+        public get cos(): number {
+            return this._sc.y;
+        }
 
         /**
          * Populates the transform cache. Called by the parent object on creation.
@@ -226,105 +325,6 @@ module Phaser.Components {
             this.local.data[2] = this.parent.x;
             this.local.data[5] = this.parent.y;
 
-        }
-
-        /**
-         * Reference to Phaser.Game
-         */
-        public game: Game;
-
-        /**
-         * Reference to the parent object (Sprite, Group, etc)
-         */
-        public parent: Phaser.Sprite;
-
-        /**
-         * Scale of the object. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
-         */
-        public scale: Vec2;
-
-        /**
-         * Skew the object along the x and y axis. A skew value of 0 is no skew.
-         */
-        public skew: Vec2;
-
-        /**
-         * The influence of camera movement upon the object, if supported.
-         */
-        public scrollFactor: Vec2;
-
-        /**
-         * The origin is the point around which scale and rotation takes place and defaults to the top-left of the sprite.
-         */
-        public origin: Vec2;
-
-        /**
-         * This value is added to the rotation of the object.
-         * For example if you had a texture drawn facing straight up then you could set
-         * rotationOffset to 90 and it would correspond correctly with Phasers right-handed coordinate system.
-         * @type {number}
-         */
-        public rotationOffset: number = 0;
-
-        /**
-        * The rotation of the object in degrees. Phaser uses a right-handed coordinate system, where 0 points to the right.
-        */
-        public rotation: number = 0;
-
-        /**
-        * The distance from the center of the transform to the rotation origin.
-        */
-        public get distance(): number {
-            return this._distance;
-        }
-
-        /**
-        * The angle between the center of the transform to the rotation origin.
-        */
-        public get angleToCenter(): number {
-            return this._angle;
-        }
-
-        /**
-        * The offset on the X axis of the origin
-        */
-        public get offsetX(): number {
-            return this._offset.x;
-        }
-
-        /**
-        * The offset on the Y axis of the origin
-        */
-        public get offsetY(): number {
-            return this._offset.y;
-        }
-
-        /**
-        * Half the width of the parent sprite, taking into consideration scaling
-        */
-        public get halfWidth(): number {
-            return this._halfSize.x;
-        }
-
-        /**
-        * Half the height of the parent sprite, taking into consideration scaling
-        */
-        public get halfHeight(): number {
-            return this._halfSize.y;
-        }
-
-        /**
-         * The equivalent of Math.sin(rotation + rotationOffset)
-         */
-        public get sin(): number {
-            return this._sc.x;
-        }
-
-        /**
-         * The equivalent of Math.cos(rotation + rotationOffset)
-         */
-        public get cos(): number {
-            return this._sc.y;
         }
 
     }

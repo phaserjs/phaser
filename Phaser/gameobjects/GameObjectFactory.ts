@@ -1,12 +1,12 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../tweens/Tween.ts" />
-/// <reference path="../gameobjects/Emitter.ts" />
-/// <reference path="../gameobjects/Particle.ts" />
+/// <reference path="../particles/ArcadeEmitter.ts" />
+/// <reference path="../particles/ArcadeParticle.ts" />
 /// <reference path="../gameobjects/Sprite.ts" />
-/// <reference path="../gameobjects/Button.ts" />
+/// <reference path="../ui/Button.ts" />
 /// <reference path="../gameobjects/ScrollZone.ts" />
-/// <reference path="../gameobjects/DynamicTexture.ts" />
-/// <reference path="../gameobjects/Tilemap.ts" />
+/// <reference path="../display/DynamicTexture.ts" />
+/// <reference path="../tilemap/Tilemap.ts" />
 
 /**
 * Phaser - GameObjectFactory
@@ -76,8 +76,8 @@ module Phaser {
          * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
          * @returns {Button} The newly created button object.
          */
-        public button(x?: number = 0, y?: number = 0, key?: string = null, callback? = null, callbackContext? = null, overFrame? = null, outFrame? = null, downFrame? = null): Button {
-            return <Button> this._world.group.add(new Button(this._game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        public button(x?: number = 0, y?: number = 0, key?: string = null, callback? = null, callbackContext? = null, overFrame? = null, outFrame? = null, downFrame? = null): UI.Button {
+            return <UI.Button> this._world.group.add(new UI.Button(this._game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
         }
 
         /**
@@ -139,8 +139,8 @@ module Phaser {
          *
          * @return {Particle} The newly created particle object.
          */
-        public particle(): Particle {
-            return new Particle(this._game);
+        public particle(): ArcadeParticle {
+            return new ArcadeParticle(this._game);
         }
 
         /**
@@ -151,8 +151,8 @@ module Phaser {
          * @param size {number} Optional, size of this emitter.
          * @return {Emitter} The newly created emitter object.
          */
-        public emitter(x?: number = 0, y?: number = 0, size?: number = 0): Emitter {
-            return <Emitter> this._world.group.add(new Emitter(this._game, x, y, size));
+        public emitter(x?: number = 0, y?: number = 0, size?: number = 0): ArcadeEmitter {
+            return <ArcadeEmitter> this._world.group.add(new ArcadeEmitter(this._game, x, y, size));
         }
 
         /**
@@ -224,7 +224,7 @@ module Phaser {
          * @param button The Button to add to the Game World
          * @return {Phaser.Button} The Button object
          */
-        public existingButton(button: Button): Button {
+        public existingButton(button: UI.Button): UI.Button {
             return this._world.group.add(button);
         }
 
@@ -246,7 +246,7 @@ module Phaser {
          * @param emitter The Emitter to add to the Game World
          * @return {Phaser.Emitter} The Emitter object
          */
-        public existingEmitter(emitter: Emitter): Emitter {
+        public existingEmitter(emitter: ArcadeEmitter): ArcadeEmitter {
             return this._world.group.add(emitter);
         }
 

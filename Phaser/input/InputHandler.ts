@@ -1,17 +1,16 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/DynamicTexture.ts" />
-/// <reference path="../../utils/SpriteUtils.ts" />
-/// <reference path="../../utils/RectangleUtils.ts" />
+/// <reference path="../Game.ts" />
+/// <reference path="../utils/SpriteUtils.ts" />
+/// <reference path="../utils/RectangleUtils.ts" />
 
 /**
-* Phaser - Components - Input
+* Phaser - Components - InputHandler
 *
 * Input detection component
 */
 
-module Phaser.Components.Sprite {
+module Phaser.Components {
 
-    export class Input {
+    export class InputHandler {
 
         /**
          * Sprite Input component constructor

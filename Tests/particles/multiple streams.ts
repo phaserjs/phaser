@@ -4,12 +4,12 @@
 
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
-    var emitter1: Phaser.Emitter;
-    var emitter2: Phaser.Emitter;
-    var emitter3: Phaser.Emitter;
-    var emitter4: Phaser.Emitter;
-    var emitter5: Phaser.Emitter;
-    var emitter6: Phaser.Emitter;
+    var emitter1: Phaser.ArcadeEmitter;
+    var emitter2: Phaser.ArcadeEmitter;
+    var emitter3: Phaser.ArcadeEmitter;
+    var emitter4: Phaser.ArcadeEmitter;
+    var emitter5: Phaser.ArcadeEmitter;
+    var emitter6: Phaser.ArcadeEmitter;
 
     function init() {
 

@@ -1,11 +1,11 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../math/Vec2.ts" />
 /// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../components/animation/AnimationManager.ts" />
-/// <reference path="../components/Texture.ts" />
-/// <reference path="../components/Transform.ts" />
-/// <reference path="../components/sprite/Input.ts" />
-/// <reference path="../components/sprite/Events.ts" />
+/// <reference path="../animation/AnimationManager.ts" />
+/// <reference path="../input/InputHandler.ts" />
+/// <reference path="../display/Texture.ts" />
+/// <reference path="TransformManager.ts" />
+/// <reference path="Events.ts" />
 /// <reference path="../physics/arcade/Body.ts" />
 
 /**
@@ -42,11 +42,11 @@ module Phaser {
             this.group = null;
             this.name = '';
 
-            this.events = new Phaser.Components.Sprite.Events(this);
+            this.events = new Phaser.Components.Events(this);
             this.animations = new Phaser.Components.AnimationManager(this);
-            this.input = new Phaser.Components.Sprite.Input(this);
-            this.texture = new Phaser.Components.Texture(this);
-            this.transform = new Phaser.Components.Transform(this);
+            this.input = new Phaser.Components.InputHandler(this);
+            this.texture = new Phaser.Display.Texture(this);
+            this.transform = new Phaser.Components.TransformManager(this);
 
             if (key !== null)
             {
@@ -151,25 +151,25 @@ module Phaser {
         /**
          * The texture used to render the Sprite.
          */
-        public texture: Phaser.Components.Texture;
+        public texture: Phaser.Display.Texture;
 
         /**
          * The Sprite transform component.
          */
-        public transform: Phaser.Components.Transform;
+        public transform: Phaser.Components.TransformManager;
 
         /**
          * The Input component
          */
-        public input: Phaser.Components.Sprite.Input;
+        public input: Phaser.Components.InputHandler;
 
         /**
          * The Events component
          */
-        public events: Phaser.Components.Sprite.Events;
+        public events: Phaser.Components.Events;
 
         /**
-         * This manages animations of the sprite. You can modify animations though it. (see AnimationManager)
+         * This manages animations of the sprite. You can modify animations through it. (see AnimationManager)
          * @type AnimationManager
          */
         public animations: Phaser.Components.AnimationManager;
@@ -359,6 +359,17 @@ module Phaser {
 
             this.animations.update();
 
+            this.checkBounds();
+
+            if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
+            {
+                this.modified = false;
+            }
+
+        }
+
+        private checkBounds() {
+
             if (Phaser.RectangleUtils.intersects(this.worldView, this.game.world.bounds))
             {
                 this.outOfBounds = false;
@@ -380,11 +391,6 @@ module Phaser {
                 {
                     this.destroy();
                 }
-            }
-
-            if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
-            {
-                this.modified = false;
             }
 
         }

@@ -58,67 +58,65 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="components\animation\AnimationManager.js">
+    <TypeScriptCompile Include="animation\Animation.ts" />
+    <Content Include="animation\Animation.js">
+      <DependentUpon>Animation.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="animation\Frame.ts" />
+    <TypeScriptCompile Include="animation\AnimationManager.ts" />
+    <Content Include="animation\AnimationManager.js">
       <DependentUpon>AnimationManager.ts</DependentUpon>
     </Content>
+    <Content Include="animation\Frame.js">
+      <DependentUpon>Frame.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="animation\FrameData.ts" />
+    <Content Include="animation\FrameData.js">
+      <DependentUpon>FrameData.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="Game.ts" />
-    <TypeScriptCompile Include="components\sprite\Events.ts" />
-    <TypeScriptCompile Include="components\sprite\Debug.ts" />
-    <TypeScriptCompile Include="components\CSS3Filters.ts" />
-    <Content Include="components\CSS3Filters.js">
+    <TypeScriptCompile Include="core\PluginManager.ts" />
+    <TypeScriptCompile Include="core\Plugin.ts" />
+    <Content Include="core\Plugin.js">
+      <DependentUpon>Plugin.ts</DependentUpon>
+    </Content>
+    <Content Include="core\PluginManager.js">
+      <DependentUpon>PluginManager.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="display\CSS3Filters.ts" />
+    <Content Include="display\CSS3Filters.js">
       <DependentUpon>CSS3Filters.ts</DependentUpon>
     </Content>
-    <Content Include="components\sprite\Debug.js">
-      <DependentUpon>Debug.ts</DependentUpon>
+    <TypeScriptCompile Include="display\Texture.ts" />
+    <TypeScriptCompile Include="display\DynamicTexture.ts" />
+    <Content Include="display\DynamicTexture.js">
+      <DependentUpon>DynamicTexture.ts</DependentUpon>
     </Content>
-    <Content Include="components\sprite\Events.js">
-      <DependentUpon>Events.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="components\sprite\Input.ts" />
-    <Content Include="components\sprite\Input.js">
-      <DependentUpon>Input.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="components\Texture.ts" />
-    <Content Include="components\Texture.js">
+    <Content Include="display\Texture.js">
       <DependentUpon>Texture.ts</DependentUpon>
-    </Content>
-    <Content Include="components\Tile.ts" />
-    <Content Include="components\TilemapLayer.ts" />
-    <TypeScriptCompile Include="components\Transform.ts" />
-    <Content Include="components\Transform.js">
-      <DependentUpon>Transform.ts</DependentUpon>
     </Content>
     <Content Include="Game.js">
       <DependentUpon>Game.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="components\camera\CameraFX.ts" />
-    <Content Include="components\camera\CameraFX.js">
-      <DependentUpon>CameraFX.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="components\ScrollRegion.ts" />
-    <TypeScriptCompile Include="gameobjects\Button.ts" />
-    <Content Include="gameobjects\Button.js">
-      <DependentUpon>Button.ts</DependentUpon>
-    </Content>
-    <Content Include="gameobjects\DynamicTexture.js">
-      <DependentUpon>DynamicTexture.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="gameobjects\Sprite.ts" />
     <TypeScriptCompile Include="gameobjects\IGameObject.ts" />
-    <TypeScriptCompile Include="gameobjects\Emitter.ts" />
-    <Content Include="gameobjects\Emitter.js">
-      <DependentUpon>Emitter.ts</DependentUpon>
+    <TypeScriptCompile Include="gameobjects\Events.ts" />
+    <Content Include="gameobjects\Events.js">
+      <DependentUpon>Events.ts</DependentUpon>
     </Content>
     <Content Include="gameobjects\IGameObject.js">
       <DependentUpon>IGameObject.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="gameobjects\ScrollZone.ts" />
-    <Content Include="gameobjects\Particle.ts" />
-    <TypeScriptCompile Include="gameobjects\Tilemap.ts" />
-    <Content Include="gameobjects\Tilemap.js">
-      <DependentUpon>Tilemap.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="geom\Circle.ts" />
+    <TypeScriptCompile Include="gameobjects\ScrollRegion.ts" />
+    <Content Include="gameobjects\ScrollRegion.js">
+      <DependentUpon>ScrollRegion.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="gameobjects\TransformManager.ts" />
+    <Content Include="gameobjects\TransformManager.js">
+      <DependentUpon>TransformManager.ts</DependentUpon>
+    </Content>
     <Content Include="geom\Circle.js">
       <DependentUpon>Circle.ts</DependentUpon>
     </Content>
@@ -133,6 +131,14 @@
     <TypeScriptCompile Include="geom\Rectangle.ts" />
     <Content Include="geom\Rectangle.js">
       <DependentUpon>Rectangle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="input\InputManager.ts" />
+    <TypeScriptCompile Include="input\InputHandler.ts" />
+    <Content Include="input\InputHandler.js">
+      <DependentUpon>InputHandler.ts</DependentUpon>
+    </Content>
+    <Content Include="input\InputManager.js">
+      <DependentUpon>InputManager.ts</DependentUpon>
     </Content>
     <Content Include="math\GameMath.js">
       <DependentUpon>GameMath.ts</DependentUpon>
@@ -166,14 +172,6 @@
       <DependentUpon>LinkedList.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="math\Vec2.ts" />
-    <TypeScriptCompile Include="math\Transform.ts" />
-    <Content Include="math\Transform.js">
-      <DependentUpon>Transform.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="math\TransformUtils.ts" />
-    <Content Include="math\TransformUtils.js">
-      <DependentUpon>TransformUtils.ts</DependentUpon>
-    </Content>
     <Content Include="math\Vec2.js">
       <DependentUpon>Vec2.ts</DependentUpon>
     </Content>
@@ -182,6 +180,14 @@
       <DependentUpon>Net.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="physics\arcade\ArcadePhysics.ts" />
+    <TypeScriptCompile Include="particles\ArcadeEmitter.ts" />
+    <Content Include="particles\ArcadeEmitter.js">
+      <DependentUpon>ArcadeEmitter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\ArcadeParticle.ts" />
+    <Content Include="particles\ArcadeParticle.js">
+      <DependentUpon>ArcadeParticle.ts</DependentUpon>
+    </Content>
     <Content Include="physics\advanced\readme.txt" />
     <Content Include="physics\arcade\ArcadePhysics.js">
       <DependentUpon>ArcadePhysics.ts</DependentUpon>
@@ -215,10 +221,29 @@
     <Content Include="system\screens\OrientationScreen.js">
       <DependentUpon>OrientationScreen.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="tilemap\Tile.ts" />
+    <Content Include="tilemap\Tile.js">
+      <DependentUpon>Tile.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="tilemap\TilemapLayer.ts" />
+    <TypeScriptCompile Include="tilemap\Tilemap.ts" />
+    <Content Include="tilemap\Tilemap.js">
+      <DependentUpon>Tilemap.ts</DependentUpon>
+    </Content>
+    <Content Include="tilemap\TilemapLayer.js">
+      <DependentUpon>TilemapLayer.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="ui\Button.ts" />
+    <TypeScriptCompile Include="time\TimeManager.ts" />
+    <Content Include="time\TimeManager.js">
+      <DependentUpon>TimeManager.ts</DependentUpon>
+    </Content>
+    <Content Include="ui\Button.js">
+      <DependentUpon>Button.ts</DependentUpon>
+    </Content>
     <Content Include="utils\CircleUtils.js">
       <DependentUpon>CircleUtils.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="utils\PixelUtils.ts" />
     <TypeScriptCompile Include="utils\ColorUtils.ts" />
     <Content Include="utils\ColorUtils.js">
       <DependentUpon>ColorUtils.ts</DependentUpon>
@@ -227,18 +252,12 @@
     <Content Include="utils\DebugUtils.js">
       <DependentUpon>DebugUtils.ts</DependentUpon>
     </Content>
-    <Content Include="utils\PixelUtils.js">
-      <DependentUpon>PixelUtils.ts</DependentUpon>
-    </Content>
     <Content Include="utils\PointUtils.js">
       <DependentUpon>PointUtils.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="utils\RectangleUtils.ts" />
     <Content Include="utils\RectangleUtils.js">
       <DependentUpon>RectangleUtils.ts</DependentUpon>
-    </Content>
-    <Content Include="math\IntersectResult.js">
-      <DependentUpon>IntersectResult.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="math\Vec2Utils.ts" />
     <Content Include="math\Vec2Utils.js">
@@ -272,17 +291,8 @@
     </Content>
     <TypeScriptCompile Include="sound\Sound.ts" />
     <TypeScriptCompile Include="sound\SoundManager.ts" />
-    <Content Include="components\animation\Animation.js">
-      <DependentUpon>Animation.ts</DependentUpon>
-    </Content>
     <Content Include="loader\AnimationLoader.js">
       <DependentUpon>AnimationLoader.ts</DependentUpon>
-    </Content>
-    <Content Include="components\animation\Frame.js">
-      <DependentUpon>Frame.ts</DependentUpon>
-    </Content>
-    <Content Include="components\animation\FrameData.js">
-      <DependentUpon>FrameData.ts</DependentUpon>
     </Content>
     <Content Include="cameras\Camera.js">
       <DependentUpon>Camera.ts</DependentUpon>
@@ -368,11 +378,7 @@
     <TypeScriptCompile Include="tweens\easing\Circular.ts" />
     <TypeScriptCompile Include="tweens\easing\Bounce.ts" />
     <TypeScriptCompile Include="tweens\easing\Back.ts" />
-    <TypeScriptCompile Include="components\animation\FrameData.ts" />
-    <TypeScriptCompile Include="components\animation\Frame.ts" />
     <TypeScriptCompile Include="loader\AnimationLoader.ts" />
-    <TypeScriptCompile Include="components\animation\Animation.ts" />
-    <TypeScriptCompile Include="math\IntersectResult.ts" />
     <Content Include="core\Group.js">
       <DependentUpon>Group.ts</DependentUpon>
     </Content>
@@ -394,9 +400,6 @@
     <Content Include="State.js">
       <DependentUpon>State.ts</DependentUpon>
     </Content>
-    <Content Include="Time.js">
-      <DependentUpon>Time.ts</DependentUpon>
-    </Content>
     <Content Include="tweens\TweenManager.js">
       <DependentUpon>TweenManager.ts</DependentUpon>
     </Content>
@@ -409,7 +412,6 @@
     </Content>
     <TypeScriptCompile Include="World.ts" />
     <TypeScriptCompile Include="tweens\TweenManager.ts" />
-    <TypeScriptCompile Include="Time.ts" />
     <TypeScriptCompile Include="State.ts" />
     <TypeScriptCompile Include="Stage.ts" />
     <TypeScriptCompile Include="core\SignalBinding.ts" />
@@ -418,8 +420,6 @@
     <TypeScriptCompile Include="loader\Loader.ts" />
     <TypeScriptCompile Include="core\Group.ts" />
     <TypeScriptCompile Include="math\GameMath.ts" />
-    <TypeScriptCompile Include="gameobjects\DynamicTexture.ts" />
-    <TypeScriptCompile Include="components\animation\AnimationManager.ts" />
     <Content Include="loader\Cache.js">
       <DependentUpon>Cache.ts</DependentUpon>
     </Content>

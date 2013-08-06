@@ -2,9 +2,9 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
 
-    var btn1: Phaser.Button,
-        btn2: Phaser.Button,
-        btn3: Phaser.Button;
+    var btn1: Phaser.UI.Button,
+        btn2: Phaser.UI.Button,
+        btn3: Phaser.UI.Button;
     var fx;
 
     function init() {

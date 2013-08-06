@@ -13,15 +13,15 @@
         game.load.start();
     }
     button:
-Phaser.Button
+Phaser.UI.Button
     music:
 Phaser.Sound
     volumeUp:
-Phaser.Button
+Phaser.UI.Button
     volumeDown:
-Phaser.Button
+Phaser.UI.Button
     pause:
-Phaser.Button
+Phaser.UI.Button
     function create() {
         this.music = game.add.audio('boden');
         this.button = game.add.button(game.stage.centerX, 400, 'button', playMusic, this, 2, 1, 0);

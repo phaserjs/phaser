@@ -1,10 +1,10 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../core/Group.ts" />
-/// <reference path="Particle.ts" />
+/// <reference path="ArcadeParticle.ts" />
 /// <reference path="../utils/SpriteUtils.ts" />
 
 /**
-* Phaser - Emitter
+* Phaser - ArcadeEmitter
 *
 * Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
 * continuous effects like rain and fire. All it really does is launch Particle objects out
@@ -13,7 +13,7 @@
 
 module Phaser {
 
-    export class Emitter extends Group {
+    export class ArcadeEmitter extends Group {
 
         /**
          * Creates a new <code>Emitter</code> object at a specific position.
@@ -191,7 +191,7 @@ module Phaser {
          *
          * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
          */
-        public makeParticles(graphics, quantity: number = 50, multiple: bool = false, collide: number = 0): Emitter {
+        public makeParticles(graphics, quantity: number = 50, multiple: bool = false, collide: number = 0): ArcadeEmitter {
 
             this.maxSize = quantity;
 
@@ -208,14 +208,14 @@ module Phaser {
             */
 
             var randomFrame: number;
-            var particle: Particle;
+            var particle: ArcadeParticle;
             var i: number = 0;
 
             while (i < quantity)
             {
                 if (this.particleClass == null)
                 {
-                    particle = new Particle(this.game);
+                    particle = new ArcadeParticle(this.game);
                 }
                 else
                 {
@@ -360,16 +360,16 @@ module Phaser {
          */
         public emitParticle() {
 
-            var particle: Particle = this.recycle(Particle);
+            var particle: ArcadeParticle = this.recycle(ArcadeParticle);
 
             particle.lifespan = this.lifespan;
             //particle.body.bounce.setTo(this.bounce, this.bounce);
-            SpriteUtils.reset(particle, this.x - (particle.width >> 1) + this.game.math.random() * this.width, this.y - (particle.height >> 1) + this.game.math.random() * this.height);
+            SpriteUtils.reset(particle, this.x - (particle.width >> 1) + this.game.rnd.integer * this.width, this.y - (particle.height >> 1) + this.game.rnd.integer * this.height);
             particle.visible = true;
 
             if (this.minParticleSpeed.x != this.maxParticleSpeed.x)
             {
-                particle.body.velocity.x = this.minParticleSpeed.x + this.game.math.random() * (this.maxParticleSpeed.x - this.minParticleSpeed.x);
+                particle.body.velocity.x = this.minParticleSpeed.x + this.game.rnd.integer * (this.maxParticleSpeed.x - this.minParticleSpeed.x);
             }
             else
             {
@@ -378,7 +378,7 @@ module Phaser {
 
             if (this.minParticleSpeed.y != this.maxParticleSpeed.y)
             {
-                particle.body.velocity.y = this.minParticleSpeed.y + this.game.math.random() * (this.maxParticleSpeed.y - this.minParticleSpeed.y);
+                particle.body.velocity.y = this.minParticleSpeed.y + this.game.rnd.integer * (this.maxParticleSpeed.y - this.minParticleSpeed.y);
             }
             else
             {
@@ -389,7 +389,7 @@ module Phaser {
 
             if (this.minRotation != this.maxRotation && this.minRotation !== 0 && this.maxRotation !== 0)
             {
-                particle.body.angularVelocity = this.minRotation + this.game.math.random() * (this.maxRotation - this.minRotation);
+                particle.body.angularVelocity = this.minRotation + this.game.rnd.integer * (this.maxRotation - this.minRotation);
             }
             else
             {
@@ -398,7 +398,7 @@ module Phaser {
 
             if (particle.body.angularVelocity != 0)
             {
-                particle.rotation = this.game.math.random() * 360 - 180;
+                particle.rotation = this.game.rnd.integer * 360 - 180;
             }
 
             //particle.body.drag.x = this.particleDrag.x;

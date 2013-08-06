@@ -331,7 +331,7 @@ module Phaser {
             // x and y are the old values here?
             this.positionDown.setTo(this.x, this.y);
 
-            if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+            if (this.game.input.multiInputOverride == InputManager.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == InputManager.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == InputManager.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
                 //this.game.input.x = this.x * this.game.input.scale.x;
                 //this.game.input.y = this.y * this.game.input.scale.y;
@@ -365,7 +365,7 @@ module Phaser {
             {
                 if (this._holdSent == false && this.duration >= this.game.input.holdRate)
                 {
-                    if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+                    if (this.game.input.multiInputOverride == InputManager.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == InputManager.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == InputManager.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
                     {
                         this.game.input.onHold.dispatch(this);
                     }
@@ -415,7 +415,7 @@ module Phaser {
             this.circle.x = this.x;
             this.circle.y = this.y;
 
-            if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+            if (this.game.input.multiInputOverride == InputManager.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == InputManager.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == InputManager.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
                 this.game.input.activePointer = this;
                 this.game.input.x = this.x;
@@ -423,6 +423,12 @@ module Phaser {
                 this.game.input.position.setTo(this.game.input.x, this.game.input.y);
                 this.game.input.circle.x = this.game.input.x;
                 this.game.input.circle.y = this.game.input.y;
+            }
+
+            //  If the game is paused we don't process any target objects
+            if (this.game.paused)
+            {
+                return this;
             }
 
             //  Easy out if we're dragging something and it still exists
@@ -444,7 +450,7 @@ module Phaser {
             {
                 if (this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.checkPointerOver(this))
                 {
-                    //  If the object has a higher Input.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
+                    //  If the object has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
                     if (this.game.input.inputObjects[i].input.priorityID > this._highestInputPriorityID || (this.game.input.inputObjects[i].input.priorityID == this._highestInputPriorityID && this.game.input.inputObjects[i].renderOrderID > this._highestRenderOrderID))
                     {
                         this._highestRenderOrderID = this.game.input.inputObjects[i].renderOrderID;
@@ -525,7 +531,7 @@ module Phaser {
 
             this.timeUp = this.game.time.now;
 
-            if (this.game.input.multiInputOverride == Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+            if (this.game.input.multiInputOverride == InputManager.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == InputManager.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == InputManager.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
             {
                 this.game.input.onUp.dispatch(this);
 
@@ -622,7 +628,7 @@ module Phaser {
         }
 
         /**
-        * Resets the Pointer properties. Called by Input.reset when you perform a State change.
+        * Resets the Pointer properties. Called by InputManager.reset when you perform a State change.
         * @method reset
         */
         public reset() {

@@ -1,7 +1,7 @@
 /// <reference path="../Game.ts" />
 /// <reference path="../Statics.ts" />
-/// <reference path="../components/Texture.ts" />
-/// <reference path="../components/Transform.ts" />
+/// <reference path="../display/Texture.ts" />
+/// <reference path="../gameobjects/TransformManager.ts" />
 
 /**
 * Phaser - Group
@@ -29,8 +29,8 @@ module Phaser {
 
             this.ID = this.game.world.getNextGroupID();
 
-            this.transform = new Phaser.Components.Transform(this);
-            this.texture = new Phaser.Components.Texture(this);
+            this.transform = new Phaser.Components.TransformManager(this);
+            this.texture = new Phaser.Display.Texture(this);
             this.texture.opaque = false;
 
         }
@@ -98,12 +98,12 @@ module Phaser {
         /**
          * Optional texture used in the background of the Camera.
          */
-        public texture: Phaser.Components.Texture;
+        public texture: Phaser.Display.Texture;
 
         /**
          * The transform component.
          */
-        public transform: Phaser.Components.Transform;
+        public transform: Phaser.Components.TransformManager;
 
         /**
          * A boolean representing if the Group has been modified in any way via a scale, rotate, flip or skew.

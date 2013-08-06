@@ -1,5 +1,5 @@
 /// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../build/phaser-fx.d.ts" />
+/// <reference path="../../Plugins/CameraFX/Mirror.ts" />
 
 (function () {
 
@@ -13,7 +13,7 @@
 
     }
 
-    var mirror: Phaser.FX.Camera.Mirror;
+    var mirror: Phaser.Plugins.CameraFX.Mirror;
 
     function create() {
 
@@ -28,7 +28,7 @@
         game.camera.disableClipping = true;
 
         //  Add our effect to the camera
-        mirror = <Phaser.FX.Camera.Mirror> game.camera.fx.add(Phaser.FX.Camera.Mirror);
+        mirror = <Phaser.Plugins.CameraFX.Mirror> game.camera.plugins.add(Phaser.Plugins.CameraFX.Mirror);
 
         //  The first 2 parameters are the x and y coordinates of where to display the effect. They are in STAGE coordinates, not World.
         //  The next is a Rectangle making up the region of the Camera that we'll create the effect from (in this case the whole camera).

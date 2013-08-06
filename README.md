@@ -22,7 +22,6 @@ Latest Update
 
 TODO:
 
-* Dispatch world resize event
 * Investigate why tweens don't restart after the game pauses
 * Fix bug in Tween yoyo + loop combo
 * Check that tween pausing works with the new performance.now
@@ -30,15 +29,12 @@ TODO:
 * Investigate bug re: tilemap collision and animation frames
 * Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
-* If stage.clear set to false and game pauses, when it unpauses you still see the pause arrow - resolve this
 * Add clip support + shape options to Texture Component.
-* Make sure I'm using Point and not Vec2 when it's not a directional vector I need
 * Drag Sprite with "snap to center" uses local coords not world, so fails on scrolling world (no center lock works fine)
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
 * Pointer worldX/Y don't appear to be correct for some reason
 * Create a Pixel game object type (useful for particles / fx)
 * Sprite collision events
-* See which functions in the input component can move elsewhere (utils)
 * Move all of the renderDebugInfo methods to the DebugUtils class
 * Check bounds/edge points when sprite is only 1x1 sized :)
 * QuadTree.physics.checkHullIntersection
@@ -52,16 +48,13 @@ TODO:
 * Stage CSS3 Transforms?
 * Ability to layer another DOM object and have it controlled by the game somehow. Can then do stacked canvas effects.
 * Stage lost to mute
-* When game is paused Pointer shouldn't process targetObjects / change cursor
 * Need to limit touch priority of items in groups?
-* Check if it works from an iFrame
 * Bitmap Font support
 * Basic Window component (maybe a propogating Group?)
 * Put ArcadePhysics back in
 * Look at the N+ tile support maybe with ArcadePhysics?
 * Pixel-perfect click check
 * Check Flash atlas export is supported
-* Plug-in Support
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
 
 
@@ -166,7 +159,7 @@ V1.0.0
 * Added Stage.disableVisibilityChange to stop the auto pause/resume from ever firing.
 * Added crop support to the Texture component, so you can do Sprite.crop to restrict rendering to a specified Rectangle without distortion.
 * Added references to all the event listener functions so they can be cleanly destroyed.
-* Fixed interesting Firefox bug when an audio track ended it fired another 'canplaythrough' event, confusing the Loader.
+* Fixed interesting Firefox issue when an audio track ended it fired another 'canplaythrough' event, confusing the Loader.
 
 
 V0.9.6

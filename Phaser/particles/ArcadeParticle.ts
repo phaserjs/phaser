@@ -1,8 +1,8 @@
 /// <reference path="../Game.ts" />
-/// <reference path="Sprite.ts" />
+/// <reference path="../gameobjects/Sprite.ts" />
 
 /**
-* Phaser - Particle
+* Phaser - ArcadeParticle
 *
 * This is a simple particle class that extends a Sprite to have a slightly more
 * specialised behaviour. It is used exclusively by the Emitter class and can be extended as required.
@@ -10,7 +10,7 @@
 
 module Phaser {
 
-    export class Particle extends Sprite {
+    export class ArcadeParticle extends Sprite {
 
         /**
          * Instantiate a new particle.  Like <code>Sprite</code>, all meaningful creation

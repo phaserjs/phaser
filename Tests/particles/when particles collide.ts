@@ -4,8 +4,8 @@
 
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
-    var leftEmitter: Phaser.Emitter;
-    var rightEmitter: Phaser.Emitter;
+    var leftEmitter: Phaser.ArcadeEmitter;
+    var rightEmitter: Phaser.ArcadeEmitter;
 
     function init() {
 
