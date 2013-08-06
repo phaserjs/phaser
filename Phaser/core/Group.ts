@@ -417,11 +417,10 @@ module Phaser {
          * @param y {number} Y position of the new sprite.
          * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
          * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
          * @returns {Sprite} The newly created sprite object.
          */
-        public addNewSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED): Sprite {
-            return <Sprite> this.add(new Sprite(this.game, x, y, key, frame, bodyType));
+        public addNewSprite(x: number, y: number, key?: string = '', frame? = null): Sprite {
+            return <Sprite> this.add(new Sprite(this.game, x, y, key, frame));
         }
 
         /**

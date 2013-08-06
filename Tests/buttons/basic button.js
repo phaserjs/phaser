@@ -12,7 +12,6 @@ Phaser.Sprite
     button:
 Phaser.UI.Button
     function create() {
-        game.stage.clear = false;
         //  This is just an image that we'll toggle the display of when you click the button
         this.image = game.add.sprite(game.stage.centerX, 0, 'beast');
         this.image.transform.origin.setTo(0.5, 0);

@@ -23,10 +23,8 @@ module Phaser {
          * @param [x] {number} the initial x position of the sprite.
          * @param [y] {number} the initial y position of the sprite.
          * @param [key] {string} Key of the graphic you want to load for this sprite.
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED, i.e. no physics)
-         * @param [shapeType] {number} The physics shape the body will consist of (either Box (0) or Circle (1), for custom types see body.addShape)
          */
-        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null, bodyType?: number = Phaser.Types.BODY_DISABLED, shapeType?:number = 0) {
+        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null) {
 
             this.game = game;
             this.type = Phaser.Types.SPRITE;
@@ -67,13 +65,6 @@ module Phaser {
                 {
                     this.frame = frame;
                 }
-            }
-
-            if (bodyType !== Phaser.Types.BODY_DISABLED)
-            {
-                //this.body = new Phaser.Physics.Body(this, bodyType, 0, 0, shapeType);
-                //this.game.physics.addBody(this.body);
-                //this.transform.origin.setTo(0.5, 0.5);
             }
 
             this.worldView = new Rectangle(x, y, this.width, this.height);
@@ -334,8 +325,24 @@ module Phaser {
 
             this.transform.update();
 
-            this.worldView.x = (this.x * this.transform.scrollFactor.x) - (this.width * this.transform.origin.x);
-            this.worldView.y = (this.y * this.transform.scrollFactor.y) - (this.height * this.transform.origin.y);
+            if (this.transform.scrollFactor.x != 1 && this.transform.scrollFactor.x != 0)
+            {
+                this.worldView.x = (this.x * this.transform.scrollFactor.x) - (this.width * this.transform.origin.x);
+            }
+            else
+            {
+                this.worldView.x = this.x - (this.width * this.transform.origin.x);
+            }
+
+            if (this.transform.scrollFactor.y != 1 && this.transform.scrollFactor.y != 0)
+            {
+                this.worldView.y = (this.y * this.transform.scrollFactor.y) - (this.height * this.transform.origin.y);
+            }
+            else
+            {
+                this.worldView.y = this.y - (this.height * this.transform.origin.y);
+            }
+
             this.worldView.width = this.width;
             this.worldView.height = this.height;
 

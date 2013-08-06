@@ -4843,16 +4843,12 @@ var Phaser;
         * @param [x] {number} the initial x position of the sprite.
         * @param [y] {number} the initial y position of the sprite.
         * @param [key] {string} Key of the graphic you want to load for this sprite.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED, i.e. no physics)
-        * @param [shapeType] {number} The physics shape the body will consist of (either Box (0) or Circle (1), for custom types see body.addShape)
         */
-        function Sprite(game, x, y, key, frame, bodyType, shapeType) {
+        function Sprite(game, x, y, key, frame) {
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof key === "undefined") { key = null; }
             if (typeof frame === "undefined") { frame = null; }
-            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
-            if (typeof shapeType === "undefined") { shapeType = 0; }
             /**
             * Sprite physics body.
             */
@@ -4905,11 +4901,6 @@ var Phaser;
                     this.frame = frame;
                 }
             }
-            if(bodyType !== Phaser.Types.BODY_DISABLED) {
-                //this.body = new Phaser.Physics.Body(this, bodyType, 0, 0, shapeType);
-                //this.game.physics.addBody(this.body);
-                //this.transform.origin.setTo(0.5, 0.5);
-                            }
             this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.cameraView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.transform.setCache();
@@ -5022,8 +5013,16 @@ var Phaser;
         */
         function () {
             this.transform.update();
-            this.worldView.x = (this.x * this.transform.scrollFactor.x) - (this.width * this.transform.origin.x);
-            this.worldView.y = (this.y * this.transform.scrollFactor.y) - (this.height * this.transform.origin.y);
+            if(this.transform.scrollFactor.x != 1 && this.transform.scrollFactor.x != 0) {
+                this.worldView.x = (this.x * this.transform.scrollFactor.x) - (this.width * this.transform.origin.x);
+            } else {
+                this.worldView.x = this.x - (this.width * this.transform.origin.x);
+            }
+            if(this.transform.scrollFactor.y != 1 && this.transform.scrollFactor.y != 0) {
+                this.worldView.y = (this.y * this.transform.scrollFactor.y) - (this.height * this.transform.origin.y);
+            } else {
+                this.worldView.y = this.y - (this.height * this.transform.origin.y);
+            }
             this.worldView.width = this.width;
             this.worldView.height = this.height;
             if(this.modified == false && (!this.transform.scale.equals(1) || !this.transform.skew.equals(0) || this.transform.rotation != 0 || this.transform.rotationOffset != 0 || this.texture.flippedX || this.texture.flippedY)) {
@@ -5223,7 +5222,7 @@ var Phaser;
         function overlapsXY(sprite, x, y) {
             //  if rotation == 0 then just do a rect check instead!
             if(sprite.transform.rotation == 0) {
-                return Phaser.RectangleUtils.contains(sprite.cameraView, x, y);
+                return Phaser.RectangleUtils.contains(sprite.worldView, x, y);
             }
             if((x - sprite.transform.upperLeft.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) < 0) {
                 return false;
@@ -6489,14 +6488,12 @@ var Phaser;
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
         * @returns {Sprite} The newly created sprite object.
         */
-        function (x, y, key, frame, bodyType) {
+        function (x, y, key, frame) {
             if (typeof key === "undefined") { key = ''; }
             if (typeof frame === "undefined") { frame = null; }
-            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
-            return this.add(new Phaser.Sprite(this.game, x, y, key, frame, bodyType));
+            return this.add(new Phaser.Sprite(this.game, x, y, key, frame));
         };
         Group.prototype.setObjectIDs = /**
         * Sets all of the game object properties needed to exist within this Group.
@@ -11148,8 +11145,6 @@ var Phaser;
                 this.events.onInputOut.add(this.onInputOutHandler, this);
                 this.events.onInputDown.add(this.onInputDownHandler, this);
                 this.events.onInputUp.add(this.onInputUpHandler, this);
-                //  By default we'll position it using screen space, not world space.
-                this.transform.scrollFactor.setTo(0, 0);
             }
             Button.prototype.onInputOverHandler = //  TODO
             //public tabIndex: number;
@@ -12392,21 +12387,19 @@ var Phaser;
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
         * @returns {Sprite} The newly created sprite object.
         */
-        function (x, y, key, frame, bodyType) {
+        function (x, y, key, frame) {
             if (typeof key === "undefined") { key = ''; }
             if (typeof frame === "undefined") { frame = null; }
-            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DISABLED; }
-            return this._world.group.add(new Phaser.Sprite(this._game, x, y, key, frame, bodyType));
+            return this._world.group.add(new Phaser.Sprite(this._game, x, y, key, frame));
         };
         GameObjectFactory.prototype.audio = function (key, volume, loop) {
             if (typeof volume === "undefined") { volume = 1; }
             if (typeof loop === "undefined") { loop = false; }
             return this._game.sound.add(key, volume, loop);
         };
-        GameObjectFactory.prototype.physicsSprite = /**
+        GameObjectFactory.prototype.dynamicTexture = /**
         * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
         *
         * @param x {number} X position of the new sprite.
@@ -12417,14 +12410,10 @@ var Phaser;
         * @param [shapeType] The default body shape is either 0 for a Box or 1 for a Circle. See Sprite.body.addShape for custom shapes (polygons, etc)
         * @returns {Sprite} The newly created sprite object.
         */
-        function (x, y, key, frame, bodyType, shapeType) {
-            if (typeof key === "undefined") { key = ''; }
-            if (typeof frame === "undefined") { frame = null; }
-            if (typeof bodyType === "undefined") { bodyType = Phaser.Types.BODY_DYNAMIC; }
-            if (typeof shapeType === "undefined") { shapeType = 0; }
-            return this._world.group.add(new Phaser.Sprite(this._game, x, y, key, frame, bodyType, shapeType));
-        };
-        GameObjectFactory.prototype.dynamicTexture = /**
+        //public physicsSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC, shapeType?:number = 0): Sprite {
+        //    return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key, frame, bodyType, shapeType));
+        //}
+        /**
         * Create a new DynamicTexture with specific size.
         *
         * @param width {number} Width of the texture.

@@ -33,7 +33,6 @@ TODO:
 * Drag Sprite with "snap to center" uses local coords not world, so fails on scrolling world (no center lock works fine)
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
 * Pointer worldX/Y don't appear to be correct for some reason
-* Create a Pixel game object type (useful for particles / fx)
 * Sprite collision events
 * Move all of the renderDebugInfo methods to the DebugUtils class
 * Check bounds/edge points when sprite is only 1x1 sized :)
@@ -56,7 +55,7 @@ TODO:
 * Pixel-perfect click check
 * Check Flash atlas export is supported
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
-
+* Check pointer picking objects with multiple cameras (check camera first, then object???)
 
 
 V1.0.0

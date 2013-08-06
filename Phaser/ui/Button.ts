@@ -83,9 +83,6 @@ module Phaser.UI {
             this.events.onInputDown.add(this.onInputDownHandler, this);
             this.events.onInputUp.add(this.onInputUpHandler, this);
 
-            //  By default we'll position it using screen space, not world space.
-            this.transform.scrollFactor.setTo(0, 0);
-
         }
 
         private _onOverFrameName = null;

@@ -2385,10 +2385,8 @@ module Phaser {
         * @param [x] {number} the initial x position of the sprite.
         * @param [y] {number} the initial y position of the sprite.
         * @param [key] {string} Key of the graphic you want to load for this sprite.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED, i.e. no physics)
-        * @param [shapeType] {number} The physics shape the body will consist of (either Box (0) or Circle (1), for custom types see body.addShape)
         */
-        constructor(game: Game, x?: number, y?: number, key?: string, frame?, bodyType?: number, shapeType?: number);
+        constructor(game: Game, x?: number, y?: number, key?: string, frame?);
         /**
         * Reference to the main game object
         */
@@ -3345,10 +3343,9 @@ module Phaser {
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
         * @returns {Sprite} The newly created sprite object.
         */
-        public addNewSprite(x: number, y: number, key?: string, frame?, bodyType?: number): Sprite;
+        public addNewSprite(x: number, y: number, key?: string, frame?): Sprite;
         /**
         * Sets all of the game object properties needed to exist within this Group.
         */
@@ -6436,23 +6433,10 @@ module Phaser {
         * @param y {number} Y position of the new sprite.
         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DISABLED)
         * @returns {Sprite} The newly created sprite object.
         */
-        public sprite(x: number, y: number, key?: string, frame?, bodyType?: number): Sprite;
+        public sprite(x: number, y: number, key?: string, frame?): Sprite;
         public audio(key: string, volume?: number, loop?: bool): Sound;
-        /**
-        * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
-        *
-        * @param x {number} X position of the new sprite.
-        * @param y {number} Y position of the new sprite.
-        * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
-        * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-        * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
-        * @param [shapeType] The default body shape is either 0 for a Box or 1 for a Circle. See Sprite.body.addShape for custom shapes (polygons, etc)
-        * @returns {Sprite} The newly created sprite object.
-        */
-        public physicsSprite(x: number, y: number, key?: string, frame?, bodyType?: number, shapeType?: number): Sprite;
         /**
         * Create a new DynamicTexture with specific size.
         *

@@ -159,7 +159,7 @@ module Phaser {
             //  if rotation == 0 then just do a rect check instead!
             if (sprite.transform.rotation == 0)
             {
-                return Phaser.RectangleUtils.contains(sprite.cameraView, x, y);
+                return Phaser.RectangleUtils.contains(sprite.worldView, x, y);
             }
 
             if ((x - sprite.transform.upperLeft.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) < 0)
