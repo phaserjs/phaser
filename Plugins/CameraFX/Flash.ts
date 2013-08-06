@@ -1,22 +1,24 @@
-/// <reference path="../../build/phaser.d.ts" />
+/// <reference path="../../Phaser/Game.ts" />
+/// <reference path="../../Phaser/core/Plugin.ts" />
 
 /**
-* Phaser - FX - Camera - Flash
+* Phaser - Plugins - Camera FX - Flash
 *
 * The camera is filled with the given color and returns to normal at the given duration.
 */
 
-module Phaser.FX.Camera {
+module Phaser.Plugins.CameraFX {
 
-    export class Flash {
+    export class Flash extends Phaser.Plugin {
 
-        constructor(game: Game) {
+        constructor(game: Phaser.Game, parent) {
 
-            this._game = game;
+            super(game, parent);
+            this.camera = parent;
 
         }
 
-        private _game: Game;
+        public camera: Phaser.Camera;
 
         private _fxFlashColor: string;
         private _fxFlashComplete = null;
@@ -60,9 +62,9 @@ module Phaser.FX.Camera {
             //  Update the Flash effect
             if (this._fxFlashAlpha > 0)
             {
-                this._fxFlashAlpha -= this._game.time.elapsed / this._fxFlashDuration;
+                this._fxFlashAlpha -= this.game.time.elapsed / this._fxFlashDuration;
 
-                if (this._game.math.roundTo(this._fxFlashAlpha, -2) <= 0)
+                if (this.game.math.roundTo(this._fxFlashAlpha, -2) <= 0)
                 {
                     this._fxFlashAlpha = 0;
 
@@ -75,12 +77,12 @@ module Phaser.FX.Camera {
 
         }
 
-        public postRender(camera: Phaser.Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public postRender() {
 
             if (this._fxFlashAlpha > 0)
             {
-                this._game.stage.context.fillStyle = this._fxFlashColor + this._fxFlashAlpha + ')';
-                this._game.stage.context.fillRect(cameraX, cameraY, cameraWidth, cameraHeight);
+                this.game.stage.context.fillStyle = this._fxFlashColor + this._fxFlashAlpha + ')';
+                this.game.stage.context.fillRect(this.camera.screenView.x, this.camera.screenView.y, this.camera.width, this.camera.height);
             }
 
         }

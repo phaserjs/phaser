@@ -1,6 +1,6 @@
 {
   "name": "Phaser",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "description": "html5 game framework",
   "main": "index.js",
   "scripts": {

@@ -1,22 +1,24 @@
-/// <reference path="../../build/phaser.d.ts" />
+/// <reference path="../../Phaser/Game.ts" />
+/// <reference path="../../Phaser/core/Plugin.ts" />
 
 /**
-* Phaser - FX - Camera - Fade
+* Phaser - Plugins - Camera FX - Fade
 *
 * The camera is filled with the given color and returns to normal at the given duration.
 */
 
-module Phaser.FX.Camera {
+module Phaser.Plugins.CameraFX {
 
-    export class Fade {
+    export class Fade extends Phaser.Plugin {
 
-        constructor(game: Game) {
+        constructor(game: Phaser.Game, parent) {
 
-            this._game = game;
+            super(game, parent);
+            this.camera = parent;
 
         }
 
-        private _game: Game;
+        public camera: Phaser.Camera;
 
         private _fxFadeColor: string;
         private _fxFadeComplete = null;
@@ -60,9 +62,9 @@ module Phaser.FX.Camera {
             //  Update the Fade effect
             if (this._fxFadeAlpha > 0)
             {
-                this._fxFadeAlpha += this._game.time.elapsed / this._fxFadeDuration;
+                this._fxFadeAlpha += this.game.time.elapsed / this._fxFadeDuration;
 
-                if (this._game.math.roundTo(this._fxFadeAlpha, -2) >= 1)
+                if (this.game.math.roundTo(this._fxFadeAlpha, -2) >= 1)
                 {
                     this._fxFadeAlpha = 1;
 
@@ -75,13 +77,13 @@ module Phaser.FX.Camera {
 
         }
 
-        public postRender(camera: Phaser.Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public postRender() {
 
             //  "Fade" FX
             if (this._fxFadeAlpha > 0)
             {
-                this._game.stage.context.fillStyle = this._fxFadeColor + this._fxFadeAlpha + ')';
-                this._game.stage.context.fillRect(cameraX, cameraY, cameraWidth, cameraHeight);
+                this.game.stage.context.fillStyle = this._fxFadeColor + this._fxFadeAlpha + ')';
+                this.game.stage.context.fillRect(this.camera.screenView.x, this.camera.screenView.y, this.camera.width, this.camera.height);
             }
 
         }

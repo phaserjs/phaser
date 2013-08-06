@@ -1,24 +1,24 @@
-/// <reference path="../../build/phaser.d.ts" />
+/// <reference path="../../Phaser/Game.ts" />
+/// <reference path="../../Phaser/core/Plugin.ts" />
 
 /**
-* Phaser - FX - Camera - Shake
+* Phaser - Plugins - Camera FX - Shake
 *
 * A simple camera shake effect.
 */
 
-module Phaser.FX.Camera {
+module Phaser.Plugins.CameraFX {
 
-    export class Shake {
+    export class Shake extends Phaser.Plugin {
 
-        constructor(game: Game, camera: Phaser.Camera) {
+        constructor(game: Phaser.Game, parent) {
 
-            this._game = game;
-            this._parent = camera;
+            super(game, parent);
+            this.camera = parent;
 
         }
 
-        private _game: Game;
-        private _parent: Phaser.Camera;
+        public camera: Phaser.Camera;
 
         private _fxShakeIntensity: number = 0;
         private _fxShakeDuration: number = 0;
@@ -51,8 +51,8 @@ module Phaser.FX.Camera {
             //  If a shake is not already running we need to store the offsets here
             if (this._fxShakeOffset.x == 0 && this._fxShakeOffset.y == 0)
             {
-                this._fxShakePrevX = this._parent.x;
-                this._fxShakePrevY = this._parent.y;
+                this._fxShakePrevX = this.camera.x;
+                this._fxShakePrevY = this.camera.y;
             }
 
             this._fxShakeIntensity = intensity;
@@ -68,14 +68,14 @@ module Phaser.FX.Camera {
             //  Update the "shake" special effect
             if (this._fxShakeDuration > 0)
             {
-                this._fxShakeDuration -= this._game.time.elapsed;
+                this._fxShakeDuration -= this.game.time.elapsed;
 
-                if (this._game.math.roundTo(this._fxShakeDuration, -2) <= 0)
+                if (this.game.math.roundTo(this._fxShakeDuration, -2) <= 0)
                 {
                     this._fxShakeDuration = 0;
                     this._fxShakeOffset.setTo(0, 0);
-                    this._parent.x = this._fxShakePrevX;
-                    this._parent.y = this._fxShakePrevY;
+                    this.camera.x = this._fxShakePrevX;
+                    this.camera.y = this._fxShakePrevY;
 
                     if (this._fxShakeComplete != null)
                     {
@@ -86,14 +86,12 @@ module Phaser.FX.Camera {
                 {
                     if ((this._fxShakeDirection == Shake.SHAKE_BOTH_AXES) || (this._fxShakeDirection == Shake.SHAKE_HORIZONTAL_ONLY))
                     {
-                        //this._fxShakeOffset.x = ((this._game.math.random() * this._fxShakeIntensity * this.worldView.width * 2 - this._fxShakeIntensity * this.worldView.width) * this._zoom;
-                        this._fxShakeOffset.x = (this._game.math.random() * this._fxShakeIntensity * this._parent.worldView.width * 2 - this._fxShakeIntensity * this._parent.worldView.width);
+                        this._fxShakeOffset.x = (this.game.rnd.integer * this._fxShakeIntensity * this.camera.worldView.width * 2 - this._fxShakeIntensity * this.camera.worldView.width);
                     }
 
                     if ((this._fxShakeDirection == Shake.SHAKE_BOTH_AXES) || (this._fxShakeDirection == Shake.SHAKE_VERTICAL_ONLY))
                     {
-                        //this._fxShakeOffset.y = (this._game.math.random() * this._fxShakeIntensity * this.worldView.height * 2 - this._fxShakeIntensity * this.worldView.height) * this._zoom;
-                        this._fxShakeOffset.y = (this._game.math.random() * this._fxShakeIntensity * this._parent.worldView.height * 2 - this._fxShakeIntensity * this._parent.worldView.height);
+                        this._fxShakeOffset.y = (this.game.rnd.integer * this._fxShakeIntensity * this.camera.worldView.height * 2 - this._fxShakeIntensity * this.camera.worldView.height);
                     }
                 }
 
@@ -101,12 +99,12 @@ module Phaser.FX.Camera {
 
         }
 
-        public preRender(camera: Phaser.Camera, cameraX: number, cameraY: number, cameraWidth: number, cameraHeight: number) {
+        public preRender() {
 
             if ((this._fxShakeOffset.x != 0) || (this._fxShakeOffset.y != 0))
             {
-                this._parent.x = this._fxShakePrevX + this._fxShakeOffset.x;
-                this._parent.y = this._fxShakePrevY + this._fxShakeOffset.y;
+                this.camera.x = this._fxShakePrevX + this._fxShakeOffset.x;
+                this.camera.y = this._fxShakePrevY + this._fxShakeOffset.y;
             }
 
         }

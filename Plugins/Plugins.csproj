@@ -58,11 +58,31 @@
   <ItemGroup>
     <TypeScriptCompile Include="CameraFX\Scanlines.ts" />
     <TypeScriptCompile Include="CameraFX\Mirror.ts" />
+    <TypeScriptCompile Include="CameraFX\Border.ts" />
+    <Content Include="CameraFX\Border.js">
+      <DependentUpon>Border.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="CameraFX\Fade.ts" />
+    <Content Include="CameraFX\Fade.js">
+      <DependentUpon>Fade.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="CameraFX\Flash.ts" />
+    <Content Include="CameraFX\Flash.js">
+      <DependentUpon>Flash.ts</DependentUpon>
+    </Content>
     <Content Include="CameraFX\Mirror.js">
       <DependentUpon>Mirror.ts</DependentUpon>
     </Content>
     <Content Include="CameraFX\Scanlines.js">
       <DependentUpon>Scanlines.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="CameraFX\Shadow.ts" />
+    <Content Include="CameraFX\Shadow.js">
+      <DependentUpon>Shadow.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="CameraFX\Shake.ts" />
+    <Content Include="CameraFX\Shake.js">
+      <DependentUpon>Shake.ts</DependentUpon>
     </Content>
     <Content Include="Template.js">
       <DependentUpon>Template.ts</DependentUpon>

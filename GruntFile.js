@@ -51,35 +51,12 @@ module.exports = function (grunt) {
                     comments: true
                 }
             },
-	    //tests: {
-	//	src: ['Tests/**/*.ts'],
-	//	options: {
-	//	    target: 'ES5',
-	//	    declaration: true,
-	//	    comments: true
-	//	}
-	  //  }
-            //fx: {
-            //    src: ['SpecialFX/**/*.ts'],
-            //    dest: 'build/phaser-fx.js',
-            //    options: {
-            //        target: 'ES5',
-            //        declaration: true,
-            //        comments: true
-            //    }
-            //}
         },
         copy: {
             main: {
                 files: [{
                     src: 'build/phaser.js',
                     dest: 'Tests/phaser.js'
-                }]
-            },
-            fx: {
-                files: [{
-                    src: 'build/phaser-fx.js',
-                    dest: 'Tests/phaser-fx.js'
                 }]
             },
             mainAmd: {
@@ -91,15 +68,6 @@ module.exports = function (grunt) {
                     processContent: wrapPhaserInUmd
                 }
             },
-            fxAmd: {
-                files: [{
-                    src: 'build/phaser-fx.js',
-                    dest: 'build/phaser-fx.amd.js'
-                }],
-                options: {
-                    processContent: wrapAddonInUmd
-                }
-            }
         },
         watch: {
             files: '**/*.ts',

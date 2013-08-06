@@ -160,6 +160,7 @@ V1.0.0
 * Added crop support to the Texture component, so you can do Sprite.crop to restrict rendering to a specified Rectangle without distortion.
 * Added references to all the event listener functions so they can be cleanly destroyed.
 * Fixed interesting Firefox issue when an audio track ended it fired another 'canplaythrough' event, confusing the Loader.
+* Added the new PluginManager. Moved all the Camera FX over to plugins. Everything will be a plugin from now on.
 
 
 V0.9.6

@@ -18,9 +18,10 @@ module Phaser.Plugins.CameraFX {
 
         }
 
+        public camera: Phaser.Camera;
+
         public spacing: number = 4;
         public color: string = 'rgba(0, 0, 0, 0.3)';
-        public camera: Phaser.Camera;
 
         public postRender() {
 
