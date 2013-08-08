@@ -11521,15 +11521,15 @@ var Phaser;
         * TilemapLayer constructor
         * Create a new <code>TilemapLayer</code>.
         *
-        * @param game {Phaser.Game} Current game instance.
         * @param parent {Tilemap} The tilemap that contains this layer.
+        * @param id {number} The ID of this layer within the Tilemap array.
         * @param key {string} Asset key for this map.
         * @param mapFormat {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
         * @param name {string} Name of this layer, so you can get this layer by its name.
         * @param tileWidth {number} Width of tiles in this map.
         * @param tileHeight {number} Height of tiles in this map.
         */
-        function TilemapLayer(game, parent, key, mapFormat, name, tileWidth, tileHeight) {
+        function TilemapLayer(parent, id, key, mapFormat, name, tileWidth, tileHeight) {
             /**
             * Controls whether update() and draw() are automatically called.
             * @type {boolean}
@@ -11572,8 +11572,9 @@ var Phaser;
             * @type {number}
             */
             this.tileSpacing = 0;
-            this.game = game;
             this.parent = parent;
+            this.game = parent.game;
+            this.ID = id;
             this.name = name;
             this.mapFormat = mapFormat;
             this.tileWidth = tileWidth;
@@ -12028,10 +12029,6 @@ var Phaser;
             if (typeof tileWidth === "undefined") { tileWidth = 0; }
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
             /**
-            * The Events component
-            */
-            //public events: Phaser.Components.Sprite.Events;
-            /**
             * z order value of the object.
             */
             this.z = -1;
@@ -12072,17 +12069,6 @@ var Phaser;
         }
         Tilemap.FORMAT_CSV = 0;
         Tilemap.FORMAT_TILED_JSON = 1;
-        Tilemap.prototype.preUpdate = /**
-        * Inherited methods for overriding.
-        */
-        function () {
-        };
-        Tilemap.prototype.update = function () {
-        };
-        Tilemap.prototype.postUpdate = function () {
-        };
-        Tilemap.prototype.destroy = function () {
-        };
         Tilemap.prototype.parseCSV = /**
         * Parset csv map data and generate tiles.
         * @param data {string} CSV map data.
@@ -12091,7 +12077,7 @@ var Phaser;
         * @param tileHeight {number} Height of its tile.
         */
         function (data, key, tileWidth, tileHeight) {
-            var layer = new Phaser.TilemapLayer(this.game, this, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
+            var layer = new Phaser.TilemapLayer(this, 0, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
             //  Trim any rogue whitespace from the data
             data = data.trim();
             var rows = data.split("\n");
@@ -12118,7 +12104,7 @@ var Phaser;
             data = data.trim();
             var json = JSON.parse(data);
             for(var i = 0; i < json.layers.length; i++) {
-                var layer = new Phaser.TilemapLayer(this.game, this, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
+                var layer = new Phaser.TilemapLayer(this, i, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
                 //  Check it's a data layer
                 if(!json.layers[i].data) {
                     continue;
@@ -12236,7 +12222,7 @@ var Phaser;
         * @return {Tile} The tile with specific properties.
         */
         function (x, y, layer) {
-            if (typeof layer === "undefined") { layer = 0; }
+            if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
             return this.tiles[this.layers[layer].getTileIndex(x, y)];
         };
         Tilemap.prototype.getTileFromWorldXY = /**
@@ -12247,7 +12233,7 @@ var Phaser;
         * @return {Tile} The tile with specific properties.
         */
         function (x, y, layer) {
-            if (typeof layer === "undefined") { layer = 0; }
+            if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
             return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
         };
         Tilemap.prototype.getTileFromInputXY = /**
@@ -12256,7 +12242,7 @@ var Phaser;
         * @returns {Tile}
         */
         function (layer) {
-            if (typeof layer === "undefined") { layer = 0; }
+            if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
             return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.worldX, this.game.input.worldY)];
         };
         Tilemap.prototype.getTileOverlaps = /**
@@ -12317,17 +12303,19 @@ var Phaser;
         * @param [layer] {number} which layer you want to set the tile to.
         */
         function (x, y, index, layer) {
-            if (typeof layer === "undefined") { layer = 0; }
+            if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
             this.layers[layer].putTile(x, y, index);
+        };
+        Tilemap.prototype.destroy = function () {
+            this.texture = null;
+            this.transform = null;
+            this.tiles.length = 0;
+            this.layers.length = 0;
         };
         return Tilemap;
     })();
     Phaser.Tilemap = Tilemap;    
-    //  Set current layer
-    //  Set layer order?
-    //  Delete tiles of certain type
-    //  Erase tiles
-    })(Phaser || (Phaser = {}));
+})(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../tweens/Tween.ts" />
 /// <reference path="../particles/ArcadeEmitter.ts" />
@@ -18011,20 +17999,21 @@ var Phaser;
                 function TilemapRenderer(game) {
                     //  Local rendering related temp vars to help avoid gc spikes through constant var creation
                     this._ga = 1;
-                    this._sx = 0;
-                    this._sy = 0;
-                    this._sw = 0;
-                    this._sh = 0;
+                    //private _sx: number = 0;
+                    //private _sy: number = 0;
+                    //private _sw: number = 0;
+                    //private _sh: number = 0;
                     this._dx = 0;
                     this._dy = 0;
                     this._dw = 0;
                     this._dh = 0;
-                    this._fx = 1;
-                    this._fy = 1;
+                    //private _fx: number = 1;
+                    //private _fy: number = 1;
                     this._tx = 0;
                     this._ty = 0;
-                    this._sin = 0;
-                    this._cos = 1;
+                    this._tl = 0;
+                    //private _sin: number = 0;
+                    //private _cos: number = 1;
                     this._maxX = 0;
                     this._maxY = 0;
                     this._startX = 0;
@@ -18037,11 +18026,12 @@ var Phaser;
                 */
                 function (camera, tilemap) {
                     //  Loop through the layers
-                    for(var i = 0; i < tilemap.layers.length; i++) {
-                        var layer = tilemap.layers[i];
-                        if(layer.visible == false || layer.alpha < 0.1) {
+                    this._tl = tilemap.layers.length;
+                    for(var i = 0; i < this._tl; i++) {
+                        if(tilemap.layers[i].visible == false || tilemap.layers[i].alpha < 0.1) {
                             continue;
                         }
+                        var layer = tilemap.layers[i];
                         //  Work out how many tiles we can fit into our camera and round it up for the edges
                         this._maxX = this.game.math.ceil(camera.width / layer.tileWidth) + 1;
                         this._maxY = this.game.math.ceil(camera.height / layer.tileHeight) + 1;

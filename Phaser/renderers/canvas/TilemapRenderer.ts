@@ -17,20 +17,13 @@ module Phaser.Renderer.Canvas {
 
         //  Local rendering related temp vars to help avoid gc spikes through constant var creation
         private _ga: number = 1;
-        private _sx: number = 0;
-        private _sy: number = 0;
-        private _sw: number = 0;
-        private _sh: number = 0;
         private _dx: number = 0;
         private _dy: number = 0;
         private _dw: number = 0;
         private _dh: number = 0;
-        private _fx: number = 1;
-        private _fy: number = 1;
         private _tx: number = 0;
         private _ty: number = 0;
-        private _sin: number = 0;
-        private _cos: number = 1;
+        private _tl: number = 0;
         private _maxX: number = 0;
         private _maxY: number = 0;
         private _startX: number = 0;
@@ -44,14 +37,17 @@ module Phaser.Renderer.Canvas {
         public render(camera: Camera, tilemap: Tilemap): bool {
 
             //  Loop through the layers
-            for (var i = 0; i < tilemap.layers.length; i++)
-            {
-                var layer: TilemapLayer = tilemap.layers[i];
 
-                if (layer.visible == false || layer.alpha < 0.1)
+            this._tl = tilemap.layers.length;
+
+            for (var i = 0; i < this._tl; i++)
+            {
+                if (tilemap.layers[i].visible == false || tilemap.layers[i].alpha < 0.1)
                 {
                     continue;
                 }
+
+                var layer: TilemapLayer = tilemap.layers[i];
 
                 //  Work out how many tiles we can fit into our camera and round it up for the edges
                 this._maxX = this.game.math.ceil(camera.width / layer.tileWidth) + 1;

@@ -29,14 +29,12 @@ Future Plans
 * Add ability to create extra <div>s within the game container, layered above/below the canvas
 * Basic Window UI component (maybe a propogating Group?)
 * Add clip support + shape options to Texture Component.
+* Tilemap: remove tiles of a certain type, replace tile with sprite, change layer order
 
 ToDo before release
 -------------------
 
-* Tilemap.render - move layers length to var
-* Tilemap.destroy needs doing
 * Investigate bug re: tilemap collision and animation frames
-* Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
 * Allow camera to directly render to the stage rather than hidden ctx (maybe does this by default? or have under Mobile Optimisations list)
 * Sprite collision events
 * Check bounds/edge points when sprite is only 1x1 sized :)
@@ -49,6 +47,7 @@ ToDo before release
 * Pixel-perfect click check
 * Check Flash atlas export is supported
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
+* TypeScript 0.9.1 update!
 
 Latest Update
 -------------

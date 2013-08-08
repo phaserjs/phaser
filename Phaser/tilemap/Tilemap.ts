@@ -118,11 +118,6 @@ module Phaser {
         public transform: Phaser.Components.TransformManager;
 
         /**
-         * The Events component
-         */
-        //public events: Phaser.Components.Sprite.Events;
-
-        /**
          * z order value of the object.
          */
         public z: number = -1;
@@ -131,10 +126,6 @@ module Phaser {
          * Render iteration counter
          */
         public renderOrderID: number = 0;
-
-
-
-
 
         /**
          * Tilemap data format enum: CSV.
@@ -190,21 +181,6 @@ module Phaser {
         public mapFormat: number;
 
         /**
-         * Inherited methods for overriding.
-         */
-        public preUpdate() {
-        }
-
-        public update() {
-        }
-        
-        public postUpdate() {
-        }
-
-        public destroy() {
-        }
-
-        /**
          * Parset csv map data and generate tiles.
          * @param data {string} CSV map data.
          * @param key {string} Asset key for tileset image.
@@ -213,7 +189,7 @@ module Phaser {
          */
         private parseCSV(data: string, key: string, tileWidth: number, tileHeight: number) {
 
-            var layer: TilemapLayer = new TilemapLayer(this.game, this, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
+            var layer: TilemapLayer = new TilemapLayer(this, 0, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
 
             //  Trim any rogue whitespace from the data
             data = data.trim();
@@ -257,7 +233,7 @@ module Phaser {
 
             for (var i = 0; i < json.layers.length; i++)
             {
-                var layer: TilemapLayer = new TilemapLayer(this.game, this, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
+                var layer: TilemapLayer = new TilemapLayer(this, i, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
 
                 //  Check it's a data layer
                 if (!json.layers[i].data)
@@ -401,7 +377,7 @@ module Phaser {
          * @param [layer] {number} layer of this tile located.
          * @return {Tile} The tile with specific properties.
          */
-        public getTile(x: number, y: number, layer?: number = 0):Tile {
+        public getTile(x: number, y: number, layer?: number = this.currentLayer.ID):Tile {
 
             return this.tiles[this.layers[layer].getTileIndex(x, y)];
 
@@ -414,7 +390,7 @@ module Phaser {
          * @param [layer] {number} layer of this tile located.
          * @return {Tile} The tile with specific properties.
          */
-        public getTileFromWorldXY(x: number, y: number, layer?: number = 0):Tile {
+        public getTileFromWorldXY(x: number, y: number, layer?: number = this.currentLayer.ID):Tile {
 
             return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
 
@@ -425,7 +401,7 @@ module Phaser {
          * @param layer The layer to check, defaults to 0
          * @returns {Tile}
          */
-        public getTileFromInputXY(layer?: number = 0):Tile {
+        public getTileFromInputXY(layer?: number = this.currentLayer.ID):Tile {
 
             return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.worldX, this.game.input.worldY)];
 
@@ -507,16 +483,21 @@ module Phaser {
          * @param index {number} The index of this tile type in the core map data.
          * @param [layer] {number} which layer you want to set the tile to.
          */
-        public putTile(x: number, y: number, index: number, layer?: number = 0) {
+        public putTile(x: number, y: number, index: number, layer?: number = this.currentLayer.ID) {
 
             this.layers[layer].putTile(x, y, index);
 
         }
 
-        //  Set current layer
-        //  Set layer order?
-        //  Delete tiles of certain type
-        //  Erase tiles
+        public destroy() {
+
+            this.texture = null;
+            this.transform = null;
+
+            this.tiles.length = 0;
+            this.layers.length = 0;
+
+        }
 
     }
 

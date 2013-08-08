@@ -16,19 +16,20 @@ module Phaser {
          * TilemapLayer constructor
          * Create a new <code>TilemapLayer</code>.
          *
-         * @param game {Phaser.Game} Current game instance.
          * @param parent {Tilemap} The tilemap that contains this layer.
+         * @param id {number} The ID of this layer within the Tilemap array.
          * @param key {string} Asset key for this map.
          * @param mapFormat {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
          * @param name {string} Name of this layer, so you can get this layer by its name.
          * @param tileWidth {number} Width of tiles in this map.
          * @param tileHeight {number} Height of tiles in this map.
          */
-        constructor(game: Game, parent:Tilemap, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number) {
+        constructor(parent:Tilemap, id:number, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number) {
 
-            this.game = game;
             this.parent = parent;
+            this.game = parent.game;
 
+            this.ID = id;
             this.name = name;
             this.mapFormat = mapFormat;
             this.tileWidth = tileWidth;
@@ -98,6 +99,12 @@ module Phaser {
         public name: string;
 
         /**
+         * The ID of the layer within the Tilemap.
+         * @type {number}
+         */
+        public ID: number;
+
+        /**
          * Controls whether update() and draw() are automatically called.
          * @type {boolean}
          */
@@ -108,11 +115,6 @@ module Phaser {
          * @type {boolean}
          */
         public visible: bool = true;
-
-        /**
-         * @type {string}
-         */
-        //public orientation: string;
 
         /**
          * Properties of this map layer. (normally set by map editors)
@@ -131,7 +133,7 @@ module Phaser {
         public mapFormat: number;
 
         /**
-         * It's width and height are in tiles instead of pixels.
+         * Map bounds (width and height) in tiles not pixels.
          * @type {Rectangle}
          */
         public boundsInTiles: Rectangle;
