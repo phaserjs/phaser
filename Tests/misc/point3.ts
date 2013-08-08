@@ -2,12 +2,12 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
+    function preload() {
 
         game.load.atlas('bot', 'assets/sprites/running_bot.png', null, botData);
-        game.load.start();
+        
 
     }
 

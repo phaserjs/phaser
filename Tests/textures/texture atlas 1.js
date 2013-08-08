@@ -1,13 +1,12 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
+    function preload() {
         //  Texture Atlas Method 1
         //
         //  In this example we assume that the TexturePacker JSON data is a string of json data stored as a var
         //  (in this case botData)
         game.load.atlas('bot', 'assets/sprites/running_bot.png', null, botData);
-        game.load.start();
     }
     var bot;
     function create() {

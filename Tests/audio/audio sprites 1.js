@@ -3,15 +3,14 @@
 /// <reference path="../../Phaser/sound/Sound.ts" />
 //var PhaserGlobal = { disableWebAudio: true };
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
+    function preload() {
         game.load.audio('rabbit', [
             'assets/mp3/peter_rabbit.m4a', 
             'assets/mp3/peter_rabbit.mp3', 
             'assets/mp3/peter_rabbit.ogg'
         ]);
         game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
-        game.load.start();
     }
     audioSprite:
 Phaser.Sound

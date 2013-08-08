@@ -28,7 +28,7 @@ module Phaser {
          */
         constructor(game: Game, parent: string, width: number, height: number) {
 
-            this._game = game;
+            this.game = game;
 
             this.canvas = <HTMLCanvasElement> document.createElement('canvas');
             this.canvas.width = width;
@@ -56,7 +56,7 @@ module Phaser {
             this.css3 = new Phaser.Display.CSS3Filters(this.canvas);
 
             this.scaleMode = StageScaleMode.NO_SCALE;
-            this.scale = new StageScaleMode(this._game, width, height);
+            this.scale = new StageScaleMode(this.game, width, height);
 
             this.getOffset(this.canvas);
             this.bounds = new Rectangle(this.offset.x, this.offset.y, width, height);
@@ -72,9 +72,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * Background color of the stage (defaults to black). Set via the public backgroundColor property.
@@ -176,20 +176,13 @@ module Phaser {
         public disableVisibilityChange: bool = false;
 
         /**
-         * An optional 'fix' for the horrendous Android stock browser bug
-         * https://code.google.com/p/android/issues/detail?id=39247
-         * @type {boolean}
-         */
-        public patchAndroidClearRectBug: bool = false;
-
-        /**
          * Stage boot
          */
         public boot() {
 
-            this.bootScreen = new BootScreen(this._game);
-            this.pauseScreen = new PauseScreen(this._game, this.width, this.height);
-            this.orientationScreen = new OrientationScreen(this._game);
+            this.bootScreen = new BootScreen(this.game);
+            this.pauseScreen = new PauseScreen(this.game, this.width, this.height);
+            this.orientationScreen = new OrientationScreen(this.game);
 
             this.scale.setScreenSize(true);
 
@@ -205,9 +198,9 @@ module Phaser {
 
             this.context.setTransform(1, 0, 0, 1, 0, 0);
 
-            if (this.clear || (this._game.paused && this.disablePauseScreen == false))
+            if (this.clear || (this.game.paused && this.disablePauseScreen == false))
             {
-                if (this.patchAndroidClearRectBug)
+                if (this.game.device.patchAndroidClearRectBug)
                 {
                     this.context.fillStyle = 'rgb(0,0,0)';
                     this.context.fillRect(0, 0, this.width, this.height);
@@ -218,20 +211,20 @@ module Phaser {
                 }
             }
 
-            if (this._game.paused && this.scale.incorrectOrientation)
+            if (this.game.paused && this.scale.incorrectOrientation)
             {
                 this.orientationScreen.update();
                 this.orientationScreen.render();
                 return;
             }
 
-            if (this._game.isRunning == false && this.disableBootScreen == false)
+            if (this.game.isRunning == false && this.disableBootScreen == false)
             {
                 this.bootScreen.update();
                 this.bootScreen.render();
             }
 
-            if (this._game.paused && this.disablePauseScreen == false)
+            if (this.game.paused && this.disablePauseScreen == false)
             {
                 this.pauseScreen.update();
                 this.pauseScreen.render();
@@ -251,14 +244,14 @@ module Phaser {
 
             if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
             {
-                if (this._game.paused == false)
+                if (this.game.paused == false)
                 {
                     this.pauseGame();
                 }
             }
             else
             {
-                if (this._game.paused == true)
+                if (this.game.paused == true)
                 {
                     this.resumeGame();
                 }
@@ -277,7 +270,7 @@ module Phaser {
                 if ((this.scale.isLandscape && forcePortrait) || (this.scale.isPortrait && forceLandscape))
                 {
                     //  They are in the wrong orientation right now
-                    this._game.paused = true;
+                    this.game.paused = true;
                     this.scale.incorrectOrientation = true;
                 }
                 else
@@ -304,7 +297,7 @@ module Phaser {
 
             this.saveCanvasValues();
 
-            this._game.paused = true;
+            this.game.paused = true;
 
         }
 
@@ -317,7 +310,7 @@ module Phaser {
 
             this.restoreCanvasValues();
 
-            this._game.paused = false;
+            this.game.paused = false;
 
         }
 
@@ -383,7 +376,7 @@ module Phaser {
             this.context.lineWidth = this.lineWidth;
             this.context.fillStyle = this.fillStyle;
 
-            if (this.patchAndroidClearRectBug)
+            if (this.game.device.patchAndroidClearRectBug)
             {
                 this.context.fillStyle = 'rgb(0,0,0)';
                 this.context.fillRect(0, 0, this.width, this.height);

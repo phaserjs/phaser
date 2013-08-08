@@ -1,6 +1,6 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
     var zombieCamera: Phaser.Camera;
 
@@ -8,7 +8,7 @@
     var walkSpeed: number = 2,
         direction: number = 1;
 
-    function init() {
+    function preload() {
         game.world.setSize(1280, 600, true);
         game.load.image('ground', 'assets/tests/ground-2x.png');
         game.load.image('river', 'assets/tests/river-2x.png');
@@ -16,7 +16,7 @@
 
         game.load.spritesheet('zombie', 'assets/sprites/metalslug_monster39x40.png', 39, 40);
 
-        game.load.start();
+        
     }
     function create() {
         // Add background images.

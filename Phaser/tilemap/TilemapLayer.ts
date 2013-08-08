@@ -64,7 +64,7 @@ module Phaser {
         private _tempBlockResults;
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
         public game: Game;
 

@@ -3,9 +3,9 @@
 (function () {
 
     //  Here we create a tiny game (320x240 in size)
-    var game = new Phaser.Game(this, 'game', 320, 240, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 320, 240, preload, create, update, render);
 
-    function init() {
+    function preload() {
 
         //  This sets a limit on the up-scale
         game.stage.scale.maxWidth = 800;
@@ -16,7 +16,7 @@
 
         game.load.image('melon', 'assets/sprites/melon.png');
 
-        game.load.start();
+        
 
     }
 

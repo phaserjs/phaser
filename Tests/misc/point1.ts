@@ -2,14 +2,14 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
+    function preload() {
 
         game.load.image('box2', 'assets/tests/320x200.png');
         game.load.image('box1', 'assets/sprites/oz_pov_melting_disk.png');
         game.load.image('box', 'assets/sprites/bunny.png');
-        game.load.start();
+        
 
     }
 

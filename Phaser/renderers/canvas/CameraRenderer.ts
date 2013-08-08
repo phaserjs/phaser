@@ -39,7 +39,15 @@ module Phaser.Renderer.Canvas {
                 return false;
             }
 
-            camera.texture.context.clearRect(0, 0, camera.width, camera.height);
+            if (this.game.device.patchAndroidClearRectBug)
+            {
+                camera.texture.context.fillStyle = 'rgb(0,0,0)';
+                camera.texture.context.fillRect(0, 0, camera.width, camera.height);
+            }
+            else
+            {
+                camera.texture.context.clearRect(0, 0, camera.width, camera.height);
+            }
 
             //  Alpha
             if (camera.texture.alpha !== 1 && camera.texture.context.globalAlpha != camera.texture.alpha)

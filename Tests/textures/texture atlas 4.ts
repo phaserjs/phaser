@@ -2,16 +2,16 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
 
         //  Texture Atlas Method 4
         //
         //  We load a TexturePacker JSON file and image and show you how to make several unique sprites from the same file
         game.load.atlas('atlas', 'assets/pics/texturepacker_test.png', 'assets/pics/texturepacker_test.json');
 
-        game.load.start();
+        
 
     }
 

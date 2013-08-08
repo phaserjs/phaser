@@ -23,7 +23,7 @@ module Phaser {
          */
         constructor(game: Game, x: number, y: number, width: number, height: number) {
 
-            this._game = game;
+            this.game = game;
 
             this._cameras = [];
             this._cameraLength = 0;
@@ -35,9 +35,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to Game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * Local container for storing cameras.
@@ -113,7 +113,7 @@ module Phaser {
          */
         public addCamera(x: number, y: number, width: number, height: number): Camera {
 
-            var newCam: Camera = new Camera(this._game, this._cameraLength, x, y, width, height);
+            var newCam: Camera = new Camera(this.game, this._cameraLength, x, y, width, height);
 
             this._cameraLength = this._cameras.push(newCam);
 
@@ -230,7 +230,7 @@ module Phaser {
 
             this._cameras.length = 0;
 
-            this.current = this.addCamera(0, 0, this._game.stage.width, this._game.stage.height);
+            this.current = this.addCamera(0, 0, this.game.stage.width, this.game.stage.height);
 
         }
 

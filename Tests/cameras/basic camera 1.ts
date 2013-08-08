@@ -2,20 +2,18 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
-
-        game.world.setSize(1920, 1200, true);
+    function preload() {
 
         game.load.image('backdrop', 'assets/pics/remember-me.jpg');
         game.load.image('melon', 'assets/sprites/melon.png');
 
-        game.load.start();
-
     }
 
     function create() {
+
+        game.world.setSize(1920, 1200, true);
 
         game.add.sprite(0, 0, 'backdrop');
 

@@ -3,12 +3,12 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
 
         game.load.image('crystal', 'assets/pics/jim_sachs_time_crystal.png');
-        game.load.start();
+        
 
     }
 

@@ -3,13 +3,13 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
 
         game.load.image('beast', 'assets/pics/shadow_of_the_beast2_other_world.png');
         game.load.atlas('button', 'assets/buttons/button_texture_atlas.png', 'assets/buttons/button_texture_atlas.json');
-        game.load.start();
+        
 
     }
 

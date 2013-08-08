@@ -1,14 +1,13 @@
 /// <reference path="../../Phaser/tilemap/Tilemap.ts" />
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
+    function preload() {
         //  CSV Tilemap Test
         //  First we load our map data (a csv file)
         game.load.text('csvtest', 'assets/maps/catastrophi_level2.csv');
         //  Then we load the actual tile sheet image
         game.load.image('csvtiles', 'assets/tiles/catastrophi_tiles_16.png');
-        game.load.start();
     }
     function create() {
         //  This creates the tilemap using the csv and tile sheet we loaded.

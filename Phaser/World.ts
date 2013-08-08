@@ -27,18 +27,18 @@ module Phaser {
          */
         constructor(game: Game, width: number, height: number) {
 
-            this._game = game;
+            this.game = game;
 
-            this.cameras = new CameraManager(this._game, 0, 0, width, height);
+            this.cameras = new CameraManager(this.game, 0, 0, width, height);
 
             this.bounds = new Rectangle(0, 0, width, height);
 
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * Camera manager of this world.
@@ -79,7 +79,7 @@ module Phaser {
          */
         public boot() {
 
-            this.group = new Group(this._game, 0);
+            this.group = new Group(this.game, 0);
 
         }
 
@@ -127,7 +127,7 @@ module Phaser {
 
             if (updateCameraBounds == true)
             {
-                this._game.camera.setBounds(0, 0, width, height);
+                this.game.camera.setBounds(0, 0, width, height);
             }
 
             // dispatch world resize event

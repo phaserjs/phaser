@@ -17,7 +17,7 @@ module Phaser {
         */
         constructor(game: Game, callback) {
 
-            this._game = game;
+            this.game = game;
             this.callback = callback;
 
             var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -33,9 +33,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
         * The function to be called each frame. Will be called in the context of _game
@@ -148,11 +148,11 @@ module Phaser {
         **/
         public RAFUpdate(time: number) {
 
-            this._game.time.update(time);
+            this.game.time.update(time);
 
             if (this.callback)
             {
-                this.callback.call(this._game);
+                this.callback.call(this.game);
             }
 
             this._onLoop = (time) => this.RAFUpdate(time);
@@ -167,7 +167,7 @@ module Phaser {
         **/
         public SetTimeoutUpdate() {
 
-            this._game.time.update(Date.now());
+            this.game.time.update(Date.now());
 
             this._onLoop = () => this.SetTimeoutUpdate();
 
@@ -175,7 +175,7 @@ module Phaser {
 
             if (this.callback)
             {
-                this.callback.call(this._game);
+                this.callback.call(this.game);
             }
 
         }

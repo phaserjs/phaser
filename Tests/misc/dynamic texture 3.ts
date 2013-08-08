@@ -1,12 +1,12 @@
 (function() {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
 
     // Pattern texture for tiling render to the stage later.
     var pattern: Phaser.DynamicTexture;
 
-    function init() {
+    function preload() {
         game.load.spritesheet('cat', 'assets/sprites/baddie_cat_1.png', 16, 16);
-        game.load.start();
+        
     }
     function create() {
         // Create a simple pattern first.

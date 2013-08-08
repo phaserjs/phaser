@@ -1,10 +1,10 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
     var ufo, speed = 4;
     var btn0, btn1, btn2, btn3;
     var style = 'default';
-    function init() {
+    function preload() {
         game.world.setSize(1280, 800, true);
         game.load.image('ground', 'assets/tests/ground-2x.png');
         game.load.image('river', 'assets/tests/river-2x.png');
@@ -14,7 +14,6 @@
         game.load.image('cloud2', 'assets/tests/cloud-small-2x.png');
         game.load.spritesheet('button', 'assets/buttons/follow-style-button.png', 224, 70);
         game.load.spritesheet('ufo', 'assets/sprites/ufo.png', 24, 21);
-        game.load.start();
     }
     function create() {
         // background images

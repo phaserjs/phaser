@@ -1,13 +1,13 @@
 (function() {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
     // Wabbits inside this group is sorted by its "dead" property.
     // Dead wabbits behinds the others.
     var wabbits: Phaser.Group;
 
-    function init() {
+    function preload() {
         game.load.image('wabbit', 'assets/sprites/wabbit.png');
-        game.load.start();
+        
     }
     function create() {
         // Create container group.

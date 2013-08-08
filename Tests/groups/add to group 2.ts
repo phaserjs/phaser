@@ -1,10 +1,10 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
+    function preload() {
         game.load.image('ufo', 'assets/sprites/ufo.png');
         game.load.image('baddie', 'assets/sprites/space-baddie.png');
-        game.load.start();
+        
     }
 
     var friendAndFoe: Phaser.Group,

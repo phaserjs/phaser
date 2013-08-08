@@ -6,13 +6,13 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
 
-    function init() {
+    function preload() {
 
         game.load.audio('rabbit', ['assets/mp3/peter_rabbit.m4a', 'assets/mp3/peter_rabbit.mp3', 'assets/mp3/peter_rabbit.ogg']);
         game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
-        game.load.start();
+        
 
     }
 

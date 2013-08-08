@@ -2,16 +2,16 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
+    function preload() {
 
         game.world.setSize(1920, 1200, true);
 
         game.load.image('backdrop', 'assets/pics/remember-me.jpg');
         game.load.image('diamond', 'assets/sprites/diamond.png');
 
-        game.load.start();
+        
 
     }
 

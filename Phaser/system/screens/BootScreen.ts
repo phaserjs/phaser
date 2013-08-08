@@ -19,7 +19,7 @@ module Phaser {
          */
         constructor(game:Game) {
 
-            this._game = game;
+            this.game = game;
 
             this._logo = new Image();
             this._logo.src = this._logoData;
@@ -27,9 +27,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
         /**
          * Engine logo.
          */
@@ -76,34 +76,34 @@ module Phaser {
          */
         public render() {
 
-            var grd = this._game.stage.context.createLinearGradient(0, 0, 0, this._game.stage.height);
+            var grd = this.game.stage.context.createLinearGradient(0, 0, 0, this.game.stage.height);
             grd.addColorStop(0, 'rgb(' + this._color1.r + ', ' + this._color1.g + ', ' + this._color1.b + ')');
             grd.addColorStop(0.5, 'rgb(' + this._color2.r + ', ' + this._color2.g + ', ' + this._color2.b + ')');
             grd.addColorStop(1, 'rgb(' + this._color1.r + ', ' + this._color1.g + ', ' + this._color1.b + ')');
-            this._game.stage.context.fillStyle = grd;
-            this._game.stage.context.fillRect(0, 0, this._game.stage.width, this._game.stage.height);
+            this.game.stage.context.fillStyle = grd;
+            this.game.stage.context.fillRect(0, 0, this.game.stage.width, this.game.stage.height);
 
-            this._game.stage.context.shadowOffsetX = 0;
-            this._game.stage.context.shadowOffsetY = 0;
+            this.game.stage.context.shadowOffsetX = 0;
+            this.game.stage.context.shadowOffsetY = 0;
 
             if (this._logo)
             {
-                this._game.stage.context.drawImage(this._logo, 32, 32);
+                this.game.stage.context.drawImage(this._logo, 32, 32);
             }
 
-            this._game.stage.context.shadowColor = 'rgb(0,0,0)';
-            this._game.stage.context.shadowOffsetX = 1;
-            this._game.stage.context.shadowOffsetY = 1;
-            this._game.stage.context.shadowBlur = 0;
-            this._game.stage.context.fillStyle = 'rgb(255,255,255)';
-            this._game.stage.context.font = 'bold 18px Arial';
-            this._game.stage.context.textBaseline = 'top';
-            this._game.stage.context.fillText(Phaser.VERSION, 32, 64+32);
-            this._game.stage.context.fillText('Game Size: ' + this._game.stage.width + ' x ' + this._game.stage.height, 32, 64+64);
-            this._game.stage.context.fillText('www.photonstorm.com', 32, 64+96);
-            this._game.stage.context.font = '16px Arial';
-            this._game.stage.context.fillText('You are seeing this screen because you didn\'t specify any default', 32, 64+160);
-            this._game.stage.context.fillText('functions in the Game constructor or use Game.switchState()', 32, 64+184);
+            this.game.stage.context.shadowColor = 'rgb(0,0,0)';
+            this.game.stage.context.shadowOffsetX = 1;
+            this.game.stage.context.shadowOffsetY = 1;
+            this.game.stage.context.shadowBlur = 0;
+            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
+            this.game.stage.context.font = 'bold 18px Arial';
+            this.game.stage.context.textBaseline = 'top';
+            this.game.stage.context.fillText(Phaser.VERSION, 32, 64+32);
+            this.game.stage.context.fillText('Game Size: ' + this.game.stage.width + ' x ' + this.game.stage.height, 32, 64+64);
+            this.game.stage.context.fillText('www.photonstorm.com', 32, 64+96);
+            this.game.stage.context.font = '16px Arial';
+            this.game.stage.context.fillText('You are seeing this screen because you didn\'t specify any default', 32, 64+160);
+            this.game.stage.context.fillText('functions in the Game constructor or use Game.switchState()', 32, 64+184);
 
         }
 
@@ -112,7 +112,7 @@ module Phaser {
          */
         private colorCycle() {
 
-            this._fade = this._game.add.tween(this._color2);
+            this._fade = this.game.add.tween(this._color2);
 
             this._fade.to({ r: Math.random() * 250, g: Math.random() * 250, b: Math.random() * 250 }, 3000, Phaser.Easing.Linear.None);
             this._fade.onComplete.add(this.colorCycle, this);

@@ -1,20 +1,19 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
     var emitter1;
     var emitter2;
     var emitter3;
     var emitter4;
     var emitter5;
     var emitter6;
-    function init() {
+    function preload() {
         game.load.image('ball1', 'assets/sprites/aqua_ball.png');
         game.load.image('ball2', 'assets/sprites/yellow_ball.png');
         game.load.image('ball3', 'assets/sprites/red_ball.png');
         game.load.image('ball4', 'assets/sprites/purple_ball.png');
         game.load.image('ball5', 'assets/sprites/blue_ball.png');
         game.load.image('ball6', 'assets/sprites/green_ball.png');
-        game.load.start();
     }
     function makeEmitter(emitter, x, y, graphic) {
         emitter = game.add.emitter(x, y);

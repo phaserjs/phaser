@@ -1,14 +1,13 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
     var btn1, btn2, btn3;
     var fx;
-    function init() {
+    function preload() {
         game.world.setSize(800, 600, true);
         game.load.image('blue', 'assets/tests/blue-circle.png');
         game.load.image('yellow', 'assets/tests/yellow-circle.png');
         game.load.image('magenta', 'assets/tests/magenta-circle.png');
-        game.load.start();
     }
     function create() {
         btn1 = game.add.button(114, 34, 'blue', simpleFlash, this);

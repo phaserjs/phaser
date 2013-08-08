@@ -52,18 +52,18 @@ module Phaser {
          * @param parent {string} ID of its parent DOM element.
          * @param width {number} The width of your game in game pixels.
          * @param height {number} The height of your game in game pixels.
-         * @param initCallback {function} Init callback invoked when init default screen.
+         * @param preloadCallback {function} Preload callback invoked when init default screen.
          * @param createCallback {function} Create callback invoked when create default screen.
          * @param updateCallback {function} Update callback invoked when update default screen.
          * @param renderCallback {function} Render callback invoked when render default screen.
          * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
          */
-        constructor(callbackContext, parent?: string = '', width?: number = 800, height?: number = 600, initCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
+        constructor(callbackContext, parent?: string = '', width?: number = 800, height?: number = 600, preloadCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
 
             this.id = Phaser.GAMES.push(this) - 1;
 
             this.callbackContext = callbackContext;
-            this.onInitCallback = initCallback;
+            this.onPreloadCallback = preloadCallback;
             this.onCreateCallback = createCallback;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
@@ -92,7 +92,7 @@ module Phaser {
          * Milliseconds of time per step of the game loop.
          * @type {number}
          */
-        private _step: number = 0;
+        //private _step: number = 0;
 
         /**
          * Whether load complete loading or not.
@@ -133,7 +133,7 @@ module Phaser {
          * This will be called when init states. (loading assets...)
          * @type {function}
          */
-        public onInitCallback = null;
+        public onPreloadCallback = null;
 
         /**
          * This will be called when create states. (setup states...)
@@ -314,7 +314,7 @@ module Phaser {
                 this.world = new World(this, width, height);
                 this.add = new GameObjectFactory(this);
                 this.cache = new Cache(this);
-                this.load = new Loader(this, this.loadComplete);
+                this.load = new Loader(this);
                 this.time = new TimeManager(this);
                 this.tweens = new TweenManager(this);
                 this.input = new InputManager(this);
@@ -322,6 +322,8 @@ module Phaser {
                 this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
                 this.physics = new Physics.Manager(this);
                 this.plugins = new PluginManager(this, this);
+
+                this.load.onLoadComplete.addOnce(this.loadComplete, this);
 
                 this.setRenderer(Phaser.Types.RENDERER_CANVAS);
 
@@ -337,7 +339,7 @@ module Phaser {
                 DebugUtils.context = this.stage.context;
 
                 //  Display the default game screen?
-                if (this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
+                if (this.onPreloadCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
                 {
                     this._raf = new RequestAnimationFrame(this, this.bootLoop);
                 }
@@ -382,10 +384,11 @@ module Phaser {
         }
 
         /**
-         * Called when the load has finished after init was run.
+         * Called when the load has finished after preload was run.
          */
         private loadComplete() {
             this._loadComplete = true;
+            this.onCreateCallback.call(this.callbackContext);
         }
 
         /**
@@ -475,13 +478,13 @@ module Phaser {
          */
         private startState() {
 
-            if (this.onInitCallback !== null)
+            if (this.onPreloadCallback !== null)
             {
                 this.load.reset();
 
-                this.onInitCallback.call(this.callbackContext);
+                this.onPreloadCallback.call(this.callbackContext);
 
-                //  Is the load empty?
+                //  Is the loader empty?
                 if (this.load.queueSize == 0)
                 {
                     if (this.onCreateCallback !== null)
@@ -490,6 +493,11 @@ module Phaser {
                     }
 
                     this._loadComplete = true;
+                }
+                else
+                {
+                    //  Start the loader going as we have something in the queue
+                    this.load.start();
                 }
             }
             else
@@ -507,15 +515,15 @@ module Phaser {
 
         /**
          * Set the most common state callbacks (init, create, update, render).
-         * @param initCallback {function} Init callback invoked when init state.
+         * @param preloadCallback {function} Init callback invoked when init state.
          * @param createCallback {function} Create callback invoked when create state.
          * @param updateCallback {function} Update callback invoked when update state.
          * @param renderCallback {function} Render callback invoked when render state.
          * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
          */
-        public setCallbacks(initCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
+        public setCallbacks(preloadCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
 
-            this.onInitCallback = initCallback;
+            this.onPreloadCallback = preloadCallback;
             this.onCreateCallback = createCallback;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
@@ -556,7 +564,7 @@ module Phaser {
             {
                 this.callbackContext = this.state;
 
-                this.onInitCallback = null;
+                this.onPreloadCallback = null;
                 this.onLoadRenderCallback = null;
                 this.onLoadUpdateCallback = null;
                 this.onCreateCallback = null;
@@ -567,9 +575,9 @@ module Phaser {
                 this.onDestroyCallback = null;
 
                 //  Bingo, let's set them up
-                if (this.state['init'])
+                if (this.state['preload'])
                 {
-                    this.onInitCallback = this.state['init'];
+                    this.onPreloadCallback = this.state['preload'];
                 }
 
                 if (this.state['loadRender'])
@@ -639,7 +647,7 @@ module Phaser {
         public destroy() {
 
             this.callbackContext = null;
-            this.onInitCallback = null;
+            this.onPreloadCallback = null;
             this.onLoadRenderCallback = null;
             this.onLoadUpdateCallback = null;
             this.onCreateCallback = null;

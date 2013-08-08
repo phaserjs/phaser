@@ -32,9 +32,9 @@ module Phaser {
 
             this._object = object;
 
-            this._game = game;
-            this._manager = this._game.tweens;
-            this._interpolationFunction = this._game.math.linearInterpolation;
+            this.game = game;
+            this._manager = this.game.tweens;
+            this._interpolationFunction = this.game.math.linearInterpolation;
             this._easingFunction = Phaser.Easing.Linear.None;
 
             this._chainedTweens = [];
@@ -45,9 +45,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Phaser.Game;
+        public game: Phaser.Game;
 
         /**
          * Manager of this tween.
@@ -194,7 +194,7 @@ module Phaser {
 	     */
 	    public start(looped: bool = false): Tween {
 
-	        if (this._game === null || this._object === null)
+	        if (this.game === null || this._object === null)
 	        {
 	            return;
 	        }
@@ -206,7 +206,7 @@ module Phaser {
 	            this.onStart.dispatch(this._object);
 	        }
 
-	        this._startTime = this._game.time.now + this._delayTime;
+	        this._startTime = this.game.time.now + this._delayTime;
 	        this.isRunning = true;
 
 	        for (var property in this._valuesEnd)
@@ -302,8 +302,8 @@ module Phaser {
 
 	    public set parent(value:Phaser.Game) {
 
-	        this._game = value;
-            this._manager = this._game.tweens;
+	        this.game = value;
+            this._manager = this.game.tweens;
 
 	    }
 
@@ -351,7 +351,7 @@ module Phaser {
 	     */
 	    public update(time) {
 
-	        if (this._game.paused == true)
+	        if (this.game.paused == true)
 	        {
 	            if (this._pausedTime == 0)
 	            {

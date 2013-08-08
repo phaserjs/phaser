@@ -1,10 +1,9 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Phaser/ui/Button.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
+    function preload() {
         game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
-        game.load.start();
     }
     var button;
     var secondCam;

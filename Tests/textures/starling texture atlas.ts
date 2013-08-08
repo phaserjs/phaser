@@ -2,9 +2,9 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
 
-    function init() {
+    function preload() {
 
         //  Starling/Sparrow XML Texture Atlas Method 1
         //
@@ -12,7 +12,7 @@
         game.load.atlas('bits', 'assets/sprites/shoebox.png', 'assets/sprites/shoebox.xml', null, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
         game.load.atlas('bot', 'assets/sprites/shoebot.png', 'assets/sprites/shoebot.xml', null, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
 
-        game.load.start();
+        
 
     }
 

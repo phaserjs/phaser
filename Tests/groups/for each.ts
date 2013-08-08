@@ -1,12 +1,12 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
     var baseAlphaIncSpeed: Number = 0.006;
 
-    function init() {
+    function preload() {
         game.load.spritesheet('item', 'assets/buttons/number-buttons-90x90.png', 90, 90);
-        game.load.start();
+        
     }
     function create() {
         // Add some items.

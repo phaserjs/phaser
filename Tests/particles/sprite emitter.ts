@@ -19,11 +19,11 @@ class customParticle extends Phaser.ArcadeParticle {
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
     var emitter: Phaser.ArcadeEmitter;
 
-    function init() {
+    function preload() {
 
         game.load.image('carrot', 'assets/sprites/carrot.png');
         game.load.image('melon', 'assets/sprites/melon.png');
@@ -31,7 +31,7 @@ class customParticle extends Phaser.ArcadeParticle {
         game.load.image('mushroom', 'assets/sprites/mushroom.png');
         game.load.image('pineapple', 'assets/sprites/pineapple.png');
 
-        game.load.start();
+        
 
     }
 

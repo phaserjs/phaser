@@ -1,15 +1,15 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
 
     var friendAndFoe: Phaser.Group,
         enemies: Phaser.Group;
 
-    function init() {
+    function preload() {
         game.load.image('ufo', 'assets/sprites/ufo.png');
         game.load.image('baddie', 'assets/sprites/space-baddie.png');
         game.load.spritesheet('button', 'assets/buttons/baddie-buttons.png', 224, 70);
-        game.load.start();
+        
     }
     function create() {
         // Create some local groups for later use.

@@ -2,13 +2,13 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
 
-    function init() {
+    function preload() {
 
         game.load.image('ball', 'assets/sprites/shinyball.png');
 
-        game.load.start();
+        
 
     }
 

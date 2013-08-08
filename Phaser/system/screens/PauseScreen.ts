@@ -19,7 +19,7 @@ module Phaser {
          */
         constructor(game: Game, width: number, height: number) {
 
-            this._game = game;
+            this.game = game;
             this._canvas = <HTMLCanvasElement> document.createElement('canvas');
             this._canvas.width = width;
             this._canvas.height = height;
@@ -28,9 +28,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * Canvas element used by engine.
@@ -62,7 +62,7 @@ module Phaser {
 
             //  Take a grab of the current canvas to our temporary one
             this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-            this._context.drawImage(this._game.stage.canvas, 0, 0);
+            this._context.drawImage(this.game.stage.canvas, 0, 0);
             this._color = { r: 255, g: 255, b: 255 };
             this.fadeOut();
 
@@ -73,7 +73,7 @@ module Phaser {
          */
         public onResume() {
             this._fade.stop();
-            this._game.tweens.remove(this._fade);
+            this.game.tweens.remove(this._fade);
         }
 
         /**
@@ -90,25 +90,25 @@ module Phaser {
          */
         public render() {
 
-            this._game.stage.context.drawImage(this._canvas, 0, 0);
+            this.game.stage.context.drawImage(this._canvas, 0, 0);
 
-            this._game.stage.context.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            this._game.stage.context.fillRect(0, 0, this._game.stage.width, this._game.stage.height);
+            this.game.stage.context.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            this.game.stage.context.fillRect(0, 0, this.game.stage.width, this.game.stage.height);
 
             //  Draw a 'play' arrow
-            var arrowWidth = Math.round(this._game.stage.width / 2);
-            var arrowHeight = Math.round(this._game.stage.height / 2);
+            var arrowWidth = Math.round(this.game.stage.width / 2);
+            var arrowHeight = Math.round(this.game.stage.height / 2);
 
-            var sx = this._game.stage.centerX - arrowWidth / 2;
-            var sy = this._game.stage.centerY - arrowHeight / 2;
+            var sx = this.game.stage.centerX - arrowWidth / 2;
+            var sy = this.game.stage.centerY - arrowHeight / 2;
 
-            this._game.stage.context.beginPath();
-            this._game.stage.context.moveTo(sx, sy);
-            this._game.stage.context.lineTo(sx, sy + arrowHeight);
-            this._game.stage.context.lineTo(sx + arrowWidth, this._game.stage.centerY);
-            this._game.stage.context.fillStyle = 'rgba(' + this._color.r + ', ' + this._color.g + ', ' + this._color.b + ', 0.8)';
-            this._game.stage.context.fill();
-            this._game.stage.context.closePath();
+            this.game.stage.context.beginPath();
+            this.game.stage.context.moveTo(sx, sy);
+            this.game.stage.context.lineTo(sx, sy + arrowHeight);
+            this.game.stage.context.lineTo(sx + arrowWidth, this.game.stage.centerY);
+            this.game.stage.context.fillStyle = 'rgba(' + this._color.r + ', ' + this._color.g + ', ' + this._color.b + ', 0.8)';
+            this.game.stage.context.fill();
+            this.game.stage.context.closePath();
 
         }
 
@@ -117,7 +117,7 @@ module Phaser {
          */
         private fadeOut() {
 
-            this._fade = this._game.add.tween(this._color);
+            this._fade = this.game.add.tween(this._color);
 
             this._fade.to({ r: 50, g: 50, b: 50 }, 1000, Phaser.Easing.Linear.None);
             this._fade.onComplete.add(this.fadeIn, this);
@@ -130,7 +130,7 @@ module Phaser {
          */
         private fadeIn() {
 
-            this._fade = this._game.add.tween(this._color);
+            this._fade = this.game.add.tween(this._color);
 
             this._fade.to({ r: 255, g: 255, b: 255 }, 1000, Phaser.Easing.Linear.None);
             this._fade.onComplete.add(this.fadeOut, this);

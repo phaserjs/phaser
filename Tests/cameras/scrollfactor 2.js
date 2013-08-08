@@ -1,10 +1,9 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
+    function preload() {
         game.world.setSize(1600, 800, true);
         game.load.image('disk', 'assets/pics/devilstar_demo_download_disk.png');
-        game.load.start();
     }
     function create() {
         for(var i = 0; i < 10; i++) {

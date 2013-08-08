@@ -1,7 +1,7 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
+    function preload() {
         game.world.setSize(1280, 800, true);
 
         game.load.image('ground', 'assets/tests/ground-2x.png');
@@ -13,7 +13,7 @@
 
         game.load.spritesheet('ufo', 'assets/sprites/ufo.png', 24, 21);
 
-        game.load.start();
+        
     }
     function create() {
         // Create the sky layer, behind everything and donot move.

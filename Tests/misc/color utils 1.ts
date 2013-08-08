@@ -1,5 +1,5 @@
 (function() {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
 
     var colorWheel: Phaser.Sprite,
         selected: Phaser.Sprite,
@@ -11,9 +11,9 @@
     var rect: Phaser.Rectangle,
         rectSize: Number = 24;
 
-    function init() {
+    function preload() {
         game.load.image('color-wheel', 'assets/pics/color-wheel.png');
-        game.load.start();
+        
     }
     function create() {
         // Create color wheel texture.

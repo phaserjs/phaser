@@ -1,9 +1,8 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
+    function preload() {
         game.load.atlas('bot', 'assets/sprites/running_bot.png', null, botData);
-        game.load.start();
     }
     var sprite;
     var rotate = false;

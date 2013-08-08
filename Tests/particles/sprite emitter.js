@@ -24,15 +24,14 @@ var customParticle = (function (_super) {
     return customParticle;
 })(Phaser.ArcadeParticle);
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
     var emitter;
-    function init() {
+    function preload() {
         game.load.image('carrot', 'assets/sprites/carrot.png');
         game.load.image('melon', 'assets/sprites/melon.png');
         game.load.image('eggplant', 'assets/sprites/eggplant.png');
         game.load.image('mushroom', 'assets/sprites/mushroom.png');
         game.load.image('pineapple', 'assets/sprites/pineapple.png');
-        game.load.start();
     }
     function create() {
         emitter = game.add.emitter(game.stage.centerX, 50);

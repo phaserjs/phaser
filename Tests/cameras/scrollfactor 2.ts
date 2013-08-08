@@ -2,15 +2,15 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
+    function preload() {
 
         game.world.setSize(1600, 800, true);
 
         game.load.image('disk', 'assets/pics/devilstar_demo_download_disk.png');
 
-        game.load.start();
+        
 
     }
 

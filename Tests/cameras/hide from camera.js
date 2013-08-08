@@ -1,14 +1,13 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
     var radar;
     var ships = [];
     var enemyCamera;
-    function init() {
+    function preload() {
         game.load.image('radar-surface', 'assets/tests/radar-surface.png');
         game.load.image('ship', 'assets/sprites/asteroids_ship_white.png');
         game.load.image('enemy-ship', 'assets/sprites/asteroids_ship.png');
-        game.load.start();
     }
     function create() {
         // Add enemies and our ship the the world.

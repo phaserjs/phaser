@@ -21,15 +21,15 @@ module Phaser {
          */
         constructor(game: Phaser.Game) {
 
-            this._game = game;
+            this.game = game;
             this._tweens = [];
 
         }
 
         /**
-         * Local private reference to Game
+         * Local reference to Game
          */
-        private _game: Phaser.Game;
+        public game: Phaser.Game;
 
         /**
          * Local private array which is the container of all tween objects.
@@ -66,12 +66,12 @@ module Phaser {
 
             if (localReference)
             {
-                object['tween'] = new Phaser.Tween(object, this._game);
+                object['tween'] = new Phaser.Tween(object, this.game);
                 return object['tween'];
             }
             else
             {
-                return new Phaser.Tween(object, this._game);
+                return new Phaser.Tween(object, this.game);
             }
 
         }
@@ -84,7 +84,7 @@ module Phaser {
          */
         public add(tween: Phaser.Tween) {
 
-            tween.parent = this._game;
+            tween.parent = this.game;
 
             this._tweens.push(tween);
 
@@ -125,7 +125,7 @@ module Phaser {
 
             while (i < numTweens)
             {
-                if (this._tweens[i].update(this._game.time.now))
+                if (this._tweens[i].update(this.game.time.now))
                 {
                     i++;
                 }

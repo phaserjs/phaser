@@ -1,12 +1,11 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Phaser/utils/DebugUtils.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
+    function preload() {
         game.world.setSize(1920, 1200, true);
         game.load.image('backdrop', 'assets/pics/remember-me.jpg');
         game.load.image('ball', 'assets/sprites/mana_card.png');
-        game.load.start();
     }
     var ball;
     function create() {

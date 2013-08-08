@@ -2,9 +2,9 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
+    function preload() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
         game.load.image('disk', 'assets/sprites/oz_pov_melting_disk.png');
@@ -12,7 +12,7 @@
         game.load.image('fuji2', 'assets/tests/200x100corners2.png');
         game.load.image('fuji3', 'assets/tests/320x200.png');
         game.load.image('fuji4', 'assets/tests/320x200g.png');
-        game.load.start();
+        
 
     }
 

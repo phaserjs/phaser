@@ -1,7 +1,7 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
+    function preload() {
         game.load.image('atari1', 'assets/sprites/atari130xe.png');
         game.load.image('atari2', 'assets/sprites/atari800xl.png');
         game.load.image('atari4', 'assets/sprites/atari800.png');
@@ -10,7 +10,6 @@
         game.load.image('firstaid', 'assets/sprites/firstaid.png');
         game.load.image('diamond', 'assets/sprites/diamond.png');
         game.load.image('mushroom', 'assets/sprites/mushroom2.png');
-        game.load.start();
     }
     function create() {
         //  This returns an array of all the image keys in the cache

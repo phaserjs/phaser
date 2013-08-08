@@ -1,10 +1,9 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
+    function preload() {
         game.world.setSize(1920, 1200, true);
         game.load.image('backdrop', 'assets/pics/remember-me.jpg');
-        game.load.start();
     }
     var test;
     function create() {

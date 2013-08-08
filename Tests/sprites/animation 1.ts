@@ -2,16 +2,16 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
 
         //  Using Phasers asset loader we load up a PNG from the assets folder
 
         //  The sprite sheet is a standard frame-by-frame sheet, and each frame is 37 x 45 pixels in size.
         //  The final parameter (18) is the number of frames there are. You can omit this if your frames fill the entire sheet.
         game.load.spritesheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
-        game.load.start();
+        
 
     }
 

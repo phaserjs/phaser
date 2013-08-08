@@ -23,7 +23,7 @@ module Phaser {
          */
         constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool) {
 
-            this._game = game;
+            this.game = game;
             this._parent = parent;
             this._frames = frames;
             this._frameData = frameData;
@@ -41,9 +41,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * Local private reference to its owner sprite.
@@ -167,8 +167,8 @@ module Phaser {
             this.isPlaying = true;
             this.isFinished = false;
 
-            this._timeLastFrame = this._game.time.now;
-            this._timeNextFrame = this._game.time.now + this.delay;
+            this._timeLastFrame = this.game.time.now;
+            this._timeNextFrame = this.game.time.now + this.delay;
 
             this._frameIndex = 0;
 
@@ -188,8 +188,8 @@ module Phaser {
             this.isPlaying = true;
             this.isFinished = false;
 
-            this._timeLastFrame = this._game.time.now;
-            this._timeNextFrame = this._game.time.now + this.delay;
+            this._timeLastFrame = this.game.time.now;
+            this._timeNextFrame = this.game.time.now + this.delay;
 
             this._frameIndex = 0;
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
@@ -211,7 +211,7 @@ module Phaser {
          */
         public update(): bool {
 
-            if (this.isPlaying == true && this._game.time.now >= this._timeNextFrame)
+            if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
             {
                 this._frameIndex++;
 
@@ -233,8 +233,8 @@ module Phaser {
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                 }
 
-                this._timeLastFrame = this._game.time.now;
-                this._timeNextFrame = this._game.time.now + this.delay;
+                this._timeLastFrame = this.game.time.now;
+                this._timeNextFrame = this.game.time.now + this.delay;
 
                 return true;
             }
@@ -248,7 +248,7 @@ module Phaser {
          */
         public destroy() {
 
-            this._game = null;
+            this.game = null;
             this._parent = null;
             this._frames = null;
             this._frameData = null;

@@ -3,13 +3,13 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
 
         game.load.image('beast', 'assets/pics/shadow_of_the_beast2_karamoon.png');
         game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
-        game.load.start();
+        
 
     }
 

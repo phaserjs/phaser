@@ -1,13 +1,13 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
 
     var ufo: Phaser.Sprite,
         leftBtn: Phaser.Sprite,
         rightBtn: Phaser.Sprite;
     var speed: Number = 4;
 
-    function init() {
+    function preload() {
         game.world.setSize(1280, 600, true);
         game.load.image('ground', 'assets/tests/ground-2x.png');
         game.load.image('river', 'assets/tests/river-2x.png');
@@ -20,7 +20,7 @@
 
         game.load.spritesheet('ufo', 'assets/sprites/ufo.png', 24, 21);
 
-        game.load.start();
+        
     }
     function create() {
         // background images

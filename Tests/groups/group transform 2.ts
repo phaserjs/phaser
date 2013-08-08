@@ -1,6 +1,6 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
     var robot: Phaser.Group;
     var eye: Phaser.Sprite,
@@ -10,7 +10,7 @@
         leftLeg: Phaser.Sprite,
         rightLeg: Phaser.Sprite;
 
-    function init() {
+    function preload() {
         game.load.image('eye', 'assets/sprites/robot/eye.png');
         game.load.image('body', 'assets/sprites/robot/body.png');
         game.load.image('arm-l', 'assets/sprites/robot/arm-l.png');
@@ -18,7 +18,7 @@
         game.load.image('leg-l', 'assets/sprites/robot/leg-l.png');
         game.load.image('leg-r', 'assets/sprites/robot/leg-r.png');
 
-        game.load.start();
+        
     }
     function create() {
         // Add some items.

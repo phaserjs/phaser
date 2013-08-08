@@ -131,7 +131,7 @@ module Phaser {
 
             if (camera == null)
             {
-                camera = this._game.camera;
+                camera = this.game.camera;
             }
 
             var objectScreenPos: Point = objectOrGroup.getScreenXY(null, camera);
@@ -236,7 +236,7 @@ module Phaser {
 
             if (camera == null)
             {
-                camera = this._game.camera;
+                camera = this.game.camera;
             }
 
             point.x = sprite.x - camera.x * sprite.transform.scrollFactor.x;
@@ -256,7 +256,7 @@ module Phaser {
         /*
         static setBoundsFromWorld(action?: number = GameObject.OUT_OF_BOUNDS_STOP) {
 
-            this.setBounds(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
+            this.setBounds(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
             this.outOfBoundsAction = action;
 
         }

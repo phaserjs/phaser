@@ -2,12 +2,12 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
         game.load.spritesheet('shadow', 'assets/tests/tween/shadow.png', 80, 15);
         game.load.spritesheet('PHASER', 'assets/tests/tween/PHASER.png', 70, 90);
-        game.load.start();
+        
     }
 
     function create() {

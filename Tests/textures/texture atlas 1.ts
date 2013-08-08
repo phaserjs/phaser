@@ -2,9 +2,9 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
 
         //  Texture Atlas Method 1
         //
@@ -12,7 +12,7 @@
         //  (in this case botData)
         game.load.atlas('bot', 'assets/sprites/running_bot.png', null, botData);
 
-        game.load.start();
+        
 
     }
 

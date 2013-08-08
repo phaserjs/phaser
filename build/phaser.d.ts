@@ -3829,27 +3829,20 @@ module Phaser {
         * Loader constructor
         *
         * @param game {Phaser.Game} Current game instance.
-        * @param callback {function} This will be called when assets completely loaded.
         */
-        constructor(game: Game, callback);
+        constructor(game: Game);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
-        * Array stors assets keys. So you can get that asset by its unique key.
+        * Array stores assets keys. So you can get that asset by its unique key.
         */
         private _keys;
         /**
         * Contains all the assets file infos.
         */
         private _fileList;
-        /**
-        * Game initialial assets loading callback.
-        */
-        private _gameCreateComplete;
-        private _onComplete;
-        private _onFileLoad;
         /**
         * Indicates assets loading progress. (from 0 to 100)
         * @type {number}
@@ -3861,6 +3854,11 @@ module Phaser {
         * @type {number}
         */
         private _queueSize;
+        /**
+        * True if the Loader is in the process of loading a queue.
+        * @type {boolean}
+        */
+        public isLoading: bool;
         /**
         * True if game is completely loaded.
         * @type {boolean}
@@ -3876,6 +3874,10 @@ module Phaser {
         * @type {string}
         */
         public crossOrigin: string;
+        public onFileComplete: Signal;
+        public onFileError: Signal;
+        public onLoadStart: Signal;
+        public onLoadComplete: Signal;
         /**
         * TextureAtlas data format constants
         */
@@ -3935,10 +3937,8 @@ module Phaser {
         public removeAll(): void;
         /**
         * Load assets.
-        * @param onFileLoadCallback {function} Called when each file loaded successfully.
-        * @param onCompleteCallback {function} Called when all assets completely loaded.
         */
-        public start(onFileLoadCallback?, onCompleteCallback?): void;
+        public start(): void;
         /**
         * Load files. Private method ONLY used by loader.
         */
@@ -4029,9 +4029,9 @@ module Phaser {
         */
         constructor(game: Game);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Canvas key-value container.
         * @type {object}
@@ -5105,9 +5105,9 @@ module Phaser {
         */
         constructor(game: Game, x: number, y: number, width: number, height: number);
         /**
-        * Local private reference to Game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Local container for storing cameras.
         */
@@ -5334,9 +5334,9 @@ module Phaser {
         */
         constructor(object, game: Game);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Manager of this tween.
         * @type {Phaser.TweenManager}
@@ -5880,7 +5880,7 @@ module Phaser {
         private _tempTileBlock;
         private _tempBlockResults;
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
         public game: Game;
         /**
@@ -6098,9 +6098,9 @@ module Phaser {
         */
         constructor(game: Game, tilemap: Tilemap, index: number, width: number, height: number);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * You can give this Tile a friendly name to help with debugging. Never used internally.
         * @type {string}
@@ -6430,9 +6430,9 @@ module Phaser {
         */
         constructor(game: Game);
         /**
-        * Local private reference to Game
+        * Local reference to Game
         */
-        private _game;
+        public game: Game;
         /**
         * Local private reference to World
         */
@@ -6872,9 +6872,9 @@ module Phaser {
         */
         constructor(game: Game, width: number, height: number);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Stage height when start the game.
         * @type {number}
@@ -7036,9 +7036,9 @@ module Phaser {
         */
         constructor(game: Game);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Engine logo.
         */
@@ -7090,9 +7090,9 @@ module Phaser {
         */
         constructor(game: Game, width: number, height: number);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Canvas element used by engine.
         * @type {HTMLCanvasElement}
@@ -7201,9 +7201,9 @@ module Phaser {
         */
         constructor(game: Game, parent: string, width: number, height: number);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Background color of the stage (defaults to black). Set via the public backgroundColor property.
         * @type {string}
@@ -7287,12 +7287,6 @@ module Phaser {
         * @type {boolean}
         */
         public disableVisibilityChange: bool;
-        /**
-        * An optional 'fix' for the horrendous Android stock browser bug
-        * https://code.google.com/p/android/issues/detail?id=39247
-        * @type {boolean}
-        */
-        public patchAndroidClearRectBug: bool;
         /**
         * Stage boot
         */
@@ -7486,9 +7480,9 @@ module Phaser {
         */
         constructor(game: Game);
         /**
-        * Local private reference to Game
+        * Local reference to Game
         */
-        private _game;
+        public game: Game;
         /**
         * Local private array which is the container of all tween objects.
         */
@@ -7576,9 +7570,9 @@ module Phaser {
         */
         constructor(game: Game, width: number, height: number);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Camera manager of this world.
         * @type {CameraManager}
@@ -7655,6 +7649,12 @@ module Phaser {
         * Device constructor
         */
         constructor();
+        /**
+        * An optional 'fix' for the horrendous Android stock browser bug
+        * https://code.google.com/p/android/issues/detail?id=39247
+        * @type {boolean}
+        */
+        public patchAndroidClearRectBug: bool;
         /**
         * Is running desktop?
         * @type {boolean}
@@ -7899,9 +7899,9 @@ module Phaser {
         */
         constructor(game: Game, callback);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * The function to be called each frame. Will be called in the context of _game
         * @property callback
@@ -8105,7 +8105,7 @@ module Phaser {
         private _highestRenderObject;
         private _highestInputPriorityID;
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         * @property game
         * @type {Phaser.Game}
         * @private
@@ -8444,12 +8444,12 @@ module Phaser {
         */
         constructor(game: Game);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         * @property _game
         * @type {Game}
         * @private
         **/
-        private _game;
+        public game: Game;
         private _p1;
         private _p2;
         private _p3;
@@ -8812,6 +8812,13 @@ module Phaser {
         */
         public game: Game;
         /**
+        * How often should the input pointers be checked for updates?
+        * A value of 0 means every single frame (60fps), a value of 1 means every other frame (30fps) and so on.
+        * @type {number}
+        */
+        public pollRate: number;
+        private _pollCounter;
+        /**
         * A 1x1 sized canvas used for pixel-perfect checks
         * @type {HTMLCanvasElement}
         */
@@ -9117,6 +9124,7 @@ module Phaser {
         * @method removeGameObject
         **/
         public removeGameObject(index: number): void;
+        public pollLocked : bool;
         /**
         * Updates the Input Manager. Called by the core Game loop.
         * @method update
@@ -9507,23 +9515,18 @@ module Phaser {
         * @param parent {string} ID of its parent DOM element.
         * @param width {number} The width of your game in game pixels.
         * @param height {number} The height of your game in game pixels.
-        * @param initCallback {function} Init callback invoked when init default screen.
+        * @param preloadCallback {function} Preload callback invoked when init default screen.
         * @param createCallback {function} Create callback invoked when create default screen.
         * @param updateCallback {function} Update callback invoked when update default screen.
         * @param renderCallback {function} Render callback invoked when render default screen.
         * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
         */
-        constructor(callbackContext, parent?: string, width?: number, height?: number, initCallback?, createCallback?, updateCallback?, renderCallback?, destroyCallback?);
+        constructor(callbackContext, parent?: string, width?: number, height?: number, preloadCallback?, createCallback?, updateCallback?, renderCallback?, destroyCallback?);
         public id: number;
         /**
         * Game loop trigger wrapper.
         */
         public _raf: RequestAnimationFrame;
-        /**
-        * Milliseconds of time per step of the game loop.
-        * @type {number}
-        */
-        private _step;
         /**
         * Whether load complete loading or not.
         * @type {boolean}
@@ -9557,7 +9560,7 @@ module Phaser {
         * This will be called when init states. (loading assets...)
         * @type {function}
         */
-        public onInitCallback;
+        public onPreloadCallback;
         /**
         * This will be called when create states. (setup states...)
         * @type {function}
@@ -9692,7 +9695,7 @@ module Phaser {
         private boot(parent, width, height);
         public setRenderer(type: number): void;
         /**
-        * Called when the load has finished after init was run.
+        * Called when the load has finished after preload was run.
         */
         private loadComplete();
         /**
@@ -9714,13 +9717,13 @@ module Phaser {
         private startState();
         /**
         * Set the most common state callbacks (init, create, update, render).
-        * @param initCallback {function} Init callback invoked when init state.
+        * @param preloadCallback {function} Init callback invoked when init state.
         * @param createCallback {function} Create callback invoked when create state.
         * @param updateCallback {function} Update callback invoked when update state.
         * @param renderCallback {function} Render callback invoked when render state.
         * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
         */
-        public setCallbacks(initCallback?, createCallback?, updateCallback?, renderCallback?, destroyCallback?): void;
+        public setCallbacks(preloadCallback?, createCallback?, updateCallback?, renderCallback?, destroyCallback?): void;
         /**
         * Switch to a new State.
         * @param state {State} The state you want to switch to.
@@ -9756,9 +9759,9 @@ module Phaser {
         */
         constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool);
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         */
-        private _game;
+        public game: Game;
         /**
         * Local private reference to its owner sprite.
         * @type {Sprite}

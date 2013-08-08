@@ -2,14 +2,14 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
 
         game.load.image('atari1', 'assets/sprites/atari130xe.png');
         game.load.image('atari2', 'assets/sprites/atari800xl.png');
 
-        game.load.start();
+        
 
     }
 

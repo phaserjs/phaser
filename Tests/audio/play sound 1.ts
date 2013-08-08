@@ -6,14 +6,14 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
 
-    function init() {
+    function preload() {
 
         //game.load.audio('wizball', ['assets/mp3/oedipus_wizball_highscore.ogg', 'assets/mp3/oedipus_wizball_highscore.mp3']);
         game.load.audio('boden', ['assets/mp3/bodenstaendig_2000_in_rock_4bit.mp3']);
         game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
-        game.load.start();
+        
 
     }
 

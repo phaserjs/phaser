@@ -21,7 +21,7 @@ module Phaser {
          */
         constructor(game: Game, tilemap: Tilemap, index: number, width: number, height: number) {
 
-            this._game = game;
+            this.game = game;
             this.tilemap = tilemap;
             this.index = index;
 
@@ -32,9 +32,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * You can give this Tile a friendly name to help with debugging. Never used internally.

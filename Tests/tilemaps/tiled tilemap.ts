@@ -3,9 +3,9 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
 
-    function init() {
+    function preload() {
 
         //  Tiled Tilemap Test
 
@@ -16,7 +16,7 @@
         //  Then we load the actual tile sheet image
         game.load.image('jsontiles', 'assets/tiles/platformer_tiles.png');
 
-        game.load.start();
+        
 
     }
 

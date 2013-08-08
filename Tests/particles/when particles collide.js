@@ -1,12 +1,11 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
     var leftEmitter;
     var rightEmitter;
-    function init() {
+    function preload() {
         game.load.image('ball1', 'assets/sprites/aqua_ball.png');
         game.load.image('ball2', 'assets/sprites/yellow_ball.png');
-        game.load.start();
     }
     function create() {
         leftEmitter = game.add.emitter(0, game.stage.centerY - 200);

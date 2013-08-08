@@ -3,16 +3,16 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
+    function preload() {
 
         game.load.image('nashwan', 'assets/sprites/xenon2_ship.png');
         game.load.image('starfield', 'assets/misc/starfield.jpg');
         game.load.image('jet', 'assets/sprites/particle1.png');
         game.load.image('bullet', 'assets/misc/bullet1.png');
 
-        game.load.start();
+        
 
     }
 

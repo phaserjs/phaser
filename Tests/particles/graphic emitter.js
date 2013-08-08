@@ -1,10 +1,9 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
     var emitter;
-    function init() {
+    function preload() {
         game.load.image('jet', 'assets/sprites/jets.png');
-        game.load.start();
     }
     function create() {
         emitter = game.add.emitter(game.stage.centerX, game.stage.centerY);

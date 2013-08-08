@@ -5204,7 +5204,7 @@ var Phaser;
         
         if (camera == null)
         {
-        camera = this._game.camera;
+        camera = this.game.camera;
         }
         
         var objectScreenPos: Point = objectOrGroup.getScreenXY(null, camera);
@@ -5286,7 +5286,7 @@ var Phaser;
                 point = new Phaser.Point();
             }
             if(camera == null) {
-                camera = this._game.camera;
+                camera = this.game.camera;
             }
             point.x = sprite.x - camera.x * sprite.transform.scrollFactor.x;
             point.y = sprite.y - camera.y * sprite.transform.scrollFactor.y;
@@ -5302,7 +5302,7 @@ var Phaser;
         /*
         static setBoundsFromWorld(action?: number = GameObject.OUT_OF_BOUNDS_STOP) {
         
-        this.setBounds(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
+        this.setBounds(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
         this.outOfBoundsAction = action;
         
         }
@@ -7396,21 +7396,24 @@ var Phaser;
         * Loader constructor
         *
         * @param game {Phaser.Game} Current game instance.
-        * @param callback {function} This will be called when assets completely loaded.
         */
-        function Loader(game, callback) {
+        function Loader(game) {
             /**
             * The crossOrigin value applied to loaded images
             * @type {string}
             */
             this.crossOrigin = '';
-            this._game = game;
-            this._gameCreateComplete = callback;
+            this.game = game;
             this._keys = [];
             this._fileList = {
             };
             this._xhr = new XMLHttpRequest();
             this._queueSize = 0;
+            this.isLoading = false;
+            this.onFileComplete = new Phaser.Signal();
+            this.onFileError = new Phaser.Signal();
+            this.onLoadStart = new Phaser.Signal();
+            this.onLoadComplete = new Phaser.Signal();
         }
         Loader.TEXTURE_ATLAS_JSON_ARRAY = 0;
         Loader.TEXTURE_ATLAS_JSON_HASH = 1;
@@ -7420,6 +7423,7 @@ var Phaser;
         */
         function () {
             this._queueSize = 0;
+            this.isLoading = false;
         };
         Object.defineProperty(Loader.prototype, "queueSize", {
             get: function () {
@@ -7617,29 +7621,22 @@ var Phaser;
         };
         Loader.prototype.start = /**
         * Load assets.
-        * @param onFileLoadCallback {function} Called when each file loaded successfully.
-        * @param onCompleteCallback {function} Called when all assets completely loaded.
         */
-        function (onFileLoadCallback, onCompleteCallback) {
-            if (typeof onFileLoadCallback === "undefined") { onFileLoadCallback = null; }
-            if (typeof onCompleteCallback === "undefined") { onCompleteCallback = null; }
+        function () {
+            if(this.isLoading) {
+                return;
+            }
             this.progress = 0;
             this.hasLoaded = false;
-            this._onComplete = onCompleteCallback;
-            if(onCompleteCallback == null) {
-                this._onComplete = this._game.onCreateCallback;
-            }
-            this._onFileLoad = onFileLoadCallback;
+            this.isLoading = true;
+            this.onLoadStart.dispatch(this.queueSize);
             if(this._keys.length > 0) {
                 this._progressChunk = 100 / this._keys.length;
                 this.loadFile();
             } else {
                 this.progress = 100;
                 this.hasLoaded = true;
-                this._gameCreateComplete.call(this._game);
-                if(this._onComplete !== null) {
-                    this._onComplete.call(this._game.callbackContext);
-                }
+                this.onLoadComplete.dispatch();
             }
         };
         Loader.prototype.loadFile = /**
@@ -7668,7 +7665,7 @@ var Phaser;
                     file.url = this.getAudioURL(file.url);
                     if(file.url !== null) {
                         //  WebAudio or Audio Tag?
-                        if(this._game.sound.usingWebAudio) {
+                        if(this.game.sound.usingWebAudio) {
                             this._xhr.open("GET", file.url, true);
                             this._xhr.responseType = "arraybuffer";
                             this._xhr.onload = function () {
@@ -7678,8 +7675,8 @@ var Phaser;
                                 return _this.fileError(file.key);
                             };
                             this._xhr.send();
-                        } else if(this._game.sound.usingAudioTag) {
-                            if(this._game.sound.touchLocked) {
+                        } else if(this.game.sound.usingAudioTag) {
+                            if(this.game.sound.touchLocked) {
                                 //  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
                                 file.data = new Audio();
                                 file.data.name = file.key;
@@ -7694,7 +7691,7 @@ var Phaser;
                                 };
                                 file.data.preload = 'auto';
                                 file.data.src = file.url;
-                                file.data.addEventListener('canplaythrough', Phaser.GAMES[this._game.id].load.fileComplete(file.key), false);
+                                file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
                                 file.data.load();
                             }
                         }
@@ -7718,9 +7715,7 @@ var Phaser;
             for(var i = 0; i < urls.length; i++) {
                 extension = urls[i].toLowerCase();
                 extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
-                if(this._game.device.canPlayAudio(extension)) {
-                    //console.log('getAudioURL', urls[i]);
-                    //console.log(urls[i]);
+                if(this.game.device.canPlayAudio(extension)) {
                     return urls[i];
                 }
             }
@@ -7733,6 +7728,7 @@ var Phaser;
         function (key) {
             this._fileList[key].loaded = true;
             this._fileList[key].error = true;
+            this.onFileError.dispatch(key);
             throw new Error("Phaser.Loader error loading file: " + key);
             this.nextFile(key, false);
         };
@@ -7751,14 +7747,14 @@ var Phaser;
             var loadNext = true;
             switch(file.type) {
                 case 'image':
-                    this._game.cache.addImage(file.key, file.url, file.data);
+                    this.game.cache.addImage(file.key, file.url, file.data);
                     break;
                 case 'spritesheet':
-                    this._game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
+                    this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
                     break;
                 case 'textureatlas':
                     if(file.atlasURL == null) {
-                        this._game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
+                        this.game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
                     } else {
                         //  Load the JSON or XML before carrying on with the next file
                         loadNext = false;
@@ -7780,27 +7776,27 @@ var Phaser;
                     }
                     break;
                 case 'audio':
-                    if(this._game.sound.usingWebAudio) {
+                    if(this.game.sound.usingWebAudio) {
                         file.data = this._xhr.response;
-                        this._game.cache.addSound(file.key, file.url, file.data, true, false);
+                        this.game.cache.addSound(file.key, file.url, file.data, true, false);
                         if(file.autoDecode) {
-                            this._game.cache.updateSound(key, 'isDecoding', true);
+                            this.game.cache.updateSound(key, 'isDecoding', true);
                             var that = this;
                             var key = file.key;
-                            this._game.sound.context.decodeAudioData(file.data, function (buffer) {
+                            this.game.sound.context.decodeAudioData(file.data, function (buffer) {
                                 if(buffer) {
-                                    that._game.cache.decodedSound(key, buffer);
+                                    that.game.cache.decodedSound(key, buffer);
                                 }
                             });
                         }
                     } else {
-                        file.data.removeEventListener('canplaythrough', Phaser.GAMES[this._game.id].load.fileComplete);
-                        this._game.cache.addSound(file.key, file.url, file.data, false, true);
+                        file.data.removeEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete);
+                        this.game.cache.addSound(file.key, file.url, file.data, false, true);
                     }
                     break;
                 case 'text':
                     file.data = this._xhr.response;
-                    this._game.cache.addText(file.key, file.url, file.data);
+                    this.game.cache.addText(file.key, file.url, file.data);
                     break;
             }
             if(loadNext) {
@@ -7814,7 +7810,7 @@ var Phaser;
         function (key) {
             var data = JSON.parse(this._xhr.response);
             var file = this._fileList[key];
-            this._game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
+            this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
             this.nextFile(key, true);
         };
         Loader.prototype.dataLoadError = /**
@@ -7846,7 +7842,7 @@ var Phaser;
                 throw new Error("Phaser.Loader. Invalid XML given");
             }
             var file = this._fileList[key];
-            this._game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+            this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
             this.nextFile(key, true);
         };
         Loader.prototype.nextFile = /**
@@ -7859,18 +7855,14 @@ var Phaser;
             if(this.progress > 100) {
                 this.progress = 100;
             }
-            if(this._onFileLoad) {
-                this._onFileLoad.call(this._game.callbackContext, this.progress, previousKey, success);
-            }
+            this.onFileComplete.dispatch(this.progress, previousKey, success, this._queueSize - this._keys.length, this._queueSize);
             if(this._keys.length > 0) {
                 this.loadFile();
             } else {
                 this.hasLoaded = true;
+                this.isLoading = false;
                 this.removeAll();
-                this._gameCreateComplete.call(this._game);
-                if(this._onComplete !== null) {
-                    this._onComplete.call(this._game.callbackContext);
-                }
+                this.onLoadComplete.dispatch();
             }
         };
         Loader.prototype.checkKeyExists = /**
@@ -7995,7 +7987,7 @@ var Phaser;
         */
         function Cache(game) {
             this.onSoundUnlock = new Phaser.Signal();
-            this._game = game;
+            this.game = game;
             this._canvases = {
             };
             this._images = {
@@ -8034,7 +8026,7 @@ var Phaser;
                 frameWidth: frameWidth,
                 frameHeight: frameHeight
             };
-            this._images[key].frameData = Phaser.AnimationLoader.parseSpriteSheet(this._game, key, frameWidth, frameHeight, frameMax);
+            this._images[key].frameData = Phaser.AnimationLoader.parseSpriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
         };
         Cache.prototype.addTextureAtlas = /**
         * Add a new texture atlas.
@@ -8050,9 +8042,9 @@ var Phaser;
                 spriteSheet: true
             };
             if(format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY) {
-                this._images[key].frameData = Phaser.AnimationLoader.parseJSONData(this._game, atlasData);
+                this._images[key].frameData = Phaser.AnimationLoader.parseJSONData(this.game, atlasData);
             } else if(format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING) {
-                this._images[key].frameData = Phaser.AnimationLoader.parseXMLData(this._game, atlasData, format);
+                this._images[key].frameData = Phaser.AnimationLoader.parseXMLData(this.game, atlasData, format);
             }
         };
         Cache.prototype.addImage = /**
@@ -8077,7 +8069,7 @@ var Phaser;
         function (key, url, data, webAudio, audioTag) {
             if (typeof webAudio === "undefined") { webAudio = true; }
             if (typeof audioTag === "undefined") { audioTag = false; }
-            var locked = this._game.sound.touchLocked;
+            var locked = this.game.sound.touchLocked;
             var decoded = false;
             if(audioTag) {
                 decoded = true;
@@ -9966,7 +9958,7 @@ var Phaser;
             * Helper for sort.
             */
             this._sortIndex = '';
-            this._game = game;
+            this.game = game;
             this._cameras = [];
             this._cameraLength = 0;
             this.defaultCamera = this.addCamera(x, y, width, height);
@@ -10006,7 +9998,7 @@ var Phaser;
         * @returns {Camera} The newly created camera object.
         */
         function (x, y, width, height) {
-            var newCam = new Phaser.Camera(this._game, this._cameraLength, x, y, width, height);
+            var newCam = new Phaser.Camera(this.game, this._cameraLength, x, y, width, height);
             this._cameraLength = this._cameras.push(newCam);
             return newCam;
         };
@@ -10089,7 +10081,7 @@ var Phaser;
         */
         function () {
             this._cameras.length = 0;
-            this.current = this.addCamera(0, 0, this._game.stage.width, this._game.stage.height);
+            this.current = this.addCamera(0, 0, this.game.stage.width, this.game.stage.height);
         };
         return CameraManager;
     })();
@@ -10529,9 +10521,9 @@ var Phaser;
             this._chainedTweens = [];
             this.isRunning = false;
             this._object = object;
-            this._game = game;
-            this._manager = this._game.tweens;
-            this._interpolationFunction = this._game.math.linearInterpolation;
+            this.game = game;
+            this._manager = this.game.tweens;
+            this._interpolationFunction = this.game.math.linearInterpolation;
             this._easingFunction = Phaser.Easing.Linear.None;
             this._chainedTweens = [];
             this.onStart = new Phaser.Signal();
@@ -10587,14 +10579,14 @@ var Phaser;
         */
         function (looped) {
             if (typeof looped === "undefined") { looped = false; }
-            if(this._game === null || this._object === null) {
+            if(this.game === null || this._object === null) {
                 return;
             }
             if(looped == false) {
                 this._manager.add(this);
                 this.onStart.dispatch(this._object);
             }
-            this._startTime = this._game.time.now + this._delayTime;
+            this._startTime = this.game.time.now + this._delayTime;
             this.isRunning = true;
             for(var property in this._valuesEnd) {
                 // This prevents the interpolation of null values or of non-existing properties
@@ -10656,8 +10648,8 @@ var Phaser;
         };
         Object.defineProperty(Tween.prototype, "parent", {
             set: function (value) {
-                this._game = value;
-                this._manager = this._game.tweens;
+                this.game = value;
+                this._manager = this.game.tweens;
             },
             enumerable: true,
             configurable: true
@@ -10707,7 +10699,7 @@ var Phaser;
         * @return {boolean} Return false if this completed and no need to update, otherwise return true.
         */
         function (time) {
-            if(this._game.paused == true) {
+            if(this.game.paused == true) {
                 if(this._pausedTime == 0) {
                     this._pausedTime = time;
                 }
@@ -11937,7 +11929,7 @@ var Phaser;
             * @type {boolean}
             */
             this.separateY = true;
-            this._game = game;
+            this.game = game;
             this.tilemap = tilemap;
             this.index = index;
             this.width = width;
@@ -12357,8 +12349,8 @@ var Phaser;
         * @param game {Game} A reference to the current Game.
         */
         function GameObjectFactory(game) {
-            this._game = game;
-            this._world = this._game.world;
+            this.game = game;
+            this._world = this.game.world;
         }
         GameObjectFactory.prototype.camera = /**
         * Create a new camera with specific position and size.
@@ -12380,7 +12372,7 @@ var Phaser;
         * @returns {GeomSprite} The newly created geom sprite object.
         */
         //public geomSprite(x: number, y: number): GeomSprite {
-        //    return <GeomSprite> this._world.group.add(new GeomSprite(this._game, x, y));
+        //    return <GeomSprite> this._world.group.add(new GeomSprite(this.game, x, y));
         //}
         /**
         * Create a new Button game object.
@@ -12404,7 +12396,7 @@ var Phaser;
             if (typeof overFrame === "undefined") { overFrame = null; }
             if (typeof outFrame === "undefined") { outFrame = null; }
             if (typeof downFrame === "undefined") { downFrame = null; }
-            return this._world.group.add(new Phaser.UI.Button(this._game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+            return this._world.group.add(new Phaser.UI.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
         };
         GameObjectFactory.prototype.sprite = /**
         * Create a new Sprite with specific position and sprite sheet key.
@@ -12418,12 +12410,12 @@ var Phaser;
         function (x, y, key, frame) {
             if (typeof key === "undefined") { key = ''; }
             if (typeof frame === "undefined") { frame = null; }
-            return this._world.group.add(new Phaser.Sprite(this._game, x, y, key, frame));
+            return this._world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
         };
         GameObjectFactory.prototype.audio = function (key, volume, loop) {
             if (typeof volume === "undefined") { volume = 1; }
             if (typeof loop === "undefined") { loop = false; }
-            return this._game.sound.add(key, volume, loop);
+            return this.game.sound.add(key, volume, loop);
         };
         GameObjectFactory.prototype.dynamicTexture = /**
         * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
@@ -12437,7 +12429,7 @@ var Phaser;
         * @returns {Sprite} The newly created sprite object.
         */
         //public physicsSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC, shapeType?:number = 0): Sprite {
-        //    return <Sprite> this._world.group.add(new Sprite(this._game, x, y, key, frame, bodyType, shapeType));
+        //    return <Sprite> this._world.group.add(new Sprite(this.game, x, y, key, frame, bodyType, shapeType));
         //}
         /**
         * Create a new DynamicTexture with specific size.
@@ -12447,7 +12439,7 @@ var Phaser;
         * @returns {DynamicTexture} The newly created dynamic texture object.
         */
         function (width, height) {
-            return new Phaser.DynamicTexture(this._game, width, height);
+            return new Phaser.DynamicTexture(this.game, width, height);
         };
         GameObjectFactory.prototype.group = /**
         * Create a new object container.
@@ -12457,7 +12449,7 @@ var Phaser;
         */
         function (maxSize) {
             if (typeof maxSize === "undefined") { maxSize = 0; }
-            return this._world.group.add(new Phaser.Group(this._game, maxSize));
+            return this._world.group.add(new Phaser.Group(this.game, maxSize));
         };
         GameObjectFactory.prototype.particle = /**
         * Create a new Particle.
@@ -12465,7 +12457,7 @@ var Phaser;
         * @return {Particle} The newly created particle object.
         */
         function () {
-            return new Phaser.ArcadeParticle(this._game);
+            return new Phaser.ArcadeParticle(this.game);
         };
         GameObjectFactory.prototype.emitter = /**
         * Create a new Emitter.
@@ -12479,7 +12471,7 @@ var Phaser;
             if (typeof x === "undefined") { x = 0; }
             if (typeof y === "undefined") { y = 0; }
             if (typeof size === "undefined") { size = 0; }
-            return this._world.group.add(new Phaser.ArcadeEmitter(this._game, x, y, size));
+            return this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
         };
         GameObjectFactory.prototype.scrollZone = /**
         * Create a new ScrollZone object with image key, position and size.
@@ -12496,7 +12488,7 @@ var Phaser;
             if (typeof y === "undefined") { y = 0; }
             if (typeof width === "undefined") { width = 0; }
             if (typeof height === "undefined") { height = 0; }
-            return this._world.group.add(new Phaser.ScrollZone(this._game, key, x, y, width, height));
+            return this._world.group.add(new Phaser.ScrollZone(this.game, key, x, y, width, height));
         };
         GameObjectFactory.prototype.tilemap = /**
         * Create a new Tilemap.
@@ -12513,7 +12505,7 @@ var Phaser;
             if (typeof resizeWorld === "undefined") { resizeWorld = true; }
             if (typeof tileWidth === "undefined") { tileWidth = 0; }
             if (typeof tileHeight === "undefined") { tileHeight = 0; }
-            return this._world.group.add(new Phaser.Tilemap(this._game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
+            return this._world.group.add(new Phaser.Tilemap(this.game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
         };
         GameObjectFactory.prototype.tween = /**
         * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
@@ -12524,7 +12516,7 @@ var Phaser;
         */
         function (obj, localReference) {
             if (typeof localReference === "undefined") { localReference = false; }
-            return this._game.tweens.create(obj, localReference);
+            return this.game.tweens.create(obj, localReference);
         };
         GameObjectFactory.prototype.existingSprite = /**
         * Add an existing Sprite to the current world.
@@ -12604,7 +12596,7 @@ var Phaser;
         * @return {Phaser.Tween} The Tween object
         */
         function (tween) {
-            return this._game.tweens.add(tween);
+            return this.game.tweens.add(tween);
         };
         return GameObjectFactory;
     })();
@@ -13522,7 +13514,7 @@ var Phaser;
             * @type {number}
             */
             this.maxIterations = 10;
-            this._game = game;
+            this.game = game;
             this.enterLandscape = new Phaser.Signal();
             this.enterPortrait = new Phaser.Signal();
             if(window['orientation']) {
@@ -13565,7 +13557,7 @@ var Phaser;
             if(this.isFullScreen) {
                 return;
             }
-            var element = this._game.stage.canvas;
+            var element = this.game.stage.canvas;
             if(element['requestFullScreen']) {
                 element['requestFullScreen']();
             } else if(element['mozRequestFullScreen']) {
@@ -13587,7 +13579,7 @@ var Phaser;
         * The core update loop, called by Phaser.Stage
         */
         function () {
-            if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
+            if(this.game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
                 this.refresh();
             }
             if(this.forceLandscape || this.forcePortrait) {
@@ -13599,14 +13591,14 @@ var Phaser;
             if(this.incorrectOrientation) {
                 if((this.forceLandscape && window.innerWidth > window.innerHeight) || (this.forcePortrait && window.innerHeight > window.innerWidth)) {
                     //  Back to normal
-                    this._game.paused = false;
+                    this.game.paused = false;
                     this.incorrectOrientation = false;
                     this.refresh();
                 }
             } else {
                 if((this.forceLandscape && window.innerWidth < window.innerHeight) || (this.forcePortrait && window.innerHeight < window.innerWidth)) {
                     //  Show orientation screen
-                    this._game.paused = true;
+                    this.game.paused = true;
                     this.incorrectOrientation = true;
                     this.refresh();
                 }
@@ -13636,7 +13628,7 @@ var Phaser;
             } else {
                 this.enterPortrait.dispatch(this.orientation, false, true);
             }
-            if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE) {
+            if(this.game.stage.scaleMode !== StageScaleMode.NO_SCALE) {
                 this.refresh();
             }
         };
@@ -13654,7 +13646,7 @@ var Phaser;
             } else {
                 this.enterPortrait.dispatch(this.orientation, false, true);
             }
-            if(this._game.stage.scaleMode !== StageScaleMode.NO_SCALE) {
+            if(this.game.stage.scaleMode !== StageScaleMode.NO_SCALE) {
                 this.refresh();
             }
         };
@@ -13664,10 +13656,10 @@ var Phaser;
         function () {
             var _this = this;
             //  We can't do anything about the status bars in iPads, web apps or desktops
-            if(this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false) {
+            if(this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false) {
                 document.documentElement.style.minHeight = '2000px';
                 this._startHeight = window.innerHeight;
-                if(this._game.device.android && this._game.device.chrome == false) {
+                if(this.game.device.android && this.game.device.chrome == false) {
                     window.scrollTo(0, 1);
                 } else {
                     window.scrollTo(0, 0);
@@ -13686,8 +13678,8 @@ var Phaser;
         */
         function (force) {
             if (typeof force === "undefined") { force = false; }
-            if(this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false) {
-                if(this._game.device.android && this._game.device.chrome == false) {
+            if(this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false) {
+                if(this.game.device.android && this.game.device.chrome == false) {
                     window.scrollTo(0, 1);
                 } else {
                     window.scrollTo(0, 0);
@@ -13699,9 +13691,9 @@ var Phaser;
                 document.documentElement.style.minHeight = window.innerHeight + 'px';
                 if(this.incorrectOrientation == true) {
                     this.setMaximum();
-                } else if(this._game.stage.scaleMode == StageScaleMode.EXACT_FIT) {
+                } else if(this.game.stage.scaleMode == StageScaleMode.EXACT_FIT) {
                     this.setExactFit();
-                } else if(this._game.stage.scaleMode == StageScaleMode.SHOW_ALL) {
+                } else if(this.game.stage.scaleMode == StageScaleMode.SHOW_ALL) {
                     this.setShowAll();
                 }
                 this.setSize();
@@ -13724,36 +13716,36 @@ var Phaser;
                     this.height = this.minHeight;
                 }
             }
-            this._game.stage.canvas.style.width = this.width + 'px';
-            this._game.stage.canvas.style.height = this.height + 'px';
-            this._game.input.scale.setTo(this._game.stage.width / this.width, this._game.stage.height / this.height);
+            this.game.stage.canvas.style.width = this.width + 'px';
+            this.game.stage.canvas.style.height = this.height + 'px';
+            this.game.input.scale.setTo(this.game.stage.width / this.width, this.game.stage.height / this.height);
             if(this.pageAlignHorizontally) {
                 if(this.width < window.innerWidth && this.incorrectOrientation == false) {
-                    this._game.stage.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
+                    this.game.stage.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
                 } else {
-                    this._game.stage.canvas.style.marginLeft = '0px';
+                    this.game.stage.canvas.style.marginLeft = '0px';
                 }
             }
             if(this.pageAlignVeritcally) {
                 if(this.height < window.innerHeight && this.incorrectOrientation == false) {
-                    this._game.stage.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
+                    this.game.stage.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
                 } else {
-                    this._game.stage.canvas.style.marginTop = '0px';
+                    this.game.stage.canvas.style.marginTop = '0px';
                 }
             }
-            this._game.stage.getOffset(this._game.stage.canvas);
+            this.game.stage.getOffset(this.game.stage.canvas);
             this.aspectRatio = this.width / this.height;
-            this.scaleFactor.x = this._game.stage.width / this.width;
-            this.scaleFactor.y = this._game.stage.height / this.height;
+            this.scaleFactor.x = this.game.stage.width / this.width;
+            this.scaleFactor.y = this.game.stage.height / this.height;
         };
         StageScaleMode.prototype.setMaximum = function () {
             this.width = window.innerWidth;
             this.height = window.innerHeight;
         };
         StageScaleMode.prototype.setShowAll = function () {
-            var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
-            this.width = Math.round(this._game.stage.width * multiplier);
-            this.height = Math.round(this._game.stage.height * multiplier);
+            var multiplier = Math.min((window.innerHeight / this.game.stage.height), (window.innerWidth / this.game.stage.width));
+            this.width = Math.round(this.game.stage.width * multiplier);
+            this.height = Math.round(this.game.stage.height * multiplier);
         };
         StageScaleMode.prototype.setExactFit = function () {
             if(this.maxWidth && window.innerWidth > this.maxWidth) {
@@ -13813,7 +13805,7 @@ var Phaser;
             * @type {Phaser.Tween}
             */
             this._fade = null;
-            this._game = game;
+            this.game = game;
             this._logo = new Image();
             this._logo.src = this._logoData;
         }
@@ -13835,36 +13827,36 @@ var Phaser;
         * Render BootScreen.
         */
         function () {
-            var grd = this._game.stage.context.createLinearGradient(0, 0, 0, this._game.stage.height);
+            var grd = this.game.stage.context.createLinearGradient(0, 0, 0, this.game.stage.height);
             grd.addColorStop(0, 'rgb(' + this._color1.r + ', ' + this._color1.g + ', ' + this._color1.b + ')');
             grd.addColorStop(0.5, 'rgb(' + this._color2.r + ', ' + this._color2.g + ', ' + this._color2.b + ')');
             grd.addColorStop(1, 'rgb(' + this._color1.r + ', ' + this._color1.g + ', ' + this._color1.b + ')');
-            this._game.stage.context.fillStyle = grd;
-            this._game.stage.context.fillRect(0, 0, this._game.stage.width, this._game.stage.height);
-            this._game.stage.context.shadowOffsetX = 0;
-            this._game.stage.context.shadowOffsetY = 0;
+            this.game.stage.context.fillStyle = grd;
+            this.game.stage.context.fillRect(0, 0, this.game.stage.width, this.game.stage.height);
+            this.game.stage.context.shadowOffsetX = 0;
+            this.game.stage.context.shadowOffsetY = 0;
             if(this._logo) {
-                this._game.stage.context.drawImage(this._logo, 32, 32);
+                this.game.stage.context.drawImage(this._logo, 32, 32);
             }
-            this._game.stage.context.shadowColor = 'rgb(0,0,0)';
-            this._game.stage.context.shadowOffsetX = 1;
-            this._game.stage.context.shadowOffsetY = 1;
-            this._game.stage.context.shadowBlur = 0;
-            this._game.stage.context.fillStyle = 'rgb(255,255,255)';
-            this._game.stage.context.font = 'bold 18px Arial';
-            this._game.stage.context.textBaseline = 'top';
-            this._game.stage.context.fillText(Phaser.VERSION, 32, 64 + 32);
-            this._game.stage.context.fillText('Game Size: ' + this._game.stage.width + ' x ' + this._game.stage.height, 32, 64 + 64);
-            this._game.stage.context.fillText('www.photonstorm.com', 32, 64 + 96);
-            this._game.stage.context.font = '16px Arial';
-            this._game.stage.context.fillText('You are seeing this screen because you didn\'t specify any default', 32, 64 + 160);
-            this._game.stage.context.fillText('functions in the Game constructor or use Game.switchState()', 32, 64 + 184);
+            this.game.stage.context.shadowColor = 'rgb(0,0,0)';
+            this.game.stage.context.shadowOffsetX = 1;
+            this.game.stage.context.shadowOffsetY = 1;
+            this.game.stage.context.shadowBlur = 0;
+            this.game.stage.context.fillStyle = 'rgb(255,255,255)';
+            this.game.stage.context.font = 'bold 18px Arial';
+            this.game.stage.context.textBaseline = 'top';
+            this.game.stage.context.fillText(Phaser.VERSION, 32, 64 + 32);
+            this.game.stage.context.fillText('Game Size: ' + this.game.stage.width + ' x ' + this.game.stage.height, 32, 64 + 64);
+            this.game.stage.context.fillText('www.photonstorm.com', 32, 64 + 96);
+            this.game.stage.context.font = '16px Arial';
+            this.game.stage.context.fillText('You are seeing this screen because you didn\'t specify any default', 32, 64 + 160);
+            this.game.stage.context.fillText('functions in the Game constructor or use Game.switchState()', 32, 64 + 184);
         };
         BootScreen.prototype.colorCycle = /**
         * Start color fading cycle.
         */
         function () {
-            this._fade = this._game.add.tween(this._color2);
+            this._fade = this.game.add.tween(this._color2);
             this._fade.to({
                 r: Math.random() * 250,
                 g: Math.random() * 250,
@@ -13894,7 +13886,7 @@ var Phaser;
         * @param height {number} Screen canvas height.
         */
         function PauseScreen(game, width, height) {
-            this._game = game;
+            this.game = game;
             this._canvas = document.createElement('canvas');
             this._canvas.width = width;
             this._canvas.height = height;
@@ -13906,7 +13898,7 @@ var Phaser;
         function () {
             //  Take a grab of the current canvas to our temporary one
             this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-            this._context.drawImage(this._game.stage.canvas, 0, 0);
+            this._context.drawImage(this.game.stage.canvas, 0, 0);
             this._color = {
                 r: 255,
                 g: 255,
@@ -13919,7 +13911,7 @@ var Phaser;
         */
         function () {
             this._fade.stop();
-            this._game.tweens.remove(this._fade);
+            this.game.tweens.remove(this._fade);
         };
         PauseScreen.prototype.update = /**
         * Update background color.
@@ -13933,27 +13925,27 @@ var Phaser;
         * Render PauseScreen.
         */
         function () {
-            this._game.stage.context.drawImage(this._canvas, 0, 0);
-            this._game.stage.context.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            this._game.stage.context.fillRect(0, 0, this._game.stage.width, this._game.stage.height);
+            this.game.stage.context.drawImage(this._canvas, 0, 0);
+            this.game.stage.context.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            this.game.stage.context.fillRect(0, 0, this.game.stage.width, this.game.stage.height);
             //  Draw a 'play' arrow
-            var arrowWidth = Math.round(this._game.stage.width / 2);
-            var arrowHeight = Math.round(this._game.stage.height / 2);
-            var sx = this._game.stage.centerX - arrowWidth / 2;
-            var sy = this._game.stage.centerY - arrowHeight / 2;
-            this._game.stage.context.beginPath();
-            this._game.stage.context.moveTo(sx, sy);
-            this._game.stage.context.lineTo(sx, sy + arrowHeight);
-            this._game.stage.context.lineTo(sx + arrowWidth, this._game.stage.centerY);
-            this._game.stage.context.fillStyle = 'rgba(' + this._color.r + ', ' + this._color.g + ', ' + this._color.b + ', 0.8)';
-            this._game.stage.context.fill();
-            this._game.stage.context.closePath();
+            var arrowWidth = Math.round(this.game.stage.width / 2);
+            var arrowHeight = Math.round(this.game.stage.height / 2);
+            var sx = this.game.stage.centerX - arrowWidth / 2;
+            var sy = this.game.stage.centerY - arrowHeight / 2;
+            this.game.stage.context.beginPath();
+            this.game.stage.context.moveTo(sx, sy);
+            this.game.stage.context.lineTo(sx, sy + arrowHeight);
+            this.game.stage.context.lineTo(sx + arrowWidth, this.game.stage.centerY);
+            this.game.stage.context.fillStyle = 'rgba(' + this._color.r + ', ' + this._color.g + ', ' + this._color.b + ', 0.8)';
+            this.game.stage.context.fill();
+            this.game.stage.context.closePath();
         };
         PauseScreen.prototype.fadeOut = /**
         * Start fadeOut effect.
         */
         function () {
-            this._fade = this._game.add.tween(this._color);
+            this._fade = this.game.add.tween(this._color);
             this._fade.to({
                 r: 50,
                 g: 50,
@@ -13966,7 +13958,7 @@ var Phaser;
         * Start fadeIn effect.
         */
         function () {
-            this._fade = this._game.add.tween(this._color);
+            this._fade = this.game.add.tween(this._color);
             this._fade.to({
                 r: 255,
                 g: 255,
@@ -14079,13 +14071,7 @@ var Phaser;
             * @type {boolean}
             */
             this.disableVisibilityChange = false;
-            /**
-            * An optional 'fix' for the horrendous Android stock browser bug
-            * https://code.google.com/p/android/issues/detail?id=39247
-            * @type {boolean}
-            */
-            this.patchAndroidClearRectBug = false;
-            this._game = game;
+            this.game = game;
             this.canvas = document.createElement('canvas');
             this.canvas.width = width;
             this.canvas.height = height;
@@ -14106,7 +14092,7 @@ var Phaser;
             this.context = this.canvas.getContext('2d');
             this.css3 = new Phaser.Display.CSS3Filters(this.canvas);
             this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
-            this.scale = new Phaser.StageScaleMode(this._game, width, height);
+            this.scale = new Phaser.StageScaleMode(this.game, width, height);
             this.getOffset(this.canvas);
             this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, width, height);
             this.aspectRatio = width / height;
@@ -14133,9 +14119,9 @@ var Phaser;
         * Stage boot
         */
         function () {
-            this.bootScreen = new Phaser.BootScreen(this._game);
-            this.pauseScreen = new Phaser.PauseScreen(this._game, this.width, this.height);
-            this.orientationScreen = new Phaser.OrientationScreen(this._game);
+            this.bootScreen = new Phaser.BootScreen(this.game);
+            this.pauseScreen = new Phaser.PauseScreen(this.game, this.width, this.height);
+            this.orientationScreen = new Phaser.OrientationScreen(this.game);
             this.scale.setScreenSize(true);
         };
         Stage.prototype.update = /**
@@ -14145,24 +14131,24 @@ var Phaser;
         function () {
             this.scale.update();
             this.context.setTransform(1, 0, 0, 1, 0, 0);
-            if(this.clear || (this._game.paused && this.disablePauseScreen == false)) {
-                if(this.patchAndroidClearRectBug) {
+            if(this.clear || (this.game.paused && this.disablePauseScreen == false)) {
+                if(this.game.device.patchAndroidClearRectBug) {
                     this.context.fillStyle = 'rgb(0,0,0)';
                     this.context.fillRect(0, 0, this.width, this.height);
                 } else {
                     this.context.clearRect(0, 0, this.width, this.height);
                 }
             }
-            if(this._game.paused && this.scale.incorrectOrientation) {
+            if(this.game.paused && this.scale.incorrectOrientation) {
                 this.orientationScreen.update();
                 this.orientationScreen.render();
                 return;
             }
-            if(this._game.isRunning == false && this.disableBootScreen == false) {
+            if(this.game.isRunning == false && this.disableBootScreen == false) {
                 this.bootScreen.update();
                 this.bootScreen.render();
             }
-            if(this._game.paused && this.disablePauseScreen == false) {
+            if(this.game.paused && this.disablePauseScreen == false) {
                 this.pauseScreen.update();
                 this.pauseScreen.render();
             }
@@ -14175,11 +14161,11 @@ var Phaser;
                 return;
             }
             if(event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true) {
-                if(this._game.paused == false) {
+                if(this.game.paused == false) {
                     this.pauseGame();
                 }
             } else {
-                if(this._game.paused == true) {
+                if(this.game.paused == true) {
                     this.resumeGame();
                 }
             }
@@ -14192,7 +14178,7 @@ var Phaser;
             if(forceLandscape || forcePortrait) {
                 if((this.scale.isLandscape && forcePortrait) || (this.scale.isPortrait && forceLandscape)) {
                     //  They are in the wrong orientation right now
-                    this._game.paused = true;
+                    this.game.paused = true;
                     this.scale.incorrectOrientation = true;
                 } else {
                     this.scale.incorrectOrientation = false;
@@ -14210,14 +14196,14 @@ var Phaser;
                 this.pauseScreen.onPaused();
             }
             this.saveCanvasValues();
-            this._game.paused = true;
+            this.game.paused = true;
         };
         Stage.prototype.resumeGame = function () {
             if(this.disablePauseScreen == false && this.pauseScreen) {
                 this.pauseScreen.onResume();
             }
             this.restoreCanvasValues();
-            this._game.paused = false;
+            this.game.paused = false;
         };
         Stage.prototype.getOffset = /**
         * Get the DOM offset values of the given element
@@ -14251,7 +14237,7 @@ var Phaser;
             this.context.strokeStyle = this.strokeStyle;
             this.context.lineWidth = this.lineWidth;
             this.context.fillStyle = this.fillStyle;
-            if(this.patchAndroidClearRectBug) {
+            if(this.game.device.patchAndroidClearRectBug) {
                 this.context.fillStyle = 'rgb(0,0,0)';
                 this.context.fillRect(0, 0, this.width, this.height);
             } else {
@@ -14499,7 +14485,7 @@ var Phaser;
         * @param game {Game} A reference to the current Game.
         */
         function TweenManager(game) {
-            this._game = game;
+            this.game = game;
             this._tweens = [];
         }
         TweenManager.prototype.getAll = /**
@@ -14525,10 +14511,10 @@ var Phaser;
         function (object, localReference) {
             if (typeof localReference === "undefined") { localReference = false; }
             if(localReference) {
-                object['tween'] = new Phaser.Tween(object, this._game);
+                object['tween'] = new Phaser.Tween(object, this.game);
                 return object['tween'];
             } else {
-                return new Phaser.Tween(object, this._game);
+                return new Phaser.Tween(object, this.game);
             }
         };
         TweenManager.prototype.add = /**
@@ -14538,7 +14524,7 @@ var Phaser;
         * @return {Phaser.Tween} The tween object you added to the manager.
         */
         function (tween) {
-            tween.parent = this._game;
+            tween.parent = this.game;
             this._tweens.push(tween);
             return tween;
         };
@@ -14565,7 +14551,7 @@ var Phaser;
             var i = 0;
             var numTweens = this._tweens.length;
             while(i < numTweens) {
-                if(this._tweens[i].update(this._game.time.now)) {
+                if(this._tweens[i].update(this.game.time.now)) {
                     i++;
                 } else {
                     this._tweens.splice(i, 1);
@@ -14637,8 +14623,8 @@ var Phaser;
             * @type {Group}
             */
             this._groupCounter = 0;
-            this._game = game;
-            this.cameras = new Phaser.CameraManager(this._game, 0, 0, width, height);
+            this.game = game;
+            this.cameras = new Phaser.CameraManager(this.game, 0, 0, width, height);
             this.bounds = new Phaser.Rectangle(0, 0, width, height);
         }
         World.prototype.getNextGroupID = function () {
@@ -14648,7 +14634,7 @@ var Phaser;
         * Called once by Game during the boot process.
         */
         function () {
-            this.group = new Phaser.Group(this._game, 0);
+            this.group = new Phaser.Group(this.game, 0);
         };
         World.prototype.update = /**
         * This is called automatically every frame, and is where main logic happens.
@@ -14683,7 +14669,7 @@ var Phaser;
             this.bounds.width = width;
             this.bounds.height = height;
             if(updateCameraBounds == true) {
-                this._game.camera.setBounds(0, 0, width, height);
+                this.game.camera.setBounds(0, 0, width, height);
             }
             // dispatch world resize event
                     };
@@ -14761,6 +14747,13 @@ var Phaser;
         * Device constructor
         */
         function Device() {
+            //  Android bug specific :)
+            /**
+            * An optional 'fix' for the horrendous Android stock browser bug
+            * https://code.google.com/p/android/issues/detail?id=39247
+            * @type {boolean}
+            */
+            this.patchAndroidClearRectBug = false;
             //  Operating System
             /**
             * Is running desktop?
@@ -15221,7 +15214,7 @@ var Phaser;
             * @type Boolean
             **/
             this.isRunning = false;
-            this._game = game;
+            this.game = game;
             this.callback = callback;
             var vendors = [
                 'ms', 
@@ -15295,9 +15288,9 @@ var Phaser;
         **/
         function (time) {
             var _this = this;
-            this._game.time.update(time);
+            this.game.time.update(time);
             if(this.callback) {
-                this.callback.call(this._game);
+                this.callback.call(this.game);
             }
             this._onLoop = function (time) {
                 return _this.RAFUpdate(time);
@@ -15310,13 +15303,13 @@ var Phaser;
         **/
         function () {
             var _this = this;
-            this._game.time.update(Date.now());
+            this.game.time.update(Date.now());
             this._onLoop = function () {
                 return _this.SetTimeoutUpdate();
             };
             this._timeOutID = window.setTimeout(this._onLoop, 16);
             if(this.callback) {
-                this.callback.call(this._game);
+                this.callback.call(this.game);
             }
         };
         return RequestAnimationFrame;
@@ -15824,6 +15817,9 @@ var Phaser;
         * @param {Any} event
         */
         function (event) {
+            if(this.game.input.pollLocked) {
+                return;
+            }
             if(event.button) {
                 this.button = event.button;
             }
@@ -16133,20 +16129,20 @@ var Phaser;
         * @return {Touch} This object.
         */
         function Gestures(game) {
-            this._game = game;
+            this.game = game;
         }
         Gestures.prototype.start = function () {
             //  Local references to the Phaser.Input.pointer objects
-            this._p1 = this._game.input.pointer1;
-            this._p2 = this._game.input.pointer2;
-            this._p3 = this._game.input.pointer3;
-            this._p4 = this._game.input.pointer4;
-            this._p5 = this._game.input.pointer5;
-            this._p6 = this._game.input.pointer6;
-            this._p7 = this._game.input.pointer7;
-            this._p8 = this._game.input.pointer8;
-            this._p9 = this._game.input.pointer9;
-            this._p10 = this._game.input.pointer10;
+            this._p1 = this.game.input.pointer1;
+            this._p2 = this.game.input.pointer2;
+            this._p3 = this.game.input.pointer3;
+            this._p4 = this.game.input.pointer4;
+            this._p5 = this.game.input.pointer5;
+            this._p6 = this.game.input.pointer6;
+            this._p7 = this.game.input.pointer7;
+            this._p8 = this.game.input.pointer8;
+            this._p9 = this.game.input.pointer9;
+            this._p10 = this.game.input.pointer10;
         };
         return Gestures;
     })();
@@ -16724,6 +16720,13 @@ var Phaser;
     var InputManager = (function () {
         function InputManager(game) {
             /**
+            * How often should the input pointers be checked for updates?
+            * A value of 0 means every single frame (60fps), a value of 1 means every other frame (30fps) and so on.
+            * @type {number}
+            */
+            this.pollRate = 0;
+            this._pollCounter = 0;
+            /**
             * A vector object representing the previous position of the Pointer.
             * @property vector
             * @type {Vec2}
@@ -17031,11 +17034,22 @@ var Phaser;
                 this.inputObjects[index] = null;
             }
         };
+        Object.defineProperty(InputManager.prototype, "pollLocked", {
+            get: function () {
+                return (this.pollRate > 0 && this._pollCounter < this.pollRate);
+            },
+            enumerable: true,
+            configurable: true
+        });
         InputManager.prototype.update = /**
         * Updates the Input Manager. Called by the core Game loop.
         * @method update
         **/
         function () {
+            if(this.pollRate > 0 && this._pollCounter < this.pollRate) {
+                this._pollCounter++;
+                return;
+            }
             this.speed.x = this.position.x - this._oldPosition.x;
             this.speed.y = this.position.y - this._oldPosition.y;
             this._oldPosition.copyFrom(this.position);
@@ -17066,6 +17080,7 @@ var Phaser;
             if(this.pointer10) {
                 this.pointer10.update();
             }
+            this._pollCounter = 0;
         };
         InputManager.prototype.reset = /**
         * Reset all of the Pointers and Input states
@@ -17100,6 +17115,7 @@ var Phaser;
                 this.inputObjects.length = 0;
                 this.totalTrackedObjects = 0;
             }
+            this._pollCounter = 0;
         };
         InputManager.prototype.resetSpeed = function (x, y) {
             this._oldPosition.setTo(x, y);
@@ -17347,7 +17363,12 @@ var Phaser;
                     if(camera.visible == false || camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1) {
                         return false;
                     }
-                    camera.texture.context.clearRect(0, 0, camera.width, camera.height);
+                    if(this.game.device.patchAndroidClearRectBug) {
+                        camera.texture.context.fillStyle = 'rgb(0,0,0)';
+                        camera.texture.context.fillRect(0, 0, camera.width, camera.height);
+                    } else {
+                        camera.texture.context.clearRect(0, 0, camera.width, camera.height);
+                    }
                     //  Alpha
                     if(camera.texture.alpha !== 1 && camera.texture.context.globalAlpha != camera.texture.alpha) {
                         this._ga = camera.texture.context.globalAlpha;
@@ -18381,17 +18402,17 @@ var Phaser;
         * @param parent {string} ID of its parent DOM element.
         * @param width {number} The width of your game in game pixels.
         * @param height {number} The height of your game in game pixels.
-        * @param initCallback {function} Init callback invoked when init default screen.
+        * @param preloadCallback {function} Preload callback invoked when init default screen.
         * @param createCallback {function} Create callback invoked when create default screen.
         * @param updateCallback {function} Update callback invoked when update default screen.
         * @param renderCallback {function} Render callback invoked when render default screen.
         * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
         */
-        function Game(callbackContext, parent, width, height, initCallback, createCallback, updateCallback, renderCallback, destroyCallback) {
+        function Game(callbackContext, parent, width, height, preloadCallback, createCallback, updateCallback, renderCallback, destroyCallback) {
             if (typeof parent === "undefined") { parent = ''; }
             if (typeof width === "undefined") { width = 800; }
             if (typeof height === "undefined") { height = 600; }
-            if (typeof initCallback === "undefined") { initCallback = null; }
+            if (typeof preloadCallback === "undefined") { preloadCallback = null; }
             if (typeof createCallback === "undefined") { createCallback = null; }
             if (typeof updateCallback === "undefined") { updateCallback = null; }
             if (typeof renderCallback === "undefined") { renderCallback = null; }
@@ -18401,7 +18422,7 @@ var Phaser;
             * Milliseconds of time per step of the game loop.
             * @type {number}
             */
-            this._step = 0;
+            //private _step: number = 0;
             /**
             * Whether load complete loading or not.
             * @type {boolean}
@@ -18426,7 +18447,7 @@ var Phaser;
             * This will be called when init states. (loading assets...)
             * @type {function}
             */
-            this.onInitCallback = null;
+            this.onPreloadCallback = null;
             /**
             * This will be called when create states. (setup states...)
             * @type {function}
@@ -18479,7 +18500,7 @@ var Phaser;
             this.isRunning = false;
             this.id = Phaser.GAMES.push(this) - 1;
             this.callbackContext = callbackContext;
-            this.onInitCallback = initCallback;
+            this.onPreloadCallback = preloadCallback;
             this.onCreateCallback = createCallback;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
@@ -18518,7 +18539,7 @@ var Phaser;
                 this.world = new Phaser.World(this, width, height);
                 this.add = new Phaser.GameObjectFactory(this);
                 this.cache = new Phaser.Cache(this);
-                this.load = new Phaser.Loader(this, this.loadComplete);
+                this.load = new Phaser.Loader(this);
                 this.time = new Phaser.TimeManager(this);
                 this.tweens = new Phaser.TweenManager(this);
                 this.input = new Phaser.InputManager(this);
@@ -18528,6 +18549,7 @@ var Phaser;
                 ]);
                 this.physics = new Phaser.Physics.Manager(this);
                 this.plugins = new Phaser.PluginManager(this, this);
+                this.load.onLoadComplete.addOnce(this.loadComplete, this);
                 this.setRenderer(Phaser.Types.RENDERER_CANVAS);
                 this.world.boot();
                 this.stage.boot();
@@ -18538,7 +18560,7 @@ var Phaser;
                 Phaser.ColorUtils.game = this;
                 Phaser.DebugUtils.context = this.stage.context;
                 //  Display the default game screen?
-                if(this.onInitCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null) {
+                if(this.onPreloadCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null) {
                     this._raf = new Phaser.RequestAnimationFrame(this, this.bootLoop);
                 } else {
                     this.isRunning = true;
@@ -18565,10 +18587,11 @@ var Phaser;
                                 }
         };
         Game.prototype.loadComplete = /**
-        * Called when the load has finished after init was run.
+        * Called when the load has finished after preload was run.
         */
         function () {
             this._loadComplete = true;
+            this.onCreateCallback.call(this.callbackContext);
         };
         Game.prototype.bootLoop = /**
         * The bootLoop is called while the game is still booting (waiting for the DOM and resources to be available)
@@ -18629,15 +18652,18 @@ var Phaser;
         * Start current state.
         */
         function () {
-            if(this.onInitCallback !== null) {
+            if(this.onPreloadCallback !== null) {
                 this.load.reset();
-                this.onInitCallback.call(this.callbackContext);
-                //  Is the load empty?
+                this.onPreloadCallback.call(this.callbackContext);
+                //  Is the loader empty?
                 if(this.load.queueSize == 0) {
                     if(this.onCreateCallback !== null) {
                         this.onCreateCallback.call(this.callbackContext);
                     }
                     this._loadComplete = true;
+                } else {
+                    //  Start the loader going as we have something in the queue
+                    this.load.start();
                 }
             } else {
                 //  No init? Then there was nothing to load either
@@ -18649,19 +18675,19 @@ var Phaser;
         };
         Game.prototype.setCallbacks = /**
         * Set the most common state callbacks (init, create, update, render).
-        * @param initCallback {function} Init callback invoked when init state.
+        * @param preloadCallback {function} Init callback invoked when init state.
         * @param createCallback {function} Create callback invoked when create state.
         * @param updateCallback {function} Update callback invoked when update state.
         * @param renderCallback {function} Render callback invoked when render state.
         * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
         */
-        function (initCallback, createCallback, updateCallback, renderCallback, destroyCallback) {
-            if (typeof initCallback === "undefined") { initCallback = null; }
+        function (preloadCallback, createCallback, updateCallback, renderCallback, destroyCallback) {
+            if (typeof preloadCallback === "undefined") { preloadCallback = null; }
             if (typeof createCallback === "undefined") { createCallback = null; }
             if (typeof updateCallback === "undefined") { updateCallback = null; }
             if (typeof renderCallback === "undefined") { renderCallback = null; }
             if (typeof destroyCallback === "undefined") { destroyCallback = null; }
-            this.onInitCallback = initCallback;
+            this.onPreloadCallback = preloadCallback;
             this.onCreateCallback = createCallback;
             this.onUpdateCallback = updateCallback;
             this.onRenderCallback = renderCallback;
@@ -18692,7 +18718,7 @@ var Phaser;
             //  Ok, have we got the right functions?
             if(this.state['create'] || this.state['update']) {
                 this.callbackContext = this.state;
-                this.onInitCallback = null;
+                this.onPreloadCallback = null;
                 this.onLoadRenderCallback = null;
                 this.onLoadUpdateCallback = null;
                 this.onCreateCallback = null;
@@ -18702,8 +18728,8 @@ var Phaser;
                 this.onPausedCallback = null;
                 this.onDestroyCallback = null;
                 //  Bingo, let's set them up
-                if(this.state['init']) {
-                    this.onInitCallback = this.state['init'];
+                if(this.state['preload']) {
+                    this.onPreloadCallback = this.state['preload'];
                 }
                 if(this.state['loadRender']) {
                     this.onLoadRenderCallback = this.state['loadRender'];
@@ -18746,7 +18772,7 @@ var Phaser;
         */
         function () {
             this.callbackContext = null;
-            this.onInitCallback = null;
+            this.onPreloadCallback = null;
             this.onLoadRenderCallback = null;
             this.onLoadUpdateCallback = null;
             this.onCreateCallback = null;
@@ -18819,7 +18845,7 @@ var Phaser;
         * @param looped {boolean} Whether or not the animation is looped or just plays once.
         */
         function Animation(game, parent, frameData, name, frames, delay, looped) {
-            this._game = game;
+            this.game = game;
             this._parent = parent;
             this._frames = frames;
             this._frameData = frameData;
@@ -18872,8 +18898,8 @@ var Phaser;
             }
             this.isPlaying = true;
             this.isFinished = false;
-            this._timeLastFrame = this._game.time.now;
-            this._timeNextFrame = this._game.time.now + this.delay;
+            this._timeLastFrame = this.game.time.now;
+            this._timeNextFrame = this.game.time.now + this.delay;
             this._frameIndex = 0;
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
             this._parent.events.onAnimationStart.dispatch(this._parent, this);
@@ -18885,8 +18911,8 @@ var Phaser;
         function () {
             this.isPlaying = true;
             this.isFinished = false;
-            this._timeLastFrame = this._game.time.now;
-            this._timeNextFrame = this._game.time.now + this.delay;
+            this._timeLastFrame = this.game.time.now;
+            this._timeNextFrame = this.game.time.now + this.delay;
             this._frameIndex = 0;
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
         };
@@ -18901,7 +18927,7 @@ var Phaser;
         * Update animation frames.
         */
         function () {
-            if(this.isPlaying == true && this._game.time.now >= this._timeNextFrame) {
+            if(this.isPlaying == true && this.game.time.now >= this._timeNextFrame) {
                 this._frameIndex++;
                 if(this._frameIndex == this._frames.length) {
                     if(this.looped) {
@@ -18914,8 +18940,8 @@ var Phaser;
                 } else {
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                 }
-                this._timeLastFrame = this._game.time.now;
-                this._timeNextFrame = this._game.time.now + this.delay;
+                this._timeLastFrame = this.game.time.now;
+                this._timeNextFrame = this.game.time.now + this.delay;
                 return true;
             }
             return false;
@@ -18924,7 +18950,7 @@ var Phaser;
         * Clean up animation memory.
         */
         function () {
-            this._game = null;
+            this.game = null;
             this._parent = null;
             this._frames = null;
             this._frameData = null;

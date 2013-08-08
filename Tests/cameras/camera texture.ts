@@ -1,12 +1,12 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
 
-    function init() {
+    function preload() {
         game.world.setSize(800, 600, true);
         game.load.image('background', 'assets/misc/water_texture.jpg');
 
-        game.load.start();
+        
     }
     function create() {
         game.camera.texture.loadImage('background', false);

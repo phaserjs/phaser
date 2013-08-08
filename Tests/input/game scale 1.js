@@ -1,15 +1,14 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
     //  Here we create a tiny game (320x240 in size)
-    var game = new Phaser.Game(this, 'game', 320, 240, init, create, update, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 320, 240, preload, create, update, render);
+    function preload() {
         //  This sets a limit on the up-scale
         game.stage.scale.maxWidth = 800;
         game.stage.scale.maxHeight = 600;
         //  Then we tell Phaser that we want it to scale up to whatever the browser can handle, but to do it proportionally
         game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
         game.load.image('melon', 'assets/sprites/melon.png');
-        game.load.start();
     }
     function create() {
         game.world.setSize(2000, 2000);

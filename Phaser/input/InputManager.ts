@@ -61,6 +61,15 @@ module Phaser {
         public game: Game;
 
         /**
+         * How often should the input pointers be checked for updates?
+         * A value of 0 means every single frame (60fps), a value of 1 means every other frame (30fps) and so on.
+         * @type {number}
+         */
+        public pollRate: number = 0;
+
+        private _pollCounter: number = 0;
+
+        /**
          * A 1x1 sized canvas used for pixel-perfect checks
          * @type {HTMLCanvasElement}
          */
@@ -495,11 +504,21 @@ module Phaser {
 
         }
 
+        public get pollLocked(): bool {
+            return (this.pollRate > 0 && this._pollCounter < this.pollRate);
+        }
+
         /**
         * Updates the Input Manager. Called by the core Game loop.
         * @method update
         **/
         public update() {
+
+            if (this.pollRate > 0 && this._pollCounter < this.pollRate)
+            {
+                this._pollCounter++;
+                return;
+            }
 
             this.speed.x = this.position.x - this._oldPosition.x;
             this.speed.y = this.position.y - this._oldPosition.y;
@@ -518,6 +537,8 @@ module Phaser {
             if (this.pointer8) { this.pointer8.update(); }
             if (this.pointer9) { this.pointer9.update(); }
             if (this.pointer10) { this.pointer10.update(); }
+
+            this._pollCounter = 0;
 
         }
 
@@ -567,6 +588,8 @@ module Phaser {
                 this.inputObjects.length = 0;
                 this.totalTrackedObjects = 0;
             }
+
+            this._pollCounter = 0;
 
         }
 

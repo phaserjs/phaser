@@ -1,14 +1,13 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
+    function preload() {
         game.load.image('beast', 'assets/pics/shadow_of_the_beast2_karamoon.png');
         game.load.image('snot', 'assets/pics/nslide_snot.png');
         game.load.image('atari1', 'assets/sprites/atari130xe.png');
         game.load.image('sonic', 'assets/sprites/sonic_havok_sanity.png');
         game.load.image('coke', 'assets/sprites/cokecan.png');
         game.load.image('disk', 'assets/sprites/oz_pov_melting_disk.png');
-        game.load.start();
     }
     var group1;
     var group2;

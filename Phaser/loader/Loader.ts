@@ -15,26 +15,31 @@ module Phaser {
          * Loader constructor
          *
          * @param game {Phaser.Game} Current game instance.
-         * @param callback {function} This will be called when assets completely loaded.
          */
-        constructor(game: Game, callback) {
+        constructor(game: Game) {
 
-            this._game = game;
-            this._gameCreateComplete = callback;
+            this.game = game;
+
             this._keys = [];
             this._fileList = {};
             this._xhr = new XMLHttpRequest();
             this._queueSize = 0;
+            this.isLoading = false;
+
+            this.onFileComplete = new Phaser.Signal;
+            this.onFileError = new Phaser.Signal;
+            this.onLoadStart = new Phaser.Signal;
+            this.onLoadComplete = new Phaser.Signal;
 
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
-         * Array stors assets keys. So you can get that asset by its unique key.
+         * Array stores assets keys. So you can get that asset by its unique key.
          */
         private _keys: string[];
 
@@ -42,13 +47,6 @@ module Phaser {
          * Contains all the assets file infos.
          */
         private _fileList;
-
-        /**
-         * Game initialial assets loading callback.
-         */
-        private _gameCreateComplete;
-        private _onComplete;
-        private _onFileLoad;
 
         /**
          * Indicates assets loading progress. (from 0 to 100)
@@ -63,6 +61,12 @@ module Phaser {
          * @type {number}
          */
         private _queueSize: number;
+
+        /**
+         * True if the Loader is in the process of loading a queue.
+         * @type {boolean}
+         */
+        public isLoading: bool;
 
         /**
          * True if game is completely loaded.
@@ -82,6 +86,11 @@ module Phaser {
          */
         public crossOrigin: string = '';
 
+        public onFileComplete: Phaser.Signal;
+        public onFileError: Phaser.Signal;
+        public onLoadStart: Phaser.Signal;
+        public onLoadComplete: Phaser.Signal;
+
         /**
          * TextureAtlas data format constants
          */
@@ -94,6 +103,7 @@ module Phaser {
          */
         public reset() {
             this._queueSize = 0;
+            this.isLoading = false;
         }
 
         public get queueSize(): number {
@@ -269,22 +279,19 @@ module Phaser {
 
         /**
          * Load assets.
-         * @param onFileLoadCallback {function} Called when each file loaded successfully.
-         * @param onCompleteCallback {function} Called when all assets completely loaded.
          */
-        public start(onFileLoadCallback = null, onCompleteCallback = null) {
+        public start() {
+
+            if (this.isLoading)
+            {
+                return;
+            }
 
             this.progress = 0;
             this.hasLoaded = false;
+            this.isLoading = true;
 
-            this._onComplete = onCompleteCallback;
-
-            if (onCompleteCallback == null)
-            {
-                this._onComplete = this._game.onCreateCallback;
-            }
-
-            this._onFileLoad = onFileLoadCallback;
+            this.onLoadStart.dispatch(this.queueSize);
 
             if (this._keys.length > 0)
             {
@@ -295,12 +302,7 @@ module Phaser {
             {
                 this.progress = 100;
                 this.hasLoaded = true;
-                this._gameCreateComplete.call(this._game);
-
-                if (this._onComplete !== null)
-                {
-                    this._onComplete.call(this._game.callbackContext);
-                }
+                this.onLoadComplete.dispatch();
             }
 
         }
@@ -334,7 +336,7 @@ module Phaser {
                     if (file.url !== null)
                     {
                         //  WebAudio or Audio Tag?
-                        if (this._game.sound.usingWebAudio)
+                        if (this.game.sound.usingWebAudio)
                         {
                             this._xhr.open("GET", file.url, true);
                             this._xhr.responseType = "arraybuffer";
@@ -342,9 +344,9 @@ module Phaser {
                             this._xhr.onerror = () => this.fileError(file.key);
                             this._xhr.send();
                         }
-                        else if (this._game.sound.usingAudioTag)
+                        else if (this.game.sound.usingAudioTag)
                         {
-                            if (this._game.sound.touchLocked)
+                            if (this.game.sound.touchLocked)
                             {
                                 //  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
                                 file.data = new Audio();
@@ -360,7 +362,7 @@ module Phaser {
                                 file.data.onerror = () => this.fileError(file.key);
                                 file.data.preload = 'auto';
                                 file.data.src = file.url;
-                                file.data.addEventListener('canplaythrough', Phaser.GAMES[this._game.id].load.fileComplete(file.key), false);
+                                file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
                                 file.data.load();
                             }
                         }
@@ -388,10 +390,8 @@ module Phaser {
                 extension = urls[i].toLowerCase();
                 extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
 
-                if (this._game.device.canPlayAudio(extension))
+                if (this.game.device.canPlayAudio(extension))
                 {
-                    //console.log('getAudioURL', urls[i]);
-                    //console.log(urls[i]);
                     return urls[i];
                 }
 
@@ -409,6 +409,8 @@ module Phaser {
 
             this._fileList[key].loaded = true;
             this._fileList[key].error = true;
+
+            this.onFileError.dispatch(key);
 
             throw new Error("Phaser.Loader error loading file: " + key);
 
@@ -436,17 +438,17 @@ module Phaser {
             switch (file.type)
             {
                 case 'image':
-                    this._game.cache.addImage(file.key, file.url, file.data);
+                    this.game.cache.addImage(file.key, file.url, file.data);
                     break;
 
                 case 'spritesheet':
-                    this._game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
+                    this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
                     break;
 
                 case 'textureatlas':
                     if (file.atlasURL == null)
                     {
-                        this._game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
+                        this.game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
                     }
                     else
                     {
@@ -471,37 +473,37 @@ module Phaser {
 
                 case 'audio':
 
-                    if (this._game.sound.usingWebAudio)
+                    if (this.game.sound.usingWebAudio)
                     {
                         file.data = this._xhr.response;
 
-                        this._game.cache.addSound(file.key, file.url, file.data, true, false);
+                        this.game.cache.addSound(file.key, file.url, file.data, true, false);
 
                         if (file.autoDecode)
                         {
-                            this._game.cache.updateSound(key, 'isDecoding', true);
+                            this.game.cache.updateSound(key, 'isDecoding', true);
 
                             var that = this;
                             var key = file.key;
 
-                            this._game.sound.context.decodeAudioData(file.data, function (buffer) {
+                            this.game.sound.context.decodeAudioData(file.data, function (buffer) {
                                 if (buffer)
                                 {
-                                    that._game.cache.decodedSound(key, buffer);
+                                    that.game.cache.decodedSound(key, buffer);
                                 }
                             });
                         }
                     }
                     else
                     {
-                        file.data.removeEventListener('canplaythrough', Phaser.GAMES[this._game.id].load.fileComplete);
-                        this._game.cache.addSound(file.key, file.url, file.data, false, true);
+                        file.data.removeEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete);
+                        this.game.cache.addSound(file.key, file.url, file.data, false, true);
                     }
                     break;
 
                 case 'text':
                     file.data = this._xhr.response;
-                    this._game.cache.addText(file.key, file.url, file.data);
+                    this.game.cache.addText(file.key, file.url, file.data);
                     break;
             }
 
@@ -521,7 +523,7 @@ module Phaser {
             var data = JSON.parse(this._xhr.response);
             var file = this._fileList[key];
 
-            this._game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
+            this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
 
             this.nextFile(key, true);
 
@@ -573,7 +575,7 @@ module Phaser {
             }
 
             var file = this._fileList[key];
-            this._game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+            this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
 
             this.nextFile(key, true);
 
@@ -593,10 +595,7 @@ module Phaser {
                 this.progress = 100;
             }
 
-            if (this._onFileLoad)
-            {
-                this._onFileLoad.call(this._game.callbackContext, this.progress, previousKey, success);
-            }
+            this.onFileComplete.dispatch(this.progress, previousKey, success, this._queueSize - this._keys.length, this._queueSize);
 
             if (this._keys.length > 0)
             {
@@ -605,13 +604,11 @@ module Phaser {
             else
             {
                 this.hasLoaded = true;
+                this.isLoading = false;
+                
                 this.removeAll();
-                this._gameCreateComplete.call(this._game);
 
-                if (this._onComplete !== null)
-                {
-                    this._onComplete.call(this._game.callbackContext);
-                }
+                this.onLoadComplete.dispatch();
             }
 
         }

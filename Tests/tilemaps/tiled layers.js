@@ -1,15 +1,14 @@
 /// <reference path="../../Phaser/tilemap/Tilemap.ts" />
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
+    function preload() {
         //  Tiled Tilemap Test
         //  First we load our map data (a json file exported from the map editor Tiled)
         //  This data file has several layers within it. Phaser will render them all.
         game.load.text('jsontest', 'assets/maps/multi-layer-test.json');
         //  Then we load the actual tile sheet image
         game.load.image('jsontiles', 'assets/tiles/platformer_tiles.png');
-        game.load.start();
     }
     var map;
     function create() {

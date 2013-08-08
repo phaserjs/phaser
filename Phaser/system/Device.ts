@@ -25,6 +25,15 @@ module Phaser {
 
         }
 
+        //  Android bug specific :)
+
+        /**
+         * An optional 'fix' for the horrendous Android stock browser bug
+         * https://code.google.com/p/android/issues/detail?id=39247
+         * @type {boolean}
+         */
+        public patchAndroidClearRectBug: bool = false;
+
         //  Operating System
 
         /**

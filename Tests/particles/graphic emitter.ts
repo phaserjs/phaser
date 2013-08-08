@@ -2,15 +2,15 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
     var emitter: Phaser.ArcadeEmitter;
 
-    function init() {
+    function preload() {
 
         game.load.image('jet', 'assets/sprites/jets.png');
 
-        game.load.start();
+        
 
     }
 

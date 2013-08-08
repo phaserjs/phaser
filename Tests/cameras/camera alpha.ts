@@ -2,14 +2,14 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
+    function preload() {
 
         game.load.image('grid', 'assets/tests/debug-grid-1920x1920.png');
         game.load.image('car', 'assets/sprites/car90.png');
 
-        game.load.start();
+        
 
     }
 

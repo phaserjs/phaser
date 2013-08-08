@@ -17,7 +17,7 @@ module Phaser {
          */
         constructor(game: Game, width: number, height: number) {
 
-            this._game = game;
+            this.game = game;
 
             this.enterLandscape = new Phaser.Signal();
             this.enterPortrait = new Phaser.Signal();
@@ -51,9 +51,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * Stage height when start the game.
@@ -208,7 +208,7 @@ module Phaser {
                 return;
             }
 
-            var element = this._game.stage.canvas;
+            var element = this.game.stage.canvas;
 
             if (element['requestFullScreen'])
             {
@@ -247,7 +247,7 @@ module Phaser {
          */
         public update() {
 
-            if (this._game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height))
+            if (this.game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height))
             {
                 this.refresh();
             }
@@ -267,7 +267,7 @@ module Phaser {
                 if ((this.forceLandscape && window.innerWidth > window.innerHeight) || (this.forcePortrait && window.innerHeight > window.innerWidth))
                 {
                     //  Back to normal
-                    this._game.paused = false;
+                    this.game.paused = false;
                     this.incorrectOrientation = false;
                     this.refresh();
                 }
@@ -277,7 +277,7 @@ module Phaser {
                 if ((this.forceLandscape && window.innerWidth < window.innerHeight) || (this.forcePortrait && window.innerHeight < window.innerWidth))
                 {
                     //  Show orientation screen
-                    this._game.paused = true;
+                    this.game.paused = true;
                     this.incorrectOrientation = true;
                     this.refresh();
                 }
@@ -309,7 +309,7 @@ module Phaser {
                 this.enterPortrait.dispatch(this.orientation, false, true);
             }
 
-            if (this._game.stage.scaleMode !== StageScaleMode.NO_SCALE)
+            if (this.game.stage.scaleMode !== StageScaleMode.NO_SCALE)
             {
                 this.refresh();
             }
@@ -339,7 +339,7 @@ module Phaser {
                 this.enterPortrait.dispatch(this.orientation, false, true);
             }
 
-            if (this._game.stage.scaleMode !== StageScaleMode.NO_SCALE)
+            if (this.game.stage.scaleMode !== StageScaleMode.NO_SCALE)
             {
                 this.refresh();
             }
@@ -352,13 +352,13 @@ module Phaser {
         private refresh() {
 
             //  We can't do anything about the status bars in iPads, web apps or desktops
-            if (this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false)
+            if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
             {
                 document.documentElement.style.minHeight = '2000px';
 
                 this._startHeight = window.innerHeight;
 
-                if (this._game.device.android && this._game.device.chrome == false)
+                if (this.game.device.android && this.game.device.chrome == false)
                 {
                     window.scrollTo(0, 1);
                 }
@@ -382,9 +382,9 @@ module Phaser {
          */
         public setScreenSize(force: bool = false) {
 
-            if (this._game.device.iPad == false && this._game.device.webApp == false && this._game.device.desktop == false)
+            if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
             {
-                if (this._game.device.android && this._game.device.chrome == false)
+                if (this.game.device.android && this.game.device.chrome == false)
                 {
                     window.scrollTo(0, 1);
                 }
@@ -405,11 +405,11 @@ module Phaser {
                 {
                     this.setMaximum();
                 }
-                else if (this._game.stage.scaleMode == StageScaleMode.EXACT_FIT)
+                else if (this.game.stage.scaleMode == StageScaleMode.EXACT_FIT)
                 {
                     this.setExactFit();
                 }
-                else if (this._game.stage.scaleMode == StageScaleMode.SHOW_ALL)
+                else if (this.game.stage.scaleMode == StageScaleMode.SHOW_ALL)
                 {
                     this.setShowAll();
                 }
@@ -449,20 +449,20 @@ module Phaser {
                 }
             }
 
-            this._game.stage.canvas.style.width = this.width + 'px';
-            this._game.stage.canvas.style.height = this.height + 'px';
+            this.game.stage.canvas.style.width = this.width + 'px';
+            this.game.stage.canvas.style.height = this.height + 'px';
 
-            this._game.input.scale.setTo(this._game.stage.width / this.width, this._game.stage.height / this.height);
+            this.game.input.scale.setTo(this.game.stage.width / this.width, this.game.stage.height / this.height);
 
             if (this.pageAlignHorizontally)
             {
                 if (this.width < window.innerWidth && this.incorrectOrientation == false)
                 {
-                    this._game.stage.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
+                    this.game.stage.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
                 }
                 else
                 {
-                    this._game.stage.canvas.style.marginLeft = '0px';
+                    this.game.stage.canvas.style.marginLeft = '0px';
                 }
             }
 
@@ -470,19 +470,19 @@ module Phaser {
             {
                 if (this.height < window.innerHeight && this.incorrectOrientation == false)
                 {
-                    this._game.stage.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
+                    this.game.stage.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
                 }
                 else
                 {
-                    this._game.stage.canvas.style.marginTop = '0px';
+                    this.game.stage.canvas.style.marginTop = '0px';
                 }
             }
 
-            this._game.stage.getOffset(this._game.stage.canvas);
+            this.game.stage.getOffset(this.game.stage.canvas);
 
             this.aspectRatio = this.width / this.height;
-            this.scaleFactor.x = this._game.stage.width / this.width;
-            this.scaleFactor.y = this._game.stage.height / this.height;
+            this.scaleFactor.x = this.game.stage.width / this.width;
+            this.scaleFactor.y = this.game.stage.height / this.height;
 
         }
 
@@ -495,10 +495,10 @@ module Phaser {
 
         private setShowAll() {
 
-            var multiplier = Math.min((window.innerHeight / this._game.stage.height), (window.innerWidth / this._game.stage.width));
+            var multiplier = Math.min((window.innerHeight / this.game.stage.height), (window.innerWidth / this.game.stage.width));
 
-            this.width = Math.round(this._game.stage.width * multiplier);
-            this.height = Math.round(this._game.stage.height * multiplier);
+            this.width = Math.round(this.game.stage.width * multiplier);
+            this.height = Math.round(this.game.stage.height * multiplier);
 
         }
 

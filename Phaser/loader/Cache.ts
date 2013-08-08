@@ -16,7 +16,7 @@ module Phaser {
          */
         constructor(game: Game) {
 
-            this._game = game;
+            this.game = game;
 
             this._canvases = {};
             this._images = {};
@@ -26,9 +26,9 @@ module Phaser {
         }
 
         /**
-         * Local private reference to game.
+         * Local reference to Game.
          */
-        private _game: Game;
+        public game: Game;
 
         /**
          * Canvas key-value container.
@@ -78,7 +78,7 @@ module Phaser {
         public addSpriteSheet(key: string, url: string, data, frameWidth: number, frameHeight: number, frameMax: number) {
 
             this._images[key] = { url: url, data: data, spriteSheet: true, frameWidth: frameWidth, frameHeight: frameHeight };
-            this._images[key].frameData = AnimationLoader.parseSpriteSheet(this._game, key, frameWidth, frameHeight, frameMax);
+            this._images[key].frameData = AnimationLoader.parseSpriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
 
         }
 
@@ -95,11 +95,11 @@ module Phaser {
 
             if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
             {
-                this._images[key].frameData = AnimationLoader.parseJSONData(this._game, atlasData);
+                this._images[key].frameData = AnimationLoader.parseJSONData(this.game, atlasData);
             }
             else if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
             {
-                this._images[key].frameData = AnimationLoader.parseXMLData(this._game, atlasData, format);
+                this._images[key].frameData = AnimationLoader.parseXMLData(this.game, atlasData, format);
             }
 
         }
@@ -124,7 +124,7 @@ module Phaser {
          */
         public addSound(key: string, url: string, data, webAudio: bool = true, audioTag: bool = false) {
 
-            var locked: bool = this._game.sound.touchLocked;
+            var locked: bool = this.game.sound.touchLocked;
             var decoded: bool = false;
 
             if (audioTag) {

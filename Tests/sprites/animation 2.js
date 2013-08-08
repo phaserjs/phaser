@@ -1,10 +1,9 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
+    function preload() {
         //  Using Phasers asset loader we load up a PNG from the assets folder
         game.load.spritesheet('monster', 'assets/sprites/metalslug_monster39x40.png', 39, 40);
-        game.load.start();
     }
     var monster;
     function create() {

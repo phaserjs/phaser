@@ -1,15 +1,15 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
     // Group contains items.
     var items: Phaser.Group;
 
-    function init() {
+    function preload() {
         game.load.spritesheet('item', 'assets/buttons/number-buttons-90x90.png', 90, 90);
         game.load.image('rect', 'assets/tests/200x100corners.png');
         game.load.image('rect2', 'assets/tests/200x100corners2.png');
-        game.load.start();
+        
     }
     function create() {
         // Create item container group.

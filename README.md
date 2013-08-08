@@ -17,6 +17,12 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
 "Being negative is not how we make progress" - Larry Page, Google
 
+Known Issues
+------------
+
+* Input detection on Sprites/Buttons doesn't work if the CAMERA is rotated or scaled.
+
+
 Latest Update
 -------------
 
@@ -25,7 +31,7 @@ TODO:
 * Inject game into a <div>
 * Add ability to create extra <div>s within the game container, layered above/below the canvas
 * Rename init to preload and call start automatically
-* Poll the Input handlers less frequently (every other frame?)
+* Allow camera to directly render to the stage rather than its hidden (maybe does this by default? or have under Mobile Optimisations list)
 
 
 
@@ -158,7 +164,8 @@ V1.0.0
 * Fixed interesting Firefox issue when an audio track ended it fired another 'canplaythrough' event, confusing the Loader.
 * Added the new PluginManager. Moved all the Camera FX over to plugins. Everything will be a plugin from now on.
 * Added Sprite.transform.centerOn(x,y) to quickly center a sprite on a coordinate without messing with the sprite origin and regardless of rotation.
-
+* Added Input.pollRate - this lets you limit how often Pointer events are handled (0 = every frame, 1 = every other frame, etc)
+* Renamed the 'init' function to 'preload' and now call load.start automatically.
 
 V0.9.6
 

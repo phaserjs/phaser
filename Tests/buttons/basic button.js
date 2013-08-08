@@ -1,11 +1,10 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Phaser/ui/Button.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
+    function preload() {
         game.load.image('beast', 'assets/pics/shadow_of_the_beast2_karamoon.png');
         game.load.spritesheet('button', 'assets/buttons/button_sprite_sheet.png', 193, 71);
-        game.load.start();
     }
     image:
 Phaser.Sprite

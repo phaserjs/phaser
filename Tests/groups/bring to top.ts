@@ -1,11 +1,11 @@
 (function() {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, null, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
 
     var container: Phaser.Group;
 
-    function init() {
+    function preload() {
         game.load.spritesheet('button', 'assets/buttons/number-buttons.png', 160, 160);
-        game.load.start();
+        
     }
     function create() {
         // Container for sorting the buttons, which we'll use to make buttons

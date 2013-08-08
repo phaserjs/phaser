@@ -1,9 +1,8 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
+    function preload() {
         game.load.image('atari', 'assets/sprites/atari130xe.png');
-        game.load.start();
     }
     var atari;
     function create() {

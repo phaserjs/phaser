@@ -1,10 +1,9 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Phaser/gameobjects/ScrollZone.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
+    function preload() {
         game.load.image('starray', 'assets/pics/auto_scroll_landscape.png');
-        game.load.start();
     }
     function create() {
         var zone = game.add.scrollZone('starray');

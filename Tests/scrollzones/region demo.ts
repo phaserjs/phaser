@@ -3,13 +3,13 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
 
-    function init() {
+    function preload() {
 
         game.load.image('angelDawn', 'assets/pics/game14_angel_dawn.png');
 
-        game.load.start();
+        
 
     }
 

@@ -2,17 +2,17 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 320, 400, init, create);
+    var game = new Phaser.Game(this, 'game', 320, 400, preload, create);
 
     var emitter: Phaser.ArcadeEmitter;
 
-    function init() {
+    function preload() {
 
         game.load.image('backdrop1', 'assets/pics/atari_fujilogo.png');
         game.load.image('backdrop2', 'assets/pics/acryl_bladerunner.png');
         game.load.image('jet', 'assets/sprites/carrot.png');
 
-        game.load.start();
+        
 
         //  This can help a lot on crappy old Android phones :)
         //game.framerate = 30;

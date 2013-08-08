@@ -19,17 +19,17 @@ module Phaser {
         */
         constructor(game: Game) {
 
-            this._game = game;
+            this.game = game;
 
         }
 
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         * @property _game
         * @type {Game}
         * @private
         **/
-        private _game: Game;
+        public game: Game;
 
         private _p1: Pointer;
         private _p2: Pointer;
@@ -45,16 +45,16 @@ module Phaser {
         public start() {
 
             //  Local references to the Phaser.Input.pointer objects
-            this._p1 = this._game.input.pointer1;
-            this._p2 = this._game.input.pointer2;
-            this._p3 = this._game.input.pointer3;
-            this._p4 = this._game.input.pointer4;
-            this._p5 = this._game.input.pointer5;
-            this._p6 = this._game.input.pointer6;
-            this._p7 = this._game.input.pointer7;
-            this._p8 = this._game.input.pointer8;
-            this._p9 = this._game.input.pointer9;
-            this._p10 = this._game.input.pointer10;
+            this._p1 = this.game.input.pointer1;
+            this._p2 = this.game.input.pointer2;
+            this._p3 = this.game.input.pointer3;
+            this._p4 = this.game.input.pointer4;
+            this._p5 = this.game.input.pointer5;
+            this._p6 = this.game.input.pointer6;
+            this._p7 = this.game.input.pointer7;
+            this._p8 = this.game.input.pointer8;
+            this._p9 = this.game.input.pointer9;
+            this._p10 = this.game.input.pointer10;
 
         }
 

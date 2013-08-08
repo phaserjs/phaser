@@ -1,9 +1,9 @@
 (function() {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
-    function init() {
+    function preload() {
         game.load.spritesheet('rect', 'assets/buttons/number-buttons-90x90.png', 90, 90);
-        game.load.start();
+        
     }
     function create() {
         var rect: Phaser.Sprite,

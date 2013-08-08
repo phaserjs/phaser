@@ -1,12 +1,12 @@
 (function() {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
     var rotationSrv: Phaser.Point,
         angle: Number = 0;
 
-    function init() {
+    function preload() {
         game.load.spritesheet('x', 'assets/sprites/x.png', 220, 160);
-        game.load.start();
+        
     }
     function create() {
         // Create 6 sprites rotating around the center at the beginning.

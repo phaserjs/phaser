@@ -1,12 +1,11 @@
 /// <reference path="../../Phaser/tilemap/Tilemap.ts" />
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
+    function preload() {
         game.load.text('platform', 'assets/maps/mapdraw.json');
         game.load.image('tiles', 'assets/tiles/platformer_tiles.png');
         game.load.image('carrot', 'assets/sprites/carrot.png');
-        game.load.start();
     }
     var map;
     var emitter;

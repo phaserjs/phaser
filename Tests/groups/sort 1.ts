@@ -1,13 +1,13 @@
 (function() {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
 
     var xTop: Phaser.Group,
         yTop: Phaser.Group,
         zTop: Phaser.Group;
 
-    function init() {
+    function preload() {
         game.load.image('cell', 'assets/sprites/diamond.png');
-        game.load.start();
+        
     }
     function create() {
         // Create 3 groups which will have different sort "index".

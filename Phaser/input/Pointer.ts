@@ -38,7 +38,7 @@ module Phaser {
         private _highestInputPriorityID: number;
 
         /**
-        * Local private reference to game.
+        * Local reference to Game.
         * @property game
         * @type {Phaser.Game}
         * @private
@@ -418,6 +418,11 @@ module Phaser {
         * @param {Any} event
         */
         public move(event): Pointer {
+
+            if (this.game.input.pollLocked)
+            {
+                return;
+            }
 
             if (event.button)
             {

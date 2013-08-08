@@ -1,10 +1,9 @@
 /// <reference path="../../Phaser/Game.ts" />
 /// <reference path="../../Plugins/CameraFX/Scanlines.ts" />
 (function () {
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
-    function init() {
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
+    function preload() {
         game.load.image('backdrop', 'assets/pics/ninja-masters2.png');
-        game.load.start();
     }
     var scanlines;
     function create() {

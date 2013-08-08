@@ -2,17 +2,17 @@
 
 (function () {
 
-    var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
+    var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update);
 
     var leftEmitter: Phaser.ArcadeEmitter;
     var rightEmitter: Phaser.ArcadeEmitter;
 
-    function init() {
+    function preload() {
 
         game.load.image('ball1', 'assets/sprites/aqua_ball.png');
         game.load.image('ball2', 'assets/sprites/yellow_ball.png');
 
-        game.load.start();
+        
 
     }
 
