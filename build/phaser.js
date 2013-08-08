@@ -10736,6 +10736,11 @@ var Phaser;
                                 this._chainedTweens[i].start();
                             }
                             return false;
+                        } else {
+                            //  YoYo and Loop are both on
+                            this._yoyoCount = 0;
+                            this.reverse();
+                            return true;
                         }
                     }
                 }
@@ -18834,13 +18839,11 @@ var Phaser;
                 if(value == true && this._paused == false) {
                     this._paused = true;
                     this.onPause.dispatch();
-                    //  Hook to the above
                     this.sound.pauseAll();
                     this._raf.callback = this.pausedLoop;
                 } else if(value == false && this._paused == true) {
                     this._paused = false;
                     this.onResume.dispatch();
-                    //  Hook to the above
                     this.input.reset();
                     this.sound.resumeAll();
                     if(this.isRunning == false) {

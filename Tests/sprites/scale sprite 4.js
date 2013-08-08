@@ -14,8 +14,8 @@
         bunny.transform.scale.setTo(0.5, 0.5);
         //  This time let's scale the sprite by a looped tween
         game.add.tween(bunny.transform.scale).to({
-            x: 2,
-            y: 2
+            x: 1.5,
+            y: 1.5
         }, 2000, Phaser.Easing.Elastic.Out, true, 0, true, true);
     }
 })();

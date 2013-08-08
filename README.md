@@ -28,21 +28,19 @@ Future Plans
 * Ability to layer another DOM object and have it controlled by the game somehow. Can then do stacked canvas effects.
 * Add ability to create extra <div>s within the game container, layered above/below the canvas
 * Basic Window UI component (maybe a propogating Group?)
+* Add clip support + shape options to Texture Component.
 
 ToDo before release
 -------------------
 
-* Hook sound/input to the pause/resume signals
-* Fix bug in Tween yoyo + loop combo
-* Allow camera to directly render to the stage rather than hidden ctx (maybe does this by default? or have under Mobile Optimisations list)
+* Tilemap.render - move layers length to var
+* Tilemap.destroy needs doing
 * Investigate bug re: tilemap collision and animation frames
-* Add clip support + shape options to Texture Component.
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
+* Allow camera to directly render to the stage rather than hidden ctx (maybe does this by default? or have under Mobile Optimisations list)
 * Sprite collision events
 * Check bounds/edge points when sprite is only 1x1 sized :)
 * QuadTree.physics.checkHullIntersection
-* Tilemap.render - move layers length to var
-* Tilemap.destroy needs doing
 * Sprite.transform.bottomRight/Left doesn't seem to take origin into account
 * Stage lost to mute
 * Bitmap Font support

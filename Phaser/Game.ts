@@ -685,7 +685,6 @@ module Phaser {
             {
                 this._paused = true;
                 this.onPause.dispatch();
-                //  Hook to the above
                 this.sound.pauseAll();
                 this._raf.callback = this.pausedLoop;
             }
@@ -693,7 +692,6 @@ module Phaser {
             {
                 this._paused = false;
                 this.onResume.dispatch();
-                //  Hook to the above
                 this.input.reset();
                 this.sound.resumeAll();
 

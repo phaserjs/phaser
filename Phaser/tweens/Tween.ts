@@ -406,7 +406,7 @@ module Phaser {
                         //  We've yoyo'd once already, quit?
 	                    if (this._loop == false)
 	                    {
-    	                    this.onComplete.dispatch(this._object);
+	                        this.onComplete.dispatch(this._object);
 
 	                        for (var i = 0; i < this._chainedTweens.length; i++)
 	                        {
@@ -414,6 +414,13 @@ module Phaser {
 	                        }
 
 	                        return false;
+	                    }
+	                    else
+	                    {
+                            //  YoYo and Loop are both on
+	                        this._yoyoCount = 0;
+    	                    this.reverse();
+	                        return true;
 	                    }
 	                }
 	            }
