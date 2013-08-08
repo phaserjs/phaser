@@ -54,7 +54,7 @@ module Phaser {
          * Will this region be rendered? (default to true)
          * @type {boolean}
          */
-        public visible: bool = true;
+        public visible: boolean = true;
 
         /**
          * Region scrolling speed.

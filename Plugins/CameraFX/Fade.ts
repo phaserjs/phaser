@@ -33,7 +33,7 @@ module Phaser.Plugins.CameraFX {
         * @param	OnComplete	An optional function you want to run when the flash finishes. Set to null for no callback.
         * @param	Force		Force an already running flash effect to reset.
         */
-        public start(color: number = 0x000000, duration: number = 1, onComplete = null, force: bool = false) {
+        public start(color: number = 0x000000, duration: number = 1, onComplete = null, force: boolean = false) {
 
             if (force === false && this._fxFadeAlpha > 0)
             {

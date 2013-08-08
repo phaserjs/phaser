@@ -75,12 +75,12 @@ module Phaser {
         /**
          * 
          */
-        public alive: bool;
+        public alive: boolean;
 
         /**
          * 
          */
-        public active: bool;
+        public active: boolean;
 
         /**
          * The minimum possible velocity of a particle.
@@ -120,7 +120,7 @@ module Phaser {
          * Determines whether the emitter is currently emitting particles.
          * It is totally safe to directly toggle this.
          */
-        public on: bool;
+        public on: boolean;
 
         /**
          * How often a particle is emitted (if emitter is started with Explode == false).
@@ -152,7 +152,7 @@ module Phaser {
         /**
          * Internal helper for the style of particle emission (all at once, or one at a time).
          */
-        private _explode: bool;
+        private _explode: boolean;
 
         /**
          * Internal helper for deciding when to launch particles or kill them.
@@ -191,7 +191,7 @@ module Phaser {
          *
          * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
          */
-        public makeParticles(graphics, quantity: number = 50, multiple: bool = false, collide: number = 0): ArcadeEmitter {
+        public makeParticles(graphics, quantity: number = 50, multiple: boolean = false, collide: number = 0): ArcadeEmitter {
 
             this.maxSize = quantity;
 
@@ -338,7 +338,7 @@ module Phaser {
          * @param frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
          * @param quantity {number} How many particles to launch. 0 = "all of the particles".
          */
-        public start(explode: bool = true, lifespan: number = 0, frequency: number = 0.1, quantity: number = 0) {
+        public start(explode: boolean = true, lifespan: number = 0, frequency: number = 0.1, quantity: number = 0) {
 
             this.revive();
 

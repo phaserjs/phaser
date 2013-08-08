@@ -24,7 +24,7 @@ module Phaser {
          * @param [y] {number} the initial y position of the sprite.
          * @param [key] {string} Key of the graphic you want to load for this sprite.
          */
-        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, frame? = null) {
+        constructor(game: Game, x: number = 0, y: number = 0, key: string = null, frame = null) {
 
             this.game = game;
             this.type = Phaser.Types.SPRITE;
@@ -106,27 +106,27 @@ module Phaser {
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.
          */
-        public exists: bool;
+        public exists: boolean;
 
         /**
          * Controls if <code>update()</code> is automatically called by the core game loop.
          */
-        public active: bool;
+        public active: boolean;
 
         /**
          * Controls if this Sprite is rendered or skipped during the core game loop.
          */
-        public visible: bool;
+        public visible: boolean;
 
         /**
          * A useful state for many game objects. Kill and revive both flip this switch.
          */
-        public alive: bool;
+        public alive: boolean;
 
         /**
          * Is the Sprite out of the world bounds or not?
          */
-        public outOfBounds: bool;
+        public outOfBounds: boolean;
 
         /**
          * The action to be taken when the sprite is fully out of the world bounds
@@ -185,7 +185,7 @@ module Phaser {
         /**
          * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
          */
-        public modified: bool = false;
+        public modified: boolean = false;
 
         /**
          * x value of the object.
@@ -419,7 +419,7 @@ module Phaser {
          * like to animate an effect or whatever, you should override this,
          * setting only alive to false, and leaving exists true.
          */
-        public kill(removeFromGroup:bool = false) {
+        public kill(removeFromGroup:boolean = false) {
 
             this.alive = false;
             this.exists = false;

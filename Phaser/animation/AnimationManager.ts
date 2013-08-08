@@ -63,7 +63,7 @@ module Phaser.Components {
          * animation then set this to false, otherwise leave it set to true.
          * @type {boolean}
          */
-        public autoUpdateBounds: bool = true;
+        public autoUpdateBounds: boolean = true;
 
         /**
          * Keeps track of the current animation being played.
@@ -96,7 +96,7 @@ module Phaser.Components {
          * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
          * @return {Animation} The Animation that was created
          */
-        public add(name: string, frames: any[] = null, frameRate: number = 60, loop: bool = false, useNumericIndex: bool = true): Animation {
+        public add(name: string, frames: any[] = null, frameRate: number = 60, loop: boolean = false, useNumericIndex: boolean = true): Animation {
 
             if (this._frameData == null)
             {
@@ -144,7 +144,7 @@ module Phaser.Components {
          * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
          * @return {boolean} True if they're valid, otherwise return false.
          */
-        private validateFrames(frames: any[], useNumericIndex: bool): bool {
+        private validateFrames(frames: any[], useNumericIndex: boolean): boolean {
 
             for (var i = 0; i < frames.length; i++)
             {
@@ -174,7 +174,7 @@ module Phaser.Components {
          * @param frameRate {number} FrameRate you want to specify instead of using default.
          * @param loop {boolean} Whether or not the animation is looped or just plays once.
          */
-        public play(name: string, frameRate?: number = null, loop?: bool): Animation {
+        public play(name: string, frameRate: number = null, loop: boolean = false): Animation {
 
             if (this._anims[name])
             {

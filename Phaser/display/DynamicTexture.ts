@@ -188,7 +188,7 @@ module Phaser {
         /**
          *
          */
-        public pasteImage(key: string, frame?: number = -1, destX?: number = 0, destY?: number = 0, destWidth?: number = null, destHeight?: number = null) {
+        public pasteImage(key: string, frame: number = -1, destX: number = 0, destY: number = 0, destWidth: number = null, destHeight: number = null) {
 
             var texture = null;
             var frameData;
@@ -243,7 +243,7 @@ module Phaser {
 
         }
 
-        //  TODO - Add in support for: alphaBitmapData: BitmapData = null, alphaPoint: Point = null, mergeAlpha: bool = false
+        //  TODO - Add in support for: alphaBitmapData: BitmapData = null, alphaPoint: Point = null, mergeAlpha: boolean = false
         /**
          * Copy pixel from another DynamicTexture to this texture.
          * @param sourceTexture {DynamicTexture} Source texture object.
@@ -303,7 +303,7 @@ module Phaser {
         * @param x {number} The X coordinate to render on the stage to (given in screen coordinates, not world)
         * @param y {number} The Y coordinate to render on the stage to (given in screen coordinates, not world)
         */
-        public render(x?: number = 0, y?: number = 0) {
+        public render(x: number = 0, y: number = 0) {
 
             if (this.globalCompositeOperation)
             {

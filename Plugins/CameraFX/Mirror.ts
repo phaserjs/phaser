@@ -36,18 +36,18 @@ module Phaser.Plugins.CameraFX {
 
         public camera: Phaser.Camera;
 
-        public flipX: bool = false;
-        public flipY: bool = true;
+        public flipX: boolean = false;
+        public flipY: boolean = true;
 
         public x: number;
         public y: number;
-        public cls: bool = false;
+        public cls: boolean = false;
 
         /**
         * This is the rectangular region to grab from the Camera used in the Mirror effect
         * It is rendered to the Stage at Mirror.x/y (note the use of Stage coordinates, not World coordinates)
         */
-        public start(x: number, y: number, region: Phaser.Rectangle, fillColor?: string = 'rgba(0, 0, 100, 0.5)') {
+        public start(x: number, y: number, region: Phaser.Rectangle, fillColor: string = 'rgba(0, 0, 100, 0.5)') {
 
             this.x = x;
             this.y = y;

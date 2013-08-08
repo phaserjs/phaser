@@ -103,11 +103,11 @@ module Phaser {
         * @return {boolean} Whether or not the objects overlap this.
         */
         /*
-        static overlaps(objectOrGroup, inScreenSpace: bool = false, camera: Camera = null): bool {
+        static overlaps(objectOrGroup, inScreenSpace: boolean = false, camera: Camera = null): boolean {
 
             if (objectOrGroup.isGroup)
             {
-                var results: bool = false;
+                var results: boolean = false;
                 var i: number = 0;
                 var members = <Group> objectOrGroup.members;
 
@@ -154,7 +154,7 @@ module Phaser {
         *
         * @return   Whether or not the point overlaps this object.
         */
-        static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): bool {
+        static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): boolean {
 
             //  if rotation == 0 then just do a rect check instead!
             if (sprite.transform.rotation == 0)
@@ -195,8 +195,8 @@ module Phaser {
         *
         * @return   Whether or not the point overlaps this object.
         */
-        static overlapsPoint(sprite: Sprite, point: Point): bool {
-            return overlapsXY(sprite, point.x, point.y);
+        static overlapsPoint(sprite: Sprite, point: Point): boolean {
+            return SpriteUtils.overlapsXY(sprite, point.x, point.y);
         }
 
         /**
@@ -206,7 +206,7 @@ module Phaser {
         *
         * @return {boolean} Whether the object is on screen or not.
         */
-        static onScreen(sprite: Sprite, camera: Camera = null): bool {
+        static onScreen(sprite: Sprite, camera: Camera = null): boolean {
 
             if (camera == null)
             {
@@ -254,7 +254,7 @@ module Phaser {
         * @param action {number} The action to take if the object hits the world bounds, either OUT_OF_BOUNDS_KILL or OUT_OF_BOUNDS_STOP
         */
         /*
-        static setBoundsFromWorld(action?: number = GameObject.OUT_OF_BOUNDS_STOP) {
+        static setBoundsFromWorld(action: number = GameObject.OUT_OF_BOUNDS_STOP) {
 
             this.setBounds(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
             this.outOfBoundsAction = action;

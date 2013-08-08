@@ -48,8 +48,8 @@ module Phaser.Physics {
         private _length: number = 0;
         private _distance: Vec2;
         private _tangent: Vec2;
-        private _separatedX: bool;
-        private _separatedY: bool;
+        private _separatedX: boolean;
+        private _separatedY: boolean;
         private _overlap: number;
         private _maxOverlap: number;
         private _obj1Velocity: number;
@@ -58,7 +58,7 @@ module Phaser.Physics {
         private _obj2NewVelocity: number;
         private _average: number;
         private _quadTree: QuadTree;
-        private _quadTreeResult: bool;
+        private _quadTreeResult: boolean;
 
         public bounds: Rectangle;
 
@@ -77,7 +77,7 @@ module Phaser.Physics {
          * The overlap bias is used when calculating hull overlap before separation - change it if you have especially small or large GameObjects
          * @type {number}
          */
-        static TILE_OVERLAP: bool = false;
+        static TILE_OVERLAP: boolean = false;
 
         /**
          * @type {number}
@@ -213,7 +213,7 @@ module Phaser.Physics {
          * @param body2 The second Physics.Body to separate
          * @returns {boolean} Returns true if the bodies were separated, otherwise false.
          */
-        public separate(body1: Body, body2: Body): bool {
+        public separate(body1: Body, body2: Body): boolean {
 
             this._separatedX = this.separateBodyX(body1, body2);
             this._separatedY = this.separateBodyY(body1, body2);
@@ -222,7 +222,7 @@ module Phaser.Physics {
 
         }
 
-        public checkHullIntersection(body1: Body, body2:Body): bool {
+        public checkHullIntersection(body1: Body, body2:Body): boolean {
             return ((body1.hullX + body1.hullWidth > body2.hullX) && (body1.hullX < body2.hullX + body2.hullWidth) && (body1.hullY + body1.hullHeight > body2.hullY) && (body1.hullY < body2.hullY + body2.hullHeight));
         }
 
@@ -232,7 +232,7 @@ module Phaser.Physics {
          * @param object2 The second GameObject to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
          */
-        public separateBodyX(body1: Body, body2: Body): bool {
+        public separateBodyX(body1: Body, body2: Body): boolean {
 
             //  Can't separate two disabled or static objects
             if ((body1.type == Types.BODY_DISABLED || body1.type == Types.BODY_STATIC) && (body2.type == Types.BODY_DISABLED || body2.type == Types.BODY_STATIC))
@@ -338,7 +338,7 @@ module Phaser.Physics {
          * @param object2 The second GameObject to separate
          * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
          */
-        public separateBodyY(body1: Body, body2: Body): bool {
+        public separateBodyY(body1: Body, body2: Body): boolean {
 
             //  Can't separate two immovable objects
             if ((body1.type == Types.BODY_DISABLED || body1.type == Types.BODY_STATIC) && (body2.type == Types.BODY_DISABLED || body2.type == Types.BODY_STATIC))
@@ -725,7 +725,7 @@ module Phaser.Physics {
          * @param context The context in which the callbacks will be called
          * @returns {boolean} true if the objects overlap, otherwise false.
          */
-        public overlap(object1 = null, object2 = null, notifyCallback = null, processCallback = null, context = null): bool {
+        public overlap(object1 = null, object2 = null, notifyCallback = null, processCallback = null, context = null): boolean {
 
             /*
             if (object1 == null)
@@ -770,10 +770,10 @@ module Phaser.Physics {
          * @param tile The Tile to separate
          * @returns {boolean} Whether the objects in fact touched and were separated
          */
-        public separateTile(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, collideUp: bool, collideDown: bool, separateX: bool, separateY: bool): bool {
+        public separateTile(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: boolean, collideRight: boolean, collideUp: boolean, collideDown: boolean, separateX: boolean, separateY: boolean): boolean {
 
-            //var separatedX: bool = this.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
-            //var separatedY: bool = this.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
+            //var separatedX: boolean = this.separateTileX(object, x, y, width, height, mass, collideLeft, collideRight, separateX);
+            //var separatedY: boolean = this.separateTileY(object, x, y, width, height, mass, collideUp, collideDown, separateY);
 
             //return separatedX || separatedY;
 
@@ -788,7 +788,7 @@ module Phaser.Physics {
          * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
          */
         /*
-        public separateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+        public separateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: boolean, collideRight: boolean, separate: boolean): boolean {
 
             //  Can't separate two immovable objects (tiles are always immovable)
             if (object.immovable)
@@ -872,7 +872,7 @@ module Phaser.Physics {
          * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
          */
         /*
-        public separateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+        public separateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: boolean, collideDown: boolean, separate: boolean): boolean {
 
             //  Can't separate two immovable objects (tiles are always immovable)
             if (object.immovable)
@@ -953,7 +953,7 @@ module Phaser.Physics {
          * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
          */
         /*
-        public static NEWseparateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: bool, collideRight: bool, separate: bool): bool {
+        public static NEWseparateTileX(object:Sprite, x: number, y: number, width: number, height: number, mass: number, collideLeft: boolean, collideRight: boolean, separate: boolean): boolean {
 
             //  Can't separate two immovable objects (tiles are always immovable)
             if (object.immovable)
@@ -1036,7 +1036,7 @@ module Phaser.Physics {
          * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
          */
         /*
-        public NEWseparateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: bool, collideDown: bool, separate: bool): bool {
+        public NEWseparateTileY(object: Sprite, x: number, y: number, width: number, height: number, mass: number, collideUp: boolean, collideDown: boolean, separate: boolean): boolean {
 
             //  Can't separate two immovable objects (tiles are always immovable)
             if (object.immovable)

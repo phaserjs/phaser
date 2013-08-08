@@ -16,7 +16,7 @@ module Phaser {
          * @param [volume] {number} volume of this sound when playing.
          * @param [loop] {boolean} loop this sound when playing? (Default to false)
          */
-        constructor(game: Phaser.Game, key: string, volume?: number = 1, loop?: bool = false) {
+        constructor(game: Phaser.Game, key: string, volume: number = 1, loop: boolean = false) {
 
             this.game = game;
 
@@ -116,27 +116,27 @@ module Phaser {
         private _sound;
 
         private _muteVolume: number;
-        private _muted: bool = false;
+        private _muted: boolean = false;
         private _tempPosition: number;
         private _tempVolume: number;
-        private _tempLoop: bool;
+        private _tempLoop: boolean;
         private _tempMarker: string;
 
-        public usingWebAudio: bool = false;
-        public usingAudioTag: bool = false;
+        public usingWebAudio: boolean = false;
+        public usingAudioTag: boolean = false;
 
         public name: string = '';
 
-        autoplay: bool = false;
+        autoplay: boolean = false;
         totalDuration: number = 0;
         startTime: number = 0;
         currentTime: number = 0;
         duration: number = 0;
         stopTime: number = 0;
         position: number;
-        paused: bool = false;
-        loop: bool = false;
-        isPlaying: bool = false;
+        paused: boolean = false;
+        loop: boolean = false;
+        isPlaying: boolean = false;
         key: string;
         markers;
         currentMarker: string = '';
@@ -151,17 +151,17 @@ module Phaser {
         public onMute: Phaser.Signal;
         public onMarkerComplete: Phaser.Signal;
 
-        public pendingPlayback: bool = false;
+        public pendingPlayback: boolean = false;
 
-        public get isDecoding(): bool {
+        public get isDecoding(): boolean {
             return this.game.cache.getSound(this.key).isDecoding;
         }
 
-        public get isDecoded(): bool {
+        public get isDecoded(): boolean {
             return this.game.cache.isSoundDecoded(this.key);
         }
 
-        public addMarker(name: string, start: number, stop: number, volume: number = 1, loop: bool = false) {
+        public addMarker(name: string, start: number, stop: number, volume: number = 1, loop: boolean = false) {
             this.markers[name] = { name: name, start: start, stop: stop, volume: volume, duration: stop - start, loop: loop };
         }
 
@@ -230,7 +230,7 @@ module Phaser {
 
         }
 
-        public override: bool = false;
+        public override: boolean = false;
 
         /**
          * Play this sound, or a marked section of it.
@@ -239,7 +239,7 @@ module Phaser {
          * @param [loop] {boolean} loop when it finished playing? (Default to false)
          * @return {Sound} The playing sound object.
          */
-        public play(marker: string = '', position?: number = 0, volume?: number = 1, loop?: bool = false, forceRestart: bool = false) {
+        public play(marker: string = '', position: number = 0, volume: number = 1, loop: boolean = false, forceRestart: boolean = false) {
 
             //console.log('play', marker, 'current is', this.currentMarker);
 
@@ -409,7 +409,7 @@ module Phaser {
 
         }
 
-        public restart(marker: string = '', position?: number = 0, volume?: number = 1, loop?: bool = false) {
+        public restart(marker: string = '', position: number = 0, volume: number = 1, loop: boolean = false) {
             this.play(marker, position, volume, loop, true);
         }
 
@@ -491,11 +491,11 @@ module Phaser {
         /**
          * Mute sounds.
          */
-        public get mute(): bool {
+        public get mute(): boolean {
             return this._muted;
         }
 
-        public set mute(value: bool) {
+        public set mute(value: boolean) {
 
             if (value)
             {

@@ -42,17 +42,17 @@ module Phaser {
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.
          */
-        exists: bool;
+        exists: boolean;
 
         /**
          * Controls if <code>update()</code> is automatically called by the core game loop.
          */
-        active: bool;
+        active: boolean;
 
         /**
          * Controls if this is rendered or skipped during the core game loop.
          */
-        visible: bool;
+        visible: boolean;
 
         /**
          * The animation manager component

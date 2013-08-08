@@ -40,7 +40,7 @@ module Phaser.Components {
          * If enabled the Input component will be updated by the parent Sprite
          * @type {Boolean}
          */
-        public enabled: bool;
+        public enabled: boolean;
 
         /**
          * The PriorityID controls which Sprite receives an Input event first if they should overlap.
@@ -55,17 +55,17 @@ module Phaser.Components {
         private _dragPoint: Point;
         private _draggedPointerID: number;
         public dragOffset: Point;
-        public isDragged: bool = false;
-        public dragFromCenter: bool;
-        public dragPixelPerfect: bool = false;
+        public isDragged: boolean = false;
+        public dragFromCenter: boolean;
+        public dragPixelPerfect: boolean = false;
         public dragPixelPerfectAlpha: number;
 
-        public allowHorizontalDrag: bool = true;
-        public allowVerticalDrag: bool = true;
-        public bringToTop: bool = false;
+        public allowHorizontalDrag: boolean = true;
+        public allowVerticalDrag: boolean = true;
+        public bringToTop: boolean = false;
 
-        public snapOnDrag: bool = false;
-        public snapOnRelease: bool = false;
+        public snapOnDrag: boolean = false;
+        public snapOnRelease: boolean = false;
         public snapOffset: Point;
         public snapX: number = 0;
         public snapY: number = 0;
@@ -75,7 +75,7 @@ module Phaser.Components {
 		 * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
 		 * @default false
 		 */
-        public draggable: bool = false;
+        public draggable: boolean = false;
 
         /**
 		 * A region of the game world within which the sprite is restricted during drag
@@ -94,21 +94,21 @@ module Phaser.Components {
          * If checkBody is set to true it will monitor the bounds of the physics body.
          * @type {Boolean}
          */
-        public checkBody: bool;
+        public checkBody: boolean;
 
         /**
          * Turn the mouse pointer into a hand image by temporarily setting the CSS style of the Game canvas
          * on Input over. Only works on desktop browsers or browsers with a visible input pointer.
          * @type {Boolean}
          */
-        public useHandCursor: bool;
+        public useHandCursor: boolean;
 
         /**
          * If this object is set to consume the pointer event then it will stop all propogation from this object on.
          * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
          * @type {Boolean}
          */
-        public consumePointerEvent: bool = false;
+        public consumePointerEvent: boolean = false;
 
         /**
          * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
@@ -133,7 +133,7 @@ module Phaser.Components {
         * @property isDown
         * @type {Boolean}
         **/
-        public pointerDown(pointer: number = 0): bool {
+        public pointerDown(pointer: number = 0): boolean {
             return this._pointerData[pointer].isDown;
         }
 
@@ -142,7 +142,7 @@ module Phaser.Components {
         * @property isUp
         * @type {Boolean}
         **/
-        public pointerUp(pointer: number = 0): bool {
+        public pointerUp(pointer: number = 0): boolean {
             return this._pointerData[pointer].isUp;
         }
 
@@ -151,7 +151,7 @@ module Phaser.Components {
         * @property timeDown
         * @type {Number}
         **/
-        public pointerTimeDown(pointer: number = 0): bool {
+        public pointerTimeDown(pointer: number = 0): boolean {
             return this._pointerData[pointer].timeDown;
         }
 
@@ -160,7 +160,7 @@ module Phaser.Components {
         * @property timeUp
         * @type {Number}
         **/
-        public pointerTimeUp(pointer: number = 0): bool {
+        public pointerTimeUp(pointer: number = 0): boolean {
             return this._pointerData[pointer].timeUp;
         }
 
@@ -169,7 +169,7 @@ module Phaser.Components {
         * @property isOver
         * @type {Boolean}
         **/
-        public pointerOver(pointer: number = 0): bool {
+        public pointerOver(pointer: number = 0): boolean {
             return this._pointerData[pointer].isOver;
         }
 
@@ -178,7 +178,7 @@ module Phaser.Components {
         * @property isOut
         * @type {Boolean}
         **/
-        public pointerOut(pointer: number = 0): bool {
+        public pointerOut(pointer: number = 0): boolean {
             return this._pointerData[pointer].isOut;
         }
 
@@ -187,7 +187,7 @@ module Phaser.Components {
         * @property timeDown
         * @type {Number}
         **/
-        public pointerTimeOver(pointer: number = 0): bool {
+        public pointerTimeOver(pointer: number = 0): boolean {
             return this._pointerData[pointer].timeOver;
         }
 
@@ -196,7 +196,7 @@ module Phaser.Components {
         * @property timeUp
         * @type {Number}
         **/
-        public pointerTimeOut(pointer: number = 0): bool {
+        public pointerTimeOut(pointer: number = 0): boolean {
             return this._pointerData[pointer].timeOut;
         }
 
@@ -204,11 +204,11 @@ module Phaser.Components {
 		 * Is this sprite being dragged by the mouse or not?
 		 * @default false
 		 */
-        public pointerDragged(pointer: number = 0): bool {
+        public pointerDragged(pointer: number = 0): boolean {
             return this._pointerData[pointer].isDragged;
         }
 
-        public start(priority: number = 0, checkBody?: bool = false, useHandCursor?: bool = false): Phaser.Sprite {
+        public start(priority: number = 0, checkBody: boolean = false, useHandCursor: boolean = false): Phaser.Sprite {
 
             //  Turning on
             if (this.enabled == false)
@@ -289,7 +289,7 @@ module Phaser.Components {
         /**
          * Checks if the given pointer is over this Sprite. All checks are done in world coordinates.
          */
-        public checkPointerOver(pointer: Phaser.Pointer): bool {
+        public checkPointerOver(pointer: Phaser.Pointer): boolean {
 
             if (this.enabled == false || this._parent.visible == false)
             {
@@ -305,7 +305,7 @@ module Phaser.Components {
         /**
          * Update
          */
-        public update(pointer: Phaser.Pointer): bool {
+        public update(pointer: Phaser.Pointer): boolean {
 
             if (this.enabled == false || this._parent.visible == false)
             {
@@ -369,7 +369,7 @@ module Phaser.Components {
 
         }
 
-        public _touchedHandler(pointer: Pointer): bool {
+        public _touchedHandler(pointer: Pointer): boolean {
 
             if (this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true)
             {
@@ -438,7 +438,7 @@ module Phaser.Components {
         /**
 		 * Updates the Pointer drag on this Sprite.
 		 */
-        private updateDrag(pointer: Pointer): bool {
+        private updateDrag(pointer: Pointer): boolean {
 
             if (pointer.isUp)
             {
@@ -480,7 +480,7 @@ module Phaser.Components {
          * @param delay The time below which the pointer is considered as just over.
          * @returns {boolean}
          */
-        public justOver(pointer: number = 0, delay?: number = 500): bool {
+        public justOver(pointer: number = 0, delay: number = 500): boolean {
             return (this._pointerData[pointer].isOver && this.overDuration(pointer) < delay);
         }
 
@@ -489,7 +489,7 @@ module Phaser.Components {
          * @param delay The time below which the pointer is considered as just out.
          * @returns {boolean}
          */
-        public justOut(pointer: number = 0, delay?: number = 500): bool {
+        public justOut(pointer: number = 0, delay: number = 500): boolean {
             return (this._pointerData[pointer].isOut && (this.game.time.now - this._pointerData[pointer].timeOut < delay));
         }
 
@@ -498,7 +498,7 @@ module Phaser.Components {
          * @param delay The time below which the pointer is considered as just over.
          * @returns {boolean}
          */
-        public justPressed(pointer: number = 0, delay?: number = 500): bool {
+        public justPressed(pointer: number = 0, delay: number = 500): boolean {
             return (this._pointerData[pointer].isDown && this.downDuration(pointer) < delay);
         }
 
@@ -507,7 +507,7 @@ module Phaser.Components {
          * @param delay The time below which the pointer is considered as just out.
          * @returns {boolean}
          */
-        public justReleased(pointer: number = 0, delay?: number = 500): bool {
+        public justReleased(pointer: number = 0, delay: number = 500): boolean {
             return (this._pointerData[pointer].isUp && (this.game.time.now - this._pointerData[pointer].timeUp < delay));
         }
 
@@ -551,7 +551,7 @@ module Phaser.Components {
 		 * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
 		 * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
 		 */
-        public enableDrag(lockCenter: bool = false, bringToTop: bool = false, pixelPerfect: bool = false, alphaThreshold: number = 255, boundsRect: Rectangle = null, boundsSprite: Phaser.Sprite = null): void {
+        public enableDrag(lockCenter: boolean = false, bringToTop: boolean = false, pixelPerfect: boolean = false, alphaThreshold: number = 255, boundsRect: Rectangle = null, boundsSprite: Phaser.Sprite = null): void {
             this._dragPoint = new Point;
 
             this.draggable = true;
@@ -648,7 +648,7 @@ module Phaser.Components {
 		 * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
 		 * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
 		 */
-        public setDragLock(allowHorizontal: bool = true, allowVertical: bool = true): void {
+        public setDragLock(allowHorizontal: boolean = true, allowVertical: boolean = true): void {
             this.allowHorizontalDrag = allowHorizontal;
             this.allowVerticalDrag = allowVertical;
         }
@@ -662,7 +662,7 @@ module Phaser.Components {
 		 * @param	onDrag		If true the sprite will snap to the grid while being dragged
 		 * @param	onRelease	If true the sprite will snap to the grid when released
 		 */
-        public enableSnap(snapX: number, snapY: number, onDrag: bool = true, onRelease: bool = false): void {
+        public enableSnap(snapX: number, snapY: number, onDrag: boolean = true, onRelease: boolean = false): void {
             this.snapOnDrag = onDrag;
             this.snapOnRelease = onRelease;
             this.snapX = snapX;

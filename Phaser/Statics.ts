@@ -95,25 +95,25 @@ module Phaser {
          * Flag used to allow GameObjects to collide with a ceiling
          * @type {number}
          */
-        static CEILING: number = Types.UP;
+        static CEILING: number = Phaser.Types.UP;
 
         /**
          * Flag used to allow GameObjects to collide with a floor
          * @type {number}
          */
-        static FLOOR: number = Types.DOWN;
+        static FLOOR: number = Phaser.Types.DOWN;
 
         /**
          * Flag used to allow GameObjects to collide with a wall (same as LEFT+RIGHT)
          * @type {number}
          */
-        static WALL: number = Types.LEFT | Types.RIGHT;
+        static WALL: number = Phaser.Types.LEFT | Phaser.Types.RIGHT;
 
         /**
          * Flag used to allow GameObjects to collide on any face
          * @type {number}
          */
-        static ANY: number = Types.LEFT | Types.RIGHT | Types.UP | Types.DOWN;
+        static ANY: number = Phaser.Types.LEFT | Phaser.Types.RIGHT | Phaser.Types.UP | Phaser.Types.DOWN;
 
     }
 

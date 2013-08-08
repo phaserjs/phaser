@@ -58,7 +58,7 @@ module Phaser {
          * @param renderCallback {function} Render callback invoked when render default screen.
          * @param destroyCallback {function} Destroy callback invoked when state is destroyed.
          */
-        constructor(callbackContext, parent?: string = '', width?: number = 800, height?: number = 600, preloadCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
+        constructor(callbackContext, parent: string = '', width: number = 800, height: number = 600, preloadCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
 
             this.id = Phaser.GAMES.push(this) - 1;
 
@@ -86,19 +86,19 @@ module Phaser {
         /**
          * Game loop trigger wrapper.
          */
-        public _raf: RequestAnimationFrame;
+        public _raf: Phaser.RequestAnimationFrame;
 
         /**
          * Whether load complete loading or not.
          * @type {boolean}
          */
-        private _loadComplete: bool = false;
+        private _loadComplete: boolean = false;
 
         /**
          * Game is paused?
          * @type {boolean}
          */
-        private _paused: bool = false;
+        private _paused: boolean = false;
 
         /**
          * The state to be switched to in the next frame.
@@ -110,7 +110,7 @@ module Phaser {
          * The PluginManager for the Game
          * @type {PluginManager}
          */
-        public plugins: PluginManager;
+        public plugins: Phaser.PluginManager;
 
         /**
          * The current State object (defaults to null)
@@ -193,103 +193,103 @@ module Phaser {
          * Reference to the GameObject Factory.
          * @type {GameObjectFactory}
          */
-        public add: GameObjectFactory;
+        public add: Phaser.GameObjectFactory;
 
         /**
          * Reference to the assets cache.
          * @type {Cache}
          */
-        public cache: Cache;
+        public cache: Phaser.Cache;
 
         /**
          * Reference to the input manager
          * @type {Input}
          */
-        public input: InputManager;
+        public input: Phaser.InputManager;
 
         /**
          * Reference to the assets loader.
          * @type {Loader}
          */
-        public load: Loader;
+        public load: Phaser.Loader;
 
         /**
          * Reference to the math helper.
          * @type {GameMath}
          */
-        public math: GameMath;
+        public math: Phaser.GameMath;
 
         /**
          * Reference to the network class.
          * @type {Net}
          */
-        public net: Net;
+        public net: Phaser.Net;
 
         /**
          * Reference to the sound manager.
          * @type {SoundManager}
          */
-        public sound: SoundManager;
+        public sound: Phaser.SoundManager;
 
         /**
          * Reference to the stage.
          * @type {Stage}
          */
-        public stage: Stage;
+        public stage: Phaser.Stage;
 
         /**
          * Reference to game clock.
          * @type {Time}
          */
-        public time: TimeManager;
+        public time: Phaser.TimeManager;
 
         /**
          * Reference to the tween manager.
          * @type {TweenManager}
          */
-        public tweens: TweenManager;
+        public tweens: Phaser.TweenManager;
 
         /**
          * Reference to the world.
          * @type {World}
          */
-        public world: World;
+        public world: Phaser.World;
 
         /**
          * Reference to the physics manager.
          * @type {Physics.Manager}
          */
-        public physics: Physics.Manager;
+        public physics: Phaser.Physics.Manager;
 
         /**
          * Instance of repeatable random data generator helper.
          * @type {RandomDataGenerator}
          */
-        public rnd: RandomDataGenerator;
+        public rnd: Phaser.RandomDataGenerator;
 
         /**
          * Contains device information and capabilities.
          * @type {Device}
          */
-        public device: Device;
+        public device: Phaser.Device;
 
         /**
          * Reference to the render manager
          * @type {RenderManager}
          */
-        public renderer: IRenderer;
+        public renderer: Phaser.IRenderer;
 
         /**
          * Whether the game engine is booted, aka available.
          * @type {boolean}
          */
-        public isBooted: bool = false;
+        public isBooted: boolean = false;
 
         /**
          * Is game running or paused?
          * @type {boolean}
          */
-        public isRunning: bool = false;
+        public isRunning: boolean = false;
 
         /**
          * Initialize engine sub modules and start the game.
@@ -316,21 +316,21 @@ module Phaser {
                 this.onPause = new Phaser.Signal;
                 this.onResume = new Phaser.Signal;
 
-                this.device = new Device();
-                this.net = new Net(this);
-                this.math = new GameMath(this);
-                this.stage = new Stage(this, parent, width, height);
-                this.world = new World(this, width, height);
-                this.add = new GameObjectFactory(this);
-                this.cache = new Cache(this);
-                this.load = new Loader(this);
-                this.time = new TimeManager(this);
-                this.tweens = new TweenManager(this);
-                this.input = new InputManager(this);
-                this.sound = new SoundManager(this);
-                this.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
-                this.physics = new Physics.Manager(this);
-                this.plugins = new PluginManager(this, this);
+                this.device = new Phaser.Device();
+                this.net = new Phaser.Net(this);
+                this.math = new Phaser.GameMath(this);
+                this.stage = new Phaser.Stage(this, parent, width, height);
+                this.world = new Phaser.World(this, width, height);
+                this.add = new Phaser.GameObjectFactory(this);
+                this.cache = new Phaser.Cache(this);
+                this.load = new Phaser.Loader(this);
+                this.time = new Phaser.TimeManager(this);
+                this.tweens = new Phaser.TweenManager(this);
+                this.input = new Phaser.InputManager(this);
+                this.sound = new Phaser.SoundManager(this);
+                this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
+                this.physics = new Phaser.Physics.Manager(this);
+                this.plugins = new Phaser.PluginManager(this, this);
 
                 this.load.onLoadComplete.addOnce(this.loadComplete, this);
 
@@ -343,9 +343,9 @@ module Phaser {
                 this.isBooted = true;
 
                 //  Set-up some static helper references
-                DebugUtils.game = this;
-                ColorUtils.game = this;
-                DebugUtils.context = this.stage.context;
+                Phaser.DebugUtils.game = this;
+                Phaser.ColorUtils.game = this;
+                Phaser.DebugUtils.context = this.stage.context;
 
                 //  Display the default game screen?
                 if (this.onPreloadCallback == null && this.onCreateCallback == null && this.onUpdateCallback == null && this.onRenderCallback == null && this._pendingState == null)
@@ -504,9 +504,9 @@ module Phaser {
 
         }
 
-        public setRenderer(type: number) {
+        public setRenderer(renderer: number) {
 
-            switch (type)
+            switch (renderer)
             {
                 case Phaser.Types.RENDERER_AUTO_DETECT:
                     this.renderer = new Phaser.Renderer.Headless.HeadlessRenderer(this);
@@ -546,7 +546,7 @@ module Phaser {
          * @param [clearWorld] {boolean} clear everything in the world? (Default to true)
          * @param [clearCache] {boolean} clear asset cache? (Default to false and ONLY available when clearWorld=true)
          */
-        public switchState(state, clearWorld: bool = true, clearCache: bool = false) {
+        public switchState(state, clearWorld: boolean = true, clearCache: boolean = false) {
 
             if (this.isBooted == false)
             {
@@ -675,11 +675,11 @@ module Phaser {
 
         }
 
-        public get paused(): bool {
+        public get paused(): boolean {
             return this._paused;
         }
 
-        public set paused(value: bool) {
+        public set paused(value: boolean) {
 
             if (value == true && this._paused == false)
             {

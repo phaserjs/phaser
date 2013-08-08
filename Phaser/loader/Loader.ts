@@ -66,13 +66,13 @@ module Phaser {
          * True if the Loader is in the process of loading a queue.
          * @type {boolean}
          */
-        public isLoading: bool;
+        public isLoading: boolean;
 
         /**
          * True if game is completely loaded.
          * @type {boolean}
          */
-        public hasLoaded: bool;
+        public hasLoaded: boolean;
 
         /**
          * Loading progress (from 0 to 100)
@@ -115,7 +115,7 @@ module Phaser {
          * @param key {string} Unique asset key of this image file.
          * @param url {string} URL of image file.
          */
-        public image(key: string, url: string, overwrite: bool = false) {
+        public image(key: string, url: string, overwrite: boolean = false) {
 
             if (overwrite == true || this.checkKeyExists(key) == false)
             {
@@ -134,7 +134,7 @@ module Phaser {
          * @param frameHeight {number} Height of each single frame.
          * @param frameMax {number} How many frames in this sprite sheet.
          */
-        public spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number = -1) {
+        public spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax: number = -1) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -153,7 +153,7 @@ module Phaser {
          * @param [atlasData] {object} A JSON or XML data object.
          * @param [format] {number} A value describing the format of the data.
          */
-        public atlas(key: string, textureURL: string, atlasURL?: string = null, atlasData? = null, format?:number = Loader.TEXTURE_ATLAS_JSON_ARRAY) {
+        public atlas(key: string, textureURL: string, atlasURL: string = null, atlasData = null, format:number = Loader.TEXTURE_ATLAS_JSON_ARRAY) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -231,7 +231,7 @@ module Phaser {
          * @param urls {Array} An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ]
          * @param autoDecode {boolean} When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
          */
-        public audio(key: string, urls: string[], autoDecode: bool = true) {
+        public audio(key: string, urls: string[], autoDecode: boolean = true) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -433,7 +433,7 @@ module Phaser {
             this._fileList[key].loaded = true;
 
             var file = this._fileList[key];
-            var loadNext: bool = true;
+            var loadNext: boolean = true;
 
             switch (file.type)
             {
@@ -586,7 +586,7 @@ module Phaser {
          * @param previousKey {string} Key of previous loaded asset.
          * @param success {boolean} Whether the previous asset loaded successfully or not.
          */
-        private nextFile(previousKey: string, success: bool) {
+        private nextFile(previousKey: string, success: boolean) {
 
             this.progress = Math.round(this.progress + this._progressChunk);
 
@@ -618,7 +618,7 @@ module Phaser {
          * @param key {string} Key of the asset you want to check.
          * @return {boolean} Return true if exists, otherwise return false.
          */
-        private checkKeyExists(key: string): bool {
+        private checkKeyExists(key: string): boolean {
 
             if (this._fileList[key])
             {

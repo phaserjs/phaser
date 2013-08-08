@@ -25,7 +25,7 @@ module Phaser {
          * @param tileWidth {number} Width of tiles in this map.
          * @param tileHeight {number} Height of tiles in this map.
          */
-        constructor(game: Game, key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0) {
+        constructor(game: Game, key: string, mapData: string, format: number, resizeWorld: boolean = true, tileWidth: number = 0, tileHeight: number = 0) {
 
             this.game = game;
             this.type = Phaser.Types.TILEMAP;
@@ -90,22 +90,22 @@ module Phaser {
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.
          */
-        public exists: bool;
+        public exists: boolean;
 
         /**
          * Controls if <code>update()</code> is automatically called by the core game loop.
          */
-        public active: bool;
+        public active: boolean;
 
         /**
          * Controls if this Sprite is rendered or skipped during the core game loop.
          */
-        public visible: bool;
+        public visible: boolean;
 
         /**
          * A useful state for many game objects. Kill and revive both flip this switch.
          */
-        public alive: bool;
+        public alive: boolean;
 
         /**
          * The texture used to render the Sprite.
@@ -326,7 +326,7 @@ module Phaser {
          * @param separateX {boolean} Enable seprate at x-axis.
          * @param separateY {boolean} Enable seprate at y-axis.
          */
-        public setCollisionRange(start: number, end: number, collision?:number = Types.ANY, resetCollisions?: bool = false, separateX?: bool = true, separateY?: bool = true) {
+        public setCollisionRange(start: number, end: number, collision:number = Types.ANY, resetCollisions: boolean = false, separateX: boolean = true, separateY: boolean = true) {
 
             for (var i = start; i < end; i++)
             {
@@ -343,7 +343,7 @@ module Phaser {
          * @param separateX {boolean} Enable seprate at x-axis.
          * @param separateY {boolean} Enable seprate at y-axis.
          */
-        public setCollisionByIndex(values:number[], collision?:number = Types.ANY, resetCollisions?: bool = false, separateX?: bool = true, separateY?: bool = true) {
+        public setCollisionByIndex(values:number[], collision:number = Types.ANY, resetCollisions: boolean = false, separateX: boolean = true, separateY: boolean = true) {
 
             for (var i = 0; i < values.length; i++)
             {
@@ -377,7 +377,7 @@ module Phaser {
          * @param [layer] {number} layer of this tile located.
          * @return {Tile} The tile with specific properties.
          */
-        public getTile(x: number, y: number, layer?: number = this.currentLayer.ID):Tile {
+        public getTile(x: number, y: number, layer: number = this.currentLayer.ID):Tile {
 
             return this.tiles[this.layers[layer].getTileIndex(x, y)];
 
@@ -390,7 +390,7 @@ module Phaser {
          * @param [layer] {number} layer of this tile located.
          * @return {Tile} The tile with specific properties.
          */
-        public getTileFromWorldXY(x: number, y: number, layer?: number = this.currentLayer.ID):Tile {
+        public getTileFromWorldXY(x: number, y: number, layer: number = this.currentLayer.ID):Tile {
 
             return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
 
@@ -401,7 +401,7 @@ module Phaser {
          * @param layer The layer to check, defaults to 0
          * @returns {Tile}
          */
-        public getTileFromInputXY(layer?: number = this.currentLayer.ID):Tile {
+        public getTileFromInputXY(layer: number = this.currentLayer.ID):Tile {
 
             return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.worldX, this.game.input.worldY)];
 
@@ -456,7 +456,7 @@ module Phaser {
          * @param object {GameObject} Target object you want to check.
          * @return {boolean} Return true if this collides with given object, otherwise return false.
          */
-        public collideGameObject(object: Sprite): bool {
+        public collideGameObject(object: Sprite): boolean {
 
             if (object.body.type == Types.BODY_DYNAMIC && object.exists == true && object.body.allowCollisions != Types.NONE)
             {
@@ -483,7 +483,7 @@ module Phaser {
          * @param index {number} The index of this tile type in the core map data.
          * @param [layer] {number} which layer you want to set the tile to.
          */
-        public putTile(x: number, y: number, index: number, layer?: number = this.currentLayer.ID) {
+        public putTile(x: number, y: number, index: number, layer: number = this.currentLayer.ID) {
 
             this.layers[layer].putTile(x, y, index);
 

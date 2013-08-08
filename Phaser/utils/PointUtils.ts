@@ -21,7 +21,7 @@ module Phaser {
          * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
          * @return {Point} The new Point object.
          **/
-        static add(a: Point, b: Point, out?: Point = new Point): Point {
+        static add(a: Point, b: Point, out: Point = new Point): Point {
             return out.setTo(a.x + b.x, a.y + b.y);
         }
 
@@ -33,7 +33,7 @@ module Phaser {
          * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
          * @return {Point} The new Point object.
          **/
-        static subtract(a: Point, b: Point, out?: Point = new Point): Point {
+        static subtract(a: Point, b: Point, out: Point = new Point): Point {
             return out.setTo(a.x - b.x, a.y - b.y);
         }
 
@@ -45,7 +45,7 @@ module Phaser {
          * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
          * @return {Point} The new Point object.
          **/
-        static multiply(a: Point, b: Point, out?: Point = new Point): Point {
+        static multiply(a: Point, b: Point, out: Point = new Point): Point {
             return out.setTo(a.x * b.x, a.y * b.y);
         }
 
@@ -57,7 +57,7 @@ module Phaser {
          * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
          * @return {Point} The new Point object.
          **/
-        static divide(a: Point, b: Point, out?: Point = new Point): Point {
+        static divide(a: Point, b: Point, out: Point = new Point): Point {
             return out.setTo(a.x / b.x, a.y / b.y);
         }
 
@@ -113,7 +113,7 @@ module Phaser {
          * @param {Point} output Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
          * @return {Point} The new Point object.
          **/
-        static clone(a: Point, output?: Point = new Point): Point {
+        static clone(a: Point, output: Point = new Point): Point {
             return output.setTo(a.x, a.y);
         }
 
@@ -125,7 +125,7 @@ module Phaser {
          * @param {Boolean} round - Round the distance to the nearest integer (default false)
          * @return {Number} The distance between the two Point objects.
          **/
-        static distanceBetween(a: Point, b: Point, round?: bool = false): number {
+        static distanceBetween(a: Point, b: Point, round: boolean = false): number {
 
             var dx = a.x - b.x;
             var dy = a.y - b.y;
@@ -148,7 +148,7 @@ module Phaser {
          * @param {Point} b - The second Point object.
          * @return {Boolean} A value of true if the Points are equal, otherwise false.
          **/
-        static equals(a: Point, b: Point): bool {
+        static equals(a: Point, b: Point): boolean {
             return (a.x == b.x && a.y == b.y);
         }
 
@@ -184,7 +184,7 @@ module Phaser {
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
         * @return The modified point object
         */
-        static rotate(a: Point, x: number, y: number, angle: number, asDegrees: bool = false, distance?: number = null): Point {
+        static rotate(a: Point, x: number, y: number, angle: number, asDegrees: boolean = false, distance: number = null): Point {
 
             if (asDegrees)
             {
@@ -212,7 +212,7 @@ module Phaser {
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
         * @return The modified point object
         */
-        static rotateAroundPoint(a: Point, b: Point, angle: number, asDegrees: bool = false, distance?: number = null): Point {
+        static rotateAroundPoint(a: Point, b: Point, angle: number, asDegrees: boolean = false, distance: number = null): Point {
             return PointUtils.rotate(a, b.x, b.y, angle, asDegrees, distance);
         }
 

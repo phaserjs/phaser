@@ -20,7 +20,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the sum of the two vectors.
         */
-        static add(a: Vec2, b: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static add(a: Vec2, b: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.x + b.x, a.y + b.y);
         }
 
@@ -32,7 +32,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the difference of the two vectors.
         */
-        static subtract(a: Vec2, b: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static subtract(a: Vec2, b: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.x - b.x, a.y - b.y);
         }
 
@@ -44,7 +44,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the sum of the two vectors multiplied.
         */
-        static multiply(a: Vec2, b: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static multiply(a: Vec2, b: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.x * b.x, a.y * b.y);
         }
 
@@ -56,7 +56,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the sum of the two vectors divided.
         */
-        static divide(a: Vec2, b: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static divide(a: Vec2, b: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.x / b.x, a.y / b.y);
         }
 
@@ -68,7 +68,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the scaled vector.
         */
-        static scale(a: Phaser.Vec2, s: number, out?: Phaser.Vec2 = new Phaser.Vec2): Phaser.Vec2 {
+        static scale(a: Phaser.Vec2, s: number, out: Phaser.Vec2 = new Phaser.Vec2): Phaser.Vec2 {
             return out.setTo(a.x * s, a.y * s);
         }
 
@@ -81,7 +81,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the sum of the two vectors added and multiplied.
         */
-        static multiplyAdd(a: Vec2, b: Vec2, s: number, out?: Vec2 = new Vec2): Vec2 {
+        static multiplyAdd(a: Vec2, b: Vec2, s: number, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.x + b.x * s, a.y + b.y * s);
         }
 
@@ -92,7 +92,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the negative vector.
         */
-        static negative(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static negative(a: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(-a.x, -a.y);
         }
 
@@ -103,7 +103,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the scaled vector.
         */
-        static perp(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static perp(a: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(-a.y, a.x);
         }
 
@@ -114,7 +114,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is the scaled vector.
         */
-        static rperp(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static rperp(a: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.y, -a.x);
         }
 
@@ -125,7 +125,7 @@ module Phaser {
         * @param {Vec2} b Reference to a source Vec2 object.
         * @return {Boolean}
         */
-        static equals(a: Vec2, b: Vec2): bool {
+        static equals(a: Vec2, b: Vec2): boolean {
             return a.x == b.x && a.y == b.y;
         }
 
@@ -137,7 +137,7 @@ module Phaser {
         * @param {Vec2} epsilon 
         * @return {Boolean}
         */
-        static epsilonEquals(a: Vec2, b: Vec2, epsilon: number): bool {
+        static epsilonEquals(a: Vec2, b: Vec2, epsilon: number): boolean {
             return Math.abs(a.x - b.x) <= epsilon && Math.abs(a.y - b.y) <= epsilon;
         }
 
@@ -171,7 +171,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static project(a: Vec2, b: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static project(a: Vec2, b: Vec2, out: Vec2 = new Vec2): Vec2 {
 
             var amt = a.dot(b) / b.lengthSq();
 
@@ -192,7 +192,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static projectUnit(a: Vec2, b: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static projectUnit(a: Vec2, b: Vec2, out: Vec2 = new Vec2): Vec2 {
 
             var amt = a.dot(b);
 
@@ -212,7 +212,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static normalRightHand(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static normalRightHand(a: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.y * -1, a.x);
         }
 
@@ -223,7 +223,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static normalize(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static normalize(a: Vec2, out: Vec2 = new Vec2): Vec2 {
 
             var m = a.length();
 
@@ -288,7 +288,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static rotateAroundOrigin(a: Vec2, b: Vec2, theta: number, out?: Vec2 = new Vec2): Vec2 {
+        static rotateAroundOrigin(a: Vec2, b: Vec2, theta: number, out: Vec2 = new Vec2): Vec2 {
             var x = a.x - b.x;
             var y = a.y - b.y;
             return out.setTo(x * Math.cos(theta) - y * Math.sin(theta) + b.x, x * Math.sin(theta) + y * Math.cos(theta) + b.y);
@@ -303,7 +303,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2.
         */
-        static rotate(a: Vec2, theta: number, out?: Vec2 = new Vec2): Vec2 {
+        static rotate(a: Vec2, theta: number, out: Vec2 = new Vec2): Vec2 {
 
             var c = Math.cos(theta);
             var s = Math.sin(theta);
@@ -319,7 +319,7 @@ module Phaser {
         * @param {Vec2} out The output Vec2 that is the result of the operation.
         * @return {Vec2} A Vec2 that is a copy of the source Vec2.
         */
-        static clone(a: Vec2, out?: Vec2 = new Vec2): Vec2 {
+        static clone(a: Vec2, out: Vec2 = new Vec2): Vec2 {
             return out.setTo(a.x, a.y);
         }
 

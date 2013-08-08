@@ -32,7 +32,7 @@ module Phaser {
          * https://code.google.com/p/android/issues/detail?id=39247
          * @type {boolean}
          */
-        public patchAndroidClearRectBug: bool = false;
+        public patchAndroidClearRectBug: boolean = false;
 
         //  Operating System
 
@@ -40,43 +40,43 @@ module Phaser {
          * Is running desktop?
          * @type {boolean}
          */
-        public desktop: bool = false;
+        public desktop: boolean = false;
 
         /**
          * Is running on iOS?
          * @type {boolean}
          */
-        public iOS: bool = false;
+        public iOS: boolean = false;
 
          /**
           * Is running on android?
           * @type {boolean}
           */
-        public android: bool = false;
+        public android: boolean = false;
 
         /**
          * Is running on chromeOS?
          * @type {boolean}
          */
-        public chromeOS: bool = false;
+        public chromeOS: boolean = false;
 
         /**
          * Is running on linux?
          * @type {boolean}
          */
-        public linux: bool = false;
+        public linux: boolean = false;
 
         /**
          * Is running on maxOS?
          * @type {boolean}
          */
-        public macOS: bool = false;
+        public macOS: boolean = false;
 
         /**
          * Is running on windows?
          * @type {boolean}
          */
-        public windows: bool = false;
+        public windows: boolean = false;
 
         //  Features
 
@@ -84,55 +84,55 @@ module Phaser {
          * Is canvas available?
          * @type {boolean}
          */
-        public canvas: bool = false;
+        public canvas: boolean = false;
 
         /**
          * Is file available?
          * @type {boolean}
          */
-        public file: bool = false;
+        public file: boolean = false;
 
         /**
          * Is fileSystem available?
          * @type {boolean}
          */
-        public fileSystem: bool = false;
+        public fileSystem: boolean = false;
 
         /**
          * Is localStorage available?
          * @type {boolean}
          */
-        public localStorage: bool = false;
+        public localStorage: boolean = false;
 
         /**
          * Is webGL available?
          * @type {boolean}
          */
-        public webGL: bool = false;
+        public webGL: boolean = false;
 
         /**
          * Is worker available?
          * @type {boolean}
          */
-        public worker: bool = false;
+        public worker: boolean = false;
 
         /**
          * Is touch available?
          * @type {boolean}
          */
-        public touch: bool = false;
+        public touch: boolean = false;
 
         /**
          * Is mspointer available?
          * @type {boolean}
          */
-        public mspointer: bool = false;
+        public mspointer: boolean = false;
 
         /**
          * Is css3D available?
          * @type {boolean}
          */
-        public css3D: bool = false;
+        public css3D: boolean = false;
 
         //  Browser
 
@@ -140,31 +140,31 @@ module Phaser {
          * Is running in arora?
          * @type {boolean}
          */
-        public arora: bool = false;
+        public arora: boolean = false;
 
         /**
          * Is running in chrome?
          * @type {boolean}
          */
-        public chrome: bool = false;
+        public chrome: boolean = false;
 
         /**
          * Is running in epiphany?
          * @type {boolean}
          */
-        public epiphany: bool = false;
+        public epiphany: boolean = false;
 
         /**
          * Is running in firefox?
          * @type {boolean}
          */
-        public firefox: bool = false;
+        public firefox: boolean = false;
 
         /**
          * Is running in ie?
          * @type {boolean}
          */
-        public ie: bool = false;
+        public ie: boolean = false;
 
         /**
          * Version of ie?
@@ -176,26 +176,26 @@ module Phaser {
          * Is running in mobileSafari?
          * @type {boolean}
          */
-        public mobileSafari: bool = false;
+        public mobileSafari: boolean = false;
 
         /**
          * Is running in midori?
          * @type {boolean}
          */
-        public midori: bool = false;
+        public midori: boolean = false;
 
         /**
          * Is running in opera?
          * @type {boolean}
          */
-        public opera: bool = false;
+        public opera: boolean = false;
 
         /**
          * Is running in safari?
          * @type {boolean}
          */
-        public safari: bool = false;
-        public webApp: bool = false;
+        public safari: boolean = false;
+        public webApp: boolean = false;
 
         //  Audio
 
@@ -203,49 +203,49 @@ module Phaser {
          * Are Audio tags available?
          * @type {boolean}
          */
-        public audioData: bool = false;
+        public audioData: boolean = false;
 
         /**
          * Is the WebAudio API available?
          * @type {boolean}
          */
-        public webAudio: bool = false;
+        public webAudio: boolean = false;
 
         /**
          * Can this device play ogg files?
          * @type {boolean}
          */
-        public ogg: bool = false;
+        public ogg: boolean = false;
 
         /**
          * Can this device play opus files?
          * @type {boolean}
          */
-        public opus: bool = false;
+        public opus: boolean = false;
 
         /**
          * Can this device play mp3 files?
          * @type {boolean}
          */
-        public mp3: bool = false;
+        public mp3: boolean = false;
 
         /**
          * Can this device play wav files?
          * @type {boolean}
          */
-        public wav: bool = false;
+        public wav: boolean = false;
 
         /**
          * Can this device play m4a files?
          * @type {boolean}
          */
-        public m4a: bool = false;
+        public m4a: boolean = false;
 
         /**
          * Can this device play webm files?
          * @type {boolean}
          */
-        public webm: bool = false;
+        public webm: boolean = false;
 
         //  Device
 
@@ -253,19 +253,19 @@ module Phaser {
          * Is running on iPhone?
          * @type {boolean}
          */
-        public iPhone: bool = false;
+        public iPhone: boolean = false;
 
         /**
          * Is running on iPhone4?
          * @type {boolean}
          */
-        public iPhone4: bool = false;
+        public iPhone4: boolean = false;
 
         /**
          * Is running on iPad?
          * @type {boolean}
          */
-        public iPad: bool = false;
+        public iPad: boolean = false;
 
         /**
          * PixelRatio of the host device?
@@ -401,7 +401,7 @@ module Phaser {
 
         }
 
-        public canPlayAudio(type: string): bool {
+        public canPlayAudio(type: string): boolean {
 
             if (type == 'mp3' && this.mp3)
             {
@@ -528,7 +528,7 @@ module Phaser {
 
         }
 
-        public isConsoleOpen(): bool {
+        public isConsoleOpen(): boolean {
 
             if (window.console && window.console['firebug'])
             {

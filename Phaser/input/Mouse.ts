@@ -32,7 +32,7 @@ module Phaser {
         * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
         * @type {Boolean}
         */
-        public disabled: bool = false;
+        public disabled: boolean = false;
 
         /**
         * Custom callback useful for hooking into a 3rd party library. Will be passed the mouse event as the only parameter.

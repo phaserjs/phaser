@@ -152,7 +152,7 @@ module Phaser {
         * @param {Mat3} out The output Mat3, if none is given a new Mat3 object will be created.
         * @return {Mat3} The new Mat3
         **/
-        public clone(out?:Mat3 = new Phaser.Mat3): Mat3 {
+        public clone(out:Mat3 = new Phaser.Mat3): Mat3 {
 
             out[0] = this.data[0];
             out[1] = this.data[1];

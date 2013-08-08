@@ -85,19 +85,19 @@ module Phaser {
          * If the game should be forced to use Landscape mode, this is set to true by Game.Stage
          * @type {Boolean}
          */
-        public forceLandscape: bool = false;
+        public forceLandscape: boolean = false;
 
         /**
          * If the game should be forced to use Portrait mode, this is set to true by Game.Stage
          * @type {Boolean}
          */
-        public forcePortrait: bool = false;
+        public forcePortrait: boolean = false;
 
         /**
          * If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
          * @type {Boolean}
          */
-        public incorrectOrientation: bool = false;
+        public incorrectOrientation: boolean = false;
 
         /**
          * If you wish to align your game in the middle of the page then you can set this value to true.
@@ -105,7 +105,7 @@ module Phaser {
          * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
          * @type {Boolean}
          */
-        public pageAlignHorizontally: bool = false;
+        public pageAlignHorizontally: boolean = false;
 
         /**
          * If you wish to align your game in the middle of the page then you can set this value to true.
@@ -113,7 +113,7 @@ module Phaser {
          * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
          * @type {Boolean}
          */
-        public pageAlignVeritcally: bool = false;
+        public pageAlignVeritcally: boolean = false;
 
         /**
          * Minimum width the canvas should be scaled to (in pixels)
@@ -190,7 +190,7 @@ module Phaser {
         public enterPortrait: Phaser.Signal;
 
         //  Full Screen API calls
-        public get isFullScreen(): bool {
+        public get isFullScreen(): boolean {
 
             if (document['fullscreenElement'] === null|| document['mozFullScreenElement'] === null|| document['webkitFullscreenElement'] === null)
             {
@@ -285,11 +285,11 @@ module Phaser {
 
         }
 
-        public get isPortrait(): bool {
+        public get isPortrait(): boolean {
             return this.orientation == 0 || this.orientation == 180;
         }
 
-        public get isLandscape(): bool {
+        public get isLandscape(): boolean {
             return this.orientation === 90 || this.orientation === -90;
         }
 
@@ -354,7 +354,7 @@ module Phaser {
             //  We can't do anything about the status bars in iPads, web apps or desktops
             if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
             {
-                document.documentElement.style.minHeight = '2000px';
+                document.documentElement['style'].minHeight = '2000px';
 
                 this._startHeight = window.innerHeight;
 
@@ -380,7 +380,7 @@ module Phaser {
         /**
          * Set screen size automatically based on the scaleMode.
          */
-        public setScreenSize(force: bool = false) {
+        public setScreenSize(force: boolean = false) {
 
             if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
             {
@@ -399,7 +399,7 @@ module Phaser {
             if (force || window.innerHeight > this._startHeight || this._iterations < 0)
             {
                 // Set minimum height of content to new window height
-                document.documentElement.style.minHeight = window.innerHeight + 'px';
+                document.documentElement['style'].minHeight = window.innerHeight + 'px';
 
                 if (this.incorrectOrientation == true)
                 {

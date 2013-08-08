@@ -263,7 +263,7 @@ module Phaser {
         * @method empty
 	     * @return {Boolean} A value of true if the Circle objects diameter is less than or equal to 0; otherwise false.
         **/
-        get empty(): bool {
+        get empty(): boolean {
             return (this._diameter == 0);
         }
 
@@ -272,8 +272,8 @@ module Phaser {
         * @method setEmpty
         * @return {Circle} This Circle object
         **/
-        set empty(value: bool) {
-            return this.setTo(0, 0, 0);
+        set empty(value: boolean) {
+            this.setTo(0, 0, 0);
         }
 
         /**

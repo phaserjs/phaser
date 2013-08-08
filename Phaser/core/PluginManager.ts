@@ -54,7 +54,7 @@ module Phaser {
          */
         public add(plugin):any {
 
-            var result: bool = false;
+            var result: boolean = false;
 
             //  Prototype?
             if (typeof plugin === 'function')

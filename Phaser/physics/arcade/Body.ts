@@ -293,7 +293,7 @@ module Phaser.Physics {
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
-        public renderDebugInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
+        public renderDebugInfo(x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             this.sprite.texture.context.fillStyle = color;
             this.sprite.texture.context.fillText('Sprite: (' + this.sprite.width + ' x ' + this.sprite.height + ')', x, y);

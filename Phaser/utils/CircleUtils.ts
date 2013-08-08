@@ -22,7 +22,7 @@ module Phaser {
 	     * @param {Circle} [optional] out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
 	     * @return {Phaser.Circle}
 	     **/
-        static clone(a: Circle, out?: Circle = new Circle): Circle {
+        static clone(a: Circle, out: Circle = new Circle): Circle {
             return out.setTo(a.x, a.y, a.diameter);
         }
 
@@ -35,7 +35,7 @@ module Phaser {
 	     * @param {Number} The Y value of the coordinate to test.
 	     * @return {Boolean} True if the coordinates are within this circle, otherwise false.
 	     **/
-        static contains(a: Circle, x: number, y: number): bool {
+        static contains(a: Circle, x: number, y: number): boolean {
 
             //  Check if x/y are within the bounds first
             if (x >= a.left && x <= a.right && y >= a.top && y <= a.bottom)
@@ -57,7 +57,7 @@ module Phaser {
 	     * @param {Point} The Point object to test.
 	     * @return {Boolean} True if the coordinates are within this circle, otherwise false.
 	     **/
-        static containsPoint(a: Circle, point:Point): bool {
+        static containsPoint(a: Circle, point:Point): boolean {
             return CircleUtils.contains(a, point.x, point.y);
         }
 
@@ -68,7 +68,7 @@ module Phaser {
 	     * @param {Circle} The Circle object to test.
 	     * @return {Boolean} True if the coordinates are within this circle, otherwise false.
 	     **/
-        static containsCircle(a:Circle, b:Circle): bool {
+        static containsCircle(a:Circle, b:Circle): boolean {
             //return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
             return true;
         }
@@ -81,7 +81,7 @@ module Phaser {
 	     * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
 	     * @return {Number} The distance between this Point object and the destination Point object.
 	     **/
-        static distanceBetween(a:Circle, target: any, round?: bool = false): number {
+        static distanceBetween(a:Circle, target: any, round: boolean = false): number {
 
             var dx = a.x - target.x;
             var dy = a.y - target.y;
@@ -104,7 +104,7 @@ module Phaser {
          * @param {Circle} b - The second Circle object.
 	     * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
 	     **/
-        static equals(a:Circle, b: Circle): bool {
+        static equals(a:Circle, b: Circle): boolean {
             return (a.x == b.x && a.y == b.y && a.diameter == b.diameter);
         }
 
@@ -116,7 +116,7 @@ module Phaser {
          * @param {Circle} b - The second Circle object.
 	     * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
 	     **/
-        static intersects(a:Circle, b: Circle): bool {
+        static intersects(a:Circle, b: Circle): boolean {
             return (CircleUtils.distanceBetween(a, b) <= (a.radius + b.radius));
         }
 
@@ -129,7 +129,7 @@ module Phaser {
 	     * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
 	     * @return {Phaser.Point} The Point object holding the result.
 	     **/
-        static circumferencePoint(a:Circle, angle: number, asDegrees: bool = false, out?: Point = new Point): Point {
+        static circumferencePoint(a:Circle, angle: number, asDegrees: boolean = false, out: Point = new Point): Point {
 
             if (asDegrees === true)
             {
@@ -163,7 +163,7 @@ public static boolean intersect(Rectangle r, Circle c)
 }
     */
 
-        static intersectsRectangle(c: Circle, r: Rectangle): bool {
+        static intersectsRectangle(c: Circle, r: Rectangle): boolean {
 
             var cx: number = Math.abs(c.x - r.x - r.halfWidth);
             var xDist: number = r.halfWidth + c.radius;

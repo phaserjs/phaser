@@ -70,37 +70,37 @@ module Phaser {
          * Indicating collide with any object on the left.
          * @type {boolean}
          */
-        public collideLeft: bool = false;
+        public collideLeft: boolean = false;
 
         /**
          * Indicating collide with any object on the right.
          * @type {boolean}
          */
-        public collideRight: bool = false;
+        public collideRight: boolean = false;
 
         /**
          * Indicating collide with any object on the top.
          * @type {boolean}
          */
-        public collideUp: bool = false;
+        public collideUp: boolean = false;
 
         /**
          * Indicating collide with any object on the bottom.
          * @type {boolean}
          */
-        public collideDown: bool = false;
+        public collideDown: boolean = false;
 
         /**
          * Enable separation at x-axis.
          * @type {boolean}
          */
-        public separateX: bool = true;
+        public separateX: boolean = true;
 
         /**
          * Enable separation at y-axis.
          * @type {boolean}
          */
-        public separateY: bool = true;
+        public separateY: boolean = true;
 
         /**
          * A reference to the tilemap this tile object belongs to.
@@ -132,7 +132,7 @@ module Phaser {
          * @param separateX {boolean} Enable seprate at x-axis.
          * @param separateY {boolean} Enable seprate at y-axis.
          */
-        public setCollision(collision: number, resetCollisions: bool, separateX: bool, separateY: bool) {
+        public setCollision(collision: number, resetCollisions: boolean, separateX: boolean, separateY: boolean) {
 
             if (resetCollisions)
             {

@@ -66,7 +66,7 @@ module Phaser {
          * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
          * @return {Phaser.Tween} The newly created tween object.
          */
-        public create(object, localReference?:bool = false): Phaser.Tween {
+        public create(object, localReference:boolean = false): Phaser.Tween {
 
             if (localReference)
             {

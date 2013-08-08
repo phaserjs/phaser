@@ -91,7 +91,7 @@ module Phaser {
          * @param name {string} Name of the frame you want to check.
          * @return {boolean} True if frame with given name found, otherwise return false.
          */
-        public checkFrameName(name: string): bool {
+        public checkFrameName(name: string): boolean {
 
 
             if (this._frameNames[name] == null)
@@ -110,7 +110,7 @@ module Phaser {
          * @param [output] {Frame[]} result will be added into this array.
          * @return {Frame[]} Ranges of specific frames in an array.
          */
-        public getFrameRange(start: number, end: number, output?: Frame[] = []): Frame[] {
+        public getFrameRange(start: number, end: number, output: Frame[] = []): Frame[] {
 
             for (var i = start; i <= end; i++)
             {
@@ -126,7 +126,7 @@ module Phaser {
          * @param [output] {number[]} result will be added into this array.
          * @return {number[]} Indexes of specific frames in an array.
          */
-        public getFrameIndexes(output?: number[] = []): number[] {
+        public getFrameIndexes(output: number[] = []): number[] {
 
             output.length = 0;
 

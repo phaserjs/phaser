@@ -21,7 +21,7 @@ module Phaser {
         * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
         * @return {Point} The new Point object.
         **/
-        static getTopLeftAsPoint(a: Rectangle, out?: Point = new Point): Point {
+        static getTopLeftAsPoint(a: Rectangle, out: Point = new Point): Point {
             return out.setTo(a.x, a.y);
         }
 
@@ -32,7 +32,7 @@ module Phaser {
         * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
         * @return {Point} The new Point object.
         **/
-        static getBottomRightAsPoint(a: Rectangle, out?: Point = new Point): Point {
+        static getBottomRightAsPoint(a: Rectangle, out: Point = new Point): Point {
             return out.setTo(a.right, a.bottom);
         }
 
@@ -74,7 +74,7 @@ module Phaser {
         * @param {Point} output Optional Point object. If given the values will be set into the object, otherwise a brand new Point object will be created and returned.
         * @return {Point} The size of the Rectangle object
         **/
-        static size(a: Rectangle, output?: Point = new Point): Point {
+        static size(a: Rectangle, output: Point = new Point): Point {
             return output.setTo(a.width, a.height);
         }
 
@@ -85,7 +85,7 @@ module Phaser {
         * @param {Rectangle} output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
         * @return {Rectangle}
         **/
-        static clone(a: Rectangle, output?: Rectangle = new Rectangle): Rectangle {
+        static clone(a: Rectangle, output: Rectangle = new Rectangle): Rectangle {
             return output.setTo(a.x, a.y, a.width, a.height);
         }
 
@@ -97,7 +97,7 @@ module Phaser {
         * @param {Number} y The y coordinate of the point to test.
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
         **/
-        static contains(a: Rectangle, x: number, y: number): bool {
+        static contains(a: Rectangle, x: number, y: number): boolean {
             return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
         }
 
@@ -108,7 +108,7 @@ module Phaser {
         * @param {Point} point The point object being checked. Can be Point or any object with .x and .y values.
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
         **/
-        static containsPoint(a: Rectangle, point: Point): bool {
+        static containsPoint(a: Rectangle, point: Point): boolean {
             return RectangleUtils.contains(a, point.x, point.y);
         }
 
@@ -120,7 +120,7 @@ module Phaser {
         * @param {Rectangle} b - The second Rectangle object.
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
         **/
-        static containsRect(a: Rectangle, b: Rectangle): bool {
+        static containsRect(a: Rectangle, b: Rectangle): boolean {
 
             //	If the given rect has a larger volume than this one then it can never contain it
             if (a.volume > b.volume)
@@ -140,7 +140,7 @@ module Phaser {
         * @param {Rectangle} b - The second Rectangle object.
         * @return {Boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
         **/
-        static equals(a: Rectangle, b: Rectangle): bool {
+        static equals(a: Rectangle, b: Rectangle): boolean {
             return (a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height);
         }
 
@@ -152,7 +152,7 @@ module Phaser {
         * @param {Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
         * @return {Rectangle} A Rectangle object that equals the area of intersection. If the Rectangles do not intersect, this method returns an empty Rectangle object; that is, a Rectangle with its x, y, width, and height properties set to 0.
         **/
-        static intersection(a: Rectangle, b: Rectangle, out?: Rectangle = new Rectangle): Rectangle {
+        static intersection(a: Rectangle, b: Rectangle, out: Rectangle = new Rectangle): Rectangle {
 
             if (RectangleUtils.intersects(a, b))
             {
@@ -175,7 +175,7 @@ module Phaser {
         * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
         **/
-        static intersects(a: Rectangle, b: Rectangle, tolerance?: number = 0): bool {
+        static intersects(a: Rectangle, b: Rectangle, tolerance: number = 0): boolean {
             return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
         }
 
@@ -189,7 +189,7 @@ module Phaser {
         * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
         **/
-        static intersectsRaw(a: Rectangle, left: number, right: number, top: number, bottom: number, tolerance?: number = 0): bool {
+        static intersectsRaw(a: Rectangle, left: number, right: number, top: number, bottom: number, tolerance: number = 0): boolean {
             return !(left > a.right + tolerance || right < a.left - tolerance || top > a.bottom + tolerance || bottom < a.top - tolerance);
         }
 
@@ -201,7 +201,7 @@ module Phaser {
         * @param {Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
         * @return {Rectangle} A Rectangle object that is the union of the two Rectangles.
         **/
-        static union(a: Rectangle, b: Rectangle, out?: Rectangle = new Rectangle): Rectangle {
+        static union(a: Rectangle, b: Rectangle, out: Rectangle = new Rectangle): Rectangle {
             return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
         }
 

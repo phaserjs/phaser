@@ -13,7 +13,7 @@ module Phaser {
 
     export class Group {
 
-        constructor(game: Game, maxSize?: number = 0) {
+        constructor(game: Game, maxSize: number = 0) {
 
             this.game = game;
             this.type = Phaser.Types.GROUP;
@@ -108,17 +108,17 @@ module Phaser {
         /**
          * A boolean representing if the Group has been modified in any way via a scale, rotate, flip or skew.
          */
-        public modified: bool = false;
+        public modified: boolean = false;
 
         /**
          * If this Group exists or not. Can be set to false to skip certain loop checks.
          */
-        public exists: bool;
+        public exists: boolean;
 
         /**
          * Controls if this Group (and all of its contents) are rendered or skipped during the core game loop.
          */
-        public visible: bool;
+        public visible: boolean;
 
         /**
          * Use with <code>sort()</code> to sort in ascending order.
@@ -419,7 +419,7 @@ module Phaser {
          * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
          * @returns {Sprite} The newly created sprite object.
          */
-        public addNewSprite(x: number, y: number, key?: string = '', frame? = null): Sprite {
+        public addNewSprite(x: number, y: number, key: string = '', frame = null): Sprite {
             return <Sprite> this.add(new Sprite(this.game, x, y, key, frame));
         }
 
@@ -524,7 +524,7 @@ module Phaser {
          *
          * @return {Basic} The removed object.
          */
-        public remove(object, splice: bool = false) {
+        public remove(object, splice: boolean = false) {
 
             //console.log('removing from group: ', object.name);
 
@@ -594,7 +594,7 @@ module Phaser {
          *
          * @return {Basic} True if the two objects successfully swapped position.
          */
-        public swap(child1, child2, sort?: bool = true): bool {
+        public swap(child1, child2, sort: boolean = true): boolean {
 
             if (child1.group.ID != this.ID || child2.group.ID != this.ID || child1 === child2)
             {
@@ -615,7 +615,7 @@ module Phaser {
 
         }
 
-        public bringToTop(child): bool {
+        public bringToTop(child): boolean {
 
             //console.log('bringToTop', child.name,'current z', child.z);
             var oldZ = child.z;
@@ -753,7 +753,7 @@ module Phaser {
          * @param {Object} Value The value you want to assign to that variable.
          * @param {boolean} Recurse	Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
          */
-        public setAll(variableName: string, value: Object, recurse: bool = true) {
+        public setAll(variableName: string, value: Object, recurse: boolean = true) {
 
             this._i = 0;
 
@@ -782,7 +782,7 @@ module Phaser {
          * @param {string} FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
          * @param {boolean} Recurse	Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
          */
-        public callAll(functionName: string, recurse: bool = true) {
+        public callAll(functionName: string, recurse: boolean = true) {
 
             this._i = 0;
 
@@ -808,7 +808,7 @@ module Phaser {
          * @param {function} callback
          * @param {boolean} recursive
          */
-        public forEach(callback, recursive: bool = false) {
+        public forEach(callback, recursive: boolean = false) {
 
             this._i = 0;
 
@@ -836,7 +836,7 @@ module Phaser {
          * @param {function} callback
          * @param {boolean} recursive
          */
-        public forEachAlive(context, callback, recursive: bool = false) {
+        public forEachAlive(context, callback, recursive: boolean = false) {
 
             this._i = 0;
 

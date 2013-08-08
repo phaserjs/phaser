@@ -45,7 +45,7 @@ module Phaser.Components {
 
         private _rotation: number;
 
-        private _dirty: bool = false;
+        private _dirty: boolean = false;
 
         //  Cache vars
         private _pos: Phaser.Point;

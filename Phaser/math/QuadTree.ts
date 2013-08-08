@@ -101,7 +101,7 @@ module Phaser {
         private _basic;
         private _members;
         private _l: number;
-        private _overlapProcessed: bool;
+        private _overlapProcessed: boolean;
         private _checkObject;
 
         public static physics: Phaser.Physics.Manager;
@@ -124,7 +124,7 @@ module Phaser {
         /**
          * Whether this branch of the tree can be subdivided or not.
          */
-        private _canSubdivide: bool;
+        private _canSubdivide: boolean;
 
         /**
          * Refers to the internal A and B linked lists,
@@ -228,7 +228,7 @@ module Phaser {
         /**
          * Internal, used during tree processing and overlap checks.
          */
-        private static _useBothLists: bool;
+        private static _useBothLists: boolean;
 
         /**
          * Internal, used during tree processing and overlap checks.
@@ -544,7 +544,7 @@ module Phaser {
          *
          * @return {Boolean} Whether or not any overlaps were found.
          */
-        public execute(): bool {
+        public execute(): boolean {
 
             this._overlapProcessed = false;
 
@@ -605,7 +605,7 @@ module Phaser {
          *
          * @return {Boolean} Whether or not any overlaps were found.
          */
-        private overlapNode(): bool {
+        private overlapNode(): boolean {
 
             //Walk the list and check for overlaps
             this._overlapProcessed = false;

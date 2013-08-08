@@ -108,13 +108,13 @@ module Phaser {
          * Controls whether update() and draw() are automatically called.
          * @type {boolean}
          */
-        public exists: bool = true;
+        public exists: boolean = true;
 
         /**
          * Controls whether draw() are automatically called.
          * @type {boolean}
          */
-        public visible: bool = true;
+        public visible: boolean = true;
 
         /**
          * Properties of this map layer. (normally set by map editors)
@@ -236,7 +236,7 @@ module Phaser {
          * @param [width] {number} specify a Rectangle of tiles to operate. The width in tiles.
          * @param [height] {number} specify a Rectangle of tiles to operate. The height in tiles.
          */
-        public swapTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
+        public swapTile(tileA: number, tileB: number, x: number = 0, y: number = 0, width: number = this.widthInTiles, height: number = this.heightInTiles) {
 
             this.getTempBlock(x, y, width, height);
 
@@ -274,7 +274,7 @@ module Phaser {
          * @param [width] {number} width of block.
          * @param [height] {number} height of block.
          */
-        public fillTile(index: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
+        public fillTile(index: number, x: number = 0, y: number = 0, width: number = this.widthInTiles, height: number = this.heightInTiles) {
 
             this.getTempBlock(x, y, width, height);
 
@@ -293,7 +293,7 @@ module Phaser {
          * @param [width] {number} width of block.
          * @param [height] {number} height of block.
          */
-        public randomiseTiles(tiles: number[], x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
+        public randomiseTiles(tiles: number[], x: number = 0, y: number = 0, width: number = this.widthInTiles, height: number = this.heightInTiles) {
 
             this.getTempBlock(x, y, width, height);
 
@@ -313,7 +313,7 @@ module Phaser {
          * @param [width] {number} width of block.
          * @param [height] {number} height of block.
          */
-        public replaceTile(tileA: number, tileB: number, x?: number = 0, y?: number = 0, width?: number = this.widthInTiles, height?: number = this.heightInTiles) {
+        public replaceTile(tileA: number, tileB: number, x: number = 0, y: number = 0, width: number = this.widthInTiles, height: number = this.heightInTiles) {
 
             this.getTempBlock(x, y, width, height);
 
@@ -409,7 +409,7 @@ module Phaser {
          * @param height {number} Height of block.
          * @param collisionOnly {boolean} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
          */
-        private getTempBlock(x: number, y: number, width: number, height: number, collisionOnly?: bool = false) {
+        private getTempBlock(x: number, y: number, width: number, height: number, collisionOnly: boolean = false) {
 
             if (x < 0)
             {

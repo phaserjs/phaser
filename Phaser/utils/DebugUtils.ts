@@ -29,45 +29,45 @@ module Phaser {
         static font: string = '14px Courier';
         static lineHeight: number = 16;
         static currentColor: string;
-        static renderShadow: bool = true;
+        static renderShadow: boolean = true;
 
-        static start(x: number, y: number, color?: string = 'rgb(255,255,255)') {
+        static start(x: number, y: number, color: string = 'rgb(255,255,255)') {
 
-            currentX = x;
-            currentY = y;
-            currentColor = color;
+            DebugUtils.currentX = x;
+            DebugUtils.currentY = y;
+            DebugUtils.currentColor = color;
 
             DebugUtils.context.fillStyle = color;
             DebugUtils.context.font = font;
 
         }
 
-        static line(text: string, x?:number = null, y?:number = null) {
+        static line(text: string, x:number = null, y:number = null) {
 
             if (x !== null)
             {
-                currentX = x;
+                DebugUtils.currentX = x;
             }
 
             if (y !== null)
             {
-                currentY = y;
+                DebugUtils.currentY = y;
             }
 
             if (renderShadow)
             {
                 DebugUtils.context.fillStyle = 'rgb(0,0,0)';
-                DebugUtils.context.fillText(text, currentX + 1, currentY + 1);
-                DebugUtils.context.fillStyle = currentColor;
+                DebugUtils.context.fillText(text, DebugUtils.currentX + 1, DebugUtils.currentY + 1);
+                DebugUtils.context.fillStyle = DebugUtils.currentColor;
             }
 
-            DebugUtils.context.fillText(text, currentX, currentY);
+            DebugUtils.context.fillText(text, DebugUtils.currentX, DebugUtils.currentY);
 
-            currentY += lineHeight;
+            DebugUtils.currentY += lineHeight;
 
         }
 
-        static renderSpriteCorners(sprite: Sprite, color?: string = 'rgb(255,0,255)') {
+        static renderSpriteCorners(sprite: Sprite, color: string = 'rgb(255,0,255)') {
 
             start(0, 0, color);
 
@@ -84,7 +84,7 @@ module Phaser {
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
-        static renderSoundInfo(sound: Sound, x: number, y: number, color?: string = 'rgb(255,255,255)') {
+        static renderSoundInfo(sound: Sound, x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             start(x, y, color);
 
@@ -110,7 +110,7 @@ module Phaser {
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
-        static renderCameraInfo(camera: Camera, x: number, y: number, color?: string = 'rgb(255,255,255)') {
+        static renderCameraInfo(camera: Camera, x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             start(x, y, color);
             line('Camera ID: ' + camera.ID + ' (' + camera.screenView.width + ' x ' + camera.screenView.height + ')');
@@ -129,7 +129,7 @@ module Phaser {
         * Renders the Pointer.circle object onto the stage in green if down or red if up.
         * @method renderDebug
         */
-        static renderPointer(pointer: Pointer, hideIfUp: bool = false, downColor?: string = 'rgba(0,255,0,0.5)', upColor?: string = 'rgba(255,0,0,0.5)', color?: string = 'rgb(255,255,255)') {
+        static renderPointer(pointer: Pointer, hideIfUp: boolean = false, downColor: string = 'rgba(0,255,0,0.5)', upColor: string = 'rgba(255,0,0,0.5)', color: string = 'rgb(255,255,255)') {
 
             if (hideIfUp == true && pointer.isUp == true)
             {
@@ -175,7 +175,7 @@ module Phaser {
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
-        static renderSpriteInputInfo(sprite: Sprite, x: number, y: number, color?: string = 'rgb(255,255,255)') {
+        static renderSpriteInputInfo(sprite: Sprite, x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             start(x, y, color);
 
@@ -193,7 +193,7 @@ module Phaser {
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
-        static renderInputInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
+        static renderInputInfo(x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             start(x, y, color);
 
@@ -213,7 +213,7 @@ module Phaser {
 
         }
 
-        static renderSpriteWorldView(sprite: Sprite, x: number, y: number, color?: string = 'rgb(255,255,255)') {
+        static renderSpriteWorldView(sprite: Sprite, x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             start(x, y, color);
             line('Sprite World Coords (' + sprite.width + ' x ' + sprite.height + ')');
@@ -228,7 +228,7 @@ module Phaser {
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
-        static renderSpriteInfo(sprite: Sprite, x: number, y: number, color?: string = 'rgb(255,255,255)') {
+        static renderSpriteInfo(sprite: Sprite, x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             start(x, y, color);
             line('Sprite: ' + ' (' + sprite.width + ' x ' + sprite.height + ') origin: ' + sprite.transform.origin.x + ' x ' + sprite.transform.origin.y);
@@ -242,7 +242,7 @@ module Phaser {
 
         }
 
-        static renderSpriteBounds(sprite: Sprite, camera?: Camera = null, color?: string = 'rgba(0,255,0,0.2)') {
+        static renderSpriteBounds(sprite: Sprite, camera: Camera = null, color: string = 'rgba(0,255,0,0.2)') {
 
             if (camera == null)
             {
@@ -292,7 +292,7 @@ module Phaser {
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
          */
-        static renderText(text: string, x: number, y: number, color?: string = 'rgb(255,255,255)', font?: string = '16px Courier') {
+        static renderText(text: string, x: number, y: number, color: string = 'rgb(255,255,255)', font: string = '16px Courier') {
 
             DebugUtils.context.font = font;
             DebugUtils.context.fillStyle = color;

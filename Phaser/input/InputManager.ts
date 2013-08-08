@@ -107,7 +107,7 @@ module Phaser {
         * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
         * @type {Boolean}
         */
-        public disabled: bool = false;
+        public disabled: boolean = false;
 
         /**
          * Controls the expected behaviour when using a mouse and touch together on a multi-input device
@@ -283,7 +283,7 @@ module Phaser {
         * @property recordPointerHistory
         * @type {Boolean}
         **/
-        public recordPointerHistory: bool = false;
+        public recordPointerHistory: boolean = false;
 
         /**
         * The rate in milliseconds at which the Pointer objects should update their tracking history
@@ -504,7 +504,7 @@ module Phaser {
 
         }
 
-        public get pollLocked(): bool {
+        public get pollLocked(): boolean {
             return (this.pollRate > 0 && this._pollCounter < this.pollRate);
         }
 
@@ -547,7 +547,7 @@ module Phaser {
         * @method reset
         * @param hard {Boolean} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
         **/
-        public reset(hard?: bool = false) {
+        public reset(hard: boolean = false) {
 
             this.keyboard.reset();
 
@@ -737,7 +737,7 @@ module Phaser {
         * @param {Boolean} state The state the Pointer should be in (false for inactive, true for active)
         * @return {Pointer} A Pointer object or null if no Pointer object matches the requested state.
         **/
-        public getPointer(state: bool = false): Pointer {
+        public getPointer(state: boolean = false): Pointer {
 
             //  Unrolled for speed
             if (this.pointer1.active == state)
@@ -836,7 +836,7 @@ module Phaser {
             return Vec2Utils.angle(pointer1.position, pointer2.position);
         }
 
-        public pixelPerfectCheck(sprite: Phaser.Sprite, pointer: Phaser.Pointer, alpha: number = 255): bool {
+        public pixelPerfectCheck(sprite: Phaser.Sprite, pointer: Phaser.Pointer, alpha: number = 255): boolean {
 
             this.hitContext.clearRect(0, 0, 1, 1);
 

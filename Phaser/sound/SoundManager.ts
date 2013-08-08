@@ -102,9 +102,9 @@ module Phaser {
 
         }
 
-        public usingWebAudio: bool = false;
-        public usingAudioTag: bool = false;
-        public noAudio: bool = false;
+        public usingWebAudio: boolean = false;
+        public usingAudioTag: boolean = false;
+        public noAudio: boolean = false;
 
         /**
          * Local reference to the current Phaser.Game.
@@ -130,11 +130,11 @@ module Phaser {
         private _sounds: Phaser.Sound[];
 
         private _muteVolume: number;
-        private _muted: bool = false;
+        private _muted: boolean = false;
 
         public channels: number;
 
-        public touchLocked: bool = false;
+        public touchLocked: boolean = false;
 
         private _unlockSource = null;
 
@@ -174,11 +174,11 @@ module Phaser {
         /**
          * A global audio mute toggle.
          */
-        public get mute():bool {
+        public get mute():boolean {
             return this._muted;
         }
 
-        public set mute(value: bool) {
+        public set mute(value: boolean) {
 
             console.log('SoundManager mute', value);
 
@@ -311,7 +311,7 @@ module Phaser {
          * @param key {string} Assets key of the sound to be decoded.
          * @param [sound] {Sound} its bufer will be set to decoded data.
          */
-        public decode(key: string, sound?: Sound = null) {
+        public decode(key: string, sound: Sound = null) {
 
             var soundData = this.game.cache.getSoundData(key);
 
@@ -362,7 +362,7 @@ module Phaser {
 
         }
 
-        public add(key: string, volume?: number = 1, loop?: bool = false): Sound {
+        public add(key: string, volume: number = 1, loop: boolean = false): Sound {
 
             var sound: Phaser.Sound = new Sound(this.game, key, volume, loop);
 

@@ -1,5 +1,6 @@
 /**
 * Phaser
+* www.phaser.io
 *
 * v1.0.0 - August 12th 2013
 *
@@ -17,5 +18,6 @@
 var Phaser;
 (function (Phaser) {
     Phaser.VERSION = 'Phaser version 1.0.0';
+
     Phaser.GAMES = [];
 })(Phaser || (Phaser = {}));

@@ -21,7 +21,7 @@ module Phaser {
          * @param delay {number} Time between frames in ms.
          * @param looped {boolean} Whether or not the animation is looped or just plays once.
          */
-        constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool) {
+        constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: boolean) {
 
             this.game = game;
             this._parent = parent;
@@ -97,19 +97,19 @@ module Phaser {
          * Whether or not this animation finished playing.
          * @type {boolean}
          */
-        public isFinished: bool;
+        public isFinished: boolean;
 
         /**
          * Whethor or not this animation is currently playing.
          * @type {boolean}
          */
-        public isPlaying: bool;
+        public isPlaying: boolean;
 
         /**
          * Whether or not the animation is looped.
          * @type {boolean}
          */
-        public looped: bool;
+        public looped: boolean;
 
         /**
          * Time between frames in ms.
@@ -152,18 +152,14 @@ module Phaser {
          * @param frameRate {number} FrameRate you want to specify instead of using default.
          * @param loop {boolean} Whether or not the animation is looped or just plays once.
          */
-        public play(frameRate?: number = null, loop?: bool) {
+        public play(frameRate: number = null, loop: boolean = false) {
 
             if (frameRate !== null)
             {
                 this.delay = 1000 / frameRate;
             }
 
-            if (loop !== undefined)
-            {
-                this.looped = loop;
-            }
-
+            this.looped = loop;
             this.isPlaying = true;
             this.isFinished = false;
 
@@ -209,7 +205,7 @@ module Phaser {
         /**
          * Update animation frames.
          */
-        public update(): bool {
+        public update(): boolean {
 
             if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
             {

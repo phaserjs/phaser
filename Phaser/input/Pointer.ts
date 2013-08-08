@@ -51,7 +51,7 @@ module Phaser {
         * @type {Boolean}
         * @private
         */
-        private _holdSent: bool = false;
+        private _holdSent: boolean = false;
 
         /**
         * Local private variable storing the short-term history of pointer movements
@@ -70,7 +70,7 @@ module Phaser {
         private _nextDrop: number = 0;
 
         //  Monitor events outside of a state reset loop
-        private _stateReset: bool = false;
+        private _stateReset: boolean = false;
 
         /**
         * The Pointer ID (a number between 1 and 10, 0 is reserved for the mouse pointer specifically)
@@ -93,7 +93,7 @@ module Phaser {
         * @property active
         * @type {Boolean}
         */
-        public active: bool;
+        public active: boolean;
 
         /**
         * A Vector object containing the initial position when the Pointer was engaged with the screen.
@@ -122,7 +122,7 @@ module Phaser {
         * @property withinGame
         * @type {Boolean}
         */
-        public withinGame: bool = false;
+        public withinGame: boolean = false;
 
         /**
         * If this Pointer is a mouse the button property holds the value of which mouse button was pressed down
@@ -199,21 +199,21 @@ module Phaser {
         * @property isMouse
         * @type {Boolean}
         **/
-        public isMouse: bool = false;
+        public isMouse: boolean = false;
 
         /**
         * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
         * @property isDown
         * @type {Boolean}
         **/
-        public isDown: bool = false;
+        public isDown: boolean = false;
 
         /**
         * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
         * @property isUp
         * @type {Boolean}
         **/
-        public isUp: bool = true;
+        public isUp: boolean = true;
 
         /**
         * A timestamp representing when the Pointer first touched the touchscreen.
@@ -623,7 +623,7 @@ module Phaser {
         * @param {Number} [duration].
         * @return {Boolean}
         */
-        public justPressed(duration?: number = this.game.input.justPressedRate): bool {
+        public justPressed(duration: number = this.game.input.justPressedRate): boolean {
 
             if (this.isDown === true && (this.timeDown + duration) > this.game.time.now)
             {
@@ -642,7 +642,7 @@ module Phaser {
         * @param {Number} [duration].
         * @return {Boolean}
         */
-        public justReleased(duration?: number = this.game.input.justReleasedRate): bool {
+        public justReleased(duration: number = this.game.input.justReleasedRate): boolean {
 
             if (this.isUp === true && (this.timeUp + duration) > this.game.time.now)
             {

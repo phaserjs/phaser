@@ -49,14 +49,13 @@ module Phaser {
 		 * 
 		 * @return	Array
 		 */
-        static public getHSVColorWheel(alpha: number = 255) {
+        public static getHSVColorWheel(alpha: number = 255) {
 
             var colors = [];
 
             for (var c: number = 0; c <= 359; c++)
             {
-                //colors[c] = HSVtoRGB(c, 1.0, 1.0, alpha);
-                colors[c] = getWebRGB(HSVtoRGB(c, 1.0, 1.0, alpha));
+                colors[c] = ColorUtils.getWebRGB(ColorUtils.HSVtoRGB(c, 1.0, 1.0, alpha));
             }
 
             return colors;
@@ -72,13 +71,13 @@ module Phaser {
 		 * 
 		 * @return 0xAARRGGBB format color value
 		 */
-        static public getComplementHarmony(color: number): number {
+        public static getComplementHarmony(color: number): number {
 
-            var hsv: any = RGBtoHSV(color);
+            var hsv: any = ColorUtils.RGBtoHSV(color);
 
             var opposite: number = ColorUtils.game.math.wrapValue(hsv.hue, 180, 359);
 
-            return HSVtoRGB(opposite, 1.0, 1.0);
+            return ColorUtils.HSVtoRGB(opposite, 1.0, 1.0);
 
         }
 
@@ -92,9 +91,9 @@ module Phaser {
 		 * 
 		 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 		 */
-        static public getAnalogousHarmony(color: number, threshold: number = 30) {
+        public static getAnalogousHarmony(color: number, threshold: number = 30) {
 
-            var hsv: any = RGBtoHSV(color);
+            var hsv: any = ColorUtils.RGBtoHSV(color);
 
             if (threshold > 359 || threshold < 0)
             {
@@ -104,7 +103,7 @@ module Phaser {
             var warmer: number = ColorUtils.game.math.wrapValue(hsv.hue, 359 - threshold, 359);
             var colder: number = ColorUtils.game.math.wrapValue(hsv.hue, threshold, 359);
 
-            return { color1: color, color2: HSVtoRGB(warmer, 1.0, 1.0), color3: HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
+            return { color1: color, color2: ColorUtils.HSVtoRGB(warmer, 1.0, 1.0), color3: ColorUtils.HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
 
         }
 
@@ -118,9 +117,9 @@ module Phaser {
 		 * 
 		 * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
 		 */
-        static public getSplitComplementHarmony(color: number, threshold: number = 30): any {
+        public static getSplitComplementHarmony(color: number, threshold: number = 30): any {
 
-            var hsv: any = RGBtoHSV(color);
+            var hsv: any = ColorUtils.RGBtoHSV(color);
 
             if (threshold >= 359 || threshold <= 0)
             {
@@ -132,7 +131,7 @@ module Phaser {
             var warmer: number = ColorUtils.game.math.wrapValue(hsv.hue, opposite - threshold, 359);
             var colder: number = ColorUtils.game.math.wrapValue(hsv.hue, opposite + threshold, 359);
 
-            return { color1: color, color2: HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: hsv.hue, hue2: warmer, hue3: colder }
+            return { color1: color, color2: ColorUtils.HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: ColorUtils.HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: hsv.hue, hue2: warmer, hue3: colder }
         }
 
         /**
@@ -144,14 +143,14 @@ module Phaser {
 		 * 
 		 * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
 		 */
-        static public getTriadicHarmony(color: number): any {
+        public static getTriadicHarmony(color: number): any {
 
-            var hsv: any = RGBtoHSV(color);
+            var hsv: any = ColorUtils.RGBtoHSV(color);
 
             var triadic1: number = ColorUtils.game.math.wrapValue(hsv.hue, 120, 359);
             var triadic2: number = ColorUtils.game.math.wrapValue(triadic1, 120, 359);
 
-            return { color1: color, color2: HSVtoRGB(triadic1, 1.0, 1.0), color3: HSVtoRGB(triadic2, 1.0, 1.0) }
+            return { color1: color, color2: ColorUtils.HSVtoRGB(triadic1, 1.0, 1.0), color3: ColorUtils.HSVtoRGB(triadic2, 1.0, 1.0) }
 
         }
 
@@ -163,13 +162,13 @@ module Phaser {
 		 * 
 		 * @return	string containing the 3 lines of information
 		 */
-        static public getColorInfo(color: number): string {
+        public static getColorInfo(color: number): string {
 
-            var argb: any = getRGB(color);
-            var hsl: any = RGBtoHSV(color);
+            var argb: any = ColorUtils.getRGB(color);
+            var hsl: any = ColorUtils.RGBtoHSV(color);
 
             //	Hex format
-            var result: string = RGBtoHexstring(color) + "\n";
+            var result: string = ColorUtils.RGBtoHexstring(color) + "\n";
 
             //	RGB format
             result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
@@ -188,11 +187,11 @@ module Phaser {
 		 * 
 		 * @return	A string of length 10 characters in the format 0xAARRGGBB
 		 */
-        static public RGBtoHexstring(color: number): string {
+        public static RGBtoHexstring(color: number): string {
 
-            var argb: any = getRGB(color);
+            var argb: any = ColorUtils.getRGB(color);
 
-            return "0x" + colorToHexstring(argb.alpha) + colorToHexstring(argb.red) + colorToHexstring(argb.green) + colorToHexstring(argb.blue);
+            return "0x" + ColorUtils.colorToHexstring(argb.alpha) + ColorUtils.colorToHexstring(argb.red) + ColorUtils.colorToHexstring(argb.green) + ColorUtils.colorToHexstring(argb.blue);
 
         }
 
@@ -203,11 +202,11 @@ module Phaser {
 		 * 
 		 * @return	A string of length 10 characters in the format 0xAARRGGBB
 		 */
-        static public RGBtoWebstring(color: number): string {
+        public static RGBtoWebstring(color: number): string {
 
-            var argb: any = getRGB(color);
+            var argb: any = ColorUtils.getRGB(color);
 
-            return "#" + colorToHexstring(argb.red) + colorToHexstring(argb.green) + colorToHexstring(argb.blue);
+            return "#" + ColorUtils.colorToHexstring(argb.red) + ColorUtils.colorToHexstring(argb.green) + ColorUtils.colorToHexstring(argb.blue);
 
         }
 
@@ -218,7 +217,7 @@ module Phaser {
 		 * 
 		 * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
 		 */
-        static public colorToHexstring(color: number): string {
+        public static colorToHexstring(color: number): string {
 
             var digits: string = "0123456789ABCDEF";
 
@@ -299,7 +298,7 @@ module Phaser {
 		 * 
 		 * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
 		 */
-        static public RGBtoHSV(color: number): any {
+        public static RGBtoHSV(color: number): any {
 
             var rgb: any = ColorUtils.getRGB(color);
 
@@ -378,7 +377,7 @@ module Phaser {
         * @return {Number}
         * @static
         */
-        static public interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha: number = 255): number {
+        public static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha: number = 255): number {
 
             var src1: any = ColorUtils.getRGB(color1);
             var src2: any = ColorUtils.getRGB(color2);
@@ -403,7 +402,7 @@ module Phaser {
         * @return {Number}
         * @static
         */
-        static public interpolateColorWithRGB(color: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number {
+        public static interpolateColorWithRGB(color: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number {
             
             var src: any = ColorUtils.getRGB(color);
 
@@ -429,7 +428,7 @@ module Phaser {
         * @return {Number}
         * @static
         */
-        static public interpolateRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number {
+        public static interpolateRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number {
 
             var r: number = (((r2 - r1) * currentStep) / steps) + r1;
             var g: number = (((g2 - g1) * currentStep) / steps) + g1;
@@ -450,7 +449,7 @@ module Phaser {
 		 * 
 		 * @return 32-bit color value with alpha
 		 */
-        static public getRandomColor(min: number = 0, max: number = 255, alpha: number = 255): number {
+        public static getRandomColor(min: number = 0, max: number = 255, alpha: number = 255): number {
 
             //	Sanity checks
             if (max > 255)
@@ -480,7 +479,7 @@ module Phaser {
 		 * 
 		 * @return Object with properties: alpha, red, green, blue
 		 */
-        static public getRGB(color: number): any {
+        public static getRGB(color: number): any {
             return { alpha: color >>> 24, red: color >> 16 & 0xFF, green: color >> 8 & 0xFF, blue: color & 0xFF };
         }
 
@@ -490,7 +489,7 @@ module Phaser {
         * @param {Number} color
         * @return {Any}
         */
-        static public getWebRGB(color: number): any {
+        public static getWebRGB(color: number): any {
 
             var alpha: number = (color >>> 24) / 255;
             var red: number = color >> 16 & 0xFF;
@@ -508,7 +507,7 @@ module Phaser {
 		 * 
 		 * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
 		 */
-        static public getAlpha(color: number): number {
+        public static getAlpha(color: number): number {
             return color >>> 24;
         }
 
@@ -519,7 +518,7 @@ module Phaser {
 		 * 
 		 * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
 		 */
-        static public getAlphaFloat(color: number): number {
+        public static getAlphaFloat(color: number): number {
             return (color >>> 24) / 255;
         }
 
@@ -530,7 +529,7 @@ module Phaser {
 		 * 
 		 * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
 		 */
-        static public getRed(color: number): number {
+        public static getRed(color: number): number {
             return color >> 16 & 0xFF;
         }
 
@@ -541,7 +540,7 @@ module Phaser {
 		 * 
 		 * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
 		 */
-        static public getGreen(color: number): number {
+        public static getGreen(color: number): number {
             return color >> 8 & 0xFF;
         }
 
@@ -552,7 +551,7 @@ module Phaser {
 		 * 
 		 * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
 		 */
-        static public getBlue(color: number): number {
+        public static getBlue(color: number): number {
             return color & 0xFF;
         }
 

@@ -211,7 +211,7 @@ module Phaser {
         * @param {?number=} y The scaling factor in the y direction.  If this is not specified, the x scaling factor will be used.
         * @return {Vec2} This for chaining.
         */
-        public scale(x: number, y?:number): Vec2 {
+        public scale(x: number, y:number): Vec2 {
 
             this.x *= x;
             this.y *= y || x;
@@ -280,7 +280,7 @@ module Phaser {
         * 
         * @return {Boolean}
         */
-        public equals(value): bool {
+        public equals(value): boolean {
             return (this.x == value && this.y == value);
         }
 

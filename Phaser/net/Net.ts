@@ -30,7 +30,7 @@ module Phaser {
          * You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
          * Do not include 'http://' at the start.
          */
-        public checkDomainName(domain: string): bool {
+        public checkDomainName(domain: string): boolean {
             return window.location.hostname.indexOf(domain) !== -1;
         }
 
@@ -40,7 +40,7 @@ module Phaser {
          * If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
          * Optionally you can redirect to the new url, or just return it as a string.
          */
-        public updateQueryString(key: string, value: string, redirect?:bool = false, url?: string = ''):string {
+        public updateQueryString(key: string, value: string, redirect:boolean = false, url: string = ''):string {
 
             if (url == '')
             {
@@ -99,7 +99,7 @@ module Phaser {
          * Returns the Query String as an object.
          * If you specify a parameter it will return just the value of that parameter, should it exist.
          */
-        public getQueryString(parameter?: string = '') {
+        public getQueryString(parameter: string = '') {
 
             var output = {};
             var keyValues = location.search.substring(1).split('&');

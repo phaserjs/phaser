@@ -76,7 +76,7 @@ module Phaser {
          * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
          * @returns {Button} The newly created button object.
          */
-        public button(x?: number = 0, y?: number = 0, key?: string = null, callback? = null, callbackContext? = null, overFrame? = null, outFrame? = null, downFrame? = null): UI.Button {
+        public button(x: number = 0, y: number = 0, key: string = null, callback = null, callbackContext = null, overFrame = null, outFrame = null, downFrame = null): UI.Button {
             return <UI.Button> this._world.group.add(new UI.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
         }
 
@@ -89,11 +89,11 @@ module Phaser {
          * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
          * @returns {Sprite} The newly created sprite object.
          */
-        public sprite(x: number, y: number, key?: string = '', frame? = null): Sprite {
+        public sprite(x: number, y: number, key: string = '', frame = null): Sprite {
             return <Sprite> this._world.group.add(new Sprite(this.game, x, y, key, frame));
         }
 
-        public audio(key: string, volume?: number = 1, loop?: bool = false) {
+        public audio(key: string, volume: number = 1, loop: boolean = false) {
             return <Sound> this.game.sound.add(key, volume, loop);
         }
 
@@ -108,7 +108,7 @@ module Phaser {
          * @param [shapeType] The default body shape is either 0 for a Box or 1 for a Circle. See Sprite.body.addShape for custom shapes (polygons, etc)
          * @returns {Sprite} The newly created sprite object.
          */
-        //public physicsSprite(x: number, y: number, key?: string = '', frame? = null, bodyType?: number = Phaser.Types.BODY_DYNAMIC, shapeType?:number = 0): Sprite {
+        //public physicsSprite(x: number, y: number, key: string = '', frame? = null, bodyType: number = Phaser.Types.BODY_DYNAMIC, shapeType:number = 0): Sprite {
         //    return <Sprite> this._world.group.add(new Sprite(this.game, x, y, key, frame, bodyType, shapeType));
         //}
 
@@ -129,7 +129,7 @@ module Phaser {
          * @param maxSize {number} Optional, capacity of this group.
          * @returns {Group} The newly created group.
          */
-        public group(maxSize?: number = 0): Group {
+        public group(maxSize: number = 0): Group {
             return <Group> this._world.group.add(new Group(this.game, maxSize));
         }
 
@@ -150,7 +150,7 @@ module Phaser {
          * @param size {number} Optional, size of this emitter.
          * @return {Emitter} The newly created emitter object.
          */
-        public emitter(x?: number = 0, y?: number = 0, size?: number = 0): ArcadeEmitter {
+        public emitter(x: number = 0, y: number = 0, size: number = 0): ArcadeEmitter {
             return <ArcadeEmitter> this._world.group.add(new ArcadeEmitter(this.game, x, y, size));
         }
 
@@ -164,7 +164,7 @@ module Phaser {
          * @param height {number} Height of this object.
          * @returns {ScrollZone} The newly created scroll zone object.
          */
-        public scrollZone(key: string, x?: number = 0, y?: number = 0, width?: number = 0, height?: number = 0): ScrollZone {
+        public scrollZone(key: string, x: number = 0, y: number = 0, width: number = 0, height: number = 0): ScrollZone {
             return <ScrollZone> this._world.group.add(new ScrollZone(this.game, key, x, y, width, height));
         }
 
@@ -179,7 +179,7 @@ module Phaser {
          * @param [tileHeight] {number} height of each tile.
          * @return {Tilemap} The newly created tilemap object.
          */
-        public tilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth?: number = 0, tileHeight?: number = 0): Tilemap {
+        public tilemap(key: string, mapData: string, format: number, resizeWorld: boolean = true, tileWidth: number = 0, tileHeight: number = 0): Tilemap {
             return <Tilemap> this._world.group.add(new Tilemap(this.game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
         }
 
@@ -190,7 +190,7 @@ module Phaser {
          * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
          * @return {Phaser.Tween} The newly created tween object.
          */
-        public tween(obj, localReference?:bool = false): Tween {
+        public tween(obj, localReference:boolean = false): Tween {
             return this.game.tweens.create(obj, localReference);
         }
 

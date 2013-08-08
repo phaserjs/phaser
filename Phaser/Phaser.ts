@@ -1,5 +1,6 @@
 /**
 * Phaser
+* www.phaser.io
 *
 * v1.0.0 - August 12th 2013
 *

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -47,14 +47,14 @@
     <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
     <TypeScriptOutFile>../build/phaser.js</TypeScriptOutFile>
-    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
+    <TypeScriptGeneratesDeclarations>false</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
     <TypeScriptOutFile>../build/phaser.js</TypeScriptOutFile>
-    <TypeScriptGeneratesDeclarations>true</TypeScriptGeneratesDeclarations>
+    <TypeScriptGeneratesDeclarations>false</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
@@ -83,12 +83,12 @@
     <Content Include="core\PluginManager.js">
       <DependentUpon>PluginManager.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="display\Texture.ts" />
+    <TypeScriptCompile Include="display\DynamicTexture.ts" />
     <TypeScriptCompile Include="display\CSS3Filters.ts" />
     <Content Include="display\CSS3Filters.js">
       <DependentUpon>CSS3Filters.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="display\Texture.ts" />
-    <TypeScriptCompile Include="display\DynamicTexture.ts" />
     <Content Include="display\DynamicTexture.js">
       <DependentUpon>DynamicTexture.ts</DependentUpon>
     </Content>

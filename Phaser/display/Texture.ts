@@ -76,7 +76,7 @@ module Phaser.Display {
         * The load status of the texture image.
         * @type {boolean}
         */
-        public loaded: bool = false;
+        public loaded: boolean = false;
 
         /**
          * An Array of Cameras to which this texture won't render
@@ -90,7 +90,7 @@ module Phaser.Display {
          * for some effects it can be handy.
          * @type {boolean}
          */
-        public opaque: bool = false;
+        public opaque: boolean = false;
 
         /**
         * Opacity of the Sprite texture where 1 is opaque (default) and 0 is fully transparent.
@@ -140,7 +140,7 @@ module Phaser.Display {
          * If renderRotation is false then the object can still rotate but it will never be rendered rotated.
          * @type {boolean}
          */
-        public renderRotation: bool = true;
+        public renderRotation: boolean = true;
 
         /**
          * The direction the animation frame is facing (can be Phaser.Types.RIGHT, LEFT, UP, DOWN).
@@ -152,19 +152,19 @@ module Phaser.Display {
          * Flip the graphic horizontally (defaults to false)
          * @type {boolean}
          */
-        public flippedX: bool = false;
+        public flippedX: boolean = false;
 
         /**
          * Flip the graphic vertically (defaults to false)
          * @type {boolean}
          */
-        public flippedY: bool = false;
+        public flippedY: boolean = false;
 
         /**
          * Is the texture a DynamicTexture?
          * @type {boolean}
          */
-        public isDynamic: bool = false;
+        public isDynamic: boolean = false;
 
         /**
          * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
@@ -191,7 +191,7 @@ module Phaser.Display {
         /**
          * Returns true if this texture is hidden from rendering to the given camera, otherwise false.
          */
-        public isHidden(camera: Camera): bool {
+        public isHidden(camera: Camera): boolean {
 
             if (this._blacklist && this.cameraBlacklist.indexOf(camera.ID) !== -1)
             {
@@ -222,7 +222,7 @@ module Phaser.Display {
          * Updates the texture being used to render the Sprite.
          * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
          */
-        public setTo(image = null, dynamic?: DynamicTexture = null) {
+        public setTo(image = null, dynamic: DynamicTexture = null) {
 
             if (dynamic)
             {
@@ -252,7 +252,7 @@ module Phaser.Display {
          * @param clearAnimations {boolean} If this Sprite has a set of animation data already loaded you can choose to keep or clear it with this boolean
          * @param updateBody {boolean} Update the physics body dimensions to match the newly loaded texture/frame?
          */
-        public loadImage(key: string, clearAnimations?: bool = true, updateBody?: bool = true) {
+        public loadImage(key: string, clearAnimations: boolean = true, updateBody: boolean = true) {
 
             if (clearAnimations && this.parent['animations'] && this.parent['animations'].frameData !== null)
             {

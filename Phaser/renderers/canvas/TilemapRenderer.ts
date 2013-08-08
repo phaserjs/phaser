@@ -34,7 +34,7 @@ module Phaser.Renderer.Canvas {
          * Render a tilemap to a specific camera.
          * @param camera {Camera} The camera this tilemap will be rendered to.
          */
-        public render(camera: Camera, tilemap: Tilemap): bool {
+        public render(camera: Camera, tilemap: Tilemap): boolean {
 
             //  Loop through the layers
 

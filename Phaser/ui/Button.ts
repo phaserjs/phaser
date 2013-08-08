@@ -28,7 +28,7 @@ module Phaser.UI {
          * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
          * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
          */
-        constructor(game: Game, x?: number = 0, y?: number = 0, key?: string = null, callback? = null, callbackContext? = null, overFrame? = null, outFrame? = null, downFrame? = null) {
+        constructor(game: Game, x: number = 0, y: number = 0, key: string = null, callback = null, callbackContext = null, overFrame = null, outFrame = null, downFrame = null) {
 
             super(game, x, y, key, outFrame);
 
@@ -116,7 +116,7 @@ module Phaser.UI {
 
         //  TODO
         //public tabIndex: number;
-        //public tabEnabled: bool;
+        //public tabEnabled: boolean;
 
         //  ENTER or SPACE can activate this button if it has focus
 
@@ -204,11 +204,11 @@ module Phaser.UI {
             return this.input.priorityID;
         }
 
-        public set useHandCursor(value: bool) {
+        public set useHandCursor(value: boolean) {
             this.input.useHandCursor = value;
         }
 
-        public get useHandCursor(): bool {
+        public get useHandCursor(): boolean {
             return this.input.useHandCursor;
         }
 

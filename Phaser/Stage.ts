@@ -122,7 +122,7 @@ module Phaser {
          * Clear the whole stage every frame? (Default to true)
          * @type {boolean}
          */
-        public clear: bool = true;
+        public clear: boolean = true;
 
         /**
          * Canvas element used by engine.
@@ -141,14 +141,14 @@ module Phaser {
          * (Default to false, aka always use PauseScreen)
          * @type {boolean}
          */
-        public disablePauseScreen: bool = false;
+        public disablePauseScreen: boolean = false;
 
         /**
          * Do not use boot screen when engine starts?
          * (Default to false, aka always use BootScreen)
          * @type {boolean}
          */
-        public disableBootScreen: bool = false;
+        public disableBootScreen: boolean = false;
 
         /**
          * Offset from this stage to the canvas element.
@@ -173,7 +173,7 @@ module Phaser {
          * If set to true the game will never pause when the browser or browser tab loses focuses
          * @type {boolean}
          */
-        public disableVisibilityChange: bool = false;
+        public disableVisibilityChange: boolean = false;
 
         /**
          * Stage boot
@@ -259,7 +259,7 @@ module Phaser {
 
         }
 
-        public enableOrientationCheck(forceLandscape: bool, forcePortrait: bool, imageKey?: string = '') {
+        public enableOrientationCheck(forceLandscape: boolean, forcePortrait: boolean, imageKey: string = '') {
 
             this.scale.forceLandscape = forceLandscape;
             this.scale.forcePortrait = forcePortrait;
@@ -317,7 +317,7 @@ module Phaser {
         /**
          * Get the DOM offset values of the given element
          */
-        public getOffset(element, populateOffset: bool = true): Point {
+        public getOffset(element, populateOffset: boolean = true): Point {
 
             var box = element.getBoundingClientRect();
 

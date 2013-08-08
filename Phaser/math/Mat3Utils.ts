@@ -16,7 +16,7 @@ module Phaser {
         /**
          * Transpose the values of a Mat3
          **/
-        static transpose(source:Phaser.Mat3, dest?:Phaser.Mat3 = null): Mat3 {
+        static transpose(source:Phaser.Mat3, dest:Phaser.Mat3 = null): Mat3 {
 
             if (dest === null)
             {

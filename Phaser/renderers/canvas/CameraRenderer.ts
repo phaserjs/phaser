@@ -32,7 +32,7 @@ module Phaser.Renderer.Canvas {
         private _sin: number = 0;
         private _cos: number = 1;
 
-        public preRender(camera: Camera): bool {
+        public preRender(camera: Camera): boolean {
 
             if (camera.visible == false || camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1)
             {

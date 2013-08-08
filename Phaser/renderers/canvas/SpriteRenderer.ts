@@ -32,7 +32,7 @@ module Phaser.Renderer.Canvas {
          * @param camera {Rectangle} The Rectangle you want to check.
          * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
          */
-        public inCamera(camera: Camera, sprite: Sprite): bool {
+        public inCamera(camera: Camera, sprite: Sprite): boolean {
 
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
             if (sprite.transform.scrollFactor.equals(0))
@@ -50,7 +50,7 @@ module Phaser.Renderer.Canvas {
          * @param camera {Camera} Camera this sprite will be rendered to.
          * @return {boolean} Return false if not rendered, otherwise return true.
          */
-        public render(camera: Camera, sprite: Sprite): bool {
+        public render(camera: Camera, sprite: Sprite): boolean {
 
             Phaser.SpriteUtils.updateCameraView(camera, sprite);
 

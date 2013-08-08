@@ -91,13 +91,13 @@ module Phaser {
          * Will this tween automatically restart when it completes?
          * @type {boolean}
          */
-	    private _loop: bool = false;
+	    private _loop: boolean = false;
 
         /**
          * A yoyo tween is one that plays once fully, then reverses back to the original tween values before completing.
          * @type {boolean}
          */
-	    private _yoyo: bool = false;
+	    private _yoyo: boolean = false;
 	    private _yoyoCount: number = 0;
 
 	    /**
@@ -141,7 +141,7 @@ module Phaser {
 	     * @param [loop] {boolean} Should the tween automatically restart once complete? (ignores any chained tweens)
 	     * @return {Tween} Itself.
 	     */
-	    public to(properties, duration?: number = 1000, ease?: any = null, autoStart?: bool = false, delay?:number = 0, loop?:bool = false, yoyo?:bool = false): Tween {
+	    public to(properties, duration: number = 1000, ease: any = null, autoStart: boolean = false, delay:number = 0, loop:boolean = false, yoyo:boolean = false): Tween {
 
 	        this._duration = duration;
 
@@ -173,14 +173,14 @@ module Phaser {
 
 	    }
 
-	    public loop(value: bool): Tween {
+	    public loop(value: boolean): Tween {
 
 	        this._loop = value;
 	        return this;
 
 	    }
 
-	    public yoyo(value: bool): Tween {
+	    public yoyo(value: boolean): Tween {
 
 	        this._yoyo = value;
 	        this._yoyoCount = 0;
@@ -188,12 +188,12 @@ module Phaser {
 
 	    }
 
-        public isRunning: bool = false;
+        public isRunning: boolean = false;
 
 	    /**
 	     * Start to tween.
 	     */
-	    public start(looped: bool = false): Tween {
+	    public start(looped: boolean = false): Tween {
 
 	        if (this.game === null || this._object === null)
 	        {
@@ -356,7 +356,7 @@ module Phaser {
 
 	    }
 
-	    private _paused: bool;
+	    private _paused: boolean;
 
 	    /**
 	     * Update tweening.

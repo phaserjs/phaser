@@ -148,7 +148,7 @@ module Phaser {
         /**
          * A boolean representing if the Camera has been modified in any way via a scale, rotate, flip or skew.
          */
-        public modified: bool = false;
+        public modified: boolean = false;
 
         /**
          * Sprite moving inside this Rectangle will not cause camera moving.
@@ -160,7 +160,7 @@ module Phaser {
          * Whether this camera is visible or not. (default is true)
          * @type {boolean}
          */
-        public visible: bool = true;
+        public visible: boolean = true;
 
         /**
          * The z value of this Camera. Cameras are rendered in z-index order by the Renderer.
@@ -184,7 +184,7 @@ module Phaser {
         *
         * @param object {Sprite/Group} The object to check.
         */
-        public isHidden(object): bool {
+        public isHidden(object): boolean {
             return object.texture.isHidden(this);
         }
 
@@ -205,7 +205,7 @@ module Phaser {
          * @param target {Sprite} The object you want the camera to track. Set to null to not follow anything.
          * @param [style] {number} Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
          */
-        public follow(target: Sprite, style?: number = Phaser.Types.CAMERA_FOLLOW_LOCKON) {
+        public follow(target: Sprite, style: number = Phaser.Types.CAMERA_FOLLOW_LOCKON) {
 
             this._target = target;
 

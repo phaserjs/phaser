@@ -19,7 +19,7 @@ module Phaser.Renderer.Headless {
 
         public renderGameObject(camera, object) {
             //  Nothing, headless remember?
-        };
+        }
 
         public cameraRenderer;
         public groupRenderer;

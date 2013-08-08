@@ -17,7 +17,7 @@ module Phaser {
         * @param {Array} seeds
         * @return {Phaser.RandomDataGenerator}
         */
-        constructor(seeds?: string[] = []) {
+        constructor(seeds: string[] = []) {
 
             this.sow(seeds);
 
@@ -122,7 +122,7 @@ module Phaser {
         * @method sow
         * @param {Array} seeds
         */
-        public sow(seeds?: string[] = []) {
+        public sow(seeds: string[] = []) {
 
             this.s0 = this.hash(' ');
             this.s1 = this.hash(this.s0);
@@ -263,7 +263,7 @@ module Phaser {
         * @param {Number} min
         * @param {Number} max
         */
-        public timestamp(min?: number = 946684800000, max?: number = 1577862000000): number {
+        public timestamp(min: number = 946684800000, max: number = 1577862000000): number {
 
             return this.realInRange(min, max);
 

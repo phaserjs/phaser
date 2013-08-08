@@ -122,10 +122,10 @@ module Phaser {
          * @param url {string} URL of this sound file.
          * @param data {object} Extra sound data.
          */
-        public addSound(key: string, url: string, data, webAudio: bool = true, audioTag: bool = false) {
+        public addSound(key: string, url: string, data, webAudio: boolean = true, audioTag: boolean = false) {
 
-            var locked: bool = this.game.sound.touchLocked;
-            var decoded: bool = false;
+            var locked: boolean = this.game.sound.touchLocked;
+            var decoded: boolean = false;
 
             if (audioTag) {
                 decoded = true;
@@ -277,7 +277,7 @@ module Phaser {
          * @param key Asset key of the sound you want.
          * @return {object} The sound data you want.
          */
-        public isSoundDecoded(key: string): bool {
+        public isSoundDecoded(key: string): boolean {
 
             if (this._sounds[key])
             {
@@ -291,7 +291,7 @@ module Phaser {
          * @param key Asset key of the sound you want.
          * @return {object} The sound data you want.
          */
-        public isSoundReady(key: string): bool {
+        public isSoundReady(key: string): boolean {
 
             if (this._sounds[key] && this._sounds[key].decoded == true && this._sounds[key].locked == false)
             {
@@ -307,7 +307,7 @@ module Phaser {
          * @param key Asset key of the sprite sheet you want.
          * @return {object} The sprite sheet data you want.
          */
-        public isSpriteSheet(key: string): bool {
+        public isSpriteSheet(key: string): boolean {
 
             if (this._images[key])
             {

@@ -253,7 +253,7 @@ module Phaser {
 		 *
 		 * @return {number} The angle (in radians unless asDegrees is true)
 		 */
-        public angleBetweenPoint(a: Sprite, target: Point, asDegrees: bool = false): number {
+        public angleBetweenPoint(a: Sprite, target: Point, asDegrees: boolean = false): number {
 
             var dx: number = (target.x) - (a.x + a.transform.origin.x);
             var dy: number = (target.y) - (a.y + a.transform.origin.y);
@@ -279,7 +279,7 @@ module Phaser {
 		 *
 		 * @return {number} The angle (in radians unless asDegrees is true)
 		 */
-        public angleBetween(a: Sprite, b: Sprite, asDegrees: bool = false): number {
+        public angleBetween(a: Sprite, b: Sprite, asDegrees: boolean = false): number {
 
             var dx: number = (b.x + b.transform.origin.x) - (a.x + a.transform.origin.x);
             var dy: number = (b.y + b.transform.origin.y) - (a.y + a.transform.origin.y);
@@ -340,7 +340,7 @@ module Phaser {
 		 *
 		 * @return {number} The angle (in radians unless asDegrees is true)
 		 */
-        public angleBetweenMouse(a: Sprite, asDegrees: bool = false): number {
+        public angleBetweenMouse(a: Sprite, asDegrees: boolean = false): number {
 
             //	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
             var p: Point = SpriteUtils.getScreenXY(a);

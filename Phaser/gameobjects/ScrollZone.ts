@@ -26,7 +26,7 @@ module Phaser {
          * @param [width] {number} width of this object.
          * @param [height] {number} height of this object.
          */
-        constructor(game: Game, key:string, x: number = 0, y: number = 0, width?: number = 0, height?: number = 0) {
+        constructor(game: Game, key:string, x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
 
             super(game, x, y, key);
 
@@ -80,7 +80,7 @@ module Phaser {
          * @param [speedY] {number} y-axis scrolling speed.
          * @return {ScrollRegion} The newly added region.
          */
-        public addRegion(x: number, y: number, width: number, height: number, speedX?:number = 0, speedY?:number = 0):ScrollRegion {
+        public addRegion(x: number, y: number, width: number, height: number, speedX:number = 0, speedY:number = 0):ScrollRegion {
 
             if (x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height)
             {

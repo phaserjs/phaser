@@ -14,7 +14,7 @@
     }
 
     var sprite: Phaser.Sprite;
-    var rotate: bool = false;
+    var rotate: boolean = false;
 
     function create() {
 
