@@ -297,7 +297,7 @@ module Phaser.Components {
             }
             else
             {
-                return SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY());
+                return SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY);
             }
 
         }
@@ -319,7 +319,7 @@ module Phaser.Components {
             }
             else if (this._pointerData[pointer.id].isOver == true)
             {
-                if (SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY()))
+                if (SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY))
                 {
                     this._pointerData[pointer.id].x = pointer.x - this._parent.x;
                     this._pointerData[pointer.id].y = pointer.y - this._parent.y;
@@ -413,7 +413,7 @@ module Phaser.Components {
                 this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
 
                 //  Only release the InputUp signal if the pointer is still over this sprite
-                if (SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY()))
+                if (SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY))
                 {
                     //console.log('releasedHandler: ' + Date.now());
                     this._parent.events.onInputUp.dispatch(this._parent, pointer);
@@ -605,7 +605,7 @@ module Phaser.Components {
 
             if (this.dragFromCenter)
             {
-                this._parent.transform.centerOn(pointer.worldX(), pointer.worldY());
+                this._parent.transform.centerOn(pointer.worldX, pointer.worldY);
                 this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
             }
             else

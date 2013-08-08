@@ -2276,7 +2276,7 @@ var Phaser;
                 if(this.enabled == false || this._parent.visible == false) {
                     return false;
                 } else {
-                    return Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY());
+                    return Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY);
                 }
             };
             InputHandler.prototype.update = /**
@@ -2290,7 +2290,7 @@ var Phaser;
                 if(this.draggable && this._draggedPointerID == pointer.id) {
                     return this.updateDrag(pointer);
                 } else if(this._pointerData[pointer.id].isOver == true) {
-                    if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY())) {
+                    if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY)) {
                         this._pointerData[pointer.id].x = pointer.x - this._parent.x;
                         this._pointerData[pointer.id].y = pointer.y - this._parent.y;
                         return true;
@@ -2351,7 +2351,7 @@ var Phaser;
                     this._pointerData[pointer.id].timeUp = this.game.time.now;
                     this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
                     //  Only release the InputUp signal if the pointer is still over this sprite
-                    if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX(), pointer.worldY())) {
+                    if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY)) {
                         //console.log('releasedHandler: ' + Date.now());
                         this._parent.events.onInputUp.dispatch(this._parent, pointer);
                     } else {
@@ -2506,7 +2506,7 @@ var Phaser;
                 this._draggedPointerID = pointer.id;
                 this._pointerData[pointer.id].isDragged = true;
                 if(this.dragFromCenter) {
-                    this._parent.transform.centerOn(pointer.worldX(), pointer.worldY());
+                    this._parent.transform.centerOn(pointer.worldX, pointer.worldY);
                     this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
                 } else {
                     this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
@@ -9964,15 +9964,12 @@ var Phaser;
         */
         function CameraManager(game, x, y, width, height) {
             /**
-            * Local helper stores index of next created camera.
-            */
-            this._cameraInstance = 0;
-            /**
             * Helper for sort.
             */
             this._sortIndex = '';
             this._game = game;
             this._cameras = [];
+            this._cameraLength = 0;
             this.defaultCamera = this.addCamera(x, y, width, height);
             this.current = this.defaultCamera;
         }
@@ -10010,9 +10007,8 @@ var Phaser;
         * @returns {Camera} The newly created camera object.
         */
         function (x, y, width, height) {
-            var newCam = new Phaser.Camera(this._game, this._cameraInstance, x, y, width, height);
-            this._cameras.push(newCam);
-            this._cameraInstance++;
+            var newCam = new Phaser.Camera(this._game, this._cameraLength, x, y, width, height);
+            this._cameraLength = this._cameras.push(newCam);
             return newCam;
         };
         CameraManager.prototype.removeCamera = /**
@@ -10045,6 +10041,16 @@ var Phaser;
                 this.sort();
             }
             return true;
+        };
+        CameraManager.prototype.getCameraUnderPoint = function (x, y) {
+            //  Work through the cameras in reverse as they are rendered in array order
+            //  Return the first camera we find matching the criteria
+            for(var c = this._cameraLength - 1; c >= 0; c--) {
+                if(this._cameras[c].visible && Phaser.RectangleUtils.contains(this._cameras[c].screenView, x, y)) {
+                    return this._cameras[c];
+                }
+            }
+            return null;
         };
         CameraManager.prototype.sort = /**
         * Call this function to sort the Cameras according to a particular value and order (default is their Z value).
@@ -12259,7 +12265,7 @@ var Phaser;
         */
         function (layer) {
             if (typeof layer === "undefined") { layer = 0; }
-            return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.getWorldX(), this.game.input.getWorldY())];
+            return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.worldX, this.game.input.worldY)];
         };
         Tilemap.prototype.getTileOverlaps = /**
         * Get tiles overlaps the given object.
@@ -15682,6 +15688,13 @@ var Phaser;
             * @type {Any}
             **/
             this.targetObject = null;
+            /**
+            * The top-most Camera that this Pointer is over (if any, null if none).
+            * If the Pointer is over several cameras that are stacked on-top of each other this is only ever set to the top-most rendered camera.
+            * @property camera
+            * @type {Phaser.Camera}
+            **/
+            this.camera = null;
             this.game = game;
             this.id = id;
             this.active = false;
@@ -15707,22 +15720,34 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Pointer.prototype.worldX = /**
-        * Gets the X value of this Pointer in world coordinates based on the given camera.
-        * @param {Camera} [camera]
-        */
-        function (camera) {
-            if (typeof camera === "undefined") { camera = this.game.input.camera; }
-            return camera.worldView.x + this.x;
-        };
-        Pointer.prototype.worldY = /**
-        * Gets the Y value of this Pointer in world coordinates based on the given camera.
-        * @param {Camera} [camera]
-        */
-        function (camera) {
-            if (typeof camera === "undefined") { camera = this.game.input.camera; }
-            return camera.worldView.y + this.y;
-        };
+        Object.defineProperty(Pointer.prototype, "worldX", {
+            get: /**
+            * Gets the X value of this Pointer in world coordinates based on the given camera.
+            * @param {Camera} [camera]
+            */
+            function () {
+                if(this.camera) {
+                    return this.camera.worldView.x + this.x;
+                }
+                return null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Pointer.prototype, "worldY", {
+            get: /**
+            * Gets the Y value of this Pointer in world coordinates based on the given camera.
+            * @param {Camera} [camera]
+            */
+            function () {
+                if(this.camera) {
+                    return this.camera.worldView.y + this.y;
+                }
+                return null;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Pointer.prototype.start = /**
         * Called when the Pointer is pressed onto the touchscreen
         * @method start
@@ -15790,6 +15815,8 @@ var Phaser;
                         this._history.shift();
                     }
                 }
+                //  Check which camera they are over
+                this.camera = this.game.world.cameras.getCameraUnderPoint(this.x, this.y);
             }
         };
         Pointer.prototype.move = /**
@@ -16815,6 +16842,24 @@ var Phaser;
             this.recordLimit = 100;
             /**
             * A Pointer object
+            * @property pointer3
+            * @type {Pointer}
+            **/
+            this.pointer3 = null;
+            /**
+            * A Pointer object
+            * @property pointer4
+            * @type {Pointer}
+            **/
+            this.pointer4 = null;
+            /**
+            * A Pointer object
+            * @property pointer5
+            * @type {Pointer}
+            **/
+            this.pointer5 = null;
+            /**
+            * A Pointer object
             * @property pointer6
             * @type {Pointer}
             **/
@@ -16856,9 +16901,6 @@ var Phaser;
             this.mousePointer = new Phaser.Pointer(this.game, 0);
             this.pointer1 = new Phaser.Pointer(this.game, 1);
             this.pointer2 = new Phaser.Pointer(this.game, 2);
-            this.pointer3 = new Phaser.Pointer(this.game, 3);
-            this.pointer4 = new Phaser.Pointer(this.game, 4);
-            this.pointer5 = new Phaser.Pointer(this.game, 5);
             this.mouse = new Phaser.Mouse(this.game);
             this.keyboard = new Phaser.Keyboard(this.game);
             this.touch = new Phaser.Touch(this.game);
@@ -16873,7 +16915,6 @@ var Phaser;
             this.position = new Phaser.Vec2();
             this._oldPosition = new Phaser.Vec2();
             this.circle = new Phaser.Circle(0, 0, 44);
-            this.camera = this.game.camera;
             this.activePointer = this.mousePointer;
             this.currentPointers = 0;
             this.hitCanvas = document.createElement('canvas');
@@ -16884,6 +16925,20 @@ var Phaser;
         InputManager.MOUSE_OVERRIDES_TOUCH = 0;
         InputManager.TOUCH_OVERRIDES_MOUSE = 1;
         InputManager.MOUSE_TOUCH_COMBINE = 2;
+        Object.defineProperty(InputManager.prototype, "camera", {
+            get: /**
+            * The camera being used for mouse and touch based pointers to calculate their world coordinates.
+            * This is only ever the camera set by the most recently active Pointer.
+            * If you need to know exactly which camera a specific Pointer is over then see Pointer.camera instead.
+            * @property camera
+            * @type {Camera}
+            **/
+            function () {
+                return this.activePointer.camera;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(InputManager.prototype, "x", {
             get: /**
             * The X coordinate of the most recently active pointer.
@@ -16895,7 +16950,7 @@ var Phaser;
                 return this._x;
             },
             set: function (value) {
-                this._x = Math.round(value);
+                this._x = Math.floor(value);
             },
             enumerable: true,
             configurable: true
@@ -16911,33 +16966,23 @@ var Phaser;
                 return this._y;
             },
             set: function (value) {
-                this._y = Math.round(value);
+                this._y = Math.floor(value);
             },
             enumerable: true,
             configurable: true
         });
         InputManager.prototype.addPointer = /**
-        * Add a new Pointer object to the Input Manager. By default Input creates 5 pointer objects for you. If you need more
+        * Add a new Pointer object to the Input Manager. By default Input creates 2 pointer objects for you. If you need more
         * use this to create a new one, up to a maximum of 10.
         * @method addPointer
         * @return {Pointer} A reference to the new Pointer object
         **/
         function () {
             var next = 0;
-            if(this.pointer10 === null) {
-                next = 10;
-            }
-            if(this.pointer9 === null) {
-                next = 9;
-            }
-            if(this.pointer8 === null) {
-                next = 8;
-            }
-            if(this.pointer7 === null) {
-                next = 7;
-            }
-            if(this.pointer6 === null) {
-                next = 6;
+            for(var i = 10; i > 0; i--) {
+                if(this['pointer' + i] === null) {
+                    next = i;
+                }
             }
             if(next == 0) {
                 throw new Error("You can only have 10 Pointer objects");
@@ -16998,9 +17043,15 @@ var Phaser;
             this.mousePointer.update();
             this.pointer1.update();
             this.pointer2.update();
-            this.pointer3.update();
-            this.pointer4.update();
-            this.pointer5.update();
+            if(this.pointer3) {
+                this.pointer3.update();
+            }
+            if(this.pointer4) {
+                this.pointer4.update();
+            }
+            if(this.pointer5) {
+                this.pointer5.update();
+            }
             if(this.pointer6) {
                 this.pointer6.update();
             }
@@ -17026,25 +17077,10 @@ var Phaser;
             if (typeof hard === "undefined") { hard = false; }
             this.keyboard.reset();
             this.mousePointer.reset();
-            this.pointer1.reset();
-            this.pointer2.reset();
-            this.pointer3.reset();
-            this.pointer4.reset();
-            this.pointer5.reset();
-            if(this.pointer6) {
-                this.pointer6.reset();
-            }
-            if(this.pointer7) {
-                this.pointer7.reset();
-            }
-            if(this.pointer8) {
-                this.pointer8.reset();
-            }
-            if(this.pointer9) {
-                this.pointer9.reset();
-            }
-            if(this.pointer10) {
-                this.pointer10.reset();
+            for(var i = 1; i <= 10; i++) {
+                if(this['pointer' + i]) {
+                    this['pointer' + i].reset();
+                }
             }
             this.currentPointers = 0;
             this.game.stage.canvas.style.cursor = "default";
@@ -17090,26 +17126,10 @@ var Phaser;
             **/
             function () {
                 this.currentPointers = 0;
-                if(this.pointer1.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer2.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer3.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer4.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer5.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer6 && this.pointer6.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer7 && this.pointer7.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer8 && this.pointer8.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer9 && this.pointer9.active == true) {
-                    this.currentPointers++;
-                } else if(this.pointer10 && this.pointer10.active == true) {
-                    this.currentPointers++;
+                for(var i = 1; i <= 10; i++) {
+                    if(this['pointer' + i] && this['pointer' + i].active) {
+                        this.currentPointers++;
+                    }
                 }
                 return this.currentPointers;
             },
@@ -17131,22 +17151,12 @@ var Phaser;
                 return this.pointer1.start(event);
             } else if(this.pointer2.active == false) {
                 return this.pointer2.start(event);
-            } else if(this.pointer3.active == false) {
-                return this.pointer3.start(event);
-            } else if(this.pointer4.active == false) {
-                return this.pointer4.start(event);
-            } else if(this.pointer5.active == false) {
-                return this.pointer5.start(event);
-            } else if(this.pointer6 && this.pointer6.active == false) {
-                return this.pointer6.start(event);
-            } else if(this.pointer7 && this.pointer7.active == false) {
-                return this.pointer7.start(event);
-            } else if(this.pointer8 && this.pointer8.active == false) {
-                return this.pointer8.start(event);
-            } else if(this.pointer9 && this.pointer9.active == false) {
-                return this.pointer9.start(event);
-            } else if(this.pointer10 && this.pointer10.active == false) {
-                return this.pointer10.start(event);
+            } else {
+                for(var i = 3; i <= 10; i++) {
+                    if(this['pointer' + i] && this['pointer' + i].active == false) {
+                        return this['pointer' + i].start(event);
+                    }
+                }
             }
             return null;
         };
@@ -17158,26 +17168,16 @@ var Phaser;
         **/
         function (event) {
             //  Unrolled for speed
-            if(this.pointer1.active == true && this.pointer1.identifier == event.identifier) {
+            if(this.pointer1.active && this.pointer1.identifier == event.identifier) {
                 return this.pointer1.move(event);
-            } else if(this.pointer2.active == true && this.pointer2.identifier == event.identifier) {
+            } else if(this.pointer2.active && this.pointer2.identifier == event.identifier) {
                 return this.pointer2.move(event);
-            } else if(this.pointer3.active == true && this.pointer3.identifier == event.identifier) {
-                return this.pointer3.move(event);
-            } else if(this.pointer4.active == true && this.pointer4.identifier == event.identifier) {
-                return this.pointer4.move(event);
-            } else if(this.pointer5.active == true && this.pointer5.identifier == event.identifier) {
-                return this.pointer5.move(event);
-            } else if(this.pointer6 && this.pointer6.active == true && this.pointer6.identifier == event.identifier) {
-                return this.pointer6.move(event);
-            } else if(this.pointer7 && this.pointer7.active == true && this.pointer7.identifier == event.identifier) {
-                return this.pointer7.move(event);
-            } else if(this.pointer8 && this.pointer8.active == true && this.pointer8.identifier == event.identifier) {
-                return this.pointer8.move(event);
-            } else if(this.pointer9 && this.pointer9.active == true && this.pointer9.identifier == event.identifier) {
-                return this.pointer9.move(event);
-            } else if(this.pointer10 && this.pointer10.active == true && this.pointer10.identifier == event.identifier) {
-                return this.pointer10.move(event);
+            } else {
+                for(var i = 3; i <= 10; i++) {
+                    if(this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier) {
+                        return this['pointer' + i].move(event);
+                    }
+                }
             }
             return null;
         };
@@ -17189,26 +17189,16 @@ var Phaser;
         **/
         function (event) {
             //  Unrolled for speed
-            if(this.pointer1.active == true && this.pointer1.identifier == event.identifier) {
+            if(this.pointer1.active && this.pointer1.identifier == event.identifier) {
                 return this.pointer1.stop(event);
-            } else if(this.pointer2.active == true && this.pointer2.identifier == event.identifier) {
+            } else if(this.pointer2.active && this.pointer2.identifier == event.identifier) {
                 return this.pointer2.stop(event);
-            } else if(this.pointer3.active == true && this.pointer3.identifier == event.identifier) {
-                return this.pointer3.stop(event);
-            } else if(this.pointer4.active == true && this.pointer4.identifier == event.identifier) {
-                return this.pointer4.stop(event);
-            } else if(this.pointer5.active == true && this.pointer5.identifier == event.identifier) {
-                return this.pointer5.stop(event);
-            } else if(this.pointer6 && this.pointer6.active == true && this.pointer6.identifier == event.identifier) {
-                return this.pointer6.stop(event);
-            } else if(this.pointer7 && this.pointer7.active == true && this.pointer7.identifier == event.identifier) {
-                return this.pointer7.stop(event);
-            } else if(this.pointer8 && this.pointer8.active == true && this.pointer8.identifier == event.identifier) {
-                return this.pointer8.stop(event);
-            } else if(this.pointer9 && this.pointer9.active == true && this.pointer9.identifier == event.identifier) {
-                return this.pointer9.stop(event);
-            } else if(this.pointer10 && this.pointer10.active == true && this.pointer10.identifier == event.identifier) {
-                return this.pointer10.stop(event);
+            } else {
+                for(var i = 3; i <= 10; i++) {
+                    if(this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier) {
+                        return this['pointer' + i].stop(event);
+                    }
+                }
             }
             return null;
         };
@@ -17225,22 +17215,12 @@ var Phaser;
                 return this.pointer1;
             } else if(this.pointer2.active == state) {
                 return this.pointer2;
-            } else if(this.pointer3.active == state) {
-                return this.pointer3;
-            } else if(this.pointer4.active == state) {
-                return this.pointer4;
-            } else if(this.pointer5.active == state) {
-                return this.pointer5;
-            } else if(this.pointer6 && this.pointer6.active == state) {
-                return this.pointer6;
-            } else if(this.pointer7 && this.pointer7.active == state) {
-                return this.pointer7;
-            } else if(this.pointer8 && this.pointer8.active == state) {
-                return this.pointer8;
-            } else if(this.pointer9 && this.pointer9.active == state) {
-                return this.pointer9;
-            } else if(this.pointer10 && this.pointer10.active == state) {
-                return this.pointer10;
+            } else {
+                for(var i = 3; i <= 10; i++) {
+                    if(this['pointer' + i] && this['pointer' + i].active == state) {
+                        return this['pointer' + i];
+                    }
+                }
             }
             return null;
         };
@@ -17256,39 +17236,35 @@ var Phaser;
                 return this.pointer1;
             } else if(this.pointer2.identifier == identifier) {
                 return this.pointer2;
-            } else if(this.pointer3.identifier == identifier) {
-                return this.pointer3;
-            } else if(this.pointer4.identifier == identifier) {
-                return this.pointer4;
-            } else if(this.pointer5.identifier == identifier) {
-                return this.pointer5;
-            } else if(this.pointer6 && this.pointer6.identifier == identifier) {
-                return this.pointer6;
-            } else if(this.pointer7 && this.pointer7.identifier == identifier) {
-                return this.pointer7;
-            } else if(this.pointer8 && this.pointer8.identifier == identifier) {
-                return this.pointer8;
-            } else if(this.pointer9 && this.pointer9.identifier == identifier) {
-                return this.pointer9;
-            } else if(this.pointer10 && this.pointer10.identifier == identifier) {
-                return this.pointer10;
+            } else {
+                for(var i = 3; i <= 10; i++) {
+                    if(this['pointer' + i] && this['pointer' + i].identifier == identifier) {
+                        return this['pointer' + i];
+                    }
+                }
             }
             return null;
         };
-        InputManager.prototype.getWorldX = /**
-        * @param {Camera} [camera]
-        */
-        function (camera) {
-            if (typeof camera === "undefined") { camera = this.game.camera; }
-            return camera.worldView.x + this.x;
-        };
-        InputManager.prototype.getWorldY = /**
-        * @param {Camera} [camera]
-        */
-        function (camera) {
-            if (typeof camera === "undefined") { camera = this.game.camera; }
-            return camera.worldView.y + this.y;
-        };
+        Object.defineProperty(InputManager.prototype, "worldX", {
+            get: function () {
+                if(this.camera) {
+                    return (this.camera.worldView.x - this.camera.screenView.x) + this.x;
+                }
+                return null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InputManager.prototype, "worldY", {
+            get: function () {
+                if(this.camera) {
+                    return (this.camera.worldView.y - this.camera.screenView.y) + this.y;
+                }
+                return null;
+            },
+            enumerable: true,
+            configurable: true
+        });
         InputManager.prototype.getDistance = /**
         * Get the distance between two Pointer objects
         * @method getDistance
@@ -18243,7 +18219,7 @@ var Phaser;
             //  Render the text
             DebugUtils.start(pointer.x, pointer.y - 100, color);
             DebugUtils.line('ID: ' + pointer.id + " Active: " + pointer.active);
-            DebugUtils.line('World X: ' + pointer.worldX() + " World Y: " + pointer.worldY());
+            DebugUtils.line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
             DebugUtils.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
             DebugUtils.line('Duration: ' + pointer.duration + " ms");
         };
@@ -18271,9 +18247,13 @@ var Phaser;
         function renderInputInfo(x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             DebugUtils.start(x, y, color);
-            DebugUtils.line('Input');
+            if(DebugUtils.game.input.camera) {
+                DebugUtils.line('Input - Camera: ' + DebugUtils.game.input.camera.ID);
+            } else {
+                DebugUtils.line('Input - Camera: null');
+            }
             DebugUtils.line('X: ' + DebugUtils.game.input.x + ' Y: ' + DebugUtils.game.input.y);
-            DebugUtils.line('World X: ' + DebugUtils.game.input.getWorldX() + ' World Y: ' + DebugUtils.game.input.getWorldY());
+            DebugUtils.line('World X: ' + DebugUtils.game.input.worldX + ' World Y: ' + DebugUtils.game.input.worldY);
             DebugUtils.line('Scale X: ' + DebugUtils.game.input.scale.x.toFixed(1) + ' Scale Y: ' + DebugUtils.game.input.scale.x.toFixed(1));
             DebugUtils.line('Screen X: ' + DebugUtils.game.input.activePointer.screenX + ' Screen Y: ' + DebugUtils.game.input.activePointer.screenY);
         };

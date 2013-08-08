@@ -24,9 +24,6 @@
         //  So we resize our default camera to 400px
         game.camera.height = 400;
 
-        //  Because it's our default camera we need to tell it to disable clipping, otherwise we'll never see the mirror effect render.
-        game.camera.disableClipping = true;
-
         //  Add our effect to the camera
         mirror = <Phaser.Plugins.CameraFX.Mirror> game.camera.plugins.add(Phaser.Plugins.CameraFX.Mirror);
 

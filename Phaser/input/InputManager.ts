@@ -27,9 +27,6 @@ module Phaser {
             this.mousePointer = new Pointer(this.game, 0);
             this.pointer1 = new Pointer(this.game, 1);
             this.pointer2 = new Pointer(this.game, 2);
-            this.pointer3 = new Pointer(this.game, 3);
-            this.pointer4 = new Pointer(this.game, 4);
-            this.pointer5 = new Pointer(this.game, 5);
 
             this.mouse = new Mouse(this.game);
             this.keyboard = new Keyboard(this.game);
@@ -47,8 +44,6 @@ module Phaser {
             this.position = new Vec2;
             this._oldPosition = new Vec2;
             this.circle = new Circle(0, 0, 44);
-
-            this.camera = this.game.camera;
 
             this.activePointer = this.mousePointer;
             this.currentPointers = 0;
@@ -130,10 +125,14 @@ module Phaser {
 
         /**
         * The camera being used for mouse and touch based pointers to calculate their world coordinates.
+        * This is only ever the camera set by the most recently active Pointer.
+        * If you need to know exactly which camera a specific Pointer is over then see Pointer.camera instead.
         * @property camera
         * @type {Camera}
         **/
-        public camera: Camera;
+        public get camera(): Camera {
+            return this.activePointer.camera;
+        }
 
         /**
         * Phaser.Mouse handler
@@ -318,21 +317,21 @@ module Phaser {
         * @property pointer3
         * @type {Pointer}
         **/
-        public pointer3: Pointer;
+        public pointer3: Pointer = null;
 
         /**
         * A Pointer object
         * @property pointer4
         * @type {Pointer}
         **/
-        public pointer4: Pointer;
+        public pointer4: Pointer = null;
 
         /**
         * A Pointer object
         * @property pointer5
         * @type {Pointer}
         **/
-        public pointer5: Pointer;
+        public pointer5: Pointer = null;
 
         /**
         * A Pointer object
@@ -392,7 +391,7 @@ module Phaser {
         }
 
         public set x(value: number) {
-            this._x = Math.round(value);
+            this._x = Math.floor(value);
         }
 
         /**
@@ -406,11 +405,11 @@ module Phaser {
         }
 
         public set y(value: number) {
-            this._y = Math.round(value);
+            this._y = Math.floor(value);
         }
 
         /**
-        * Add a new Pointer object to the Input Manager. By default Input creates 5 pointer objects for you. If you need more
+        * Add a new Pointer object to the Input Manager. By default Input creates 2 pointer objects for you. If you need more
         * use this to create a new one, up to a maximum of 10.
         * @method addPointer
         * @return {Pointer} A reference to the new Pointer object
@@ -419,29 +418,12 @@ module Phaser {
 
             var next: number = 0;
 
-            if (this.pointer10 === null)
+            for (var i = 10; i > 0; i--)
             {
-                next = 10;
-            }
-
-            if (this.pointer9 === null)
-            {
-                next = 9;
-            }
-
-            if (this.pointer8 === null)
-            {
-                next = 8;
-            }
-
-            if (this.pointer7 === null)
-            {
-                next = 7;
-            }
-
-            if (this.pointer6 === null)
-            {
-                next = 6;
+                if (this['pointer' + i] === null)
+                {
+                    next = i;
+                }
             }
 
             if (next == 0)
@@ -527,10 +509,10 @@ module Phaser {
             this.mousePointer.update();
             this.pointer1.update();
             this.pointer2.update();
-            this.pointer3.update();
-            this.pointer4.update();
-            this.pointer5.update();
 
+            if (this.pointer3) { this.pointer3.update(); }
+            if (this.pointer4) { this.pointer4.update(); }
+            if (this.pointer5) { this.pointer5.update(); }
             if (this.pointer6) { this.pointer6.update(); }
             if (this.pointer7) { this.pointer7.update(); }
             if (this.pointer8) { this.pointer8.update(); }
@@ -549,17 +531,14 @@ module Phaser {
             this.keyboard.reset();
 
             this.mousePointer.reset();
-            this.pointer1.reset();
-            this.pointer2.reset();
-            this.pointer3.reset();
-            this.pointer4.reset();
-            this.pointer5.reset();
 
-            if (this.pointer6) { this.pointer6.reset(); }
-            if (this.pointer7) { this.pointer7.reset(); }
-            if (this.pointer8) { this.pointer8.reset(); }
-            if (this.pointer9) { this.pointer9.reset(); }
-            if (this.pointer10) { this.pointer10.reset(); }
+            for (var i = 1; i <= 10; i++)
+            {
+                if (this['pointer' + i])
+                {
+                    this['pointer' + i].reset();
+                }
+            }
 
             this.currentPointers = 0;
 
@@ -616,45 +595,12 @@ module Phaser {
 
             this.currentPointers = 0;
 
-            if (this.pointer1.active == true)
+            for (var i = 1; i <= 10; i++)
             {
-                this.currentPointers++;
-            }
-            else if (this.pointer2.active == true)
-            {
-                this.currentPointers++;
-            }
-            else if (this.pointer3.active == true)
-            {
-                this.currentPointers++;
-            }
-            else if (this.pointer4.active == true)
-            {
-                this.currentPointers++;
-            }
-            else if (this.pointer5.active == true)
-            {
-                this.currentPointers++;
-            }
-            else if (this.pointer6 && this.pointer6.active == true)
-            {
-                this.currentPointers++;
-            }
-            else if (this.pointer7 && this.pointer7.active == true)
-            {
-                this.currentPointers++;
-            }
-            else if (this.pointer8 && this.pointer8.active == true)
-            {
-                this.currentPointers++;
-            }
-            else if (this.pointer9 && this.pointer9.active == true)
-            {
-                this.currentPointers++;
-            }
-            else if (this.pointer10 && this.pointer10.active == true)
-            {
-                this.currentPointers++;
+                if (this['pointer' + i] && this['pointer' + i].active)
+                {
+                    this.currentPointers++;
+                }
             }
 
             return this.currentPointers;
@@ -683,37 +629,15 @@ module Phaser {
             {
                 return this.pointer2.start(event);
             }
-            else if (this.pointer3.active == false)
+            else
             {
-                return this.pointer3.start(event);
-            }
-            else if (this.pointer4.active == false)
-            {
-                return this.pointer4.start(event);
-            }
-            else if (this.pointer5.active == false)
-            {
-                return this.pointer5.start(event);
-            }
-            else if (this.pointer6 && this.pointer6.active == false)
-            {
-                return this.pointer6.start(event);
-            }
-            else if (this.pointer7 && this.pointer7.active == false)
-            {
-                return this.pointer7.start(event);
-            }
-            else if (this.pointer8 && this.pointer8.active == false)
-            {
-                return this.pointer8.start(event);
-            }
-            else if (this.pointer9 && this.pointer9.active == false)
-            {
-                return this.pointer9.start(event);
-            }
-            else if (this.pointer10 && this.pointer10.active == false)
-            {
-                return this.pointer10.start(event);
+                for (var i = 3; i <= 10; i++)
+                {
+                    if (this['pointer' + i] && this['pointer' + i].active == false)
+                    {
+                        return this['pointer' + i].start(event);
+                    }
+                }
             }
 
             return null;
@@ -729,45 +653,23 @@ module Phaser {
         public updatePointer(event): Pointer {
 
             //  Unrolled for speed
-            if (this.pointer1.active == true && this.pointer1.identifier == event.identifier)
+            if (this.pointer1.active && this.pointer1.identifier == event.identifier)
             {
                 return this.pointer1.move(event);
             }
-            else if (this.pointer2.active == true && this.pointer2.identifier == event.identifier)
+            else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
             {
                 return this.pointer2.move(event);
             }
-            else if (this.pointer3.active == true && this.pointer3.identifier == event.identifier)
+            else
             {
-                return this.pointer3.move(event);
-            }
-            else if (this.pointer4.active == true && this.pointer4.identifier == event.identifier)
-            {
-                return this.pointer4.move(event);
-            }
-            else if (this.pointer5.active == true && this.pointer5.identifier == event.identifier)
-            {
-                return this.pointer5.move(event);
-            }
-            else if (this.pointer6 && this.pointer6.active == true && this.pointer6.identifier == event.identifier)
-            {
-                return this.pointer6.move(event);
-            }
-            else if (this.pointer7 && this.pointer7.active == true && this.pointer7.identifier == event.identifier)
-            {
-                return this.pointer7.move(event);
-            }
-            else if (this.pointer8 && this.pointer8.active == true && this.pointer8.identifier == event.identifier)
-            {
-                return this.pointer8.move(event);
-            }
-            else if (this.pointer9 && this.pointer9.active == true && this.pointer9.identifier == event.identifier)
-            {
-                return this.pointer9.move(event);
-            }
-            else if (this.pointer10 && this.pointer10.active == true && this.pointer10.identifier == event.identifier)
-            {
-                return this.pointer10.move(event);
+                for (var i = 3; i <= 10; i++)
+                {
+                    if (this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier)
+                    {
+                        return this['pointer' + i].move(event);
+                    }
+                }
             }
 
             return null;
@@ -783,45 +685,23 @@ module Phaser {
         public stopPointer(event): Pointer {
 
             //  Unrolled for speed
-            if (this.pointer1.active == true && this.pointer1.identifier == event.identifier)
+            if (this.pointer1.active && this.pointer1.identifier == event.identifier)
             {
                 return this.pointer1.stop(event);
             }
-            else if (this.pointer2.active == true && this.pointer2.identifier == event.identifier)
+            else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
             {
                 return this.pointer2.stop(event);
             }
-            else if (this.pointer3.active == true && this.pointer3.identifier == event.identifier)
+            else
             {
-                return this.pointer3.stop(event);
-            }
-            else if (this.pointer4.active == true && this.pointer4.identifier == event.identifier)
-            {
-                return this.pointer4.stop(event);
-            }
-            else if (this.pointer5.active == true && this.pointer5.identifier == event.identifier)
-            {
-                return this.pointer5.stop(event);
-            }
-            else if (this.pointer6 && this.pointer6.active == true && this.pointer6.identifier == event.identifier)
-            {
-                return this.pointer6.stop(event);
-            }
-            else if (this.pointer7 && this.pointer7.active == true && this.pointer7.identifier == event.identifier)
-            {
-                return this.pointer7.stop(event);
-            }
-            else if (this.pointer8 && this.pointer8.active == true && this.pointer8.identifier == event.identifier)
-            {
-                return this.pointer8.stop(event);
-            }
-            else if (this.pointer9 && this.pointer9.active == true && this.pointer9.identifier == event.identifier)
-            {
-                return this.pointer9.stop(event);
-            }
-            else if (this.pointer10 && this.pointer10.active == true && this.pointer10.identifier == event.identifier)
-            {
-                return this.pointer10.stop(event);
+                for (var i = 3; i <= 10; i++)
+                {
+                    if (this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier)
+                    {
+                        return this['pointer' + i].stop(event);
+                    }
+                }
             }
 
             return null;
@@ -845,37 +725,15 @@ module Phaser {
             {
                 return this.pointer2;
             }
-            else if (this.pointer3.active == state)
+            else
             {
-                return this.pointer3;
-            }
-            else if (this.pointer4.active == state)
-            {
-                return this.pointer4;
-            }
-            else if (this.pointer5.active == state)
-            {
-                return this.pointer5;
-            }
-            else if (this.pointer6 && this.pointer6.active == state)
-            {
-                return this.pointer6;
-            }
-            else if (this.pointer7 && this.pointer7.active == state)
-            {
-                return this.pointer7;
-            }
-            else if (this.pointer8 && this.pointer8.active == state)
-            {
-                return this.pointer8;
-            }
-            else if (this.pointer9 && this.pointer9.active == state)
-            {
-                return this.pointer9;
-            }
-            else if (this.pointer10 && this.pointer10.active == state)
-            {
-                return this.pointer10;
+                for (var i = 3; i <= 10; i++)
+                {
+                    if (this['pointer' + i] && this['pointer' + i].active == state)
+                    {
+                        return this['pointer' + i];
+                    }
+                }
             }
 
             return null;
@@ -899,55 +757,40 @@ module Phaser {
             {
                 return this.pointer2;
             }
-            else if (this.pointer3.identifier == identifier)
+            else
             {
-                return this.pointer3;
-            }
-            else if (this.pointer4.identifier == identifier)
-            {
-                return this.pointer4;
-            }
-            else if (this.pointer5.identifier == identifier)
-            {
-                return this.pointer5;
-            }
-            else if (this.pointer6 && this.pointer6.identifier == identifier)
-            {
-                return this.pointer6;
-            }
-            else if (this.pointer7 && this.pointer7.identifier == identifier)
-            {
-                return this.pointer7;
-            }
-            else if (this.pointer8 && this.pointer8.identifier == identifier)
-            {
-                return this.pointer8;
-            }
-            else if (this.pointer9 && this.pointer9.identifier == identifier)
-            {
-                return this.pointer9;
-            }
-            else if (this.pointer10 && this.pointer10.identifier == identifier)
-            {
-                return this.pointer10;
+                for (var i = 3; i <= 10; i++)
+                {
+                    if (this['pointer' + i] && this['pointer' + i].identifier == identifier)
+                    {
+                        return this['pointer' + i];
+                    }
+                }
             }
 
             return null;
 
         }
 
-        /**
-         * @param {Camera} [camera]
-         */
-        public getWorldX(camera?: Camera = this.game.camera) {
-            return camera.worldView.x + this.x;
+        public get worldX(): number {
+
+            if (this.camera)
+            {
+                return (this.camera.worldView.x - this.camera.screenView.x) + this.x;
+            }
+
+            return null;
+
         }
 
-        /**
-         * @param {Camera} [camera]
-         */
-        public getWorldY(camera?: Camera = this.game.camera) {
-            return camera.worldView.y + this.y;
+        public get worldY(): number {
+
+            if (this.camera)
+            {
+                return (this.camera.worldView.y - this.camera.screenView.y) + this.y;
+            }
+
+            return null;
         }
 
         /**

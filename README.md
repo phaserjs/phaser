@@ -22,13 +22,10 @@ Latest Update
 
 TODO:
 
-*** Render each camera to its own canvas - then I can apply filters (?), easily rotate it, scale it, etc without worrying about children
 * Default camera (camera 0) could be the stage camera, renders to stage?
 * Inject game into a <div>
 * Add ability to create extra <div>s within the game container, layered above/below the canvas
-* One single canvas
-* Inject Pixi.js into this fully? Use it for all rendering? A lot of work, but could be interesting? At least pixi is quite small.
-
+* Rename init to preload and call start automatically
 
 
 

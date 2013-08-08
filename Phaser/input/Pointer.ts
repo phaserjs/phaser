@@ -274,19 +274,35 @@ module Phaser {
         public targetObject = null;
 
         /**
+        * The top-most Camera that this Pointer is over (if any, null if none).
+        * If the Pointer is over several cameras that are stacked on-top of each other this is only ever set to the top-most rendered camera.
+        * @property camera
+        * @type {Phaser.Camera}
+        **/
+        public camera: Phaser.Camera = null;
+
+        /**
         * Gets the X value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public worldX(camera?: Camera = this.game.input.camera) {
-            return camera.worldView.x + this.x;
+        public get worldX() {
+            if (this.camera)
+            {
+                return this.camera.worldView.x + this.x;
+            }
+            return null;
         }
 
         /**
         * Gets the Y value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public worldY(camera?: Camera = this.game.input.camera) {
-            return camera.worldView.y + this.y;
+        public get worldY() {
+            if (this.camera)
+            {
+                return this.camera.worldView.y + this.y;
+            }
+            return null;
         }
 
         /**
@@ -385,6 +401,8 @@ module Phaser {
                     }
                 }
 
+                //  Check which camera they are over
+                this.camera = this.game.world.cameras.getCameraUnderPoint(this.x, this.y);
             }
 
         }

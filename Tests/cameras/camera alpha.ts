@@ -24,10 +24,10 @@
 
         car = game.add.sprite(400, 300, 'car');
 
-        game.camera.follow(car, Phaser.Phaser.Types.CAMERA_FOLLOW_TOPDOWN);
+        game.camera.follow(car, Phaser.Types.CAMERA_FOLLOW_TOPDOWN);
 
         miniCam = game.add.camera(0, 0, 300, 300);
-        miniCam.follow(car, Phaser.Phaser.Types.CAMERA_FOLLOW_TOPDOWN_TIGHT);
+        miniCam.follow(car, Phaser.Types.CAMERA_FOLLOW_TOPDOWN_TIGHT);
         miniCam.setBounds(0, 0, game.world.width, game.world.height);
         miniCam.texture.alpha = 0.7;
 

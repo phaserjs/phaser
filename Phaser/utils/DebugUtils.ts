@@ -163,7 +163,7 @@ module Phaser {
             start(pointer.x, pointer.y - 100, color);
 
             line('ID: ' + pointer.id + " Active: " + pointer.active);
-            line('World X: ' + pointer.worldX() + " World Y: " + pointer.worldY());
+            line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
             line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
             line('Duration: ' + pointer.duration + " ms");
 
@@ -196,9 +196,18 @@ module Phaser {
         static renderInputInfo(x: number, y: number, color?: string = 'rgb(255,255,255)') {
 
             start(x, y, color);
-            line('Input');
+
+            if (game.input.camera)
+            {
+                line('Input - Camera: ' + game.input.camera.ID);
+            }
+            else
+            {
+                line('Input - Camera: null');
+            }
+
             line('X: ' + game.input.x + ' Y: ' + game.input.y);
-            line('World X: ' + game.input.getWorldX() + ' World Y: ' + game.input.getWorldY());
+            line('World X: ' + game.input.worldX + ' World Y: ' + game.input.worldY);
             line('Scale X: ' + game.input.scale.x.toFixed(1) + ' Scale Y: ' + game.input.scale.x.toFixed(1));
             line('Screen X: ' + game.input.activePointer.screenX + ' Screen Y: ' + game.input.activePointer.screenY);
 

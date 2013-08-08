@@ -26,8 +26,6 @@
         emitter.makeParticles('jet', 50, false, 0);
         emitter.setRotation(0, 0);
         emitter.start(false, 10, 0.1);
-        //  Make sure the camera doesn't clip anything
-        game.camera.disableClipping = true;
         game.stage.scale.enterLandscape.add(goneLandscape, this);
         game.stage.scale.enterPortrait.add(gonePortrait, this);
         game.onRenderCallback = render;

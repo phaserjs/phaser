@@ -71,6 +71,10 @@
       <DependentUpon>basic button.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="buttons\rotated buttons.ts" />
+    <TypeScriptCompile Include="buttons\camera buttons.ts" />
+    <Content Include="buttons\camera buttons.js">
+      <DependentUpon>camera buttons.ts</DependentUpon>
+    </Content>
     <Content Include="buttons\rotated buttons.js">
       <DependentUpon>rotated buttons.ts</DependentUpon>
     </Content>

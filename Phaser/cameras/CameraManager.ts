@@ -26,6 +26,7 @@ module Phaser {
             this._game = game;
 
             this._cameras = [];
+            this._cameraLength = 0;
 
             this.defaultCamera = this.addCamera(x, y, width, height);
 
@@ -44,9 +45,9 @@ module Phaser {
         private _cameras: Camera[];
 
         /**
-         * Local helper stores index of next created camera.
+         * Local container for storing cameras array length.
          */
-        private _cameraInstance: number = 0;
+        private _cameraLength: number;
 
         /**
          * Helper for sort.
@@ -112,11 +113,9 @@ module Phaser {
          */
         public addCamera(x: number, y: number, width: number, height: number): Camera {
 
-            var newCam: Camera = new Camera(this._game, this._cameraInstance, x, y, width, height);
+            var newCam: Camera = new Camera(this._game, this._cameraLength, x, y, width, height);
 
-            this._cameras.push(newCam);
-
-            this._cameraInstance++;
+            this._cameraLength = this._cameras.push(newCam);
 
             return newCam;
 
@@ -167,6 +166,22 @@ module Phaser {
             }
 
             return true;
+
+        }
+
+        public getCameraUnderPoint(x: number, y: number): Camera {
+
+            //  Work through the cameras in reverse as they are rendered in array order
+            //  Return the first camera we find matching the criteria
+            for (var c = this._cameraLength - 1; c >= 0; c--)
+            {
+                if (this._cameras[c].visible && Phaser.RectangleUtils.contains(this._cameras[c].screenView, x, y))
+                {
+                    return this._cameras[c];
+                }
+            }
+
+            return null;
 
         }
 

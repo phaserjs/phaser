@@ -13,8 +13,6 @@
         //  What we need is a camera 800x400 pixels in size as the mirror effect will be 200px tall and sit below it.
         //  So we resize our default camera to 400px
         game.camera.height = 400;
-        //  Because it's our default camera we need to tell it to disable clipping, otherwise we'll never see the mirror effect render.
-        game.camera.disableClipping = true;
         //  Add our effect to the camera
         mirror = game.camera.plugins.add(Phaser.Plugins.CameraFX.Mirror);
         //  The first 2 parameters are the x and y coordinates of where to display the effect. They are in STAGE coordinates, not World.

@@ -5113,9 +5113,9 @@ module Phaser {
         */
         private _cameras;
         /**
-        * Local helper stores index of next created camera.
+        * Local container for storing cameras array length.
         */
-        private _cameraInstance;
+        private _cameraLength;
         /**
         * Helper for sort.
         */
@@ -5164,6 +5164,7 @@ module Phaser {
         */
         public removeCamera(id: number): bool;
         public swap(camera1: Camera, camera2: Camera, sort?: bool): bool;
+        public getCameraUnderPoint(x: number, y: number): Camera;
         /**
         * Call this function to sort the Cameras according to a particular value and order (default is their Z value).
         * The order in which they are sorted determines the render order. If sorted on z then Cameras with a lower z-index value render first.
@@ -8298,15 +8299,22 @@ module Phaser {
         **/
         public targetObject;
         /**
+        * The top-most Camera that this Pointer is over (if any, null if none).
+        * If the Pointer is over several cameras that are stacked on-top of each other this is only ever set to the top-most rendered camera.
+        * @property camera
+        * @type {Phaser.Camera}
+        **/
+        public camera: Camera;
+        /**
         * Gets the X value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public worldX(camera?: Camera): number;
+        public worldX : number;
         /**
         * Gets the Y value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public worldY(camera?: Camera): number;
+        public worldY : number;
         /**
         * Called when the Pointer is pressed onto the touchscreen
         * @method start
@@ -8858,10 +8866,12 @@ module Phaser {
         static MOUSE_TOUCH_COMBINE: number;
         /**
         * The camera being used for mouse and touch based pointers to calculate their world coordinates.
+        * This is only ever the camera set by the most recently active Pointer.
+        * If you need to know exactly which camera a specific Pointer is over then see Pointer.camera instead.
         * @property camera
         * @type {Camera}
         **/
-        public camera: Camera;
+        public camera : Camera;
         /**
         * Phaser.Mouse handler
         * @type {Mouse}
@@ -9086,7 +9096,7 @@ module Phaser {
         **/
         public y : number;
         /**
-        * Add a new Pointer object to the Input Manager. By default Input creates 5 pointer objects for you. If you need more
+        * Add a new Pointer object to the Input Manager. By default Input creates 2 pointer objects for you. If you need more
         * use this to create a new one, up to a maximum of 10.
         * @method addPointer
         * @return {Pointer} A reference to the new Pointer object
@@ -9166,14 +9176,8 @@ module Phaser {
         * @return {Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
         **/
         public getPointerFromIdentifier(identifier: number): Pointer;
-        /**
-        * @param {Camera} [camera]
-        */
-        public getWorldX(camera?: Camera): number;
-        /**
-        * @param {Camera} [camera]
-        */
-        public getWorldY(camera?: Camera): number;
+        public worldX : number;
+        public worldY : number;
         /**
         * Get the distance between two Pointer objects
         * @method getDistance
