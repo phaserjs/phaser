@@ -114,8 +114,8 @@ module Phaser {
 
             start(x, y, color);
             line('Camera ID: ' + camera.ID + ' (' + camera.screenView.width + ' x ' + camera.screenView.height + ')');
-            line('X: ' + camera.screenView.x + ' Y: ' + camera.screenView.y + ' rotation: ' + camera.transform.rotation);
-            line('World X: ' + camera.worldView.x + ' World Y: ' + camera.worldView.y + ' W: ' + camera.worldView.width + ' H: ' + camera.worldView.height + ' R: ' + camera.worldView.right + ' B: ' + camera.worldView.bottom);
+            line('X: ' + camera.x + ' Y: ' + camera.y + ' Rotation: ' + camera.transform.rotation);
+            line('WorldView X: ' + camera.worldView.x + ' Y: ' + camera.worldView.y + ' W: ' + camera.worldView.width + ' H: ' + camera.worldView.height);
             line('ScreenView X: ' + camera.screenView.x + ' Y: ' + camera.screenView.y + ' W: ' + camera.screenView.width + ' H: ' + camera.screenView.height);
 
             if (camera.worldBounds)
@@ -219,9 +219,8 @@ module Phaser {
             line('sx: ' + sprite.transform.scale.x.toFixed(1) + ' sy: ' + sprite.transform.scale.y.toFixed(1));
             line('tx: ' + sprite.texture.width.toFixed(1) + ' ty: ' + sprite.texture.height.toFixed(1));
             line('center x: ' + sprite.transform.center.x + ' y: ' + sprite.transform.center.y);
-            //line('cameraView x: ' + sprite.cameraView.x + ' y: ' + sprite.cameraView.y + ' width: ' + sprite.cameraView.width + ' height: ' + sprite.cameraView.height + ' bottom: ' + sprite.cameraView.bottom + ' right: ' + sprite.cameraView.right);
             line('cameraView x: ' + sprite.cameraView.x + ' y: ' + sprite.cameraView.y + ' width: ' + sprite.cameraView.width + ' height: ' + sprite.cameraView.height);
-            line('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite));
+            line('inCamera: ' + DebugUtils.game.renderer.spriteRenderer.inCamera(DebugUtils.game.camera, sprite));
 
         }
 

@@ -211,6 +211,11 @@ module Phaser {
         **/
         public setTo(x: number, y: number, width: number, height: number): Rectangle;
         /**
+        * Runs Math.floor() on both the x and y values of this Rectangle.
+        * @method floor
+        **/
+        public floor(): void;
+        /**
         * Copies the x, y, width and height properties from any given object to this Rectangle.
         * @method copyFrom
         * @param {any} source - The object to copy from.
@@ -839,6 +844,28 @@ module Phaser {
         static RENDERER_HEADLESS: number;
         static RENDERER_CANVAS: number;
         static RENDERER_WEBGL: number;
+        static CAMERA_TYPE_ORTHOGRAPHIC: number;
+        static CAMERA_TYPE_ISOMETRIC: number;
+        /**
+        * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
+        * @type {number}
+        */
+        static CAMERA_FOLLOW_LOCKON: number;
+        /**
+        * Camera "follow" style preset: camera deadzone is narrow but tall.
+        * @type {number}
+        */
+        static CAMERA_FOLLOW_PLATFORMER: number;
+        /**
+        * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
+        * @type {number}
+        */
+        static CAMERA_FOLLOW_TOPDOWN: number;
+        /**
+        * Camera "follow" style preset: camera deadzone is a small square around the focus object.
+        * @type {number}
+        */
+        static CAMERA_FOLLOW_TOPDOWN_TIGHT: number;
         static GROUP: number;
         static SPRITE: number;
         static GEOMSPRITE: number;
@@ -849,7 +876,7 @@ module Phaser {
         static BUTTON: number;
         static GEOM_POINT: number;
         static GEOM_CIRCLE: number;
-        static GEOM_Rectangle: number;
+        static GEOM_RECTANGLE: number;
         static GEOM_LINE: number;
         static GEOM_POLYGON: number;
         static BODY_DISABLED: number;
@@ -3052,6 +3079,10 @@ module Phaser.Display {
         */
         constructor(parent);
         /**
+        * Camera Blacklist length
+        */
+        private _blacklist;
+        /**
         * Private _width - use the width getter/setter instead
         */
         private _width;
@@ -3161,6 +3192,23 @@ module Phaser.Display {
         * @type {Phaser.Rectangle}
         */
         public crop: Rectangle;
+        /**
+        * Hides an object from this Camera. Hidden objects are not rendered.
+        *
+        * @param object {Camera} The camera this object should ignore.
+        */
+        public hideFromCamera(camera: Camera): void;
+        /**
+        * Returns true if this texture is hidden from rendering to the given camera, otherwise false.
+        */
+        public isHidden(camera: Camera): bool;
+        /**
+        * Un-hides an object previously hidden to this Camera.
+        * The object must implement a public cameraBlacklist property.
+        *
+        * @param object {Sprite/Group} The object this camera should display.
+        */
+        public showToCamera(camera: Camera): void;
         /**
         * Updates the texture being used to render the Sprite.
         * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
@@ -4904,33 +4952,33 @@ module Phaser {
         */
         public transform: Components.TransformManager;
         /**
-        * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
-        * @type {number}
+        * The scale of the Sprite. A value of 1 is original scale. 0.5 is half size. 2 is double the size.
+        * This is a reference to Sprite.transform.scale
         */
-        static STYLE_LOCKON: number;
+        public scale: Vec2;
         /**
-        * Camera "follow" style preset: camera deadzone is narrow but tall.
-        * @type {number}
+        * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
+        * Set to null to disable, set to a Phaser.Rectangle object to control the region that will be rendered, anything outside the rectangle is ignored.
+        * This is a reference to Sprite.texture.crop
+        * @type {Phaser.Rectangle}
         */
-        static STYLE_PLATFORMER: number;
+        public crop: Rectangle;
         /**
-        * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
-        * @type {number}
+        * The origin of the Sprite around which rotation and positioning takes place.
+        * This is a reference to Sprite.transform.origin
         */
-        static STYLE_TOPDOWN: number;
+        public origin: Vec2;
         /**
-        * Camera "follow" style preset: camera deadzone is a small square around the focus object.
-        * @type {number}
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
         */
-        static STYLE_TOPDOWN_TIGHT: number;
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public alpha : number;
         /**
         * Identity of this camera.
         */
         public ID: number;
-        /**
-        * Controls if this camera is clipped or not when rendering. You shouldn't usually set this value directly.
-        */
-        public clip: bool;
         /**
         * Camera view Rectangle in world coordinate.
         * @type {Rectangle}
@@ -4955,11 +5003,6 @@ module Phaser {
         * @type {Rectangle}
         */
         public deadzone: Rectangle;
-        /**
-        * Disable the automatic camera canvas clipping when Camera is non-Stage sized.
-        * @type {Boolean}
-        */
-        public disableClipping: bool;
         /**
         * Whether this camera is visible or not. (default is true)
         * @type {boolean}
@@ -5041,7 +5084,6 @@ module Phaser {
         * The value is automatically wrapped to be between 0 and 360.
         */
         public rotation : number;
-        private checkClip();
     }
 }
 /**
@@ -5082,8 +5124,6 @@ module Phaser {
         * Helper for sort.
         */
         private _sortOrder;
-        static CAMERA_TYPE_ORTHOGRAPHIC: number;
-        static CAMERA_TYPE_ISOMETRIC: number;
         /**
         * Currently used camera.
         */
@@ -5115,7 +5155,7 @@ module Phaser {
         * @param height {number} Height of the new camera.
         * @returns {Camera} The newly created camera object.
         */
-        public addCamera(x: number, y: number, width: number, height: number, type?: number): Camera;
+        public addCamera(x: number, y: number, width: number, height: number): Camera;
         /**
         * Remove a new camera with its id.
         *
@@ -9154,40 +9194,171 @@ module Phaser {
 module Phaser {
     interface IRenderer {
         render();
-        renderGameObject(object);
-        renderSprite(camera: Camera, sprite: Sprite): bool;
-        renderScrollZone(camera: Camera, sprite: ScrollZone): bool;
-        renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number);
-        preRenderGroup(camera: Camera, group: Group);
-        postRenderGroup(camera: Camera, group: Group);
-        preRenderCamera(camera: Camera);
-        postRenderCamera(camera: Camera);
-        inCamera(camera: Camera, sprite: Sprite): bool;
+        renderCount: number;
+        renderGameObject;
+        cameraRenderer;
+        groupRenderer;
+        spriteRenderer;
+        geometryRenderer;
+        scrollZoneRenderer;
+        tilemapRenderer;
     }
 }
-module Phaser {
+module Phaser.Renderer.Headless {
     class HeadlessRenderer implements IRenderer {
         constructor(game: Game);
-        private _game;
+        public game: Game;
+        public renderCount: number;
         public render(): void;
-        public inCamera(camera: Camera, sprite: Sprite): bool;
-        public renderGameObject(object): void;
-        public renderSprite(camera: Camera, sprite: Sprite): bool;
-        public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
-        public renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number): bool;
-        public preRenderCamera(camera: Camera): void;
-        public postRenderCamera(camera: Camera): void;
-        public preRenderGroup(camera: Camera, group: Group): void;
-        public postRenderGroup(camera: Camera, group: Group): void;
+        public renderGameObject(camera, object): void;
+        public cameraRenderer;
+        public groupRenderer;
+        public spriteRenderer;
+        public geometryRenderer;
+        public scrollZoneRenderer;
+        public tilemapRenderer;
     }
 }
-module Phaser {
-    class CanvasRenderer implements IRenderer {
+module Phaser.Renderer.Canvas {
+    class CameraRenderer {
         constructor(game: Game);
         /**
         * The essential reference to the main game object
         */
-        private _game;
+        public game: Game;
+        private _ga;
+        private _sx;
+        private _sy;
+        private _sw;
+        private _sh;
+        private _dx;
+        private _dy;
+        private _dw;
+        private _dh;
+        private _fx;
+        private _fy;
+        private _tx;
+        private _ty;
+        private _gac;
+        private _sin;
+        private _cos;
+        public preRender(camera: Camera): bool;
+        public postRender(camera: Camera): bool;
+    }
+}
+module Phaser.Renderer.Canvas {
+    class GeometryRenderer {
+        constructor(game: Game);
+        /**
+        * The essential reference to the main game object
+        */
+        public game: Game;
+        private _ga;
+        private _sx;
+        private _sy;
+        private _sw;
+        private _sh;
+        private _dx;
+        private _dy;
+        private _dw;
+        private _dh;
+        private _fx;
+        private _fy;
+        private _sin;
+        private _cos;
+        public renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number): bool;
+    }
+}
+module Phaser.Renderer.Canvas {
+    class GroupRenderer {
+        constructor(game: Game);
+        /**
+        * The essential reference to the main game object
+        */
+        public game: Game;
+        private _ga;
+        private _sx;
+        private _sy;
+        private _sw;
+        private _sh;
+        private _dx;
+        private _dy;
+        private _dw;
+        private _dh;
+        private _fx;
+        private _fy;
+        private _sin;
+        private _cos;
+        public preRender(camera: Camera, group: Group): bool;
+        public postRender(camera: Camera, group: Group): void;
+    }
+}
+module Phaser.Renderer.Canvas {
+    class ScrollZoneRenderer {
+        constructor(game: Game);
+        /**
+        * The essential reference to the main game object
+        */
+        public game: Game;
+        private _ga;
+        private _sx;
+        private _sy;
+        private _sw;
+        private _sh;
+        private _dx;
+        private _dy;
+        private _dw;
+        private _dh;
+        private _fx;
+        private _fy;
+        private _sin;
+        private _cos;
+        /**
+        * Check whether this object is visible in a specific camera Rectangle.
+        * @param camera {Rectangle} The Rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+        */
+        public inCamera(camera: Camera, scrollZone: ScrollZone): bool;
+        public render(camera: Camera, scrollZone: ScrollZone): bool;
+    }
+}
+module Phaser.Renderer.Canvas {
+    class SpriteRenderer {
+        constructor(game: Game);
+        /**
+        * The essential reference to the main game object
+        */
+        public game: Game;
+        private _ga;
+        private _sx;
+        private _sy;
+        private _sw;
+        private _sh;
+        private _dx;
+        private _dy;
+        private _dw;
+        private _dh;
+        /**
+        * Check whether this object is visible in a specific camera Rectangle.
+        * @param camera {Rectangle} The Rectangle you want to check.
+        * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+        */
+        public inCamera(camera: Camera, sprite: Sprite): bool;
+        /**
+        * Render this sprite to specific camera. Called by game loop after update().
+        * @param camera {Camera} Camera this sprite will be rendered to.
+        * @return {boolean} Return false if not rendered, otherwise return true.
+        */
+        public render(camera: Camera, sprite: Sprite): bool;
+    }
+}
+module Phaser.Renderer.Canvas {
+    class TilemapRenderer {
+        constructor(game: Game);
+        /**
+        * The essential reference to the main game object
+        */
+        public game: Game;
         private _ga;
         private _sx;
         private _sy;
@@ -9208,42 +9379,30 @@ module Phaser {
         private _startX;
         private _startY;
         private _columnData;
-        private _cameraList;
-        private _camera;
-        private _groupLength;
-        private _count;
-        public renderTotal: number;
-        public render(): void;
-        public renderGameObject(object): void;
-        public preRenderGroup(camera: Camera, group: Group): bool;
-        public postRenderGroup(camera: Camera, group: Group): void;
-        /**
-        * Check whether this object is visible in a specific camera Rectangle.
-        * @param camera {Rectangle} The Rectangle you want to check.
-        * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
-        */
-        public inCamera(camera: Camera, sprite: Sprite): bool;
-        public inScreen(camera: Camera): bool;
-        /**
-        * Render this sprite to specific camera. Called by game loop after update().
-        * @param camera {Camera} Camera this sprite will be rendered to.
-        * @return {boolean} Return false if not rendered, otherwise return true.
-        */
-        public preRenderCamera(camera: Camera): bool;
-        public postRenderCamera(camera: Camera): void;
-        public renderCircle(camera: Camera, circle: Circle, context, outline?: bool, fill?: bool, lineColor?: string, fillColor?: string, lineWidth?: number): bool;
-        /**
-        * Render this sprite to specific camera. Called by game loop after update().
-        * @param camera {Camera} Camera this sprite will be rendered to.
-        * @return {boolean} Return false if not rendered, otherwise return true.
-        */
-        public renderSprite(camera: Camera, sprite: Sprite): bool;
-        public renderScrollZone(camera: Camera, scrollZone: ScrollZone): bool;
         /**
         * Render a tilemap to a specific camera.
         * @param camera {Camera} The camera this tilemap will be rendered to.
         */
-        public renderTilemap(camera: Camera, tilemap: Tilemap): bool;
+        public render(camera: Camera, tilemap: Tilemap): bool;
+    }
+}
+module Phaser.Renderer.Canvas {
+    class CanvasRenderer implements IRenderer {
+        constructor(game: Game);
+        public game: Game;
+        private _c;
+        private _cameraList;
+        private _camera;
+        public cameraRenderer: CameraRenderer;
+        public groupRenderer: GroupRenderer;
+        public spriteRenderer: SpriteRenderer;
+        public geometryRenderer: GeometryRenderer;
+        public scrollZoneRenderer: ScrollZoneRenderer;
+        public tilemapRenderer: TilemapRenderer;
+        public renderCount: number;
+        public renderTotal: number;
+        public render(): void;
+        public renderGameObject(camera, object): void;
     }
 }
 /**

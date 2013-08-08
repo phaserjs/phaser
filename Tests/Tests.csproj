@@ -90,15 +90,23 @@
       <DependentUpon>basic camera 1.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="cameras\scrollfactor 1.ts" />
-    <Content Include="cameras\basic follow.ts" />
-    <Content Include="cameras\camera fx 1.ts" />
-    <Content Include="cameras\camera fx 2.ts" />
-    <Content Include="cameras\camera fx 3.ts" />
-    <Content Include="cameras\camera scale.ts" />
-    <Content Include="cameras\camera texture.ts" />
-    <Content Include="cameras\follow styles.ts" />
-    <Content Include="cameras\hide from camera.ts" />
-    <Content Include="cameras\multi camera.ts" />
+    <TypeScriptCompile Include="cameras\basic follow.ts" />
+    <TypeScriptCompile Include="cameras\camera fx 1.ts" />
+    <TypeScriptCompile Include="cameras\camera fx 2.ts" />
+    <TypeScriptCompile Include="cameras\camera fx 3.ts" />
+    <TypeScriptCompile Include="cameras\camera scale.ts" />
+    <TypeScriptCompile Include="cameras\camera texture.ts" />
+    <TypeScriptCompile Include="cameras\follow styles.ts" />
+    <TypeScriptCompile Include="cameras\hide from camera.ts" />
+    <TypeScriptCompile Include="cameras\multi camera.ts" />
+    <TypeScriptCompile Include="cameras\camera alpha.ts" />
+    <Content Include="cameras\camera alpha.js">
+      <DependentUpon>camera alpha.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="cameras\camera rotation.ts" />
+    <Content Include="cameras\camera rotation.js">
+      <DependentUpon>camera rotation.ts</DependentUpon>
+    </Content>
     <Content Include="cameras\scrollfactor 1.js">
       <DependentUpon>scrollfactor 1.ts</DependentUpon>
     </Content>
@@ -110,7 +118,7 @@
     <TypeScriptCompile Include="input\over sprite 1.ts" />
     <TypeScriptCompile Include="groups\create group 1.ts" />
     <TypeScriptCompile Include="cameras\world sprite.ts" />
-    <Content Include="cameras\scrollfactor compare.ts" />
+    <TypeScriptCompile Include="cameras\scrollfactor compare.ts" />
     <Content Include="cameras\world sprite.js">
       <DependentUpon>world sprite.ts</DependentUpon>
     </Content>

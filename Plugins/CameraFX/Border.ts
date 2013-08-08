@@ -21,10 +21,10 @@ module Phaser.Plugins.CameraFX {
         public camera: Phaser.Camera;
 
         /**
-         * Whether render border of this camera or not. (default is false)
+         * Whether render border of this camera or not. (default is true)
          * @type {boolean}
          */
-        public showBorder: bool = false;
+        public showBorder: bool = true;
 
         /**
          * Color of border of this camera. (in css color string)

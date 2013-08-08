@@ -327,6 +327,14 @@ var Phaser;
             this.height = height;
             return this;
         };
+        Rectangle.prototype.floor = /**
+        * Runs Math.floor() on both the x and y values of this Rectangle.
+        * @method floor
+        **/
+        function () {
+            this.x = Math.floor(this.x);
+            this.y = Math.floor(this.y);
+        };
         Rectangle.prototype.copyFrom = /**
         * Copies the x, y, width and height properties from any given object to this Rectangle.
         * @method copyFrom
@@ -1267,6 +1275,12 @@ var Phaser;
         Types.RENDERER_HEADLESS = 1;
         Types.RENDERER_CANVAS = 2;
         Types.RENDERER_WEBGL = 3;
+        Types.CAMERA_TYPE_ORTHOGRAPHIC = 0;
+        Types.CAMERA_TYPE_ISOMETRIC = 1;
+        Types.CAMERA_FOLLOW_LOCKON = 0;
+        Types.CAMERA_FOLLOW_PLATFORMER = 1;
+        Types.CAMERA_FOLLOW_TOPDOWN = 2;
+        Types.CAMERA_FOLLOW_TOPDOWN_TIGHT = 3;
         Types.GROUP = 0;
         Types.SPRITE = 1;
         Types.GEOMSPRITE = 2;
@@ -1277,7 +1291,7 @@ var Phaser;
         Types.BUTTON = 7;
         Types.GEOM_POINT = 0;
         Types.GEOM_CIRCLE = 1;
-        Types.GEOM_Rectangle = 2;
+        Types.GEOM_RECTANGLE = 2;
         Types.GEOM_LINE = 3;
         Types.GEOM_POLYGON = 4;
         Types.BODY_DISABLED = 0;
@@ -2493,7 +2507,6 @@ var Phaser;
                 this._pointerData[pointer.id].isDragged = true;
                 if(this.dragFromCenter) {
                     this._parent.transform.centerOn(pointer.worldX(), pointer.worldY());
-                    //this._dragPoint.setTo(this._parent.x - this._parent.transform.center.x, this._parent.y - this._parent.transform.center.y);
                     this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
                 } else {
                     this._dragPoint.setTo(this._parent.x - pointer.x, this._parent.y - pointer.y);
@@ -2977,7 +2990,6 @@ var Phaser;
             * Doesn't change the origin of the sprite.
             */
             function (x, y) {
-                console.log('centerOn', x, y);
                 this.parent.x = x + (this.parent.x - this.center.x);
                 this.parent.y = y + (this.parent.y - this.center.y);
                 this.setCache();
@@ -5113,8 +5125,8 @@ var Phaser;
         function updateCameraView(camera, sprite) {
             if(sprite.rotation == 0 || sprite.texture.renderRotation == false) {
                 //  Easy out
-                sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.width * sprite.transform.origin.x));
-                sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.height * sprite.transform.origin.y));
+                sprite.cameraView.x = Math.floor(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.width * sprite.transform.origin.x));
+                sprite.cameraView.y = Math.floor(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.height * sprite.transform.origin.y));
                 sprite.cameraView.width = sprite.width;
                 sprite.cameraView.height = sprite.height;
             } else {
@@ -6138,7 +6150,40 @@ var Phaser;
                 this._width = 16;
                 this._height = 16;
                 this.cameraBlacklist = [];
+                this._blacklist = 0;
             }
+            Texture.prototype.hideFromCamera = /**
+            * Hides an object from this Camera. Hidden objects are not rendered.
+            *
+            * @param object {Camera} The camera this object should ignore.
+            */
+            function (camera) {
+                if(this.isHidden(camera) == false) {
+                    this.cameraBlacklist.push(camera.ID);
+                    this._blacklist++;
+                }
+            };
+            Texture.prototype.isHidden = /**
+            * Returns true if this texture is hidden from rendering to the given camera, otherwise false.
+            */
+            function (camera) {
+                if(this._blacklist && this.cameraBlacklist.indexOf(camera.ID) !== -1) {
+                    return true;
+                }
+                return false;
+            };
+            Texture.prototype.showToCamera = /**
+            * Un-hides an object previously hidden to this Camera.
+            * The object must implement a public cameraBlacklist property.
+            *
+            * @param object {Sprite/Group} The object this camera should display.
+            */
+            function (camera) {
+                if(this.isHidden(camera)) {
+                    this.cameraBlacklist.slice(this.cameraBlacklist.indexOf(camera.ID), 1);
+                    this._blacklist--;
+                }
+            };
             Texture.prototype.setTo = /**
             * Updates the texture being used to render the Sprite.
             * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
@@ -6360,7 +6405,7 @@ var Phaser;
             if(camera.isHidden(this) == true) {
                 return;
             }
-            this.game.renderer.preRenderGroup(camera, this);
+            this.game.renderer.groupRenderer.preRender(camera, this);
             this._i = 0;
             while(this._i < this.length) {
                 this._member = this.members[this._i++];
@@ -6368,18 +6413,18 @@ var Phaser;
                     if(this._member.type == Phaser.Types.GROUP) {
                         this._member.render(camera);
                     } else {
-                        this.game.renderer.renderGameObject(this._member);
+                        this.game.renderer.renderGameObject(camera, this._member);
                     }
                 }
             }
-            this.game.renderer.postRenderGroup(camera, this);
+            this.game.renderer.groupRenderer.postRender(camera, this);
         };
         Group.prototype.directRender = /**
         * Calls render on all members of this Group regardless of their visible status and also ignores the camera blacklist.
         * Use this when the Group objects render to hidden canvases for example.
         */
         function (camera) {
-            this.game.renderer.preRenderGroup(camera, this);
+            this.game.renderer.groupRenderer.preRender(camera, this);
             this._i = 0;
             while(this._i < this.length) {
                 this._member = this.members[this._i++];
@@ -6391,7 +6436,7 @@ var Phaser;
                     }
                 }
             }
-            this.game.renderer.postRenderGroup(camera, this);
+            this.game.renderer.groupRenderer.postRender(camera, this);
         };
         Object.defineProperty(Group.prototype, "maxSize", {
             get: /**
@@ -9570,10 +9615,6 @@ var Phaser;
         function Camera(game, id, x, y, width, height) {
             this._target = null;
             /**
-            * Controls if this camera is clipped or not when rendering. You shouldn't usually set this value directly.
-            */
-            this.clip = false;
-            /**
             * Camera worldBounds.
             * @type {Rectangle}
             */
@@ -9587,11 +9628,6 @@ var Phaser;
             * @type {Rectangle}
             */
             this.deadzone = null;
-            /**
-            * Disable the automatic camera canvas clipping when Camera is non-Stage sized.
-            * @type {Boolean}
-            */
-            this.disableClipping = false;
             /**
             * Whether this camera is visible or not. (default is true)
             * @type {boolean}
@@ -9614,13 +9650,33 @@ var Phaser;
             this.plugins = new Phaser.PluginManager(this.game, this);
             this.transform = new Phaser.Components.TransformManager(this);
             this.texture = new Phaser.Display.Texture(this);
-            this.texture.opaque = false;
-            this.checkClip();
+            //  We create a hidden canvas for our camera the size of the game (we use the screenView to clip the render to the camera size)
+            this.texture.canvas = document.createElement('canvas');
+            this.texture.canvas.width = width;
+            this.texture.canvas.height = height;
+            this.texture.context = this.texture.canvas.getContext('2d');
+            //  Handy proxies
+            this.scale = this.transform.scale;
+            this.alpha = this.texture.alpha;
+            this.origin = this.transform.origin;
+            this.crop = this.texture.crop;
         }
-        Camera.STYLE_LOCKON = 0;
-        Camera.STYLE_PLATFORMER = 1;
-        Camera.STYLE_TOPDOWN = 2;
-        Camera.STYLE_TOPDOWN_TIGHT = 3;
+        Object.defineProperty(Camera.prototype, "alpha", {
+            get: /**
+            * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+            */
+            function () {
+                return this.texture.alpha;
+            },
+            set: /**
+            * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+            */
+            function (value) {
+                this.texture.alpha = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Camera.prototype.hide = /**
         * Hides an object from this Camera. Hidden objects are not rendered.
         * The object must implement a public cameraBlacklist property.
@@ -9628,9 +9684,7 @@ var Phaser;
         * @param object {Sprite/Group} The object this camera should ignore.
         */
         function (object) {
-            if(this.isHidden(object) == false) {
-                object.texture['cameraBlacklist'].push(this.ID);
-            }
+            object.texture.hideFromCamera(this);
         };
         Camera.prototype.isHidden = /**
         * Returns true if the object is hidden from this Camera.
@@ -9638,7 +9692,7 @@ var Phaser;
         * @param object {Sprite/Group} The object to check.
         */
         function (object) {
-            return (object.texture['cameraBlacklist'] && object.texture['cameraBlacklist'].length > 0 && object.texture['cameraBlacklist'].indexOf(this.ID) == -1);
+            return object.texture.isHidden(this);
         };
         Camera.prototype.show = /**
         * Un-hides an object previously hidden to this Camera.
@@ -9647,9 +9701,7 @@ var Phaser;
         * @param object {Sprite/Group} The object this camera should display.
         */
         function (object) {
-            if(this.isHidden(object) == true) {
-                object.texture['cameraBlacklist'].slice(object.texture['cameraBlacklist'].indexOf(this.ID), 1);
-            }
+            object.texture.showToCamera(this);
         };
         Camera.prototype.follow = /**
         * Tells this camera object what sprite to track.
@@ -9657,24 +9709,24 @@ var Phaser;
         * @param [style] {number} Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
         */
         function (target, style) {
-            if (typeof style === "undefined") { style = Camera.STYLE_LOCKON; }
+            if (typeof style === "undefined") { style = Phaser.Types.CAMERA_FOLLOW_LOCKON; }
             this._target = target;
             var helper;
             switch(style) {
-                case Camera.STYLE_PLATFORMER:
+                case Phaser.Types.CAMERA_FOLLOW_PLATFORMER:
                     var w = this.width / 8;
                     var h = this.height / 3;
                     this.deadzone = new Phaser.Rectangle((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
                     break;
-                case Camera.STYLE_TOPDOWN:
+                case Phaser.Types.CAMERA_FOLLOW_TOPDOWN:
                     helper = Math.max(this.width, this.height) / 4;
                     this.deadzone = new Phaser.Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
                     break;
-                case Camera.STYLE_TOPDOWN_TIGHT:
+                case Phaser.Types.CAMERA_FOLLOW_TOPDOWN_TIGHT:
                     helper = Math.max(this.width, this.height) / 8;
                     this.deadzone = new Phaser.Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
                     break;
-                case Camera.STYLE_LOCKON:
+                case Phaser.Types.CAMERA_FOLLOW_LOCKON:
                 default:
                     this.deadzone = null;
                     break;
@@ -9770,6 +9822,7 @@ var Phaser;
                     this.worldView.y = (this.worldBounds.bottom - this.height) + 1;
                 }
             }
+            this.worldView.floor();
             this.plugins.update();
         };
         Camera.prototype.postUpdate = /**
@@ -9785,15 +9838,16 @@ var Phaser;
                     this.worldView.x = this.worldBounds.left;
                 }
                 if(this.worldView.x > this.worldBounds.right - this.width) {
-                    this.worldView.x = (this.worldBounds.right - this.width) + 1;
+                    this.worldView.x = this.worldBounds.right - this.width;
                 }
                 if(this.worldView.y < this.worldBounds.top) {
                     this.worldView.y = this.worldBounds.top;
                 }
                 if(this.worldView.y > this.worldBounds.bottom - this.height) {
-                    this.worldView.y = (this.worldBounds.bottom - this.height) + 1;
+                    this.worldView.y = this.worldBounds.bottom - this.height;
                 }
             }
+            this.worldView.floor();
             this.plugins.postUpdate();
         };
         Camera.prototype.destroy = /**
@@ -9830,6 +9884,9 @@ var Phaser;
             set: function (value) {
                 this.screenView.width = value;
                 this.worldView.width = value;
+                if(value !== this.texture.canvas.width) {
+                    this.texture.canvas.width = value;
+                }
             },
             enumerable: true,
             configurable: true
@@ -9841,6 +9898,9 @@ var Phaser;
             set: function (value) {
                 this.screenView.height = value;
                 this.worldView.height = value;
+                if(value !== this.texture.canvas.height) {
+                    this.texture.canvas.height = value;
+                }
             },
             enumerable: true,
             configurable: true
@@ -9848,14 +9908,18 @@ var Phaser;
         Camera.prototype.setPosition = function (x, y) {
             this.screenView.x = x;
             this.screenView.y = y;
-            this.checkClip();
         };
         Camera.prototype.setSize = function (width, height) {
             this.screenView.width = width * this.transform.scale.x;
             this.screenView.height = height * this.transform.scale.y;
             this.worldView.width = width;
             this.worldView.height = height;
-            this.checkClip();
+            if(width !== this.texture.canvas.width) {
+                this.texture.canvas.width = width;
+            }
+            if(height !== this.texture.canvas.height) {
+                this.texture.canvas.height = height;
+            }
         };
         Object.defineProperty(Camera.prototype, "rotation", {
             get: /**
@@ -9874,13 +9938,6 @@ var Phaser;
             enumerable: true,
             configurable: true
         });
-        Camera.prototype.checkClip = function () {
-            if(this.screenView.x != 0 || this.screenView.y != 0 || this.screenView.width < this.game.stage.width || this.screenView.height < this.game.stage.height) {
-                this.clip = true;
-            } else {
-                this.clip = false;
-            }
-        };
         return Camera;
     })();
     Phaser.Camera = Camera;    
@@ -9919,8 +9976,6 @@ var Phaser;
             this.defaultCamera = this.addCamera(x, y, width, height);
             this.current = this.defaultCamera;
         }
-        CameraManager.CAMERA_TYPE_ORTHOGRAPHIC = 0;
-        CameraManager.CAMERA_TYPE_ISOMETRIC = 1;
         CameraManager.prototype.getAll = /**
         * Get all the cameras.
         *
@@ -9954,8 +10009,7 @@ var Phaser;
         * @param height {number} Height of the new camera.
         * @returns {Camera} The newly created camera object.
         */
-        function (x, y, width, height, type) {
-            if (typeof type === "undefined") { type = CameraManager.CAMERA_TYPE_ORTHOGRAPHIC; }
+        function (x, y, width, height) {
             var newCam = new Phaser.Camera(this._game, this._cameraInstance, x, y, width, height);
             this._cameras.push(newCam);
             this._cameraInstance++;
@@ -14085,6 +14139,7 @@ var Phaser;
         */
         function () {
             this.scale.update();
+            this.context.setTransform(1, 0, 0, 1, 0, 0);
             if(this.clear || (this._game.paused && this.disablePauseScreen == false)) {
                 if(this.patchAndroidClearRectBug) {
                     this.context.fillStyle = 'rgb(0,0,0)';
@@ -17261,629 +17316,812 @@ var Phaser;
     })();
     Phaser.InputManager = InputManager;    
 })(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="../cameras/Camera.ts" />
-/// <reference path="IRenderer.ts" />
 var Phaser;
 (function (Phaser) {
-    var HeadlessRenderer = (function () {
-        function HeadlessRenderer(game) {
-            this._game = game;
-        }
-        HeadlessRenderer.prototype.render = function () {
-        };
-        HeadlessRenderer.prototype.inCamera = function (camera, sprite) {
-            return true;
-        };
-        HeadlessRenderer.prototype.renderGameObject = function (object) {
-        };
-        HeadlessRenderer.prototype.renderSprite = function (camera, sprite) {
-            return true;
-        };
-        HeadlessRenderer.prototype.renderScrollZone = function (camera, scrollZone) {
-            return true;
-        };
-        HeadlessRenderer.prototype.renderCircle = function (camera, circle, context, outline, fill, lineColor, fillColor, lineWidth) {
-            if (typeof outline === "undefined") { outline = true; }
-            if (typeof fill === "undefined") { fill = true; }
-            if (typeof lineColor === "undefined") { lineColor = 'rgb(0,255,0)'; }
-            if (typeof fillColor === "undefined") { fillColor = 'rgba(0,100,0.0.3)'; }
-            if (typeof lineWidth === "undefined") { lineWidth = 1; }
-            return true;
-        };
-        HeadlessRenderer.prototype.preRenderCamera = function (camera) {
-        };
-        HeadlessRenderer.prototype.postRenderCamera = function (camera) {
-        };
-        HeadlessRenderer.prototype.preRenderGroup = function (camera, group) {
-        };
-        HeadlessRenderer.prototype.postRenderGroup = function (camera, group) {
-        };
-        return HeadlessRenderer;
-    })();
-    Phaser.HeadlessRenderer = HeadlessRenderer;    
+    (function (Renderer) {
+        /// <reference path="../Game.ts" />
+        /// <reference path="../cameras/Camera.ts" />
+        /// <reference path="IRenderer.ts" />
+        (function (Headless) {
+            var HeadlessRenderer = (function () {
+                function HeadlessRenderer(game) {
+                    this.game = game;
+                }
+                HeadlessRenderer.prototype.render = function () {
+                    //  Nothing, headless remember?
+                                    };
+                HeadlessRenderer.prototype.renderGameObject = function (camera, object) {
+                    //  Nothing, headless remember?
+                                    };
+                return HeadlessRenderer;
+            })();
+            Headless.HeadlessRenderer = HeadlessRenderer;            
+        })(Renderer.Headless || (Renderer.Headless = {}));
+        var Headless = Renderer.Headless;
+    })(Phaser.Renderer || (Phaser.Renderer = {}));
+    var Renderer = Phaser.Renderer;
 })(Phaser || (Phaser = {}));
-/// <reference path="../Game.ts" />
-/// <reference path="../gameobjects/Sprite.ts" />
-/// <reference path="../gameobjects/ScrollZone.ts" />
-/// <reference path="../cameras/Camera.ts" />
-/// <reference path="IRenderer.ts" />
 var Phaser;
 (function (Phaser) {
-    var CanvasRenderer = (function () {
-        function CanvasRenderer(game) {
-            //  Local rendering related temp vars to help avoid gc spikes through var creation
-            this._ga = 1;
-            this._sx = 0;
-            this._sy = 0;
-            this._sw = 0;
-            this._sh = 0;
-            this._dx = 0;
-            this._dy = 0;
-            this._dw = 0;
-            this._dh = 0;
-            this._fx = 1;
-            this._fy = 1;
-            this._tx = 0;
-            this._ty = 0;
-            this._sin = 0;
-            this._cos = 1;
-            this._maxX = 0;
-            this._maxY = 0;
-            this._startX = 0;
-            this._startY = 0;
-            this._game = game;
-        }
-        CanvasRenderer.prototype.render = function () {
-            //  Get a list of all the active cameras
-            this._cameraList = this._game.world.getAllCameras();
-            this._count = 0;
-            //  Then iterate through world.group on them all (where not blacklisted, etc)
-            for(var c = 0; c < this._cameraList.length; c++) {
-                this._camera = this._cameraList[c];
-                this.preRenderCamera(this._camera);
-                this._game.world.group.render(this._camera);
-                this.postRenderCamera(this._camera);
-            }
-            this.renderTotal = this._count;
-        };
-        CanvasRenderer.prototype.renderGameObject = function (object) {
-            if(object.type == Phaser.Types.SPRITE || object.type == Phaser.Types.BUTTON) {
-                this.renderSprite(this._camera, object);
-            } else if(object.type == Phaser.Types.SCROLLZONE) {
-                this.renderScrollZone(this._camera, object);
-            } else if(object.type == Phaser.Types.TILEMAP) {
-                this.renderTilemap(this._camera, object);
-            }
-        };
-        CanvasRenderer.prototype.preRenderGroup = function (camera, group) {
-            if(camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1 || this.inScreen(camera) == false) {
-                return false;
-            }
-            //  Reset our temp vars
-            this._ga = -1;
-            this._sx = 0;
-            this._sy = 0;
-            this._sw = group.texture.width;
-            this._sh = group.texture.height;
-            this._fx = group.transform.scale.x;
-            this._fy = group.transform.scale.y;
-            this._sin = 0;
-            this._cos = 1;
-            //this._dx = (camera.screenView.x * camera.scrollFactor.x) + camera.frameBounds.x - (camera.worldView.x * camera.scrollFactor.x);
-            //this._dy = (camera.screenView.y * camera.scrollFactor.y) + camera.frameBounds.y - (camera.worldView.y * camera.scrollFactor.y);
-            this._dx = 0;
-            this._dy = 0;
-            this._dw = group.texture.width;
-            this._dh = group.texture.height;
-            //  Global Composite Ops
-            if(group.texture.globalCompositeOperation) {
-                group.texture.context.save();
-                group.texture.context.globalCompositeOperation = group.texture.globalCompositeOperation;
-            }
-            //  Alpha
-            if(group.texture.alpha !== 1 && group.texture.context.globalAlpha !== group.texture.alpha) {
-                this._ga = group.texture.context.globalAlpha;
-                group.texture.context.globalAlpha = group.texture.alpha;
-            }
-            //  Flip X
-            if(group.texture.flippedX) {
-                this._fx = -group.transform.scale.x;
-            }
-            //  Flip Y
-            if(group.texture.flippedY) {
-                this._fy = -group.transform.scale.y;
-            }
-            //	Rotation and Flipped
-            if(group.modified) {
-                if(group.transform.rotation !== 0 || group.transform.rotationOffset !== 0) {
-                    this._sin = Math.sin(group.game.math.degreesToRadians(group.transform.rotationOffset + group.transform.rotation));
-                    this._cos = Math.cos(group.game.math.degreesToRadians(group.transform.rotationOffset + group.transform.rotation));
+    (function (Renderer) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="../../gameobjects/Sprite.ts" />
+        /// <reference path="../../cameras/Camera.ts" />
+        (function (Canvas) {
+            var CameraRenderer = (function () {
+                function CameraRenderer(game) {
+                    this._ga = 1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = 0;
+                    this._sh = 0;
+                    this._dx = 0;
+                    this._dy = 0;
+                    this._dw = 0;
+                    this._dh = 0;
+                    this._fx = 1;
+                    this._fy = 1;
+                    this._tx = 0;
+                    this._ty = 0;
+                    this._gac = 1;
+                    this._sin = 0;
+                    this._cos = 1;
+                    this.game = game;
                 }
-                //  setTransform(a, b, c, d, e, f);
-                //  a = scale x
-                //  b = skew x
-                //  c = skew y
-                //  d = scale y
-                //  e = translate x
-                //  f = translate y
-                group.texture.context.save();
-                group.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + group.transform.skew.x, -(this._sin * this._fy) + group.transform.skew.y, this._cos * this._fy, this._dx, this._dy);
-                this._dx = -group.transform.origin.x;
-                this._dy = -group.transform.origin.y;
-            } else {
-                if(!group.transform.origin.equals(0)) {
-                    this._dx -= group.transform.origin.x;
-                    this._dy -= group.transform.origin.y;
-                }
-            }
-            this._sx = Math.floor(this._sx);
-            this._sy = Math.floor(this._sy);
-            this._sw = Math.floor(this._sw);
-            this._sh = Math.floor(this._sh);
-            this._dx = Math.floor(this._dx);
-            this._dy = Math.floor(this._dy);
-            this._dw = Math.floor(this._dw);
-            this._dh = Math.floor(this._dh);
-            if(group.texture.opaque) {
-                group.texture.context.fillStyle = group.texture.backgroundColor;
-                group.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            }
-            if(group.texture.loaded) {
-                group.texture.context.drawImage(group.texture.texture, //	Source Image
-                this._sx, //	Source X (location within the source image)
-                this._sy, //	Source Y
-                this._sw, //	Source Width
-                this._sh, //	Source Height
-                this._dx, //	Destination X (where on the canvas it'll be drawn)
-                this._dy, //	Destination Y
-                this._dw, //	Destination Width (always same as Source Width unless scaled)
-                this._dh);
-                //	Destination Height (always same as Source Height unless scaled)
-                            }
-            return true;
-        };
-        CanvasRenderer.prototype.postRenderGroup = function (camera, group) {
-            if(group.modified || group.texture.globalCompositeOperation) {
-                group.texture.context.restore();
-            }
-            //  This could have been over-written by a sprite, need to store elsewhere
-            if(this._ga > -1) {
-                group.texture.context.globalAlpha = this._ga;
-            }
-        };
-        CanvasRenderer.prototype.inCamera = /**
-        * Check whether this object is visible in a specific camera Rectangle.
-        * @param camera {Rectangle} The Rectangle you want to check.
-        * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
-        */
-        function (camera, sprite) {
-            //  Object fixed in place regardless of the camera scrolling? Then it's always visible
-            if(sprite.transform.scrollFactor.equals(0)) {
-                return true;
-            }
-            return Phaser.RectangleUtils.intersects(sprite.cameraView, camera.screenView);
-        };
-        CanvasRenderer.prototype.inScreen = function (camera) {
-            return true;
-        };
-        CanvasRenderer.prototype.preRenderCamera = /**
-        * Render this sprite to specific camera. Called by game loop after update().
-        * @param camera {Camera} Camera this sprite will be rendered to.
-        * @return {boolean} Return false if not rendered, otherwise return true.
-        */
-        function (camera) {
-            if(camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1 || this.inScreen(camera) == false) {
-                return false;
-            }
-            camera.plugins.preRender();
-            //  Reset our temp vars
-            this._ga = -1;
-            this._sx = 0;
-            this._sy = 0;
-            this._sw = camera.width;
-            this._sh = camera.height;
-            this._fx = camera.transform.scale.x;
-            this._fy = camera.transform.scale.y;
-            this._sin = 0;
-            this._cos = 1;
-            this._dx = camera.screenView.x;
-            this._dy = camera.screenView.y;
-            this._dw = camera.width;
-            this._dh = camera.height;
-            //  Global Composite Ops
-            if(camera.texture.globalCompositeOperation) {
-                camera.texture.context.save();
-                camera.texture.context.globalCompositeOperation = camera.texture.globalCompositeOperation;
-            }
-            //  Alpha
-            if(camera.texture.alpha !== 1 && camera.texture.context.globalAlpha != camera.texture.alpha) {
-                this._ga = camera.texture.context.globalAlpha;
-                camera.texture.context.globalAlpha = camera.texture.alpha;
-            }
-            //  Sprite Flip X
-            if(camera.texture.flippedX) {
-                this._fx = -camera.transform.scale.x;
-            }
-            //  Sprite Flip Y
-            if(camera.texture.flippedY) {
-                this._fy = -camera.transform.scale.y;
-            }
-            //	Rotation and Flipped
-            if(camera.modified) {
-                if(camera.transform.rotation !== 0 || camera.transform.rotationOffset !== 0) {
-                    this._sin = Math.sin(camera.game.math.degreesToRadians(camera.transform.rotationOffset + camera.transform.rotation));
-                    this._cos = Math.cos(camera.game.math.degreesToRadians(camera.transform.rotationOffset + camera.transform.rotation));
-                }
-                //  setTransform(a, b, c, d, e, f);
-                //  a = scale x
-                //  b = skew x
-                //  c = skew y
-                //  d = scale y
-                //  e = translate x
-                //  f = translate y
-                camera.texture.context.save();
-                camera.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + camera.transform.skew.x, -(this._sin * this._fy) + camera.transform.skew.y, this._cos * this._fy, this._dx, this._dy);
-                this._dx = -camera.transform.origin.x;
-                this._dy = -camera.transform.origin.y;
-            } else {
-                if(!camera.transform.origin.equals(0)) {
-                    this._dx -= camera.transform.origin.x;
-                    this._dy -= camera.transform.origin.y;
-                }
-            }
-            this._sx = Math.floor(this._sx);
-            this._sy = Math.floor(this._sy);
-            this._sw = Math.floor(this._sw);
-            this._sh = Math.floor(this._sh);
-            this._dx = Math.floor(this._dx);
-            this._dy = Math.floor(this._dy);
-            this._dw = Math.floor(this._dw);
-            this._dh = Math.floor(this._dh);
-            //  Clip the camera so we don't get sprites appearing outside the edges
-            if(camera.clip == true && camera.disableClipping == false) {
-                camera.texture.context.beginPath();
-                camera.texture.context.rect(camera.screenView.x, camera.screenView.x, camera.screenView.width, camera.screenView.height);
-                camera.texture.context.closePath();
-                camera.texture.context.clip();
-            }
-            if(camera.texture.opaque) {
-                camera.texture.context.fillStyle = camera.texture.backgroundColor;
-                camera.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            }
-            if(camera.texture.loaded) {
-                camera.texture.context.drawImage(camera.texture.texture, //	Source Image
-                this._sx, //	Source X (location within the source image)
-                this._sy, //	Source Y
-                this._sw, //	Source Width
-                this._sh, //	Source Height
-                this._dx, //	Destination X (where on the canvas it'll be drawn)
-                this._dy, //	Destination Y
-                this._dw, //	Destination Width (always same as Source Width unless scaled)
-                this._dh);
-                //	Destination Height (always same as Source Height unless scaled)
-                            }
-            camera.plugins.render();
-            return true;
-        };
-        CanvasRenderer.prototype.postRenderCamera = function (camera) {
-            if(camera.modified || camera.texture.globalCompositeOperation) {
-                camera.texture.context.restore();
-            }
-            //  This could have been over-written by a sprite, need to store elsewhere
-            if(this._ga > -1) {
-                camera.texture.context.globalAlpha = this._ga;
-            }
-            camera.plugins.postRender();
-        };
-        CanvasRenderer.prototype.renderCircle = function (camera, circle, context, outline, fill, lineColor, fillColor, lineWidth) {
-            if (typeof outline === "undefined") { outline = false; }
-            if (typeof fill === "undefined") { fill = true; }
-            if (typeof lineColor === "undefined") { lineColor = 'rgb(0,255,0)'; }
-            if (typeof fillColor === "undefined") { fillColor = 'rgba(0,100,0.0.3)'; }
-            if (typeof lineWidth === "undefined") { lineWidth = 1; }
-            this._count++;
-            //  Reset our temp vars
-            this._sx = 0;
-            this._sy = 0;
-            this._sw = circle.diameter;
-            this._sh = circle.diameter;
-            this._fx = 1;
-            this._fy = 1;
-            this._sin = 0;
-            this._cos = 1;
-            this._dx = camera.screenView.x + circle.x - camera.worldView.x;
-            this._dy = camera.screenView.y + circle.y - camera.worldView.y;
-            this._dw = circle.diameter;
-            this._dh = circle.diameter;
-            this._sx = Math.floor(this._sx);
-            this._sy = Math.floor(this._sy);
-            this._sw = Math.floor(this._sw);
-            this._sh = Math.floor(this._sh);
-            this._dx = Math.floor(this._dx);
-            this._dy = Math.floor(this._dy);
-            this._dw = Math.floor(this._dw);
-            this._dh = Math.floor(this._dh);
-            this._game.stage.saveCanvasValues();
-            context.save();
-            context.lineWidth = lineWidth;
-            context.strokeStyle = lineColor;
-            context.fillStyle = fillColor;
-            context.beginPath();
-            context.arc(this._dx, this._dy, circle.radius, 0, Math.PI * 2);
-            context.closePath();
-            if(outline) {
-                //context.stroke();
-                            }
-            if(fill) {
-                context.fill();
-            }
-            context.restore();
-            this._game.stage.restoreCanvasValues();
-            return true;
-        };
-        CanvasRenderer.prototype.renderSprite = /**
-        * Render this sprite to specific camera. Called by game loop after update().
-        * @param camera {Camera} Camera this sprite will be rendered to.
-        * @return {boolean} Return false if not rendered, otherwise return true.
-        */
-        function (camera, sprite) {
-            Phaser.SpriteUtils.updateCameraView(camera, sprite);
-            if(sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
-                return false;
-            }
-            sprite.renderOrderID = this._count;
-            this._count++;
-            //  Reset our temp vars
-            this._ga = -1;
-            this._sx = 0;
-            this._sy = 0;
-            this._sw = sprite.texture.width;
-            this._sh = sprite.texture.height;
-            this._dx = camera.screenView.x + sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
-            this._dy = camera.screenView.y + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
-            this._dw = sprite.texture.width;
-            this._dh = sprite.texture.height;
-            if(sprite.animations.currentFrame !== null) {
-                this._sx = sprite.animations.currentFrame.x;
-                this._sy = sprite.animations.currentFrame.y;
-                if(sprite.animations.currentFrame.trimmed) {
-                    this._dx += sprite.animations.currentFrame.spriteSourceSizeX;
-                    this._dy += sprite.animations.currentFrame.spriteSourceSizeY;
-                    this._sw = sprite.animations.currentFrame.spriteSourceSizeW;
-                    this._sh = sprite.animations.currentFrame.spriteSourceSizeH;
-                    this._dw = sprite.animations.currentFrame.spriteSourceSizeW;
-                    this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
-                }
-            }
-            if(sprite.modified) {
-                sprite.texture.context.save();
-                sprite.texture.context.setTransform(sprite.transform.local.data[0], //  scale x
-                sprite.transform.local.data[3], //  skew x
-                sprite.transform.local.data[1], //  skew y
-                sprite.transform.local.data[4], //  scale y
-                this._dx, //  translate x
-                this._dy);
-                //  translate y
-                this._dx = sprite.transform.origin.x * -this._dw;
-                this._dy = sprite.transform.origin.y * -this._dh;
-            } else {
-                this._dx -= (this._dw * sprite.transform.origin.x);
-                this._dy -= (this._dh * sprite.transform.origin.y);
-            }
-            if(sprite.crop) {
-                this._sx += sprite.crop.x * sprite.transform.scale.x;
-                this._sy += sprite.crop.y * sprite.transform.scale.y;
-                this._sw = sprite.crop.width * sprite.transform.scale.x;
-                this._sh = sprite.crop.height * sprite.transform.scale.y;
-                this._dx += sprite.crop.x * sprite.transform.scale.x;
-                this._dy += sprite.crop.y * sprite.transform.scale.y;
-                this._dw = sprite.crop.width * sprite.transform.scale.x;
-                this._dh = sprite.crop.height * sprite.transform.scale.y;
-                //this._sx += sprite.crop.x;
-                //this._sy += sprite.crop.y;
-                //this._sw = sprite.crop.width;
-                //this._sh = sprite.crop.height;
-                //this._dx += sprite.crop.x;
-                //this._dy += sprite.crop.y;
-                //this._dw = sprite.crop.width;
-                //this._dh = sprite.crop.height;
-                            }
-            this._sx = Math.floor(this._sx);
-            this._sy = Math.floor(this._sy);
-            this._sw = Math.floor(this._sw);
-            this._sh = Math.floor(this._sh);
-            this._dx = Math.floor(this._dx);
-            this._dy = Math.floor(this._dy);
-            this._dw = Math.floor(this._dw);
-            this._dh = Math.floor(this._dh);
-            if(this._sw <= 0 || this._sh <= 0 || this._dw <= 0 || this._dh <= 0) {
-                return false;
-            }
-            //  Global Composite Ops
-            if(sprite.texture.globalCompositeOperation) {
-                sprite.texture.context.save();
-                sprite.texture.context.globalCompositeOperation = sprite.texture.globalCompositeOperation;
-            }
-            //  Alpha
-            if(sprite.texture.alpha !== 1 && sprite.texture.context.globalAlpha != sprite.texture.alpha) {
-                this._ga = sprite.texture.context.globalAlpha;
-                sprite.texture.context.globalAlpha = sprite.texture.alpha;
-            }
-            if(sprite.texture.opaque) {
-                sprite.texture.context.fillStyle = sprite.texture.backgroundColor;
-                sprite.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
-            }
-            if(sprite.texture.loaded) {
-                sprite.texture.context.drawImage(sprite.texture.texture, //	Source Image
-                this._sx, //	Source X (location within the source image)
-                this._sy, //	Source Y
-                this._sw, //	Source Width
-                this._sh, //	Source Height
-                this._dx, //	Destination X (where on the canvas it'll be drawn)
-                this._dy, //	Destination Y
-                this._dw, //	Destination Width (always same as Source Width unless scaled)
-                this._dh);
-                //	Destination Height (always same as Source Height unless scaled)
-                            }
-            if(sprite.modified || sprite.texture.globalCompositeOperation) {
-                sprite.texture.context.restore();
-            }
-            if(this._ga > -1) {
-                sprite.texture.context.globalAlpha = this._ga;
-            }
-            return true;
-        };
-        CanvasRenderer.prototype.renderScrollZone = function (camera, scrollZone) {
-            if(scrollZone.transform.scale.x == 0 || scrollZone.transform.scale.y == 0 || scrollZone.texture.alpha < 0.1 || this.inCamera(camera, scrollZone) == false) {
-                return false;
-            }
-            this._count++;
-            //  Reset our temp vars
-            this._ga = -1;
-            this._sx = 0;
-            this._sy = 0;
-            this._sw = scrollZone.width;
-            this._sh = scrollZone.height;
-            this._fx = scrollZone.transform.scale.x;
-            this._fy = scrollZone.transform.scale.y;
-            this._sin = 0;
-            this._cos = 1;
-            this._dx = (camera.screenView.x * scrollZone.transform.scrollFactor.x) + scrollZone.x - (camera.worldView.x * scrollZone.transform.scrollFactor.x);
-            this._dy = (camera.screenView.y * scrollZone.transform.scrollFactor.y) + scrollZone.y - (camera.worldView.y * scrollZone.transform.scrollFactor.y);
-            this._dw = scrollZone.width;
-            this._dh = scrollZone.height;
-            //  Alpha
-            if(scrollZone.texture.alpha !== 1) {
-                this._ga = scrollZone.texture.context.globalAlpha;
-                scrollZone.texture.context.globalAlpha = scrollZone.texture.alpha;
-            }
-            //  Sprite Flip X
-            if(scrollZone.texture.flippedX) {
-                this._fx = -scrollZone.transform.scale.x;
-            }
-            //  Sprite Flip Y
-            if(scrollZone.texture.flippedY) {
-                this._fy = -scrollZone.transform.scale.y;
-            }
-            //	Rotation and Flipped
-            if(scrollZone.modified) {
-                if(scrollZone.texture.renderRotation == true && (scrollZone.rotation !== 0 || scrollZone.transform.rotationOffset !== 0)) {
-                    this._sin = Math.sin(scrollZone.game.math.degreesToRadians(scrollZone.transform.rotationOffset + scrollZone.rotation));
-                    this._cos = Math.cos(scrollZone.game.math.degreesToRadians(scrollZone.transform.rotationOffset + scrollZone.rotation));
-                }
-                //  setTransform(a, b, c, d, e, f);
-                //  a = scale x
-                //  b = skew x
-                //  c = skew y
-                //  d = scale y
-                //  e = translate x
-                //  f = translate y
-                scrollZone.texture.context.save();
-                scrollZone.texture.context.setTransform(this._cos * this._fx, (this._sin * this._fx) + scrollZone.transform.skew.x, -(this._sin * this._fy) + scrollZone.transform.skew.y, this._cos * this._fy, this._dx, this._dy);
-                this._dx = -scrollZone.transform.origin.x;
-                this._dy = -scrollZone.transform.origin.y;
-            } else {
-                if(!scrollZone.transform.origin.equals(0)) {
-                    this._dx -= scrollZone.transform.origin.x;
-                    this._dy -= scrollZone.transform.origin.y;
-                }
-            }
-            this._sx = Math.floor(this._sx);
-            this._sy = Math.floor(this._sy);
-            this._sw = Math.floor(this._sw);
-            this._sh = Math.floor(this._sh);
-            this._dx = Math.floor(this._dx);
-            this._dy = Math.floor(this._dy);
-            this._dw = Math.floor(this._dw);
-            this._dh = Math.floor(this._dh);
-            for(var i = 0; i < scrollZone.regions.length; i++) {
-                if(scrollZone.texture.isDynamic) {
-                    scrollZone.regions[i].render(scrollZone.texture.context, scrollZone.texture.texture, this._dx, this._dy, this._dw, this._dh);
-                } else {
-                    scrollZone.regions[i].render(scrollZone.texture.context, scrollZone.texture.texture, this._dx, this._dy, this._dw, this._dh);
-                }
-            }
-            if(scrollZone.modified) {
-                scrollZone.texture.context.restore();
-            }
-            if(this._ga > -1) {
-                scrollZone.texture.context.globalAlpha = this._ga;
-            }
-            return true;
-        };
-        CanvasRenderer.prototype.renderTilemap = /**
-        * Render a tilemap to a specific camera.
-        * @param camera {Camera} The camera this tilemap will be rendered to.
-        */
-        function (camera, tilemap) {
-            //  Loop through the layers
-            for(var i = 0; i < tilemap.layers.length; i++) {
-                var layer = tilemap.layers[i];
-                if(layer.visible == false || layer.alpha < 0.1) {
-                    continue;
-                }
-                //  Work out how many tiles we can fit into our camera and round it up for the edges
-                this._maxX = this._game.math.ceil(camera.width / layer.tileWidth) + 1;
-                this._maxY = this._game.math.ceil(camera.height / layer.tileHeight) + 1;
-                //  And now work out where in the tilemap the camera actually is
-                this._startX = this._game.math.floor(camera.worldView.x / layer.tileWidth);
-                this._startY = this._game.math.floor(camera.worldView.y / layer.tileHeight);
-                //  Tilemap bounds check
-                if(this._startX < 0) {
-                    this._startX = 0;
-                }
-                if(this._startY < 0) {
-                    this._startY = 0;
-                }
-                if(this._maxX > layer.widthInTiles) {
-                    this._maxX = layer.widthInTiles;
-                }
-                if(this._maxY > layer.heightInTiles) {
-                    this._maxY = layer.heightInTiles;
-                }
-                if(this._startX + this._maxX > layer.widthInTiles) {
-                    this._startX = layer.widthInTiles - this._maxX;
-                }
-                if(this._startY + this._maxY > layer.heightInTiles) {
-                    this._startY = layer.heightInTiles - this._maxY;
-                }
-                //  Finally get the offset to avoid the blocky movement
-                //this._dx = (camera.screenView.x * layer.transform.scrollFactor.x) - (camera.worldView.x * layer.transform.scrollFactor.x);
-                //this._dy = (camera.screenView.y * layer.transform.scrollFactor.y) - (camera.worldView.y * layer.transform.scrollFactor.y);
-                //this._dx = (camera.screenView.x * this.scrollFactor.x) + this.x - (camera.worldView.x * this.scrollFactor.x);
-                //this._dy = (camera.screenView.y * this.scrollFactor.y) + this.y - (camera.worldView.y * this.scrollFactor.y);
-                this._dx = 0;
-                this._dy = 0;
-                this._dx += -(camera.worldView.x - (this._startX * layer.tileWidth));
-                this._dy += -(camera.worldView.y - (this._startY * layer.tileHeight));
-                this._tx = this._dx;
-                this._ty = this._dy;
-                //  Alpha
-                if(layer.texture.alpha !== 1) {
-                    this._ga = layer.texture.context.globalAlpha;
-                    layer.texture.context.globalAlpha = layer.texture.alpha;
-                }
-                for(var row = this._startY; row < this._startY + this._maxY; row++) {
-                    this._columnData = layer.mapData[row];
-                    for(var tile = this._startX; tile < this._startX + this._maxX; tile++) {
-                        if(layer.tileOffsets[this._columnData[tile]]) {
-                            layer.texture.context.drawImage(layer.texture.texture, layer.tileOffsets[this._columnData[tile]].x, layer.tileOffsets[this._columnData[tile]].y, layer.tileWidth, layer.tileHeight, this._tx, this._ty, layer.tileWidth, layer.tileHeight);
-                        }
-                        this._tx += layer.tileWidth;
+                CameraRenderer.prototype.preRender = function (camera) {
+                    if(camera.visible == false || camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1) {
+                        return false;
                     }
-                    this._tx = this._dx;
-                    this._ty += layer.tileHeight;
+                    camera.texture.context.clearRect(0, 0, camera.width, camera.height);
+                    //  Alpha
+                    if(camera.texture.alpha !== 1 && camera.texture.context.globalAlpha != camera.texture.alpha) {
+                        this._ga = camera.texture.context.globalAlpha;
+                        camera.texture.context.globalAlpha = camera.texture.alpha;
+                    }
+                    if(camera.texture.opaque) {
+                        camera.texture.context.fillStyle = camera.texture.backgroundColor;
+                        camera.texture.context.fillRect(0, 0, camera.width, camera.height);
+                    }
+                    //if (camera.texture.loaded)
+                    //{
+                    //    camera.texture.context.drawImage(
+                    //        camera.texture.texture,	    //	Source Image
+                    //        this._sx, 			//	Source X (location within the source image)
+                    //        this._sy, 			//	Source Y
+                    //        this._sw, 			//	Source Width
+                    //        this._sh, 			//	Source Height
+                    //        0, 			        //	Destination X (where on the canvas it'll be drawn)
+                    //        0, 			        //	Destination Y
+                    //        this._dw, 			//	Destination Width (always same as Source Width unless scaled)
+                    //        this._dh			//	Destination Height (always same as Source Height unless scaled)
+                    //    );
+                    //}
+                    //  Global Composite Ops
+                    if(camera.texture.globalCompositeOperation) {
+                        camera.texture.context.globalCompositeOperation = camera.texture.globalCompositeOperation;
+                    }
+                    camera.plugins.preRender();
+                };
+                CameraRenderer.prototype.postRender = function (camera) {
+                    //  This could have been over-written by a sprite, need to store elsewhere
+                    if(this._ga > -1) {
+                        camera.texture.context.globalAlpha = this._ga;
+                    }
+                    camera.plugins.postRender();
+                    //  Reset our temp vars
+                    this._ga = -1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = camera.width;
+                    this._sh = camera.height;
+                    this._fx = camera.transform.scale.x;
+                    this._fy = camera.transform.scale.y;
+                    this._sin = 0;
+                    this._cos = 1;
+                    this._dx = camera.screenView.x;
+                    this._dy = camera.screenView.y;
+                    this._dw = camera.width;
+                    this._dh = camera.height;
+                    this.game.stage.context.save();
+                    //  Flip X
+                    if(camera.texture.flippedX) {
+                        this._fx = -camera.transform.scale.x;
+                    }
+                    //  Flip Y
+                    if(camera.texture.flippedY) {
+                        this._fy = -camera.transform.scale.y;
+                    }
+                    //	Rotation and Flipped
+                    if(camera.modified) {
+                        if(camera.transform.rotation !== 0 || camera.transform.rotationOffset !== 0) {
+                            this._sin = Math.sin(camera.game.math.degreesToRadians(camera.transform.rotationOffset + camera.transform.rotation));
+                            this._cos = Math.cos(camera.game.math.degreesToRadians(camera.transform.rotationOffset + camera.transform.rotation));
+                        }
+                        this.game.stage.context.setTransform(this._cos * this._fx, //  scale x
+                        (this._sin * this._fx) + camera.transform.skew.x, //  skew x
+                        -(this._sin * this._fy) + camera.transform.skew.y, //  skew y
+                        this._cos * this._fy, //  scale y
+                        this._dx, //  translate x
+                        this._dy);
+                        //  translate y
+                        this._dx = camera.transform.origin.x * -this._dw;
+                        this._dy = camera.transform.origin.y * -this._dh;
+                    } else {
+                        this._dx -= (this._dw * camera.transform.origin.x);
+                        this._dy -= (this._dh * camera.transform.origin.y);
+                    }
+                    this._sx = Math.floor(this._sx);
+                    this._sy = Math.floor(this._sy);
+                    this._sw = Math.floor(this._sw);
+                    this._sh = Math.floor(this._sh);
+                    this._dx = Math.floor(this._dx);
+                    this._dy = Math.floor(this._dy);
+                    this._dw = Math.floor(this._dw);
+                    this._dh = Math.floor(this._dh);
+                    if(this._sw <= 0 || this._sh <= 0 || this._dw <= 0 || this._dh <= 0) {
+                        this.game.stage.context.restore();
+                        return false;
+                    }
+                    this.game.stage.context.drawImage(camera.texture.canvas, //	Source Image
+                    this._sx, //	Source X (location within the source image)
+                    this._sy, //	Source Y
+                    this._sw, //	Source Width
+                    this._sh, //	Source Height
+                    this._dx, //	Destination X (where on the canvas it'll be drawn)
+                    this._dy, //	Destination Y
+                    this._dw, //	Destination Width (always same as Source Width unless scaled)
+                    this._dh);
+                    //	Destination Height (always same as Source Height unless scaled)
+                    this.game.stage.context.restore();
+                };
+                return CameraRenderer;
+            })();
+            Canvas.CameraRenderer = CameraRenderer;            
+        })(Renderer.Canvas || (Renderer.Canvas = {}));
+        var Canvas = Renderer.Canvas;
+    })(Phaser.Renderer || (Phaser.Renderer = {}));
+    var Renderer = Phaser.Renderer;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Renderer) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="../../gameobjects/Sprite.ts" />
+        /// <reference path="../../cameras/Camera.ts" />
+        (function (Canvas) {
+            var GeometryRenderer = (function () {
+                function GeometryRenderer(game) {
+                    //  Local rendering related temp vars to help avoid gc spikes through constant var creation
+                    this._ga = 1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = 0;
+                    this._sh = 0;
+                    this._dx = 0;
+                    this._dy = 0;
+                    this._dw = 0;
+                    this._dh = 0;
+                    this._fx = 1;
+                    this._fy = 1;
+                    this._sin = 0;
+                    this._cos = 1;
+                    this.game = game;
                 }
-                if(this._ga > -1) {
-                    layer.texture.context.globalAlpha = this._ga;
+                GeometryRenderer.prototype.renderCircle = function (camera, circle, context, outline, fill, lineColor, fillColor, lineWidth) {
+                    if (typeof outline === "undefined") { outline = false; }
+                    if (typeof fill === "undefined") { fill = true; }
+                    if (typeof lineColor === "undefined") { lineColor = 'rgb(0,255,0)'; }
+                    if (typeof fillColor === "undefined") { fillColor = 'rgba(0,100,0.0.3)'; }
+                    if (typeof lineWidth === "undefined") { lineWidth = 1; }
+                    //  Reset our temp vars
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = circle.diameter;
+                    this._sh = circle.diameter;
+                    this._fx = 1;
+                    this._fy = 1;
+                    this._sin = 0;
+                    this._cos = 1;
+                    this._dx = camera.screenView.x + circle.x - camera.worldView.x;
+                    this._dy = camera.screenView.y + circle.y - camera.worldView.y;
+                    this._dw = circle.diameter;
+                    this._dh = circle.diameter;
+                    this._sx = Math.floor(this._sx);
+                    this._sy = Math.floor(this._sy);
+                    this._sw = Math.floor(this._sw);
+                    this._sh = Math.floor(this._sh);
+                    this._dx = Math.floor(this._dx);
+                    this._dy = Math.floor(this._dy);
+                    this._dw = Math.floor(this._dw);
+                    this._dh = Math.floor(this._dh);
+                    this.game.stage.saveCanvasValues();
+                    context.save();
+                    context.lineWidth = lineWidth;
+                    context.strokeStyle = lineColor;
+                    context.fillStyle = fillColor;
+                    context.beginPath();
+                    context.arc(this._dx, this._dy, circle.radius, 0, Math.PI * 2);
+                    context.closePath();
+                    if(outline) {
+                        //context.stroke();
+                                            }
+                    if(fill) {
+                        context.fill();
+                    }
+                    context.restore();
+                    this.game.stage.restoreCanvasValues();
+                    return true;
+                };
+                return GeometryRenderer;
+            })();
+            Canvas.GeometryRenderer = GeometryRenderer;            
+        })(Renderer.Canvas || (Renderer.Canvas = {}));
+        var Canvas = Renderer.Canvas;
+    })(Phaser.Renderer || (Phaser.Renderer = {}));
+    var Renderer = Phaser.Renderer;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Renderer) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="../../gameobjects/Sprite.ts" />
+        /// <reference path="../../cameras/Camera.ts" />
+        (function (Canvas) {
+            var GroupRenderer = (function () {
+                function GroupRenderer(game) {
+                    //  Local rendering related temp vars to help avoid gc spikes through var creation
+                    this._ga = 1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = 0;
+                    this._sh = 0;
+                    this._dx = 0;
+                    this._dy = 0;
+                    this._dw = 0;
+                    this._dh = 0;
+                    this._fx = 1;
+                    this._fy = 1;
+                    this._sin = 0;
+                    this._cos = 1;
+                    this.game = game;
                 }
-            }
-            return true;
-        };
-        return CanvasRenderer;
-    })();
-    Phaser.CanvasRenderer = CanvasRenderer;    
+                GroupRenderer.prototype.preRender = function (camera, group) {
+                    if(group.visible == false || camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1) {
+                        return false;
+                    }
+                    //  Reset our temp vars
+                    this._ga = -1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = group.texture.width;
+                    this._sh = group.texture.height;
+                    this._fx = group.transform.scale.x;
+                    this._fy = group.transform.scale.y;
+                    this._sin = 0;
+                    this._cos = 1;
+                    //this._dx = (camera.screenView.x * camera.scrollFactor.x) + camera.frameBounds.x - (camera.worldView.x * camera.scrollFactor.x);
+                    //this._dy = (camera.screenView.y * camera.scrollFactor.y) + camera.frameBounds.y - (camera.worldView.y * camera.scrollFactor.y);
+                    this._dx = 0;
+                    this._dy = 0;
+                    this._dw = group.texture.width;
+                    this._dh = group.texture.height;
+                    //  Global Composite Ops
+                    if(group.texture.globalCompositeOperation) {
+                        group.texture.context.save();
+                        group.texture.context.globalCompositeOperation = group.texture.globalCompositeOperation;
+                    }
+                    //  Alpha
+                    if(group.texture.alpha !== 1 && group.texture.context.globalAlpha !== group.texture.alpha) {
+                        this._ga = group.texture.context.globalAlpha;
+                        group.texture.context.globalAlpha = group.texture.alpha;
+                    }
+                    //  Flip X
+                    if(group.texture.flippedX) {
+                        this._fx = -group.transform.scale.x;
+                    }
+                    //  Flip Y
+                    if(group.texture.flippedY) {
+                        this._fy = -group.transform.scale.y;
+                    }
+                    //	Rotation and Flipped
+                    if(group.modified) {
+                        if(group.transform.rotation !== 0 || group.transform.rotationOffset !== 0) {
+                            this._sin = Math.sin(group.game.math.degreesToRadians(group.transform.rotationOffset + group.transform.rotation));
+                            this._cos = Math.cos(group.game.math.degreesToRadians(group.transform.rotationOffset + group.transform.rotation));
+                        }
+                        group.texture.context.save();
+                        group.texture.context.setTransform(this._cos * this._fx, //  scale x
+                        (this._sin * this._fx) + group.transform.skew.x, //  skew x
+                        -(this._sin * this._fy) + group.transform.skew.y, //  skew y
+                        this._cos * this._fy, //  scale y
+                        this._dx, //  translate x
+                        this._dy);
+                        //  translate y
+                        this._dx = -group.transform.origin.x;
+                        this._dy = -group.transform.origin.y;
+                    } else {
+                        if(!group.transform.origin.equals(0)) {
+                            this._dx -= group.transform.origin.x;
+                            this._dy -= group.transform.origin.y;
+                        }
+                    }
+                    this._sx = Math.floor(this._sx);
+                    this._sy = Math.floor(this._sy);
+                    this._sw = Math.floor(this._sw);
+                    this._sh = Math.floor(this._sh);
+                    this._dx = Math.floor(this._dx);
+                    this._dy = Math.floor(this._dy);
+                    this._dw = Math.floor(this._dw);
+                    this._dh = Math.floor(this._dh);
+                    if(group.texture.opaque) {
+                        group.texture.context.fillStyle = group.texture.backgroundColor;
+                        group.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+                    }
+                    if(group.texture.loaded) {
+                        group.texture.context.drawImage(group.texture.texture, //	Source Image
+                        this._sx, //	Source X (location within the source image)
+                        this._sy, //	Source Y
+                        this._sw, //	Source Width
+                        this._sh, //	Source Height
+                        this._dx, //	Destination X (where on the canvas it'll be drawn)
+                        this._dy, //	Destination Y
+                        this._dw, //	Destination Width (always same as Source Width unless scaled)
+                        this._dh);
+                        //	Destination Height (always same as Source Height unless scaled)
+                                            }
+                    return true;
+                };
+                GroupRenderer.prototype.postRender = function (camera, group) {
+                    if(group.modified || group.texture.globalCompositeOperation) {
+                        group.texture.context.restore();
+                    }
+                    if(this._ga > -1) {
+                        group.texture.context.globalAlpha = this._ga;
+                    }
+                };
+                return GroupRenderer;
+            })();
+            Canvas.GroupRenderer = GroupRenderer;            
+        })(Renderer.Canvas || (Renderer.Canvas = {}));
+        var Canvas = Renderer.Canvas;
+    })(Phaser.Renderer || (Phaser.Renderer = {}));
+    var Renderer = Phaser.Renderer;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Renderer) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="../../gameobjects/Sprite.ts" />
+        /// <reference path="../../cameras/Camera.ts" />
+        (function (Canvas) {
+            var ScrollZoneRenderer = (function () {
+                function ScrollZoneRenderer(game) {
+                    //  Local rendering related temp vars to help avoid gc spikes through constant var creation
+                    this._ga = 1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = 0;
+                    this._sh = 0;
+                    this._dx = 0;
+                    this._dy = 0;
+                    this._dw = 0;
+                    this._dh = 0;
+                    this._fx = 1;
+                    this._fy = 1;
+                    this._sin = 0;
+                    this._cos = 1;
+                    this.game = game;
+                }
+                ScrollZoneRenderer.prototype.inCamera = /**
+                * Check whether this object is visible in a specific camera Rectangle.
+                * @param camera {Rectangle} The Rectangle you want to check.
+                * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+                */
+                function (camera, scrollZone) {
+                    //  Object fixed in place regardless of the camera scrolling? Then it's always visible
+                    if(scrollZone.transform.scrollFactor.equals(0)) {
+                        return true;
+                    }
+                    //return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
+                    return true;
+                };
+                ScrollZoneRenderer.prototype.render = function (camera, scrollZone) {
+                    if(scrollZone.transform.scale.x == 0 || scrollZone.transform.scale.y == 0 || scrollZone.texture.alpha < 0.1 || this.inCamera(camera, scrollZone) == false) {
+                        return false;
+                    }
+                    //  Reset our temp vars
+                    this._ga = -1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = scrollZone.width;
+                    this._sh = scrollZone.height;
+                    this._fx = scrollZone.transform.scale.x;
+                    this._fy = scrollZone.transform.scale.y;
+                    this._sin = 0;
+                    this._cos = 1;
+                    this._dx = (camera.screenView.x * scrollZone.transform.scrollFactor.x) + scrollZone.x - (camera.worldView.x * scrollZone.transform.scrollFactor.x);
+                    this._dy = (camera.screenView.y * scrollZone.transform.scrollFactor.y) + scrollZone.y - (camera.worldView.y * scrollZone.transform.scrollFactor.y);
+                    this._dw = scrollZone.width;
+                    this._dh = scrollZone.height;
+                    //  Alpha
+                    if(scrollZone.texture.alpha !== 1) {
+                        this._ga = scrollZone.texture.context.globalAlpha;
+                        scrollZone.texture.context.globalAlpha = scrollZone.texture.alpha;
+                    }
+                    //  Sprite Flip X
+                    if(scrollZone.texture.flippedX) {
+                        this._fx = -scrollZone.transform.scale.x;
+                    }
+                    //  Sprite Flip Y
+                    if(scrollZone.texture.flippedY) {
+                        this._fy = -scrollZone.transform.scale.y;
+                    }
+                    //	Rotation and Flipped
+                    if(scrollZone.modified) {
+                        if(scrollZone.texture.renderRotation == true && (scrollZone.rotation !== 0 || scrollZone.transform.rotationOffset !== 0)) {
+                            this._sin = Math.sin(scrollZone.game.math.degreesToRadians(scrollZone.transform.rotationOffset + scrollZone.rotation));
+                            this._cos = Math.cos(scrollZone.game.math.degreesToRadians(scrollZone.transform.rotationOffset + scrollZone.rotation));
+                        }
+                        scrollZone.texture.context.save();
+                        scrollZone.texture.context.setTransform(this._cos * this._fx, //  scale x
+                        (this._sin * this._fx) + scrollZone.transform.skew.x, //  skew x
+                        -(this._sin * this._fy) + scrollZone.transform.skew.y, //  skew y
+                        this._cos * this._fy, //  scale y
+                        this._dx, //  translate x
+                        this._dy);
+                        //  translate y
+                        this._dx = -scrollZone.transform.origin.x;
+                        this._dy = -scrollZone.transform.origin.y;
+                    } else {
+                        if(!scrollZone.transform.origin.equals(0)) {
+                            this._dx -= scrollZone.transform.origin.x;
+                            this._dy -= scrollZone.transform.origin.y;
+                        }
+                    }
+                    this._sx = Math.floor(this._sx);
+                    this._sy = Math.floor(this._sy);
+                    this._sw = Math.floor(this._sw);
+                    this._sh = Math.floor(this._sh);
+                    this._dx = Math.floor(this._dx);
+                    this._dy = Math.floor(this._dy);
+                    this._dw = Math.floor(this._dw);
+                    this._dh = Math.floor(this._dh);
+                    for(var i = 0; i < scrollZone.regions.length; i++) {
+                        if(scrollZone.texture.isDynamic) {
+                            scrollZone.regions[i].render(scrollZone.texture.context, scrollZone.texture.texture, this._dx, this._dy, this._dw, this._dh);
+                        } else {
+                            scrollZone.regions[i].render(scrollZone.texture.context, scrollZone.texture.texture, this._dx, this._dy, this._dw, this._dh);
+                        }
+                    }
+                    if(scrollZone.modified) {
+                        scrollZone.texture.context.restore();
+                    }
+                    if(this._ga > -1) {
+                        scrollZone.texture.context.globalAlpha = this._ga;
+                    }
+                    this.game.renderer.renderCount++;
+                    return true;
+                };
+                return ScrollZoneRenderer;
+            })();
+            Canvas.ScrollZoneRenderer = ScrollZoneRenderer;            
+        })(Renderer.Canvas || (Renderer.Canvas = {}));
+        var Canvas = Renderer.Canvas;
+    })(Phaser.Renderer || (Phaser.Renderer = {}));
+    var Renderer = Phaser.Renderer;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Renderer) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="../../gameobjects/Sprite.ts" />
+        /// <reference path="../../cameras/Camera.ts" />
+        (function (Canvas) {
+            var SpriteRenderer = (function () {
+                function SpriteRenderer(game) {
+                    //  Local rendering related temp vars to help avoid gc spikes through constant var creation
+                    //private _c: number = 0;
+                    this._ga = 1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = 0;
+                    this._sh = 0;
+                    this._dx = 0;
+                    this._dy = 0;
+                    this._dw = 0;
+                    this._dh = 0;
+                    this.game = game;
+                }
+                SpriteRenderer.prototype.inCamera = /**
+                * Check whether this object is visible in a specific camera Rectangle.
+                * @param camera {Rectangle} The Rectangle you want to check.
+                * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+                */
+                function (camera, sprite) {
+                    //  Object fixed in place regardless of the camera scrolling? Then it's always visible
+                    if(sprite.transform.scrollFactor.equals(0)) {
+                        return true;
+                    }
+                    //return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
+                    return true;
+                };
+                SpriteRenderer.prototype.render = /**
+                * Render this sprite to specific camera. Called by game loop after update().
+                * @param camera {Camera} Camera this sprite will be rendered to.
+                * @return {boolean} Return false if not rendered, otherwise return true.
+                */
+                function (camera, sprite) {
+                    Phaser.SpriteUtils.updateCameraView(camera, sprite);
+                    if(sprite.transform.scale.x == 0 || sprite.transform.scale.y == 0 || sprite.texture.alpha < 0.1 || this.inCamera(camera, sprite) == false) {
+                        return false;
+                    }
+                    //  Reset our temp vars
+                    this._ga = -1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = sprite.texture.width;
+                    this._sh = sprite.texture.height;
+                    //this._dx = camera.screenView.x + sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
+                    //this._dy = camera.screenView.y + sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
+                    this._dx = sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x);
+                    this._dy = sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y);
+                    this._dw = sprite.texture.width;
+                    this._dh = sprite.texture.height;
+                    if(sprite.animations.currentFrame !== null) {
+                        this._sx = sprite.animations.currentFrame.x;
+                        this._sy = sprite.animations.currentFrame.y;
+                        if(sprite.animations.currentFrame.trimmed) {
+                            this._dx += sprite.animations.currentFrame.spriteSourceSizeX;
+                            this._dy += sprite.animations.currentFrame.spriteSourceSizeY;
+                            this._sw = sprite.animations.currentFrame.spriteSourceSizeW;
+                            this._sh = sprite.animations.currentFrame.spriteSourceSizeH;
+                            this._dw = sprite.animations.currentFrame.spriteSourceSizeW;
+                            this._dh = sprite.animations.currentFrame.spriteSourceSizeH;
+                        }
+                    }
+                    if(sprite.modified) {
+                        camera.texture.context.save();
+                        camera.texture.context.setTransform(sprite.transform.local.data[0], //  scale x
+                        sprite.transform.local.data[3], //  skew x
+                        sprite.transform.local.data[1], //  skew y
+                        sprite.transform.local.data[4], //  scale y
+                        this._dx, //  translate x
+                        this._dy);
+                        //  translate y
+                        this._dx = sprite.transform.origin.x * -this._dw;
+                        this._dy = sprite.transform.origin.y * -this._dh;
+                    } else {
+                        this._dx -= (this._dw * sprite.transform.origin.x);
+                        this._dy -= (this._dh * sprite.transform.origin.y);
+                    }
+                    if(sprite.crop) {
+                        this._sx += sprite.crop.x * sprite.transform.scale.x;
+                        this._sy += sprite.crop.y * sprite.transform.scale.y;
+                        this._sw = sprite.crop.width * sprite.transform.scale.x;
+                        this._sh = sprite.crop.height * sprite.transform.scale.y;
+                        this._dx += sprite.crop.x * sprite.transform.scale.x;
+                        this._dy += sprite.crop.y * sprite.transform.scale.y;
+                        this._dw = sprite.crop.width * sprite.transform.scale.x;
+                        this._dh = sprite.crop.height * sprite.transform.scale.y;
+                    }
+                    this._sx = Math.floor(this._sx);
+                    this._sy = Math.floor(this._sy);
+                    this._sw = Math.floor(this._sw);
+                    this._sh = Math.floor(this._sh);
+                    this._dx = Math.floor(this._dx);
+                    this._dy = Math.floor(this._dy);
+                    this._dw = Math.floor(this._dw);
+                    this._dh = Math.floor(this._dh);
+                    if(this._sw <= 0 || this._sh <= 0 || this._dw <= 0 || this._dh <= 0) {
+                        return false;
+                    }
+                    //  Global Composite Ops
+                    if(sprite.texture.globalCompositeOperation) {
+                        camera.texture.context.save();
+                        camera.texture.context.globalCompositeOperation = sprite.texture.globalCompositeOperation;
+                    }
+                    //  Alpha
+                    if(sprite.texture.alpha !== 1 && camera.texture.context.globalAlpha != sprite.texture.alpha) {
+                        this._ga = sprite.texture.context.globalAlpha;
+                        camera.texture.context.globalAlpha = sprite.texture.alpha;
+                    }
+                    if(sprite.texture.opaque) {
+                        camera.texture.context.fillStyle = sprite.texture.backgroundColor;
+                        camera.texture.context.fillRect(this._dx, this._dy, this._dw, this._dh);
+                    }
+                    if(sprite.texture.loaded) {
+                        camera.texture.context.drawImage(sprite.texture.texture, //	Source Image
+                        this._sx, //	Source X (location within the source image)
+                        this._sy, //	Source Y
+                        this._sw, //	Source Width
+                        this._sh, //	Source Height
+                        this._dx, //	Destination X (where on the canvas it'll be drawn)
+                        this._dy, //	Destination Y
+                        this._dw, //	Destination Width (always same as Source Width unless scaled)
+                        this._dh);
+                        //	Destination Height (always same as Source Height unless scaled)
+                                            }
+                    if(sprite.modified || sprite.texture.globalCompositeOperation) {
+                        camera.texture.context.restore();
+                    }
+                    if(this._ga > -1) {
+                        camera.texture.context.globalAlpha = this._ga;
+                    }
+                    sprite.renderOrderID = this.game.renderer.renderCount;
+                    this.game.renderer.renderCount++;
+                    return true;
+                };
+                return SpriteRenderer;
+            })();
+            Canvas.SpriteRenderer = SpriteRenderer;            
+        })(Renderer.Canvas || (Renderer.Canvas = {}));
+        var Canvas = Renderer.Canvas;
+    })(Phaser.Renderer || (Phaser.Renderer = {}));
+    var Renderer = Phaser.Renderer;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Renderer) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="../../gameobjects/Sprite.ts" />
+        /// <reference path="../../cameras/Camera.ts" />
+        (function (Canvas) {
+            var TilemapRenderer = (function () {
+                function TilemapRenderer(game) {
+                    //  Local rendering related temp vars to help avoid gc spikes through constant var creation
+                    this._ga = 1;
+                    this._sx = 0;
+                    this._sy = 0;
+                    this._sw = 0;
+                    this._sh = 0;
+                    this._dx = 0;
+                    this._dy = 0;
+                    this._dw = 0;
+                    this._dh = 0;
+                    this._fx = 1;
+                    this._fy = 1;
+                    this._tx = 0;
+                    this._ty = 0;
+                    this._sin = 0;
+                    this._cos = 1;
+                    this._maxX = 0;
+                    this._maxY = 0;
+                    this._startX = 0;
+                    this._startY = 0;
+                    this.game = game;
+                }
+                TilemapRenderer.prototype.render = /**
+                * Render a tilemap to a specific camera.
+                * @param camera {Camera} The camera this tilemap will be rendered to.
+                */
+                function (camera, tilemap) {
+                    //  Loop through the layers
+                    for(var i = 0; i < tilemap.layers.length; i++) {
+                        var layer = tilemap.layers[i];
+                        if(layer.visible == false || layer.alpha < 0.1) {
+                            continue;
+                        }
+                        //  Work out how many tiles we can fit into our camera and round it up for the edges
+                        this._maxX = this.game.math.ceil(camera.width / layer.tileWidth) + 1;
+                        this._maxY = this.game.math.ceil(camera.height / layer.tileHeight) + 1;
+                        //  And now work out where in the tilemap the camera actually is
+                        this._startX = this.game.math.floor(camera.worldView.x / layer.tileWidth);
+                        this._startY = this.game.math.floor(camera.worldView.y / layer.tileHeight);
+                        //  Tilemap bounds check
+                        if(this._startX < 0) {
+                            this._startX = 0;
+                        }
+                        if(this._startY < 0) {
+                            this._startY = 0;
+                        }
+                        if(this._maxX > layer.widthInTiles) {
+                            this._maxX = layer.widthInTiles;
+                        }
+                        if(this._maxY > layer.heightInTiles) {
+                            this._maxY = layer.heightInTiles;
+                        }
+                        if(this._startX + this._maxX > layer.widthInTiles) {
+                            this._startX = layer.widthInTiles - this._maxX;
+                        }
+                        if(this._startY + this._maxY > layer.heightInTiles) {
+                            this._startY = layer.heightInTiles - this._maxY;
+                        }
+                        //  Finally get the offset to avoid the blocky movement
+                        //this._dx = (camera.screenView.x * layer.transform.scrollFactor.x) - (camera.worldView.x * layer.transform.scrollFactor.x);
+                        //this._dy = (camera.screenView.y * layer.transform.scrollFactor.y) - (camera.worldView.y * layer.transform.scrollFactor.y);
+                        //this._dx = (camera.screenView.x * this.scrollFactor.x) + this.x - (camera.worldView.x * this.scrollFactor.x);
+                        //this._dy = (camera.screenView.y * this.scrollFactor.y) + this.y - (camera.worldView.y * this.scrollFactor.y);
+                        this._dx = 0;
+                        this._dy = 0;
+                        this._dx += -(camera.worldView.x - (this._startX * layer.tileWidth));
+                        this._dy += -(camera.worldView.y - (this._startY * layer.tileHeight));
+                        this._tx = this._dx;
+                        this._ty = this._dy;
+                        //  Alpha
+                        if(layer.texture.alpha !== 1) {
+                            this._ga = layer.texture.context.globalAlpha;
+                            layer.texture.context.globalAlpha = layer.texture.alpha;
+                        }
+                        for(var row = this._startY; row < this._startY + this._maxY; row++) {
+                            this._columnData = layer.mapData[row];
+                            for(var tile = this._startX; tile < this._startX + this._maxX; tile++) {
+                                if(layer.tileOffsets[this._columnData[tile]]) {
+                                    layer.texture.context.drawImage(layer.texture.texture, layer.tileOffsets[this._columnData[tile]].x, layer.tileOffsets[this._columnData[tile]].y, layer.tileWidth, layer.tileHeight, this._tx, this._ty, layer.tileWidth, layer.tileHeight);
+                                }
+                                this._tx += layer.tileWidth;
+                            }
+                            this._tx = this._dx;
+                            this._ty += layer.tileHeight;
+                        }
+                        if(this._ga > -1) {
+                            layer.texture.context.globalAlpha = this._ga;
+                        }
+                    }
+                    return true;
+                };
+                return TilemapRenderer;
+            })();
+            Canvas.TilemapRenderer = TilemapRenderer;            
+        })(Renderer.Canvas || (Renderer.Canvas = {}));
+        var Canvas = Renderer.Canvas;
+    })(Phaser.Renderer || (Phaser.Renderer = {}));
+    var Renderer = Phaser.Renderer;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Renderer) {
+        /// <reference path="../../Game.ts" />
+        /// <reference path="../../gameobjects/Sprite.ts" />
+        /// <reference path="../../gameobjects/ScrollZone.ts" />
+        /// <reference path="../../cameras/Camera.ts" />
+        /// <reference path="../IRenderer.ts" />
+        /// <reference path="CameraRenderer.ts" />
+        /// <reference path="GeometryRenderer.ts" />
+        /// <reference path="GroupRenderer.ts" />
+        /// <reference path="ScrollZoneRenderer.ts" />
+        /// <reference path="SpriteRenderer.ts" />
+        /// <reference path="TilemapRenderer.ts" />
+        (function (Canvas) {
+            var CanvasRenderer = (function () {
+                function CanvasRenderer(game) {
+                    this._c = 0;
+                    this.game = game;
+                    this.cameraRenderer = new Canvas.CameraRenderer(game);
+                    this.groupRenderer = new Canvas.GroupRenderer(game);
+                    this.spriteRenderer = new Canvas.SpriteRenderer(game);
+                    this.geometryRenderer = new Canvas.GeometryRenderer(game);
+                    this.scrollZoneRenderer = new Canvas.ScrollZoneRenderer(game);
+                    this.tilemapRenderer = new Canvas.TilemapRenderer(game);
+                }
+                CanvasRenderer.prototype.render = function () {
+                    this._cameraList = this.game.world.getAllCameras();
+                    this.renderCount = 0;
+                    //  Then iterate through world.group on them all (where not blacklisted, etc)
+                    for(this._c = 0; this._c < this._cameraList.length; this._c++) {
+                        if(this._cameraList[this._c].visible) {
+                            this.cameraRenderer.preRender(this._cameraList[this._c]);
+                            this.game.world.group.render(this._cameraList[this._c]);
+                            this.cameraRenderer.postRender(this._cameraList[this._c]);
+                        }
+                    }
+                    this.renderTotal = this.renderCount;
+                };
+                CanvasRenderer.prototype.renderGameObject = function (camera, object) {
+                    if(object.type == Phaser.Types.SPRITE || object.type == Phaser.Types.BUTTON) {
+                        this.spriteRenderer.render(camera, object);
+                    } else if(object.type == Phaser.Types.SCROLLZONE) {
+                        this.scrollZoneRenderer.render(camera, object);
+                    } else if(object.type == Phaser.Types.TILEMAP) {
+                        this.tilemapRenderer.render(camera, object);
+                    }
+                };
+                return CanvasRenderer;
+            })();
+            Canvas.CanvasRenderer = CanvasRenderer;            
+        })(Renderer.Canvas || (Renderer.Canvas = {}));
+        var Canvas = Renderer.Canvas;
+    })(Phaser.Renderer || (Phaser.Renderer = {}));
+    var Renderer = Phaser.Renderer;
 })(Phaser || (Phaser = {}));
 /// <reference path="../Game.ts" />
 /// <reference path="../geom/Point.ts" />
@@ -17967,8 +18205,8 @@ var Phaser;
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             DebugUtils.start(x, y, color);
             DebugUtils.line('Camera ID: ' + camera.ID + ' (' + camera.screenView.width + ' x ' + camera.screenView.height + ')');
-            DebugUtils.line('X: ' + camera.screenView.x + ' Y: ' + camera.screenView.y + ' rotation: ' + camera.transform.rotation);
-            DebugUtils.line('World X: ' + camera.worldView.x + ' World Y: ' + camera.worldView.y + ' W: ' + camera.worldView.width + ' H: ' + camera.worldView.height + ' R: ' + camera.worldView.right + ' B: ' + camera.worldView.bottom);
+            DebugUtils.line('X: ' + camera.x + ' Y: ' + camera.y + ' Rotation: ' + camera.transform.rotation);
+            DebugUtils.line('WorldView X: ' + camera.worldView.x + ' Y: ' + camera.worldView.y + ' W: ' + camera.worldView.width + ' H: ' + camera.worldView.height);
             DebugUtils.line('ScreenView X: ' + camera.screenView.x + ' Y: ' + camera.screenView.y + ' W: ' + camera.screenView.width + ' H: ' + camera.screenView.height);
             if(camera.worldBounds) {
                 DebugUtils.line('Bounds: ' + camera.worldBounds.width + ' x ' + camera.worldBounds.height);
@@ -18054,9 +18292,8 @@ var Phaser;
             DebugUtils.line('sx: ' + sprite.transform.scale.x.toFixed(1) + ' sy: ' + sprite.transform.scale.y.toFixed(1));
             DebugUtils.line('tx: ' + sprite.texture.width.toFixed(1) + ' ty: ' + sprite.texture.height.toFixed(1));
             DebugUtils.line('center x: ' + sprite.transform.center.x + ' y: ' + sprite.transform.center.y);
-            //line('cameraView x: ' + sprite.cameraView.x + ' y: ' + sprite.cameraView.y + ' width: ' + sprite.cameraView.width + ' height: ' + sprite.cameraView.height + ' bottom: ' + sprite.cameraView.bottom + ' right: ' + sprite.cameraView.right);
             DebugUtils.line('cameraView x: ' + sprite.cameraView.x + ' y: ' + sprite.cameraView.y + ' width: ' + sprite.cameraView.width + ' height: ' + sprite.cameraView.height);
-            DebugUtils.line('inCamera: ' + DebugUtils.game.renderer.inCamera(DebugUtils.game.camera, sprite));
+            DebugUtils.line('inCamera: ' + DebugUtils.game.renderer.spriteRenderer.inCamera(DebugUtils.game.camera, sprite));
         };
         DebugUtils.renderSpriteBounds = function renderSpriteBounds(sprite, camera, color) {
             if (typeof camera === "undefined") { camera = null; }
@@ -18134,7 +18371,7 @@ var Phaser;
 /// <reference path="input/InputManager.ts" />
 /// <reference path="renderers/IRenderer.ts" />
 /// <reference path="renderers/HeadlessRenderer.ts" />
-/// <reference path="renderers/CanvasRenderer.ts" />
+/// <reference path="renderers/canvas/CanvasRenderer.ts" />
 /// <reference path="utils/DebugUtils.ts" />
 /// <reference path="core/PluginManager.ts" />
 /**
@@ -18332,11 +18569,11 @@ var Phaser;
         Game.prototype.setRenderer = function (type) {
             switch(type) {
                 case Phaser.Types.RENDERER_AUTO_DETECT:
-                    this.renderer = new Phaser.HeadlessRenderer(this);
+                    this.renderer = new Phaser.Renderer.Headless.HeadlessRenderer(this);
                     break;
                 case Phaser.Types.RENDERER_AUTO_DETECT:
                 case Phaser.Types.RENDERER_CANVAS:
-                    this.renderer = new Phaser.CanvasRenderer(this);
+                    this.renderer = new Phaser.Renderer.Canvas.CanvasRenderer(this);
                     break;
                     // WebGL coming soon :)
                                 }

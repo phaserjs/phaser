@@ -32,8 +32,14 @@ module Phaser.Display {
             this._height = 16;
 
             this.cameraBlacklist = [];
+            this._blacklist = 0;
 
         }
+
+        /**
+         * Camera Blacklist length
+         */
+        private _blacklist: number;
 
         /**
          * Private _width - use the width getter/setter instead
@@ -166,6 +172,51 @@ module Phaser.Display {
          * @type {Phaser.Rectangle}
          */
         public crop: Phaser.Rectangle;
+
+        /**
+        * Hides an object from this Camera. Hidden objects are not rendered.
+        *
+        * @param object {Camera} The camera this object should ignore.
+        */
+        public hideFromCamera(camera: Camera) {
+
+            if (this.isHidden(camera) == false)
+            {
+                this.cameraBlacklist.push(camera.ID);
+                this._blacklist++;
+            }
+
+        }
+
+        /**
+         * Returns true if this texture is hidden from rendering to the given camera, otherwise false.
+         */
+        public isHidden(camera: Camera): bool {
+
+            if (this._blacklist && this.cameraBlacklist.indexOf(camera.ID) !== -1)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+        /**
+        * Un-hides an object previously hidden to this Camera.
+        * The object must implement a public cameraBlacklist property.
+        *
+        * @param object {Sprite/Group} The object this camera should display.
+        */
+        public showToCamera(camera: Camera) {
+
+            if (this.isHidden(camera))
+            {
+                this.cameraBlacklist.slice(this.cameraBlacklist.indexOf(camera.ID), 1);
+                this._blacklist--;
+            }
+
+        }
 
         /**
          * Updates the texture being used to render the Sprite.

@@ -5,8 +5,8 @@
     var zombieCamera: Phaser.Camera;
 
     var zombie: Phaser.Sprite;
-    var walkSpeed: Number = 2,
-        direction: Number = 1;
+    var walkSpeed: number = 2,
+        direction: number = 1;
 
     function init() {
         game.world.setSize(1280, 600, true);
@@ -66,7 +66,8 @@
         }
     }
     function render() {
-        game.camera.renderDebugInfo(32, 32);
-        zombieCamera.renderDebugInfo(32, 128);
+
+        Phaser.DebugUtils.renderCameraInfo(game.camera, 32, 32);
+        Phaser.DebugUtils.renderCameraInfo(zombieCamera, 32, 128);
     }
 })();

@@ -3,13 +3,13 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
 
     var ufo: Phaser.Sprite,
-        speed: Number = 4;
+        speed: number = 4;
 
     var btn0: Phaser.UI.Button,
         btn1: Phaser.UI.Button,
         btn2: Phaser.UI.Button,
         btn3: Phaser.UI.Button;
-    var style: String = 'default';
+    var style: string = 'default';
 
     function init() {
         game.world.setSize(1280, 800, true);
@@ -84,19 +84,19 @@
         Phaser.DebugUtils.context.fillText('Current style: ' + style, 360, 48);
     }
     function lockonFollow() {
-        game.camera.follow(ufo, Phaser.Camera.STYLE_LOCKON);
+        game.camera.follow(ufo, Phaser.Phaser.Types.CAMERA_FOLLOW_LOCKON);
         style = 'STYLE_LOCKON';
     }
     function platformerFollow() {
-        game.camera.follow(ufo, Phaser.Camera.STYLE_PLATFORMER);
+        game.camera.follow(ufo, Phaser.Phaser.Types.CAMERA_FOLLOW_PLATFORMER);
         style = 'STYLE_PLATFORMER';
     }
     function topdownFollow() {
-        game.camera.follow(ufo, Phaser.Camera.STYLE_TOPDOWN);
+        game.camera.follow(ufo, Phaser.Phaser.Types.CAMERA_FOLLOW_TOPDOWN);
         style = 'STYLE_TOPDOWN';
     }
     function topdownTightFollow() {
-        game.camera.follow(ufo, Phaser.Camera.STYLE_TOPDOWN_TIGHT);
+        game.camera.follow(ufo, Phaser.Phaser.Types.CAMERA_FOLLOW_TOPDOWN_TIGHT);
         style = 'STYLE_TOPDOWN_TIGHT';
     }
 })();

@@ -22,20 +22,27 @@ Latest Update
 
 TODO:
 
+*** Render each camera to its own canvas - then I can apply filters (?), easily rotate it, scale it, etc without worrying about children
+* Default camera (camera 0) could be the stage camera, renders to stage?
+* Inject game into a <div>
+* Add ability to create extra <div>s within the game container, layered above/below the canvas
+* One single canvas
+* Inject Pixi.js into this fully? Use it for all rendering? A lot of work, but could be interesting? At least pixi is quite small.
+
+
+
+
 * Investigate why tweens don't restart after the game pauses
 * Fix bug in Tween yoyo + loop combo
 * Check that tween pausing works with the new performance.now
 * Game.Time should monitor pause duration
 * Investigate bug re: tilemap collision and animation frames
-* Update tests that use arrow keys and include touch/mouse support (FlxControlHandler style)
 * Pointer.getWorldX(camera) needs to take camera scale into consideration
 * Add clip support + shape options to Texture Component.
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
 * Sprite collision events
 * Check bounds/edge points when sprite is only 1x1 sized :)
 * QuadTree.physics.checkHullIntersection
-* Add visible toggle if tween property is alpha <> 01
-* Camera.isHidden uses an array and length check, faster to swap for a single counter, also try to remove indexOf check
 * Tilemap.render - move layers length to var
 * Tilemap.destroy needs doing
 * Sprite.transform.bottomRight/Left doesn't seem to take origin into account

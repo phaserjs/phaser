@@ -3,7 +3,7 @@
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update);
 
     var ufo: Phaser.Sprite;
-    var speed: Number = 4;
+    var speed: number = 4;
 
     function init() {
         game.world.setSize(1280, 600, true);

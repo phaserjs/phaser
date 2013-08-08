@@ -152,7 +152,6 @@
     </Content>
     <TypeScriptCompile Include="utils\PointUtils.ts" />
     <TypeScriptCompile Include="utils\CircleUtils.ts" />
-    <TypeScriptCompile Include="renderers\CanvasRenderer.ts" />
     <TypeScriptCompile Include="Statics.ts" />
     <TypeScriptCompile Include="renderers\HeadlessRenderer.ts" />
     <TypeScriptCompile Include="math\QuadTree.ts" />
@@ -204,6 +203,34 @@
     <Content Include="physics\Manager.js">
       <DependentUpon>Manager.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="renderers\canvas\SpriteRenderer.ts" />
+    <TypeScriptCompile Include="renderers\canvas\CanvasRenderer.ts" />
+    <TypeScriptCompile Include="renderers\canvas\CameraRenderer.ts" />
+    <Content Include="renderers\canvas\CameraRenderer.js">
+      <DependentUpon>CameraRenderer.ts</DependentUpon>
+    </Content>
+    <Content Include="renderers\canvas\CanvasRenderer.js">
+      <DependentUpon>CanvasRenderer.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="renderers\canvas\GroupRenderer.ts" />
+    <TypeScriptCompile Include="renderers\canvas\GeometryRenderer.ts" />
+    <Content Include="renderers\canvas\GeometryRenderer.js">
+      <DependentUpon>GeometryRenderer.ts</DependentUpon>
+    </Content>
+    <Content Include="renderers\canvas\GroupRenderer.js">
+      <DependentUpon>GroupRenderer.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="renderers\canvas\ScrollZoneRenderer.ts" />
+    <Content Include="renderers\canvas\ScrollZoneRenderer.js">
+      <DependentUpon>ScrollZoneRenderer.ts</DependentUpon>
+    </Content>
+    <Content Include="renderers\canvas\SpriteRenderer.js">
+      <DependentUpon>SpriteRenderer.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="renderers\canvas\TilemapRenderer.ts" />
+    <Content Include="renderers\canvas\TilemapRenderer.js">
+      <DependentUpon>TilemapRenderer.ts</DependentUpon>
+    </Content>
     <Content Include="renderers\HeadlessRenderer.js">
       <DependentUpon>HeadlessRenderer.ts</DependentUpon>
     </Content>
@@ -213,9 +240,6 @@
     </Content>
     <Content Include="Statics.js">
       <DependentUpon>Statics.ts</DependentUpon>
-    </Content>
-    <Content Include="renderers\CanvasRenderer.js">
-      <DependentUpon>CanvasRenderer.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="system\screens\OrientationScreen.ts" />
     <Content Include="system\screens\OrientationScreen.js">

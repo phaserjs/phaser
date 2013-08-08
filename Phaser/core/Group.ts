@@ -236,7 +236,7 @@ module Phaser {
                 return;
             }
 
-            this.game.renderer.preRenderGroup(camera, this);
+            this.game.renderer.groupRenderer.preRender(camera, this);
 
             this._i = 0;
 
@@ -252,12 +252,12 @@ module Phaser {
                     }
                     else
                     {
-                        this.game.renderer.renderGameObject(this._member);
+                        this.game.renderer.renderGameObject(camera, this._member);
                     }
                 }
             }
 
-            this.game.renderer.postRenderGroup(camera, this);
+            this.game.renderer.groupRenderer.postRender(camera, this);
 
         }
 
@@ -267,7 +267,7 @@ module Phaser {
         */
         public directRender(camera: Camera) {
 
-            this.game.renderer.preRenderGroup(camera, this);
+            this.game.renderer.groupRenderer.preRender(camera, this);
 
             this._i = 0;
 
@@ -288,7 +288,7 @@ module Phaser {
                 }
             }
 
-            this.game.renderer.postRenderGroup(camera, this);
+            this.game.renderer.groupRenderer.postRender(camera, this);
 
         }
 

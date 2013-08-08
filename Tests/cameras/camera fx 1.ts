@@ -20,7 +20,7 @@
         btn2 = game.add.button(426, 86, 'yellow', forceFade, this);
         btn3 = game.add.button(221, 318, 'magenta', fadeWithCallback, this);
 
-        fx = game.camera.fx.add(Phaser.FX.Camera.Fade);
+        //fx = game.camera.fx.add(Phaser.FX.Camera.Fade);
     }
     function render() {
         Phaser.DebugUtils.context.fillStyle = '#fff';

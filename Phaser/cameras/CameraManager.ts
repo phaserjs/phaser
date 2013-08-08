@@ -28,6 +28,7 @@ module Phaser {
             this._cameras = [];
 
             this.defaultCamera = this.addCamera(x, y, width, height);
+
             this.current = this.defaultCamera;
 
         }
@@ -56,9 +57,6 @@ module Phaser {
          * Helper for sort.
          */
         private _sortOrder: number;
-
-        public static CAMERA_TYPE_ORTHOGRAPHIC: number = 0;
-        public static CAMERA_TYPE_ISOMETRIC: number = 1;
 
         /**
          * Currently used camera.
@@ -112,7 +110,7 @@ module Phaser {
          * @param height {number} Height of the new camera.
          * @returns {Camera} The newly created camera object.
          */
-        public addCamera(x: number, y: number, width: number, height: number, type: number = CameraManager.CAMERA_TYPE_ORTHOGRAPHIC): Camera {
+        public addCamera(x: number, y: number, width: number, height: number): Camera {
 
             var newCam: Camera = new Camera(this._game, this._cameraInstance, x, y, width, height);
 

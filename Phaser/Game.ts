@@ -25,7 +25,7 @@
 /// <reference path="input/InputManager.ts" />
 /// <reference path="renderers/IRenderer.ts" />
 /// <reference path="renderers/HeadlessRenderer.ts" />
-/// <reference path="renderers/CanvasRenderer.ts" />
+/// <reference path="renderers/canvas/CanvasRenderer.ts" />
 /// <reference path="utils/DebugUtils.ts" />
 /// <reference path="core/PluginManager.ts" />
 
@@ -368,12 +368,12 @@ module Phaser {
             switch (type)
             {
                 case Phaser.Types.RENDERER_AUTO_DETECT:
-                    this.renderer = new Phaser.HeadlessRenderer(this);
+                    this.renderer = new Phaser.Renderer.Headless.HeadlessRenderer(this);
                     break;
 
                 case Phaser.Types.RENDERER_AUTO_DETECT:
                 case Phaser.Types.RENDERER_CANVAS:
-                    this.renderer = new Phaser.CanvasRenderer(this);
+                    this.renderer = new Phaser.Renderer.Canvas.CanvasRenderer(this);
                     break;
 
                 // WebGL coming soon :)

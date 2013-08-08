@@ -19,10 +19,10 @@ var Phaser;
                 function Border(game, parent) {
                                 _super.call(this, game, parent);
                     /**
-                    * Whether render border of this camera or not. (default is false)
+                    * Whether render border of this camera or not. (default is true)
                     * @type {boolean}
                     */
-                    this.showBorder = false;
+                    this.showBorder = true;
                     /**
                     * Color of border of this camera. (in css color string)
                     * @type {string}

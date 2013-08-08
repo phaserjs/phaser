@@ -301,6 +301,17 @@ module Phaser {
         }
 
         /**
+         * Runs Math.floor() on both the x and y values of this Rectangle.
+         * @method floor
+         **/
+        public floor() {
+
+            this.x = Math.floor(this.x);
+            this.y = Math.floor(this.y);
+
+        }
+
+        /**
          * Copies the x, y, width and height properties from any given object to this Rectangle.
          * @method copyFrom
          * @param {any} source - The object to copy from.

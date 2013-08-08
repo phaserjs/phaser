@@ -21,7 +21,7 @@
         btn3 = game.add.button(221, 318, 'magenta', flashWithCallback, this);
 
         // Usage of flash fx is the same as fade.
-        fx = game.camera.fx.add(Phaser.FX.Camera.Flash);
+        //fx = game.camera.fx.add(Phaser.FX.Camera.Flash);
     }
     function render() {
         Phaser.DebugUtils.context.fillStyle = '#fff';

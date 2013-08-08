@@ -21,7 +21,7 @@
         btn3 = game.add.button(221, 318, 'magenta', shakeWithCallback, this);
 
         // Usage of shake fx is the same as fade and flash.
-        fx = game.camera.fx.add(Phaser.FX.Camera.Shake);
+        //fx = game.camera.fx.add(Phaser.FX.Camera.Shake);
     }
     function render() {
         Phaser.DebugUtils.context.fillStyle = '#fff';

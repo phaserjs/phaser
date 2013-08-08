@@ -10,6 +10,33 @@ module Phaser {
         static RENDERER_CANVAS: number = 2;
         static RENDERER_WEBGL: number = 3;
 
+        static CAMERA_TYPE_ORTHOGRAPHIC: number = 0;
+        static CAMERA_TYPE_ISOMETRIC: number = 1;
+
+        /**
+         * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
+         * @type {number}
+         */
+        public static CAMERA_FOLLOW_LOCKON: number = 0;
+
+        /**
+         * Camera "follow" style preset: camera deadzone is narrow but tall.
+         * @type {number}
+         */
+        public static CAMERA_FOLLOW_PLATFORMER: number = 1;
+
+        /**
+         * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
+         * @type {number}
+         */
+        public static CAMERA_FOLLOW_TOPDOWN: number = 2;
+
+        /**
+         * Camera "follow" style preset: camera deadzone is a small square around the focus object.
+         * @type {number}
+         */
+        public static CAMERA_FOLLOW_TOPDOWN_TIGHT: number = 3;
+
         static GROUP: number = 0;
         static SPRITE: number = 1;
         static GEOMSPRITE: number = 2;
@@ -21,7 +48,7 @@ module Phaser {
 
         static GEOM_POINT: number = 0;
         static GEOM_CIRCLE: number = 1;
-        static GEOM_Rectangle: number = 2;
+        static GEOM_RECTANGLE: number = 2;
         static GEOM_LINE: number = 3;
         static GEOM_POLYGON: number = 4;
 

@@ -2,35 +2,29 @@
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, init, create, update, render);
     function init() {
-        game.world.setSize(1920, 1200, true);
-        game.load.image('backdrop', 'assets/pics/remember-me.jpg');
         game.load.image('melon', 'assets/sprites/melon.png');
         game.load.start();
     }
+    var car;
+    var miniCam;
     function create() {
-        game.add.sprite(0, 0, 'backdrop');
-        for(var i = 0; i < 100; i++) {
+        game.world.setSize(3000, 3000, true);
+        game.stage.backgroundColor = 'rgb(20,20,50)';
+        for(var i = 0; i < 1000; i++) {
             game.add.sprite(game.world.randomX, game.world.randomY, 'melon');
         }
-        //game.camera.texture.alpha = 0.5;
-        //game.camera.width = 400;
-        game.camera.texture.opaque = true;
-        game.camera.texture.backgroundColor = 'rgb(200,0,0)';
         game.camera.transform.origin.setTo(0.5, 0.5);
+        game.camera.texture.opaque = true;
+        game.camera.texture.backgroundColor = 'rgb(0,0,0)';
         game.camera.setPosition(game.stage.centerX, game.stage.centerY);
-        //game.camera.setPosition(0, 0);
-        //console.log('cam', game.camera.width, game.camera.height);
-            }
+        //game.camera.setPosition(200, 0);
+        game.camera.setSize(320, 320);
+    }
     function update() {
-        game.camera.rotation++;
         if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            //game.camera.x -= 4;
-            game.camera.transform.scale.x -= 0.1;
-            game.camera.transform.scale.y -= 0.1;
+            game.camera.rotation -= 2;
         } else if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            //game.camera.x += 4;
-            game.camera.transform.scale.x += 0.1;
-            game.camera.transform.scale.y += 0.1;
+            game.camera.rotation += 2;
         }
         if(game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
             game.camera.y -= 4;

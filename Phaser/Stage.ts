@@ -203,6 +203,8 @@ module Phaser {
 
             this.scale.update();
 
+            this.context.setTransform(1, 0, 0, 1, 0, 0);
+
             if (this.clear || (this._game.paused && this.disablePauseScreen == false))
             {
                 if (this.patchAndroidClearRectBug)

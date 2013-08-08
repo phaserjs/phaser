@@ -51,9 +51,17 @@ module Phaser {
             this.transform = new Phaser.Components.TransformManager(this);
             this.texture = new Phaser.Display.Texture(this);
 
-            this.texture.opaque = false;
+            //  We create a hidden canvas for our camera the size of the game (we use the screenView to clip the render to the camera size)
+            this.texture.canvas = <HTMLCanvasElement> document.createElement('canvas');
+            this.texture.canvas.width = width;
+            this.texture.canvas.height = height;
+            this.texture.context = this.texture.canvas.getContext('2d');
 
-            this.checkClip();
+            //  Handy proxies
+            this.scale = this.transform.scale;
+            this.alpha = this.texture.alpha;
+            this.origin = this.transform.origin;
+            this.crop = this.texture.crop;
 
         }
 
@@ -81,38 +89,43 @@ module Phaser {
         public transform: Phaser.Components.TransformManager;
 
         /**
-         * Camera "follow" style preset: camera has no deadzone, just tracks the focus object directly.
-         * @type {number}
-         */
-        public static STYLE_LOCKON: number = 0;
+        * The scale of the Sprite. A value of 1 is original scale. 0.5 is half size. 2 is double the size.
+        * This is a reference to Sprite.transform.scale
+        */
+        public scale: Phaser.Vec2;
 
         /**
-         * Camera "follow" style preset: camera deadzone is narrow but tall.
-         * @type {number}
+         * The crop rectangle allows you to control which part of the sprite texture is rendered without distorting it.
+         * Set to null to disable, set to a Phaser.Rectangle object to control the region that will be rendered, anything outside the rectangle is ignored.
+         * This is a reference to Sprite.texture.crop
+         * @type {Phaser.Rectangle}
          */
-        public static STYLE_PLATFORMER: number = 1;
+        public crop: Phaser.Rectangle;
 
         /**
-         * Camera "follow" style preset: camera deadzone is a medium-size square around the focus object.
-         * @type {number}
-         */
-        public static STYLE_TOPDOWN: number = 2;
+        * The origin of the Sprite around which rotation and positioning takes place.
+        * This is a reference to Sprite.transform.origin
+        */
+        public origin: Phaser.Vec2;
 
         /**
-         * Camera "follow" style preset: camera deadzone is a small square around the focus object.
-         * @type {number}
-         */
-        public static STYLE_TOPDOWN_TIGHT: number = 3;
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public set alpha(value: number) {
+            this.texture.alpha = value;
+        }
+
+        /**
+        * The alpha of the Sprite between 0 and 1, a value of 1 being fully opaque.
+        */
+        public get alpha(): number {
+            return this.texture.alpha;
+        }
 
         /**
          * Identity of this camera.
          */
         public ID: number;
-
-        /**
-         * Controls if this camera is clipped or not when rendering. You shouldn't usually set this value directly.
-         */
-        public clip: bool = false;
 
         /**
          * Camera view Rectangle in world coordinate.
@@ -144,12 +157,6 @@ module Phaser {
         public deadzone: Rectangle = null;
 
         /**
-         * Disable the automatic camera canvas clipping when Camera is non-Stage sized.
-         * @type {Boolean}
-         */
-        public disableClipping: bool = false;
-
-        /**
          * Whether this camera is visible or not. (default is true)
          * @type {boolean}
          */
@@ -168,10 +175,7 @@ module Phaser {
         */
         public hide(object) {
 
-            if (this.isHidden(object) == false)
-            {
-                object.texture['cameraBlacklist'].push(this.ID);
-            }
+            object.texture.hideFromCamera(this);
 
         }
 
@@ -181,7 +185,7 @@ module Phaser {
         * @param object {Sprite/Group} The object to check.
         */
         public isHidden(object): bool {
-            return (object.texture['cameraBlacklist'] && object.texture['cameraBlacklist'].length > 0 && object.texture['cameraBlacklist'].indexOf(this.ID) == -1);
+            return object.texture.isHidden(this);
         }
 
         /**
@@ -192,10 +196,7 @@ module Phaser {
         */
         public show(object) {
 
-            if (this.isHidden(object) == true)
-            {
-                object.texture['cameraBlacklist'].slice(object.texture['cameraBlacklist'].indexOf(this.ID), 1);
-            }
+            object.texture.showToCamera(this);
 
         }
 
@@ -204,7 +205,7 @@ module Phaser {
          * @param target {Sprite} The object you want the camera to track. Set to null to not follow anything.
          * @param [style] {number} Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
          */
-        public follow(target: Sprite, style?: number = Camera.STYLE_LOCKON) {
+        public follow(target: Sprite, style?: number = Phaser.Types.CAMERA_FOLLOW_LOCKON) {
 
             this._target = target;
 
@@ -212,20 +213,20 @@ module Phaser {
 
             switch (style)
             {
-                case Camera.STYLE_PLATFORMER:
+                case Phaser.Types.CAMERA_FOLLOW_PLATFORMER:
                     var w: number = this.width / 8;
                     var h: number = this.height / 3;
                     this.deadzone = new Rectangle((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
                     break;
-                case Camera.STYLE_TOPDOWN:
+                case Phaser.Types.CAMERA_FOLLOW_TOPDOWN:
                     helper = Math.max(this.width, this.height) / 4;
                     this.deadzone = new Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
                     break;
-                case Camera.STYLE_TOPDOWN_TIGHT:
+                case Phaser.Types.CAMERA_FOLLOW_TOPDOWN_TIGHT:
                     helper = Math.max(this.width, this.height) / 8;
                     this.deadzone = new Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
                     break;
-                case Camera.STYLE_LOCKON:
+                case Phaser.Types.CAMERA_FOLLOW_LOCKON:
                 default:
                     this.deadzone = null;
                     break;
@@ -364,6 +365,8 @@ module Phaser {
                 }
             }
 
+            this.worldView.floor();
+
             this.plugins.update();
 
         }
@@ -388,7 +391,7 @@ module Phaser {
 
                 if (this.worldView.x > this.worldBounds.right - this.width)
                 {
-                    this.worldView.x = (this.worldBounds.right - this.width) + 1;
+                    this.worldView.x = this.worldBounds.right - this.width;
                 }
 
                 if (this.worldView.y < this.worldBounds.top)
@@ -398,9 +401,11 @@ module Phaser {
 
                 if (this.worldView.y > this.worldBounds.bottom - this.height)
                 {
-                    this.worldView.y = (this.worldBounds.bottom - this.height) + 1;
+                    this.worldView.y = this.worldBounds.bottom - this.height;
                 }
             }
+
+            this.worldView.floor();
 
             this.plugins.postUpdate();
 
@@ -440,27 +445,53 @@ module Phaser {
         }
 
         public set width(value: number) {
+
             this.screenView.width = value;
             this.worldView.width = value;
+
+            if (value !== this.texture.canvas.width)
+            {
+                this.texture.canvas.width = value;
+            }
+
         }
 
         public set height(value: number) {
+
             this.screenView.height = value;
             this.worldView.height = value;
+
+            if (value !== this.texture.canvas.height)
+            {
+                this.texture.canvas.height = value;
+            }
+
         }
 
         public setPosition(x: number, y: number) {
+
             this.screenView.x = x;
             this.screenView.y = y;
-            this.checkClip();
+
         }
 
         public setSize(width: number, height: number) {
+
             this.screenView.width = width * this.transform.scale.x;
             this.screenView.height = height * this.transform.scale.y;
             this.worldView.width = width;
             this.worldView.height = height;
-            this.checkClip();
+
+            if (width !== this.texture.canvas.width)
+            {
+                this.texture.canvas.width = width;
+            }
+
+            if (height !== this.texture.canvas.height)
+            {
+                this.texture.canvas.height = height;
+            }
+
         }
 
         /**
@@ -476,19 +507,6 @@ module Phaser {
         */
         public set rotation(value: number) {
             this.transform.rotation = this.game.math.wrap(value, 360, 0);
-        }
-
-        private checkClip() {
-
-            if (this.screenView.x != 0 || this.screenView.y != 0 || this.screenView.width < this.game.stage.width || this.screenView.height < this.game.stage.height)
-            {
-                this.clip = true;
-            }
-            else
-            {
-                this.clip = false;
-            }
-
         }
 
     }
