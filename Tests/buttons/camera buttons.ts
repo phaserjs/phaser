@@ -17,10 +17,10 @@
 
     function create() {
 
-        button = game.add.button(100, 400, 'button', clickedIt, this, 2, 1, 0);
+        button = game.add.button(200, 400, 'button', clickedIt, this, 2, 1, 0);
+        button.origin.setTo(0.5, 0.5);
 
         game.camera.width = 400;
-        //game.camera.rotation = 10;
         game.camera.texture.opaque = true;
         game.camera.texture.backgroundColor = 'rgb(100,0,0)';
 
@@ -33,11 +33,13 @@
     function render() {
 
         Phaser.DebugUtils.renderInputInfo(32, 32);
+        Phaser.DebugUtils.renderSpriteWorldView(button, 32, 200);
 
     }
 
     function clickedIt() {
 
+        button.rotation += 10;
 
     }
 

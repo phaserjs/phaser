@@ -32,8 +32,8 @@
     function update() {
         //  Collide everything with the map
         //map.collide();
-        marker.x = game.math.snapToFloor(game.input.getWorldX(), 16);
-        marker.y = game.math.snapToFloor(game.input.getWorldY(), 16);
+        marker.x = game.math.snapToFloor(game.input.worldX, 16);
+        marker.y = game.math.snapToFloor(game.input.worldY, 16);
         if(game.input.mousePointer.isDown) {
             map.putTile(marker.x, marker.y, 32);
         }

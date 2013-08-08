@@ -9465,6 +9465,7 @@ module Phaser {
         * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
         static renderInputInfo(x: number, y: number, color?: string): void;
+        static renderSpriteWorldView(sprite: Sprite, x: number, y: number, color?: string): void;
         /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.

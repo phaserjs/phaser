@@ -336,8 +336,6 @@ module Phaser.Components {
 
         public _pointerOverHandler(pointer: Pointer) {
 
-            //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
-
             if (this._pointerData[pointer.id].isOver == false)
             {
                 this._pointerData[pointer.id].isOver = true;

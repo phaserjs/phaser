@@ -22,10 +22,10 @@ Latest Update
 
 TODO:
 
-* Default camera (camera 0) could be the stage camera, renders to stage?
 * Inject game into a <div>
 * Add ability to create extra <div>s within the game container, layered above/below the canvas
 * Rename init to preload and call start automatically
+* Poll the Input handlers less frequently (every other frame?)
 
 
 
@@ -34,7 +34,6 @@ TODO:
 * Check that tween pausing works with the new performance.now
 * Game.Time should monitor pause duration
 * Investigate bug re: tilemap collision and animation frames
-* Pointer.getWorldX(camera) needs to take camera scale into consideration
 * Add clip support + shape options to Texture Component.
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
 * Sprite collision events
@@ -54,7 +53,6 @@ TODO:
 * Pixel-perfect click check
 * Check Flash atlas export is supported
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
-* Check pointer picking objects with multiple cameras (check camera first, then object???)
 
 
 V1.0.0

@@ -285,23 +285,28 @@ module Phaser {
         * Gets the X value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public get worldX() {
+        public get worldX(): number {
+
             if (this.camera)
             {
-                return this.camera.worldView.x + this.x;
+                return (this.camera.worldView.x - this.camera.screenView.x) + this.x;
             }
+
             return null;
+
         }
 
         /**
         * Gets the Y value of this Pointer in world coordinates based on the given camera.
         * @param {Camera} [camera]
         */
-        public get worldY() {
+        public get worldY(): number {
+
             if (this.camera)
             {
-                return this.camera.worldView.y + this.y;
+                return (this.camera.worldView.y - this.camera.screenView.y) + this.y;
             }
+
             return null;
         }
 

@@ -213,6 +213,15 @@ module Phaser {
 
         }
 
+        static renderSpriteWorldView(sprite: Sprite, x: number, y: number, color?: string = 'rgb(255,255,255)') {
+
+            start(x, y, color);
+            line('Sprite World Coords (' + sprite.width + ' x ' + sprite.height + ')');
+            line('x: ' + sprite.worldView.x + ' y: ' + sprite.worldView.y);
+            line('bottom: ' + sprite.worldView.bottom + ' right: ' + sprite.worldView.right.toFixed(1));
+
+        }
+
         /**
          * Render debug infos. (including name, bounds info, position and some other properties)
          * @param x {number} X position of the debug info to be rendered.

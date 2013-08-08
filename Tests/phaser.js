@@ -2301,7 +2301,6 @@ var Phaser;
                 }
             };
             InputHandler.prototype._pointerOverHandler = function (pointer) {
-                //  { id: i, x: 0, y: 0, isDown: false, isUp: false, isOver: false, isOut: false, timeOver: 0, timeOut: 0, isDragged: false }
                 if(this._pointerData[pointer.id].isOver == false) {
                     this._pointerData[pointer.id].isOver = true;
                     this._pointerData[pointer.id].isOut = false;
@@ -15727,7 +15726,7 @@ var Phaser;
             */
             function () {
                 if(this.camera) {
-                    return this.camera.worldView.x + this.x;
+                    return (this.camera.worldView.x - this.camera.screenView.x) + this.x;
                 }
                 return null;
             },
@@ -15741,7 +15740,7 @@ var Phaser;
             */
             function () {
                 if(this.camera) {
-                    return this.camera.worldView.y + this.y;
+                    return (this.camera.worldView.y - this.camera.screenView.y) + this.y;
                 }
                 return null;
             },
@@ -18256,6 +18255,13 @@ var Phaser;
             DebugUtils.line('World X: ' + DebugUtils.game.input.worldX + ' World Y: ' + DebugUtils.game.input.worldY);
             DebugUtils.line('Scale X: ' + DebugUtils.game.input.scale.x.toFixed(1) + ' Scale Y: ' + DebugUtils.game.input.scale.x.toFixed(1));
             DebugUtils.line('Screen X: ' + DebugUtils.game.input.activePointer.screenX + ' Screen Y: ' + DebugUtils.game.input.activePointer.screenY);
+        };
+        DebugUtils.renderSpriteWorldView = function renderSpriteWorldView(sprite, x, y, color) {
+            if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+            DebugUtils.start(x, y, color);
+            DebugUtils.line('Sprite World Coords (' + sprite.width + ' x ' + sprite.height + ')');
+            DebugUtils.line('x: ' + sprite.worldView.x + ' y: ' + sprite.worldView.y);
+            DebugUtils.line('bottom: ' + sprite.worldView.bottom + ' right: ' + sprite.worldView.right.toFixed(1));
         };
         DebugUtils.renderSpriteInfo = /**
         * Render debug infos. (including name, bounds info, position and some other properties)
