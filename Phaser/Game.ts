@@ -89,12 +89,6 @@ module Phaser {
         public _raf: RequestAnimationFrame;
 
         /**
-         * Milliseconds of time per step of the game loop.
-         * @type {number}
-         */
-        //private _step: number = 0;
-
-        /**
          * Whether load complete loading or not.
          * @type {boolean}
          */
@@ -182,6 +176,18 @@ module Phaser {
          * @type {function}
          */
         public onDestroyCallback = null;
+
+        /**
+         * This Signal is dispatched whenever the game pauses.
+         * @type {Phaser.Signal}
+         */
+        public onPause: Phaser.Signal;
+
+        /**
+         * This Signal is dispatched whenever the game resumes from a paused state.
+         * @type {Phaser.Signal}
+         */
+        public onResume: Phaser.Signal;
 
         /**
          * Reference to the GameObject Factory.
@@ -307,6 +313,9 @@ module Phaser {
                 document.removeEventListener('DOMContentLoaded', Phaser.GAMES[this.id].boot);
                 window.removeEventListener('load', Phaser.GAMES[this.id].boot);
 
+                this.onPause = new Phaser.Signal;
+                this.onResume = new Phaser.Signal;
+
                 this.device = new Device();
                 this.net = new Net(this);
                 this.math = new GameMath(this);
@@ -361,24 +370,6 @@ module Phaser {
 
                 }
 
-            }
-
-        }
-
-        public setRenderer(type: number) {
-
-            switch (type)
-            {
-                case Phaser.Types.RENDERER_AUTO_DETECT:
-                    this.renderer = new Phaser.Renderer.Headless.HeadlessRenderer(this);
-                    break;
-
-                case Phaser.Types.RENDERER_AUTO_DETECT:
-                case Phaser.Types.RENDERER_CANVAS:
-                    this.renderer = new Phaser.Renderer.Canvas.CanvasRenderer(this);
-                    break;
-
-                // WebGL coming soon :)
             }
 
         }
@@ -509,6 +500,24 @@ module Phaser {
                 }
 
                 this._loadComplete = true;
+            }
+
+        }
+
+        public setRenderer(type: number) {
+
+            switch (type)
+            {
+                case Phaser.Types.RENDERER_AUTO_DETECT:
+                    this.renderer = new Phaser.Renderer.Headless.HeadlessRenderer(this);
+                    break;
+
+                case Phaser.Types.RENDERER_AUTO_DETECT:
+                case Phaser.Types.RENDERER_CANVAS:
+                    this.renderer = new Phaser.Renderer.Canvas.CanvasRenderer(this);
+                    break;
+
+                // WebGL coming soon :)
             }
 
         }
@@ -675,13 +684,16 @@ module Phaser {
             if (value == true && this._paused == false)
             {
                 this._paused = true;
+                this.onPause.dispatch();
+                //  Hook to the above
                 this.sound.pauseAll();
                 this._raf.callback = this.pausedLoop;
             }
             else if (value == false && this._paused == true)
             {
                 this._paused = false;
-                //this.time.time = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
+                this.onResume.dispatch();
+                //  Hook to the above
                 this.input.reset();
                 this.sound.resumeAll();
 

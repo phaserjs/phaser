@@ -22,23 +22,19 @@ Known Issues
 
 * Input detection on Sprites/Buttons doesn't work if the CAMERA is rotated or scaled.
 
+Future Plans
+------------
 
-Latest Update
--------------
-
-TODO:
-
-* Inject game into a <div>
+* Ability to layer another DOM object and have it controlled by the game somehow. Can then do stacked canvas effects.
 * Add ability to create extra <div>s within the game container, layered above/below the canvas
-* Rename init to preload and call start automatically
-* Allow camera to directly render to the stage rather than its hidden (maybe does this by default? or have under Mobile Optimisations list)
+* Basic Window UI component (maybe a propogating Group?)
 
+ToDo before release
+-------------------
 
-
-* Investigate why tweens don't restart after the game pauses
+* Hook sound/input to the pause/resume signals
 * Fix bug in Tween yoyo + loop combo
-* Check that tween pausing works with the new performance.now
-* Game.Time should monitor pause duration
+* Allow camera to directly render to the stage rather than hidden ctx (maybe does this by default? or have under Mobile Optimisations list)
 * Investigate bug re: tilemap collision and animation frames
 * Add clip support + shape options to Texture Component.
 * Need to be able to set the current tilemap layer, then the getTileXY default layer uses that one if no other given
@@ -48,18 +44,16 @@ TODO:
 * Tilemap.render - move layers length to var
 * Tilemap.destroy needs doing
 * Sprite.transform.bottomRight/Left doesn't seem to take origin into account
-* Stage.opaqueBackground = 'rgb()' or null, alpha, blendMode, filters, mask, rotation+XYZ,scaleXYZ,visible
-* Stage CSS3 Transforms?
-* Ability to layer another DOM object and have it controlled by the game somehow. Can then do stacked canvas effects.
 * Stage lost to mute
 * Bitmap Font support
-* Basic Window component (maybe a propogating Group?)
 * Put ArcadePhysics back in
 * Look at the N+ tile support maybe with ArcadePhysics?
 * Pixel-perfect click check
 * Check Flash atlas export is supported
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
 
+Latest Update
+-------------
 
 V1.0.0
 
@@ -165,7 +159,8 @@ V1.0.0
 * Added the new PluginManager. Moved all the Camera FX over to plugins. Everything will be a plugin from now on.
 * Added Sprite.transform.centerOn(x,y) to quickly center a sprite on a coordinate without messing with the sprite origin and regardless of rotation.
 * Added Input.pollRate - this lets you limit how often Pointer events are handled (0 = every frame, 1 = every other frame, etc)
-* Renamed the 'init' function to 'preload' and now call load.start automatically.
+* Renamed the 'init' function to 'preload'. It now calls load.start automatically.
+* Added 
 
 V0.9.6
 

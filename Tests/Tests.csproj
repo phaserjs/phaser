@@ -395,6 +395,10 @@
     <Content Include="tweens\easing example 4.ts" />
     <Content Include="tweens\easing example 5.ts" />
     <Content Include="tweens\easing example 6.ts" />
+    <TypeScriptCompile Include="tweens\pause test.ts" />
+    <Content Include="tweens\pause test.js">
+      <DependentUpon>pause test.ts</DependentUpon>
+    </Content>
     <Content Include="tweens\tween loop 1.js">
       <DependentUpon>tween loop 1.ts</DependentUpon>
     </Content>

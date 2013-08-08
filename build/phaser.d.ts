@@ -5439,6 +5439,9 @@ module Phaser {
         * @return {Phaser.Tween} Itselfe.
         */
         public chain(tween: Tween): Tween;
+        public pause(): void;
+        public resume(): void;
+        private _paused;
         /**
         * Update tweening.
         * @param time {number} Current time from game clock.
@@ -7366,12 +7369,6 @@ module Phaser {
         */
         private _started;
         /**
-        * Time scale factor.
-        * Set it to 0.5 for slow motion, to 2.0 makes game twice faster.
-        * @type {number}
-        */
-        public timeScale: number;
-        /**
         * Elapsed since last frame.
         * @type {number}
         */
@@ -7382,6 +7379,12 @@ module Phaser {
         * @type {number}
         */
         public time: number;
+        /**
+        * How long the game has been paused for. Gets reset each time the game pauses.
+        * @property pausedTime
+        * @type {number}
+        */
+        public pausedTime: number;
         /**
         * Time of current frame.
         * @property now
@@ -7416,12 +7419,12 @@ module Phaser {
         */
         public fpsMax: number;
         /**
-        * Mininal duration between 2 frames.
+        * Minimum duration between 2 frames.
         * @type {number}
         */
         public msMin: number;
         /**
-        * Maximal duration between 2 frames.
+        * Maximum duration between 2 frames.
         * @type {number}
         */
         public msMax: number;
@@ -7442,6 +7445,10 @@ module Phaser {
         * @param {number} raf The current timestamp, either performance.now or Date.now
         */
         public update(raf: number): void;
+        private gamePaused();
+        private gameResumed();
+        public pauseDuration: number;
+        private _pauseStarted;
         /**
         * How long has passed since given time.
         * @method elapsedSince
@@ -7450,7 +7457,7 @@ module Phaser {
         */
         public elapsedSince(since: number): number;
         /**
-        * How long has passed since give time (in seconds).
+        * How long has passed since the given time (in seconds).
         * @method elapsedSecondsSince
         * @param {number} since The time you want to measure (in seconds).
         * @return {number} Duration between given time and now (in seconds).
@@ -7523,6 +7530,8 @@ module Phaser {
         * @return {boolean} Return false if there's no tween to update, otherwise return true.
         */
         public update(): bool;
+        public pauseAll(): bool;
+        public resumeAll(): bool;
     }
 }
 /**
@@ -9602,6 +9611,16 @@ module Phaser {
         */
         public onDestroyCallback;
         /**
+        * This Signal is dispatched whenever the game pauses.
+        * @type {Phaser.Signal}
+        */
+        public onPause: Signal;
+        /**
+        * This Signal is dispatched whenever the game resumes from a paused state.
+        * @type {Phaser.Signal}
+        */
+        public onResume: Signal;
+        /**
         * Reference to the GameObject Factory.
         * @type {GameObjectFactory}
         */
@@ -9693,7 +9712,6 @@ module Phaser {
         * @param height {number} Height of the game screen.
         */
         private boot(parent, width, height);
-        public setRenderer(type: number): void;
         /**
         * Called when the load has finished after preload was run.
         */
@@ -9715,6 +9733,7 @@ module Phaser {
         * Start current state.
         */
         private startState();
+        public setRenderer(type: number): void;
         /**
         * Set the most common state callbacks (init, create, update, render).
         * @param preloadCallback {function} Init callback invoked when init state.

@@ -24,6 +24,9 @@ module Phaser {
             this._timeLastSecond = this._started;
             this.time = this._started;
 
+            this.game.onPause.add(this.gamePaused, this);
+            this.game.onResume.add(this.gameResumed, this);
+
         }
 
         /**
@@ -42,7 +45,7 @@ module Phaser {
          * Set it to 0.5 for slow motion, to 2.0 makes game twice faster.
          * @type {number}
          */
-        public timeScale: number = 1.0;
+        //public timeScale: number = 1.0;
 
         /**
          * Elapsed since last frame.
@@ -56,6 +59,13 @@ module Phaser {
          * @type {number}
          */
         public time: number = 0;
+
+        /**
+         * How long the game has been paused for. Gets reset each time the game pauses.
+         * @property pausedTime
+         * @type {number}
+         */
+        public pausedTime: number = 0;
 
         /**
          * Time of current frame.
@@ -101,13 +111,13 @@ module Phaser {
         public fpsMax: number = 0;
 
         /**
-         * Mininal duration between 2 frames.
+         * Minimum duration between 2 frames.
          * @type {number}
          */
         public msMin: number = 1000;
 
         /**
-         * Maximal duration between 2 frames.
+         * Maximum duration between 2 frames.
          * @type {number}
          */
         public msMax: number = 0;
@@ -133,7 +143,6 @@ module Phaser {
         public update(raf: number) {
 
             this.now = raf; // mark
-            //this.now = Date.now(); // mark
             this.delta = this.now - this.time; // elapsedMS
 
             this.msMin = Math.min(this.msMin, this.delta);
@@ -153,7 +162,25 @@ module Phaser {
 
             this.time = this.now; // _total
 
+            //  Paused?
+            if (this.game.paused)
+            {
+                this.pausedTime = this.now - this._pauseStarted;
+            }
+
         }
+
+        private gamePaused() {
+            this._pauseStarted = this.now;
+        }
+
+        private gameResumed() {
+            //  Level out the delta timer to avoid spikes
+            this.pauseDuration = this.pausedTime;
+        }
+
+        public pauseDuration: number = 0;
+        private _pauseStarted: number = 0;
 
         /**
          * How long has passed since given time.
@@ -168,7 +195,7 @@ module Phaser {
         }
 
         /**
-         * How long has passed since give time (in seconds).
+         * How long has passed since the given time (in seconds).
          * @method elapsedSecondsSince
          * @param {number} since The time you want to measure (in seconds).
          * @return {number} Duration between given time and now (in seconds).

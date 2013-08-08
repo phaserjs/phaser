@@ -10693,24 +10693,20 @@ var Phaser;
             this._chainedTweens.push(tween);
             return this;
         };
+        Tween.prototype.pause = function () {
+            this._paused = true;
+        };
+        Tween.prototype.resume = function () {
+            this._paused = false;
+            this._startTime += this.game.time.pauseDuration;
+        };
         Tween.prototype.update = /**
         * Update tweening.
         * @param time {number} Current time from game clock.
         * @return {boolean} Return false if this completed and no need to update, otherwise return true.
         */
         function (time) {
-            if(this.game.paused == true) {
-                if(this._pausedTime == 0) {
-                    this._pausedTime = time;
-                }
-            } else {
-                //  Ok we aren't paused, but was there some time gained?
-                if(this._pausedTime > 0) {
-                    this._startTime += (time - this._pausedTime);
-                    this._pausedTime = 0;
-                }
-            }
-            if(time < this._startTime) {
+            if(this._paused || time < this._startTime) {
                 return true;
             }
             this._tempElapsed = (time - this._startTime) / this._duration;
@@ -14192,11 +14188,11 @@ var Phaser;
             this.canvas.style['-ms-interpolation-mode'] = 'nearest-neighbor';
         };
         Stage.prototype.pauseGame = function () {
+            this.game.paused = true;
             if(this.disablePauseScreen == false && this.pauseScreen) {
                 this.pauseScreen.onPaused();
             }
             this.saveCanvasValues();
-            this.game.paused = true;
         };
         Stage.prototype.resumeGame = function () {
             if(this.disablePauseScreen == false && this.pauseScreen) {
@@ -14336,7 +14332,7 @@ var Phaser;
             * Set it to 0.5 for slow motion, to 2.0 makes game twice faster.
             * @type {number}
             */
-            this.timeScale = 1.0;
+            //public timeScale: number = 1.0;
             /**
             * Elapsed since last frame.
             * @type {number}
@@ -14348,6 +14344,12 @@ var Phaser;
             * @type {number}
             */
             this.time = 0;
+            /**
+            * How long the game has been paused for. Gets reset each time the game pauses.
+            * @property pausedTime
+            * @type {number}
+            */
+            this.pausedTime = 0;
             /**
             * Time of current frame.
             * @property now
@@ -14376,12 +14378,12 @@ var Phaser;
             */
             this.fpsMax = 0;
             /**
-            * Mininal duration between 2 frames.
+            * Minimum duration between 2 frames.
             * @type {number}
             */
             this.msMin = 1000;
             /**
-            * Maximal duration between 2 frames.
+            * Maximum duration between 2 frames.
             * @type {number}
             */
             this.msMax = 0;
@@ -14395,10 +14397,14 @@ var Phaser;
             * @type {number}
             */
             this._timeLastSecond = 0;
+            this.pauseDuration = 0;
+            this._pauseStarted = 0;
             this.game = game;
             this._started = 0;
             this._timeLastSecond = this._started;
             this.time = this._started;
+            this.game.onPause.add(this.gamePaused, this);
+            this.game.onResume.add(this.gameResumed, this);
         }
         Object.defineProperty(TimeManager.prototype, "totalElapsedSeconds", {
             get: /**
@@ -14421,7 +14427,6 @@ var Phaser;
         function (raf) {
             this.now = raf// mark
             ;
-            //this.now = Date.now(); // mark
             this.delta = this.now - this.time// elapsedMS
             ;
             this.msMin = Math.min(this.msMin, this.delta);
@@ -14436,6 +14441,17 @@ var Phaser;
             }
             this.time = this.now// _total
             ;
+            //  Paused?
+            if(this.game.paused) {
+                this.pausedTime = this.now - this._pauseStarted;
+            }
+        };
+        TimeManager.prototype.gamePaused = function () {
+            this._pauseStarted = this.now;
+        };
+        TimeManager.prototype.gameResumed = function () {
+            //  Level out the delta timer to avoid spikes
+            this.pauseDuration = this.pausedTime;
         };
         TimeManager.prototype.elapsedSince = /**
         * How long has passed since given time.
@@ -14447,7 +14463,7 @@ var Phaser;
             return this.now - since;
         };
         TimeManager.prototype.elapsedSecondsSince = /**
-        * How long has passed since give time (in seconds).
+        * How long has passed since the given time (in seconds).
         * @method elapsedSecondsSince
         * @param {number} since The time you want to measure (in seconds).
         * @return {number} Duration between given time and now (in seconds).
@@ -14487,6 +14503,8 @@ var Phaser;
         function TweenManager(game) {
             this.game = game;
             this._tweens = [];
+            this.game.onPause.add(this.pauseAll, this);
+            this.game.onResume.add(this.resumeAll, this);
         }
         TweenManager.prototype.getAll = /**
         * Get all the tween objects in an array.
@@ -14559,6 +14577,28 @@ var Phaser;
                 }
             }
             return true;
+        };
+        TweenManager.prototype.pauseAll = function () {
+            if(this._tweens.length === 0) {
+                return false;
+            }
+            var i = 0;
+            var numTweens = this._tweens.length;
+            while(i < numTweens) {
+                this._tweens[i].pause();
+                i++;
+            }
+        };
+        TweenManager.prototype.resumeAll = function () {
+            if(this._tweens.length === 0) {
+                return false;
+            }
+            var i = 0;
+            var numTweens = this._tweens.length;
+            while(i < numTweens) {
+                this._tweens[i].resume();
+                i++;
+            }
         };
         return TweenManager;
     })();
@@ -18419,11 +18459,6 @@ var Phaser;
             if (typeof destroyCallback === "undefined") { destroyCallback = null; }
             var _this = this;
             /**
-            * Milliseconds of time per step of the game loop.
-            * @type {number}
-            */
-            //private _step: number = 0;
-            /**
             * Whether load complete loading or not.
             * @type {boolean}
             */
@@ -18532,6 +18567,8 @@ var Phaser;
             } else {
                 document.removeEventListener('DOMContentLoaded', Phaser.GAMES[this.id].boot);
                 window.removeEventListener('load', Phaser.GAMES[this.id].boot);
+                this.onPause = new Phaser.Signal();
+                this.onResume = new Phaser.Signal();
                 this.device = new Phaser.Device();
                 this.net = new Phaser.Net(this);
                 this.math = new Phaser.GameMath(this);
@@ -18573,18 +18610,6 @@ var Phaser;
                     }
                 }
             }
-        };
-        Game.prototype.setRenderer = function (type) {
-            switch(type) {
-                case Phaser.Types.RENDERER_AUTO_DETECT:
-                    this.renderer = new Phaser.Renderer.Headless.HeadlessRenderer(this);
-                    break;
-                case Phaser.Types.RENDERER_AUTO_DETECT:
-                case Phaser.Types.RENDERER_CANVAS:
-                    this.renderer = new Phaser.Renderer.Canvas.CanvasRenderer(this);
-                    break;
-                    // WebGL coming soon :)
-                                }
         };
         Game.prototype.loadComplete = /**
         * Called when the load has finished after preload was run.
@@ -18672,6 +18697,18 @@ var Phaser;
                 }
                 this._loadComplete = true;
             }
+        };
+        Game.prototype.setRenderer = function (type) {
+            switch(type) {
+                case Phaser.Types.RENDERER_AUTO_DETECT:
+                    this.renderer = new Phaser.Renderer.Headless.HeadlessRenderer(this);
+                    break;
+                case Phaser.Types.RENDERER_AUTO_DETECT:
+                case Phaser.Types.RENDERER_CANVAS:
+                    this.renderer = new Phaser.Renderer.Canvas.CanvasRenderer(this);
+                    break;
+                    // WebGL coming soon :)
+                                }
         };
         Game.prototype.setCallbacks = /**
         * Set the most common state callbacks (init, create, update, render).
@@ -18796,11 +18833,14 @@ var Phaser;
             set: function (value) {
                 if(value == true && this._paused == false) {
                     this._paused = true;
+                    this.onPause.dispatch();
+                    //  Hook to the above
                     this.sound.pauseAll();
                     this._raf.callback = this.pausedLoop;
                 } else if(value == false && this._paused == true) {
                     this._paused = false;
-                    //this.time.time = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
+                    this.onResume.dispatch();
+                    //  Hook to the above
                     this.input.reset();
                     this.sound.resumeAll();
                     if(this.isRunning == false) {

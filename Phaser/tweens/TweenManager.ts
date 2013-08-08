@@ -22,7 +22,11 @@ module Phaser {
         constructor(game: Phaser.Game) {
 
             this.game = game;
+
             this._tweens = [];
+
+            this.game.onPause.add(this.pauseAll, this);
+            this.game.onResume.add(this.resumeAll, this);
 
         }
 
@@ -137,6 +141,42 @@ module Phaser {
             }
 
             return true;
+
+        }
+
+        public pauseAll() {
+
+            if (this._tweens.length === 0)
+            {
+                return false;
+            }
+
+            var i = 0;
+            var numTweens = this._tweens.length;
+
+            while (i < numTweens)
+            {
+                this._tweens[i].pause();
+                i++;
+            }
+
+        }
+
+        public resumeAll() {
+
+            if (this._tweens.length === 0)
+            {
+                return false;
+            }
+
+            var i = 0;
+            var numTweens = this._tweens.length;
+
+            while (i < numTweens)
+            {
+                this._tweens[i].resume();
+                i++;
+            }
 
         }
 

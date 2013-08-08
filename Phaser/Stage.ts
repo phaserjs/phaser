@@ -290,14 +290,14 @@ module Phaser {
 
         public pauseGame() {
 
+            this.game.paused = true;
+
             if (this.disablePauseScreen == false && this.pauseScreen)
             {
                 this.pauseScreen.onPaused();
             }
 
             this.saveCanvasValues();
-
-            this.game.paused = true;
 
         }
 

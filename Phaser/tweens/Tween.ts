@@ -60,6 +60,7 @@ module Phaser {
          * @type {object}
          */
 	    private _object = null;
+
         private _pausedTime: number = 0;
 
         /**
@@ -344,6 +345,19 @@ module Phaser {
 
 	    }
 
+	    public pause() {
+	        this._paused = true;
+	    }
+
+	    public resume() {
+	        
+            this._paused = false;
+            this._startTime += this.game.time.pauseDuration;
+
+	    }
+
+	    private _paused: bool;
+
 	    /**
 	     * Update tweening.
 	     * @param time {number} Current time from game clock.
@@ -351,24 +365,7 @@ module Phaser {
 	     */
 	    public update(time) {
 
-	        if (this.game.paused == true)
-	        {
-	            if (this._pausedTime == 0)
-	            {
-	                this._pausedTime = time;
-	            }
-	        }
-	        else
-	        {
-                //  Ok we aren't paused, but was there some time gained?
-	            if (this._pausedTime > 0)
-	            {
-	                this._startTime += (time - this._pausedTime);
-	                this._pausedTime = 0;
-	            }
-	        }
-
-	        if (time < this._startTime)
+	        if (this._paused || time < this._startTime)
 	        {
 	            return true;
 	        }
