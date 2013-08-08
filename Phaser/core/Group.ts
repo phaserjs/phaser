@@ -1,7 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../Statics.ts" />
-/// <reference path="../display/Texture.ts" />
-/// <reference path="../gameobjects/TransformManager.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Group
@@ -13,7 +10,7 @@ module Phaser {
 
     export class Group {
 
-        constructor(game: Game, maxSize: number = 0) {
+        constructor(game: Phaser.Game, maxSize: number = 0) {
 
             this.game = game;
             this.type = Phaser.Types.GROUP;
@@ -73,7 +70,7 @@ module Phaser {
         /**
          * Reference to the main game object
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * The type of game object.
@@ -93,7 +90,7 @@ module Phaser {
         /**
          * The Group this Group is a child of (if any).
          */
-        public group: Group = null;
+        public group: Phaser.Group = null;
 
         /**
          * Optional texture used in the background of the Camera.
@@ -102,8 +99,10 @@ module Phaser {
 
         /**
          * The transform component.
+         * WTF TypeScript, thank you very much for wasting a day of my time debugging just to find out setting the type barfs
          */
-        public transform: Phaser.Components.TransformManager;
+        //public transform: Phaser.Components.TransformManager;
+        public transform;
 
         /**
          * A boolean representing if the Group has been modified in any way via a scale, rotate, flip or skew.
@@ -119,16 +118,6 @@ module Phaser {
          * Controls if this Group (and all of its contents) are rendered or skipped during the core game loop.
          */
         public visible: boolean;
-
-        /**
-         * Use with <code>sort()</code> to sort in ascending order.
-         */
-        public static ASCENDING: number = -1;
-
-        /**
-         * Use with <code>sort()</code> to sort in descending order.
-         */
-        public static DESCENDING: number = 1;
 
         /**
          * Array of all the objects that exist in this group.
@@ -229,7 +218,7 @@ module Phaser {
         * Calls render on all members of this Group who have a status of visible=true and exists=true
         * You can also call Object.render directly, which will bypass the visible/exists check.
         */
-        public render(camera: Camera) {
+        public render(camera: Phaser.Camera) {
 
             if (camera.isHidden(this) == true)
             {
@@ -265,7 +254,7 @@ module Phaser {
         * Calls render on all members of this Group regardless of their visible status and also ignores the camera blacklist.
         * Use this when the Group objects render to hidden canvases for example.
         */
-        public directRender(camera: Camera) {
+        public directRender(camera: Phaser.Camera) {
 
             this.game.renderer.groupRenderer.preRender(camera, this);
 
@@ -302,9 +291,9 @@ module Phaser {
         /**
          * @private
          */
-        public set maxSize(Size: number) {
+        public set maxSize(size: number) {
 
-            this._maxSize = Size;
+            this._maxSize = size;
 
             if (this._marker >= this._maxSize)
             {
@@ -419,8 +408,8 @@ module Phaser {
          * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
          * @returns {Sprite} The newly created sprite object.
          */
-        public addNewSprite(x: number, y: number, key: string = '', frame = null): Sprite {
-            return <Sprite> this.add(new Sprite(this.game, x, y, key, frame));
+        public addNewSprite(x: number, y: number, key: string = '', frame = null): Phaser.Sprite {
+            return <Phaser.Sprite> this.add(new Phaser.Sprite(this.game, x, y, key, frame));
         }
 
         /**
@@ -473,7 +462,7 @@ module Phaser {
          *
          * @return {any} A reference to the object that was created.  Don't forget to cast it back to the Class you want (e.g. myObject = myGroup.recycle(myObjectClass) as myObjectClass;).
          */
-        public recycle(objectClass = null) {
+        public recycle(objectClass = null): any {
 
             if (this._maxSize > 0)
             {
@@ -524,7 +513,7 @@ module Phaser {
          *
          * @return {Basic} The removed object.
          */
-        public remove(object, splice: boolean = false) {
+        public remove(object, splice: boolean = false): any {
 
             //console.log('removing from group: ', object.name);
 
@@ -566,7 +555,7 @@ module Phaser {
          *
          * @return {Basic} The new object.
          */
-        public replace(oldObject, newObject) {
+        public replace(oldObject, newObject): any {
 
             this._i = this.members.indexOf(oldObject);
 
@@ -709,7 +698,7 @@ module Phaser {
          * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "z".
          * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
          */
-        public sort(index: string = 'z', order: number = Group.ASCENDING) {
+        public sort(index: string = 'z', order: number = Phaser.Types.SORT_ASCENDING) {
 
             this._sortIndex = index;
             this._sortOrder = order;
@@ -867,7 +856,7 @@ module Phaser {
          *
          * @return {any} A <code>Basic</code> currently flagged as not existing.
          */
-        public getFirstAvailable(objectClass = null) {
+        public getFirstAvailable(objectClass = null): any {
 
             this._i = 0;
 
@@ -917,7 +906,7 @@ module Phaser {
          *
          * @return {Basic} A <code>Basic</code> currently flagged as existing.
          */
-        public getFirstExtant() {
+        public getFirstExtant(): any {
 
             this._i = 0;
 
@@ -941,7 +930,7 @@ module Phaser {
          *
          * @return {Basic} A <code>Basic</code> currently flagged as not dead.
          */
-        public getFirstAlive() {
+        public getFirstAlive(): any {
 
             this._i = 0;
 
@@ -965,7 +954,7 @@ module Phaser {
          *
          * @return {Basic} A <code>Basic</code> currently flagged as dead.
          */
-        public getFirstDead() {
+        public getFirstDead(): any {
 
             this._i = 0;
 
@@ -1055,7 +1044,7 @@ module Phaser {
          *
          * @return {Basic} A <code>Basic</code> from the members list.
          */
-        public getRandom(startIndex: number = 0, length: number = 0) {
+        public getRandom(startIndex: number = 0, length: number = 0): any {
 
             if (length == 0)
             {

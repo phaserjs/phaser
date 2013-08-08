@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../math/Vec2.ts" />
-/// <reference path="../math/Mat3.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Mat3Utils

@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Device
@@ -24,8 +24,6 @@ module Phaser {
             this._checkOS();
 
         }
-
-        //  Android bug specific :)
 
         /**
          * An optional 'fix' for the horrendous Android stock browser bug
@@ -546,65 +544,6 @@ module Phaser {
             }
 
             return false;
-
-        }
-
-        /**
-         * Get all informations of host device.
-         * @return {string} Informations in a string.
-         */
-        public getAll(): string {
-
-            var output: string = '';
-
-            output = output.concat('Device\n');
-            output = output.concat('iPhone : ' + this.iPhone + '\n');
-            output = output.concat('iPhone4 : ' + this.iPhone4 + '\n');
-            output = output.concat('iPad : ' + this.iPad + '\n');
-
-            output = output.concat('\n');
-            output = output.concat('Operating System\n');
-            output = output.concat('iOS: ' + this.iOS + '\n');
-            output = output.concat('Android: ' + this.android + '\n');
-            output = output.concat('ChromeOS: ' + this.chromeOS + '\n');
-            output = output.concat('Linux: ' + this.linux + '\n');
-            output = output.concat('MacOS: ' + this.macOS + '\n');
-            output = output.concat('Windows: ' + this.windows + '\n');
-
-            output = output.concat('\n');
-            output = output.concat('Browser\n');
-            output = output.concat('Arora: ' + this.arora + '\n');
-            output = output.concat('Chrome: ' + this.chrome + '\n');
-            output = output.concat('Epiphany: ' + this.epiphany + '\n');
-            output = output.concat('Firefox: ' + this.firefox + '\n');
-            output = output.concat('Internet Explorer: ' + this.ie + ' (' + this.ieVersion + ')\n');
-            output = output.concat('Mobile Safari: ' + this.mobileSafari + '\n');
-            output = output.concat('Midori: ' + this.midori + '\n');
-            output = output.concat('Opera: ' + this.opera + '\n');
-            output = output.concat('Safari: ' + this.safari + '\n');
-
-            output = output.concat('\n');
-            output = output.concat('Features\n');
-            output = output.concat('Canvas: ' + this.canvas + '\n');
-            output = output.concat('File: ' + this.file + '\n');
-            output = output.concat('FileSystem: ' + this.fileSystem + '\n');
-            output = output.concat('LocalStorage: ' + this.localStorage + '\n');
-            output = output.concat('WebGL: ' + this.webGL + '\n');
-            output = output.concat('Worker: ' + this.worker + '\n');
-            output = output.concat('Touch: ' + this.touch + '\n');
-            output = output.concat('MSPointer: ' + this.mspointer + '\n');
-            output = output.concat('CSS 3D: ' + this.css3D + '\n');
-
-            output = output.concat('\n');
-            output = output.concat('Audio\n');
-            output = output.concat('Audio Data: ' + this.canvas + '\n');
-            output = output.concat('Web Audio: ' + this.canvas + '\n');
-            output = output.concat('Can play OGG: ' + this.canvas + '\n');
-            output = output.concat('Can play MP3: ' + this.canvas + '\n');
-            output = output.concat('Can play M4A: ' + this.canvas + '\n');
-            output = output.concat('Can play WAV: ' + this.canvas + '\n');
-
-            return output;
 
         }
 

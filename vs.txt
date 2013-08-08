@@ -1,0 +1,17 @@
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptOutFile>../build/phaser-debug.js</TypeScriptOutFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptOutFile>../build/phaser-release.js</TypeScriptOutFile>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>cd $(ProjectDir)..\build
+copy phaser-debug.js ..\Tests\</PostBuildEvent>
+  </PropertyGroup>

@@ -1,10 +1,4 @@
-/// <reference path="Phaser.ts" />
-/// <reference path="Game.ts" />
-/// <reference path="display/CSS3Filters.ts" />
-/// <reference path="system/StageScaleMode.ts" />
-/// <reference path="system/screens/BootScreen.ts" />
-/// <reference path="system/screens/PauseScreen.ts" />
-/// <reference path="system/screens/OrientationScreen.ts" />
+/// <reference path="_definitions.ts" />
 
 /**
 * Phaser - Stage
@@ -74,7 +68,7 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Background color of the stage (defaults to black). Set via the public backgroundColor property.

@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../geom/Point.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - PointUtils
@@ -21,7 +20,7 @@ module Phaser {
          * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
          * @return {Point} The new Point object.
          **/
-        static add(a: Point, b: Point, out: Point = new Point): Point {
+        static add(a: Phaser.Point, b: Phaser.Point, out: Phaser.Point = new Phaser.Point): Phaser.Point {
             return out.setTo(a.x + b.x, a.y + b.y);
         }
 
@@ -33,7 +32,7 @@ module Phaser {
          * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
          * @return {Point} The new Point object.
          **/
-        static subtract(a: Point, b: Point, out: Point = new Point): Point {
+        static subtract(a: Phaser.Point, b: Phaser.Point, out: Phaser.Point = new Phaser.Point): Phaser.Point {
             return out.setTo(a.x - b.x, a.y - b.y);
         }
 
@@ -45,7 +44,7 @@ module Phaser {
          * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
          * @return {Point} The new Point object.
          **/
-        static multiply(a: Point, b: Point, out: Point = new Point): Point {
+        static multiply(a: Phaser.Point, b: Phaser.Point, out: Phaser.Point = new Phaser.Point): Phaser.Point {
             return out.setTo(a.x * b.x, a.y * b.y);
         }
 
@@ -57,7 +56,7 @@ module Phaser {
          * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
          * @return {Point} The new Point object.
          **/
-        static divide(a: Point, b: Point, out: Point = new Point): Point {
+        static divide(a: Phaser.Point, b: Phaser.Point, out: Phaser.Point = new Phaser.Point): Phaser.Point {
             return out.setTo(a.x / b.x, a.y / b.y);
         }
 
@@ -69,10 +68,10 @@ module Phaser {
          * @param {number} The maximum value to clamp this Point to
          * @return {Point} This Point object.
          **/
-        static clamp(a: Point, min: number, max: number): Point {
+        static clamp(a: Phaser.Point, min: number, max: number): Phaser.Point {
 
-            PointUtils.clampX(a, min, max);
-            PointUtils.clampY(a, min, max);
+            Phaser.PointUtils.clampX(a, min, max);
+            Phaser.PointUtils.clampY(a, min, max);
             return a;
 
         }
@@ -85,7 +84,7 @@ module Phaser {
          * @param {number} The maximum value to clamp this Point to
          * @return {Point} This Point object.
          **/
-        static clampX(a: Point, min: number, max: number): Point {
+        static clampX(a: Phaser.Point, min: number, max: number): Phaser.Point {
 
             a.x = Math.max(Math.min(a.x, max), min);
             return a;
@@ -100,7 +99,7 @@ module Phaser {
          * @param {number} The maximum value to clamp this Point to
          * @return {Point} This Point object.
          **/
-        static clampY(a: Point, min: number, max: number): Point {
+        static clampY(a: Phaser.Point, min: number, max: number): Phaser.Point {
 
             a.y = Math.max(Math.min(a.y, max), min);
             return a;
@@ -113,7 +112,7 @@ module Phaser {
          * @param {Point} output Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
          * @return {Point} The new Point object.
          **/
-        static clone(a: Point, output: Point = new Point): Point {
+        static clone(a: Phaser.Point, output: Phaser.Point = new Phaser.Point): Phaser.Point {
             return output.setTo(a.x, a.y);
         }
 
@@ -125,7 +124,7 @@ module Phaser {
          * @param {Boolean} round - Round the distance to the nearest integer (default false)
          * @return {Number} The distance between the two Point objects.
          **/
-        static distanceBetween(a: Point, b: Point, round: boolean = false): number {
+        static distanceBetween(a: Phaser.Point, b: Phaser.Point, round: boolean = false): number {
 
             var dx = a.x - b.x;
             var dy = a.y - b.y;
@@ -148,7 +147,7 @@ module Phaser {
          * @param {Point} b - The second Point object.
          * @return {Boolean} A value of true if the Points are equal, otherwise false.
          **/
-        static equals(a: Point, b: Point): boolean {
+        static equals(a: Phaser.Point, b: Phaser.Point): boolean {
             return (a.x == b.x && a.y == b.y);
         }
 
@@ -184,11 +183,11 @@ module Phaser {
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
         * @return The modified point object
         */
-        static rotate(a: Point, x: number, y: number, angle: number, asDegrees: boolean = false, distance: number = null): Point {
+        static rotate(a: Phaser.Point, x: number, y: number, angle: number, asDegrees: boolean = false, distance: number = null): Phaser.Point {
 
             if (asDegrees)
             {
-                angle = angle * GameMath.DEG_TO_RAD;
+                angle = angle * Phaser.GameMath.DEG_TO_RAD;
             }
 
             //  Get distance from origin (cx/cy) to this point
@@ -212,8 +211,8 @@ module Phaser {
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
         * @return The modified point object
         */
-        static rotateAroundPoint(a: Point, b: Point, angle: number, asDegrees: boolean = false, distance: number = null): Point {
-            return PointUtils.rotate(a, b.x, b.y, angle, asDegrees, distance);
+        static rotateAroundPoint(a: Phaser.Point, b: Phaser.Point, angle: number, asDegrees: boolean = false, distance: number = null): Phaser.Point {
+            return Phaser.PointUtils.rotate(a, b.x, b.y, angle, asDegrees, distance);
         }
 
     }

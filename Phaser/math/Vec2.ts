@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Vec2
@@ -47,7 +47,7 @@ module Phaser {
          * @param {any} source - The object to copy from.
          * @return {Vec2} This Vec2 object.
          **/
-        public copyFrom(source: any): Vec2 {
+        public copyFrom(source: any): Phaser.Vec2 {
             return this.setTo(source.x, source.y);
         }
 
@@ -57,7 +57,7 @@ module Phaser {
         * @param {Number} y The y position of the vector
         * @return {Vec2} This object
         **/
-        public setTo(x: number, y: number): Vec2 {
+        public setTo(x: number, y: number): Phaser.Vec2 {
 
             this.x = x;
             this.y = y;
@@ -71,7 +71,7 @@ module Phaser {
         * @param {Vec2} other The other Vector.
         * @return {Vec2} This for chaining.
         */
-        public add(a: Vec2): Vec2 {
+        public add(a: Phaser.Vec2): Phaser.Vec2 {
 
             this.x += a.x;
             this.y += a.y;
@@ -85,7 +85,7 @@ module Phaser {
         * @param {Vec2} other The other Vector.
         * @return {Vec2} This for chaining.
         */
-        public subtract(v: Vec2): Vec2 {
+        public subtract(v: Phaser.Vec2): Phaser.Vec2 {
 
             this.x -= v.x;
             this.y -= v.y;
@@ -99,7 +99,7 @@ module Phaser {
         * @param {Vec2} other The other Vector.
         * @return {Vec2} This for chaining.
         */
-        public multiply(v: Vec2): Vec2 {
+        public multiply(v: Phaser.Vec2): Phaser.Vec2 {
 
             this.x *= v.x;
             this.y *= v.y;
@@ -113,7 +113,7 @@ module Phaser {
         * @param {Vec2} other The other Vector.
         * @return {Vec2} This for chaining.
         */
-        public divide(v: Vec2): Vec2 {
+        public divide(v: Phaser.Vec2): Phaser.Vec2 {
 
             this.x /= v.x;
             this.y /= v.y;
@@ -144,7 +144,7 @@ module Phaser {
         * 
         * @return {Vec2} This for chaining.
         */
-        public normalize(): Vec2 {
+        public normalize(): Phaser.Vec2 {
 
 	        var inv = (this.x != 0 || this.y != 0) ? 1 / Math.sqrt(this.x * this.x + this.y * this.y) : 0;
 	        this.x *= inv;
@@ -159,7 +159,7 @@ module Phaser {
         * @param {Vec2} a Reference to a source Vec2 object.
         * @return {Number}
         */
-        public dot(a: Vec2): number {
+        public dot(a: Phaser.Vec2): number {
             return ((this.x * a.x) + (this.y * a.y));
         }
 
@@ -169,7 +169,7 @@ module Phaser {
         * @param {Vec2} a Reference to a source Vec2 object.
         * @return {Number}
         */
-        public cross(a: Vec2): number {
+        public cross(a: Phaser.Vec2): number {
             return ((this.x * a.y) - (this.y * a.x));
         }
 
@@ -179,7 +179,7 @@ module Phaser {
         * @param {Vec2} a Reference to a source Vec2 object.
         * @return {Number}
         */
-        public projectionLength(a: Vec2): number {
+        public projectionLength(a: Phaser.Vec2): number {
 
             var den: number = a.dot(a);
 
@@ -200,7 +200,7 @@ module Phaser {
         * @param {Vec2} a Reference to a source Vec2 object.
         * @return {Number}
         */
-        public angle(a: Vec2): number {
+        public angle(a: Phaser.Vec2): number {
             return Math.atan2(a.x * this.y - a.y * this.x, a.x * this.x + a.y * this.y);
         }
 
@@ -211,7 +211,7 @@ module Phaser {
         * @param {?number=} y The scaling factor in the y direction.  If this is not specified, the x scaling factor will be used.
         * @return {Vec2} This for chaining.
         */
-        public scale(x: number, y:number): Vec2 {
+        public scale(x: number, y: number): Phaser.Vec2 {
 
             this.x *= x;
             this.y *= y || x;
@@ -225,7 +225,7 @@ module Phaser {
         * @param {number} scalar
         * @return {Vec2} This for chaining.
         */
-        public multiplyByScalar(scalar: number): Vec2 {
+        public multiplyByScalar(scalar: number): Phaser.Vec2 {
 
             this.x *= scalar;
             this.y *= scalar;
@@ -240,7 +240,7 @@ module Phaser {
         * @param {number} scalar
         * @return {Vec2} This for chaining.
         */
-        public multiplyAddByScalar(a: Vec2, scalar: number): Vec2 {
+        public multiplyAddByScalar(a: Phaser.Vec2, scalar: number): Phaser.Vec2 {
 
             this.x += a.x * scalar;
             this.y += a.y * scalar;
@@ -254,7 +254,7 @@ module Phaser {
         * @param {number} scalar
         * @return {Vec2} This for chaining.
         */
-        public divideByScalar(scalar: number): Vec2 {
+        public divideByScalar(scalar: number): Phaser.Vec2 {
 
             this.x /= scalar;
             this.y /= scalar;
@@ -267,7 +267,7 @@ module Phaser {
         * 
         * @return {Vec2} This for chaining.
         */
-        public reverse(): Vec2 {
+        public reverse(): Phaser.Vec2 {
 
             this.x = -this.x;
             this.y = -this.y;
@@ -290,8 +290,7 @@ module Phaser {
         * @return {string} a string representation of the object.
         **/
         public toString(): string {
-            //return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
-            return "x=" + this.x + " y=" + this.y;
+            return "[{Vec2 (x=" + this.x + " y=" + this.y + ")}]";
         }
 
     }

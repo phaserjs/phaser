@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../math/Vec2.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Pointer
@@ -43,7 +42,7 @@ module Phaser {
         * @type {Phaser.Game}
         * @private
         **/
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
         * Local private variable to store the status of dispatching a hold event

@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - GameMath
@@ -25,7 +25,7 @@ module Phaser {
             }
         }
 
-        public game: Game;
+        public game: Phaser.Game;
 
         //  Pre-calculated tables containing Math.sin(angle) and Math.cos(angle) from -180 to 180
         //  So sinA[sprite.rotation] would be the same as Math.sin(sprite.rotation) without a call to Math.sin

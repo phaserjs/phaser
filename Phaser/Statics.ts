@@ -1,3 +1,5 @@
+/// <reference path="_definitions.ts" />
+
 module Phaser {
 
     /**
@@ -45,6 +47,7 @@ module Phaser {
         static TILEMAP: number = 5;
         static SCROLLZONE: number = 6;
         static BUTTON: number = 7;
+        static DYNAMICTEXTURE: number = 8;
 
         static GEOM_POINT: number = 0;
         static GEOM_CIRCLE: number = 1;
@@ -60,6 +63,16 @@ module Phaser {
         static OUT_OF_BOUNDS_KILL: number = 0;
         static OUT_OF_BOUNDS_DESTROY: number = 1;
         static OUT_OF_BOUNDS_PERSIST: number = 2;
+
+        /**
+         * Use with <code>sort()</code> to sort in ascending order.
+         */
+        static SORT_ASCENDING: number = -1;
+
+        /**
+         * Use with <code>sort()</code> to sort in descending order.
+         */
+        static SORT_DESCENDING: number = 1;
 
         /**
          * Flag used to allow GameObjects to collide on their left side

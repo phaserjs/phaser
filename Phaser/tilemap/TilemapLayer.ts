@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="Tilemap.ts" />
-/// <reference path="../gameobjects/IGameObject.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - TilemapLayer
@@ -24,7 +22,7 @@ module Phaser {
          * @param tileWidth {number} Width of tiles in this map.
          * @param tileHeight {number} Height of tiles in this map.
          */
-        constructor(parent:Tilemap, id:number, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number) {
+        constructor(parent: Phaser.Tilemap, id:number, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number) {
 
             this.parent = parent;
             this.game = parent.game;
@@ -67,13 +65,13 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * The tilemap that contains this layer.
          * @type {Tilemap}
          */
-        public parent: Tilemap;
+        public parent: Phaser.Tilemap;
 
         /**
          * The texture used to render the Sprite.
@@ -136,7 +134,7 @@ module Phaser {
          * Map bounds (width and height) in tiles not pixels.
          * @type {Rectangle}
          */
-        public boundsInTiles: Rectangle;
+        public boundsInTiles: Phaser.Rectangle;
 
         /**
          * Width of each tile.
@@ -368,7 +366,7 @@ module Phaser {
          * @param object {GameObject} Tiles you want to get that overlaps this.
          * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
          */
-        public getTileOverlaps(object: Sprite) {
+        public getTileOverlaps(object: Phaser.Sprite) {
 
             //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
             if (object.body.bounds.x < 0 || object.body.bounds.x > this.widthInPixels || object.body.bounds.y < 0 || object.body.bounds.bottom > this.heightInPixels)

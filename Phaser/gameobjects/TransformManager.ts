@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../math/Mat3.ts" />
-/// <reference path="../geom/Point.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Components - TransformManager
@@ -19,7 +17,7 @@ module Phaser.Components {
             this.game = parent.game;
             this.parent = parent;
 
-            this.local = new Mat3;
+            this.local = new Phaser.Mat3;
 
             this.scrollFactor = new Phaser.Vec2(1, 1);
             this.origin = new Phaser.Vec2;
@@ -63,7 +61,7 @@ module Phaser.Components {
         /**
          * Reference to Phaser.Game
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Reference to the parent object (Sprite, Group, etc)
@@ -73,22 +71,22 @@ module Phaser.Components {
         /**
          * Scale of the object. A scale of 1.0 is the original size. 0.5 half size. 2.0 double sized.
          */
-        public scale: Vec2;
+        public scale: Phaser.Vec2;
 
         /**
          * Skew the object along the x and y axis. A skew value of 0 is no skew.
          */
-        public skew: Vec2;
+        public skew: Phaser.Vec2;
 
         /**
          * The influence of camera movement upon the object, if supported.
          */
-        public scrollFactor: Vec2;
+        public scrollFactor: Phaser.Vec2;
 
         /**
          * The origin is the point around which scale and rotation takes place and defaults to the top-left of the sprite.
          */
-        public origin: Vec2;
+        public origin: Phaser.Vec2;
 
         /**
          * This value is added to the rotation of the object.
@@ -131,7 +129,7 @@ module Phaser.Components {
         /**
          * The local transform matrix
          */
-        public local: Mat3;
+        public local: Phaser.Mat3;
 
         /**
         * The distance from the center of the transform to the rotation origin.
@@ -220,16 +218,16 @@ module Phaser.Components {
             this._size.y = this.parent.height;
             this._origin.x = this.origin.x;
             this._origin.y = this.origin.y;
-            this._sc.x = Math.sin((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD);
-            this._sc.y = Math.cos((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD);
-            this._scA.y = Math.cos((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD + this._angle);
-            this._scA.x = Math.sin((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD + this._angle);
+            this._sc.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            this._sc.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+            this._scA.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
+            this._scA.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
             this._prevRotation = this.rotation;
 
             if (this.parent.texture && this.parent.texture.renderRotation)
             {
-                this._sc.x = Math.sin((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD);
-                this._sc.y = Math.cos((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD);
+                this._sc.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                this._sc.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
             }
             else
             {
@@ -278,15 +276,15 @@ module Phaser.Components {
             //  2) Rotation change
             if (this.rotation != this._prevRotation)
             {
-                this._sc.x = Math.sin((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD);
-                this._sc.y = Math.cos((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD);
-                this._scA.y = Math.cos((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD + this._angle);
-                this._scA.x = Math.sin((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD + this._angle);
+                this._sc.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                this._sc.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                this._scA.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
+                this._scA.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
 
                 if (this.parent.texture.renderRotation)
                 {
-                    this._sc.x = Math.sin((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD);
-                    this._sc.y = Math.cos((this.rotation + this.rotationOffset) * GameMath.DEG_TO_RAD);
+                    this._sc.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                    this._sc.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
                 }
                 else
                 {

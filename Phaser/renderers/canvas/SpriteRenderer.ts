@@ -1,6 +1,4 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/Sprite.ts" />
-/// <reference path="../../cameras/Camera.ts" />
+/// <reference path="../../_definitions.ts" />
 
 module Phaser.Renderer.Canvas {
 
@@ -32,7 +30,7 @@ module Phaser.Renderer.Canvas {
          * @param camera {Rectangle} The Rectangle you want to check.
          * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
          */
-        public inCamera(camera: Camera, sprite: Sprite): boolean {
+        public inCamera(camera: Phaser.Camera, sprite: Phaser.Sprite): boolean {
 
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
             if (sprite.transform.scrollFactor.equals(0))
@@ -50,7 +48,7 @@ module Phaser.Renderer.Canvas {
          * @param camera {Camera} Camera this sprite will be rendered to.
          * @return {boolean} Return false if not rendered, otherwise return true.
          */
-        public render(camera: Camera, sprite: Sprite): boolean {
+        public render(camera: Phaser.Camera, sprite: Phaser.Sprite): boolean {
 
             Phaser.SpriteUtils.updateCameraView(camera, sprite);
 
@@ -99,7 +97,7 @@ module Phaser.Renderer.Canvas {
                     sprite.transform.local.data[4],         //  scale y
                     this._dx,                               //  translate x
                     this._dy                                //  translate y
-                );
+                    );
 
                 this._dx = sprite.transform.origin.x * -this._dw;
                 this._dy = sprite.transform.origin.y * -this._dh;
@@ -168,9 +166,9 @@ module Phaser.Renderer.Canvas {
                     this._dy, 			//	Destination Y
                     this._dw, 			//	Destination Width (always same as Source Width unless scaled)
                     this._dh			//	Destination Height (always same as Source Height unless scaled)
-                );
+                    );
             }
-                
+
             if (sprite.modified || sprite.texture.globalCompositeOperation)
             {
                 camera.texture.context.restore();

@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - TimeManager
@@ -16,7 +16,7 @@ module Phaser {
          *
          * @param game {Phaser.Game} Current game instance.
          */
-        constructor(game: Game) {
+        constructor(game: Phaser.Game) {
 
             this.game = game;
 
@@ -32,20 +32,13 @@ module Phaser {
         /**
          * Local reference to game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Time when this object created.
          * @param {number}
          */
         private _started: number;
-
-        /**
-         * Time scale factor.
-         * Set it to 0.5 for slow motion, to 2.0 makes game twice faster.
-         * @type {number}
-         */
-        //public timeScale: number = 1.0;
 
         /**
          * Elapsed since last frame.

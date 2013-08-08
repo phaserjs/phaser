@@ -1,13 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../core/Signal.ts" />
-/// <reference path="../utils/PointUtils.ts" />
-/// <reference path="../math/Vec2Utils.ts" />
-/// <reference path="Pointer.ts" />
-/// <reference path="MSPointer.ts" />
-/// <reference path="Gestures.ts" />
-/// <reference path="Mouse.ts" />
-/// <reference path="Keyboard.ts" />
-/// <reference path="Touch.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - InputManager
@@ -32,7 +23,7 @@ module Phaser {
             this.keyboard = new Keyboard(this.game);
             this.touch = new Touch(this.game);
             this.mspointer = new MSPointer(this.game);
-            this.gestures = new Gestures(this.game);
+            //this.gestures = new Gestures(this.game);
 
             this.onDown = new Phaser.Signal();
             this.onUp = new Phaser.Signal();
@@ -58,7 +49,7 @@ module Phaser {
         /**
          * Local reference to game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * How often should the input pointers be checked for updates?
@@ -171,7 +162,7 @@ module Phaser {
         * Phaser.Gestures handler
         * @type {Gestures}
         */
-        public gestures: Gestures;
+        //public gestures: Gestures;
 
         /**
         * A vector object representing the current position of the Pointer.
@@ -458,7 +449,7 @@ module Phaser {
             this.keyboard.start();
             this.touch.start();
             this.mspointer.start();
-            this.gestures.start();
+            //this.gestures.start();
 
             this.mousePointer.active = true;
 

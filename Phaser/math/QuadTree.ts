@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../geom/Rectangle.ts" />
-/// <reference path="LinkedList.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - QuadTree
@@ -23,7 +21,8 @@ module Phaser {
          * @param {Number} height		Desired height of this node.
          * @param {Number} parent		The parent branch or node.  Pass null to create a root.
          */
-        constructor(manager: Phaser.Physics.Manager, x: number, y: number, width: number, height: number, parent: QuadTree = null) {
+        //constructor(manager: Phaser.Physics.Manager, x: number, y: number, width: number, height: number, parent: QuadTree = null) {
+        constructor(manager, x: number, y: number, width: number, height: number, parent: QuadTree = null) {
 
             super(x, y, width, height);
 
@@ -104,7 +103,8 @@ module Phaser {
         private _overlapProcessed: boolean;
         private _checkObject;
 
-        public static physics: Phaser.Physics.Manager;
+        //public static physics: Phaser.Physics.Manager;
+        public static physics;
 
         /**
          * Flag for specifying that you want to add an object to the A list.

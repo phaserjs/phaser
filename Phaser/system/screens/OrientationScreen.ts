@@ -1,4 +1,4 @@
-/// <reference path="../../Game.ts" />
+/// <reference path="../../_definitions.ts" />
 
 /**
 * Phaser - OrientationScreen
@@ -17,14 +17,14 @@ module Phaser {
          * @param width {number} Screen canvas width.
          * @param height {number} Screen canvas height.
          */
-        constructor(game: Game) {
+        constructor(game: Phaser.Game) {
             this.game = game;
         }
 
         /**
          * Local reference to game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         private _showOnLandscape: boolean = false;
         private _showOnPortrait: boolean = false;

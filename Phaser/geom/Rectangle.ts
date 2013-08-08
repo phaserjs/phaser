@@ -1,4 +1,4 @@
-/// <reference path="Point.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
  *	Rectangle

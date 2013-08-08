@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Tile
@@ -19,7 +19,7 @@ module Phaser {
          * @param width {number} Width of the tile.
          * @param height number} Height of the tile.
          */
-        constructor(game: Game, tilemap: Tilemap, index: number, width: number, height: number) {
+        constructor(game: Phaser.Game, tilemap: Phaser.Tilemap, index: number, width: number, height: number) {
 
             this.game = game;
             this.tilemap = tilemap;
@@ -34,7 +34,7 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * You can give this Tile a friendly name to help with debugging. Never used internally.
@@ -106,7 +106,7 @@ module Phaser {
          * A reference to the tilemap this tile object belongs to.
          * @type {Tilemap}
          */
-        public tilemap: Tilemap;
+        public tilemap: Phaser.Tilemap;
 
         /**
          * The index of this tile type in the core map data.
@@ -144,7 +144,7 @@ module Phaser {
 
             this.allowCollisions = collision;
 
-            if (collision & Types.ANY)
+            if (collision & Phaser.Types.ANY)
             {
                 this.collideLeft = true;
                 this.collideRight = true;
@@ -153,22 +153,22 @@ module Phaser {
                 return;
             }
 
-            if (collision & Types.LEFT || collision & Types.WALL)
+            if (collision & Phaser.Types.LEFT || collision & Phaser.Types.WALL)
             {
                 this.collideLeft = true;
             }
 
-            if (collision & Types.RIGHT || collision & Types.WALL)
+            if (collision & Phaser.Types.RIGHT || collision & Phaser.Types.WALL)
             {
                 this.collideRight = true;
             }
 
-            if (collision & Types.UP || collision & Types.CEILING)
+            if (collision & Phaser.Types.UP || collision & Phaser.Types.CEILING)
             {
                 this.collideUp = true;
             }
 
-            if (collision & Types.DOWN || collision & Types.CEILING)
+            if (collision & Phaser.Types.DOWN || collision & Phaser.Types.CEILING)
             {
                 this.collideDown = true;
             }
@@ -180,7 +180,7 @@ module Phaser {
          */
         public resetCollision() {
 
-            this.allowCollisions = Types.NONE;
+            this.allowCollisions = Phaser.Types.NONE;
             this.collideLeft = false;
             this.collideRight = false;
             this.collideUp = false;
@@ -195,7 +195,7 @@ module Phaser {
         **/
         public toString(): string {
 
-            return "[{Tiled (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
+            return "[{Tile (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
 
         }
 

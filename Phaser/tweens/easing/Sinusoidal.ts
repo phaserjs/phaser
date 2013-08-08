@@ -1,4 +1,4 @@
-/// <reference path="../../Game.ts" />
+/// <reference path="../../_definitions.ts" />
 
 /**
 * Phaser - Easing - Sinusoidal

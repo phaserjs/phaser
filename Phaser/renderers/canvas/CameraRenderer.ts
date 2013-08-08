@@ -1,6 +1,4 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/Sprite.ts" />
-/// <reference path="../../cameras/Camera.ts" />
+/// <reference path="../../_definitions.ts" />
 
 module Phaser.Renderer.Canvas {
 
@@ -32,7 +30,7 @@ module Phaser.Renderer.Canvas {
         private _sin: number = 0;
         private _cos: number = 1;
 
-        public preRender(camera: Camera): boolean {
+        public preRender(camera: Phaser.Camera): boolean {
 
             if (camera.visible == false || camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1)
             {
@@ -87,7 +85,7 @@ module Phaser.Renderer.Canvas {
 
         }
 
-        public postRender(camera: Camera) {
+        public postRender(camera: Phaser.Camera) {
 
             //  This could have been over-written by a sprite, need to store elsewhere
             if (this._ga > -1)
@@ -142,7 +140,7 @@ module Phaser.Renderer.Canvas {
                     this._cos * this._fy,                               //  scale y
                     this._dx,                                           //  translate x
                     this._dy                                            //  translate y
-                );
+                    );
 
                 this._dx = camera.transform.origin.x * -this._dw;
                 this._dy = camera.transform.origin.y * -this._dh;
@@ -178,7 +176,7 @@ module Phaser.Renderer.Canvas {
                 this._dy, 			//	Destination Y
                 this._dw, 			//	Destination Width (always same as Source Width unless scaled)
                 this._dh			//	Destination Height (always same as Source Height unless scaled)
-            );
+                );
 
             this.game.stage.context.restore();
 

@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Components - Events
@@ -30,7 +30,7 @@ module Phaser.Components {
         /**
          * Reference to Phaser.Game
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Local private reference to its parent game object.

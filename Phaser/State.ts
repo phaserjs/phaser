@@ -1,4 +1,4 @@
-/// <reference path="Game.ts" />
+/// <reference path="_definitions.ts" />
 
 /**
 * Phaser - State
@@ -14,7 +14,7 @@ module Phaser {
          * State constructor
          * Create a new <code>State</code>.
          */
-        constructor(game: Game) {
+        constructor(game: Phaser.Game) {
 
             this.game = game;
 
@@ -35,73 +35,73 @@ module Phaser {
         /**
          * Reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Currently used camera.
          * @type {Camera}
          */
-        public camera: Camera;
+        public camera: Phaser.Camera;
 
         /**
          * Reference to the assets cache.
          * @type {Cache}
          */
-        public cache: Cache;
+        public cache: Phaser.Cache;
 
         /**
          * Reference to the GameObject Factory.
          * @type {GameObjectFactory}
          */
-        public add: GameObjectFactory;
+        public add: Phaser.GameObjectFactory;
 
         /**
          * Reference to the input manager
          * @type {Input}
          */
-        public input: InputManager;
+        public input: Phaser.InputManager;
 
         /**
          * Reference to the assets loader.
          * @type {Loader}
          */
-        public load: Loader;
+        public load: Phaser.Loader;
 
         /**
          * Reference to the math helper.
          * @type {GameMath}
          */
-        public math: GameMath;
+        public math: Phaser.GameMath;
 
         /**
          * Reference to the sound manager.
          * @type {SoundManager}
          */
-        public sound: SoundManager;
+        public sound: Phaser.SoundManager;
 
         /**
          * Reference to the stage.
          * @type {Stage}
          */
-        public stage: Stage;
+        public stage: Phaser.Stage;
 
         /**
          * Reference to game clock.
          * @type {Time}
          */
-        public time: TimeManager;
+        public time: Phaser.TimeManager;
 
         /**
          * Reference to the tween manager.
          * @type {TweenManager}
          */
-        public tweens: TweenManager;
+        public tweens: Phaser.TweenManager;
 
         /**
          * Reference to the world.
          * @type {World}
          */
-        public world: World;
+        public world: Phaser.World;
 
         //  Override these in your own States
 

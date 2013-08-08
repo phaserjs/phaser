@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Net
@@ -13,7 +13,7 @@ module Phaser {
         /**
          * Net constructor
          */
-        constructor(game: Game) {
+        constructor(game: Phaser.Game) {
 
             this.game = game;
 
@@ -22,7 +22,7 @@ module Phaser {
         /**
          * Local reference to the current Phaser.Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Compares the given domain name against the hostname of the browser containing the game.

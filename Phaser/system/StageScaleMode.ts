@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - StageScaleMode
@@ -15,12 +15,12 @@ module Phaser {
         /**
          * StageScaleMode constructor
          */
-        constructor(game: Game, width: number, height: number) {
+        constructor(game: Phaser.Game, width: number, height: number) {
 
             this.game = game;
 
-            this.enterLandscape = new Phaser.Signal();
-            this.enterPortrait = new Phaser.Signal();
+            this.enterLandscape = new Phaser.Signal;
+            this.enterPortrait = new Phaser.Signal;
 
             if (window['orientation'])
             {
@@ -38,7 +38,7 @@ module Phaser {
                 }
             }
 
-            this.scaleFactor = new Vec2(1, 1);
+            this.scaleFactor = new Phaser.Vec2(1, 1);
             this.aspectRatio = 0;
             this.minWidth = width;
             this.minHeight = height;
@@ -53,7 +53,7 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Stage height when start the game.
@@ -169,7 +169,7 @@ module Phaser {
          * The scale factor of the scaled game width
          * @type {Vec2}
          */
-        public scaleFactor: Vec2;
+        public scaleFactor: Phaser.Vec2;
 
         /**
          * Window orientation angle (90 and -90 are landscape, 0 and 80 are portrait)
@@ -247,7 +247,7 @@ module Phaser {
          */
         public update() {
 
-            if (this.game.stage.scaleMode !== StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height))
+            if (this.game.stage.scaleMode !== Phaser.StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height))
             {
                 this.refresh();
             }

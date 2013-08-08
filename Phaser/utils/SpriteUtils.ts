@@ -1,9 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../geom/Point.ts" />
-/// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../geom/Circle.ts" />
-/// <reference path="../gameobjects/Sprite.ts" />
-/// <reference path="RectangleUtils.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - SpriteUtils
@@ -15,7 +10,7 @@ module Phaser {
 
     export class SpriteUtils {
 
-        static _tempPoint: Point;
+        static _tempPoint: Phaser.Point;
         static _sin: number;
         static _cos: number;
 
@@ -25,7 +20,7 @@ module Phaser {
          * @param sprite {Sprite} The Sprite that will have its cameraView property modified
          * @return {Rectangle} A reference to the Sprite.cameraView property
          */
-        static updateCameraView(camera: Camera, sprite: Sprite): Rectangle {
+        static updateCameraView(camera: Phaser.Camera, sprite: Phaser.Sprite): Phaser.Rectangle {
 
             if (sprite.rotation == 0 || sprite.texture.renderRotation == false)
             {
@@ -40,21 +35,21 @@ module Phaser {
                 //  If the sprite is rotated around its center we can use this quicker method:
                 if (sprite.transform.origin.x == 0.5 && sprite.transform.origin.y == 0.5)
                 {
-                    SpriteUtils._sin = sprite.transform.sin;
-                    SpriteUtils._cos = sprite.transform.cos;
+                    Phaser.SpriteUtils._sin = sprite.transform.sin;
+                    Phaser.SpriteUtils._cos = sprite.transform.cos;
 
-                    if (SpriteUtils._sin < 0)
+                    if (Phaser.SpriteUtils._sin < 0)
                     {
-                        SpriteUtils._sin = -SpriteUtils._sin;
+                        Phaser.SpriteUtils._sin = -Phaser.SpriteUtils._sin;
                     }
 
-                    if (SpriteUtils._cos < 0)
+                    if (Phaser.SpriteUtils._cos < 0)
                     {
-                        SpriteUtils._cos = -SpriteUtils._cos;
+                        Phaser.SpriteUtils._cos = -Phaser.SpriteUtils._cos;
                     }
 
-                    sprite.cameraView.width = Math.round(sprite.height * SpriteUtils._sin + sprite.width * SpriteUtils._cos);
-                    sprite.cameraView.height = Math.round(sprite.height * SpriteUtils._cos + sprite.width * SpriteUtils._sin);
+                    sprite.cameraView.width = Math.round(sprite.height * Phaser.SpriteUtils._sin + sprite.width * Phaser.SpriteUtils._cos);
+                    sprite.cameraView.height = Math.round(sprite.height * Phaser.SpriteUtils._cos + sprite.width * Phaser.SpriteUtils._sin);
                     sprite.cameraView.x = Math.round(sprite.x - (camera.worldView.x * sprite.transform.scrollFactor.x) - (sprite.cameraView.width * sprite.transform.origin.x));
                     sprite.cameraView.y = Math.round(sprite.y - (camera.worldView.y * sprite.transform.scrollFactor.y) - (sprite.cameraView.height * sprite.transform.origin.y));
                 }
@@ -71,21 +66,21 @@ module Phaser {
 
         }
 
-        static getAsPoints(sprite: Sprite): Phaser.Point[] {
+        static getAsPoints(sprite: Phaser.Sprite): Phaser.Point[] {
 
             var out: Phaser.Point[] = [];
 
             //  top left
-            out.push(new Point(sprite.x, sprite.y));
+            out.push(new Phaser.Point(sprite.x, sprite.y));
 
             //  top right
-            out.push(new Point(sprite.x + sprite.width, sprite.y));
+            out.push(new Phaser.Point(sprite.x + sprite.width, sprite.y));
 
             //  bottom right
-            out.push(new Point(sprite.x + sprite.width, sprite.y + sprite.height));
+            out.push(new Phaser.Point(sprite.x + sprite.width, sprite.y + sprite.height));
 
             //  bottom left
-            out.push(new Point(sprite.x, sprite.y + sprite.height));
+            out.push(new Phaser.Point(sprite.x, sprite.y + sprite.height));
 
             return out;
 
@@ -195,8 +190,8 @@ module Phaser {
         *
         * @return   Whether or not the point overlaps this object.
         */
-        static overlapsPoint(sprite: Sprite, point: Point): boolean {
-            return SpriteUtils.overlapsXY(sprite, point.x, point.y);
+        static overlapsPoint(sprite: Phaser.Sprite, point: Phaser.Point): boolean {
+            return Phaser.SpriteUtils.overlapsXY(sprite, point.x, point.y);
         }
 
         /**
@@ -206,16 +201,16 @@ module Phaser {
         *
         * @return {boolean} Whether the object is on screen or not.
         */
-        static onScreen(sprite: Sprite, camera: Camera = null): boolean {
+        static onScreen(sprite: Phaser.Sprite, camera: Phaser.Camera = null): boolean {
 
             if (camera == null)
             {
                 camera = sprite.game.camera;
             }
 
-            SpriteUtils.getScreenXY(sprite, SpriteUtils._tempPoint, camera);
+            Phaser.SpriteUtils.getScreenXY(sprite, SpriteUtils._tempPoint, camera);
 
-            return (SpriteUtils._tempPoint.x + sprite.width > 0) && (SpriteUtils._tempPoint.x < camera.width) && (SpriteUtils._tempPoint.y + sprite.height > 0) && (SpriteUtils._tempPoint.y < camera.height);
+            return (Phaser.SpriteUtils._tempPoint.x + sprite.width > 0) && (Phaser.SpriteUtils._tempPoint.x < camera.width) && (Phaser.SpriteUtils._tempPoint.y + sprite.height > 0) && (Phaser.SpriteUtils._tempPoint.y < camera.height);
 
         }
 
@@ -227,7 +222,7 @@ module Phaser {
         *
         * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
-        static getScreenXY(sprite: Sprite, point: Point = null, camera: Camera = null): Point {
+        static getScreenXY(sprite: Phaser.Sprite, point: Phaser.Point = null, camera: Phaser.Camera = null): Phaser.Point {
 
             if (point == null)
             {
@@ -236,7 +231,7 @@ module Phaser {
 
             if (camera == null)
             {
-                camera = this.game.camera;
+                camera = sprite.game.camera;
             }
 
             point.x = sprite.x - camera.x * sprite.transform.scrollFactor.x;
@@ -269,7 +264,7 @@ module Phaser {
         * @param x {number} The new X position of this object.
         * @param y {number} The new Y position of this object.
         */
-        static reset(sprite: Sprite, x: number, y: number) {
+        static reset(sprite: Phaser.Sprite, x: number, y: number) {
 
             sprite.revive();
             //sprite.body.touching = Types.NONE;

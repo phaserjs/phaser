@@ -1,15 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="easing/Back.ts" />
-/// <reference path="easing/Bounce.ts" />
-/// <reference path="easing/Circular.ts" />
-/// <reference path="easing/Cubic.ts" />
-/// <reference path="easing/Elastic.ts" />
-/// <reference path="easing/Exponential.ts" />
-/// <reference path="easing/Linear.ts" />
-/// <reference path="easing/Quadratic.ts" />
-/// <reference path="easing/Quartic.ts" />
-/// <reference path="easing/Quintic.ts" />
-/// <reference path="easing/Sinusoidal.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Tween
@@ -28,7 +17,7 @@ module Phaser {
          * @param object {object} Target object will be affected by this tween.
          * @param game {Phaser.Game} Current game instance.
          */
-        constructor(object, game:Phaser.Game) {
+        constructor(object, game: Phaser.Game) {
 
             this._object = object;
 
@@ -38,9 +27,9 @@ module Phaser {
             this._easingFunction = Phaser.Easing.Linear.None;
 
             this._chainedTweens = [];
-            this.onStart = new Phaser.Signal();
-            this.onUpdate = new Phaser.Signal();
-            this.onComplete = new Phaser.Signal();
+            this.onStart = new Phaser.Signal;
+            this.onUpdate = new Phaser.Signal;
+            this.onComplete = new Phaser.Signal;
 
         }
 
@@ -59,7 +48,7 @@ module Phaser {
          * Reference to the target object.
          * @type {object}
          */
-	    private _object = null;
+        private _object = null;
 
         private _pausedTime: number = 0;
 
@@ -67,393 +56,393 @@ module Phaser {
          * Start values container.
          * @type {object}
          */
-	    private _valuesStart = {};
+        private _valuesStart = {};
 
         /**
          * End values container.
          * @type {object}
          */
-	    private _valuesEnd = {};
+        private _valuesEnd = {};
 
-	    /**
-	     * How long this tween will perform.
-	     * @type {number}
-	     */
-	    private _duration = 1000;
-	    private _delayTime = 0;
-	    private _startTime = null;
+        /**
+         * How long this tween will perform.
+         * @type {number}
+         */
+        private _duration: number = 1000;
+        private _delayTime: number = 0;
+        private _startTime: number = null;
 
         //  Temp vars to avoid gc spikes
-	    private _tempElapsed: number;
-	    private _tempValue;
+        private _tempElapsed: number;
+        private _tempValue;
 
         /**
          * Will this tween automatically restart when it completes?
          * @type {boolean}
          */
-	    private _loop: boolean = false;
+        private _loop: boolean = false;
 
         /**
          * A yoyo tween is one that plays once fully, then reverses back to the original tween values before completing.
          * @type {boolean}
          */
-	    private _yoyo: boolean = false;
-	    private _yoyoCount: number = 0;
+        private _yoyo: boolean = false;
+        private _yoyoCount: number = 0;
 
-	    /**
-	     * Easing function which actually updating this tween.
-	     * @type {function}
-	     */
-	    private _easingFunction;
-	    private _interpolationFunction;
+        /**
+         * Easing function which actually updating this tween.
+         * @type {function}
+         */
+        private _easingFunction;
+        private _interpolationFunction;
 
-	    /**
-	     * Contains chained tweens.
-	     * @type {Tweens[]}
-	     */
-	    private _chainedTweens = [];
+        /**
+         * Contains chained tweens.
+         * @type {Tweens[]}
+         */
+        private _chainedTweens = [];
 
-	    /**
-	     * Signal to be dispatched when this tween start.
-	     * @type {Phaser.Signal}
-	     */
-	    public onStart: Phaser.Signal;
+        /**
+         * Signal to be dispatched when this tween start.
+         * @type {Phaser.Signal}
+         */
+        public onStart: Phaser.Signal;
 
-	    /**
-	     * Signal to be dispatched when this tween updating.
-	     * @type {Phaser.Signal}
-	     */
-	    public onUpdate: Phaser.Signal;
+        /**
+         * Signal to be dispatched when this tween updating.
+         * @type {Phaser.Signal}
+         */
+        public onUpdate: Phaser.Signal;
 
-	    /**
-	     * Signal to be dispatched when this tween completed.
-	     * @type {Phaser.Signal}
-	     */
-	    public onComplete: Phaser.Signal;
+        /**
+         * Signal to be dispatched when this tween completed.
+         * @type {Phaser.Signal}
+         */
+        public onComplete: Phaser.Signal;
 
-	    /**
-	     * Configure the Tween
-	     * @param properties {object} Propertis you want to tween.
-	     * @param [duration] {number} duration of this tween.
-	     * @param [ease] {any} Easing function.
-	     * @param [autoStart] {boolean} Whether this tween will start automatically or not.
-	     * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
-	     * @param [loop] {boolean} Should the tween automatically restart once complete? (ignores any chained tweens)
-	     * @return {Tween} Itself.
-	     */
-	    public to(properties, duration: number = 1000, ease: any = null, autoStart: boolean = false, delay:number = 0, loop:boolean = false, yoyo:boolean = false): Tween {
+        /**
+         * Configure the Tween
+         * @param properties {object} Propertis you want to tween.
+         * @param [duration] {number} duration of this tween.
+         * @param [ease] {any} Easing function.
+         * @param [autoStart] {boolean} Whether this tween will start automatically or not.
+         * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
+         * @param [loop] {boolean} Should the tween automatically restart once complete? (ignores any chained tweens)
+         * @return {Tween} Itself.
+         */
+        public to(properties, duration: number = 1000, ease: any = null, autoStart: boolean = false, delay: number = 0, loop: boolean = false, yoyo: boolean = false): Phaser.Tween {
 
-	        this._duration = duration;
+            this._duration = duration;
 
-	        //  If properties isn't an object this will fail, sanity check it here somehow?
-	        this._valuesEnd = properties;
+            //  If properties isn't an object this will fail, sanity check it here somehow?
+            this._valuesEnd = properties;
 
-	        if (ease !== null)
-	        {
-	            this._easingFunction = ease;
-	        }
+            if (ease !== null)
+            {
+                this._easingFunction = ease;
+            }
 
-	        if (delay > 0)
-	        {
-	            this._delayTime = delay;
-	        }
+            if (delay > 0)
+            {
+                this._delayTime = delay;
+            }
 
-	        this._loop = loop;
-	        this._yoyo = yoyo;
-	        this._yoyoCount = 0;
+            this._loop = loop;
+            this._yoyo = yoyo;
+            this._yoyoCount = 0;
 
-	        if (autoStart === true)
-	        {
-	            return this.start();
-	        }
-	        else
-	        {
-	            return this;
-	        }
+            if (autoStart === true)
+            {
+                return this.start();
+            }
+            else
+            {
+                return this;
+            }
 
-	    }
+        }
 
-	    public loop(value: boolean): Tween {
+        public loop(value: boolean): Phaser.Tween {
 
-	        this._loop = value;
-	        return this;
+            this._loop = value;
+            return this;
 
-	    }
+        }
 
-	    public yoyo(value: boolean): Tween {
+        public yoyo(value: boolean): Phaser.Tween {
 
-	        this._yoyo = value;
-	        this._yoyoCount = 0;
-	        return this;
+            this._yoyo = value;
+            this._yoyoCount = 0;
+            return this;
 
-	    }
+        }
 
         public isRunning: boolean = false;
 
-	    /**
-	     * Start to tween.
-	     */
-	    public start(looped: boolean = false): Tween {
+        /**
+         * Start to tween.
+         */
+        public start(looped: boolean = false): Phaser.Tween {
 
-	        if (this.game === null || this._object === null)
-	        {
-	            return;
-	        }
+            if (this.game === null || this._object === null)
+            {
+                return;
+            }
 
-	        if (looped == false)
-	        {
-	            this._manager.add(this);
+            if (looped == false)
+            {
+                this._manager.add(this);
 
-	            this.onStart.dispatch(this._object);
-	        }
+                this.onStart.dispatch(this._object);
+            }
 
-	        this._startTime = this.game.time.now + this._delayTime;
-	        this.isRunning = true;
+            this._startTime = this.game.time.now + this._delayTime;
+            this.isRunning = true;
 
-	        for (var property in this._valuesEnd)
-	        {
-	            // This prevents the interpolation of null values or of non-existing properties
-	            if (this._object[property] === null || !(property in this._object))
-	            {
-        	        throw Error('Phaser.Tween interpolation of null value of non-existing property');
-	                continue;
-	            }
+            for (var property in this._valuesEnd)
+            {
+                // This prevents the interpolation of null values or of non-existing properties
+                if (this._object[property] === null || !(property in this._object))
+                {
+                    throw Error('Phaser.Tween interpolation of null value of non-existing property');
+                    continue;
+                }
 
-	            // check if an Array was provided as property value
-	            if (this._valuesEnd[property] instanceof Array)
-	            {
-	                if (this._valuesEnd[property].length === 0)
-	                {
-	                    continue;
-	                }
+                // check if an Array was provided as property value
+                if (this._valuesEnd[property] instanceof Array)
+                {
+                    if (this._valuesEnd[property].length === 0)
+                    {
+                        continue;
+                    }
 
-	                // create a local copy of the Array with the start value at the front
-	                this._valuesEnd[property] = [this._object[property]].concat(this._valuesEnd[property]);
-	            }
+                    // create a local copy of the Array with the start value at the front
+                    this._valuesEnd[property] = [this._object[property]].concat(this._valuesEnd[property]);
+                }
 
-	            if (looped == false)
-	            {
-	                this._valuesStart[property] = this._object[property];
-	            }
+                if (looped == false)
+                {
+                    this._valuesStart[property] = this._object[property];
+                }
 
-	        }
+            }
 
-	        return this;
+            return this;
 
-	    }
+        }
 
-	    public reverse() {
-            
-	        var tempObj = {};
+        public reverse() {
 
-	        for (var property in this._valuesStart)
-	        {
-	            tempObj[property] = this._valuesStart[property];
-	            this._valuesStart[property] = this._valuesEnd[property];
-	            this._valuesEnd[property] = tempObj[property];
-	        }
+            var tempObj = {};
 
-	        this._yoyoCount++;
+            for (var property in this._valuesStart)
+            {
+                tempObj[property] = this._valuesStart[property];
+                this._valuesStart[property] = this._valuesEnd[property];
+                this._valuesEnd[property] = tempObj[property];
+            }
 
-	        return this.start(true);
+            this._yoyoCount++;
 
-	    }
+            return this.start(true);
 
-	    public reset(): Tween {
+        }
+
+        public reset(): Phaser.Tween {
 
             //  Reset the properties back to what they were before
-	        for (var property in this._valuesStart)
-	        {
-	            this._object[property] = this._valuesStart[property];
-	        }
+            for (var property in this._valuesStart)
+            {
+                this._object[property] = this._valuesStart[property];
+            }
 
-	        return this.start(true);
+            return this.start(true);
 
-	    }
+        }
 
-	    public clear(): Tween {
+        public clear(): Phaser.Tween {
 
             this._chainedTweens = [];
 
             this.onStart.removeAll();
             this.onUpdate.removeAll();
-	        this.onComplete.removeAll();
+            this.onComplete.removeAll();
 
-	        return this;
+            return this;
 
-	    }
+        }
 
-	    /**
-	     * Stop tweening.
-	     */
-	    public stop(): Tween {
+        /**
+         * Stop tweening.
+         */
+        public stop(): Phaser.Tween {
 
-	        if (this._manager !== null)
-	        {
-	            this._manager.remove(this);
-	        }
+            if (this._manager !== null)
+            {
+                this._manager.remove(this);
+            }
 
-	        this.isRunning = false;
+            this.isRunning = false;
 
-	        this.onComplete.dispose();
+            this.onComplete.dispose();
 
-	        return this;
+            return this;
 
-	    }
+        }
 
-	    public set parent(value:Phaser.Game) {
+        public set parent(value: Phaser.Game) {
 
-	        this.game = value;
+            this.game = value;
             this._manager = this.game.tweens;
 
-	    }
+        }
 
-	    public set delay(amount:number) {
-	        this._delayTime = amount;
-	    }
+        public set delay(amount: number) {
+            this._delayTime = amount;
+        }
 
-	    public get delay(): number {
-	        return this._delayTime;
-	    }
+        public get delay(): number {
+            return this._delayTime;
+        }
 
-	    public set easing(easing) {
-	        this._easingFunction = easing;
-	    }
+        public set easing(easing) {
+            this._easingFunction = easing;
+        }
 
-	    public get easing():any {
-	        return this._easingFunction;
-	    }
+        public get easing() {
+            return this._easingFunction;
+        }
 
-	    public set interpolation(interpolation) {
-	        this._interpolationFunction = interpolation;
-	    }
+        public set interpolation(interpolation) {
+            this._interpolationFunction = interpolation;
+        }
 
-	    public get interpolation():any {
-	        return this._interpolationFunction;
-	    }
+        public get interpolation() {
+            return this._interpolationFunction;
+        }
 
-	    /**
-	     * Add another chained tween, which will start automatically when the one before it completes.
-	     * @param tween {Phaser.Tween} Tween object you want to chain with this.
-	     * @return {Phaser.Tween} Itselfe.
-	     */
-	    public chain(tween:Phaser.Tween): Tween {
+        /**
+         * Add another chained tween, which will start automatically when the one before it completes.
+         * @param tween {Phaser.Tween} Tween object you want to chain with this.
+         * @return {Phaser.Tween} Itselfe.
+         */
+        public chain(tween: Phaser.Tween): Phaser.Tween {
 
-	        this._chainedTweens.push(tween);
+            this._chainedTweens.push(tween);
 
-	        return this;
+            return this;
 
-	    }
+        }
 
-	    public pause() {
-	        this._paused = true;
-	    }
+        public pause() {
+            this._paused = true;
+        }
 
-	    public resume() {
-	        
+        public resume() {
+
             this._paused = false;
             this._startTime += this.game.time.pauseDuration;
 
-	    }
+        }
 
-	    private _paused: boolean;
+        private _paused: boolean;
 
-	    /**
-	     * Update tweening.
-	     * @param time {number} Current time from game clock.
-	     * @return {boolean} Return false if this completed and no need to update, otherwise return true.
-	     */
-	    public update(time) {
+        /**
+         * Update tweening.
+         * @param time {number} Current time from game clock.
+         * @return {boolean} Return false if this completed and no need to update, otherwise return true.
+         */
+        public update(time: number) {
 
-	        if (this._paused || time < this._startTime)
-	        {
-	            return true;
-	        }
+            if (this._paused || time < this._startTime)
+            {
+                return true;
+            }
 
-	        this._tempElapsed = (time - this._startTime) / this._duration;
-	        this._tempElapsed = this._tempElapsed > 1 ? 1 : this._tempElapsed;
+            this._tempElapsed = (time - this._startTime) / this._duration;
+            this._tempElapsed = this._tempElapsed > 1 ? 1 : this._tempElapsed;
 
-	        this._tempValue = this._easingFunction(this._tempElapsed);
+            this._tempValue = this._easingFunction(this._tempElapsed);
 
-	        for (var property in this._valuesStart)
-	        {
+            for (var property in this._valuesStart)
+            {
                 //  Add checks for object, array, numeric up front
-	            if (this._valuesEnd[property] instanceof Array)
-	            {
-	                this._object[property] = this._interpolationFunction(this._valuesEnd[property], this._tempValue);
-	            }
+                if (this._valuesEnd[property] instanceof Array)
+                {
+                    this._object[property] = this._interpolationFunction(this._valuesEnd[property], this._tempValue);
+                }
                 else
-	            {
-	                this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * this._tempValue;
-	            }
-	        }
+                {
+                    this._object[property] = this._valuesStart[property] + (this._valuesEnd[property] - this._valuesStart[property]) * this._tempValue;
+                }
+            }
 
-	        this.onUpdate.dispatch(this._object, this._tempValue);
+            this.onUpdate.dispatch(this._object, this._tempValue);
 
-	        if (this._tempElapsed == 1)
-	        {
+            if (this._tempElapsed == 1)
+            {
                 //  Yoyo?
-	            if (this._yoyo)
-	            {
-	                if (this._yoyoCount == 0)
-	                {
+                if (this._yoyo)
+                {
+                    if (this._yoyoCount == 0)
+                    {
                         //  Reverse the tween
-	                    this.reverse();
-	                    return true;
-	                }
-	                else
-	                {
+                        this.reverse();
+                        return true;
+                    }
+                    else
+                    {
                         //  We've yoyo'd once already, quit?
-	                    if (this._loop == false)
-	                    {
-	                        this.onComplete.dispatch(this._object);
+                        if (this._loop == false)
+                        {
+                            this.onComplete.dispatch(this._object);
 
-	                        for (var i = 0; i < this._chainedTweens.length; i++)
-	                        {
-	                            this._chainedTweens[i].start();
-	                        }
+                            for (var i = 0; i < this._chainedTweens.length; i++)
+                            {
+                                this._chainedTweens[i].start();
+                            }
 
-	                        return false;
-	                    }
-	                    else
-	                    {
+                            return false;
+                        }
+                        else
+                        {
                             //  YoYo and Loop are both on
-	                        this._yoyoCount = 0;
-    	                    this.reverse();
-	                        return true;
-	                    }
-	                }
-	            }
+                            this._yoyoCount = 0;
+                            this.reverse();
+                            return true;
+                        }
+                    }
+                }
 
                 //  Loop?
-	            if (this._loop)
-	            {
-	                this._yoyoCount = 0;
-	                this.reset();
-	                return true;
-	            }
-	            else
-	            {
-    	            this.onComplete.dispatch(this._object);
+                if (this._loop)
+                {
+                    this._yoyoCount = 0;
+                    this.reset();
+                    return true;
+                }
+                else
+                {
+                    this.onComplete.dispatch(this._object);
 
-	                for (var i = 0; i < this._chainedTweens.length; i++)
-	                {
-	                    this._chainedTweens[i].start();
-	                }
+                    for (var i = 0; i < this._chainedTweens.length; i++)
+                    {
+                        this._chainedTweens[i].start();
+                    }
 
-	                if (this._chainedTweens.length == 0)
-	                {
-            	        this.isRunning = false;
-	                }
+                    if (this._chainedTweens.length == 0)
+                    {
+                        this.isRunning = false;
+                    }
 
-	                return false;
-	            }
+                    return false;
+                }
 
-	        }
+            }
 
-	        return true;
+            return true;
 
-	    }
+        }
 
     }
 }

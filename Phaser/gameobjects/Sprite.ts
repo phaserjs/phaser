@@ -1,12 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../math/Vec2.ts" />
-/// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../animation/AnimationManager.ts" />
-/// <reference path="../input/InputHandler.ts" />
-/// <reference path="../display/Texture.ts" />
-/// <reference path="TransformManager.ts" />
-/// <reference path="Events.ts" />
-/// <reference path="../physics/arcade/Body.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Sprite
@@ -86,7 +78,7 @@ module Phaser {
         /**
          * Reference to the main game object
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * The type of game object.
@@ -101,7 +93,7 @@ module Phaser {
         /**
          * The Group this Sprite belongs to.
          */
-        public group: Group;
+        public group: Phaser.Group;
 
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.
@@ -137,7 +129,8 @@ module Phaser {
         /**
          * Sprite physics body.
          */
-        public body: Phaser.Physics.Body = null;
+        //public body: Phaser.Physics.Body = null;
+        public body;
 
         /**
          * The texture used to render the Sprite.
@@ -236,7 +229,7 @@ module Phaser {
 
             if (this.group)
             {
-                this.group.bringToTop(this);
+                //this.group.bringToTop(this);
             }
 
         }
@@ -426,7 +419,7 @@ module Phaser {
 
             if (removeFromGroup && this.group)
             {
-                this.group.remove(this);
+                //this.group.remove(this);
             }
 
             this.events.onKilled.dispatch(this);

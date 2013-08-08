@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Loader
@@ -36,7 +36,7 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Array stores assets keys. So you can get that asset by its unique key.

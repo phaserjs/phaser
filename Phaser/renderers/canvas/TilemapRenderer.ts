@@ -1,6 +1,4 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/Sprite.ts" />
-/// <reference path="../../cameras/Camera.ts" />
+/// <reference path="../../_definitions.ts" />
 
 module Phaser.Renderer.Canvas {
 
@@ -34,7 +32,7 @@ module Phaser.Renderer.Canvas {
          * Render a tilemap to a specific camera.
          * @param camera {Camera} The camera this tilemap will be rendered to.
          */
-        public render(camera: Camera, tilemap: Tilemap): boolean {
+        public render(camera: Phaser.Camera, tilemap: Phaser.Tilemap): boolean {
 
             //  Loop through the layers
 
@@ -127,7 +125,7 @@ module Phaser.Renderer.Canvas {
                                 this._ty,
                                 layer.tileWidth,
                                 layer.tileHeight
-                            );
+                                );
 
                         }
 

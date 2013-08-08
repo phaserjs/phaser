@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - RandomDataGenerator
@@ -17,7 +17,7 @@ module Phaser {
         * @param {Array} seeds
         * @return {Phaser.RandomDataGenerator}
         */
-        constructor(seeds: string[] = []) {
+        constructor(seeds: string[]= []) {
 
             this.sow(seeds);
 
@@ -55,7 +55,7 @@ module Phaser {
         * @method uint32
         * @private
         */
-        private uint32() {
+        private uint32(): number {
 
             return this.rnd.apply(this) * 0x100000000; // 2^32
 
@@ -65,7 +65,7 @@ module Phaser {
         * @method fract32
         * @private
         */
-        private fract32() {
+        private fract32(): number {
 
             return this.rnd.apply(this) + (this.rnd.apply(this) * 0x200000 | 0) * 1.1102230246251565e-16; // 2^-53
 
@@ -76,7 +76,7 @@ module Phaser {
         * @method rnd
         * @private
         */
-        private rnd() {
+        private rnd(): number {
 
             var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10; // 2^-32
 
@@ -122,7 +122,7 @@ module Phaser {
         * @method sow
         * @param {Array} seeds
         */
-        public sow(seeds: string[] = []) {
+        public sow(seeds: string[]= []) {
 
             this.s0 = this.hash(' ');
             this.s1 = this.hash(this.s0);
@@ -230,7 +230,7 @@ module Phaser {
                 b = a = '';
                 a++ < 36;
                 b += ~a % 5 | a * 3 & 4 ? (a ^ 15 ? 8 ^ this.frac * (a ^ 20 ? 16 : 4) : 4).toString(16) : '-'
-            );
+                );
 
             return b;
         }

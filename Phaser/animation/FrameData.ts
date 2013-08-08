@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - FrameData
@@ -23,7 +23,7 @@ module Phaser {
         /**
          * Local frame container.
          */
-        private _frames: Frame[];
+        private _frames: Phaser.Frame[];
 
         /**
          * Local frameName<->index container.
@@ -39,7 +39,7 @@ module Phaser {
          * @param frame {Frame} The frame you want to add.
          * @return {Frame} The frame you just added.
          */
-        public addFrame(frame: Frame): Frame {
+        public addFrame(frame: Phaser.Frame): Phaser.Frame {
 
             frame.index = this._frames.length;
 
@@ -75,7 +75,7 @@ module Phaser {
          * @param name {string} Name of the frame you want to get.
          * @return {Frame} The frame you want.
          */
-        public getFrameByName(name: string): Frame {
+        public getFrameByName(name: string): Phaser.Frame {
 
             if (this._frameNames[name] !== '')
             {
@@ -93,7 +93,6 @@ module Phaser {
          */
         public checkFrameName(name: string): boolean {
 
-
             if (this._frameNames[name] == null)
             {
                 return false;
@@ -110,7 +109,7 @@ module Phaser {
          * @param [output] {Frame[]} result will be added into this array.
          * @return {Frame[]} Ranges of specific frames in an array.
          */
-        public getFrameRange(start: number, end: number, output: Frame[] = []): Frame[] {
+        public getFrameRange(start: number, end: number, output: Phaser.Frame[]= []): Phaser.Frame[] {
 
             for (var i = start; i <= end; i++)
             {
@@ -164,7 +163,7 @@ module Phaser {
          * Get all frames in this frame data.
          * @return {Frame[]} All the frames in an array.
          */
-        public getAllFrames(): Frame[] {
+        public getAllFrames(): Phaser.Frame[] {
             return this._frames;
         }
 
@@ -175,7 +174,7 @@ module Phaser {
          */
         public getFrames(range: number[]) {
 
-            var output: Frame[] = [];
+            var output: Phaser.Frame[] = [];
 
             for (var i = 0; i < range.length; i++)
             {

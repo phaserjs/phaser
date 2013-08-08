@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - RequestAnimationFrame
@@ -15,7 +15,7 @@ module Phaser {
         * @param {Any} callback
         * @return {RequestAnimationFrame} This object.
         */
-        constructor(game: Game, callback) {
+        constructor(game: Phaser.Game, callback) {
 
             this.game = game;
             this.callback = callback;
@@ -35,7 +35,7 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
         * The function to be called each frame. Will be called in the context of _game

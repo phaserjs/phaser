@@ -1,9 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../gameobjects/Sprite.ts" />
-/// <reference path="../loader/AnimationLoader.ts" />
-/// <reference path="Animation.ts" />
-/// <reference path="Frame.ts" />
-/// <reference path="FrameData.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - AnimationManager
@@ -33,7 +28,7 @@ module Phaser.Components {
         /**
          * Reference to Phaser.Game
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Local private reference to its parent game object.

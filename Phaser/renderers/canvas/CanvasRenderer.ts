@@ -1,14 +1,4 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/Sprite.ts" />
-/// <reference path="../../gameobjects/ScrollZone.ts" />
-/// <reference path="../../cameras/Camera.ts" />
-/// <reference path="../IRenderer.ts" />
-/// <reference path="CameraRenderer.ts" />
-/// <reference path="GeometryRenderer.ts" />
-/// <reference path="GroupRenderer.ts" />
-/// <reference path="ScrollZoneRenderer.ts" />
-/// <reference path="SpriteRenderer.ts" />
-/// <reference path="TilemapRenderer.ts" />
+/// <reference path="../../_definitions.ts" />
 
 module Phaser.Renderer.Canvas {
 
@@ -18,12 +8,12 @@ module Phaser.Renderer.Canvas {
 
             this.game = game;
 
-            this.cameraRenderer = new CameraRenderer(game);
-            this.groupRenderer = new GroupRenderer(game);
-            this.spriteRenderer = new SpriteRenderer(game);
-            this.geometryRenderer = new GeometryRenderer(game);
-            this.scrollZoneRenderer = new ScrollZoneRenderer(game);
-            this.tilemapRenderer = new TilemapRenderer(game);
+            this.cameraRenderer = new Phaser.Renderer.Canvas.CameraRenderer(game);
+            this.groupRenderer = new Phaser.Renderer.Canvas.GroupRenderer(game);
+            this.spriteRenderer = new Phaser.Renderer.Canvas.SpriteRenderer(game);
+            this.geometryRenderer = new Phaser.Renderer.Canvas.GeometryRenderer(game);
+            this.scrollZoneRenderer = new Phaser.Renderer.Canvas.ScrollZoneRenderer(game);
+            this.tilemapRenderer = new Phaser.Renderer.Canvas.TilemapRenderer(game);
 
         }
 
@@ -31,7 +21,7 @@ module Phaser.Renderer.Canvas {
 
         private _c: number = 0;
         private _cameraList: Phaser.Camera[];
-        private _camera: Camera;
+        private _camera: Phaser.Camera;
 
         public cameraRenderer: Phaser.Renderer.Canvas.CameraRenderer;
         public groupRenderer: Phaser.Renderer.Canvas.GroupRenderer;
@@ -65,7 +55,7 @@ module Phaser.Renderer.Canvas {
 
         }
 
-        public renderGameObject(camera, object) {
+        public renderGameObject(camera:Phaser.Camera, object) {
 
             if (object.type == Types.SPRITE || object.type == Types.BUTTON)
             {

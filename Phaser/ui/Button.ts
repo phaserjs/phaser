@@ -1,11 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../math/Vec2.ts" />
-/// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../animation/AnimationManager.ts" />
-/// <reference path="../input/InputHandler.ts" />
-/// <reference path="../display/Texture.ts" />
-/// <reference path="../gameobjects/TransformManager.ts" />
-/// <reference path="../gameobjects/Events.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - UI - Button
@@ -13,7 +6,7 @@
 
 module Phaser.UI {
 
-    export class Button extends Sprite {
+    export class Button extends Phaser.Sprite {
 
         /**
          * Create a new <code>Button</code> object.
@@ -28,7 +21,7 @@ module Phaser.UI {
          * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
          * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
          */
-        constructor(game: Game, x: number = 0, y: number = 0, key: string = null, callback = null, callbackContext = null, overFrame = null, outFrame = null, downFrame = null) {
+        constructor(game: Phaser.Game, x: number = 0, y: number = 0, key: string = null, callback = null, callbackContext = null, overFrame = null, outFrame = null, downFrame = null) {
 
             super(game, x, y, key, outFrame);
 
@@ -120,8 +113,8 @@ module Phaser.UI {
 
         //  ENTER or SPACE can activate this button if it has focus
 
-        private onInputOverHandler(pointer:Phaser.Pointer) {
-            
+        private onInputOverHandler(pointer: Phaser.Pointer) {
+
             if (this._onOverFrameName != null)
             {
                 this.frameName = this._onOverFrameName;
@@ -138,7 +131,7 @@ module Phaser.UI {
 
         }
 
-        private onInputOutHandler(pointer:Phaser.Pointer) {
+        private onInputOutHandler(pointer: Phaser.Pointer) {
 
             if (this._onOutFrameName != null)
             {
@@ -156,7 +149,7 @@ module Phaser.UI {
 
         }
 
-        private onInputDownHandler(pointer:Phaser.Pointer) {
+        private onInputDownHandler(pointer: Phaser.Pointer) {
 
             //console.log('Button onInputDownHandler: ' + Date.now());
 
@@ -176,7 +169,7 @@ module Phaser.UI {
 
         }
 
-        private onInputUpHandler(pointer:Phaser.Pointer) {
+        private onInputUpHandler(pointer: Phaser.Pointer) {
 
             //console.log('Button onInputUpHandler: ' + Date.now());
 

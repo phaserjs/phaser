@@ -30,10 +30,14 @@ Future Plans
 * Basic Window UI component (maybe a propogating Group?)
 * Add clip support + shape options to Texture Component.
 * Tilemap: remove tiles of a certain type, replace tile with sprite, change layer order
+* Joypad support
+* Gestures input class
 
 ToDo before release
 -------------------
 
+* Move embedded Phaser logo outside
+* Put Device.getAll elsewhere (plugin? utils?)
 * Investigate bug re: tilemap collision and animation frames
 * Allow camera to directly render to the stage rather than hidden ctx (maybe does this by default? or have under Mobile Optimisations list)
 * Sprite collision events
@@ -47,7 +51,6 @@ ToDo before release
 * Pixel-perfect click check
 * Check Flash atlas export is supported
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
-* TypeScript 0.9.1 update!
 
 Latest Update
 -------------
@@ -157,7 +160,8 @@ V1.0.0
 * Added Sprite.transform.centerOn(x,y) to quickly center a sprite on a coordinate without messing with the sprite origin and regardless of rotation.
 * Added Input.pollRate - this lets you limit how often Pointer events are handled (0 = every frame, 1 = every other frame, etc)
 * Renamed the 'init' function to 'preload'. It now calls load.start automatically.
-* Added 
+* Entire framework updated for TypeScript 0.9.1 - what a mammoth amount of work that was! Sorry but not backward compatible.
+
 
 V0.9.6
 

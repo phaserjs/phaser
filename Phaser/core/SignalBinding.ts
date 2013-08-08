@@ -1,4 +1,4 @@
-/// <reference path="Signal.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - SignalBinding

@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../utils/SpriteUtils.ts" />
-/// <reference path="DynamicTexture.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Display - Texture
@@ -54,7 +52,7 @@ module Phaser.Display {
         /**
          * Reference to Phaser.Game
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Reference to the parent object (Sprite, Group, etc)
@@ -70,7 +68,7 @@ module Phaser.Display {
          * Reference to the DynamicTexture that is used as the texture for the Sprite.
          * @type {DynamicTexture}
          */
-        public dynamicTexture: DynamicTexture = null;
+        public dynamicTexture: Phaser.Display.DynamicTexture = null;
 
         /**
         * The load status of the texture image.
@@ -178,7 +176,7 @@ module Phaser.Display {
         *
         * @param object {Camera} The camera this object should ignore.
         */
-        public hideFromCamera(camera: Camera) {
+        public hideFromCamera(camera: Phaser.Camera) {
 
             if (this.isHidden(camera) == false)
             {
@@ -191,7 +189,7 @@ module Phaser.Display {
         /**
          * Returns true if this texture is hidden from rendering to the given camera, otherwise false.
          */
-        public isHidden(camera: Camera): boolean {
+        public isHidden(camera: Phaser.Camera): boolean {
 
             if (this._blacklist && this.cameraBlacklist.indexOf(camera.ID) !== -1)
             {
@@ -208,7 +206,7 @@ module Phaser.Display {
         *
         * @param object {Sprite/Group} The object this camera should display.
         */
-        public showToCamera(camera: Camera) {
+        public showToCamera(camera: Phaser.Camera) {
 
             if (this.isHidden(camera))
             {
@@ -222,7 +220,7 @@ module Phaser.Display {
          * Updates the texture being used to render the Sprite.
          * Called automatically by SpriteUtils.loadTexture and SpriteUtils.loadDynamicTexture.
          */
-        public setTo(image = null, dynamic: DynamicTexture = null) {
+        public setTo(image = null, dynamic: Phaser.Display.DynamicTexture = null) {
 
             if (dynamic)
             {

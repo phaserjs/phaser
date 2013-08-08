@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="Pointer.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - MSPointer
@@ -29,7 +28,7 @@ module Phaser {
         * @property game
         * @type Game
         **/
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
         * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.

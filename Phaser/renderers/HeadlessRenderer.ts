@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../cameras/Camera.ts" />
-/// <reference path="IRenderer.ts" />
+/// <reference path="../_definitions.ts" />
 
 module Phaser.Renderer.Headless {
 

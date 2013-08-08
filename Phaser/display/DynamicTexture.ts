@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../utils/RectangleUtils.ts" />
-/// <reference path="../utils/ColorUtils.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Display - DynamicTexture
@@ -11,7 +9,7 @@
 * once and have them replicated across as many game objects as you like.
 */
 
-module Phaser {
+module Phaser.Display {
 
     export class DynamicTexture {
 
@@ -26,7 +24,7 @@ module Phaser {
         constructor(game: Game, width: number, height: number) {
 
             this.game = game;
-            this.type = Phaser.Types.GEOMSPRITE;
+            this.type = Phaser.Types.DYNAMICTEXTURE;
 
             this.canvas = <HTMLCanvasElement> document.createElement('canvas');
             this.canvas.width = width;
@@ -42,7 +40,7 @@ module Phaser {
         /**
          * Reference to game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * The type of game object.
@@ -71,7 +69,7 @@ module Phaser {
          * Bound of this texture with width and height info.
          * @type {Rectangle}
          */
-        public bounds: Rectangle;
+        public bounds: Phaser.Rectangle;
 
         /**
          * This class is actually a wrapper of canvas.
@@ -107,7 +105,7 @@ module Phaser {
             //a = imageData.data[3];
             var imageData = this.context.getImageData(x, y, 1, 1);
 
-            return ColorUtils.getColor(imageData.data[0], imageData.data[1], imageData.data[2]);
+            return Phaser.ColorUtils.getColor(imageData.data[0], imageData.data[1], imageData.data[2]);
 
         }
 
@@ -121,7 +119,7 @@ module Phaser {
 
             var imageData = this.context.getImageData(x, y, 1, 1);
 
-            return ColorUtils.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
+            return Phaser.ColorUtils.getColor32(imageData.data[3], imageData.data[0], imageData.data[1], imageData.data[2]);
 
         }
 
@@ -130,7 +128,7 @@ module Phaser {
          * @param rect {Rectangle} The specific Rectangle.
          * @returns {array} CanvasPixelArray.
          */
-        public getPixels(rect: Rectangle) {
+        public getPixels(rect: Phaser.Rectangle) {
 
             return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
 
@@ -167,7 +165,7 @@ module Phaser {
          * @param rect {Rectangle} Target Rectangle.
          * @param input {object} Source image data.
          */
-        public setPixels(rect: Rectangle, input) {
+        public setPixels(rect: Phaser.Rectangle, input) {
 
             this.context.putImageData(input, rect.x, rect.y);
 
@@ -178,7 +176,7 @@ module Phaser {
          * @param rect {Rectangle} Target Rectangle you want to fill.
          * @param color {number} A native number with color value. (format: 0xRRGGBB)
          */
-        public fillRect(rect: Rectangle, color: number) {
+        public fillRect(rect: Phaser.Rectangle, color: number) {
 
             this.context.fillStyle = color;
             this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
@@ -250,7 +248,7 @@ module Phaser {
          * @param sourceRect {Rectangle} The specific region Rectangle to be copied to this in the source.
          * @param destPoint {Point} Top-left point the target image data will be paste at.
          */
-        public copyPixels(sourceTexture: DynamicTexture, sourceRect: Rectangle, destPoint: Point) {
+        public copyPixels(sourceTexture: Phaser.Display.DynamicTexture, sourceRect: Phaser.Rectangle, destPoint: Phaser.Point) {
 
             //  Swap for drawImage if the sourceRect is the same size as the sourceTexture to avoid a costly getImageData call
             if (Phaser.RectangleUtils.equals(sourceRect, this.bounds) == true)
@@ -264,7 +262,7 @@ module Phaser {
 
         }
 
-        public add(sprite: Sprite) {
+        public add(sprite: Phaser.Sprite) {
 
             sprite.texture.canvas = this.canvas;
             sprite.texture.context = this.context;

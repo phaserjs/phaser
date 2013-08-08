@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="Sound.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - SoundManager
@@ -14,7 +13,7 @@ module Phaser {
          * SoundManager constructor
          * Create a new <code>SoundManager</code>.
          */
-        constructor(game: Game) {
+        constructor(game: Phaser.Game) {
 
             this.game = game;
 
@@ -29,7 +28,6 @@ module Phaser {
 
             if (this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
             {
-                //console.log('iOS Touch Locked');
                 this.game.input.touch.callbackContext = this;
                 this.game.input.touch.touchStartCallback = this.unlock;
                 this.game.input.mouse.callbackContext = this;
@@ -109,7 +107,7 @@ module Phaser {
         /**
          * Local reference to the current Phaser.Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Reference to AudioContext instance.
@@ -149,7 +147,6 @@ module Phaser {
 
             if (this.game.device.webAudio && (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == false))
             {
-                //console.log('create empty buffer');
                 // Create empty buffer and play it
                 var buffer = this.context.createBuffer(1, 1, 22050);
                 this._unlockSource = this.context.createBufferSource();
@@ -160,7 +157,6 @@ module Phaser {
             else
             {
                 //  Create an Audio tag?
-                //console.log('create audio tag');
                 this.touchLocked = false;
                 this._unlockSource = null;
                 this.game.input.touch.callbackContext = null;
@@ -179,8 +175,6 @@ module Phaser {
         }
 
         public set mute(value: boolean) {
-
-            console.log('SoundManager mute', value);
 
             if (value)
             {

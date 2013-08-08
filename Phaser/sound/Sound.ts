@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="SoundManager.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Sound
@@ -69,7 +68,7 @@ module Phaser {
 
         }
 
-        private soundHasUnlocked(key:string) {
+        private soundHasUnlocked(key: string) {
 
             if (key == this.key)
             {
@@ -83,7 +82,7 @@ module Phaser {
         /**
          * Local reference to the current Phaser.Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Reference to AudioContext instance.
@@ -312,10 +311,10 @@ module Phaser {
 
                     //if (this._sound == null)
                     //{
-                        this._sound = this.context.createBufferSource();
-                        this._sound.buffer = this._buffer;
-                        this._sound.connect(this.gainNode);
-                        this.totalDuration = this._sound.buffer.duration;
+                    this._sound = this.context.createBufferSource();
+                    this._sound.buffer = this._buffer;
+                    this._sound.connect(this.gainNode);
+                    this.totalDuration = this._sound.buffer.duration;
                     //}
 
                     if (this.duration == 0)
@@ -480,7 +479,7 @@ module Phaser {
 
             this.isPlaying = false;
 
-            var prevMarker:string = this.currentMarker;
+            var prevMarker: string = this.currentMarker;
 
             this.currentMarker = '';
 

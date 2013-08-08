@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="Tween.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - TweenManager

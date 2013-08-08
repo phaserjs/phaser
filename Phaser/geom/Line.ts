@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Line
@@ -239,7 +239,7 @@ module Phaser {
         * @param {Any} line
         * @return {Any}
         */
-        public intersectLineLine(line): any {
+        public intersectLineLine(line) {
             //return Phaser.intersectLineLine(this,line);
         }
 

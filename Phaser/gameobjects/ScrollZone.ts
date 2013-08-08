@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../geom/Rectangle.ts" />
-/// <reference path="ScrollRegion.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - ScrollZone
@@ -62,13 +60,13 @@ module Phaser {
          * Current region this zone is scrolling.
          * @type {ScrollRegion}
          */
-        public currentRegion: ScrollRegion;
+        public currentRegion: Phaser.ScrollRegion;
 
         /**
          * Array contains all added regions.
          * @type {ScrollRegion[]}
          */
-        public regions: ScrollRegion[];
+        public regions: Phaser.ScrollRegion[];
 
         /**
          * Add a new region to this zone.
@@ -80,7 +78,7 @@ module Phaser {
          * @param [speedY] {number} y-axis scrolling speed.
          * @return {ScrollRegion} The newly added region.
          */
-        public addRegion(x: number, y: number, width: number, height: number, speedX:number = 0, speedY:number = 0):ScrollRegion {
+        public addRegion(x: number, y: number, width: number, height: number, speedX: number = 0, speedY: number = 0): Phaser.ScrollRegion {
 
             if (x > this.width || y > this.height || x < 0 || y < 0 || (x + width) > this.width || (y + height) > this.height)
             {
@@ -88,7 +86,7 @@ module Phaser {
                 return null;
             }
 
-            this.currentRegion = new ScrollRegion(x, y, width, height, speedX, speedY);
+            this.currentRegion = new Phaser.ScrollRegion(x, y, width, height, speedX, speedY);
 
             this.regions.push(this.currentRegion);
 
@@ -134,7 +132,7 @@ module Phaser {
             var tileWidth = Math.ceil(this.width / regionWidth) * regionWidth;
             var tileHeight = Math.ceil(this.height / regionHeight) * regionHeight;
 
-            var dt: DynamicTexture = new DynamicTexture(this.game, tileWidth, tileHeight);
+            var dt: Phaser.Display.DynamicTexture = new Phaser.Display.DynamicTexture(this.game, tileWidth, tileHeight);
 
             dt.context.rect(0, 0, tileWidth, tileHeight);
             dt.context.fillStyle = dt.context.createPattern(this.texture.imageTexture, "repeat");

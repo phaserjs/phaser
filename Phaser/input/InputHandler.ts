@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../utils/SpriteUtils.ts" />
-/// <reference path="../utils/RectangleUtils.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Components - InputHandler
@@ -27,7 +25,7 @@ module Phaser.Components {
         /**
          * Reference to Phaser.Game
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Local private reference to its parent game object.
@@ -551,7 +549,7 @@ module Phaser.Components {
 		 * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
 		 * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
 		 */
-        public enableDrag(lockCenter: boolean = false, bringToTop: boolean = false, pixelPerfect: boolean = false, alphaThreshold: number = 255, boundsRect: Rectangle = null, boundsSprite: Phaser.Sprite = null): void {
+        public enableDrag(lockCenter: boolean = false, bringToTop: boolean = false, pixelPerfect: boolean = false, alphaThreshold: number = 255, boundsRect: Rectangle = null, boundsSprite: Phaser.Sprite = null) {
             this._dragPoint = new Point;
 
             this.draggable = true;
@@ -576,7 +574,7 @@ module Phaser.Components {
         /**
 		 * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
 		 */
-        public disableDrag(): void {
+        public disableDrag() {
 
             if (this._pointerData)
             {
@@ -595,7 +593,7 @@ module Phaser.Components {
         /**
 		 * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
 		 */
-        public startDrag(pointer: Pointer): void {
+        public startDrag(pointer: Pointer) {
 
             this.isDragged = true;
             this._draggedPointerID = pointer.id;
@@ -625,7 +623,7 @@ module Phaser.Components {
         /**
 		 * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
 		 */
-        public stopDrag(pointer: Pointer): void {
+        public stopDrag(pointer: Pointer) {
 
             this.isDragged = false;
             this._draggedPointerID = -1;
@@ -648,7 +646,7 @@ module Phaser.Components {
 		 * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
 		 * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
 		 */
-        public setDragLock(allowHorizontal: boolean = true, allowVertical: boolean = true): void {
+        public setDragLock(allowHorizontal: boolean = true, allowVertical: boolean = true) {
             this.allowHorizontalDrag = allowHorizontal;
             this.allowVerticalDrag = allowVertical;
         }
@@ -662,7 +660,7 @@ module Phaser.Components {
 		 * @param	onDrag		If true the sprite will snap to the grid while being dragged
 		 * @param	onRelease	If true the sprite will snap to the grid when released
 		 */
-        public enableSnap(snapX: number, snapY: number, onDrag: boolean = true, onRelease: boolean = false): void {
+        public enableSnap(snapX: number, snapY: number, onDrag: boolean = true, onRelease: boolean = false) {
             this.snapOnDrag = onDrag;
             this.snapOnRelease = onRelease;
             this.snapX = snapX;
@@ -672,7 +670,7 @@ module Phaser.Components {
         /**
 		 * Stops the sprite from snapping to a grid during drag or release.
 		 */
-        public disableSnap(): void {
+        public disableSnap() {
             this.snapOnDrag = false;
             this.snapOnRelease = false;
         }
@@ -680,7 +678,7 @@ module Phaser.Components {
         /**
 		 * Bounds Rect check for the sprite drag
 		 */
-        private checkBoundsRect(): void {
+        private checkBoundsRect() {
             if (this._parent.x < this.boundsRect.left)
             {
                 this._parent.x = this.boundsRect.x;
@@ -703,7 +701,7 @@ module Phaser.Components {
         /**
 		 * Parent Sprite Bounds check for the sprite drag
 		 */
-        private checkBoundsSprite(): void {
+        private checkBoundsSprite() {
             if (this._parent.x < this.boundsSprite.x)
             {
                 this._parent.x = this.boundsSprite.x;

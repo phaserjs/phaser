@@ -1,12 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../tweens/Tween.ts" />
-/// <reference path="../particles/ArcadeEmitter.ts" />
-/// <reference path="../particles/ArcadeParticle.ts" />
-/// <reference path="../gameobjects/Sprite.ts" />
-/// <reference path="../ui/Button.ts" />
-/// <reference path="../gameobjects/ScrollZone.ts" />
-/// <reference path="../display/DynamicTexture.ts" />
-/// <reference path="../tilemap/Tilemap.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - GameObjectFactory
@@ -48,7 +40,7 @@ module Phaser {
          * @param height {number} Height of the new camera.
          * @returns {Camera} The newly created camera object.
          */
-        public camera(x: number, y: number, width: number, height: number): Camera {
+        public camera(x: number, y: number, width: number, height: number): Phaser.Camera {
             return this._world.cameras.addCamera(x, y, width, height);
         }
 
@@ -76,8 +68,8 @@ module Phaser {
          * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
          * @returns {Button} The newly created button object.
          */
-        public button(x: number = 0, y: number = 0, key: string = null, callback = null, callbackContext = null, overFrame = null, outFrame = null, downFrame = null): UI.Button {
-            return <UI.Button> this._world.group.add(new UI.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        public button(x: number = 0, y: number = 0, key: string = null, callback = null, callbackContext = null, overFrame = null, outFrame = null, downFrame = null): Phaser.UI.Button {
+            return <Phaser.UI.Button> this._world.group.add(new Phaser.UI.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
         }
 
         /**
@@ -89,12 +81,12 @@ module Phaser {
          * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
          * @returns {Sprite} The newly created sprite object.
          */
-        public sprite(x: number, y: number, key: string = '', frame = null): Sprite {
-            return <Sprite> this._world.group.add(new Sprite(this.game, x, y, key, frame));
+        public sprite(x: number, y: number, key: string = '', frame = null): Phaser.Sprite {
+            return <Phaser.Sprite> this._world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
         }
 
-        public audio(key: string, volume: number = 1, loop: boolean = false) {
-            return <Sound> this.game.sound.add(key, volume, loop);
+        public audio(key: string, volume: number = 1, loop: boolean = false): Phaser.Sound {
+            return <Phaser.Sound> this.game.sound.add(key, volume, loop);
         }
 
         /**
@@ -119,8 +111,8 @@ module Phaser {
          * @param height {number} Height of the texture.
          * @returns {DynamicTexture} The newly created dynamic texture object.
          */
-        public dynamicTexture(width: number, height: number): DynamicTexture {
-            return new DynamicTexture(this.game, width, height);
+        public dynamicTexture(width: number, height: number): Phaser.Display.DynamicTexture {
+            return new Phaser.Display.DynamicTexture(this.game, width, height);
         }
 
         /**
@@ -129,8 +121,8 @@ module Phaser {
          * @param maxSize {number} Optional, capacity of this group.
          * @returns {Group} The newly created group.
          */
-        public group(maxSize: number = 0): Group {
-            return <Group> this._world.group.add(new Group(this.game, maxSize));
+        public group(maxSize: number = 0): Phaser.Group {
+            return <Phaser.Group> this._world.group.add(new Phaser.Group(this.game, maxSize));
         }
 
         /**
@@ -138,9 +130,9 @@ module Phaser {
          *
          * @return {Particle} The newly created particle object.
          */
-        public particle(): ArcadeParticle {
-            return new ArcadeParticle(this.game);
-        }
+        //public particle(): ArcadeParticle {
+        //    return new ArcadeParticle(this.game);
+        //}
 
         /**
          * Create a new Emitter.
@@ -150,9 +142,9 @@ module Phaser {
          * @param size {number} Optional, size of this emitter.
          * @return {Emitter} The newly created emitter object.
          */
-        public emitter(x: number = 0, y: number = 0, size: number = 0): ArcadeEmitter {
-            return <ArcadeEmitter> this._world.group.add(new ArcadeEmitter(this.game, x, y, size));
-        }
+        //public emitter(x: number = 0, y: number = 0, size: number = 0): ArcadeEmitter {
+        //    return <ArcadeEmitter> this._world.group.add(new ArcadeEmitter(this.game, x, y, size));
+        //}
 
         /**
          * Create a new ScrollZone object with image key, position and size.
@@ -164,8 +156,8 @@ module Phaser {
          * @param height {number} Height of this object.
          * @returns {ScrollZone} The newly created scroll zone object.
          */
-        public scrollZone(key: string, x: number = 0, y: number = 0, width: number = 0, height: number = 0): ScrollZone {
-            return <ScrollZone> this._world.group.add(new ScrollZone(this.game, key, x, y, width, height));
+        public scrollZone(key: string, x: number = 0, y: number = 0, width: number = 0, height: number = 0): Phaser.ScrollZone {
+            return <Phaser.ScrollZone> this._world.group.add(new Phaser.ScrollZone(this.game, key, x, y, width, height));
         }
 
         /**
@@ -179,8 +171,8 @@ module Phaser {
          * @param [tileHeight] {number} height of each tile.
          * @return {Tilemap} The newly created tilemap object.
          */
-        public tilemap(key: string, mapData: string, format: number, resizeWorld: boolean = true, tileWidth: number = 0, tileHeight: number = 0): Tilemap {
-            return <Tilemap> this._world.group.add(new Tilemap(this.game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
+        public tilemap(key: string, mapData: string, format: number, resizeWorld: boolean = true, tileWidth: number = 0, tileHeight: number = 0): Phaser.Tilemap {
+            return <Phaser.Tilemap> this._world.group.add(new Phaser.Tilemap(this.game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
         }
 
         /**
@@ -190,7 +182,7 @@ module Phaser {
          * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
          * @return {Phaser.Tween} The newly created tween object.
          */
-        public tween(obj, localReference:boolean = false): Tween {
+        public tween(obj, localReference: boolean = false): Phaser.Tween {
             return this.game.tweens.create(obj, localReference);
         }
 
@@ -201,7 +193,7 @@ module Phaser {
          * @param sprite The Sprite to add to the Game World
          * @return {Phaser.Sprite} The Sprite object
          */
-        public existingSprite(sprite: Sprite): Sprite {
+        public existingSprite(sprite: Phaser.Sprite): Phaser.Sprite {
             return this._world.group.add(sprite);
         }
 
@@ -212,7 +204,7 @@ module Phaser {
          * @param group The Group to add to the Game World
          * @return {Phaser.Group} The Group object
          */
-        public existingGroup(group: Group): Group {
+        public existingGroup(group: Phaser.Group): Phaser.Group {
             return this._world.group.add(group);
         }
 
@@ -223,7 +215,7 @@ module Phaser {
          * @param button The Button to add to the Game World
          * @return {Phaser.Button} The Button object
          */
-        public existingButton(button: UI.Button): UI.Button {
+        public existingButton(button: Phaser.UI.Button): Phaser.UI.Button {
             return this._world.group.add(button);
         }
 
@@ -245,9 +237,9 @@ module Phaser {
          * @param emitter The Emitter to add to the Game World
          * @return {Phaser.Emitter} The Emitter object
          */
-        public existingEmitter(emitter: ArcadeEmitter): ArcadeEmitter {
-            return this._world.group.add(emitter);
-        }
+        //public existingEmitter(emitter: ArcadeEmitter): ArcadeEmitter {
+        //    return this._world.group.add(emitter);
+        //}
 
         /**
          * Add an existing ScrollZone to the current world.
@@ -256,7 +248,7 @@ module Phaser {
          * @param scrollZone The ScrollZone to add to the Game World
          * @return {Phaser.ScrollZone} The ScrollZone object
          */
-        public existingScrollZone(scrollZone: ScrollZone): ScrollZone {
+        public existingScrollZone(scrollZone: Phaser.ScrollZone): Phaser.ScrollZone {
             return this._world.group.add(scrollZone);
         }
 
@@ -267,7 +259,7 @@ module Phaser {
          * @param tilemap The Tilemap to add to the Game World
          * @return {Phaser.Tilemap} The Tilemap object
          */
-        public existingTilemap(tilemap: Tilemap): Tilemap {
+        public existingTilemap(tilemap: Phaser.Tilemap): Phaser.Tilemap {
             return this._world.group.add(tilemap);
         }
 
@@ -278,7 +270,7 @@ module Phaser {
          * @param tween The Tween to add to the Game World
          * @return {Phaser.Tween} The Tween object
          */
-        public existingTween(tween: Tween): Tween {
+        public existingTween(tween: Phaser.Tween): Phaser.Tween {
             return this.game.tweens.add(tween);
         }
 

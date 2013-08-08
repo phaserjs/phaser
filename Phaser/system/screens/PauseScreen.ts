@@ -1,4 +1,4 @@
-/// <reference path="../../Game.ts" />
+/// <reference path="../../_definitions.ts" />
 
 /**
 * Phaser - PauseScreen
@@ -17,7 +17,7 @@ module Phaser {
          * @param width {number} Screen canvas width.
          * @param height {number} Screen canvas height.
          */
-        constructor(game: Game, width: number, height: number) {
+        constructor(game: Phaser.Game, width: number, height: number) {
 
             this.game = game;
             this._canvas = <HTMLCanvasElement> document.createElement('canvas');
@@ -30,7 +30,7 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Canvas element used by engine.

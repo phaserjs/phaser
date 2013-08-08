@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 module Phaser {
 
@@ -7,7 +7,7 @@ module Phaser {
         /**
          * Reference to the main game object
          */
-        game: Game;
+        game: Phaser.Game;
 
         /**
          * The type of game object.
@@ -17,7 +17,7 @@ module Phaser {
         /**
          * The ID of the Group this Sprite belongs to.
          */
-        group: Group;
+        group: Phaser.Group;
 
         /**
          * The name of the Game Object. Typically not set by Phaser, but extremely useful for debugging / logic.
@@ -62,12 +62,12 @@ module Phaser {
         /**
          * Associated events
          */
-        events;
+        events: Phaser.Components.Events;
 
         /**
          * The input component
          */
-        input;
+        input: Phaser.Components.InputHandler;
 
         /**
          * The texture used to render.

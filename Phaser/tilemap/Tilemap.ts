@@ -1,6 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="TilemapLayer.ts" />
-/// <reference path="Tile.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Tilemap
@@ -70,7 +68,7 @@ module Phaser {
         /**
          * Reference to the main game object
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * The type of game object.
@@ -143,25 +141,25 @@ module Phaser {
          * Array contains tile objects of this map.
          * @type {Tile[]}
          */
-        public tiles : Tile[];
+        public tiles: Phaser.Tile[];
 
         /**
          * Array contains tilemap layer objects of this map.
          * @type {TilemapLayer[]}
          */
-        public layers : TilemapLayer[];
+        public layers : Phaser.TilemapLayer[];
 
         /**
          * Current tilemap layer.
          * @type {TilemapLayer}
          */
-        public currentLayer: TilemapLayer;
+        public currentLayer: Phaser.TilemapLayer;
 
         /**
          * The tilemap layer for collision.
          * @type {TilemapLayer}
          */
-        public collisionLayer: TilemapLayer;
+        public collisionLayer: Phaser.TilemapLayer;
 
         /**
          * Tilemap collision callback.
@@ -290,7 +288,7 @@ module Phaser {
 
             for (var i = 0; i < qty; i++)
             {
-                this.tiles.push(new Tile(this.game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
+                this.tiles.push(new Phaser.Tile(this.game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
             }
 
         }
@@ -359,7 +357,7 @@ module Phaser {
          * @param value {number} Index of the tile you want to get.
          * @return {Tile} The tile with given index.
          */
-        public getTileByIndex(value: number):Tile {
+        public getTileByIndex(value: number): Phaser.Tile {
 
             if (this.tiles[value])
             {
@@ -377,7 +375,7 @@ module Phaser {
          * @param [layer] {number} layer of this tile located.
          * @return {Tile} The tile with specific properties.
          */
-        public getTile(x: number, y: number, layer: number = this.currentLayer.ID):Tile {
+        public getTile(x: number, y: number, layer: number = this.currentLayer.ID): Phaser.Tile {
 
             return this.tiles[this.layers[layer].getTileIndex(x, y)];
 
@@ -390,7 +388,7 @@ module Phaser {
          * @param [layer] {number} layer of this tile located.
          * @return {Tile} The tile with specific properties.
          */
-        public getTileFromWorldXY(x: number, y: number, layer: number = this.currentLayer.ID):Tile {
+        public getTileFromWorldXY(x: number, y: number, layer: number = this.currentLayer.ID): Phaser.Tile {
 
             return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
 
@@ -401,7 +399,7 @@ module Phaser {
          * @param layer The layer to check, defaults to 0
          * @returns {Tile}
          */
-        public getTileFromInputXY(layer: number = this.currentLayer.ID):Tile {
+        public getTileFromInputXY(layer: number = this.currentLayer.ID): Phaser.Tile {
 
             return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.worldX, this.game.input.worldY)];
 
@@ -412,7 +410,7 @@ module Phaser {
          * @param object {GameObject} Tiles you want to get that overlaps this.
          * @return {array} Array with tiles information. (Each contains x, y and the tile.)
          */
-        public getTileOverlaps(object: Sprite) {
+        public getTileOverlaps(object: Phaser.Sprite) {
 
             return this.currentLayer.getTileOverlaps(object);
 
@@ -456,7 +454,7 @@ module Phaser {
          * @param object {GameObject} Target object you want to check.
          * @return {boolean} Return true if this collides with given object, otherwise return false.
          */
-        public collideGameObject(object: Sprite): boolean {
+        public collideGameObject(object: Phaser.Sprite): boolean {
 
             if (object.body.type == Types.BODY_DYNAMIC && object.exists == true && object.body.allowCollisions != Types.NONE)
             {

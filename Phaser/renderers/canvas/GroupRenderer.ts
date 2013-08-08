@@ -1,6 +1,4 @@
-/// <reference path="../../Game.ts" />
-/// <reference path="../../gameobjects/Sprite.ts" />
-/// <reference path="../../cameras/Camera.ts" />
+/// <reference path="../../_definitions.ts" />
 
 module Phaser.Renderer.Canvas {
 
@@ -30,7 +28,7 @@ module Phaser.Renderer.Canvas {
         private _sin: number = 0;
         private _cos: number = 1;
 
-        public preRender(camera: Camera, group: Group) {
+        public preRender(camera: Phaser.Camera, group: Phaser.Group) {
 
             if (group.visible == false || camera.transform.scale.x == 0 || camera.transform.scale.y == 0 || camera.texture.alpha < 0.1)
             {
@@ -98,7 +96,7 @@ module Phaser.Renderer.Canvas {
                     this._cos * this._fy,                               //  scale y
                     this._dx,                                           //  translate x
                     this._dy                                            //  translate y
-                );
+                    );
 
                 this._dx = -group.transform.origin.x;
                 this._dy = -group.transform.origin.y;
@@ -139,14 +137,14 @@ module Phaser.Renderer.Canvas {
                     this._dy, 			//	Destination Y
                     this._dw, 			//	Destination Width (always same as Source Width unless scaled)
                     this._dh			//	Destination Height (always same as Source Height unless scaled)
-                );
+                    );
             }
 
             return true;
 
         }
 
-        public postRender(camera: Camera, group: Group) {
+        public postRender(camera: Phaser.Camera, group: Phaser.Group) {
 
             if (group.modified || group.texture.globalCompositeOperation)
             {

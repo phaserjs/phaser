@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="Camera.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - CameraManager
@@ -21,7 +20,7 @@ module Phaser {
          * @param width {number} Width of the created camera.
          * @param height {number} Height of the created camera.
          */
-        constructor(game: Game, x: number, y: number, width: number, height: number) {
+        constructor(game: Phaser.Game, x: number, y: number, width: number, height: number) {
 
             this.game = game;
 
@@ -37,12 +36,12 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Local container for storing cameras.
          */
-        private _cameras: Camera[];
+        private _cameras: Phaser.Camera[];
 
         /**
          * Local container for storing cameras array length.
@@ -62,19 +61,19 @@ module Phaser {
         /**
          * Currently used camera.
          */
-        public current: Camera;
+        public current: Phaser.Camera;
 
         /**
          * The default created camera.
          */
-        public defaultCamera: Camera;
+        public defaultCamera: Phaser.Camera;
 
         /**
          * Get all the cameras.
          *
          * @returns {Camera[]} An array contains all the cameras.
          */
-        public getAll(): Camera[] {
+        public getAll(): Phaser.Camera[] {
             return this._cameras;
         }
 
@@ -111,9 +110,9 @@ module Phaser {
          * @param height {number} Height of the new camera.
          * @returns {Camera} The newly created camera object.
          */
-        public addCamera(x: number, y: number, width: number, height: number): Camera {
+        public addCamera(x: number, y: number, width: number, height: number): Phaser.Camera {
 
-            var newCam: Camera = new Camera(this.game, this._cameraLength, x, y, width, height);
+            var newCam: Phaser.Camera = new Phaser.Camera(this.game, this._cameraLength, x, y, width, height);
 
             this._cameraLength = this._cameras.push(newCam);
 
@@ -148,7 +147,7 @@ module Phaser {
 
         }
 
-        public swap(camera1: Camera, camera2: Camera, sort: boolean = true): boolean {
+        public swap(camera1: Phaser.Camera, camera2: Phaser.Camera, sort: boolean = true): boolean {
 
             if (camera1.ID == camera2.ID)
             {
@@ -169,7 +168,7 @@ module Phaser {
 
         }
 
-        public getCameraUnderPoint(x: number, y: number): Camera {
+        public getCameraUnderPoint(x: number, y: number): Phaser.Camera {
 
             //  Work through the cameras in reverse as they are rendered in array order
             //  Return the first camera we find matching the criteria
@@ -192,7 +191,7 @@ module Phaser {
          * @param {string} index The <code>string</code> name of the Camera variable you want to sort on. Default value is "z".
          * @param {number} order A <code>Group</code> constant that defines the sort order. Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
          */
-        public sort(index: string = 'z', order: number = Group.ASCENDING) {
+        public sort(index: string = 'z', order: number = Phaser.Types.SORT_ASCENDING) {
 
             this._sortIndex = index;
             this._sortOrder = order;

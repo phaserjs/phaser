@@ -1,8 +1,4 @@
-/// <reference path="Game.ts" />
-/// <reference path="cameras/CameraManager.ts" />
-/// <reference path="core/Group.ts" />
-/// <reference path="geom/Rectangle.ts" />
-/// <reference path="physics/Manager.ts" />
+/// <reference path="_definitions.ts" />
 
 /**
 * Phaser - World
@@ -25,38 +21,38 @@ module Phaser {
          * @param width {number} Width of the world bound.
          * @param height {number} Height of the world bound.
          */
-        constructor(game: Game, width: number, height: number) {
+        constructor(game: Phaser.Game, width: number, height: number) {
 
             this.game = game;
 
-            this.cameras = new CameraManager(this.game, 0, 0, width, height);
+            this.cameras = new Phaser.CameraManager(this.game, 0, 0, width, height);
 
-            this.bounds = new Rectangle(0, 0, width, height);
+            this.bounds = new Phaser.Rectangle(0, 0, width, height);
 
         }
 
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Camera manager of this world.
          * @type {CameraManager}
          */
-        public cameras: CameraManager;
+        public cameras: Phaser.CameraManager;
 
         /**
          * Object container stores every object created with `create*` methods.
          * @type {Group}
          */
-        public group: Group;
+        public group: Phaser.Group;
 
         /**
          * Bound of this world that objects can not escape from.
          * @type {Rectangle}
          */
-        public bounds: Rectangle;
+        public bounds: Phaser.Rectangle;
 
         /**
          * The Gravity of the World (defaults to 0,0, or no gravity at all)
@@ -79,7 +75,7 @@ module Phaser {
          */
         public boot() {
 
-            this.group = new Group(this.game, 0);
+            this.group = new Phaser.Group(this.game, 0);
 
         }
 
@@ -171,7 +167,7 @@ module Phaser {
          *
          * @returns {array} An array contains all the cameras.
          */
-        public getAllCameras(): Camera[] {
+        public getAllCameras(): Phaser.Camera[] {
             return this.cameras.getAll();
         }
 

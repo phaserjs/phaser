@@ -1,33 +1,4 @@
-/// <reference path="geom/Rectangle.ts" />
-/// <reference path="math/LinkedList.ts" />
-/// <reference path="math/QuadTree.ts" />
-/// <reference path="geom/Point.ts" />
-/// <reference path="math/Vec2.ts" />
-/// <reference path="geom/Circle.ts" />
-/// <reference path="core/Group.ts" />
-/// <reference path="core/Signal.ts" />
-/// <reference path="core/SignalBinding.ts" />
-/// <reference path="loader/Loader.ts" />
-/// <reference path="net/Net.ts" />
-/// <reference path="loader/Cache.ts" />
-/// <reference path="math/GameMath.ts" />
-/// <reference path="math/RandomDataGenerator.ts" />
-/// <reference path="cameras/CameraManager.ts" />
-/// <reference path="gameobjects/GameObjectFactory.ts" />
-/// <reference path="sound/SoundManager.ts" />
-/// <reference path="sound/Sound.ts" />
-/// <reference path="Stage.ts" />
-/// <reference path="time/TimeManager.ts" />
-/// <reference path="tweens/TweenManager.ts" />
-/// <reference path="World.ts" />
-/// <reference path="system/Device.ts" />
-/// <reference path="system/RequestAnimationFrame.ts" />
-/// <reference path="input/InputManager.ts" />
-/// <reference path="renderers/IRenderer.ts" />
-/// <reference path="renderers/HeadlessRenderer.ts" />
-/// <reference path="renderers/canvas/CanvasRenderer.ts" />
-/// <reference path="utils/DebugUtils.ts" />
-/// <reference path="core/PluginManager.ts" />
+/// <reference path="_definitions.ts" />
 
 /**
 * Phaser - Game
@@ -242,7 +213,7 @@ module Phaser {
          * @type {Time}
          */
         public time: Phaser.TimeManager;
-
+  
         /**
          * Reference to the tween manager.
          * @type {TweenManager}
@@ -259,7 +230,7 @@ module Phaser {
          * Reference to the physics manager.
          * @type {Physics.Manager}
          */
-        public physics: Phaser.Physics.Manager;
+        //public physics: Phaser.Physics.Manager;
 
         /**
          * Instance of repeatable random data generator helper.
@@ -272,7 +243,7 @@ module Phaser {
          * @type {Device}
          */
         public device: Phaser.Device;
-
+ 
         /**
          * Reference to the render manager
          * @type {RenderManager}
@@ -329,7 +300,7 @@ module Phaser {
                 this.input = new Phaser.InputManager(this);
                 this.sound = new Phaser.SoundManager(this);
                 this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
-                this.physics = new Phaser.Physics.Manager(this);
+                //this.physics = new Phaser.Physics.Manager(this);
                 this.plugins = new Phaser.PluginManager(this, this);
 
                 this.load.onLoadComplete.addOnce(this.loadComplete, this);
@@ -461,7 +432,6 @@ module Phaser {
             }
 
             this.plugins.postRender();
-
         }
 
         /**
@@ -707,7 +677,7 @@ module Phaser {
 
         }
 
-        public get camera(): Camera {
+        public get camera(): Phaser.Camera {
             return this.world.cameras.current;
         }
 

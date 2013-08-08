@@ -1,11 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../geom/Point.ts" />
-/// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../math/Vec2.ts" />
-/// <reference path="../display/Texture.ts" />
-/// <reference path="../gameobjects/TransformManager.ts" />
-/// <reference path="../gameobjects/Sprite.ts" />
-/// <reference path="../core/PluginManager.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Camera
@@ -70,7 +63,7 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * The PluginManager for the Game

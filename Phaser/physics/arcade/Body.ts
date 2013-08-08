@@ -1,7 +1,4 @@
-/// <reference path="../../math/Vec2.ts" />
-/// <reference path="../../geom/Point.ts" />
-/// <reference path="../../math/Vec2Utils.ts" />
-/// <reference path="ArcadePhysics.ts" />
+/// <reference path="../../_definitions.ts" />
 
 /**
 * Phaser - ArcadePhysics - Body
@@ -19,7 +16,7 @@ module Phaser.Physics {
 
             //  Fixture properties
             //  Will extend into its own class at a later date - can move the fixture defs there and add shape support, but this will do for 1.0 release
-            this.bounds = new Rectangle;
+            this.bounds = new Phaser.Rectangle;
 
             this._width = sprite.width;
             this._height = sprite.height;
@@ -29,29 +26,29 @@ module Phaser.Physics {
             //this.gravity = Vec2Utils.clone(ArcadePhysics.gravity);
             //this.bounce = Vec2Utils.clone(ArcadePhysics.bounce);
 
-            this.velocity = new Vec2;
-            this.acceleration = new Vec2;
+            this.velocity = new Phaser.Vec2;
+            this.acceleration = new Phaser.Vec2;
             //this.drag = Vec2Utils.clone(ArcadePhysics.drag);
-            this.maxVelocity = new Vec2(10000, 10000);
+            this.maxVelocity = new Phaser.Vec2(10000, 10000);
 
             this.angularVelocity = 0;
             this.angularAcceleration = 0;
             this.angularDrag = 0;
 
-            this.touching = Types.NONE;
-            this.wasTouching = Types.NONE;
-            this.allowCollisions = Types.ANY;
+            this.touching = Phaser.Types.NONE;
+            this.wasTouching = Phaser.Types.NONE;
+            this.allowCollisions = Phaser.Types.ANY;
 
-            this.position = new Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
-            this.oldPosition = new Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
-            this.offset = new Vec2;
+            this.position = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+            this.oldPosition = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+            this.offset = new Phaser.Vec2;
 
         }
 
         /**
          * Reference to Phaser.Game
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * Reference to the parent Sprite
@@ -68,13 +65,13 @@ module Phaser.Physics {
          */
         public type: number;
 
-        public gravity: Vec2;
-        public bounce: Vec2;
+        public gravity: Phaser.Vec2;
+        public bounce: Phaser.Vec2;
 
-        public velocity: Vec2;
-        public acceleration: Vec2;
-        public drag: Vec2;
-        public maxVelocity: Vec2;
+        public velocity: Phaser.Vec2;
+        public acceleration: Phaser.Vec2;
+        public drag: Phaser.Vec2;
+        public maxVelocity: Phaser.Vec2;
 
         public angularVelocity: number = 0;
         public angularAcceleration: number = 0;
@@ -92,12 +89,10 @@ module Phaser.Physics {
         public wasTouching: number;
         public mass: number = 1;
 
-        public position: Vec2;
-        public oldPosition: Vec2;
-        public offset: Vec2;
-        public bounds: Rectangle;
-
-
+        public position: Phaser.Vec2;
+        public oldPosition: Phaser.Vec2;
+        public offset: Phaser.Vec2;
+        public bounds: Phaser.Rectangle;
 
         private _width: number = 0;
         private _height: number = 0;

@@ -1,7 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="../geom/Point.ts" />
-/// <reference path="../geom/Rectangle.ts" />
-/// <reference path="../geom/Circle.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - ColorUtils
@@ -13,7 +10,7 @@ module Phaser {
 
     export class ColorUtils {
 
-        static game: Game;
+        static game: Phaser.Game;
 
         /**
          * Given an alpha and 3 color values this will return an integer representation of it
@@ -55,7 +52,7 @@ module Phaser {
 
             for (var c: number = 0; c <= 359; c++)
             {
-                colors[c] = ColorUtils.getWebRGB(ColorUtils.HSVtoRGB(c, 1.0, 1.0, alpha));
+                colors[c] = Phaser.ColorUtils.getWebRGB(Phaser.ColorUtils.HSVtoRGB(c, 1.0, 1.0, alpha));
             }
 
             return colors;
@@ -73,11 +70,11 @@ module Phaser {
 		 */
         public static getComplementHarmony(color: number): number {
 
-            var hsv: any = ColorUtils.RGBtoHSV(color);
+            var hsv: any = Phaser.ColorUtils.RGBtoHSV(color);
 
-            var opposite: number = ColorUtils.game.math.wrapValue(hsv.hue, 180, 359);
+            var opposite: number = Phaser.ColorUtils.game.math.wrapValue(hsv.hue, 180, 359);
 
-            return ColorUtils.HSVtoRGB(opposite, 1.0, 1.0);
+            return Phaser.ColorUtils.HSVtoRGB(opposite, 1.0, 1.0);
 
         }
 
@@ -93,17 +90,17 @@ module Phaser {
 		 */
         public static getAnalogousHarmony(color: number, threshold: number = 30) {
 
-            var hsv: any = ColorUtils.RGBtoHSV(color);
+            var hsv: any = Phaser.ColorUtils.RGBtoHSV(color);
 
             if (threshold > 359 || threshold < 0)
             {
                 throw Error("Color Warning: Invalid threshold given to getAnalogousHarmony()");
             }
 
-            var warmer: number = ColorUtils.game.math.wrapValue(hsv.hue, 359 - threshold, 359);
-            var colder: number = ColorUtils.game.math.wrapValue(hsv.hue, threshold, 359);
+            var warmer: number = Phaser.ColorUtils.game.math.wrapValue(hsv.hue, 359 - threshold, 359);
+            var colder: number = Phaser.ColorUtils.game.math.wrapValue(hsv.hue, threshold, 359);
 
-            return { color1: color, color2: ColorUtils.HSVtoRGB(warmer, 1.0, 1.0), color3: ColorUtils.HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
+            return { color1: color, color2: Phaser.ColorUtils.HSVtoRGB(warmer, 1.0, 1.0), color3: Phaser.ColorUtils.HSVtoRGB(colder, 1.0, 1.0), hue1: hsv.hue, hue2: warmer, hue3: colder }
 
         }
 
@@ -119,19 +116,19 @@ module Phaser {
 		 */
         public static getSplitComplementHarmony(color: number, threshold: number = 30): any {
 
-            var hsv: any = ColorUtils.RGBtoHSV(color);
+            var hsv: any = Phaser.ColorUtils.RGBtoHSV(color);
 
             if (threshold >= 359 || threshold <= 0)
             {
-                throw Error("ColorUtils Warning: Invalid threshold given to getSplitComplementHarmony()");
+                throw Error("Phaser.ColorUtils Warning: Invalid threshold given to getSplitComplementHarmony()");
             }
 
-            var opposite: number = ColorUtils.game.math.wrapValue(hsv.hue, 180, 359);
+            var opposite: number = Phaser.ColorUtils.game.math.wrapValue(hsv.hue, 180, 359);
 
-            var warmer: number = ColorUtils.game.math.wrapValue(hsv.hue, opposite - threshold, 359);
-            var colder: number = ColorUtils.game.math.wrapValue(hsv.hue, opposite + threshold, 359);
+            var warmer: number = Phaser.ColorUtils.game.math.wrapValue(hsv.hue, opposite - threshold, 359);
+            var colder: number = Phaser.ColorUtils.game.math.wrapValue(hsv.hue, opposite + threshold, 359);
 
-            return { color1: color, color2: ColorUtils.HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: ColorUtils.HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: hsv.hue, hue2: warmer, hue3: colder }
+            return { color1: color, color2: Phaser.ColorUtils.HSVtoRGB(warmer, hsv.saturation, hsv.value), color3: Phaser.ColorUtils.HSVtoRGB(colder, hsv.saturation, hsv.value), hue1: hsv.hue, hue2: warmer, hue3: colder }
         }
 
         /**
@@ -145,12 +142,12 @@ module Phaser {
 		 */
         public static getTriadicHarmony(color: number): any {
 
-            var hsv: any = ColorUtils.RGBtoHSV(color);
+            var hsv: any = Phaser.ColorUtils.RGBtoHSV(color);
 
-            var triadic1: number = ColorUtils.game.math.wrapValue(hsv.hue, 120, 359);
-            var triadic2: number = ColorUtils.game.math.wrapValue(triadic1, 120, 359);
+            var triadic1: number = Phaser.ColorUtils.game.math.wrapValue(hsv.hue, 120, 359);
+            var triadic2: number = Phaser.ColorUtils.game.math.wrapValue(triadic1, 120, 359);
 
-            return { color1: color, color2: ColorUtils.HSVtoRGB(triadic1, 1.0, 1.0), color3: ColorUtils.HSVtoRGB(triadic2, 1.0, 1.0) }
+            return { color1: color, color2: Phaser.ColorUtils.HSVtoRGB(triadic1, 1.0, 1.0), color3: Phaser.ColorUtils.HSVtoRGB(triadic2, 1.0, 1.0) }
 
         }
 
@@ -164,11 +161,11 @@ module Phaser {
 		 */
         public static getColorInfo(color: number): string {
 
-            var argb: any = ColorUtils.getRGB(color);
-            var hsl: any = ColorUtils.RGBtoHSV(color);
+            var argb: any = Phaser.ColorUtils.getRGB(color);
+            var hsl: any = Phaser.ColorUtils.RGBtoHSV(color);
 
             //	Hex format
-            var result: string = ColorUtils.RGBtoHexstring(color) + "\n";
+            var result: string = Phaser.ColorUtils.RGBtoHexstring(color) + "\n";
 
             //	RGB format
             result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
@@ -189,9 +186,9 @@ module Phaser {
 		 */
         public static RGBtoHexstring(color: number): string {
 
-            var argb: any = ColorUtils.getRGB(color);
+            var argb: any = Phaser.ColorUtils.getRGB(color);
 
-            return "0x" + ColorUtils.colorToHexstring(argb.alpha) + ColorUtils.colorToHexstring(argb.red) + ColorUtils.colorToHexstring(argb.green) + ColorUtils.colorToHexstring(argb.blue);
+            return "0x" + Phaser.ColorUtils.colorToHexstring(argb.alpha) + Phaser.ColorUtils.colorToHexstring(argb.red) + Phaser.ColorUtils.colorToHexstring(argb.green) + Phaser.ColorUtils.colorToHexstring(argb.blue);
 
         }
 
@@ -204,9 +201,9 @@ module Phaser {
 		 */
         public static RGBtoWebstring(color: number): string {
 
-            var argb: any = ColorUtils.getRGB(color);
+            var argb: any = Phaser.ColorUtils.getRGB(color);
 
-            return "#" + ColorUtils.colorToHexstring(argb.red) + ColorUtils.colorToHexstring(argb.green) + ColorUtils.colorToHexstring(argb.blue);
+            return "#" + Phaser.ColorUtils.colorToHexstring(argb.red) + Phaser.ColorUtils.colorToHexstring(argb.green) + Phaser.ColorUtils.colorToHexstring(argb.blue);
 
         }
 
@@ -246,7 +243,7 @@ module Phaser {
 
             if (s == 0.0)
             {
-                result = ColorUtils.getColor32(alpha, v * 255, v * 255, v * 255);
+                result = Phaser.ColorUtils.getColor32(alpha, v * 255, v * 255, v * 255);
             }
             else
             {
@@ -259,31 +256,31 @@ module Phaser {
                 switch (Math.floor(h))
                 {
                     case 0:
-                        result = ColorUtils.getColor32(alpha, v * 255, t * 255, p * 255);
+                        result = Phaser.ColorUtils.getColor32(alpha, v * 255, t * 255, p * 255);
                         break;
 
                     case 1:
-                        result = ColorUtils.getColor32(alpha, q * 255, v * 255, p * 255);
+                        result = Phaser.ColorUtils.getColor32(alpha, q * 255, v * 255, p * 255);
                         break;
 
                     case 2:
-                        result = ColorUtils.getColor32(alpha, p * 255, v * 255, t * 255);
+                        result = Phaser.ColorUtils.getColor32(alpha, p * 255, v * 255, t * 255);
                         break;
 
                     case 3:
-                        result = ColorUtils.getColor32(alpha, p * 255, q * 255, v * 255);
+                        result = Phaser.ColorUtils.getColor32(alpha, p * 255, q * 255, v * 255);
                         break;
 
                     case 4:
-                        result = ColorUtils.getColor32(alpha, t * 255, p * 255, v * 255);
+                        result = Phaser.ColorUtils.getColor32(alpha, t * 255, p * 255, v * 255);
                         break;
 
                     case 5:
-                        result = ColorUtils.getColor32(alpha, v * 255, p * 255, q * 255);
+                        result = Phaser.ColorUtils.getColor32(alpha, v * 255, p * 255, q * 255);
                         break;
 
                     default:
-                        throw new Error("ColorUtils.HSVtoRGB : Unknown color");
+                        throw new Error("Phaser.ColorUtils.HSVtoRGB : Unknown color");
                 }
             }
 
@@ -300,7 +297,7 @@ module Phaser {
 		 */
         public static RGBtoHSV(color: number): any {
 
-            var rgb: any = ColorUtils.getRGB(color);
+            var rgb: any = Phaser.ColorUtils.getRGB(color);
 
             var red: number = rgb.red / 255;
             var green: number = rgb.green / 255;
@@ -379,14 +376,14 @@ module Phaser {
         */
         public static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha: number = 255): number {
 
-            var src1: any = ColorUtils.getRGB(color1);
-            var src2: any = ColorUtils.getRGB(color2);
+            var src1: any = Phaser.ColorUtils.getRGB(color1);
+            var src2: any = Phaser.ColorUtils.getRGB(color2);
 
             var r: number = (((src2.red - src1.red) * currentStep) / steps) + src1.red;
             var g: number = (((src2.green - src1.green) * currentStep) / steps) + src1.green;
             var b: number = (((src2.blue - src1.blue) * currentStep) / steps) + src1.blue;
 
-            return ColorUtils.getColor32(alpha, r, g, b);
+            return Phaser.ColorUtils.getColor32(alpha, r, g, b);
 
         }
 
@@ -404,13 +401,13 @@ module Phaser {
         */
         public static interpolateColorWithRGB(color: number, r2: number, g2: number, b2: number, steps: number, currentStep: number): number {
             
-            var src: any = ColorUtils.getRGB(color);
+            var src: any = Phaser.ColorUtils.getRGB(color);
 
             var r: number = (((r2 - src.red) * currentStep) / steps) + src.red;
             var g: number = (((g2 - src.green) * currentStep) / steps) + src.green;
             var b: number = (((b2 - src.blue) * currentStep) / steps) + src.blue;
 
-            return ColorUtils.getColor(r, g, b);
+            return Phaser.ColorUtils.getColor(r, g, b);
 
         }
 
@@ -434,7 +431,7 @@ module Phaser {
             var g: number = (((g2 - g1) * currentStep) / steps) + g1;
             var b: number = (((b2 - b1) * currentStep) / steps) + b1;
 
-            return ColorUtils.getColor(r, g, b);
+            return Phaser.ColorUtils.getColor(r, g, b);
 
         }
 
@@ -454,19 +451,19 @@ module Phaser {
             //	Sanity checks
             if (max > 255)
             {
-                return ColorUtils.getColor(255, 255, 255);
+                return Phaser.ColorUtils.getColor(255, 255, 255);
             }
 
             if (min > max)
             {
-                return ColorUtils.getColor(255, 255, 255);
+                return Phaser.ColorUtils.getColor(255, 255, 255);
             }
 
             var red: number = min + Math.round(Math.random() * (max - min));
             var green: number = min + Math.round(Math.random() * (max - min));
             var blue: number = min + Math.round(Math.random() * (max - min));
 
-            return ColorUtils.getColor32(alpha, red, green, blue);
+            return Phaser.ColorUtils.getColor32(alpha, red, green, blue);
 
         }
 

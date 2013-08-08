@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="Vec2.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Vec2Utils

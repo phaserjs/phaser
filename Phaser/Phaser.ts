@@ -1,3 +1,5 @@
+/// <reference path="_definitions.ts" />
+
 /**
 * Phaser
 * www.phaser.io

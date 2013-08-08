@@ -1,5 +1,4 @@
-/// <reference path="../Game.ts" />
-/// <reference path="Plugin.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - PluginManager
@@ -22,7 +21,7 @@ module Phaser {
         /**
          * Local reference to Game.
          */
-        public game: Game;
+        public game: Phaser.Game;
 
         /**
          * The object that owns this PluginManager.

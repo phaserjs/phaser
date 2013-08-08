@@ -1,4 +1,4 @@
-/// <reference path="../Game.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
 * Phaser - Mouse
@@ -22,7 +22,7 @@ module Phaser {
         * @property game
         * @type {Phaser.Game}
         **/
-        public game: Game;
+        public game: Phaser.Game;
 
         public static LEFT_BUTTON: number = 0;
         public static MIDDLE_BUTTON: number = 1;
