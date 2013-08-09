@@ -16,6 +16,10 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="utils\CanvasUtils.ts" />
+    <Content Include="utils\CanvasUtils.js">
+      <DependentUpon>CanvasUtils.ts</DependentUpon>
+    </Content>
     <Content Include="_definitions.ts" />
     <TypeScriptCompile Include="Phaser.ts" />
     <TypeScriptCompile Include="particles\Emitter.ts" />

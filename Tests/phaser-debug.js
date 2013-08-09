@@ -13120,6 +13120,10 @@ var Phaser;
             * @type {string}
             */
             this.crossOrigin = '';
+            //  If you want to append a URL before the path of any asset you can set this here.
+            //  Useful if you need to allow an asset url to be configured outside of the game code.
+            //  MUST have / on the end of it!
+            this.baseURL = '';
             this.game = game;
 
             this._keys = [];
@@ -13326,7 +13330,7 @@ var Phaser;
                         return _this.fileError(file.key);
                     };
                     file.data.crossOrigin = this.crossOrigin;
-                    file.data.src = file.url;
+                    file.data.src = this.baseURL + file.url;
                     break;
 
                 case 'audio':
@@ -13334,7 +13338,7 @@ var Phaser;
 
                     if (file.url !== null) {
                         if (this.game.sound.usingWebAudio) {
-                            this._xhr.open("GET", file.url, true);
+                            this._xhr.open("GET", this.baseURL + file.url, true);
                             this._xhr.responseType = "arraybuffer";
                             this._xhr.onload = function () {
                                 return _this.fileComplete(file.key);
@@ -13349,7 +13353,7 @@ var Phaser;
                                 file.data = new Audio();
                                 file.data.name = file.key;
                                 file.data.preload = 'auto';
-                                file.data.src = file.url;
+                                file.data.src = this.baseURL + file.url;
                                 this.fileComplete(file.key);
                             } else {
                                 file.data = new Audio();
@@ -13358,7 +13362,7 @@ var Phaser;
                                     return _this.fileError(file.key);
                                 };
                                 file.data.preload = 'auto';
-                                file.data.src = file.url;
+                                file.data.src = this.baseURL + file.url;
                                 file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
                                 file.data.load();
                             }
@@ -13368,7 +13372,7 @@ var Phaser;
                     break;
 
                 case 'text':
-                    this._xhr.open("GET", file.url, true);
+                    this._xhr.open("GET", this.baseURL + file.url, true);
                     this._xhr.responseType = "text";
                     this._xhr.onload = function () {
                         return _this.fileComplete(file.key);
@@ -13442,7 +13446,7 @@ var Phaser;
                     } else {
                         //  Load the JSON or XML before carrying on with the next file
                         loadNext = false;
-                        this._xhr.open("GET", file.atlasURL, true);
+                        this._xhr.open("GET", this.baseURL + file.atlasURL, true);
                         this._xhr.responseType = "text";
 
                         if (file.format == Loader.TEXTURE_ATLAS_JSON_ARRAY) {
@@ -14796,71 +14800,6 @@ var Phaser;
                 enumerable: true,
                 configurable: true
             });
-
-            //  MOVE THESE TO A UTIL
-            Body.prototype.render = function (context) {
-                context.beginPath();
-                context.strokeStyle = 'rgb(0,255,0)';
-                context.strokeRect(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight, this.bounds.width, this.bounds.height);
-                context.stroke();
-                context.closePath();
-
-                //  center point
-                context.fillStyle = 'rgb(0,255,0)';
-                context.fillRect(this.position.x, this.position.y, 2, 2);
-
-                if (this.touching & Phaser.Types.LEFT) {
-                    context.beginPath();
-                    context.strokeStyle = 'rgb(255,0,0)';
-                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
-                    context.lineTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
-                    context.stroke();
-                    context.closePath();
-                }
-                if (this.touching & Phaser.Types.RIGHT) {
-                    context.beginPath();
-                    context.strokeStyle = 'rgb(255,0,0)';
-                    context.moveTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
-                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
-                    context.stroke();
-                    context.closePath();
-                }
-
-                if (this.touching & Phaser.Types.UP) {
-                    context.beginPath();
-                    context.strokeStyle = 'rgb(255,0,0)';
-                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
-                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y - this.bounds.halfHeight);
-                    context.stroke();
-                    context.closePath();
-                }
-                if (this.touching & Phaser.Types.DOWN) {
-                    context.beginPath();
-                    context.strokeStyle = 'rgb(255,0,0)';
-                    context.moveTo(this.position.x - this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
-                    context.lineTo(this.position.x + this.bounds.halfWidth, this.position.y + this.bounds.halfHeight);
-                    context.stroke();
-                    context.closePath();
-                }
-            };
-
-            /**
-            * Render debug infos. (including name, bounds info, position and some other properties)
-            * @param x {number} X position of the debug info to be rendered.
-            * @param y {number} Y position of the debug info to be rendered.
-            * @param [color] {number} color of the debug info to be rendered. (format is css color string)
-            */
-            Body.prototype.renderDebugInfo = function (x, y, color) {
-                if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-                this.sprite.texture.context.fillStyle = color;
-                this.sprite.texture.context.fillText('Sprite: (' + this.sprite.width + ' x ' + this.sprite.height + ')', x, y);
-
-                //this.sprite.texture.context.fillText('x: ' + this._sprite.frameBounds.x.toFixed(1) + ' y: ' + this._sprite.frameBounds.y.toFixed(1) + ' rotation: ' + this._sprite.rotation.toFixed(1), x, y + 14);
-                this.sprite.texture.context.fillText('x: ' + this.bounds.x.toFixed(1) + ' y: ' + this.bounds.y.toFixed(1) + ' rotation: ' + this.sprite.transform.rotation.toFixed(0), x, y + 14);
-                this.sprite.texture.context.fillText('vx: ' + this.velocity.x.toFixed(1) + ' vy: ' + this.velocity.y.toFixed(1), x, y + 28);
-                this.sprite.texture.context.fillText('acx: ' + this.acceleration.x.toFixed(1) + ' acy: ' + this.acceleration.y.toFixed(1), x, y + 42);
-                this.sprite.texture.context.fillText('angVx: ' + this.angularVelocity.toFixed(1) + ' angAc: ' + this.angularAcceleration.toFixed(1), x, y + 56);
-            };
             return Body;
         })();
         Physics.Body = Body;
@@ -15013,7 +14952,7 @@ var Phaser;
         */
         Sprite.prototype.bringToTop = function () {
             if (this.group) {
-                //this.group.bringToTop(this);
+                this.group.bringToTop(this);
             }
         };
 
@@ -19757,7 +19696,7 @@ var Phaser;
                 //this.physics = new Phaser.Physics.Manager(this);
                 this.plugins = new Phaser.PluginManager(this, this);
 
-                this.load.onLoadComplete.addOnce(this.loadComplete, this);
+                this.load.onLoadComplete.add(this.loadComplete, this);
 
                 this.setRenderer(Phaser.Types.RENDERER_CANVAS);
 
@@ -19883,6 +19822,7 @@ var Phaser;
                     this._loadComplete = true;
                 } else {
                     //  Start the loader going as we have something in the queue
+                    this.load.onLoadComplete.add(this.loadComplete, this);
                     this.load.start();
                 }
             } else {

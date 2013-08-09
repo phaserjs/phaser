@@ -32,25 +32,12 @@ module Phaser {
             this.canvas = <HTMLCanvasElement> document.createElement('canvas');
             this.canvas.width = width;
             this.canvas.height = height;
-
-            if ((parent !== '' || parent !== null) && document.getElementById(parent))
-            {
-                document.getElementById(parent).appendChild(this.canvas);
-                document.getElementById(parent).style.overflow = 'hidden';
-            }
-            else
-            {
-                document.body.appendChild(this.canvas);
-            }
-
-            //  Consume default actions on the canvas
-            this.canvas.style.msTouchAction = 'none';
-            this.canvas.style['ms-touch-action'] = 'none';
-            this.canvas.style['touch-action'] = 'none';
-            this.canvas.style.backgroundColor = 'rgb(0,0,0)';
-            this.canvas.oncontextmenu = function(event) { event.preventDefault(); };
-
             this.context = this.canvas.getContext('2d');
+
+            Phaser.CanvasUtils.addToDOM(this.canvas, parent, true);
+            Phaser.CanvasUtils.setTouchAction(this.canvas);
+
+            this.canvas.oncontextmenu = function(event) { event.preventDefault(); };
 
             this.css3 = new Phaser.Display.CSS3Filters(this.canvas);
 
@@ -278,13 +265,6 @@ module Phaser {
                 }
             }
 
-        }
-
-        public setImageRenderingCrisp() {
-            this.canvas.style['image-rendering'] = 'crisp-edges';
-            this.canvas.style['image-rendering'] = '-moz-crisp-edges';
-            this.canvas.style['image-rendering'] = '-webkit-optimize-contrast';
-            this.canvas.style['-ms-interpolation-mode'] = 'nearest-neighbor';
         }
 
         public pauseGame() {

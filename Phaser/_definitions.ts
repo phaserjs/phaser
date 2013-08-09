@@ -93,6 +93,7 @@
 
 /// <reference path="ui/Button.ts" />
 
+/// <reference path="utils/CanvasUtils.ts" />
 /// <reference path="utils/CircleUtils.ts" />
 /// <reference path="utils/ColorUtils.ts" />
 /// <reference path="utils/PointUtils.ts" />
