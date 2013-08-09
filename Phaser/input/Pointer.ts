@@ -99,14 +99,14 @@ module Phaser {
         * @property positionDown
         * @type {Vec2}
         **/
-        public positionDown: Vec2 = null;
+        public positionDown: Phaser.Vec2 = null;
 
         /**
         * A Vector object containing the current position of the Pointer on the screen.
         * @property position
         * @type {Vec2}
         **/
-        public position: Vec2 = null;
+        public position: Phaser.Vec2 = null;
 
         /**
         * A Circle object centered on the x/y screen coordinates of the Pointer.
@@ -114,7 +114,7 @@ module Phaser {
         * @property circle
         * @type {Circle}
         **/
-        public circle: Circle = null;
+        public circle: Phaser.Circle = null;
 
         /**
         *
