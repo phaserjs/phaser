@@ -1,11 +1,16 @@
 /// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - AnimationManager
-*
-* Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
-* sprite specific animations.
-*/
+ * AnimationManager
+ *
+ * Any Game Object that supports animation contains a single AnimationManager instance. It is used to add,
+ * play and update Phaser.Animation objects.
+ *
+ * @package    Phaser.Components.AnimationManager
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 
 module Phaser.Components {
 
@@ -63,18 +68,18 @@ module Phaser.Components {
         /**
          * Keeps track of the current animation being played.
          */
-        public currentAnim: Animation;
+        public currentAnim: Phaser.Animation;
 
         /**
          * Keeps track of the current frame of animation.
          */
-        public currentFrame: Frame = null;
+        public currentFrame: Phaser.Frame = null;
 
         /**
          * Load animation frame data.
          * @param frameData Data to be loaded.
          */
-        public loadFrameData(frameData: FrameData) {
+        public loadFrameData(frameData: Phaser.FrameData) {
 
             this._frameData = frameData;
 
@@ -91,7 +96,7 @@ module Phaser.Components {
          * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
          * @return {Animation} The Animation that was created
          */
-        public add(name: string, frames: any[] = null, frameRate: number = 60, loop: boolean = false, useNumericIndex: boolean = true): Animation {
+        public add(name: string, frames: any[] = null, frameRate: number = 60, loop: boolean = false, useNumericIndex: boolean = true): Phaser.Animation {
 
             if (this._frameData == null)
             {
@@ -237,6 +242,10 @@ module Phaser.Components {
             return this._frameIndex;
         }
 
+        /**
+         *
+         * @param value
+         */
         public set frame(value: number) {
 
             if (this._frameData && this._frameData.getFrame(value) !== null)

@@ -29,14 +29,16 @@ Future Plans
 * Add ability to create extra <div>s within the game container, layered above/below the canvas
 * Basic Window UI component (maybe a propogating Group?)
 * Add clip support + shape options to Texture Component.
-* Tilemap: remove tiles of a certain type, replace tile with sprite, change layer order
-* Joypad support
-* Gestures input class
+* Tilemap: remove tiles of a certain type, replace tile with sprite, change layer order, Tiled object support.
+* Joypad support.
+* Gestures input class.
+* Integrate the Advanced Physics system that is 90% ready but needs updating for TypeScript 0.9.1.
+
 
 ToDo before release
 -------------------
 
-* Move embedded Phaser logo outside
+* Move embedded Phaser logo outside or swap for canvas calls
 * Put Device.getAll elsewhere (plugin? utils?)
 * Investigate bug re: tilemap collision and animation frames
 * Allow camera to directly render to the stage rather than hidden ctx (maybe does this by default? or have under Mobile Optimisations list)
@@ -44,13 +46,17 @@ ToDo before release
 * Check bounds/edge points when sprite is only 1x1 sized :)
 * QuadTree.physics.checkHullIntersection
 * Sprite.transform.bottomRight/Left doesn't seem to take origin into account
-* Stage lost to mute
+* When game paused should mute-all then resume-all sounds?
 * Bitmap Font support
 * Put ArcadePhysics back in
 * Look at the N+ tile support maybe with ArcadePhysics?
 * Pixel-perfect click check
 * Check Flash atlas export is supported
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
+* Check multi-game support (2+ games on one page)
+* Docs!
+* Getting Started guide!
+
 
 Latest Update
 -------------
@@ -512,30 +518,26 @@ V0.5
 License
 -------
 
-Copyright 2013 Richard Davey, Photon Storm Ltd. All rights reserved.
+The MIT License (MIT)
 
-Redistribution and use in source and binary forms, with or without modification, are
-permitted provided that the following conditions are met:
+Copyright (c) 2013 Richard Davey, Photon Storm Ltd.
 
-   1. Redistributions of source code must retain the above copyright notice, this list of
-      conditions and the following disclaimer.
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
 
-   2. Redistributions in binary form must reproduce the above copyright notice, this list
-      of conditions and the following disclaimer in the documentation and/or other materials
-      provided with the distribution.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-THIS SOFTWARE IS PROVIDED BY RICHARD DAVEY ``AS IS'' AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL RICHARD DAVEY OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-The views and conclusions contained in the software and documentation are those of the
-authors and should not be interpreted as representing official policies, either expressed
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [1]: https://github.com/photonstorm/phaser/issues
 [phaser]: https://github.com/photonstorm/phaser

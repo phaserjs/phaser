@@ -79,7 +79,7 @@ var Phaser;
         * @param tileHeight {number} Height of its tile.
         */
         Tilemap.prototype.parseCSV = function (data, key, tileWidth, tileHeight) {
-            var layer = new TilemapLayer(this, 0, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
+            var layer = new Phaser.TilemapLayer(this, 0, key, Tilemap.FORMAT_CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
 
             //  Trim any rogue whitespace from the data
             data = data.trim();
@@ -118,7 +118,7 @@ var Phaser;
             var json = JSON.parse(data);
 
             for (var i = 0; i < json.layers.length; i++) {
-                var layer = new TilemapLayer(this, i, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
+                var layer = new Phaser.TilemapLayer(this, i, key, Tilemap.FORMAT_TILED_JSON, json.layers[i].name, json.tilewidth, json.tileheight);
 
                 if (!json.layers[i].data) {
                     continue;
@@ -166,7 +166,7 @@ var Phaser;
         */
         Tilemap.prototype.generateTiles = function (qty) {
             for (var i = 0; i < qty; i++) {
-                this.tiles.push(new Tile(this.game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
+                this.tiles.push(new Phaser.Tile(this.game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
             }
         };
 

@@ -3,6 +3,9 @@
 	[
 		{
 			"path": "/D/wamp/www/phaser/Tests"
+		},
+		{
+			"path": "/D/wamp/www/phaser/Phaser"
 		}
 	]
 }

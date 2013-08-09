@@ -1,14 +1,19 @@
 /// <reference path="_definitions.ts" />
 
 /**
-* Phaser - World
-*
-* "This world is but a canvas to our imagination." - Henry David Thoreau
-*
-* A game has only one world. The world is an abstract place in which all game objects live. It is not bound
-* by stage limits and can be any size or dimension. You look into the world via cameras and all game objects
-* live within the world at world-based coordinates. By default a world is created the same size as your Stage.
-*/
+ * World
+ *
+ * "This world is but a canvas to our imagination." - Henry David Thoreau
+ *
+ * A game has only one world. The world is an abstract place in which all game objects live. It is not bound
+ * by stage limits and can be any size. You look into the world via cameras. All game objects live within
+ * the world at world-based coordinates. By default a world is created the same size as your Stage.
+ *
+ * @package    Phaser.World
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 
 module Phaser {
 

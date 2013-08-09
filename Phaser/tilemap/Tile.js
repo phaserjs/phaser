@@ -126,7 +126,7 @@ var Phaser;
         * @return {string} a string representation of the object.
         **/
         Tile.prototype.toString = function () {
-            return "[{Tiled (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
+            return "[{Tile (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
         };
         return Tile;
     })();

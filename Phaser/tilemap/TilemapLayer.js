@@ -374,7 +374,7 @@ var Phaser;
 
             var i = 0;
 
-            if (this.mapFormat == Tilemap.FORMAT_TILED_JSON) {
+            if (this.mapFormat == Phaser.Tilemap.FORMAT_TILED_JSON) {
                 //  For some reason Tiled counts from 1 not 0
                 this.tileOffsets[0] = null;
                 i = 1;

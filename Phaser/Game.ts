@@ -1,14 +1,19 @@
 /// <reference path="_definitions.ts" />
 
 /**
-* Phaser - Game
-*
-* This is where the magic happens. The Game object is the heart of your game,
-* providing quick access to common functions and handling the boot process.
-*
-* "Hell, there are no rules here - we're trying to accomplish something."
-*                                                       Thomas A. Edison
-*/
+ * Game
+ *
+ * This is where the magic happens. The Game object is the heart of your game,
+ * providing quick access to common functions and handling the boot process.
+ *
+ * "Hell, there are no rules here - we're trying to accomplish something."
+ *                                                       Thomas A. Edison
+ *
+ * @package    Phaser.Game
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 
 module Phaser {
 
@@ -19,6 +24,7 @@ module Phaser {
          *
          * Instantiate a new <code>Phaser.Game</code> object.
          *
+         * @constructor
          * @param callbackContext Which context will the callbacks be called with.
          * @param parent {string} ID of its parent DOM element.
          * @param width {number} The width of your game in game pixels.
@@ -213,7 +219,7 @@ module Phaser {
          * @type {Time}
          */
         public time: Phaser.TimeManager;
-  
+
         /**
          * Reference to the tween manager.
          * @type {TweenManager}
@@ -243,7 +249,7 @@ module Phaser {
          * @type {Device}
          */
         public device: Phaser.Device;
- 
+
         /**
          * Reference to the render manager
          * @type {RenderManager}
@@ -385,9 +391,9 @@ module Phaser {
             //   Called by onUpdateCallback etc
         }
 
-       /**
-         * Game loop method will be called when it's running.
-         */
+        /**
+          * Game loop method will be called when it's running.
+          */
         private loop() {
 
             this.plugins.preUpdate();

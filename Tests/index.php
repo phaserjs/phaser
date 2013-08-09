@@ -62,8 +62,7 @@ if (isset($_GET['m']))
 <?php
     }
 ?>
-    <script src="phaser.js"></script>
-    <script src="phaser-fx.js"></script>
+    <script src="phaser-debug.js"></script>
 <?php
     if ($state)
     {

@@ -1,10 +1,15 @@
 /// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - Frame
-*
-* A Frame is a single frame of an animation and is part of a FrameData collection.
-*/
+ * Frame
+ *
+ * A Frame is a single frame of an animation and is part of a FrameData collection.
+ *
+ * @package    Phaser.Frame
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 
 module Phaser {
 

@@ -1,10 +1,16 @@
 /// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - Animation
-*
-* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
-*/
+ * Animation
+ *
+ * An Animation instance contains a single animation and the controls to play it.
+ * It is created by the AnimationManager and belongs to Game Objects such as Sprite.
+ *
+ * @package    Phaser.Animation
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 
 module Phaser {
 
@@ -40,9 +46,6 @@ module Phaser {
 
         }
 
-        /**
-         * Local reference to Game.
-         */
         public game: Phaser.Game;
 
         /**

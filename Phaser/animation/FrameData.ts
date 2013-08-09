@@ -1,10 +1,15 @@
 /// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - FrameData
-*
-* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
-*/
+ * FrameData
+ *
+ * FrameData is a container for Frame objects, which are the internal representation of animation data in Phaser.
+ *
+ * @package    Phaser.FrameData
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 
 module Phaser {
 

@@ -1,11 +1,16 @@
 /// <reference path="_definitions.ts" />
 
 /**
-* Phaser - Stage
-*
-* The Stage is the canvas on which everything is displayed. This class handles display within the web browser, focus handling,
-* resizing, scaling and pause/boot screens.
-*/
+ * Stage
+ *
+ * The Stage controls the canvas on which everything is displayed. It handles display within the browser,
+ * focus handling, game resizing, scaling and the pause, boot and orientation screens.
+ *
+ * @package    Phaser.Stage
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 
 module Phaser {
 

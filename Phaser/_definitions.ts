@@ -78,8 +78,6 @@
 /// <reference path="tilemap/Tilemap.ts" />
 /// <reference path="tilemap/TilemapLayer.ts" />
 
-/// <reference path="ui/Button.ts" />
-
 /// <reference path="physics/arcade/Body.ts" />
 
 /// <reference path="gameobjects/Events.ts" />
@@ -89,6 +87,8 @@
 /// <reference path="gameobjects/ScrollZone.ts" />
 /// <reference path="gameobjects/IGameObject.ts" />
 /// <reference path="gameobjects/GameObjectFactory.ts" />
+
+/// <reference path="ui/Button.ts" />
 
 /// <reference path="utils/CircleUtils.ts" />
 /// <reference path="utils/ColorUtils.ts" />

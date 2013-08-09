@@ -1,10 +1,18 @@
 /// <reference path="_definitions.ts" />
 
+/**
+ * Types
+ *
+ * This file contains all constants used through-out Phaser.
+ *
+ * @package    Phaser.Types
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
+
 module Phaser {
 
-    /**
-    * Constants used to define game object types (faster than doing typeof object checks in core loops)
-    */
     export class Types {
 
         static RENDERER_AUTO_DETECT: number = 0;
@@ -108,25 +116,25 @@ module Phaser {
          * Flag used to allow GameObjects to collide with a ceiling
          * @type {number}
          */
-        static CEILING: number = Phaser.Types.UP;
+        static CEILING: number = 0x0100;
 
         /**
          * Flag used to allow GameObjects to collide with a floor
          * @type {number}
          */
-        static FLOOR: number = Phaser.Types.DOWN;
+        static FLOOR: number = 0x1000;
 
         /**
          * Flag used to allow GameObjects to collide with a wall (same as LEFT+RIGHT)
          * @type {number}
          */
-        static WALL: number = Phaser.Types.LEFT | Phaser.Types.RIGHT;
+        static WALL: number = 0x0001 | 0x0010;
 
         /**
          * Flag used to allow GameObjects to collide on any face
          * @type {number}
          */
-        static ANY: number = Phaser.Types.LEFT | Phaser.Types.RIGHT | Phaser.Types.UP | Phaser.Types.DOWN;
+        static ANY: number = 0x0001 | 0x0010 | 0x0100 | 0x1000;
 
     }
 

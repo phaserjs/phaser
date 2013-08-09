@@ -1,33 +1,16 @@
 /// <reference path="_definitions.ts" />
 /**
-* Phaser
-* www.phaser.io
+* Types
 *
-* v1.0.0 - August 12th 2013
+* This file contains all constants used through-out Phaser.
 *
-* A feature-packed 2D canvas game framework born from the firey pits of Flixel and Kiwi.
-*
-* Richard Davey (@photonstorm)
-*
-* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from both which Phaser
-* and my love of game development took a lot of inspiration.
-*
-* "If you want your children to be intelligent,  read them fairy tales."
-* "If you want them to be more intelligent, read them more fairy tales."
-*                                                     -- Albert Einstein
+* @package    Phaser.Types
+* @author     Richard Davey <rich@photonstorm.com>
+* @copyright  2013 Photon Storm Ltd.
+* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 var Phaser;
 (function (Phaser) {
-    Phaser.VERSION = 'Phaser version 1.0.0';
-
-    Phaser.GAMES = [];
-})(Phaser || (Phaser = {}));
-/// <reference path="_definitions.ts" />
-var Phaser;
-(function (Phaser) {
-    /**
-    * Constants used to define game object types (faster than doing typeof object checks in core loops)
-    */
     var Types = (function () {
         function Types() {
         }
@@ -86,13 +69,13 @@ var Phaser;
 
         Types.NONE = 0;
 
-        Types.CEILING = Phaser.Types.UP;
+        Types.CEILING = 0x0100;
 
-        Types.FLOOR = Phaser.Types.DOWN;
+        Types.FLOOR = 0x1000;
 
-        Types.WALL = Phaser.Types.LEFT | Phaser.Types.RIGHT;
+        Types.WALL = 0x0001 | 0x0010;
 
-        Types.ANY = Phaser.Types.LEFT | Phaser.Types.RIGHT | Phaser.Types.UP | Phaser.Types.DOWN;
+        Types.ANY = 0x0001 | 0x0010 | 0x0100 | 0x1000;
         return Types;
     })();
     Phaser.Types = Types;
@@ -3540,6 +3523,255 @@ var Phaser;
         return LinkedList;
     })();
     Phaser.LinkedList = LinkedList;
+})(Phaser || (Phaser = {}));
+/// <reference path="../_definitions.ts" />
+/**
+* Phaser - RandomDataGenerator
+*
+* An extremely useful repeatable random data generator. Access it via Game.rnd
+* Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
+* Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
+*/
+var Phaser;
+(function (Phaser) {
+    var RandomDataGenerator = (function () {
+        /**
+        * @constructor
+        * @param {Array} seeds
+        * @return {Phaser.RandomDataGenerator}
+        */
+        function RandomDataGenerator(seeds) {
+            if (typeof seeds === "undefined") { seeds = []; }
+            /**
+            * @property c
+            * @type Number
+            * @private
+            */
+            this.c = 1;
+            this.sow(seeds);
+        }
+        /**
+        * @method uint32
+        * @private
+        */
+        RandomDataGenerator.prototype.uint32 = function () {
+            return this.rnd.apply(this) * 0x100000000;
+        };
+
+        /**
+        * @method fract32
+        * @private
+        */
+        RandomDataGenerator.prototype.fract32 = function () {
+            return this.rnd.apply(this) + (this.rnd.apply(this) * 0x200000 | 0) * 1.1102230246251565e-16;
+        };
+
+        // private random helper
+        /**
+        * @method rnd
+        * @private
+        */
+        RandomDataGenerator.prototype.rnd = function () {
+            var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10;
+
+            this.c = t | 0;
+            this.s0 = this.s1;
+            this.s1 = this.s2;
+            this.s2 = t - this.c;
+
+            return this.s2;
+        };
+
+        /**
+        * @method hash
+        * @param {Any} data
+        * @private
+        */
+        RandomDataGenerator.prototype.hash = function (data) {
+            var h, i, n;
+
+            n = 0xefc8249d;
+
+            data = data.toString();
+
+            for (i = 0; i < data.length; i++) {
+                n += data.charCodeAt(i);
+                h = 0.02519603282416938 * n;
+                n = h >>> 0;
+                h -= n;
+                h *= n;
+                n = h >>> 0;
+                h -= n;
+                n += h * 0x100000000;
+            }
+
+            return (n >>> 0) * 2.3283064365386963e-10;
+        };
+
+        /**
+        * Reset the seed of the random data generator
+        * @method sow
+        * @param {Array} seeds
+        */
+        RandomDataGenerator.prototype.sow = function (seeds) {
+            if (typeof seeds === "undefined") { seeds = []; }
+            this.s0 = this.hash(' ');
+            this.s1 = this.hash(this.s0);
+            this.s2 = this.hash(this.s1);
+
+            var seed;
+
+            for (var i = 0; seed = seeds[i++];) {
+                this.s0 -= this.hash(seed);
+                this.s0 += ~~(this.s0 < 0);
+
+                this.s1 -= this.hash(seed);
+                this.s1 += ~~(this.s1 < 0);
+
+                this.s2 -= this.hash(seed);
+                this.s2 += ~~(this.s2 < 0);
+            }
+        };
+
+        Object.defineProperty(RandomDataGenerator.prototype, "integer", {
+            get: /**
+            * Returns a random integer between 0 and 2^32
+            * @method integer
+            * @return {Number}
+            */
+            function () {
+                return this.uint32();
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(RandomDataGenerator.prototype, "frac", {
+            get: /**
+            * Returns a random real number between 0 and 1
+            * @method frac
+            * @return {Number}
+            */
+            function () {
+                return this.fract32();
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(RandomDataGenerator.prototype, "real", {
+            get: /**
+            * Returns a random real number between 0 and 2^32
+            * @method real
+            * @return {Number}
+            */
+            function () {
+                return this.uint32() + this.fract32();
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        /**
+        * Returns a random integer between min and max
+        * @method integerInRange
+        * @param {Number} min
+        * @param {Number} max
+        * @return {Number}
+        */
+        RandomDataGenerator.prototype.integerInRange = function (min, max) {
+            return Math.floor(this.realInRange(min, max));
+        };
+
+        /**
+        * Returns a random real number between min and max
+        * @method realInRange
+        * @param {Number} min
+        * @param {Number} max
+        * @return {Number}
+        */
+        RandomDataGenerator.prototype.realInRange = function (min, max) {
+            min = min || 0;
+            max = max || 0;
+
+            return this.frac * (max - min) + min;
+        };
+
+        Object.defineProperty(RandomDataGenerator.prototype, "normal", {
+            get: /**
+            * Returns a random real number between -1 and 1
+            * @method normal
+            * @return {Number}
+            */
+            function () {
+                return 1 - 2 * this.frac;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(RandomDataGenerator.prototype, "uuid", {
+            get: /**
+            * Returns a valid v4 UUID hex string (from https://gist.github.com/1308368)
+            * @method uuid
+            * @return {String}
+            */
+            function () {
+                var a, b;
+
+                for (b = a = ''; a++ < 36; b += ~a % 5 | a * 3 & 4 ? (a ^ 15 ? 8 ^ this.frac * (a ^ 20 ? 16 : 4) : 4).toString(16) : '-')
+                    ;
+
+                return b;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        /**
+        * Returns a random member of `array`
+        * @method pick
+        * @param {Any} array
+        */
+        RandomDataGenerator.prototype.pick = function (array) {
+            return array[this.integerInRange(0, array.length)];
+        };
+
+        /**
+        * Returns a random member of `array`, favoring the earlier entries
+        * @method weightedPick
+        * @param {Any} array
+        */
+        RandomDataGenerator.prototype.weightedPick = function (array) {
+            return array[~~(Math.pow(this.frac, 2) * array.length)];
+        };
+
+        /**
+        * Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified
+        * @method timestamp
+        * @param {Number} min
+        * @param {Number} max
+        */
+        RandomDataGenerator.prototype.timestamp = function (min, max) {
+            if (typeof min === "undefined") { min = 946684800000; }
+            if (typeof max === "undefined") { max = 1577862000000; }
+            return this.realInRange(min, max);
+        };
+
+        Object.defineProperty(RandomDataGenerator.prototype, "angle", {
+            get: /**
+            * Returns a random angle between -180 and 180
+            * @method angle
+            */
+            function () {
+                return this.integerInRange(-180, 180);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return RandomDataGenerator;
+    })();
+    Phaser.RandomDataGenerator = RandomDataGenerator;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
@@ -11723,9 +11955,15 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - Animation
+* Animation
 *
-* An Animation is a single animation. It is created by the AnimationManager and belongs to Sprite objects.
+* An Animation instance contains a single animation and the controls to play it.
+* It is created by the AnimationManager and belongs to Game Objects such as Sprite.
+*
+* @package    Phaser.Animation
+* @author     Richard Davey <rich@photonstorm.com>
+* @copyright  2013 Photon Storm Ltd.
+* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 var Phaser;
 (function (Phaser) {
@@ -11894,10 +12132,15 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../_definitions.ts" />
     /**
-    * Phaser - AnimationManager
+    * AnimationManager
     *
-    * Any Sprite that has animation contains an instance of the AnimationManager, which is used to add, play and update
-    * sprite specific animations.
+    * Any Game Object that supports animation contains a single AnimationManager instance. It is used to add,
+    * play and update Phaser.Animation objects.
+    *
+    * @package    Phaser.Components.AnimationManager
+    * @author     Richard Davey <rich@photonstorm.com>
+    * @copyright  2013 Photon Storm Ltd.
+    * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
     */
     (function (Components) {
         var AnimationManager = (function () {
@@ -12072,7 +12315,11 @@ var Phaser;
                 get: function () {
                     return this._frameIndex;
                 },
-                set: function (value) {
+                set: /**
+                *
+                * @param value
+                */
+                function (value) {
                     if (this._frameData && this._frameData.getFrame(value) !== null) {
                         this.currentFrame = this._frameData.getFrame(value);
 
@@ -12131,9 +12378,14 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - Frame
+* Frame
 *
 * A Frame is a single frame of an animation and is part of a FrameData collection.
+*
+* @package    Phaser.Frame
+* @author     Richard Davey <rich@photonstorm.com>
+* @copyright  2013 Photon Storm Ltd.
+* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 var Phaser;
 (function (Phaser) {
@@ -12208,9 +12460,14 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - FrameData
+* FrameData
 *
-* FrameData is a container for Frame objects, the internal representation of animation data in Phaser.
+* FrameData is a container for Frame objects, which are the internal representation of animation data in Phaser.
+*
+* @package    Phaser.FrameData
+* @author     Richard Davey <rich@photonstorm.com>
+* @copyright  2013 Photon Storm Ltd.
+* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 var Phaser;
 (function (Phaser) {
@@ -14204,168 +14461,6 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
-    /// <reference path="../_definitions.ts" />
-    /**
-    * Phaser - UI - Button
-    */
-    (function (UI) {
-        var Button = (function (_super) {
-            __extends(Button, _super);
-            /**
-            * Create a new <code>Button</code> object.
-            *
-            * @param game {Phaser.Game} Current game instance.
-            * @param [x] {number} X position of the button.
-            * @param [y] {number} Y position of the button.
-            * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
-            * @param [callback] {function} The function to call when this button is pressed
-            * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
-            * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
-            * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
-            * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
-            */
-            function Button(game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
-                if (typeof x === "undefined") { x = 0; }
-                if (typeof y === "undefined") { y = 0; }
-                if (typeof key === "undefined") { key = null; }
-                if (typeof callback === "undefined") { callback = null; }
-                if (typeof callbackContext === "undefined") { callbackContext = null; }
-                if (typeof overFrame === "undefined") { overFrame = null; }
-                if (typeof outFrame === "undefined") { outFrame = null; }
-                if (typeof downFrame === "undefined") { downFrame = null; }
-                _super.call(this, game, x, y, key, outFrame);
-                this._onOverFrameName = null;
-                this._onOutFrameName = null;
-                this._onDownFrameName = null;
-                this._onUpFrameName = null;
-                this._onOverFrameID = null;
-                this._onOutFrameID = null;
-                this._onDownFrameID = null;
-                this._onUpFrameID = null;
-
-                this.type = Phaser.Types.BUTTON;
-
-                if (typeof overFrame == 'string') {
-                    this._onOverFrameName = overFrame;
-                } else {
-                    this._onOverFrameID = overFrame;
-                }
-
-                if (typeof outFrame == 'string') {
-                    this._onOutFrameName = outFrame;
-                    this._onUpFrameName = outFrame;
-                } else {
-                    this._onOutFrameID = outFrame;
-                    this._onUpFrameID = outFrame;
-                }
-
-                if (typeof downFrame == 'string') {
-                    this._onDownFrameName = downFrame;
-                } else {
-                    this._onDownFrameID = downFrame;
-                }
-
-                //  These are the signals the game will subscribe to
-                this.onInputOver = new Phaser.Signal();
-                this.onInputOut = new Phaser.Signal();
-                this.onInputDown = new Phaser.Signal();
-                this.onInputUp = new Phaser.Signal();
-
-                if (callback) {
-                    this.onInputUp.add(callback, callbackContext);
-                }
-
-                this.input.start(0, false, true);
-
-                //  Redirect the input events to here so we can handle animation updates, etc
-                this.events.onInputOver.add(this.onInputOverHandler, this);
-                this.events.onInputOut.add(this.onInputOutHandler, this);
-                this.events.onInputDown.add(this.onInputDownHandler, this);
-                this.events.onInputUp.add(this.onInputUpHandler, this);
-            }
-            //  TODO
-            //public tabIndex: number;
-            //public tabEnabled: boolean;
-            //  ENTER or SPACE can activate this button if it has focus
-            Button.prototype.onInputOverHandler = function (pointer) {
-                if (this._onOverFrameName != null) {
-                    this.frameName = this._onOverFrameName;
-                } else if (this._onOverFrameID != null) {
-                    this.frame = this._onOverFrameID;
-                }
-
-                if (this.onInputOver) {
-                    this.onInputOver.dispatch(this, pointer);
-                }
-            };
-
-            Button.prototype.onInputOutHandler = function (pointer) {
-                if (this._onOutFrameName != null) {
-                    this.frameName = this._onOutFrameName;
-                } else if (this._onOutFrameID != null) {
-                    this.frame = this._onOutFrameID;
-                }
-
-                if (this.onInputOut) {
-                    this.onInputOut.dispatch(this, pointer);
-                }
-            };
-
-            Button.prototype.onInputDownHandler = function (pointer) {
-                if (this._onDownFrameName != null) {
-                    this.frameName = this._onDownFrameName;
-                } else if (this._onDownFrameID != null) {
-                    this.frame = this._onDownFrameID;
-                }
-
-                if (this.onInputDown) {
-                    this.onInputDown.dispatch(this, pointer);
-                }
-            };
-
-            Button.prototype.onInputUpHandler = function (pointer) {
-                if (this._onUpFrameName != null) {
-                    this.frameName = this._onUpFrameName;
-                } else if (this._onUpFrameID != null) {
-                    this.frame = this._onUpFrameID;
-                }
-
-                if (this.onInputUp) {
-                    this.onInputUp.dispatch(this, pointer);
-                }
-            };
-
-
-            Object.defineProperty(Button.prototype, "priorityID", {
-                get: function () {
-                    return this.input.priorityID;
-                },
-                set: function (value) {
-                    this.input.priorityID = value;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-
-            Object.defineProperty(Button.prototype, "useHandCursor", {
-                get: function () {
-                    return this.input.useHandCursor;
-                },
-                set: function (value) {
-                    this.input.useHandCursor = value;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return Button;
-        })(Phaser.Sprite);
-        UI.Button = Button;
-    })(Phaser.UI || (Phaser.UI = {}));
-    var UI = Phaser.UI;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
     * Phaser - ArcadePhysics - Body
@@ -15792,6 +15887,168 @@ var Phaser;
         return GameObjectFactory;
     })();
     Phaser.GameObjectFactory = GameObjectFactory;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    /**
+    * Phaser - UI - Button
+    */
+    (function (UI) {
+        var Button = (function (_super) {
+            __extends(Button, _super);
+            /**
+            * Create a new <code>Button</code> object.
+            *
+            * @param game {Phaser.Game} Current game instance.
+            * @param [x] {number} X position of the button.
+            * @param [y] {number} Y position of the button.
+            * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
+            * @param [callback] {function} The function to call when this button is pressed
+            * @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
+            * @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+            * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+            * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+            */
+            function Button(game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+                if (typeof x === "undefined") { x = 0; }
+                if (typeof y === "undefined") { y = 0; }
+                if (typeof key === "undefined") { key = null; }
+                if (typeof callback === "undefined") { callback = null; }
+                if (typeof callbackContext === "undefined") { callbackContext = null; }
+                if (typeof overFrame === "undefined") { overFrame = null; }
+                if (typeof outFrame === "undefined") { outFrame = null; }
+                if (typeof downFrame === "undefined") { downFrame = null; }
+                _super.call(this, game, x, y, key, outFrame);
+                this._onOverFrameName = null;
+                this._onOutFrameName = null;
+                this._onDownFrameName = null;
+                this._onUpFrameName = null;
+                this._onOverFrameID = null;
+                this._onOutFrameID = null;
+                this._onDownFrameID = null;
+                this._onUpFrameID = null;
+
+                this.type = Phaser.Types.BUTTON;
+
+                if (typeof overFrame == 'string') {
+                    this._onOverFrameName = overFrame;
+                } else {
+                    this._onOverFrameID = overFrame;
+                }
+
+                if (typeof outFrame == 'string') {
+                    this._onOutFrameName = outFrame;
+                    this._onUpFrameName = outFrame;
+                } else {
+                    this._onOutFrameID = outFrame;
+                    this._onUpFrameID = outFrame;
+                }
+
+                if (typeof downFrame == 'string') {
+                    this._onDownFrameName = downFrame;
+                } else {
+                    this._onDownFrameID = downFrame;
+                }
+
+                //  These are the signals the game will subscribe to
+                this.onInputOver = new Phaser.Signal();
+                this.onInputOut = new Phaser.Signal();
+                this.onInputDown = new Phaser.Signal();
+                this.onInputUp = new Phaser.Signal();
+
+                if (callback) {
+                    this.onInputUp.add(callback, callbackContext);
+                }
+
+                this.input.start(0, false, true);
+
+                //  Redirect the input events to here so we can handle animation updates, etc
+                this.events.onInputOver.add(this.onInputOverHandler, this);
+                this.events.onInputOut.add(this.onInputOutHandler, this);
+                this.events.onInputDown.add(this.onInputDownHandler, this);
+                this.events.onInputUp.add(this.onInputUpHandler, this);
+            }
+            //  TODO
+            //public tabIndex: number;
+            //public tabEnabled: boolean;
+            //  ENTER or SPACE can activate this button if it has focus
+            Button.prototype.onInputOverHandler = function (pointer) {
+                if (this._onOverFrameName != null) {
+                    this.frameName = this._onOverFrameName;
+                } else if (this._onOverFrameID != null) {
+                    this.frame = this._onOverFrameID;
+                }
+
+                if (this.onInputOver) {
+                    this.onInputOver.dispatch(this, pointer);
+                }
+            };
+
+            Button.prototype.onInputOutHandler = function (pointer) {
+                if (this._onOutFrameName != null) {
+                    this.frameName = this._onOutFrameName;
+                } else if (this._onOutFrameID != null) {
+                    this.frame = this._onOutFrameID;
+                }
+
+                if (this.onInputOut) {
+                    this.onInputOut.dispatch(this, pointer);
+                }
+            };
+
+            Button.prototype.onInputDownHandler = function (pointer) {
+                if (this._onDownFrameName != null) {
+                    this.frameName = this._onDownFrameName;
+                } else if (this._onDownFrameID != null) {
+                    this.frame = this._onDownFrameID;
+                }
+
+                if (this.onInputDown) {
+                    this.onInputDown.dispatch(this, pointer);
+                }
+            };
+
+            Button.prototype.onInputUpHandler = function (pointer) {
+                if (this._onUpFrameName != null) {
+                    this.frameName = this._onUpFrameName;
+                } else if (this._onUpFrameID != null) {
+                    this.frame = this._onUpFrameID;
+                }
+
+                if (this.onInputUp) {
+                    this.onInputUp.dispatch(this, pointer);
+                }
+            };
+
+
+            Object.defineProperty(Button.prototype, "priorityID", {
+                get: function () {
+                    return this.input.priorityID;
+                },
+                set: function (value) {
+                    this.input.priorityID = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+
+            Object.defineProperty(Button.prototype, "useHandCursor", {
+                get: function () {
+                    return this.input.useHandCursor;
+                },
+                set: function (value) {
+                    this.input.useHandCursor = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return Button;
+        })(Phaser.Sprite);
+        UI.Button = Button;
+    })(Phaser.UI || (Phaser.UI = {}));
+    var UI = Phaser.UI;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
@@ -18230,13 +18487,18 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="_definitions.ts" />
 /**
-* Phaser - World
+* World
 *
 * "This world is but a canvas to our imagination." - Henry David Thoreau
 *
 * A game has only one world. The world is an abstract place in which all game objects live. It is not bound
-* by stage limits and can be any size or dimension. You look into the world via cameras and all game objects
-* live within the world at world-based coordinates. By default a world is created the same size as your Stage.
+* by stage limits and can be any size. You look into the world via cameras. All game objects live within
+* the world at world-based coordinates. By default a world is created the same size as your Stage.
+*
+* @package    Phaser.World
+* @author     Richard Davey <rich@photonstorm.com>
+* @copyright  2013 Photon Storm Ltd.
+* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 var Phaser;
 (function (Phaser) {
@@ -18383,10 +18645,15 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="_definitions.ts" />
 /**
-* Phaser - Stage
+* Stage
 *
-* The Stage is the canvas on which everything is displayed. This class handles display within the web browser, focus handling,
-* resizing, scaling and pause/boot screens.
+* The Stage controls the canvas on which everything is displayed. It handles display within the browser,
+* focus handling, game resizing, scaling and the pause, boot and orientation screens.
+*
+* @package    Phaser.Stage
+* @author     Richard Davey <rich@photonstorm.com>
+* @copyright  2013 Photon Storm Ltd.
+* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 var Phaser;
 (function (Phaser) {
@@ -18717,9 +18984,15 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="_definitions.ts" />
 /**
-* Phaser - State
+* State
 *
-* This is a base State class which can be extended if you are creating your game using TypeScript.
+* This is a base State class which can be extended if you are creating your game with TypeScript.
+* It provides quick access to common functions such as the camera, cache, input, match, sound and more.
+*
+* @package    Phaser.State
+* @author     Richard Davey <rich@photonstorm.com>
+* @copyright  2013 Photon Storm Ltd.
+* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 var Phaser;
 (function (Phaser) {
@@ -18787,13 +19060,18 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="_definitions.ts" />
 /**
-* Phaser - Game
+* Game
 *
 * This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
 *
 * "Hell, there are no rules here - we're trying to accomplish something."
 *                                                       Thomas A. Edison
+*
+* @package    Phaser.Game
+* @author     Richard Davey <rich@photonstorm.com>
+* @copyright  2013 Photon Storm Ltd.
+* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 var Phaser;
 (function (Phaser) {
@@ -18803,6 +19081,7 @@ var Phaser;
         *
         * Instantiate a new <code>Phaser.Game</code> object.
         *
+        * @constructor
         * @param callbackContext Which context will the callbacks be called with.
         * @param parent {string} ID of its parent DOM element.
         * @param width {number} The width of your game in game pixels.
@@ -19278,252 +19557,27 @@ var Phaser;
     })();
     Phaser.Game = Game;
 })(Phaser || (Phaser = {}));
-/// <reference path="../_definitions.ts" />
+/// <reference path="_definitions.ts" />
 /**
-* Phaser - RandomDataGenerator
+* Phaser - http://www.phaser.io
 *
-* An extremely useful repeatable random data generator. Access it via Game.rnd
-* Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
-* Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
+* v1.0.0 - August 12th 2013
+*
+* A feature-packed 2D canvas game framework born from the firey pits of Flixel and
+* constructed via plenty of blood, sweat, tears and coffee by Richard Davey (@photonstorm).
+*
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from both which Phaser
+* and my love of game development originate.
+*
+* Follow Phaser progress at http://www.photonstorm.com
+*
+* "If you want your children to be intelligent,  read them fairy tales."
+* "If you want them to be more intelligent, read them more fairy tales."
+*                                                     -- Albert Einstein
 */
 var Phaser;
 (function (Phaser) {
-    var RandomDataGenerator = (function () {
-        /**
-        * @constructor
-        * @param {Array} seeds
-        * @return {Phaser.RandomDataGenerator}
-        */
-        function RandomDataGenerator(seeds) {
-            if (typeof seeds === "undefined") { seeds = []; }
-            /**
-            * @property c
-            * @type Number
-            * @private
-            */
-            this.c = 1;
-            this.sow(seeds);
-        }
-        /**
-        * @method uint32
-        * @private
-        */
-        RandomDataGenerator.prototype.uint32 = function () {
-            return this.rnd.apply(this) * 0x100000000;
-        };
+    Phaser.VERSION = 'Phaser version 1.0.0';
 
-        /**
-        * @method fract32
-        * @private
-        */
-        RandomDataGenerator.prototype.fract32 = function () {
-            return this.rnd.apply(this) + (this.rnd.apply(this) * 0x200000 | 0) * 1.1102230246251565e-16;
-        };
-
-        // private random helper
-        /**
-        * @method rnd
-        * @private
-        */
-        RandomDataGenerator.prototype.rnd = function () {
-            var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10;
-
-            this.c = t | 0;
-            this.s0 = this.s1;
-            this.s1 = this.s2;
-            this.s2 = t - this.c;
-
-            return this.s2;
-        };
-
-        /**
-        * @method hash
-        * @param {Any} data
-        * @private
-        */
-        RandomDataGenerator.prototype.hash = function (data) {
-            var h, i, n;
-
-            n = 0xefc8249d;
-
-            data = data.toString();
-
-            for (i = 0; i < data.length; i++) {
-                n += data.charCodeAt(i);
-                h = 0.02519603282416938 * n;
-                n = h >>> 0;
-                h -= n;
-                h *= n;
-                n = h >>> 0;
-                h -= n;
-                n += h * 0x100000000;
-            }
-
-            return (n >>> 0) * 2.3283064365386963e-10;
-        };
-
-        /**
-        * Reset the seed of the random data generator
-        * @method sow
-        * @param {Array} seeds
-        */
-        RandomDataGenerator.prototype.sow = function (seeds) {
-            if (typeof seeds === "undefined") { seeds = []; }
-            this.s0 = this.hash(' ');
-            this.s1 = this.hash(this.s0);
-            this.s2 = this.hash(this.s1);
-
-            var seed;
-
-            for (var i = 0; seed = seeds[i++];) {
-                this.s0 -= this.hash(seed);
-                this.s0 += ~~(this.s0 < 0);
-
-                this.s1 -= this.hash(seed);
-                this.s1 += ~~(this.s1 < 0);
-
-                this.s2 -= this.hash(seed);
-                this.s2 += ~~(this.s2 < 0);
-            }
-        };
-
-        Object.defineProperty(RandomDataGenerator.prototype, "integer", {
-            get: /**
-            * Returns a random integer between 0 and 2^32
-            * @method integer
-            * @return {Number}
-            */
-            function () {
-                return this.uint32();
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(RandomDataGenerator.prototype, "frac", {
-            get: /**
-            * Returns a random real number between 0 and 1
-            * @method frac
-            * @return {Number}
-            */
-            function () {
-                return this.fract32();
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(RandomDataGenerator.prototype, "real", {
-            get: /**
-            * Returns a random real number between 0 and 2^32
-            * @method real
-            * @return {Number}
-            */
-            function () {
-                return this.uint32() + this.fract32();
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        /**
-        * Returns a random integer between min and max
-        * @method integerInRange
-        * @param {Number} min
-        * @param {Number} max
-        * @return {Number}
-        */
-        RandomDataGenerator.prototype.integerInRange = function (min, max) {
-            return Math.floor(this.realInRange(min, max));
-        };
-
-        /**
-        * Returns a random real number between min and max
-        * @method realInRange
-        * @param {Number} min
-        * @param {Number} max
-        * @return {Number}
-        */
-        RandomDataGenerator.prototype.realInRange = function (min, max) {
-            min = min || 0;
-            max = max || 0;
-
-            return this.frac * (max - min) + min;
-        };
-
-        Object.defineProperty(RandomDataGenerator.prototype, "normal", {
-            get: /**
-            * Returns a random real number between -1 and 1
-            * @method normal
-            * @return {Number}
-            */
-            function () {
-                return 1 - 2 * this.frac;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(RandomDataGenerator.prototype, "uuid", {
-            get: /**
-            * Returns a valid v4 UUID hex string (from https://gist.github.com/1308368)
-            * @method uuid
-            * @return {String}
-            */
-            function () {
-                var a, b;
-
-                for (b = a = ''; a++ < 36; b += ~a % 5 | a * 3 & 4 ? (a ^ 15 ? 8 ^ this.frac * (a ^ 20 ? 16 : 4) : 4).toString(16) : '-')
-                    ;
-
-                return b;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        /**
-        * Returns a random member of `array`
-        * @method pick
-        * @param {Any} array
-        */
-        RandomDataGenerator.prototype.pick = function (array) {
-            return array[this.integerInRange(0, array.length)];
-        };
-
-        /**
-        * Returns a random member of `array`, favoring the earlier entries
-        * @method weightedPick
-        * @param {Any} array
-        */
-        RandomDataGenerator.prototype.weightedPick = function (array) {
-            return array[~~(Math.pow(this.frac, 2) * array.length)];
-        };
-
-        /**
-        * Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified
-        * @method timestamp
-        * @param {Number} min
-        * @param {Number} max
-        */
-        RandomDataGenerator.prototype.timestamp = function (min, max) {
-            if (typeof min === "undefined") { min = 946684800000; }
-            if (typeof max === "undefined") { max = 1577862000000; }
-            return this.realInRange(min, max);
-        };
-
-        Object.defineProperty(RandomDataGenerator.prototype, "angle", {
-            get: /**
-            * Returns a random angle between -180 and 180
-            * @method angle
-            */
-            function () {
-                return this.integerInRange(-180, 180);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return RandomDataGenerator;
-    })();
-    Phaser.RandomDataGenerator = RandomDataGenerator;
+    Phaser.GAMES = [];
 })(Phaser || (Phaser = {}));

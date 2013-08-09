@@ -1,10 +1,16 @@
 /// <reference path="_definitions.ts" />
 
 /**
-* Phaser - State
-*
-* This is a base State class which can be extended if you are creating your game using TypeScript.
-*/
+ * State
+ *
+ * This is a base State class which can be extended if you are creating your game with TypeScript.
+ * It provides quick access to common functions such as the camera, cache, input, match, sound and more.
+ *
+ * @package    Phaser.State
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 
 module Phaser {
 
