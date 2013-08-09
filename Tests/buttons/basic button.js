@@ -31,8 +31,10 @@
 
     function clickedIt() {
         if (this.image.visible == true) {
+            game.stage.backgroundColor = '';
             this.image.visible = false;
         } else {
+            game.stage.backgroundColor = 'rgb(0,0,0)';
             this.image.visible = true;
         }
     }

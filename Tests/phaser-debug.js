@@ -1,5 +1,29 @@
 /// <reference path="_definitions.ts" />
 /**
+* Phaser - http://www.phaser.io
+*
+* v1.0.0 - August 12th 2013
+*
+* A feature-packed 2D canvas game framework born from the firey pits of Flixel and
+* constructed via plenty of blood, sweat, tears and coffee by Richard Davey (@photonstorm).
+*
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from both which Phaser
+* and my love of game development originate.
+*
+* Follow Phaser progress at http://www.photonstorm.com
+*
+* "If you want your children to be intelligent,  read them fairy tales."
+* "If you want them to be more intelligent, read them more fairy tales."
+*                                                     -- Albert Einstein
+*/
+var Phaser;
+(function (Phaser) {
+    Phaser.VERSION = 'Phaser version 1.0.0';
+
+    Phaser.GAMES = [];
+})(Phaser || (Phaser = {}));
+/// <reference path="_definitions.ts" />
+/**
 * Types
 *
 * This file contains all constants used through-out Phaser.
@@ -5320,10 +5344,13 @@ var Phaser;
             this.texture = new Phaser.Display.Texture(this);
 
             //  We create a hidden canvas for our camera the size of the game (we use the screenView to clip the render to the camera size)
-            this.texture.canvas = document.createElement('canvas');
-            this.texture.canvas.width = width;
-            this.texture.canvas.height = height;
+            this._canvas = document.createElement('canvas');
+            this._canvas.width = width;
+            this._canvas.height = height;
+            this._renderLocal = true;
+            this.texture.canvas = this._canvas;
             this.texture.context = this.texture.canvas.getContext('2d');
+            this.texture.backgroundColor = this.game.stage.backgroundColor;
 
             //  Handy proxies
             this.scale = this.transform.scale;
@@ -5344,6 +5371,24 @@ var Phaser;
             */
             function (value) {
                 this.texture.alpha = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Camera.prototype, "directToStage", {
+            set: function (value) {
+                if (value) {
+                    this._renderLocal = false;
+                    this.texture.canvas = this.game.stage.canvas;
+                    Phaser.CanvasUtils.setBackgroundColor(this.texture.canvas, this.game.stage.backgroundColor);
+                } else {
+                    this._renderLocal = true;
+                    this.texture.canvas = this._canvas;
+                    Phaser.CanvasUtils.setBackgroundColor(this.texture.canvas, this.texture.backgroundColor);
+                }
+
+                this.texture.context = this.texture.canvas.getContext('2d');
             },
             enumerable: true,
             configurable: true
@@ -5696,6 +5741,8 @@ var Phaser;
             this._cameraLength = 0;
 
             this.defaultCamera = this.addCamera(x, y, width, height);
+
+            this.defaultCamera.directToStage = true;
 
             this.current = this.defaultCamera;
         }
@@ -19162,24 +19209,14 @@ var Phaser;
             this.canvas = document.createElement('canvas');
             this.canvas.width = width;
             this.canvas.height = height;
+            this.context = this.canvas.getContext('2d');
 
-            if ((parent !== '' || parent !== null) && document.getElementById(parent)) {
-                document.getElementById(parent).appendChild(this.canvas);
-                document.getElementById(parent).style.overflow = 'hidden';
-            } else {
-                document.body.appendChild(this.canvas);
-            }
+            Phaser.CanvasUtils.addToDOM(this.canvas, parent, true);
+            Phaser.CanvasUtils.setTouchAction(this.canvas);
 
-            //  Consume default actions on the canvas
-            this.canvas.style.msTouchAction = 'none';
-            this.canvas.style['ms-touch-action'] = 'none';
-            this.canvas.style['touch-action'] = 'none';
-            this.canvas.style.backgroundColor = 'rgb(0,0,0)';
             this.canvas.oncontextmenu = function (event) {
                 event.preventDefault();
             };
-
-            this.context = this.canvas.getContext('2d');
 
             this.css3 = new Phaser.Display.CSS3Filters(this.canvas);
 
@@ -19231,7 +19268,7 @@ var Phaser;
 
             if (this.clear || (this.game.paused && this.disablePauseScreen == false)) {
                 if (this.game.device.patchAndroidClearRectBug) {
-                    this.context.fillStyle = 'rgb(0,0,0)';
+                    this.context.fillStyle = this._backgroundColor;
                     this.context.fillRect(0, 0, this.width, this.height);
                 } else {
                     this.context.clearRect(0, 0, this.width, this.height);
@@ -19289,13 +19326,6 @@ var Phaser;
                     this.scale.incorrectOrientation = false;
                 }
             }
-        };
-
-        Stage.prototype.setImageRenderingCrisp = function () {
-            this.canvas.style['image-rendering'] = 'crisp-edges';
-            this.canvas.style['image-rendering'] = '-moz-crisp-edges';
-            this.canvas.style['image-rendering'] = '-webkit-optimize-contrast';
-            this.canvas.style['-ms-interpolation-mode'] = 'nearest-neighbor';
         };
 
         Stage.prototype.pauseGame = function () {
@@ -19356,7 +19386,7 @@ var Phaser;
             this.context.fillStyle = this.fillStyle;
 
             if (this.game.device.patchAndroidClearRectBug) {
-                this.context.fillStyle = 'rgb(0,0,0)';
+                this.context.fillStyle = this._backgroundColor;
                 this.context.fillRect(0, 0, this.width, this.height);
             } else {
                 this.context.clearRect(0, 0, this.width, this.height);
@@ -20019,27 +20049,81 @@ var Phaser;
     })();
     Phaser.Game = Game;
 })(Phaser || (Phaser = {}));
-/// <reference path="_definitions.ts" />
+/// <reference path="../_definitions.ts" />
 /**
-* Phaser - http://www.phaser.io
+* Phaser - CanvasUtils
 *
-* v1.0.0 - August 12th 2013
-*
-* A feature-packed 2D canvas game framework born from the firey pits of Flixel and
-* constructed via plenty of blood, sweat, tears and coffee by Richard Davey (@photonstorm).
-*
-* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from both which Phaser
-* and my love of game development originate.
-*
-* Follow Phaser progress at http://www.photonstorm.com
-*
-* "If you want your children to be intelligent,  read them fairy tales."
-* "If you want them to be more intelligent, read them more fairy tales."
-*                                                     -- Albert Einstein
+* A collection of methods useful for manipulating canvas objects.
 */
 var Phaser;
 (function (Phaser) {
-    Phaser.VERSION = 'Phaser version 1.0.0';
+    var CanvasUtils = (function () {
+        function CanvasUtils() {
+        }
+        CanvasUtils.getAspectRatio = function (canvas) {
+            return canvas.width / canvas.height;
+        };
 
-    Phaser.GAMES = [];
+        CanvasUtils.setBackgroundColor = function (canvas, color) {
+            if (typeof color === "undefined") { color = 'rgb(0,0,0)'; }
+            canvas.style.backgroundColor = color;
+            return canvas;
+        };
+
+        CanvasUtils.setTouchAction = function (canvas, value) {
+            if (typeof value === "undefined") { value = 'none'; }
+            canvas.style.msTouchAction = value;
+            canvas.style['ms-touch-action'] = value;
+            canvas.style['touch-action'] = value;
+
+            return canvas;
+        };
+
+        CanvasUtils.addToDOM = function (canvas, parent, overflowHidden) {
+            if (typeof parent === "undefined") { parent = ''; }
+            if (typeof overflowHidden === "undefined") { overflowHidden = true; }
+            if ((parent !== '' || parent !== null) && document.getElementById(parent)) {
+                document.getElementById(parent).appendChild(canvas);
+
+                if (overflowHidden) {
+                    document.getElementById(parent).style.overflow = 'hidden';
+                }
+            } else {
+                document.body.appendChild(canvas);
+            }
+
+            return canvas;
+        };
+
+        CanvasUtils.setTransform = function (context, translateX, translateY, scaleX, scaleY, skewX, skewY) {
+            context.setTransform(scaleX, skewX, skewY, scaleY, translateX, translateY);
+
+            return context;
+        };
+
+        CanvasUtils.setSmoothingEnabled = function (context, value) {
+            context['imageSmoothingEnabled'] = value;
+            context['mozImageSmoothingEnabled'] = value;
+            context['oImageSmoothingEnabled'] = value;
+            context['webkitImageSmoothingEnabled'] = value;
+            context['msImageSmoothingEnabled'] = value;
+            return context;
+        };
+
+        CanvasUtils.setImageRenderingCrisp = function (canvas) {
+            canvas.style['image-rendering'] = 'crisp-edges';
+            canvas.style['image-rendering'] = '-moz-crisp-edges';
+            canvas.style['image-rendering'] = '-webkit-optimize-contrast';
+            canvas.style.msInterpolationMode = 'nearest-neighbor';
+            return canvas;
+        };
+
+        CanvasUtils.setImageRenderingBicubic = function (canvas) {
+            canvas.style['image-rendering'] = 'auto';
+            canvas.style.msInterpolationMode = 'bicubic';
+            return canvas;
+        };
+        return CanvasUtils;
+    })();
+    Phaser.CanvasUtils = CanvasUtils;
 })(Phaser || (Phaser = {}));

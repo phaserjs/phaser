@@ -5344,10 +5344,13 @@ var Phaser;
             this.texture = new Phaser.Display.Texture(this);
 
             //  We create a hidden canvas for our camera the size of the game (we use the screenView to clip the render to the camera size)
-            this.texture.canvas = document.createElement('canvas');
-            this.texture.canvas.width = width;
-            this.texture.canvas.height = height;
+            this._canvas = document.createElement('canvas');
+            this._canvas.width = width;
+            this._canvas.height = height;
+            this._renderLocal = true;
+            this.texture.canvas = this._canvas;
             this.texture.context = this.texture.canvas.getContext('2d');
+            this.texture.backgroundColor = this.game.stage.backgroundColor;
 
             //  Handy proxies
             this.scale = this.transform.scale;
@@ -5368,6 +5371,24 @@ var Phaser;
             */
             function (value) {
                 this.texture.alpha = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Camera.prototype, "directToStage", {
+            set: function (value) {
+                if (value) {
+                    this._renderLocal = false;
+                    this.texture.canvas = this.game.stage.canvas;
+                    Phaser.CanvasUtils.setBackgroundColor(this.texture.canvas, this.game.stage.backgroundColor);
+                } else {
+                    this._renderLocal = true;
+                    this.texture.canvas = this._canvas;
+                    Phaser.CanvasUtils.setBackgroundColor(this.texture.canvas, this.texture.backgroundColor);
+                }
+
+                this.texture.context = this.texture.canvas.getContext('2d');
             },
             enumerable: true,
             configurable: true
@@ -5720,6 +5741,8 @@ var Phaser;
             this._cameraLength = 0;
 
             this.defaultCamera = this.addCamera(x, y, width, height);
+
+            this.defaultCamera.directToStage = true;
 
             this.current = this.defaultCamera;
         }
@@ -19245,7 +19268,7 @@ var Phaser;
 
             if (this.clear || (this.game.paused && this.disablePauseScreen == false)) {
                 if (this.game.device.patchAndroidClearRectBug) {
-                    this.context.fillStyle = 'rgb(0,0,0)';
+                    this.context.fillStyle = this._backgroundColor;
                     this.context.fillRect(0, 0, this.width, this.height);
                 } else {
                     this.context.clearRect(0, 0, this.width, this.height);
@@ -19363,7 +19386,7 @@ var Phaser;
             this.context.fillStyle = this.fillStyle;
 
             if (this.game.device.patchAndroidClearRectBug) {
-                this.context.fillStyle = 'rgb(0,0,0)';
+                this.context.fillStyle = this._backgroundColor;
                 this.context.fillRect(0, 0, this.width, this.height);
             } else {
                 this.context.clearRect(0, 0, this.width, this.height);

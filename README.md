@@ -33,8 +33,6 @@ Future Plans
 * Joypad support.
 * Gestures input class.
 * Integrate the Advanced Physics system that is 90% ready but needs updating for TypeScript 0.9.1.
-* We can streamline the code for a lot of the CanvasRenderer calls re: global ops, alpha, etc.
-* Move getOffset inside Phaser.Display.Canvas
 
 
 ToDo before release
@@ -169,6 +167,7 @@ V1.0.0
 * Added Input.pollRate - this lets you limit how often Pointer events are handled (0 = every frame, 1 = every other frame, etc)
 * Renamed the 'init' function to 'preload'. It now calls load.start automatically.
 * Entire framework updated for TypeScript 0.9.1 - what a mammoth amount of work that was! Sorry but not backward compatible.
+* Added CanvasUtils class, including ability to set image rendering, add a canvas to the dom and other handy things.
 
 
 V0.9.6

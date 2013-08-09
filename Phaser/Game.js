@@ -175,7 +175,7 @@ var Phaser;
                 //this.physics = new Phaser.Physics.Manager(this);
                 this.plugins = new Phaser.PluginManager(this, this);
 
-                this.load.onLoadComplete.addOnce(this.loadComplete, this);
+                this.load.onLoadComplete.add(this.loadComplete, this);
 
                 this.setRenderer(Phaser.Types.RENDERER_CANVAS);
 
@@ -301,6 +301,7 @@ var Phaser;
                     this._loadComplete = true;
                 } else {
                     //  Start the loader going as we have something in the queue
+                    this.load.onLoadComplete.add(this.loadComplete, this);
                     this.load.start();
                 }
             } else {

@@ -29,6 +29,8 @@ var Phaser;
 
             this.defaultCamera = this.addCamera(x, y, width, height);
 
+            this.defaultCamera.directToStage = true;
+
             this.current = this.defaultCamera;
         }
         /**

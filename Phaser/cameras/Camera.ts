@@ -45,10 +45,13 @@ module Phaser {
             this.texture = new Phaser.Display.Texture(this);
 
             //  We create a hidden canvas for our camera the size of the game (we use the screenView to clip the render to the camera size)
-            this.texture.canvas = <HTMLCanvasElement> document.createElement('canvas');
-            this.texture.canvas.width = width;
-            this.texture.canvas.height = height;
+            this._canvas = <HTMLCanvasElement> document.createElement('canvas');
+            this._canvas.width = width;
+            this._canvas.height = height;
+            this._renderLocal = true;
+            this.texture.canvas = this._canvas;
             this.texture.context = this.texture.canvas.getContext('2d');
+            this.texture.backgroundColor = this.game.stage.backgroundColor;
 
             //  Handy proxies
             this.scale = this.transform.scale;
@@ -58,6 +61,8 @@ module Phaser {
 
         }
 
+        private _renderLocal: boolean;
+        private _canvas: HTMLCanvasElement;
         private _target: Sprite = null;
 
         /**
@@ -159,6 +164,25 @@ module Phaser {
          * The z value of this Camera. Cameras are rendered in z-index order by the Renderer.
          */
         public z: number = -1;
+
+        public set directToStage(value: boolean) {
+
+            if (value)
+            {
+                this._renderLocal = false;
+                this.texture.canvas = this.game.stage.canvas;
+                Phaser.CanvasUtils.setBackgroundColor(this.texture.canvas, this.game.stage.backgroundColor);
+            }
+            else
+            {
+                this._renderLocal = true;
+                this.texture.canvas = this._canvas;
+                Phaser.CanvasUtils.setBackgroundColor(this.texture.canvas, this.texture.backgroundColor);
+            }
+
+            this.texture.context = this.texture.canvas.getContext('2d');
+
+        }
 
         /**
         * Hides an object from this Camera. Hidden objects are not rendered.

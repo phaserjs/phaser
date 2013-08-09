@@ -19,6 +19,10 @@ var Phaser;
             * @type {string}
             */
             this.crossOrigin = '';
+            //  If you want to append a URL before the path of any asset you can set this here.
+            //  Useful if you need to allow an asset url to be configured outside of the game code.
+            //  MUST have / on the end of it!
+            this.baseURL = '';
             this.game = game;
 
             this._keys = [];
@@ -225,7 +229,7 @@ var Phaser;
                         return _this.fileError(file.key);
                     };
                     file.data.crossOrigin = this.crossOrigin;
-                    file.data.src = file.url;
+                    file.data.src = this.baseURL + file.url;
                     break;
 
                 case 'audio':
@@ -233,7 +237,7 @@ var Phaser;
 
                     if (file.url !== null) {
                         if (this.game.sound.usingWebAudio) {
-                            this._xhr.open("GET", file.url, true);
+                            this._xhr.open("GET", this.baseURL + file.url, true);
                             this._xhr.responseType = "arraybuffer";
                             this._xhr.onload = function () {
                                 return _this.fileComplete(file.key);
@@ -248,7 +252,7 @@ var Phaser;
                                 file.data = new Audio();
                                 file.data.name = file.key;
                                 file.data.preload = 'auto';
-                                file.data.src = file.url;
+                                file.data.src = this.baseURL + file.url;
                                 this.fileComplete(file.key);
                             } else {
                                 file.data = new Audio();
@@ -257,7 +261,7 @@ var Phaser;
                                     return _this.fileError(file.key);
                                 };
                                 file.data.preload = 'auto';
-                                file.data.src = file.url;
+                                file.data.src = this.baseURL + file.url;
                                 file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
                                 file.data.load();
                             }
@@ -267,7 +271,7 @@ var Phaser;
                     break;
 
                 case 'text':
-                    this._xhr.open("GET", file.url, true);
+                    this._xhr.open("GET", this.baseURL + file.url, true);
                     this._xhr.responseType = "text";
                     this._xhr.onload = function () {
                         return _this.fileComplete(file.key);
@@ -341,7 +345,7 @@ var Phaser;
                     } else {
                         //  Load the JSON or XML before carrying on with the next file
                         loadNext = false;
-                        this._xhr.open("GET", file.atlasURL, true);
+                        this._xhr.open("GET", this.baseURL + file.atlasURL, true);
                         this._xhr.responseType = "text";
 
                         if (file.format == Loader.TEXTURE_ATLAS_JSON_ARRAY) {

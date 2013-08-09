@@ -188,7 +188,7 @@ module Phaser {
             {
                 if (this.game.device.patchAndroidClearRectBug)
                 {
-                    this.context.fillStyle = 'rgb(0,0,0)';
+                    this.context.fillStyle = this._backgroundColor;
                     this.context.fillRect(0, 0, this.width, this.height);
                 }
                 else
@@ -357,7 +357,7 @@ module Phaser {
 
             if (this.game.device.patchAndroidClearRectBug)
             {
-                this.context.fillStyle = 'rgb(0,0,0)';
+                this.context.fillStyle = this._backgroundColor;
                 this.context.fillRect(0, 0, this.width, this.height);
             }
             else

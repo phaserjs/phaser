@@ -387,10 +387,6 @@ module Phaser {
 
         }
 
-        private emptyCallback() {
-            //   Called by onUpdateCallback etc
-        }
-
         /**
           * Game loop method will be called when it's running.
           */

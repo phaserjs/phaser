@@ -114,7 +114,7 @@ var Phaser;
         */
         Sprite.prototype.bringToTop = function () {
             if (this.group) {
-                //this.group.bringToTop(this);
+                this.group.bringToTop(this);
             }
         };
 

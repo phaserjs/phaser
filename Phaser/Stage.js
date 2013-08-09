@@ -56,24 +56,14 @@ var Phaser;
             this.canvas = document.createElement('canvas');
             this.canvas.width = width;
             this.canvas.height = height;
+            this.context = this.canvas.getContext('2d');
 
-            if ((parent !== '' || parent !== null) && document.getElementById(parent)) {
-                document.getElementById(parent).appendChild(this.canvas);
-                document.getElementById(parent).style.overflow = 'hidden';
-            } else {
-                document.body.appendChild(this.canvas);
-            }
+            Phaser.CanvasUtils.addToDOM(this.canvas, parent, true);
+            Phaser.CanvasUtils.setTouchAction(this.canvas);
 
-            //  Consume default actions on the canvas
-            this.canvas.style.msTouchAction = 'none';
-            this.canvas.style['ms-touch-action'] = 'none';
-            this.canvas.style['touch-action'] = 'none';
-            this.canvas.style.backgroundColor = 'rgb(0,0,0)';
             this.canvas.oncontextmenu = function (event) {
                 event.preventDefault();
             };
-
-            this.context = this.canvas.getContext('2d');
 
             this.css3 = new Phaser.Display.CSS3Filters(this.canvas);
 
@@ -125,7 +115,7 @@ var Phaser;
 
             if (this.clear || (this.game.paused && this.disablePauseScreen == false)) {
                 if (this.game.device.patchAndroidClearRectBug) {
-                    this.context.fillStyle = 'rgb(0,0,0)';
+                    this.context.fillStyle = this._backgroundColor;
                     this.context.fillRect(0, 0, this.width, this.height);
                 } else {
                     this.context.clearRect(0, 0, this.width, this.height);
@@ -183,13 +173,6 @@ var Phaser;
                     this.scale.incorrectOrientation = false;
                 }
             }
-        };
-
-        Stage.prototype.setImageRenderingCrisp = function () {
-            this.canvas.style['image-rendering'] = 'crisp-edges';
-            this.canvas.style['image-rendering'] = '-moz-crisp-edges';
-            this.canvas.style['image-rendering'] = '-webkit-optimize-contrast';
-            this.canvas.style['-ms-interpolation-mode'] = 'nearest-neighbor';
         };
 
         Stage.prototype.pauseGame = function () {
@@ -250,7 +233,7 @@ var Phaser;
             this.context.fillStyle = this.fillStyle;
 
             if (this.game.device.patchAndroidClearRectBug) {
-                this.context.fillStyle = 'rgb(0,0,0)';
+                this.context.fillStyle = this._backgroundColor;
                 this.context.fillRect(0, 0, this.width, this.height);
             } else {
                 this.context.clearRect(0, 0, this.width, this.height);

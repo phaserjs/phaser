@@ -126,6 +126,10 @@
       <DependentUpon>world sprite.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="groups\bring to top 1.ts" />
+    <TypeScriptCompile Include="display\render crisp.ts" />
+    <Content Include="display\render crisp.js">
+      <DependentUpon>render crisp.ts</DependentUpon>
+    </Content>
     <Content Include="groups\add to group 1.ts" />
     <Content Include="groups\add to group 2.ts" />
     <Content Include="groups\bring to top 1.js">
