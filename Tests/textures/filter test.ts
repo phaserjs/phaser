@@ -14,7 +14,7 @@
     }
 
     var hue: number = 0;
-    var texture: Phaser.DynamicTexture;
+    var texture: Phaser.Display.DynamicTexture;
 
     function create() {
 

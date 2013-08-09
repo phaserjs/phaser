@@ -7390,85 +7390,120 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - TimeManager
-*
-* This is the game clock and it manages elapsed time and calculation of delta values, used for game object motion.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
     var TimeManager = (function () {
         /**
-        * Time constructor
-        * Create a new <code>Time</code>.
+        * This is the core internal game clock. It manages the elapsed time and calculation of delta values,
+        * used for game object motion and tweens.
         *
-        * @param game {Phaser.Game} Current game instance.
+        * @class TimeManager
+        * @constructor
+        * @param {Phaser.Game} game A reference to the currently running game.
         */
         function TimeManager(game) {
             /**
-            * Elapsed since last frame.
-            * @type {number}
+            * Number of milliseconds elapsed since the last frame update.
+            * @property elapsed
+            * @public
+            * @type {Number}
             */
             this.elapsed = 0;
             /**
             * Game time counter.
             * @property time
-            * @type {number}
+            * @public
+            * @type {Number}
             */
             this.time = 0;
             /**
-            * How long the game has been paused for. Gets reset each time the game pauses.
+            * Records how long the game has been paused for. Is reset each time the game pauses.
             * @property pausedTime
-            * @type {number}
+            * @public
+            * @type {Number}
             */
             this.pausedTime = 0;
             /**
-            * Time of current frame.
+            * The time right now.
             * @property now
-            * @type {number}
+            * @public
+            * @type {Number}
             */
             this.now = 0;
             /**
-            * Elapsed time since last frame.
+            * Elapsed time since the last frame.
             * @property delta
-            * @type {number}
+            * @public
+            * @type {Number}
             */
             this.delta = 0;
             /**
             * Frames per second.
-            * @type {number}
+            * @property fps
+            * @public
+            * @type {Number}
             */
             this.fps = 0;
             /**
-            * Minimal fps.
-            * @type {number}
+            * The lowest rate the fps has dropped to.
+            * @property fpsMin
+            * @public
+            * @type {Number}
             */
             this.fpsMin = 1000;
             /**
-            * Maximal fps.
-            * @type {number}
+            * The highest rate the fps has reached (usually no higher than 60fps).
+            * @property fpsMax
+            * @public
+            * @type {Number}
             */
             this.fpsMax = 0;
             /**
-            * Minimum duration between 2 frames.
-            * @type {number}
+            * The minimum amount of time the game has taken between two frames.
+            * @property msMin
+            * @public
+            * @type {Number}
             */
             this.msMin = 1000;
             /**
-            * Maximum duration between 2 frames.
-            * @type {number}
+            * The maximum amount of time the game has taken between two frames.
+            * @property msMax
+            * @public
+            * @type {Number}
             */
             this.msMax = 0;
             /**
-            * How many frames in last second.
-            * @type {number}
+            * The number of frames record in the last second.
+            * @property frames
+            * @public
+            * @type {Number}
             */
             this.frames = 0;
             /**
-            * Time of last second.
-            * @type {number}
+            * The time (in ms) that the last second counter ticked over.
+            * @property _timeLastSecond
+            * @private
+            * @type {Number}
             */
             this._timeLastSecond = 0;
+            /**
+            * Records how long the game was paused for in miliseconds.
+            * @property pauseDuration
+            * @public
+            * @type {Number}
+            */
             this.pauseDuration = 0;
+            /**
+            * The time the game started being paused.
+            * @property _pauseStarted
+            * @private
+            * @type {Number}
+            */
             this._pauseStarted = 0;
             this.game = game;
 
@@ -7481,7 +7516,7 @@ var Phaser;
         }
         Object.defineProperty(TimeManager.prototype, "totalElapsedSeconds", {
             get: /**
-            *
+            * The number of seconds that have elapsed since the game was started.
             * @method totalElapsedSeconds
             * @return {Number}
             */
@@ -7496,7 +7531,7 @@ var Phaser;
         * Update clock and calculate the fps.
         * This is called automatically by Game._raf
         * @method update
-        * @param {number} raf The current timestamp, either performance.now or Date.now
+        * @param {Number} raf The current timestamp, either performance.now or Date.now
         */
         TimeManager.prototype.update = function (raf) {
             this.now = raf;
@@ -7523,20 +7558,30 @@ var Phaser;
             }
         };
 
+        /**
+        * Called when the game enters a paused state.
+        * @method gamePaused
+        * @private
+        */
         TimeManager.prototype.gamePaused = function () {
             this._pauseStarted = this.now;
         };
 
+        /**
+        * Called when the game resumes from a paused state.
+        * @method gameResumed
+        * @private
+        */
         TimeManager.prototype.gameResumed = function () {
             //  Level out the delta timer to avoid spikes
             this.pauseDuration = this.pausedTime;
         };
 
         /**
-        * How long has passed since given time.
+        * How long has passed since the given time.
         * @method elapsedSince
-        * @param {number} since The time you want to measure.
-        * @return {number} Duration between given time and now.
+        * @param {Number} since The time you want to measure against.
+        * @return {Number} The difference between the given time and now.
         */
         TimeManager.prototype.elapsedSince = function (since) {
             return this.now - since;
@@ -7545,15 +7590,15 @@ var Phaser;
         /**
         * How long has passed since the given time (in seconds).
         * @method elapsedSecondsSince
-        * @param {number} since The time you want to measure (in seconds).
-        * @return {number} Duration between given time and now (in seconds).
+        * @param {Number} since The time you want to measure (in seconds).
+        * @return {Number} Duration between given time and now (in seconds).
         */
         TimeManager.prototype.elapsedSecondsSince = function (since) {
             return (this.now - since) * 0.001;
         };
 
         /**
-        * Set the start time to now.
+        * Resets the private _started value to now.
         * @method reset
         */
         TimeManager.prototype.reset = function () {
@@ -7818,6 +7863,110 @@ var Phaser;
                 return false;
             }
         };
+
+        Keyboard.A = "A".charCodeAt(0);
+        Keyboard.B = "B".charCodeAt(0);
+        Keyboard.C = "C".charCodeAt(0);
+        Keyboard.D = "D".charCodeAt(0);
+        Keyboard.E = "E".charCodeAt(0);
+        Keyboard.F = "F".charCodeAt(0);
+        Keyboard.G = "G".charCodeAt(0);
+        Keyboard.H = "H".charCodeAt(0);
+        Keyboard.I = "I".charCodeAt(0);
+        Keyboard.J = "J".charCodeAt(0);
+        Keyboard.K = "K".charCodeAt(0);
+        Keyboard.L = "L".charCodeAt(0);
+        Keyboard.M = "M".charCodeAt(0);
+        Keyboard.N = "N".charCodeAt(0);
+        Keyboard.O = "O".charCodeAt(0);
+        Keyboard.P = "P".charCodeAt(0);
+        Keyboard.Q = "Q".charCodeAt(0);
+        Keyboard.R = "R".charCodeAt(0);
+        Keyboard.S = "S".charCodeAt(0);
+        Keyboard.T = "T".charCodeAt(0);
+        Keyboard.U = "U".charCodeAt(0);
+        Keyboard.V = "V".charCodeAt(0);
+        Keyboard.W = "W".charCodeAt(0);
+        Keyboard.X = "X".charCodeAt(0);
+        Keyboard.Y = "Y".charCodeAt(0);
+        Keyboard.Z = "Z".charCodeAt(0);
+
+        Keyboard.ZERO = "0".charCodeAt(0);
+        Keyboard.ONE = "1".charCodeAt(0);
+        Keyboard.TWO = "2".charCodeAt(0);
+        Keyboard.THREE = "3".charCodeAt(0);
+        Keyboard.FOUR = "4".charCodeAt(0);
+        Keyboard.FIVE = "5".charCodeAt(0);
+        Keyboard.SIX = "6".charCodeAt(0);
+        Keyboard.SEVEN = "7".charCodeAt(0);
+        Keyboard.EIGHT = "8".charCodeAt(0);
+        Keyboard.NINE = "9".charCodeAt(0);
+
+        Keyboard.NUMPAD_0 = 96;
+        Keyboard.NUMPAD_1 = 97;
+        Keyboard.NUMPAD_2 = 98;
+        Keyboard.NUMPAD_3 = 99;
+        Keyboard.NUMPAD_4 = 100;
+        Keyboard.NUMPAD_5 = 101;
+        Keyboard.NUMPAD_6 = 102;
+        Keyboard.NUMPAD_7 = 103;
+        Keyboard.NUMPAD_8 = 104;
+        Keyboard.NUMPAD_9 = 105;
+        Keyboard.NUMPAD_MULTIPLY = 106;
+        Keyboard.NUMPAD_ADD = 107;
+        Keyboard.NUMPAD_ENTER = 108;
+        Keyboard.NUMPAD_SUBTRACT = 109;
+        Keyboard.NUMPAD_DECIMAL = 110;
+        Keyboard.NUMPAD_DIVIDE = 111;
+
+        Keyboard.F1 = 112;
+        Keyboard.F2 = 113;
+        Keyboard.F3 = 114;
+        Keyboard.F4 = 115;
+        Keyboard.F5 = 116;
+        Keyboard.F6 = 117;
+        Keyboard.F7 = 118;
+        Keyboard.F8 = 119;
+        Keyboard.F9 = 120;
+        Keyboard.F10 = 121;
+        Keyboard.F11 = 122;
+        Keyboard.F12 = 123;
+        Keyboard.F13 = 124;
+        Keyboard.F14 = 125;
+        Keyboard.F15 = 126;
+
+        Keyboard.COLON = 186;
+        Keyboard.EQUALS = 187;
+        Keyboard.UNDERSCORE = 189;
+        Keyboard.QUESTION_MARK = 191;
+        Keyboard.TILDE = 192;
+        Keyboard.OPEN_BRACKET = 219;
+        Keyboard.BACKWARD_SLASH = 220;
+        Keyboard.CLOSED_BRACKET = 221;
+        Keyboard.QUOTES = 222;
+
+        Keyboard.BACKSPACE = 8;
+        Keyboard.TAB = 9;
+        Keyboard.CLEAR = 12;
+        Keyboard.ENTER = 13;
+        Keyboard.SHIFT = 16;
+        Keyboard.CONTROL = 17;
+        Keyboard.ALT = 18;
+        Keyboard.CAPS_LOCK = 20;
+        Keyboard.ESC = 27;
+        Keyboard.SPACEBAR = 32;
+        Keyboard.PAGE_UP = 33;
+        Keyboard.PAGE_DOWN = 34;
+        Keyboard.END = 35;
+        Keyboard.HOME = 36;
+        Keyboard.LEFT = 37;
+        Keyboard.UP = 38;
+        Keyboard.RIGHT = 39;
+        Keyboard.DOWN = 40;
+        Keyboard.INSERT = 45;
+        Keyboard.DELETE = 46;
+        Keyboard.HELP = 47;
+        Keyboard.NUM_LOCK = 144;
         return Keyboard;
     })();
     Phaser.Keyboard = Keyboard;
@@ -15737,9 +15886,10 @@ var Phaser;
         *
         * @return {Particle} The newly created particle object.
         */
-        //public particle(): ArcadeParticle {
-        //    return new ArcadeParticle(this.game);
-        //}
+        GameObjectFactory.prototype.particle = function () {
+            return new Phaser.ArcadeParticle(this.game);
+        };
+
         /**
         * Create a new Emitter.
         *
@@ -15748,9 +15898,13 @@ var Phaser;
         * @param size {number} Optional, size of this emitter.
         * @return {Emitter} The newly created emitter object.
         */
-        //public emitter(x: number = 0, y: number = 0, size: number = 0): ArcadeEmitter {
-        //    return <ArcadeEmitter> this._world.group.add(new ArcadeEmitter(this.game, x, y, size));
-        //}
+        GameObjectFactory.prototype.emitter = function (x, y, size) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof size === "undefined") { size = 0; }
+            return this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
+        };
+
         /**
         * Create a new ScrollZone object with image key, position and size.
         *
@@ -15849,9 +16003,10 @@ var Phaser;
         * @param emitter The Emitter to add to the Game World
         * @return {Phaser.Emitter} The Emitter object
         */
-        //public existingEmitter(emitter: ArcadeEmitter): ArcadeEmitter {
-        //    return this._world.group.add(emitter);
-        //}
+        GameObjectFactory.prototype.existingEmitter = function (emitter) {
+            return this._world.group.add(emitter);
+        };
+
         /**
         * Add an existing ScrollZone to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
@@ -15887,6 +16042,373 @@ var Phaser;
         return GameObjectFactory;
     })();
     Phaser.GameObjectFactory = GameObjectFactory;
+})(Phaser || (Phaser = {}));
+/// <reference path="../_definitions.ts" />
+/**
+* Phaser - ArcadeEmitter
+*
+* Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+* continuous effects like rain and fire. All it really does is launch Particle objects out
+* at set intervals, and fixes their positions and velocities accorindgly.
+*/
+var Phaser;
+(function (Phaser) {
+    var ArcadeEmitter = (function (_super) {
+        __extends(ArcadeEmitter, _super);
+        /**
+        * Creates a new <code>Emitter</code> object at a specific position.
+        * Does NOT automatically generate or attach particles!
+        *
+        * @param x {number} The X position of the emitter.
+        * @param y {number} The Y position of the emitter.
+        * @param [size] {number} Specifies a maximum capacity for this emitter.
+        */
+        function ArcadeEmitter(game, x, y, size) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof size === "undefined") { size = 0; }
+            _super.call(this, game, size);
+
+            this.x = x;
+            this.y = y;
+            this.width = 0;
+            this.height = 0;
+            this.minParticleSpeed = new Phaser.Vec2(-100, -100);
+            this.maxParticleSpeed = new Phaser.Vec2(100, 100);
+            this.minRotation = -360;
+            this.maxRotation = 360;
+            this.gravity = 0;
+            this.particleClass = null;
+            this.particleDrag = new Phaser.Vec2();
+            this.frequency = 0.1;
+            this.lifespan = 3;
+            this.bounce = 0;
+            this._quantity = 0;
+            this._counter = 0;
+            this._explode = true;
+            this.on = false;
+
+            this.exists = true;
+            this.active = true;
+            this.visible = true;
+        }
+        /**
+        * Clean up memory.
+        */
+        ArcadeEmitter.prototype.destroy = function () {
+            this.minParticleSpeed = null;
+            this.maxParticleSpeed = null;
+            this.particleDrag = null;
+            this.particleClass = null;
+            this._point = null;
+            _super.prototype.destroy.call(this);
+        };
+
+        /**
+        * This function generates a new array of particle sprites to attach to the emitter.
+        *
+        * @param graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
+        * @param quantity {number} The number of particles to generate when using the "create from image" option.
+        * @param multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
+        * @param collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
+        *
+        * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
+        */
+        ArcadeEmitter.prototype.makeParticles = function (graphics, quantity, multiple, collide) {
+            if (typeof quantity === "undefined") { quantity = 50; }
+            if (typeof multiple === "undefined") { multiple = false; }
+            if (typeof collide === "undefined") { collide = 0; }
+            this.maxSize = quantity;
+
+            var totalFrames = 1;
+
+            /*
+            if(Multiple)
+            {
+            var sprite:Sprite = new Sprite(this.game);
+            sprite.loadGraphic(Graphics,true);
+            totalFrames = sprite.frames;
+            sprite.destroy();
+            }
+            */
+            var randomFrame;
+            var particle;
+            var i = 0;
+
+            while (i < quantity) {
+                if (this.particleClass == null) {
+                    particle = new Phaser.ArcadeParticle(this.game);
+                } else {
+                    particle = new this.particleClass(this.game);
+                }
+
+                if (multiple) {
+                    /*
+                    randomFrame = this.game.math.random()*totalFrames;
+                    */
+                } else {
+                    if (graphics) {
+                        particle.texture.loadImage(graphics);
+                    }
+                }
+
+                if (collide > 0) {
+                    //particle.body.allowCollisions = Types.ANY;
+                    particle.body.type = Phaser.Types.BODY_DYNAMIC;
+                    particle.width *= collide;
+                    particle.height *= collide;
+                } else {
+                    //particle.body.allowCollisions = Types.NONE;
+                }
+
+                particle.exists = false;
+
+                //  Center the origin for rotation assistance
+                //particle.transform.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
+                this.add(particle);
+
+                i++;
+            }
+
+            return this;
+        };
+
+        ArcadeEmitter.prototype.preUpdate = function () {
+        };
+        ArcadeEmitter.prototype.postUpdate = function () {
+        };
+
+        /**
+        * Called automatically by the game loop, decides when to launch particles and when to "die".
+        */
+        ArcadeEmitter.prototype.update = function () {
+            if (this.on) {
+                if (this._explode) {
+                    this.on = false;
+
+                    var i = 0;
+                    var l = this._quantity;
+
+                    if ((l <= 0) || (l > this.length)) {
+                        l = this.length;
+                    }
+
+                    while (i < l) {
+                        this.emitParticle();
+                        i++;
+                    }
+
+                    this._quantity = 0;
+                } else {
+                    this._timer += this.game.time.elapsed;
+
+                    while ((this.frequency > 0) && (this._timer > this.frequency) && this.on) {
+                        this._timer -= this.frequency;
+                        this.emitParticle();
+
+                        if ((this._quantity > 0) && (++this._counter >= this._quantity)) {
+                            this.on = false;
+                            this._quantity = 0;
+                        }
+                    }
+                }
+            }
+
+            _super.prototype.update.call(this);
+        };
+
+        /**
+        * Call this function to turn off all the particles and the emitter.
+        */
+        ArcadeEmitter.prototype.kill = function () {
+            this.on = false;
+            this.alive = false;
+            this.exists = false;
+        };
+
+        /**
+        * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
+        * In practice, this is most often called by <code>Object.reset()</code>.
+        */
+        ArcadeEmitter.prototype.revive = function () {
+            this.alive = true;
+            this.exists = true;
+        };
+
+        /**
+        * Call this function to start emitting particles.
+        *
+        * @param explode {boolean} Whether the particles should all burst out at once.
+        * @param lifespan {number} How long each particle lives once emitted. 0 = forever.
+        * @param frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
+        * @param quantity {number} How many particles to launch. 0 = "all of the particles".
+        */
+        ArcadeEmitter.prototype.start = function (explode, lifespan, frequency, quantity) {
+            if (typeof explode === "undefined") { explode = true; }
+            if (typeof lifespan === "undefined") { lifespan = 0; }
+            if (typeof frequency === "undefined") { frequency = 0.1; }
+            if (typeof quantity === "undefined") { quantity = 0; }
+            this.revive();
+
+            this.visible = true;
+            this.on = true;
+
+            this._explode = explode;
+            this.lifespan = lifespan;
+            this.frequency = frequency;
+            this._quantity += quantity;
+
+            this._counter = 0;
+            this._timer = 0;
+        };
+
+        /**
+        * This function can be used both internally and externally to emit the next particle.
+        */
+        ArcadeEmitter.prototype.emitParticle = function () {
+            var particle = this.recycle(Phaser.ArcadeParticle);
+
+            particle.lifespan = this.lifespan;
+
+            //particle.body.bounce.setTo(this.bounce, this.bounce);
+            Phaser.SpriteUtils.reset(particle, this.x - (particle.width >> 1) + this.game.rnd.integer * this.width, this.y - (particle.height >> 1) + this.game.rnd.integer * this.height);
+            particle.visible = true;
+
+            if (this.minParticleSpeed.x != this.maxParticleSpeed.x) {
+                particle.body.velocity.x = this.minParticleSpeed.x + this.game.rnd.integer * (this.maxParticleSpeed.x - this.minParticleSpeed.x);
+            } else {
+                particle.body.velocity.x = this.minParticleSpeed.x;
+            }
+
+            if (this.minParticleSpeed.y != this.maxParticleSpeed.y) {
+                particle.body.velocity.y = this.minParticleSpeed.y + this.game.rnd.integer * (this.maxParticleSpeed.y - this.minParticleSpeed.y);
+            } else {
+                particle.body.velocity.y = this.minParticleSpeed.y;
+            }
+
+            if (this.minRotation != this.maxRotation && this.minRotation !== 0 && this.maxRotation !== 0) {
+                particle.body.angularVelocity = this.minRotation + this.game.rnd.integer * (this.maxRotation - this.minRotation);
+            } else {
+                particle.body.angularVelocity = this.minRotation;
+            }
+
+            if (particle.body.angularVelocity != 0) {
+                particle.rotation = this.game.rnd.integer * 360 - 180;
+            }
+
+            //particle.body.drag.x = this.particleDrag.x;
+            //particle.body.drag.y = this.particleDrag.y;
+            particle.onEmit();
+        };
+
+        /**
+        * A more compact way of setting the width and height of the emitter.
+        *
+        * @param width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
+        * @param height {number} The desired height of the emitter.
+        */
+        ArcadeEmitter.prototype.setSize = function (width, height) {
+            this.width = width;
+            this.height = height;
+        };
+
+        /**
+        * A more compact way of setting the X velocity range of the emitter.
+        *
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
+        */
+        ArcadeEmitter.prototype.setXSpeed = function (min, max) {
+            if (typeof min === "undefined") { min = 0; }
+            if (typeof max === "undefined") { max = 0; }
+            this.minParticleSpeed.x = min;
+            this.maxParticleSpeed.x = max;
+        };
+
+        /**
+        * A more compact way of setting the Y velocity range of the emitter.
+        *
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
+        */
+        ArcadeEmitter.prototype.setYSpeed = function (min, max) {
+            if (typeof min === "undefined") { min = 0; }
+            if (typeof max === "undefined") { max = 0; }
+            this.minParticleSpeed.y = min;
+            this.maxParticleSpeed.y = max;
+        };
+
+        /**
+        * A more compact way of setting the angular velocity constraints of the emitter.
+        *
+        * @param Min {number} The minimum value for this range.
+        * @param Max {number} The maximum value for this range.
+        */
+        ArcadeEmitter.prototype.setRotation = function (min, max) {
+            if (typeof min === "undefined") { min = 0; }
+            if (typeof max === "undefined") { max = 0; }
+            this.minRotation = min;
+            this.maxRotation = max;
+        };
+
+        /**
+        * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
+        *
+        * @param Object {object} The <code>Object</code> that you want to sync up with.
+        */
+        ArcadeEmitter.prototype.at = function (object) {
+            //this.x = object.body.bounds.halfWidth - (this.width >> 1);
+            //this.y = object.body.bounds.halfHeight - (this.height >> 1);
+        };
+        return ArcadeEmitter;
+    })(Phaser.Group);
+    Phaser.ArcadeEmitter = ArcadeEmitter;
+})(Phaser || (Phaser = {}));
+/// <reference path="../_definitions.ts" />
+/**
+* Phaser - ArcadeParticle
+*
+* This is a simple particle class that extends a Sprite to have a slightly more
+* specialised behaviour. It is used exclusively by the Emitter class and can be extended as required.
+*/
+var Phaser;
+(function (Phaser) {
+    var ArcadeParticle = (function (_super) {
+        __extends(ArcadeParticle, _super);
+        /**
+        * Instantiate a new particle.  Like <code>Sprite</code>, all meaningful creation
+        * happens during <code>loadGraphic()</code> or <code>makeGraphic()</code> or whatever.
+        */
+        function ArcadeParticle(game) {
+            _super.call(this, game);
+
+            this.body.type = Phaser.Types.BODY_DYNAMIC;
+            this.lifespan = 0;
+        }
+        /**
+        * The particle's main update logic.  Basically it checks to see if it should be dead yet.
+        */
+        ArcadeParticle.prototype.update = function () {
+            if (this.lifespan <= 0) {
+                return;
+            }
+
+            this.lifespan -= this.game.time.elapsed;
+
+            if (this.lifespan <= 0) {
+                this.kill();
+            }
+        };
+
+        /**
+        * Triggered whenever this object is launched by a <code>Emitter</code>.
+        * You can override this to add custom behavior like a sound or AI or something.
+        */
+        ArcadeParticle.prototype.onEmit = function () {
+        };
+        return ArcadeParticle;
+    })(Phaser.Sprite);
+    Phaser.ArcadeParticle = ArcadeParticle;
 })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {

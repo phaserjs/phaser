@@ -1,5 +1,4 @@
 /// <reference path="../../Phaser/Game.ts" />
-/// <reference path="../../Phaser/gameobjects/ScrollZone.ts" />
 
 (function () {
 
@@ -11,8 +10,6 @@
         game.load.image('starfield', 'assets/misc/starfield.jpg');
         game.load.image('jet', 'assets/sprites/particle1.png');
         game.load.image('bullet', 'assets/misc/bullet1.png');
-
-        
 
     }
 

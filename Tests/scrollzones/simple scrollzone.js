@@ -2,9 +2,11 @@
 /// <reference path="../../Phaser/gameobjects/ScrollZone.ts" />
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, preload, create);
+
     function preload() {
         game.load.image('crystal', 'assets/pics/jim_sachs_time_crystal.png');
     }
+
     function create() {
         //  This creates our ScrollZone. It is positioned at x0 y0 (world coodinates) by default and uses
         //  the 'crystal' image from the cache.

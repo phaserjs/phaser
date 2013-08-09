@@ -1,0 +1,10 @@
+{
+    "name": "Phaser",
+    "description": "HTML5 Game Framework",
+    "version": "1.0.0",
+    "url": "http://www.phaser.io/",
+    "options": {
+	    "linkNatives": "false"
+    }
+
+}

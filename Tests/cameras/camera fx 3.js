@@ -1,8 +1,10 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
+
     var btn1, btn2, btn3;
     var fx;
+
     function preload() {
         game.world.setSize(800, 600, true);
         game.load.image('blue', 'assets/tests/blue-circle.png');
@@ -15,7 +17,7 @@
         btn3 = game.add.button(221, 318, 'magenta', shakeWithCallback, this);
         // Usage of shake fx is the same as fade and flash.
         //fx = game.camera.fx.add(Phaser.FX.Camera.Shake);
-            }
+    }
     function render() {
         Phaser.DebugUtils.context.fillStyle = '#fff';
         Phaser.DebugUtils.context.fillText('Press to shake.', 114 + 90, 34 + 130);

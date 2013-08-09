@@ -1,0 +1,1 @@
+yuidoc -c ../Phaser/yuidoc.json -o API/ -t yuidoc-theme-dana -e .ts ../Phaser/time

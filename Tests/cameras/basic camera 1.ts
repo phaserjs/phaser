@@ -35,7 +35,7 @@
 
     function update() {
 
-        game.camera.rotation++;
+        game.camera.rotation--;
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {

@@ -1,84 +1,119 @@
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - TimeManager
-*
-* This is the game clock and it manages elapsed time and calculation of delta values, used for game object motion.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
     var TimeManager = (function () {
         /**
-        * Time constructor
-        * Create a new <code>Time</code>.
+        * This is the core internal game clock. It manages the elapsed time and calculation of delta values,
+        * used for game object motion and tweens.
         *
-        * @param game {Phaser.Game} Current game instance.
+        * @class TimeManager
+        * @constructor
+        * @param {Phaser.Game} game A reference to the currently running game.
         */
         function TimeManager(game) {
             /**
-            * Elapsed since last frame.
-            * @type {number}
+            * Number of milliseconds elapsed since the last frame update.
+            * @property elapsed
+            * @public
+            * @type {Number}
             */
             this.elapsed = 0;
             /**
             * Game time counter.
             * @property time
-            * @type {number}
+            * @public
+            * @type {Number}
             */
             this.time = 0;
             /**
-            * How long the game has been paused for. Gets reset each time the game pauses.
+            * Records how long the game has been paused for. Is reset each time the game pauses.
             * @property pausedTime
-            * @type {number}
+            * @public
+            * @type {Number}
             */
             this.pausedTime = 0;
             /**
-            * Time of current frame.
+            * The time right now.
             * @property now
-            * @type {number}
+            * @public
+            * @type {Number}
             */
             this.now = 0;
             /**
-            * Elapsed time since last frame.
+            * Elapsed time since the last frame.
             * @property delta
-            * @type {number}
+            * @public
+            * @type {Number}
             */
             this.delta = 0;
             /**
             * Frames per second.
-            * @type {number}
+            * @property fps
+            * @public
+            * @type {Number}
             */
             this.fps = 0;
             /**
-            * Minimal fps.
-            * @type {number}
+            * The lowest rate the fps has dropped to.
+            * @property fpsMin
+            * @public
+            * @type {Number}
             */
             this.fpsMin = 1000;
             /**
-            * Maximal fps.
-            * @type {number}
+            * The highest rate the fps has reached (usually no higher than 60fps).
+            * @property fpsMax
+            * @public
+            * @type {Number}
             */
             this.fpsMax = 0;
             /**
-            * Minimum duration between 2 frames.
-            * @type {number}
+            * The minimum amount of time the game has taken between two frames.
+            * @property msMin
+            * @public
+            * @type {Number}
             */
             this.msMin = 1000;
             /**
-            * Maximum duration between 2 frames.
-            * @type {number}
+            * The maximum amount of time the game has taken between two frames.
+            * @property msMax
+            * @public
+            * @type {Number}
             */
             this.msMax = 0;
             /**
-            * How many frames in last second.
-            * @type {number}
+            * The number of frames record in the last second.
+            * @property frames
+            * @public
+            * @type {Number}
             */
             this.frames = 0;
             /**
-            * Time of last second.
-            * @type {number}
+            * The time (in ms) that the last second counter ticked over.
+            * @property _timeLastSecond
+            * @private
+            * @type {Number}
             */
             this._timeLastSecond = 0;
+            /**
+            * Records how long the game was paused for in miliseconds.
+            * @property pauseDuration
+            * @public
+            * @type {Number}
+            */
             this.pauseDuration = 0;
+            /**
+            * The time the game started being paused.
+            * @property _pauseStarted
+            * @private
+            * @type {Number}
+            */
             this._pauseStarted = 0;
             this.game = game;
 
@@ -91,7 +126,7 @@ var Phaser;
         }
         Object.defineProperty(TimeManager.prototype, "totalElapsedSeconds", {
             get: /**
-            *
+            * The number of seconds that have elapsed since the game was started.
             * @method totalElapsedSeconds
             * @return {Number}
             */
@@ -106,7 +141,7 @@ var Phaser;
         * Update clock and calculate the fps.
         * This is called automatically by Game._raf
         * @method update
-        * @param {number} raf The current timestamp, either performance.now or Date.now
+        * @param {Number} raf The current timestamp, either performance.now or Date.now
         */
         TimeManager.prototype.update = function (raf) {
             this.now = raf;
@@ -133,20 +168,30 @@ var Phaser;
             }
         };
 
+        /**
+        * Called when the game enters a paused state.
+        * @method gamePaused
+        * @private
+        */
         TimeManager.prototype.gamePaused = function () {
             this._pauseStarted = this.now;
         };
 
+        /**
+        * Called when the game resumes from a paused state.
+        * @method gameResumed
+        * @private
+        */
         TimeManager.prototype.gameResumed = function () {
             //  Level out the delta timer to avoid spikes
             this.pauseDuration = this.pausedTime;
         };
 
         /**
-        * How long has passed since given time.
+        * How long has passed since the given time.
         * @method elapsedSince
-        * @param {number} since The time you want to measure.
-        * @return {number} Duration between given time and now.
+        * @param {Number} since The time you want to measure against.
+        * @return {Number} The difference between the given time and now.
         */
         TimeManager.prototype.elapsedSince = function (since) {
             return this.now - since;
@@ -155,15 +200,15 @@ var Phaser;
         /**
         * How long has passed since the given time (in seconds).
         * @method elapsedSecondsSince
-        * @param {number} since The time you want to measure (in seconds).
-        * @return {number} Duration between given time and now (in seconds).
+        * @param {Number} since The time you want to measure (in seconds).
+        * @return {Number} Duration between given time and now (in seconds).
         */
         TimeManager.prototype.elapsedSecondsSince = function (since) {
             return (this.now - since) * 0.001;
         };
 
         /**
-        * Set the start time to now.
+        * Resets the private _started value to now.
         * @method reset
         */
         TimeManager.prototype.reset = function () {

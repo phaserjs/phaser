@@ -8,11 +8,9 @@
 
         game.load.image('ball', 'assets/sprites/shinyball.png');
 
-        
-
     }
 
-    var wobblyBall: Phaser.DynamicTexture;
+    var wobblyBall: Phaser.Display.DynamicTexture;
 
     function create() {
 

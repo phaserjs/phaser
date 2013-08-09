@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -16,7 +16,16 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="_definitions.ts" />
     <TypeScriptCompile Include="Phaser.ts" />
+    <TypeScriptCompile Include="particles\Emitter.ts" />
+    <Content Include="particles\Emitter.js">
+      <DependentUpon>Emitter.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\Particle.ts" />
+    <Content Include="particles\Particle.js">
+      <DependentUpon>Particle.ts</DependentUpon>
+    </Content>
     <Content Include="Phaser.js">
       <DependentUpon>Phaser.ts</DependentUpon>
     </Content>
@@ -416,7 +425,7 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
-    <XTypeScriptOutFile>../build/phaser-debug.js</XTypeScriptOutFile>
+    <TypeScriptOutFile>../build/phaser-debug.js</TypeScriptOutFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>

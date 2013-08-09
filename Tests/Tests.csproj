@@ -118,7 +118,6 @@
     <Content Include="cameras\scrollfactor 2.js">
       <DependentUpon>scrollfactor 2.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="particles\graphic emitter.ts" />
     <TypeScriptCompile Include="input\over sprite 1.ts" />
     <TypeScriptCompile Include="groups\create group 1.ts" />
     <TypeScriptCompile Include="cameras\world sprite.ts" />
@@ -251,25 +250,6 @@
     <Content Include="misc\rectangle utils 2.ts" />
     <Content Include="mobile\sprite test 1.js">
       <DependentUpon>sprite test 1.ts</DependentUpon>
-    </Content>
-    <Content Include="particles\graphic emitter.js">
-      <DependentUpon>graphic emitter.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="particles\multiple streams.ts" />
-    <TypeScriptCompile Include="particles\mousetrail.ts" />
-    <Content Include="particles\mousetrail.js">
-      <DependentUpon>mousetrail.ts</DependentUpon>
-    </Content>
-    <Content Include="particles\multiple streams.js">
-      <DependentUpon>multiple streams.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="particles\sprite emitter.ts" />
-    <Content Include="particles\sprite emitter.js">
-      <DependentUpon>sprite emitter.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="particles\when particles collide.ts" />
-    <Content Include="particles\when particles collide.js">
-      <DependentUpon>when particles collide.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scrollzones\simple scrollzone.ts" />
     <TypeScriptCompile Include="scrollzones\scroll window.ts" />
@@ -462,6 +442,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="animation\" />
+    <Folder Include="particles\" />
     <Folder Include="physics\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />

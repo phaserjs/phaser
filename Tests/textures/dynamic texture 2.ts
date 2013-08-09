@@ -4,7 +4,7 @@
 
     var game = new Phaser.Game(this, 'game', 800, 600, null, create, update, render);
 
-    var starfield: Phaser.DynamicTexture;
+    var starfield: Phaser.Display.DynamicTexture;
 
     var xx = [];
     var yy = [];

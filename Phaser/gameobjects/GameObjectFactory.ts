@@ -130,9 +130,9 @@ module Phaser {
          *
          * @return {Particle} The newly created particle object.
          */
-        //public particle(): ArcadeParticle {
-        //    return new ArcadeParticle(this.game);
-        //}
+        public particle(): Phaser.ArcadeParticle {
+            return new Phaser.ArcadeParticle(this.game);
+        }
 
         /**
          * Create a new Emitter.
@@ -142,9 +142,9 @@ module Phaser {
          * @param size {number} Optional, size of this emitter.
          * @return {Emitter} The newly created emitter object.
          */
-        //public emitter(x: number = 0, y: number = 0, size: number = 0): ArcadeEmitter {
-        //    return <ArcadeEmitter> this._world.group.add(new ArcadeEmitter(this.game, x, y, size));
-        //}
+        public emitter(x: number = 0, y: number = 0, size: number = 0): Phaser.ArcadeEmitter {
+            return <Phaser.ArcadeEmitter> this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
+        }
 
         /**
          * Create a new ScrollZone object with image key, position and size.
@@ -237,9 +237,9 @@ module Phaser {
          * @param emitter The Emitter to add to the Game World
          * @return {Phaser.Emitter} The Emitter object
          */
-        //public existingEmitter(emitter: ArcadeEmitter): ArcadeEmitter {
-        //    return this._world.group.add(emitter);
-        //}
+        public existingEmitter(emitter: Phaser.ArcadeEmitter): Phaser.ArcadeEmitter {
+            return this._world.group.add(emitter);
+        }
 
         /**
          * Add an existing ScrollZone to the current world.

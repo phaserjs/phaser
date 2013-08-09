@@ -211,7 +211,6 @@ module Phaser {
 
         }
 
-/*
         // Letters
         public static A: number = "A".charCodeAt(0);
         public static B: number = "B".charCodeAt(0);
@@ -321,7 +320,6 @@ module Phaser {
         public static DELETE: number = 46;
         public static HELP: number = 47;
         public static NUM_LOCK: number = 144;
-*/
     }
 
 }

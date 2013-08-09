@@ -1,21 +1,23 @@
 /// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - TimeManager
-*
-* This is the game clock and it manages elapsed time and calculation of delta values, used for game object motion.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
-
 module Phaser {
 
     export class TimeManager {
 
         /**
-         * Time constructor
-         * Create a new <code>Time</code>.
-         *
-         * @param game {Phaser.Game} Current game instance.
-         */
+        * This is the core internal game clock. It manages the elapsed time and calculation of delta values,
+        * used for game object motion and tweens.
+        *
+        * @class TimeManager
+        * @constructor
+        * @param {Phaser.Game} game A reference to the currently running game.
+        */
         constructor(game: Phaser.Game) {
 
             this.game = game;
@@ -30,52 +32,62 @@ module Phaser {
         }
 
         /**
-         * Local reference to game.
-         */
+        * A reference to the currently running Game.
+        * @property game
+        * @type {Phaser.Game}
+        */
         public game: Phaser.Game;
 
         /**
-         * Time when this object created.
-         * @param {number}
-         */
+        * The time at which the Game instance started.
+        * @property _started
+        * @private
+        * @type {Number}
+        */
         private _started: number;
 
         /**
-         * Elapsed since last frame.
-         * @type {number}
-         */
+        * Number of milliseconds elapsed since the last frame update.
+        * @property elapsed
+        * @public
+        * @type {Number}
+        */
         public elapsed: number = 0;
 
         /**
-         * Game time counter.
-         * @property time
-         * @type {number}
-         */
+        * Game time counter.
+        * @property time
+        * @public
+        * @type {Number}
+        */
         public time: number = 0;
 
         /**
-         * How long the game has been paused for. Gets reset each time the game pauses.
-         * @property pausedTime
-         * @type {number}
-         */
+        * Records how long the game has been paused for. Is reset each time the game pauses.
+        * @property pausedTime
+        * @public
+        * @type {Number}
+        */
         public pausedTime: number = 0;
 
         /**
-         * Time of current frame.
-         * @property now
-         * @type {number}
-         */
+        * The time right now.
+        * @property now
+        * @public
+        * @type {Number}
+        */
         public now: number = 0;
 
         /**
-         * Elapsed time since last frame.
-         * @property delta
-         * @type {number}
-         */
+        * Elapsed time since the last frame.
+        * @property delta
+        * @public
+        * @type {Number}
+        */
         public delta: number = 0;
 
         /**
-        *
+        * The number of seconds that have elapsed since the game was started.
         * @method totalElapsedSeconds
         * @return {Number}
         */
@@ -86,52 +98,66 @@ module Phaser {
         }
 
         /**
-         * Frames per second.
-         * @type {number}
-         */
+        * Frames per second.
+        * @property fps
+        * @public
+        * @type {Number}
+        */
         public fps: number = 0;
 
         /**
-         * Minimal fps.
-         * @type {number}
-         */
+        * The lowest rate the fps has dropped to.
+        * @property fpsMin
+        * @public
+        * @type {Number}
+        */
         public fpsMin: number = 1000;
 
         /**
-         * Maximal fps.
-         * @type {number}
-         */
+        * The highest rate the fps has reached (usually no higher than 60fps).
+        * @property fpsMax
+        * @public
+        * @type {Number}
+        */
         public fpsMax: number = 0;
 
         /**
-         * Minimum duration between 2 frames.
-         * @type {number}
-         */
+        * The minimum amount of time the game has taken between two frames.
+        * @property msMin
+        * @public
+        * @type {Number}
+        */
         public msMin: number = 1000;
 
         /**
-         * Maximum duration between 2 frames.
-         * @type {number}
-         */
+        * The maximum amount of time the game has taken between two frames.
+        * @property msMax
+        * @public
+        * @type {Number}
+        */
         public msMax: number = 0;
 
         /**
-         * How many frames in last second.
-         * @type {number}
-         */
+        * The number of frames record in the last second.
+        * @property frames
+        * @public
+        * @type {Number}
+        */
         public frames: number = 0;
 
         /**
-         * Time of last second.
-         * @type {number}
-         */
+        * The time (in ms) that the last second counter ticked over.
+        * @property _timeLastSecond
+        * @private
+        * @type {Number}
+        */
         private _timeLastSecond: number = 0;
 
         /**
          * Update clock and calculate the fps.
          * This is called automatically by Game._raf
          * @method update
-         * @param {number} raf The current timestamp, either performance.now or Date.now
+         * @param {Number} raf The current timestamp, either performance.now or Date.now
          */
         public update(raf: number) {
 
@@ -163,24 +189,47 @@ module Phaser {
 
         }
 
+        /**
+        * Called when the game enters a paused state.
+        * @method gamePaused
+        * @private
+        */
         private gamePaused() {
             this._pauseStarted = this.now;
         }
 
+        /**
+        * Called when the game resumes from a paused state.
+        * @method gameResumed
+        * @private
+        */
         private gameResumed() {
             //  Level out the delta timer to avoid spikes
             this.pauseDuration = this.pausedTime;
         }
 
+        /**
+        * Records how long the game was paused for in miliseconds.
+        * @property pauseDuration
+        * @public
+        * @type {Number}
+        */
         public pauseDuration: number = 0;
+
+        /**
+        * The time the game started being paused.
+        * @property _pauseStarted
+        * @private
+        * @type {Number}
+        */
         private _pauseStarted: number = 0;
 
         /**
-         * How long has passed since given time.
-         * @method elapsedSince
-         * @param {number} since The time you want to measure.
-         * @return {number} Duration between given time and now.
-         */
+        * How long has passed since the given time.
+        * @method elapsedSince
+        * @param {Number} since The time you want to measure against.
+        * @return {Number} The difference between the given time and now.
+        */
         public elapsedSince(since: number): number {
 
             return this.now - since;
@@ -188,11 +237,11 @@ module Phaser {
         }
 
         /**
-         * How long has passed since the given time (in seconds).
-         * @method elapsedSecondsSince
-         * @param {number} since The time you want to measure (in seconds).
-         * @return {number} Duration between given time and now (in seconds).
-         */
+        * How long has passed since the given time (in seconds).
+        * @method elapsedSecondsSince
+        * @param {Number} since The time you want to measure (in seconds).
+        * @return {Number} Duration between given time and now (in seconds).
+        */
         public elapsedSecondsSince(since: number): number {
 
             return (this.now - since) * 0.001;
@@ -200,9 +249,9 @@ module Phaser {
         }
 
         /**
-         * Set the start time to now.
-         * @method reset
-         */
+        * Resets the private _started value to now.
+        * @method reset
+        */
         public reset() {
 
             this._started = this.now;

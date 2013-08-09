@@ -125,9 +125,10 @@ var Phaser;
         *
         * @return {Particle} The newly created particle object.
         */
-        //public particle(): ArcadeParticle {
-        //    return new ArcadeParticle(this.game);
-        //}
+        GameObjectFactory.prototype.particle = function () {
+            return new Phaser.ArcadeParticle(this.game);
+        };
+
         /**
         * Create a new Emitter.
         *
@@ -136,9 +137,13 @@ var Phaser;
         * @param size {number} Optional, size of this emitter.
         * @return {Emitter} The newly created emitter object.
         */
-        //public emitter(x: number = 0, y: number = 0, size: number = 0): ArcadeEmitter {
-        //    return <ArcadeEmitter> this._world.group.add(new ArcadeEmitter(this.game, x, y, size));
-        //}
+        GameObjectFactory.prototype.emitter = function (x, y, size) {
+            if (typeof x === "undefined") { x = 0; }
+            if (typeof y === "undefined") { y = 0; }
+            if (typeof size === "undefined") { size = 0; }
+            return this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
+        };
+
         /**
         * Create a new ScrollZone object with image key, position and size.
         *
@@ -237,9 +242,10 @@ var Phaser;
         * @param emitter The Emitter to add to the Game World
         * @return {Phaser.Emitter} The Emitter object
         */
-        //public existingEmitter(emitter: ArcadeEmitter): ArcadeEmitter {
-        //    return this._world.group.add(emitter);
-        //}
+        GameObjectFactory.prototype.existingEmitter = function (emitter) {
+            return this._world.group.add(emitter);
+        };
+
         /**
         * Add an existing ScrollZone to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
