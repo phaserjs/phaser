@@ -33,6 +33,8 @@ Future Plans
 * Joypad support.
 * Gestures input class.
 * Integrate the Advanced Physics system that is 90% ready but needs updating for TypeScript 0.9.1.
+* We can streamline the code for a lot of the CanvasRenderer calls re: global ops, alpha, etc.
+* Move getOffset inside Phaser.Display.Canvas
 
 
 ToDo before release

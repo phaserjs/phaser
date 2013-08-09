@@ -229,7 +229,7 @@ module Phaser {
 
             if (this.group)
             {
-                //this.group.bringToTop(this);
+                this.group.bringToTop(this);
             }
 
         }
