@@ -14,6 +14,7 @@ module Phaser {
 
             this.game = game;
             this.type = Phaser.Types.GROUP;
+            this.active = true;
             this.exists = true;
             this.visible = true;
 
@@ -115,6 +116,11 @@ module Phaser {
         public exists: boolean;
 
         /**
+         * If this Group exists or not. Can be set to false to skip certain loop checks.
+         */
+        public active: boolean;
+
+        /**
          * Controls if this Group (and all of its contents) are rendered or skipped during the core game loop.
          */
         public visible: boolean;
@@ -184,7 +190,10 @@ module Phaser {
 
                 if (this._member != null && this._member.exists && this._member.active)
                 {
-                    this._member.preUpdate();
+                    if (this._member.type != Phaser.Types.GROUP)
+                    {
+                        this._member.preUpdate();
+                    }
                     this._member.update();
                 }
             }

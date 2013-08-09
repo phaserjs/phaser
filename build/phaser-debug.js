@@ -15085,6 +15085,10 @@ var Phaser;
         * Pre-update is called right before update() on each object in the game loop.
         */
         Sprite.prototype.preUpdate = function () {
+            if (this.name == 'piece1') {
+                console.log('wv', this.worldView);
+            }
+
             this.transform.update();
 
             if (this.transform.scrollFactor.x != 1 && this.transform.scrollFactor.x != 0) {
@@ -18110,6 +18114,11 @@ var Phaser;
             Phaser.DebugUtils.line('bottom: ' + sprite.worldView.bottom + ' right: ' + sprite.worldView.right.toFixed(1));
         };
 
+        DebugUtils.renderSpriteWorldViewBounds = function (sprite, color) {
+            if (typeof color === "undefined") { color = 'rgba(0,255,0,0.3)'; }
+            Phaser.DebugUtils.renderRectangle(sprite.worldView, color);
+        };
+
         DebugUtils.renderSpriteInfo = /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.
@@ -19787,10 +19796,6 @@ var Phaser;
             if (this.onPausedCallback !== null) {
                 this.onPausedCallback.call(this.callbackContext);
             }
-        };
-
-        Game.prototype.emptyCallback = function () {
-            //   Called by onUpdateCallback etc
         };
 
         /**

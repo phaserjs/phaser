@@ -217,6 +217,12 @@ module Phaser {
 
         }
 
+        static renderSpriteWorldViewBounds(sprite: Phaser.Sprite, color: string = 'rgba(0,255,0,0.3)') {
+
+            Phaser.DebugUtils.renderRectangle(sprite.worldView, color);
+
+        }
+
         /**
          * Render debug infos. (including name, bounds info, position and some other properties)
          * @param x {number} X position of the debug info to be rendered.

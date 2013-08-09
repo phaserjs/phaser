@@ -550,6 +550,7 @@ module Phaser.Components {
 		 * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
 		 */
         public enableDrag(lockCenter: boolean = false, bringToTop: boolean = false, pixelPerfect: boolean = false, alphaThreshold: number = 255, boundsRect: Rectangle = null, boundsSprite: Phaser.Sprite = null) {
+
             this._dragPoint = new Point;
 
             this.draggable = true;
@@ -569,6 +570,7 @@ module Phaser.Components {
             {
                 this.boundsSprite = boundsSprite;
             }
+
         }
 
         /**
