@@ -1,32 +1,85 @@
 /// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - DebugUtils
-*
-* A collection of methods for displaying debug information about game objects.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
-
 module Phaser {
 
+    /**
+    * A collection of methods for displaying debug information about game objects.
+    *
+    * @class DebugUtils
+    */
     export class DebugUtils {
 
-        static game: Phaser.Game;
+        /**
+        * A reference to the currently running Game.
+        * @property game
+        * @type {Phaser.Game}
+        */
+        public static game: Phaser.Game;
 
         /**
-         * The context to which the render debug info will be drawn.
-         * Defaults to the Game.Stage.context, but can be redirected anywhere.
-         * @type {CanvasRenderingContext2D}
-         */
-        static context: CanvasRenderingContext2D;
+        * The context to which the debug info will be drawn.
+        * Defaults to the Game.Stage.context, but can be redirected anywhere.
+        * @property context
+        * @type {CanvasRenderingContext2D}
+        */
+        public static context: CanvasRenderingContext2D;
 
-        static currentX: number;
-        static currentY: number;
-        static font: string = '14px Courier';
-        static lineHeight: number = 16;
-        static currentColor: string;
-        static renderShadow: boolean = true;
+        /**
+        * An internally used value that holds the X value of the debug text to be rendered.
+        * @property currentX
+        * @type {Number}
+        */
+        public static currentX: number;
 
-        static start(x: number, y: number, color: string = 'rgb(255,255,255)') {
+        /**
+        * An internally used value that holds the Y value of the debug text to be rendered.
+        * @property currentY
+        * @type {Number}
+        */
+        public static currentY: number;
+
+        /**
+        * The font of the debug text to be rendered.
+        * @property font
+        * @type {String}
+        */
+        public static font: string = '14px Courier';
+
+        /**
+        * The height in pixels of a line of debug text. If you adjust the font size then adjust this accordingly.
+        * @property lineHeight
+        * @type {Number}
+        */
+        public static lineHeight: number = 16;
+
+        /**
+        * The color of the debug text to be rendered in CSS string format (i.e. 'rgb(r,g,b)')
+        * @property font
+        * @type {String}
+        */
+        public static currentColor: string;
+
+        /**
+        * If set to true this will render a shadow below any debug text, often making it easier to read.
+        * @property renderShadow
+        * @type {Boolean}
+        */
+        public static renderShadow: boolean = true;
+        
+        /**
+        * Internal method that resets the debug output values.
+        * @method start
+        * @param {Number} x The X value the debug info will start from.
+        * @param {Number} y The Y value the debug info will start from.
+        * @param {String} color The color the debug info will drawn in.
+        */
+        public static start(x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             Phaser.DebugUtils.currentX = x;
             Phaser.DebugUtils.currentY = y;
@@ -37,7 +90,14 @@ module Phaser {
 
         }
 
-        static line(text: string, x:number = null, y:number = null) {
+        /**
+        * Internal method that outputs a single line of text.
+        * @method line
+        * @param {String} text The line of text to draw.
+        * @param {Number} x The X value the debug info will start from.
+        * @param {Number} y The Y value the debug info will start from.
+        */
+        public static line(text: string, x:number = null, y:number = null) {
 
             if (x !== null)
             {
@@ -62,7 +122,7 @@ module Phaser {
 
         }
 
-        static renderSpriteCorners(sprite: Phaser.Sprite, color: string = 'rgb(255,0,255)') {
+        public static renderSpriteCorners(sprite: Phaser.Sprite, color: string = 'rgb(255,0,255)') {
 
             Phaser.DebugUtils.start(0, 0, color);
 
@@ -79,7 +139,7 @@ module Phaser {
          * @param y {number} Y position of the debug info to be rendered.
          * @param [color] {number} color of the debug info to be rendered. (format is css color string)
         */
-        static renderSoundInfo(sound: Phaser.Sound, x: number, y: number, color: string = 'rgb(255,255,255)') {
+        public static renderSoundInfo(sound: Phaser.Sound, x: number, y: number, color: string = 'rgb(255,255,255)') {
 
             Phaser.DebugUtils.start(x, y, color);
 

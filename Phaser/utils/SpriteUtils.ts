@@ -1,26 +1,49 @@
 /// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - SpriteUtils
-*
-* A collection of methods useful for manipulating and checking Sprites.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
-
 module Phaser {
 
+    /**
+    * A collection of methods useful for manipulating and comparing Sprites.
+    *
+    * @class SpriteUtils
+    */
     export class SpriteUtils {
 
-        static _tempPoint: Phaser.Point;
-        static _sin: number;
-        static _cos: number;
+        /**
+        * A temporary internal variable.
+        * @property _tempPoint
+        * @type {Phaser.Point}
+        */
+        public static _tempPoint: Phaser.Point;
 
         /**
-         * Updates a Sprites cameraView Rectangle based on the given camera, sprite world position and rotation
-         * @param camera {Camera} The Camera to use in the view
-         * @param sprite {Sprite} The Sprite that will have its cameraView property modified
-         * @return {Rectangle} A reference to the Sprite.cameraView property
-         */
-        static updateCameraView(camera: Phaser.Camera, sprite: Phaser.Sprite): Phaser.Rectangle {
+        * A temporary internal variable.
+        * @property _sin
+        * @type {Number}
+        */
+        public static _sin: number;
+
+        /**
+        * A temporary internal variable.
+        * @property _cos
+        * @type {Number}
+        */
+        public static _cos: number;
+
+        /**
+        * Updates a Sprites cameraView Rectangle based on the given camera, sprite world position and rotation.
+        * @method updateCameraView
+        * @param {Camera} camera The Camera to use in the view
+        * @param {Sprite} sprite The Sprite that will have its cameraView property modified
+        * @return {Rectangle} A reference to the Sprite.cameraView property
+        */
+        public static updateCameraView(camera: Phaser.Camera, sprite: Phaser.Sprite): Phaser.Rectangle {
 
             if (sprite.rotation == 0 || sprite.texture.renderRotation == false)
             {
@@ -66,7 +89,13 @@ module Phaser {
 
         }
 
-        static getAsPoints(sprite: Phaser.Sprite): Phaser.Point[] {
+        /**
+        * Returns an array containing 4 Point objects corresponding to the 4 corners of the sprite bounds.
+        * @method getAsPoints
+        * @param {Sprite} sprite The Sprite that will have its cameraView property modified
+        * @return {Array} An array of Point objects.
+        */
+        public static getAsPoints(sprite: Phaser.Sprite): Phaser.Point[] {
 
             var out: Phaser.Point[] = [];
 
@@ -138,18 +167,17 @@ module Phaser {
         }
         */
 
-
         /**
         * Checks to see if the given x and y coordinates overlaps this <code>Sprite</code>, taking scaling and rotation into account.
         * The coordinates must be given in world space, not local or camera space.
         *
-        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
-        * @param x {Number} The x coordinate in world space.
-        * @param y {Number} The y coordinate in world space.
-        *
-        * @return   Whether or not the point overlaps this object.
+        * @method overlapsXY
+        * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
+        * @param {Number} x The x coordinate in world space.
+        * @param {Number} y The y coordinate in world space.
+        * @return {Boolean} Whether or not the point overlaps this object.
         */
-        static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): boolean {
+        public static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): boolean {
 
             //  if rotation == 0 then just do a rect check instead!
             if (sprite.transform.rotation == 0)
@@ -185,23 +213,24 @@ module Phaser {
         * Checks to see if the given point overlaps this <code>Sprite</code>, taking scaling and rotation into account.
         * The point must be given in world space, not local or camera space.
         *
-        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
-        * @param point {Point} The point in world space you want to check.
-        *
-        * @return   Whether or not the point overlaps this object.
+        * @method overlapsPoint
+        * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
+        * @param {Point} point The point in world space you want to check.
+        * @return {Boolean} Whether or not the point overlaps this object.
         */
-        static overlapsPoint(sprite: Phaser.Sprite, point: Phaser.Point): boolean {
+        public static overlapsPoint(sprite: Phaser.Sprite, point: Phaser.Point): boolean {
             return Phaser.SpriteUtils.overlapsXY(sprite, point.x, point.y);
         }
 
         /**
         * Check and see if this object is currently on screen.
         *
-        * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
-        *
-        * @return {boolean} Whether the object is on screen or not.
+        * @method onScreen
+        * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
+        * @param {Camera} camera Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        * @return {Boolean} Whether the object is on screen or not.
         */
-        static onScreen(sprite: Phaser.Sprite, camera: Phaser.Camera = null): boolean {
+        public static onScreen(sprite: Phaser.Sprite, camera: Phaser.Camera = null): boolean {
 
             if (camera == null)
             {
@@ -217,12 +246,13 @@ module Phaser {
         /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param point {Point} Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        *
+        * @method getScreenXY
+        * @param {Sprite} sprite The Sprite to check.
+        * @param {Point} point Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param {Camera} camera Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
-        static getScreenXY(sprite: Phaser.Sprite, point: Phaser.Point = null, camera: Phaser.Camera = null): Phaser.Point {
+        public static getScreenXY(sprite: Phaser.Sprite, point: Phaser.Point = null, camera: Phaser.Camera = null): Phaser.Point {
 
             if (point == null)
             {
@@ -258,23 +288,25 @@ module Phaser {
         */
 
         /**
-        * Handy for reviving game objects.
-        * Resets their existence flags and position.
+        * Handy for reviving game objects. Resets their existence flags and position.
         *
-        * @param x {number} The new X position of this object.
-        * @param y {number} The new Y position of this object.
+        * @method reset
+        * @param {Sprite} sprite The Sprite to reset.
+        * @param {number} x The new X position of this object.
+        * @param {number} y The new Y position of this object.
+        * @return {Sprite} The reset Sprite object.
         */
-        static reset(sprite: Phaser.Sprite, x: number, y: number) {
+        public static reset(sprite: Phaser.Sprite, x: number, y: number):Phaser.Sprite {
 
             sprite.revive();
-            //sprite.body.touching = Types.NONE;
-            //sprite.body.wasTouching = Types.NONE;
             sprite.x = x;
             sprite.y = y;
             sprite.body.velocity.x = 0;
             sprite.body.velocity.y = 0;
             sprite.body.position.x = x;
             sprite.body.position.y = y;
+
+            return sprite;
 
         }
 
@@ -283,36 +315,17 @@ module Phaser {
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
         * it can be stopped from leaving the world, or a section of it.
         *
-        * @param x {number} x position of the bound
-        * @param y {number} y position of the bound
-        * @param width {number} width of its bound
-        * @param height {number} height of its bound
+        * @method setBounds
+        * @param {number} x x position of the bound
+        * @param {number} y y position of the bound
+        * @param {number} width width of its bound
+        * @param {number} height height of its bound
         */
-        static setBounds(x: number, y: number, width: number, height: number) {
+        public static setBounds(x: number, y: number, width: number, height: number) {
 
-            //this.worldBounds = new Quad(x, y, width, height);
+            // Needed?
 
         }
-
-        /**
-         * This function creates a flat colored square image dynamically.
-         * @param width {number} The width of the sprite you want to generate.
-         * @param height {number} The height of the sprite you want to generate.
-         * @param [color] {number} specifies the color of the generated block. (format is 0xAARRGGBB)
-         * @return {Sprite} Sprite instance itself.
-         */
-        /*
-        static makeGraphic(width: number, height: number, color: string = 'rgb(255,255,255)'): Sprite {
-
-            this._texture = null;
-            this.width = width;
-            this.height = height;
-            this.fillColor = color;
-            this._dynamicTexture = false;
-
-            return this;
-        }
-        */
 
     }
 

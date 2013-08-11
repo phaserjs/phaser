@@ -1,36 +1,40 @@
 /// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - CircleUtils
-*
-* A collection of methods useful for manipulating and comparing Circle objects.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
-
 module Phaser {
 
+    /**
+    * A collection of methods useful for manipulating and comparing Circle objects.
+    *
+    * @class CircleUtils
+    */
     export class CircleUtils {
 
         /**
-         * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
-         * @method clone
-         * @param {Circle} a - The Circle object.
-         * @param {Circle} [optional] out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
-         * @return {Phaser.Circle}
-         **/
-        static clone(a: Phaser.Circle, out: Phaser.Circle = new Phaser.Circle): Phaser.Circle {
+        * Returns a new Circle object with the same values for the x, y, width, and height properties as the given Circle object.
+        * @method clone
+        * @param {Phaser.Circle} a The Circle object to be cloned.
+        * @param {Phaser.Circle} out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+        * @return {Phaser.Circle} The cloned Circle object.
+        */
+        public static clone(a: Phaser.Circle, out: Phaser.Circle = new Phaser.Circle): Phaser.Circle {
             return out.setTo(a.x, a.y, a.diameter);
         }
 
         /**
-         * Return true if the given x/y coordinates are within the Circle object.
-         * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
-         * @method contains
-         * @param {Circle} a - The Circle object.
-         * @param {Number} The X value of the coordinate to test.
-         * @param {Number} The Y value of the coordinate to test.
-         * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-         **/
-        static contains(a: Phaser.Circle, x: number, y: number): boolean {
+        * Return true if the given x/y coordinates are within the Circle object.
+        * @method contains
+        * @param {Phaser.Circle} a The Circle to be checked.
+        * @param {Number} x The X value of the coordinate to test.
+        * @param {Number} y The Y value of the coordinate to test.
+        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+        */
+        public static contains(a: Phaser.Circle, x: number, y: number): boolean {
 
             //  Check if x/y are within the bounds first
             if (x >= a.left && x <= a.right && y >= a.top && y <= a.bottom)
@@ -45,38 +49,38 @@ module Phaser {
         }
 
         /**
-         * Return true if the coordinates of the given Point object are within this Circle object.
-         * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
-         * @method containsPoint
-         * @param {Circle} a - The Circle object.
-         * @param {Point} The Point object to test.
-         * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-         **/
-        static containsPoint(a: Phaser.Circle, point: Phaser.Point): boolean {
+        * Return true if the coordinates of the given Point object are within this Circle object.
+        * @method containsPoint
+        * @param {Phaser.Circle} a The Circle object.
+        * @param {Phaser.Point} point The Point object to test.
+        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
+        */
+        public static containsPoint(a: Phaser.Circle, point: Phaser.Point): boolean {
             return CircleUtils.contains(a, point.x, point.y);
         }
 
         /**
-         * Return true if the given Circle is contained entirely within this Circle object.
-         * If you need details about the intersection then use Phaser.Intersect.circleToCircle instead.
-         * @method containsCircle
-         * @param {Circle} The Circle object to test.
-         * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-         **/
-        static containsCircle(a: Phaser.Circle, b: Phaser.Circle): boolean {
+        * Return true if the given Circle is contained entirely within this Circle object.
+        * @method containsCircle
+        * @param {Phaser.Circle} a The Circle object to test.
+        * @param {Phaser.Circle} b The Circle object to test.
+        * @return {Boolean} True if Circle B is contained entirely inside of Circle A, otherwise false.
+        */
+        public static containsCircle(a: Phaser.Circle, b: Phaser.Circle): boolean {
             //return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
             return true;
         }
 
         /**
-         * Returns the distance from the center of the Circle object to the given object (can be Circle, Point or anything with x/y properties)
-         * @method distanceBetween
-         * @param {Circle} a - The Circle object.
-         * @param {Circle} b - The target object. Must have visible x and y properties that represent the center of the object.
-         * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
-         * @return {Number} The distance between this Point object and the destination Point object.
-         **/
-        static distanceBetween(a: Phaser.Circle, target: any, round: boolean = false): number {
+        * Returns the distance from the center of the Circle object to the given object 
+        * (can be Circle, Point or anything with x/y properties)
+        * @method distanceBetween
+        * @param {Phaser.Circle} a The Circle object.
+        * @param {Phaser.Circle} b The target object. Must have visible x and y properties that represent the center of the object.
+        * @param {Boolean} [optional] round Round the distance to the nearest integer (default false)
+        * @return {Number} The distance between this Point object and the destination Point object.
+        */
+        public static distanceBetween(a: Phaser.Circle, target: any, round: boolean = false): number {
 
             var dx = a.x - target.x;
             var dy = a.y - target.y;
@@ -93,38 +97,38 @@ module Phaser {
         }
 
         /**
-         * Determines whether the two Circle objects match. This method compares the x, y and diameter properties.
-         * @method equals
-         * @param {Circle} a - The first Circle object.
-         * @param {Circle} b - The second Circle object.
-         * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
-         **/
-        static equals(a: Phaser.Circle, b: Phaser.Circle): boolean {
+        * Determines whether the two Circle objects match. This method compares the x, y and diameter properties.
+        * @method equals
+        * @param {Phaser.Circle} a The first Circle object.
+        * @param {Phaser.Circle} b The second Circle object.
+        * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
+        */
+        public static equals(a: Phaser.Circle, b: Phaser.Circle): boolean {
             return (a.x == b.x && a.y == b.y && a.diameter == b.diameter);
         }
 
         /**
-         * Determines whether the two Circle objects intersect.
-         * This method checks the radius distances between the two Circle objects to see if they intersect.
-         * @method intersects
-         * @param {Circle} a - The first Circle object.
-         * @param {Circle} b - The second Circle object.
-         * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
-         **/
-        static intersects(a: Phaser.Circle, b: Phaser.Circle): boolean {
+        * Determines whether the two Circle objects intersect.
+        * This method checks the radius distances between the two Circle objects to see if they intersect.
+        * @method intersects
+        * @param {Phaser.Circle} a The first Circle object.
+        * @param {Phaser.Circle} b The second Circle object.
+        * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
+        */
+        public static intersects(a: Phaser.Circle, b: Phaser.Circle): boolean {
             return (Phaser.CircleUtils.distanceBetween(a, b) <= (a.radius + b.radius));
         }
 
         /**
-         * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
-         * @method circumferencePoint
-         * @param {Circle} a - The first Circle object.
-         * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
-         * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
-         * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
-         * @return {Phaser.Point} The Point object holding the result.
-         **/
-        static circumferencePoint(a: Phaser.Circle, angle: number, asDegrees: boolean = false, out: Phaser.Point = new Phaser.Point): Phaser.Point {
+        * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
+        * @method circumferencePoint
+        * @param {Phaser.Circle} a The first Circle object.
+        * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
+        * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
+        * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
+        * @return {Phaser.Point} The Point object holding the result.
+        */
+        public static circumferencePoint(a: Phaser.Circle, angle: number, asDegrees: boolean = false, out: Phaser.Point = new Phaser.Point): Phaser.Point {
 
             if (asDegrees === true)
             {
@@ -135,30 +139,14 @@ module Phaser {
 
         }
 
-
-        /*
-        public static boolean intersect(Rectangle r, Circle c)
-        {
-            float cx = Math.abs(c.x - r.x - r.halfWidth);
-            float xDist = r.halfWidth + c.radius;
-            if (cx > xDist)
-                return false;
-            float cy = Math.abs(c.y - r.y - r.halfHeight);
-            float yDist = r.halfHeight + c.radius;
-            if (cy > yDist)
-                return false;
-            if (cx <= r.halfWidth || cy <= r.halfHeight)
-                return true;
-            float xCornerDist = cx - r.halfWidth;
-            float yCornerDist = cy - r.halfHeight;
-            float xCornerDistSq = xCornerDist * xCornerDist;
-            float yCornerDistSq = yCornerDist * yCornerDist;
-            float maxCornerDistSq = c.radius * c.radius;
-            return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
-        }
-            */
-
-        static intersectsRectangle(c: Phaser.Circle, r: Phaser.Rectangle): boolean {
+        /**
+        * Checks if the given Circle and Rectangle objects intersect.
+        * @method intersectsRectangle
+        * @param {Phaser.Circle} c The Circle object to test.
+        * @param {Phaser.Rectangle} r The Rectangle object to test.
+        * @return {Boolean} True if the two objects intersect, otherwise false.
+        */
+        public static intersectsRectangle(c: Phaser.Circle, r: Phaser.Rectangle): boolean {
 
             var cx: number = Math.abs(c.x - r.x - r.halfWidth);
             var xDist: number = r.halfWidth + c.radius;
