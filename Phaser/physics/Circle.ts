@@ -17,10 +17,15 @@ module Phaser.Physics {
             this.radius = radius;
 
             this.circleTileProjections = {};
-            this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_FULL] = Phaser.Physics.Projection.CircleFull.Collide;
+            this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_22DEGs] = Phaser.Physics.Projection.Circle22Deg.CollideS;
+            this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_22DEGb] = Phaser.Physics.Projection.Circle22Deg.CollideB;
             this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_45DEG] = Phaser.Physics.Projection.Circle45Deg.Collide;
+            this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_67DEGs] = Phaser.Physics.Projection.Circle67Deg.CollideS;
+            this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_67DEGb] = Phaser.Physics.Projection.Circle67Deg.CollideB;
             this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONCAVE] = Phaser.Physics.Projection.CircleConcave.Collide;
             this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONVEX] = Phaser.Physics.Projection.CircleConvex.Collide;
+            this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_FULL] = Phaser.Physics.Projection.CircleFull.Collide;
+            this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_HALF] = Phaser.Physics.Projection.CircleHalf.Collide;
 
         }
 
@@ -35,11 +40,11 @@ module Phaser.Physics {
         public oldpos: Phaser.Vec2;
         public radius: number;
         public oH: number;  //  horizontal collision 
-        public oV: number;
+        public oV: number;  //  vertical collision 
 
         private circleTileProjections;
 
-        public IntegrateVerlet() {
+        public integrateVerlet() {
 
             var d = 1;      //  drag
             var g = 0.2;    //  gravity
@@ -61,7 +66,9 @@ module Phaser.Physics {
 
         }
 
-        public ReportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Phaser.Physics.TileMapCell) {
+        //  px projection vector
+        //  dx surface normal
+        public reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Phaser.Physics.TileMapCell = null) {
 
             var p = this.pos;
             var o = this.oldpos;
@@ -109,7 +116,7 @@ module Phaser.Physics {
 
         }
 
-        public CollideCircleVsWorldBounds() {
+        public collideCircleVsWorldBounds() {
 
             var p = this.pos;
             var r = this.radius;
@@ -125,7 +132,7 @@ module Phaser.Physics {
             if (0 < dx)
             {
                 //object is colliding with XMIN
-                this.ReportCollisionVsWorld(dx, 0, 1, 0, null);
+                this.reportCollisionVsWorld(dx, 0, 1, 0, null);
             }
             else
             {
@@ -134,7 +141,7 @@ module Phaser.Physics {
                 if (0 < dx)
                 {
                     //object is colliding with XMAX
-                    this.ReportCollisionVsWorld(-dx, 0, -1, 0, null);
+                    this.reportCollisionVsWorld(-dx, 0, -1, 0, null);
                 }
             }
 
@@ -145,7 +152,7 @@ module Phaser.Physics {
             if (0 < dy)
             {
                 //object is colliding with YMIN
-                this.ReportCollisionVsWorld(0, dy, 0, 1, null);
+                this.reportCollisionVsWorld(0, dy, 0, 1, null);
             }
             else
             {
@@ -154,7 +161,7 @@ module Phaser.Physics {
                 if (0 < dy)
                 {
                     //object is colliding with YMAX
-                    this.ReportCollisionVsWorld(0, -dy, 0, -1, null);
+                    this.reportCollisionVsWorld(0, -dy, 0, -1, null);
                 }
             }
         }
@@ -207,7 +214,7 @@ module Phaser.Physics {
 
         }
 
-        public CollideCircleVsTile(tile) {
+        public collideCircleVsTile(tile) {
 
             var pos = this.pos;
             var r = this.radius;
@@ -255,13 +262,13 @@ module Phaser.Physics {
                         this.oV = 1;
                     }
 
-                    this.ResolveCircleTile(px, py, this.oH, this.oV, this, c);
+                    this.resolveCircleTile(px, py, this.oH, this.oV, this, c);
 
                 }
             }
         }
 
-        public ResolveCircleTile(x, y, oH, oV, obj, t) {
+        public resolveCircleTile(x, y, oH, oV, obj, t) {
 
             if (0 < t.ID)
             {
@@ -269,7 +276,7 @@ module Phaser.Physics {
             }
             else
             {
-                console.log("ResolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " (" + t.i + "," + t.j + ")");
+                console.log("resolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " (" + t.i + "," + t.j + ")");
                 return false;
             }
         }

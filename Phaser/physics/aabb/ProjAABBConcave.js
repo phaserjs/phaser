@@ -30,7 +30,7 @@ var Phaser;
                         var lenP = Math.sqrt(x * x + y * y);
                         if (lenP < pen) {
                             //it's shorter to move along axis directions
-                            obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+                            obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
 
                             return Phaser.Physics.AABB.COL_AXIS;
                         } else {
@@ -38,7 +38,7 @@ var Phaser;
                             ox /= len;
                             oy /= len;
 
-                            obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+                            obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
 
                             return Phaser.Physics.AABB.COL_OTHER;
                         }

@@ -27,14 +27,14 @@ var Phaser;
                     if (((signx * ox) < 0) || ((signy * oy) < 0)) {
                         //the test corner is "outside" the 1/4 of the circle we're interested in
                         var lenP = Math.sqrt(x * x + y * y);
-                        obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+                        obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
 
                         return Phaser.Physics.AABB.COL_AXIS;
                     } else if (0 < pen) {
                         //project along corner->circle vector
                         ox /= len;
                         oy /= len;
-                        obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+                        obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
 
                         return Phaser.Physics.AABB.COL_OTHER;
                     }

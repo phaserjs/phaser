@@ -19,9 +19,15 @@ module Phaser.Physics {
             this.yw = Math.abs(yw);
 
             this.aabbTileProjections = {};
-            this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_FULL] = Phaser.Physics.Projection.AABBFull.Collide;
+            this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_22DEGs] = Phaser.Physics.Projection.AABB22Deg.CollideS;
+            this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_22DEGb] = Phaser.Physics.Projection.AABB22Deg.CollideB;
+            this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_45DEG] = Phaser.Physics.Projection.AABB45Deg.Collide;
+            this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_67DEGs] = Phaser.Physics.Projection.AABB67Deg.CollideS;
+            this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_67DEGb] = Phaser.Physics.Projection.AABB67Deg.CollideB;
             this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONCAVE] = Phaser.Physics.Projection.AABBConcave.Collide;
             this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONVEX] = Phaser.Physics.Projection.AABBConvex.Collide;
+            this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_FULL] = Phaser.Physics.Projection.AABBFull.Collide;
+            this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_HALF] = Phaser.Physics.Projection.AABBHalf.Collide;
 
         }
 
@@ -41,7 +47,7 @@ module Phaser.Physics {
 
         private aabbTileProjections;
 
-        public IntegrateVerlet() {
+        public integrateVerlet() {
 
             var d = 1;      //  global drag
             var g = 0.2;    //  global gravity
@@ -63,7 +69,7 @@ module Phaser.Physics {
 
         }
 
-        public ReportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: TileMapCell) {
+        public reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: TileMapCell = null) {
 
             var p = this.pos;
             var o = this.oldpos;
@@ -113,7 +119,7 @@ module Phaser.Physics {
         }
 
 
-        public CollideAABBVsTile(tile:Phaser.Physics.TileMapCell) {
+        public collideAABBVsTile(tile:Phaser.Physics.TileMapCell) {
 
             var pos = this.pos;
             var c = tile;
@@ -167,13 +173,13 @@ module Phaser.Physics {
                         }
                     }
 
-                    this.ResolveBoxTile(px, py, this, c);
+                    this.resolveBoxTile(px, py, this, c);
 
                 }
             }
         }
 
-        public CollideAABBVsWorldBounds() {
+        public collideAABBVsWorldBounds() {
 
             var p = this.pos;
             var xw = this.xw;
@@ -189,7 +195,7 @@ module Phaser.Physics {
             if (0 < dx)
             {
                 //object is colliding with XMIN
-                this.ReportCollisionVsWorld(dx, 0, 1, 0, null);
+                this.reportCollisionVsWorld(dx, 0, 1, 0, null);
             }
             else
             {
@@ -198,7 +204,7 @@ module Phaser.Physics {
                 if (0 < dx)
                 {
                     //object is colliding with XMAX
-                    this.ReportCollisionVsWorld(-dx, 0, -1, 0, null);
+                    this.reportCollisionVsWorld(-dx, 0, -1, 0, null);
                 }
             }
 
@@ -208,7 +214,7 @@ module Phaser.Physics {
             if (0 < dy)
             {
                 //object is colliding with YMIN
-                this.ReportCollisionVsWorld(0, dy, 0, 1, null);
+                this.reportCollisionVsWorld(0, dy, 0, 1, null);
             }
             else
             {
@@ -217,7 +223,7 @@ module Phaser.Physics {
                 if (0 < dy)
                 {
                     //object is colliding with YMAX
-                    this.ReportCollisionVsWorld(0, -dy, 0, -1, null);
+                    this.reportCollisionVsWorld(0, -dy, 0, -1, null);
                 }
             }
         }
@@ -235,7 +241,7 @@ module Phaser.Physics {
 
         }
 
-        public ResolveBoxTile(x, y, box, t) {
+        public resolveBoxTile(x, y, box, t) {
 
             if (0 < t.ID)
             {
@@ -243,7 +249,7 @@ module Phaser.Physics {
             }
             else
             {
-                //trace("ResolveBoxTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " ("+ t.i + "," + t.j + ")");
+                //trace("resolveBoxTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " ("+ t.i + "," + t.j + ")");
                 return false;
             }
         }

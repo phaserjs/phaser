@@ -20,7 +20,7 @@ var Phaser;
                 this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONCAVE] = Phaser.Physics.Projection.CircleConcave.Collide;
                 this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONVEX] = Phaser.Physics.Projection.CircleConvex.Collide;
             }
-            Circle.prototype.IntegrateVerlet = function () {
+            Circle.prototype.integrateVerlet = function () {
                 var d = 1;
                 var g = 0.2;
 
@@ -41,7 +41,7 @@ var Phaser;
                 p.y += (d * py) - (d * oy) + g;
             };
 
-            Circle.prototype.ReportCollisionVsWorld = function (px, py, dx, dy, obj) {
+            Circle.prototype.reportCollisionVsWorld = function (px, py, dx, dy, obj) {
                 var p = this.pos;
                 var o = this.oldpos;
 
@@ -84,7 +84,7 @@ var Phaser;
                 o.y += py + by + fy;
             };
 
-            Circle.prototype.CollideCircleVsWorldBounds = function () {
+            Circle.prototype.collideCircleVsWorldBounds = function () {
                 var p = this.pos;
                 var r = this.radius;
                 var XMIN = 0;
@@ -98,13 +98,13 @@ var Phaser;
 
                 if (0 < dx) {
                     //object is colliding with XMIN
-                    this.ReportCollisionVsWorld(dx, 0, 1, 0, null);
+                    this.reportCollisionVsWorld(dx, 0, 1, 0, null);
                 } else {
                     //test XMAX
                     dx = (p.x + r) - XMAX;
                     if (0 < dx) {
                         //object is colliding with XMAX
-                        this.ReportCollisionVsWorld(-dx, 0, -1, 0, null);
+                        this.reportCollisionVsWorld(-dx, 0, -1, 0, null);
                     }
                 }
 
@@ -114,13 +114,13 @@ var Phaser;
 
                 if (0 < dy) {
                     //object is colliding with YMIN
-                    this.ReportCollisionVsWorld(0, dy, 0, 1, null);
+                    this.reportCollisionVsWorld(0, dy, 0, 1, null);
                 } else {
                     //test YMAX
                     dy = (p.y + r) - YMAX;
                     if (0 < dy) {
                         //object is colliding with YMAX
-                        this.ReportCollisionVsWorld(0, -dy, 0, -1, null);
+                        this.reportCollisionVsWorld(0, -dy, 0, -1, null);
                     }
                 }
             };
@@ -165,7 +165,7 @@ var Phaser;
                 }
             };
 
-            Circle.prototype.CollideCircleVsTile = function (tile) {
+            Circle.prototype.collideCircleVsTile = function (tile) {
                 var pos = this.pos;
                 var r = this.radius;
                 var c = tile;
@@ -203,16 +203,16 @@ var Phaser;
                             this.oV = 1;
                         }
 
-                        this.ResolveCircleTile(px, py, this.oH, this.oV, this, c);
+                        this.resolveCircleTile(px, py, this.oH, this.oV, this, c);
                     }
                 }
             };
 
-            Circle.prototype.ResolveCircleTile = function (x, y, oH, oV, obj, t) {
+            Circle.prototype.resolveCircleTile = function (x, y, oH, oV, obj, t) {
                 if (0 < t.ID) {
                     return this.circleTileProjections[t.CTYPE](x, y, oH, oV, obj, t);
                 } else {
-                    console.log("ResolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " (" + t.i + "," + t.j + ")");
+                    console.log("resolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " (" + t.i + "," + t.j + ")");
                     return false;
                 }
             };

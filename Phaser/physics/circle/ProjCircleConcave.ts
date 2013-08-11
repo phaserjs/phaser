@@ -68,7 +68,7 @@ module Phaser.Physics.Projection {
 
                         if (lenP < pen)
                         {
-                            obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+                            obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
 
                             return Phaser.Physics.Circle.COL_AXIS;
                         }
@@ -80,7 +80,7 @@ module Phaser.Physics.Projection {
                             ox /= len;
                             oy /= len;
 
-                            obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+                            obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
 
                             return Phaser.Physics.Circle.COL_OTHER;
                         }
@@ -97,7 +97,7 @@ module Phaser.Physics.Projection {
                     if ((signy * oV) < 0)
                     {
                         //colliding with face/edge
-                        obj.ReportCollisionVsWorld(0, y * oV, 0, oV, t);
+                        obj.reportCollisionVsWorld(0, y * oV, 0, oV, t);
 
                         return Phaser.Physics.Circle.COL_AXIS;
                     }
@@ -129,7 +129,7 @@ module Phaser.Physics.Projection {
                                 dy /= len;
                             }
 
-                            obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+                            obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
 
                             return Phaser.Physics.Circle.COL_OTHER;
                         }
@@ -142,7 +142,7 @@ module Phaser.Physics.Projection {
                 if ((signx * oH) < 0)
                 {
                     //colliding with face/edge
-                    obj.ReportCollisionVsWorld(x * oH, 0, oH, 0, t);
+                    obj.reportCollisionVsWorld(x * oH, 0, oH, 0, t);
 
                     return Phaser.Physics.Circle.COL_AXIS;
                 }
@@ -174,7 +174,7 @@ module Phaser.Physics.Projection {
                             dy /= len;
                         }
 
-                        obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+                        obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
 
                         return Phaser.Physics.Circle.COL_OTHER;
                     }
@@ -217,7 +217,7 @@ module Phaser.Physics.Projection {
                             dy /= len;
                         }
 
-                        obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+                        obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
 
                         return Phaser.Physics.Circle.COL_OTHER;
                     }

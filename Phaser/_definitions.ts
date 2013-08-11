@@ -114,13 +114,22 @@
 /// <reference path="physics/AABB.ts" />
 /// <reference path="physics/Circle.ts" />
 /// <reference path="physics/TileMapCell.ts" />
-/// <reference path="physics/aabb/ProjAABBFull.ts" />
-/// <reference path="physics/aabb/ProjAABBConvex.ts" />
+
+/// <reference path="physics/aabb/ProjAABB22Deg.ts" />
+/// <reference path="physics/aabb/ProjAABB45Deg.ts" />
+/// <reference path="physics/aabb/ProjAABB67Deg.ts" />
 /// <reference path="physics/aabb/ProjAABBConcave.ts" />
-/// <reference path="physics/circle/ProjCircleFull.ts" />
-/// <reference path="physics/circle/ProjCircleConvex.ts" />
-/// <reference path="physics/circle/ProjCircleConcave.ts" />
+/// <reference path="physics/aabb/ProjAABBConvex.ts" />
+/// <reference path="physics/aabb/ProjAABBFull.ts" />
+/// <reference path="physics/aabb/ProjAABBHalf.ts" />
+
+/// <reference path="physics/circle/ProjCircle22Deg.ts" />
 /// <reference path="physics/circle/ProjCircle45Deg.ts" />
+/// <reference path="physics/circle/ProjCircle67Deg.ts" />
+/// <reference path="physics/circle/ProjCircleConcave.ts" />
+/// <reference path="physics/circle/ProjCircleConvex.ts" />
+/// <reference path="physics/circle/ProjCircleFull.ts" />
+/// <reference path="physics/circle/ProjCircleHalf.ts" />
 
 /// <reference path="particles/ParticleManager.ts" />
 /// <reference path="particles/Particle.ts" />

@@ -21,7 +21,7 @@ var Phaser;
                 this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONCAVE] = Phaser.Physics.Projection.AABBConcave.Collide;
                 this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONVEX] = Phaser.Physics.Projection.AABBConvex.Collide;
             }
-            AABB.prototype.IntegrateVerlet = function () {
+            AABB.prototype.integrateVerlet = function () {
                 var d = 1;
                 var g = 0.2;
 
@@ -41,7 +41,7 @@ var Phaser;
                 p.y += (d * py) - (d * oy) + g;
             };
 
-            AABB.prototype.ReportCollisionVsWorld = function (px, py, dx, dy, obj) {
+            AABB.prototype.reportCollisionVsWorld = function (px, py, dx, dy, obj) {
                 var p = this.pos;
                 var o = this.oldpos;
 
@@ -84,7 +84,7 @@ var Phaser;
                 o.y += py + by + fy;
             };
 
-            AABB.prototype.CollideAABBVsTile = function (tile) {
+            AABB.prototype.collideAABBVsTile = function (tile) {
                 var pos = this.pos;
                 var c = tile;
 
@@ -121,12 +121,12 @@ var Phaser;
                             }
                         }
 
-                        this.ResolveBoxTile(px, py, this, c);
+                        this.resolveBoxTile(px, py, this, c);
                     }
                 }
             };
 
-            AABB.prototype.CollideAABBVsWorldBounds = function () {
+            AABB.prototype.collideAABBVsWorldBounds = function () {
                 var p = this.pos;
                 var xw = this.xw;
                 var yw = this.yw;
@@ -140,13 +140,13 @@ var Phaser;
                 var dx = XMIN - (p.x - xw);
                 if (0 < dx) {
                     //object is colliding with XMIN
-                    this.ReportCollisionVsWorld(dx, 0, 1, 0, null);
+                    this.reportCollisionVsWorld(dx, 0, 1, 0, null);
                 } else {
                     //test XMAX
                     dx = (p.x + xw) - XMAX;
                     if (0 < dx) {
                         //object is colliding with XMAX
-                        this.ReportCollisionVsWorld(-dx, 0, -1, 0, null);
+                        this.reportCollisionVsWorld(-dx, 0, -1, 0, null);
                     }
                 }
 
@@ -155,13 +155,13 @@ var Phaser;
                 var dy = YMIN - (p.y - yw);
                 if (0 < dy) {
                     //object is colliding with YMIN
-                    this.ReportCollisionVsWorld(0, dy, 0, 1, null);
+                    this.reportCollisionVsWorld(0, dy, 0, 1, null);
                 } else {
                     //test YMAX
                     dy = (p.y + yw) - YMAX;
                     if (0 < dy) {
                         //object is colliding with YMAX
-                        this.ReportCollisionVsWorld(0, -dy, 0, -1, null);
+                        this.reportCollisionVsWorld(0, -dy, 0, -1, null);
                     }
                 }
             };
@@ -177,11 +177,11 @@ var Phaser;
                 context.fillRect(this.pos.x, this.pos.y, 2, 2);
             };
 
-            AABB.prototype.ResolveBoxTile = function (x, y, box, t) {
+            AABB.prototype.resolveBoxTile = function (x, y, box, t) {
                 if (0 < t.ID) {
                     return this.aabbTileProjections[t.CTYPE](x, y, box, t);
                 } else {
-                    //trace("ResolveBoxTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " ("+ t.i + "," + t.j + ")");
+                    //trace("resolveBoxTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " ("+ t.i + "," + t.j + ")");
                     return false;
                 }
             };

@@ -28,12 +28,12 @@ module Phaser.Physics.Projection {
                         //NOTE: should we handle the delta == 0 case?! and how? (project towards oldpos?)
                         if (dx < 0)
                         {
-                            obj.ReportCollisionVsWorld(-x, 0, -1, 0, t);
+                            obj.reportCollisionVsWorld(-x, 0, -1, 0, t);
                             return Phaser.Physics.Circle.COL_AXIS;
                         }
                         else
                         {
-                            obj.ReportCollisionVsWorld(x, 0, 1, 0, t);
+                            obj.reportCollisionVsWorld(x, 0, 1, 0, t);
                             return Phaser.Physics.Circle.COL_AXIS;
                         }
                     }
@@ -45,12 +45,12 @@ module Phaser.Physics.Projection {
                         //NOTE: should we handle the delta == 0 case?! and how? (project towards oldpos?)					
                         if (dy < 0)
                         {
-                            obj.ReportCollisionVsWorld(0, -y, 0, -1, t);
+                            obj.reportCollisionVsWorld(0, -y, 0, -1, t);
                             return Phaser.Physics.Circle.COL_AXIS;
                         }
                         else
                         {
-                            obj.ReportCollisionVsWorld(0, y, 0, 1, t);
+                            obj.reportCollisionVsWorld(0, y, 0, 1, t);
                             return Phaser.Physics.Circle.COL_AXIS;
                         }
                     }
@@ -58,7 +58,7 @@ module Phaser.Physics.Projection {
                 else
                 {
                     //collision with vertical neighbor
-                    obj.ReportCollisionVsWorld(0, y * oV, 0, oV, t);
+                    obj.reportCollisionVsWorld(0, y * oV, 0, oV, t);
 
                     return Phaser.Physics.Circle.COL_AXIS;
                 }
@@ -66,7 +66,7 @@ module Phaser.Physics.Projection {
             else if (oV == 0)
             {
                 //collision with horizontal neighbor
-                obj.ReportCollisionVsWorld(x * oH, 0, oH, 0, t);
+                obj.reportCollisionVsWorld(x * oH, 0, oH, 0, t);
                 return Phaser.Physics.Circle.COL_AXIS;
             }
             else
@@ -97,7 +97,7 @@ module Phaser.Physics.Projection {
                         dy /= len;
                     }
 
-                    obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+                    obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
 
                     return Phaser.Physics.Circle.COL_OTHER;
                 }

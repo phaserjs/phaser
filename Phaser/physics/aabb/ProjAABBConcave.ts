@@ -34,7 +34,7 @@ module Phaser.Physics.Projection {
                 if (lenP < pen)
                 {
                     //it's shorter to move along axis directions
-                    obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+                    obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
 
                     return Phaser.Physics.AABB.COL_AXIS;
                 }
@@ -44,7 +44,7 @@ module Phaser.Physics.Projection {
                     ox /= len;//len should never be 0, since if it IS 0, rad should be > than len
                     oy /= len;//and we should never reach here
 
-                    obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+                    obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
 
                     return Phaser.Physics.AABB.COL_OTHER;
                 }

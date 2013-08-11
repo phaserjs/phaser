@@ -12,7 +12,7 @@ module Phaser.Physics.Projection {
 
             var l = Math.sqrt(x * x + y * y);
 
-            obj.ReportCollisionVsWorld(x, y, x / l, y / l, t);
+            obj.reportCollisionVsWorld(x, y, x / l, y / l, t);
 
             return Phaser.Physics.AABB.COL_AXIS;
 

@@ -17,10 +17,10 @@ var Phaser;
                                 var dx = obj.pos.x - t.pos.x;
 
                                 if (dx < 0) {
-                                    obj.ReportCollisionVsWorld(-x, 0, -1, 0, t);
+                                    obj.reportCollisionVsWorld(-x, 0, -1, 0, t);
                                     return Phaser.Physics.Circle.COL_AXIS;
                                 } else {
-                                    obj.ReportCollisionVsWorld(x, 0, 1, 0, t);
+                                    obj.reportCollisionVsWorld(x, 0, 1, 0, t);
                                     return Phaser.Physics.Circle.COL_AXIS;
                                 }
                             } else {
@@ -28,22 +28,22 @@ var Phaser;
                                 var dy = obj.pos.y - t.pos.y;
 
                                 if (dy < 0) {
-                                    obj.ReportCollisionVsWorld(0, -y, 0, -1, t);
+                                    obj.reportCollisionVsWorld(0, -y, 0, -1, t);
                                     return Phaser.Physics.Circle.COL_AXIS;
                                 } else {
-                                    obj.ReportCollisionVsWorld(0, y, 0, 1, t);
+                                    obj.reportCollisionVsWorld(0, y, 0, 1, t);
                                     return Phaser.Physics.Circle.COL_AXIS;
                                 }
                             }
                         } else {
                             //collision with vertical neighbor
-                            obj.ReportCollisionVsWorld(0, y * oV, 0, oV, t);
+                            obj.reportCollisionVsWorld(0, y * oV, 0, oV, t);
 
                             return Phaser.Physics.Circle.COL_AXIS;
                         }
                     } else if (oV == 0) {
                         //collision with horizontal neighbor
-                        obj.ReportCollisionVsWorld(x * oH, 0, oH, 0, t);
+                        obj.reportCollisionVsWorld(x * oH, 0, oH, 0, t);
                         return Phaser.Physics.Circle.COL_AXIS;
                     } else {
                         //diagonal collision
@@ -66,7 +66,7 @@ var Phaser;
                                 dy /= len;
                             }
 
-                            obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+                            obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
 
                             return Phaser.Physics.Circle.COL_OTHER;
                         }

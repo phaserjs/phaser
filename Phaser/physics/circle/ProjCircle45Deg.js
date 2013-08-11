@@ -58,11 +58,11 @@ var Phaser;
                                 var lenN = Math.sqrt(sx * sx + sy * sy);
 
                                 if (lenP < lenN) {
-                                    obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+                                    obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
 
                                     return Phaser.Physics.Circle.COL_AXIS;
                                 } else {
-                                    obj.ReportCollisionVsWorld(sx, sy, t.sx, t.sy, t);
+                                    obj.reportCollisionVsWorld(sx, sy, t.sx, t.sy, t);
 
                                     return Phaser.Physics.Circle.COL_OTHER;
                                 }
@@ -70,7 +70,7 @@ var Phaser;
                         } else {
                             if ((signy * oV) < 0) {
                                 //colliding with face/edge
-                                obj.ReportCollisionVsWorld(0, y * oV, 0, oV, t);
+                                obj.reportCollisionVsWorld(0, y * oV, 0, oV, t);
 
                                 return Phaser.Physics.Circle.COL_AXIS;
                             } else {
@@ -97,7 +97,7 @@ var Phaser;
                                         ox /= len;
                                         oy /= len;
 
-                                        obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+                                        obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
 
                                         return Phaser.Physics.Circle.COL_OTHER;
                                     }
@@ -111,7 +111,7 @@ var Phaser;
                                     var pen = obj.radius - Math.abs(dp);
                                     if (0 < pen) {
                                         //collision; circle out along normal by penetration amount
-                                        obj.ReportCollisionVsWorld(sx * pen, sy * pen, sx, sy, t);
+                                        obj.reportCollisionVsWorld(sx * pen, sy * pen, sx, sy, t);
 
                                         return Phaser.Physics.Circle.COL_OTHER;
                                     }
@@ -121,7 +121,7 @@ var Phaser;
                     } else if (oV == 0) {
                         if ((signx * oH) < 0) {
                             //colliding with face/edge
-                            obj.ReportCollisionVsWorld(x * oH, 0, oH, 0, t);
+                            obj.reportCollisionVsWorld(x * oH, 0, oH, 0, t);
 
                             return Phaser.Physics.Circle.COL_AXIS;
                         } else {
@@ -153,7 +153,7 @@ var Phaser;
                                     ox /= len;
                                     oy /= len;
 
-                                    obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+                                    obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
 
                                     return Phaser.Physics.Circle.COL_OTHER;
                                 }
@@ -167,7 +167,7 @@ var Phaser;
                                 var pen = obj.radius - Math.abs(dp);
                                 if (0 < pen) {
                                     //collision; circle out along normal by penetration amount
-                                    obj.ReportCollisionVsWorld(sx * pen, sy * pen, sx, sy, t);
+                                    obj.reportCollisionVsWorld(sx * pen, sy * pen, sx, sy, t);
 
                                     return Phaser.Physics.Circle.COL_OTHER;
                                 }
@@ -200,7 +200,7 @@ var Phaser;
                                     dy /= len;
                                 }
 
-                                obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+                                obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
                                 return Phaser.Physics.Circle.COL_OTHER;
                             }
                         }
