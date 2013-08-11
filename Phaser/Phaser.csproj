@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ProjectGuid>{A90BE60F-CAEA-4747-904A-CDB097BA2459}</ProjectGuid>
+    <ProjectGuid>{BB30C59B-5B34-4F7C-B5CC-8D49EA280EDA}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <OutputPath>bin</OutputPath>
@@ -17,6 +17,122 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="utils\CanvasUtils.ts" />
+    <TypeScriptCompile Include="particles\ParticlePool.ts" />
+    <TypeScriptCompile Include="particles\ParticleManager.ts" />
+    <TypeScriptCompile Include="particles\initialize\Mass.ts" />
+    <TypeScriptCompile Include="particles\initialize\Initialize.ts" />
+    <TypeScriptCompile Include="particles\behaviours\Behaviour.ts" />
+    <Content Include="particles\behaviours\Behaviour.js">
+      <DependentUpon>Behaviour.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\behaviours\RandomDrift.ts" />
+    <Content Include="particles\behaviours\RandomDrift.js">
+      <DependentUpon>RandomDrift.ts</DependentUpon>
+    </Content>
+    <Content Include="particles\initialize\Initialize.js">
+      <DependentUpon>Initialize.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\initialize\Life.ts" />
+    <Content Include="particles\initialize\Life.js">
+      <DependentUpon>Life.ts</DependentUpon>
+    </Content>
+    <Content Include="particles\initialize\Mass.js">
+      <DependentUpon>Mass.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\initialize\Radius.ts" />
+    <TypeScriptCompile Include="particles\initialize\Position.ts" />
+    <Content Include="particles\initialize\Position.js">
+      <DependentUpon>Position.ts</DependentUpon>
+    </Content>
+    <Content Include="particles\initialize\Radius.js">
+      <DependentUpon>Radius.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\initialize\Rate.ts" />
+    <Content Include="particles\initialize\Rate.js">
+      <DependentUpon>Rate.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\initialize\Velocity.ts" />
+    <Content Include="particles\initialize\Velocity.js">
+      <DependentUpon>Velocity.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\NumericalIntegration.ts" />
+    <Content Include="particles\NumericalIntegration.js">
+      <DependentUpon>NumericalIntegration.ts</DependentUpon>
+    </Content>
+    <Content Include="particles\ParticleManager.js">
+      <DependentUpon>ParticleManager.ts</DependentUpon>
+    </Content>
+    <Content Include="particles\ParticlePool.js">
+      <DependentUpon>ParticlePool.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\ParticleUtils.ts" />
+    <Content Include="particles\ParticleUtils.js">
+      <DependentUpon>ParticleUtils.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\Span.ts" />
+    <TypeScriptCompile Include="particles\Polar2D.ts" />
+    <Content Include="particles\Polar2D.js">
+      <DependentUpon>Polar2D.ts</DependentUpon>
+    </Content>
+    <Content Include="particles\Span.js">
+      <DependentUpon>Span.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="particles\zone\Zone.ts" />
+    <TypeScriptCompile Include="particles\zone\PointZone.ts" />
+    <Content Include="particles\zone\PointZone.js">
+      <DependentUpon>PointZone.ts</DependentUpon>
+    </Content>
+    <Content Include="particles\zone\Zone.js">
+      <DependentUpon>Zone.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\PhysicsManager.ts" />
+    <TypeScriptCompile Include="physics\AABB.ts" />
+    <Content Include="physics\AABB.js">
+      <DependentUpon>AABB.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\Circle.ts" />
+    <TypeScriptCompile Include="physics\aabb\ProjAABBFull.ts" />
+    <TypeScriptCompile Include="physics\aabb\ProjAABBConvex.ts" />
+    <TypeScriptCompile Include="physics\aabb\ProjAABBConcave.ts" />
+    <Content Include="physics\aabb\ProjAABBConcave.js">
+      <DependentUpon>ProjAABBConcave.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\aabb\ProjAABBConvex.js">
+      <DependentUpon>ProjAABBConvex.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\aabb\ProjAABBFull.js">
+      <DependentUpon>ProjAABBFull.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\Body.ts" />
+    <Content Include="physics\Body.js">
+      <DependentUpon>Body.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\Circle.js">
+      <DependentUpon>Circle.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\circle\ProjCircleFull.ts" />
+    <TypeScriptCompile Include="physics\circle\ProjCircle45Deg.ts" />
+    <Content Include="physics\circle\ProjCircle45Deg.js">
+      <DependentUpon>ProjCircle45Deg.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\circle\ProjCircleConcave.ts" />
+    <Content Include="physics\circle\ProjCircleConcave.js">
+      <DependentUpon>ProjCircleConcave.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\circle\ProjCircleConvex.ts" />
+    <Content Include="physics\circle\ProjCircleConvex.js">
+      <DependentUpon>ProjCircleConvex.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\circle\ProjCircleFull.js">
+      <DependentUpon>ProjCircleFull.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\PhysicsManager.js">
+      <DependentUpon>PhysicsManager.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\TileMapCell.ts" />
+    <Content Include="physics\TileMapCell.js">
+      <DependentUpon>TileMapCell.ts</DependentUpon>
+    </Content>
     <Content Include="utils\CanvasUtils.js">
       <DependentUpon>CanvasUtils.ts</DependentUpon>
     </Content>
@@ -285,10 +401,6 @@
     <Content Include="tilemap\TilemapLayer.js">
       <DependentUpon>TilemapLayer.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="physics\arcade\Body.ts" />
-    <Content Include="physics\arcade\Body.js">
-      <DependentUpon>Body.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="gameobjects\Events.ts" />
     <Content Include="gameobjects\Events.js">
       <DependentUpon>Events.ts</DependentUpon>
@@ -398,6 +510,7 @@
       <DependentUpon>Game.ts</DependentUpon>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

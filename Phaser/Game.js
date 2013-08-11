@@ -238,10 +238,6 @@ var Phaser;
             }
         };
 
-        Game.prototype.emptyCallback = function () {
-            //   Called by onUpdateCallback etc
-        };
-
         /**
         * Game loop method will be called when it's running.
         */

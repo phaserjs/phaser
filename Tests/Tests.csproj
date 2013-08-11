@@ -231,7 +231,6 @@
     <Content Include="input\world drag.js">
       <DependentUpon>world drag.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="mobile\sprite test 1.ts" />
     <TypeScriptCompile Include="misc\point1.ts" />
     <Content Include="misc\color utils 1.ts" />
     <Content Include="misc\color utils 2.ts" />
@@ -252,20 +251,22 @@
     </Content>
     <Content Include="misc\rectangle utils 1.ts" />
     <Content Include="misc\rectangle utils 2.ts" />
-    <Content Include="mobile\sprite test 1.js">
-      <DependentUpon>sprite test 1.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scrollzones\simple scrollzone.ts" />
     <TypeScriptCompile Include="scrollzones\scroll window.ts" />
     <TypeScriptCompile Include="scrollzones\region demo.ts" />
     <TypeScriptCompile Include="scrollzones\parallax.ts" />
     <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
+    <TypeScriptCompile Include="physics\sprite bounds.ts" />
+    <TypeScriptCompile Include="physics\circle 1.ts" />
+    <Content Include="physics\circle 1.js">
+      <DependentUpon>circle 1.ts</DependentUpon>
+    </Content>
+    <Content Include="physics\sprite bounds.js">
+      <DependentUpon>sprite bounds.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="physics\temp2.ts" />
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scrollzones\blasteroids.ts" />
-    <Content Include="scrollzones\blasteroids.js">
-      <DependentUpon>blasteroids.ts</DependentUpon>
     </Content>
     <Content Include="scrollzones\parallax.js">
       <DependentUpon>parallax.ts</DependentUpon>
@@ -359,10 +360,6 @@
     </Content>
     <TypeScriptCompile Include="tilemaps\tiled tilemap.ts" />
     <TypeScriptCompile Include="tilemaps\tiled layers.ts" />
-    <TypeScriptCompile Include="tilemaps\map draw.ts" />
-    <Content Include="tilemaps\map draw.js">
-      <DependentUpon>map draw.ts</DependentUpon>
-    </Content>
     <Content Include="tilemaps\tiled layers.js">
       <DependentUpon>tiled layers.ts</DependentUpon>
     </Content>
@@ -446,8 +443,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="animation\" />
+    <Folder Include="mobile\" />
     <Folder Include="particles\" />
-    <Folder Include="physics\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

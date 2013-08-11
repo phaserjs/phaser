@@ -84,6 +84,19 @@ var Phaser;
             return this.game.sound.add(key, volume, loop);
         };
 
+        GameObjectFactory.prototype.circle = function (x, y, radius) {
+            return new Phaser.Physics.Circle(this.game, x, y, radius);
+        };
+
+        GameObjectFactory.prototype.aabb = function (x, y, width, height) {
+            return new Phaser.Physics.AABB(this.game, x, y, Math.floor(width / 2), Math.floor(height / 2));
+        };
+
+        GameObjectFactory.prototype.cell = function (x, y, width, height, state) {
+            if (typeof state === "undefined") { state = Phaser.Physics.TileMapCell.TID_FULL; }
+            return new Phaser.Physics.TileMapCell(this.game, x, y, width, height).SetState(state);
+        };
+
         /**
         * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
         *
@@ -125,10 +138,9 @@ var Phaser;
         *
         * @return {Particle} The newly created particle object.
         */
-        GameObjectFactory.prototype.particle = function () {
-            return new Phaser.ArcadeParticle(this.game);
-        };
-
+        //public particle(): Phaser.ArcadeParticle {
+        //    return new Phaser.ArcadeParticle(this.game);
+        //}
         /**
         * Create a new Emitter.
         *
@@ -137,13 +149,9 @@ var Phaser;
         * @param size {number} Optional, size of this emitter.
         * @return {Emitter} The newly created emitter object.
         */
-        GameObjectFactory.prototype.emitter = function (x, y, size) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof size === "undefined") { size = 0; }
-            return this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
-        };
-
+        //public emitter(x: number = 0, y: number = 0, size: number = 0): Phaser.ArcadeEmitter {
+        //    return <Phaser.ArcadeEmitter> this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
+        //}
         /**
         * Create a new ScrollZone object with image key, position and size.
         *
@@ -242,10 +250,9 @@ var Phaser;
         * @param emitter The Emitter to add to the Game World
         * @return {Phaser.Emitter} The Emitter object
         */
-        GameObjectFactory.prototype.existingEmitter = function (emitter) {
-            return this._world.group.add(emitter);
-        };
-
+        //public existingEmitter(emitter: Phaser.ArcadeEmitter): Phaser.ArcadeEmitter {
+        //    return this._world.group.add(emitter);
+        //}
         /**
         * Add an existing ScrollZone to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.

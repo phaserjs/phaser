@@ -4459,6 +4459,7 @@ var Phaser;
             this.modified = false;
             this.game = game;
             this.type = Phaser.Types.GROUP;
+            this.active = true;
             this.exists = true;
             this.visible = true;
 
@@ -4519,7 +4520,9 @@ var Phaser;
                 this._member = this.members[this._i++];
 
                 if (this._member != null && this._member.exists && this._member.active) {
-                    this._member.preUpdate();
+                    if (this._member.type != Phaser.Types.GROUP) {
+                        this._member.preUpdate();
+                    }
                     this._member.update();
                 }
             }
@@ -14661,200 +14664,6 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
-    /// <reference path="../../_definitions.ts" />
-    /**
-    * Phaser - ArcadePhysics - Body
-    */
-    (function (Physics) {
-        var Body = (function () {
-            function Body(sprite, type) {
-                this.angularVelocity = 0;
-                this.angularAcceleration = 0;
-                this.angularDrag = 0;
-                this.maxAngular = 10000;
-                this.mass = 1;
-                this._width = 0;
-                this._height = 0;
-                this.sprite = sprite;
-                this.game = sprite.game;
-                this.type = type;
-
-                //  Fixture properties
-                //  Will extend into its own class at a later date - can move the fixture defs there and add shape support, but this will do for 1.0 release
-                this.bounds = new Phaser.Rectangle();
-
-                this._width = sprite.width;
-                this._height = sprite.height;
-
-                //  Body properties
-                //this.gravity = Vec2Utils.clone(ArcadePhysics.gravity);
-                //this.bounce = Vec2Utils.clone(ArcadePhysics.bounce);
-                this.velocity = new Phaser.Vec2();
-                this.acceleration = new Phaser.Vec2();
-
-                //this.drag = Vec2Utils.clone(ArcadePhysics.drag);
-                this.maxVelocity = new Phaser.Vec2(10000, 10000);
-
-                this.angularVelocity = 0;
-                this.angularAcceleration = 0;
-                this.angularDrag = 0;
-
-                this.touching = Phaser.Types.NONE;
-                this.wasTouching = Phaser.Types.NONE;
-                this.allowCollisions = Phaser.Types.ANY;
-
-                this.position = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
-                this.oldPosition = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
-                this.offset = new Phaser.Vec2();
-            }
-            Object.defineProperty(Body.prototype, "x", {
-                get: function () {
-                    return this.sprite.x + this.offset.x;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "y", {
-                get: function () {
-                    return this.sprite.y + this.offset.y;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-
-
-            Object.defineProperty(Body.prototype, "width", {
-                get: function () {
-                    return this._width * this.sprite.transform.scale.x;
-                },
-                set: function (value) {
-                    this._width = value;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "height", {
-                get: function () {
-                    return this._height * this.sprite.transform.scale.y;
-                },
-                set: function (value) {
-                    this._height = value;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Body.prototype.preUpdate = function () {
-                this.oldPosition.copyFrom(this.position);
-
-                this.bounds.x = this.x;
-                this.bounds.y = this.y;
-                this.bounds.width = this.width;
-                this.bounds.height = this.height;
-            };
-
-            //  Shall we do this? Or just update the values directly in the separate functions? But then the bounds will be out of sync - as long as
-            //  the bounds are updated and used in calculations then we can do one final sprite movement here I guess?
-            Body.prototype.postUpdate = function () {
-                if (this.type !== Phaser.Types.BODY_DISABLED) {
-                    //this.game.world.physics.updateMotion(this);
-                    this.wasTouching = this.touching;
-                    this.touching = Phaser.Types.NONE;
-                }
-
-                this.position.setTo(this.x, this.y);
-            };
-
-            Object.defineProperty(Body.prototype, "hullWidth", {
-                get: function () {
-                    if (this.deltaX > 0) {
-                        return this.bounds.width + this.deltaX;
-                    } else {
-                        return this.bounds.width - this.deltaX;
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "hullHeight", {
-                get: function () {
-                    if (this.deltaY > 0) {
-                        return this.bounds.height + this.deltaY;
-                    } else {
-                        return this.bounds.height - this.deltaY;
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "hullX", {
-                get: function () {
-                    if (this.position.x < this.oldPosition.x) {
-                        return this.position.x;
-                    } else {
-                        return this.oldPosition.x;
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "hullY", {
-                get: function () {
-                    if (this.position.y < this.oldPosition.y) {
-                        return this.position.y;
-                    } else {
-                        return this.oldPosition.y;
-                    }
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "deltaXAbs", {
-                get: function () {
-                    return (this.deltaX > 0 ? this.deltaX : -this.deltaX);
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "deltaYAbs", {
-                get: function () {
-                    return (this.deltaY > 0 ? this.deltaY : -this.deltaY);
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "deltaX", {
-                get: function () {
-                    return this.position.x - this.oldPosition.x;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Body.prototype, "deltaY", {
-                get: function () {
-                    return this.position.y - this.oldPosition.y;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return Body;
-        })();
-        Physics.Body = Body;
-    })(Phaser.Physics || (Phaser.Physics = {}));
-    var Physics = Phaser.Physics;
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
     /// <reference path="../_definitions.ts" />
     /**
     * Phaser - Components - Events
@@ -15085,10 +14894,6 @@ var Phaser;
         * Pre-update is called right before update() on each object in the game loop.
         */
         Sprite.prototype.preUpdate = function () {
-            if (this.name == 'piece1') {
-                console.log('wv', this.worldView);
-            }
-
             this.transform.update();
 
             if (this.transform.scrollFactor.x != 1 && this.transform.scrollFactor.x != 0) {
@@ -15334,8 +15139,7 @@ var Phaser;
             TransformManager.prototype.centerOn = function (x, y) {
                 this.parent.x = x + (this.parent.x - this.center.x);
                 this.parent.y = y + (this.parent.y - this.center.y);
-
-                this.setCache();
+                //this.setCache();
             };
 
             /**
@@ -15354,10 +15158,8 @@ var Phaser;
                 this._size.y = this.parent.height;
                 this._origin.x = this.origin.x;
                 this._origin.y = this.origin.y;
-                this._sc.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-                this._sc.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-                this._scA.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
                 this._scA.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
+                this._scA.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
                 this._prevRotation = this.rotation;
 
                 if (this.parent.texture && this.parent.texture.renderRotation) {
@@ -15378,6 +15180,9 @@ var Phaser;
 
                 this._pos.x = this.parent.x;
                 this._pos.y = this.parent.y;
+
+                this._flippedX = this.parent.texture.flippedX;
+                this._flippedY = this.parent.texture.flippedY;
             };
 
             /**
@@ -15403,9 +15208,7 @@ var Phaser;
                     this._dirty = true;
                 }
 
-                if (this.rotation != this._prevRotation) {
-                    this._sc.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-                    this._sc.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                if (this.rotation != this._prevRotation || this._dirty) {
                     this._scA.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
                     this._scA.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
 
@@ -15433,27 +15236,35 @@ var Phaser;
 
                     this._pos.x = this.parent.x;
                     this._pos.y = this.parent.y;
+
+                    //  Translate
+                    this.local.data[2] = this.parent.x;
+                    this.local.data[5] = this.parent.y;
                 }
 
-                if (this.parent.texture.flippedX) {
-                    this.local.data[0] = this._sc.y * -this.scale.x;
-                    this.local.data[3] = (this._sc.x * -this.scale.x) + this.skew.x;
-                } else {
-                    this.local.data[0] = this._sc.y * this.scale.x;
-                    this.local.data[3] = (this._sc.x * this.scale.x) + this.skew.x;
+                if (this._dirty || this._flippedX != this.parent.texture.flippedX) {
+                    this._flippedX = this.parent.texture.flippedX;
+
+                    if (this._flippedX) {
+                        this.local.data[0] = this._sc.y * -this.scale.x;
+                        this.local.data[3] = (this._sc.x * -this.scale.x) + this.skew.x;
+                    } else {
+                        this.local.data[0] = this._sc.y * this.scale.x;
+                        this.local.data[3] = (this._sc.x * this.scale.x) + this.skew.x;
+                    }
                 }
 
-                if (this.parent.texture.flippedY) {
-                    this.local.data[4] = this._sc.y * -this.scale.y;
-                    this.local.data[1] = -(this._sc.x * -this.scale.y) + this.skew.y;
-                } else {
-                    this.local.data[4] = this._sc.y * this.scale.y;
-                    this.local.data[1] = -(this._sc.x * this.scale.y) + this.skew.y;
-                }
+                if (this._dirty || this._flippedY != this.parent.texture.flippedY) {
+                    this._flippedY = this.parent.texture.flippedY;
 
-                //  Translate
-                this.local.data[2] = this.parent.x;
-                this.local.data[5] = this.parent.y;
+                    if (this._flippedY) {
+                        this.local.data[4] = this._sc.y * -this.scale.y;
+                        this.local.data[1] = -(this._sc.x * -this.scale.y) + this.skew.y;
+                    } else {
+                        this.local.data[4] = this._sc.y * this.scale.y;
+                        this.local.data[1] = -(this._sc.x * this.scale.y) + this.skew.y;
+                    }
+                }
             };
             return TransformManager;
         })();
@@ -15835,6 +15646,19 @@ var Phaser;
             return this.game.sound.add(key, volume, loop);
         };
 
+        GameObjectFactory.prototype.circle = function (x, y, radius) {
+            return new Phaser.Physics.Circle(this.game, x, y, radius);
+        };
+
+        GameObjectFactory.prototype.aabb = function (x, y, width, height) {
+            return new Phaser.Physics.AABB(this.game, x, y, Math.floor(width / 2), Math.floor(height / 2));
+        };
+
+        GameObjectFactory.prototype.cell = function (x, y, width, height, state) {
+            if (typeof state === "undefined") { state = Phaser.Physics.TileMapCell.TID_FULL; }
+            return new Phaser.Physics.TileMapCell(this.game, x, y, width, height).SetState(state);
+        };
+
         /**
         * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
         *
@@ -15876,10 +15700,9 @@ var Phaser;
         *
         * @return {Particle} The newly created particle object.
         */
-        GameObjectFactory.prototype.particle = function () {
-            return new Phaser.ArcadeParticle(this.game);
-        };
-
+        //public particle(): Phaser.ArcadeParticle {
+        //    return new Phaser.ArcadeParticle(this.game);
+        //}
         /**
         * Create a new Emitter.
         *
@@ -15888,13 +15711,9 @@ var Phaser;
         * @param size {number} Optional, size of this emitter.
         * @return {Emitter} The newly created emitter object.
         */
-        GameObjectFactory.prototype.emitter = function (x, y, size) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof size === "undefined") { size = 0; }
-            return this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
-        };
-
+        //public emitter(x: number = 0, y: number = 0, size: number = 0): Phaser.ArcadeEmitter {
+        //    return <Phaser.ArcadeEmitter> this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
+        //}
         /**
         * Create a new ScrollZone object with image key, position and size.
         *
@@ -15993,10 +15812,9 @@ var Phaser;
         * @param emitter The Emitter to add to the Game World
         * @return {Phaser.Emitter} The Emitter object
         */
-        GameObjectFactory.prototype.existingEmitter = function (emitter) {
-            return this._world.group.add(emitter);
-        };
-
+        //public existingEmitter(emitter: Phaser.ArcadeEmitter): Phaser.ArcadeEmitter {
+        //    return this._world.group.add(emitter);
+        //}
         /**
         * Add an existing ScrollZone to the current world.
         * Note: This doesn't check or update the objects reference to Game. If that is wrong, all kinds of things will break.
@@ -16033,372 +15851,467 @@ var Phaser;
     })();
     Phaser.GameObjectFactory = GameObjectFactory;
 })(Phaser || (Phaser = {}));
-/// <reference path="../_definitions.ts" />
-/**
-* Phaser - ArcadeEmitter
-*
-* Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
-* continuous effects like rain and fire. All it really does is launch Particle objects out
-* at set intervals, and fixes their positions and velocities accorindgly.
-*/
 var Phaser;
 (function (Phaser) {
-    var ArcadeEmitter = (function (_super) {
-        __extends(ArcadeEmitter, _super);
-        /**
-        * Creates a new <code>Emitter</code> object at a specific position.
-        * Does NOT automatically generate or attach particles!
-        *
-        * @param x {number} The X position of the emitter.
-        * @param y {number} The Y position of the emitter.
-        * @param [size] {number} Specifies a maximum capacity for this emitter.
-        */
-        function ArcadeEmitter(game, x, y, size) {
-            if (typeof x === "undefined") { x = 0; }
-            if (typeof y === "undefined") { y = 0; }
-            if (typeof size === "undefined") { size = 0; }
-            _super.call(this, game, size);
-
-            this.x = x;
-            this.y = y;
-            this.width = 0;
-            this.height = 0;
-            this.minParticleSpeed = new Phaser.Vec2(-100, -100);
-            this.maxParticleSpeed = new Phaser.Vec2(100, 100);
-            this.minRotation = -360;
-            this.maxRotation = 360;
-            this.gravity = 0;
-            this.particleClass = null;
-            this.particleDrag = new Phaser.Vec2();
-            this.frequency = 0.1;
-            this.lifespan = 3;
-            this.bounce = 0;
-            this._quantity = 0;
-            this._counter = 0;
-            this._explode = true;
-            this.on = false;
-
-            this.exists = true;
-            this.active = true;
-            this.visible = true;
-        }
-        /**
-        * Clean up memory.
-        */
-        ArcadeEmitter.prototype.destroy = function () {
-            this.minParticleSpeed = null;
-            this.maxParticleSpeed = null;
-            this.particleDrag = null;
-            this.particleClass = null;
-            this._point = null;
-            _super.prototype.destroy.call(this);
-        };
-
-        /**
-        * This function generates a new array of particle sprites to attach to the emitter.
-        *
-        * @param graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
-        * @param quantity {number} The number of particles to generate when using the "create from image" option.
-        * @param multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-        * @param collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
-        *
-        * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
-        */
-        ArcadeEmitter.prototype.makeParticles = function (graphics, quantity, multiple, collide) {
-            if (typeof quantity === "undefined") { quantity = 50; }
-            if (typeof multiple === "undefined") { multiple = false; }
-            if (typeof collide === "undefined") { collide = 0; }
-            this.maxSize = quantity;
-
-            var totalFrames = 1;
-
-            /*
-            if(Multiple)
-            {
-            var sprite:Sprite = new Sprite(this.game);
-            sprite.loadGraphic(Graphics,true);
-            totalFrames = sprite.frames;
-            sprite.destroy();
-            }
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var Emitter = (function () {
+            /**
+            * You can use this emit particles.
+            *
+            * It will dispatch follow events:
+            * Proton.PARTICLE_CREATED
+            * Proton.PARTICLE_UPDATA
+            * Proton.PARTICLE_DEAD
+            *
+            * @class Proton.Emitter
+            * @constructor
+            * @param {Object} pObj the parameters object;
+            * for example {damping:0.01,bindEmitter:false}
             */
-            var randomFrame;
-            var particle;
-            var i = 0;
+            function Emitter(pObj) {
+                this.initializes = [];
+                this.particles = [];
+                this.behaviours = [];
+                this.emitTime = 0;
+                this.emitTotalTimes = -1;
+                this.initializes = [];
+                this.particles = [];
+                this.behaviours = [];
+                this.emitTime = 0;
+                this.emitTotalTimes = -1;
 
-            while (i < quantity) {
-                if (this.particleClass == null) {
-                    particle = new Phaser.ArcadeParticle(this.game);
-                } else {
-                    particle = new this.particleClass(this.game);
-                }
+                /**
+                * The friction coefficient for all particle emit by This;
+                * @property damping
+                * @type {Number}
+                * @default 0.006
+                */
+                this.damping = .006;
 
-                if (multiple) {
-                    /*
-                    randomFrame = this.game.math.random()*totalFrames;
-                    */
-                } else {
-                    if (graphics) {
-                        particle.texture.loadImage(graphics);
-                    }
-                }
+                /**
+                * If bindEmitter the particles can bind this emitter's property;
+                * @property bindEmitter
+                * @type {Boolean}
+                * @default true
+                */
+                this.bindEmitter = true;
 
-                if (collide > 0) {
-                    //particle.body.allowCollisions = Types.ANY;
-                    particle.body.type = Phaser.Types.BODY_DYNAMIC;
-                    particle.width *= collide;
-                    particle.height *= collide;
-                } else {
-                    //particle.body.allowCollisions = Types.NONE;
-                }
+                /**
+                * The number of particles per second emit (a [particle]/b [s]);
+                * @property rate
+                * @type {Proton.Rate}
+                * @default Proton.Rate(1, .1)
+                */
+                this.rate = new Phaser.Particles.Initializers.Rate(1, .1);
 
-                particle.exists = false;
-
-                //  Center the origin for rotation assistance
-                //particle.transform.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
-                this.add(particle);
-
-                i++;
+                //Emitter._super_.call(this, pObj);
+                /**
+                * The emitter's id;
+                * @property id
+                * @type {String} id
+                */
+                this.id = 'emitter_' + Emitter.ID++;
             }
+            /**
+            * start emit particle
+            * @method emit
+            * @param {Number} emitTime begin emit time;
+            * @param {String} life the life of this emitter
+            */
+            Emitter.prototype.emit = function (emitTime, life) {
+                this.emitTime = 0;
+                this.emitTotalTimes = Particles.ParticleUtils.initValue(emitTime, Infinity);
 
-            return this;
-        };
+                if (life == true || life == 'life' || life == 'destroy') {
+                    if (emitTime == 'once')
+                        this.life = 1;
+else
+                        this.life = this.emitTotalTimes;
+                } else if (!isNaN(life)) {
+                    this.life = life;
+                }
 
-        ArcadeEmitter.prototype.preUpdate = function () {
-        };
-        ArcadeEmitter.prototype.postUpdate = function () {
-        };
+                this.rate.init();
+            };
 
-        /**
-        * Called automatically by the game loop, decides when to launch particles and when to "die".
-        */
-        ArcadeEmitter.prototype.update = function () {
-            if (this.on) {
-                if (this._explode) {
-                    this.on = false;
+            /**
+            * stop emiting
+            * @method stopEmit
+            */
+            Emitter.prototype.stopEmit = function () {
+                this.emitTotalTimes = -1;
+                this.emitTime = 0;
+            };
 
-                    var i = 0;
-                    var l = this._quantity;
+            /**
+            * remove current all particles
+            * @method removeAllParticles
+            */
+            Emitter.prototype.removeAllParticles = function () {
+                for (var i = 0; i < this.particles.length; i++)
+                    this.particles[i].dead = true;
+            };
 
-                    if ((l <= 0) || (l > this.length)) {
-                        l = this.length;
-                    }
+            /**
+            * create single particle;
+            *
+            * can use emit({x:10},new Gravity(10),{'particleUpdate',fun}) or emit([{x:10},new Initialize],new Gravity(10),{'particleUpdate',fun})
+            * @method removeAllParticles
+            */
+            Emitter.prototype.createParticle = function (initialize, behaviour) {
+                if (typeof initialize === "undefined") { initialize = null; }
+                if (typeof behaviour === "undefined") { behaviour = null; }
+                var particle = Particles.ParticleManager.pool.get();
+                this.setupParticle(particle, initialize, behaviour);
 
-                    while (i < l) {
-                        this.emitParticle();
-                        i++;
-                    }
+                //this.dispatchEvent(new Proton.Event({
+                //    type: Proton.PARTICLE_CREATED,
+                //    particle: particle
+                //}));
+                return particle;
+            };
 
-                    this._quantity = 0;
+            /**
+            * add initialize to this emitter
+            * @method addSelfInitialize
+            */
+            Emitter.prototype.addSelfInitialize = function (pObj) {
+                if (pObj['init']) {
+                    pObj.init(this);
                 } else {
-                    this._timer += this.game.time.elapsed;
+                    //this.initAll();
+                }
+            };
 
-                    while ((this.frequency > 0) && (this._timer > this.frequency) && this.on) {
-                        this._timer -= this.frequency;
-                        this.emitParticle();
+            /**
+            * add the Initialize to particles;
+            *
+            * you can use initializes array:for example emitter.addInitialize(initialize1,initialize2,initialize3);
+            * @method addInitialize
+            * @param {Proton.Initialize} initialize like this new Proton.Radius(1, 12)
+            */
+            Emitter.prototype.addInitialize = function () {
+                var length = arguments.length, i;
+                for (i = 0; i < length; i++) {
+                    this.initializes.push(arguments[i]);
+                }
+            };
 
-                        if ((this._quantity > 0) && (++this._counter >= this._quantity)) {
-                            this.on = false;
-                            this._quantity = 0;
+            /**
+            * remove the Initialize
+            * @method removeInitialize
+            * @param {Proton.Initialize} initialize a initialize
+            */
+            Emitter.prototype.removeInitialize = function (initializer) {
+                var index = this.initializes.indexOf(initializer);
+                if (index > -1) {
+                    this.initializes.splice(index, 1);
+                }
+            };
+
+            /**
+            * remove all Initializes
+            * @method removeInitializers
+            */
+            Emitter.prototype.removeInitializers = function () {
+                Particles.ParticleUtils.destroyArray(this.initializes);
+            };
+
+            /**
+            * add the Behaviour to particles;
+            *
+            * you can use Behaviours array:emitter.addBehaviour(Behaviour1,Behaviour2,Behaviour3);
+            * @method addBehaviour
+            * @param {Proton.Behaviour} behaviour like this new Proton.Color('random')
+            */
+            Emitter.prototype.addBehaviour = function () {
+                var length = arguments.length, i;
+                for (i = 0; i < length; i++) {
+                    this.behaviours.push(arguments[i]);
+                    if (arguments[i].hasOwnProperty("parents"))
+                        arguments[i].parents.push(this);
+                }
+            };
+
+            /**
+            * remove the Behaviour
+            * @method removeBehaviour
+            * @param {Proton.Behaviour} behaviour a behaviour
+            */
+            Emitter.prototype.removeBehaviour = function (behaviour) {
+                var index = this.behaviours.indexOf(behaviour);
+                if (index > -1)
+                    this.behaviours.splice(index, 1);
+            };
+
+            /**
+            * remove all behaviours
+            * @method removeAllBehaviours
+            */
+            Emitter.prototype.removeAllBehaviours = function () {
+                Particles.ParticleUtils.destroyArray(this.behaviours);
+            };
+
+            Emitter.prototype.integrate = function (time) {
+                var damping = 1 - this.damping;
+                Particles.ParticleManager.integrator.integrate(this, time, damping);
+                var length = this.particles.length, i;
+                for (i = 0; i < length; i++) {
+                    var particle = this.particles[i];
+                    particle.update(time, i);
+                    Particles.ParticleManager.integrator.integrate(particle, time, damping);
+                    //this.dispatchEvent(new Proton.Event({
+                    //    type: Proton.PARTICLE_UPDATE,
+                    //    particle: particle
+                    //}));
+                }
+            };
+
+            Emitter.prototype.emitting = function (time) {
+                if (this.emitTotalTimes == 1) {
+                    var length = this.rate.getValue(99999), i;
+                    for (i = 0; i < length; i++) {
+                        this.createParticle();
+                    }
+
+                    this.emitTotalTimes = 0;
+                } else if (!isNaN(this.emitTotalTimes)) {
+                    this.emitTime += time;
+                    if (this.emitTime < this.emitTotalTimes) {
+                        var length = this.rate.getValue(time), i;
+                        for (i = 0; i < length; i++) {
+                            this.createParticle();
                         }
                     }
                 }
-            }
+            };
 
-            _super.prototype.update.call(this);
-        };
+            Emitter.prototype.update = function (time) {
+                this.age += time;
+                if (this.age >= this.life || this.dead) {
+                    this.destroy();
+                }
 
-        /**
-        * Call this function to turn off all the particles and the emitter.
-        */
-        ArcadeEmitter.prototype.kill = function () {
-            this.on = false;
-            this.alive = false;
-            this.exists = false;
-        };
+                this.emitting(time);
+                this.integrate(time);
+                var particle;
+                var length = this.particles.length, k;
+                for (k = length - 1; k >= 0; k--) {
+                    particle = this.particles[k];
+                    if (particle.dead) {
+                        Particles.ParticleManager.pool.set(particle);
+                        this.particles.splice(k, 1);
+                        //this.dispatchEvent(new Proton.Event({
+                        //    type: Proton.PARTICLE_DEAD,
+                        //    particle: particle
+                        //}));
+                    }
+                }
+            };
 
-        /**
-        * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
-        * In practice, this is most often called by <code>Object.reset()</code>.
-        */
-        ArcadeEmitter.prototype.revive = function () {
-            this.alive = true;
-            this.exists = true;
-        };
+            Emitter.prototype.setupParticle = function (particle, initialize, behaviour) {
+                var initializes = this.initializes;
+                var behaviours = this.behaviours;
 
-        /**
-        * Call this function to start emitting particles.
-        *
-        * @param explode {boolean} Whether the particles should all burst out at once.
-        * @param lifespan {number} How long each particle lives once emitted. 0 = forever.
-        * @param frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-        * @param quantity {number} How many particles to launch. 0 = "all of the particles".
-        */
-        ArcadeEmitter.prototype.start = function (explode, lifespan, frequency, quantity) {
-            if (typeof explode === "undefined") { explode = true; }
-            if (typeof lifespan === "undefined") { lifespan = 0; }
-            if (typeof frequency === "undefined") { frequency = 0.1; }
-            if (typeof quantity === "undefined") { quantity = 0; }
-            this.revive();
+                if (initialize) {
+                    if (initialize instanceof Array)
+                        initializes = initialize;
+else
+                        initializes = [initialize];
+                }
 
-            this.visible = true;
-            this.on = true;
+                if (behaviour) {
+                    if (behaviour instanceof Array)
+                        behaviours = behaviour;
+else
+                        behaviours = [behaviour];
+                }
 
-            this._explode = explode;
-            this.lifespan = lifespan;
-            this.frequency = frequency;
-            this._quantity += quantity;
+                //Proton.InitializeUtil.initialize(this, particle, initializes);
+                particle.addBehaviours(behaviours);
+                particle.parent = this;
+                this.particles.push(particle);
+            };
 
-            this._counter = 0;
-            this._timer = 0;
-        };
+            /**
+            * Destory this Emitter
+            * @method destory
+            */
+            Emitter.prototype.destroy = function () {
+                this.dead = true;
+                this.emitTotalTimes = -1;
+                if (this.particles.length == 0) {
+                    this.removeInitializers();
+                    this.removeAllBehaviours();
 
-        /**
-        * This function can be used both internally and externally to emit the next particle.
-        */
-        ArcadeEmitter.prototype.emitParticle = function () {
-            var particle = this.recycle(Phaser.ArcadeParticle);
-
-            particle.lifespan = this.lifespan;
-
-            //particle.body.bounce.setTo(this.bounce, this.bounce);
-            Phaser.SpriteUtils.reset(particle, this.x - (particle.width >> 1) + this.game.rnd.integer * this.width, this.y - (particle.height >> 1) + this.game.rnd.integer * this.height);
-            particle.visible = true;
-
-            if (this.minParticleSpeed.x != this.maxParticleSpeed.x) {
-                particle.body.velocity.x = this.minParticleSpeed.x + this.game.rnd.integer * (this.maxParticleSpeed.x - this.minParticleSpeed.x);
-            } else {
-                particle.body.velocity.x = this.minParticleSpeed.x;
-            }
-
-            if (this.minParticleSpeed.y != this.maxParticleSpeed.y) {
-                particle.body.velocity.y = this.minParticleSpeed.y + this.game.rnd.integer * (this.maxParticleSpeed.y - this.minParticleSpeed.y);
-            } else {
-                particle.body.velocity.y = this.minParticleSpeed.y;
-            }
-
-            if (this.minRotation != this.maxRotation && this.minRotation !== 0 && this.maxRotation !== 0) {
-                particle.body.angularVelocity = this.minRotation + this.game.rnd.integer * (this.maxRotation - this.minRotation);
-            } else {
-                particle.body.angularVelocity = this.minRotation;
-            }
-
-            if (particle.body.angularVelocity != 0) {
-                particle.rotation = this.game.rnd.integer * 360 - 180;
-            }
-
-            //particle.body.drag.x = this.particleDrag.x;
-            //particle.body.drag.y = this.particleDrag.y;
-            particle.onEmit();
-        };
-
-        /**
-        * A more compact way of setting the width and height of the emitter.
-        *
-        * @param width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
-        * @param height {number} The desired height of the emitter.
-        */
-        ArcadeEmitter.prototype.setSize = function (width, height) {
-            this.width = width;
-            this.height = height;
-        };
-
-        /**
-        * A more compact way of setting the X velocity range of the emitter.
-        *
-        * @param Min {number} The minimum value for this range.
-        * @param Max {number} The maximum value for this range.
-        */
-        ArcadeEmitter.prototype.setXSpeed = function (min, max) {
-            if (typeof min === "undefined") { min = 0; }
-            if (typeof max === "undefined") { max = 0; }
-            this.minParticleSpeed.x = min;
-            this.maxParticleSpeed.x = max;
-        };
-
-        /**
-        * A more compact way of setting the Y velocity range of the emitter.
-        *
-        * @param Min {number} The minimum value for this range.
-        * @param Max {number} The maximum value for this range.
-        */
-        ArcadeEmitter.prototype.setYSpeed = function (min, max) {
-            if (typeof min === "undefined") { min = 0; }
-            if (typeof max === "undefined") { max = 0; }
-            this.minParticleSpeed.y = min;
-            this.maxParticleSpeed.y = max;
-        };
-
-        /**
-        * A more compact way of setting the angular velocity constraints of the emitter.
-        *
-        * @param Min {number} The minimum value for this range.
-        * @param Max {number} The maximum value for this range.
-        */
-        ArcadeEmitter.prototype.setRotation = function (min, max) {
-            if (typeof min === "undefined") { min = 0; }
-            if (typeof max === "undefined") { max = 0; }
-            this.minRotation = min;
-            this.maxRotation = max;
-        };
-
-        /**
-        * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
-        *
-        * @param Object {object} The <code>Object</code> that you want to sync up with.
-        */
-        ArcadeEmitter.prototype.at = function (object) {
-            //this.x = object.body.bounds.halfWidth - (this.width >> 1);
-            //this.y = object.body.bounds.halfHeight - (this.height >> 1);
-        };
-        return ArcadeEmitter;
-    })(Phaser.Group);
-    Phaser.ArcadeEmitter = ArcadeEmitter;
+                    if (this.parent)
+                        this.parent.removeEmitter(this);
+                }
+            };
+            Emitter.ID = 0;
+            return Emitter;
+        })();
+        Particles.Emitter = Emitter;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
 })(Phaser || (Phaser = {}));
-/// <reference path="../_definitions.ts" />
-/**
-* Phaser - ArcadeParticle
-*
-* This is a simple particle class that extends a Sprite to have a slightly more
-* specialised behaviour. It is used exclusively by the Emitter class and can be extended as required.
-*/
 var Phaser;
 (function (Phaser) {
-    var ArcadeParticle = (function (_super) {
-        __extends(ArcadeParticle, _super);
-        /**
-        * Instantiate a new particle.  Like <code>Sprite</code>, all meaningful creation
-        * happens during <code>loadGraphic()</code> or <code>makeGraphic()</code> or whatever.
-        */
-        function ArcadeParticle(game) {
-            _super.call(this, game);
-
-            this.body.type = Phaser.Types.BODY_DYNAMIC;
-            this.lifespan = 0;
-        }
-        /**
-        * The particle's main update logic.  Basically it checks to see if it should be dead yet.
-        */
-        ArcadeParticle.prototype.update = function () {
-            if (this.lifespan <= 0) {
-                return;
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var Particle = (function () {
+            /**
+            * the Particle class
+            *
+            * @class Proton.Particle
+            * @constructor
+            * @param {Object} pObj the parameters object;
+            * for example {life:3,dead:false}
+            */
+            function Particle() {
+                this.life = Infinity;
+                this.age = 0;
+                this.energy = 1;
+                this.dead = false;
+                this.sleep = false;
+                this.target = null;
+                this.sprite = null;
+                this.parent = null;
+                this.mass = 1;
+                this.radius = 10;
+                this.alpha = 1;
+                this.scale = 1;
+                this.rotation = 0;
+                this.color = null;
+                this.easing = Phaser.Easing.Linear.None;
+                this.p = new Phaser.Vec2();
+                this.v = new Phaser.Vec2();
+                this.a = new Phaser.Vec2();
+                this.old = {
+                    p: new Phaser.Vec2(),
+                    v: new Phaser.Vec2(),
+                    a: new Phaser.Vec2()
+                };
+                this.behaviours = [];
+                /**
+                * The particle's id;
+                * @property id
+                * @type {String} id
+                */
+                this.id = 'particle_' + Particle.ID++;
+                this.reset(true);
             }
+            Particle.prototype.getDirection = function () {
+                return Math.atan2(this.v.x, -this.v.y) * (180 / Math.PI);
+            };
 
-            this.lifespan -= this.game.time.elapsed;
+            Particle.prototype.reset = function (init) {
+                this.life = Infinity;
+                this.age = 0;
+                this.energy = 1;
+                this.dead = false;
+                this.sleep = false;
+                this.target = null;
+                this.sprite = null;
+                this.parent = null;
+                this.mass = 1;
+                this.radius = 10;
+                this.alpha = 1;
+                this.scale = 1;
+                this.rotation = 0;
+                this.color = null;
+                this.easing = Phaser.Easing.Linear.None;
+                if (init) {
+                    this.transform = {};
+                    this.p = new Phaser.Vec2();
+                    this.v = new Phaser.Vec2();
+                    this.a = new Phaser.Vec2();
+                    this.old = {
+                        p: new Phaser.Vec2(),
+                        v: new Phaser.Vec2(),
+                        a: new Phaser.Vec2()
+                    };
+                    this.behaviours = [];
+                } else {
+                    Particles.ParticleUtils.destroyObject(this.transform);
+                    this.p.setTo(0, 0);
+                    this.v.setTo(0, 0);
+                    this.a.setTo(0, 0);
+                    this.old.p.setTo(0, 0);
+                    this.old.v.setTo(0, 0);
+                    this.old.a.setTo(0, 0);
+                    this.removeAllBehaviours();
+                }
 
-            if (this.lifespan <= 0) {
-                this.kill();
-            }
-        };
+                this.transform.rgb = {
+                    r: 255,
+                    g: 255,
+                    b: 255
+                };
+                return this;
+            };
 
-        /**
-        * Triggered whenever this object is launched by a <code>Emitter</code>.
-        * You can override this to add custom behavior like a sound or AI or something.
-        */
-        ArcadeParticle.prototype.onEmit = function () {
-        };
-        return ArcadeParticle;
-    })(Phaser.Sprite);
-    Phaser.ArcadeParticle = ArcadeParticle;
+            Particle.prototype.update = function (time, index) {
+                if (!this.sleep) {
+                    this.age += time;
+                    var length = this.behaviours.length, i;
+                    for (i = 0; i < length; i++) {
+                        if (this.behaviours[i])
+                            this.behaviours[i].applyBehaviour(this, time, index);
+                    }
+                }
+
+                if (this.age >= this.life) {
+                    this.destroy();
+                } else {
+                    var scale = this.easing(this.age / this.life);
+                    this.energy = Math.max(1 - scale, 0);
+                }
+            };
+
+            Particle.prototype.addBehaviour = function (behaviour) {
+                this.behaviours.push(behaviour);
+                if (behaviour.hasOwnProperty('parents'))
+                    behaviour.parents.push(this);
+                behaviour.initialize(this);
+            };
+
+            Particle.prototype.addBehaviours = function (behaviours) {
+                var length = behaviours.length, i;
+                for (i = 0; i < length; i++) {
+                    this.addBehaviour(behaviours[i]);
+                }
+            };
+
+            Particle.prototype.removeBehaviour = function (behaviour) {
+                var index = this.behaviours.indexOf(behaviour);
+                if (index > -1) {
+                    var behaviour = this.behaviours.splice(index, 1);
+                    behaviour.parents = null;
+                }
+            };
+
+            Particle.prototype.removeAllBehaviours = function () {
+                Particles.ParticleUtils.destroyArray(this.behaviours);
+            };
+
+            /**
+            * Destory this particle
+            * @method destory
+            */
+            Particle.prototype.destroy = function () {
+                this.removeAllBehaviours();
+                this.energy = 0;
+                this.dead = true;
+                this.parent = null;
+            };
+            Particle.ID = 0;
+            return Particle;
+        })();
+        Particles.Particle = Particle;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
 })(Phaser || (Phaser = {}));
 var Phaser;
 (function (Phaser) {
@@ -16796,6 +16709,19 @@ var Phaser;
             }
 
             return colors;
+        };
+
+        ColorUtils.hexToRGB = function (h) {
+            var hex16 = (h.charAt(0) == "#") ? h.substring(1, 7) : h;
+            var r = parseInt(hex16.substring(0, 2), 16);
+            var g = parseInt(hex16.substring(2, 4), 16);
+            var b = parseInt(hex16.substring(4, 6), 16);
+
+            return {
+                r: r,
+                g: g,
+                b: b
+            };
         };
 
         ColorUtils.getComplementHarmony = /**
@@ -19002,6 +18928,2787 @@ var Phaser;
     })(Phaser.Renderer || (Phaser.Renderer = {}));
     var Renderer = Phaser.Renderer;
 })(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    /**
+    * Phaser - Physics - PhysicsManager
+    */
+    (function (Physics) {
+        var PhysicsManager = (function () {
+            function PhysicsManager(game) {
+                this.grav = 0.2;
+                this.drag = 1;
+                this.bounce = 0.3;
+                this.friction = 0.05;
+                this.min_f = 0;
+                this.max_f = 1;
+                this.min_b = 0;
+                this.max_b = 1;
+                this.min_g = 0;
+                this.max_g = 1;
+                this.xmin = 0;
+                this.xmax = 800;
+                this.ymin = 0;
+                this.ymax = 600;
+                this.objrad = 24;
+                this.tilerad = 24 * 2;
+                this.objspeed = 0.2;
+                this.maxspeed = 20;
+                this.game = game;
+            }
+            PhysicsManager.prototype.update = function () {
+                //  Booyah!
+            };
+            return PhysicsManager;
+        })();
+        Physics.PhysicsManager = PhysicsManager;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    /**
+    * Phaser - Physics - Body
+    * A binding between a Sprite and a physics object (AABB or Circle)
+    */
+    (function (Physics) {
+        var Body = (function () {
+            function Body(sprite, type) {
+                this.angularVelocity = 0;
+                this.angularAcceleration = 0;
+                this.angularDrag = 0;
+                this.maxAngular = 10000;
+                this.mass = 1;
+                this._width = 0;
+                this._height = 0;
+                this.sprite = sprite;
+                this.game = sprite.game;
+                this.type = type;
+
+                //  Fixture properties
+                //  Will extend into its own class at a later date - can move the fixture defs there and add shape support, but this will do for 1.0 release
+                this.bounds = new Phaser.Rectangle();
+
+                this._width = sprite.width;
+                this._height = sprite.height;
+
+                //  Body properties
+                //this.gravity = Vec2Utils.clone(ArcadePhysics.gravity);
+                //this.bounce = Vec2Utils.clone(ArcadePhysics.bounce);
+                this.velocity = new Phaser.Vec2();
+                this.acceleration = new Phaser.Vec2();
+
+                //this.drag = Vec2Utils.clone(ArcadePhysics.drag);
+                this.maxVelocity = new Phaser.Vec2(10000, 10000);
+
+                this.angularVelocity = 0;
+                this.angularAcceleration = 0;
+                this.angularDrag = 0;
+
+                this.touching = Phaser.Types.NONE;
+                this.wasTouching = Phaser.Types.NONE;
+                this.allowCollisions = Phaser.Types.ANY;
+
+                this.position = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+                this.oldPosition = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+                this.offset = new Phaser.Vec2();
+            }
+            Object.defineProperty(Body.prototype, "x", {
+                get: function () {
+                    return this.sprite.x + this.offset.x;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "y", {
+                get: function () {
+                    return this.sprite.y + this.offset.y;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+
+
+            Object.defineProperty(Body.prototype, "width", {
+                get: function () {
+                    return this._width * this.sprite.transform.scale.x;
+                },
+                set: function (value) {
+                    this._width = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "height", {
+                get: function () {
+                    return this._height * this.sprite.transform.scale.y;
+                },
+                set: function (value) {
+                    this._height = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Body.prototype.preUpdate = function () {
+                this.oldPosition.copyFrom(this.position);
+
+                this.bounds.x = this.x;
+                this.bounds.y = this.y;
+                this.bounds.width = this.width;
+                this.bounds.height = this.height;
+            };
+
+            //  Shall we do this? Or just update the values directly in the separate functions? But then the bounds will be out of sync - as long as
+            //  the bounds are updated and used in calculations then we can do one final sprite movement here I guess?
+            Body.prototype.postUpdate = function () {
+                if (this.type !== Phaser.Types.BODY_DISABLED) {
+                    //this.game.world.physics.updateMotion(this);
+                    this.wasTouching = this.touching;
+                    this.touching = Phaser.Types.NONE;
+                }
+
+                this.position.setTo(this.x, this.y);
+            };
+
+            Object.defineProperty(Body.prototype, "hullWidth", {
+                get: function () {
+                    if (this.deltaX > 0) {
+                        return this.bounds.width + this.deltaX;
+                    } else {
+                        return this.bounds.width - this.deltaX;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "hullHeight", {
+                get: function () {
+                    if (this.deltaY > 0) {
+                        return this.bounds.height + this.deltaY;
+                    } else {
+                        return this.bounds.height - this.deltaY;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "hullX", {
+                get: function () {
+                    if (this.position.x < this.oldPosition.x) {
+                        return this.position.x;
+                    } else {
+                        return this.oldPosition.x;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "hullY", {
+                get: function () {
+                    if (this.position.y < this.oldPosition.y) {
+                        return this.position.y;
+                    } else {
+                        return this.oldPosition.y;
+                    }
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "deltaXAbs", {
+                get: function () {
+                    return (this.deltaX > 0 ? this.deltaX : -this.deltaX);
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "deltaYAbs", {
+                get: function () {
+                    return (this.deltaY > 0 ? this.deltaY : -this.deltaY);
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "deltaX", {
+                get: function () {
+                    return this.position.x - this.oldPosition.x;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Body.prototype, "deltaY", {
+                get: function () {
+                    return this.position.y - this.oldPosition.y;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return Body;
+        })();
+        Physics.Body = Body;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    /**
+    * Phaser - Physics - AABB
+    */
+    (function (Physics) {
+        var AABB = (function () {
+            function AABB(game, x, y, xw, yw) {
+                this.type = 0;
+                this.game = game;
+
+                this.pos = new Phaser.Vec2(x, y);
+                this.oldpos = new Phaser.Vec2(x, y);
+
+                this.xw = Math.abs(xw);
+                this.yw = Math.abs(yw);
+
+                this.aabbTileProjections = {};
+                this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_FULL] = Phaser.Physics.Projection.AABBFull.Collide;
+                this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONCAVE] = Phaser.Physics.Projection.AABBConcave.Collide;
+                this.aabbTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONVEX] = Phaser.Physics.Projection.AABBConvex.Collide;
+            }
+            AABB.prototype.IntegrateVerlet = function () {
+                var d = 1;
+                var g = 0.2;
+
+                var p = this.pos;
+                var o = this.oldpos;
+                var px;
+                var py;
+
+                //o = oldposition
+                var ox = o.x;
+                var oy = o.y;
+                o.x = px = p.x;
+                o.y = py = p.y;
+
+                //integrate
+                p.x += (d * px) - (d * ox);
+                p.y += (d * py) - (d * oy) + g;
+            };
+
+            AABB.prototype.ReportCollisionVsWorld = function (px, py, dx, dy, obj) {
+                var p = this.pos;
+                var o = this.oldpos;
+
+                //calc velocity
+                var vx = p.x - o.x;
+                var vy = p.y - o.y;
+
+                //find component of velocity parallel to collision normal
+                var dp = (vx * dx + vy * dy);
+                var nx = dp * dx;
+
+                var ny = dp * dy;
+
+                var tx = vx - nx;
+                var ty = vy - ny;
+
+                //we only want to apply collision response forces if the object is travelling into, and not out of, the collision
+                var b, bx, by, f, fx, fy;
+
+                if (dp < 0) {
+                    //f = FRICTION;
+                    f = 0.05;
+                    fx = tx * f;
+                    fy = ty * f;
+
+                    //b = 1 + BOUNCE;//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
+                    b = 1 + 0.3;
+
+                    bx = (nx * b);
+                    by = (ny * b);
+                } else {
+                    //moving out of collision, do not apply forces
+                    bx = by = fx = fy = 0;
+                }
+
+                p.x += px;
+                p.y += py;
+
+                o.x += px + bx + fx;
+                o.y += py + by + fy;
+            };
+
+            AABB.prototype.CollideAABBVsTile = function (tile) {
+                var pos = this.pos;
+                var c = tile;
+
+                var tx = c.pos.x;
+                var ty = c.pos.y;
+                var txw = c.xw;
+                var tyw = c.yw;
+
+                var dx = pos.x - tx;
+                var px = (txw + this.xw) - Math.abs(dx);
+
+                if (0 < px) {
+                    var dy = pos.y - ty;
+                    var py = (tyw + this.yw) - Math.abs(dy);
+
+                    if (0 < py) {
+                        if (px < py) {
+                            if (dx < 0) {
+                                //project to the left
+                                px *= -1;
+                                py = 0;
+                            } else {
+                                //proj to right
+                                py = 0;
+                            }
+                        } else {
+                            if (dy < 0) {
+                                //project up
+                                px = 0;
+                                py *= -1;
+                            } else {
+                                //project down
+                                px = 0;
+                            }
+                        }
+
+                        this.ResolveBoxTile(px, py, this, c);
+                    }
+                }
+            };
+
+            AABB.prototype.CollideAABBVsWorldBounds = function () {
+                var p = this.pos;
+                var xw = this.xw;
+                var yw = this.yw;
+                var XMIN = 0;
+                var XMAX = 800;
+                var YMIN = 0;
+                var YMAX = 600;
+
+                //collide vs. x-bounds
+                //test XMIN
+                var dx = XMIN - (p.x - xw);
+                if (0 < dx) {
+                    //object is colliding with XMIN
+                    this.ReportCollisionVsWorld(dx, 0, 1, 0, null);
+                } else {
+                    //test XMAX
+                    dx = (p.x + xw) - XMAX;
+                    if (0 < dx) {
+                        //object is colliding with XMAX
+                        this.ReportCollisionVsWorld(-dx, 0, -1, 0, null);
+                    }
+                }
+
+                //collide vs. y-bounds
+                //test YMIN
+                var dy = YMIN - (p.y - yw);
+                if (0 < dy) {
+                    //object is colliding with YMIN
+                    this.ReportCollisionVsWorld(0, dy, 0, 1, null);
+                } else {
+                    //test YMAX
+                    dy = (p.y + yw) - YMAX;
+                    if (0 < dy) {
+                        //object is colliding with YMAX
+                        this.ReportCollisionVsWorld(0, -dy, 0, -1, null);
+                    }
+                }
+            };
+
+            AABB.prototype.render = function (context) {
+                context.beginPath();
+                context.strokeStyle = 'rgb(0,255,0)';
+                context.strokeRect(this.pos.x - this.xw, this.pos.y - this.yw, this.xw * 2, this.yw * 2);
+                context.stroke();
+                context.closePath();
+
+                context.fillStyle = 'rgb(0,255,0)';
+                context.fillRect(this.pos.x, this.pos.y, 2, 2);
+            };
+
+            AABB.prototype.ResolveBoxTile = function (x, y, box, t) {
+                if (0 < t.ID) {
+                    return this.aabbTileProjections[t.CTYPE](x, y, box, t);
+                } else {
+                    //trace("ResolveBoxTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " ("+ t.i + "," + t.j + ")");
+                    return false;
+                }
+            };
+            AABB.COL_NONE = 0;
+            AABB.COL_AXIS = 1;
+            AABB.COL_OTHER = 2;
+            return AABB;
+        })();
+        Physics.AABB = AABB;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    /**
+    * Phaser - Physics - Circle
+    */
+    (function (Physics) {
+        var Circle = (function () {
+            function Circle(game, x, y, radius) {
+                this.type = 1;
+                this.game = game;
+
+                this.pos = new Phaser.Vec2(x, y);
+                this.oldpos = new Phaser.Vec2(x, y);
+                this.radius = radius;
+
+                this.circleTileProjections = {};
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_FULL] = Phaser.Physics.Projection.CircleFull.Collide;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_45DEG] = Phaser.Physics.Projection.Circle45Deg.Collide;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONCAVE] = Phaser.Physics.Projection.CircleConcave.Collide;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONVEX] = Phaser.Physics.Projection.CircleConvex.Collide;
+            }
+            Circle.prototype.IntegrateVerlet = function () {
+                var d = 1;
+                var g = 0.2;
+
+                var p = this.pos;
+                var o = this.oldpos;
+                var px;
+                var py;
+
+                var ox = o.x;
+                var oy = o.y;
+
+                //o = oldposition
+                o.x = px = p.x;
+                o.y = py = p.y;
+
+                //integrate
+                p.x += (d * px) - (d * ox);
+                p.y += (d * py) - (d * oy) + g;
+            };
+
+            Circle.prototype.ReportCollisionVsWorld = function (px, py, dx, dy, obj) {
+                var p = this.pos;
+                var o = this.oldpos;
+
+                //calc velocity
+                var vx = p.x - o.x;
+                var vy = p.y - o.y;
+
+                //find component of velocity parallel to collision normal
+                var dp = (vx * dx + vy * dy);
+                var nx = dp * dx;
+
+                var ny = dp * dy;
+
+                var tx = vx - nx;
+                var ty = vy - ny;
+
+                //we only want to apply collision response forces if the object is travelling into, and not out of, the collision
+                var b, bx, by, f, fx, fy;
+
+                if (dp < 0) {
+                    //f = FRICTION;
+                    f = 0.05;
+                    fx = tx * f;
+                    fy = ty * f;
+
+                    //b = 1 + BOUNCE;//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
+                    b = 1 + 0.9;
+
+                    bx = (nx * b);
+                    by = (ny * b);
+                } else {
+                    //moving out of collision, do not apply forces
+                    bx = by = fx = fy = 0;
+                }
+
+                p.x += px;
+                p.y += py;
+
+                o.x += px + bx + fx;
+                o.y += py + by + fy;
+            };
+
+            Circle.prototype.CollideCircleVsWorldBounds = function () {
+                var p = this.pos;
+                var r = this.radius;
+                var XMIN = 0;
+                var XMAX = 800;
+                var YMIN = 0;
+                var YMAX = 600;
+
+                //collide vs. x-bounds
+                //test XMIN
+                var dx = XMIN - (p.x - r);
+
+                if (0 < dx) {
+                    //object is colliding with XMIN
+                    this.ReportCollisionVsWorld(dx, 0, 1, 0, null);
+                } else {
+                    //test XMAX
+                    dx = (p.x + r) - XMAX;
+                    if (0 < dx) {
+                        //object is colliding with XMAX
+                        this.ReportCollisionVsWorld(-dx, 0, -1, 0, null);
+                    }
+                }
+
+                //collide vs. y-bounds
+                //test YMIN
+                var dy = YMIN - (p.y - r);
+
+                if (0 < dy) {
+                    //object is colliding with YMIN
+                    this.ReportCollisionVsWorld(0, dy, 0, 1, null);
+                } else {
+                    //test YMAX
+                    dy = (p.y + r) - YMAX;
+                    if (0 < dy) {
+                        //object is colliding with YMAX
+                        this.ReportCollisionVsWorld(0, -dy, 0, -1, null);
+                    }
+                }
+            };
+
+            Circle.prototype.render = function (context) {
+                context.beginPath();
+                context.strokeStyle = 'rgb(0,255,0)';
+                context.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
+                context.stroke();
+                context.closePath();
+
+                if (this.oH == 1) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.pos.x - this.radius, this.pos.y - this.radius);
+                    context.lineTo(this.pos.x - this.radius, this.pos.y + this.radius);
+                    context.stroke();
+                    context.closePath();
+                } else if (this.oH == -1) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.pos.x + this.radius, this.pos.y - this.radius);
+                    context.lineTo(this.pos.x + this.radius, this.pos.y + this.radius);
+                    context.stroke();
+                    context.closePath();
+                }
+
+                if (this.oV == 1) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.pos.x - this.radius, this.pos.y - this.radius);
+                    context.lineTo(this.pos.x + this.radius, this.pos.y - this.radius);
+                    context.stroke();
+                    context.closePath();
+                } else if (this.oV == -1) {
+                    context.beginPath();
+                    context.strokeStyle = 'rgb(255,0,0)';
+                    context.moveTo(this.pos.x - this.radius, this.pos.y + this.radius);
+                    context.lineTo(this.pos.x + this.radius, this.pos.y + this.radius);
+                    context.stroke();
+                    context.closePath();
+                }
+            };
+
+            Circle.prototype.CollideCircleVsTile = function (tile) {
+                var pos = this.pos;
+                var r = this.radius;
+                var c = tile;
+
+                var tx = c.pos.x;
+                var ty = c.pos.y;
+                var txw = c.xw;
+                var tyw = c.yw;
+
+                var dx = pos.x - tx;
+                var px = (txw + r) - Math.abs(dx);
+
+                if (0 < px) {
+                    var dy = pos.y - ty;
+                    var py = (tyw + r) - Math.abs(dy);
+
+                    if (0 < py) {
+                        //object may be colliding with tile
+                        //determine grid/voronoi region of circle center
+                        this.oH = 0;
+                        this.oV = 0;
+                        if (dx < -txw) {
+                            //circle is on left side of tile
+                            this.oH = -1;
+                        } else if (txw < dx) {
+                            //circle is on right side of tile
+                            this.oH = 1;
+                        }
+
+                        if (dy < -tyw) {
+                            //circle is on top side of tile
+                            this.oV = -1;
+                        } else if (tyw < dy) {
+                            //circle is on bottom side of tile
+                            this.oV = 1;
+                        }
+
+                        this.ResolveCircleTile(px, py, this.oH, this.oV, this, c);
+                    }
+                }
+            };
+
+            Circle.prototype.ResolveCircleTile = function (x, y, oH, oV, obj, t) {
+                if (0 < t.ID) {
+                    return this.circleTileProjections[t.CTYPE](x, y, oH, oV, obj, t);
+                } else {
+                    console.log("ResolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.ID + " (" + t.i + "," + t.j + ")");
+                    return false;
+                }
+            };
+            Circle.COL_NONE = 0;
+            Circle.COL_AXIS = 1;
+            Circle.COL_OTHER = 2;
+            return Circle;
+        })();
+        Physics.Circle = Circle;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    /**
+    * Phaser - Physics - TileMapCell
+    */
+    (function (Physics) {
+        var TileMapCell = (function () {
+            function TileMapCell(game, x, y, xw, yw) {
+                this.game = game;
+                this.ID = TileMapCell.TID_EMPTY;
+                this.CTYPE = TileMapCell.CTYPE_EMPTY;
+
+                this.pos = new Phaser.Vec2(x, y);
+                this.xw = xw;
+                this.yw = yw;
+                this.minx = this.pos.x - this.xw;
+                this.maxx = this.pos.x + this.xw;
+                this.miny = this.pos.y - this.yw;
+                this.maxy = this.pos.y + this.yw;
+
+                //this stores tile-specific collision information
+                this.signx = 0;
+                this.signy = 0;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            //these functions are used to update the cell
+            //note: ID is assumed to NOT be "empty" state..
+            //if it IS the empty state, the tile clears itself
+            TileMapCell.prototype.SetState = function (ID) {
+                if (ID == TileMapCell.TID_EMPTY) {
+                    this.Clear();
+                } else {
+                    //set tile state to a non-emtpy value, and update it's edges and those of the neighbors
+                    this.ID = ID;
+                    this.UpdateType();
+                    //this.Draw();
+                }
+                return this;
+            };
+
+            TileMapCell.prototype.Clear = function () {
+                //tile was on, turn it off
+                this.ID = TileMapCell.TID_EMPTY;
+                this.UpdateType();
+                //this.Draw();
+            };
+
+            TileMapCell.prototype.render = function (context) {
+                context.beginPath();
+                context.strokeStyle = 'rgb(255,255,0)';
+                context.strokeRect(this.minx, this.miny, this.xw * 2, this.yw * 2);
+                context.strokeRect(this.pos.x, this.pos.y, 2, 2);
+                context.closePath();
+            };
+
+            //this converts a tile from implicitly-defined (via ID), to explicit (via properties)
+            TileMapCell.prototype.UpdateType = function () {
+                if (0 < this.ID) {
+                    if (this.ID < TileMapCell.CTYPE_45DEG) {
+                        //TID_FULL
+                        this.CTYPE = TileMapCell.CTYPE_FULL;
+                        this.signx = 0;
+                        this.signy = 0;
+                        this.sx = 0;
+                        this.sy = 0;
+                    } else if (this.ID < TileMapCell.CTYPE_CONCAVE) {
+                        //45deg
+                        this.CTYPE = TileMapCell.CTYPE_45DEG;
+                        if (this.ID == TileMapCell.TID_45DEGpn) {
+                            console.log('set tile as 45deg pn');
+                            this.signx = 1;
+                            this.signy = -1;
+                            this.sx = this.signx / Math.SQRT2;
+                            this.sy = this.signy / Math.SQRT2;
+                        } else if (this.ID == TileMapCell.TID_45DEGnn) {
+                            this.signx = -1;
+                            this.signy = -1;
+                            this.sx = this.signx / Math.SQRT2;
+                            this.sy = this.signy / Math.SQRT2;
+                        } else if (this.ID == TileMapCell.TID_45DEGnp) {
+                            this.signx = -1;
+                            this.signy = 1;
+                            this.sx = this.signx / Math.SQRT2;
+                            this.sy = this.signy / Math.SQRT2;
+                        } else if (this.ID == TileMapCell.TID_45DEGpp) {
+                            this.signx = 1;
+                            this.signy = 1;
+                            this.sx = this.signx / Math.SQRT2;
+                            this.sy = this.signy / Math.SQRT2;
+                        } else {
+                            //trace("BAAAD TILE!!!!!: ID=" + this.ID + " ("+ t.i + "," + t.j + ")");
+                            return false;
+                        }
+                    } else if (this.ID < TileMapCell.CTYPE_CONVEX) {
+                        //concave
+                        this.CTYPE = TileMapCell.CTYPE_CONCAVE;
+                        if (this.ID == TileMapCell.TID_CONCAVEpn) {
+                            this.signx = 1;
+                            this.signy = -1;
+                            this.sx = 0;
+                            this.sy = 0;
+                        } else if (this.ID == TileMapCell.TID_CONCAVEnn) {
+                            this.signx = -1;
+                            this.signy = -1;
+                            this.sx = 0;
+                            this.sy = 0;
+                        } else if (this.ID == TileMapCell.TID_CONCAVEnp) {
+                            this.signx = -1;
+                            this.signy = 1;
+                            this.sx = 0;
+                            this.sy = 0;
+                        } else if (this.ID == TileMapCell.TID_CONCAVEpp) {
+                            this.signx = 1;
+                            this.signy = 1;
+                            this.sx = 0;
+                            this.sy = 0;
+                        } else {
+                            //trace("BAAAD TILE!!!!!: ID=" + this.ID + " ("+ t.i + "," + t.j + ")");
+                            return false;
+                        }
+                    } else if (this.ID < TileMapCell.CTYPE_22DEGs) {
+                        //convex
+                        this.CTYPE = TileMapCell.CTYPE_CONVEX;
+                        if (this.ID == TileMapCell.TID_CONVEXpn) {
+                            this.signx = 1;
+                            this.signy = -1;
+                            this.sx = 0;
+                            this.sy = 0;
+                        } else if (this.ID == TileMapCell.TID_CONVEXnn) {
+                            this.signx = -1;
+                            this.signy = -1;
+                            this.sx = 0;
+                            this.sy = 0;
+                        } else if (this.ID == TileMapCell.TID_CONVEXnp) {
+                            this.signx = -1;
+                            this.signy = 1;
+                            this.sx = 0;
+                            this.sy = 0;
+                        } else if (this.ID == TileMapCell.TID_CONVEXpp) {
+                            this.signx = 1;
+                            this.signy = 1;
+                            this.sx = 0;
+                            this.sy = 0;
+                        } else {
+                            //trace("BAAAD TILE!!!!!: ID=" + this.ID + " ("+ t.i + "," + t.j + ")");
+                            return false;
+                        }
+                    } else if (this.ID < TileMapCell.CTYPE_22DEGb) {
+                        //22deg small
+                        this.CTYPE = TileMapCell.CTYPE_22DEGs;
+                        if (this.ID == TileMapCell.TID_22DEGpnS) {
+                            this.signx = 1;
+                            this.signy = -1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 1) / slen;
+                            this.sy = (this.signy * 2) / slen;
+                        } else if (this.ID == TileMapCell.TID_22DEGnnS) {
+                            this.signx = -1;
+                            this.signy = -1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 1) / slen;
+                            this.sy = (this.signy * 2) / slen;
+                        } else if (this.ID == TileMapCell.TID_22DEGnpS) {
+                            this.signx = -1;
+                            this.signy = 1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 1) / slen;
+                            this.sy = (this.signy * 2) / slen;
+                        } else if (this.ID == TileMapCell.TID_22DEGppS) {
+                            this.signx = 1;
+                            this.signy = 1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 1) / slen;
+                            this.sy = (this.signy * 2) / slen;
+                        } else {
+                            //trace("BAAAD TILE!!!!!: ID=" + this.ID + " ("+ t.i + "," + t.j + ")");
+                            return false;
+                        }
+                    } else if (this.ID < TileMapCell.CTYPE_67DEGs) {
+                        //22deg big
+                        this.CTYPE = TileMapCell.CTYPE_22DEGb;
+                        if (this.ID == TileMapCell.TID_22DEGpnB) {
+                            this.signx = 1;
+                            this.signy = -1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 1) / slen;
+                            this.sy = (this.signy * 2) / slen;
+                        } else if (this.ID == TileMapCell.TID_22DEGnnB) {
+                            this.signx = -1;
+                            this.signy = -1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 1) / slen;
+                            this.sy = (this.signy * 2) / slen;
+                        } else if (this.ID == TileMapCell.TID_22DEGnpB) {
+                            this.signx = -1;
+                            this.signy = 1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 1) / slen;
+                            this.sy = (this.signy * 2) / slen;
+                        } else if (this.ID == TileMapCell.TID_22DEGppB) {
+                            this.signx = 1;
+                            this.signy = 1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 1) / slen;
+                            this.sy = (this.signy * 2) / slen;
+                        } else {
+                            //trace("BAAAD TILE!!!!!: ID=" + this.ID + " ("+ t.i + "," + t.j + ")");
+                            return false;
+                        }
+                    } else if (this.ID < TileMapCell.CTYPE_67DEGb) {
+                        //67deg small
+                        this.CTYPE = TileMapCell.CTYPE_67DEGs;
+                        if (this.ID == TileMapCell.TID_67DEGpnS) {
+                            this.signx = 1;
+                            this.signy = -1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 2) / slen;
+                            this.sy = (this.signy * 1) / slen;
+                        } else if (this.ID == TileMapCell.TID_67DEGnnS) {
+                            this.signx = -1;
+                            this.signy = -1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 2) / slen;
+                            this.sy = (this.signy * 1) / slen;
+                        } else if (this.ID == TileMapCell.TID_67DEGnpS) {
+                            this.signx = -1;
+                            this.signy = 1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 2) / slen;
+                            this.sy = (this.signy * 1) / slen;
+                        } else if (this.ID == TileMapCell.TID_67DEGppS) {
+                            this.signx = 1;
+                            this.signy = 1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 2) / slen;
+                            this.sy = (this.signy * 1) / slen;
+                        } else {
+                            //trace("BAAAD TILE!!!!!: ID=" + this.ID + " ("+ t.i + "," + t.j + ")");
+                            return false;
+                        }
+                    } else if (this.ID < TileMapCell.CTYPE_HALF) {
+                        //67deg big
+                        this.CTYPE = TileMapCell.CTYPE_67DEGb;
+                        if (this.ID == TileMapCell.TID_67DEGpnB) {
+                            this.signx = 1;
+                            this.signy = -1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 2) / slen;
+                            this.sy = (this.signy * 1) / slen;
+                        } else if (this.ID == TileMapCell.TID_67DEGnnB) {
+                            this.signx = -1;
+                            this.signy = -1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 2) / slen;
+                            this.sy = (this.signy * 1) / slen;
+                        } else if (this.ID == TileMapCell.TID_67DEGnpB) {
+                            this.signx = -1;
+                            this.signy = 1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 2) / slen;
+                            this.sy = (this.signy * 1) / slen;
+                        } else if (this.ID == TileMapCell.TID_67DEGppB) {
+                            this.signx = 1;
+                            this.signy = 1;
+                            var slen = Math.sqrt(2 * 2 + 1 * 1);
+                            this.sx = (this.signx * 2) / slen;
+                            this.sy = (this.signy * 1) / slen;
+                        } else {
+                            //trace("BAAAD TILE!!!!!: ID=" + this.ID + " ("+ t.i + "," + t.j + ")");
+                            return false;
+                        }
+                    } else {
+                        //half-full tile
+                        this.CTYPE = TileMapCell.CTYPE_HALF;
+                        if (this.ID == TileMapCell.TID_HALFd) {
+                            this.signx = 0;
+                            this.signy = -1;
+                            this.sx = this.signx;
+                            this.sy = this.signy;
+                        } else if (this.ID == TileMapCell.TID_HALFu) {
+                            this.signx = 0;
+                            this.signy = 1;
+                            this.sx = this.signx;
+                            this.sy = this.signy;
+                        } else if (this.ID == TileMapCell.TID_HALFl) {
+                            this.signx = 1;
+                            this.signy = 0;
+                            this.sx = this.signx;
+                            this.sy = this.signy;
+                        } else if (this.ID == TileMapCell.TID_HALFr) {
+                            this.signx = -1;
+                            this.signy = 0;
+                            this.sx = this.signx;
+                            this.sy = this.signy;
+                        } else {
+                            //trace("BAAD TILE!!!: ID=" + this.ID + " ("+ t.i + "," + t.j + ")");
+                            return false;
+                        }
+                    }
+                } else {
+                    //TID_EMPTY
+                    this.CTYPE = TileMapCell.CTYPE_EMPTY;
+                    this.signx = 0;
+                    this.signy = 0;
+                    this.sx = 0;
+                    this.sy = 0;
+                }
+            };
+            TileMapCell.TID_EMPTY = 0;
+            TileMapCell.TID_FULL = 1;
+            TileMapCell.TID_45DEGpn = 2;
+            TileMapCell.TID_45DEGnn = 3;
+            TileMapCell.TID_45DEGnp = 4;
+            TileMapCell.TID_45DEGpp = 5;
+            TileMapCell.TID_CONCAVEpn = 6;
+            TileMapCell.TID_CONCAVEnn = 7;
+            TileMapCell.TID_CONCAVEnp = 8;
+            TileMapCell.TID_CONCAVEpp = 9;
+            TileMapCell.TID_CONVEXpn = 10;
+            TileMapCell.TID_CONVEXnn = 11;
+            TileMapCell.TID_CONVEXnp = 12;
+            TileMapCell.TID_CONVEXpp = 13;
+            TileMapCell.TID_22DEGpnS = 14;
+            TileMapCell.TID_22DEGnnS = 15;
+            TileMapCell.TID_22DEGnpS = 16;
+            TileMapCell.TID_22DEGppS = 17;
+            TileMapCell.TID_22DEGpnB = 18;
+            TileMapCell.TID_22DEGnnB = 19;
+            TileMapCell.TID_22DEGnpB = 20;
+            TileMapCell.TID_22DEGppB = 21;
+            TileMapCell.TID_67DEGpnS = 22;
+            TileMapCell.TID_67DEGnnS = 23;
+            TileMapCell.TID_67DEGnpS = 24;
+            TileMapCell.TID_67DEGppS = 25;
+            TileMapCell.TID_67DEGpnB = 26;
+            TileMapCell.TID_67DEGnnB = 27;
+            TileMapCell.TID_67DEGnpB = 28;
+            TileMapCell.TID_67DEGppB = 29;
+            TileMapCell.TID_HALFd = 30;
+            TileMapCell.TID_HALFr = 31;
+            TileMapCell.TID_HALFu = 32;
+            TileMapCell.TID_HALFl = 33;
+
+            TileMapCell.CTYPE_EMPTY = 0;
+            TileMapCell.CTYPE_FULL = 1;
+            TileMapCell.CTYPE_45DEG = 2;
+            TileMapCell.CTYPE_CONCAVE = 6;
+            TileMapCell.CTYPE_CONVEX = 10;
+            TileMapCell.CTYPE_22DEGs = 14;
+            TileMapCell.CTYPE_22DEGb = 18;
+            TileMapCell.CTYPE_67DEGs = 22;
+            TileMapCell.CTYPE_67DEGb = 26;
+            TileMapCell.CTYPE_HALF = 30;
+            return TileMapCell;
+        })();
+        Physics.TileMapCell = TileMapCell;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../_definitions.ts" />
+        /**
+        * Phaser - Physics - Projection
+        */
+        (function (Projection) {
+            var AABBFull = (function () {
+                function AABBFull() {
+                }
+                AABBFull.Collide = function (x, y, obj, t) {
+                    var l = Math.sqrt(x * x + y * y);
+
+                    obj.ReportCollisionVsWorld(x, y, x / l, y / l, t);
+
+                    return Phaser.Physics.AABB.COL_AXIS;
+                };
+                return AABBFull;
+            })();
+            Projection.AABBFull = AABBFull;
+        })(Physics.Projection || (Physics.Projection = {}));
+        var Projection = Physics.Projection;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../_definitions.ts" />
+        /**
+        * Phaser - Physics - Projection
+        */
+        (function (Projection) {
+            var AABBConvex = (function () {
+                function AABBConvex() {
+                }
+                AABBConvex.Collide = function (x, y, obj, t) {
+                    //if distance from "innermost" corner of AABB is less than than tile radius,
+                    //collision is occuring and we need to project
+                    var signx = t.signx;
+                    var signy = t.signy;
+
+                    var ox = (obj.pos.x - (signx * obj.xw)) - (t.pos.x - (signx * t.xw));
+                    var oy = (obj.pos.y - (signy * obj.yw)) - (t.pos.y - (signy * t.yw));
+                    var len = Math.sqrt(ox * ox + oy * oy);
+
+                    var twid = t.xw * 2;
+                    var rad = Math.sqrt(twid * twid + 0);
+
+                    //note that this should be precomputed at compile-time since it's constant
+                    var pen = rad - len;
+                    if (((signx * ox) < 0) || ((signy * oy) < 0)) {
+                        //the test corner is "outside" the 1/4 of the circle we're interested in
+                        var lenP = Math.sqrt(x * x + y * y);
+                        obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                        return Phaser.Physics.AABB.COL_AXIS;
+                    } else if (0 < pen) {
+                        //project along corner->circle vector
+                        ox /= len;
+                        oy /= len;
+                        obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                        return Phaser.Physics.AABB.COL_OTHER;
+                    }
+
+                    return Phaser.Physics.AABB.COL_NONE;
+                };
+                return AABBConvex;
+            })();
+            Projection.AABBConvex = AABBConvex;
+        })(Physics.Projection || (Physics.Projection = {}));
+        var Projection = Physics.Projection;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../_definitions.ts" />
+        /**
+        * Phaser - Physics - Projection
+        */
+        (function (Projection) {
+            var AABBConcave = (function () {
+                function AABBConcave() {
+                }
+                AABBConcave.Collide = function (x, y, obj, t) {
+                    //if distance from "innermost" corner of AABB is further than tile radius,
+                    //collision is occuring and we need to project
+                    var signx = t.signx;
+                    var signy = t.signy;
+
+                    var ox = (t.pos.x + (signx * t.xw)) - (obj.pos.x - (signx * obj.xw));
+                    var oy = (t.pos.y + (signy * t.yw)) - (obj.pos.y - (signy * obj.yw));
+
+                    var twid = t.xw * 2;
+                    var rad = Math.sqrt(twid * twid + 0);
+
+                    //note that this should be precomputed at compile-time since it's constant
+                    var len = Math.sqrt(ox * ox + oy * oy);
+                    var pen = len - rad;
+
+                    if (0 < pen) {
+                        //collision; we need to either project along the axes, or project along corner->circlecenter vector
+                        var lenP = Math.sqrt(x * x + y * y);
+                        if (lenP < pen) {
+                            //it's shorter to move along axis directions
+                            obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                            return Phaser.Physics.AABB.COL_AXIS;
+                        } else {
+                            //project along corner->circle vector
+                            ox /= len;
+                            oy /= len;
+
+                            obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                            return Phaser.Physics.AABB.COL_OTHER;
+                        }
+                    }
+
+                    return Phaser.Physics.AABB.COL_NONE;
+                };
+                return AABBConcave;
+            })();
+            Projection.AABBConcave = AABBConcave;
+        })(Physics.Projection || (Physics.Projection = {}));
+        var Projection = Physics.Projection;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../_definitions.ts" />
+        /**
+        * Phaser - Physics - Projection
+        */
+        (function (Projection) {
+            var CircleFull = (function () {
+                function CircleFull() {
+                }
+                CircleFull.Collide = function (x, y, oH, oV, obj, t) {
+                    if (oH == 0) {
+                        if (oV == 0) {
+                            if (x < y) {
+                                //penetration in x is smaller; project in x
+                                var dx = obj.pos.x - t.pos.x;
+
+                                if (dx < 0) {
+                                    obj.ReportCollisionVsWorld(-x, 0, -1, 0, t);
+                                    return Phaser.Physics.Circle.COL_AXIS;
+                                } else {
+                                    obj.ReportCollisionVsWorld(x, 0, 1, 0, t);
+                                    return Phaser.Physics.Circle.COL_AXIS;
+                                }
+                            } else {
+                                //penetration in y is smaller; project in y
+                                var dy = obj.pos.y - t.pos.y;
+
+                                if (dy < 0) {
+                                    obj.ReportCollisionVsWorld(0, -y, 0, -1, t);
+                                    return Phaser.Physics.Circle.COL_AXIS;
+                                } else {
+                                    obj.ReportCollisionVsWorld(0, y, 0, 1, t);
+                                    return Phaser.Physics.Circle.COL_AXIS;
+                                }
+                            }
+                        } else {
+                            //collision with vertical neighbor
+                            obj.ReportCollisionVsWorld(0, y * oV, 0, oV, t);
+
+                            return Phaser.Physics.Circle.COL_AXIS;
+                        }
+                    } else if (oV == 0) {
+                        //collision with horizontal neighbor
+                        obj.ReportCollisionVsWorld(x * oH, 0, oH, 0, t);
+                        return Phaser.Physics.Circle.COL_AXIS;
+                    } else {
+                        //diagonal collision
+                        //get diag vertex position
+                        var vx = t.pos.x + (oH * t.xw);
+                        var vy = t.pos.y + (oV * t.yw);
+
+                        var dx = obj.pos.x - vx;
+                        var dy = obj.pos.y - vy;
+
+                        var len = Math.sqrt(dx * dx + dy * dy);
+                        var pen = obj.radius - len;
+                        if (0 < pen) {
+                            if (len == 0) {
+                                //project out by 45deg
+                                dx = oH / Math.SQRT2;
+                                dy = oV / Math.SQRT2;
+                            } else {
+                                dx /= len;
+                                dy /= len;
+                            }
+
+                            obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                            return Phaser.Physics.Circle.COL_OTHER;
+                        }
+                    }
+
+                    return Phaser.Physics.Circle.COL_NONE;
+                };
+                return CircleFull;
+            })();
+            Projection.CircleFull = CircleFull;
+        })(Physics.Projection || (Physics.Projection = {}));
+        var Projection = Physics.Projection;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../_definitions.ts" />
+        /**
+        * Phaser - Physics - Projection
+        */
+        (function (Projection) {
+            var CircleConvex = (function () {
+                function CircleConvex() {
+                }
+                CircleConvex.Collide = function (x, y, oH, oV, obj, t) {
+                    //if the object is horiz AND/OR vertical neighbor in the normal (signx,signy)
+                    //direction, collide vs. tile-circle only.
+                    //if we're colliding diagonally:
+                    //  -else, collide vs. the appropriate vertex
+                    //if obj is in this tile: perform collision as for aabb
+                    //if obj is horiz or vert neigh against direction of slope: collide vs. face
+                    var signx = t.signx;
+                    var signy = t.signy;
+                    var lenP;
+
+                    if (oH == 0) {
+                        if (oV == 0) {
+                            //colliding with current tile
+                            var ox = obj.pos.x - (t.pos.x - (signx * t.xw));
+                            var oy = obj.pos.y - (t.pos.y - (signy * t.yw));
+
+                            var twid = t.xw * 2;
+                            var trad = Math.sqrt(twid * twid + 0);
+
+                            //note that this should be precomputed at compile-time since it's constant
+                            var len = Math.sqrt(ox * ox + oy * oy);
+                            var pen = (trad + obj.radius) - len;
+
+                            if (0 < pen) {
+                                if (x < y) {
+                                    //penetration in x is smaller
+                                    lenP = x;
+                                    y = 0;
+
+                                    if ((obj.pos.x - t.pos.x) < 0) {
+                                        x *= -1;
+                                    }
+                                } else {
+                                    //penetration in y is smaller
+                                    lenP = y;
+                                    x = 0;
+
+                                    if ((obj.pos.y - t.pos.y) < 0) {
+                                        y *= -1;
+                                    }
+                                }
+
+                                if (lenP < pen) {
+                                    obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                                    return Phaser.Physics.Circle.COL_AXIS;
+                                } else {
+                                    //note: len should NEVER be == 0, because if it is,
+                                    //projeciton by an axis shoudl always be shorter, and we should
+                                    //never arrive here
+                                    ox /= len;
+                                    oy /= len;
+
+                                    obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                                    return Phaser.Physics.Circle.COL_OTHER;
+                                }
+                            }
+                        } else {
+                            if ((signy * oV) < 0) {
+                                //colliding with face/edge
+                                obj.ReportCollisionVsWorld(0, y * oV, 0, oV, t);
+
+                                return Phaser.Physics.Circle.COL_AXIS;
+                            } else {
+                                //obj in neighboring cell pointed at by tile normal;
+                                //we could only be colliding vs the tile-circle surface
+                                var ox = obj.pos.x - (t.pos.x - (signx * t.xw));
+                                var oy = obj.pos.y - (t.pos.y - (signy * t.yw));
+
+                                var twid = t.xw * 2;
+                                var trad = Math.sqrt(twid * twid + 0);
+
+                                //note that this should be precomputed at compile-time since it's constant
+                                var len = Math.sqrt(ox * ox + oy * oy);
+                                var pen = (trad + obj.radius) - len;
+
+                                if (0 < pen) {
+                                    //note: len should NEVER be == 0, because if it is,
+                                    //obj is not in a neighboring cell!
+                                    ox /= len;
+                                    oy /= len;
+
+                                    obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                                    return Phaser.Physics.Circle.COL_OTHER;
+                                }
+                            }
+                        }
+                    } else if (oV == 0) {
+                        if ((signx * oH) < 0) {
+                            //colliding with face/edge
+                            obj.ReportCollisionVsWorld(x * oH, 0, oH, 0, t);
+
+                            return Phaser.Physics.Circle.COL_AXIS;
+                        } else {
+                            //obj in neighboring cell pointed at by tile normal;
+                            //we could only be colliding vs the tile-circle surface
+                            var ox = obj.pos.x - (t.pos.x - (signx * t.xw));
+                            var oy = obj.pos.y - (t.pos.y - (signy * t.yw));
+
+                            var twid = t.xw * 2;
+                            var trad = Math.sqrt(twid * twid + 0);
+
+                            //note that this should be precomputed at compile-time since it's constant
+                            var len = Math.sqrt(ox * ox + oy * oy);
+                            var pen = (trad + obj.radius) - len;
+
+                            if (0 < pen) {
+                                //note: len should NEVER be == 0, because if it is,
+                                //obj is not in a neighboring cell!
+                                ox /= len;
+                                oy /= len;
+
+                                obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                                return Phaser.Physics.Circle.COL_OTHER;
+                            }
+                        }
+                    } else {
+                        if (0 < ((signx * oH) + (signy * oV))) {
+                            //obj in diag neighb cell pointed at by tile normal;
+                            //we could only be colliding vs the tile-circle surface
+                            var ox = obj.pos.x - (t.pos.x - (signx * t.xw));
+                            var oy = obj.pos.y - (t.pos.y - (signy * t.yw));
+
+                            var twid = t.xw * 2;
+                            var trad = Math.sqrt(twid * twid + 0);
+
+                            //note that this should be precomputed at compile-time since it's constant
+                            var len = Math.sqrt(ox * ox + oy * oy);
+                            var pen = (trad + obj.radius) - len;
+
+                            if (0 < pen) {
+                                //note: len should NEVER be == 0, because if it is,
+                                //obj is not in a neighboring cell!
+                                ox /= len;
+                                oy /= len;
+
+                                obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                                return Phaser.Physics.Circle.COL_OTHER;
+                            }
+                        } else {
+                            //collide vs. vertex
+                            //get diag vertex position
+                            var vx = t.pos.x + (oH * t.xw);
+                            var vy = t.pos.y + (oV * t.yw);
+
+                            var dx = obj.pos.x - vx;
+                            var dy = obj.pos.y - vy;
+
+                            var len = Math.sqrt(dx * dx + dy * dy);
+                            var pen = obj.radius - len;
+                            if (0 < pen) {
+                                if (len == 0) {
+                                    //project out by 45deg
+                                    dx = oH / Math.SQRT2;
+                                    dy = oV / Math.SQRT2;
+                                } else {
+                                    dx /= len;
+                                    dy /= len;
+                                }
+
+                                obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                                return Phaser.Physics.Circle.COL_OTHER;
+                            }
+                        }
+                    }
+
+                    return Phaser.Physics.Circle.COL_NONE;
+                };
+                return CircleConvex;
+            })();
+            Projection.CircleConvex = CircleConvex;
+        })(Physics.Projection || (Physics.Projection = {}));
+        var Projection = Physics.Projection;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../_definitions.ts" />
+        /**
+        * Phaser - Physics - Projection
+        */
+        (function (Projection) {
+            var CircleConcave = (function () {
+                function CircleConcave() {
+                }
+                CircleConcave.Collide = function (x, y, oH, oV, obj, t) {
+                    //if we're colliding diagonally:
+                    //	-if obj is in the diagonal pointed to by the slope normal: we can't collide, do nothing
+                    //  -else, collide vs. the appropriate vertex
+                    //if obj is in this tile: perform collision as for aabb
+                    //if obj is horiz OR very neighb in direction of slope: collide vs vert
+                    //if obj is horiz or vert neigh against direction of slope: collide vs. face
+                    var signx = t.signx;
+                    var signy = t.signy;
+                    var lenP;
+
+                    if (oH == 0) {
+                        if (oV == 0) {
+                            //colliding with current tile
+                            var ox = (t.pos.x + (signx * t.xw)) - obj.pos.x;
+                            var oy = (t.pos.y + (signy * t.yw)) - obj.pos.y;
+
+                            var twid = t.xw * 2;
+                            var trad = Math.sqrt(twid * twid + 0);
+
+                            //note that this should be precomputed at compile-time since it's constant
+                            var len = Math.sqrt(ox * ox + oy * oy);
+                            var pen = (len + obj.radius) - trad;
+
+                            if (0 < pen) {
+                                if (x < y) {
+                                    //penetration in x is smaller
+                                    lenP = x;
+                                    y = 0;
+
+                                    if ((obj.pos.x - t.pos.x) < 0) {
+                                        x *= -1;
+                                    }
+                                } else {
+                                    //penetration in y is smaller
+                                    lenP = y;
+                                    x = 0;
+
+                                    if ((obj.pos.y - t.pos.y) < 0) {
+                                        y *= -1;
+                                    }
+                                }
+
+                                if (lenP < pen) {
+                                    obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                                    return Phaser.Physics.Circle.COL_AXIS;
+                                } else {
+                                    //we can assume that len >0, because if we're here then
+                                    //(len + obj.radius) > trad, and since obj.radius <= trad
+                                    //len MUST be > 0
+                                    ox /= len;
+                                    oy /= len;
+
+                                    obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                                    return Phaser.Physics.Circle.COL_OTHER;
+                                }
+                            } else {
+                                return Phaser.Physics.Circle.COL_NONE;
+                            }
+                        } else {
+                            if ((signy * oV) < 0) {
+                                //colliding with face/edge
+                                obj.ReportCollisionVsWorld(0, y * oV, 0, oV, t);
+
+                                return Phaser.Physics.Circle.COL_AXIS;
+                            } else {
+                                //we could only be colliding vs the vertical tip
+                                //get diag vertex position
+                                var vx = t.pos.x - (signx * t.xw);
+                                var vy = t.pos.y + (oV * t.yw);
+
+                                var dx = obj.pos.x - vx;
+                                var dy = obj.pos.y - vy;
+
+                                var len = Math.sqrt(dx * dx + dy * dy);
+                                var pen = obj.radius - len;
+                                if (0 < pen) {
+                                    if (len == 0) {
+                                        //project out vertically
+                                        dx = 0;
+                                        dy = oV;
+                                    } else {
+                                        dx /= len;
+                                        dy /= len;
+                                    }
+
+                                    obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                                    return Phaser.Physics.Circle.COL_OTHER;
+                                }
+                            }
+                        }
+                    } else if (oV == 0) {
+                        if ((signx * oH) < 0) {
+                            //colliding with face/edge
+                            obj.ReportCollisionVsWorld(x * oH, 0, oH, 0, t);
+
+                            return Phaser.Physics.Circle.COL_AXIS;
+                        } else {
+                            //we could only be colliding vs the horizontal tip
+                            //get diag vertex position
+                            var vx = t.pos.x + (oH * t.xw);
+                            var vy = t.pos.y - (signy * t.yw);
+
+                            var dx = obj.pos.x - vx;
+                            var dy = obj.pos.y - vy;
+
+                            var len = Math.sqrt(dx * dx + dy * dy);
+                            var pen = obj.radius - len;
+                            if (0 < pen) {
+                                if (len == 0) {
+                                    //project out horizontally
+                                    dx = oH;
+                                    dy = 0;
+                                } else {
+                                    dx /= len;
+                                    dy /= len;
+                                }
+
+                                obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                                return Phaser.Physics.Circle.COL_OTHER;
+                            }
+                        }
+                    } else {
+                        if (0 < ((signx * oH) + (signy * oV))) {
+                            //the dotprod of slope normal and cell offset is strictly positive,
+                            //therefore obj is in the diagonal neighb pointed at by the normal, and
+                            //it cannot possibly reach/touch/penetrate the slope
+                            return Phaser.Physics.Circle.COL_NONE;
+                        } else {
+                            //collide vs. vertex
+                            //get diag vertex position
+                            var vx = t.pos.x + (oH * t.xw);
+                            var vy = t.pos.y + (oV * t.yw);
+
+                            var dx = obj.pos.x - vx;
+                            var dy = obj.pos.y - vy;
+
+                            var len = Math.sqrt(dx * dx + dy * dy);
+                            var pen = obj.radius - len;
+                            if (0 < pen) {
+                                if (len == 0) {
+                                    //project out by 45deg
+                                    dx = oH / Math.SQRT2;
+                                    dy = oV / Math.SQRT2;
+                                } else {
+                                    dx /= len;
+                                    dy /= len;
+                                }
+
+                                obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                                return Phaser.Physics.Circle.COL_OTHER;
+                            }
+                        }
+                    }
+
+                    return Phaser.Physics.Circle.COL_NONE;
+                };
+                return CircleConcave;
+            })();
+            Projection.CircleConcave = CircleConcave;
+        })(Physics.Projection || (Physics.Projection = {}));
+        var Projection = Physics.Projection;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Physics) {
+        /// <reference path="../../_definitions.ts" />
+        /**
+        * Phaser - Physics - Projection
+        */
+        (function (Projection) {
+            var Circle45Deg = (function () {
+                function Circle45Deg() {
+                }
+                Circle45Deg.Collide = function (x, y, oH, oV, obj, t) {
+                    //if we're colliding diagonally:
+                    //	-if obj is in the diagonal pointed to by the slope normal: we can't collide, do nothing
+                    //  -else, collide vs. the appropriate vertex
+                    //if obj is in this tile: perform collision as for aabb-ve-45deg
+                    //if obj is horiz OR very neighb in direction of slope: collide only vs. slope
+                    //if obj is horiz or vert neigh against direction of slope: collide vs. face
+                    var signx = t.signx;
+                    var signy = t.signy;
+                    var lenP;
+
+                    if (oH == 0) {
+                        if (oV == 0) {
+                            //colliding with current tile
+                            var sx = t.sx;
+                            var sy = t.sy;
+
+                            var ox = (obj.pos.x - (sx * obj.radius)) - t.pos.x;
+                            var oy = (obj.pos.y - (sy * obj.radius)) - t.pos.y;
+
+                            //if the dotprod of (ox,oy) and (sx,sy) is negative, the innermost point is in the slope
+                            //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                            var dp = (ox * sx) + (oy * sy);
+                            if (dp < 0) {
+                                //collision; project delta onto slope and use this as the slope penetration vector
+                                sx *= -dp;
+                                sy *= -dp;
+
+                                if (x < y) {
+                                    //penetration in x is smaller
+                                    lenP = x;
+                                    y = 0;
+
+                                    if ((obj.pos.x - t.pos.x) < 0) {
+                                        x *= -1;
+                                    }
+                                } else {
+                                    //penetration in y is smaller
+                                    lenP = y;
+                                    x = 0;
+
+                                    if ((obj.pos.y - t.pos.y) < 0) {
+                                        y *= -1;
+                                    }
+                                }
+
+                                var lenN = Math.sqrt(sx * sx + sy * sy);
+
+                                if (lenP < lenN) {
+                                    obj.ReportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                                    return Phaser.Physics.Circle.COL_AXIS;
+                                } else {
+                                    obj.ReportCollisionVsWorld(sx, sy, t.sx, t.sy, t);
+
+                                    return Phaser.Physics.Circle.COL_OTHER;
+                                }
+                            }
+                        } else {
+                            if ((signy * oV) < 0) {
+                                //colliding with face/edge
+                                obj.ReportCollisionVsWorld(0, y * oV, 0, oV, t);
+
+                                return Phaser.Physics.Circle.COL_AXIS;
+                            } else {
+                                //we could only be colliding vs the slope OR a vertex
+                                //look at the vector form the closest vert to the circle to decide
+                                var sx = t.sx;
+                                var sy = t.sy;
+
+                                var ox = obj.pos.x - (t.pos.x - (signx * t.xw));
+                                var oy = obj.pos.y - (t.pos.y + (oV * t.yw));
+
+                                //if the component of (ox,oy) parallel to the normal's righthand normal
+                                //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                                //then we project by the vertex, otherwise by the normal.
+                                //note that this is simply a VERY tricky/weird method of determining
+                                //if the circle is in side the slope/face's voronoi region, or that of the vertex.
+                                var perp = (ox * -sy) + (oy * sx);
+                                if (0 < (perp * signx * signy)) {
+                                    //collide vs. vertex
+                                    var len = Math.sqrt(ox * ox + oy * oy);
+                                    var pen = obj.radius - len;
+                                    if (0 < pen) {
+                                        //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                                        ox /= len;
+                                        oy /= len;
+
+                                        obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                                        return Phaser.Physics.Circle.COL_OTHER;
+                                    }
+                                } else {
+                                    //collide vs. slope
+                                    //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                                    //penetrating the slope. note that this method of penetration calculation doesn't hold
+                                    //in general (i.e it won't work if the circle is in the slope), but works in this case
+                                    //because we know the circle is in a neighboring cell
+                                    var dp = (ox * sx) + (oy * sy);
+                                    var pen = obj.radius - Math.abs(dp);
+                                    if (0 < pen) {
+                                        //collision; circle out along normal by penetration amount
+                                        obj.ReportCollisionVsWorld(sx * pen, sy * pen, sx, sy, t);
+
+                                        return Phaser.Physics.Circle.COL_OTHER;
+                                    }
+                                }
+                            }
+                        }
+                    } else if (oV == 0) {
+                        if ((signx * oH) < 0) {
+                            //colliding with face/edge
+                            obj.ReportCollisionVsWorld(x * oH, 0, oH, 0, t);
+
+                            return Phaser.Physics.Circle.COL_AXIS;
+                        } else {
+                            //we could only be colliding vs the slope OR a vertex
+                            //look at the vector form the closest vert to the circle to decide
+                            var sx = t.sx;
+                            var sy = t.sy;
+
+                            var ox = obj.pos.x - (t.pos.x + (oH * t.xw));
+                            var oy = obj.pos.y - (t.pos.y - (signy * t.yw));
+
+                            //if the component of (ox,oy) parallel to the normal's righthand normal
+                            //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                            //then we project by the normal, otherwise by the vertex.
+                            //(NOTE: this is the opposite logic of the vertical case;
+                            // for vertical, if the perp prod and the slope's slope agree, it's outside.
+                            // for horizontal, if the perp prod and the slope's slope agree, circle is inside.
+                            //  ..but this is only a property of flahs' coord system (i.e the rules might swap
+                            // in righthanded systems))
+                            //note that this is simply a VERY tricky/weird method of determining
+                            //if the circle is in side the slope/face's voronio region, or that of the vertex.
+                            var perp = (ox * -sy) + (oy * sx);
+                            if ((perp * signx * signy) < 0) {
+                                //collide vs. vertex
+                                var len = Math.sqrt(ox * ox + oy * oy);
+                                var pen = obj.radius - len;
+                                if (0 < pen) {
+                                    //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                                    ox /= len;
+                                    oy /= len;
+
+                                    obj.ReportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                                    return Phaser.Physics.Circle.COL_OTHER;
+                                }
+                            } else {
+                                //collide vs. slope
+                                //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                                //penetrating the slope. note that this method of penetration calculation doesn't hold
+                                //in general (i.e it won't work if the circle is in the slope), but works in this case
+                                //because we know the circle is in a neighboring cell
+                                var dp = (ox * sx) + (oy * sy);
+                                var pen = obj.radius - Math.abs(dp);
+                                if (0 < pen) {
+                                    //collision; circle out along normal by penetration amount
+                                    obj.ReportCollisionVsWorld(sx * pen, sy * pen, sx, sy, t);
+
+                                    return Phaser.Physics.Circle.COL_OTHER;
+                                }
+                            }
+                        }
+                    } else {
+                        if (0 < ((signx * oH) + (signy * oV))) {
+                            //the dotprod of slope normal and cell offset is strictly positive,
+                            //therefore obj is in the diagonal neighb pointed at by the normal, and
+                            //it cannot possibly reach/touch/penetrate the slope
+                            return Phaser.Physics.Circle.COL_NONE;
+                        } else {
+                            //collide vs. vertex
+                            //get diag vertex position
+                            var vx = t.pos.x + (oH * t.xw);
+                            var vy = t.pos.y + (oV * t.yw);
+
+                            var dx = obj.pos.x - vx;
+                            var dy = obj.pos.y - vy;
+
+                            var len = Math.sqrt(dx * dx + dy * dy);
+                            var pen = obj.radius - len;
+                            if (0 < pen) {
+                                if (len == 0) {
+                                    //project out by 45deg
+                                    dx = oH / Math.SQRT2;
+                                    dy = oV / Math.SQRT2;
+                                } else {
+                                    dx /= len;
+                                    dy /= len;
+                                }
+
+                                obj.ReportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+                                return Phaser.Physics.Circle.COL_OTHER;
+                            }
+                        }
+                    }
+
+                    return Phaser.Physics.Circle.COL_NONE;
+                };
+                return Circle45Deg;
+            })();
+            Projection.Circle45Deg = Circle45Deg;
+        })(Physics.Projection || (Physics.Projection = {}));
+        var Projection = Physics.Projection;
+    })(Phaser.Physics || (Phaser.Physics = {}));
+    var Physics = Phaser.Physics;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var ParticleManager = (function () {
+            function ParticleManager(proParticleCount, integrationType) {
+                this.PARTICLE_CREATED = 'partilcleCreated';
+                this.PARTICLE_UPDATE = 'partilcleUpdate';
+                this.PARTICLE_SLEEP = 'particleSleep';
+                this.PARTICLE_DEAD = 'partilcleDead';
+                this.PROTON_UPDATE = 'protonUpdate';
+                this.PROTON_UPDATE_AFTER = 'protonUpdateAfter';
+                this.EMITTER_ADDED = 'emitterAdded';
+                this.EMITTER_REMOVED = 'emitterRemoved';
+                this.emitters = [];
+                this.renderers = [];
+                this.time = 0;
+                this.oldTime = 0;
+                this.amendChangeTabsBug = true;
+                this.TextureBuffer = {};
+                this.TextureCanvasBuffer = {};
+                this.proParticleCount = Particles.ParticleUtils.initValue(proParticleCount, ParticleManager.POOL_MAX);
+                this.integrationType = Particles.ParticleUtils.initValue(integrationType, ParticleManager.EULER);
+                this.emitters = [];
+                this.renderers = [];
+                this.time = 0;
+                this.oldTime = 0;
+
+                ParticleManager.pool = new Phaser.Particles.ParticlePool(proParticleCount);
+                ParticleManager.integrator = new Phaser.Particles.NumericalIntegration(this.integrationType);
+            }
+            /**
+            * add a type of Renderer
+            *
+            * @method addRender
+            * @param {Renderer} render
+            */
+            ParticleManager.prototype.addRender = function (render) {
+                render.proton = this;
+                this.renderers.push(render.proton);
+            };
+
+            /**
+            * add the Emitter
+            *
+            * @method addEmitter
+            * @param {Emitter} emitter
+            */
+            ParticleManager.prototype.addEmitter = function (emitter) {
+                this.emitters.push(emitter);
+                emitter.parent = this;
+                //this.dispatchEvent(new Proton.Event({
+                //    type: Proton.EMITTER_ADDED,
+                //    emitter: emitter
+                //}));
+            };
+
+            ParticleManager.prototype.removeEmitter = function (emitter) {
+                var index = this.emitters.indexOf(emitter);
+                this.emitters.splice(index, 1);
+                emitter.parent = null;
+                //this.dispatchEvent(new Proton.Event({
+                //    type: Proton.EMITTER_REMOVED,
+                //    emitter: emitter
+                //}));
+            };
+
+            ParticleManager.prototype.update = function () {
+                if (!this.oldTime)
+                    this.oldTime = new Date().getTime();
+
+                var time = new Date().getTime();
+                this.elapsed = (time - this.oldTime) / 1000;
+
+                //if (ParticleUtils.amendChangeTabsBug)
+                //    this.amendChangeTabsBugHandler();
+                this.oldTime = time;
+                if (this.elapsed > 0) {
+                    for (var i = 0; i < this.emitters.length; i++) {
+                        this.emitters[i].update(this.elapsed);
+                    }
+                }
+                //this.dispatchEvent(new Proton.Event({
+                //    type: Proton.PROTON_UPDATE_AFTER
+                //}));
+            };
+
+            ParticleManager.prototype.amendChangeTabsBugHandler = function () {
+                if (this.elapsed > .5) {
+                    this.oldTime = new Date().getTime();
+                    this.elapsed = 0;
+                }
+            };
+
+            ParticleManager.prototype.getParticleNumber = function () {
+                var total = 0;
+                for (var i = 0; i < this.emitters.length; i++) {
+                    total += this.emitters[i].particles.length;
+                }
+                return total;
+            };
+
+            ParticleManager.prototype.destroy = function () {
+                for (var i = 0; i < this.emitters.length; i++) {
+                    this.emitters[i].destory();
+                    delete this.emitters[i];
+                }
+
+                this.emitters = [];
+                this.time = 0;
+                this.oldTime = 0;
+                ParticleManager.pool.release();
+            };
+            ParticleManager.POOL_MAX = 1000;
+            ParticleManager.TIME_STEP = 60;
+
+            ParticleManager.MEASURE = 100;
+            ParticleManager.EULER = 'euler';
+            ParticleManager.RK2 = 'runge-kutta2';
+            ParticleManager.RK4 = 'runge-kutta4';
+            ParticleManager.VERLET = 'verlet';
+            return ParticleManager;
+        })();
+        Particles.ParticleManager = ParticleManager;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var ParticlePool = (function () {
+            function ParticlePool(num, releaseTime) {
+                if (typeof releaseTime === "undefined") { releaseTime = 0; }
+                this.poolList = [];
+                this.timeoutID = 0;
+                this.proParticleCount = Particles.ParticleUtils.initValue(num, 0);
+                this.releaseTime = Particles.ParticleUtils.initValue(releaseTime, -1);
+                this.poolList = [];
+                this.timeoutID = 0;
+
+                for (var i = 0; i < this.proParticleCount; i++) {
+                    this.add();
+                }
+
+                if (this.releaseTime > 0) {
+                    //  TODO - Hook to game clock so Pause works
+                    this.timeoutID = setTimeout(this.release, this.releaseTime / 1000);
+                }
+            }
+            ParticlePool.prototype.create = function (newTypeParticleClass) {
+                if (typeof newTypeParticleClass === "undefined") { newTypeParticleClass = null; }
+                if (newTypeParticleClass) {
+                    return new newTypeParticleClass();
+                } else {
+                    return new Phaser.Particles.Particle();
+                }
+            };
+
+            ParticlePool.prototype.getCount = function () {
+                return this.poolList.length;
+            };
+
+            ParticlePool.prototype.add = function () {
+                return this.poolList.push(this.create());
+            };
+
+            ParticlePool.prototype.get = function () {
+                if (this.poolList.length === 0) {
+                    return this.create();
+                } else {
+                    return this.poolList.pop().reset();
+                }
+            };
+
+            ParticlePool.prototype.set = function (particle) {
+                if (this.poolList.length < Particles.ParticleManager.POOL_MAX) {
+                    return this.poolList.push(particle);
+                }
+            };
+
+            ParticlePool.prototype.release = function () {
+                for (var i = 0; i < this.poolList.length; i++) {
+                    if (this.poolList[i]['destroy']) {
+                        this.poolList[i].destroy();
+                    }
+
+                    delete this.poolList[i];
+                }
+
+                this.poolList = [];
+            };
+            return ParticlePool;
+        })();
+        Particles.ParticlePool = ParticlePool;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var ParticleUtils = (function () {
+            function ParticleUtils() {
+            }
+            ParticleUtils.initValue = function (value, defaults) {
+                var value = (value != null && value != undefined) ? value : defaults;
+                return value;
+            };
+
+            ParticleUtils.isArray = function (value) {
+                return typeof value === 'object' && value.hasOwnProperty('length');
+            };
+
+            ParticleUtils.destroyArray = function (array) {
+                array.length = 0;
+            };
+
+            ParticleUtils.destroyObject = function (obj) {
+                for (var o in obj) {
+                    delete obj[o];
+                }
+            };
+
+            ParticleUtils.setSpanValue = function (a, b, c) {
+                if (typeof b === "undefined") { b = null; }
+                if (typeof c === "undefined") { c = null; }
+                if (a instanceof Phaser.Particles.Span) {
+                    return a;
+                } else {
+                    if (!b) {
+                        return new Phaser.Particles.Span(a);
+                    } else {
+                        if (!c) {
+                            return new Phaser.Particles.Span(a, b);
+                        } else {
+                            return new Phaser.Particles.Span(a, b, c);
+                        }
+                    }
+                }
+            };
+
+            ParticleUtils.getSpanValue = function (pan) {
+                if (pan instanceof Phaser.Particles.Span) {
+                    return pan.getValue();
+                } else {
+                    return pan;
+                }
+            };
+
+            ParticleUtils.randomAToB = function (a, b, INT) {
+                if (typeof INT === "undefined") { INT = null; }
+                if (!INT) {
+                    return a + Math.random() * (b - a);
+                } else {
+                    return Math.floor(Math.random() * (b - a)) + a;
+                }
+            };
+
+            ParticleUtils.randomFloating = function (center, f, INT) {
+                return ParticleUtils.randomAToB(center - f, center + f, INT);
+            };
+
+            ParticleUtils.randomZone = function (display) {
+            };
+
+            ParticleUtils.degreeTransform = function (a) {
+                return a * Math.PI / 180;
+            };
+
+            ParticleUtils.randomColor = //static toColor16 getRGB(num) {
+            //    return "#" + num.toString(16);
+            //}
+            function () {
+                return '#' + ('00000' + (Math.random() * 0x1000000 << 0).toString(16)).slice(-6);
+            };
+
+            ParticleUtils.setEasingByName = function (name) {
+                switch (name) {
+                    case 'easeLinear':
+                        return Phaser.Easing.Linear.None;
+                        break;
+
+                    case 'easeInQuad':
+                        return Phaser.Easing.Quadratic.In;
+                        break;
+
+                    case 'easeOutQuad':
+                        return Phaser.Easing.Quadratic.Out;
+                        break;
+
+                    case 'easeInOutQuad':
+                        return Phaser.Easing.Quadratic.InOut;
+                        break;
+
+                    case 'easeInCubic':
+                        return Phaser.Easing.Cubic.In;
+                        break;
+
+                    case 'easeOutCubic':
+                        return Phaser.Easing.Cubic.Out;
+                        break;
+
+                    case 'easeInOutCubic':
+                        return Phaser.Easing.Cubic.InOut;
+                        break;
+
+                    case 'easeInQuart':
+                        return Phaser.Easing.Quartic.In;
+                        break;
+
+                    case 'easeOutQuart':
+                        return Phaser.Easing.Quartic.Out;
+                        break;
+
+                    case 'easeInOutQuart':
+                        return Phaser.Easing.Quartic.InOut;
+                        break;
+
+                    case 'easeInSine':
+                        return Phaser.Easing.Sinusoidal.In;
+                        break;
+
+                    case 'easeOutSine':
+                        return Phaser.Easing.Sinusoidal.Out;
+                        break;
+
+                    case 'easeInOutSine':
+                        return Phaser.Easing.Sinusoidal.InOut;
+                        break;
+
+                    case 'easeInExpo':
+                        return Phaser.Easing.Exponential.In;
+                        break;
+
+                    case 'easeOutExpo':
+                        return Phaser.Easing.Exponential.Out;
+                        break;
+
+                    case 'easeInOutExpo':
+                        return Phaser.Easing.Exponential.InOut;
+                        break;
+
+                    case 'easeInCirc':
+                        return Phaser.Easing.Circular.In;
+                        break;
+
+                    case 'easeOutCirc':
+                        return Phaser.Easing.Circular.Out;
+                        break;
+
+                    case 'easeInOutCirc':
+                        return Phaser.Easing.Circular.InOut;
+                        break;
+
+                    case 'easeInBack':
+                        return Phaser.Easing.Back.In;
+                        break;
+
+                    case 'easeOutBack':
+                        return Phaser.Easing.Back.Out;
+                        break;
+
+                    case 'easeInOutBack':
+                        return Phaser.Easing.Back.InOut;
+                        break;
+
+                    default:
+                        return Phaser.Easing.Linear.None;
+                        break;
+                }
+            };
+            return ParticleUtils;
+        })();
+        Particles.ParticleUtils = ParticleUtils;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var Polar2D = (function () {
+            function Polar2D(r, tha) {
+                this.r = Math.abs(r) || 0;
+                this.tha = tha || 0;
+            }
+            Polar2D.prototype.set = function (r, tha) {
+                this.r = r;
+                this.tha = tha;
+                return this;
+            };
+
+            Polar2D.prototype.setR = function (r) {
+                this.r = r;
+                return this;
+            };
+
+            Polar2D.prototype.setTha = function (tha) {
+                this.tha = tha;
+                return this;
+            };
+
+            Polar2D.prototype.copy = function (p) {
+                this.r = p.r;
+                this.tha = p.tha;
+                return this;
+            };
+
+            Polar2D.prototype.toVector = function () {
+                return new Phaser.Vec2(this.getX(), this.getY());
+            };
+
+            Polar2D.prototype.getX = function () {
+                return this.r * Math.sin(this.tha);
+            };
+
+            Polar2D.prototype.getY = function () {
+                return -this.r * Math.cos(this.tha);
+            };
+
+            Polar2D.prototype.normalize = function () {
+                this.r = 1;
+                return this;
+            };
+
+            Polar2D.prototype.equals = function (v) {
+                return ((v.r === this.r) && (v.tha === this.tha));
+            };
+
+            Polar2D.prototype.toArray = function () {
+                return [this.r, this.tha];
+            };
+
+            Polar2D.prototype.clear = function () {
+                this.r = 0.0;
+                this.tha = 0.0;
+                return this;
+            };
+
+            Polar2D.prototype.clone = function () {
+                return new Polar2D(this.r, this.tha);
+            };
+            return Polar2D;
+        })();
+        Particles.Polar2D = Polar2D;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var Span = (function () {
+            function Span(a, b, center) {
+                if (typeof b === "undefined") { b = null; }
+                if (typeof center === "undefined") { center = null; }
+                this.isArray = false;
+
+                if (Particles.ParticleUtils.isArray(a)) {
+                    this.isArray = true;
+                    this.a = a;
+                } else {
+                    this.a = Particles.ParticleUtils.initValue(a, 1);
+                    this.b = Particles.ParticleUtils.initValue(b, this.a);
+                    this.center = Particles.ParticleUtils.initValue(center, false);
+                }
+            }
+            Span.prototype.getValue = function (INT) {
+                if (typeof INT === "undefined") { INT = null; }
+                if (this.isArray) {
+                    return this.a[Math.floor(this.a.length * Math.random())];
+                } else {
+                    if (!this.center) {
+                        return Particles.ParticleUtils.randomAToB(this.a, this.b, INT);
+                    } else {
+                        return Particles.ParticleUtils.randomFloating(this.a, this.b, INT);
+                    }
+                }
+            };
+
+            Span.getSpan = function (a, b, center) {
+                return new Span(a, b, center);
+            };
+            return Span;
+        })();
+        Particles.Span = Span;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var NumericalIntegration = (function () {
+            function NumericalIntegration(type) {
+                this.type = Particles.ParticleUtils.initValue(type, Particles.ParticleManager.EULER);
+            }
+            NumericalIntegration.prototype.integrate = function (particles, time, damping) {
+                this.eulerIntegrate(particles, time, damping);
+            };
+
+            NumericalIntegration.prototype.eulerIntegrate = function (particle, time, damping) {
+                if (!particle.sleep) {
+                    particle.old.p.copy(particle.p);
+                    particle.old.v.copy(particle.v);
+                    particle.a.multiplyScalar(1 / particle.mass);
+                    particle.v.add(particle.a.multiplyScalar(time));
+                    particle.p.add(particle.old.v.multiplyScalar(time));
+                    if (damping)
+                        particle.v.multiplyScalar(damping);
+                    particle.a.clear();
+                }
+            };
+            return NumericalIntegration;
+        })();
+        Particles.NumericalIntegration = NumericalIntegration;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Behaviours) {
+            var Behaviour = (function () {
+                function Behaviour(life, easing) {
+                    /**
+                    * The behaviour's id;
+                    * @property id
+                    * @type {String} id
+                    */
+                    this.id = 'Behaviour_' + Behaviour.ID++;
+                    this.life = Particles.ParticleUtils.initValue(life, Infinity);
+
+                    /**
+                    * The behaviour's decaying trend, for example Proton.easeOutQuart;
+                    * @property easing
+                    * @type {String}
+                    * @default Proton.easeLinear
+                    */
+                    this.easing = Particles.ParticleUtils.setEasingByName(easing);
+                    this.age = 0;
+                    this.energy = 1;
+
+                    /**
+                    * The behaviour is Dead;
+                    * @property dead
+                    * @type {Boolean}
+                    */
+                    this.dead = false;
+
+                    /**
+                    * The behaviour's parents array;
+                    * @property parents
+                    * @type {Array}
+                    */
+                    this.parents = [];
+
+                    /**
+                    * The behaviour name;
+                    * @property name
+                    * @type {string}
+                    */
+                    this.name = 'Behaviour';
+                }
+                /**
+                * Reset this behaviour's parameters
+                *
+                * @method reset
+                * @param {Number} this behaviour's life
+                * @param {String} this behaviour's easing
+                */
+                //reset (life, easing) {
+                //    this.life = ParticleUtils.initValue(life, Infinity);
+                //    //this.easing = ParticleUtils.initValue(easing, Proton.ease.setEasingByName(Proton.easeLinear));
+                //}
+                /**
+                * Normalize a force by 1:100;
+                *
+                * @method normalizeForce
+                * @param {Proton.Vector2D} force
+                */
+                Behaviour.prototype.normalizeForce = function (force) {
+                    return force.multiplyScalar(Particles.ParticleManager.MEASURE);
+                };
+
+                /**
+                * Normalize a value by 1:100;
+                *
+                * @method normalizeValue
+                * @param {Number} value
+                */
+                Behaviour.prototype.normalizeValue = function (value) {
+                    return value * Particles.ParticleManager.MEASURE;
+                };
+
+                /**
+                * Initialize the behaviour's parameters for all particles
+                *
+                * @method initialize
+                * @param {Proton.Particle} particle
+                */
+                Behaviour.prototype.initialize = function (particle) {
+                };
+
+                /**
+                * Apply this behaviour for all particles every time
+                *
+                * @method applyBehaviour
+                * @param {Proton.Particle} particle
+                * @param {Number} the integrate time 1/ms
+                * @param {Int} the particle index
+                */
+                Behaviour.prototype.applyBehaviour = function (particle, time, index) {
+                    this.age += time;
+
+                    if (this.age >= this.life || this.dead) {
+                        this.energy = 0;
+                        this.dead = true;
+                        this.destroy();
+                    } else {
+                        var scale = this.easing(particle.age / particle.life);
+                        this.energy = Math.max(1 - scale, 0);
+                    }
+                };
+
+                /**
+                * Destory this behaviour
+                * @method destory
+                */
+                Behaviour.prototype.destroy = function () {
+                    var index;
+                    var length = this.parents.length, i;
+
+                    for (i = 0; i < length; i++) {
+                        this.parents[i].removeBehaviour(this);
+                    }
+
+                    this.parents = [];
+                };
+                return Behaviour;
+            })();
+            Behaviours.Behaviour = Behaviour;
+        })(Particles.Behaviours || (Particles.Behaviours = {}));
+        var Behaviours = Particles.Behaviours;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Behaviours) {
+            var RandomDrift = (function (_super) {
+                __extends(RandomDrift, _super);
+                function RandomDrift(driftX, driftY, delay, life, easing) {
+                    _super.call(this, life, easing);
+                    this.reset(driftX, driftY, delay);
+                    this.time = 0;
+                    this.name = "RandomDrift";
+                }
+                RandomDrift.prototype.reset = function (driftX, driftY, delay, life, easing) {
+                    if (typeof life === "undefined") { life = null; }
+                    if (typeof easing === "undefined") { easing = null; }
+                    this.panFoce = new Phaser.Vec2(driftX, driftY);
+                    this.panFoce = this.normalizeForce(this.panFoce);
+                    this.delay = delay;
+
+                    if (life) {
+                        this.life = Particles.ParticleUtils.initValue(life, Infinity);
+                        this.easing = Particles.ParticleUtils.initValue(easing, Phaser.Easing.Linear.None);
+                    }
+                };
+
+                RandomDrift.prototype.applyBehaviour = function (particle, time, index) {
+                    _super.prototype.applyBehaviour.call(this, particle, time, index);
+
+                    this.time += time;
+
+                    if (this.time >= this.delay) {
+                        particle.a.addXY(Particles.ParticleUtils.randomAToB(-this.panFoce.x, this.panFoce.x), Particles.ParticleUtils.randomAToB(-this.panFoce.y, this.panFoce.y));
+                        this.time = 0;
+                    }
+                };
+                return RandomDrift;
+            })(Behaviours.Behaviour);
+            Behaviours.RandomDrift = RandomDrift;
+        })(Particles.Behaviours || (Particles.Behaviours = {}));
+        var Behaviours = Particles.Behaviours;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Initializers) {
+            var Initialize = (function () {
+                function Initialize() {
+                }
+                Initialize.prototype.initialize = function (target) {
+                };
+
+                Initialize.prototype.reset = function (a, b, c) {
+                };
+
+                Initialize.prototype.init = function (emitter, particle) {
+                    if (typeof particle === "undefined") { particle = null; }
+                    if (particle) {
+                        this.initialize(particle);
+                    } else {
+                        this.initialize(emitter);
+                    }
+                };
+                return Initialize;
+            })();
+            Initializers.Initialize = Initialize;
+        })(Particles.Initializers || (Particles.Initializers = {}));
+        var Initializers = Particles.Initializers;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Initializers) {
+            var Life = (function (_super) {
+                __extends(Life, _super);
+                function Life(a, b, c) {
+                    _super.call(this);
+
+                    this.lifePan = Particles.ParticleUtils.setSpanValue(a, b, c);
+                }
+                Life.prototype.initialize = function (target) {
+                    if (this.lifePan.a == Infinity) {
+                        target.life = Infinity;
+                    } else {
+                        target.life = this.lifePan.getValue();
+                    }
+                };
+                return Life;
+            })(Initializers.Initialize);
+            Initializers.Life = Life;
+        })(Particles.Initializers || (Particles.Initializers = {}));
+        var Initializers = Particles.Initializers;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Initializers) {
+            var Mass = (function (_super) {
+                __extends(Mass, _super);
+                function Mass(a, b, c) {
+                    _super.call(this);
+                    this.massPan = Particles.ParticleUtils.setSpanValue(a, b, c);
+                }
+                Mass.prototype.initialize = function (target) {
+                    target.mass = this.massPan.getValue();
+                };
+                return Mass;
+            })(Initializers.Initialize);
+            Initializers.Mass = Mass;
+        })(Particles.Initializers || (Particles.Initializers = {}));
+        var Initializers = Particles.Initializers;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Initializers) {
+            var Position = (function (_super) {
+                __extends(Position, _super);
+                function Position(zone) {
+                    _super.call(this);
+
+                    if (zone != null && zone != undefined) {
+                        this.zone = zone;
+                    } else {
+                        this.zone = new Phaser.Particles.Zones.PointZone();
+                    }
+                }
+                Position.prototype.reset = function (zone) {
+                    if (zone != null && zone != undefined) {
+                        this.zone = zone;
+                    } else {
+                        this.zone = new Phaser.Particles.Zones.PointZone();
+                    }
+                };
+
+                Position.prototype.initialize = function (target) {
+                    this.zone.getPosition();
+
+                    target.p.x = this.zone.vector.x;
+                    target.p.y = this.zone.vector.y;
+                };
+                return Position;
+            })(Initializers.Initialize);
+            Initializers.Position = Position;
+        })(Particles.Initializers || (Particles.Initializers = {}));
+        var Initializers = Particles.Initializers;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Initializers) {
+            var Rate = (function (_super) {
+                __extends(Rate, _super);
+                function Rate(numpan, timepan) {
+                    _super.call(this);
+
+                    numpan = Particles.ParticleUtils.initValue(numpan, 1);
+                    timepan = Particles.ParticleUtils.initValue(timepan, 1);
+                    this.numPan = new Phaser.Particles.Span(numpan);
+                    this.timePan = new Phaser.Particles.Span(timepan);
+                    this.startTime = 0;
+                    this.nextTime = 0;
+                    this.init();
+                }
+                Rate.prototype.init = function () {
+                    this.startTime = 0;
+                    this.nextTime = this.timePan.getValue();
+                };
+
+                Rate.prototype.getValue = function (time) {
+                    this.startTime += time;
+
+                    if (this.startTime >= this.nextTime) {
+                        this.startTime = 0;
+                        this.nextTime = this.timePan.getValue();
+
+                        if (this.numPan.b == 1) {
+                            if (this.numPan.getValue(false) > 0.5) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                        } else {
+                            return this.numPan.getValue(true);
+                        }
+                    }
+
+                    return 0;
+                };
+                return Rate;
+            })(Initializers.Initialize);
+            Initializers.Rate = Rate;
+        })(Particles.Initializers || (Particles.Initializers = {}));
+        var Initializers = Particles.Initializers;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Initializers) {
+            var Velocity = (function (_super) {
+                __extends(Velocity, _super);
+                function Velocity(rpan, thapan, type) {
+                    _super.call(this);
+
+                    this.rPan = Particles.ParticleUtils.setSpanValue(rpan);
+                    this.thaPan = Particles.ParticleUtils.setSpanValue(thapan);
+                    this.type = Particles.ParticleUtils.initValue(type, 'vector');
+                }
+                Velocity.prototype.reset = function (rpan, thapan, type) {
+                    this.rPan = Particles.ParticleUtils.setSpanValue(rpan);
+                    this.thaPan = Particles.ParticleUtils.setSpanValue(thapan);
+                    this.type = Particles.ParticleUtils.initValue(type, 'vector');
+                };
+
+                Velocity.prototype.normalizeVelocity = function (vr) {
+                    return vr * Particles.ParticleManager.MEASURE;
+                };
+
+                Velocity.prototype.initialize = function (target) {
+                    if (this.type == 'p' || this.type == 'P' || this.type == 'polar') {
+                        var polar2d = new Particles.Polar2D(this.normalizeVelocity(this.rPan.getValue()), this.thaPan.getValue() * Math.PI / 180);
+                        target.v.x = polar2d.getX();
+                        target.v.y = polar2d.getY();
+                    } else {
+                        target.v.x = this.normalizeVelocity(this.rPan.getValue());
+                        target.v.y = this.normalizeVelocity(this.thaPan.getValue());
+                    }
+                };
+                return Velocity;
+            })(Initializers.Initialize);
+            Initializers.Velocity = Velocity;
+        })(Particles.Initializers || (Particles.Initializers = {}));
+        var Initializers = Particles.Initializers;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Zones) {
+            var Zone = (function () {
+                function Zone() {
+                    this.vector = new Phaser.Vec2();
+                    this.random = 0;
+                    this.crossType = "dead";
+                    this.alert = true;
+                }
+                return Zone;
+            })();
+            Zones.Zone = Zone;
+        })(Particles.Zones || (Particles.Zones = {}));
+        var Zones = Particles.Zones;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Zones) {
+            var PointZone = (function (_super) {
+                __extends(PointZone, _super);
+                function PointZone(x, y) {
+                    if (typeof x === "undefined") { x = 0; }
+                    if (typeof y === "undefined") { y = 0; }
+                    _super.call(this);
+                    this.x = x;
+                    this.y = y;
+                }
+                PointZone.prototype.getPosition = function () {
+                    return this.vector.setTo(this.x, this.y);
+                };
+
+                PointZone.prototype.crossing = function (particle) {
+                    if (this.alert) {
+                        alert('Sorry PointZone does not support crossing method');
+                        this.alert = false;
+                    }
+                };
+                return PointZone;
+            })(Zones.Zone);
+            Zones.PointZone = PointZone;
+        })(Particles.Zones || (Particles.Zones = {}));
+        var Zones = Particles.Zones;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
+})(Phaser || (Phaser = {}));
 /// <reference path="_definitions.ts" />
 /**
 * World
@@ -20131,4 +22838,32 @@ var Phaser;
         return CanvasUtils;
     })();
     Phaser.CanvasUtils = CanvasUtils;
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    (function (Particles) {
+        /// <reference path="../../_definitions.ts" />
+        (function (Initializers) {
+            var Radius = (function (_super) {
+                __extends(Radius, _super);
+                function Radius(a, b, c) {
+                    _super.call(this);
+
+                    this.radius = Particles.ParticleUtils.setSpanValue(a, b, c);
+                }
+                Radius.prototype.reset = function (a, b, c) {
+                    this.radius = Particles.ParticleUtils.setSpanValue(a, b, c);
+                };
+
+                Radius.prototype.initialize = function (particle) {
+                    particle.radius = this.radius.getValue();
+                    particle.transform.oldRadius = particle.radius;
+                };
+                return Radius;
+            })(Initializers.Initialize);
+            Initializers.Radius = Radius;
+        })(Particles.Initializers || (Particles.Initializers = {}));
+        var Initializers = Particles.Initializers;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
 })(Phaser || (Phaser = {}));

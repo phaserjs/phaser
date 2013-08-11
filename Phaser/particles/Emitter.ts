@@ -1,462 +1,333 @@
 /// <reference path="../_definitions.ts" />
 
-/**
-* Phaser - ArcadeEmitter
-*
-* Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
-* continuous effects like rain and fire. All it really does is launch Particle objects out
-* at set intervals, and fixes their positions and velocities accorindgly.
-*/
+module Phaser.Particles {
 
-module Phaser {
-
-    export class ArcadeEmitter extends Phaser.Group {
+    export class Emitter {
 
         /**
-         * Creates a new <code>Emitter</code> object at a specific position.
-         * Does NOT automatically generate or attach particles!
+         * You can use this emit particles.
          *
-         * @param x {number} The X position of the emitter.
-         * @param y {number} The Y position of the emitter.
-         * @param [size] {number} Specifies a maximum capacity for this emitter.
+         * It will dispatch follow events:
+         * Proton.PARTICLE_CREATED
+         * Proton.PARTICLE_UPDATA
+         * Proton.PARTICLE_DEAD
+         *
+         * @class Proton.Emitter
+         * @constructor
+         * @param {Object} pObj the parameters object;
+         * for example {damping:0.01,bindEmitter:false}
          */
-        constructor(game: Phaser.Game, x: number = 0, y: number = 0, size: number = 0) {
 
-            super(game, size);
+        constructor(pObj) {
 
-            this.x = x;
-            this.y = y;
-            this.width = 0;
-            this.height = 0;
-            this.minParticleSpeed = new Vec2(-100, -100);
-            this.maxParticleSpeed = new Vec2(100, 100);
-            this.minRotation = -360;
-            this.maxRotation = 360;
-            this.gravity = 0;
-            this.particleClass = null;
-            this.particleDrag = new Vec2();
-            this.frequency = 0.1;
-            this.lifespan = 3;
-            this.bounce = 0;
-            this._quantity = 0;
-            this._counter = 0;
-            this._explode = true;
-            this.on = false;
+            this.initializes = [];
+            this.particles = [];
+            this.behaviours = [];
+            this.emitTime = 0;
+            this.emitTotalTimes = -1;
+            /**
+             * The friction coefficient for all particle emit by This;
+             * @property damping
+             * @type {Number}
+             * @default 0.006
+             */
+            this.damping = .006;
+            /**
+             * If bindEmitter the particles can bind this emitter's property;
+             * @property bindEmitter
+             * @type {Boolean}
+             * @default true
+             */
+            this.bindEmitter = true;
+            /**
+             * The number of particles per second emit (a [particle]/b [s]);
+             * @property rate
+             * @type {Proton.Rate}
+             * @default Proton.Rate(1, .1)
+             */
+            this.rate = new Phaser.Particles.Initializers.Rate(1, .1);
+            //Emitter._super_.call(this, pObj);
+            /**
+             * The emitter's id;
+             * @property id
+             * @type {String} id
+             */
+            this.id = 'emitter_' + Emitter.ID++;
+        }
 
-            this.exists = true;
-            this.active = true;
-            this.visible = true;
+        static ID = 0;
+        id;
+        initializes = [];
+        particles = [];
+        behaviours = [];
+        emitTime = 0;
+        emitTotalTimes = -1;
+        damping;
+        bindEmitter;
+        rate;
+        life;
+        age;
+        dead;
+        parent;
 
+        /**
+         * start emit particle
+         * @method emit
+         * @param {Number} emitTime begin emit time;
+         * @param {String} life the life of this emitter
+         */
+        emit(emitTime, life) {
+            this.emitTime = 0;
+            this.emitTotalTimes = ParticleUtils.initValue(emitTime, Infinity);
+
+            if (life == true || life == 'life' || life == 'destroy')
+            {
+                if (emitTime == 'once')
+                    this.life = 1;
+                else
+                    this.life = this.emitTotalTimes;
+
+            } else if (!isNaN(life))
+            {
+                this.life = life;
+            }
+
+            this.rate.init();
         }
 
         /**
-         * The X position of the top left corner of the emitter in world space.
+         * stop emiting
+         * @method stopEmit
          */
-        public x: number;
+        stopEmit() {
+            this.emitTotalTimes = -1;
+            this.emitTime = 0;
+        }
 
         /**
-         * The Y position of the top left corner of emitter in world space.
+         * remove current all particles
+         * @method removeAllParticles
          */
-        public y: number;
+        removeAllParticles() {
+            for (var i = 0; i < this.particles.length; i++)
+                this.particles[i].dead = true;
+        }
 
         /**
-         * The width of the emitter.  Particles can be randomly generated from anywhere within this box.
-         */
-        public width: number;
-
-        /**
-         * The height of the emitter.  Particles can be randomly generated from anywhere within this box.
-         */
-        public height: number;
-
-        /**
+         * create single particle;
          * 
+         * can use emit({x:10},new Gravity(10),{'particleUpdate',fun}) or emit([{x:10},new Initialize],new Gravity(10),{'particleUpdate',fun})
+         * @method removeAllParticles
          */
-        public alive: boolean;
+        createParticle(initialize=null, behaviour=null) {
+            var particle = ParticleManager.pool.get();
+            this.setupParticle(particle, initialize, behaviour);
+            //this.dispatchEvent(new Proton.Event({
+            //    type: Proton.PARTICLE_CREATED,
+            //    particle: particle
+            //}));
+            return particle;
+        }
 
         /**
+         * add initialize to this emitter
+         * @method addSelfInitialize
+         */
+        addSelfInitialize(pObj) {
+            if (pObj['init'])
+            {
+                pObj.init(this);
+            } else
+            {
+                //this.initAll();
+            }
+        }
+
+        /**
+         * add the Initialize to particles;
          * 
+         * you can use initializes array:for example emitter.addInitialize(initialize1,initialize2,initialize3);
+         * @method addInitialize
+         * @param {Proton.Initialize} initialize like this new Proton.Radius(1, 12)
          */
-        public active: boolean;
-
-        /**
-         * The minimum possible velocity of a particle.
-         * The default value is (-100,-100).
-         */
-        public minParticleSpeed: Phaser.Vec2;
-
-        /**
-         * The maximum possible velocity of a particle.
-         * The default value is (100,100).
-         */
-        public maxParticleSpeed: Phaser.Vec2;
-
-        /**
-         * The X and Y drag component of particles launched from the emitter.
-         */
-        public particleDrag: Phaser.Vec2;
-
-        /**
-         * The minimum possible angular velocity of a particle.  The default value is -360.
-         * NOTE: rotating particles are more expensive to draw than non-rotating ones!
-         */
-        public minRotation: number;
-
-        /**
-         * The maximum possible angular velocity of a particle.  The default value is 360.
-         * NOTE: rotating particles are more expensive to draw than non-rotating ones!
-         */
-        public maxRotation: number;
-
-        /**
-         * Sets the <code>acceleration.y</code> member of each particle to this value on launch.
-         */
-        public gravity: number;
-
-        /**
-         * Determines whether the emitter is currently emitting particles.
-         * It is totally safe to directly toggle this.
-         */
-        public on: boolean;
-
-        /**
-         * How often a particle is emitted (if emitter is started with Explode == false).
-         */
-        public frequency: number;
-
-        /**
-         * How long each particle lives once it is emitted.
-         * Set lifespan to 'zero' for particles to live forever.
-         */
-        public lifespan: number;
-
-        /**
-         * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
-         */
-        public bounce: number;
-
-        /**
-         * Set your own particle class type here.
-         * Default is <code>Particle</code>.
-         */
-        public particleClass;
-
-        /**
-         * Internal helper for deciding how many particles to launch.
-         */
-        private _quantity: number;
-
-        /**
-         * Internal helper for the style of particle emission (all at once, or one at a time).
-         */
-        private _explode: boolean;
-
-        /**
-         * Internal helper for deciding when to launch particles or kill them.
-         */
-        private _timer: number;
-
-        /**
-         * Internal counter for figuring out how many particles to launch.
-         */
-        private _counter: number;
-
-        /**
-         * Internal point object, handy for reusing for memory mgmt purposes.
-         */
-        private _point: Phaser.Vec2;
-
-        /**
-         * Clean up memory.
-         */
-        public destroy() {
-            this.minParticleSpeed = null;
-            this.maxParticleSpeed = null;
-            this.particleDrag = null;
-            this.particleClass = null;
-            this._point = null;
-            super.destroy();
+        addInitialize() {
+            var length = arguments.length, i;
+            for (i = 0; i < length; i++)
+            {
+                this.initializes.push(arguments[i]);
+            }
         }
 
         /**
-         * This function generates a new array of particle sprites to attach to the emitter.
-         *
-         * @param graphics If you opted to not pre-configure an array of Sprite objects, you can simply pass in a particle image or sprite sheet.
-         * @param quantity {number} The number of particles to generate when using the "create from image" option.
-         * @param multiple {boolean} Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-         * @param collide {number}  Whether the particles should be flagged as not 'dead' (non-colliding particles are higher performance).  0 means no collisions, 0-1 controls scale of particle's bounding box.
-         *
-         * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
+         * remove the Initialize
+         * @method removeInitialize
+         * @param {Proton.Initialize} initialize a initialize
          */
-        public makeParticles(graphics, quantity: number = 50, multiple: boolean = false, collide: number = 0): Phaser.ArcadeEmitter {
-
-            this.maxSize = quantity;
-
-            var totalFrames: number = 1;
-
-            /*
-            if(Multiple)
+        removeInitialize(initializer) {
+            var index = this.initializes.indexOf(initializer);
+            if (index > -1)
             {
-                var sprite:Sprite = new Sprite(this.game);
-                sprite.loadGraphic(Graphics,true);
-                totalFrames = sprite.frames;
-                sprite.destroy();
+                this.initializes.splice(index, 1);
             }
-            */
-
-            var randomFrame: number;
-            var particle: Phaser.ArcadeParticle;
-            var i: number = 0;
-
-            while (i < quantity)
-            {
-                if (this.particleClass == null)
-                {
-                    particle = new Phaser.ArcadeParticle(this.game);
-                }
-                else
-                {
-                    particle = new this.particleClass(this.game);
-                }
-
-                if (multiple)
-                {
-                    /*
-                    randomFrame = this.game.math.random()*totalFrames;
-                    */
-                }
-                else
-                {
-                    if (graphics)
-                    {
-                        particle.texture.loadImage(graphics);
-                    }
-                }
-
-                if (collide > 0)
-                {
-                    //particle.body.allowCollisions = Types.ANY;
-                    particle.body.type = Phaser.Types.BODY_DYNAMIC;
-                    particle.width *= collide;
-                    particle.height *= collide;
-                }
-                else
-                {
-                    //particle.body.allowCollisions = Types.NONE;
-                }
-
-                particle.exists = false;
-                //  Center the origin for rotation assistance
-                //particle.transform.origin.setTo(particle.body.bounds.halfWidth, particle.body.bounds.halfHeight);
-
-                this.add(particle);
-
-                i++;
-            }
-
-            return this;
         }
 
-        public preUpdate() { }
-        public postUpdate() { }
+        /**
+         * remove all Initializes
+         * @method removeInitializers
+         */
+        removeInitializers() {
+            ParticleUtils.destroyArray(this.initializes);
+        }
 
         /**
-         * Called automatically by the game loop, decides when to launch particles and when to "die".
+         * add the Behaviour to particles;
+         * 
+         * you can use Behaviours array:emitter.addBehaviour(Behaviour1,Behaviour2,Behaviour3);
+         * @method addBehaviour
+         * @param {Proton.Behaviour} behaviour like this new Proton.Color('random')
          */
-        public update() {
-
-            if (this.on)
+        addBehaviour() {
+            var length = arguments.length, i;
+            for (i = 0; i < length; i++)
             {
-                if (this._explode)
+                this.behaviours.push(arguments[i]);
+                if (arguments[i].hasOwnProperty("parents"))
+                    arguments[i].parents.push(this);
+            }
+        }
+
+        /**
+         * remove the Behaviour
+         * @method removeBehaviour
+         * @param {Proton.Behaviour} behaviour a behaviour
+         */
+        removeBehaviour(behaviour) {
+            var index = this.behaviours.indexOf(behaviour);
+            if (index > -1)
+                this.behaviours.splice(index, 1);
+        }
+
+        /**
+         * remove all behaviours
+         * @method removeAllBehaviours
+         */
+        removeAllBehaviours() {
+            ParticleUtils.destroyArray(this.behaviours);
+        }
+
+        integrate(time) {
+            var damping = 1 - this.damping;
+            ParticleManager.integrator.integrate(this, time, damping);
+            var length = this.particles.length, i;
+            for (i = 0; i < length; i++)
+            {
+                var particle = this.particles[i];
+                particle.update(time, i);
+                ParticleManager.integrator.integrate(particle, time, damping);
+
+                //this.dispatchEvent(new Proton.Event({
+                //    type: Proton.PARTICLE_UPDATE,
+                //    particle: particle
+                //}));
+            }
+        }
+
+        emitting(time) {
+            if (this.emitTotalTimes == 1)
+            {
+                var length = this.rate.getValue(99999), i;
+                for (i = 0; i < length; i++)
                 {
-                    this.on = false;
-
-                    var i: number = 0;
-                    var l: number = this._quantity;
-
-                    if ((l <= 0) || (l > this.length))
-                    {
-                        l = this.length;
-                    }
-
-                    while (i < l)
-                    {
-                        this.emitParticle();
-                        i++;
-                    }
-
-                    this._quantity = 0;
+                    this.createParticle();
                 }
-                else
+
+                this.emitTotalTimes = 0;
+            } else if (!isNaN(this.emitTotalTimes))
+            {
+                this.emitTime += time;
+                if (this.emitTime < this.emitTotalTimes)
                 {
-                    this._timer += this.game.time.elapsed;
-
-                    while ((this.frequency > 0) && (this._timer > this.frequency) && this.on)
+                    var length = this.rate.getValue(time), i;
+                    for (i = 0; i < length; i++)
                     {
-                        this._timer -= this.frequency;
-                        this.emitParticle();
-
-                        if ((this._quantity > 0) && (++this._counter >= this._quantity))
-                        {
-                            this.on = false;
-                            this._quantity = 0;
-                        }
+                        this.createParticle();
                     }
                 }
             }
-
-            super.update();
-
         }
 
-        /**
-         * Call this function to turn off all the particles and the emitter.
-         */
-        public kill() {
-            this.on = false;
-            this.alive = false;
-            this.exists = false;
-        }
 
-        /**
-         * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
-         * In practice, this is most often called by <code>Object.reset()</code>.
-         */
-        public revive() {
-            this.alive = true;
-            this.exists = true;
-        }
-
-        /**
-         * Call this function to start emitting particles.
-         *
-         * @param explode {boolean} Whether the particles should all burst out at once.
-         * @param lifespan {number} How long each particle lives once emitted. 0 = forever.
-         * @param frequency {number} Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-         * @param quantity {number} How many particles to launch. 0 = "all of the particles".
-         */
-        public start(explode: boolean = true, lifespan: number = 0, frequency: number = 0.1, quantity: number = 0) {
-
-            this.revive();
-
-            this.visible = true;
-            this.on = true;
-
-            this._explode = explode;
-            this.lifespan = lifespan;
-            this.frequency = frequency;
-            this._quantity += quantity;
-
-            this._counter = 0;
-            this._timer = 0;
-
-        }
-
-        /**
-         * This function can be used both internally and externally to emit the next particle.
-         */
-        public emitParticle() {
-
-            var particle: ArcadeParticle = this.recycle(ArcadeParticle);
-
-            particle.lifespan = this.lifespan;
-            //particle.body.bounce.setTo(this.bounce, this.bounce);
-            SpriteUtils.reset(particle, this.x - (particle.width >> 1) + this.game.rnd.integer * this.width, this.y - (particle.height >> 1) + this.game.rnd.integer * this.height);
-            particle.visible = true;
-
-            if (this.minParticleSpeed.x != this.maxParticleSpeed.x)
+        update(time) {
+            this.age += time;
+            if (this.age >= this.life || this.dead)
             {
-                particle.body.velocity.x = this.minParticleSpeed.x + this.game.rnd.integer * (this.maxParticleSpeed.x - this.minParticleSpeed.x);
-            }
-            else
-            {
-                particle.body.velocity.x = this.minParticleSpeed.x;
+                this.destroy();
             }
 
-            if (this.minParticleSpeed.y != this.maxParticleSpeed.y)
+            this.emitting(time);
+            this.integrate(time);
+            var particle;
+            var length = this.particles.length, k;
+            for (k = length - 1; k >= 0; k--)
             {
-                particle.body.velocity.y = this.minParticleSpeed.y + this.game.rnd.integer * (this.maxParticleSpeed.y - this.minParticleSpeed.y);
+                particle = this.particles[k];
+                if (particle.dead)
+                {
+                    ParticleManager.pool.set(particle);
+                    this.particles.splice(k, 1);
+                    //this.dispatchEvent(new Proton.Event({
+                    //    type: Proton.PARTICLE_DEAD,
+                    //    particle: particle
+                    //}));
+                }
             }
-            else
+        }
+
+        setupParticle(particle, initialize, behaviour) {
+
+            var initializes = this.initializes;
+            var behaviours = this.behaviours;
+
+            if (initialize)
             {
-                particle.body.velocity.y = this.minParticleSpeed.y;
+                if (initialize instanceof Array)
+                    initializes = initialize;
+                else
+                    initializes = [initialize];
             }
 
-            //particle.body.acceleration.y = this.gravity;
-
-            if (this.minRotation != this.maxRotation && this.minRotation !== 0 && this.maxRotation !== 0)
+            if (behaviour)
             {
-                particle.body.angularVelocity = this.minRotation + this.game.rnd.integer * (this.maxRotation - this.minRotation);
-            }
-            else
-            {
-                particle.body.angularVelocity = this.minRotation;
+                if (behaviour instanceof Array)
+                    behaviours = behaviour;
+                else
+                    behaviours = [behaviour];
             }
 
-            if (particle.body.angularVelocity != 0)
-            {
-                particle.rotation = this.game.rnd.integer * 360 - 180;
-            }
-
-            //particle.body.drag.x = this.particleDrag.x;
-            //particle.body.drag.y = this.particleDrag.y;
-            particle.onEmit();
-
+            //Proton.InitializeUtil.initialize(this, particle, initializes);
+            particle.addBehaviours(behaviours);
+            particle.parent = this;
+            this.particles.push(particle);
         }
 
         /**
-         * A more compact way of setting the width and height of the emitter.
-         *
-         * @param width {number} The desired width of the emitter (particles are spawned randomly within these dimensions).
-         * @param height {number} The desired height of the emitter.
+         * Destory this Emitter
+         * @method destory
          */
-        public setSize(width: number, height: number) {
-            this.width = width;
-            this.height = height;
+        destroy() {
+            this.dead = true;
+            this.emitTotalTimes = -1;
+            if (this.particles.length == 0)
+            {
+                this.removeInitializers();
+                this.removeAllBehaviours();
+
+                if (this.parent)
+                    this.parent.removeEmitter(this);
+            }
         }
 
-        /**
-         * A more compact way of setting the X velocity range of the emitter.
-         *
-         * @param Min {number} The minimum value for this range.
-         * @param Max {number} The maximum value for this range.
-         */
-        public setXSpeed(min: number = 0, max: number = 0) {
-            this.minParticleSpeed.x = min;
-            this.maxParticleSpeed.x = max;
-        }
 
-        /**
-         * A more compact way of setting the Y velocity range of the emitter.
-         *
-         * @param Min {number} The minimum value for this range.
-         * @param Max {number} The maximum value for this range.
-         */
-        public setYSpeed(min: number = 0, max: number = 0) {
-            this.minParticleSpeed.y = min;
-            this.maxParticleSpeed.y = max;
-        }
-
-        /**
-         * A more compact way of setting the angular velocity constraints of the emitter.
-         *
-         * @param Min {number} The minimum value for this range.
-         * @param Max {number} The maximum value for this range.
-         */
-        public setRotation(min: number = 0, max: number = 0) {
-            this.minRotation = min;
-            this.maxRotation = max;
-        }
-
-        /**
-         * Change the emitter's midpoint to match the midpoint of a <code>Object</code>.
-         *
-         * @param Object {object} The <code>Object</code> that you want to sync up with.
-         */
-        public at(object: Sprite) {
-            //this.x = object.body.bounds.halfWidth - (this.width >> 1);
-            //this.y = object.body.bounds.halfHeight - (this.height >> 1);
-        }
     }
 
 }

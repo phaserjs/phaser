@@ -89,6 +89,18 @@ module Phaser {
             return <Phaser.Sound> this.game.sound.add(key, volume, loop);
         }
 
+        public circle(x: number, y: number, radius: number): Phaser.Physics.Circle {
+            return new Phaser.Physics.Circle(this.game, x, y, radius);
+        }
+
+        public aabb(x: number, y: number, width: number, height:number): Phaser.Physics.AABB {
+            return new Phaser.Physics.AABB(this.game, x, y, Math.floor(width / 2), Math.floor(height / 2));
+        }
+
+        public cell(x: number, y: number, width: number, height: number, state: number = Phaser.Physics.TileMapCell.TID_FULL): Phaser.Physics.TileMapCell {
+            return new Phaser.Physics.TileMapCell(this.game, x, y, width, height).SetState(state);
+        }
+
         /**
          * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
          *
@@ -130,9 +142,9 @@ module Phaser {
          *
          * @return {Particle} The newly created particle object.
          */
-        public particle(): Phaser.ArcadeParticle {
-            return new Phaser.ArcadeParticle(this.game);
-        }
+        //public particle(): Phaser.ArcadeParticle {
+        //    return new Phaser.ArcadeParticle(this.game);
+        //}
 
         /**
          * Create a new Emitter.
@@ -142,9 +154,9 @@ module Phaser {
          * @param size {number} Optional, size of this emitter.
          * @return {Emitter} The newly created emitter object.
          */
-        public emitter(x: number = 0, y: number = 0, size: number = 0): Phaser.ArcadeEmitter {
-            return <Phaser.ArcadeEmitter> this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
-        }
+        //public emitter(x: number = 0, y: number = 0, size: number = 0): Phaser.ArcadeEmitter {
+        //    return <Phaser.ArcadeEmitter> this._world.group.add(new Phaser.ArcadeEmitter(this.game, x, y, size));
+        //}
 
         /**
          * Create a new ScrollZone object with image key, position and size.
@@ -237,9 +249,9 @@ module Phaser {
          * @param emitter The Emitter to add to the Game World
          * @return {Phaser.Emitter} The Emitter object
          */
-        public existingEmitter(emitter: Phaser.ArcadeEmitter): Phaser.ArcadeEmitter {
-            return this._world.group.add(emitter);
-        }
+        //public existingEmitter(emitter: Phaser.ArcadeEmitter): Phaser.ArcadeEmitter {
+        //    return this._world.group.add(emitter);
+        //}
 
         /**
          * Add an existing ScrollZone to the current world.

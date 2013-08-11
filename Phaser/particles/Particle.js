@@ -1,52 +1,157 @@
-/// <reference path="../_definitions.ts" />
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-/**
-* Phaser - ArcadeParticle
-*
-* This is a simple particle class that extends a Sprite to have a slightly more
-* specialised behaviour. It is used exclusively by the Emitter class and can be extended as required.
-*/
 var Phaser;
 (function (Phaser) {
-    var ArcadeParticle = (function (_super) {
-        __extends(ArcadeParticle, _super);
-        /**
-        * Instantiate a new particle.  Like <code>Sprite</code>, all meaningful creation
-        * happens during <code>loadGraphic()</code> or <code>makeGraphic()</code> or whatever.
-        */
-        function ArcadeParticle(game) {
-            _super.call(this, game);
-
-            this.body.type = Phaser.Types.BODY_DYNAMIC;
-            this.lifespan = 0;
-        }
-        /**
-        * The particle's main update logic.  Basically it checks to see if it should be dead yet.
-        */
-        ArcadeParticle.prototype.update = function () {
-            if (this.lifespan <= 0) {
-                return;
+    /// <reference path="../_definitions.ts" />
+    (function (Particles) {
+        var Particle = (function () {
+            /**
+            * the Particle class
+            *
+            * @class Proton.Particle
+            * @constructor
+            * @param {Object} pObj the parameters object;
+            * for example {life:3,dead:false}
+            */
+            function Particle() {
+                this.life = Infinity;
+                this.age = 0;
+                this.energy = 1;
+                this.dead = false;
+                this.sleep = false;
+                this.target = null;
+                this.sprite = null;
+                this.parent = null;
+                this.mass = 1;
+                this.radius = 10;
+                this.alpha = 1;
+                this.scale = 1;
+                this.rotation = 0;
+                this.color = null;
+                this.easing = Phaser.Easing.Linear.None;
+                this.p = new Phaser.Vec2();
+                this.v = new Phaser.Vec2();
+                this.a = new Phaser.Vec2();
+                this.old = {
+                    p: new Phaser.Vec2(),
+                    v: new Phaser.Vec2(),
+                    a: new Phaser.Vec2()
+                };
+                this.behaviours = [];
+                /**
+                * The particle's id;
+                * @property id
+                * @type {String} id
+                */
+                this.id = 'particle_' + Particle.ID++;
+                this.reset(true);
             }
+            Particle.prototype.getDirection = function () {
+                return Math.atan2(this.v.x, -this.v.y) * (180 / Math.PI);
+            };
 
-            this.lifespan -= this.game.time.elapsed;
+            Particle.prototype.reset = function (init) {
+                this.life = Infinity;
+                this.age = 0;
+                this.energy = 1;
+                this.dead = false;
+                this.sleep = false;
+                this.target = null;
+                this.sprite = null;
+                this.parent = null;
+                this.mass = 1;
+                this.radius = 10;
+                this.alpha = 1;
+                this.scale = 1;
+                this.rotation = 0;
+                this.color = null;
+                this.easing = Phaser.Easing.Linear.None;
+                if (init) {
+                    this.transform = {};
+                    this.p = new Phaser.Vec2();
+                    this.v = new Phaser.Vec2();
+                    this.a = new Phaser.Vec2();
+                    this.old = {
+                        p: new Phaser.Vec2(),
+                        v: new Phaser.Vec2(),
+                        a: new Phaser.Vec2()
+                    };
+                    this.behaviours = [];
+                } else {
+                    Particles.ParticleUtils.destroyObject(this.transform);
+                    this.p.setTo(0, 0);
+                    this.v.setTo(0, 0);
+                    this.a.setTo(0, 0);
+                    this.old.p.setTo(0, 0);
+                    this.old.v.setTo(0, 0);
+                    this.old.a.setTo(0, 0);
+                    this.removeAllBehaviours();
+                }
 
-            if (this.lifespan <= 0) {
-                this.kill();
-            }
-        };
+                this.transform.rgb = {
+                    r: 255,
+                    g: 255,
+                    b: 255
+                };
+                return this;
+            };
 
-        /**
-        * Triggered whenever this object is launched by a <code>Emitter</code>.
-        * You can override this to add custom behavior like a sound or AI or something.
-        */
-        ArcadeParticle.prototype.onEmit = function () {
-        };
-        return ArcadeParticle;
-    })(Phaser.Sprite);
-    Phaser.ArcadeParticle = ArcadeParticle;
+            Particle.prototype.update = function (time, index) {
+                if (!this.sleep) {
+                    this.age += time;
+                    var length = this.behaviours.length, i;
+                    for (i = 0; i < length; i++) {
+                        if (this.behaviours[i])
+                            this.behaviours[i].applyBehaviour(this, time, index);
+                    }
+                }
+
+                if (this.age >= this.life) {
+                    this.destroy();
+                } else {
+                    var scale = this.easing(this.age / this.life);
+                    this.energy = Math.max(1 - scale, 0);
+                }
+            };
+
+            Particle.prototype.addBehaviour = function (behaviour) {
+                this.behaviours.push(behaviour);
+                if (behaviour.hasOwnProperty('parents'))
+                    behaviour.parents.push(this);
+                behaviour.initialize(this);
+            };
+
+            Particle.prototype.addBehaviours = function (behaviours) {
+                var length = behaviours.length, i;
+                for (i = 0; i < length; i++) {
+                    this.addBehaviour(behaviours[i]);
+                }
+            };
+
+            Particle.prototype.removeBehaviour = function (behaviour) {
+                var index = this.behaviours.indexOf(behaviour);
+                if (index > -1) {
+                    var behaviour = this.behaviours.splice(index, 1);
+                    behaviour.parents = null;
+                }
+            };
+
+            Particle.prototype.removeAllBehaviours = function () {
+                Particles.ParticleUtils.destroyArray(this.behaviours);
+            };
+
+            /**
+            * Destory this particle
+            * @method destory
+            */
+            Particle.prototype.destroy = function () {
+                this.removeAllBehaviours();
+                this.energy = 0;
+                this.dead = true;
+                this.parent = null;
+            };
+            Particle.ID = 0;
+            return Particle;
+        })();
+        Particles.Particle = Particle;
+    })(Phaser.Particles || (Phaser.Particles = {}));
+    var Particles = Phaser.Particles;
 })(Phaser || (Phaser = {}));

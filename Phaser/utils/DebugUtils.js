@@ -183,6 +183,11 @@ var Phaser;
             Phaser.DebugUtils.line('bottom: ' + sprite.worldView.bottom + ' right: ' + sprite.worldView.right.toFixed(1));
         };
 
+        DebugUtils.renderSpriteWorldViewBounds = function (sprite, color) {
+            if (typeof color === "undefined") { color = 'rgba(0,255,0,0.3)'; }
+            Phaser.DebugUtils.renderRectangle(sprite.worldView, color);
+        };
+
         DebugUtils.renderSpriteInfo = /**
         * Render debug infos. (including name, bounds info, position and some other properties)
         * @param x {number} X position of the debug info to be rendered.

@@ -59,6 +59,21 @@ module Phaser {
 
         }
 
+        public static hexToRGB(h: string) {
+
+            var hex16 = (h.charAt(0) == "#") ? h.substring(1, 7) : h;
+            var r = parseInt(hex16.substring(0, 2), 16);
+            var g = parseInt(hex16.substring(2, 4), 16);
+            var b = parseInt(hex16.substring(4, 6), 16);
+
+			return {
+                r: r,
+                g: g,
+                b: b
+            }
+
+        }
+
         /**
 		 * Returns a Complementary Color Harmony for the given color.
 		 * <p>A complementary hue is one directly opposite the color given on the color wheel</p>

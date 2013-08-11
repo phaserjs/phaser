@@ -1,7 +1,8 @@
-/// <reference path="../../_definitions.ts" />
+/// <reference path="../_definitions.ts" />
 
 /**
-* Phaser - ArcadePhysics - Body
+* Phaser - Physics - Body
+* A binding between a Sprite and a physics object (AABB or Circle)
 */
 
 module Phaser.Physics {

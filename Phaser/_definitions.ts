@@ -78,8 +78,6 @@
 /// <reference path="tilemap/Tilemap.ts" />
 /// <reference path="tilemap/TilemapLayer.ts" />
 
-/// <reference path="physics/arcade/Body.ts" />
-
 /// <reference path="gameobjects/Events.ts" />
 /// <reference path="gameobjects/Sprite.ts" />
 /// <reference path="gameobjects/TransformManager.ts" />
@@ -110,6 +108,38 @@
 /// <reference path="renderers/canvas/SpriteRenderer.ts" />
 /// <reference path="renderers/canvas/TilemapRenderer.ts" />
 /// <reference path="renderers/canvas/CanvasRenderer.ts" />
+
+/// <reference path="physics/PhysicsManager.ts" />
+/// <reference path="physics/Body.ts" />
+/// <reference path="physics/AABB.ts" />
+/// <reference path="physics/Circle.ts" />
+/// <reference path="physics/TileMapCell.ts" />
+/// <reference path="physics/aabb/ProjAABBFull.ts" />
+/// <reference path="physics/aabb/ProjAABBConvex.ts" />
+/// <reference path="physics/aabb/ProjAABBConcave.ts" />
+/// <reference path="physics/circle/ProjCircleFull.ts" />
+/// <reference path="physics/circle/ProjCircleConvex.ts" />
+/// <reference path="physics/circle/ProjCircleConcave.ts" />
+/// <reference path="physics/circle/ProjCircle45Deg.ts" />
+
+/// <reference path="particles/ParticleManager.ts" />
+/// <reference path="particles/Particle.ts" />
+/// <reference path="particles/Emitter.ts" />
+/// <reference path="particles/ParticlePool.ts" />
+/// <reference path="particles/ParticleUtils.ts" />
+/// <reference path="particles/Polar2D.ts" />
+/// <reference path="particles/Span.ts" />
+/// <reference path="particles/NumericalIntegration.ts" />
+/// <reference path="particles/behaviours/Behaviour.ts" />
+/// <reference path="particles/behaviours/RandomDrift.ts" />
+/// <reference path="particles/initialize/Initialize.ts" />
+/// <reference path="particles/initialize/Life.ts" />
+/// <reference path="particles/initialize/Mass.ts" />
+/// <reference path="particles/initialize/Position.ts" />
+/// <reference path="particles/initialize/Rate.ts" />
+/// <reference path="particles/initialize/Velocity.ts" />
+/// <reference path="particles/zone/Zone.ts" />
+/// <reference path="particles/zone/PointZone.ts" />
 
 /// <reference path="World.ts" />
 /// <reference path="Stage.ts" />

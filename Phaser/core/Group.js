@@ -35,6 +35,7 @@ var Phaser;
             this.modified = false;
             this.game = game;
             this.type = Phaser.Types.GROUP;
+            this.active = true;
             this.exists = true;
             this.visible = true;
 
@@ -95,7 +96,9 @@ var Phaser;
                 this._member = this.members[this._i++];
 
                 if (this._member != null && this._member.exists && this._member.active) {
-                    this._member.preUpdate();
+                    if (this._member.type != Phaser.Types.GROUP) {
+                        this._member.preUpdate();
+                    }
                     this._member.update();
                 }
             }

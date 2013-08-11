@@ -144,8 +144,7 @@ var Phaser;
             TransformManager.prototype.centerOn = function (x, y) {
                 this.parent.x = x + (this.parent.x - this.center.x);
                 this.parent.y = y + (this.parent.y - this.center.y);
-
-                this.setCache();
+                //this.setCache();
             };
 
             /**
@@ -164,10 +163,8 @@ var Phaser;
                 this._size.y = this.parent.height;
                 this._origin.x = this.origin.x;
                 this._origin.y = this.origin.y;
-                this._sc.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-                this._sc.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-                this._scA.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
                 this._scA.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
+                this._scA.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
                 this._prevRotation = this.rotation;
 
                 if (this.parent.texture && this.parent.texture.renderRotation) {
@@ -188,6 +185,9 @@ var Phaser;
 
                 this._pos.x = this.parent.x;
                 this._pos.y = this.parent.y;
+
+                this._flippedX = this.parent.texture.flippedX;
+                this._flippedY = this.parent.texture.flippedY;
             };
 
             /**
@@ -213,9 +213,7 @@ var Phaser;
                     this._dirty = true;
                 }
 
-                if (this.rotation != this._prevRotation) {
-                    this._sc.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-                    this._sc.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
+                if (this.rotation != this._prevRotation || this._dirty) {
                     this._scA.y = Math.cos((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
                     this._scA.x = Math.sin((this.rotation + this.rotationOffset) * Phaser.GameMath.DEG_TO_RAD + this._angle);
 
@@ -243,27 +241,35 @@ var Phaser;
 
                     this._pos.x = this.parent.x;
                     this._pos.y = this.parent.y;
+
+                    //  Translate
+                    this.local.data[2] = this.parent.x;
+                    this.local.data[5] = this.parent.y;
                 }
 
-                if (this.parent.texture.flippedX) {
-                    this.local.data[0] = this._sc.y * -this.scale.x;
-                    this.local.data[3] = (this._sc.x * -this.scale.x) + this.skew.x;
-                } else {
-                    this.local.data[0] = this._sc.y * this.scale.x;
-                    this.local.data[3] = (this._sc.x * this.scale.x) + this.skew.x;
+                if (this._dirty || this._flippedX != this.parent.texture.flippedX) {
+                    this._flippedX = this.parent.texture.flippedX;
+
+                    if (this._flippedX) {
+                        this.local.data[0] = this._sc.y * -this.scale.x;
+                        this.local.data[3] = (this._sc.x * -this.scale.x) + this.skew.x;
+                    } else {
+                        this.local.data[0] = this._sc.y * this.scale.x;
+                        this.local.data[3] = (this._sc.x * this.scale.x) + this.skew.x;
+                    }
                 }
 
-                if (this.parent.texture.flippedY) {
-                    this.local.data[4] = this._sc.y * -this.scale.y;
-                    this.local.data[1] = -(this._sc.x * -this.scale.y) + this.skew.y;
-                } else {
-                    this.local.data[4] = this._sc.y * this.scale.y;
-                    this.local.data[1] = -(this._sc.x * this.scale.y) + this.skew.y;
-                }
+                if (this._dirty || this._flippedY != this.parent.texture.flippedY) {
+                    this._flippedY = this.parent.texture.flippedY;
 
-                //  Translate
-                this.local.data[2] = this.parent.x;
-                this.local.data[5] = this.parent.y;
+                    if (this._flippedY) {
+                        this.local.data[4] = this._sc.y * -this.scale.y;
+                        this.local.data[1] = -(this._sc.x * -this.scale.y) + this.skew.y;
+                    } else {
+                        this.local.data[4] = this._sc.y * this.scale.y;
+                        this.local.data[1] = -(this._sc.x * this.scale.y) + this.skew.y;
+                    }
+                }
             };
             return TransformManager;
         })();
