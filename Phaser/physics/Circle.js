@@ -15,10 +15,15 @@ var Phaser;
                 this.radius = radius;
 
                 this.circleTileProjections = {};
-                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_FULL] = Phaser.Physics.Projection.CircleFull.Collide;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_22DEGs] = Phaser.Physics.Projection.Circle22Deg.CollideS;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_22DEGb] = Phaser.Physics.Projection.Circle22Deg.CollideB;
                 this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_45DEG] = Phaser.Physics.Projection.Circle45Deg.Collide;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_67DEGs] = Phaser.Physics.Projection.Circle67Deg.CollideS;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_67DEGb] = Phaser.Physics.Projection.Circle67Deg.CollideB;
                 this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONCAVE] = Phaser.Physics.Projection.CircleConcave.Collide;
                 this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_CONVEX] = Phaser.Physics.Projection.CircleConvex.Collide;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_FULL] = Phaser.Physics.Projection.CircleFull.Collide;
+                this.circleTileProjections[Phaser.Physics.TileMapCell.CTYPE_HALF] = Phaser.Physics.Projection.CircleHalf.Collide;
             }
             Circle.prototype.integrateVerlet = function () {
                 var d = 1;
@@ -41,7 +46,10 @@ var Phaser;
                 p.y += (d * py) - (d * oy) + g;
             };
 
+            //  px projection vector
+            //  dx surface normal
             Circle.prototype.reportCollisionVsWorld = function (px, py, dx, dy, obj) {
+                if (typeof obj === "undefined") { obj = null; }
                 var p = this.pos;
                 var o = this.oldpos;
 

@@ -97,7 +97,7 @@ module Phaser.Physics {
                 fy = ty * f;
 
                 //b = 1 + BOUNCE;//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
-                b = 1 + 0.9;//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
+                b = 1 + 0.3;//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
 
                 bx = (nx * b);
                 by = (ny * b);

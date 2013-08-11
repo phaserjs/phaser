@@ -19442,7 +19442,7 @@ var Phaser;
                     fy = ty * f;
 
                     //b = 1 + BOUNCE;//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
-                    b = 1 + 0.9;
+                    b = 1 + 0.3;
 
                     bx = (nx * b);
                     by = (ny * b);

@@ -264,7 +264,6 @@
     <Content Include="physics\sprite bounds.js">
       <DependentUpon>sprite bounds.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="physics\temp2.ts" />
     <Content Include="scrollzones\ballscroller.js">
       <DependentUpon>ballscroller.ts</DependentUpon>
     </Content>
