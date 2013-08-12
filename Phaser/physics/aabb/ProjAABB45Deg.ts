@@ -13,8 +13,8 @@ module Phaser.Physics.Projection {
             var signx = t.signx;
             var signy = t.signy;
 
-            var ox = (obj.pos.x - (signx * obj.xw)) - t.pos.x;//this gives is the coordinates of the innermost
-            var oy = (obj.pos.y - (signy * obj.yw)) - t.pos.y;//point on the AABB, relative to the tile center
+            var ox = (obj.pos.x - (signx * obj.width)) - t.pos.x;//this gives is the coordinates of the innermost
+            var oy = (obj.pos.y - (signy * obj.height)) - t.pos.y;//point on the AABB, relative to the tile center
 
             var sx = t.sx;
             var sy = t.sy;

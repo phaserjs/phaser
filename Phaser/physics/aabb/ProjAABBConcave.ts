@@ -16,8 +16,8 @@ module Phaser.Physics.Projection {
             var signx = t.signx;
             var signy = t.signy;
 
-            var ox = (t.pos.x + (signx * t.xw)) - (obj.pos.x - (signx * obj.xw));//(ox,oy) is the vector form the innermost AABB corner to the
-            var oy = (t.pos.y + (signy * t.yw)) - (obj.pos.y - (signy * obj.yw));//circle's center
+            var ox = (t.pos.x + (signx * t.xw)) - (obj.pos.x - (signx * obj.width));//(ox,oy) is the vector form the innermost AABB corner to the
+            var oy = (t.pos.y + (signy * t.yw)) - (obj.pos.y - (signy * obj.height));//circle's center
 
             var twid = t.xw * 2;
             var rad = Math.sqrt(twid * twid + 0);//this gives us the radius of a circle centered on the tile's corner and extending to the opposite edge of the tile;

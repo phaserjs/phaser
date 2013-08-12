@@ -64,6 +64,8 @@ module Phaser {
 
             this.transform.setCache();
 
+            //this.body = new Phaser.Physics.Body(this, 0);
+
             this.outOfBounds = false;
             this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_PERSIST;
 
@@ -127,12 +129,6 @@ module Phaser {
         public outOfBoundsAction: number;
 
         /**
-         * Sprite physics body.
-         */
-        //public body: Phaser.Physics.Body = null;
-        public body;
-
-        /**
          * The texture used to render the Sprite.
          */
         public texture: Phaser.Display.Texture;
@@ -151,6 +147,12 @@ module Phaser {
          * The Events component
          */
         public events: Phaser.Components.Events;
+
+        /**
+         * The Physics Body
+         */
+        //public body: Phaser.Physics.Body;
+        public body;
 
         /**
          * This manages animations of the sprite. You can modify animations through it. (see AnimationManager)

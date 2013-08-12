@@ -16,8 +16,8 @@ module Phaser.Physics.Projection {
             var signx = t.signx;
             var signy = t.signy;
 
-            var ox = (obj.pos.x - (signx * obj.xw)) - (t.pos.x - (signx * t.xw));//(ox,oy) is the vector from the circle center to
-            var oy = (obj.pos.y - (signy * obj.yw)) - (t.pos.y - (signy * t.yw));//the AABB
+            var ox = (obj.pos.x - (signx * obj.width)) - (t.pos.x - (signx * t.xw));//(ox,oy) is the vector from the circle center to
+            var oy = (obj.pos.y - (signy * obj.height)) - (t.pos.y - (signy * t.yw));//the AABB
             var len = Math.sqrt(ox * ox + oy * oy);
 
             var twid = t.xw * 2;

@@ -14,7 +14,7 @@ module Phaser.Physics.Projection {
             var signy = t.signy;
 
             //first we need to check to make sure we're colliding with the slope at all
-            var py = obj.pos.y - (signy * obj.yw);
+            var py = obj.pos.y - (signy * obj.height);
             var penY = t.pos.y - py;//this is the vector from the innermost point on the box to the highest point on
             //the tile; if it is positive, this means the box is above the tile and
             //no collision is occuring
@@ -22,8 +22,8 @@ module Phaser.Physics.Projection {
             if (0 < (penY * signy))
             {
 
-                var ox = (obj.pos.x - (signx * obj.xw)) - (t.pos.x + (signx * t.xw));//this gives is the coordinates of the innermost
-                var oy = (obj.pos.y - (signy * obj.yw)) - (t.pos.y - (signy * t.yw));//point on the AABB, relative to a point on the slope
+                var ox = (obj.pos.x - (signx * obj.width)) - (t.pos.x + (signx * t.xw));//this gives is the coordinates of the innermost
+                var oy = (obj.pos.y - (signy * obj.height)) - (t.pos.y - (signy * t.yw));//point on the AABB, relative to a point on the slope
 
                 var sx = t.sx;//get slope unit normal
                 var sy = t.sy;
@@ -85,8 +85,8 @@ module Phaser.Physics.Projection {
             var signx = t.signx;
             var signy = t.signy;
 
-            var ox = (obj.pos.x - (signx * obj.xw)) - (t.pos.x - (signx * t.xw));//this gives is the coordinates of the innermost
-            var oy = (obj.pos.y - (signy * obj.yw)) - (t.pos.y + (signy * t.yw));//point on the AABB, relative to a point on the slope
+            var ox = (obj.pos.x - (signx * obj.width)) - (t.pos.x - (signx * t.xw));//this gives is the coordinates of the innermost
+            var oy = (obj.pos.y - (signy * obj.height)) - (t.pos.y + (signy * t.yw));//point on the AABB, relative to a point on the slope
 
             var sx = t.sx;//get slope unit normal
             var sy = t.sy;

@@ -301,10 +301,10 @@ module Phaser {
             sprite.revive();
             sprite.x = x;
             sprite.y = y;
-            sprite.body.velocity.x = 0;
-            sprite.body.velocity.y = 0;
-            sprite.body.position.x = x;
-            sprite.body.position.y = y;
+            //sprite.body.velocity.x = 0;
+            //sprite.body.velocity.y = 0;
+            //sprite.body.position.x = x;
+            //sprite.body.position.y = y;
 
             return sprite;
 

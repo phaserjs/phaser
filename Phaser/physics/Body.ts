@@ -15,46 +15,32 @@ module Phaser.Physics {
             this.game = sprite.game;
             this.type = type;
 
-            //  Fixture properties
-            //  Will extend into its own class at a later date - can move the fixture defs there and add shape support, but this will do for 1.0 release
-            this.bounds = new Phaser.Rectangle;
-
-            this._width = sprite.width;
-            this._height = sprite.height;
-
-
-            //  Body properties
-            //this.gravity = Vec2Utils.clone(ArcadePhysics.gravity);
-            //this.bounce = Vec2Utils.clone(ArcadePhysics.bounce);
+            //this.aabb = new Phaser.Physics.AABB(sprite.game, sprite.x, sprite.y, sprite.width, sprite.height);
 
             this.velocity = new Phaser.Vec2;
             this.acceleration = new Phaser.Vec2;
-            //this.drag = Vec2Utils.clone(ArcadePhysics.drag);
+            this.drag = new Phaser.Vec2;
+            this.gravity = new Phaser.Vec2;
             this.maxVelocity = new Phaser.Vec2(10000, 10000);
 
             this.angularVelocity = 0;
             this.angularAcceleration = 0;
             this.angularDrag = 0;
 
-            this.touching = Phaser.Types.NONE;
-            this.wasTouching = Phaser.Types.NONE;
-            this.allowCollisions = Phaser.Types.ANY;
+            //this.touching = Phaser.Types.NONE;
+            //this.wasTouching = Phaser.Types.NONE;
+            //this.allowCollisions = Phaser.Types.ANY;
 
-            this.position = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
-            this.oldPosition = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
-            this.offset = new Phaser.Vec2;
+            //this.position = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+            //this.oldPosition = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
+            //this.offset = new Phaser.Vec2;
 
         }
 
-        /**
-         * Reference to Phaser.Game
-         */
         public game: Phaser.Game;
-
-        /**
-         * Reference to the parent Sprite
-         */
         public sprite: Phaser.Sprite;
+        //public aabb: Phaser.Physics.AABB;
+        public bounds: Phaser.Rectangle;
 
         /**
          * The type of Body (disabled, dynamic, static or kinematic)
@@ -93,7 +79,7 @@ module Phaser.Physics {
         public position: Phaser.Vec2;
         public oldPosition: Phaser.Vec2;
         public offset: Phaser.Vec2;
-        public bounds: Phaser.Rectangle;
+        //public bounds: Phaser.Rectangle;
 
         private _width: number = 0;
         private _height: number = 0;

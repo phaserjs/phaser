@@ -13,14 +13,14 @@ module Phaser.Physics.Projection {
             var signx = t.signx;
             var signy = t.signy;
 
-            var px = obj.pos.x - (signx * obj.xw);
+            var px = obj.pos.x - (signx * obj.width);
             var penX = t.pos.x - px;
 
             if (0 < (penX * signx))
             {
 
-                var ox = (obj.pos.x - (signx * obj.xw)) - (t.pos.x - (signx * t.xw));//this gives is the coordinates of the innermost
-                var oy = (obj.pos.y - (signy * obj.yw)) - (t.pos.y + (signy * t.yw));//point on the AABB, relative to a point on the slope
+                var ox = (obj.pos.x - (signx * obj.width)) - (t.pos.x - (signx * t.xw));//this gives is the coordinates of the innermost
+                var oy = (obj.pos.y - (signy * obj.height)) - (t.pos.y + (signy * t.yw));//point on the AABB, relative to a point on the slope
 
                 var sx = t.sx;//get slope unit normal
                 var sy = t.sy;
@@ -81,8 +81,8 @@ module Phaser.Physics.Projection {
             var signx = t.signx;
             var signy = t.signy;
 
-            var ox = (obj.pos.x - (signx * obj.xw)) - (t.pos.x + (signx * t.xw));//this gives is the coordinates of the innermost
-            var oy = (obj.pos.y - (signy * obj.yw)) - (t.pos.y - (signy * t.yw));//point on the AABB, relative to a point on the slope
+            var ox = (obj.pos.x - (signx * obj.width)) - (t.pos.x + (signx * t.xw));//this gives is the coordinates of the innermost
+            var oy = (obj.pos.y - (signy * obj.height)) - (t.pos.y - (signy * t.yw));//point on the AABB, relative to a point on the slope
 
             var sx = t.sx;//get slope unit normal
             var sy = t.sy;

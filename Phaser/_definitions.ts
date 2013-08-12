@@ -86,9 +86,6 @@
 /// <reference path="gameobjects/IGameObject.ts" />
 /// <reference path="gameobjects/GameObjectFactory.ts" />
 
-/// <reference path="particles/Emitter.ts" />
-/// <reference path="particles/Particle.ts" />
-
 /// <reference path="ui/Button.ts" />
 
 /// <reference path="utils/CanvasUtils.ts" />
@@ -109,27 +106,27 @@
 /// <reference path="renderers/canvas/TilemapRenderer.ts" />
 /// <reference path="renderers/canvas/CanvasRenderer.ts" />
 
-/// <reference path="physics/PhysicsManager.ts" />
-/// <reference path="physics/Body.ts" />
-/// <reference path="physics/AABB.ts" />
-/// <reference path="physics/Circle.ts" />
-/// <reference path="physics/TileMapCell.ts" />
+// <reference path="physics/PhysicsManager.ts" />
+// <reference path="physics/Body.ts" />
+// <reference path="physics/AABB.ts" />
+// <reference path="physics/Circle.ts" />
+// <reference path="physics/TileMapCell.ts" />
 
-/// <reference path="physics/aabb/ProjAABB22Deg.ts" />
-/// <reference path="physics/aabb/ProjAABB45Deg.ts" />
-/// <reference path="physics/aabb/ProjAABB67Deg.ts" />
-/// <reference path="physics/aabb/ProjAABBConcave.ts" />
-/// <reference path="physics/aabb/ProjAABBConvex.ts" />
-/// <reference path="physics/aabb/ProjAABBFull.ts" />
-/// <reference path="physics/aabb/ProjAABBHalf.ts" />
+// <reference path="physics/aabb/ProjAABB22Deg.ts" />
+// <reference path="physics/aabb/ProjAABB45Deg.ts" />
+// <reference path="physics/aabb/ProjAABB67Deg.ts" />
+// <reference path="physics/aabb/ProjAABBConcave.ts" />
+// <reference path="physics/aabb/ProjAABBConvex.ts" />
+// <reference path="physics/aabb/ProjAABBFull.ts" />
+// <reference path="physics/aabb/ProjAABBHalf.ts" />
 
-/// <reference path="physics/circle/ProjCircle22Deg.ts" />
-/// <reference path="physics/circle/ProjCircle45Deg.ts" />
-/// <reference path="physics/circle/ProjCircle67Deg.ts" />
-/// <reference path="physics/circle/ProjCircleConcave.ts" />
-/// <reference path="physics/circle/ProjCircleConvex.ts" />
-/// <reference path="physics/circle/ProjCircleFull.ts" />
-/// <reference path="physics/circle/ProjCircleHalf.ts" />
+// <reference path="physics/circle/ProjCircle22Deg.ts" />
+// <reference path="physics/circle/ProjCircle45Deg.ts" />
+// <reference path="physics/circle/ProjCircle67Deg.ts" />
+// <reference path="physics/circle/ProjCircleConcave.ts" />
+// <reference path="physics/circle/ProjCircleConvex.ts" />
+// <reference path="physics/circle/ProjCircleFull.ts" />
+// <reference path="physics/circle/ProjCircleHalf.ts" />
 
 /// <reference path="particles/ParticleManager.ts" />
 /// <reference path="particles/Particle.ts" />

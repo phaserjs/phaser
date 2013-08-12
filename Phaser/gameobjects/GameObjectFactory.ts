@@ -89,6 +89,7 @@ module Phaser {
             return <Phaser.Sound> this.game.sound.add(key, volume, loop);
         }
 
+/*
         public circle(x: number, y: number, radius: number): Phaser.Physics.Circle {
             return new Phaser.Physics.Circle(this.game, x, y, radius);
         }
@@ -100,6 +101,7 @@ module Phaser {
         public cell(x: number, y: number, width: number, height: number, state: number = Phaser.Physics.TileMapCell.TID_FULL): Phaser.Physics.TileMapCell {
             return new Phaser.Physics.TileMapCell(this.game, x, y, width, height).SetState(state);
         }
+*/
 
         /**
          * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.

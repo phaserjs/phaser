@@ -16,8 +16,8 @@ module Phaser.Physics.Projection {
             var sx = t.signx;
             var sy = t.signy;
 
-            var ox = (obj.pos.x - (sx * obj.xw)) - t.pos.x;//this gives is the coordinates of the innermost
-            var oy = (obj.pos.y - (sy * obj.yw)) - t.pos.y;//point on the AABB, relative to the tile center
+            var ox = (obj.pos.x - (sx * obj.width)) - t.pos.x;//this gives is the coordinates of the innermost
+            var oy = (obj.pos.y - (sy * obj.height)) - t.pos.y;//point on the AABB, relative to the tile center
 
             //we perform operations analogous to the 45deg tile, except we're using 
             //an axis-aligned slope instead of an angled one..

@@ -4,46 +4,21 @@
 
     function preload() {
         game.load.image('ball', 'assets/sprites/shinyball.png');
-        game.load.image('tommy', 'assets/tommy.png');
-        game.load.image('alice', 'assets/alice.png');
-        game.load.image('mummy', 'assets/mummy.png');
+        game.load.image('carrot', 'assets/sprites/carrot.png');
     }
 
     var cells;
-    var b1;
-    var b2;
-    var b3;
-    var b4;
-    var b5;
-    var b6;
-    var b7;
-    var b8;
-    var b9;
-    var b10;
+    var b;
     var c;
     var t;
     var ball;
-    var carrot1;
-    var carrot2;
-    var carrot3;
-    var carrot4;
-    var carrot5;
-    var carrot6;
-    var carrot7;
-    var carrot8;
-    var carrot9;
-    var carrot10;
+    var carrot;
 
     function create() {
         //this.ball = game.add.sprite(0, 0, 'ball');
-        var f = [null, 'tommy', 'alice', 'mummy', 'tommy', 'alice', 'mummy', 'tommy', 'alice', 'mummy', 'tommy', 'alice', 'mummy', 'tommy', 'alice', 'mummy', 'tommy', 'alice', 'mummy'];
+        this.carrot = game.add.sprite(300, 0, 'carrot');
 
-        for (var i = 1; i <= 10; i++) {
-            this['carrot' + i] = game.add.sprite(0, 0, f[i]);
-
-            //this['carrot' + i].scale.setTo(0.5, 0.5);
-            this['b' + i] = game.add.aabb(game.stage.randomX, 200, 50, 50);
-        }
+        this.b = game.add.aabb(game.stage.randomX, 200, 22, 21);
 
         //this.c = game.add.circle(200, 200, 16);
         //  pos is center, not upper-left
@@ -54,15 +29,11 @@
         for (var i = 0; i < 10; i++) {
             if (i % 2 == 0) {
                 tid = Phaser.Physics.TileMapCell.TID_CONCAVEpn;
-                //tid = Phaser.Physics.TileMapCell.TID_22DEGnnS;
             } else {
                 tid = Phaser.Physics.TileMapCell.TID_CONCAVEnn;
-                //tid = Phaser.Physics.TileMapCell.TID_22DEGpnS;
             }
 
             this.cells.push(game.add.cell(100 + (i * 100), 400, 50, 50, tid));
-            //this.cells.push(new TileMapCell(100 + (i * 100), 500, 50, 50).SetState(TileMapCell.TID_FULL));
-            //this.cells.push(new TileMapCell(100 + (i * 100), 500, 50, 50).SetState(TileMapCell.TID_CONCAVEpn));
         }
     }
 
@@ -82,29 +53,31 @@
             fy += 0.2;
         }
 
-        for (var i = 1; i <= 10; i++) {
-            this['b' + i].pos.x = this['b' + i].oldpos.x + Math.min(40, Math.max(-40, this['b' + i].pos.x - this['b' + i].oldpos.x + fx));
-            this['b' + i].pos.y = this['b' + i].oldpos.y + Math.min(40, Math.max(-40, this['b' + i].pos.y - this['b' + i].oldpos.y + fy));
-            this['b' + i].integrateVerlet();
-        }
+        //  update circle
+        //this.c.pos.x = this.c.oldpos.x + Math.min(20, Math.max(-20, this.c.pos.x - this.c.oldpos.x + fx));
+        //this.c.pos.y = this.c.oldpos.y + Math.min(20, Math.max(-20, this.c.pos.y - this.c.oldpos.y + fy));
+        //this.c.integrateVerlet();
+        //  update box
+        this.b.pos.x = this.b.oldpos.x + Math.min(20, Math.max(-20, this.b.pos.x - this.b.oldpos.x + fx));
+        this.b.pos.y = this.b.oldpos.y + Math.min(20, Math.max(-20, this.b.pos.y - this.b.oldpos.y + fy));
+        this.b.integrateVerlet();
 
         for (var i = 0; i < this.cells.length; i++) {
-            for (var ib = 1; ib <= 10; ib++) {
-                this['b' + ib].collideAABBVsTile(this.cells[i]);
-            }
+            //this.c.collideCircleVsTile(this.cells[i]);
+            this.b.collideAABBVsTile(this.cells[i]);
         }
 
-        for (var i = 1; i <= 10; i++) {
-            this['b' + i].collideAABBVsWorldBounds();
-        }
+        //this.c.collideCircleVsWorldBounds();
+        this.b.collideAABBVsWorldBounds();
 
-        for (var i = 1; i <= 10; i++) {
-            this['carrot' + i].transform.centerOn(this['b' + i].pos.x, this['b' + i].pos.y);
-        }
         //this.ball.transform.centerOn(this.c.pos.x, this.c.pos.y);
+        this.carrot.transform.centerOn(this.b.pos.x, this.b.pos.y);
     }
 
     function render() {
+        //this.c.render(game.stage.context);
+        this.b.render(game.stage.context);
+
         for (var i = 0; i < this.cells.length; i++) {
             this.cells[i].render(game.stage.context);
         }

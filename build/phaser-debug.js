@@ -6580,25 +6580,53 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Back
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Back easing methods.
+        *
+        * @class Back
+        */
         var Back = (function () {
             function Back() {
             }
-            Back.In = function (k) {
+            Back.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 var s = 1.70158;
                 return k * k * ((s + 1) * k - s);
             };
 
-            Back.Out = function (k) {
+            Back.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 var s = 1.70158;
                 return --k * k * ((s + 1) * k + s) + 1;
             };
 
-            Back.InOut = function (k) {
+            Back.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 var s = 1.70158 * 1.525;
                 if ((k *= 2) < 1)
                     return 0.5 * (k * k * ((s + 1) * k - s));
@@ -6614,19 +6642,40 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Bounce
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Bounce easing methods.
+        *
+        * @class Bounce
+        */
         var Bounce = (function () {
             function Bounce() {
             }
-            Bounce.In = function (k) {
+            Bounce.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return 1 - Phaser.Easing.Bounce.Out(1 - k);
             };
 
-            Bounce.Out = function (k) {
+            Bounce.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 if (k < (1 / 2.75)) {
                     return 7.5625 * k * k;
                 } else if (k < (2 / 2.75)) {
@@ -6638,7 +6687,14 @@ var Phaser;
                 }
             };
 
-            Bounce.InOut = function (k) {
+            Bounce.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 if (k < 0.5)
                     return Phaser.Easing.Bounce.In(k * 2) * 0.5;
                 return Phaser.Easing.Bounce.Out(k * 2 - 1) * 0.5 + 0.5;
@@ -6684,23 +6740,51 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Cubic
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Cubic easing methods.
+        *
+        * @class Cubic
+        */
         var Cubic = (function () {
             function Cubic() {
             }
-            Cubic.In = function (k) {
+            Cubic.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return k * k * k;
             };
 
-            Cubic.Out = function (k) {
+            Cubic.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return --k * k * k + 1;
             };
 
-            Cubic.InOut = function (k) {
+            Cubic.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 if ((k *= 2) < 1)
                     return 0.5 * k * k * k;
                 return 0.5 * ((k -= 2) * k * k + 2);
@@ -6715,15 +6799,29 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Elastic
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Elastic easing methods.
+        *
+        * @class Elastic
+        */
         var Elastic = (function () {
             function Elastic() {
             }
-            Elastic.In = function (k) {
+            Elastic.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 var s, a = 0.1, p = 0.4;
                 if (k === 0)
                     return 0;
@@ -6737,7 +6835,14 @@ var Phaser;
                 return -(a * Math.pow(2, 10 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
             };
 
-            Elastic.Out = function (k) {
+            Elastic.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 var s, a = 0.1, p = 0.4;
                 if (k === 0)
                     return 0;
@@ -6751,7 +6856,14 @@ var Phaser;
                 return (a * Math.pow(2, -10 * k) * Math.sin((k - s) * (2 * Math.PI) / p) + 1);
             };
 
-            Elastic.InOut = function (k) {
+            Elastic.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 var s, a = 0.1, p = 0.4;
                 if (k === 0)
                     return 0;
@@ -6776,23 +6888,51 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Exponential
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Exponential easing methods.
+        *
+        * @class Exponential
+        */
         var Exponential = (function () {
             function Exponential() {
             }
-            Exponential.In = function (k) {
+            Exponential.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return k === 0 ? 0 : Math.pow(1024, k - 1);
             };
 
-            Exponential.Out = function (k) {
+            Exponential.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return k === 1 ? 1 : 1 - Math.pow(2, -10 * k);
             };
 
-            Exponential.InOut = function (k) {
+            Exponential.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 if (k === 0)
                     return 0;
                 if (k === 1)
@@ -6811,15 +6951,29 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Linear
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Linear easing methods.
+        *
+        * @class Linear
+        */
         var Linear = (function () {
             function Linear() {
             }
-            Linear.None = function (k) {
+            Linear.None = /**
+            * A Linear Ease only has a None method.
+            *
+            * @method None
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return k;
             };
             return Linear;
@@ -6832,23 +6986,51 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Quadratic
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Quadratic easing methods.
+        *
+        * @class Quadratic
+        */
         var Quadratic = (function () {
             function Quadratic() {
             }
-            Quadratic.In = function (k) {
+            Quadratic.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return k * k;
             };
 
-            Quadratic.Out = function (k) {
+            Quadratic.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return k * (2 - k);
             };
 
-            Quadratic.InOut = function (k) {
+            Quadratic.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 if ((k *= 2) < 1)
                     return 0.5 * k * k;
                 return -0.5 * (--k * (k - 2) - 1);
@@ -6863,23 +7045,51 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Quartic
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Quartic easing methods.
+        *
+        * @class Quartic
+        */
         var Quartic = (function () {
             function Quartic() {
             }
-            Quartic.In = function (k) {
+            Quartic.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return k * k * k * k;
             };
 
-            Quartic.Out = function (k) {
+            Quartic.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return 1 - (--k * k * k * k);
             };
 
-            Quartic.InOut = function (k) {
+            Quartic.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 if ((k *= 2) < 1)
                     return 0.5 * k * k * k * k;
                 return -0.5 * ((k -= 2) * k * k * k - 2);
@@ -6894,23 +7104,51 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Quintic
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Quintic easing methods.
+        *
+        * @class Quintic
+        */
         var Quintic = (function () {
             function Quintic() {
             }
-            Quintic.In = function (k) {
+            Quintic.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return k * k * k * k * k;
             };
 
-            Quintic.Out = function (k) {
+            Quintic.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return --k * k * k * k * k + 1;
             };
 
-            Quintic.InOut = function (k) {
+            Quintic.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 if ((k *= 2) < 1)
                     return 0.5 * k * k * k * k * k;
                 return 0.5 * ((k -= 2) * k * k * k * k + 2);
@@ -6925,23 +7163,51 @@ var Phaser;
 (function (Phaser) {
     /// <reference path="../../_definitions.ts" />
     /**
-    * Phaser - Easing - Sinusoidal
-    *
-    * For use with Phaser.Tween
+    * @author       Richard Davey <rich@photonstorm.com>
+    * @author       sole (http://soledadpenades.com), tween.js
+    * @copyright    2013 Photon Storm Ltd.
+    * @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+    * @module       Phaser
     */
     (function (Easing) {
+        /**
+        * Sinusoidal easing methods.
+        *
+        * @class Sinusoidal
+        */
         var Sinusoidal = (function () {
             function Sinusoidal() {
             }
-            Sinusoidal.In = function (k) {
+            Sinusoidal.In = /**
+            * The In ease method.
+            *
+            * @method In
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return 1 - Math.cos(k * Math.PI / 2);
             };
 
-            Sinusoidal.Out = function (k) {
+            Sinusoidal.Out = /**
+            * The Out ease method.
+            *
+            * @method Out
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return Math.sin(k * Math.PI / 2);
             };
 
-            Sinusoidal.InOut = function (k) {
+            Sinusoidal.InOut = /**
+            * The InOut ease method.
+            *
+            * @method InOut
+            * @param {Number} k The value to ease.
+            * @return {Number} The eased value.
+            */
+            function (k) {
                 return 0.5 * (1 - Math.cos(Math.PI * k));
             };
             return Sinusoidal;
@@ -16477,22 +16743,28 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - CircleUtils
-*
-* A collection of methods useful for manipulating and comparing Circle objects.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
+    /**
+    * A collection of methods useful for manipulating and comparing Circle objects.
+    *
+    * @class CircleUtils
+    */
     var CircleUtils = (function () {
         function CircleUtils() {
         }
         CircleUtils.clone = /**
-        * Returns a new Circle object with the same values for the x, y, width, and height properties as the original Circle object.
+        * Returns a new Circle object with the same values for the x, y, width, and height properties as the given Circle object.
         * @method clone
-        * @param {Circle} a - The Circle object.
-        * @param {Circle} [optional] out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
-        * @return {Phaser.Circle}
-        **/
+        * @param {Phaser.Circle} a The Circle object to be cloned.
+        * @param {Phaser.Circle} out Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
+        * @return {Phaser.Circle} The cloned Circle object.
+        */
         function (a, out) {
             if (typeof out === "undefined") { out = new Phaser.Circle(); }
             return out.setTo(a.x, a.y, a.diameter);
@@ -16500,13 +16772,12 @@ var Phaser;
 
         CircleUtils.contains = /**
         * Return true if the given x/y coordinates are within the Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
         * @method contains
-        * @param {Circle} a - The Circle object.
-        * @param {Number} The X value of the coordinate to test.
-        * @param {Number} The Y value of the coordinate to test.
+        * @param {Phaser.Circle} a The Circle to be checked.
+        * @param {Number} x The X value of the coordinate to test.
+        * @param {Number} y The Y value of the coordinate to test.
         * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
+        */
         function (a, x, y) {
             if (x >= a.left && x <= a.right && y >= a.top && y <= a.bottom) {
                 var dx = (a.x - x) * (a.x - x);
@@ -16519,36 +16790,36 @@ var Phaser;
 
         CircleUtils.containsPoint = /**
         * Return true if the coordinates of the given Point object are within this Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleContainsPoint instead.
         * @method containsPoint
-        * @param {Circle} a - The Circle object.
-        * @param {Point} The Point object to test.
+        * @param {Phaser.Circle} a The Circle object.
+        * @param {Phaser.Point} point The Point object to test.
         * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
+        */
         function (a, point) {
             return CircleUtils.contains(a, point.x, point.y);
         };
 
         CircleUtils.containsCircle = /**
         * Return true if the given Circle is contained entirely within this Circle object.
-        * If you need details about the intersection then use Phaser.Intersect.circleToCircle instead.
         * @method containsCircle
-        * @param {Circle} The Circle object to test.
-        * @return {Boolean} True if the coordinates are within this circle, otherwise false.
-        **/
+        * @param {Phaser.Circle} a The Circle object to test.
+        * @param {Phaser.Circle} b The Circle object to test.
+        * @return {Boolean} True if Circle B is contained entirely inside of Circle A, otherwise false.
+        */
         function (a, b) {
             //return ((a.radius + b.radius) * (a.radius + b.radius)) >= Collision.distanceSquared(a.x, a.y, b.x, b.y);
             return true;
         };
 
         CircleUtils.distanceBetween = /**
-        * Returns the distance from the center of the Circle object to the given object (can be Circle, Point or anything with x/y properties)
+        * Returns the distance from the center of the Circle object to the given object
+        * (can be Circle, Point or anything with x/y properties)
         * @method distanceBetween
-        * @param {Circle} a - The Circle object.
-        * @param {Circle} b - The target object. Must have visible x and y properties that represent the center of the object.
-        * @param {Boolean} [optional] round - Round the distance to the nearest integer (default false)
+        * @param {Phaser.Circle} a The Circle object.
+        * @param {Phaser.Circle} b The target object. Must have visible x and y properties that represent the center of the object.
+        * @param {Boolean} [optional] round Round the distance to the nearest integer (default false)
         * @return {Number} The distance between this Point object and the destination Point object.
-        **/
+        */
         function (a, target, round) {
             if (typeof round === "undefined") { round = false; }
             var dx = a.x - target.x;
@@ -16564,10 +16835,10 @@ var Phaser;
         CircleUtils.equals = /**
         * Determines whether the two Circle objects match. This method compares the x, y and diameter properties.
         * @method equals
-        * @param {Circle} a - The first Circle object.
-        * @param {Circle} b - The second Circle object.
+        * @param {Phaser.Circle} a The first Circle object.
+        * @param {Phaser.Circle} b The second Circle object.
         * @return {Boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
-        **/
+        */
         function (a, b) {
             return (a.x == b.x && a.y == b.y && a.diameter == b.diameter);
         };
@@ -16576,10 +16847,10 @@ var Phaser;
         * Determines whether the two Circle objects intersect.
         * This method checks the radius distances between the two Circle objects to see if they intersect.
         * @method intersects
-        * @param {Circle} a - The first Circle object.
-        * @param {Circle} b - The second Circle object.
+        * @param {Phaser.Circle} a The first Circle object.
+        * @param {Phaser.Circle} b The second Circle object.
         * @return {Boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
-        **/
+        */
         function (a, b) {
             return (Phaser.CircleUtils.distanceBetween(a, b) <= (a.radius + b.radius));
         };
@@ -16587,12 +16858,12 @@ var Phaser;
         CircleUtils.circumferencePoint = /**
         * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
         * @method circumferencePoint
-        * @param {Circle} a - The first Circle object.
+        * @param {Phaser.Circle} a The first Circle object.
         * @param {Number} angle The angle in radians (unless asDegrees is true) to return the point from.
         * @param {Boolean} asDegrees Is the given angle in radians (false) or degrees (true)?
         * @param {Phaser.Point} [optional] output An optional Point object to put the result in to. If none specified a new Point object will be created.
         * @return {Phaser.Point} The Point object holding the result.
-        **/
+        */
         function (a, angle, asDegrees, out) {
             if (typeof asDegrees === "undefined") { asDegrees = false; }
             if (typeof out === "undefined") { out = new Phaser.Point(); }
@@ -16603,26 +16874,12 @@ var Phaser;
             return out.setTo(a.x + a.radius * Math.cos(angle), a.y + a.radius * Math.sin(angle));
         };
 
-        CircleUtils.intersectsRectangle = /*
-        public static boolean intersect(Rectangle r, Circle c)
-        {
-        float cx = Math.abs(c.x - r.x - r.halfWidth);
-        float xDist = r.halfWidth + c.radius;
-        if (cx > xDist)
-        return false;
-        float cy = Math.abs(c.y - r.y - r.halfHeight);
-        float yDist = r.halfHeight + c.radius;
-        if (cy > yDist)
-        return false;
-        if (cx <= r.halfWidth || cy <= r.halfHeight)
-        return true;
-        float xCornerDist = cx - r.halfWidth;
-        float yCornerDist = cy - r.halfHeight;
-        float xCornerDistSq = xCornerDist * xCornerDist;
-        float yCornerDistSq = yCornerDist * yCornerDist;
-        float maxCornerDistSq = c.radius * c.radius;
-        return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
-        }
+        CircleUtils.intersectsRectangle = /**
+        * Checks if the given Circle and Rectangle objects intersect.
+        * @method intersectsRectangle
+        * @param {Phaser.Circle} c The Circle object to test.
+        * @param {Phaser.Rectangle} r The Rectangle object to test.
+        * @return {Boolean} True if the two objects intersect, otherwise false.
         */
         function (c, r) {
             var cx = Math.abs(c.x - r.x - r.halfWidth);
@@ -16657,48 +16914,54 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - ColorUtils
-*
-* A collection of methods useful for manipulating color values.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
+    /**
+    * A collection of methods useful for manipulating and comparing colors.
+    *
+    * @class ColorUtils
+    */
     var ColorUtils = (function () {
         function ColorUtils() {
         }
         ColorUtils.getColor32 = /**
         * Given an alpha and 3 color values this will return an integer representation of it
         *
-        * @param alpha {number} The Alpha value (between 0 and 255)
-        * @param red   {number} The Red channel value (between 0 and 255)
-        * @param green {number} The Green channel value (between 0 and 255)
-        * @param blue  {number} The Blue channel value (between 0 and 255)
-        *
-        * @return  A native color value integer (format: 0xAARRGGBB)
+        * @method getColor32
+        * @param {Number} alpha The Alpha value (between 0 and 255)
+        * @param {Number} red The Red channel value (between 0 and 255)
+        * @param {Number} green The Green channel value (between 0 and 255)
+        * @param {Number} blue The Blue channel value (between 0 and 255)
+        * @return {Number} A native color value integer (format: 0xAARRGGBB)
         */
         function (alpha, red, green, blue) {
             return alpha << 24 | red << 16 | green << 8 | blue;
         };
 
         ColorUtils.getColor = /**
-        * Given 3 color values this will return an integer representation of it
+        * Given 3 color values this will return an integer representation of it.
         *
-        * @param red   {number} The Red channel value (between 0 and 255)
-        * @param green {number} The Green channel value (between 0 and 255)
-        * @param blue  {number} The Blue channel value (between 0 and 255)
-        *
-        * @return  A native color value integer (format: 0xRRGGBB)
+        * @method getColor
+        * @param {Number} red The Red channel value (between 0 and 255)
+        * @param {Number} green The Green channel value (between 0 and 255)
+        * @param {Number} blue The Blue channel value (between 0 and 255)
+        * @return {Number} A native color value integer (format: 0xRRGGBB)
         */
         function (red, green, blue) {
             return red << 16 | green << 8 | blue;
         };
 
         ColorUtils.getHSVColorWheel = /**
-        * Get HSV color wheel values in an array which will be 360 elements in size
+        * Get HSV color wheel values in an array which will be 360 elements in size.
         *
-        * @param	alpha	Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
-        *
-        * @return	Array
+        * @method getHSVColorWheel
+        * @param {Number} alpha	Alpha value for each color of the color wheel, between 0 (transparent) and 255 (opaque)
+        * @return {Array} An array containing 360 elements corresponding to the HSV color wheel.
         */
         function (alpha) {
             if (typeof alpha === "undefined") { alpha = 255; }
@@ -16711,7 +16974,14 @@ var Phaser;
             return colors;
         };
 
-        ColorUtils.hexToRGB = function (h) {
+        ColorUtils.hexToRGB = /**
+        * Converts the given hex string into an object containing the RGB values.
+        *
+        * @method hexToRGB
+        * @param {String} The string hex color to convert.
+        * @return {Object} An object with 3 properties: r,g and b.
+        */
+        function (h) {
             var hex16 = (h.charAt(0) == "#") ? h.substring(1, 7) : h;
             var r = parseInt(hex16.substring(0, 2), 16);
             var g = parseInt(hex16.substring(2, 4), 16);
@@ -16729,9 +16999,9 @@ var Phaser;
         * <p>A complementary hue is one directly opposite the color given on the color wheel</p>
         * <p>Value returned in 0xAARRGGBB format with Alpha set to 255.</p>
         *
-        * @param	color The color to base the harmony on
-        *
-        * @return 0xAARRGGBB format color value
+        * @method getComplementHarmony
+        * @param {Number} color The color to base the harmony on.
+        * @return {Number} 0xAARRGGBB format color value.
         */
         function (color) {
             var hsv = Phaser.ColorUtils.RGBtoHSV(color);
@@ -16746,10 +17016,10 @@ var Phaser;
         * <p>An Analogous harmony are hues adjacent to each other on the color wheel</p>
         * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
         *
-        * @param	color The color to base the harmony on
-        * @param	threshold Control how adjacent the colors will be (default +- 30 degrees)
-        *
-        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
+        * @method getAnalogousHarmony
+        * @param {Number} color The color to base the harmony on.
+        * @param {Number} threshold Control how adjacent the colors will be (default +- 30 degrees)
+        * @return {Object} Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
         */
         function (color, threshold) {
             if (typeof threshold === "undefined") { threshold = 30; }
@@ -16770,10 +17040,10 @@ var Phaser;
         * <p>A Split Complement harmony are the two hues on either side of the color's Complement</p>
         * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
         *
-        * @param	color The color to base the harmony on
-        * @param	threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
-        *
-        * @return 	Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
+        * @method getSplitComplementHarmony
+        * @param {Number} color The color to base the harmony on
+        * @param {Number} threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
+        * @return {Object} An object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
         */
         function (color, threshold) {
             if (typeof threshold === "undefined") { threshold = 30; }
@@ -16796,9 +17066,9 @@ var Phaser;
         * <p>A Triadic harmony are 3 hues equidistant from each other on the color wheel</p>
         * <p>Values returned in 0xAARRGGBB format with Alpha set to 255.</p>
         *
-        * @param	color The color to base the harmony on
-        *
-        * @return 	Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
+        * @method getTriadicHarmony
+        * @param {Number} color The color to base the harmony on.
+        * @return {Object} An Object containing 3 properties: color1 (the original color), color2 and color3 (the equidistant colors)
         */
         function (color) {
             var hsv = Phaser.ColorUtils.RGBtoHSV(color);
@@ -16813,9 +17083,9 @@ var Phaser;
         * Returns a string containing handy information about the given color including string hex value,
         * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
         *
-        * @param	color A color value in the format 0xAARRGGBB
-        *
-        * @return	string containing the 3 lines of information
+        * @method getColorInfo
+        * @param {Number} color A color value in the format 0xAARRGGBB
+        * @return {String} string containing the 3 lines of information
         */
         function (color) {
             var argb = Phaser.ColorUtils.getRGB(color);
@@ -16836,9 +17106,9 @@ var Phaser;
         ColorUtils.RGBtoHexstring = /**
         * Return a string representation of the color in the format 0xAARRGGBB
         *
-        * @param	color The color to get the string representation for
-        *
-        * @return	A string of length 10 characters in the format 0xAARRGGBB
+        * @method RGBtoHexstring
+        * @param {Number} color The color to get the string representation for
+        * @return {String A string of length 10 characters in the format 0xAARRGGBB
         */
         function (color) {
             var argb = Phaser.ColorUtils.getRGB(color);
@@ -16849,9 +17119,9 @@ var Phaser;
         ColorUtils.RGBtoWebstring = /**
         * Return a string representation of the color in the format #RRGGBB
         *
-        * @param	color The color to get the string representation for
-        *
-        * @return	A string of length 10 characters in the format 0xAARRGGBB
+        * @method RGBtoWebstring
+        * @param {Number} color The color to get the string representation for
+        * @return {String} A string of length 10 characters in the format 0xAARRGGBB
         */
         function (color) {
             var argb = Phaser.ColorUtils.getRGB(color);
@@ -16862,9 +17132,9 @@ var Phaser;
         ColorUtils.colorToHexstring = /**
         * Return a string containing a hex representation of the given color
         *
-        * @param	color The color channel to get the hex value for, must be a value between 0 and 255)
-        *
-        * @return	A string of length 2 characters, i.e. 255 = FF, 0 = 00
+        * @method colorToHexstring
+        * @param {Number} color The color channel to get the hex value for, must be a value between 0 and 255)
+        * @return {String} A string of length 2 characters, i.e. 255 = FF, 0 = 00
         */
         function (color) {
             var digits = "0123456789ABCDEF";
@@ -16880,12 +17150,12 @@ var Phaser;
         ColorUtils.HSVtoRGB = /**
         * Convert a HSV (hue, saturation, lightness) color space value to an RGB color
         *
-        * @param	h 		Hue degree, between 0 and 359
-        * @param	s 		Saturation, between 0.0 (grey) and 1.0
-        * @param	v 		Value, between 0.0 (black) and 1.0
-        * @param	alpha	Alpha value to set per color (between 0 and 255)
-        *
-        * @return 32-bit ARGB color value (0xAARRGGBB)
+        * @method HSVtoRGB
+        * @param {Number} h Hue degree, between 0 and 359
+        * @param {Number} s Saturation, between 0.0 (grey) and 1.0
+        * @param {Number} v Value, between 0.0 (black) and 1.0
+        * @param {Number} alpha Alpha value to set per color (between 0 and 255)
+        * @return {Number} 32-bit ARGB color value (0xAARRGGBB)
         */
         function (h, s, v, alpha) {
             if (typeof alpha === "undefined") { alpha = 255; }
@@ -16936,9 +17206,9 @@ var Phaser;
         ColorUtils.RGBtoHSV = /**
         * Convert an RGB color value to an object containing the HSV color space values: Hue, Saturation and Lightness
         *
-        * @param	color In format 0xRRGGBB
-        *
-        * @return 	Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
+        * @method RGBtoHSV
+        * @param {Number} color In format 0xRRGGBB
+        * @return {Object} An Object with the properties hue (from 0 to 360), saturation (from 0 to 1.0) and lightness (from 0 to 1.0, also available under .value)
         */
         function (color) {
             var rgb = Phaser.ColorUtils.getRGB(color);
@@ -16993,15 +17263,14 @@ var Phaser;
         };
 
         ColorUtils.interpolateColor = /**
-        *
+        * Interpolates the two given colours based on the supplied step and currentStep properties.
         * @method interpolateColor
         * @param {Number} color1
         * @param {Number} color2
         * @param {Number} steps
         * @param {Number} currentStep
         * @param {Number} alpha
-        * @return {Number}
-        * @static
+        * @return {Number} The interpolated color value.
         */
         function (color1, color2, steps, currentStep, alpha) {
             if (typeof alpha === "undefined") { alpha = 255; }
@@ -17016,29 +17285,28 @@ var Phaser;
         };
 
         ColorUtils.interpolateColorWithRGB = /**
-        *
+        * Interpolates the two given colours based on the supplied step and currentStep properties.
         * @method interpolateColorWithRGB
         * @param {Number} color
-        * @param {Number} r2
-        * @param {Number} g2
-        * @param {Number} b2
+        * @param {Number} r
+        * @param {Number} g
+        * @param {Number} b
         * @param {Number} steps
         * @param {Number} currentStep
-        * @return {Number}
-        * @static
+        * @return {Number} The interpolated color value.
         */
-        function (color, r2, g2, b2, steps, currentStep) {
+        function (color, r, g, b, steps, currentStep) {
             var src = Phaser.ColorUtils.getRGB(color);
 
-            var r = (((r2 - src.red) * currentStep) / steps) + src.red;
-            var g = (((g2 - src.green) * currentStep) / steps) + src.green;
-            var b = (((b2 - src.blue) * currentStep) / steps) + src.blue;
+            var or = (((r - src.red) * currentStep) / steps) + src.red;
+            var og = (((g - src.green) * currentStep) / steps) + src.green;
+            var ob = (((b - src.blue) * currentStep) / steps) + src.blue;
 
-            return Phaser.ColorUtils.getColor(r, g, b);
+            return Phaser.ColorUtils.getColor(or, og, ob);
         };
 
         ColorUtils.interpolateRGB = /**
-        *
+        * Interpolates the two given colours based on the supplied step and currentStep properties.
         * @method interpolateRGB
         * @param {Number} r1
         * @param {Number} g1
@@ -17048,8 +17316,7 @@ var Phaser;
         * @param {Number} b2
         * @param {Number} steps
         * @param {Number} currentStep
-        * @return {Number}
-        * @static
+        * @return {Number} The interpolated color value.
         */
         function (r1, g1, b1, r2, g2, b2, steps, currentStep) {
             var r = (((r2 - r1) * currentStep) / steps) + r1;
@@ -17064,11 +17331,11 @@ var Phaser;
         * <p>Set the min value to start each channel from the given offset.</p>
         * <p>Set the max value to restrict the maximum color used per channel</p>
         *
-        * @param	min		The lowest value to use for the color
-        * @param	max 	The highest value to use for the color
-        * @param	alpha	The alpha value of the returning color (default 255 = fully opaque)
-        *
-        * @return 32-bit color value with alpha
+        * @method getRandomColor
+        * @param {Number} min The lowest value to use for the color
+        * @param {Number} max The highest value to use for the color
+        * @param {Number} alpha The alpha value of the returning color (default 255 = fully opaque)
+        * @return {Number} 32-bit color value with alpha
         */
         function (min, max, alpha) {
             if (typeof min === "undefined") { min = 0; }
@@ -17094,19 +17361,19 @@ var Phaser;
         *
         * <p>Alpha will only be set if it exist in the given color (0xAARRGGBB)</p>
         *
-        * @param	color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB)
-        *
-        * @return Object with properties: alpha, red, green, blue
+        * @method getRGB
+        * @param {Number} color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB)
+        * @return {Object} An Object with properties: alpha, red, green, blue
         */
         function (color) {
             return { alpha: color >>> 24, red: color >> 16 & 0xFF, green: color >> 8 & 0xFF, blue: color & 0xFF };
         };
 
         ColorUtils.getWebRGB = /**
-        *
+        * Returns a CSS friendly string value from the given color.
         * @method getWebRGB
         * @param {Number} color
-        * @return {Any}
+        * @return {String} A string in the format: 'rgba(r,g,b,a)'
         */
         function (color) {
             var alpha = (color >>> 24) / 255;
@@ -17120,9 +17387,9 @@ var Phaser;
         ColorUtils.getAlpha = /**
         * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
         *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Alpha component of the color, will be between 0 and 255 (0 being no Alpha, 255 full Alpha)
+        * @method getAlpha
+        * @param {Number} color In the format 0xAARRGGBB
+        * @return {Number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
         */
         function (color) {
             return color >>> 24;
@@ -17131,9 +17398,9 @@ var Phaser;
         ColorUtils.getAlphaFloat = /**
         * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1
         *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
+        * @method getAlphaFloat
+        * @param {Number} color In the format 0xAARRGGBB
+        * @return {Number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
         */
         function (color) {
             return (color >>> 24) / 255;
@@ -17142,9 +17409,9 @@ var Phaser;
         ColorUtils.getRed = /**
         * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255
         *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
+        * @method getRed
+        * @param {Number} color In the format 0xAARRGGBB
+        * @return {Number} The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
         */
         function (color) {
             return color >> 16 & 0xFF;
@@ -17153,9 +17420,9 @@ var Phaser;
         ColorUtils.getGreen = /**
         * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255
         *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
+        * @method getGreen
+        * @param {Number} color In the format 0xAARRGGBB
+        * @return {Number} The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
         */
         function (color) {
             return color >> 8 & 0xFF;
@@ -17164,9 +17431,9 @@ var Phaser;
         ColorUtils.getBlue = /**
         * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255
         *
-        * @param	color	In the format 0xAARRGGBB
-        *
-        * @return	The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
+        * @method getBlue
+        * @param {Number} color In the format 0xAARRGGBB
+        * @return {Number} The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
         */
         function (color) {
             return color & 0xFF;
@@ -17177,25 +17444,29 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - PointUtils
-*
-* A collection of methods useful for manipulating and comparing Point objects.
-*
-* TODO: interpolate & polar
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
+    /**
+    * A collection of methods useful for manipulating and comparing Point objects.
+    *
+    * @class PointUtils
+    */
     var PointUtils = (function () {
         function PointUtils() {
         }
         PointUtils.add = /**
         * Adds the coordinates of two points together to create a new point.
         * @method add
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
+        * @param {Phaser.Point} a The first Point object.
+        * @param {Phaser.Point} b The second Point object.
+        * @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Phaser.Point} The new Point object.
+        */
         function (a, b, out) {
             if (typeof out === "undefined") { out = new Phaser.Point(); }
             return out.setTo(a.x + b.x, a.y + b.y);
@@ -17204,11 +17475,11 @@ var Phaser;
         PointUtils.subtract = /**
         * Subtracts the coordinates of two points to create a new point.
         * @method subtract
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
+        * @param {Phaser.Point} a The first Point object.
+        * @param {Phaser.Point} b The second Point object.
+        * @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Phaser.Point} The new Point object.
+        */
         function (a, b, out) {
             if (typeof out === "undefined") { out = new Phaser.Point(); }
             return out.setTo(a.x - b.x, a.y - b.y);
@@ -17217,11 +17488,11 @@ var Phaser;
         PointUtils.multiply = /**
         * Multiplies the coordinates of two points to create a new point.
         * @method subtract
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
+        * @param {Phaser.Point} a The first Point object.
+        * @param {Phaser.Point} b The second Point object.
+        * @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Phaser.Point} The new Point object.
+        */
         function (a, b, out) {
             if (typeof out === "undefined") { out = new Phaser.Point(); }
             return out.setTo(a.x * b.x, a.y * b.y);
@@ -17230,11 +17501,11 @@ var Phaser;
         PointUtils.divide = /**
         * Divides the coordinates of two points to create a new point.
         * @method subtract
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
+        * @param {Phaser.Point} a The first Point object.
+        * @param {Phaser.Point} b The second Point object.
+        * @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Phaser.Point} The new Point object.
+        */
         function (a, b, out) {
             if (typeof out === "undefined") { out = new Phaser.Point(); }
             return out.setTo(a.x / b.x, a.y / b.y);
@@ -17243,11 +17514,11 @@ var Phaser;
         PointUtils.clamp = /**
         * Clamps the Point object values to be between the given min and max
         * @method clamp
-        * @param {Point} a - The point.
-        * @param {number} The minimum value to clamp this Point to
-        * @param {number} The maximum value to clamp this Point to
-        * @return {Point} This Point object.
-        **/
+        * @param {Phaser.Point} a The point.
+        * @param {Number} min The minimum value to clamp this Point to
+        * @param {Number} max The maximum value to clamp this Point to
+        * @return {Phaser.Point} This Point object.
+        */
         function (a, min, max) {
             Phaser.PointUtils.clampX(a, min, max);
             Phaser.PointUtils.clampY(a, min, max);
@@ -17257,11 +17528,11 @@ var Phaser;
         PointUtils.clampX = /**
         * Clamps the x value of the given Point object to be between the min and max values.
         * @method clampX
-        * @param {Point} a - The point.
-        * @param {number} The minimum value to clamp this Point to
-        * @param {number} The maximum value to clamp this Point to
-        * @return {Point} This Point object.
-        **/
+        * @param {Phaser.Point} a The point.
+        * @param {Number} min The minimum value to clamp this Point to
+        * @param {Number} max The maximum value to clamp this Point to
+        * @return {Phaser.Point} This Point object.
+        */
         function (a, min, max) {
             a.x = Math.max(Math.min(a.x, max), min);
             return a;
@@ -17270,11 +17541,11 @@ var Phaser;
         PointUtils.clampY = /**
         * Clamps the y value of the given Point object to be between the min and max values.
         * @method clampY
-        * @param {Point} a - The point.
-        * @param {number} The minimum value to clamp this Point to
-        * @param {number} The maximum value to clamp this Point to
-        * @return {Point} This Point object.
-        **/
+        * @param {Phaser.Point} a The point.
+        * @param {Number} min The minimum value to clamp this Point to
+        * @param {Number} max The maximum value to clamp this Point to
+        * @return {Phaser.Point} This Point object.
+        */
         function (a, min, max) {
             a.y = Math.max(Math.min(a.y, max), min);
             return a;
@@ -17283,9 +17554,9 @@ var Phaser;
         PointUtils.clone = /**
         * Creates a copy of the given Point.
         * @method clone
-        * @param {Point} output Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
-        * @return {Point} The new Point object.
-        **/
+        * @param {Phaser.Point} output Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
+        * @return {Phaser.Point} The new Point object.
+        */
         function (a, output) {
             if (typeof output === "undefined") { output = new Phaser.Point(); }
             return output.setTo(a.x, a.y);
@@ -17294,11 +17565,11 @@ var Phaser;
         PointUtils.distanceBetween = /**
         * Returns the distance between the two given Point objects.
         * @method distanceBetween
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
-        * @param {Boolean} round - Round the distance to the nearest integer (default false)
+        * @param {Phaser.Point} a The first Point object.
+        * @param {Phaser.Point} b The second Point object.
+        * @param {Boolean} round Round the distance to the nearest integer (default false)
         * @return {Number} The distance between the two Point objects.
-        **/
+        */
         function (a, b, round) {
             if (typeof round === "undefined") { round = false; }
             var dx = a.x - b.x;
@@ -17314,10 +17585,10 @@ var Phaser;
         PointUtils.equals = /**
         * Determines whether the two given Point objects are equal. They are considered equal if they have the same x and y values.
         * @method equals
-        * @param {Point} a - The first Point object.
-        * @param {Point} b - The second Point object.
+        * @param {Phaser.Point} a The first Point object.
+        * @param {Phaser.Point} b The second Point object.
         * @return {Boolean} A value of true if the Points are equal, otherwise false.
-        **/
+        */
         function (a, b) {
             return (a.x == b.x && a.y == b.y);
         };
@@ -17326,31 +17597,34 @@ var Phaser;
         * Determines a point between two specified points. The parameter f determines where the new interpolated point is located relative to the two end points specified by parameters pt1 and pt2.
         * The closer the value of the parameter f is to 1.0, the closer the interpolated point is to the first point (parameter pt1). The closer the value of the parameter f is to 0, the closer the interpolated point is to the second point (parameter pt2).
         * @method interpolate
-        * @param {Point} pointA - The first Point object.
-        * @param {Point} pointB - The second Point object.
-        * @param {Number} f - The level of interpolation between the two points. Indicates where the new point will be, along the line between pt1 and pt2. If f=1, pt1 is returned; if f=0, pt2 is returned.
-        * @return {Point} The new interpolated Point object.
-        **/
-        //static interpolate(pointA, pointB, f) {
+        * @param {Phaser.Point} pointA The first Point object.
+        * @param {Phaser.Point} pointB The second Point object.
+        * @param {Number} f The level of interpolation between the two points. Indicates where the new point will be, along the line between pt1 and pt2. If f=1, pt1 is returned; if f=0, pt2 is returned.
+        * @return {Phaser.Point} The new interpolated Point object.
+        */
+        //public static interpolate(pointA, pointB, f) {
+        // TODO!
         //}
         /**
         * Converts a pair of polar coordinates to a Cartesian point coordinate.
         * @method polar
-        * @param {Number} length - The length coordinate of the polar pair.
-        * @param {Number} angle - The angle, in radians, of the polar pair.
-        * @return {Point} The new Cartesian Point object.
-        **/
-        //static polar(length, angle) {
+        * @param {Number} length The length coordinate of the polar pair.
+        * @param {Number} angle The angle, in radians, of the polar pair.
+        * @return {Phaser.Point} The new Cartesian Point object.
+        */
+        //public static polar(length, angle) {
+        // TODO!
         //}
         /**
         * Rotates a Point around the x/y coordinates given to the desired angle.
-        * @param a {Point} The Point object to rotate.
-        * @param x {number} The x coordinate of the anchor point
-        * @param y {number} The y coordinate of the anchor point
+        * @method rotate
+        * @param {Phaser.Point} a The Point object to rotate.
+        * @param {Number} x The x coordinate of the anchor point
+        * @param {Number} y The y coordinate of the anchor point
         * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
         * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
-        * @return The modified point object
+        * @return {Phaser.Point} The modified point object
         */
         function (a, x, y, angle, asDegrees, distance) {
             if (typeof asDegrees === "undefined") { asDegrees = false; }
@@ -17368,14 +17642,13 @@ var Phaser;
 
         PointUtils.rotateAroundPoint = /**
         * Rotates a Point around the given Point to the desired angle.
-        * @param a {Point} The Point object to rotate.
-        * @param b {Point} The Point object to serve as point of rotation.
-        * @param x {number} The x coordinate of the anchor point
-        * @param y {number} The y coordinate of the anchor point
+        * @method rotateAroundPoint
+        * @param {Phaser.Point} a The Point object to rotate.
+        * @param {Phaser.Point} b The Point object to serve as point of rotation.
         * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
         * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
-        * @return The modified point object
+        * @return {Phaser.Point} The modified point object
         */
         function (a, b, angle, asDegrees, distance) {
             if (typeof asDegrees === "undefined") { asDegrees = false; }
@@ -17388,24 +17661,28 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - RectangleUtils
-*
-* A collection of methods useful for manipulating and comparing Rectangle objects.
-*
-* TODO: Check docs + overlap + intersect + toPolygon?
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
+    /**
+    * A collection of methods useful for manipulating and comparing Rectangle objects.
+    *
+    * @class RectangleUtils
+    */
     var RectangleUtils = (function () {
         function RectangleUtils() {
         }
         RectangleUtils.getTopLeftAsPoint = /**
         * Get the location of the Rectangles top-left corner as a Point object.
         * @method getTopLeftAsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
-        **/
+        * @param {Phaser.Rectangle} a The Rectangle object.
+        * @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Phaser.Point} The new Point object.
+        */
         function (a, out) {
             if (typeof out === "undefined") { out = new Phaser.Point(); }
             return out.setTo(a.x, a.y);
@@ -17414,9 +17691,9 @@ var Phaser;
         RectangleUtils.getBottomRightAsPoint = /**
         * Get the location of the Rectangles bottom-right corner as a Point object.
         * @method getTopLeftAsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} out - Optional Point to store the value in, if not supplied a new Point object will be created.
-        * @return {Point} The new Point object.
+        * @param {Phaser.Rectangle} a The Rectangle object.
+        * @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+        * @return {Phaser.Point} The new Point object.
         **/
         function (a, out) {
             if (typeof out === "undefined") { out = new Phaser.Point(); }
@@ -17426,11 +17703,11 @@ var Phaser;
         RectangleUtils.inflate = /**
         * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
         * @method inflate
-        * @param {Rectangle} a - The Rectangle object.
+        * @param {Phaser.Rectangle} a The Rectangle object.
         * @param {Number} dx The amount to be added to the left side of the Rectangle.
         * @param {Number} dy The amount to be added to the bottom side of the Rectangle.
-        * @return {Rectangle} This Rectangle object.
-        **/
+        * @return {Phaser.Rectangle} This Rectangle object.
+        */
         function (a, dx, dy) {
             a.x -= dx;
             a.width += 2 * dx;
@@ -17444,10 +17721,10 @@ var Phaser;
         RectangleUtils.inflatePoint = /**
         * Increases the size of the Rectangle object. This method is similar to the Rectangle.inflate() method except it takes a Point object as a parameter.
         * @method inflatePoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} point The x property of this Point object is used to increase the horizontal dimension of the Rectangle object. The y property is used to increase the vertical dimension of the Rectangle object.
-        * @return {Rectangle} The Rectangle object.
-        **/
+        * @param {Phaser.Rectangle} a The Rectangle object.
+        * @param {Phaser.Point} point The x property of this Point object is used to increase the horizontal dimension of the Rectangle object. The y property is used to increase the vertical dimension of the Rectangle object.
+        * @return {Phaser.Rectangle} The Rectangle object.
+        */
         function (a, point) {
             return Phaser.RectangleUtils.inflate(a, point.x, point.y);
         };
@@ -17455,10 +17732,10 @@ var Phaser;
         RectangleUtils.size = /**
         * The size of the Rectangle object, expressed as a Point object with the values of the width and height properties.
         * @method size
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} output Optional Point object. If given the values will be set into the object, otherwise a brand new Point object will be created and returned.
-        * @return {Point} The size of the Rectangle object
-        **/
+        * @param {Phaser.Rectangle} a The Rectangle object.
+        * @param {Phaser.Point} output Optional Point object. If given the values will be set into the object, otherwise a brand new Point object will be created and returned.
+        * @return {Phaser.Point} The size of the Rectangle object
+        */
         function (a, output) {
             if (typeof output === "undefined") { output = new Phaser.Point(); }
             return output.setTo(a.width, a.height);
@@ -17467,10 +17744,10 @@ var Phaser;
         RectangleUtils.clone = /**
         * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
         * @method clone
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle}
-        **/
+        * @param {Phaser.Rectangle} a The Rectangle object.
+        * @param {Phaser.Rectangle} output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Phaser.Rectangle}
+        */
         function (a, output) {
             if (typeof output === "undefined") { output = new Phaser.Rectangle(); }
             return output.setTo(a.x, a.y, a.width, a.height);
@@ -17479,11 +17756,11 @@ var Phaser;
         RectangleUtils.contains = /**
         * Determines whether the specified coordinates are contained within the region defined by this Rectangle object.
         * @method contains
-        * @param {Rectangle} a - The Rectangle object.
+        * @param {Phaser.Rectangle} a The Rectangle object.
         * @param {Number} x The x coordinate of the point to test.
         * @param {Number} y The y coordinate of the point to test.
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
+        */
         function (a, x, y) {
             return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
         };
@@ -17491,10 +17768,10 @@ var Phaser;
         RectangleUtils.containsPoint = /**
         * Determines whether the specified point is contained within the rectangular region defined by this Rectangle object. This method is similar to the Rectangle.contains() method, except that it takes a Point object as a parameter.
         * @method containsPoint
-        * @param {Rectangle} a - The Rectangle object.
-        * @param {Point} point The point object being checked. Can be Point or any object with .x and .y values.
+        * @param {Phaser.Rectangle} a The Rectangle object.
+        * @param {Phaser.Point} point The point object being checked. Can be Point or any object with .x and .y values.
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
+        */
         function (a, point) {
             return Phaser.RectangleUtils.contains(a, point.x, point.y);
         };
@@ -17503,10 +17780,10 @@ var Phaser;
         * Determines whether the first Rectangle object is fully contained within the second Rectangle object.
         * A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
         * @method containsRect
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Phaser.Rectangle} a The first Rectangle object.
+        * @param {Phaser.Rectangle} b The second Rectangle object.
         * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
-        **/
+        */
         function (a, b) {
             if (a.volume > b.volume) {
                 return false;
@@ -17519,10 +17796,10 @@ var Phaser;
         * Determines whether the two Rectangles are equal.
         * This method compares the x, y, width and height properties of each Rectangle.
         * @method equals
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Phaser.Rectangle} a The first Rectangle object.
+        * @param {Phaser.Rectangle} b The second Rectangle object.
         * @return {Boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
-        **/
+        */
         function (a, b) {
             return (a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height);
         };
@@ -17530,11 +17807,11 @@ var Phaser;
         RectangleUtils.intersection = /**
         * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the Rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
         * @method intersection
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle} A Rectangle object that equals the area of intersection. If the Rectangles do not intersect, this method returns an empty Rectangle object; that is, a Rectangle with its x, y, width, and height properties set to 0.
-        **/
+        * @param {Phaser.Rectangle} a The first Rectangle object.
+        * @param {Phaser.Rectangle} b The second Rectangle object.
+        * @param {Phaser.Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Phaser.Rectangle} A Rectangle object that equals the area of intersection. If the Rectangles do not intersect, this method returns an empty Rectangle object; that is, a Rectangle with its x, y, width, and height properties set to 0.
+        */
         function (a, b, out) {
             if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
             if (Phaser.RectangleUtils.intersects(a, b)) {
@@ -17551,11 +17828,11 @@ var Phaser;
         * Determines whether the two Rectangles intersect with each other.
         * This method checks the x, y, width, and height properties of the Rectangles.
         * @method intersects
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
+        * @param {Phaser.Rectangle} a The first Rectangle object.
+        * @param {Phaser.Rectangle} b The second Rectangle object.
         * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
-        **/
+        */
         function (a, b, tolerance) {
             if (typeof tolerance === "undefined") { tolerance = 0; }
             return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
@@ -17570,7 +17847,7 @@ var Phaser;
         * @param {Number} bottomt
         * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
         * @return {Boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
-        **/
+        */
         function (a, left, right, top, bottom, tolerance) {
             if (typeof tolerance === "undefined") { tolerance = 0; }
             return !(left > a.right + tolerance || right < a.left - tolerance || top > a.bottom + tolerance || bottom < a.top - tolerance);
@@ -17579,11 +17856,11 @@ var Phaser;
         RectangleUtils.union = /**
         * Adds two Rectangles together to create a new Rectangle object, by filling in the horizontal and vertical space between the two Rectangles.
         * @method union
-        * @param {Rectangle} a - The first Rectangle object.
-        * @param {Rectangle} b - The second Rectangle object.
-        * @param {Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
-        * @return {Rectangle} A Rectangle object that is the union of the two Rectangles.
-        **/
+        * @param {Phaser.Rectangle} a The first Rectangle object.
+        * @param {Phaser.Rectangle} b The second Rectangle object.
+        * @param {Phaser.Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
+        * @return {Phaser.Rectangle} A Rectangle object that is the union of the two Rectangles.
+        */
         function (a, b, out) {
             if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
             return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
@@ -17594,19 +17871,26 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - SpriteUtils
-*
-* A collection of methods useful for manipulating and checking Sprites.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
+    /**
+    * A collection of methods useful for manipulating and comparing Sprites.
+    *
+    * @class SpriteUtils
+    */
     var SpriteUtils = (function () {
         function SpriteUtils() {
         }
         SpriteUtils.updateCameraView = /**
-        * Updates a Sprites cameraView Rectangle based on the given camera, sprite world position and rotation
-        * @param camera {Camera} The Camera to use in the view
-        * @param sprite {Sprite} The Sprite that will have its cameraView property modified
+        * Updates a Sprites cameraView Rectangle based on the given camera, sprite world position and rotation.
+        * @method updateCameraView
+        * @param {Camera} camera The Camera to use in the view
+        * @param {Sprite} sprite The Sprite that will have its cameraView property modified
         * @return {Rectangle} A reference to the Sprite.cameraView property
         */
         function (camera, sprite) {
@@ -17644,7 +17928,13 @@ var Phaser;
             return sprite.cameraView;
         };
 
-        SpriteUtils.getAsPoints = function (sprite) {
+        SpriteUtils.getAsPoints = /**
+        * Returns an array containing 4 Point objects corresponding to the 4 corners of the sprite bounds.
+        * @method getAsPoints
+        * @param {Sprite} sprite The Sprite that will have its cameraView property modified
+        * @return {Array} An array of Point objects.
+        */
+        function (sprite) {
             var out = [];
 
             //  top left
@@ -17717,11 +18007,11 @@ var Phaser;
         * Checks to see if the given x and y coordinates overlaps this <code>Sprite</code>, taking scaling and rotation into account.
         * The coordinates must be given in world space, not local or camera space.
         *
-        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
-        * @param x {Number} The x coordinate in world space.
-        * @param y {Number} The y coordinate in world space.
-        *
-        * @return   Whether or not the point overlaps this object.
+        * @method overlapsXY
+        * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
+        * @param {Number} x The x coordinate in world space.
+        * @param {Number} y The y coordinate in world space.
+        * @return {Boolean} Whether or not the point overlaps this object.
         */
         function (sprite, x, y) {
             if (sprite.transform.rotation == 0) {
@@ -17751,10 +18041,10 @@ var Phaser;
         * Checks to see if the given point overlaps this <code>Sprite</code>, taking scaling and rotation into account.
         * The point must be given in world space, not local or camera space.
         *
-        * @param sprite {Sprite} The Sprite to check. It will take scaling and rotation into account.
-        * @param point {Point} The point in world space you want to check.
-        *
-        * @return   Whether or not the point overlaps this object.
+        * @method overlapsPoint
+        * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
+        * @param {Point} point The point in world space you want to check.
+        * @return {Boolean} Whether or not the point overlaps this object.
         */
         function (sprite, point) {
             return Phaser.SpriteUtils.overlapsXY(sprite, point.x, point.y);
@@ -17763,9 +18053,10 @@ var Phaser;
         SpriteUtils.onScreen = /**
         * Check and see if this object is currently on screen.
         *
-        * @param camera {Camera} Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
-        *
-        * @return {boolean} Whether the object is on screen or not.
+        * @method onScreen
+        * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
+        * @param {Camera} camera Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
+        * @return {Boolean} Whether the object is on screen or not.
         */
         function (sprite, camera) {
             if (typeof camera === "undefined") { camera = null; }
@@ -17781,9 +18072,10 @@ var Phaser;
         SpriteUtils.getScreenXY = /**
         * Call this to figure out the on-screen position of the object.
         *
-        * @param point {Point} Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
-        * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
-        *
+        * @method getScreenXY
+        * @param {Sprite} sprite The Sprite to check.
+        * @param {Point} point Takes a <code>Point</code> object and assigns the post-scrolled X and Y values of this object to it.
+        * @param {Camera} camera Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         * @return {Point} The <code>Point</code> you passed in, or a new <code>Point</code> if you didn't pass one, containing the screen X and Y position of this object.
         */
         function (sprite, point, camera) {
@@ -17819,23 +18111,24 @@ var Phaser;
         }
         */
         /**
-        * Handy for reviving game objects.
-        * Resets their existence flags and position.
+        * Handy for reviving game objects. Resets their existence flags and position.
         *
-        * @param x {number} The new X position of this object.
-        * @param y {number} The new Y position of this object.
+        * @method reset
+        * @param {Sprite} sprite The Sprite to reset.
+        * @param {number} x The new X position of this object.
+        * @param {number} y The new Y position of this object.
+        * @return {Sprite} The reset Sprite object.
         */
         function (sprite, x, y) {
             sprite.revive();
-
-            //sprite.body.touching = Types.NONE;
-            //sprite.body.wasTouching = Types.NONE;
             sprite.x = x;
             sprite.y = y;
             sprite.body.velocity.x = 0;
             sprite.body.velocity.y = 0;
             sprite.body.position.x = x;
             sprite.body.position.y = y;
+
+            return sprite;
         };
 
         SpriteUtils.setBounds = /**
@@ -17843,13 +18136,14 @@ var Phaser;
         * in the world. But by setting the bounds (which are given in world dimensions, not screen dimensions)
         * it can be stopped from leaving the world, or a section of it.
         *
-        * @param x {number} x position of the bound
-        * @param y {number} y position of the bound
-        * @param width {number} width of its bound
-        * @param height {number} height of its bound
+        * @method setBounds
+        * @param {number} x x position of the bound
+        * @param {number} y y position of the bound
+        * @param {number} width width of its bound
+        * @param {number} height height of its bound
         */
         function (x, y, width, height) {
-            //this.worldBounds = new Quad(x, y, width, height);
+            // Needed?
         };
         return SpriteUtils;
     })();
@@ -17857,16 +18151,29 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - DebugUtils
-*
-* A collection of methods for displaying debug information about game objects.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
+    /**
+    * A collection of methods for displaying debug information about game objects.
+    *
+    * @class DebugUtils
+    */
     var DebugUtils = (function () {
         function DebugUtils() {
         }
-        DebugUtils.start = function (x, y, color) {
+        DebugUtils.start = /**
+        * Internal method that resets the debug output values.
+        * @method start
+        * @param {Number} x The X value the debug info will start from.
+        * @param {Number} y The Y value the debug info will start from.
+        * @param {String} color The color the debug info will drawn in.
+        */
+        function (x, y, color) {
             if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
             Phaser.DebugUtils.currentX = x;
             Phaser.DebugUtils.currentY = y;
@@ -17876,7 +18183,14 @@ var Phaser;
             Phaser.DebugUtils.context.font = Phaser.DebugUtils.font;
         };
 
-        DebugUtils.line = function (text, x, y) {
+        DebugUtils.line = /**
+        * Internal method that outputs a single line of text.
+        * @method line
+        * @param {String} text The line of text to draw.
+        * @param {Number} x The X value the debug info will start from.
+        * @param {Number} y The Y value the debug info will start from.
+        */
+        function (text, x, y) {
             if (typeof x === "undefined") { x = null; }
             if (typeof y === "undefined") { y = null; }
             if (x !== null) {
@@ -18117,6 +18431,7 @@ var Phaser;
             Phaser.DebugUtils.context.fillText(text, x, y);
         };
         DebugUtils.font = '14px Courier';
+
         DebugUtils.lineHeight = 16;
 
         DebugUtils.renderShadow = true;
@@ -19194,64 +19509,52 @@ var Phaser;
                 var d = 1;
                 var g = 0.2;
 
-                var p = this.pos;
-                var o = this.oldpos;
-                var px;
-                var py;
+                //var p = this.pos;
+                //var o = this.oldpos;
+                var px = this.pos.x;
+                var py = this.pos.y;
 
                 //o = oldposition
-                var ox = o.x;
-                var oy = o.y;
-                o.x = px = p.x;
-                o.y = py = p.y;
+                var ox = this.oldpos.x;
+                var oy = this.oldpos.y;
+                this.oldpos.x = this.pos.x;
+                this.oldpos.y = this.pos.y;
 
                 //integrate
-                p.x += (d * px) - (d * ox);
-                p.y += (d * py) - (d * oy) + g;
+                this.pos.x += (d * px) - (d * ox);
+                this.pos.y += (d * py) - (d * oy) + g;
             };
 
             AABB.prototype.reportCollisionVsWorld = function (px, py, dx, dy, obj) {
                 if (typeof obj === "undefined") { obj = null; }
-                var p = this.pos;
-                var o = this.oldpos;
-
                 //calc velocity
-                var vx = p.x - o.x;
-                var vy = p.y - o.y;
+                var vx = this.pos.x - this.oldpos.x;
+                var vy = this.pos.y - this.oldpos.y;
 
                 //find component of velocity parallel to collision normal
                 var dp = (vx * dx + vy * dy);
                 var nx = dp * dx;
-
                 var ny = dp * dy;
 
                 var tx = vx - nx;
                 var ty = vy - ny;
 
-                //we only want to apply collision response forces if the object is travelling into, and not out of, the collision
-                var b, bx, by, f, fx, fy;
+                this.pos.x += px;
+                this.pos.y += py;
+
+                this.oldpos.x += px;
+                this.oldpos.y += py;
 
                 if (dp < 0) {
-                    //f = FRICTION;
-                    f = 0.05;
-                    fx = tx * f;
-                    fy = ty * f;
+                    //  moving into collision, apply forces
+                    var b = 1 + 0.5;
+                    var f = 0.05;
+                    var fx = tx * f;
+                    var fy = ty * f;
 
-                    //b = 1 + BOUNCE;//this bounce constant should be elsewhere, i.e inside the object/tile/etc..
-                    b = 1 + 0.3;
-
-                    bx = (nx * b);
-                    by = (ny * b);
-                } else {
-                    //moving out of collision, do not apply forces
-                    bx = by = fx = fy = 0;
+                    this.oldpos.x += (nx * b) + fx;
+                    this.oldpos.y += (ny * b) + fy;
                 }
-
-                p.x += px;
-                p.y += py;
-
-                o.x += px + bx + fx;
-                o.y += py + by + fy;
             };
 
             AABB.prototype.collideAABBVsTile = function (tile) {
@@ -24245,26 +24548,55 @@ var Phaser;
 })(Phaser || (Phaser = {}));
 /// <reference path="../_definitions.ts" />
 /**
-* Phaser - CanvasUtils
-*
-* A collection of methods useful for manipulating canvas objects.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
 */
 var Phaser;
 (function (Phaser) {
+    /**
+    * A collection of methods useful for manipulating canvas objects.
+    *
+    * @class CanvasUtils
+    */
     var CanvasUtils = (function () {
         function CanvasUtils() {
         }
-        CanvasUtils.getAspectRatio = function (canvas) {
+        CanvasUtils.getAspectRatio = /**
+        * Returns the aspect ratio of the given canvas.
+        *
+        * @method getAspectRatio
+        * @param {HTMLCanvasElement} canvas The canvas to get the aspect ratio from.
+        * @return {Number} Returns true on success
+        */
+        function (canvas) {
             return canvas.width / canvas.height;
         };
 
-        CanvasUtils.setBackgroundColor = function (canvas, color) {
+        CanvasUtils.setBackgroundColor = /**
+        * Sets the background color behind the canvas. This changes the canvas style property.
+        *
+        * @method setBackgroundColor
+        * @param {HTMLCanvasElement} canvas The canvas to set the background color on.
+        * @param {String} color The color to set. Can be in the format 'rgb(r,g,b)', or '#RRGGBB' or any valid CSS color.
+        * @return {HTMLCanvasElement} Returns the source canvas.
+        */
+        function (canvas, color) {
             if (typeof color === "undefined") { color = 'rgb(0,0,0)'; }
             canvas.style.backgroundColor = color;
             return canvas;
         };
 
-        CanvasUtils.setTouchAction = function (canvas, value) {
+        CanvasUtils.setTouchAction = /**
+        * Sets the touch-action property on the canvas style. Can be used to disable default browser touch actions.
+        *
+        * @method setTouchAction
+        * @param {HTMLCanvasElement} canvas The canvas to set the touch action on.
+        * @param {String} value The touch action to set. Defaults to 'none'.
+        * @return {HTMLCanvasElement} Returns the source canvas.
+        */
+        function (canvas, value) {
             if (typeof value === "undefined") { value = 'none'; }
             canvas.style.msTouchAction = value;
             canvas.style['ms-touch-action'] = value;
@@ -24273,7 +24605,17 @@ var Phaser;
             return canvas;
         };
 
-        CanvasUtils.addToDOM = function (canvas, parent, overflowHidden) {
+        CanvasUtils.addToDOM = /**
+        * Adds the given canvas element to the DOM. The canvas will be added as a child of the given parent.
+        * If no parent is given it will be added as a child of the document.body.
+        *
+        * @method addToDOM
+        * @param {HTMLCanvasElement} canvas The canvas to set the touch action on.
+        * @param {String} parent The DOM element to add the canvas to. Defaults to ''.
+        * @param {Boolean} overflowHidden If set to true it will add the overflow='hidden' style to the parent DOM element.
+        * @return {HTMLCanvasElement} Returns the source canvas.
+        */
+        function (canvas, parent, overflowHidden) {
             if (typeof parent === "undefined") { parent = ''; }
             if (typeof overflowHidden === "undefined") { overflowHidden = true; }
             if ((parent !== '' || parent !== null) && document.getElementById(parent)) {
@@ -24289,13 +24631,38 @@ var Phaser;
             return canvas;
         };
 
-        CanvasUtils.setTransform = function (context, translateX, translateY, scaleX, scaleY, skewX, skewY) {
+        CanvasUtils.setTransform = /**
+        * Sets the transform of the given canvas to the matrix values provided.
+        *
+        * @method setTransform
+        * @param {CanvasRenderingContext2D} context The context to set the transform on.
+        * @param {Number} translateX The value to translate horizontally by.
+        * @param {Number} translateY The value to translate vertically by.
+        * @param {Number} scaleX The value to scale horizontally by.
+        * @param {Number} scaleY The value to scale vertically by.
+        * @param {Number} skewX The value to skew horizontaly by.
+        * @param {Number} skewY The value to skew vertically by.
+        * @return {CanvasRenderingContext2D} Returns the source context.
+        */
+        function (context, translateX, translateY, scaleX, scaleY, skewX, skewY) {
             context.setTransform(scaleX, skewX, skewY, scaleY, translateX, translateY);
 
             return context;
         };
 
-        CanvasUtils.setSmoothingEnabled = function (context, value) {
+        CanvasUtils.setSmoothingEnabled = /**
+        * Sets the Image Smoothing property on the given context. Set to false to disable image smoothing.
+        * By default browsers have image smoothing enabled, which isn't always what you visually want, especially
+        * when using pixel art in a game. Note that this sets the property on the context itself, so that any image
+        * drawn to the context will be affected. This sets the property across all current browsers but support is
+        * patchy on earlier browsers, especially on mobile.
+        *
+        * @method setSmoothingEnabled
+        * @param {CanvasRenderingContext2D} context The context to enable or disable the image smoothing on.
+        * @param {Boolean} overflowHidden If set to true it will enable image smoothing, false will disable it.
+        * @return {CanvasRenderingContext2D} Returns the source context.
+        */
+        function (context, value) {
             context['imageSmoothingEnabled'] = value;
             context['mozImageSmoothingEnabled'] = value;
             context['oImageSmoothingEnabled'] = value;
@@ -24304,7 +24671,15 @@ var Phaser;
             return context;
         };
 
-        CanvasUtils.setImageRenderingCrisp = function (canvas) {
+        CanvasUtils.setImageRenderingCrisp = /**
+        * Sets the CSS image-rendering property on the given canvas to be 'crisp' (aka 'optimize contrast on webkit').
+        * Note that if this doesn't given the desired result then see the CanvasUtils.setSmoothingEnabled method.
+        *
+        * @method setImageRenderingCrisp
+        * @param {HTMLCanvasElement} canvas The canvas to set image-rendering crisp on.
+        * @return {HTMLCanvasElement} Returns the source canvas.
+        */
+        function (canvas) {
             canvas.style['image-rendering'] = 'crisp-edges';
             canvas.style['image-rendering'] = '-moz-crisp-edges';
             canvas.style['image-rendering'] = '-webkit-optimize-contrast';
@@ -24312,7 +24687,15 @@ var Phaser;
             return canvas;
         };
 
-        CanvasUtils.setImageRenderingBicubic = function (canvas) {
+        CanvasUtils.setImageRenderingBicubic = /**
+        * Sets the CSS image-rendering property on the given canvas to be 'bicubic' (aka 'auto').
+        * Note that if this doesn't given the desired result then see the CanvasUtils.setSmoothingEnabled method.
+        *
+        * @method setImageRenderingBicubic
+        * @param {HTMLCanvasElement} canvas The canvas to set image-rendering bicubic on.
+        * @return {HTMLCanvasElement} Returns the source canvas.
+        */
+        function (canvas) {
             canvas.style['image-rendering'] = 'auto';
             canvas.style.msInterpolationMode = 'bicubic';
             return canvas;
