@@ -126,9 +126,9 @@ module Phaser {
          * Remove a new camera with its id.
          *
          * @param id {number} ID of the camera you want to remove.
-         * @returns {boolean} True if successfully removed the camera, otherwise return false.
+         * @returns {bool} True if successfully removed the camera, otherwise return false.
          */
-        public removeCamera(id: number): boolean {
+        public removeCamera(id: number): bool {
 
             for (var c = 0; c < this._cameras.length; c++)
             {
@@ -149,7 +149,7 @@ module Phaser {
 
         }
 
-        public swap(camera1: Phaser.Camera, camera2: Phaser.Camera, sort: boolean = true): boolean {
+        public swap(camera1: Phaser.Camera, camera2: Phaser.Camera, sort: bool = true): bool {
 
             if (camera1.ID == camera2.ID)
             {

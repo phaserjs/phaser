@@ -30,9 +30,9 @@ module Phaser {
 
         /**
         * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-        * @type {Boolean}
+        * @type {bool}
         */
-        public disabled: boolean = false;
+        public disabled: bool = false;
 
         /**
         * A reference to the event handlers to allow removeEventListener support
@@ -161,9 +161,9 @@ module Phaser {
         /**
          * @param {Number} keycode
          * @param {Number} [duration]
-         * @return {Boolean}
+         * @return {bool}
          */
-        public justPressed(keycode: number, duration: number = 250): boolean {
+        public justPressed(keycode: number, duration: number = 250): bool {
 
             if (this._keys[keycode] && this._keys[keycode].isDown === true && (this.game.time.now - this._keys[keycode].timeDown < duration))
             {
@@ -179,9 +179,9 @@ module Phaser {
         /**
          * @param {Number} keycode
          * @param {Number} [duration]
-         * @return {Boolean}
+         * @return {bool}
          */
-        public justReleased(keycode: number, duration: number = 250): boolean {
+        public justReleased(keycode: number, duration: number = 250): bool {
 
             if (this._keys[keycode] && this._keys[keycode].isDown === false && (this.game.time.now - this._keys[keycode].timeUp < duration))
             {
@@ -196,9 +196,9 @@ module Phaser {
 
         /**
          * @param {Number} keycode
-         * @return {Boolean}
+         * @return {bool}
          */
-        public isDown(keycode: number): boolean {
+        public isDown(keycode: number): bool {
 
             if (this._keys[keycode])
             {

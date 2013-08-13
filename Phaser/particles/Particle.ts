@@ -142,11 +142,13 @@ module Phaser.Particles {
         }
 
         removeBehaviour(behaviour) {
+
             var index = this.behaviours.indexOf(behaviour);
+
             if (index > -1)
             {
-                var behaviour = this.behaviours.splice(index, 1);
-                behaviour.parents = null;
+                var outBehaviour = this.behaviours.splice(index, 1);
+                //outBehaviour.parents = null;
             }
         }
 

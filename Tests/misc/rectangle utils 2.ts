@@ -9,10 +9,10 @@
         topHandler: Phaser.Rectangle,
         bottomHandler: Phaser.Rectangle;
 
-    var onDragLeft: Boolean = false,
-        onDragRight: Boolean = false,
-        onDragTop: Boolean = false,
-        onDragBottom: Boolean = false;
+    var onDragLeft: bool = false,
+        onDragRight: bool = false,
+        onDragTop: bool = false,
+        onDragBottom: bool = false;
 
     var lastPos = {x: 0, y: 0};
 

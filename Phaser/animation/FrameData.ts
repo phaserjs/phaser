@@ -94,9 +94,9 @@ module Phaser {
         /**
          * Check whether there's a frame with given name.
          * @param name {string} Name of the frame you want to check.
-         * @return {boolean} True if frame with given name found, otherwise return false.
+         * @return {bool} True if frame with given name found, otherwise return false.
          */
-        public checkFrameName(name: string): boolean {
+        public checkFrameName(name: string): bool {
 
             if (this._frameNames[name] == null)
             {

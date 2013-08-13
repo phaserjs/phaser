@@ -257,6 +257,7 @@
     <TypeScriptCompile Include="scrollzones\parallax.ts" />
     <TypeScriptCompile Include="scrollzones\ballscroller.ts" />
     <TypeScriptCompile Include="physics\sprite bounds.ts" />
+    <TypeScriptCompile Include="physics\circle 1.ts" />
     <Content Include="physics\sprite bounds.js">
       <DependentUpon>sprite bounds.ts</DependentUpon>
     </Content>

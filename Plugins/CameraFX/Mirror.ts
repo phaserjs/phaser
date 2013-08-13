@@ -36,12 +36,12 @@ module Phaser.Plugins.CameraFX {
 
         public camera: Phaser.Camera;
 
-        public flipX: boolean = false;
-        public flipY: boolean = true;
+        public flipX: bool = false;
+        public flipY: bool = true;
 
         public x: number;
         public y: number;
-        public cls: boolean = false;
+        public cls: bool = false;
 
         /**
         * This is the rectangular region to grab from the Camera used in the Mirror effect

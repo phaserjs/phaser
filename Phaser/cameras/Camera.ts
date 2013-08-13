@@ -61,7 +61,7 @@ module Phaser {
 
         }
 
-        private _renderLocal: boolean;
+        private _renderLocal: bool;
         private _canvas: HTMLCanvasElement;
         private _target: Sprite = null;
 
@@ -144,9 +144,9 @@ module Phaser {
         public worldBounds: Rectangle = null;
 
         /**
-         * A boolean representing if the Camera has been modified in any way via a scale, rotate, flip or skew.
+         * A bool representing if the Camera has been modified in any way via a scale, rotate, flip or skew.
          */
-        public modified: boolean = false;
+        public modified: bool = false;
 
         /**
          * Sprite moving inside this Rectangle will not cause camera moving.
@@ -156,16 +156,16 @@ module Phaser {
 
         /**
          * Whether this camera is visible or not. (default is true)
-         * @type {boolean}
+         * @type {bool}
          */
-        public visible: boolean = true;
+        public visible: bool = true;
 
         /**
          * The z value of this Camera. Cameras are rendered in z-index order by the Renderer.
          */
         public z: number = -1;
 
-        public set directToStage(value: boolean) {
+        public set directToStage(value: bool) {
 
             if (value)
             {
@@ -201,7 +201,7 @@ module Phaser {
         *
         * @param object {Sprite/Group} The object to check.
         */
-        public isHidden(object): boolean {
+        public isHidden(object): bool {
             return object.texture.isHidden(this);
         }
 

@@ -100,9 +100,9 @@ module Phaser {
 
         }
 
-        public usingWebAudio: boolean = false;
-        public usingAudioTag: boolean = false;
-        public noAudio: boolean = false;
+        public usingWebAudio: bool = false;
+        public usingAudioTag: bool = false;
+        public noAudio: bool = false;
 
         /**
          * Local reference to the current Phaser.Game.
@@ -128,11 +128,11 @@ module Phaser {
         private _sounds: Phaser.Sound[];
 
         private _muteVolume: number;
-        private _muted: boolean = false;
+        private _muted: bool = false;
 
         public channels: number;
 
-        public touchLocked: boolean = false;
+        public touchLocked: bool = false;
 
         private _unlockSource = null;
 
@@ -170,11 +170,11 @@ module Phaser {
         /**
          * A global audio mute toggle.
          */
-        public get mute():boolean {
+        public get mute():bool {
             return this._muted;
         }
 
-        public set mute(value: boolean) {
+        public set mute(value: bool) {
 
             if (value)
             {
@@ -356,7 +356,7 @@ module Phaser {
 
         }
 
-        public add(key: string, volume: number = 1, loop: boolean = false): Sound {
+        public add(key: string, volume: number = 1, loop: bool = false): Sound {
 
             var sound: Phaser.Sound = new Sound(this.game, key, volume, loop);
 

@@ -124,10 +124,10 @@ module Phaser {
         * @method distanceBetween
         * @param {Phaser.Point} a The first Point object.
         * @param {Phaser.Point} b The second Point object.
-        * @param {Boolean} round Round the distance to the nearest integer (default false)
+        * @param {bool} round Round the distance to the nearest integer (default false)
         * @return {Number} The distance between the two Point objects.
         */
-        public static distanceBetween(a: Phaser.Point, b: Phaser.Point, round: boolean = false): number {
+        public static distanceBetween(a: Phaser.Point, b: Phaser.Point, round: bool = false): number {
 
             var dx = a.x - b.x;
             var dy = a.y - b.y;
@@ -148,9 +148,9 @@ module Phaser {
         * @method equals
         * @param {Phaser.Point} a The first Point object.
         * @param {Phaser.Point} b The second Point object.
-        * @return {Boolean} A value of true if the Points are equal, otherwise false.
+        * @return {bool} A value of true if the Points are equal, otherwise false.
         */
-        public static equals(a: Phaser.Point, b: Phaser.Point): boolean {
+        public static equals(a: Phaser.Point, b: Phaser.Point): bool {
             return (a.x == b.x && a.y == b.y);
         }
 
@@ -185,11 +185,11 @@ module Phaser {
 	    * @param {Number} x The x coordinate of the anchor point
 	    * @param {Number} y The y coordinate of the anchor point
         * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
-	    * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
+	    * @param {bool} asDegrees Is the given rotation in radians (false) or degrees (true)?
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
         * @return {Phaser.Point} The modified point object
         */
-        public static rotate(a: Phaser.Point, x: number, y: number, angle: number, asDegrees: boolean = false, distance: number = null): Phaser.Point {
+        public static rotate(a: Phaser.Point, x: number, y: number, angle: number, asDegrees: bool = false, distance: number = null): Phaser.Point {
 
             if (asDegrees)
             {
@@ -212,11 +212,11 @@ module Phaser {
         * @param {Phaser.Point} a The Point object to rotate.
         * @param {Phaser.Point} b The Point object to serve as point of rotation.
 	    * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
-	    * @param {Boolean} asDegrees Is the given rotation in radians (false) or degrees (true)?
+	    * @param {bool} asDegrees Is the given rotation in radians (false) or degrees (true)?
         * @param {Number} distance An optional distance constraint between the Point and the anchor.
         * @return {Phaser.Point} The modified point object
         */
-        public static rotateAroundPoint(a: Phaser.Point, b: Phaser.Point, angle: number, asDegrees: boolean = false, distance: number = null): Phaser.Point {
+        public static rotateAroundPoint(a: Phaser.Point, b: Phaser.Point, angle: number, asDegrees: bool = false, distance: number = null): Phaser.Point {
             return Phaser.PointUtils.rotate(a, b.x, b.y, angle, asDegrees, distance);
         }
 

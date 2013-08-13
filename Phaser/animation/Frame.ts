@@ -76,7 +76,7 @@ module Phaser {
         /**
          * Rotated? (not yet implemented)
          */
-        public rotated: boolean = false;
+        public rotated: bool = false;
 
         /**
          * Either cw or ccw, rotation is always 90 degrees.
@@ -85,9 +85,9 @@ module Phaser {
 
         /**
          * Was it trimmed when packed?
-         * @type {boolean}
+         * @type {bool}
          */
-        public trimmed: boolean;
+        public trimmed: bool;
 
         //  The coordinates of the trimmed sprite inside the original sprite
 
@@ -130,13 +130,13 @@ module Phaser {
         /**
          * Set rotation of this frame. (Not yet supported!)
          */
-        public setRotation(rotated: boolean, rotationDirection: string) {
+        public setRotation(rotated: bool, rotationDirection: string) {
             //  Not yet supported
         }
 
         /**
          * Set trim of the frame.
-         * @param trimmed {boolean} Whether this frame trimmed or not.
+         * @param trimmed {bool} Whether this frame trimmed or not.
          * @param actualWidth {number} Actual width of this frame.
          * @param actualHeight {number} Actual height of this frame.
          * @param destX {number} Destination x position.
@@ -144,7 +144,7 @@ module Phaser {
          * @param destWidth {number} Destination draw width.
          * @param destHeight {number} Destination draw height.
          */
-        public setTrim(trimmed: boolean, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number) {
+        public setTrim(trimmed: bool, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number) {
 
             //console.log('setTrim', trimmed, 'aw', actualWidth, 'ah', actualHeight, 'dx', destX, 'dy', destY, 'dw', destWidth, 'dh', destHeight);
 

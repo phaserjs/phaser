@@ -85,11 +85,10 @@ module Phaser {
             return <Phaser.Sprite> this._world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
         }
 
-        public audio(key: string, volume: number = 1, loop: boolean = false): Phaser.Sound {
+        public audio(key: string, volume: number = 1, loop: bool = false): Phaser.Sound {
             return <Phaser.Sound> this.game.sound.add(key, volume, loop);
         }
 
-/*
         public circle(x: number, y: number, radius: number): Phaser.Physics.Circle {
             return new Phaser.Physics.Circle(this.game, x, y, radius);
         }
@@ -101,22 +100,6 @@ module Phaser {
         public cell(x: number, y: number, width: number, height: number, state: number = Phaser.Physics.TileMapCell.TID_FULL): Phaser.Physics.TileMapCell {
             return new Phaser.Physics.TileMapCell(this.game, x, y, width, height).SetState(state);
         }
-*/
-
-        /**
-         * Create a new Sprite with the physics automatically created and set to DYNAMIC. The Sprite position offset is set to its center.
-         *
-         * @param x {number} X position of the new sprite.
-         * @param y {number} Y position of the new sprite.
-         * @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this sprite
-         * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-         * @param [bodyType] {number} The physics body type of the object (defaults to BODY_DYNAMIC)
-         * @param [shapeType] The default body shape is either 0 for a Box or 1 for a Circle. See Sprite.body.addShape for custom shapes (polygons, etc)
-         * @returns {Sprite} The newly created sprite object.
-         */
-        //public physicsSprite(x: number, y: number, key: string = '', frame? = null, bodyType: number = Phaser.Types.BODY_DYNAMIC, shapeType:number = 0): Sprite {
-        //    return <Sprite> this._world.group.add(new Sprite(this.game, x, y, key, frame, bodyType, shapeType));
-        //}
 
         /**
          * Create a new DynamicTexture with specific size.
@@ -180,12 +163,12 @@ module Phaser {
          * @param key {string} Key for tileset image.
          * @param mapData {string} Data of this tilemap.
          * @param format {number} Format of map data. (Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON)
-         * @param [resizeWorld] {boolean} resize the world to make same as tilemap?
+         * @param [resizeWorld] {bool} resize the world to make same as tilemap?
          * @param [tileWidth] {number} width of each tile.
          * @param [tileHeight] {number} height of each tile.
          * @return {Tilemap} The newly created tilemap object.
          */
-        public tilemap(key: string, mapData: string, format: number, resizeWorld: boolean = true, tileWidth: number = 0, tileHeight: number = 0): Phaser.Tilemap {
+        public tilemap(key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth: number = 0, tileHeight: number = 0): Phaser.Tilemap {
             return <Phaser.Tilemap> this._world.group.add(new Phaser.Tilemap(this.game, key, mapData, format, resizeWorld, tileWidth, tileHeight));
         }
 
@@ -196,7 +179,7 @@ module Phaser {
          * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
          * @return {Phaser.Tween} The newly created tween object.
          */
-        public tween(obj, localReference: boolean = false): Phaser.Tween {
+        public tween(obj, localReference: bool = false): Phaser.Tween {
             return this.game.tweens.create(obj, localReference);
         }
 

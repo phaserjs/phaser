@@ -96,9 +96,9 @@ module Phaser {
         /**
         * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
         * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled = true instead
-        * @type {Boolean}
+        * @type {bool}
         */
-        public disabled: boolean = false;
+        public disabled: bool = false;
 
         /**
          * Controls the expected behaviour when using a mouse and touch together on a multi-input device
@@ -221,7 +221,7 @@ module Phaser {
 
         /**
         * A Signal dispatched when a Pointer object (including the mouse) is tapped: pressed and released quickly.
-        * The signal sends 2 parameters. The Pointer that caused it and a boolean depending if the tap was a single tap or a double tap.
+        * The signal sends 2 parameters. The Pointer that caused it and a bool depending if the tap was a single tap or a double tap.
         * @type {Phaser.Signal}
         */
         public onTap: Phaser.Signal;
@@ -272,9 +272,9 @@ module Phaser {
         * The history is cleared each time the Pointer is pressed down.
         * The history is updated at the rate specified in Input.pollRate
         * @property recordPointerHistory
-        * @type {Boolean}
+        * @type {bool}
         **/
-        public recordPointerHistory: boolean = false;
+        public recordPointerHistory: bool = false;
 
         /**
         * The rate in milliseconds at which the Pointer objects should update their tracking history
@@ -495,7 +495,7 @@ module Phaser {
 
         }
 
-        public get pollLocked(): boolean {
+        public get pollLocked(): bool {
             return (this.pollRate > 0 && this._pollCounter < this.pollRate);
         }
 
@@ -536,9 +536,9 @@ module Phaser {
         /**
         * Reset all of the Pointers and Input states
         * @method reset
-        * @param hard {Boolean} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
+        * @param hard {bool} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
         **/
-        public reset(hard: boolean = false) {
+        public reset(hard: bool = false) {
 
             this.keyboard.reset();
 
@@ -725,10 +725,10 @@ module Phaser {
         /**
         * Get the next Pointer object whos active property matches the given state
         * @method getPointer
-        * @param {Boolean} state The state the Pointer should be in (false for inactive, true for active)
+        * @param {bool} state The state the Pointer should be in (false for inactive, true for active)
         * @return {Pointer} A Pointer object or null if no Pointer object matches the requested state.
         **/
-        public getPointer(state: boolean = false): Pointer {
+        public getPointer(state: bool = false): Pointer {
 
             //  Unrolled for speed
             if (this.pointer1.active == state)
@@ -827,7 +827,7 @@ module Phaser {
             return Vec2Utils.angle(pointer1.position, pointer2.position);
         }
 
-        public pixelPerfectCheck(sprite: Phaser.Sprite, pointer: Phaser.Pointer, alpha: number = 255): boolean {
+        public pixelPerfectCheck(sprite: Phaser.Sprite, pointer: Phaser.Pointer, alpha: number = 255): bool {
 
             this.hitContext.clearRect(0, 0, 1, 1);
 

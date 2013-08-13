@@ -241,7 +241,7 @@ module Phaser.Display {
 
         }
 
-        //  TODO - Add in support for: alphaBitmapData: BitmapData = null, alphaPoint: Point = null, mergeAlpha: boolean = false
+        //  TODO - Add in support for: alphaBitmapData: BitmapData = null, alphaPoint: Point = null, mergeAlpha: bool = false
         /**
          * Copy pixel from another DynamicTexture to this texture.
          * @param sourceTexture {DynamicTexture} Source texture object.

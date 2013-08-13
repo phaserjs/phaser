@@ -239,9 +239,9 @@ module Phaser {
         /**
         * Determines whether or not this Rectangle object is empty.
         * @method isEmpty
-        * @return {Boolean} A value of true if the Rectangle objects width or height is less than or equal to 0; otherwise false.
+        * @return {bool} A value of true if the Rectangle objects width or height is less than or equal to 0; otherwise false.
         **/
-        get empty(): boolean {
+        get empty(): bool {
             return (!this.width || !this.height);
         }
 
@@ -250,7 +250,7 @@ module Phaser {
         * @method setEmpty
         * @return {Rectangle} This Rectangle object
         **/
-        set empty(value: boolean) {
+        set empty(value: bool) {
             this.setTo(0, 0, 0, 0);
         }
 

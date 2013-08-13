@@ -25,9 +25,9 @@ module Phaser {
          * @param name {string} Unique name of this animation.
          * @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
          * @param delay {number} Time between frames in ms.
-         * @param looped {boolean} Whether or not the animation is looped or just plays once.
+         * @param looped {bool} Whether or not the animation is looped or just plays once.
          */
-        constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: boolean) {
+        constructor(game: Game, parent: Sprite, frameData: FrameData, name: string, frames, delay: number, looped: bool) {
 
             this.game = game;
             this._parent = parent;
@@ -98,21 +98,21 @@ module Phaser {
 
         /**
          * Whether or not this animation finished playing.
-         * @type {boolean}
+         * @type {bool}
          */
-        public isFinished: boolean;
+        public isFinished: bool;
 
         /**
          * Whethor or not this animation is currently playing.
-         * @type {boolean}
+         * @type {bool}
          */
-        public isPlaying: boolean;
+        public isPlaying: bool;
 
         /**
          * Whether or not the animation is looped.
-         * @type {boolean}
+         * @type {bool}
          */
-        public looped: boolean;
+        public looped: bool;
 
         /**
          * Time between frames in ms.
@@ -153,9 +153,9 @@ module Phaser {
         /**
          * Play this animation.
          * @param frameRate {number} FrameRate you want to specify instead of using default.
-         * @param loop {boolean} Whether or not the animation is looped or just plays once.
+         * @param loop {bool} Whether or not the animation is looped or just plays once.
          */
-        public play(frameRate: number = null, loop: boolean = false) {
+        public play(frameRate: number = null, loop: bool = false) {
 
             if (frameRate !== null)
             {
@@ -208,7 +208,7 @@ module Phaser {
         /**
          * Update animation frames.
          */
-        public update(): boolean {
+        public update(): bool {
 
             if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
             {

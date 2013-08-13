@@ -22,9 +22,9 @@ module Phaser.Plugins.CameraFX {
 
         /**
          * Render camera shadow or not. (default is false)
-         * @type {boolean}
+         * @type {bool}
          */
-        public showShadow: boolean = false;
+        public showShadow: bool = false;
 
         /**
          * Color of shadow, in css color string.

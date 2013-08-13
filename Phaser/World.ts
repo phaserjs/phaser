@@ -119,9 +119,9 @@ module Phaser {
          *
          * @param width {number} New width of the world.
          * @param height {number} New height of the world.
-         * @param [updateCameraBounds] {boolean} Update camera bounds automatically or not. Default to true.
+         * @param [updateCameraBounds] {bool} Update camera bounds automatically or not. Default to true.
          */
-        public setSize(width: number, height: number, updateCameraBounds: boolean = true) {
+        public setSize(width: number, height: number, updateCameraBounds: bool = true) {
 
             this.bounds.width = width;
             this.bounds.height = height;

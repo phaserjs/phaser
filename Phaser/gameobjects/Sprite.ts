@@ -64,7 +64,7 @@ module Phaser {
 
             this.transform.setCache();
 
-            //this.body = new Phaser.Physics.Body(this, 0);
+            this.body = new Phaser.Physics.Body(this, 0);
 
             this.outOfBounds = false;
             this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_PERSIST;
@@ -100,27 +100,27 @@ module Phaser {
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.
          */
-        public exists: boolean;
+        public exists: bool;
 
         /**
          * Controls if <code>update()</code> is automatically called by the core game loop.
          */
-        public active: boolean;
+        public active: bool;
 
         /**
          * Controls if this Sprite is rendered or skipped during the core game loop.
          */
-        public visible: boolean;
+        public visible: bool;
 
         /**
          * A useful state for many game objects. Kill and revive both flip this switch.
          */
-        public alive: boolean;
+        public alive: bool;
 
         /**
          * Is the Sprite out of the world bounds or not?
          */
-        public outOfBounds: boolean;
+        public outOfBounds: bool;
 
         /**
          * The action to be taken when the sprite is fully out of the world bounds
@@ -151,8 +151,7 @@ module Phaser {
         /**
          * The Physics Body
          */
-        //public body: Phaser.Physics.Body;
-        public body;
+        public body: Phaser.Physics.Body;
 
         /**
          * This manages animations of the sprite. You can modify animations through it. (see AnimationManager)
@@ -178,9 +177,9 @@ module Phaser {
         public tween: Phaser.Tween;
 
         /**
-         * A boolean representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
+         * A bool representing if the Sprite has been modified in any way via a scale, rotate, flip or skew.
          */
-        public modified: boolean = false;
+        public modified: bool = false;
 
         /**
          * x value of the object.
@@ -364,6 +363,8 @@ module Phaser {
 
             this.checkBounds();
 
+            this.transform.centerOn(this.body.aabb.pos.x, this.body.aabb.pos.y);
+
             if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
             {
                 this.modified = false;
@@ -414,7 +415,7 @@ module Phaser {
          * like to animate an effect or whatever, you should override this,
          * setting only alive to false, and leaving exists true.
          */
-        public kill(removeFromGroup:boolean = false) {
+        public kill(removeFromGroup:bool = false) {
 
             this.alive = false;
             this.exists = false;

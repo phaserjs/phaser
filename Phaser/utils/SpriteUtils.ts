@@ -121,17 +121,17 @@ module Phaser {
         * WARNING: Currently tilemaps do NOT support screen space overlap checks!
         *
         * @param objectOrGroup {object} The object or group being tested.
-        * @param inScreenSpace {boolean} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
+        * @param inScreenSpace {bool} Whether to take scroll factors numbero account when checking for overlap.  Default is false, or "only compare in world space."
         * @param camera {Camera} Specify which game camera you want.  If null getScreenXY() will just grab the first global camera.
         *
-        * @return {boolean} Whether or not the objects overlap this.
+        * @return {bool} Whether or not the objects overlap this.
         */
         /*
-        static overlaps(objectOrGroup, inScreenSpace: boolean = false, camera: Camera = null): boolean {
+        static overlaps(objectOrGroup, inScreenSpace: bool = false, camera: Camera = null): bool {
 
             if (objectOrGroup.isGroup)
             {
-                var results: boolean = false;
+                var results: bool = false;
                 var i: number = 0;
                 var members = <Group> objectOrGroup.members;
 
@@ -175,9 +175,9 @@ module Phaser {
         * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
         * @param {Number} x The x coordinate in world space.
         * @param {Number} y The y coordinate in world space.
-        * @return {Boolean} Whether or not the point overlaps this object.
+        * @return {bool} Whether or not the point overlaps this object.
         */
-        public static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): boolean {
+        public static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): bool {
 
             //  if rotation == 0 then just do a rect check instead!
             if (sprite.transform.rotation == 0)
@@ -216,9 +216,9 @@ module Phaser {
         * @method overlapsPoint
         * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
         * @param {Point} point The point in world space you want to check.
-        * @return {Boolean} Whether or not the point overlaps this object.
+        * @return {bool} Whether or not the point overlaps this object.
         */
-        public static overlapsPoint(sprite: Phaser.Sprite, point: Phaser.Point): boolean {
+        public static overlapsPoint(sprite: Phaser.Sprite, point: Phaser.Point): bool {
             return Phaser.SpriteUtils.overlapsXY(sprite, point.x, point.y);
         }
 
@@ -228,9 +228,9 @@ module Phaser {
         * @method onScreen
         * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
         * @param {Camera} camera Specify which game camera you want. If null getScreenXY() will just grab the first global camera.
-        * @return {Boolean} Whether the object is on screen or not.
+        * @return {bool} Whether the object is on screen or not.
         */
-        public static onScreen(sprite: Phaser.Sprite, camera: Phaser.Camera = null): boolean {
+        public static onScreen(sprite: Phaser.Sprite, camera: Phaser.Camera = null): bool {
 
             if (camera == null)
             {

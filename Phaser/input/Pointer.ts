@@ -47,10 +47,10 @@ module Phaser {
         /**
         * Local private variable to store the status of dispatching a hold event
         * @property _holdSent
-        * @type {Boolean}
+        * @type {bool}
         * @private
         */
-        private _holdSent: boolean = false;
+        private _holdSent: bool = false;
 
         /**
         * Local private variable storing the short-term history of pointer movements
@@ -69,7 +69,7 @@ module Phaser {
         private _nextDrop: number = 0;
 
         //  Monitor events outside of a state reset loop
-        private _stateReset: boolean = false;
+        private _stateReset: bool = false;
 
         /**
         * The Pointer ID (a number between 1 and 10, 0 is reserved for the mouse pointer specifically)
@@ -90,9 +90,9 @@ module Phaser {
         /**
         * Is this Pointer active or not? An active Pointer is one that is in contact with the touch screen.
         * @property active
-        * @type {Boolean}
+        * @type {bool}
         */
-        public active: boolean;
+        public active: bool;
 
         /**
         * A Vector object containing the initial position when the Pointer was engaged with the screen.
@@ -119,9 +119,9 @@ module Phaser {
         /**
         *
         * @property withinGame
-        * @type {Boolean}
+        * @type {bool}
         */
-        public withinGame: boolean = false;
+        public withinGame: bool = false;
 
         /**
         * If this Pointer is a mouse the button property holds the value of which mouse button was pressed down
@@ -196,23 +196,23 @@ module Phaser {
         /**
         * If the Pointer is a mouse this is true, otherwise false
         * @property isMouse
-        * @type {Boolean}
+        * @type {bool}
         **/
-        public isMouse: boolean = false;
+        public isMouse: bool = false;
 
         /**
         * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
         * @property isDown
-        * @type {Boolean}
+        * @type {bool}
         **/
-        public isDown: boolean = false;
+        public isDown: bool = false;
 
         /**
         * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
         * @property isUp
-        * @type {Boolean}
+        * @type {bool}
         **/
-        public isUp: boolean = true;
+        public isUp: bool = true;
 
         /**
         * A timestamp representing when the Pointer first touched the touchscreen.
@@ -620,9 +620,9 @@ module Phaser {
         * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate
         * @method justPressed
         * @param {Number} [duration].
-        * @return {Boolean}
+        * @return {bool}
         */
-        public justPressed(duration: number = this.game.input.justPressedRate): boolean {
+        public justPressed(duration: number = this.game.input.justPressedRate): bool {
 
             if (this.isDown === true && (this.timeDown + duration) > this.game.time.now)
             {
@@ -639,9 +639,9 @@ module Phaser {
         * The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate
         * @method justReleased
         * @param {Number} [duration].
-        * @return {Boolean}
+        * @return {bool}
         */
-        public justReleased(duration: number = this.game.input.justReleasedRate): boolean {
+        public justReleased(duration: number = this.game.input.justReleasedRate): bool {
 
             if (this.isUp === true && (this.timeUp + duration) > this.game.time.now)
             {

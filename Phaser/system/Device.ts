@@ -28,141 +28,141 @@ module Phaser {
         /**
          * An optional 'fix' for the horrendous Android stock browser bug
          * https://code.google.com/p/android/issues/detail?id=39247
-         * @type {boolean}
+         * @type {bool}
          */
-        public patchAndroidClearRectBug: boolean = false;
+        public patchAndroidClearRectBug: bool = false;
 
         //  Operating System
 
         /**
          * Is running desktop?
-         * @type {boolean}
+         * @type {bool}
          */
-        public desktop: boolean = false;
+        public desktop: bool = false;
 
         /**
          * Is running on iOS?
-         * @type {boolean}
+         * @type {bool}
          */
-        public iOS: boolean = false;
+        public iOS: bool = false;
 
          /**
           * Is running on android?
-          * @type {boolean}
+          * @type {bool}
           */
-        public android: boolean = false;
+        public android: bool = false;
 
         /**
          * Is running on chromeOS?
-         * @type {boolean}
+         * @type {bool}
          */
-        public chromeOS: boolean = false;
+        public chromeOS: bool = false;
 
         /**
          * Is running on linux?
-         * @type {boolean}
+         * @type {bool}
          */
-        public linux: boolean = false;
+        public linux: bool = false;
 
         /**
          * Is running on maxOS?
-         * @type {boolean}
+         * @type {bool}
          */
-        public macOS: boolean = false;
+        public macOS: bool = false;
 
         /**
          * Is running on windows?
-         * @type {boolean}
+         * @type {bool}
          */
-        public windows: boolean = false;
+        public windows: bool = false;
 
         //  Features
 
         /**
          * Is canvas available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public canvas: boolean = false;
+        public canvas: bool = false;
 
         /**
          * Is file available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public file: boolean = false;
+        public file: bool = false;
 
         /**
          * Is fileSystem available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public fileSystem: boolean = false;
+        public fileSystem: bool = false;
 
         /**
          * Is localStorage available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public localStorage: boolean = false;
+        public localStorage: bool = false;
 
         /**
          * Is webGL available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public webGL: boolean = false;
+        public webGL: bool = false;
 
         /**
          * Is worker available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public worker: boolean = false;
+        public worker: bool = false;
 
         /**
          * Is touch available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public touch: boolean = false;
+        public touch: bool = false;
 
         /**
          * Is mspointer available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public mspointer: boolean = false;
+        public mspointer: bool = false;
 
         /**
          * Is css3D available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public css3D: boolean = false;
+        public css3D: bool = false;
 
         //  Browser
 
         /**
          * Is running in arora?
-         * @type {boolean}
+         * @type {bool}
          */
-        public arora: boolean = false;
+        public arora: bool = false;
 
         /**
          * Is running in chrome?
-         * @type {boolean}
+         * @type {bool}
          */
-        public chrome: boolean = false;
+        public chrome: bool = false;
 
         /**
          * Is running in epiphany?
-         * @type {boolean}
+         * @type {bool}
          */
-        public epiphany: boolean = false;
+        public epiphany: bool = false;
 
         /**
          * Is running in firefox?
-         * @type {boolean}
+         * @type {bool}
          */
-        public firefox: boolean = false;
+        public firefox: bool = false;
 
         /**
          * Is running in ie?
-         * @type {boolean}
+         * @type {bool}
          */
-        public ie: boolean = false;
+        public ie: bool = false;
 
         /**
          * Version of ie?
@@ -172,98 +172,98 @@ module Phaser {
 
         /**
          * Is running in mobileSafari?
-         * @type {boolean}
+         * @type {bool}
          */
-        public mobileSafari: boolean = false;
+        public mobileSafari: bool = false;
 
         /**
          * Is running in midori?
-         * @type {boolean}
+         * @type {bool}
          */
-        public midori: boolean = false;
+        public midori: bool = false;
 
         /**
          * Is running in opera?
-         * @type {boolean}
+         * @type {bool}
          */
-        public opera: boolean = false;
+        public opera: bool = false;
 
         /**
          * Is running in safari?
-         * @type {boolean}
+         * @type {bool}
          */
-        public safari: boolean = false;
-        public webApp: boolean = false;
+        public safari: bool = false;
+        public webApp: bool = false;
 
         //  Audio
 
         /**
          * Are Audio tags available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public audioData: boolean = false;
+        public audioData: bool = false;
 
         /**
          * Is the WebAudio API available?
-         * @type {boolean}
+         * @type {bool}
          */
-        public webAudio: boolean = false;
+        public webAudio: bool = false;
 
         /**
          * Can this device play ogg files?
-         * @type {boolean}
+         * @type {bool}
          */
-        public ogg: boolean = false;
+        public ogg: bool = false;
 
         /**
          * Can this device play opus files?
-         * @type {boolean}
+         * @type {bool}
          */
-        public opus: boolean = false;
+        public opus: bool = false;
 
         /**
          * Can this device play mp3 files?
-         * @type {boolean}
+         * @type {bool}
          */
-        public mp3: boolean = false;
+        public mp3: bool = false;
 
         /**
          * Can this device play wav files?
-         * @type {boolean}
+         * @type {bool}
          */
-        public wav: boolean = false;
+        public wav: bool = false;
 
         /**
          * Can this device play m4a files?
-         * @type {boolean}
+         * @type {bool}
          */
-        public m4a: boolean = false;
+        public m4a: bool = false;
 
         /**
          * Can this device play webm files?
-         * @type {boolean}
+         * @type {bool}
          */
-        public webm: boolean = false;
+        public webm: bool = false;
 
         //  Device
 
         /**
          * Is running on iPhone?
-         * @type {boolean}
+         * @type {bool}
          */
-        public iPhone: boolean = false;
+        public iPhone: bool = false;
 
         /**
          * Is running on iPhone4?
-         * @type {boolean}
+         * @type {bool}
          */
-        public iPhone4: boolean = false;
+        public iPhone4: bool = false;
 
         /**
          * Is running on iPad?
-         * @type {boolean}
+         * @type {bool}
          */
-        public iPad: boolean = false;
+        public iPad: bool = false;
 
         /**
          * PixelRatio of the host device?
@@ -399,7 +399,7 @@ module Phaser {
 
         }
 
-        public canPlayAudio(type: string): boolean {
+        public canPlayAudio(type: string): bool {
 
             if (type == 'mp3' && this.mp3)
             {
@@ -526,7 +526,7 @@ module Phaser {
 
         }
 
-        public isConsoleOpen(): boolean {
+        public isConsoleOpen(): bool {
 
             if (window.console && window.console['firebug'])
             {

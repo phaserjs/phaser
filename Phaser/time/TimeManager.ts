@@ -55,6 +55,14 @@ module Phaser {
         public elapsed: number = 0;
 
         /**
+        * The elapsed time calculated for the physics motion updates.
+        * @property physicsElapsed
+        * @public
+        * @type {Number}
+        */
+        public physicsElapsed: number = 0;
+
+        /**
         * Game time counter.
         * @property time
         * @public
@@ -181,6 +189,8 @@ module Phaser {
 
             this.time = this.now; // _total
 
+            this.physicsElapsed = 1.0 * (this.delta / 1000);
+
             //  Paused?
             if (this.game.paused)
             {
@@ -204,8 +214,13 @@ module Phaser {
         * @private
         */
         private gameResumed() {
+
             //  Level out the delta timer to avoid spikes
+            this.delta = 0;
+            this.physicsElapsed = 0;
+            this.time = Date.now();
             this.pauseDuration = this.pausedTime;
+
         }
 
         /**

@@ -96,9 +96,9 @@ module Phaser {
         * @param {Phaser.Rectangle} a The Rectangle object.
         * @param {Number} x The x coordinate of the point to test.
         * @param {Number} y The y coordinate of the point to test.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        * @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
         */
-        public static contains(a: Phaser.Rectangle, x: number, y: number): boolean {
+        public static contains(a: Phaser.Rectangle, x: number, y: number): bool {
             return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
         }
 
@@ -107,9 +107,9 @@ module Phaser {
         * @method containsPoint
         * @param {Phaser.Rectangle} a The Rectangle object.
         * @param {Phaser.Point} point The point object being checked. Can be Point or any object with .x and .y values.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        * @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
         */
-        public static containsPoint(a: Phaser.Rectangle, point: Phaser.Point): boolean {
+        public static containsPoint(a: Phaser.Rectangle, point: Phaser.Point): bool {
             return Phaser.RectangleUtils.contains(a, point.x, point.y);
         }
 
@@ -119,9 +119,9 @@ module Phaser {
         * @method containsRect
         * @param {Phaser.Rectangle} a The first Rectangle object.
         * @param {Phaser.Rectangle} b The second Rectangle object.
-        * @return {Boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
+        * @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
         */
-        public static containsRect(a: Phaser.Rectangle, b: Phaser.Rectangle): boolean {
+        public static containsRect(a: Phaser.Rectangle, b: Phaser.Rectangle): bool {
 
             //	If the given rect has a larger volume than this one then it can never contain it
             if (a.volume > b.volume)
@@ -139,9 +139,9 @@ module Phaser {
         * @method equals
         * @param {Phaser.Rectangle} a The first Rectangle object.
         * @param {Phaser.Rectangle} b The second Rectangle object.
-        * @return {Boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
+        * @return {bool} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
         */
-        public static equals(a: Phaser.Rectangle, b: Phaser.Rectangle): boolean {
+        public static equals(a: Phaser.Rectangle, b: Phaser.Rectangle): bool {
             return (a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height);
         }
 
@@ -174,9 +174,9 @@ module Phaser {
         * @param {Phaser.Rectangle} a The first Rectangle object.
         * @param {Phaser.Rectangle} b The second Rectangle object.
         * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
-        * @return {Boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
+        * @return {bool} A value of true if the specified object intersects with this Rectangle object; otherwise false.
         */
-        public static intersects(a: Phaser.Rectangle, b: Phaser.Rectangle, tolerance: number = 0): boolean {
+        public static intersects(a: Phaser.Rectangle, b: Phaser.Rectangle, tolerance: number = 0): bool {
             return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
         }
 
@@ -188,9 +188,9 @@ module Phaser {
         * @param {Number} top
         * @param {Number} bottomt
         * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
-        * @return {Boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
+        * @return {bool} A value of true if the specified object intersects with the Rectangle; otherwise false.
         */
-        public static intersectsRaw(a: Phaser.Rectangle, left: number, right: number, top: number, bottom: number, tolerance: number = 0): boolean {
+        public static intersectsRaw(a: Phaser.Rectangle, left: number, right: number, top: number, bottom: number, tolerance: number = 0): bool {
             return !(left > a.right + tolerance || right < a.left - tolerance || top > a.bottom + tolerance || bottom < a.top - tolerance);
         }
 

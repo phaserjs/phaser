@@ -65,8 +65,8 @@ module Phaser {
 
         static CIRCLE_ALPHA: number = 0.5522847498307933984022516322796; //4*(Math.sqrt(2)-1)/3.0;
 
-        static ON: boolean = true;
-        static OFF: boolean = false;
+        static ON: bool = true;
+        static OFF: bool = false;
 
         static SHORT_EPSILON: number = 0.1;//round integer epsilon
         static PERC_EPSILON: number = 0.001;//percentage epsilon
@@ -76,15 +76,15 @@ module Phaser {
         public cosTable = [];
         public sinTable = [];
 
-        public fuzzyEqual(a: number, b: number, epsilon: number = 0.0001): boolean {
+        public fuzzyEqual(a: number, b: number, epsilon: number = 0.0001): bool {
             return Math.abs(a - b) < epsilon;
         }
 
-        public fuzzyLessThan(a: number, b: number, epsilon: number = 0.0001): boolean {
+        public fuzzyLessThan(a: number, b: number, epsilon: number = 0.0001): bool {
             return a < b + epsilon;
         }
 
-        public fuzzyGreaterThan(a: number, b: number, epsilon: number = 0.0001): boolean {
+        public fuzzyGreaterThan(a: number, b: number, epsilon: number = 0.0001): bool {
             return a > b - epsilon;
         }
 
@@ -226,7 +226,7 @@ module Phaser {
         /**
          * Snaps a value to the nearest value in an array.
          */
-        public snapToInArray(input: number, arr: number[], sort: boolean = true): number {
+        public snapToInArray(input: number, arr: number[], sort: bool = true): number {
 
             if (sort) arr.sort();
             if (input < arr[0]) return arr[0];
@@ -325,7 +325,7 @@ module Phaser {
         /**
          * set an angle within the bounds of -PI to PI
          */
-        public normalizeAngle(angle: number, radians: boolean = true): number {
+        public normalizeAngle(angle: number, radians: bool = true): number {
             var rd: number = (radians) ? GameMath.PI : 180;
             return this.wrap(angle, rd, -rd);
         }
@@ -334,7 +334,7 @@ module Phaser {
          * closest angle between two angles from a1 to a2
          * absolute value the return for exact angle
          */
-        public nearestAngleBetween(a1: number, a2: number, radians: boolean = true): number {
+        public nearestAngleBetween(a1: number, a2: number, radians: bool = true): number {
 
             var rd: number = (radians) ? GameMath.PI : 180;
 
@@ -352,7 +352,7 @@ module Phaser {
          *
          * for instance if dep=-170 and ind=170 then 190 will be returned as an alternative to -170
          */
-        public normalizeAngleToAnother(dep: number, ind: number, radians: boolean = true): number {
+        public normalizeAngleToAnother(dep: number, ind: number, radians: bool = true): number {
             return ind + this.nearestAngleBetween(ind, dep, radians);
         }
 
@@ -361,7 +361,7 @@ module Phaser {
          *
          * for instance dep=-170 and ind=170, then 190 will be reutrned as alternative to -170
          */
-        public normalizeAngleAfterAnother(dep: number, ind: number, radians: boolean = true): number {
+        public normalizeAngleAfterAnother(dep: number, ind: number, radians: bool = true): number {
 
             dep = this.normalizeAngle(dep - ind, radians);
             return ind + dep;
@@ -372,7 +372,7 @@ module Phaser {
          *
          * for instance dep = 190 and ind = 170, then -170 will be returned as an alternative to 190
          */
-        public normalizeAngleBeforeAnother(dep: number, ind: number, radians: boolean = true): number {
+        public normalizeAngleBeforeAnother(dep: number, ind: number, radians: bool = true): number {
 
             dep = this.normalizeAngle(ind - dep, radians);
             return ind - dep;
@@ -381,7 +381,7 @@ module Phaser {
         /**
          * interpolate across the shortest arc between two angles
          */
-        public interpolateAngles(a1: number, a2: number, weight: number, radians: boolean = true, ease = null): number {
+        public interpolateAngles(a1: number, a2: number, weight: number, radians: bool = true, ease = null): number {
 
             a1 = this.normalizeAngle(a1, radians);
             a2 = this.normalizeAngleToAnother(a2, a1, radians);
@@ -521,7 +521,7 @@ module Phaser {
         }
 
         /**
-         * Generate a random boolean result based on the chance value
+         * Generate a random bool result based on the chance value
          * <p>
          * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
          * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
@@ -529,7 +529,7 @@ module Phaser {
          * @param chance The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%)
          * @return true if the roll passed, or false
          */
-        public chanceRoll(chance: number = 50): boolean {
+        public chanceRoll(chance: number = 50): bool {
 
             if (chance <= 0)
             {
@@ -633,7 +633,7 @@ module Phaser {
          *
          * @return	True if the given number is odd. False if the given number is even.
          */
-        public isOdd(n: number): boolean {
+        public isOdd(n: number): bool {
 
             if (n & 1)
             {
@@ -653,7 +653,7 @@ module Phaser {
          *
          * @return	True if the given number is even. False if the given number is odd.
          */
-        public isEven(n: number): boolean {
+        public isEven(n: number): bool {
 
             if (n & 1)
             {
@@ -983,7 +983,7 @@ module Phaser {
          * Returns the distance from this Point object to the given Point object.
          * @method distanceFrom
          * @param {Point} target - The destination Point object.
-         * @param {Boolean} round - Round the distance to the nearest integer (default false)
+         * @param {bool} round - Round the distance to the nearest integer (default false)
          * @return {Number} The distance between this Point object and the destination Point object.
          **/
         public distanceBetween(x1: number, y1: number, x2: number, y2: number): number {

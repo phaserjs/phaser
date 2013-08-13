@@ -55,17 +55,17 @@ module Phaser {
         /**
         * 
         * @property _isSetTimeOut
-        * @type Boolean
+        * @type bool
         * @private
         **/
-        private _isSetTimeOut: boolean = false;
+        private _isSetTimeOut: bool = false;
 
         /**
         * 
         * @method usingSetTimeOut
-        * @return Boolean
+        * @return bool
         **/
-        public isUsingSetTimeOut(): boolean {
+        public isUsingSetTimeOut(): bool {
 
             return this._isSetTimeOut;
 
@@ -74,9 +74,9 @@ module Phaser {
         /**
         * 
         * @method usingRAF
-        * @return Boolean
+        * @return bool
         **/
-        public isUsingRAF(): boolean {
+        public isUsingRAF(): bool {
 
             return this._isSetTimeOut === true;
 
@@ -85,9 +85,9 @@ module Phaser {
         /**
         * 
         * @property isRunning
-        * @type Boolean
+        * @type bool
         **/
-        public isRunning: boolean = false;
+        public isRunning: bool = false;
 
         /**
         * A reference to the RAF/setTimeout to avoid constant anonymous function creation

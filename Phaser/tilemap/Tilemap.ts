@@ -19,11 +19,11 @@ module Phaser {
          * @param key {string} Asset key for this map.
          * @param mapData {string} Data of this map. (a big 2d array, normally in csv)
          * @param format {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
-         * @param resizeWorld {boolean} Resize the world bound automatically based on this tilemap?
+         * @param resizeWorld {bool} Resize the world bound automatically based on this tilemap?
          * @param tileWidth {number} Width of tiles in this map.
          * @param tileHeight {number} Height of tiles in this map.
          */
-        constructor(game: Game, key: string, mapData: string, format: number, resizeWorld: boolean = true, tileWidth: number = 0, tileHeight: number = 0) {
+        constructor(game: Game, key: string, mapData: string, format: number, resizeWorld: bool = true, tileWidth: number = 0, tileHeight: number = 0) {
 
             this.game = game;
             this.type = Phaser.Types.TILEMAP;
@@ -88,22 +88,22 @@ module Phaser {
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.
          */
-        public exists: boolean;
+        public exists: bool;
 
         /**
          * Controls if <code>update()</code> is automatically called by the core game loop.
          */
-        public active: boolean;
+        public active: bool;
 
         /**
          * Controls if this Sprite is rendered or skipped during the core game loop.
          */
-        public visible: boolean;
+        public visible: bool;
 
         /**
          * A useful state for many game objects. Kill and revive both flip this switch.
          */
-        public alive: boolean;
+        public alive: bool;
 
         /**
          * The texture used to render the Sprite.
@@ -320,11 +320,11 @@ module Phaser {
          * @param start {number} First index of tiles.
          * @param end {number} Last index of tiles.
          * @param collision {number} Bit field of flags. (see Tile.allowCollision)
-         * @param resetCollisions {boolean} Reset collision flags before set.
-         * @param separateX {boolean} Enable seprate at x-axis.
-         * @param separateY {boolean} Enable seprate at y-axis.
+         * @param resetCollisions {bool} Reset collision flags before set.
+         * @param separateX {bool} Enable seprate at x-axis.
+         * @param separateY {bool} Enable seprate at y-axis.
          */
-        public setCollisionRange(start: number, end: number, collision:number = Types.ANY, resetCollisions: boolean = false, separateX: boolean = true, separateY: boolean = true) {
+        public setCollisionRange(start: number, end: number, collision:number = Types.ANY, resetCollisions: bool = false, separateX: bool = true, separateY: bool = true) {
 
             for (var i = start; i < end; i++)
             {
@@ -337,11 +337,11 @@ module Phaser {
          * Set collision configs of tiles with given index.
          * @param values {number[]} Index array which contains all tile indexes. The tiles with those indexes will be setup with rest parameters.
          * @param collision {number} Bit field of flags. (see Tile.allowCollision)
-         * @param resetCollisions {boolean} Reset collision flags before set.
-         * @param separateX {boolean} Enable seprate at x-axis.
-         * @param separateY {boolean} Enable seprate at y-axis.
+         * @param resetCollisions {bool} Reset collision flags before set.
+         * @param separateX {bool} Enable seprate at x-axis.
+         * @param separateY {bool} Enable seprate at y-axis.
          */
-        public setCollisionByIndex(values:number[], collision:number = Types.ANY, resetCollisions: boolean = false, separateX: boolean = true, separateY: boolean = true) {
+        public setCollisionByIndex(values:number[], collision:number = Types.ANY, resetCollisions: bool = false, separateX: bool = true, separateY: bool = true) {
 
             for (var i = 0; i < values.length; i++)
             {
@@ -422,7 +422,7 @@ module Phaser {
          * @param objectOrGroup {function} Target object of group you want to check.
          * @param callback {function} This is called if objectOrGroup collides the tilemap.
          * @param context {object} Callback will be called with this context.
-         * @return {boolean} Return true if this collides with given object, otherwise return false.
+         * @return {bool} Return true if this collides with given object, otherwise return false.
          */
         public collide(objectOrGroup = null, callback = null, context = null) {
 
@@ -452,9 +452,9 @@ module Phaser {
         /**
          * Check whether this tilemap collides with the given game object.
          * @param object {GameObject} Target object you want to check.
-         * @return {boolean} Return true if this collides with given object, otherwise return false.
+         * @return {bool} Return true if this collides with given object, otherwise return false.
          */
-        public collideGameObject(object: Phaser.Sprite): boolean {
+        public collideGameObject(object: Phaser.Sprite): bool {
 
             if (object.body.type == Types.BODY_DYNAMIC && object.exists == true && object.body.allowCollisions != Types.NONE)
             {

@@ -12,7 +12,7 @@
     }
 
     var sprite: Phaser.Sprite;
-    var rotate: boolean = false;
+    var rotate: bool = false;
 
     function create() {
 
@@ -26,7 +26,7 @@
         if (rotate == false) { rotate = true; } else { rotate = false; }
     }
 
-    var inPoint: boolean = false;
+    var inPoint: bool = false;
 
     function update() {
 

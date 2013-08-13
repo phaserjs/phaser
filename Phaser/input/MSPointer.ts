@@ -32,9 +32,9 @@ module Phaser {
 
         /**
         * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-        * @type {Boolean}
+        * @type {bool}
         */
-        public disabled: boolean = false;
+        public disabled: bool = false;
 
         /**
         * A reference to the event handlers to allow removeEventListener support

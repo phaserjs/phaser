@@ -78,15 +78,15 @@ module Phaser {
 
         /**
          * Will this tween automatically restart when it completes?
-         * @type {boolean}
+         * @type {bool}
          */
-        private _loop: boolean = false;
+        private _loop: bool = false;
 
         /**
          * A yoyo tween is one that plays once fully, then reverses back to the original tween values before completing.
-         * @type {boolean}
+         * @type {bool}
          */
-        private _yoyo: boolean = false;
+        private _yoyo: bool = false;
         private _yoyoCount: number = 0;
 
         /**
@@ -125,12 +125,12 @@ module Phaser {
          * @param properties {object} Propertis you want to tween.
          * @param [duration] {number} duration of this tween.
          * @param [ease] {any} Easing function.
-         * @param [autoStart] {boolean} Whether this tween will start automatically or not.
+         * @param [autoStart] {bool} Whether this tween will start automatically or not.
          * @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
-         * @param [loop] {boolean} Should the tween automatically restart once complete? (ignores any chained tweens)
+         * @param [loop] {bool} Should the tween automatically restart once complete? (ignores any chained tweens)
          * @return {Tween} Itself.
          */
-        public to(properties, duration: number = 1000, ease: any = null, autoStart: boolean = false, delay: number = 0, loop: boolean = false, yoyo: boolean = false): Phaser.Tween {
+        public to(properties, duration: number = 1000, ease: any = null, autoStart: bool = false, delay: number = 0, loop: bool = false, yoyo: bool = false): Phaser.Tween {
 
             this._duration = duration;
 
@@ -162,14 +162,14 @@ module Phaser {
 
         }
 
-        public loop(value: boolean): Phaser.Tween {
+        public loop(value: bool): Phaser.Tween {
 
             this._loop = value;
             return this;
 
         }
 
-        public yoyo(value: boolean): Phaser.Tween {
+        public yoyo(value: bool): Phaser.Tween {
 
             this._yoyo = value;
             this._yoyoCount = 0;
@@ -177,12 +177,12 @@ module Phaser {
 
         }
 
-        public isRunning: boolean = false;
+        public isRunning: bool = false;
 
         /**
          * Start to tween.
          */
-        public start(looped: boolean = false): Phaser.Tween {
+        public start(looped: bool = false): Phaser.Tween {
 
             if (this.game === null || this._object === null)
             {
@@ -345,12 +345,12 @@ module Phaser {
 
         }
 
-        private _paused: boolean;
+        private _paused: bool;
 
         /**
          * Update tweening.
          * @param time {number} Current time from game clock.
-         * @return {boolean} Return false if this completed and no need to update, otherwise return true.
+         * @return {bool} Return false if this completed and no need to update, otherwise return true.
          */
         public update(time: number) {
 

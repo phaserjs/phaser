@@ -100,7 +100,7 @@ module Phaser {
         private _basic;
         private _members;
         private _l: number;
-        private _overlapProcessed: boolean;
+        private _overlapProcessed: bool;
         private _checkObject;
 
         //public static physics: Phaser.Physics.Manager;
@@ -124,7 +124,7 @@ module Phaser {
         /**
          * Whether this branch of the tree can be subdivided or not.
          */
-        private _canSubdivide: boolean;
+        private _canSubdivide: bool;
 
         /**
          * Refers to the internal A and B linked lists,
@@ -228,7 +228,7 @@ module Phaser {
         /**
          * Internal, used during tree processing and overlap checks.
          */
-        private static _useBothLists: boolean;
+        private static _useBothLists: bool;
 
         /**
          * Internal, used during tree processing and overlap checks.
@@ -542,9 +542,9 @@ module Phaser {
          * <code>QuadTree</code>'s other main function.  Call this after adding objects
          * using <code>QuadTree.load()</code> to compare the objects that you loaded.
          *
-         * @return {Boolean} Whether or not any overlaps were found.
+         * @return {bool} Whether or not any overlaps were found.
          */
-        public execute(): boolean {
+        public execute(): bool {
 
             this._overlapProcessed = false;
 
@@ -603,9 +603,9 @@ module Phaser {
         /**
          * A private for comparing an object against the contents of a node.
          *
-         * @return {Boolean} Whether or not any overlaps were found.
+         * @return {bool} Whether or not any overlaps were found.
          */
-        private overlapNode(): boolean {
+        private overlapNode(): bool {
 
             //Walk the list and check for overlaps
             this._overlapProcessed = false;

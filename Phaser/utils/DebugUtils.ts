@@ -68,9 +68,9 @@ module Phaser {
         /**
         * If set to true this will render a shadow below any debug text, often making it easier to read.
         * @property renderShadow
-        * @type {Boolean}
+        * @type {bool}
         */
-        public static renderShadow: boolean = true;
+        public static renderShadow: bool = true;
         
         /**
         * Internal method that resets the debug output values.
@@ -184,7 +184,7 @@ module Phaser {
         * Renders the Pointer.circle object onto the stage in green if down or red if up.
         * @method renderDebug
         */
-        static renderPointer(pointer: Phaser.Pointer, hideIfUp: boolean = false, downColor: string = 'rgba(0,255,0,0.5)', upColor: string = 'rgba(255,0,0,0.5)', color: string = 'rgb(255,255,255)') {
+        static renderPointer(pointer: Phaser.Pointer, hideIfUp: bool = false, downColor: string = 'rgba(0,255,0,0.5)', upColor: string = 'rgba(255,0,0,0.5)', color: string = 'rgb(255,255,255)') {
 
             if (hideIfUp == true && pointer.isUp == true)
             {

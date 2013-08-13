@@ -15,7 +15,7 @@ module Phaser.Physics {
             this.game = sprite.game;
             this.type = type;
 
-            //this.aabb = new Phaser.Physics.AABB(sprite.game, sprite.x, sprite.y, sprite.width, sprite.height);
+            this.aabb = new Phaser.Physics.AABB(sprite.game, sprite.x, sprite.y, sprite.width, sprite.height);
 
             this.velocity = new Phaser.Vec2;
             this.acceleration = new Phaser.Vec2;
@@ -26,10 +26,11 @@ module Phaser.Physics {
             this.angularVelocity = 0;
             this.angularAcceleration = 0;
             this.angularDrag = 0;
+            this.maxAngular = 10000;
 
             //this.touching = Phaser.Types.NONE;
             //this.wasTouching = Phaser.Types.NONE;
-            //this.allowCollisions = Phaser.Types.ANY;
+            this.allowCollisions = Phaser.Types.ANY;
 
             //this.position = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
             //this.oldPosition = new Phaser.Vec2(sprite.x + this.bounds.halfWidth, sprite.y + this.bounds.halfHeight);
@@ -39,7 +40,7 @@ module Phaser.Physics {
 
         public game: Phaser.Game;
         public sprite: Phaser.Sprite;
-        //public aabb: Phaser.Physics.AABB;
+        public aabb: Phaser.Physics.AABB;
         public bounds: Phaser.Rectangle;
 
         /**
@@ -71,16 +72,20 @@ module Phaser.Physics {
          */
         public facing: number;
 
-        public touching: number;
-        public allowCollisions: number;
-        public wasTouching: number;
-        public mass: number = 1;
+        public deltaX: number = 0;
+        public deltaY: number = 0;
 
-        public position: Phaser.Vec2;
-        public oldPosition: Phaser.Vec2;
-        public offset: Phaser.Vec2;
+        //public touching: number;
+        public allowCollisions: number;
+        //public wasTouching: number;
+        //public mass: number = 1;
+
+        //public position: Phaser.Vec2;
+        //public oldPosition: Phaser.Vec2;
+        //public offset: Phaser.Vec2;
         //public bounds: Phaser.Rectangle;
 
+/*
         private _width: number = 0;
         private _height: number = 0;
 
@@ -204,7 +209,7 @@ module Phaser.Physics {
         public get deltaY(): number {
             return this.position.y - this.oldPosition.y;
         }
-
+*/
     }
 
 }

@@ -28,9 +28,9 @@ module Phaser.Renderer.Canvas {
         /**
          * Check whether this object is visible in a specific camera Rectangle.
          * @param camera {Rectangle} The Rectangle you want to check.
-         * @return {boolean} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
+         * @return {bool} Return true if bounds of this sprite intersects the given Rectangle, otherwise return false.
          */
-        public inCamera(camera: Phaser.Camera, sprite: Phaser.Sprite): boolean {
+        public inCamera(camera: Phaser.Camera, sprite: Phaser.Sprite): bool {
 
             //  Object fixed in place regardless of the camera scrolling? Then it's always visible
             if (sprite.transform.scrollFactor.equals(0))
@@ -46,9 +46,9 @@ module Phaser.Renderer.Canvas {
         /**
          * Render this sprite to specific camera. Called by game loop after update().
          * @param camera {Camera} Camera this sprite will be rendered to.
-         * @return {boolean} Return false if not rendered, otherwise return true.
+         * @return {bool} Return false if not rendered, otherwise return true.
          */
-        public render(camera: Phaser.Camera, sprite: Phaser.Sprite): boolean {
+        public render(camera: Phaser.Camera, sprite: Phaser.Sprite): bool {
 
             Phaser.SpriteUtils.updateCameraView(camera, sprite);
 

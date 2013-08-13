@@ -24,7 +24,7 @@ module Phaser.Particles.Behaviours {
             /**
              * The behaviour is Dead;
              * @property dead
-             * @type {Boolean}
+             * @type {bool}
              */
             this.dead = false;
             /**

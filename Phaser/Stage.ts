@@ -106,9 +106,9 @@ module Phaser {
 
         /**
          * Clear the whole stage every frame? (Default to true)
-         * @type {boolean}
+         * @type {bool}
          */
-        public clear: boolean = true;
+        public clear: bool = true;
 
         /**
          * Canvas element used by engine.
@@ -125,16 +125,16 @@ module Phaser {
         /**
          * Do not use pause screen when game is paused?
          * (Default to false, aka always use PauseScreen)
-         * @type {boolean}
+         * @type {bool}
          */
-        public disablePauseScreen: boolean = false;
+        public disablePauseScreen: bool = false;
 
         /**
          * Do not use boot screen when engine starts?
          * (Default to false, aka always use BootScreen)
-         * @type {boolean}
+         * @type {bool}
          */
-        public disableBootScreen: boolean = false;
+        public disableBootScreen: bool = false;
 
         /**
          * Offset from this stage to the canvas element.
@@ -157,9 +157,9 @@ module Phaser {
 
         /**
          * If set to true the game will never pause when the browser or browser tab loses focuses
-         * @type {boolean}
+         * @type {bool}
          */
-        public disableVisibilityChange: boolean = false;
+        public disableVisibilityChange: bool = false;
 
         /**
          * Stage boot
@@ -245,7 +245,7 @@ module Phaser {
 
         }
 
-        public enableOrientationCheck(forceLandscape: boolean, forcePortrait: boolean, imageKey: string = '') {
+        public enableOrientationCheck(forceLandscape: bool, forcePortrait: bool, imageKey: string = '') {
 
             this.scale.forceLandscape = forceLandscape;
             this.scale.forcePortrait = forcePortrait;
@@ -296,7 +296,7 @@ module Phaser {
         /**
          * Get the DOM offset values of the given element
          */
-        public getOffset(element, populateOffset: boolean = true): Point {
+        public getOffset(element, populateOffset: bool = true): Point {
 
             var box = element.getBoundingClientRect();
 

@@ -13,9 +13,9 @@ module Phaser {
         /**
          * Sound constructor
          * @param [volume] {number} volume of this sound when playing.
-         * @param [loop] {boolean} loop this sound when playing? (Default to false)
+         * @param [loop] {bool} loop this sound when playing? (Default to false)
          */
-        constructor(game: Phaser.Game, key: string, volume: number = 1, loop: boolean = false) {
+        constructor(game: Phaser.Game, key: string, volume: number = 1, loop: bool = false) {
 
             this.game = game;
 
@@ -115,27 +115,27 @@ module Phaser {
         private _sound;
 
         private _muteVolume: number;
-        private _muted: boolean = false;
+        private _muted: bool = false;
         private _tempPosition: number;
         private _tempVolume: number;
-        private _tempLoop: boolean;
+        private _tempLoop: bool;
         private _tempMarker: string;
 
-        public usingWebAudio: boolean = false;
-        public usingAudioTag: boolean = false;
+        public usingWebAudio: bool = false;
+        public usingAudioTag: bool = false;
 
         public name: string = '';
 
-        autoplay: boolean = false;
+        autoplay: bool = false;
         totalDuration: number = 0;
         startTime: number = 0;
         currentTime: number = 0;
         duration: number = 0;
         stopTime: number = 0;
         position: number;
-        paused: boolean = false;
-        loop: boolean = false;
-        isPlaying: boolean = false;
+        paused: bool = false;
+        loop: bool = false;
+        isPlaying: bool = false;
         key: string;
         markers;
         currentMarker: string = '';
@@ -150,17 +150,17 @@ module Phaser {
         public onMute: Phaser.Signal;
         public onMarkerComplete: Phaser.Signal;
 
-        public pendingPlayback: boolean = false;
+        public pendingPlayback: bool = false;
 
-        public get isDecoding(): boolean {
+        public get isDecoding(): bool {
             return this.game.cache.getSound(this.key).isDecoding;
         }
 
-        public get isDecoded(): boolean {
+        public get isDecoded(): bool {
             return this.game.cache.isSoundDecoded(this.key);
         }
 
-        public addMarker(name: string, start: number, stop: number, volume: number = 1, loop: boolean = false) {
+        public addMarker(name: string, start: number, stop: number, volume: number = 1, loop: bool = false) {
             this.markers[name] = { name: name, start: start, stop: stop, volume: volume, duration: stop - start, loop: loop };
         }
 
@@ -229,16 +229,16 @@ module Phaser {
 
         }
 
-        public override: boolean = false;
+        public override: bool = false;
 
         /**
          * Play this sound, or a marked section of it.
          * @param marker {string} Assets key of the sound you want to play.
          * @param [volume] {number} volume of the sound you want to play.
-         * @param [loop] {boolean} loop when it finished playing? (Default to false)
+         * @param [loop] {bool} loop when it finished playing? (Default to false)
          * @return {Sound} The playing sound object.
          */
-        public play(marker: string = '', position: number = 0, volume: number = 1, loop: boolean = false, forceRestart: boolean = false) {
+        public play(marker: string = '', position: number = 0, volume: number = 1, loop: bool = false, forceRestart: bool = false) {
 
             //console.log('play', marker, 'current is', this.currentMarker);
 
@@ -408,7 +408,7 @@ module Phaser {
 
         }
 
-        public restart(marker: string = '', position: number = 0, volume: number = 1, loop: boolean = false) {
+        public restart(marker: string = '', position: number = 0, volume: number = 1, loop: bool = false) {
             this.play(marker, position, volume, loop, true);
         }
 
@@ -490,11 +490,11 @@ module Phaser {
         /**
          * Mute sounds.
          */
-        public get mute(): boolean {
+        public get mute(): bool {
             return this._muted;
         }
 
-        public set mute(value: boolean) {
+        public set mute(value: bool) {
 
             if (value)
             {

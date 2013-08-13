@@ -43,7 +43,7 @@ module Phaser.Components {
 
         private _rotation: number;
 
-        private _dirty: boolean = false;
+        private _dirty: bool = false;
 
         //  Cache vars
         private _pos: Phaser.Point;
@@ -57,8 +57,8 @@ module Phaser.Components {
         private _angle: number;
         private _distance: number;
         private _prevRotation: number;
-        private _flippedX: boolean;
-        private _flippedY: boolean;
+        private _flippedX: bool;
+        private _flippedY: bool;
 
         /**
          * Reference to Phaser.Game

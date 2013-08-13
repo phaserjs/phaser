@@ -28,7 +28,7 @@ module Phaser.Renderer.Canvas {
         private _sin: number = 0;
         private _cos: number = 1;
 
-        public renderCircle(camera: Phaser.Camera, circle: Phaser.Circle, context, outline: boolean = false, fill: boolean = true, lineColor: string = 'rgb(0,255,0)', fillColor: string = 'rgba(0,100,0.0.3)', lineWidth: number = 1): boolean {
+        public renderCircle(camera: Phaser.Camera, circle: Phaser.Circle, context, outline: bool = false, fill: bool = true, lineColor: string = 'rgb(0,255,0)', fillColor: string = 'rgba(0,100,0.0.3)', lineWidth: number = 1): bool {
 
             //  Reset our temp vars
             this._sx = 0;

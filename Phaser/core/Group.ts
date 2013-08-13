@@ -106,24 +106,24 @@ module Phaser {
         public transform;
 
         /**
-         * A boolean representing if the Group has been modified in any way via a scale, rotate, flip or skew.
+         * A bool representing if the Group has been modified in any way via a scale, rotate, flip or skew.
          */
-        public modified: boolean = false;
+        public modified: bool = false;
 
         /**
          * If this Group exists or not. Can be set to false to skip certain loop checks.
          */
-        public exists: boolean;
+        public exists: bool;
 
         /**
          * If this Group exists or not. Can be set to false to skip certain loop checks.
          */
-        public active: boolean;
+        public active: bool;
 
         /**
          * Controls if this Group (and all of its contents) are rendered or skipped during the core game loop.
          */
-        public visible: boolean;
+        public visible: bool;
 
         /**
          * Array of all the objects that exist in this group.
@@ -518,11 +518,11 @@ module Phaser {
          * Removes an object from the group.
          *
          * @param {Basic} object The Game Object you want to remove.
-         * @param {boolean} splice Whether the object should be cut from the array entirely or not.
+         * @param {bool} splice Whether the object should be cut from the array entirely or not.
          *
          * @return {Basic} The removed object.
          */
-        public remove(object, splice: boolean = false): any {
+        public remove(object, splice: bool = false): any {
 
             //console.log('removing from group: ', object.name);
 
@@ -592,7 +592,7 @@ module Phaser {
          *
          * @return {Basic} True if the two objects successfully swapped position.
          */
-        public swap(child1, child2, sort: boolean = true): boolean {
+        public swap(child1, child2, sort: bool = true): bool {
 
             if (child1.group.ID != this.ID || child2.group.ID != this.ID || child1 === child2)
             {
@@ -613,7 +613,7 @@ module Phaser {
 
         }
 
-        public bringToTop(child): boolean {
+        public bringToTop(child): bool {
 
             //console.log('bringToTop', child.name,'current z', child.z);
             var oldZ = child.z;
@@ -749,9 +749,9 @@ module Phaser {
          *
          * @param {string} VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
          * @param {Object} Value The value you want to assign to that variable.
-         * @param {boolean} Recurse	Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
+         * @param {bool} Recurse	Default value is true, meaning if <code>setAll()</code> encounters a member that is a group, it will call <code>setAll()</code> on that group rather than modifying its variable.
          */
-        public setAll(variableName: string, value: Object, recurse: boolean = true) {
+        public setAll(variableName: string, value: Object, recurse: bool = true) {
 
             this._i = 0;
 
@@ -778,9 +778,9 @@ module Phaser {
          * Currently only works on functions that have no required parameters.
          *
          * @param {string} FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
-         * @param {boolean} Recurse	Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
+         * @param {bool} Recurse	Default value is true, meaning if <code>callAll()</code> encounters a member that is a group, it will call <code>callAll()</code> on that group rather than calling the group's function.
          */
-        public callAll(functionName: string, recurse: boolean = true) {
+        public callAll(functionName: string, recurse: bool = true) {
 
             this._i = 0;
 
@@ -804,9 +804,9 @@ module Phaser {
 
         /**
          * @param {function} callback
-         * @param {boolean} recursive
+         * @param {bool} recursive
          */
-        public forEach(callback, recursive: boolean = false) {
+        public forEach(callback, recursive: bool = false) {
 
             this._i = 0;
 
@@ -832,9 +832,9 @@ module Phaser {
         /**
          * @param {any} context
          * @param {function} callback
-         * @param {boolean} recursive
+         * @param {bool} recursive
          */
-        public forEachAlive(context, callback, recursive: boolean = false) {
+        public forEachAlive(context, callback, recursive: bool = false) {
 
             this._i = 0;
 

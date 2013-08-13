@@ -41,22 +41,22 @@ module Phaser {
          * If Signal should keep record of previously dispatched parameters and
          * automatically execute listener during `add()`/`addOnce()` if Signal was
          * already dispatched before.
-         * @type boolean
+         * @type bool
          */
-        public memorize: boolean = false;
+        public memorize: bool = false;
 
         /**
-         * @type boolean
+         * @type bool
          * @private
          */
-        private _shouldPropagate: boolean = true;
+        private _shouldPropagate: bool = true;
 
         /**
          * If Signal is active and should broadcast events.
          * <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
-         * @type boolean
+         * @type bool
          */
-        public active: boolean = true;
+        public active: bool = true;
 
         /**
         * 
@@ -75,13 +75,13 @@ module Phaser {
 
         /**
          * @param {Function} listener
-         * @param {boolean} isOnce
+         * @param {bool} isOnce
          * @param {Object} [listenerContext]
          * @param {Number} [priority]
          * @return {SignalBinding}
          * @private
          */
-        private _registerListener(listener, isOnce: boolean, listenerContext, priority: number): SignalBinding {
+        private _registerListener(listener, isOnce: bool, listenerContext, priority: number): SignalBinding {
 
             var prevIndex: number = this._indexOfListener(listener, listenerContext);
             var binding: SignalBinding;
@@ -159,9 +159,9 @@ module Phaser {
          * Check if listener was attached to Signal.
          * @param {Function} listener
          * @param {Object} [context]
-         * @return {boolean} if Signal has the specified listener.
+         * @return {bool} if Signal has the specified listener.
          */
-        public has(listener, context: any = null): boolean {
+        public has(listener, context: any = null): bool {
 
             return this._indexOfListener(listener, context) !== -1;
 

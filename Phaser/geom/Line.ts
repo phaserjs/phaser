@@ -193,9 +193,9 @@ module Phaser {
         * @method isPointOnLine
         * @param {Number} x
         * @param {Number} y
-        * @return {Boolean}
+        * @return {bool}
         */
-        public isPointOnLine(x: number, y: number): boolean {
+        public isPointOnLine(x: number, y: number): bool {
 
             if ((x - this.x1) * (this.y2 - this.y1) === (this.x2 - this.x1) * (y - this.y1))
             {
@@ -213,9 +213,9 @@ module Phaser {
         * @method isPointOnLineSegment
         * @param {Number} x
         * @param {Number} y
-        * @return {Boolean}
+        * @return {bool}
         */
-        public isPointOnLineSegment(x: number, y: number): boolean {
+        public isPointOnLineSegment(x: number, y: number): bool {
 
             var xMin = Math.min(this.x1, this.x2);
             var xMax = Math.max(this.x1, this.x2);
@@ -251,6 +251,7 @@ module Phaser {
         * @param {Phaser.Line} [output]
         * @return {Phaser.Line}
         */
+        /*
         public perp(x: number, y: number, output: Line): Line {
 
             if (this.y1 === this.y2)
@@ -267,7 +268,7 @@ module Phaser {
 
             var yInt: number = (y - this.perpSlope * x);
 
-            var pt: any = this.intersectLineLine({ x1: x, y1: y, x2: 0, y2: yInt });
+            var pt = this.intersectLineLine({ x1: x, y1: y, x2: 0, y2: yInt });
 
             if (output)
             {
@@ -279,6 +280,7 @@ module Phaser {
             }
 
         }
+        */
 
         /*
         intersectLineCircle (circle:Circle)

@@ -64,15 +64,15 @@ module Phaser {
 
         /**
          * True if the Loader is in the process of loading a queue.
-         * @type {boolean}
+         * @type {bool}
          */
-        public isLoading: boolean;
+        public isLoading: bool;
 
         /**
          * True if game is completely loaded.
-         * @type {boolean}
+         * @type {bool}
          */
-        public hasLoaded: boolean;
+        public hasLoaded: bool;
 
         /**
          * Loading progress (from 0 to 100)
@@ -120,7 +120,7 @@ module Phaser {
          * @param key {string} Unique asset key of this image file.
          * @param url {string} URL of image file.
          */
-        public image(key: string, url: string, overwrite: boolean = false) {
+        public image(key: string, url: string, overwrite: bool = false) {
 
             if (overwrite == true || this.checkKeyExists(key) == false)
             {
@@ -234,9 +234,9 @@ module Phaser {
          * Add a new audio file loading request.
          * @param key {string} Unique asset key of the audio file.
          * @param urls {Array} An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ]
-         * @param autoDecode {boolean} When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+         * @param autoDecode {bool} When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
          */
-        public audio(key: string, urls: string[], autoDecode: boolean = true) {
+        public audio(key: string, urls: string[], autoDecode: bool = true) {
 
             if (this.checkKeyExists(key) === false)
             {
@@ -438,7 +438,7 @@ module Phaser {
             this._fileList[key].loaded = true;
 
             var file = this._fileList[key];
-            var loadNext: boolean = true;
+            var loadNext: bool = true;
 
             switch (file.type)
             {
@@ -589,9 +589,9 @@ module Phaser {
         /**
          * Handle loading next file.
          * @param previousKey {string} Key of previous loaded asset.
-         * @param success {boolean} Whether the previous asset loaded successfully or not.
+         * @param success {bool} Whether the previous asset loaded successfully or not.
          */
-        private nextFile(previousKey: string, success: boolean) {
+        private nextFile(previousKey: string, success: bool) {
 
             this.progress = Math.round(this.progress + this._progressChunk);
 
@@ -621,9 +621,9 @@ module Phaser {
         /**
          * Check whether asset exists with a specific key.
          * @param key {string} Key of the asset you want to check.
-         * @return {boolean} Return true if exists, otherwise return false.
+         * @return {bool} Return true if exists, otherwise return false.
          */
-        private checkKeyExists(key: string): boolean {
+        private checkKeyExists(key: string): bool {
 
             if (this._fileList[key])
             {

@@ -42,17 +42,17 @@ module Phaser {
         /**
          * Controls if both <code>update</code> and render are called by the core game loop.
          */
-        exists: boolean;
+        exists: bool;
 
         /**
          * Controls if <code>update()</code> is automatically called by the core game loop.
          */
-        active: boolean;
+        active: bool;
 
         /**
          * Controls if this is rendered or skipped during the core game loop.
          */
-        visible: boolean;
+        visible: bool;
 
         /**
          * The animation manager component
@@ -78,6 +78,7 @@ module Phaser {
          * The transform component.
          */
         transform: Phaser.Components.TransformManager;
+        //transform;
 
     }
 

@@ -20,6 +20,10 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 Known Issues
 ------------
 
+* The TypeScript 0.9.1 compiler is NOT production ready and is full of bugs. I tried my best to support it but I can't in all honesty
+recommend it to anyone, so have reverted back to TypeScript 0.8.3 which works flawlessly. Sorry everyone. I'll try upgrading again in
+the future when they sort it out.
+
 * Input detection on Sprites/Buttons doesn't work if the CAMERA is rotated or scaled.
 
 Future Plans
@@ -48,8 +52,6 @@ ToDo before release
 * Sprite.transform.bottomRight/Left doesn't seem to take origin into account
 * When game paused should mute-all then resume-all sounds?
 * Bitmap Font support
-* Put ArcadePhysics back in
-* Look at the N+ tile support maybe with ArcadePhysics?
 * Pixel-perfect click check
 * Check Flash atlas export is supported
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
@@ -166,7 +168,6 @@ V1.0.0
 * Added Sprite.transform.centerOn(x,y) to quickly center a sprite on a coordinate without messing with the sprite origin and regardless of rotation.
 * Added Input.pollRate - this lets you limit how often Pointer events are handled (0 = every frame, 1 = every other frame, etc)
 * Renamed the 'init' function to 'preload'. It now calls load.start automatically.
-* Entire framework updated for TypeScript 0.9.1 - what a mammoth amount of work that was! Sorry but not backward compatible.
 * Added CanvasUtils class, including ability to set image rendering, add a canvas to the dom and other handy things.
 
 

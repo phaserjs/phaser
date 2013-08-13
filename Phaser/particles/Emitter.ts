@@ -35,7 +35,7 @@ module Phaser.Particles {
             /**
              * If bindEmitter the particles can bind this emitter's property;
              * @property bindEmitter
-             * @type {Boolean}
+             * @type {bool}
              * @default true
              */
             this.bindEmitter = true;

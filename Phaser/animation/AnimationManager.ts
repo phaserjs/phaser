@@ -61,9 +61,9 @@ module Phaser.Components {
          * When an animation frame changes you can choose to automatically update the physics bounds of the parent Sprite
          * to the width and height of the new frame. If you've set a specific physics bounds that you don't want changed during
          * animation then set this to false, otherwise leave it set to true.
-         * @type {boolean}
+         * @type {bool}
          */
-        public autoUpdateBounds: boolean = true;
+        public autoUpdateBounds: bool = true;
 
         /**
          * Keeps track of the current animation being played.
@@ -92,11 +92,11 @@ module Phaser.Components {
          * @param name {string} What this animation should be called (e.g. "run").
          * @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
          * @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
-         * @param loop {boolean} Whether or not the animation is looped or just plays once.
-         * @param useNumericIndex {boolean} Use number indexes instead of string indexes?
+         * @param loop {bool} Whether or not the animation is looped or just plays once.
+         * @param useNumericIndex {bool} Use number indexes instead of string indexes?
          * @return {Animation} The Animation that was created
          */
-        public add(name: string, frames: any[] = null, frameRate: number = 60, loop: boolean = false, useNumericIndex: boolean = true): Phaser.Animation {
+        public add(name: string, frames: any[] = null, frameRate: number = 60, loop: bool = false, useNumericIndex: bool = true): Phaser.Animation {
 
             if (this._frameData == null)
             {
@@ -141,10 +141,10 @@ module Phaser.Components {
         /**
          * Check whether the frames is valid.
          * @param frames {any[]} Frames to be validated.
-         * @param useNumericIndex {boolean} Does these frames use number indexes or string indexes?
-         * @return {boolean} True if they're valid, otherwise return false.
+         * @param useNumericIndex {bool} Does these frames use number indexes or string indexes?
+         * @return {bool} True if they're valid, otherwise return false.
          */
-        private validateFrames(frames: any[], useNumericIndex: boolean): boolean {
+        private validateFrames(frames: any[], useNumericIndex: bool): bool {
 
             for (var i = 0; i < frames.length; i++)
             {
@@ -172,9 +172,9 @@ module Phaser.Components {
          * Play animation with specific name.
          * @param name {string} The string name of the animation you want to play.
          * @param frameRate {number} FrameRate you want to specify instead of using default.
-         * @param loop {boolean} Whether or not the animation is looped or just plays once.
+         * @param loop {bool} Whether or not the animation is looped or just plays once.
          */
-        public play(name: string, frameRate: number = null, loop: boolean = false): Animation {
+        public play(name: string, frameRate: number = null, loop: bool = false): Animation {
 
             if (this._anims[name])
             {

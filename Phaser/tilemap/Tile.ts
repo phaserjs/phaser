@@ -68,39 +68,39 @@ module Phaser {
 
         /**
          * Indicating collide with any object on the left.
-         * @type {boolean}
+         * @type {bool}
          */
-        public collideLeft: boolean = false;
+        public collideLeft: bool = false;
 
         /**
          * Indicating collide with any object on the right.
-         * @type {boolean}
+         * @type {bool}
          */
-        public collideRight: boolean = false;
+        public collideRight: bool = false;
 
         /**
          * Indicating collide with any object on the top.
-         * @type {boolean}
+         * @type {bool}
          */
-        public collideUp: boolean = false;
+        public collideUp: bool = false;
 
         /**
          * Indicating collide with any object on the bottom.
-         * @type {boolean}
+         * @type {bool}
          */
-        public collideDown: boolean = false;
+        public collideDown: bool = false;
 
         /**
          * Enable separation at x-axis.
-         * @type {boolean}
+         * @type {bool}
          */
-        public separateX: boolean = true;
+        public separateX: bool = true;
 
         /**
          * Enable separation at y-axis.
-         * @type {boolean}
+         * @type {bool}
          */
-        public separateY: boolean = true;
+        public separateY: bool = true;
 
         /**
          * A reference to the tilemap this tile object belongs to.
@@ -128,11 +128,11 @@ module Phaser {
         /**
          * Set collision configs.
          * @param collision {number} Bit field of flags. (see Tile.allowCollision)
-         * @param resetCollisions {boolean} Reset collision flags before set.
-         * @param separateX {boolean} Enable seprate at x-axis.
-         * @param separateY {boolean} Enable seprate at y-axis.
+         * @param resetCollisions {bool} Reset collision flags before set.
+         * @param separateX {bool} Enable seprate at x-axis.
+         * @param separateY {bool} Enable seprate at y-axis.
          */
-        public setCollision(collision: number, resetCollisions: boolean, separateX: boolean, separateY: boolean) {
+        public setCollision(collision: number, resetCollisions: bool, separateX: bool, separateY: bool) {
 
             if (resetCollisions)
             {

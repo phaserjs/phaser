@@ -23,11 +23,11 @@ module Phaser {
          * @name SignalBinding
          * @param {Signal} signal Reference to Signal object that listener is currently bound to.
          * @param {Function} listener Handler function bound to the signal.
-         * @param {boolean} isOnce If binding should be executed just once.
+         * @param {bool} isOnce If binding should be executed just once.
          * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
          * @param {Number} [priority] The priority level of the event listener. (default = 0).
          */
-        constructor(signal: Signal, listener, isOnce: boolean, listenerContext, priority: number = 0) {
+        constructor(signal: Signal, listener, isOnce: bool, listenerContext, priority: number = 0) {
 
             this._listener = listener;
             this._isOnce = isOnce;
@@ -46,10 +46,10 @@ module Phaser {
 
         /**
          * If binding should be executed just once.
-         * @type boolean
+         * @type bool
          * @private
          */
-        private _isOnce: boolean;
+        private _isOnce: bool;
 
         /**
          * Context on which listener will be executed (object that should represent the `this` variable inside listener function).
@@ -74,9 +74,9 @@ module Phaser {
 
         /**
          * If binding is active and should be executed.
-         * @type boolean
+         * @type bool
          */
-        public active: boolean = true;
+        public active: bool = true;
 
         /**
          * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute`. (curried parameters)
@@ -123,18 +123,18 @@ module Phaser {
         }
 
         /**
-         * @return {Boolean} `true` if binding is still bound to the signal and have a listener.
+         * @return {bool} `true` if binding is still bound to the signal and have a listener.
          */
-        public isBound(): boolean {
+        public isBound(): bool {
 
             return (!!this._signal && !!this._listener);
 
         }
 
         /**
-         * @return {boolean} If SignalBinding will only be executed once.
+         * @return {bool} If SignalBinding will only be executed once.
          */
-        public isOnce(): boolean {
+        public isOnce(): bool {
 
             return this._isOnce;
 

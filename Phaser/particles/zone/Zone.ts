@@ -14,7 +14,7 @@ module Phaser.Particles.Zones {
         vector: Phaser.Vec2;
         random: number;
         crossType: string;
-        alert: boolean;
+        alert: bool;
 
     }
 }

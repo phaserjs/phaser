@@ -14,6 +14,7 @@
 	$defs = file('_definitions.ts');
 
 	echo "  <ItemGroup>\n";
+	echo "    <TypeScriptCompile Include=\"_definitions.ts\" />\n";
 
 	for ($i = 0; $i < count($defs); $i++)
 	{
@@ -46,9 +47,9 @@
 */
 
 			echo "    <TypeScriptCompile Include=\"$ts\" />\n";
-			echo "    <Content Include=\"$js\">\n";
-			echo "      <DependentUpon>$file</DependentUpon>\n";
-			echo "    </Content>\n";
+			//echo "    <Content Include=\"$js\">\n";
+			//echo "      <DependentUpon>$file</DependentUpon>\n";
+			//echo "    </Content>\n";
 		}
 
 	}

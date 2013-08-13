@@ -71,9 +71,7 @@ module Phaser.Physics.Projection {
 
                             return Phaser.Physics.Circle.COL_OTHER;
                         }
-                        return true;
                     }
-
                 }
                 else
                 {

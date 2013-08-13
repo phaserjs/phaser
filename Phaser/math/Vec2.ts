@@ -278,9 +278,9 @@ module Phaser {
         /**
         * Check if both the x and y of this vector equal the given value.
         * 
-        * @return {Boolean}
+        * @return {bool}
         */
-        public equals(value): boolean {
+        public equals(value): bool {
             return (this.x == value && this.y == value);
         }
 

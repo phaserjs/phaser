@@ -109,7 +109,7 @@ module Phaser.UI {
 
         //  TODO
         //public tabIndex: number;
-        //public tabEnabled: boolean;
+        //public tabEnabled: bool;
 
         //  ENTER or SPACE can activate this button if it has focus
 
@@ -197,11 +197,11 @@ module Phaser.UI {
             return this.input.priorityID;
         }
 
-        public set useHandCursor(value: boolean) {
+        public set useHandCursor(value: bool) {
             this.input.useHandCursor = value;
         }
 
-        public get useHandCursor(): boolean {
+        public get useHandCursor(): bool {
             return this.input.useHandCursor;
         }
 

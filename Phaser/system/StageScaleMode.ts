@@ -83,37 +83,37 @@ module Phaser {
 
         /**
          * If the game should be forced to use Landscape mode, this is set to true by Game.Stage
-         * @type {Boolean}
+         * @type {bool}
          */
-        public forceLandscape: boolean = false;
+        public forceLandscape: bool = false;
 
         /**
          * If the game should be forced to use Portrait mode, this is set to true by Game.Stage
-         * @type {Boolean}
+         * @type {bool}
          */
-        public forcePortrait: boolean = false;
+        public forcePortrait: bool = false;
 
         /**
          * If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
-         * @type {Boolean}
+         * @type {bool}
          */
-        public incorrectOrientation: boolean = false;
+        public incorrectOrientation: bool = false;
 
         /**
          * If you wish to align your game in the middle of the page then you can set this value to true.
          * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
          * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
-         * @type {Boolean}
+         * @type {bool}
          */
-        public pageAlignHorizontally: boolean = false;
+        public pageAlignHorizontally: bool = false;
 
         /**
          * If you wish to align your game in the middle of the page then you can set this value to true.
          * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
          * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
-         * @type {Boolean}
+         * @type {bool}
          */
-        public pageAlignVeritcally: boolean = false;
+        public pageAlignVeritcally: bool = false;
 
         /**
          * Minimum width the canvas should be scaled to (in pixels)
@@ -190,7 +190,7 @@ module Phaser {
         public enterPortrait: Phaser.Signal;
 
         //  Full Screen API calls
-        public get isFullScreen(): boolean {
+        public get isFullScreen(): bool {
 
             if (document['fullscreenElement'] === null|| document['mozFullScreenElement'] === null|| document['webkitFullscreenElement'] === null)
             {
@@ -285,11 +285,11 @@ module Phaser {
 
         }
 
-        public get isPortrait(): boolean {
+        public get isPortrait(): bool {
             return this.orientation == 0 || this.orientation == 180;
         }
 
-        public get isLandscape(): boolean {
+        public get isLandscape(): bool {
             return this.orientation === 90 || this.orientation === -90;
         }
 
@@ -380,7 +380,7 @@ module Phaser {
         /**
          * Set screen size automatically based on the scaleMode.
          */
-        public setScreenSize(force: boolean = false) {
+        public setScreenSize(force: bool = false) {
 
             if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
             {

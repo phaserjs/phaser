@@ -66,10 +66,10 @@ module Phaser {
         * @method addToDOM
         * @param {HTMLCanvasElement} canvas The canvas to set the touch action on.
         * @param {String} parent The DOM element to add the canvas to. Defaults to ''.
-        * @param {Boolean} overflowHidden If set to true it will add the overflow='hidden' style to the parent DOM element.
+        * @param {bool} overflowHidden If set to true it will add the overflow='hidden' style to the parent DOM element.
         * @return {HTMLCanvasElement} Returns the source canvas.
         */
-        public static addToDOM(canvas: HTMLCanvasElement, parent: string = '', overflowHidden: boolean = true): HTMLCanvasElement {
+        public static addToDOM(canvas: HTMLCanvasElement, parent: string = '', overflowHidden: bool = true): HTMLCanvasElement {
 
             if ((parent !== '' || parent !== null) && document.getElementById(parent))
             {
@@ -119,10 +119,10 @@ module Phaser {
         *
         * @method setSmoothingEnabled
         * @param {CanvasRenderingContext2D} context The context to enable or disable the image smoothing on.
-        * @param {Boolean} overflowHidden If set to true it will enable image smoothing, false will disable it.
+        * @param {bool} overflowHidden If set to true it will enable image smoothing, false will disable it.
         * @return {CanvasRenderingContext2D} Returns the source context.
         */
-        public static setSmoothingEnabled(context: CanvasRenderingContext2D, value: boolean): CanvasRenderingContext2D {
+        public static setSmoothingEnabled(context: CanvasRenderingContext2D, value: bool): CanvasRenderingContext2D {
 
             context['imageSmoothingEnabled'] = value;
             context['mozImageSmoothingEnabled'] = value;

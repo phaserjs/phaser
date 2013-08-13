@@ -1,7 +1,6 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, preload, create, update, render);
-
     function preload() {
         //  Using Phasers asset loader we load up a PNG from the assets folder
         game.load.image('disk', 'assets/sprites/oz_pov_melting_disk.png');
@@ -10,19 +9,15 @@
         game.load.image('fuji3', 'assets/tests/320x200.png');
         game.load.image('fuji4', 'assets/tests/320x200g.png');
     }
-
     var fuji;
     var fuji2;
     var fuji3;
-
     function create() {
         game.stage.backgroundColor = 'rgb(0,0,0)';
-
         //game.world.setSize(2000, 1200, true);
         //  The sprite is 320 x 200 pixels in size positioned in the middle of the stage
         //fuji = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji4');
         fuji2 = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji3');
-
         //fuji2 = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji2');
         //fuji3 = game.add.sprite(game.stage.centerX, game.stage.centerY, 'fuji2');
         //fuji.visible = false;
@@ -43,35 +38,31 @@
         //fuji.transform.origin.setTo(0.5, 0.5);
         //fuji.transform.origin.setTo(0, 0);
         fuji2.transform.origin.setTo(1, 1);
-
         //fuji3.transform.origin.setTo(1, 1);
         game.input.onTap.add(rotateIt, this);
         //game.stage.clear = false;
-    }
-
+            }
     function rotateIt() {
         //fuji.rotation += 10;
         fuji2.rotation += 10;
         //fuji3.rotation += 20;
-    }
-
+            }
     function update() {
-        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+        //fuji.rotation++;
+        //fuji2.rotation++;
+        if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             game.camera.x -= 4;
-        } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+        } else if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             game.camera.x += 4;
         }
-
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+        if(game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
             game.camera.y -= 4;
-        } else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+        } else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
             game.camera.y += 4;
         }
     }
-
     var points;
     var points2;
-
     function render() {
         //  This = the center point
         //var cx = fuji2.x + (fuji2.width / 2) * cos - (fuji2.height / 2) * sin;
@@ -99,7 +90,6 @@
         //game.stage.context.fillRect(cx, cy, 4, 4);
         var sin = Math.sin((fuji2.transform.rotation + fuji2.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
         var cos = Math.cos((fuji2.transform.rotation + fuji2.transform.rotationOffset) * Phaser.GameMath.DEG_TO_RAD);
-
         var originX = fuji2.transform.origin.x * fuji2.width;
         var originY = fuji2.transform.origin.y * fuji2.height;
         var centerX = 0.5 * fuji2.width;
@@ -107,10 +97,8 @@
         var distanceX = originX - centerX;
         var distanceY = originY - centerY;
         var distance = Math.sqrt(((originX - centerX) * (originX - centerX)) + ((originY - centerY) * (originY - centerY)));
-
         var px = fuji2.x + distance * Math.cos(fuji2.transform.rotation + 45 * Math.PI / 180);
         var py = fuji2.y + distance * Math.sin(fuji2.transform.rotation + 45 * Math.PI / 180);
-
         game.stage.context.save();
         game.stage.context.fillStyle = 'rgb(255,255,0)';
         game.stage.context.fillText('rect width: ' + originX + ' height: ' + originY, 32, 32);
@@ -119,7 +107,6 @@
         game.stage.context.fillText('point of rotation x: ' + fuji2.transform.origin.x + ' y: ' + fuji2.transform.origin.y, 32, 92);
         game.stage.context.fillText('x: ' + fuji2.x + ' y: ' + fuji2.y, fuji2.x + 4, fuji2.y);
         game.stage.context.restore();
-
         game.stage.context.save();
         game.stage.context.fillStyle = 'rgba(255,255,255,0.1)';
         game.stage.context.arc(fuji2.x, fuji2.y, distance, 0, Math.PI * 2);
@@ -237,5 +224,5 @@
         */
         //game.stage.context.strokeStyle = 'rgb(255,255,0)';
         //game.stage.context.strokeRect(fuji.cameraView.x, fuji.cameraView.y, fuji.cameraView.width, fuji.cameraView.height);
-    }
+            }
 })();

@@ -26,8 +26,8 @@ module Phaser {
          */
         public game: Phaser.Game;
 
-        private _showOnLandscape: boolean = false;
-        private _showOnPortrait: boolean = false;
+        private _showOnLandscape: bool = false;
+        private _showOnPortrait: bool = false;
 
         /**
          * Landscape Image. If you only want your game to work in Portrait mode, and display an image when in Landscape, 
@@ -43,7 +43,7 @@ module Phaser {
          */
         public portraitImage;
 
-        public enable(onLandscape: boolean, onPortrait: boolean, imageKey: string) {
+        public enable(onLandscape: bool, onPortrait: bool, imageKey: string) {
 
             this._showOnLandscape = onLandscape;
             this._showOnPortrait = onPortrait;

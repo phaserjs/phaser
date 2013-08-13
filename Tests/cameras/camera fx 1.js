@@ -1,10 +1,8 @@
 /// <reference path="../../Phaser/Game.ts" />
 (function () {
     var game = new Phaser.Game(this, 'game', 800, 600, preload, create, null, render);
-
     var btn1, btn2, btn3;
     var fx;
-
     function preload() {
         game.world.setSize(800, 600, true);
         game.load.image('blue', 'assets/tests/blue-circle.png');
@@ -16,7 +14,7 @@
         btn2 = game.add.button(426, 86, 'yellow', forceFade, this);
         btn3 = game.add.button(221, 318, 'magenta', fadeWithCallback, this);
         //fx = game.camera.fx.add(Phaser.FX.Camera.Fade);
-    }
+            }
     function render() {
         Phaser.DebugUtils.context.fillStyle = '#fff';
         Phaser.DebugUtils.context.fillText('Press to fade.', 114 + 90, 34 + 130);

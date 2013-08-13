@@ -122,9 +122,9 @@ module Phaser {
         * 
         * @param {Vec2} a Reference to a source Vec2 object.
         * @param {Vec2} b Reference to a source Vec2 object.
-        * @return {Boolean}
+        * @return {bool}
         */
-        static equals(a: Vec2, b: Vec2): boolean {
+        static equals(a: Vec2, b: Vec2): bool {
             return a.x == b.x && a.y == b.y;
         }
 
@@ -134,9 +134,9 @@ module Phaser {
         * @param {Vec2} a Reference to a source Vec2 object.
         * @param {Vec2} b Reference to a source Vec2 object.
         * @param {Vec2} epsilon 
-        * @return {Boolean}
+        * @return {bool}
         */
-        static epsilonEquals(a: Vec2, b: Vec2, epsilon: number): boolean {
+        static epsilonEquals(a: Vec2, b: Vec2, epsilon: number): bool {
             return Math.abs(a.x - b.x) <= epsilon && Math.abs(a.y - b.y) <= epsilon;
         }
 

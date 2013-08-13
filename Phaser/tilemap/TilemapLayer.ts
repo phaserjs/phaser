@@ -104,15 +104,15 @@ module Phaser {
 
         /**
          * Controls whether update() and draw() are automatically called.
-         * @type {boolean}
+         * @type {bool}
          */
-        public exists: boolean = true;
+        public exists: bool = true;
 
         /**
          * Controls whether draw() are automatically called.
-         * @type {boolean}
+         * @type {bool}
          */
-        public visible: boolean = true;
+        public visible: bool = true;
 
         /**
          * Properties of this map layer. (normally set by map editors)
@@ -405,9 +405,9 @@ module Phaser {
          * @param y {number} Y position of block's left-top corner.
          * @param width {number} Width of block.
          * @param height {number} Height of block.
-         * @param collisionOnly {boolean} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
+         * @param collisionOnly {bool} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
          */
-        private getTempBlock(x: number, y: number, width: number, height: number, collisionOnly: boolean = false) {
+        private getTempBlock(x: number, y: number, width: number, height: number, collisionOnly: bool = false) {
 
             if (x < 0)
             {

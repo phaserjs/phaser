@@ -41,7 +41,7 @@ module Phaser.Plugins.CameraFX {
         * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
         * @param	Direction	Whether to shake on both axes, just up and down, or just side to side (use class constants SHAKE_BOTH_AXES, SHAKE_VERTICAL_ONLY, or SHAKE_HORIZONTAL_ONLY).
         */
-        public start(intensity: number = 0.05, duration: number = 0.5, onComplete = null, force: boolean = true, direction: number = Shake.SHAKE_BOTH_AXES) {
+        public start(intensity: number = 0.05, duration: number = 0.5, onComplete = null, force: bool = true, direction: number = Shake.SHAKE_BOTH_AXES) {
 
             if (!force && ((this._fxShakeOffset.x != 0) || (this._fxShakeOffset.y != 0)))
             {

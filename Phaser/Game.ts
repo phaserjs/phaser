@@ -67,15 +67,15 @@ module Phaser {
 
         /**
          * Whether load complete loading or not.
-         * @type {boolean}
+         * @type {bool}
          */
-        private _loadComplete: boolean = false;
+        private _loadComplete: bool = false;
 
         /**
          * Game is paused?
-         * @type {boolean}
+         * @type {bool}
          */
-        private _paused: boolean = false;
+        private _paused: bool = false;
 
         /**
          * The state to be switched to in the next frame.
@@ -234,9 +234,9 @@ module Phaser {
 
         /**
          * Reference to the physics manager.
-         * @type {Physics.Manager}
+         * @type {Physics.PhysicsManager}
          */
-        //public physics: Phaser.Physics.Manager;
+        public physics: Phaser.Physics.PhysicsManager;
 
         /**
          * Instance of repeatable random data generator helper.
@@ -258,15 +258,15 @@ module Phaser {
 
         /**
          * Whether the game engine is booted, aka available.
-         * @type {boolean}
+         * @type {bool}
          */
-        public isBooted: boolean = false;
+        public isBooted: bool = false;
 
         /**
          * Is game running or paused?
-         * @type {boolean}
+         * @type {bool}
          */
-        public isRunning: boolean = false;
+        public isRunning: bool = false;
 
         /**
          * Initialize engine sub modules and start the game.
@@ -306,7 +306,7 @@ module Phaser {
                 this.input = new Phaser.InputManager(this);
                 this.sound = new Phaser.SoundManager(this);
                 this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
-                //this.physics = new Phaser.Physics.Manager(this);
+                this.physics = new Phaser.Physics.PhysicsManager(this);
                 this.plugins = new Phaser.PluginManager(this, this);
 
                 this.load.onLoadComplete.add(this.loadComplete, this);
@@ -398,7 +398,7 @@ module Phaser {
             this.input.update();
             this.stage.update();
             this.sound.update();
-            //this.physics.update();
+            this.physics.update();
             this.world.update();
             this.plugins.update();
 
@@ -516,10 +516,10 @@ module Phaser {
         /**
          * Switch to a new State.
          * @param state {State} The state you want to switch to.
-         * @param [clearWorld] {boolean} clear everything in the world? (Default to true)
-         * @param [clearCache] {boolean} clear asset cache? (Default to false and ONLY available when clearWorld=true)
+         * @param [clearWorld] {bool} clear everything in the world? (Default to true)
+         * @param [clearCache] {bool} clear asset cache? (Default to false and ONLY available when clearWorld=true)
          */
-        public switchState(state, clearWorld: boolean = true, clearCache: boolean = false) {
+        public switchState(state, clearWorld: bool = true, clearCache: bool = false) {
 
             if (this.isBooted == false)
             {
@@ -648,11 +648,11 @@ module Phaser {
 
         }
 
-        public get paused(): boolean {
+        public get paused(): bool {
             return this._paused;
         }
 
-        public set paused(value: boolean) {
+        public set paused(value: bool) {
 
             if (value == true && this._paused == false)
             {

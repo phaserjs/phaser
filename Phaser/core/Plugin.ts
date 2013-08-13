@@ -39,23 +39,23 @@ module Phaser {
         /**
          * Controls whether preUpdate, update or postUpdate are called
          */
-        public active: boolean;
+        public active: bool;
 
         /**
          * Controls whether preRender, render or postRender are called
          */
-        public visible: boolean;
+        public visible: bool;
 
         /**
-         * Quick access booleans to avoid having to do a function existence check during tight inner loops
+         * Quick access bools to avoid having to do a function existence check during tight inner loops
          */
-        public hasPreUpdate: boolean;
-        public hasUpdate: boolean;
-        public hasPostUpdate: boolean;
+        public hasPreUpdate: bool;
+        public hasUpdate: bool;
+        public hasPostUpdate: bool;
 
-        public hasPreRender: boolean;
-        public hasRender: boolean;
-        public hasPostRender: boolean;
+        public hasPreRender: bool;
+        public hasRender: bool;
+        public hasPostRender: bool;
 
         /**
          * Pre-update is called at the start of the update cycle, before any other updates have taken place.
