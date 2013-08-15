@@ -155,14 +155,19 @@ module Phaser {
          * @param frameRate {number} FrameRate you want to specify instead of using default.
          * @param loop {bool} Whether or not the animation is looped or just plays once.
          */
-        public play(frameRate: number = null, loop: bool = false) {
+        public play(frameRate: number = null, loop: bool = null) {
 
             if (frameRate !== null)
             {
                 this.delay = 1000 / frameRate;
             }
 
-            this.looped = loop;
+            if (loop !== null)
+            {
+                //  If they set a new loop value then use it, otherwise use the default set on creation
+                this.looped = loop;
+            }
+
             this.isPlaying = true;
             this.isFinished = false;
 

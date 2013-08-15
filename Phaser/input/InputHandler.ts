@@ -295,7 +295,9 @@ module Phaser.Components {
             }
             else
             {
-                return SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY);
+                //return SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY);
+                //return SpriteUtils.overlapsXY(this._parent, pointer.screenX, pointer.screenY);
+                return SpriteUtils.overlapsPointer(this._parent, pointer);
             }
 
         }
@@ -317,7 +319,8 @@ module Phaser.Components {
             }
             else if (this._pointerData[pointer.id].isOver == true)
             {
-                if (SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY))
+                //if (SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY))
+                if (SpriteUtils.overlapsPointer(this._parent, pointer))
                 {
                     this._pointerData[pointer.id].x = pointer.x - this._parent.x;
                     this._pointerData[pointer.id].y = pointer.y - this._parent.y;
@@ -409,7 +412,8 @@ module Phaser.Components {
                 this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
 
                 //  Only release the InputUp signal if the pointer is still over this sprite
-                if (SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY))
+                //if (SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY))
+                if (SpriteUtils.overlapsPointer(this._parent, pointer))
                 {
                     //console.log('releasedHandler: ' + Date.now());
                     this._parent.events.onInputUp.dispatch(this._parent, pointer);

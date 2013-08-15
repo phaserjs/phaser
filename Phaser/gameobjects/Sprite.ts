@@ -64,7 +64,7 @@ module Phaser {
 
             this.transform.setCache();
 
-            this.body = new Phaser.Physics.Body(this, 0);
+            //this.body = new Phaser.Physics.Body(this, 0);
 
             this.outOfBounds = false;
             this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_PERSIST;
@@ -363,7 +363,7 @@ module Phaser {
 
             this.checkBounds();
 
-            this.transform.centerOn(this.body.aabb.pos.x, this.body.aabb.pos.y);
+            //this.transform.centerOn(this.body.aabb.pos.x, this.body.aabb.pos.y);
 
             if (this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false)
             {

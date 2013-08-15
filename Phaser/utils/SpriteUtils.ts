@@ -167,12 +167,35 @@ module Phaser {
         }
         */
 
+        public static overlapsPointer(sprite:Phaser.Sprite, pointer: Phaser.Pointer): bool {
+
+            if (sprite.transform.scrollFactor.equals(1))
+            {
+                //  We can do a world vs. world check
+                return Phaser.SpriteUtils.overlapsXY(sprite, pointer.worldX, pointer.worldY);
+            }
+            else if (sprite.transform.scrollFactor.equals(0))
+            {
+                //  scroll factor 0 means a screen view check, as the sprite will be absolutely positioned
+                return Phaser.SpriteUtils.overlapsXY(sprite, pointer.x, pointer.y);
+            }
+            else
+            {
+                //  If the sprite has a scroll factor other than 0 or 1 then we need to work out
+                //  what the pointers scroll factor values would be
+                var px: number = pointer.worldX * sprite.transform.scrollFactor.x;
+                var py: number = pointer.worldY * sprite.transform.scrollFactor.y;
+                return Phaser.SpriteUtils.overlapsXY(sprite, px, py);
+            }
+
+        }
+
         /**
         * Checks to see if the given x and y coordinates overlaps this <code>Sprite</code>, taking scaling and rotation into account.
         * The coordinates must be given in world space, not local or camera space.
         *
         * @method overlapsXY
-        * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account.
+        * @param {Sprite} sprite The Sprite to check. It will take scaling and rotation into account, but NOT scroll factor.
         * @param {Number} x The x coordinate in world space.
         * @param {Number} y The y coordinate in world space.
         * @return {bool} Whether or not the point overlaps this object.
@@ -180,10 +203,10 @@ module Phaser {
         public static overlapsXY(sprite: Phaser.Sprite, x: number, y: number): bool {
 
             //  if rotation == 0 then just do a rect check instead!
-            if (sprite.transform.rotation == 0)
-            {
-                return Phaser.RectangleUtils.contains(sprite.worldView, x, y);
-            }
+            //if (sprite.transform.rotation == 0)
+            //{
+            //    return Phaser.RectangleUtils.contains(sprite.worldView, x, y);
+            //}
 
             if ((x - sprite.transform.upperLeft.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) < 0)
             {

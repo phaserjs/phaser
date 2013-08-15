@@ -174,7 +174,7 @@ module Phaser.Components {
          * @param frameRate {number} FrameRate you want to specify instead of using default.
          * @param loop {bool} Whether or not the animation is looped or just plays once.
          */
-        public play(name: string, frameRate: number = null, loop: bool = false): Animation {
+        public play(name: string, frameRate: number = null, loop: bool = null): Phaser.Animation {
 
             if (this._anims[name])
             {

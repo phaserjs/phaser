@@ -5088,7 +5088,7 @@ var Phaser;
                 if(this.enabled == false || this._parent.visible == false) {
                     return false;
                 } else {
-                    return Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY);
+                    return Phaser.SpriteUtils.overlapsPointer(this._parent, pointer);
                 }
             };
             InputHandler.prototype.update = function (pointer) {
@@ -5099,7 +5099,7 @@ var Phaser;
                 if(this.draggable && this._draggedPointerID == pointer.id) {
                     return this.updateDrag(pointer);
                 } else if(this._pointerData[pointer.id].isOver == true) {
-                    if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY)) {
+                    if(Phaser.SpriteUtils.overlapsPointer(this._parent, pointer)) {
                         this._pointerData[pointer.id].x = pointer.x - this._parent.x;
                         this._pointerData[pointer.id].y = pointer.y - this._parent.y;
                         return true;
@@ -5152,7 +5152,7 @@ var Phaser;
                     this._pointerData[pointer.id].isUp = true;
                     this._pointerData[pointer.id].timeUp = this.game.time.now;
                     this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
-                    if(Phaser.SpriteUtils.overlapsXY(this._parent, pointer.worldX, pointer.worldY)) {
+                    if(Phaser.SpriteUtils.overlapsPointer(this._parent, pointer)) {
                         this._parent.events.onInputUp.dispatch(this._parent, pointer);
                     } else {
                         if(this.useHandCursor) {
@@ -6929,11 +6929,13 @@ var Phaser;
         });
         Animation.prototype.play = function (frameRate, loop) {
             if (typeof frameRate === "undefined") { frameRate = null; }
-            if (typeof loop === "undefined") { loop = false; }
+            if (typeof loop === "undefined") { loop = null; }
             if(frameRate !== null) {
                 this.delay = 1000 / frameRate;
             }
-            this.looped = loop;
+            if(loop !== null) {
+                this.looped = loop;
+            }
             this.isPlaying = true;
             this.isFinished = false;
             this._timeLastFrame = this.game.time.now;
@@ -7054,7 +7056,7 @@ var Phaser;
             };
             AnimationManager.prototype.play = function (name, frameRate, loop) {
                 if (typeof frameRate === "undefined") { frameRate = null; }
-                if (typeof loop === "undefined") { loop = false; }
+                if (typeof loop === "undefined") { loop = null; }
                 if(this._anims[name]) {
                     if(this.currentAnim == this._anims[name]) {
                         if(this.currentAnim.isPlaying == false) {
@@ -10693,7 +10695,6 @@ var Phaser;
             this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.cameraView = new Phaser.Rectangle(x, y, this.width, this.height);
             this.transform.setCache();
-            this.body = new Phaser.Physics.Body(this, 0);
             this.outOfBounds = false;
             this.outOfBoundsAction = Phaser.Types.OUT_OF_BOUNDS_PERSIST;
             this.scale = this.transform.scale;
@@ -10791,7 +10792,6 @@ var Phaser;
         Sprite.prototype.postUpdate = function () {
             this.animations.update();
             this.checkBounds();
-            this.transform.centerOn(this.body.aabb.pos.x, this.body.aabb.pos.y);
             if(this.modified == true && this.transform.scale.equals(1) && this.transform.skew.equals(0) && this.transform.rotation == 0 && this.transform.rotationOffset == 0 && this.texture.flippedX == false && this.texture.flippedY == false) {
                 this.modified = false;
             }
@@ -11940,10 +11940,18 @@ var Phaser;
             out.push(new Phaser.Point(sprite.x, sprite.y + sprite.height));
             return out;
         };
-        SpriteUtils.overlapsXY = function overlapsXY(sprite, x, y) {
-            if(sprite.transform.rotation == 0) {
-                return Phaser.RectangleUtils.contains(sprite.worldView, x, y);
+        SpriteUtils.overlapsPointer = function overlapsPointer(sprite, pointer) {
+            if(sprite.transform.scrollFactor.equals(1)) {
+                return Phaser.SpriteUtils.overlapsXY(sprite, pointer.worldX, pointer.worldY);
+            } else if(sprite.transform.scrollFactor.equals(0)) {
+                return Phaser.SpriteUtils.overlapsXY(sprite, pointer.x, pointer.y);
+            } else {
+                var px = pointer.worldX * sprite.transform.scrollFactor.x;
+                var py = pointer.worldY * sprite.transform.scrollFactor.y;
+                return Phaser.SpriteUtils.overlapsXY(sprite, px, py);
             }
+        };
+        SpriteUtils.overlapsXY = function overlapsXY(sprite, x, y) {
             if((x - sprite.transform.upperLeft.x) * (sprite.transform.upperRight.x - sprite.transform.upperLeft.x) + (y - sprite.transform.upperLeft.y) * (sprite.transform.upperRight.y - sprite.transform.upperLeft.y) < 0) {
                 return false;
             }
@@ -14248,6 +14256,12 @@ var Phaser;
             this.onDestroyCallback = null;
             this.isBooted = false;
             this.isRunning = false;
+            if(window['PhaserGlobal'].singleInstance) {
+                if(Phaser.GAMES.length > 0) {
+                    console.log('Phaser detected an instance of this game already running, aborting');
+                    return;
+                }
+            }
             this.id = Phaser.GAMES.push(this) - 1;
             this.callbackContext = callbackContext;
             this.onPreloadCallback = preloadCallback;

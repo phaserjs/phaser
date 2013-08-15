@@ -12,7 +12,7 @@ module Phaser {
 
     export class Keyboard {
 
-        constructor(game: Game) {
+        constructor(game: Phaser.Game) {
 
             this.game = game;
 
