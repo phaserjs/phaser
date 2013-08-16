@@ -38,11 +38,11 @@ module Phaser {
         constructor(callbackContext, parent: string = '', width: number = 800, height: number = 600, preloadCallback = null, createCallback = null, updateCallback = null, renderCallback = null, destroyCallback = null) {
 
             //  Single instance check
-            if (window['PhaserGlobal'].singleInstance)
+            if (window['PhaserGlobal'] && window['PhaserGlobal'].singleInstance)
             {
                 if (Phaser.GAMES.length > 0)
                 {
-                    console.log('Phaser detected an instance of this game already running, aborting');
+                    throw new Error('Phaser detected an instance of this game already running, aborting');
                     return;
                 }
             }

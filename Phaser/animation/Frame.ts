@@ -38,6 +38,8 @@ module Phaser {
 
         }
 
+        public game: Phaser.Game;
+
         /**
          * X position within the image to cut from.
          * @type {number}

@@ -5963,7 +5963,7 @@ var Phaser;
             this.maxHeight = null;
             this.width = 0;
             this.height = 0;
-            this.maxIterations = 10;
+            this.maxIterations = 5;
             this.game = game;
             this.enterLandscape = new Phaser.Signal();
             this.enterPortrait = new Phaser.Signal();
@@ -6025,9 +6025,6 @@ var Phaser;
             }
         };
         StageScaleMode.prototype.update = function () {
-            if(this.game.stage.scaleMode !== Phaser.StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
-                this.refresh();
-            }
             if(this.forceLandscape || this.forcePortrait) {
                 this.checkOrientationState();
             }
@@ -6934,7 +6931,6 @@ var Phaser;
                 this.delay = 1000 / frameRate;
             }
             if(loop !== null) {
-                console.log('play loop override', loop);
                 this.looped = loop;
             }
             this.isPlaying = true;
@@ -6966,9 +6962,7 @@ var Phaser;
                         this._frameIndex = 0;
                         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                         this._parent.events.onAnimationLoop.dispatch(this._parent, this);
-                        console.log('anim loop core');
                     } else {
-                        console.log('anim complete core');
                         this.onComplete();
                     }
                 } else {
@@ -7059,7 +7053,7 @@ var Phaser;
             };
             AnimationManager.prototype.play = function (name, frameRate, loop) {
                 if (typeof frameRate === "undefined") { frameRate = null; }
-                if (typeof loop === "undefined") { loop = false; }
+                if (typeof loop === "undefined") { loop = null; }
                 if(this._anims[name]) {
                     if(this.currentAnim == this._anims[name]) {
                         if(this.currentAnim.isPlaying == false) {
@@ -7881,6 +7875,8 @@ var Phaser;
             }
             var width = img.width;
             var height = img.height;
+            frameWidth *= game.stage.globalScale;
+            frameHeight *= game.stage.globalScale;
             var row = Math.round(width / frameWidth);
             var column = Math.round(height / frameHeight);
             var total = row * column;
@@ -12658,14 +12654,21 @@ var Phaser;
                         this._dw = sprite.crop.width * sprite.transform.scale.x;
                         this._dh = sprite.crop.height * sprite.transform.scale.y;
                     }
-                    this._sx = Math.floor(this._sx);
-                    this._sy = Math.floor(this._sy);
-                    this._sw = Math.floor(this._sw);
-                    this._sh = Math.floor(this._sh);
-                    this._dx = Math.floor(this._dx);
-                    this._dy = Math.floor(this._dy);
-                    this._dw = Math.floor(this._dw);
-                    this._dh = Math.floor(this._dh);
+                    if(this.game.stage.globalScale != 1) {
+                        this._sx = Math.floor(this._sx * this.game.stage.globalScale);
+                        this._sy = Math.floor(this._sy * this.game.stage.globalScale);
+                        this._dx = Math.floor(this._dx * this.game.stage.globalScale);
+                        this._dy = Math.floor(this._dy * this.game.stage.globalScale);
+                    } else {
+                        this._sx = Math.floor(this._sx);
+                        this._sy = Math.floor(this._sy);
+                        this._sw = Math.floor(this._sw);
+                        this._sh = Math.floor(this._sh);
+                        this._dx = Math.floor(this._dx);
+                        this._dy = Math.floor(this._dy);
+                        this._dw = Math.floor(this._dw);
+                        this._dh = Math.floor(this._dh);
+                    }
                     if(this._sw <= 0 || this._sh <= 0 || this._dw <= 0 || this._dh <= 0) {
                         return false;
                     }
@@ -13984,6 +13987,7 @@ var Phaser;
     var Stage = (function () {
         function Stage(game, parent, width, height) {
             var _this = this;
+            this.globalScale = 1;
             this._backgroundColor = 'rgb(0,0,0)';
             this.clear = true;
             this.disablePauseScreen = false;
@@ -14259,6 +14263,12 @@ var Phaser;
             this.onDestroyCallback = null;
             this.isBooted = false;
             this.isRunning = false;
+            if(window['PhaserGlobal'].singleInstance) {
+                if(Phaser.GAMES.length > 0) {
+                    console.log('Phaser detected an instance of this game already running, aborting');
+                    return;
+                }
+            }
             this.id = Phaser.GAMES.push(this) - 1;
             this.callbackContext = callbackContext;
             this.onPreloadCallback = preloadCallback;

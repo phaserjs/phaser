@@ -160,10 +160,10 @@ module Phaser {
         public aspectRatio: number;
 
         /**
-         * The maximum number of times it will try to resize the canvas to fill the browser (default is 10)
+         * The maximum number of times it will try to resize the canvas to fill the browser (default is 5)
          * @type {number}
          */
-        public maxIterations: number = 10;
+        public maxIterations: number = 5;
 
         /**
          * The scale factor of the scaled game width
@@ -247,6 +247,12 @@ module Phaser {
          */
         public update() {
 
+            if (this.forceLandscape || this.forcePortrait)
+            {
+                this.checkOrientationState();
+            }
+
+            /*
             if (this.game.stage.scaleMode !== Phaser.StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height))
             {
                 this.refresh();
@@ -256,6 +262,7 @@ module Phaser {
             {
                 this.checkOrientationState();
             }
+            */
 
         }
 

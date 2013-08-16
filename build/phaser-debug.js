@@ -5963,7 +5963,7 @@ var Phaser;
             this.maxHeight = null;
             this.width = 0;
             this.height = 0;
-            this.maxIterations = 10;
+            this.maxIterations = 5;
             this.game = game;
             this.enterLandscape = new Phaser.Signal();
             this.enterPortrait = new Phaser.Signal();
@@ -6025,9 +6025,6 @@ var Phaser;
             }
         };
         StageScaleMode.prototype.update = function () {
-            if(this.game.stage.scaleMode !== Phaser.StageScaleMode.NO_SCALE && (window.innerWidth !== this.width || window.innerHeight !== this.height)) {
-                this.refresh();
-            }
             if(this.forceLandscape || this.forcePortrait) {
                 this.checkOrientationState();
             }

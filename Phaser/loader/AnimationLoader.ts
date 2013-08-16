@@ -95,8 +95,21 @@ module Phaser {
 
             for (var i = 0; i < frames.length; i++)
             {
-                newFrame = data.addFrame(new Frame(frames[i].frame.x, frames[i].frame.y, frames[i].frame.w, frames[i].frame.h, frames[i].filename));
-                newFrame.setTrim(frames[i].trimmed, frames[i].sourceSize.w, frames[i].sourceSize.h, frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].spriteSourceSize.w, frames[i].spriteSourceSize.h);
+                newFrame = data.addFrame(new Frame(
+                    frames[i].frame.x,
+                    frames[i].frame.y,
+                    frames[i].frame.w,
+                    frames[i].frame.h,
+                    frames[i].filename));
+
+                newFrame.setTrim(
+                    frames[i].trimmed, 
+                    frames[i].sourceSize.w,
+                    frames[i].sourceSize.h,
+                    frames[i].spriteSourceSize.x,
+                    frames[i].spriteSourceSize.y,
+                    frames[i].spriteSourceSize.w,
+                    frames[i].spriteSourceSize.h);
             }
 
             return data;
