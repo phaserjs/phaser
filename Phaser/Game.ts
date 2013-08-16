@@ -42,7 +42,7 @@ module Phaser {
             {
                 if (Phaser.GAMES.length > 0)
                 {
-                    throw new Error('Phaser detected an instance of this game already running, aborting');
+                    console.log('Phaser detected an instance of this game already running, aborting');
                     return;
                 }
             }

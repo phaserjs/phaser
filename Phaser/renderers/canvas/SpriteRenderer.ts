@@ -38,8 +38,8 @@ module Phaser.Renderer.Canvas {
                 return true;
             }
 
-            //return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
-            return true;
+            return RectangleUtils.intersects(sprite.cameraView, camera.screenView);
+            //return true;
 
         }
 
