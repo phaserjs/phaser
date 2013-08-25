@@ -4064,7 +4064,6 @@ var Phaser;
 (function (Phaser) {
     var TimeManager = (function () {
         function TimeManager(game) {
-            this.elapsed = 0;
             this.physicsElapsed = 0;
             this.time = 0;
             this.pausedTime = 0;
@@ -6264,23 +6263,18 @@ var Phaser;
 (function (Phaser) {
     var OrientationScreen = (function () {
         function OrientationScreen(game) {
-            this._showOnLandscape = false;
-            this._showOnPortrait = false;
+            this._enabled = false;
             this.game = game;
         }
-        OrientationScreen.prototype.enable = function (onLandscape, onPortrait, imageKey) {
-            this._showOnLandscape = onLandscape;
-            this._showOnPortrait = onPortrait;
-            this.landscapeImage = this.game.cache.getImage(imageKey);
-            this.portraitImage = this.game.cache.getImage(imageKey);
+        OrientationScreen.prototype.enable = function (imageKey) {
+            this._enabled = true;
+            this.image = this.game.cache.getImage(imageKey);
         };
         OrientationScreen.prototype.update = function () {
         };
         OrientationScreen.prototype.render = function () {
-            if(this._showOnLandscape) {
-                this.game.stage.context.drawImage(this.landscapeImage, 0, 0, this.landscapeImage.width, this.landscapeImage.height, 0, 0, this.game.stage.width, this.game.stage.height);
-            } else if(this._showOnPortrait) {
-                this.game.stage.context.drawImage(this.portraitImage, 0, 0, this.portraitImage.width, this.portraitImage.height, 0, 0, this.game.stage.width, this.game.stage.height);
+            if(this._enabled) {
+                this.game.stage.context.drawImage(this.image, 0, 0, this.image.width, this.image.height, 0, 0, this.game.stage.width, this.game.stage.height);
             }
         };
         return OrientationScreen;
@@ -12605,7 +12599,7 @@ var Phaser;
                     if(sprite.transform.scrollFactor.equals(0)) {
                         return true;
                     }
-                    return true;
+                    return Phaser.RectangleUtils.intersects(sprite.cameraView, camera.screenView);
                 };
                 SpriteRenderer.prototype.render = function (camera, sprite) {
                     Phaser.SpriteUtils.updateCameraView(camera, sprite);
@@ -14067,7 +14061,7 @@ var Phaser;
             if (typeof imageKey === "undefined") { imageKey = ''; }
             this.scale.forceLandscape = forceLandscape;
             this.scale.forcePortrait = forcePortrait;
-            this.orientationScreen.enable(forceLandscape, forcePortrait, imageKey);
+            this.orientationScreen.enable(imageKey);
             if(forceLandscape || forcePortrait) {
                 if((this.scale.isLandscape && forcePortrait) || (this.scale.isPortrait && forceLandscape)) {
                     this.game.paused = true;
@@ -14253,7 +14247,7 @@ var Phaser;
             this.onDestroyCallback = null;
             this.isBooted = false;
             this.isRunning = false;
-            if(window['PhaserGlobal'].singleInstance) {
+            if(window['PhaserGlobal'] && window['PhaserGlobal'].singleInstance) {
                 if(Phaser.GAMES.length > 0) {
                     console.log('Phaser detected an instance of this game already running, aborting');
                     return;
@@ -14432,6 +14426,8 @@ var Phaser;
             this.input.reset(true);
             if(typeof state === 'function') {
                 this.state = new state(this);
+            } else {
+                this.state = state;
             }
             if(this.state['create'] || this.state['update']) {
                 this.callbackContext = this.state;

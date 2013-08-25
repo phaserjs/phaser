@@ -249,7 +249,7 @@ module Phaser {
 
             this.scale.forceLandscape = forceLandscape;
             this.scale.forcePortrait = forcePortrait;
-            this.orientationScreen.enable(forceLandscape, forcePortrait, imageKey);
+            this.orientationScreen.enable(imageKey);
 
             if (forceLandscape || forcePortrait)
             {

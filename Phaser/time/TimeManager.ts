@@ -52,7 +52,7 @@ module Phaser {
         * @public
         * @type {Number}
         */
-        public elapsed: number = 0;
+        //public elapsed: number = 0;
 
         /**
         * The elapsed time calculated for the physics motion updates.

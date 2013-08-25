@@ -550,6 +550,10 @@ module Phaser {
             {
                 this.state = new state(this);
             }
+            else
+            {
+                this.state = state;
+            }
 
             //  Ok, have we got the right functions?
             if (this.state['create'] || this.state['update'])

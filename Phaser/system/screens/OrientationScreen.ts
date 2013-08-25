@@ -12,48 +12,40 @@ module Phaser {
 
         /**
          * OrientationScreen constructor
-         * Create a new <code>OrientationScreen</code> with specific width and height.
-         *
-         * @param width {number} Screen canvas width.
-         * @param height {number} Screen canvas height.
+         * Create a new <code>OrientationScreen</code>.
          */
         constructor(game: Phaser.Game) {
             this.game = game;
         }
+
+        private _enabled: bool = false;
 
         /**
          * Local reference to game.
          */
         public game: Phaser.Game;
 
-        private _showOnLandscape: bool = false;
-        private _showOnPortrait: bool = false;
-
         /**
-         * Landscape Image. If you only want your game to work in Portrait mode, and display an image when in Landscape, 
-         * then set this to be the key of an image previously loaded into the Game.Cache.
+         * The image to be displayed when the device is rotated to an unsupported orientation.
+         * Set this to be the key of an image previously loaded into the Game.Cache.
          * @type {Cache Reference}
          */
-        public landscapeImage;
+        public image;
 
         /**
-         * Portrait Image. If you only want your game to work in Landscape mode, and display an image when in Portrait, 
-         * then set this to be the key of an image previously loaded into the Game.Cache.
+         * Enable the orientation screen. An image that is displayed whenever the device enters an unsupported orientation.
+         * Set this to be the key of an image previously loaded into the Game.Cache.
          * @type {Cache Reference}
          */
-        public portraitImage;
+        public enable(imageKey: string) {
 
-        public enable(onLandscape: bool, onPortrait: bool, imageKey: string) {
-
-            this._showOnLandscape = onLandscape;
-            this._showOnPortrait = onPortrait;
-            this.landscapeImage = this.game.cache.getImage(imageKey);
-            this.portraitImage = this.game.cache.getImage(imageKey);
+            this._enabled = true;
+            this.image = this.game.cache.getImage(imageKey);
 
         }
 
         /**
-         * Update
+         * Update (can be overridden)
          */
         public update() {
         }
@@ -63,13 +55,9 @@ module Phaser {
          */
         public render() {
 
-            if (this._showOnLandscape)
+            if (this._enabled)
             {
-                this.game.stage.context.drawImage(this.landscapeImage, 0, 0, this.landscapeImage.width, this.landscapeImage.height, 0, 0, this.game.stage.width, this.game.stage.height);
-            }
-            else if (this._showOnPortrait)
-            {
-                this.game.stage.context.drawImage(this.portraitImage, 0, 0, this.portraitImage.width, this.portraitImage.height, 0, 0, this.game.stage.width, this.game.stage.height);
+                this.game.stage.context.drawImage(this.image, 0, 0, this.image.width, this.image.height, 0, 0, this.game.stage.width, this.game.stage.height);
             }
 
         }

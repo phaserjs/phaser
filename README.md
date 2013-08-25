@@ -1,7 +1,7 @@
 Phaser
 ======
 
-Version: 1.0.0 - Released: August 12th 2013
+Version: 1.0.0 - Released: August 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -45,7 +45,6 @@ ToDo before release
 * Move embedded Phaser logo outside or swap for canvas calls
 * Put Device.getAll elsewhere (plugin? utils?)
 * Investigate bug re: tilemap collision and animation frames
-* Allow camera to directly render to the stage rather than hidden ctx (maybe does this by default? or have under Mobile Optimisations list)
 * Sprite collision events
 * Check bounds/edge points when sprite is only 1x1 sized :)
 * QuadTree.physics.checkHullIntersection
@@ -53,12 +52,19 @@ ToDo before release
 * When game paused should mute-all then resume-all sounds?
 * Bitmap Font support
 * Pixel-perfect click check
-* Check Flash atlas export is supported
+* Check Flash atlas export is working
 * DynamicTexture.setPixel needs to be swapped for a proper pixel put, not the filledRect it currently is.
 * Check multi-game support (2+ games on one page)
-* Docs!
+* Finish the Docs!
 * Getting Started guide!
+* Sprite Sheet / Atlas support for Dynamic Textures
 
+
+Mobile Optimisation Suggestions
+-------------------------------
+
+* Camera.directToStage
+* Stage.clear
 
 Latest Update
 -------------
