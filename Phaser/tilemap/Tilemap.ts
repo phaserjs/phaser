@@ -487,6 +487,24 @@ module Phaser {
 
         }
 
+        /**
+        * Can be over-ridden if required
+        */
+        public preUpdate() {
+        }
+
+        /**
+        * Can be over-ridden if required
+        */
+        public update() {
+        }
+
+        /**
+        * Can be over-ridden if required
+        */
+        public postUpdate() {
+        }
+
         public destroy() {
 
             this.texture = null;

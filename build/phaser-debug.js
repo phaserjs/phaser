@@ -8170,6 +8170,12 @@ var Phaser;
             if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
             this.layers[layer].putTile(x, y, index);
         };
+        Tilemap.prototype.preUpdate = function () {
+        };
+        Tilemap.prototype.update = function () {
+        };
+        Tilemap.prototype.postUpdate = function () {
+        };
         Tilemap.prototype.destroy = function () {
             this.texture = null;
             this.transform = null;
