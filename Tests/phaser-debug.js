@@ -1,10 +1,5 @@
 var Phaser;
 (function (Phaser) {
-    Phaser.VERSION = 'Phaser version 1.0.0';
-    Phaser.GAMES = [];
-})(Phaser || (Phaser = {}));
-var Phaser;
-(function (Phaser) {
     var Types = (function () {
         function Types() { }
         Types.RENDERER_AUTO_DETECT = 0;
@@ -14539,4 +14534,9 @@ var Phaser;
         return Game;
     })();
     Phaser.Game = Game;    
+})(Phaser || (Phaser = {}));
+var Phaser;
+(function (Phaser) {
+    Phaser.VERSION = 'Phaser version 1.0.0';
+    Phaser.GAMES = [];
 })(Phaser || (Phaser = {}));

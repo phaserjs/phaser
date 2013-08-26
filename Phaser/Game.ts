@@ -178,91 +178,91 @@ module Phaser {
 
         /**
          * Reference to the GameObject Factory.
-         * @type {GameObjectFactory}
+         * @type {Phaser.GameObjectFactory}
          */
         public add: Phaser.GameObjectFactory;
 
         /**
          * Reference to the assets cache.
-         * @type {Cache}
+         * @type {Phaser.Cache}
          */
         public cache: Phaser.Cache;
 
         /**
          * Reference to the input manager
-         * @type {Input}
+         * @type {Phaser.InputManager}
          */
         public input: Phaser.InputManager;
 
         /**
          * Reference to the assets loader.
-         * @type {Loader}
+         * @type {Phaser.Loader}
          */
         public load: Phaser.Loader;
 
         /**
          * Reference to the math helper.
-         * @type {GameMath}
+         * @type {Phaser.GameMath}
          */
         public math: Phaser.GameMath;
 
         /**
          * Reference to the network class.
-         * @type {Net}
+         * @type {Phaser.Net}
          */
         public net: Phaser.Net;
 
         /**
          * Reference to the sound manager.
-         * @type {SoundManager}
+         * @type {Phaser.SoundManager}
          */
         public sound: Phaser.SoundManager;
 
         /**
          * Reference to the stage.
-         * @type {Stage}
+         * @type {Phaser.Stage}
          */
         public stage: Phaser.Stage;
 
         /**
          * Reference to game clock.
-         * @type {Time}
+         * @type {Phaser.TimeManager}
          */
         public time: Phaser.TimeManager;
 
         /**
          * Reference to the tween manager.
-         * @type {TweenManager}
+         * @type {Phaser.TweenManager}
          */
         public tweens: Phaser.TweenManager;
 
         /**
          * Reference to the world.
-         * @type {World}
+         * @type {Phaser.World}
          */
         public world: Phaser.World;
 
         /**
          * Reference to the physics manager.
-         * @type {Physics.PhysicsManager}
+         * @type {Phaser.Physics.PhysicsManager}
          */
         public physics: Phaser.Physics.PhysicsManager;
 
         /**
          * Instance of repeatable random data generator helper.
-         * @type {RandomDataGenerator}
+         * @type {Phaser.RandomDataGenerator}
          */
         public rnd: Phaser.RandomDataGenerator;
 
         /**
          * Contains device information and capabilities.
-         * @type {Device}
+         * @type {Phaser.Device}
          */
         public device: Phaser.Device;
 
         /**
          * Reference to the render manager
-         * @type {RenderManager}
+         * @type {Phaser.IRenderer}
          */
         public renderer: Phaser.IRenderer;
 
