@@ -58,6 +58,8 @@ ToDo before release
 * Finish the Docs!
 * Getting Started guide!
 * Sprite Sheet / Atlas support for Dynamic Textures
+* Check browser support: OS X and iOS7 + Chrome Android latest
+* Tweening + collision - what happens?
 
 
 Mobile Optimisation Suggestions

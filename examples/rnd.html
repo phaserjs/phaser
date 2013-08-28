@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>phaser.js - a(nother) new beginning</title>
+	<script src="../src/Phaser.js"></script>
+	<script src="../src/core/SignalBinding.js"></script>
+	<script src="../src/core/Signal.js"></script>
+	<script src="../src/math/RandomDataGenerator.js"></script>
+	<script src="../src/Game.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(this, '', 800, 600);
+
+console.log(game.rnd.integer());
+console.log(game.rnd.frac());
+console.log(game.rnd.real());
+console.log(game.rnd.integerInRange(100,200));
+
+</script>
+
+</body>
+</html>
