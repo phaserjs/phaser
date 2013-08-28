@@ -94,7 +94,18 @@ Phaser.Circle.prototype = {
     * @param {bool} [optional] round Round the distance to the nearest integer (default false)
     * @return {Number} The distance between this Point object and the destination Point object.
     */
-    distance: function () {
+    distance: function (dest, round) {
+
+        if (typeof round === "undefined") { round = false }
+
+        if (round)
+        {
+            return Phaser.Math.distanceRound(this.x, this.y, dest.x, dest.y);
+        }
+        else
+        {
+            return Phaser.Math.distance(this.x, this.y, dest.x, dest.y);
+        }
 
     },
 
