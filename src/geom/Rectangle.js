@@ -1,15 +1,6 @@
 /**
-*	Rectangle
-*
-*	@desc 		A Rectangle object is an area defined by its position, as indicated by its top-left corner (x,y) and width and height.
-*
-*	@version 	1.6 - 24th May 2013
-*	@author 	Richard Davey
-*/
-
-
-/**
 * Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a Rectangle with x, y, width, and height properties set to 0 is created.
+*
 * @class Rectangle
 * @constructor
 * @param {Number} x The x coordinate of the top-left corner of the Rectangle.
@@ -134,6 +125,118 @@ Phaser.Rectangle.prototype = {
 
         return dest;
 
+    },
+
+    /**
+    * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
+    * @method inflate
+    * @param {Number} dx The amount to be added to the left side of the Rectangle.
+    * @param {Number} dy The amount to be added to the bottom side of the Rectangle.
+    * @return {Phaser.Rectangle} This Rectangle object.
+    */
+    inflate: function (dx, dy) {
+        return Phaser.Rectangle.inflate(this, dx, dy);
+    },
+
+    /**
+    * The size of the Rectangle object, expressed as a Point object with the values of the width and height properties.
+    * @method size
+    * @param {Phaser.Point} output Optional Point object. If given the values will be set into the object, otherwise a brand new Point object will be created and returned.
+    * @return {Phaser.Point} The size of the Rectangle object
+    */
+    size: function (output) {
+        return Phaser.Rectangle.size(this, output);
+    };
+
+    /**
+    * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
+    * @method clone
+    * @param {Phaser.Rectangle} output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
+    * @return {Phaser.Rectangle}
+    */
+    clone: function (output) {
+        return Phaser.Rectangle.clone(this, output);
+    },
+
+    /**
+    * Determines whether the specified coordinates are contained within the region defined by this Rectangle object.
+    * @method contains
+    * @param {Number} x The x coordinate of the point to test.
+    * @param {Number} y The y coordinate of the point to test.
+    * @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
+    */
+    contains: function (x, y) {
+        return Phaser.Rectangle.contains(this, x, y);
+    },
+
+    /**
+    * Determines whether the first Rectangle object is fully contained within the second Rectangle object.
+    * A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
+    * @method containsRect
+    * @param {Phaser.Rectangle} b The second Rectangle object.
+    * @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
+    */
+    containsRect: function (b) {
+        return Phaser.Rectangle.containsRect(this, b);
+    },
+
+    /**
+    * Determines whether the two Rectangles are equal.
+    * This method compares the x, y, width and height properties of each Rectangle.
+    * @method equals
+    * @param {Phaser.Rectangle} b The second Rectangle object.
+    * @return {bool} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
+    */
+    equals: function (b) {
+        return Phaser.Rectangle.equals(this, b);
+    },
+
+    /**
+    * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the Rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
+    * @method intersection
+    * @param {Phaser.Rectangle} b The second Rectangle object.
+    * @param {Phaser.Rectangle} output Optional Rectangle object. If given the intersection values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
+    * @return {Phaser.Rectangle} A Rectangle object that equals the area of intersection. If the Rectangles do not intersect, this method returns an empty Rectangle object; that is, a Rectangle with its x, y, width, and height properties set to 0.
+    */
+    intersection: function (b, out) {
+        return Phaser.Rectangle.intersection(this, b, output);
+    },
+
+    /**
+    * Determines whether the two Rectangles intersect with each other.
+    * This method checks the x, y, width, and height properties of the Rectangles.
+    * @method intersects
+    * @param {Phaser.Rectangle} b The second Rectangle object.
+    * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+    * @return {bool} A value of true if the specified object intersects with this Rectangle object; otherwise false.
+    */
+    intersects: function (b, tolerance) {
+        return Phaser.Rectangle.intersects(this, b, tolerance);
+    },
+
+    /**
+    * Determines whether the object specified intersects (overlaps) with the given values.
+    * @method intersectsRaw
+    * @param {Number} left
+    * @param {Number} right
+    * @param {Number} top
+    * @param {Number} bottomt
+    * @param {Number} tolerance A tolerance value to allow for an intersection test with padding, default to 0
+    * @return {bool} A value of true if the specified object intersects with the Rectangle; otherwise false.
+    */
+    intersectsRaw: function (left, right, top, bottom, tolerance) {
+        return Phaser.Rectangle.intersectsRaw(this, left, right, top, bottom, tolerance);
+    },
+
+    /**
+    * Adds two Rectangles together to create a new Rectangle object, by filling in the horizontal and vertical space between the two Rectangles.
+    * @method union
+    * @param {Phaser.Rectangle} b The second Rectangle object.
+    * @param {Phaser.Rectangle} output Optional Rectangle object. If given the new values will be set into this object, otherwise a brand new Rectangle object will be created and returned.
+    * @return {Phaser.Rectangle} A Rectangle object that is the union of the two Rectangles.
+    */
+    union: function (b, out) {
+        return Phaser.Rectangle.union(this, b, out);
     },
 
     /**
