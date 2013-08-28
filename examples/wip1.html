@@ -11,6 +11,9 @@
 	<script src="../src/geom/Point.js"></script>
 	<script src="../src/geom/Circle.js"></script>
 	<script src="../src/net/Net.js"></script>
+	<script src="../src/tween/TweenManager.js"></script>
+	<script src="../src/tween/Tween.js"></script>
+	<script src="../src/tween/Easing.js"></script>
 	<script src="../src/time/Time.js"></script>
 	<script src="../src/animation/Animation.js"></script>
 	<script src="../src/animation/Frame.js"></script>
@@ -26,17 +29,16 @@
 
 var game = new Phaser.Game(this, '', 800, 600);
 
-var a = new Phaser.Point(100, 100);
-var b = new Phaser.Point(200, 100);
+var test = { x: 0 };
 
-console.log('Point A', a.toString());
-console.log('Point B', b.toString());
+var tween = game.tweens.create(test);
 
-a.add(b.x, b.y);
+tween.onComplete.add(onComplete, this);
+tween.to({x: 100}, 1000, Phaser.Easing.Linear.None, true);
 
-console.log('Point A + B', a.toString());
-
-console.log('Distance between A and B', Phaser.Point.distance(a, b));
+function onComplete() {
+	console.log('tween finished, new data: ', test);
+}
 
 </script>
 

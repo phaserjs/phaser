@@ -96,17 +96,15 @@ Phaser.TweenManager.prototype = {
 	*
 	* @return {bool} Return false if there's no tween to update, otherwise return true.
 	*/
-	update: function ( time ) {
+	update: function () {
 
 		if ( _tweens.length === 0 ) return false;
 
 		var i = 0, numTweens = _tweens.length;
 
-		time = time !== undefined ? time : ( typeof window !== 'undefined' && window.performance !== undefined && window.performance.now !== undefined ? window.performance.now() : Date.now() );
-
 		while ( i < numTweens ) {
 
-			if ( _tweens[ i ].update( time ) ) {
+			if ( _tweens[ i ].update( this.game.time.now ) ) {
 
 				i ++;
 
