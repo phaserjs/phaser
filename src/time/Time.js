@@ -17,8 +17,8 @@ Phaser.Time = function (game) {
 
 	this.game = game;
 
-	this.game.onPause.add(this.gamePaused, this);
-	this.game.onResume.add(this.gameResumed, this);
+	// this.game.onPause.add(this.gamePaused, this);
+	// this.game.onResume.add(this.gameResumed, this);
 
 };
 
@@ -37,7 +37,7 @@ Phaser.Time.prototype = {
 	* @private
 	* @type {Number}
 	*/
-	_started: 0;
+	_started: 0,
 
 	/**
 	* The time (in ms) that the last second counter ticked over.
@@ -45,7 +45,7 @@ Phaser.Time.prototype = {
 	* @private
 	* @type {Number}
 	*/
-	_timeLastSecond: number = 0;
+	_timeLastSecond: 0,
 
 	/**
 	* The time the game started being paused.

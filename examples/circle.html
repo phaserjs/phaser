@@ -25,16 +25,19 @@
 
 var game = new Phaser.Game(this, '', 800, 600);
 
-var data = Phaser.Math.sinCosGenerator(10);
+var c = new Phaser.Circle(100, 100, 32);
 
-console.log('Sin', data.sin);
-console.log('Cos', data.cos);
+console.log(c.toString());
 
-console.log('Shift value 1', Phaser.Math.shift(data.sin));
-console.log('Shift value 2', Phaser.Math.shift(data.sin));
-console.log('Shift value 3', Phaser.Math.shift(data.sin));
+var p = { x: 0, y: 0 };
 
-console.log('Sin', data.sin);
+Phaser.Circle.circumferencePoint(c, 45, true, p);
+
+console.log('Circumference Point', p);
+
+c.radius = 200;
+
+console.log(c.toString());
 
 </script>
 
