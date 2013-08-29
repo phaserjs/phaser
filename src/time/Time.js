@@ -6,7 +6,7 @@
 */
 
 /**
-* This is the core internal game clock. It manages the elapsed time and calculation of delta values,
+* This is the core internal game clock. It manages the elapsed time and calculation of elapsed values,
 * used for game object motion and tweens.
 *
 * @class Time
@@ -89,11 +89,11 @@ Phaser.Time.prototype = {
 
 	/**
 	* Elapsed time since the last frame.
-	* @property delta
+	* @property elapsed
 	* @public
 	* @type {Number}
 	*/
-	delta: 0,
+	elapsed: 0,
 
 	/**
 	* Frames per second.
@@ -152,6 +152,22 @@ Phaser.Time.prototype = {
 	pauseDuration: 0,
 
 	/**
+	* The value that setTimeout needs to work out when to next update
+	* @property timeToCall
+	* @public
+	* @type {Number}
+	*/
+	timeToCall: 0,
+
+	/**
+	* Internal value used by timeToCall as part of the setTimeout loop
+	* @property lastTime
+	* @public
+	* @type {Number}
+	*/
+	lastTime: 0,
+
+	/**
 	* The number of seconds that have elapsed since the game was started.
 	* @method totalElapsedSeconds
 	* @return {Number}
@@ -161,18 +177,20 @@ Phaser.Time.prototype = {
 	},
 
 	/**
-	* Update clock and calculate the fps.
-	* This is called automatically by Game._raf
+	* Updates the game clock and calculate the fps.
+	* This is called automatically by Phaser.Game
 	* @method update
-	* @param {Number} raf The current timestamp, either performance.now or Date.now
+	* @param {Number} time The current timestamp, either performance.now or Date.now depending on the browser
 	*/
-	update: function (raf) {
+	update: function (time) {
 
-		this.now = raf;
-		this.delta = this.now - this.time;
+		this.now = time;
+		this.timeToCall = Math.max(0, 16 - (time - this.lastTime));
 
-		this.msMin = Math.min(this.msMin, this.delta);
-		this.msMax = Math.max(this.msMax, this.delta);
+		this.elapsed = this.now - this.time;
+
+		this.msMin = Math.min(this.msMin, this.elapsed);
+		this.msMax = Math.max(this.msMax, this.elapsed);
 
 		this.frames++;
 
@@ -186,7 +204,8 @@ Phaser.Time.prototype = {
 		}
 
 		this.time = this.now;
-		this.physicsElapsed = 1.0 * (this.delta / 1000);
+        this.lastTime = time + this.timeToCall;
+		this.physicsElapsed = 1.0 * (this.elapsed / 1000);
 
 		//  Paused?
 		if (this.game.paused) {
@@ -211,8 +230,8 @@ Phaser.Time.prototype = {
 	*/
 	gameResumed: function () {
 
-		//  Level out the delta timer to avoid spikes
-		this.delta = 0;
+		//  Level out the elapsed timer to avoid spikes
+		this.elapsed = 0;
 		this.physicsElapsed = 0;
 		this.time = Date.now();
 		this.pauseDuration = this.pausedTime;
