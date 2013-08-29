@@ -217,7 +217,7 @@ Phaser.Loader.prototype = {
 
 	},
 
-	atlasJSON: function (key, textureURL, atlasURL, atlasData) {
+	atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
 		if (typeof atlasURL === "undefined") { atlasURL = null; }
 		if (typeof atlasData === "undefined") { atlasData = null; }
 		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);

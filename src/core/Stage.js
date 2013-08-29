@@ -13,6 +13,25 @@ Phaser.Stage = function (game) {
 	
 	this.game = game;
 
+	//	Get the offset values (for input and other things)
+	this.offset = new Phaser.Point;
+	Phaser.Canvas.getOffset(this.game.renderer.view, this.offset);
+	this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
+
+	var _this = this;
+
+    this._onChange = function (event) {
+        return _this.visibilityChange(event);
+    }
+
+    document.addEventListener('visibilitychange', this._onChange, false);
+    document.addEventListener('webkitvisibilitychange', this._onChange, false);
+    document.addEventListener('pagehide', this._onChange, false);
+    document.addEventListener('pageshow', this._onChange, false);
+
+    window.onblur = this._onChange;
+    window.onfocus = this._onChange;
+
 };
 
 Phaser.Stage.prototype = {
@@ -21,29 +40,6 @@ Phaser.Stage.prototype = {
 
 	bounds: null,
 	offset: null,
-	
-	boot: function () {
-
-		//	Get the offset values (for input and other things)
-		this.offset = new Phaser.Point;
-		Phaser.Canvas.getOffset(this.game.renderer.view, this.offset);
-		this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
-
-		var _this = this;
-
-	    this._onChange = function (event) {
-	        return _this.visibilityChange(event);
-	    }
-
-        document.addEventListener('visibilitychange', this._onChange, false);
-        document.addEventListener('webkitvisibilitychange', this._onChange, false);
-        document.addEventListener('pagehide', this._onChange, false);
-        document.addEventListener('pageshow', this._onChange, false);
-
-        window.onblur = this._onChange;
-        window.onfocus = this._onChange;
-
-	},
 
 	/**
     * This method is called when the document visibility is changed.

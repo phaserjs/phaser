@@ -278,7 +278,7 @@ Phaser.Game.prototype = {
 			this.load.onLoadComplete.add(this.loadComplete, this);
 
 			this.state.boot();
-			this.stage.boot();
+			// this.stage.boot();
 			// this.input.boot();
 
 			if (this.renderType == Phaser.CANVAS)
@@ -330,8 +330,6 @@ Phaser.Game.prototype = {
     * Called when the load has finished, after preload was run.
     */
     loadComplete: function () {
-
-    	console.log('loadComplete', this);
 
         this._loadComplete = true;
 

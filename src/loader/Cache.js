@@ -88,6 +88,10 @@ Phaser.Cache.prototype = {
         {
             this._images[key].frameData = Phaser.Animation.Parser.JSONData(this.game, atlasData);
         }
+        else if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+        {
+            this._images[key].frameData = Phaser.Animation.Parser.JSONDataHash(this.game, atlasData);
+        }
         else if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
             this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, atlasData, format);

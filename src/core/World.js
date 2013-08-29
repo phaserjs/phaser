@@ -1,13 +1,14 @@
 Phaser.World = function (game) {
 
 	this.game = game;
-	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 
 	this._stage = new PIXI.Stage(0x000000);
 
 	this._container = new PIXI.DisplayObjectContainer();
 
 	this._stage.addChild(this._container);
+
+	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 	
 };
 
@@ -18,8 +19,20 @@ Phaser.World.prototype = {
 
 	bounds: null,
 
-	add: function (sprite) {
-		this._container.addChild(sprite);
+	add: function (gameobject) {
+		this._container.addChild(gameobject);
+	},
+
+	addAt: function (gameobject, index) {
+		this._container.addChildAt(gameobject, index);
+	},
+
+	getAt: function (index) {
+		return this._container.getChildAt(index);
+	},
+
+	remove: function (gameobject) {
+		this._container.removeChild(gameobject);
 	},
 
 	/**

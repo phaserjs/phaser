@@ -102,8 +102,8 @@ Phaser.StateManager.prototype = {
 
 		if (this._pendingState !== null)
 		{
-			console.log('_pendingState found');
-			console.log(typeof this._pendingState);
+			// console.log('_pendingState found');
+			// console.log(typeof this._pendingState);
 
 			if (typeof this._pendingState === 'string')
 			{
@@ -129,26 +129,26 @@ Phaser.StateManager.prototype = {
 
         if (typeof autoStart === "undefined") { autoStart = false; }
 
-		console.log('Phaser.StateManager.addState', key);
-		console.log(typeof state);
-		console.log('autoStart?', autoStart);
+		// console.log('Phaser.StateManager.addState', key);
+		// console.log(typeof state);
+		// console.log('autoStart?', autoStart);
 
 		var newState;
 
 		if (state instanceof Phaser.State)
 		{
-			console.log('Phaser.StateManager.addState: Phaser.State given');
+			// console.log('Phaser.StateManager.addState: Phaser.State given');
 			newState = state;
     		newState.link(this.game);
 		}
 		else if (typeof state === 'object')
 		{
-			console.log('Phaser.StateManager.addState: Object given');
+			// console.log('Phaser.StateManager.addState: Object given');
 			newState = state;
 		}
 		else if (typeof state === 'function')
 		{
-			console.log('Phaser.StateManager.addState: Function given');
+			// console.log('Phaser.StateManager.addState: Function given');
 			newState = new state(this.game);
 		}
 
@@ -158,12 +158,12 @@ Phaser.StateManager.prototype = {
 		{
 			if (this.game.isBooted)
 			{
-				console.log('Game is booted, so we can start the state now');
+				// console.log('Game is booted, so we can start the state now');
 				this.start(key);
 			}
 			else
 			{
-				console.log('Game is NOT booted, so set the current state as pending');
+				// console.log('Game is NOT booted, so set the current state as pending');
 				this._pendingState = key;
 			}
 		}
@@ -203,7 +203,7 @@ Phaser.StateManager.prototype = {
     */
     start: function (key, clearWorld, clearCache) {
 
-    	console.log('Phaser.StateManager.start', key);
+    	// console.log('Phaser.StateManager.start', key);
     	// console.log(this);
     	// console.log(this.callbackContext);
 
@@ -212,7 +212,7 @@ Phaser.StateManager.prototype = {
 
         if (this.game.isBooted == false)
         {
-			console.log('Game is NOT booted, so set the requested state as pending');
+			// console.log('Game is NOT booted, so set the requested state as pending');
 			this._pendingState = key;
 			return;
         }
@@ -243,14 +243,14 @@ Phaser.StateManager.prototype = {
 
         if (this.onPreloadCallback)
         {
-	    	console.log('Preload Callback found');
+	    	// console.log('Preload Callback found');
             this.game.load.reset();
             this.onPreloadCallback.call(this.callbackContext);
 
             //  Is the loader empty?
             if (this.game.load.queueSize == 0)
             {
-		    	console.log('Loader queue empty');
+		    	// console.log('Loader queue empty');
                 this.game.loadComplete();
 
                 if (this.onCreateCallback)
@@ -260,18 +260,18 @@ Phaser.StateManager.prototype = {
             }
             else
             {
-		    	console.log('Loader started');
+		    	// console.log('Loader started');
                 //  Start the loader going as we have something in the queue
                 this.game.load.start();
             }
         }
         else
         {
-			console.log('Preload callback not found');
+			// console.log('Preload callback not found');
             //  No init? Then there was nothing to load either
             if (this.onCreateCallback)
             {
-				console.log('Create callback found');
+				// console.log('Create callback found');
                 this.onCreateCallback.call(this.callbackContext);
             }
 
@@ -343,10 +343,10 @@ Phaser.StateManager.prototype = {
 
     loadComplete: function () {
 
-		console.log('Phaser.StateManager.loadComplete');
+		// console.log('Phaser.StateManager.loadComplete');
 
         if (this.onCreateCallback) {
-			console.log('Create callback found');
+			// console.log('Create callback found');
             this.onCreateCallback.call(this.callbackContext);
         }
 

@@ -65,7 +65,7 @@ Phaser.Animation.Parser = {
     },
 
     /**
-    * Parse frame data from json.
+    * Parse frame data from json texture atlas in Array format.
     * @param json {object} Json data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */
@@ -103,6 +103,51 @@ Phaser.Animation.Parser = {
             	frames[i].spriteSourceSize.w, 
             	frames[i].spriteSourceSize.h
 			);
+        }
+
+        return data;
+
+    },
+
+    /**
+    * Parse frame data from json texture atlas in Hash format.
+    * @param json {object} Json data you want to parse.
+    * @return {FrameData} Generated FrameData object.
+    */
+    JSONDataHash: function (game, json) {
+
+        //  Malformed?
+        if (!json['frames']) {
+            console.log(json);
+            throw new Error("Phaser.AnimationLoader.parseJSONDataHash: Invalid Texture Atlas JSON given, missing 'frames' object");
+        }
+            
+        //  Let's create some frames then
+        var data = new Phaser.Animation.FrameData();
+        
+        //  By this stage frames is a fully parsed array
+        var frames = json['frames'];
+        var newFrame;
+        
+        for (var key in frames) {
+
+            newFrame = data.addFrame(new Phaser.Animation.Frame(
+                frames[key].frame.x, 
+                frames[key].frame.y, 
+                frames[key].frame.w, 
+                frames[key].frame.h, 
+                key
+            ));
+
+            newFrame.setTrim(
+                frames[key].trimmed, 
+                frames[key].sourceSize.w, 
+                frames[key].sourceSize.h, 
+                frames[key].spriteSourceSize.x, 
+                frames[key].spriteSourceSize.y, 
+                frames[key].spriteSourceSize.w, 
+                frames[key].spriteSourceSize.h
+            );
         }
 
         return data;
