@@ -6,7 +6,6 @@ Phaser.StateManager = function (game, pendingState) {
 
 	if (pendingState !== null)
 	{
-		console.log('StartManager constructor', pendingState);
 		this._pendingState = pendingState;
 	}
 
@@ -99,7 +98,7 @@ Phaser.StateManager.prototype = {
 
 	boot: function () {
 
-		console.log('Phaser.StateManager.boot');
+		// console.log('Phaser.StateManager.boot');
 
 		if (this._pendingState !== null)
 		{

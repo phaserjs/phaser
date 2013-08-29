@@ -28,7 +28,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
 	if (typeof width === "undefined") { width = 800; }
 	if (typeof height === "undefined") { height = 600; }
-	if (typeof renderer === "undefined") { renderer = Phaser.RENDERER_AUTO; }
+	if (typeof renderer === "undefined") { renderer = Phaser.AUTO; }
 	if (typeof parent === "undefined") { parent = ''; }
 	if (typeof state === "undefined") { state = null; }
 	if (typeof transparent === "undefined") { transparent = false; }
@@ -43,9 +43,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	this.transparent = transparent;
 	this.antialias = antialias;
 	this.renderType = renderer;
-	// this.renderer = renderer;
-
-	console.log('Phaser.Game', width, height, renderer, parent, transparent, antialias);
 
 	this.state = new Phaser.StateManager(this, state);
 
@@ -246,8 +243,6 @@ Phaser.Game.prototype = {
 			return;
 		}
 
-		console.log('Phaser.Game boot');
-
 		if (!document.body) {
 			window.setTimeout(this._onBoot, 20);
 		}
@@ -287,13 +282,13 @@ Phaser.Game.prototype = {
 			this.stage.boot();
 			// this.input.boot();
 
-			if (this.renderType == Phaser.RENDERER_CANVAS)
+			if (this.renderType == Phaser.CANVAS)
 			{
-				console.log('Phaser', Phaser.VERSION, 'initialized. Rendering to Canvas');
+				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to Canvas', 'color: #ffff33; background: #000000');
 			}
 			else
 			{
-				console.log('Phaser', Phaser.VERSION, 'initialized. Rendering to WebGL');
+				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to WebGL', 'color: #ffff33; background: #000000');
 			}
 
 	        this.isRunning = true;
@@ -308,11 +303,11 @@ Phaser.Game.prototype = {
 
 	setUpRenderer: function () {
 
-		if (this.renderType == Phaser.RENDERER_CANVAS || (this.renderer == Phaser.RENDERER_AUTO && this.device.webGL == false))
+		if (this.renderType == Phaser.CANVAS || (this.renderer == Phaser.AUTO && this.device.webGL == false))
 		{
 			if (this.device.canvas)
 			{
-				this.renderType = Phaser.RENDERER_CANVAS;
+				this.renderType = Phaser.CANVAS;
 				this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, this.transparent);
 				Phaser.Canvas.setSmoothingEnabled(this.renderer.view, this.antialias);
 			}
@@ -373,7 +368,8 @@ Phaser.Game.prototype = {
 
 	        this.state.preRender();
 
-	        // this.renderer.render();
+	        this.renderer.render(this.stage._s);
+
 	        this.plugins.render();
 
 	        this.state.render();
@@ -389,7 +385,7 @@ Phaser.Game.prototype = {
 	        this.plugins.postUpdate();
 
 	        this.plugins.preRender();
-	        // this.renderer.render();
+	        this.renderer.render(this.stage._s);
 	        this.plugins.render();
 	        this.state.loadRender();
 	        this.plugins.postRender();

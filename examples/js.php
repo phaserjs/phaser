@@ -45,6 +45,7 @@
 	<script src="../src/core/StateManager.js"></script>
 	<script src="../src/core/State.js"></script>
 	<script src="../src/system/RequestAnimationFrame.js"></script>
+	<script src="../src/system/Canvas.js"></script>
 	<script src="../src/system/Device.js"></script>
 	<script src="../src/core/SignalBinding.js"></script>
 	<script src="../src/core/Signal.js"></script>
@@ -54,6 +55,7 @@
 	<script src="../src/math/Math.js"></script>
 	<script src="../src/geom/Point.js"></script>
 	<script src="../src/geom/Circle.js"></script>
+	<script src="../src/geom/Rectangle.js"></script>
 	<script src="../src/net/Net.js"></script>
 	<script src="../src/tween/TweenManager.js"></script>
 	<script src="../src/tween/Tween.js"></script>

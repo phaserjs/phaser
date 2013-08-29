@@ -13,9 +13,6 @@ Phaser.Stage = function (game) {
 	
 	this.game = game;
 
-	this.bounds = new Phaser.Rectangle;
-	this.offset = new Phaser.Point;
-
 };
 
 Phaser.Stage.prototype = {
@@ -29,8 +26,9 @@ Phaser.Stage.prototype = {
 	boot: function () {
 
 		//	Get the offset values (for input and other things)
+		this.offset = new Phaser.Point;
 		Phaser.Canvas.getOffset(this.game.renderer.view, this.offset);
-		this.bounds.setTo(this.offset.x, this.offset.y, this.game.width, this.game.height);
+		this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
 
 		this._s = new PIXI.Stage(0x000000);
 
@@ -62,12 +60,12 @@ Phaser.Stage.prototype = {
 
         if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
         {
-	        console.log('visibilityChange - hidden', event);
+	        // console.log('visibilityChange - hidden', event);
 	        this.game.paused = true;
         }
         else
         {
-	        console.log('visibilityChange - shown', event);
+	        // console.log('visibilityChange - shown', event);
 	        this.game.paused = false;
         }
 
