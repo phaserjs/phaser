@@ -1,0 +1,116 @@
+Phaser.World = function (game) {
+
+	this.game = game;
+	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
+
+	this._stage = new PIXI.Stage(0x000000);
+
+	this._container = new PIXI.DisplayObjectContainer();
+
+	this._stage.addChild(this._container);
+	
+};
+
+Phaser.World.prototype = {
+
+	_stage: null,
+	_container: null,
+
+	bounds: null,
+
+	add: function (sprite) {
+		this._container.addChild(sprite);
+	},
+
+	/**
+	* Updates the size of this world.
+	*
+	* @param width {number} New width of the world.
+	* @param height {number} New height of the world.
+	* @param [updateCameraBounds] {bool} Update camera bounds automatically or not. Default to true.
+	*/
+	setSize: function (width, height, updateCameraBounds) {
+
+		if (typeof updateCameraBounds === "undefined") { updateCameraBounds = true; }
+
+		this.bounds.width = width;
+		this.bounds.height = height;
+
+		if (updateCameraBounds == true)
+		{
+			// this.game.camera.setBounds(0, 0, width, height);
+		}
+
+	},
+
+};
+
+//	Getters / Setters
+
+Object.defineProperty(Phaser.World.prototype, "width", {
+
+    get: function () {
+        return this.bounds.width;
+    },
+
+    set: function (value) {
+        this.bounds.width = value;
+    },
+
+    enumerable: true,
+    configurable: true
+});
+
+Object.defineProperty(Phaser.World.prototype, "height", {
+
+    get: function () {
+        return this.bounds.height;
+    },
+
+    set: function (value) {
+        this.bounds.height = value;
+    },
+
+    enumerable: true,
+    configurable: true
+});
+
+Object.defineProperty(Phaser.World.prototype, "centerX", {
+
+    get: function () {
+        return this.bounds.halfWidth;
+    },
+
+    enumerable: true,
+    configurable: true
+});
+
+Object.defineProperty(Phaser.World.prototype, "centerY", {
+
+    get: function () {
+        return this.bounds.halfHeight;
+    },
+
+    enumerable: true,
+    configurable: true
+});
+
+Object.defineProperty(Phaser.World.prototype, "randomX", {
+
+    get: function () {
+        return Math.round(Math.random() * this.bounds.width);
+    },
+
+    enumerable: true,
+    configurable: true
+});
+
+Object.defineProperty(Phaser.World.prototype, "randomY", {
+
+    get: function () {
+        return Math.round(Math.random() * this.bounds.height);
+    },
+
+    enumerable: true,
+    configurable: true
+});

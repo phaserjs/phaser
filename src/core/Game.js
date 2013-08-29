@@ -257,13 +257,12 @@ Phaser.Game.prototype = {
 			this.isBooted = true;
 
 			this.device = new Phaser.Device();
+			this.math = Phaser.Math;
 
 			this.setUpRenderer();
 
-			this.net = new Phaser.Net(this);
-			this.math = Phaser.Math;
+			this.world = new Phaser.World(this);
 			this.stage = new Phaser.Stage(this);
-			// this.world = new Phaser.World(this, width, height);
 			// this.add = new Phaser.GameObjectFactory(this);
 			this.cache = new Phaser.Cache(this);
 			this.load = new Phaser.Loader(this);
@@ -274,11 +273,11 @@ Phaser.Game.prototype = {
 			this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 			// this.physics = new Phaser.Physics.PhysicsManager(this);
 			this.plugins = new Phaser.PluginManager(this, this);
+			this.net = new Phaser.Net(this);
 
 			this.load.onLoadComplete.add(this.loadComplete, this);
 
 			this.state.boot();
-			// this.world.boot();
 			this.stage.boot();
 			// this.input.boot();
 
@@ -309,7 +308,7 @@ Phaser.Game.prototype = {
 			{
 				this.renderType = Phaser.CANVAS;
 				this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, this.transparent);
-				Phaser.Canvas.setSmoothingEnabled(this.renderer.view, this.antialias);
+				Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
 			}
 			else
 			{
@@ -368,7 +367,7 @@ Phaser.Game.prototype = {
 
 	        this.state.preRender();
 
-	        this.renderer.render(this.stage._s);
+	        this.renderer.render(this.world._stage);
 
 	        this.plugins.render();
 
@@ -385,7 +384,7 @@ Phaser.Game.prototype = {
 	        this.plugins.postUpdate();
 
 	        this.plugins.preRender();
-	        this.renderer.render(this.stage._s);
+	        this.renderer.render(this.world._stage);
 	        this.plugins.render();
 	        this.state.loadRender();
 	        this.plugins.postRender();

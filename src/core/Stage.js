@@ -18,7 +18,6 @@ Phaser.Stage = function (game) {
 Phaser.Stage.prototype = {
 
 	_onChange: null,
-	_s: null,
 
 	bounds: null,
 	offset: null,
@@ -29,8 +28,6 @@ Phaser.Stage.prototype = {
 		this.offset = new Phaser.Point;
 		Phaser.Canvas.getOffset(this.game.renderer.view, this.offset);
 		this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
-
-		this._s = new PIXI.Stage(0x000000);
 
 		var _this = this;
 

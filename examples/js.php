@@ -42,19 +42,22 @@
 	<script src="../src/pixi/utils/Polyk.js"></script>
 	<script src="../src/pixi/utils/Utils.js"></script>
 
-	<script src="../src/core/StateManager.js"></script>
 	<script src="../src/core/State.js"></script>
-	<script src="../src/system/RequestAnimationFrame.js"></script>
+	<script src="../src/core/StateManager.js"></script>
+	<script src="../src/core/Signal.js"></script>
+	<script src="../src/core/SignalBinding.js"></script>
+	<script src="../src/core/Plugin.js"></script>
+	<script src="../src/core/PluginManager.js"></script>
+	<script src="../src/core/Stage.js"></script>
+	<script src="../src/core/World.js"></script>
+	<script src="../src/core/Game.js"></script>
 	<script src="../src/system/Canvas.js"></script>
 	<script src="../src/system/Device.js"></script>
-	<script src="../src/core/SignalBinding.js"></script>
-	<script src="../src/core/Signal.js"></script>
-	<script src="../src/core/PluginManager.js"></script>
-	<script src="../src/core/Plugin.js"></script>
+	<script src="../src/system/RequestAnimationFrame.js"></script>
 	<script src="../src/math/RandomDataGenerator.js"></script>
 	<script src="../src/math/Math.js"></script>
-	<script src="../src/geom/Point.js"></script>
 	<script src="../src/geom/Circle.js"></script>
+	<script src="../src/geom/Point.js"></script>
 	<script src="../src/geom/Rectangle.js"></script>
 	<script src="../src/net/Net.js"></script>
 	<script src="../src/tween/TweenManager.js"></script>
@@ -67,5 +70,3 @@
 	<script src="../src/animation/Parser.js"></script>
 	<script src="../src/loader/Cache.js"></script>
 	<script src="../src/loader/Loader.js"></script>
-	<script src="../src/Stage.js"></script>
-	<script src="../src/Game.js"></script>
