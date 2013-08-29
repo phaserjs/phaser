@@ -8,16 +8,24 @@
 </head>
 <body>
 
+<input type="button" id="menu" value="Main Menu" />
+<input type="button" id="select" value="Level Select" />
+
 <script type="text/javascript">
 
 (function () {
 
-	var mainMenu = {
+	var preloader = {
 
 		preload: function() {
-			console.log('mainMenu preload');
+			console.log('preloader.preload');
 			game.load.image('nocooper', 'assets/pics/1984-nocooper-space.png');
-		},
+			game.load.image('touhou', 'assets/pics/aya_touhou_teng_soldier.png');
+		}
+
+	}
+
+	var mainMenu = {
 
 		create: function() {
 			console.log('mainMenu create');
@@ -26,11 +34,6 @@
 	}
 
 	var levelSelect = {
-
-		preload: function() {
-			console.log('levelSelect preload');
-			game.load.image('touhou', 'assets/pics/aya_touhou_teng_soldier.png');
-		},
 
 		create: function() {
 			console.log('levelSelect create');
@@ -41,13 +44,12 @@
 	//	No parameters given, which means no default state is created or started
 	var game = new Phaser.Game();
 
-	//	In this example we've created 2 states above (mainMenu and levelSelect)
-	//	We'll add them both to the game
+	game.state.add('preloader', preloader, true);
 	game.state.add('menu', mainMenu);
 	game.state.add('select', levelSelect);
 
-	//	Now we can either start the state we want directly, or we could have passed 'true' as the 3rd parameter in state.add
-	game.state.start('select');
+	var b1 = document.getElementById('menu').onclick = function() { game.state.start('menu') };
+	var b2 = document.getElementById('select').onclick = function() { game.state.start('select') };
 
 })();
 

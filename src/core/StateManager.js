@@ -4,7 +4,11 @@ Phaser.StateManager = function (game, pendingState) {
 
 	this.states = {};
 
-	this._pendingState = pendingState;
+	if (pendingState !== null)
+	{
+		console.log('StartManager constructor', pendingState);
+		this._pendingState = pendingState;
+	}
 
 };
 
@@ -96,9 +100,23 @@ Phaser.StateManager.prototype = {
 	boot: function () {
 
 		console.log('Phaser.StateManager.boot');
-		console.log(typeof this._pendingState);
 
-		this.add('default', this._pendingState, true);
+		if (this._pendingState !== null)
+		{
+			console.log('_pendingState found');
+			console.log(typeof this._pendingState);
+
+			if (typeof this._pendingState === 'string')
+			{
+				//	State was already added, so just start it
+				this.start(this._pendingState, false, false);
+			}
+			else
+			{
+				this.add('default', this._pendingState, true);
+			}
+
+		}
 
 	},
 
@@ -110,10 +128,11 @@ Phaser.StateManager.prototype = {
     */
     add: function (key, state, autoStart) {
 
-        if (typeof autoStart === "undefined") { autoStart = true; }
+        if (typeof autoStart === "undefined") { autoStart = false; }
 
 		console.log('Phaser.StateManager.addState', key);
 		console.log(typeof state);
+		console.log('autoStart?', autoStart);
 
 		var newState;
 
@@ -138,7 +157,16 @@ Phaser.StateManager.prototype = {
 
 		if (autoStart)
 		{
-			this.start(key);
+			if (this.game.isBooted)
+			{
+				console.log('Game is booted, so we can start the state now');
+				this.start(key);
+			}
+			else
+			{
+				console.log('Game is NOT booted, so set the current state as pending');
+				this._pendingState = key;
+			}
 		}
 
 		return newState;
@@ -146,6 +174,25 @@ Phaser.StateManager.prototype = {
     },
 
     remove: function (key) {
+
+    	if (this.current == key)
+    	{
+	        this.callbackContext = null;
+
+	        this.onInitCallback = null;
+	        this.onShutDownCallback = null;
+
+	        this.onPreloadCallback = null;
+	        this.onLoadRenderCallback = null;
+	        this.onLoadUpdateCallback = null;
+	        this.onCreateCallback = null;
+	        this.onUpdateCallback = null;
+	        this.onRenderCallback = null;
+	        this.onPausedCallback = null;
+	        this.onDestroyCallback = null;
+    	}
+
+    	delete this.states[key];
 
     },
 
@@ -163,6 +210,13 @@ Phaser.StateManager.prototype = {
 
         if (typeof clearWorld === "undefined") { clearWorld = true; }
         if (typeof clearCache === "undefined") { clearCache = false; }
+
+        if (this.game.isBooted == false)
+        {
+			console.log('Game is NOT booted, so set the requested state as pending');
+			this._pendingState = key;
+			return;
+        }
 
 		if (this.checkState(key) == false)
 		{
@@ -288,120 +342,6 @@ Phaser.StateManager.prototype = {
 
 	},
 
-	/**
-    * Switch to a new State.
-    * @param state {State} The state you want to switch to. If a string will be treated as a reference to an already stored state.
-    * @param [clearWorld] {bool} clear everything in the world? (Default to true)
-    * @param [clearCache] {bool} clear asset cache? (Default to false and ONLY available when clearWorld=true)
-    */
-    OLDswitchState: function (state, clearWorld, clearCache) {
-
-        if (typeof clearWorld === "undefined") { clearWorld = true; }
-        if (typeof clearCache === "undefined") { clearCache = false; }
-
-		console.log('Phaser.StateManager.switchState');
-		console.log(typeof state);
-
-		var result = false;
-		var newState;
-
-		//	Check the pendingState object to see if it contains anything we can use
-		if (typeof state === 'string')
-		{
-			console.log('Phaser.StateManager.boot: string given');
-		}
-		else if (state instanceof Phaser.State)
-		{
-			console.log('Phaser.StateManager.boot: Phaser.State given');
-			newState = state;
-    		newState.link(this.game);
-			result = this.setCallbacks();
-		}
-		else if (typeof state === 'object')
-		{
-			console.log('Phaser.StateManager.boot: Object given');
-			newState = state;
-			result = this.setCallbacks();
-		}
-		else if (typeof state === 'function')
-		{
-			console.log('Phaser.StateManager.boot: function reference given');
-			newState = new state(this.game);
-			result = this.setCallbacks();
-		}
-
-		if (result)
-		{
-			console.log("We've been given and successfully parsed a valid state");
-
-			var idx = this.states.push(newState);
-
-			//	We've been given and successfully parsed a valid state
-			this.startState();
-		}
-
-		return result;
-
-    },
-
-
-
-
-	/**
-    * Start the current state
-    */
-    OLDstartState: function () {
-			result = this.setCallbacks();
-
-    	console.log('Phaser.StateManager.startState');
-    	// console.log(this);
-    	// console.log(this.callbackContext);
-
-
-
-        if (this.onPreloadCallback !== null)
-        {
-	    	console.log('Preload Callback found');
-            this.game.load.reset();
-            this.onPreloadCallback.call(this.callbackContext);
-            // this.onPreloadCallback.call(this.onPreloadCallback);
-
-            //  Is the loader empty?
-            if (this.game.load.queueSize == 0)
-            {
-		    	console.log('Loader queue empty');
-                // this.game._loadComplete = true;
-                this.game.loadComplete();
-
-                if (this.onCreateCallback !== null)
-                {
-                    this.onCreateCallback.call(this.callbackContext);
-                    // this.onCreateCallback.call(this.onCreateCallback);
-                }
-            }
-            else
-            {
-		    	console.log('Loader started');
-                //  Start the loader going as we have something in the queue
-                this.game.load.start();
-            }
-        }
-        else
-        {
-			console.log('Preload callback not found');
-            //  No init? Then there was nothing to load either
-            if (this.onCreateCallback) {
-				console.log('Create callback found');
-                this.onCreateCallback.call(this.callbackContext);
-                // this.onCreateCallback.call(this.onCreateCallback);
-            }
-
-            // this.game._loadComplete = true;
-            this.game.loadComplete();
-        }
-
-    },
-
     loadComplete: function () {
 
 		console.log('Phaser.StateManager.loadComplete');
@@ -414,87 +354,50 @@ Phaser.StateManager.prototype = {
 
     },
 
-	/**
-    * Switch to a new State.
-    * @param state {State} The state you want to switch to.
-    * @param [clearWorld] {bool} clear everything in the world? (Default to true)
-    * @param [clearCache] {bool} clear asset cache? (Default to false and ONLY available when clearWorld=true)
-    */
+    loadUpdate: function () {
 
-    /*
-    switchState: function (state, clearWorld, clearCache) {
+	    if (this.onLoadUpdateCallback)
+	    {
+	    	this.onLoadUpdateCallback.call(this.callbackContext);
+		}
 
-    	// console.log('switchState', state, this.isBooted);
-    	// console.log(typeof state);
-    	// console.log(state instanceof Phaser.State);
-
-        if (typeof clearWorld === "undefined") { clearWorld = true; }
-        if (typeof clearCache === "undefined") { clearCache = false; }
-
-    	if (state instanceof Phaser.State) {
-    		state.link(this);
-    	}
-
-        if (this.isBooted == false) {
-            this._pendingState = state;
-            return;
-        }
-
-        //  Destroy current state?
-        if (this.onDestroyCallback !== null) {
-            this.onDestroyCallback.call(this.callbackContext);
-        }
-
-        if (this.input) {
-	        this.input.reset(true);
-        }
-
-        //  Prototype?
-        if (typeof state === 'function')
-        {
-            this.state = new state(this);
-        }
-        else
-        {
-            this.state = state;
-        }
-
-        //  Ok, have we got at least a create or update function?
-        if (this.state['create'] || this.state['update']) {
-
-            this.callbackContext = this.state;
-
-            //  Bingo, let's set them up
-            this.onPreloadCallback = this.state['preload'] || null;
-            this.onLoadRenderCallback = this.state['loadRender'] || null;
-            this.onLoadUpdateCallback = this.state['loadUpdate'] || null;
-            this.onCreateCallback = this.state['create'] || null;
-            this.onUpdateCallback = this.state['update'] || null;
-            this.onPreRenderCallback = this.state['preRender'] || null;
-            this.onRenderCallback = this.state['render'] || null;
-            this.onPausedCallback = this.state['paused'] || null;
-            this.onDestroyCallback = this.state['destroy'] || null;
-            
-            if (clearWorld) {
-
-                //this.world.destroy();
-
-                if (clearCache == true) {
-                    this.cache.destroy();
-                }
-            }
-
-            this._loadComplete = false;
-
-            this.startState();
-        }
-        else
-        {
-            console.warn("Invalid Phaser State object given. Must contain at least a create or update function.");
-        }
     },
 
-    */
+    loadRender: function () {
+
+	    if (this.onLoadRenderCallback)
+	    {
+	    	this.onLoadRenderCallback.call(this.callbackContext);
+		}
+
+    },
+
+    update: function () {
+
+	    if (this.onUpdateCallback)
+	    {
+	    	this.onUpdateCallback.call(this.callbackContext);
+		}
+
+    },
+
+    preRender: function () {
+
+	    if (this.onPreRenderCallback)
+	    {
+	    	this.onPreRenderCallback.call(this.callbackContext);
+		}
+
+    },
+
+    render: function () {
+
+	    if (this.onRenderCallback)
+	    {
+	    	this.onRenderCallback.call(this.callbackContext);
+		}
+
+    },
 
 	/**
     * Nuke the entire game from orbit
@@ -502,6 +405,10 @@ Phaser.StateManager.prototype = {
     destroy: function () {
 
         this.callbackContext = null;
+
+        this.onInitCallback = null;
+        this.onShutDownCallback = null;
+
         this.onPreloadCallback = null;
         this.onLoadRenderCallback = null;
         this.onLoadUpdateCallback = null;
@@ -510,6 +417,10 @@ Phaser.StateManager.prototype = {
         this.onRenderCallback = null;
         this.onPausedCallback = null;
         this.onDestroyCallback = null;
+
+        this.game = null;
+        this.states = {};
+        this._pendingState = null;
 
     }
 
