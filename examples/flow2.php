@@ -16,7 +16,7 @@
 
 	state.preload = function() {
 
-		console.log('state preload called');
+		console.log('state preload called', this);
 
 		//	When an instance of Phaser.State is added to Phaser.Game it becomes bound to that game
 		//	which opens up lots of handy short-cuts to helpers and libs, such as this.math, this.load, this.cache, etc
@@ -32,7 +32,7 @@
 		console.log('state create called');
 
 		//	Let's try adding an image to the DOM
-		document.body.appendChild(this.cache.getImage('cockpit'));
+		document.body.appendChild(this.cache.getImage('overdose'));
 
 		//	And some text
 		var para = document.createElement('pre');
@@ -41,11 +41,9 @@
 
 	}
 
-	var megaBlasterGame = new Phaser.Game();
-
 	//	In this approach we're using a Phaser.State object and switching to it
 	//	This gives us the advantage that from within state functions you can access 'this' and most the properties of Phaser.Game
-	megaBlasterGame.switchState(state);
+	var game = new Phaser.Game(800, 600, Phaser.RENDERER_AUTO, '', state);
 
 })();
 

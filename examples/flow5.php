@@ -37,8 +37,10 @@
 		}
 	}
 
-	//	In this example we're passing in a custom state object, not an instance of Phaser.State
-	var game = new Phaser.Game(800, 600, Phaser.RENDERER_AUTO, '', state);
+	var game = new Phaser.Game(800, 600, Phaser.RENDERER_AUTO, '');
+
+	//	In this instance we'll change to the state ourselves rather than pass it in the game constructor
+
 
 })();
 

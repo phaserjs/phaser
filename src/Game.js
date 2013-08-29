@@ -24,26 +24,43 @@
 * @param renderer {number} Which renderer to use (canvas or webgl)
 * @param parent {string} ID of its parent DOM element.
 */
-Phaser.Game = function (width, height, renderer, parent) {
+Phaser.Game = function (width, height, renderer, parent, state) {
 
 	if (typeof width === "undefined") { width = 800; }
 	if (typeof height === "undefined") { height = 600; }
 	if (typeof renderer === "undefined") { renderer = Phaser.RENDERER_AUTO; }
 	if (typeof parent === "undefined") { parent = ''; }
+	if (typeof state === "undefined") { state = {}; }
 
 	this.id = Phaser.GAMES.push(this) - 1;
+	this.parent = parent;
+
+	//	Do some more intelligent size parsing here, so they can set "100%" for example, maybe pass the scale mode in here too?
+	this.width = width;
+	this.height = height;
+
 	this.renderer = renderer;
 
-	//var _this = this;
+	console.log('Phaser.Game', width, height, renderer, parent);
+
+	//	Pass 'state' to the StateManager?
+	this.state = new Phaser.StateManager(this, state);
+	// this._tempState = state;
+
+	var _this = this;
+
+    this._onBoot = function () {
+        return _this.boot();
+    }
 
 	if (document.readyState === 'complete' || document.readyState === 'interactive')
 	{
-		setTimeout(Phaser.GAMES[this.id].boot(parent, width, height), 0);
+		window.setTimeout(this._onBoot, 0);
 	}
 	else
 	{
-		document.addEventListener('DOMContentLoaded', Phaser.GAMES[this.id].boot(parent, width, height), false);
-		window.addEventListener('load', Phaser.GAMES[this.id].boot(parent, width, height), false);
+		document.addEventListener('DOMContentLoaded', this._onBoot, false);
+		window.addEventListener('load', this._onBoot, false);
 	}
 
 	return this;
@@ -52,11 +69,33 @@ Phaser.Game = function (width, height, renderer, parent) {
 
 Phaser.Game.prototype = {
 
+	//	temps so we can clean-up the event listeneres
+	_tempState: null,
+	_onBoot: null,
+
 	/**
 	* Phaser Game ID.
 	* @type {number}
 	*/
 	id: 0,
+
+	/**
+	* The Game width (in pixels).
+	* @type {number}
+	*/
+	width: 0,
+
+	/**
+	* The Game height (in pixels).
+	* @type {number}
+	*/
+	height: 0,
+
+	/**
+	* The Games DOM parent.
+	* @type {HTMLElement}
+	*/
+	parent: '',
 
 	/**
 	* The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL
@@ -77,72 +116,6 @@ Phaser.Game.prototype = {
 	_paused: false,
 
 	/**
-	* The state to be switched to in the next frame.
-	* @type {State}
-	*/
-	_pendingState: null,
-
-	/**
-	* The current State object (defaults to null)
-	* @type {State}
-	*/
-	state: null,
-	
-	/**
-	* This will be called when init states. (loading assets...)
-	* @type {function}
-	*/
-	onPreloadCallback: null,
-	
-	/**
-	* This will be called when create states. (setup states...)
-	* @type {function}
-	*/
-	onCreateCallback: null,
-
-	/**
-	* This will be called when State is updated, this doesn't happen during load (see onLoadUpdateCallback)
-	* @type {function}
-	*/
-	onUpdateCallback: null,
-
-	/**
-	* This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback)
-	* @type {function}
-	*/
-	onRenderCallback: null,
-
-	/**
-	* This will be called before the State is rendered and before the stage is cleared
-	* @type {function}
-	*/
-	onPreRenderCallback: null,
-
-	/**
-	* This will be called when the State is updated but only during the load process
-	* @type {function}
-	*/
-	onLoadUpdateCallback: null,
-
-	/**
-	* This will be called when the State is rendered but only during the load process
-	* @type {function}
-	*/
-	onLoadRenderCallback: null,
-
-	/**
-	* This will be called when states paused.
-	* @type {function}
-	*/
-	onPausedCallback: null,
-
-	/**
-	* This will be called when the state is destroyed (i.e. swapping to a new state)
-	* @type {function}
-	*/
-	onDestroyCallback: null,
-
-	/**
 	* Whether the game engine is booted, aka available.
 	* @type {bool}
 	*/
@@ -156,8 +129,15 @@ Phaser.Game.prototype = {
 
 	/**
 	* Automatically handles the core game loop via requestAnimationFrame or setTimeout
+     * @type {Phaser.RequestAnimationFrame}
 	*/
 	raf: null,
+
+    /**
+     * The StateManager.
+     * @type {Phaser.StateManager}
+     */
+    state: null,
 
     /**
      * Reference to the GameObject Factory.
@@ -249,24 +229,25 @@ Phaser.Game.prototype = {
 	* @param width {number} Width of the game screen.
 	* @param height {number} Height of the game screen.
 	*/
-	boot: function (parent, width, height) {
+	boot: function () {
 
 		if (this.isBooted) {
 			return;
 		}
 
-		console.log('Phaser.Game.Boot');
-		console.log(this);
+		console.log('Phaser.Game boot');
 
-		var _this = this;
+		//	Probably not needed any more
+		// var _this = this;
 
 		if (!document.body) {
-			setTimeout(Phaser.GAMES[_this.id].boot(parent, width, height), 13);
+			window.setTimeout(this._onBoot, 20);
+			// setTimeout(Phaser.GAMES[_this.id].boot(parent, width, height), 13);
 		}
 		else
 		{
-			document.removeEventListener('DOMContentLoaded', Phaser.GAMES[_this.id].boot);
-			window.removeEventListener('load', Phaser.GAMES[_this.id].boot);
+			document.removeEventListener('DOMContentLoaded', this._onBoot);
+			window.removeEventListener('load', this._onBoot);
 
 			this.onPause = new Phaser.Signal();
 			this.onResume = new Phaser.Signal();
@@ -286,9 +267,11 @@ Phaser.Game.prototype = {
 			this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 			// this.physics = new Phaser.Physics.PhysicsManager(this);
 			this.plugins = new Phaser.PluginManager(this, this);
+			// this.state = new Phaser.StateManager(this, this._tempState);
 
 			this.load.onLoadComplete.add(this.loadComplete, this);
 
+			this.state.boot();
 			// this.world.boot();
 			// this.stage.boot();
 			// this.input.boot();
@@ -299,22 +282,11 @@ Phaser.Game.prototype = {
 	        this.isRunning = true;
             this._loadComplete = false;
 
-			this.raf = new Phaser.RequestAnimationFrame(this);
-			this.raf.start();
+			// this.raf = new Phaser.RequestAnimationFrame(this);
+			// this.raf.start();
 
-	        if (this.onPreloadCallback || this.onCreateCallback || this.onUpdateCallback || this.onRenderCallback || this._pendingState)
-	        {
-			    if (this._pendingState)
-			    {
-					console.log('boot has found a pending state');
-			        this.switchState(this._pendingState, false, false);
-			    }
-			    else
-			    {
-					console.log('boot has found enough callbacks to start the state');
-			        this.startState();
-			    }
-	        }
+			//	boot sm
+
 		}
 
 	},
@@ -329,6 +301,7 @@ Phaser.Game.prototype = {
 	*/
 	launch: function (context, preload, create, update, render) {
 
+		/*
 		this.callbackContext = context;
 
 	    this.onPreloadCallback = preload || null;
@@ -363,11 +336,12 @@ Phaser.Game.prototype = {
 				console.log('launch has set the callbacks but cant start because the DOM isnt booted yet');
 			}
         }
+        */
 
 	},
 
 	/**
-    * Called when the load has finished after preload was run.
+    * Called when the load has finished, after preload was run.
     */
     loadComplete: function () {
 
@@ -375,56 +349,14 @@ Phaser.Game.prototype = {
 
         this._loadComplete = true;
 
-        if (this.onCreateCallback) {
-	        this.onCreateCallback.call(this.callbackContext);
-	        // this.onCreateCallback.call(this);
-        }
+        this.state.loadComplete();
 
-    },
+		this.load.onLoadComplete.remove(this.loadComplete, this);
 
-	/**
-    * Start the current state
-    */
-    startState: function () {
-
-    	console.log('startState');
-    	// console.log(this);
-    	// console.log(this.callbackContext);
-
-        if (this.onPreloadCallback !== null)
-        {
-            this.load.reset();
-            this.onPreloadCallback.call(this.callbackContext);
-            // this.onPreloadCallback.call(this.onPreloadCallback);
-
-            //  Is the loader empty?
-            if (this.load.queueSize == 0)
-            {
-                if (this.onCreateCallback !== null)
-                {
-                    this.onCreateCallback.call(this.callbackContext);
-                    // this.onCreateCallback.call(this.onCreateCallback);
-                }
-
-                this._loadComplete = true;
-            }
-            else
-            {
-                //  Start the loader going as we have something in the queue
-                this.load.onLoadComplete.add(this.loadComplete, this);
-                this.load.start();
-            }
-        }
-        else
-        {
-            //  No init? Then there was nothing to load either
-            if (this.onCreateCallback !== null) {
-                this.onCreateCallback.call(this.callbackContext);
-                // this.onCreateCallback.call(this.onCreateCallback);
-            }
-
-            this._loadComplete = true;
-        }
+        // if (this.onCreateCallback) {
+	       //  this.onCreateCallback.call(this.callbackContext);
+	       //  // this.onCreateCallback.call(this);
+        // }
 
     },
 
@@ -492,84 +424,6 @@ Phaser.Game.prototype = {
         }
 
 	},
-
-	/**
-    * Switch to a new State.
-    * @param state {State} The state you want to switch to.
-    * @param [clearWorld] {bool} clear everything in the world? (Default to true)
-    * @param [clearCache] {bool} clear asset cache? (Default to false and ONLY available when clearWorld=true)
-    */
-    switchState: function (state, clearWorld, clearCache) {
-
-    	// console.log('switchState', state, this.isBooted);
-    	// console.log(typeof state);
-    	// console.log(state instanceof Phaser.State);
-
-        if (typeof clearWorld === "undefined") { clearWorld = true; }
-        if (typeof clearCache === "undefined") { clearCache = false; }
-
-    	if (state instanceof Phaser.State) {
-    		state.link(this);
-    	}
-
-        if (this.isBooted == false) {
-            this._pendingState = state;
-            return;
-        }
-
-        //  Destroy current state?
-        if (this.onDestroyCallback !== null) {
-            this.onDestroyCallback.call(this.callbackContext);
-        }
-
-        if (this.input) {
-	        this.input.reset(true);
-        }
-
-        //  Prototype?
-        if (typeof state === 'function')
-        {
-            this.state = new state(this);
-        }
-        else
-        {
-            this.state = state;
-        }
-
-        //  Ok, have we got at least a create or update function?
-        if (this.state['create'] || this.state['update']) {
-
-            this.callbackContext = this.state;
-
-            //  Bingo, let's set them up
-            this.onPreloadCallback = this.state['preload'] || null;
-            this.onLoadRenderCallback = this.state['loadRender'] || null;
-            this.onLoadUpdateCallback = this.state['loadUpdate'] || null;
-            this.onCreateCallback = this.state['create'] || null;
-            this.onUpdateCallback = this.state['update'] || null;
-            this.onPreRenderCallback = this.state['preRender'] || null;
-            this.onRenderCallback = this.state['render'] || null;
-            this.onPausedCallback = this.state['paused'] || null;
-            this.onDestroyCallback = this.state['destroy'] || null;
-            
-            if (clearWorld) {
-
-                //this.world.destroy();
-
-                if (clearCache == true) {
-                    this.cache.destroy();
-                }
-            }
-
-            this._loadComplete = false;
-
-            this.startState();
-        }
-        else
-        {
-            console.warn("Invalid Phaser State object given. Must contain at least a create or update function.");
-        }
-    },
 
 	/**
     * Nuke the entire game from orbit

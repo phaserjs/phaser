@@ -42,6 +42,7 @@
 	<script src="../src/pixi/utils/Polyk.js"></script>
 	<script src="../src/pixi/utils/Utils.js"></script>
 
+	<script src="../src/core/StateManager.js"></script>
 	<script src="../src/core/State.js"></script>
 	<script src="../src/system/RequestAnimationFrame.js"></script>
 	<script src="../src/system/Device.js"></script>

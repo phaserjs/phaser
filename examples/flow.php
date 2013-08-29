@@ -13,11 +13,10 @@
 //	Your game will work either from within a closure or not, it doesn't matter
 (function () {
 
-	//	These are all optional parameters now
-	var game = new Phaser.Game();
+	var game = new Phaser.Game(800, 600, Phaser.RENDERER_AUTO, '', { preload: preload, create: create });
 
 	//	In this approach we're simply using functions in the current scope to do what we need
-	game.launch(this, preload, create);
+	// game.launch(this, preload, create);
 
 	function preload() {
 
@@ -45,7 +44,7 @@
 
 	}
 
-/})();
+})();
 
 </script>
 
