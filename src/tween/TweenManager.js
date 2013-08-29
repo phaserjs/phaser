@@ -98,21 +98,21 @@ Phaser.TweenManager.prototype = {
 	*/
 	update: function () {
 
-		if ( _tweens.length === 0 ) return false;
+		if ( this._tweens.length === 0 ) return false;
 
-		var i = 0, numTweens = _tweens.length;
+		var i = 0, numTweens = this._tweens.length;
 
 		while ( i < numTweens ) {
 
-			if ( _tweens[ i ].update( this.game.time.now ) ) {
+			if ( this._tweens[ i ].update( this.game.time.now ) ) {
 
-				i ++;
+				i++;
 
 			} else {
 
-				_tweens.splice( i, 1 );
+				this._tweens.splice( i, 1 );
 
-				numTweens --;
+				numTweens--;
 
 			}
 

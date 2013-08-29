@@ -20,7 +20,7 @@ Phaser.Plugin = function (game, parent) {
 
 };
 
-Phaser.Plugin.prototype = {,
+Phaser.Plugin.prototype = {
 
     /**
     * Pre-update is called at the start of the update cycle, before any other updates have taken place.

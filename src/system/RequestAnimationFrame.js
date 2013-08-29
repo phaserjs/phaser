@@ -27,6 +27,12 @@ Phaser.RequestAnimationFrame = function(game) {
 Phaser.RequestAnimationFrame.prototype = {
 
 	/**
+	* The function called by the update
+	* @private
+	**/
+	_onLoop: null,
+
+	/**
 	* Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
 	* @method start
 	**/
@@ -34,15 +40,27 @@ Phaser.RequestAnimationFrame.prototype = {
 
 		this.isRunning = true;
 
+		var _this = this;
+
 		if (!window.requestAnimationFrame)
 		{
 			this._isSetTimeOut = true;
-			this._timeOutID = window.setTimeout(Phaser.GAMES[this.game.id].raf.updateSetTimeout, 0);
+
+            this._onLoop = function () {
+                return _this.updateSetTimeout();
+            };
+
+			this._timeOutID = window.setTimeout(this._onLoop, 0);
 		}
 		else
 		{
 			this._isSetTimeOut = false;
-			window.requestAnimationFrame(Phaser.GAMES[this.game.id].raf.updateRAF);
+
+            this._onLoop = function () {
+                return _this.updateRAF();
+            };
+
+			window.requestAnimationFrame(this._onLoop);
 		}
 
 	},
@@ -55,7 +73,7 @@ Phaser.RequestAnimationFrame.prototype = {
 
 		this.game.update(time);
 
-		window.requestAnimationFrame(Phaser.GAMES[this.game.id].raf.updateRAF);
+		window.requestAnimationFrame(this._onLoop);
 
 	},
 
@@ -67,7 +85,7 @@ Phaser.RequestAnimationFrame.prototype = {
 
 		this.game.update(Date.now());
 
-		this._timeOutID = window.setTimeout(Phaser.GAMES[this.game.id].raf.updateSetTimeout, this.game.time.timeToCall);
+		this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
 
 	},
 

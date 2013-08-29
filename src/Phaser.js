@@ -23,4 +23,12 @@
 /**
  * @module Phaser
  */
-var Phaser = Phaser || { VERSION: '1.0.0', GAMES: [] };
+var Phaser = Phaser || { 
+
+	VERSION: '1.0.0', 
+	GAMES: [], 
+	RENDERER_AUTO: 0,
+	RENDERER_CANVAS: 1,
+	RENDERER_WEBGL: 2
+
+ };

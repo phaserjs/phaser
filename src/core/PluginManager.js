@@ -13,7 +13,7 @@ Phaser.PluginManager = function(game, parent) {
 
 };
 
-Phaser.PluginManager.prototype =  {,
+Phaser.PluginManager.prototype = {
 
     /**
     * Add a new Plugin to the PluginManager.
