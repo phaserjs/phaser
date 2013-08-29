@@ -349,7 +349,6 @@ Phaser.StateManager.prototype = {
         if (this.onCreateCallback) {
 			console.log('Create callback found');
             this.onCreateCallback.call(this.callbackContext);
-            // this.onCreateCallback.call(this.onCreateCallback);
         }
 
     },

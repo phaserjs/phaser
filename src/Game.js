@@ -24,13 +24,15 @@
 * @param renderer {number} Which renderer to use (canvas or webgl)
 * @param parent {string} ID of its parent DOM element.
 */
-Phaser.Game = function (width, height, renderer, parent, state) {
+Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
 
 	if (typeof width === "undefined") { width = 800; }
 	if (typeof height === "undefined") { height = 600; }
 	if (typeof renderer === "undefined") { renderer = Phaser.RENDERER_AUTO; }
 	if (typeof parent === "undefined") { parent = ''; }
 	if (typeof state === "undefined") { state = null; }
+	if (typeof transparent === "undefined") { transparent = false; }
+	if (typeof antialias === "undefined") { antialias = true; }
 
 	this.id = Phaser.GAMES.push(this) - 1;
 	this.parent = parent;
@@ -38,10 +40,12 @@ Phaser.Game = function (width, height, renderer, parent, state) {
 	//	Do some more intelligent size parsing here, so they can set "100%" for example, maybe pass the scale mode in here too?
 	this.width = width;
 	this.height = height;
+	this.transparent = transparent;
+	this.antialias = antialias;
+	this.renderType = renderer;
+	// this.renderer = renderer;
 
-	this.renderer = renderer;
-
-	console.log('Phaser.Game', width, height, renderer, parent);
+	console.log('Phaser.Game', width, height, renderer, parent, transparent, antialias);
 
 	this.state = new Phaser.StateManager(this, state);
 
@@ -89,6 +93,9 @@ Phaser.Game.prototype = {
 	*/
 	height: 0,
 
+	transparent: false,
+	antialias: true,
+
 	/**
 	* The Games DOM parent.
 	* @type {HTMLElement}
@@ -99,7 +106,13 @@ Phaser.Game.prototype = {
 	* The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL
 	* @type {number}
 	*/
-	renderer: 0,
+	renderType: 0,
+
+	/**
+	* The Pixi Renderer
+	* @type {number}
+	*/
+	renderer: null,
 
 	/**
 	* Whether load complete loading or not.
@@ -108,10 +121,10 @@ Phaser.Game.prototype = {
 	_loadComplete: false,
 
 	/**
-	* Game is paused?
+	* Is game paused?
 	* @type {bool}
 	*/
-	_paused: false,
+	paused: false,
 
 	/**
 	* Whether the game engine is booted, aka available.
@@ -243,15 +256,18 @@ Phaser.Game.prototype = {
 			document.removeEventListener('DOMContentLoaded', this._onBoot);
 			window.removeEventListener('load', this._onBoot);
 
-			this.onPause = new Phaser.Signal();
-			this.onResume = new Phaser.Signal();
+			this.onPause = new Phaser.Signal;
+			this.onResume = new Phaser.Signal;
 
 			this.isBooted = true;
 
 			this.device = new Phaser.Device();
+
+			this.setUpRenderer();
+
 			this.net = new Phaser.Net(this);
 			this.math = Phaser.Math;
-			// this.stage = new Phaser.Stage(this, parent, width, height);
+			this.stage = new Phaser.Stage(this);
 			// this.world = new Phaser.World(this, width, height);
 			// this.add = new Phaser.GameObjectFactory(this);
 			this.cache = new Phaser.Cache(this);
@@ -268,10 +284,17 @@ Phaser.Game.prototype = {
 
 			this.state.boot();
 			// this.world.boot();
-			// this.stage.boot();
+			this.stage.boot();
 			// this.input.boot();
 
-			console.log('Phaser', Phaser.VERSION, 'initialized');
+			if (this.renderType == Phaser.RENDERER_CANVAS)
+			{
+				console.log('Phaser', Phaser.VERSION, 'initialized. Rendering to Canvas');
+			}
+			else
+			{
+				console.log('Phaser', Phaser.VERSION, 'initialized. Rendering to WebGL');
+			}
 
 	        this.isRunning = true;
             this._loadComplete = false;
@@ -280,6 +303,32 @@ Phaser.Game.prototype = {
 			this.raf.start();
 
 		}
+
+	},
+
+	setUpRenderer: function () {
+
+		if (this.renderType == Phaser.RENDERER_CANVAS || (this.renderer == Phaser.RENDERER_AUTO && this.device.webGL == false))
+		{
+			if (this.device.canvas)
+			{
+				this.renderType = Phaser.RENDERER_CANVAS;
+				this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, this.transparent);
+				Phaser.Canvas.setSmoothingEnabled(this.renderer.view, this.antialias);
+			}
+			else
+			{
+				throw new Error('Phaser.Game - cannot create Canvas or WebGL context, aborting.');
+			}
+		}
+		else
+		{
+			//	They must have requested WebGL and their browser supports it
+			this.renderer = new PIXI.WebGLRenderer(this.width, this.height, null, this.transparent, this.antialias);
+		}
+
+        Phaser.Canvas.addToDOM(this.renderer.view, this.parent, true);
+        Phaser.Canvas.setTouchAction(this.renderer.view);
 
 	},
 

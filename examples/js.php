@@ -37,7 +37,7 @@
 	<script src="../src/pixi/textures/BaseTexture.js"></script>
 	<script src="../src/pixi/textures/Texture.js"></script>
 	<script src="../src/pixi/textures/RenderTexture.js"></script>
-	<script src="../src/pixi/utils/Detector.js"></script>
+	<!--<script src="../src/pixi/utils/Detector.js"></script>-->
 	<script src="../src/pixi/utils/EventTarget.js"></script>
 	<script src="../src/pixi/utils/Polyk.js"></script>
 	<script src="../src/pixi/utils/Utils.js"></script>
@@ -65,4 +65,5 @@
 	<script src="../src/animation/Parser.js"></script>
 	<script src="../src/loader/Cache.js"></script>
 	<script src="../src/loader/Loader.js"></script>
+	<script src="../src/Stage.js"></script>
 	<script src="../src/Game.js"></script>
