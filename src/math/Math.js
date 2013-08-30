@@ -241,9 +241,12 @@ Phaser.Math = {
 	* set an angle within the bounds of -PI to PI
 	*/
     normalizeAngle: function (angle, radians) {
+
         if (typeof radians === "undefined") { radians = true; }
+
         var rd = (radians) ? GameMath.PI : 180;
         return this.wrap(angle, rd, -rd);
+        
     },
 
 	/**
@@ -251,28 +254,40 @@ Phaser.Math = {
 	* absolute value the return for exact angle
 	*/
     nearestAngleBetween: function (a1, a2, radians) {
+
         if (typeof radians === "undefined") { radians = true; }
+
         var rd = (radians) ? GameMath.PI : 180;
         a1 = this.normalizeAngle(a1, radians);
         a2 = this.normalizeAngle(a2, radians);
-        if(a1 < -rd / 2 && a2 > rd / 2) {
+        
+        if (a1 < -rd / 2 && a2 > rd / 2)
+        {
             a1 += rd * 2;
         }
-        if(a2 < -rd / 2 && a1 > rd / 2) {
+
+        if (a2 < -rd / 2 && a1 > rd / 2)
+        {
             a2 += rd * 2;
         }
+
         return a2 - a1;
+
     },
 
 	/**
 	* interpolate across the shortest arc between two angles
 	*/
     interpolateAngles: function (a1, a2, weight, radians, ease) {
+
         if (typeof radians === "undefined") { radians = true; }
         if (typeof ease === "undefined") { ease = null; }
+
         a1 = this.normalizeAngle(a1, radians);
         a2 = this.normalizeAngleToAnother(a2, a1, radians);
+
         return (typeof ease === 'function') ? ease(weight, a1, a2 - a1, 1) : this.interpolateFloat(a1, a2, weight);
+
     },
 
 	/**
@@ -285,18 +300,29 @@ Phaser.Math = {
 	* @return true if the roll passed, or false
 	*/
     chanceRoll: function (chance) {
+
         if (typeof chance === "undefined") { chance = 50; }
-        if(chance <= 0) {
+        
+        if (chance <= 0)
+        {
             return false;
-        } else if(chance >= 100) {
+        }
+        else if (chance >= 100)
+        {
             return true;
-        } else {
-            if(Math.random() * 100 >= chance) {
+        }
+        else
+        {
+            if (Math.random() * 100 >= chance)
+            {
                 return false;
-            } else {
+            }
+            else
+            {
                 return true;
             }
         }
+
     },
 
 	/**
@@ -308,11 +334,16 @@ Phaser.Math = {
 	* @return The new value
 	*/
     maxAdd: function (value, amount, max) {
+
         value += amount;
-        if(value > max) {
+
+        if (value > max)
+        {
             value = max;
         }
+
         return value;
+
     },
 
 	/**
@@ -324,11 +355,16 @@ Phaser.Math = {
 	* @return The new value
 	*/
     minSub: function (value, amount, min) {
+
         value -= amount;
-        if(value < min) {
+        
+        if (value < min)
+        {
             value = min;
         }
+
         return value;
+
     },
 
 	/**
@@ -341,12 +377,15 @@ Phaser.Math = {
 	* @return The wrapped value
 	*/
     wrapValue: function (value, amount, max) {
+
         var diff;
         value = Math.abs(value);
         amount = Math.abs(amount);
         max = Math.abs(max);
         diff = (value + amount) % max;
+
         return diff;
+
     },
 
 	/**
@@ -366,11 +405,9 @@ Phaser.Math = {
 	* @return	True if the given number is odd. False if the given number is even.
 	*/
     isOdd: function (n) {
-        if(n & 1) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return (n & 1);
+
     },
 
 	/**
@@ -381,11 +418,16 @@ Phaser.Math = {
 	* @return	True if the given number is even. False if the given number is odd.
 	*/
     isEven: function (n) {
-        if(n & 1) {
+
+        if (n & 1)
+        {
             return false;
-        } else {
+        }
+        else
+        {
             return true;
         }
+
     },
 
 	/**
@@ -397,17 +439,25 @@ Phaser.Math = {
 	* @return	The new angle value, returns the same as the input angle if it was within bounds
 	*/
     wrapAngle: function (angle) {
+
         var result = angle;
+
         //  Nothing needs to change
-        if(angle >= -180 && angle <= 180) {
+        if (angle >= -180 && angle <= 180)
+        {
             return angle;
         }
+
         //  Else normalise it to -180, 180
         result = (angle + 180) % 360;
-        if(result < 0) {
+
+        if (result < 0)
+        {
             result += 360;
         }
+
         return result - 180;
+
     },
 
 	/**
@@ -541,18 +591,27 @@ Phaser.Math = {
 	* @return	The random object that was selected.
 	*/
     getRandom: function (objects, startIndex, length) {
+
         if (typeof startIndex === "undefined") { startIndex = 0; }
         if (typeof length === "undefined") { length = 0; }
-        if(objects != null) {
+        
+        if (objects != null) {
+
             var l = length;
-            if((l == 0) || (l > objects.length - startIndex)) {
+
+            if ((l == 0) || (l > objects.length - startIndex))
+            {
                 l = objects.length - startIndex;
             }
-            if(l > 0) {
+
+            if (l > 0)
+            {
                 return objects[startIndex + Math.floor(Math.random() * l)];
             }
         }
+
         return null;
+
     },
 
 	/**
@@ -563,8 +622,11 @@ Phaser.Math = {
 	* @return	The rounded value of that number.
 	*/
     floor: function (value) {
+
         var n = value | 0;
+
         return (value > 0) ? (n) : ((n != value) ? (n - 1) : (n));
+
     },
 
 	/**

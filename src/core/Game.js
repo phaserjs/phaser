@@ -303,7 +303,7 @@ Phaser.Game.prototype = {
 
 	setUpRenderer: function () {
 
-		if (this.renderType == Phaser.CANVAS || (this.renderer == Phaser.AUTO && this.device.webGL == false))
+		if (this.renderType == Phaser.CANVAS || (this.renderType == Phaser.AUTO && this.device.webGL == false))
 		{
 			if (this.device.canvas)
 			{

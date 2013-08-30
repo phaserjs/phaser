@@ -12,7 +12,7 @@
 
 (function () {
 
-	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update }, false, false);
 
 	var timer = 0;
 	var total = 0;
@@ -34,6 +34,10 @@
 
 		var mummy = game.add.sprite(-(Math.random() * 800), game.world.randomY, 'mummy');
 
+		mummy.scale.setTo(2, 2);
+		//	If you prefer to work in degrees rather than radians then you can use Phaser.Sprite.angle
+		//	otherwise use Phaser.Sprite.rotation
+		mummy.angle = game.rnd.angle();
 		mummy.animations.add('walk');
 		mummy.animations.play('walk', 50, true);
 

@@ -91,15 +91,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	 */
 	this._height = 0;
 
-	// if (texture.baseTexture.hasLoaded)
-	// {
-		this.updateFrame = true;
-	// }
-
+    this.updateFrame = true;
 	this.renderable = true;
 
 	this.position.x = x;
 	this.position.y = y;
+
+    //  Replaces the PIXI.Point with a slightly more flexible one
+    this.scale = new Phaser.Point(1, 1);
 
 };
 
@@ -115,6 +114,18 @@ Phaser.Sprite.prototype.update = function() {
     // this.checkBounds();
 
 }
+
+Object.defineProperty(Phaser.Sprite.prototype, 'angle', {
+
+    get: function() {
+        return Phaser.Math.radToDeg(this.rotation);
+    },
+
+    set: function(value) {
+        this.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
 
 Object.defineProperty(Phaser.Sprite.prototype, 'x', {
 

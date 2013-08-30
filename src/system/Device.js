@@ -309,6 +309,7 @@ Phaser.Device.prototype = {
         this.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
         this.fileSystem = !!window['requestFileSystem'];
         this.webGL = ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )();
+        // this.webGL = !!window['WebGLRenderingContext'];
         this.worker = !!window['Worker'];
         
         if ('ontouchstart' in document.documentElement || window.navigator.msPointerEnabled) {
