@@ -51,6 +51,8 @@
 	<script src="../src/core/Stage.js"></script>
 	<script src="../src/core/World.js"></script>
 	<script src="../src/core/Game.js"></script>
+	<script src="../src/gameobjects/GameObjectFactory.js"></script>
+	<script src="../src/gameobjects/Sprite.js"></script>
 	<script src="../src/system/Canvas.js"></script>
 	<script src="../src/system/Device.js"></script>
 	<script src="../src/system/RequestAnimationFrame.js"></script>
@@ -64,6 +66,7 @@
 	<script src="../src/tween/Tween.js"></script>
 	<script src="../src/tween/Easing.js"></script>
 	<script src="../src/time/Time.js"></script>
+	<script src="../src/animation/AnimationManager.js"></script>
 	<script src="../src/animation/Animation.js"></script>
 	<script src="../src/animation/Frame.js"></script>
 	<script src="../src/animation/FrameData.js"></script>

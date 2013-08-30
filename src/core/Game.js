@@ -264,7 +264,7 @@ Phaser.Game.prototype = {
 
 			this.world = new Phaser.World(this);
 			this.stage = new Phaser.Stage(this);
-			// this.add = new Phaser.GameObjectFactory(this);
+			this.add = new Phaser.GameObjectFactory(this);
 			this.cache = new Phaser.Cache(this);
 			this.load = new Phaser.Loader(this);
 			this.time = new Phaser.Time(this);
