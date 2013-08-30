@@ -69,7 +69,7 @@ Phaser.Animation.Parser = {
     * @param json {object} Json data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */
-    JSONData: function (game, json) {
+    JSONData: function (game, json, cacheKey) {
 
         //  Malformed?
         if (!json['frames']) {
@@ -84,25 +84,41 @@ Phaser.Animation.Parser = {
         var frames = json['frames'];
         var newFrame;
         
-        for (var i = 0; i < frames.length; i++) {
+        for (var i = 0; i < frames.length; i++)
+        {
+            var uuid = game.rnd.uuid();
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
             	frames[i].frame.x, 
             	frames[i].frame.y, 
             	frames[i].frame.w, 
             	frames[i].frame.h, 
-            	frames[i].filename
+            	frames[i].filename,
+                uuid
 			));
 
-            newFrame.setTrim(
-            	frames[i].trimmed, 
-            	frames[i].sourceSize.w, 
-            	frames[i].sourceSize.h, 
-            	frames[i].spriteSourceSize.x, 
-            	frames[i].spriteSourceSize.y, 
-            	frames[i].spriteSourceSize.w, 
-            	frames[i].spriteSourceSize.h
-			);
+            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
+                x: frames[key].frame.x,
+                y: frames[key].frame.y,
+                width: frames[key].frame.w,
+                height: frames[key].frame.h
+            });
+
+            if (frames[i].trimmed)
+            {
+                newFrame.setTrim(
+                    frames[i].trimmed, 
+                    frames[i].sourceSize.w, 
+                    frames[i].sourceSize.h, 
+                    frames[i].spriteSourceSize.x, 
+                    frames[i].spriteSourceSize.y, 
+                    frames[i].spriteSourceSize.w, 
+                    frames[i].spriteSourceSize.h
+                );
+
+                PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
+                PIXI.TextureCache[uuid].trim.x = 0;
+            }
         }
 
         return data;
@@ -114,7 +130,7 @@ Phaser.Animation.Parser = {
     * @param json {object} Json data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */
-    JSONDataHash: function (game, json) {
+    JSONDataHash: function (game, json, cacheKey) {
 
         //  Malformed?
         if (!json['frames']) {
@@ -129,25 +145,41 @@ Phaser.Animation.Parser = {
         var frames = json['frames'];
         var newFrame;
         
-        for (var key in frames) {
+        for (var key in frames)
+        {
+            var uuid = game.rnd.uuid();
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
                 frames[key].frame.x, 
                 frames[key].frame.y, 
                 frames[key].frame.w, 
                 frames[key].frame.h, 
-                key
+                key,
+                uuid
             ));
 
-            newFrame.setTrim(
-                frames[key].trimmed, 
-                frames[key].sourceSize.w, 
-                frames[key].sourceSize.h, 
-                frames[key].spriteSourceSize.x, 
-                frames[key].spriteSourceSize.y, 
-                frames[key].spriteSourceSize.w, 
-                frames[key].spriteSourceSize.h
-            );
+            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
+                x: frames[key].frame.x,
+                y: frames[key].frame.y,
+                width: frames[key].frame.w,
+                height: frames[key].frame.h
+            });
+
+            if (frames[key].trimmed)
+            {
+                newFrame.setTrim(
+                    frames[key].trimmed, 
+                    frames[key].sourceSize.w, 
+                    frames[key].sourceSize.h, 
+                    frames[key].spriteSourceSize.x, 
+                    frames[key].spriteSourceSize.y, 
+                    frames[key].spriteSourceSize.w, 
+                    frames[key].spriteSourceSize.h
+                );
+
+                PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
+                PIXI.TextureCache[uuid].trim.x = 0;
+            }
         }
 
         return data;
@@ -159,7 +191,7 @@ Phaser.Animation.Parser = {
     * @param xml {object} XML data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */
-    XMLData: function (game, xml, format) {
+    XMLData: function (game, xml, cacheKey) {
 
         //  Malformed?
         if (!xml.getElementsByTagName('TextureAtlas')) {
@@ -171,7 +203,9 @@ Phaser.Animation.Parser = {
         var frames = xml.getElementsByTagName('SubTexture');
         var newFrame;
         
-        for (var i = 0; i < frames.length; i++) {
+        for (var i = 0; i < frames.length; i++)
+        {
+            var uuid = game.rnd.uuid();
 
             var frame = frames[i].attributes;
 
@@ -180,8 +214,16 @@ Phaser.Animation.Parser = {
             	frame.y.nodeValue, 
             	frame.width.nodeValue, 
             	frame.height.nodeValue, 
-            	frame.name.nodeValue
+            	frame.name.nodeValue,
+                uuid
             ));
+
+            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
+                x: frame.x.nodeValue,
+                y: frame.y.nodeValue,
+                width: frame.width.nodeValue,
+                height: frame.height.nodeValue
+            });
 
             //  Trimmed?
             if (frame.frameX.nodeValue != '-0' || frame.frameY.nodeValue != '-0') {
@@ -194,6 +236,16 @@ Phaser.Animation.Parser = {
                 	frame.frameWidth.nodeValue, 
                 	frame.frameHeight.nodeValue
                 );
+
+                PIXI.TextureCache[uuid].realSize = {
+                    x: Math.abs(frame.frameX.nodeValue),
+                    y: Math.abs(frame.frameY.nodeValue),
+                    w: frame.frameWidth.nodeValue,
+                    h: frame.frameHeight.nodeValue
+                };
+
+                PIXI.TextureCache[uuid].trim.x = 0;
+
             }
         }
 

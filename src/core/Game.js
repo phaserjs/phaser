@@ -258,6 +258,7 @@ Phaser.Game.prototype = {
 
 			this.device = new Phaser.Device();
 			this.math = Phaser.Math;
+			this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
 			this.setUpRenderer();
 
@@ -270,7 +271,6 @@ Phaser.Game.prototype = {
 			this.tweens = new Phaser.TweenManager(this);
 			// this.input = new Phaser.InputManager(this);
 			// this.sound = new Phaser.SoundManager(this);
-			this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 			// this.physics = new Phaser.Physics.PhysicsManager(this);
 			this.plugins = new Phaser.PluginManager(this, this);
 			this.net = new Phaser.Net(this);

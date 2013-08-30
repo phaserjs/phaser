@@ -22,9 +22,33 @@
 
 	function create() {
 
-		var base = new PIXI.BaseTexture(game.cache.getImage('monsters'));
-		var texture = new PIXI.Texture(base);
-		bunny = new PIXI.Sprite(texture);
+		//var texture = PIXI.TextureCache['skully.png'];
+
+		// PIXI.BaseTextureCache['monsters'] = new PIXI.BaseTexture(game.cache.getImage('monsters'));
+
+		//	every image loaded should go into the BaseTextureCache, unique by URL (or maybe key)
+		// var base = new PIXI.BaseTexture(game.cache.getImage('monsters'));
+
+		//	Every FRAME needs a PIXI.Texture, related to the base (the source image) and the frame data
+		// var texture = new PIXI.Texture(base, { x: 0, y: 0, width: 100, height: 100 });
+		// var texture2 = new PIXI.Texture(base, { x: 0, y: 0, width: 100, height: 300 });
+
+		//	PIXI.Sprite.fromFrame(key) pulls the texture from the TextureCache and returns a new Sprite made from it...
+		// var texture = PIXI.TextureCache[frameId];
+
+
+		// console.log(PIXI.TextureCache);
+
+		// console.log(game.cache.getFrameData('monsters'));
+
+		var frameData = game.cache.getFrameData('monsters');
+
+		// bunny = new PIXI.Sprite(texture2);
+
+		// bunny = PIXI.Sprite.fromFrame(frameData.getFrame(0).uuid);
+		bunny = PIXI.Sprite.fromFrame(frameData.getFrameByName('skully.png').uuid);
+
+		// bunny = PIXI.Sprite.fromImage('monsters');
 		
 		bunny.anchor.x = 0.5;
 		bunny.anchor.y = 0.5;

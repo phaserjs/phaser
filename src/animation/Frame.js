@@ -8,17 +8,23 @@
 * @copyright  2013 Photon Storm Ltd.
 * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
-Phaser.Animation.Frame = function (x, y, width, height, name) {
+Phaser.Animation.Frame = function (x, y, width, height, name, uuid) {
 
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
 	this.name = name;
+	this.uuid = uuid;
 
 };
 
 Phaser.Animation.Frame.prototype = {
+
+	/**
+	 * A link to the PIXI.TextureCache entry
+	 */
+	uuid: '',
 
 	/**
 	 * X position within the image to cut from.

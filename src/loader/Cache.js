@@ -71,6 +71,8 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data, spriteSheet: true, frameWidth: frameWidth, frameHeight: frameHeight };
         this._images[key].frameData = Phaser.Animation.Parser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
 
+        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+
     },
 
     /**
@@ -84,17 +86,19 @@ Phaser.Cache.prototype = {
 
         this._images[key] = { url: url, data: data, spriteSheet: true };
 
+        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+
         if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.JSONData(this.game, atlasData);
+            this._images[key].frameData = Phaser.Animation.Parser.JSONData(this.game, atlasData, key);
         }
         else if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.JSONDataHash(this.game, atlasData);
+            this._images[key].frameData = Phaser.Animation.Parser.JSONDataHash(this.game, atlasData, key);
         }
         else if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, atlasData, format);
+            this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, atlasData, key);
         }
 
     },
@@ -108,6 +112,8 @@ Phaser.Cache.prototype = {
     addImage: function (key, url, data) {
 
         this._images[key] = { url: url, data: data, spriteSheet: false };
+
+        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
 
     },
 
