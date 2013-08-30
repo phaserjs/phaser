@@ -56,8 +56,8 @@ Phaser.RequestAnimationFrame.prototype = {
 		{
 			this._isSetTimeOut = false;
 
-            this._onLoop = function () {
-                return _this.updateRAF();
+            this._onLoop = function (time) {
+                return _this.updateRAF(time);
             };
 
 			window.requestAnimationFrame(this._onLoop);

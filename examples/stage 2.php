@@ -41,12 +41,12 @@
 
 		// console.log(game.cache.getFrameData('monsters'));
 
-		var frameData = game.cache.getFrameData('monsters');
+		frameData = game.cache.getFrameData('monsters');
 
 		// bunny = new PIXI.Sprite(texture2);
 
-		// bunny = PIXI.Sprite.fromFrame(frameData.getFrame(0).uuid);
-		bunny = PIXI.Sprite.fromFrame(frameData.getFrameByName('skully.png').uuid);
+		bunny = PIXI.Sprite.fromFrame(frameData.getFrame(0).uuid);
+		// bunny = PIXI.Sprite.fromFrame(frameData.getFrameByName('skully.png').uuid);
 
 		// bunny = PIXI.Sprite.fromImage('monsters');
 		
@@ -58,15 +58,23 @@
 		
 		game.world.add(bunny);
 
+		n = game.time.now + 1000;
+
 	}
+
+	var frameData;
+	var f = 0;
+	var n = 0;
 
 	function update() {
 
-		if (game.paused == false)
+		if (game.time.now > n)
 		{
-		    // bunny.rotation += 0.01;
-		    // bunny.scale.x += 0.01;
-		    // bunny.scale.y += 0.01;
+			f = game.math.wrapValue(f, 1, 4);
+
+			bunny.setTexture(PIXI.TextureCache[frameData.getFrame(f).uuid]);
+
+			n = game.time.now + 1000;
 		}
 
 	}
