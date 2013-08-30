@@ -47,9 +47,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	 */
 	this.texture = PIXI.TextureCache[key];
 
+    if (this.game.cache.isSpriteSheet(key))
+    {
+        this.animations.loadFrameData(this.game.cache.getFrameData(key));
+    }
+
     if (frame !== null)
     {
-        if (typeof frame == 'string')
+        if (typeof frame === 'string')
         {
             this.frameName = frame;
         }

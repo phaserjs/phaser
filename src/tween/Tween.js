@@ -41,8 +41,7 @@ Phaser.Tween = function (object, game) {
 		this._valuesStart[ field ] = parseFloat(object[field], 10);
 	}
 
-    // this.onStart = new Phaser.Signal();
-    // this.onUpdate = new Phaser.Signal();
+    this.onStart = new Phaser.Signal();
     this.onComplete = new Phaser.Signal();
 
     this.isRunning = false;
@@ -93,11 +92,13 @@ Phaser.Tween.prototype = {
 
 	start: function ( time ) {
 
-		//TWEEN.add( this );
-
         if (this.game === null || this._object === null) {
             return;
         }
+
+		this._manager.add(this);
+
+		this.onStart.dispatch(this._object);
 
         this.isRunning = true;
 
@@ -139,11 +140,7 @@ Phaser.Tween.prototype = {
 
 	stop: function () {
 
-		//TWEEN.remove( this );
-        if (this._manager !== null) {
-            this._manager.remove(this);
-        }
-
+		this._manager.remove(this);
         this.isRunning = false;
 
 		return this;
@@ -170,7 +167,6 @@ Phaser.Tween.prototype = {
 		return this;
 
 	},
-
 
 	easing: function ( easing ) {
 

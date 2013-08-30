@@ -26,7 +26,7 @@ Phaser.TweenManager.prototype = {
 	*/
 	getAll: function () {
 
-		return _tweens;
+		return this._tweens;
 
 	},
 
@@ -35,7 +35,7 @@ Phaser.TweenManager.prototype = {
 	*/
 	removeAll: function () {
 
-		_tweens = [];
+		this._tweens = [];
 
 	},
 
@@ -47,7 +47,7 @@ Phaser.TweenManager.prototype = {
 	*/
 	add: function ( tween ) {
 
-		_tweens.push( tween );
+		this._tweens.push( tween );
 
 	},
 
@@ -81,11 +81,11 @@ Phaser.TweenManager.prototype = {
 	*/
 	remove: function ( tween ) {
 
-		var i = _tweens.indexOf( tween );
+		var i = this._tweens.indexOf( tween );
 
 		if ( i !== -1 ) {
 
-			_tweens.splice( i, 1 );
+			this._tweens.splice( i, 1 );
 
 		}
 

@@ -61,16 +61,17 @@ Phaser.AnimationManager.prototype = {
 
 		if (this._frameData == null)
 		{
+			console.warn('No frameData available for Phaser.Animation ' + name);
 			return;
 		}
 
 		//  Create the signals the AnimationManager will emit
-		if (this._parent.events.onAnimationStart == null)
-		{
+		// if (this._parent.events.onAnimationStart == null)
+		// {
 			// this._parent.events.onAnimationStart = new Phaser.Signal();
 			// this._parent.events.onAnimationComplete = new Phaser.Signal();
 			// this._parent.events.onAnimationLoop = new Phaser.Signal();
-		}
+		// }
 
 		if (frames == null)
 		{
@@ -243,7 +244,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
         {
             this.currentFrame = this._frameData.getFrame(value);
             this._frameIndex = value;
-            console.log('AM set frame', value, this.currentFrame);
 			this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
 

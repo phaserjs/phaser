@@ -21,10 +21,12 @@ Phaser.World.prototype = {
 
 	add: function (gameobject) {
 		this._container.addChild(gameobject);
+		return gameobject;
 	},
 
 	addAt: function (gameobject, index) {
 		this._container.addChildAt(gameobject, index);
+		return gameobject;
 	},
 
 	getAt: function (index) {
@@ -33,6 +35,7 @@ Phaser.World.prototype = {
 
 	remove: function (gameobject) {
 		this._container.removeChild(gameobject);
+		return gameobject;
 	},
 
 	/**

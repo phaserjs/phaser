@@ -1,14 +1,14 @@
 Phaser.GameObjectFactory = function (game) {
 
 	this.game = game;
-	this._world = this.game.world;
+	this.world = this.game.world;
 
 };
 
 Phaser.GameObjectFactory.prototype = {
 
-	_world: null,
 	game: null,
+    world: null,
 
 	/**
     * Create a new Sprite with specific position and sprite sheet key.
@@ -24,8 +24,23 @@ Phaser.GameObjectFactory.prototype = {
         if (typeof key === "undefined") { key = ''; }
         if (typeof frame === "undefined") { frame = null; }
 
-        // return this._world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
+        return this.world.add(new Phaser.Sprite(this.game, x, y, key, frame));
 
     },
+
+    /**
+    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
+    *
+    * @param obj {object} Object the tween will be run on.
+    * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
+    * @return {Phaser.Tween} The newly created tween object.
+    */
+    tween: function (obj, localReference) {
+
+        if (typeof localReference === "undefined") { localReference = false; }
+
+        return this.game.tweens.create(obj, localReference);
+
+    }
 
 };
