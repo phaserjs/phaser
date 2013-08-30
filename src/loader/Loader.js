@@ -177,7 +177,8 @@ Phaser.Loader.prototype = {
 
 		if (typeof overwrite === "undefined") { overwrite = false; }
 
-		if (overwrite || this.checkKeyExists(key) == false) {
+		if (overwrite || this.checkKeyExists(key) == false)
+		{
 			this.addToFileList('text', key, url);
 		}
 
@@ -195,7 +196,8 @@ Phaser.Loader.prototype = {
 
 		if (typeof frameMax === "undefined") { frameMax = -1; }
 
-		if (this.checkKeyExists(key) === false) {
+		if (this.checkKeyExists(key) === false)
+		{
 			this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
 		}
 
@@ -211,7 +213,8 @@ Phaser.Loader.prototype = {
 
 		if (typeof autoDecode === "undefined") { autoDecode = true; }
 
-		if (this.checkKeyExists(key) === false) {
+		if (this.checkKeyExists(key) === false)
+		{
 			this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
 		}
 

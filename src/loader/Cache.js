@@ -69,9 +69,10 @@ Phaser.Cache.prototype = {
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax) {
 
         this._images[key] = { url: url, data: data, spriteSheet: true, frameWidth: frameWidth, frameHeight: frameHeight };
-        this._images[key].frameData = Phaser.Animation.Parser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+
+        this._images[key].frameData = Phaser.Animation.Parser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
 
     },
 

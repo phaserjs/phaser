@@ -48,13 +48,23 @@ Phaser.Animation.Parser = {
         var x = 0;
         var y = 0;
 
-        for (var i = 0; i < total; i++) {
+        for (var i = 0; i < total; i++)
+        {
+            var uuid = game.rnd.uuid();
 
-            data.addFrame(new Phaser.Animation.Frame(x, y, frameWidth, frameHeight, ''));
+            data.addFrame(new Phaser.Animation.Frame(x, y, frameWidth, frameHeight, '', uuid));
+
+            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
+                x: x,
+                y: y,
+                width: frameWidth,
+                height: frameHeight
+            });
 
             x += frameWidth;
 
-            if (x === width) {
+            if (x === width)
+            {
                 x = 0;
                 y += frameHeight;
             }
