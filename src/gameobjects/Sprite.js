@@ -109,7 +109,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 /**
  * Automatically called after update() by the game loop for all 'alive' objects.
  */
-Phaser.Sprite.prototype.postUpdate = function() {
+Phaser.Sprite.prototype.update = function() {
 
     this.animations.update();
     // this.checkBounds();

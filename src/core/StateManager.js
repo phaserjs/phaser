@@ -25,6 +25,12 @@ Phaser.StateManager.prototype = {
 	_pendingState: null,
 
 	/**
+	* Flag that sets if the State has been created or not.
+	* @type {Boolean}
+	*/
+	_created: false,
+
+	/**
 	* The state to be switched to in the next frame.
 	* @type {Object}
 	*/
@@ -257,6 +263,8 @@ Phaser.StateManager.prototype = {
                 {
                     this.onCreateCallback.call(this.callbackContext);
                 }
+
+				this._created = true;
             }
             else
             {
@@ -274,6 +282,8 @@ Phaser.StateManager.prototype = {
 				// console.log('Create callback found');
                 this.onCreateCallback.call(this.callbackContext);
             }
+
+			this._created = true;
 
             this.game.loadComplete();
         }
@@ -336,6 +346,7 @@ Phaser.StateManager.prototype = {
         this.onShutDownCallback = this.states[key]['shutdown'] || this.dummy;
 
 		this.current = key;
+		this._created = false;
 
 		this.onInitCallback.call(this.callbackContext);
 
@@ -345,19 +356,12 @@ Phaser.StateManager.prototype = {
 
 		// console.log('Phaser.StateManager.loadComplete');
 
-        if (this.onCreateCallback) {
+        if (this._created == false && this.onCreateCallback)
+        {
 			// console.log('Create callback found');
             this.onCreateCallback.call(this.callbackContext);
+            this._created = true;
         }
-
-    },
-
-    loadUpdate: function () {
-
-	    if (this.onLoadUpdateCallback)
-	    {
-	    	this.onLoadUpdateCallback.call(this.callbackContext);
-		}
 
     },
 
@@ -372,9 +376,16 @@ Phaser.StateManager.prototype = {
 
     update: function () {
 
-	    if (this.onUpdateCallback)
-	    {
-	    	this.onUpdateCallback.call(this.callbackContext);
+    	if (this._created && this.onUpdateCallback)
+    	{
+			this.onUpdateCallback.call(this.callbackContext);
+    	}
+    	else
+    	{
+		    if (this.onLoadUpdateCallback)
+		    {
+		    	this.onLoadUpdateCallback.call(this.callbackContext);
+			}
 		}
 
     },

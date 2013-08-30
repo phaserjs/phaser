@@ -16,6 +16,7 @@ Phaser.World.prototype = {
 
 	_stage: null,
 	_container: null,
+	_length: 0,
 
 	bounds: null,
 
@@ -36,6 +37,15 @@ Phaser.World.prototype = {
 	remove: function (gameobject) {
 		this._container.removeChild(gameobject);
 		return gameobject;
+	},
+
+	update: function () {
+
+		for (var child in this._container.children)
+		{
+			this._container.children[child].update();
+		}
+
 	},
 
 	/**

@@ -243,7 +243,8 @@ Phaser.Game.prototype = {
 			return;
 		}
 
-		if (!document.body) {
+		if (!document.body)
+		{
 			window.setTimeout(this._onBoot, 20);
 		}
 		else
@@ -351,42 +352,13 @@ Phaser.Game.prototype = {
         // this.stage.update();
         // this.sound.update();
         // this.physics.update();
-        // this.world.update();
-
+        this.world.update();
+		this.state.update();
         this.plugins.update();
 
-        if (this._loadComplete)
-        {
-	        this.state.update();
-	
-	        // this.world.postUpdate();
-	        this.plugins.postUpdate();
-	        this.plugins.preRender();
+		this.renderer.render(this.world._stage);
 
-	        this.state.preRender();
-
-	        this.renderer.render(this.world._stage);
-
-	        this.plugins.render();
-
-	        this.state.render();
-
-	        this.plugins.postRender();
-        }
-        else
-        {
-        	//	Still loading assets
-	        this.state.loadUpdate();
-	
-	        // this.world.postUpdate();
-	        this.plugins.postUpdate();
-
-	        this.plugins.preRender();
-	        this.renderer.render(this.world._stage);
-	        this.plugins.render();
-	        this.state.loadRender();
-	        this.plugins.postRender();
-        }
+		this.plugins.postRender();
 
 	},
 
