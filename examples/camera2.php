@@ -15,7 +15,7 @@
 	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
 	function preload() {
-		game.load.image('mushroom', 'assets/sprites/mushroom2.png');
+		game.load.image('mushroom', 'assets/sprites/mana_card.png');
 	}
 
 	var s;
@@ -23,44 +23,27 @@
 	var r;
 	var p;
 
+	var half = { width: 0, height: 0 };
+	var angle = 0;
+	var distance = 0;
+
 	function create() {
 
 		//	Make our game world 2000x2000 pixels in size (the default is to match the game size)
 		game.world.setSize(2000, 2000);
 
 		s = game.add.sprite(400, 300, 'mushroom');
+		console.log(s.width, s.height);
 
-		//	do this on a texture basis!
-        // this._halfSize.x = this.parent.width / 2;
-        // this._halfSize.y = this.parent.height / 2;
-        // this._offset.x = this.origin.x * this.parent.width;
-        // this._offset.y = this.origin.y * this.parent.height;
-        // this._angle = Math.atan2(this.halfHeight - this._offset.x, this.halfWidth - this._offset.y);
-        // this._distance = Math.sqrt(((this._offset.x - this._halfSize.x) * (this._offset.x - this._halfSize.x)) + ((this._offset.y - this._halfSize.y) * (this._offset.y - this._halfSize.y)));
+		//	get the distance between top-left and bottom-right
+		distance = Phaser.Math.distance(0,0,s.width,s.height);
 
+//	draw line from x/y
+		s.anchor.setTo(1, 0);
 
+		// c = new Phaser.Circle(s.x, s.y, distance);
 
-		// s.scale.setTo(2, 2);
-		s.anchor.setTo(0.5, 0.5);
-		s.angle = 45;
-
-		r = new Phaser.Rectangle(0, 0, s.width, s.height);
-
-		var newWidth = (s.width * Math.cos(s.rotation)) + (s.height * Math.sin(s.rotation));
-		var newHeight = (s.width * Math.sin(s.rotation)) + (s.height * Math.cos(s.rotation));
-
-		r.x = cx(s) - newWidth / 2;
-		r.y = cy(s);
-		r.width = newWidth;
-		r.height = newHeight;
-
-		// var max = Math.max(s.width, s.height);
-		// c = new Phaser.Circle(0,0,max);
-		// console.log(c);
-
-		// p = new Phaser.Point(s.x, s.y);
-
-		// s.angle = 90;
+		p = new Phaser.Point();
 
 		//	PIXI worldTransform order:
 
@@ -71,58 +54,50 @@
 		//	4 = scaleY
 		//	5 = translateY
 
-		console.log(s.worldTransform);
-
 	}
 
-	function cx(sprite) {
+function getMidPoint(x, y, width, height, angle_degrees) {
+    var angle_rad = angle_degrees * Math.PI / 180;
+    var cosa = Math.cos(angle_rad);
+    var sina = Math.sin(angle_rad);
+    var wp = width/2;
+    var hp = height/2;
+    return { px: ( x + wp * cosa - hp * sina ),
+             py: ( y + wp * sina + hp * cosa ) };
+}
 
-		if (sprite.anchor.x == 0)
-		{
-			return sprite.x;
-		}
-		else
-		{
-			return sprite.x - (sprite.width * sprite.anchor.x);
-		}
-	}
-
-	function cy(sprite) {
-
-		if (sprite.anchor.y == 0)
-		{
-			return sprite.y;
-		}
-		else
-		{
-			return sprite.y - (sprite.height * sprite.anchor.y);
-		}
-	}
 
 	function update() {
 
+
 		s.rotation += 0.01;
-		var newWidth = (s.width * Math.cos(s.rotation)) + (s.height * Math.sin(s.rotation));
-		var newHeight = (s.width * Math.sin(s.rotation)) + (s.height * Math.cos(s.rotation));
-		r.x = cx(s) - newWidth / 2;
-		r.y = cy(s);
-		r.width = newWidth;
-		r.height = newHeight;
+		// var newWidth = (s.width * Math.cos(s.rotation)) + (s.height * Math.sin(s.rotation));
+		// var newHeight = (s.width * Math.sin(s.rotation)) + (s.height * Math.cos(s.rotation));
+		// r.x = cx(s) - newWidth / 2;
+		// r.y = cy(s);
+		// r.width = newWidth;
+		// r.height = newHeight;
 
 	}
 
 	function render() {
 
+		// var tt = getMidPoint(s.x,s.y,s.width,s.height,s.angle);
+		// p.setTo(tt.px,tt.py);
+
+		var originAngle = Math.atan2(centerY - originY, centerX - originX);		
+
 		// game.debug.renderCameraInfo(game.camera, 32, 32);
-		game.debug.renderInputInfo(32, 100);
+		// game.debug.renderInputInfo(32, 100);
 		// game.debug.renderSpriteInfo(s, 32, 32);
 		// game.debug.renderSpriteBounds(s);
 
 		//p.rotate(s.x, s.y, s.angle, asDegrees, distance) {
 
-		// game.debug.renderPoint(p);
+		game.debug.renderPoint(p);
 
-		game.debug.renderRectangle(r);
+		// game.debug.renderRectangle(r);
+		// game.debug.renderCircle(c);
 
 		// var p = getLocalPosition(game.input.x, game.input.y, s);
 

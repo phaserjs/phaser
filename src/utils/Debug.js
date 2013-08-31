@@ -372,9 +372,11 @@ Phaser.Utils.Debug.prototype = {
         fillStyle = fillStyle || 'rgba(0,255,0,0.3)';
 
         this.start();
+        this.context.beginPath();
         this.context.fillStyle = fillStyle;
         this.context.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false);
         this.context.fill();
+        this.context.closePath();
         this.stop();
 
     },
