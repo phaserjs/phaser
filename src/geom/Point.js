@@ -347,18 +347,22 @@ Phaser.Point.distance = function (a, b, round) {
 */
 Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
-    if (typeof asDegrees === "undefined") { asDegrees = false; }
-    if (typeof distance === "undefined") { distance = null; }
+    asDegrees = asDegrees || false;
+    distance = distance || null;
 
-    if (asDegrees) {
+    if (asDegrees)
+    {
         angle = Phaser.Math.radToDeg(angle);
     }
 
     //  Get distance from origin (cx/cy) to this point
-    if (distance === null) {
+    if (distance === null)
+    {
         distance = Math.sqrt(((x - a.x) * (x - a.x)) + ((y - a.y) * (y - a.y)));
     }
 
     return a.setTo(x + distance * Math.cos(angle), y + distance * Math.sin(angle));
 
 };
+
+

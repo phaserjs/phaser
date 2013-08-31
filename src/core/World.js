@@ -24,6 +24,7 @@ Phaser.World.prototype = {
 	boot: function () {
 
 		this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
+		this.game.camera = this.camera;
 
 	},
 

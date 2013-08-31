@@ -1,11 +1,10 @@
 Phaser.Sprite = function (game, x, y, key, frame) {
 
-    if (typeof x === "undefined") { x = 0; }
-    if (typeof y === "undefined") { y = 0; }
-
-    //	if null we ought to set to the phaser logo or something :)
-    if (typeof key === "undefined") { key = null; }
-    if (typeof frame === "undefined") { frame = null; }
+    x = x || 0;
+    y = y || 0;
+    //  if null we ought to set to the phaser logo or something :)
+    key = key || null;
+    frame = frame || null;
 
 	this.game = game;
 
@@ -37,7 +36,25 @@ Phaser.Sprite = function (game, x, y, key, frame) {
      * @property anchor
      * @type Point
      */
-	this.anchor = new PIXI.Point();
+	this.anchor = new Phaser.Point();
+
+    /**
+     * The width of the sprite (this is initially set by the texture)
+     *
+     * @property _width
+     * @type Number
+     * @private
+     */
+    // this._width = 0;
+
+    /**
+     * The height of the sprite (this is initially set by the texture)
+     *
+     * @property _height
+     * @type Number
+     * @private
+     */
+    // this._height = 0;
 
 	/**
 	 * The texture that the sprite is using
@@ -73,23 +90,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	 */
 	this.blendMode = PIXI.blendModes.NORMAL;
 
-	/**
-	 * The width of the sprite (this is initially set by the texture)
-	 *
-	 * @property _width
-	 * @type Number
-	 * @private
-	 */
-	this._width = 0;
-
-	/**
-	 * The height of the sprite (this is initially set by the texture)
-	 *
-	 * @property _height
-	 * @type Number
-	 * @private
-	 */
-	this._height = 0;
+    this._x = x;
+    this._y = y;
 
     this.updateFrame = true;
 	this.renderable = true;
@@ -99,6 +101,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     //  Replaces the PIXI.Point with a slightly more flexible one
     this.scale = new Phaser.Point(1, 1);
+
+    this.scrollFactor = new Phaser.Point(1, 1);
+
+    this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
 
 };
 
@@ -111,6 +117,12 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 Phaser.Sprite.prototype.update = function() {
 
     this.animations.update();
+
+    this.worldView.setTo(this._x, this._y, this.width, this.height);
+
+    this.position.x = this._x - (this.game.world.camera.x * this.scrollFactor.x);
+    this.position.y = this._y - (this.game.world.camera.y * this.scrollFactor.y);
+
     // this.checkBounds();
 
 }
@@ -130,11 +142,12 @@ Object.defineProperty(Phaser.Sprite.prototype, 'angle', {
 Object.defineProperty(Phaser.Sprite.prototype, 'x', {
 
     get: function() {
-        return this.position.x;
+        return this._x;
     },
 
     set: function(value) {
-    	this.position.x = value;
+        this.worldView.x = value;
+    	this._x = value;
     }
 
 });
@@ -142,11 +155,12 @@ Object.defineProperty(Phaser.Sprite.prototype, 'x', {
 Object.defineProperty(Phaser.Sprite.prototype, 'y', {
 
     get: function() {
-        return this.position.y;
+        return this._y;
     },
 
     set: function(value) {
-    	this.position.y = value;
+        this.worldView.y = value;
+    	this._y = value;
     }
 
 });

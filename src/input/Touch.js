@@ -7,7 +7,7 @@
 * http://www.html5rocks.com/en/mobile/touchandmouse/
 * Note: Android 2.x only supports 1 touch event at once, no multi-touch
 */
-Phaser.Input.Touch = function (game) {
+Phaser.Touch = function (game) {
 
 	this.game = game;
     this.callbackContext = this.game;
@@ -21,7 +21,7 @@ Phaser.Input.Touch = function (game) {
 
 };
 
-Phaser.Input.Touch.prototype = {
+Phaser.Touch.prototype = {
 
 	game: null,
 

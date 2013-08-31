@@ -1,11 +1,11 @@
 /**
-* Phaser.Input.MSPointer
+* Phaser.MSPointer
 *
 * The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
 * It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
 */
-Phaser.Input.MSPointer = function (game) {
+Phaser.MSPointer = function (game) {
 
 	this.game = game;
 	this.callbackContext = this.game;
@@ -16,7 +16,7 @@ Phaser.Input.MSPointer = function (game) {
 
 };
 
-Phaser.Input.MSPointer.prototype = {
+Phaser.MSPointer.prototype = {
 
 	game: null,
 
@@ -55,6 +55,10 @@ Phaser.Input.MSPointer.prototype = {
             this.game.stage.canvas.addEventListener('MSPointerDown', this._onMSPointerDown, false);
             this.game.stage.canvas.addEventListener('MSPointerMove', this._onMSPointerMove, false);
             this.game.stage.canvas.addEventListener('MSPointerUp', this._onMSPointerUp, false);
+
+            this.game.stage.canvas.style['-ms-content-zooming'] = 'none';
+            this.game.stage.canvas.style['-ms-touch-action'] = 'none';
+
         }
 
     },

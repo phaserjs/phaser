@@ -1,4 +1,4 @@
-Phaser.Input.Mouse = function (game) {
+Phaser.Mouse = function (game) {
 
 	this.game = game;
 	this.callbackContext = this.game;
@@ -9,11 +9,11 @@ Phaser.Input.Mouse = function (game) {
 
 };
 
-Phaser.Input.Mouse.LEFT_BUTTON = 0;
-Phaser.Input.Mouse.MIDDLE_BUTTON = 1;
-Phaser.Input.Mouse.RIGHT_BUTTON = 2;
+Phaser.Mouse.LEFT_BUTTON = 0;
+Phaser.Mouse.MIDDLE_BUTTON = 1;
+Phaser.Mouse.RIGHT_BUTTON = 2;
 
-Phaser.Input.Mouse.prototype = {
+Phaser.Mouse.prototype = {
 
 	game: null,
 

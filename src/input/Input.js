@@ -13,9 +13,9 @@ Phaser.Input = function (game) {
 	
 };
 
-Phaser.Input.MOUSE_OVERRIDES_TOUCH = 0;
-Phaser.Input.TOUCH_OVERRIDES_MOUSE = 1;
-Phaser.Input.MOUSE_TOUCH_COMBINE = 2;
+Phaser.Mouse_OVERRIDES_TOUCH = 0;
+Phaser.Touch_OVERRIDES_MOUSE = 1;
+Phaser.Mouse_TOUCH_COMBINE = 2;
 
 Phaser.Input.prototype = {
 
@@ -60,7 +60,7 @@ Phaser.Input.prototype = {
     /**
     * Controls the expected behaviour when using a mouse and touch together on a multi-input device
     */
-    multiInputOverride: Phaser.Input.MOUSE_TOUCH_COMBINE,
+    multiInputOverride: Phaser.Mouse_TOUCH_COMBINE,
 
     /**
     * A vector object representing the current position of the Pointer.
@@ -259,14 +259,14 @@ Phaser.Input.prototype = {
     **/
     boot: function () {
 
-	    this.mousePointer = new Phaser.Input.Pointer(this.game, 0);
-	    this.pointer1 = new Phaser.Input.Pointer(this.game, 1);
-	    this.pointer2 = new Phaser.Input.Pointer(this.game, 2);
+	    this.mousePointer = new Phaser.Pointer(this.game, 0);
+	    this.pointer1 = new Phaser.Pointer(this.game, 1);
+	    this.pointer2 = new Phaser.Pointer(this.game, 2);
 
-	    this.mouse = new Phaser.Input.Mouse(this.game);
-	    this.keyboard = new Phaser.Input.Keyboard(this.game);
-	    this.touch = new Phaser.Input.Touch(this.game);
-	    this.mspointer = new Phaser.Input.MSPointer(this.game);
+	    this.mouse = new Phaser.Mouse(this.game);
+	    this.keyboard = new Phaser.Keyboard(this.game);
+	    this.touch = new Phaser.Touch(this.game);
+	    this.mspointer = new Phaser.MSPointer(this.game);
 
 	    this.onDown = new Phaser.Signal();
 	    this.onUp = new Phaser.Signal();
@@ -321,7 +321,7 @@ Phaser.Input.prototype = {
         }
         else
         {
-            this['pointer' + next] = new Phaser.Input.Pointer(this.game, next);
+            this['pointer' + next] = new Phaser.Pointer(this.game, next);
             return this['pointer' + next];
         }
 
@@ -700,7 +700,7 @@ Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 Object.defineProperty(Phaser.Input.prototype, "worldX", {
 
     get: function () {
-		return this.camera.worldView.x + this.x;
+		return this.game.camera.view.x + this.x;
     },
 
     enumerable: true,
@@ -710,7 +710,7 @@ Object.defineProperty(Phaser.Input.prototype, "worldX", {
 Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
     get: function () {
-		return this.camera.worldView.x + this.x;
+		return this.game.camera.view.y + this.y;
     },
 
     enumerable: true,

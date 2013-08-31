@@ -232,6 +232,30 @@ Phaser.Game.prototype = {
     device: null,
 
 	/**
+	* A handy reference to world.camera
+	* @type {Phaser.Camera}
+	*/
+	camera: null,
+
+	/**
+	* A handy reference to renderer.view
+	* @type {HTMLCanvasElement}
+	*/
+	canvas: null,
+
+	/**
+	* A handy reference to renderer.context (only set for CANVAS games)
+	* @type {Context}
+	*/
+	context: null,
+
+	/**
+	* A set of useful debug utilities
+	* @type {Phaser.Utils.Debug}
+	*/
+	debug: null,
+
+	/**
 	* Initialize engine sub modules and start the game.
 	* @param parent {string} ID of parent Dom element.
 	* @param width {number} Width of the game screen.
@@ -275,12 +299,12 @@ Phaser.Game.prototype = {
 			// this.physics = new Phaser.Physics.PhysicsManager(this);
 			this.plugins = new Phaser.PluginManager(this, this);
 			this.net = new Phaser.Net(this);
+			this.debug = new Phaser.Utils.Debug(this);
 
 			this.load.onLoadComplete.add(this.loadComplete, this);
 
 			this.world.boot();
 			this.state.boot();
-			// this.stage.boot();
 			this.input.boot();
 
 			if (this.renderType == Phaser.CANVAS)
@@ -311,6 +335,8 @@ Phaser.Game.prototype = {
 				this.renderType = Phaser.CANVAS;
 				this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, this.transparent);
 				Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
+				this.canvas = this.renderer.view;
+				this.context = this.renderer.context;
 			}
 			else
 			{
@@ -321,6 +347,8 @@ Phaser.Game.prototype = {
 		{
 			//	They must have requested WebGL and their browser supports it
 			this.renderer = new PIXI.WebGLRenderer(this.width, this.height, null, this.transparent, this.antialias);
+			this.canvas = this.renderer.view;
+			this.context = null;
 		}
 
         Phaser.Canvas.addToDOM(this.renderer.view, this.parent, true);
@@ -358,6 +386,7 @@ Phaser.Game.prototype = {
         this.plugins.update();
 
 		this.renderer.render(this.world._stage);
+		this.state.render();
 
 		this.plugins.postRender();
 

@@ -20,13 +20,48 @@
 
 	function create() {
 
-		game.add.sprite(0, 0, 'mushroom');
-		game.add.sprite(400, 0, 'mushroom');
-		game.add.sprite(800, 0, 'mushroom');
+		//	Make our game world 2000x2000 pixels in size (the default is to match the game size)
+		game.world.setSize(2000, 2000);
+
+		for (var i = 0; i < 50; i++)
+		{
+			var s = game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
+			s.scrollFactor.setTo(0.5, 0.5);
+		}
+
+		for (var i = 0; i < 50; i++)
+		{
+			game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
+		}
+
+		for (var i = 0; i < 50; i++)
+		{
+			var s = game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
+			s.scrollFactor.setTo(2, 2);
+		}
 
 	}
 
 	function update() {
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+        {
+            game.camera.x -= 4;
+        }
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+        {
+            game.camera.x += 4;
+        }
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+        {
+            game.camera.y -= 4;
+        }
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+        {
+            game.camera.y += 4;
+        }
+
 	}
 
 })();

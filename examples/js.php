@@ -91,3 +91,7 @@
 
 	<script src="../src/loader/Cache.js"></script>
 	<script src="../src/loader/Loader.js"></script>
+
+	<script src="../src/utils/Debug.js"></script>
+
+

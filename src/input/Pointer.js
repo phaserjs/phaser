@@ -3,7 +3,7 @@
 *
 * A Pointer object is used by the Mouse, Touch and MSPoint managers and represents a single finger on the touch screen.
 */
-Phaser.Input.Pointer = function (game, id) {
+Phaser.Pointer = function (game, id) {
 
 	this.game = game;
     this.id = id;
@@ -22,7 +22,7 @@ Phaser.Input.Pointer = function (game, id) {
 
 };
 
-Phaser.Input.Pointer.prototype = {
+Phaser.Pointer.prototype = {
 
 	/**
 	* Local private variable to store the status of dispatching a hold event
@@ -238,7 +238,7 @@ Phaser.Input.Pointer.prototype = {
         // x and y are the old values here?
         this.positionDown.setTo(this.x, this.y);
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+        if (this.game.input.multiInputOverride == Phaser.Mouse_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Mouse_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Touch_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
         {
             //this.game.input.x = this.x * this.game.input.scale.x;
             //this.game.input.y = this.y * this.game.input.scale.y;
@@ -272,7 +272,7 @@ Phaser.Input.Pointer.prototype = {
         {
             if (this._holdSent == false && this.duration >= this.game.input.holdRate)
             {
-                if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+                if (this.game.input.multiInputOverride == Phaser.Mouse_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Mouse_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Touch_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
                 {
                     this.game.input.onHold.dispatch(this);
                 }
@@ -335,7 +335,7 @@ Phaser.Input.Pointer.prototype = {
         this.circle.x = this.x;
         this.circle.y = this.y;
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+        if (this.game.input.multiInputOverride == Phaser.Mouse_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Mouse_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Touch_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
         {
             this.game.input.activePointer = this;
             this.game.input.x = this.x;
@@ -453,7 +453,7 @@ Phaser.Input.Pointer.prototype = {
 
         this.timeUp = this.game.time.now;
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+        if (this.game.input.multiInputOverride == Phaser.Mouse_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Mouse_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Touch_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
         {
             this.game.input.onUp.dispatch(this);
 
@@ -576,7 +576,7 @@ Phaser.Input.Pointer.prototype = {
 
 };
 
-Object.defineProperty(Phaser.Input.Pointer.prototype, "duration", {
+Object.defineProperty(Phaser.Pointer.prototype, "duration", {
 
 	/**
     * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
@@ -598,7 +598,7 @@ Object.defineProperty(Phaser.Input.Pointer.prototype, "duration", {
     configurable: true
 });
 
-Object.defineProperty(Phaser.Input.Pointer.prototype, "worldX", {
+Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
 
 	/**
     * Gets the X value of this Pointer in world coordinates based on the given camera.
@@ -614,7 +614,7 @@ Object.defineProperty(Phaser.Input.Pointer.prototype, "worldX", {
     configurable: true
 });
 
-Object.defineProperty(Phaser.Input.Pointer.prototype, "worldY", {
+Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
 
 	/**
     * Gets the Y value of this Pointer in world coordinates based on the given camera.

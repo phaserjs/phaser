@@ -365,15 +365,6 @@ Phaser.StateManager.prototype = {
 
     },
 
-    loadRender: function () {
-
-	    if (this.onLoadRenderCallback)
-	    {
-	    	this.onLoadRenderCallback.call(this.callbackContext);
-		}
-
-    },
-
     update: function () {
 
     	if (this._created && this.onUpdateCallback)
@@ -401,9 +392,16 @@ Phaser.StateManager.prototype = {
 
     render: function () {
 
-	    if (this.onRenderCallback)
-	    {
-	    	this.onRenderCallback.call(this.callbackContext);
+    	if (this._created && this.onRenderCallback)
+    	{
+			this.onRenderCallback.call(this.callbackContext);
+    	}
+    	else
+    	{
+		    if (this.onLoadRenderCallback)
+		    {
+		    	this.onLoadRenderCallback.call(this.callbackContext);
+			}
 		}
 
     },
