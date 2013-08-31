@@ -161,7 +161,7 @@ Phaser.Game.prototype = {
 
     /**
      * Reference to the input manager
-     * @type {Phaser.InputManager}
+     * @type {Phaser.Input}
      */
     input: null,
 
@@ -270,7 +270,7 @@ Phaser.Game.prototype = {
 			this.load = new Phaser.Loader(this);
 			this.time = new Phaser.Time(this);
 			this.tweens = new Phaser.TweenManager(this);
-			// this.input = new Phaser.InputManager(this);
+			this.input = new Phaser.Input(this);
 			// this.sound = new Phaser.SoundManager(this);
 			// this.physics = new Phaser.Physics.PhysicsManager(this);
 			this.plugins = new Phaser.PluginManager(this, this);
@@ -278,9 +278,10 @@ Phaser.Game.prototype = {
 
 			this.load.onLoadComplete.add(this.loadComplete, this);
 
+			this.world.boot();
 			this.state.boot();
 			// this.stage.boot();
-			// this.input.boot();
+			this.input.boot();
 
 			if (this.renderType == Phaser.CANVAS)
 			{
@@ -347,8 +348,8 @@ Phaser.Game.prototype = {
 
         this.plugins.preUpdate();
 
+        this.input.update();
         this.tweens.update();
-        // this.input.update();
         // this.stage.update();
         // this.sound.update();
         // this.physics.update();

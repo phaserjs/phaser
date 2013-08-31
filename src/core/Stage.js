@@ -12,10 +12,13 @@
 Phaser.Stage = function (game) {
 	
 	this.game = game;
+    this.canvas = game.renderer.view;
 
 	//	Get the offset values (for input and other things)
 	this.offset = new Phaser.Point;
-	Phaser.Canvas.getOffset(this.game.renderer.view, this.offset);
+
+	Phaser.Canvas.getOffset(this.canvas, this.offset);
+
 	this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
 
 	var _this = this;
@@ -38,6 +41,7 @@ Phaser.Stage.prototype = {
 
 	_onChange: null,
 
+    canvas: null,
 	bounds: null,
 	offset: null,
 

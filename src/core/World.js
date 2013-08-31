@@ -19,6 +19,13 @@ Phaser.World.prototype = {
 	_length: 0,
 
 	bounds: null,
+	camera: null,
+
+	boot: function () {
+
+		this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
+
+	},
 
 	add: function (gameobject) {
 		this._container.addChild(gameobject);
@@ -41,6 +48,8 @@ Phaser.World.prototype = {
 
 	update: function () {
 
+		this.camera.update();
+
 		for (var child in this._container.children)
 		{
 			this._container.children[child].update();
@@ -53,19 +62,11 @@ Phaser.World.prototype = {
 	*
 	* @param width {number} New width of the world.
 	* @param height {number} New height of the world.
-	* @param [updateCameraBounds] {bool} Update camera bounds automatically or not. Default to true.
 	*/
-	setSize: function (width, height, updateCameraBounds) {
-
-		if (typeof updateCameraBounds === "undefined") { updateCameraBounds = true; }
+	setSize: function (width, height) {
 
 		this.bounds.width = width;
 		this.bounds.height = height;
-
-		if (updateCameraBounds == true)
-		{
-			// this.game.camera.setBounds(0, 0, width, height);
-		}
 
 	},
 
