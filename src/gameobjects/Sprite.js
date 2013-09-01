@@ -108,16 +108,20 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     //  Edge points
     this.offset = new Phaser.Point();
+    this.center = new Phaser.Point();
     this.topLeft = new Phaser.Point();
     this.topRight = new Phaser.Point();
     this.bottomRight = new Phaser.Point();
     this.bottomLeft = new Phaser.Point();
 
     //  Do we need all 4 edge points? It might be better to just calculate the center and apply the circle for a bounds check
+    this.getLocalPosition(this.center, this.offset.x + this.width / 2, this.offset.y + this.height / 2);
     this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
     this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
     this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height);
     this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height);
+
+    this.bounds = new Phaser.Rectangle(x, y, this.width, this.height);
 
     this._dirty = false;
 
@@ -200,13 +204,17 @@ Phaser.Sprite.prototype.update = function() {
         this.offset.setTo(this._a02 - (this.anchor.x * this._sw), this._a12 - (this.anchor.y * this._sh));
 
         //  Do we need all 4 edge points? It might be better to just calculate the center and apply the circle for a bounds check
+        this.getLocalPosition(this.center, this.offset.x + this.width / 2, this.offset.y + this.height / 2);
         this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
         this.getLocalPosition(this.topRight, this.offset.x + this._sw, this.offset.y);
         this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._sh);
         this.getLocalPosition(this.bottomRight, this.offset.x + this._sw, this.offset.y + this._sh);
+
+        //  Update our bounds
+        this.getBounds(this.bounds);
     }
 
-    // this.checkBounds();
+    //  Check our bounds
 
 }
 
@@ -214,6 +222,8 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
     p.x = ((this._a11 * this._id * x + -this._a01 * this._id * y + (this._a12 * this._a01 - this._a02 * this._a11) * this._id) * this._sx) + this._a02;
     p.y = ((this._a00 * this._id * y + -this._a10 * this._id * x + (-this._a12 * this._a00 + this._a02 * this._a10) * this._id) * this._sy) + this._a12;
+
+    //  At this point could be working out the smallest / largest value for the bounds check
 
     return p;
 

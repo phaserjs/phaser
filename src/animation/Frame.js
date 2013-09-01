@@ -16,6 +16,7 @@ Phaser.Animation.Frame = function (x, y, width, height, name, uuid) {
 	this.height = height;
 	this.name = name;
 	this.uuid = uuid;
+	this.distance = Phaser.Math.distance(0, 0, width, height);
 
 };
 
@@ -49,6 +50,12 @@ Phaser.Animation.Frame.prototype = {
 	 * @type {number}
 	 */
 	height: 0,
+
+	/**
+	 * The distance from the top left to the bottom-right of this Frame.
+	 * @type {number}
+	 */
+	distance: 0,
 
 	/**
 	 * Useful for Sprite Sheets.

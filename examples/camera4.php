@@ -44,6 +44,8 @@
 		game.debug.renderPoint(mummy.topRight, 'rgb(0,255,0)');
 		game.debug.renderPoint(mummy.bottomLeft, 'rgb(0,0,255)');
 		game.debug.renderPoint(mummy.bottomRight, 'rgb(255,0,255)');
+		game.debug.renderPoint(mummy.center, 'rgb(255,255,0)');
+		game.debug.renderRectangle(mummy.bounds, 'rgba(255,255,0,0.1)');
 
 	}
 

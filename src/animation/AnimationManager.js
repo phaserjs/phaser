@@ -18,7 +18,7 @@ Phaser.AnimationManager = function (parent) {
 	this._frameData = null;
 
 	/**
-	* Keeps track of the current frame of animation.
+	* Keeps track of the current frame of the animation.
 	*/
 	this.currentFrame = null;
 
