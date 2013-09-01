@@ -107,14 +107,19 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
 
     //  Edge points
-    this.topLeft = new Phaser.Point(x, y);
-    this.topRight = new Phaser.Point(x + this.width, y);
-    this.bottomRight = new Phaser.Point(x + this.width, y + this.height);
-    this.bottomLeft = new Phaser.Point(x, y + this.height);
-
     this.offset = new Phaser.Point();
+    this.topLeft = new Phaser.Point();
+    this.topRight = new Phaser.Point();
+    this.bottomRight = new Phaser.Point();
+    this.bottomLeft = new Phaser.Point();
 
-    this._dirty = true;
+    //  Do we need all 4 edge points? It might be better to just calculate the center and apply the circle for a bounds check
+    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
+    this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height);
+    this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height);
+
+    this._dirty = false;
 
     //  transform cache
     this._a00 = 0;

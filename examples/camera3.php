@@ -44,12 +44,6 @@
 		s.angle += 0.5;
 		s2.angle += 1;
 
-		if (s.scale.x > -2)
-		{
-			// s.scale.x -= 0.01;
-			// s.scale.y -= 0.01;
-		}
-
 	}
 
 	function render() {
