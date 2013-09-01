@@ -59,12 +59,6 @@ Phaser.World.prototype = {
 		
 		do	
 		{
-			// if (!displayObject.active)
-			// {
-			// 	displayObject = displayObject.last._iNext;
-			// 	continue;
-			// }
-
 			if (displayObject['update'])
 			{
 				displayObject.update();
