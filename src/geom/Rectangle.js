@@ -663,7 +663,7 @@ Phaser.Rectangle.intersection = function (a, b, out) {
 */
 Phaser.Rectangle.intersects = function (a, b, tolerance) {
 
-    if (typeof tolerance === "undefined") { tolerance = 0; }
+    tolerance = tolerance || 0;
 
     return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
 

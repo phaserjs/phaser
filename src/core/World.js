@@ -59,11 +59,11 @@ Phaser.World.prototype = {
 		
 		do	
 		{
-			if (!displayObject.visible)
-			{
-				displayObject = displayObject.last._iNext;
-				continue;
-			}
+			// if (!displayObject.active)
+			// {
+			// 	displayObject = displayObject.last._iNext;
+			// 	continue;
+			// }
 
 			if (displayObject['update'])
 			{

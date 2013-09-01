@@ -104,18 +104,15 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     this.scrollFactor = new Phaser.Point(1, 1);
 
-    this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
+    // this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
 
     //  Edge points
     this.offset = new Phaser.Point();
-    this.center = new Phaser.Point();
     this.topLeft = new Phaser.Point();
     this.topRight = new Phaser.Point();
     this.bottomRight = new Phaser.Point();
     this.bottomLeft = new Phaser.Point();
 
-    //  Do we need all 4 edge points? It might be better to just calculate the center and apply the circle for a bounds check
-    this.getLocalPosition(this.center, this.offset.x + this.width / 2, this.offset.y + this.height / 2);
     this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
     this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
     this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height);
@@ -133,6 +130,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this._a11 = 0;
     this._a12 = 0;
     this._id = 0;
+    this._left = null;
+    this._right = null;
+    this._top = null;
+    this._bottom = null;
 
     //  The actual scale X value based on the worldTransform
     this._sx = 0;
@@ -157,64 +158,82 @@ Phaser.Sprite.prototype.update = function() {
 
     this.animations.update();
 
-    this.worldView.setTo(this._x, this._y, this.width, this.height);
-
-    this.position.x = this._x - (this.game.world.camera.x * this.scrollFactor.x);
-    this.position.y = this._y - (this.game.world.camera.y * this.scrollFactor.y);
-
     //  |a c tx|
     //  |b d ty|
     //  |0 0  1|
 
+        this.position.x = this._x - (this.game.world.camera.x * this.scrollFactor.x);
+        this.position.y = this._y - (this.game.world.camera.y * this.scrollFactor.y);
+
+
     //  Cache our transform values
-    if (this.worldTransform[0] != this._a00 || this.worldTransform[1] != this._a01)
-    {
+    // if (this.worldTransform[0] != this._a00 || this.worldTransform[1] != this._a01)
+    // {
         this._a00 = this.worldTransform[0];  //  scaleX         a
         this._a01 = this.worldTransform[1];  //  skewY          c
         this._sx = Math.sqrt((this._a00 * this._a00) + (this._a01 * this._a01));
         this._a01 *= -1;
         this._dirty = true;
-    }
+    // }
 
-    if (this.worldTransform[3] != this._a10 || this.worldTransform[4] != this._a11)
-    {
+    // if (this.worldTransform[3] != this._a10 || this.worldTransform[4] != this._a11)
+    // {
         this._a10 = this.worldTransform[3];  //  skewX          b
         this._a11 = this.worldTransform[4];  //  scaleY         d
         this._sy = Math.sqrt((this._a10 * this._a10) + (this._a11 * this._a11));
         this._a10 *= -1;
         this._dirty = true;
-    }
+    // }
 
-    if (this.worldTransform[2] != this._a02 || this.worldTransform[5] != this._a12)
-    {
+   // if (this.worldTransform[2] != this._a02 || this.worldTransform[5] != this._a12)
+   // {
         this._a02 = this.worldTransform[2];  //  translateX     tx
         this._a12 = this.worldTransform[5];  //  translateY     ty
-        this._dirty = true;
-    }
+        // this._a02 -= (this.game.world.camera.x * this.scrollFactor.x);
+        // this._a12 -= (this.game.world.camera.y * this.scrollFactor.y);
+//        this._dirty = true;
+//    }
 
     //  If the frame has changed we ought to set _dirty
     this._sw = this.texture.frame.width * this._sx;
     this._sh = this.texture.frame.height * this._sy;
 
-    if (this._dirty)
-    {
+    //if (this._dirty)
+    //{
         this._id = 1 / (this._a00 * this._a11 + this._a01 * -this._a10);
 
-        //  Update the edge points
-        this.offset.setTo(this._a02 - (this.anchor.x * this._sw), this._a12 - (this.anchor.y * this._sh));
-
-        //  Do we need all 4 edge points? It might be better to just calculate the center and apply the circle for a bounds check
-        this.getLocalPosition(this.center, this.offset.x + this.width / 2, this.offset.y + this.height / 2);
-        this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
-        this.getLocalPosition(this.topRight, this.offset.x + this._sw, this.offset.y);
-        this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._sh);
-        this.getLocalPosition(this.bottomRight, this.offset.x + this._sw, this.offset.y + this._sh);
-
         //  Update our bounds
-        this.getBounds(this.bounds);
-    }
+        this.updateBounds();
+
+        this.visible = this.inCamera(this.game.world.camera.screenView);
+    //}
 
     //  Check our bounds
+
+}
+
+Phaser.Sprite.prototype.updateBounds = function() {
+
+    //  Update the edge points
+    this.offset.setTo(this._a02 - (this.anchor.x * this._sw), this._a12 - (this.anchor.y * this._sh));
+
+    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
+    this.getLocalPosition(this.topRight, this.offset.x + this._sw, this.offset.y);
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._sh);
+    this.getLocalPosition(this.bottomRight, this.offset.x + this._sw, this.offset.y + this._sh);
+
+    this._left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    this._right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    this._top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+    this._bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+
+    this.bounds.setTo(this._left, this._top, this._right - this._left, this._bottom - this._top);
+
+}
+
+Phaser.Sprite.prototype.inCamera = function(cameraRect) {
+
+    return Phaser.Rectangle.intersects(cameraRect, this.bounds, 0);
 
 }
 
@@ -222,8 +241,6 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
     p.x = ((this._a11 * this._id * x + -this._a01 * this._id * y + (this._a12 * this._a01 - this._a02 * this._a11) * this._id) * this._sx) + this._a02;
     p.y = ((this._a00 * this._id * y + -this._a10 * this._id * x + (-this._a12 * this._a00 + this._a02 * this._a10) * this._id) * this._sy) + this._a12;
-
-    //  At this point could be working out the smallest / largest value for the bounds check
 
     return p;
 
@@ -233,17 +250,15 @@ Phaser.Sprite.prototype.getBounds = function(rect) {
 
     rect = rect || new Phaser.Rectangle;
 
-    var left = Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    var right = Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    var top = Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
-    var bottom = Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+    var left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    var right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    var top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+    var bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
 
     rect.x = left;
     rect.y = top;
     rect.width = right - left;
     rect.height = bottom - top;
-
-    //  This could work to include the children by running through the linked list and storing only the highest min.max values
     
     return rect;
 
@@ -268,7 +283,7 @@ Object.defineProperty(Phaser.Sprite.prototype, 'x', {
     },
 
     set: function(value) {
-        this.worldView.x = value;
+        // this.worldView.x = value;
     	this._x = value;
     }
 
@@ -281,7 +296,7 @@ Object.defineProperty(Phaser.Sprite.prototype, 'y', {
     },
 
     set: function(value) {
-        this.worldView.y = value;
+        // this.worldView.y = value;
     	this._y = value;
     }
 

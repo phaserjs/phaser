@@ -430,6 +430,44 @@ Phaser.Math = {
 
     },
 
+    /**
+    * Significantly faster version of Math.max
+    * See http://jsperf.com/math-s-min-max-vs-homemade/5
+    *
+    * @return   The highest value from those given.
+    */
+    max: function () {
+
+        for (var i = 1, max = 0, len = arguments.length; i < len; i++)
+        {
+            if (arguments[max] < arguments[i]) {
+                max = i;
+            }
+        }
+        
+        return arguments[max];
+
+    },
+
+    /**
+    * Significantly faster version of Math.min
+    * See http://jsperf.com/math-s-min-max-vs-homemade/5
+    *
+    * @return   The lowest value from those given.
+    */
+    min: function () {
+
+        for (var i =1 , min = 0, len = arguments.length; i < len; i++)
+        {
+            if (arguments[i] < arguments[min]){
+                min = i;
+            }
+        }
+
+        return arguments[min];
+
+    },
+
 	/**
 	* Keeps an angle value between -180 and +180<br>
 	* Should be called whenever the angle is updated on the Sprite to stop it from going insane.

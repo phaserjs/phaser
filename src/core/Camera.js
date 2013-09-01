@@ -14,7 +14,9 @@ Phaser.Camera = function (game, id, x, y, width, height) {
 	//  The view into the world we wish to render (by default the game dimensions)
 	//  The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render
 	//	Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?)
-	this.view = new Phaser.Rectangle(x, y, width, height);
+    this.view = new Phaser.Rectangle(x, y, width, height);
+	this.screenView = new Phaser.Rectangle(x, y, width, height);
+
 	
 };
 
@@ -115,6 +117,8 @@ Phaser.Camera.prototype = {
     update: function () {
 
         // this.plugins.preUpdate();
+
+        //  Add dirty flag
 
         if (this.target !== null)
         {
