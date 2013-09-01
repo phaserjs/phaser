@@ -93,6 +93,13 @@
 	function update() {
 
 		s.angle += 0.5;
+
+		if (s.scale.x < 2)
+		{
+			s.scale.x += 0.01;
+			s.scale.y += 0.01;
+		}
+
 	}
 
 	function render() {
@@ -101,16 +108,18 @@
 
 		// var p1 = getLocalPosition(midpoint.x, midpoint.y, s);
 
-		var p1 = getLocalPosition(tl.x, tl.y, s);
-		var p2 = getLocalPosition(tr.x, tr.y, s);
-		var p3 = getLocalPosition(bl.x, bl.y, s);
-		var p4 = getLocalPosition(br.x, br.y, s);
+        //  top left
+		var p1 = getLocalPosition(s.x, s.y, s);
 
-		// p1.add(100, 100);
-		// p2.add(100, 100);
-		// p3.add(100, 100);
-		// p4.add(100, 100);
-		// p1.add(s.x + (s.anchor.x * (s.width / 2)), s.y + (s.anchor.y * (s.height / 2)));
+        //  top right
+		var p2 = getLocalPosition(s.x + s.width, s.y, s);
+
+        //  bottom left
+		var p3 = getLocalPosition(s.x, s.y + s.height, s);
+
+        //  bottom right
+		var p4 = getLocalPosition(s.x + s.width, s.y + s.height, s);
+
 		p1.add(s.x, s.y);
 		p2.add(s.x, s.y);
 		p3.add(s.x, s.y);
@@ -134,7 +143,7 @@
 	}
 
 	function getLocalPosition (x, y, displayObject) {
-		
+
 		var a00 = displayObject.worldTransform[0];	//	scaleX
 		var a01 = displayObject.worldTransform[1];	//	skewY
 		var a02 = displayObject.worldTransform[2];	//	translateX
@@ -150,7 +159,7 @@
 		var dx = a11 * id * x + -a01 * id * y + (a12 * a01 - a02 * a11) * id;
 		var dy = a00 * id * y + -a10 * id * x + (-a12 * a00 + a02 * a10) * id;
 
-		return new Phaser.Point(dx, dy);
+		return new Phaser.Point(dx * displayObject.scale.x, dy * displayObject.scale.y);
 
 	}
 
