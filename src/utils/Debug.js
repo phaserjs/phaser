@@ -284,6 +284,7 @@ Phaser.Utils.Debug.prototype = {
         //  5 = translateY
 
 
+        this.line('id: ' + sprite._id);
         this.line('scale x: ' + sprite.worldTransform[0]);
         this.line('scale y: ' + sprite.worldTransform[4]);
         this.line('tx: ' + sprite.worldTransform[2]);
@@ -295,6 +296,64 @@ Phaser.Utils.Debug.prototype = {
         // this.line('center x: ' + sprite.transform.center.x + ' y: ' + sprite.transform.center.y);
         // this.line('cameraView x: ' + sprite.cameraView.x + ' y: ' + sprite.cameraView.y + ' width: ' + sprite.cameraView.width + ' height: ' + sprite.cameraView.height);
         // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
+
+    },
+
+    renderWorldTransformInfo: function (sprite, x, y, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(x, y, color);
+
+        this.line('World Transform');
+        this.line('skewX:  ' + sprite.worldTransform[3]);
+        this.line('skewY:  ' + sprite.worldTransform[1]);
+        this.line('scaleX: ' + sprite.worldTransform[0]);
+        this.line('scaleY: ' + sprite.worldTransform[4]);
+        this.line('transX: ' + sprite.worldTransform[2]);
+        this.line('transY: ' + sprite.worldTransform[5]);
+
+    },
+
+    renderLocalTransformInfo: function (sprite, x, y, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(x, y, color);
+
+        this.line('Local Transform');
+        // this.line('testX:  ' + Math.floor(sprite.localTransform[3] + sprite.localTransform[0]));
+        this.line('skewX:  ' + sprite.localTransform[3]);
+        this.line('skewY:  ' + sprite.localTransform[1]);
+        this.line('scaleX: ' + sprite.localTransform[0]);
+        this.line('scaleY: ' + sprite.localTransform[4]);
+        this.line('transX: ' + sprite.localTransform[2]);
+        this.line('transY: ' + sprite.localTransform[5]);
+
+    },
+
+    renderPointInfo: function (point, x, y, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(x, y, color);
+        this.line('px: ' + point.x.toFixed(1) + ' py: ' + point.y.toFixed(1));
+        this.stop();
 
     },
 

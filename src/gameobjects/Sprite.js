@@ -122,6 +122,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this._a11 = 0;
     this._a12 = 0;
     this._id = 0;
+    this._sx = 0;
+    this._sy = 0;
+    this._sw = 0;
+    this._sh = 0;
 
 };
 
@@ -140,8 +144,30 @@ Phaser.Sprite.prototype.update = function() {
     this.position.x = this._x - (this.game.world.camera.x * this.scrollFactor.x);
     this.position.y = this._y - (this.game.world.camera.y * this.scrollFactor.y);
 
+    //  |a c tx|
+    //  |b d ty|
+    //  |0 0  1|
+
+    //  Cache our transform values
+    this._a00 = this.worldTransform[0];  //  scaleX         a
+    this._a01 = this.worldTransform[1];  //  skewY          c
+    this._a02 = this.worldTransform[2];  //  translateX     tx
+    this._a10 = this.worldTransform[3];  //  skewX          b
+    this._a11 = this.worldTransform[4];  //  scaleY         d
+    this._a12 = this.worldTransform[5];  //  translateY     ty
+
+    this._sx = Math.sqrt((this._a00 * this._a00) + (this._a01 * this._a01));
+    this._sy = Math.sqrt((this._a10 * this._a10) + (this._a11 * this._a11));
+    this._sw = this.width * this._sx;
+    this._sh = this.height * this._sy;
+
+    this._a01 *= -1;
+    this._a10 *= -1;
+
+    this._id = 1 / (this._a00 * this._a11 + this._a01 * -this._a10);
+
     //  Update the edge points
-    this.offset.setTo(this._x - (this.anchor.x * this.width), this._y - (this.anchor.y * this.height));
+    this.offset.setTo(this._a02 - (this.anchor.x * this.width), this._a12 - (this.anchor.y * this.height));
 
     this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
     this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
@@ -154,20 +180,8 @@ Phaser.Sprite.prototype.update = function() {
 
 Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
-    this._a00 = this.worldTransform[0];  //  scaleX
-    this._a01 = this.worldTransform[1];  //  skewY
-    this._a02 = this.worldTransform[2];  //  translateX
-    this._a10 = this.worldTransform[3];  //  skewX
-    this._a11 = this.worldTransform[4];  //  scaleY
-    this._a12 = this.worldTransform[5];  //  translateY
-
-    this._a01 *= -1;
-    this._a10 *= -1;
-
-    this._id = 1 / (this._a00 * this._a11 + this._a01 * -this._a10);
-
-    p.x = ((this._a11 * this._id * x + -this._a01 * this._id * y + (this._a12 * this._a01 - this._a02 * this._a11) * this._id) * this.scale.x) + this.x;
-    p.y = ((this._a00 * this._id * y + -this._a10 * this._id * x + (-this._a12 * this._a00 + this._a02 * this._a10) * this._id) * this.scale.y) + this.y;
+    p.x = ((this._a11 * this._id * x + -this._a01 * this._id * y + (this._a12 * this._a01 - this._a02 * this._a11) * this._id) * this._sx) + this._a02;
+    p.y = ((this._a00 * this._id * y + -this._a10 * this._id * x + (-this._a12 * this._a00 + this._a02 * this._a10) * this._id) * this._sy) + this._a12;
 
     return p;
 

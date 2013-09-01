@@ -26,9 +26,14 @@
 
 		s = game.add.sprite(game.world.centerX, game.world.centerY, 'card');
 		s2 = game.add.sprite(100, 100, 'mushroom');
-		s2.name = 'm';
 
 		s.addChild(s2);
+
+		// s.angle = 45;
+		s.scale.x = 0.5;
+		s.scale.y = 0.5;
+		// s2.scale.x = 2;
+		// s2.scale.y = 2;
 
 		s.anchor.setTo(0.5, 0.5);
 		s2.anchor.setTo(0.5, 0.5);
@@ -50,8 +55,16 @@
 
 	function render() {
 
-		game.debug.renderSpriteInfo(s, 32, 32);
-		game.debug.renderSpriteInfo(s2, 32, 320);
+		var scale1X = Math.sqrt((s2.worldTransform[0] * s2.worldTransform[0]) + (s2.worldTransform[1] * s2.worldTransform[1]));
+		var scale1Y = Math.sqrt((s2.worldTransform[3] * s2.worldTransform[3]) + (s2.worldTransform[4] * s2.worldTransform[4]));
+
+		game.debug.renderText('scaleX: ' + scale1X + ' scaleY: ' + scale1Y, 500, 32);
+
+		game.debug.renderWorldTransformInfo(s, 32, 32);
+		game.debug.renderLocalTransformInfo(s, 300, 32);
+
+		game.debug.renderWorldTransformInfo(s2, 32, 450);
+		game.debug.renderLocalTransformInfo(s2, 300, 450);
 
 		game.debug.renderPoint(s.topLeft, 'rgb(255,0,0)');
 		game.debug.renderPoint(s.topRight, 'rgb(0,255,0)');
