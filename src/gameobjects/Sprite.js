@@ -114,7 +114,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     this.offset = new Phaser.Point();
 
-    //  help avoid gc spikes by using temp. vars
+    this._dirty = true;
+
+    //  transform cache
     this._a00 = 0;
     this._a01 = 0;
     this._a02 = 0;
@@ -122,9 +124,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this._a11 = 0;
     this._a12 = 0;
     this._id = 0;
+
+    //  The actual scale X value based on the worldTransform
     this._sx = 0;
+    //  The actual scale Y value based on the worldTransform
     this._sy = 0;
+    //  The width of the image, based on the un-modified frame size multiplied by the final calculated scale size
     this._sw = 0;
+    //  The height of the image, based on the un-modified frame size multiplied by the final calculated scale size
     this._sh = 0;
 
 };
@@ -133,9 +140,11 @@ Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 
 /**
- * Automatically called after update() by the game loop for all 'alive' objects.
+ * Automatically called by the game loop.
  */
 Phaser.Sprite.prototype.update = function() {
+
+    this._dirty = false;
 
     this.animations.update();
 
@@ -149,30 +158,48 @@ Phaser.Sprite.prototype.update = function() {
     //  |0 0  1|
 
     //  Cache our transform values
-    this._a00 = this.worldTransform[0];  //  scaleX         a
-    this._a01 = this.worldTransform[1];  //  skewY          c
-    this._a02 = this.worldTransform[2];  //  translateX     tx
-    this._a10 = this.worldTransform[3];  //  skewX          b
-    this._a11 = this.worldTransform[4];  //  scaleY         d
-    this._a12 = this.worldTransform[5];  //  translateY     ty
+    if (this.worldTransform[0] != this._a00 || this.worldTransform[1] != this._a01)
+    {
+        this._a00 = this.worldTransform[0];  //  scaleX         a
+        this._a01 = this.worldTransform[1];  //  skewY          c
+        this._sx = Math.sqrt((this._a00 * this._a00) + (this._a01 * this._a01));
+        this._a01 *= -1;
+        this._dirty = true;
+    }
 
-    this._sx = Math.sqrt((this._a00 * this._a00) + (this._a01 * this._a01));
-    this._sy = Math.sqrt((this._a10 * this._a10) + (this._a11 * this._a11));
+    if (this.worldTransform[3] != this._a10 || this.worldTransform[4] != this._a11)
+    {
+        this._a10 = this.worldTransform[3];  //  skewX          b
+        this._a11 = this.worldTransform[4];  //  scaleY         d
+        this._sy = Math.sqrt((this._a10 * this._a10) + (this._a11 * this._a11));
+        this._a10 *= -1;
+        this._dirty = true;
+    }
+
+    if (this.worldTransform[2] != this._a02 || this.worldTransform[5] != this._a12)
+    {
+        this._a02 = this.worldTransform[2];  //  translateX     tx
+        this._a12 = this.worldTransform[5];  //  translateY     ty
+        this._dirty = true;
+    }
+
+    //  If the frame has changed we ought to set _dirty
     this._sw = this.texture.frame.width * this._sx;
     this._sh = this.texture.frame.height * this._sy;
 
-    this._a01 *= -1;
-    this._a10 *= -1;
+    if (this._dirty)
+    {
+        this._id = 1 / (this._a00 * this._a11 + this._a01 * -this._a10);
 
-    this._id = 1 / (this._a00 * this._a11 + this._a01 * -this._a10);
+        //  Update the edge points
+        this.offset.setTo(this._a02 - (this.anchor.x * this._sw), this._a12 - (this.anchor.y * this._sh));
 
-    //  Update the edge points
-    this.offset.setTo(this._a02 - (this.anchor.x * this._sw), this._a12 - (this.anchor.y * this._sh));
-
-    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
-    this.getLocalPosition(this.topRight, this.offset.x + this._sw, this.offset.y);
-    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._sh);
-    this.getLocalPosition(this.bottomRight, this.offset.x + this._sw, this.offset.y + this._sh);
+        //  Do we need all 4 edge points? It might be better to just calculate the center and apply the circle for a bounds check
+        this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
+        this.getLocalPosition(this.topRight, this.offset.x + this._sw, this.offset.y);
+        this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._sh);
+        this.getLocalPosition(this.bottomRight, this.offset.x + this._sw, this.offset.y + this._sh);
+    }
 
     // this.checkBounds();
 

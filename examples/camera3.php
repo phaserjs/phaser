@@ -29,7 +29,6 @@
 
 		s.addChild(s2);
 
-		// s.angle = 45;
 		s.scale.x = 2;
 		s.scale.y = 2;
 		s2.scale.x = 0.5;
