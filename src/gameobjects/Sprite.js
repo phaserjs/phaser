@@ -158,8 +158,8 @@ Phaser.Sprite.prototype.update = function() {
 
     this._sx = Math.sqrt((this._a00 * this._a00) + (this._a01 * this._a01));
     this._sy = Math.sqrt((this._a10 * this._a10) + (this._a11 * this._a11));
-    this._sw = this.width * this._sx;
-    this._sh = this.height * this._sy;
+    this._sw = this.texture.frame.width * this._sx;
+    this._sh = this.texture.frame.height * this._sy;
 
     this._a01 *= -1;
     this._a10 *= -1;
@@ -167,12 +167,12 @@ Phaser.Sprite.prototype.update = function() {
     this._id = 1 / (this._a00 * this._a11 + this._a01 * -this._a10);
 
     //  Update the edge points
-    this.offset.setTo(this._a02 - (this.anchor.x * this.width), this._a12 - (this.anchor.y * this.height));
+    this.offset.setTo(this._a02 - (this.anchor.x * this._sw), this._a12 - (this.anchor.y * this._sh));
 
     this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
-    this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
-    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height);
-    this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height);
+    this.getLocalPosition(this.topRight, this.offset.x + this._sw, this.offset.y);
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._sh);
+    this.getLocalPosition(this.bottomRight, this.offset.x + this._sw, this.offset.y + this._sh);
 
     // this.checkBounds();
 

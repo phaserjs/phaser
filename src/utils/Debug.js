@@ -332,13 +332,14 @@ Phaser.Utils.Debug.prototype = {
         this.start(x, y, color);
 
         this.line('Local Transform');
-        // this.line('testX:  ' + Math.floor(sprite.localTransform[3] + sprite.localTransform[0]));
         this.line('skewX:  ' + sprite.localTransform[3]);
         this.line('skewY:  ' + sprite.localTransform[1]);
         this.line('scaleX: ' + sprite.localTransform[0]);
         this.line('scaleY: ' + sprite.localTransform[4]);
         this.line('transX: ' + sprite.localTransform[2]);
         this.line('transY: ' + sprite.localTransform[5]);
+        this.line('sX:     ' + sprite._sx);
+        this.line('sY:     ' + sprite._sy);
 
     },
 

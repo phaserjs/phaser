@@ -30,20 +30,20 @@
 		s.addChild(s2);
 
 		// s.angle = 45;
-		s.scale.x = 0.5;
-		s.scale.y = 0.5;
-		// s2.scale.x = 2;
-		// s2.scale.y = 2;
+		s.scale.x = 2;
+		s.scale.y = 2;
+		s2.scale.x = 0.5;
+		s2.scale.y = 0.5;
 
 		s.anchor.setTo(0.5, 0.5);
-		s2.anchor.setTo(0.5, 0.5);
+		s2.anchor.setTo(0, 0);
 
 	}
 
 	function update() {
 
 		s.angle += 0.5;
-		// s2.angle += 1;
+		s2.angle += 1;
 
 		if (s.scale.x > -2)
 		{
@@ -54,11 +54,6 @@
 	}
 
 	function render() {
-
-		var scale1X = Math.sqrt((s2.worldTransform[0] * s2.worldTransform[0]) + (s2.worldTransform[1] * s2.worldTransform[1]));
-		var scale1Y = Math.sqrt((s2.worldTransform[3] * s2.worldTransform[3]) + (s2.worldTransform[4] * s2.worldTransform[4]));
-
-		game.debug.renderText('scaleX: ' + scale1X + ' scaleY: ' + scale1Y, 500, 32);
 
 		game.debug.renderWorldTransformInfo(s, 32, 32);
 		game.debug.renderLocalTransformInfo(s, 300, 32);
