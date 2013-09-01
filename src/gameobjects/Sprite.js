@@ -106,6 +106,23 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
 
+    //  Edge points
+    this.topLeft = new Phaser.Point(x, y);
+    this.topRight = new Phaser.Point(x + this.width, y);
+    this.bottomRight = new Phaser.Point(x + this.width, y + this.height);
+    this.bottomLeft = new Phaser.Point(x, y + this.height);
+
+    this.offset = new Phaser.Point();
+
+    //  help avoid gc spikes by using temp. vars
+    this._a00 = 0;
+    this._a01 = 0;
+    this._a02 = 0;
+    this._a10 = 0;
+    this._a11 = 0;
+    this._a12 = 0;
+    this._id = 0;
+
 };
 
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
@@ -123,7 +140,56 @@ Phaser.Sprite.prototype.update = function() {
     this.position.x = this._x - (this.game.world.camera.x * this.scrollFactor.x);
     this.position.y = this._y - (this.game.world.camera.y * this.scrollFactor.y);
 
+    //  Update the edge points (sx, sy)
+    this.offset.setTo(this.x - (this.anchor.x * this.width), this.y - (this.anchor.y * this.height));
+
+    // var sx = s.x - offsetX;
+    // var sy = s.y - offsetY;
+
+    //  top left
+    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
+    // var p1 = getLocalPosition(sx, sy, s);
+
+    //  top right
+    this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
+    // var p2 = getLocalPosition(sx + s.width, sy, s);
+
+    //  bottom left
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height);
+    // var p3 = getLocalPosition(sx, sy + s.height, s);
+
+    //  bottom right
+    this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height);
+    // var p4 = getLocalPosition(sx + s.width, sy + s.height, s);
+
+    // p1.add(s.x, s.y);
+    // p2.add(s.x, s.y);
+    // p3.add(s.x, s.y);
+    // p4.add(s.x, s.y);
+
     // this.checkBounds();
+
+}
+
+Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
+
+    this._a00 = this.worldTransform[0];  //  scaleX
+    this._a01 = this.worldTransform[1];  //  skewY
+    this._a02 = this.worldTransform[2];  //  translateX
+    this._a10 = this.worldTransform[3];  //  skewX
+    this._a11 = this.worldTransform[4];  //  scaleY
+    this._a12 = this.worldTransform[5];  //  translateY
+
+    this._a01 *= -1;
+    this._a10 *= -1;
+
+    this._id = 1 / (this._a00 * this._a11 + this._a01 * -this._a10);
+
+    p.x = (this._a11 * this._id * x + -this._a01 * this._id * y + (this._a12 * this._a01 - this._a02 * this._a11) * this._id) * this.scale.x;
+    p.y = (this._a00 * this._id * y + -this._a10 * this._id * x + (-this._a12 * this._a00 + this._a02 * this._a10) * this._id) * this.scale.y;
+    p.add(this.x, this.y);
+
+    return p;
 
 }
 

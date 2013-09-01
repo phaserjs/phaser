@@ -69,11 +69,7 @@
 		br = points[2];
 		bl = points[3];
 
-		s.anchor.setTo(0, 0);
-		s.angle = 5;
-
-		//	get the distance between top-left and bottom-right
-		// distance = Phaser.Math.distance(0,0,s.width,s.height);
+		s.anchor.setTo(2, 0.5);
 
 		//	PIXI worldTransform order:
 
@@ -94,10 +90,10 @@
 
 		s.angle += 0.5;
 
-		if (s.scale.x < 2)
+		if (s.scale.x > -2)
 		{
-			s.scale.x += 0.01;
-			s.scale.y += 0.01;
+			s.scale.x -= 0.01;
+			s.scale.y -= 0.01;
 		}
 
 	}
@@ -108,17 +104,23 @@
 
 		// var p1 = getLocalPosition(midpoint.x, midpoint.y, s);
 
+		var offsetX = s.anchor.x * s.width;
+		var offsetY = s.anchor.y * s.height;
+
+		var sx = s.x - offsetX;
+		var sy = s.y - offsetY;
+
         //  top left
-		var p1 = getLocalPosition(s.x, s.y, s);
+		var p1 = getLocalPosition(sx, sy, s);
 
         //  top right
-		var p2 = getLocalPosition(s.x + s.width, s.y, s);
+		var p2 = getLocalPosition(sx + s.width, sy, s);
 
         //  bottom left
-		var p3 = getLocalPosition(s.x, s.y + s.height, s);
+		var p3 = getLocalPosition(sx, sy + s.height, s);
 
         //  bottom right
-		var p4 = getLocalPosition(s.x + s.width, s.y + s.height, s);
+		var p4 = getLocalPosition(sx + s.width, sy + s.height, s);
 
 		p1.add(s.x, s.y);
 		p2.add(s.x, s.y);
@@ -139,6 +141,8 @@
 		game.debug.renderText('ty: ' + tr.y, 32, 265);
 		game.debug.renderText('px: ' + p2.x, 32, 280);
 		game.debug.renderText('py: ' + p2.y, 32, 295);
+		game.debug.renderText('ox: ' + offsetX, 32, 350);
+		game.debug.renderText('oy: ' + offsetY, 32, 370);
 
 	}
 
