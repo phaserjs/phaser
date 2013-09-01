@@ -51,10 +51,29 @@ Phaser.World.prototype = {
 
 		this.camera.update();
 
-		for (var child in this._container.children)
+		var displayObject = this._stage;
+
+		// once the display object hits this. we can break the loop	
+		var testObject = displayObject.last._iNext;
+		displayObject = displayObject.first;
+		
+		do	
 		{
-			this._container.children[child].update();
+			if (!displayObject.visible)
+			{
+				displayObject = displayObject.last._iNext;
+				continue;
+			}
+
+			if (displayObject['update'])
+			{
+				displayObject.update();
+			}
+			
+			//	count++
+			displayObject = displayObject._iNext;
 		}
+		while(displayObject != testObject)
 
 	},
 

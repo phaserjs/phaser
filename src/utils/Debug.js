@@ -272,7 +272,7 @@ Phaser.Utils.Debug.prototype = {
         this.start(x, y, color);
 
         this.line('Sprite: ' + ' (' + sprite.width + ' x ' + sprite.height + ') anchor: ' + sprite.anchor.x + ' x ' + sprite.anchor.y);
-        // this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
+        this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         // this.line('wx: ' + sprite.worldView.x + ' wy: ' + sprite.worldView.y + ' ww: ' + sprite.worldView.width.toFixed(1) + ' wh: ' + sprite.worldView.height.toFixed(1) + ' wb: ' + sprite.worldView.bottom + ' wr: ' + sprite.worldView.right);
         // this.line('sx: ' + sprite.scale.x.toFixed(1) + ' sy: ' + sprite.scale.y.toFixed(1));
 
@@ -288,8 +288,8 @@ Phaser.Utils.Debug.prototype = {
         this.line('scale y: ' + sprite.worldTransform[4]);
         this.line('tx: ' + sprite.worldTransform[2]);
         this.line('ty: ' + sprite.worldTransform[5]);
-        this.line('skew x: ' + sprite.worldTransform[1]);
-        this.line('skew y: ' + sprite.worldTransform[3]);
+        this.line('skew x: ' + sprite.worldTransform[3]);
+        this.line('skew y: ' + sprite.worldTransform[1]);
 
         // this.line('tx: ' + sprite.texture.width.toFixed(1) + ' ty: ' + sprite.texture.height.toFixed(1));
         // this.line('center x: ' + sprite.transform.center.x + ' y: ' + sprite.transform.center.y);
