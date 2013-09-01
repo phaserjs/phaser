@@ -219,6 +219,26 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
 }
 
+Phaser.Sprite.prototype.getBounds = function(rect) {
+
+    rect = rect || new Phaser.Rectangle;
+
+    var left = Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    var right = Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    var top = Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+    var bottom = Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+
+    rect.x = left;
+    rect.y = top;
+    rect.width = right - left;
+    rect.height = bottom - top;
+
+    //  This could work to include the children by running through the linked list and storing only the highest min.max values
+    
+    return rect;
+
+}
+
 Object.defineProperty(Phaser.Sprite.prototype, 'angle', {
 
     get: function() {
