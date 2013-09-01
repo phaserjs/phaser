@@ -23,9 +23,36 @@
 	var r;
 	var p;
 
+	var tl;
+	var tr;
+	var bl;
+	var br;
+
 	var half = { width: 0, height: 0 };
 	var angle = 0;
 	var distance = 0;
+
+	/**
+    * Returns an array containing 4 Point objects corresponding to the 4 corners of the sprite bounds.
+    * @method getAsPoints
+    * @param {Sprite} sprite The Sprite that will have its cameraView property modified
+    * @return {Array} An array of Point objects.
+    */        
+    function getAsPoints(sprite) {
+        var out = [];
+        //  top left
+        out.push(new Phaser.Point(sprite.x, sprite.y));
+        //  top right
+        out.push(new Phaser.Point(sprite.x + sprite.width, sprite.y));
+        //  bottom right
+        out.push(new Phaser.Point(sprite.x + sprite.width, sprite.y + sprite.height));
+        //  bottom left
+        out.push(new Phaser.Point(sprite.x, sprite.y + sprite.height));
+
+        return out;
+    }
+
+    var midpoint;
 
 	function create() {
 
@@ -33,106 +60,99 @@
 		game.world.setSize(2000, 2000);
 
 		s = game.add.sprite(400, 300, 'mushroom');
-		console.log(s.width, s.height);
+
+		midpoint = new Phaser.Point(s.x + s.width / 2, s.y + s.height / 2);
+
+		var points = getAsPoints(s);
+		tl = points[0];
+		tr = points[1];
+		br = points[2];
+		bl = points[3];
+
+		s.anchor.setTo(0, 0);
+		s.angle = 5;
 
 		//	get the distance between top-left and bottom-right
-		distance = Phaser.Math.distance(0,0,s.width,s.height);
-
-//	draw line from x/y
-		s.anchor.setTo(1, 0);
-
-		// c = new Phaser.Circle(s.x, s.y, distance);
-
-		p = new Phaser.Point();
+		// distance = Phaser.Math.distance(0,0,s.width,s.height);
 
 		//	PIXI worldTransform order:
 
-		//	0 = scaleX
-		//	1 = skewY
+		//	|a c tx|
+		//	|b d ty|
+		//	|0 0  1|
+
+		//	0 = scaleX (a)
+		//	1 = skewY (c)
 		//	2 = translateX
-		//	3 = skewX
-		//	4 = scaleY
+		//	3 = skewX (b)
+		//	4 = scaleY (d)
 		//	5 = translateY
 
 	}
 
-function getMidPoint(x, y, width, height, angle_degrees) {
-    var angle_rad = angle_degrees * Math.PI / 180;
-    var cosa = Math.cos(angle_rad);
-    var sina = Math.sin(angle_rad);
-    var wp = width/2;
-    var hp = height/2;
-    return { px: ( x + wp * cosa - hp * sina ),
-             py: ( y + wp * sina + hp * cosa ) };
-}
-
-
 	function update() {
 
-
-		s.rotation += 0.01;
-		// var newWidth = (s.width * Math.cos(s.rotation)) + (s.height * Math.sin(s.rotation));
-		// var newHeight = (s.width * Math.sin(s.rotation)) + (s.height * Math.cos(s.rotation));
-		// r.x = cx(s) - newWidth / 2;
-		// r.y = cy(s);
-		// r.width = newWidth;
-		// r.height = newHeight;
-
+		s.angle += 0.5;
 	}
 
 	function render() {
 
-		// var tt = getMidPoint(s.x,s.y,s.width,s.height,s.angle);
-		// p.setTo(tt.px,tt.py);
+		game.debug.renderSpriteInfo(s, 32, 32);
 
-		var originAngle = Math.atan2(centerY - originY, centerX - originX);		
+		// var p1 = getLocalPosition(midpoint.x, midpoint.y, s);
 
-		// game.debug.renderCameraInfo(game.camera, 32, 32);
-		// game.debug.renderInputInfo(32, 100);
-		// game.debug.renderSpriteInfo(s, 32, 32);
-		// game.debug.renderSpriteBounds(s);
+		var p1 = getLocalPosition(tl.x, tl.y, s);
+		var p2 = getLocalPosition(tr.x, tr.y, s);
+		var p3 = getLocalPosition(bl.x, bl.y, s);
+		var p4 = getLocalPosition(br.x, br.y, s);
 
-		//p.rotate(s.x, s.y, s.angle, asDegrees, distance) {
+		// p1.add(100, 100);
+		// p2.add(100, 100);
+		// p3.add(100, 100);
+		// p4.add(100, 100);
+		// p1.add(s.x + (s.anchor.x * (s.width / 2)), s.y + (s.anchor.y * (s.height / 2)));
+		p1.add(s.x, s.y);
+		p2.add(s.x, s.y);
+		p3.add(s.x, s.y);
+		p4.add(s.x, s.y);
 
-		game.debug.renderPoint(p);
+		// game.debug.renderPoint(tl, 'rgb(255,0,0)');
+		// game.debug.renderPoint(tr, 'rgb(0,255,0)');
+		// game.debug.renderPoint(bl, 'rgb(0,0,255)');
+		// game.debug.renderPoint(br, 'rgb(255,0,255)');
 
-		// game.debug.renderRectangle(r);
-		// game.debug.renderCircle(c);
+		game.debug.renderPoint(p1, 'rgb(255,0,0)');
+		game.debug.renderPoint(p2, 'rgb(0,255,0)');
+		game.debug.renderPoint(p3, 'rgb(0,0,255)');
+		game.debug.renderPoint(p4, 'rgb(255,0,255)');
 
-		// var p = getLocalPosition(game.input.x, game.input.y, s);
-
-		// game.debug.renderPoint(p, 'rgb(255,0,255)');
-		// game.debug.renderPixel(game.input.x, game.input.y);
+		game.debug.renderText('tx: ' + tr.x, 32, 250);
+		game.debug.renderText('ty: ' + tr.y, 32, 265);
+		game.debug.renderText('px: ' + p2.x, 32, 280);
+		game.debug.renderText('py: ' + p2.y, 32, 295);
 
 	}
 
-	function transformBox ( m, t, a ) {
-
-		//	m = 3x3 matrix (may need to check entries)
-		//	t = translation matrix
-		//	a = rect
-
-
-
-	}
-
-	function getLocalPosition (x, y, displayObject)
-	{
-		//	Maps the point over the DO to local un-rotated, un-scaled space
-		//	So you can then compare this point against a hitArea that was defined for the sprite to get detection
-
-		var worldTransform = displayObject.worldTransform;
-		var global = { x: x, y: y };
+	function getLocalPosition (x, y, displayObject) {
 		
-		// do a cheeky transform to get the mouse coords;
-		var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-	        a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
-	        id = 1 / (a00 * a11 + a01 * -a10);
-		// set the mouse coords...
-		return new PIXI.Point(a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
-								   a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id)
-	}
+		var a00 = displayObject.worldTransform[0];	//	scaleX
+		var a01 = displayObject.worldTransform[1];	//	skewY
+		var a02 = displayObject.worldTransform[2];	//	translateX
+		var a10 = displayObject.worldTransform[3];	//	skewX
+		var a11 = displayObject.worldTransform[4];	//	scaleY
+		var a12 = displayObject.worldTransform[5];	//	translateY
 
+		a01 *= -1;
+		a10 *= -1;
+
+		var id = 1 / (a00 * a11 + a01 * -a10);
+
+		var dx = a11 * id * x + -a01 * id * y + (a12 * a01 - a02 * a11) * id;
+		var dy = a00 * id * y + -a10 * id * x + (-a12 * a00 + a02 * a10) * id;
+
+		return new Phaser.Point(dx, dy);
+
+	}
 
 })();
 

@@ -48,11 +48,11 @@ Phaser.Point.prototype = {
     },
 
     /**
-    * Sets the x and y values of this MicroPoint object to the given coordinates.
+    * Sets the x and y values of this Point object to the given coordinates.
     * @method setTo
     * @param {Number} x - The horizontal position of this point.
     * @param {Number} y - The vertical position of this point.
-    * @return {MicroPoint} This MicroPoint object. Useful for chaining method calls.
+    * @return {Point} This Point object. Useful for chaining method calls.
     **/        
     setTo: function (x, y) {
         this.x = x;

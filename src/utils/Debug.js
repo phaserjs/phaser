@@ -397,9 +397,11 @@ Phaser.Utils.Debug.prototype = {
         if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
         if (typeof font === "undefined") { font = '16px Courier'; }
 
+        this.start();
         this.context.font = font;
         this.context.fillStyle = color;
         this.context.fillText(text, x, y);
+        this.stop();
 
     }
 
