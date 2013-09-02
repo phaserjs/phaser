@@ -105,20 +105,31 @@ Phaser.Utils.Debug.prototype = {
 
     },
 
-    renderSpriteCorners: function (sprite, color) {
+    renderSpriteCorners: function (sprite, showText, color) {
 
         if (this.context == null)
         {
             return;
         }
 
-        if (typeof color === "undefined") { color = 'rgb(255,0,255)'; }
+        showText = showText || false;
+        color = color || 'rgb(255,0,255)';
 
         this.start(0, 0, color);
-        this.line('x: ' + Math.floor(sprite.transform.upperLeft.x) + ' y: ' + Math.floor(sprite.transform.upperLeft.y), sprite.transform.upperLeft.x, sprite.transform.upperLeft.y);
-        this.line('x: ' + Math.floor(sprite.transform.upperRight.x) + ' y: ' + Math.floor(sprite.transform.upperRight.y), sprite.transform.upperRight.x, sprite.transform.upperRight.y);
-        this.line('x: ' + Math.floor(sprite.transform.bottomLeft.x) + ' y: ' + Math.floor(sprite.transform.bottomLeft.y), sprite.transform.bottomLeft.x, sprite.transform.bottomLeft.y);
-        this.line('x: ' + Math.floor(sprite.transform.bottomRight.x) + ' y: ' + Math.floor(sprite.transform.bottomRight.y), sprite.transform.bottomRight.x, sprite.transform.bottomRight.y);
+        this.renderPoint(sprite.topLeft);
+        this.renderPoint(sprite.topRight);
+        this.renderPoint(sprite.bottomLeft);
+        this.renderPoint(sprite.bottomRight);
+
+        if (showText)
+        {
+            this.line('x: ' + Math.floor(sprite.topLeft.x) + ' y: ' + Math.floor(sprite.topLeft.y), sprite.topLeft.x, sprite.topLeft.y);
+            this.line('x: ' + Math.floor(sprite.topRight.x) + ' y: ' + Math.floor(sprite.topRight.y), sprite.topRight.x, sprite.topRight.y);
+            this.line('x: ' + Math.floor(sprite.bottomLeft.x) + ' y: ' + Math.floor(sprite.bottomLeft.y), sprite.bottomLeft.x, sprite.bottomLeft.y);
+            this.line('x: ' + Math.floor(sprite.bottomRight.x) + ' y: ' + Math.floor(sprite.bottomRight.y), sprite.bottomRight.x, sprite.bottomRight.y);
+        }
+
+        this.stop();
 
     },
 
@@ -273,9 +284,8 @@ Phaser.Utils.Debug.prototype = {
 
         this.line('Sprite: ' + ' (' + sprite.width + ' x ' + sprite.height + ') anchor: ' + sprite.anchor.x + ' x ' + sprite.anchor.y);
         this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
-        this.line('rendering: ' + sprite.visible);
-        // this.line('wx: ' + sprite.worldView.x + ' wy: ' + sprite.worldView.y + ' ww: ' + sprite.worldView.width.toFixed(1) + ' wh: ' + sprite.worldView.height.toFixed(1) + ' wb: ' + sprite.worldView.bottom + ' wr: ' + sprite.worldView.right);
-        // this.line('sx: ' + sprite.scale.x.toFixed(1) + ' sy: ' + sprite.scale.y.toFixed(1));
+        this.line('visible: ' + sprite.visible);
+        this.line('in camera: ' + sprite.inCamera);
 
         //  0 = scaleX
         //  1 = skewY

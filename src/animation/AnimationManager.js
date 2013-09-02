@@ -32,6 +32,8 @@ Phaser.AnimationManager = function (parent) {
 
 Phaser.AnimationManager.prototype = {
 
+	updateIfVisible: true,
+
 	/**
 	* Load animation frame data.
 	* @param frameData Data to be loaded.
@@ -54,10 +56,10 @@ Phaser.AnimationManager.prototype = {
 	*/
 	add: function (name, frames, frameRate, loop, useNumericIndex) {
 
-		if (typeof frames === "undefined") { frames = null; }
-		if (typeof frameRate === "undefined") { frameRate = 60; }
-		if (typeof loop === "undefined") { loop = false; }
-		if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
+		frames = frames || null;
+		frameRate = frameRate || 60;
+		loop = loop || false;
+		useNumericIndex = useNumericIndex || true;
 
 		if (this._frameData == null)
 		{
@@ -138,8 +140,8 @@ Phaser.AnimationManager.prototype = {
 	*/
 	play: function (name, frameRate, loop) {
 
-		if (typeof frameRate === "undefined") { frameRate = null; }
-		if (typeof loop === "undefined") { loop = null; }
+		frameRate = frameRate || null;
+		loop = loop || null;
 		
 		if (this._anims[name])
 		{
@@ -177,6 +179,11 @@ Phaser.AnimationManager.prototype = {
 	* Update animation and parent sprite's bounds.
 	*/
 	update: function () {
+
+		if (this.updateIfVisible && this._parent.visible == false)
+		{
+			return;
+		}
 
 		if (this.currentAnim && this.currentAnim.update() == true)
 		{
@@ -231,7 +238,12 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
 Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 
     get: function () {
-        return this._frameIndex;
+
+    	if (this.currentFrame)
+    	{
+	        return this._frameIndex;
+	    }
+	    
     },
 
 	/**
@@ -256,7 +268,12 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
 
     get: function () {
-        return this.currentFrame.name;
+
+    	if (this.currentFrame)
+    	{
+	        return this.currentFrame.name;
+    	}
+
     },
 
     set: function (value) {

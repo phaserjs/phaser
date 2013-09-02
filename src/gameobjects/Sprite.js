@@ -38,24 +38,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
      */
 	this.anchor = new Phaser.Point();
 
-    /**
-     * The width of the sprite (this is initially set by the texture)
-     *
-     * @property _width
-     * @type Number
-     * @private
-     */
-    // this._width = 0;
-
-    /**
-     * The height of the sprite (this is initially set by the texture)
-     *
-     * @property _height
-     * @type Number
-     * @private
-     */
-    // this._height = 0;
-
 	/**
 	 * The texture that the sprite is using
 	 *
@@ -90,8 +72,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	 */
 	this.blendMode = PIXI.blendModes.NORMAL;
 
-    this._x = x;
-    this._y = y;
+    this.x = x;
+    this.y = y;
 
     this.updateFrame = true;
 	this.renderable = true;
@@ -99,50 +81,65 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	this.position.x = x;
 	this.position.y = y;
 
+    /**
+     * Should this Sprite be automatically culled if out of range of the camera?
+     * A culled sprite has its visible property set to 'false'.
+     * Note that this check doesn't look at this Sprites children, which may still be in camera range.
+     * So you should set autoCull to false if the Sprite will have children likely to still be in camera range.
+     *
+     * @property autoCull
+     * @type Boolean
+     */
+    this.autoCull = false;
+
     //  Replaces the PIXI.Point with a slightly more flexible one
     this.scale = new Phaser.Point(1, 1);
 
+    //  Influence of camera movement upon the position
     this.scrollFactor = new Phaser.Point(1, 1);
 
-    // this.worldView = new Phaser.Rectangle(x, y, this.width, this.height);
+    //  A mini cache for storing all of the calculated values
+    this._cache = { 
 
-    //  Edge points
+        dirty: false,
+
+        //  Transform cache
+        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
+
+        //  Bounds check
+        left: null, right: null, top: null, bottom: null, 
+
+        //  The previous calculated position inc. camera x/y and scrollFactor
+        x: -1, y: -1,
+
+        //  The actual scale values based on the worldTransform
+        scaleX: 1, scaleY: 1,
+
+        //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
+        width: 0, height: 0,
+
+        //  The current frame index, used to check for bounds updates
+        frameWidth: 0, frameHeight: 0,
+
+        boundsX: 0, boundsY: 0,
+
+        //  If this sprite visible to the camera (regardless of being set to visible or not)
+        cameraVisible: true
+
+    };
+
+    //  Corner points
     this.offset = new Phaser.Point();
     this.topLeft = new Phaser.Point();
     this.topRight = new Phaser.Point();
     this.bottomRight = new Phaser.Point();
     this.bottomLeft = new Phaser.Point();
+    this.bounds = new Phaser.Rectangle(x, y, this.width, this.height);
 
     this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
     this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
     this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height);
     this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height);
-
-    this.bounds = new Phaser.Rectangle(x, y, this.width, this.height);
-
-    this._dirty = false;
-
-    //  transform cache
-    this._a00 = 0;
-    this._a01 = 0;
-    this._a02 = 0;
-    this._a10 = 0;
-    this._a11 = 0;
-    this._a12 = 0;
-    this._id = 0;
-    this._left = null;
-    this._right = null;
-    this._top = null;
-    this._bottom = null;
-
-    //  The actual scale X value based on the worldTransform
-    this._sx = 0;
-    //  The actual scale Y value based on the worldTransform
-    this._sy = 0;
-    //  The width of the image, based on the un-modified frame size multiplied by the final calculated scale size
-    this._sw = 0;
-    //  The height of the image, based on the un-modified frame size multiplied by the final calculated scale size
-    this._sh = 0;
 
 };
 
@@ -154,59 +151,97 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
  */
 Phaser.Sprite.prototype.update = function() {
 
-    this._dirty = false;
+    this._cache.dirty = false;
 
     this.animations.update();
 
-    //  |a c tx|
-    //  |b d ty|
-    //  |0 0  1|
+    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
-        this.position.x = this._x - (this.game.world.camera.x * this.scrollFactor.x);
-        this.position.y = this._y - (this.game.world.camera.y * this.scrollFactor.y);
+    //  If this sprite or the camera have moved then let's update everything
+    //  It may have rotated though ...
+    if (this.position.x != this._cache.x || this.position.y != this._cache.y)
+    {
+        this.position.x = this._cache.x;
+        this.position.y = this._cache.y;
+        this._cache.dirty = true;
+    }
 
+    if (this.visible)
+    {
+        //  |a c tx|
+        //  |b d ty|
+        //  |0 0  1|
 
-    //  Cache our transform values
-    // if (this.worldTransform[0] != this._a00 || this.worldTransform[1] != this._a01)
-    // {
-        this._a00 = this.worldTransform[0];  //  scaleX         a
-        this._a01 = this.worldTransform[1];  //  skewY          c
-        this._sx = Math.sqrt((this._a00 * this._a00) + (this._a01 * this._a01));
-        this._a01 *= -1;
-        this._dirty = true;
-    // }
+        //  Only update the values we need
+        if (this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.a01)
+        {
+            this._cache.a00 = this.worldTransform[0];  //  scaleX         a
+            this._cache.a01 = this.worldTransform[1];  //  skewY          c
+            this._cache.scaleX = Math.sqrt((this._cache.a00 * this._cache.a00) + (this._cache.a01 * this._cache.a01));
+            this._cache.a01 *= -1;
+            this._cache.dirty = true;
+        }
 
-    // if (this.worldTransform[3] != this._a10 || this.worldTransform[4] != this._a11)
-    // {
-        this._a10 = this.worldTransform[3];  //  skewX          b
-        this._a11 = this.worldTransform[4];  //  scaleY         d
-        this._sy = Math.sqrt((this._a10 * this._a10) + (this._a11 * this._a11));
-        this._a10 *= -1;
-        this._dirty = true;
-    // }
+        //  Need to test, but probably highly unlikely that a scaleX would happen without effecting the Y skew
+        if (this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
+        {
+            this._cache.a10 = this.worldTransform[3];  //  skewX          b
+            this._cache.a11 = this.worldTransform[4];  //  scaleY         d
+            this._cache.scaleY = Math.sqrt((this._cache.a10 * this._cache.a10) + (this._cache.a11 * this._cache.a11));
+            this._cache.a10 *= -1;
+            this._cache.dirty = true;
+        }
 
-   // if (this.worldTransform[2] != this._a02 || this.worldTransform[5] != this._a12)
-   // {
-        this._a02 = this.worldTransform[2];  //  translateX     tx
-        this._a12 = this.worldTransform[5];  //  translateY     ty
-        // this._a02 -= (this.game.world.camera.x * this.scrollFactor.x);
-        // this._a12 -= (this.game.world.camera.y * this.scrollFactor.y);
-//        this._dirty = true;
-//    }
+        if (this.worldTransform[2] != this._cache.a02 || this.worldTransform[5] != this._cache.a12)
+        {
+            this._cache.a02 = this.worldTransform[2];  //  translateX     tx
+            this._cache.a12 = this.worldTransform[5];  //  translateY     ty
+            this._cache.dirty = true;
+        }
 
-    //  If the frame has changed we ought to set _dirty
-    this._sw = this.texture.frame.width * this._sx;
-    this._sh = this.texture.frame.height * this._sy;
+        if (this._cache.dirty || this.texture.frame.width != this._cache.frameWidth || this.texture.frame.height != this._cache.frameHeight)
+        {
+            this._cache.frameWidth = this.texture.frame.width;
+            this._cache.frameHeight = this.texture.frame.height;
 
-    //if (this._dirty)
-    //{
-        this._id = 1 / (this._a00 * this._a11 + this._a01 * -this._a10);
+            this._cache.width = this.texture.frame.width * this._cache.scaleX;
+            this._cache.height = this.texture.frame.height * this._cache.scaleY;
 
-        //  Update our bounds
-        this.updateBounds();
+            this._cache.dirty = true;
+        }
 
-        this.visible = this.inCamera(this.game.world.camera.screenView);
-    //}
+        if (this._cache.dirty)
+        {
+            this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
+            this.updateBounds();
+        }
+    }
+    else
+    {
+        //  We still need to work out the bounds in case the camera has moved
+        //  but we can't use the local or worldTransform to do it, as Pixi resets that if a Sprite is invisible.
+        //  So we'll compare against the cached state + new position.
+        if (this._cache.dirty && this.visible == false)
+        {
+            this.bounds.x -= this._cache.boundsX - this._cache.x;
+            this._cache.boundsX = this._cache.x;
+
+            this.bounds.y -= this._cache.boundsy - this._cache.y;
+            this._cache.boundsY = this._cache.y;
+        }
+    }
+
+    //  Re-run the camera visibility check
+    if (this._cache.dirty)
+    {
+        this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.bounds, 0);
+
+        if (this.autoCull == true)
+        {
+            this.visible = this._cache.cameraVisible;
+        }
+    }
 
     //  Check our bounds
 
@@ -215,32 +250,31 @@ Phaser.Sprite.prototype.update = function() {
 Phaser.Sprite.prototype.updateBounds = function() {
 
     //  Update the edge points
-    this.offset.setTo(this._a02 - (this.anchor.x * this._sw), this._a12 - (this.anchor.y * this._sh));
+
+    this.offset.setTo(this._cache.a02 - (this.anchor.x * this._cache.width), this._cache.a12 - (this.anchor.y * this._cache.height));
 
     this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
-    this.getLocalPosition(this.topRight, this.offset.x + this._sw, this.offset.y);
-    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._sh);
-    this.getLocalPosition(this.bottomRight, this.offset.x + this._sw, this.offset.y + this._sh);
+    this.getLocalPosition(this.topRight, this.offset.x + this._cache.width, this.offset.y);
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._cache.height);
+    this.getLocalPosition(this.bottomRight, this.offset.x + this._cache.width, this.offset.y + this._cache.height);
 
-    this._left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    this._right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    this._top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
-    this._bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+    this._cache.left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    this._cache.right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    this._cache.top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+    this._cache.bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
 
-    this.bounds.setTo(this._left, this._top, this._right - this._left, this._bottom - this._top);
+    this.bounds.setTo(this._cache.left, this._cache.top, this._cache.right - this._cache.left, this._cache.bottom - this._cache.top);
 
-}
-
-Phaser.Sprite.prototype.inCamera = function(cameraRect) {
-
-    return Phaser.Rectangle.intersects(cameraRect, this.bounds, 0);
+    //  This is the coordinate the Sprite was at when the last bounds was created
+    this._cache.boundsX = this._cache.x;
+    this._cache.boundsY = this._cache.y;
 
 }
 
 Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
-    p.x = ((this._a11 * this._id * x + -this._a01 * this._id * y + (this._a12 * this._a01 - this._a02 * this._a11) * this._id) * this._sx) + this._a02;
-    p.y = ((this._a00 * this._id * y + -this._a10 * this._id * x + (-this._a12 * this._a00 + this._a02 * this._a10) * this._id) * this._sy) + this._a12;
+    p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this._cache.scaleX) + this._cache.a02;
+    p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this._cache.scaleY) + this._cache.a12;
 
     return p;
 
@@ -272,32 +306,6 @@ Object.defineProperty(Phaser.Sprite.prototype, 'angle', {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-Object.defineProperty(Phaser.Sprite.prototype, 'x', {
-
-    get: function() {
-        return this._x;
-    },
-
-    set: function(value) {
-        // this.worldView.x = value;
-    	this._x = value;
-    }
-
-});
-
-Object.defineProperty(Phaser.Sprite.prototype, 'y', {
-
-    get: function() {
-        return this._y;
-    },
-
-    set: function(value) {
-        // this.worldView.y = value;
-    	this._y = value;
     }
 
 });
@@ -338,3 +346,14 @@ Object.defineProperty(Phaser.Sprite.prototype, "frameName", {
 
 });
 
+Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
+    
+    /**
+    * Is this sprite visible to the camera or not?
+    */
+    get: function () {
+        return this._cache.cameraVisible;
+    }
+
+
+});
