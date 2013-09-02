@@ -105,7 +105,7 @@ Phaser.Utils.Debug.prototype = {
 
     },
 
-    renderSpriteCorners: function (sprite, showText, color) {
+    renderSpriteCorners: function (sprite, showText, showBounds, color) {
 
         if (this.context == null)
         {
@@ -113,9 +113,32 @@ Phaser.Utils.Debug.prototype = {
         }
 
         showText = showText || false;
+        showBounds = showBounds || false;
         color = color || 'rgb(255,0,255)';
 
         this.start(0, 0, color);
+
+        if (showBounds)
+        {
+            this.context.beginPath();
+            this.context.moveTo(sprite.bounds.x, sprite.bounds.y);
+            this.context.lineTo(sprite.bounds.x + sprite.bounds.width, sprite.bounds.y);
+            this.context.lineTo(sprite.bounds.x + sprite.bounds.width, sprite.bounds.y + sprite.bounds.height);
+            this.context.lineTo(sprite.bounds.x, sprite.bounds.y + sprite.bounds.height);
+            this.context.closePath();
+            this.context.strokeStyle = 'rgba(255,0,255,0.5)';
+            this.context.stroke();
+        }
+
+        this.context.beginPath();
+        this.context.moveTo(sprite.topLeft.x, sprite.topLeft.y);
+        this.context.lineTo(sprite.topRight.x, sprite.topRight.y);
+        this.context.lineTo(sprite.bottomRight.x, sprite.bottomRight.y);
+        this.context.lineTo(sprite.bottomLeft.x, sprite.bottomLeft.y);
+        this.context.closePath();
+        this.context.strokeStyle = 'rgba(0,0,255,0.8)';
+        this.context.stroke();
+
         this.renderPoint(sprite.topLeft);
         this.renderPoint(sprite.topRight);
         this.renderPoint(sprite.bottomLeft);
