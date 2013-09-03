@@ -71,6 +71,30 @@ Phaser.World.prototype = {
 
 	},
 
+	postUpdate: function () {
+
+		//this.camera.update();
+
+		var displayObject = this._stage;
+
+		// once the display object hits this. we can break the loop	
+		var testObject = displayObject.last._iNext;
+		displayObject = displayObject.first;
+		
+		do	
+		{
+			if (displayObject['postUpdate'])
+			{
+				displayObject.postUpdate();
+			}
+			
+			//	count++
+			displayObject = displayObject._iNext;
+		}
+		while(displayObject != testObject)
+
+	},
+
 	/**
 	* Updates the size of this world.
 	*

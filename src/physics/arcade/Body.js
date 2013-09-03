@@ -24,6 +24,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.maxAngular = 1000;
     this.mass = 1;
 
+    this.immovable = false;
     this.touching = 0;
     this.wasTouching = 0;
     this.allowCollisions = 1;
@@ -53,9 +54,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 		this.hitArea.centerX = x;
 		this.hitArea.centerY = y;
-
-		// this._ox = x;
-		// this._oy = y;
 
 	},
 

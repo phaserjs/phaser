@@ -250,6 +250,12 @@ Phaser.Sprite.prototype.update = function() {
 
 }
 
+Phaser.Sprite.prototype.postUpdate = function() {
+
+    this.body.postUpdate();
+
+}
+
 Phaser.Sprite.prototype.updateBounds = function() {
 
     //  Update the edge points
