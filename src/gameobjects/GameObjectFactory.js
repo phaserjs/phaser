@@ -21,9 +21,6 @@ Phaser.GameObjectFactory.prototype = {
     */
     sprite: function (x, y, key, frame) {
 
-        if (typeof key === "undefined") { key = ''; }
-        if (typeof frame === "undefined") { frame = null; }
-
         return this.world.add(new Phaser.Sprite(this.game, x, y, key, frame));
 
     },
@@ -37,20 +34,22 @@ Phaser.GameObjectFactory.prototype = {
     */
     tween: function (obj, localReference) {
 
-        if (typeof localReference === "undefined") { localReference = false; }
-
         return this.game.tweens.create(obj, localReference);
 
     },
 
     audio: function (key, volume, loop) {
 
-        volume = volume || 1;
-        loop = loop || false;
-
         return this.game.sound.add(key, volume, loop);
         
-    }
+    },
+
+    tileSprite: function (x, y, width, height, key, frame) {
+
+        return this.world.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
+
+    },
+
 
 
 };

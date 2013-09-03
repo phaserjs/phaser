@@ -474,7 +474,7 @@ Phaser.Loader.prototype = {
 
 		this.onFileError.dispatch(key);
 
-		throw new Error("Phaser.Loader error loading file: " + key);
+		console.warn("Phaser.Loader error loading file: " + key);
 
 		this.nextFile(key, false);
 
@@ -488,7 +488,7 @@ Phaser.Loader.prototype = {
 
 		if (!this._fileList[key])
 		{
-			throw new Error('Phaser.Loader fileComplete invalid key ' + key);
+			console.warn('Phaser.Loader fileComplete invalid key ' + key);
 			return;
 		}
 		

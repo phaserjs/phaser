@@ -70,13 +70,13 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	 * @property blendMode
 	 * @type Number
 	 */
-	this.blendMode = PIXI.blendModes.NORMAL;
+	// this.blendMode = PIXI.blendModes.NORMAL;
 
     this.x = x;
     this.y = y;
 
-    this.updateFrame = true;
-	this.renderable = true;
+ //    this.updateFrame = true;
+	// this.renderable = true;
 
 	this.position.x = x;
 	this.position.y = y;
@@ -354,6 +354,5 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     get: function () {
         return this._cache.cameraVisible;
     }
-
 
 });
