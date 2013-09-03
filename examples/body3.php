@@ -16,7 +16,7 @@
 
 	function preload() {
 		game.load.atlasJSONHash('bot', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
-		game.load.image('bunny', 'assets/sprites/bunny.png');
+		game.load.image('bunny', 'assets/sprites/mana_card.png');
 	}
 
 	var bunny;
@@ -26,31 +26,22 @@
 
 		game.world._stage.backgroundColorString = '#182d3b';
 
-		bunny = game.add.sprite(500, game.world.centerY, 'bunny');
-		bunny.anchor.setTo(0.5, 0.5);
-		
-		bot = game.add.sprite(150, game.world.centerY, 'bot');
-		bot.anchor.setTo(0.5, 0.5);
-		bot.animations.add('run');
-		bot.animations.play('run', 10, true);
+		bunny = game.add.sprite(200, 200, 'bunny');
 
-		game.add.tween(bot.scale).to({ x: 3, y: 3 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+		bunny.body.acceleration.x = 10;
+		// bunny.body.velocity.y = 20;
 
 	}
 
 	function update() {
 
-		bunny.angle += 1;
-		bot.angle += 1;
 
 	}
 
 	function render() {
 
 		game.debug.renderSpriteCorners(bunny, true, true);
-		game.debug.renderSpriteCorners(bot, true, true);
-		game.debug.renderSpriteInfo(bunny, 20, 32);
-		game.debug.renderSpriteInfo(bot, 20, 132);
+		game.debug.renderRectangle(bunny.body.hitArea);
 
 	}
 

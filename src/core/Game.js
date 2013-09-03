@@ -26,13 +26,13 @@
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
 
-	if (typeof width === "undefined") { width = 800; }
-	if (typeof height === "undefined") { height = 600; }
-	if (typeof renderer === "undefined") { renderer = Phaser.AUTO; }
-	if (typeof parent === "undefined") { parent = ''; }
-	if (typeof state === "undefined") { state = null; }
-	if (typeof transparent === "undefined") { transparent = false; }
-	if (typeof antialias === "undefined") { antialias = true; }
+	width = width || 800;
+	height = height || 600;
+	renderer = renderer || Phaser.AUTO;
+	parent = parent || '';
+	state = state || null;
+	transparent = transparent || false;
+	antialias = antialias || true;
 
 	this.id = Phaser.GAMES.push(this) - 1;
 	this.parent = parent;
@@ -263,7 +263,8 @@ Phaser.Game.prototype = {
 	*/
 	boot: function () {
 
-		if (this.isBooted) {
+		if (this.isBooted)
+		{
 			return;
 		}
 
@@ -296,7 +297,7 @@ Phaser.Game.prototype = {
 			this.tweens = new Phaser.TweenManager(this);
 			this.input = new Phaser.Input(this);
 			this.sound = new Phaser.SoundManager(this);
-			// this.physics = new Phaser.Physics.PhysicsManager(this);
+			this.physics = new Phaser.Physics.Arcade(this);
 			this.plugins = new Phaser.PluginManager(this, this);
 			this.net = new Phaser.Net(this);
 			this.debug = new Phaser.Utils.Debug(this);

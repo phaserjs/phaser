@@ -62,21 +62,24 @@ Phaser.Tween.prototype = {
 	*/
 	to: function ( properties, duration, ease, autoStart, delay, repeat, yoyo ) {
 
-        if (typeof duration === "undefined") { duration = 1000; }
-        if (typeof ease === "undefined") { ease = null; }
-        if (typeof autoStart === "undefined") { autoStart = false; }
-        if (typeof delay === "undefined") { delay = 0; }
-        if (typeof repeat === "undefined") { repeat = 0; }
-        if (typeof yoyo === "undefined") { yoyo = false; }
+		duration = duration || 1000;
+		ease = ease || null;
+		autoStart = autoStart || false;
+		delay = delay || 0;
+		repeat = repeat || 0;
+		yoyo = yoyo || false;
 
+		this._repeat = repeat;
         this._duration = duration;
 		this._valuesEnd = properties;
 
-        if (ease !== null) {
+        if (ease !== null)
+        {
             this._easingFunction = ease;
         }
 
-        if (delay > 0) {
+        if (delay > 0)
+        {
             this._delayTime = delay;
         }
 
@@ -104,8 +107,6 @@ Phaser.Tween.prototype = {
 
 		this._onStartCallbackFired = false;
 
-		// this._startTime = time !== undefined ? time : ( typeof window !== 'undefined' && window.performance !== undefined && window.performance.now !== undefined ? window.performance.now() : Date.now() );
-		// this._startTime += _delayTime;
         this._startTime = this.game.time.now + this._delayTime;
 
 		for ( var property in this._valuesEnd ) {

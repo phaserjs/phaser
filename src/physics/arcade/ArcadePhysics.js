@@ -27,20 +27,20 @@ Phaser.Physics.Arcade.prototype = {
 
         this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.gravity.x, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
         body.angularVelocity += this._velocityDelta;
-        body.sprite.rotation += body.angularVelocity * this.game.time.elapsed;
+        body.sprite.rotation += body.angularVelocity * this.game.time.physicsElapsed;
         body.angularVelocity += this._velocityDelta;
 
         this._velocityDelta = (this.computeVelocity(body.velocity.x, body.gravity.x, body.acceleration.x, body.drag.x) - body.velocity.x) / 2;
         body.velocity.x += this._velocityDelta;
-        this._delta = body.velocity.x * this.game.time.elapsed;
+        this._delta = body.velocity.x * this.game.time.physicsElapsed;
         body.velocity.x += this._velocityDelta;
-        body.sprite.x += this._delta;
+        body._x += this._delta;
 
         this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
         body.velocity.y += this._velocityDelta;
-        this._delta = body.velocity.y * this.game.time.elapsed;
+        this._delta = body.velocity.y * this.game.time.physicsElapsed;
         body.velocity.y += this._velocityDelta;
-        body.sprite.y += this._delta;
+        body._y += this._delta;
 
     },
 
@@ -63,11 +63,11 @@ Phaser.Physics.Arcade.prototype = {
 
         if (acceleration !== 0)
         {
-            velocity += (acceleration + gravity) * this.game.time.elapsed;
+            velocity += (acceleration + gravity) * this.game.time.physicsElapsed;
         }
         else if (drag !== 0)
         {
-            this._drag = drag * this.game.time.elapsed;
+            this._drag = drag * this.game.time.physicsElapsed;
 
             if (velocity - this._drag > 0)
             {

@@ -115,6 +115,7 @@ Phaser.Cache.prototype = {
     addImage: function (key, url, data) {
 
         this._images[key] = { url: url, data: data, spriteSheet: false };
+        this._images[key].frame = new Phaser.Animation.Frame(0, 0, data.width, data.height, '', '');
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
@@ -129,8 +130,8 @@ Phaser.Cache.prototype = {
      */
     addSound: function (key, url, data, webAudio, audioTag) {
 
-        if (typeof webAudio === "undefined") { webAudio = true; }
-        if (typeof audioTag === "undefined") { audioTag = false; }
+        webAudio = webAudio || true;
+        audioTag = audioTag || false;
 
         var locked = this.game.sound.touchLocked;
         var decoded = false;
@@ -241,6 +242,21 @@ Phaser.Cache.prototype = {
 
         if (this._images[key] && this._images[key].frameData) {
             return this._images[key].frameData;
+        }
+
+        return null;
+    },
+
+    /**
+    * Get a single frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.
+    * @param key Asset key of the frame data you want.
+    * @return {object} The frame data you want.
+    */
+    getFrame: function (key) {
+
+        if (this._images[key] && this._images[key].spriteSheet == false)
+        {
+            return this._images[key].frame;
         }
 
         return null;
