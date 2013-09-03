@@ -163,7 +163,6 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 		
 		if(displayObject instanceof PIXI.Sprite)
 		{
-				
 			var frame = displayObject.texture.frame;
 			
 			if(frame)

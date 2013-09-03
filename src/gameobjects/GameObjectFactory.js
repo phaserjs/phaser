@@ -50,6 +50,11 @@ Phaser.GameObjectFactory.prototype = {
 
     },
 
+    text: function (x, y, text, style) {
+
+        return this.world.add(new Phaser.Text(this.game, x, y, text, style));
+
+    },
 
 
 };

@@ -65,6 +65,7 @@
 	<script src="../src/gameobjects/GameObjectFactory.js"></script>
 	<script src="../src/gameobjects/Sprite.js"></script>
 	<script src="../src/gameobjects/TileSprite.js"></script>
+	<script src="../src/gameobjects/Text.js"></script>
 
 	<script src="../src/system/Canvas.js"></script>
 	<script src="../src/system/Device.js"></script>

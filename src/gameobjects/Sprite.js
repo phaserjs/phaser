@@ -17,6 +17,17 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     this.name = '';
 
+    if (key)
+    {
+        PIXI.Sprite.call(this, PIXI.TextureCache[key]);
+    }
+    else
+    {
+        //  No texture yet
+        console.log('no texture yet');
+        PIXI.Sprite.call(this);
+    }
+
     // this.events = new Phaser.Components.Events(this);
 
     /**
@@ -25,7 +36,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
      */
     this.animations = new Phaser.AnimationManager(this);
 
-	PIXI.DisplayObjectContainer.call(this);
+	// PIXI.DisplayObjectContainer.call(this);
 
 	/**
 	 * The anchor sets the origin point of the texture.
@@ -44,7 +55,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	 * @property texture
 	 * @type Texture
 	 */
-	this.texture = PIXI.TextureCache[key];
+	// this.texture = PIXI.TextureCache[key];
 
     if (this.game.cache.isSpriteSheet(key))
     {
@@ -63,20 +74,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         }
     }
 
-	/**
-	 * The blend mode of sprite.
-	 * currently supports PIXI.blendModes.NORMAL and PIXI.blendModes.SCREEN
-	 *
-	 * @property blendMode
-	 * @type Number
-	 */
-	// this.blendMode = PIXI.blendModes.NORMAL;
-
     this.x = x;
     this.y = y;
-
- //    this.updateFrame = true;
-	// this.renderable = true;
 
 	this.position.x = x;
 	this.position.y = y;
@@ -143,6 +142,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
 };
 
+//  Needed to keep the PIXI.Sprite constructor in the prototype chain (as the core pixi renderer uses an instanceof check sadly)
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 
