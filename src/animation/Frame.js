@@ -14,6 +14,10 @@ Phaser.Animation.Frame = function (x, y, width, height, name, uuid) {
 	this.y = y;
 	this.width = width;
 	this.height = height;
+    this.sourceSizeW = width;
+    this.sourceSizeH = height;
+    this.centerX = Math.floor(width / 2);
+    this.centerY = Math.floor(height / 2);
 	this.name = name;
 	this.uuid = uuid;
 	this.distance = Phaser.Math.distance(0, 0, width, height);
@@ -50,6 +54,18 @@ Phaser.Animation.Frame.prototype = {
 	 * @type {number}
 	 */
 	height: 0,
+
+	/**
+	 * center X position within the image to cut from.
+	 * @type {number}
+	 */
+	centerX: 0,
+
+	/**
+	 * center Y position within the image to cut from.
+	 * @type {number}
+	 */
+	centerY: 0,
 
 	/**
 	 * The distance from the top left to the bottom-right of this Frame.
@@ -136,11 +152,14 @@ Phaser.Animation.Frame.prototype = {
 
         this.trimmed = trimmed;
 
-        if (trimmed) {
+        if (trimmed)
+        {
             this.width = actualWidth;
             this.height = actualHeight;
             this.sourceSizeW = actualWidth;
             this.sourceSizeH = actualHeight;
+		    this.centerX = Math.floor(actualWidth / 2);
+		    this.centerY = Math.floor(actualHeight / 2);
             this.spriteSourceSizeX = destX;
             this.spriteSourceSizeY = destY;
             this.spriteSourceSizeW = destWidth;

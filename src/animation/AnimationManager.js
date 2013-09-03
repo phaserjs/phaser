@@ -177,18 +177,23 @@ Phaser.AnimationManager.prototype = {
 
 	/**
 	* Update animation and parent sprite's bounds.
+	* Returns true if a new frame has been set, otherwise false.
 	*/
 	update: function () {
 
 		if (this.updateIfVisible && this._parent.visible == false)
 		{
-			return;
+			return false;
 		}
 
 		if (this.currentAnim && this.currentAnim.update() == true)
 		{
 			this.currentFrame = this.currentAnim.currentFrame;
+			this._parent.currentFrame = this.currentFrame;
+			return true;
 		}
+
+		return false;
 
 	},
 
@@ -256,6 +261,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
         {
             this.currentFrame = this._frameData.getFrame(value);
             this._frameIndex = value;
+            this._parent.currentFrame = this.currentFrame;
 			this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
 
@@ -282,6 +288,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
         {
             this.currentFrame = this._frameData.getFrameByName(value);
             this._frameIndex = this.currentFrame.index;
+            this._parent.currentFrame = this.currentFrame;
 			this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
         else

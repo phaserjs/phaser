@@ -139,6 +139,7 @@ Phaser.Utils.Debug.prototype = {
         this.context.strokeStyle = 'rgba(0,0,255,0.8)';
         this.context.stroke();
 
+        this.renderPoint(sprite.center);
         this.renderPoint(sprite.topLeft);
         this.renderPoint(sprite.topRight);
         this.renderPoint(sprite.bottomLeft);

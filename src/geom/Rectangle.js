@@ -11,10 +11,10 @@
 **/
 Phaser.Rectangle = function (x, y, width, height) {
 
-    if (typeof x === "undefined") { x = 0; }
-    if (typeof y === "undefined") { y = 0; }
-    if (typeof width === "undefined") { width = 0; }
-    if (typeof height === "undefined") { height = 0; }
+    x = x || 0;
+    y = y || 0;
+    width = width || 0;
+    height = height || 0;
 
     /**
      * @property x
@@ -444,6 +444,52 @@ Object.defineProperty(Phaser.Rectangle.prototype, "perimeter", {
     **/
     get: function () {
         return (this.width * 2) + (this.height * 2);
+    },
+    enumerable: true,
+    configurable: true
+});
+
+Object.defineProperty(Phaser.Rectangle.prototype, "centerX", {
+    
+    /**
+    * The x coordinate of the center of the Rectangle.
+    * @method centerX
+    * @return {Number}
+    **/
+    get: function () {
+        return this.x + this.halfWidth;
+    },
+
+    /**
+    * The x coordinate of the center of the Rectangle.
+    * @method centerX
+    * @param {Number} value
+    **/
+    set: function (value) {
+        this.x = value - this.halfWidth;
+    },
+    enumerable: true,
+    configurable: true
+});
+
+Object.defineProperty(Phaser.Rectangle.prototype, "centerY", {
+    
+    /**
+    * The y coordinate of the center of the Rectangle.
+    * @method centerY
+    * @return {Number}
+    **/
+    get: function () {
+        return this.y + this.halfHeight;
+    },
+
+    /**
+    * The y coordinate of the center of the Rectangle.
+    * @method centerY
+    * @param {Number} value
+    **/
+    set: function (value) {
+        this.y = value - this.halfHeight;
     },
     enumerable: true,
     configurable: true

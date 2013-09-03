@@ -41,8 +41,8 @@ Phaser.Animation.prototype = {
     */
     play: function (frameRate, loop) {
 
-        if (typeof frameRate === "undefined") { frameRate = null; }
-        if (typeof loop === "undefined") { loop = null; }
+        frameRate = frameRate || null;
+        loop = loop || null;
 
         if (frameRate !== null)
         {
@@ -113,6 +113,7 @@ Phaser.Animation.prototype = {
                 {
                     this._frameIndex = 0;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                    this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
                     // this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                 }
                 else

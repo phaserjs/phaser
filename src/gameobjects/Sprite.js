@@ -24,7 +24,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     else
     {
         //  No texture yet
-        console.log('no texture yet');
         PIXI.Sprite.call(this);
     }
 
@@ -36,43 +35,37 @@ Phaser.Sprite = function (game, x, y, key, frame) {
      */
     this.animations = new Phaser.AnimationManager(this);
 
-	// PIXI.DisplayObjectContainer.call(this);
-
-	/**
-	 * The anchor sets the origin point of the texture.
-	 * The default is 0,0 this means the textures origin is the top left 
-	 * Setting than anchor to 0.5,0.5 means the textures origin is centered
-	 * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
-	 *
-     * @property anchor
-     * @type Point
-     */
-	this.anchor = new Phaser.Point();
-
-	/**
-	 * The texture that the sprite is using
-	 *
-	 * @property texture
-	 * @type Texture
-	 */
-	// this.texture = PIXI.TextureCache[key];
-
     if (this.game.cache.isSpriteSheet(key))
     {
         this.animations.loadFrameData(this.game.cache.getFrameData(key));
+
+        if (frame !== null)
+        {
+            if (typeof frame === 'string')
+            {
+                this.frameName = frame;
+            }
+            else
+            {
+                this.frame = frame;
+            }
+        }
+    }
+    else
+    {
+        this.currentFrame = new Phaser.Animation.Frame(x, y, width, height, '', '');
     }
 
-    if (frame !== null)
-    {
-        if (typeof frame === 'string')
-        {
-            this.frameName = frame;
-        }
-        else
-        {
-            this.frame = frame;
-        }
-    }
+    /**
+     * The anchor sets the origin point of the texture.
+     * The default is 0,0 this means the textures origin is the top left 
+     * Setting than anchor to 0.5,0.5 means the textures origin is centered
+     * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
+     *
+     * @property anchor
+     * @type Point
+     */
+    this.anchor = new Phaser.Point();
 
     this.x = x;
     this.y = y;
@@ -115,10 +108,19 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         scaleX: 1, scaleY: 1,
 
         //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
-        width: 0, height: 0,
+        width: this.currentFrame.sourceSizeW, height: this.currentFrame.sourceSizeH,
 
-        //  The current frame index, used to check for bounds updates
-        frameWidth: 0, frameHeight: 0,
+        //  The actual width/height of the image if from a trimmed atlas, multiplied by the final calculated scale size
+        // actualWidth: 0, actualHeight: 0,
+
+        //  The actual width/height of the image if from a trimmed atlas, multiplied by the final calculated scale size
+        halfWidth: Math.floor(this.currentFrame.sourceSizeW), halfHeight: Math.floor(this.currentFrame.sourceSizeH),
+
+        //  The actual width/height of the image if from a trimmed atlas, multiplied by the final calculated scale size
+        // centerX: 0, centerY: 0,
+
+        //  The current frame details
+        frameID: this.currentFrame.uuid, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
 
         boundsX: 0, boundsY: 0,
 
@@ -127,18 +129,17 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     };
 
-    //  Corner points
-    this.offset = new Phaser.Point();
-    this.topLeft = new Phaser.Point();
-    this.topRight = new Phaser.Point();
-    this.bottomRight = new Phaser.Point();
-    this.bottomLeft = new Phaser.Point();
-    this.bounds = new Phaser.Rectangle(x, y, this.width, this.height);
+    //  Corner point defaults
+    this.offset = new Phaser.Point;
+    this.center = new Phaser.Point(Math.floor(this._cache.width / 2), Math.floor(this._cache.height / 2));
+    this.topLeft = new Phaser.Point(x, y);
+    this.topRight = new Phaser.Point(x + this._cache.width, y);
+    this.bottomRight = new Phaser.Point(x + this._cache.width, y + this._cache.height);
+    this.bottomLeft = new Phaser.Point(x, y + this._cache.height);
+    this.bounds = new Phaser.Rectangle(x, y, this._cache.width, this._cache.height);
 
-    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
-    this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
-    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height);
-    this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height);
+    //  Set-up the physics body
+    this.body = new Phaser.Physics.Arcade.Body(this);
 
 };
 
@@ -153,7 +154,10 @@ Phaser.Sprite.prototype.update = function() {
 
     this._cache.dirty = false;
 
-    this.animations.update();
+    if (this.animations.update())
+    {
+        this._cache.dirty = true;
+    }
 
     this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
     this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
@@ -200,20 +204,22 @@ Phaser.Sprite.prototype.update = function() {
             this._cache.dirty = true;
         }
 
-        if (this._cache.dirty || this.texture.frame.width != this._cache.frameWidth || this.texture.frame.height != this._cache.frameHeight)
+        //  Frame updated?
+        if (this.currentFrame.uuid != this._cache.frameID)
         {
             this._cache.frameWidth = this.texture.frame.width;
             this._cache.frameHeight = this.texture.frame.height;
-
-            this._cache.width = this.texture.frame.width * this._cache.scaleX;
-            this._cache.height = this.texture.frame.height * this._cache.scaleY;
-
-            this._cache.dirty = true;
         }
 
         if (this._cache.dirty)
         {
+            this._cache.width = this.currentFrame.sourceSizeW * this._cache.scaleX;
+            this._cache.height = this.currentFrame.sourceSizeH * this._cache.scaleY;
+
+            // this.getLocalPosition(this.center, this.x - (this.anchor.x * this._cache.width), this.y - (this.anchor.y * this._cache.height));
+
             this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
+
             this.updateBounds();
         }
     }
@@ -241,6 +247,9 @@ Phaser.Sprite.prototype.update = function() {
         {
             this.visible = this._cache.cameraVisible;
         }
+
+        //  Update our physics bounds
+        this.body.update();
     }
 
     //  Check our bounds
@@ -253,6 +262,9 @@ Phaser.Sprite.prototype.updateBounds = function() {
 
     this.offset.setTo(this._cache.a02 - (this.anchor.x * this._cache.width), this._cache.a12 - (this.anchor.y * this._cache.height));
 
+    // this.getLocalPosition(this.center, this.x - (this.anchor.x * this._cache.width), this.y - (this.anchor.y * this._cache.height));
+
+    this.getLocalPosition(this.center, this.offset.x + this._cache.halfWidth, this.offset.y + this._cache.halfHeight);
     this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
     this.getLocalPosition(this.topRight, this.offset.x + this._cache.width, this.offset.y);
     this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._cache.height);

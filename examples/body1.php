@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>phaser.js - a new beginning</title>
+	<?php
+		require('js.php');
+	?>
+</head>
+<body>
+
+<script type="text/javascript">
+
+(function () {
+
+	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+
+	function preload() {
+		game.load.atlasJSONHash('bot', 'assets/sprites/running_bot.png', 'assets/sprites/running_bot.json');
+	}
+
+	var s;
+
+	function create() {
+
+		game.world._stage.backgroundColorString = '#182d3b';
+
+		s = game.add.sprite(game.world.centerX, game.world.centerY, 'bot');
+		// s.anchor.setTo(0.5, 0.5);
+		
+		// s.body.offset.setTo(0, 0);
+
+
+		// s.scale.setTo(2, 2);
+
+		s.animations.add('run');
+		s.animations.play('run', 10, true);
+
+	}
+
+	function update() {
+
+		s.rotation += 0.01;
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+        {
+            s.x -= 4;
+        }
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+        {
+            s.x += 4;
+        }
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+        {
+            s.y -= 4;
+        }
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+        {
+            s.y += 4;
+        }
+
+	}
+
+	function render() {
+
+		game.debug.renderSpriteCorners(s, true, true);
+		// game.debug.renderRectangle(s.body.bounds, 'rgba(255,0,0,0.3)');
+		game.debug.renderSpriteInfo(s, 20, 32);
+
+	}
+
+})();
+
+</script>
+
+</body>
+</html>
