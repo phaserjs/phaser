@@ -3,6 +3,7 @@
 	//	Much easier for debugging
 ?>
 	<script src="../src/Phaser.js"></script>
+	<script src="../src/utils/Utils.js"></script>
 
 	<script src="../src/pixi/Pixi.js"></script>
 	<script src="../src/pixi/InteractionManager.js"></script>
