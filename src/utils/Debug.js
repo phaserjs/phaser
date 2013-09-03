@@ -186,6 +186,8 @@ Phaser.Utils.Debug.prototype = {
             this.line('Position: ' + sound.position);
         }
 
+        this.stop();
+
     },
 
     /**

@@ -41,6 +41,16 @@ Phaser.GameObjectFactory.prototype = {
 
         return this.game.tweens.create(obj, localReference);
 
+    },
+
+    audio: function (key, volume, loop) {
+
+        volume = volume || 1;
+        loop = loop || false;
+
+        return this.game.sound.add(key, volume, loop);
+        
     }
+
 
 };

@@ -295,7 +295,7 @@ Phaser.Game.prototype = {
 			this.time = new Phaser.Time(this);
 			this.tweens = new Phaser.TweenManager(this);
 			this.input = new Phaser.Input(this);
-			// this.sound = new Phaser.SoundManager(this);
+			this.sound = new Phaser.SoundManager(this);
 			// this.physics = new Phaser.Physics.PhysicsManager(this);
 			this.plugins = new Phaser.PluginManager(this, this);
 			this.net = new Phaser.Net(this);
@@ -379,7 +379,7 @@ Phaser.Game.prototype = {
         this.input.update();
         this.tweens.update();
         // this.stage.update();
-        // this.sound.update();
+        this.sound.update();
         // this.physics.update();
         this.world.update();
 		this.state.update();
