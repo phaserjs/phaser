@@ -20,6 +20,20 @@ Phaser.Physics.Arcade = function (game) {
     this.FLOOR = this.DOWN;
     this.WALL = this.LEFT | this.RIGHT;
     this.ANY = this.LEFT | this.RIGHT | this.UP | this.DOWN;
+    // console.log('any', this.ANY);
+	this.OVERLAP_BIAS = 4;
+	this.TILE_OVERLAP = false;
+
+	//	avoid creating these every frame, per collision
+	this._obj1Bounds = new Phaser.Rectangle;
+	this._obj2Bounds = new Phaser.Rectangle;
+	this._overlap = 0;
+	this._maxOverlap = 0;
+	this._obj1Velocity = 0;
+	this._obj2Velocity = 0;
+	this._obj1NewVelocity = 0;
+	this._obj2NewVelocity = 0;
+	this._average = 0;
 
 	// this.angularDrag = 0;
 	// this.gravity = new Phaser.Point;
@@ -50,13 +64,13 @@ Phaser.Physics.Arcade.prototype = {
         body.velocity.x += this._velocityDelta;
         this._delta = body.velocity.x * this.game.time.physicsElapsed;
         body.velocity.x += this._velocityDelta;
-        body._x += this._delta;
+        body.x += this._delta;
 
         this._velocityDelta = (this.computeVelocity(body.velocity.y, body.gravity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
         body.velocity.y += this._velocityDelta;
         this._delta = body.velocity.y * this.game.time.physicsElapsed;
         body.velocity.y += this._velocityDelta;
-        body._y += this._delta;
+        body.y += this._delta;
 
     },
 
@@ -184,49 +198,46 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  First, get the two object deltas
-        var overlap = 0;
-        var obj1Delta = object1.x - object1.last.x;
-        var obj2Delta = object2.x - object2.last.x;
+        this._overlap = 0;
 
-        if (obj1Delta != obj2Delta)
+        if (object1.deltaX() != object2.deltaX())
         {
             //  Check if the X hulls actually overlap
-            var obj1DeltaAbs = (obj1Delta > 0) ? obj1Delta : -obj1Delta;
-            var obj2DeltaAbs = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
-            var obj1Bounds = new Quad(object1.x - ((obj1Delta > 0) ? obj1Delta : 0), object1.last.y, object1.width + ((obj1Delta > 0) ? obj1Delta : -obj1Delta), object1.height);
-            var obj2Bounds = new Quad(object2.x - ((obj2Delta > 0) ? obj2Delta : 0), object2.last.y, object2.width + ((obj2Delta > 0) ? obj2Delta : -obj2Delta), object2.height);
 
-            if ((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height))
+            this._obj1Bounds.setTo(object1.x - ((object1.deltaX() > 0) ? object1.deltaX() : 0), object1.lastY, object1.width + ((object1.deltaX() > 0) ? object1.deltaX() : -object1.deltaX()), object1.height);
+            this._obj2Bounds.setTo(object2.x - ((object2.deltaX() > 0) ? object2.deltaX() : 0), object2.lastY, object2.width + ((object2.deltaX() > 0) ? object2.deltaX() : -object2.deltaX()), object2.height);
+
+            if ((this._obj1Bounds.x + this._obj1Bounds.width > this._obj2Bounds.x) && (this._obj1Bounds.x < this._obj2Bounds.x + this._obj2Bounds.width) && (this._obj1Bounds.y + this._obj1Bounds.height > this._obj2Bounds.y) && (this._obj1Bounds.y < this._obj2Bounds.y + this._obj2Bounds.height))
             {
-                var maxOverlap = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
+                this._maxOverlap = object1.deltaAbsX() + object2.deltaAbsX() + this.OVERLAP_BIAS;
 
                 //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                if (obj1Delta > obj2Delta)
+                if (object1.deltaAbsX() > object2.deltaAbsX())
                 {
-                    overlap = object1.x + object1.width - object2.x;
+                    this._overlap = object1.x + object1.width - object2.x;
 
-                    if ((overlap > maxOverlap) || !(object1.allowCollisions & Collision.RIGHT) || !(object2.allowCollisions & Collision.LEFT))
+                    if ((this._overlap > this._maxOverlap) || !(object1.allowCollisions & this.RIGHT) || !(object2.allowCollisions & this.LEFT))
                     {
-                        overlap = 0;
+                        this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching |= Collision.RIGHT;
-                        object2.touching |= Collision.LEFT;
+                        object1.touching |= this.RIGHT;
+                        object2.touching |= this.LEFT;
                     }
                 }
-                else if (obj1Delta < obj2Delta)
+                else if (object1.deltaX() < object2.deltaX())
                 {
-                    overlap = object1.x - object2.width - object2.x;
+                    this._overlap = object1.x - object2.width - object2.x;
 
-                    if ((-overlap > maxOverlap) || !(object1.allowCollisions & Collision.LEFT) || !(object2.allowCollisions & Collision.RIGHT))
+                    if ((-this._overlap > this._maxOverlap) || !(object1.allowCollisions & this.LEFT) || !(object2.allowCollisions & this.RIGHT))
                     {
-                        overlap = 0;
+                        this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching |= Collision.LEFT;
-                        object2.touching |= Collision.RIGHT;
+                        object1.touching |= this.LEFT;
+                        object2.touching |= this.RIGHT;
                     }
 
                 }
@@ -235,34 +246,34 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (overlap != 0)
+        if (this._overlap != 0)
         {
-            var obj1Velocity = object1.velocity.x;
-            var obj2Velocity = object2.velocity.x;
+            this._obj1Velocity = object1.velocity.x;
+            this._obj2Velocity = object2.velocity.x;
 
             if (!object1.immovable && !object2.immovable)
             {
-                overlap *= 0.5;
-                object1.x = object1.x - overlap;
-                object2.x += overlap;
+                this._overlap *= 0.5;
+                object1.x = object1.x - this._overlap;
+                object2.x += this._overlap;
 
-                var obj1NewVelocity = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
-                var obj2NewVelocity = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
-                var average = (obj1NewVelocity + obj2NewVelocity) * 0.5;
-                obj1NewVelocity -= average;
-                obj2NewVelocity -= average;
-                object1.velocity.x = average + obj1NewVelocity * object1.elasticity;
-                object2.velocity.x = average + obj2NewVelocity * object2.elasticity;
+                this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * object2.mass) / object1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * object1.mass) / object2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
+                this._obj1NewVelocity -= this._average;
+                this._obj2NewVelocity -= this._average;
+                object1.velocity.x = this._average + this._obj1NewVelocity * object1.bounce.x;
+                object2.velocity.x = this._average + this._obj2NewVelocity * object2.bounce.x;
             }
             else if (!object1.immovable)
             {
-                object1.x = object1.x - overlap;
-                object1.velocity.x = obj2Velocity - obj1Velocity * object1.elasticity;
+                object1.x = object1.x - this._overlap;
+                object1.velocity.x = this._obj2Velocity - this._obj1Velocity * object1.bounce.x;
             }
             else if (!object2.immovable)
             {
-                object2.x += overlap;
-                object2.velocity.x = obj1Velocity - obj2Velocity * object2.elasticity;
+                object2.x += this._overlap;
+                object2.velocity.x = this._obj1Velocity - this._obj2Velocity * object2.bounce.x;
             }
 
             return true;
@@ -297,10 +308,10 @@ Phaser.Physics.Arcade.prototype = {
             //  Check if the Y hulls actually overlap
             var obj1DeltaAbs = (obj1Delta > 0) ? obj1Delta : -obj1Delta;
             var obj2DeltaAbs = (obj2Delta > 0) ? obj2Delta : -obj2Delta;
-            var obj1Bounds: Quad = new Quad(object1.x, object1.y - ((obj1Delta > 0) ? obj1Delta : 0), object1.width, object1.height + obj1DeltaAbs);
-            var obj2Bounds: Quad = new Quad(object2.x, object2.y - ((obj2Delta > 0) ? obj2Delta : 0), object2.width, object2.height + obj2DeltaAbs);
+            this._obj1Bounds = new Phaser.Rectangle(object1.x, object1.y - ((obj1Delta > 0) ? obj1Delta : 0), object1.width, object1.height + obj1DeltaAbs);
+            this._obj2Bounds = new Phaser.Rectangle(object2.x, object2.y - ((obj2Delta > 0) ? obj2Delta : 0), object2.width, object2.height + obj2DeltaAbs);
 
-            if ((obj1Bounds.x + obj1Bounds.width > obj2Bounds.x) && (obj1Bounds.x < obj2Bounds.x + obj2Bounds.width) && (obj1Bounds.y + obj1Bounds.height > obj2Bounds.y) && (obj1Bounds.y < obj2Bounds.y + obj2Bounds.height))
+            if ((this._obj1Bounds.x + this._obj1Bounds.width > this._obj2Bounds.x) && (this._obj1Bounds.x < this._obj2Bounds.x + this._obj2Bounds.width) && (this._obj1Bounds.y + this._obj1Bounds.height > this._obj2Bounds.y) && (this._obj1Bounds.y < this._obj2Bounds.y + this._obj2Bounds.height))
             {
                 var maxOverlap = obj1DeltaAbs + obj2DeltaAbs + Collision.OVERLAP_BIAS;
 
@@ -339,8 +350,8 @@ Phaser.Physics.Arcade.prototype = {
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
         if (overlap != 0)
         {
-            var obj1Velocity = object1.velocity.y;
-            var obj2Velocity = object2.velocity.y;
+            this._obj1Velocity = object1.velocity.y;
+            this._obj2Velocity = object2.velocity.y;
 
             if (!object1.immovable && !object2.immovable)
             {
@@ -348,18 +359,18 @@ Phaser.Physics.Arcade.prototype = {
                 object1.y = object1.y - overlap;
                 object2.y += overlap;
 
-                var obj1NewVelocity = Math.sqrt((obj2Velocity * obj2Velocity * object2.mass) / object1.mass) * ((obj2Velocity > 0) ? 1 : -1);
-                var obj2NewVelocity = Math.sqrt((obj1Velocity * obj1Velocity * object1.mass) / object2.mass) * ((obj1Velocity > 0) ? 1 : -1);
-                var average = (obj1NewVelocity + obj2NewVelocity) * 0.5;
-                obj1NewVelocity -= average;
-                obj2NewVelocity -= average;
-                object1.velocity.y = average + obj1NewVelocity * object1.elasticity;
-                object2.velocity.y = average + obj2NewVelocity * object2.elasticity;
+                this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * object2.mass) / object1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * object1.mass) / object2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
+                this._obj1NewVelocity -= this._average;
+                this._obj2NewVelocity -= this._average;
+                object1.velocity.y = this._average + this._obj1NewVelocity * object1.elasticity;
+                object2.velocity.y = this._average + this._obj2NewVelocity * object2.elasticity;
             }
             else if (!object1.immovable)
             {
                 object1.y = object1.y - overlap;
-                object1.velocity.y = obj2Velocity - obj1Velocity * object1.elasticity;
+                object1.velocity.y = this._obj2Velocity - this._obj1Velocity * object1.elasticity;
                 //  This is special case code that handles things like horizontal moving platforms you can ride
                 if (object2.active && object2.moves && (obj1Delta > obj2Delta))
                 {
@@ -369,7 +380,7 @@ Phaser.Physics.Arcade.prototype = {
             else if (!object2.immovable)
             {
                 object2.y += overlap;
-                object2.velocity.y = obj1Velocity - obj2Velocity * object2.elasticity;
+                object2.velocity.y = this._obj1Velocity - this._obj2Velocity * object2.elasticity;
                 //  This is special case code that handles things like horizontal moving platforms you can ride
                 if (object1.active && object1.moves && (obj1Delta < obj2Delta))
                 {
@@ -385,11 +396,4 @@ Phaser.Physics.Arcade.prototype = {
         }
     },
 
-
-
-
 };
-
-Phaser.Physics.Arcade.prototype.OVERLAP_BIAS = 4;
-Phaser.Physics.Arcade.prototype.TILE_OVERLAP = false;
-

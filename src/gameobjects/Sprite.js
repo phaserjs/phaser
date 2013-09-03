@@ -243,10 +243,10 @@ Phaser.Sprite.prototype.update = function() {
         }
 
         //  Update our physics bounds
-        this.body.update(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
     }
 
-    this.body.updateMotion();
+    this.body.update();
 
 }
 

@@ -27,12 +27,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.immovable = false;
     this.touching = 0;
     this.wasTouching = 0;
-    this.allowCollisions = 1;
+    this.allowCollisions = 4369;
 
-	this._x = sprite.x;
-	this._y = sprite.y;
-	this._ox = sprite.x;
-	this._oy = sprite.y;
+	this.x = sprite.x;
+	this.y = sprite.y;
+	this.lastX = sprite.x;
+	this.lastY = sprite.y;
 
 };
 
@@ -42,7 +42,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 	game: null,
 	hitArea: null,
 
-	update: function (x, y, scaleX, scaleY) {
+	updateBounds: function (x, y, scaleX, scaleY) {
 
 		if (scaleX != this._sx || scaleY != this._sy)
 		{
@@ -57,10 +57,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
-	updateMotion: function () {
+	update: function () {
 
-		this._ox = this._x;
-		this._oy = this._y;
+		this.lastX = this.x;
+		this.lastY = this.y;
 
 		this.game.physics.updateMotion(this);
 
@@ -71,8 +71,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	postUpdate: function () {
 
-		sprite.x = this._x;
-		sprite.y = this._y;
+		this.sprite.x = this.x;
+		this.sprite.y = this.y;
 
 	},
 
@@ -113,44 +113,44 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     hullX: function () {
 
-        if (this._x < this._ox)
+        if (this.x < this.lastX)
         {
-            return this._x;
+            return this.x;
         }
         else
         {
-            return this._ox;
+            return this.lastX;
         }
 
     },
 
     hullY: function () {
 
-        if (this._y < this._oy)
+        if (this.y < this.lastY)
         {
-            return this._y;
+            return this.y;
         }
         else
         {
-            return this._oy;
+            return this.lastY;
         }
 
     },
 
-    deltaXAbs: function () {
-        return (this.deltaX > 0 ? this.deltaX : -this.deltaX);
+    deltaAbsX: function () {
+        return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
     },
 
-    deltaYAbs: function () {
-        return (this.deltaY > 0 ? this.deltaY : -this.deltaY);
+    deltaAbsY: function () {
+        return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
     },
 
     deltaX: function () {
-        return this._x - this._ox;
+        return this.x - this.lastX;
     },
 
     deltaY: function () {
-        return this._y - this._oy;
+        return this.y - this.lastY;
     }
 
 };

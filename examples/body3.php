@@ -20,6 +20,7 @@
 	}
 
 	var bunny;
+	var wall;
 	var bot;
 
 	function create() {
@@ -27,14 +28,18 @@
 		game.world._stage.backgroundColorString = '#182d3b';
 
 		bunny = game.add.sprite(200, 200, 'bunny');
+		bunny.body.bounce.x = 0.8;
 
-		bunny.body.acceleration.x = 10;
-		// bunny.body.velocity.y = 20;
+		wall = game.add.sprite(700, 200, 'bunny');
+		wall.body.immovable = true;
+
+		bunny.body.velocity.x = 180;
 
 	}
 
 	function update() {
 
+		game.physics.separateX(bunny.body, wall.body);
 
 	}
 
