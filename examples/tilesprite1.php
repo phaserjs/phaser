@@ -12,7 +12,7 @@
 
 (function () {
 
-	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
 	function preload() {
 		game.load.image('disk', 'assets/sprites/p2.jpeg');
@@ -22,19 +22,12 @@
 	var count = 0;
 
 	function create() {
-
-		game.world._stage.backgroundColorString = '#182d3b';
-		
 		s = game.add.tileSprite(0, 0, 512, 512, 'disk');
-		// s.rotation = 0.1;
-
 	}
 
 	function update() {
 
 		count += 0.005
-
-		// s.rotation += 0.01;
 
 		s.tileScale.x = 2 + Math.sin(count);
 		s.tileScale.y = 2 + Math.cos(count);
@@ -59,12 +52,6 @@
         {
             s.y += 4;
         }
-
-	}
-
-	function render() {
-
-		// game.debug.renderSpriteCorners(s, true, true);
 
 	}
 
