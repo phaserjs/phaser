@@ -13,9 +13,9 @@ Phaser.Input = function (game) {
 	
 };
 
-Phaser.Mouse_OVERRIDES_TOUCH = 0;
-Phaser.Touch_OVERRIDES_MOUSE = 1;
-Phaser.Mouse_TOUCH_COMBINE = 2;
+Phaser.Input.MOUSE_OVERRIDES_TOUCH = 0;
+Phaser.Input.TOUCH_OVERRIDES_MOUSE = 1;
+Phaser.Input.MOUSE_TOUCH_COMBINE = 2;
 
 Phaser.Input.prototype = {
 
@@ -60,7 +60,7 @@ Phaser.Input.prototype = {
     /**
     * Controls the expected behaviour when using a mouse and touch together on a multi-input device
     */
-    multiInputOverride: Phaser.Mouse_TOUCH_COMBINE,
+    multiInputOverride: Phaser.Input.MOUSE_TOUCH_COMBINE,
 
     /**
     * A vector object representing the current position of the Pointer.
