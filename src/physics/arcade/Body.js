@@ -58,6 +58,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.allowRotation = false;
     this.allowGravity = true;
 
+    this.collideWorldBounds = false;
+
 	this.lastX = sprite.x;
 	this.lastY = sprite.y;
 
@@ -91,9 +93,49 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.bounds.x = this.x;
 		this.bounds.y = this.y;
 
+		if (this.allowCollisions & this.ANY)
+		{
+			this.game.physics.quadTree.insert(this);
+		}
+
+	},
+
+	checkWorldBounds: function () {
+
+		if (this.bounds.x < this.game.world.bounds.x)
+		{
+			this.x = this.game.world.bounds.x;
+			this.velocity.x *= -1;
+			this.velocity.x *= this.bounce.x;
+		}
+		else if (this.bounds.right > this.game.world.bounds.right)
+		{
+			this.x = this.game.world.bounds.right - this.width;
+			this.velocity.x *= -1;
+			this.velocity.x *= this.bounce.x;
+		}
+
+		if (this.bounds.y < this.game.world.bounds.y)
+		{
+			this.y = this.game.world.bounds.y;
+			this.velocity.y *= -1;
+			this.velocity.y *= this.bounce.y;
+		}
+		else if (this.bounds.bottom > this.game.world.bounds.bottom)
+		{
+			this.y = this.game.world.bounds.bottom - this.height;
+			this.velocity.y *= -1;
+			this.velocity.y *= this.bounce.y;
+		}
+
 	},
 
 	postUpdate: function () {
+
+		if (this.collideWorldBounds)
+		{
+			this.checkWorldBounds();
+		}
 
 		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
 		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
@@ -122,6 +164,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
+	/*
     hullWidth: function () {
 
         if (this.deltaX() > 0)
@@ -173,6 +216,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
 
     },
+    */
 
     deltaAbsX: function () {
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());

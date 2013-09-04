@@ -68,6 +68,7 @@
 	<script src="../src/system/RequestAnimationFrame.js"></script>
 	<script src="../src/math/RandomDataGenerator.js"></script>
 	<script src="../src/math/Math.js"></script>
+	<script src="../src/math/QuadTree.js"></script>
 	<script src="../src/geom/Circle.js"></script>
 	<script src="../src/geom/Point.js"></script>
 	<script src="../src/geom/Rectangle.js"></script>

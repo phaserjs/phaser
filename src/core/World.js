@@ -53,7 +53,6 @@ Phaser.World.prototype = {
 
 		var displayObject = this._stage;
 
-		// once the display object hits this. we can break the loop	
 		var testObject = displayObject.last._iNext;
 		displayObject = displayObject.first;
 		
@@ -73,11 +72,8 @@ Phaser.World.prototype = {
 
 	postUpdate: function () {
 
-		//this.camera.update();
-
 		var displayObject = this._stage;
 
-		// once the display object hits this. we can break the loop	
 		var testObject = displayObject.last._iNext;
 		displayObject = displayObject.first;
 		

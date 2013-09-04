@@ -8,9 +8,16 @@ Phaser.Physics.Arcade = function (game) {
 	this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
 	/**
+	* Used by the QuadTree to set the maximum number of objects
 	* @type {number}
 	*/
-	this.worldDivisions = 6;
+	this.maxObjects = 10;
+
+	/**
+	* Used by the QuadTree to set the maximum number of levels
+	* @type {number}
+	*/
+	this.maxLevels = 4;
 
     this.LEFT = 0x0001;
     this.RIGHT = 0x0010;
@@ -24,6 +31,8 @@ Phaser.Physics.Arcade = function (game) {
 
 	this.OVERLAP_BIAS = 4;
 	this.TILE_OVERLAP = false;
+
+	this.quadTree = null;
 
 	//	avoid gc spikes by caching these values for re-use
 	this._obj1Bounds = new Phaser.Rectangle;
@@ -128,6 +137,20 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    preUpdate: function () {
+
+    	//	Create our tree which all of the Physics bodies will add themselves to
+    	this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+    },
+
+    postUpdate: function () {
+
+    	//	Clear the tree ready for the next update
+    	this.quadTree.clear();
+
+    },
+
      /**
      * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
      * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
@@ -138,28 +161,6 @@ Phaser.Physics.Arcade.prototype = {
      * @returns {boolean} true if the objects overlap, otherwise false.
      */
     overlap: function (object1, object2, notifyCallback, processCallback) {
-
-        if (object1 == null)
-        {
-            object1 = this._game.world.group;
-        }
-
-        if (object2 == object1)
-        {
-            object2 = null;
-        }
-
-        Phaser.QuadTree.divisions = this.worldDivisions;
-
-        var quadTree = new Phaser.QuadTree(this._game.world.bounds.x, this._game.world.bounds.y, this._game.world.bounds.width, this._game.world.bounds.height);
-
-        quadTree.load(object1, object2, notifyCallback, processCallback);
-
-        var result = quadTree.execute();
-
-        quadTree.destroy();
-
-        quadTree = null;
 
         return result;
 
