@@ -30,15 +30,15 @@
 
 	function create() {
 
-		s = game.add.sprite(game.world.centerX, game.world.centerY, 'sonic');
+		s = game.add.sprite(600, game.world.centerY, 'sonic');
 		s.name = 'X';
 
-		a = game.add.child(s, -50, 0, 'sonic');
-		b = game.add.child(s, -100, 0, 'sonic');
-		c = game.add.child(s, -150, 0, 'sonic');
-		d = game.add.child(s, -200, 0, 'sonic');
-		e = game.add.child(s, -250, 0, 'sonic');
-		f = game.add.child(s, -300, 0, 'sonic');
+		a = game.add.child(s, -70, 0, 'sonic');
+		b = game.add.child(s, -140, 0, 'sonic');
+		c = game.add.child(s, -210, 0, 'sonic');
+		d = game.add.child(s, -280, 0, 'sonic');
+		e = game.add.child(s, -350, 0, 'sonic');
+		f = game.add.child(s, -420, 0, 'sonic');
 
 		a.name = 'a';
 		b.name = 'b';
@@ -56,7 +56,7 @@
 	}
 
 	function runChange () {
-		changeOrder(a, d);
+		changeOrder(b, c);
 	}
 
 	function changeOrder (node1, node2) {
@@ -272,7 +272,7 @@
 
 		for (var i = 0; i < tests.length; i++)
 		{
-			game.debug.renderText(tests[i].name, s.x + tests[i].x + tests[i].width / 2, s.y + tests[i].y - 20);
+			game.debug.renderText(tests[i].name, s.x + tests[i].x, s.y + tests[i].y - 20);
 		}
 
 		// game.debug.renderSpriteCorners(s, false, false);
