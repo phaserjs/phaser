@@ -26,27 +26,38 @@
 	function create() {
 
 		game.world._stage.backgroundColorString = '#182d3b';
+		// game.physics.gravity.y = 10;
 
-		bunny = game.add.sprite(200, 200, 'bunny');
-		bunny.body.bounce.x = 0.8;
+		bunny = game.add.sprite(200, 100, 'bunny');
+		bunny.body.bounce.y = 0.5;
+		// bunny.body.gravity.y = -10;
+		// bunny.body.setSize(20, 100);
+		// bunny.body.offset.setTo(25, -20);
+		// bunny.anchor.setTo(0.5, 0.5);
 
-		wall = game.add.sprite(700, 200, 'bunny');
+		wall = game.add.sprite(200, 450, 'bunny');
 		wall.body.immovable = true;
+		wall.body.allowGravity = false;
 
-		bunny.body.velocity.x = 180;
+		// bunny.body.angularVelocity = 1;
+		bunny.body.velocity.x = 30;
+		// bunny.body.velocity.y = 120;
+		// bunny.body.velocity.y = 50;
 
 	}
 
 	function update() {
 
-		game.physics.separateX(bunny.body, wall.body);
+		// bunny.rotation += 0.01;
+		game.physics.separate(bunny.body, wall.body);
 
 	}
 
 	function render() {
 
 		game.debug.renderSpriteCorners(bunny, true, true);
-		game.debug.renderRectangle(bunny.body.hitArea);
+		game.debug.renderRectangle(bunny.body.bounds);
+		game.debug.renderRectangle(wall.body.bounds);
 
 	}
 

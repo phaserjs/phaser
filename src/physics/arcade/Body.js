@@ -3,11 +3,25 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 	this.sprite = sprite;
 	this.game = sprite.game;
 
-	this.hitArea = new Phaser.Rectangle(sprite.x, sprite.y, sprite.currentFrame.sourceSizeW, sprite.currentFrame.sourceSizeH);
 	this.offset = new Phaser.Point;
 
-	this.width = this.hitArea.width;
-	this.height = this.hitArea.height;
+	//	the top-left of the Body
+	this.x = sprite.x;
+	this.y = sprite.y;
+
+	//	un-scaled original size
+	this.sourceWidth = sprite.currentFrame.sourceSizeW;
+	this.sourceHeight = sprite.currentFrame.sourceSizeH;
+
+	//	calculated (scaled) size
+	this.width = sprite.currentFrame.sourceSizeW;
+	this.height = sprite.currentFrame.sourceSizeH;
+	this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
+	this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
+
+	this.bounds = new Phaser.Rectangle(sprite.x, sprite.y, this.width, this.height);
+
+	//	Scale value cache
 	this._sx = sprite.scale.x;
 	this._sy = sprite.scale.y;
 
@@ -24,13 +38,26 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.maxAngular = 1000;
     this.mass = 1;
 
+    //	Handy consts
+    this.LEFT = 0x0001;
+    this.RIGHT = 0x0010;
+    this.UP = 0x0100;
+    this.DOWN = 0x1000;
+    this.NONE = 0;
+    this.CEILING = this.UP;
+    this.FLOOR = this.DOWN;
+    this.WALL = this.LEFT | this.RIGHT;
+    this.ANY = this.LEFT | this.RIGHT | this.UP | this.DOWN;
+
     this.immovable = false;
+    this.moves = true;
     this.touching = 0;
     this.wasTouching = 0;
-    this.allowCollisions = 4369;
+    this.rotation = 0;
+    this.allowCollisions = this.ANY;
+    this.allowRotation = false;
+    this.allowGravity = true;
 
-	this.x = sprite.x;
-	this.y = sprite.y;
 	this.lastX = sprite.x;
 	this.lastY = sprite.y;
 
@@ -38,22 +65,19 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 
 Phaser.Physics.Arcade.Body.prototype = {
 
-	sprite: null,
-	game: null,
-	hitArea: null,
-
-	updateBounds: function (x, y, scaleX, scaleY) {
+	updateBounds: function (centerX, centerY, scaleX, scaleY) {
 
 		if (scaleX != this._sx || scaleY != this._sy)
 		{
-			this.hitArea.width = this.width * scaleX;
-			this.hitArea.height = this.height * scaleY;
+			this.width = this.sourceWidth * scaleX;
+			this.height = this.sourceHeight * scaleY;
+			this.halfWidth = Math.floor(this.width / 2);
+			this.halfHeight = Math.floor(this.height / 2);
+			this.bounds.width = this.width;
+			this.bounds.height = this.height;
 			this._sx = scaleX;
 			this._sy = scaleY;
 		}
-
-		this.hitArea.centerX = x;
-		this.hitArea.centerY = y;
 
 	},
 
@@ -64,49 +88,62 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 		this.game.physics.updateMotion(this);
 
-		//	delta force - _x and _y now contain the new positions, so work out the deltas
-		//	separation and stuff happens here
+		this.bounds.x = this.x;
+		this.bounds.y = this.y;
 
 	},
 
 	postUpdate: function () {
 
-		this.sprite.x = this.x;
-		this.sprite.y = this.y;
+		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
+		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
+
+		if (this.allowRotation)
+		{
+			this.sprite.angle = this.rotation;
+		}
 
 	},
 
-	setSize: function (width, height) {
+	setSize: function (width, height, offsetX, offsetY) {
 
-		this.width = width;
-		this.height = height;
-		this.hitArea.width = this.width * scaleX;
-		this.hitArea.height = this.height * scaleY;
+		offsetX = offsetX || this.offset.x;
+		offsetY = offsetY || this.offset.y;
+
+		this.sourceWidth = width;
+		this.sourceHeight = height;
+		this.width = this.sourceWidth * this._sx;
+		this.height = this.sourceHeight * this._sy;
+		this.halfWidth = Math.floor(this.width / 2);
+		this.halfHeight = Math.floor(this.height / 2);
+		this.bounds.width = this.width;
+		this.bounds.height = this.height;
+		this.offset.setTo(offsetX, offsetY);
 
 	},
 
     hullWidth: function () {
 
-        if (this.deltaX > 0)
+        if (this.deltaX() > 0)
         {
-            return this.hitArea.width + this.deltaX;
+            return this.width + this.deltaX();
         }
         else
         {
-            return this.hitArea.width - this.deltaX;
+            return this.width - this.deltaX();
         }
 
     },
 
     hullHeight: function () {
 
-        if (this.deltaY > 0)
+        if (this.deltaY() > 0)
         {
-            return this.hitArea.height + this.deltaY;
+            return this.height + this.deltaY();
         }
         else
         {
-            return this.hitArea.height - this.deltaY;
+            return this.height - this.deltaY();
         }
 
     },
