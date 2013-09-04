@@ -25,11 +25,11 @@
 
 	function create() {
 
-		game.world.setSize(2000, 2000);
+		// game.world.setSize(2000, 2000);
 
 		aliens = [];
 
-		for (var i = 0; i < 1000; i++)
+		for (var i = 0; i < 10; i++)
 		{
 			var s = game.add.sprite(game.world.randomX, game.world.randomY, 'baddie');
 			s.name = 'alien' + s;
@@ -47,19 +47,11 @@
 
 	function update() {
 
+		// total = game.physics.overlap(ship);
+
 		for (var i = 0; i < aliens.length; i++)
 		{
-			aliens[i].alpha = 0.3;
-		}
-
-		total = game.physics.quadTree.retrieve(ship);
-
-		//	Get the ships top-most ID. If the length of that ID is 1 then we can ignore every other result, 
-		//	it's simply not colliding with anything :)
-
-		for (var i = 0; i < total.length; i++)
-		{
-			total[i].sprite.alpha = 1;
+			game.physics.separate(ship.body, aliens[i].body);
 		}
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
@@ -84,21 +76,13 @@
 
 	function render() {
 
-		for (var i = 0; i < aliens.length; i++)
-		{
-			// game.debug.renderRectangle(aliens[i].bounds);
-		}
-
-		game.debug.renderText(total.length, 32, 32);
 		game.debug.renderQuadTree(game.physics.quadTree);
-		// game.debug.renderRectangle(ship);
+		game.debug.renderRectangle(ship.body.bounds);
 
-		game.debug.renderText('Index: ' + ship.body.quadTreeIndex, 32, 80);
-		
-		for (var i = 0; i < ship.body.quadTreeIDs.length; i++)
-		{
-			game.debug.renderText('ID: ' + ship.body.quadTreeIDs[i], 32, 100 + (i * 20));
-		}
+		game.debug.renderText('up: ' + ship.body.touching.up, 32, 70);
+		game.debug.renderText('down: ' + ship.body.touching.down, 32, 90);
+		game.debug.renderText('left: ' + ship.body.touching.left, 32, 110);
+		game.debug.renderText('right: ' + ship.body.touching.right, 32, 130);
 
 	}
 

@@ -3,7 +3,11 @@
  * @version 1.0
  * @author Timo Hausmann
  *
- * Optimised to reduce temp. var creation and increase performance by Richard Davey
+ * @version 1.2, September 4th 2013
+ * @author Richard Davey
+ * The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
+ * it massively to add node indexing, removed lots of temp. var creation and significantly
+ * increased performance as a result.
  *
  * Original version at https://github.com/timohausmann/quadtree-js/
  */
@@ -37,8 +41,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 * @param Integer maxLevels		(optional) total max levels inside root QuadTree (default: 4) 
 * @param Integer level		(optional) deepth level, required for subnodes  
 */
-Phaser.QuadTree = function (x, y, width, height, maxObjects, maxLevels, level) {
+Phaser.QuadTree = function (physicsManager, x, y, width, height, maxObjects, maxLevels, level) {
 		
+	this.physicsManager = physicsManager;
+	this.ID = physicsManager.quadTreeID;
+	physicsManager.quadTreeID++;
+
 	this.maxObjects = maxObjects || 10;
 	this.maxLevels = maxLevels || 4;
 	this.level = level || 0;
@@ -66,67 +74,19 @@ Phaser.QuadTree.prototype = {
 	 */
 	split: function() {
 
-		this.level + 1;
+		this.level++;
 		
 	 	//	top right node
-		this.nodes[0] = new Phaser.QuadTree(this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+		this.nodes[0] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
 		
 		//	top left node
-		this.nodes[1] = new Phaser.QuadTree(this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+		this.nodes[1] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
 		
 		//	bottom left node
-		this.nodes[2] = new Phaser.QuadTree(this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+		this.nodes[2] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
 		
 		//	bottom right node
-		this.nodes[3] = new Phaser.QuadTree(this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
-
-	},
-
-	/*
-	 * Determine which node the object belongs to
-	 * @param Object pRect		bounds of the area to be checked, with x, y, width, height
-	 * @return Integer		index of the subnode (0-3), or -1 if pRect cannot completely fit within a subnode and is part of the parent node
-	 */
-	getIndex: function (rect) {
-		
-		var index = -1;
-	 
-		// var verticalMidpoint = this.bounds.x + (this.bounds.width / 2);
-		var verticalMidpoint = this.bounds.right;
-		// var horizontalMidpoint = this.bounds.y + (this.bounds.height / 2);
-		var horizontalMidpoint = this.bounds.bottom;
-
-		var topQuadrant = (rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom);
-		var bottomQuadrant = (rect.y > this.bounds.bottom);
-
-		//	rect can completely fit within the left quadrants
-		if (rect.x < verticalMidpoint && rect.right < verticalMidpoint)
-		{
-			if (topQuadrant)
-			{
-				//	rect can completely fit within the top quadrants
-				index = 1;
-			}
-			else if (bottomQuadrant)
-			{
-				//	rect can completely fit within the bottom quadrants
-				index = 2;
-			}
-		}
-		else if (rect.x > verticalMidpoint)
-		{
-			//	rect can completely fit within the right quadrants
-			if (topQuadrant)
-			{
-				index = 0;
-			}
-			else if (bottomQuadrant)
-			{
-				index = 3;
-			}
-		}
-	 
-		return index;
+		this.nodes[3] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
 
 	},
 
@@ -142,7 +102,6 @@ Phaser.QuadTree.prototype = {
 		var index;
 	 	
 	 	//	if we have subnodes ...
-		// if (typeof this.nodes[0] !== 'undefined')
 		if (this.nodes[0] != null)
 		{
 			index = this.getIndex(body.bounds);
@@ -156,10 +115,9 @@ Phaser.QuadTree.prototype = {
 	 
 	 	this.objects.push(body);
 		
-		if (this.objects.length > this.maxObjects && this.level < this.maxLevels )
+		if (this.objects.length > this.maxObjects && this.level < this.maxLevels)
 		{
 			//	Split if we don't already have subnodes
-			// if (typeof this.nodes[0] === 'undefined')
 			if (this.nodes[0] == null)
 			{
 				this.split();
@@ -170,7 +128,7 @@ Phaser.QuadTree.prototype = {
 			{
 				index = this.getIndex(this.objects[i].bounds);
 				
-				if (index !== -1 )
+				if (index !== -1)
 				{
 					//	this is expensive - see what we can do about it
 					this.nodes[index].insert(this.objects.splice(i, 1)[0]);
@@ -183,6 +141,48 @@ Phaser.QuadTree.prototype = {
 		}
 	 },
 	 
+	/*
+	 * Determine which node the object belongs to
+	 * @param Object pRect		bounds of the area to be checked, with x, y, width, height
+	 * @return Integer		index of the subnode (0-3), or -1 if pRect cannot completely fit within a subnode and is part of the parent node
+	 */
+	getIndex: function (rect) {
+		
+		//	default is that rect doesn't fit, i.e. it straddles the internal quadrants
+		var index = -1;
+
+		if (rect.x < this.bounds.right && rect.right < this.bounds.right)
+		{
+			if ((rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom))
+			{
+				//	rect fits within the top-left quadrant of this quadtree
+				index = 1;
+			}
+			else if ((rect.y > this.bounds.bottom))
+			{
+				//	rect fits within the bottom-left quadrant of this quadtree
+				index = 2;
+			}
+		}
+		else if (rect.x > this.bounds.right)
+		{
+			//	rect can completely fit within the right quadrants
+			if ((rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom))
+			{
+				//	rect fits within the top-right quadrant of this quadtree
+				index = 0;
+			}
+			else if ((rect.y > this.bounds.bottom))
+			{
+				//	rect fits within the bottom-right quadrant of this quadtree
+				index = 3;
+			}
+		}
+	 
+		return index;
+
+	},
+
 	 /*
 	 * Return all objects that could collide with the given object
 	 * @param Object pRect		bounds of the object to be checked, with x, y, width, height
@@ -190,25 +190,27 @@ Phaser.QuadTree.prototype = {
 	 */
 	retrieve: function (sprite) {
 	 	
-		var index = this.getIndex(sprite.body.bounds);
 		var returnObjects = this.objects;
-			
-		//	if we have subnodes ...
-		// if (typeof this.nodes[0] !== 'undefined')
+
+		sprite.body.quadTreeIndex = this.getIndex(sprite.body.bounds);
+
+		//	Temp store for the node IDs this sprite is in, we can use this for fast elimination later
+		sprite.body.quadTreeIDs.push(this.ID);
+
 		if (this.nodes[0])
 		{
 			//	if rect fits into a subnode ..
-			if (index !== -1)
+			if (sprite.body.quadTreeIndex !== -1)
 			{
-				returnObjects = returnObjects.concat(this.nodes[index].retrieve(sprite));
+				returnObjects = returnObjects.concat(this.nodes[sprite.body.quadTreeIndex].retrieve(sprite));
 			}
 			else
 			{
-				//	if rect does not fit into a subnode, check it against all subnodes
-				for (var i = 0, len = this.nodes.length; i < len; i++)
-				{
-					returnObjects = returnObjects.concat(this.nodes[i].retrieve(sprite));
-				}
+				//	if rect does not fit into a subnode, check it against all subnodes (unrolled for speed)
+				returnObjects = returnObjects.concat(this.nodes[0].retrieve(sprite));
+				returnObjects = returnObjects.concat(this.nodes[1].retrieve(sprite));
+				returnObjects = returnObjects.concat(this.nodes[2].retrieve(sprite));
+				returnObjects = returnObjects.concat(this.nodes[3].retrieve(sprite));
 			}
 		}
 	 

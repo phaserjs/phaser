@@ -117,6 +117,7 @@ Phaser.Utils.Debug.prototype = {
         {
             this.context.strokeStyle = color;
             this.context.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            this.renderText(quadtree.ID + ' / ' + quadtree.objects.length, bounds.x + 4, bounds.y + 16, 'rgb(0,200,0)', '12px Courier');
         }
         else
         {
@@ -145,13 +146,8 @@ Phaser.Utils.Debug.prototype = {
 
         if (showBounds)
         {
-            this.context.beginPath();
-            this.context.moveTo(sprite.bounds.x, sprite.bounds.y);
-            this.context.lineTo(sprite.bounds.x + sprite.bounds.width, sprite.bounds.y);
-            this.context.lineTo(sprite.bounds.x + sprite.bounds.width, sprite.bounds.y + sprite.bounds.height);
-            this.context.lineTo(sprite.bounds.x, sprite.bounds.y + sprite.bounds.height);
-            this.context.closePath();
             this.context.strokeStyle = 'rgba(255,0,255,0.5)';
+            this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
             this.context.stroke();
         }
 
@@ -514,8 +510,8 @@ Phaser.Utils.Debug.prototype = {
             return;
         }
 
-        if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
-        if (typeof font === "undefined") { font = '16px Courier'; }
+        color = color || 'rgb(255,255,255)';
+        font = font || '16px Courier';
 
         this.start();
         this.context.font = font;

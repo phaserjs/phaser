@@ -656,11 +656,15 @@ Phaser.Rectangle.containsPoint = function (a, point) {
 * @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
 */
 Phaser.Rectangle.containsRect = function (a, b) {
+
     //  If the given rect has a larger volume than this one then it can never contain it
-    if(a.volume > b.volume) {
+    if (a.volume > b.volume)
+    {
         return false;
     }
+
     return (a.x >= b.x && a.y >= b.y && a.right <= b.right && a.bottom <= b.bottom);
+
 };
 
 /**
@@ -685,9 +689,10 @@ Phaser.Rectangle.equals = function (a, b) {
 */
 Phaser.Rectangle.intersection = function (a, b, out) {
 
-    if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
+    out  = out || new Phaser.Rectangle;
 
-    if (Phaser.Rectangle.intersects(a, b)) {
+    if (Phaser.Rectangle.intersects(a, b))
+    {
         out.x = Math.max(a.x, b.x);
         out.y = Math.max(a.y, b.y);
         out.width = Math.min(a.right, b.right) - out.x;

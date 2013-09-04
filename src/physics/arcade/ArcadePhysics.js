@@ -19,20 +19,21 @@ Phaser.Physics.Arcade = function (game) {
 	*/
 	this.maxLevels = 4;
 
-    this.LEFT = 0x0001;
-    this.RIGHT = 0x0010;
-    this.UP = 0x0100;
-    this.DOWN = 0x1000;
     this.NONE = 0;
-    this.CEILING = this.UP;
-    this.FLOOR = this.DOWN;
-    this.WALL = this.LEFT | this.RIGHT;
-    this.ANY = this.LEFT | this.RIGHT | this.UP | this.DOWN;
+    this.UP = 1;
+    this.DOWN = 2;
+    this.LEFT = 3;
+    this.RIGHT = 4;
+    this.CEILING = 1;
+    this.FLOOR = 2;
+    this.WALL = 5;
+    this.ANY = 6;
 
 	this.OVERLAP_BIAS = 4;
 	this.TILE_OVERLAP = false;
 
-	this.quadTree = null;
+    this.quadTree = null;
+	this.quadTreeID = 0;
 
 	//	avoid gc spikes by caching these values for re-use
 	this._obj1Bounds = new Phaser.Rectangle;
@@ -140,7 +141,8 @@ Phaser.Physics.Arcade.prototype = {
     preUpdate: function () {
 
     	//	Create our tree which all of the Physics bodies will add themselves to
-    	this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+        this.quadTreeID = 0;
+    	this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
     },
 
@@ -162,7 +164,31 @@ Phaser.Physics.Arcade.prototype = {
      */
     overlap: function (object1, object2, notifyCallback, processCallback) {
 
-        return result;
+        object2 = object2 || null;
+        notifyCallback = notifyCallback || null;
+        processCallback = processCallback || this.separate;
+
+        //  Get the ships top-most ID. If the length of that ID is 1 then we can ignore every other result, 
+        //  it's simply not colliding with anything :)
+        var potentials = this.quadTree.retrieve(object1);
+        var output = [];
+
+        for (var i = 0, len = potentials.length; i < len; i++)
+        {
+            if (this.separate(object1.body, potentials[i]).body)
+            {
+                output.push(potentials[i]);
+            }
+        }
+
+        if (output.length > 0)
+        {
+            return output;
+        }
+        else
+        {
+            return null;
+        }
 
     },
 
@@ -207,32 +233,32 @@ Phaser.Physics.Arcade.prototype = {
                 this._maxOverlap = object1.deltaAbsX() + object2.deltaAbsX() + this.OVERLAP_BIAS;
 
                 //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                if (object1.deltaAbsX() > object2.deltaAbsX())
+                if (object1.deltaX() > object2.deltaX())
                 {
                     this._overlap = object1.x + object1.width - object2.x;
 
-                    if ((this._overlap > this._maxOverlap) || !(object1.allowCollisions & this.RIGHT) || !(object2.allowCollisions & this.LEFT))
+                    if ((this._overlap > this._maxOverlap) || object1.allowCollision.right == false || object2.allowCollision.left == false)
                     {
                         this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching |= this.RIGHT;
-                        object2.touching |= this.LEFT;
+                        object1.touching.right = true;
+                        object2.touching.left = true;
                     }
                 }
                 else if (object1.deltaX() < object2.deltaX())
                 {
                     this._overlap = object1.x - object2.width - object2.x;
 
-                    if ((-this._overlap > this._maxOverlap) || !(object1.allowCollisions & this.LEFT) || !(object2.allowCollisions & this.RIGHT))
+                    if ((-this._overlap > this._maxOverlap) || object1.allowCollision.left == false || object2.allowCollision.right == false)
                     {
                         this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching |= this.LEFT;
-                        object2.touching |= this.RIGHT;
+                        object1.touching.left = true;
+                        object2.touching.right = true;
                     }
                 }
             }
@@ -309,28 +335,28 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     this._overlap = object1.y + object1.height - object2.y;
 
-                    if ((this._overlap > this._maxOverlap) || !(object1.allowCollisions & this.DOWN) || !(object2.allowCollisions & this.UP))
+                    if ((this._overlap > this._maxOverlap) || object1.allowCollision.down == false || object2.allowCollision.up == false)
                     {
                         this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching |= this.DOWN;
-                        object2.touching |= this.UP;
+                        object1.touching.down = true;
+                        object2.touching.up = true;
                     }
                 }
                 else if (object1.deltaY() < object2.deltaY())
                 {
                     this._overlap = object1.y - object2.height - object2.y;
 
-                    if ((-this._overlap > this._maxOverlap) || !(object1.allowCollisions & this.UP) || !(object2.allowCollisions & this.DOWN))
+                    if ((-this._overlap > this._maxOverlap) || object1.allowCollision.up == false || object2.allowCollision.down == false)
                     {
                         this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching |= this.UP;
-                        object2.touching |= this.DOWN;
+                        object1.touching.up = true;
+                        object2.touching.down = true;
                     }
                 }
             }

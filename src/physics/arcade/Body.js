@@ -38,23 +38,16 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.maxAngular = 1000;
     this.mass = 1;
 
-    //	Handy consts
-    this.LEFT = 0x0001;
-    this.RIGHT = 0x0010;
-    this.UP = 0x0100;
-    this.DOWN = 0x1000;
-    this.NONE = 0;
-    this.CEILING = this.UP;
-    this.FLOOR = this.DOWN;
-    this.WALL = this.LEFT | this.RIGHT;
-    this.ANY = this.LEFT | this.RIGHT | this.UP | this.DOWN;
+    this.quadTreeIndex = [];
+
+    //	Allow collision
+    this.allowCollision = { any: true, up: true, down: true, left: true, right: true };
+    this.touching = { none: true, up: false, down: false, left: false, right: false };
+    this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
 
     this.immovable = false;
     this.moves = true;
-    this.touching = 0;
-    this.wasTouching = 0;
     this.rotation = 0;
-    this.allowCollisions = this.ANY;
     this.allowRotation = false;
     this.allowGravity = true;
 
@@ -85,6 +78,19 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	update: function () {
 
+		//	Store and reset collision flags
+	    this.wasTouching.none = this.touching.none;
+	    this.wasTouching.up = this.touching.up;
+	    this.wasTouching.down = this.touching.down;
+	    this.wasTouching.left = this.touching.left;
+	    this.wasTouching.right = this.touching.right;
+
+	    this.touching.none = true;
+	    this.touching.up = false;
+	    this.touching.down = false;
+	    this.touching.left = false;
+	    this.touching.right = false;
+
 		this.lastX = this.x;
 		this.lastY = this.y;
 
@@ -95,6 +101,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 		if (this.allowCollisions & this.ANY)
 		{
+		    this.quadTreeIDs = [];
+		    this.quadTreeIndex = -1;
 			this.game.physics.quadTree.insert(this);
 		}
 
