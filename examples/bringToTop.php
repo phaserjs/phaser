@@ -30,33 +30,33 @@
 
 	function create() {
 
-		s = game.add.sprite(600, game.world.centerY, 'sonic');
+		s = game.add.sprite(600, 100, 'sonic');
 		s.name = 'X';
 
-		a = game.add.child(s, -70, 0, 'sonic');
-		b = game.add.child(s, -140, 0, 'sonic');
-		c = game.add.child(s, -210, 0, 'sonic');
-		d = game.add.child(s, -280, 0, 'sonic');
-		e = game.add.child(s, -350, 0, 'sonic');
-		f = game.add.child(s, -420, 0, 'sonic');
+		a = game.add.child(s, -70, 200, 'sonic');
+		b = game.add.child(s, -140, 200, 'sonic');
+		c = game.add.child(s, -210, 200, 'sonic');
+		d = game.add.child(s, -280, 200, 'sonic');
+		e = game.add.child(s, -350, 200, 'sonic');
+		f = game.add.child(s, -420, 200, 'sonic');
 
-		a.name = 'a';
-		b.name = 'b';
-		c.name = 'c';
-		d.name = 'd';
-		e.name = 'e';
-		f.name = 'f';
+		a.name = 'A';
+		b.name = 'B';
+		c.name = 'C';
+		d.name = 'D';
+		e.name = 'E';
+		f.name = 'F';
 
 		tests = [a,b,c,d,e,f];
 
 		game.input.onUp.add(runChange, this);
 
-		scanList(s);
+		scanList(game.world._stage);
 
 	}
 
 	function runChange () {
-		changeOrder(b, c);
+		changeOrder(e, f);
 	}
 
 	function changeOrder (node1, node2) {
@@ -68,15 +68,31 @@
 
 		if (index1 !== -1 && index2 !== -1)
 		{
+			//	Cache the node values
 			var node1Prev = node1._iPrev;
 			var node1Next = node1._iNext;
 			var node2Prev = node2._iPrev;
 			var node2Next = node2._iNext;
 
+			//	Now deep scan search and replace
+			var displayObject = this.game.world._stage;
+
+			var testObject = displayObject.last._iNext;
+			displayObject = displayObject.first;
+			
+			do	
+			{
+
+				displayObject = displayObject._iNext;
+
+			}
+			while(displayObject != testObject)
+
+
 			//	Check for neighbours (cater for any order parameters)
 			if (node1._iNext == node2)
 			{
-				console.log('A-B neighbour swap');
+				console.log('A-B neighbour swap. Parent is', node1.parent.name, 'tail is', tail.name);
 
 				//	Starting
 				//	Node 1 (A)			Node 2 (B)		X 			C
@@ -88,21 +104,42 @@
 				//	Next: C 			Next: A 		Next: B 	Next: D
 				//	Prev: B 			Prev: X 		Prev: -		Prev: A
 
-				node1._iNext = node2Next;
-				node1._iPrev = node2;
-				node2._iNext = node1;
-				node2._iPrev = node1Prev;
-
-				//	Notify the head and tail
-				if (node1Prev)
+				//	Was node2 a tail node?
+				/*
+				if (node2 === tail)
 				{
-					node1Prev._iNext = node2;
-				}
+					node2._iNext = node1;
+					node2._iPrev = node1Prev;
+					node1._iNext = null;
+					node1._iPrev = node2;
 
-				if (node2Next)
-				{
-					node2Next._iPrev = node1;
+					//	Notify the head and tail
+					if (node1Prev)
+					{
+						node1Prev._iNext = node2;
+					}
+
+					node1.parent.last = node1;
 				}
+				else
+				{
+				*/
+					node1._iNext = node2Next;
+					node1._iPrev = node2;
+					node2._iNext = node1;
+					node2._iPrev = node1Prev;
+
+					//	Notify the head and tail
+					if (node1Prev)
+					{
+						node1Prev._iNext = node2;
+					}
+
+					if (node2Next)
+					{
+						node2Next._iPrev = node1;
+					}
+				// }
 			}
 			else if (node2._iNext == node1)
 			{
@@ -197,11 +234,14 @@
 			}
 		} 
 
-		scanList(s);
+		scanList(game.world._stage);
 
 	}
 
 	function scanList (sprite) {
+
+		console.log('Node  |  Next  |  Prev  |  First  |  Last');
+		console.log('------|--------|--------|---------|---------');
 
 		var displayObject = sprite;
 
@@ -210,7 +250,7 @@
 		
 		do	
 		{
-			var name = displayObject.name || 'nuffin';
+			var name = displayObject.name || '~';
 			var nameNext = '-';
 			var namePrev = '-';
 			var nameFirst = '-';
@@ -256,7 +296,7 @@
 				nameLast = '-';
 			}
 
-			console.log('node:', name, 'next:', nameNext, 'prev:', namePrev, 'first:', nameFirst, 'last:', nameLast);
+			console.log(name + '     |   ' + nameNext + '    |   ' + namePrev + '    |   ' + nameFirst + '     |    ' + nameLast);
 
 			displayObject = displayObject._iNext;
 
