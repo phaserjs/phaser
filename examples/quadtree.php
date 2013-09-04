@@ -20,15 +20,20 @@
 	}
 
 	var ship;
+	var total;
+	var aliens;
 
 	function create() {
 
-		for (var i = 0; i < 50; i++)
+		aliens = [];
+
+		for (var i = 0; i < 100; i++)
 		{
 			var s = game.add.sprite(game.world.randomX, game.world.randomY, 'baddie');
 			s.body.collideWorldBounds = true;
 			s.body.bounce.setTo(1, 1);
-			s.body.velocity.setTo(50 + Math.random() * 50, 50 + Math.random() * 50);
+			s.body.velocity.setTo(10 + Math.random() * 10, 10 + Math.random() * 10);
+			aliens.push(s);
 		}
 
 		ship = game.add.sprite(400, 400, 'ship');
@@ -38,6 +43,18 @@
 	}
 
 	function update() {
+
+		for (var i = 0; i < aliens.length; i++)
+		{
+			aliens[i].alpha = 0.3;
+		}
+
+		total = game.physics.quadTree.retrieve(ship);
+
+		for (var i = 0; i < total.length; i++)
+		{
+			total[i].sprite.alpha = 1;
+		}
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
@@ -61,6 +78,14 @@
 
 	function render() {
 
+		for (var i = 0; i < aliens.length; i++)
+		{
+			game.debug.renderRectangle(aliens[i].bounds);
+		}
+
+		game.debug.renderText(total.length, 32, 32);
+		game.debug.renderQuadTree(game.physics.quadTree);
+		game.debug.renderRectangle(ship);
 
 	}
 

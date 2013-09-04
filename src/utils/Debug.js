@@ -105,6 +105,31 @@ Phaser.Utils.Debug.prototype = {
 
     },
 
+    renderQuadTree: function (quadtree, color) {
+
+        color = color || 'rgba(255,0,0,0.3)';
+
+        this.start();
+
+        var bounds = quadtree.bounds;
+
+        if (quadtree.nodes.length === 0)
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+        }
+        else
+        {
+            for (var i = 0; i < quadtree.nodes.length; i++)
+            {
+                this.renderQuadTree(quadtree.nodes[i]);
+            }
+        }
+
+        this.stop();
+
+    },
+
     renderSpriteCorners: function (sprite, showText, showBounds, color) {
 
         if (this.context == null)
