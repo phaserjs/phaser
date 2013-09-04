@@ -19,16 +19,6 @@ Phaser.Physics.Arcade = function (game) {
 	*/
 	this.maxLevels = 4;
 
-    this.NONE = 0;
-    this.UP = 1;
-    this.DOWN = 2;
-    this.LEFT = 3;
-    this.RIGHT = 4;
-    this.CEILING = 1;
-    this.FLOOR = 2;
-    this.WALL = 5;
-    this.ANY = 6;
-
 	this.OVERLAP_BIAS = 4;
 	this.TILE_OVERLAP = false;
 
@@ -49,12 +39,6 @@ Phaser.Physics.Arcade = function (game) {
 };
 
 Phaser.Physics.Arcade.prototype = {
-
-	collide: function (objectOrGroup1, objectOrGroup2, notifyCallback) {
-
-		return this.overlap(objectOrGroup1, objectOrGroup2, notifyCallback, this.separate);
-
-	},
 
     updateMotion: function (body) {
 
@@ -153,20 +137,49 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-     /**
-     * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
-     * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-     * @param object1 The first GameObject or Group to check. If null the world.group is used.
-     * @param object2 The second GameObject or Group to check.
-     * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-     * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-     * @returns {boolean} true if the objects overlap, otherwise false.
-     */
-    overlap: function (object1, object2, notifyCallback, processCallback) {
+    //  Collides the given object with everything in the world quadtree
+    collide: function (object, notifyCallback, callbackContext) {
+
+        return this.overlap(object, null, notifyCallback, this.separate, callbackContext);
+
+    },
+
+    collideGroup: function (group, notifyCallback, callbackContext) {
+
+        notifyCallback = notifyCallback || null;
+        callbackContext = callbackContext || notifyCallback;
+
+        for (var g = 0, len = group.length; g < len; g++)
+        {
+            for (var i = 0, gi = group.length; i < gi; i++)
+            {
+                if (this.separate(group[g].body, group[i].body))
+                {
+                    if (notifyCallback)
+                    {
+                        notifyCallback.call(callbackContext, group[g], group[i].sprite);
+                    }
+                }
+            }
+        }
+
+    },
+
+    /**
+    * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
+    * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
+    * @param object1 The first GameObject or Group to check. If null the world.group is used.
+    * @param object2 The second GameObject or Group to check.
+    * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
+    * @returns {boolean} true if the objects overlap, otherwise false.
+    */
+    overlap: function (object1, object2, notifyCallback, processCallback, callbackContext) {
 
         object2 = object2 || null;
         notifyCallback = notifyCallback || null;
         processCallback = processCallback || this.separate;
+        callbackContext = callbackContext || this;
 
         //  Get the ships top-most ID. If the length of that ID is 1 then we can ignore every other result, 
         //  it's simply not colliding with anything :)
@@ -175,20 +188,18 @@ Phaser.Physics.Arcade.prototype = {
 
         for (var i = 0, len = potentials.length; i < len; i++)
         {
-            if (this.separate(object1.body, potentials[i]).body)
+            if (processCallback.call(callbackContext, object1.body, potentials[i]))
             {
+                if (notifyCallback)
+                {
+                    notifyCallback.call(callbackContext, object1, potentials[i].sprite);
+                }
+
                 output.push(potentials[i]);
             }
         }
 
-        if (output.length > 0)
-        {
-            return output;
-        }
-        else
-        {
-            return null;
-        }
+        return (output.length);
 
     },
 
@@ -409,5 +420,368 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
     },
+
+    /**
+    * Given the angle and speed calculate the velocity and return it as a Point
+    * 
+    * @param    angle   The angle (in degrees) calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+    * @param    speed   The speed it will move, in pixels per second sq
+    * 
+    * @return   A Point where Point.x contains the velocity x value and Point.y contains the velocity y value
+    */
+    velocityFromAngle: function (angle, speed, point) {
+
+        speed = speed || 0;
+        point = point || new Phaser.Point;
+
+        var a = this.game.math.degToRad(angle);
+
+        return point.setTo((Math.cos(a) * speed), (Math.sin(a) * speed));
+
+    },
+
+    /**
+     * Sets the source Sprite x/y velocity so it will move directly towards the destination Sprite at the speed given (in pixels per second)<br>
+     * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
+     * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
+     * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+     * If you need the object to accelerate, see accelerateTowardsObject() instead
+     * Note: Doesn't take into account acceleration, maxVelocity or drag (if you set drag or acceleration too high this object may not move at all)
+     * 
+     * @param   source      The Sprite on which the velocity will be set
+     * @param   dest        The Sprite where the source object will move to
+     * @param   speed       The speed it will move, in pixels per second (default is 60 pixels/sec)
+     * @param   maxTime     Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+     */
+    moveTowardsObject: function (source, dest, speed, maxTime) {
+
+        speed = speed || 60;
+        maxTime = maxTime || 0;
+
+        var a = this.angleBetween(source, dest);
+        
+        if (maxTime > 0)
+        {
+            var d = this.distanceBetween(source, dest);
+            
+            //  We know how many pixels we need to move, but how fast?
+            speed = d / (maxTime / 1000);
+        }
+        
+        source.body.velocity.x = Math.cos(a) * speed;
+        source.body.velocity.y = Math.sin(a) * speed;
+
+    },
+
+    /**
+     * Sets the x/y acceleration on the source Sprite so it will move towards the destination Sprite at the speed given (in pixels per second)<br>
+     * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
+     * If you don't need acceleration look at moveTowardsObject() instead.
+     * 
+     * @param   source          The Sprite on which the acceleration will be set
+     * @param   dest            The Sprite where the source object will move towards
+     * @param   speed           The speed it will accelerate in pixels per second
+     * @param   xSpeedMax       The maximum speed in pixels per second in which the sprite can move horizontally
+     * @param   ySpeedMax       The maximum speed in pixels per second in which the sprite can move vertically
+     */
+    accelerateTowardsObject: function (source, dest, speed, xSpeedMax, ySpeedMax) {
+
+        xSpeedMax = xSpeedMax || 1000;
+        ySpeedMax = ySpeedMax || 1000;
+
+        var a = this.angleBetween(source, dest);
+        
+        source.body.velocity.x = 0;
+        source.body.velocity.y = 0;
+        
+        source.body.acceleration.x = Math.cos(a) * speed;
+        source.body.acceleration.y = Math.sin(a) * speed;
+        
+        source.body.maxVelocity.x = xSpeedMax;
+        source.body.maxVelocity.y = ySpeedMax;
+
+    },
+
+    /**
+     * Move the given Sprite towards the mouse pointer coordinates at a steady velocity
+     * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
+     * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
+     * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+     * 
+     * @param   source      The Sprite to move
+     * @param   speed       The speed it will move, in pixels per second (default is 60 pixels/sec)
+     * @param   maxTime     Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+     */
+    moveTowardsMouse: function (source, speed, maxTime) {
+
+        speed = speed || 60;
+        maxTime = maxTime || 0;
+
+        var a = this.angleBetweenMouse(source);
+        
+        if (maxTime > 0)
+        {
+            var d = this.distanceToMouse(source);
+            
+            //  We know how many pixels we need to move, but how fast?
+            speed = d / (maxTime / 1000);
+        }
+        
+        source.body.velocity.x = Math.cos(a) * speed;
+        source.body.velocity.y = Math.sin(a) * speed;
+
+    },
+
+    /**
+     * Sets the x/y acceleration on the source Sprite so it will move towards the mouse coordinates at the speed given (in pixels per second)<br>
+     * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
+     * If you don't need acceleration look at moveTowardsMouse() instead.
+     * 
+     * @param   source          The Sprite on which the acceleration will be set
+     * @param   speed           The speed it will accelerate in pixels per second
+     * @param   xSpeedMax       The maximum speed in pixels per second in which the sprite can move horizontally
+     * @param   ySpeedMax       The maximum speed in pixels per second in which the sprite can move vertically
+     */
+    accelerateTowardsMouse: function (source, speed, xSpeedMax, ySpeedMax) {
+
+        xSpeedMax = xSpeedMax || 1000;
+        ySpeedMax = ySpeedMax || 1000;
+
+        var a = this.angleBetweenMouse(source);
+        
+        source.body.velocity.x = 0;
+        source.body.velocity.y = 0;
+        
+        source.body.acceleration.x = Math.cos(a) * speed;
+        source.body.acceleration.y = Math.sin(a) * speed;
+        
+        source.body.maxVelocity.x = xSpeedMax;
+        source.body.maxVelocity.y = ySpeedMax;
+
+    },
+
+    /**
+     * Sets the x/y velocity on the source Sprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
+     * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.<br>
+     * Timings are approximate due to the way Flash timers work, and irrespective of SWF frame rate. Allow for a variance of +- 50ms.<br>
+     * The source object doesn't stop moving automatically should it ever reach the destination coordinates.<br>
+     * 
+     * @param   source      The Sprite to move
+     * @param   target      The Point coordinates to move the source Sprite towards
+     * @param   speed       The speed it will move, in pixels per second (default is 60 pixels/sec)
+     * @param   maxTime     Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the source will arrive at destination in the given number of ms
+     */
+    moveTowardsPoint: function (source, target, speed, maxTime) {
+
+        speed = speed || 60;
+        maxTime = maxTime || 0;
+
+        var a = this.angleBetweenPoint(source, target);
+        
+        if (maxTime > 0)
+        {
+            var d = this.distanceToPoint(source, target);
+            
+            //  We know how many pixels we need to move, but how fast?
+            speed = d / (maxTime / 1000);
+        }
+        
+        source.body.velocity.x = Math.cos(a) * speed;
+        source.body.velocity.y = Math.sin(a) * speed;
+
+    },
+
+    /**
+     * Sets the x/y acceleration on the source Sprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
+     * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
+     * If you don't need acceleration look at moveTowardsPoint() instead.
+     * 
+     * @param   source          The Sprite on which the acceleration will be set
+     * @param   target          The Point coordinates to move the source Sprite towards
+     * @param   speed           The speed it will accelerate in pixels per second
+     * @param   xSpeedMax       The maximum speed in pixels per second in which the sprite can move horizontally
+     * @param   ySpeedMax       The maximum speed in pixels per second in which the sprite can move vertically
+     */
+    accelerateTowardsPoint: function (source, target, speed, xSpeedMax, ySpeedMax) {
+
+        xSpeedMax = xSpeedMax || 1000;
+        ySpeedMax = ySpeedMax || 1000;
+
+        var a = this.angleBetweenPoint(source, target);
+        
+        source.body.velocity.x = 0;
+        source.body.velocity.y = 0;
+        
+        source.body.acceleration.x = Math.cos(a) * speed;
+        source.body.acceleration.y = Math.sin(a) * speed;
+        
+        source.body.maxVelocity.x = xSpeedMax;
+        source.body.maxVelocity.y = ySpeedMax;
+
+    },
+
+    /**
+     * Find the distance (in pixels, rounded) between two Sprites, taking their origin into account
+     * 
+     * @param   a   The first Sprite
+     * @param   b   The second Sprite
+     * @return  int Distance (in pixels)
+     */
+    distanceBetween: function (a, b) {
+
+        var dx = a.center.x - b.center.x;
+        var dy = a.center.y - b.center.y;
+        
+        return Math.sqrt(dx * dx + dy * dy);
+
+    },
+
+    /**
+     * Find the distance (in pixels, rounded) from an Sprite to the given Point, taking the source origin into account
+     * 
+     * @param   a       The Sprite
+     * @param   target  The Point
+     * @return  int     Distance (in pixels)
+     */
+    distanceToPoint: function (a, target) {
+
+        var dx = a.center.x - target.x;
+        var dy = a.center.y - target.y;
+        
+        return Math.sqrt(dx * dx + dy * dy);
+
+    },
+
+    /**
+     * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
+     * 
+     * @param   a   The Sprite to test against
+     * @return  int The distance between the given sprite and the mouse coordinates
+     */
+    distanceToMouse: function (a) {
+
+        var dx = a.center.x - this.game.input.x;
+        var dy = a.center.y - this.game.input.y;
+        
+        return Math.sqrt(dx * dx + dy * dy);
+
+    },
+
+    /**
+     * Find the angle (in radians) between an Sprite and an Point. The source sprite takes its x/y and origin into account.
+     * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+     * 
+     * @param   a           The Sprite to test from
+     * @param   target      The Point to angle the Sprite towards
+     * @param   asDegrees   If you need the value in degrees instead of radians, set to true
+     * 
+     * @return  Number The angle (in radians unless asDegrees is true)
+     */
+    angleBetweenPoint: function (a, target, asDegrees) {
+
+        asDegrees = asDegrees || false;
+
+        var dx = target.x - a.center.x;
+        var dy = target.y - a.center.y;
+        
+        if (asDegrees)
+        {
+            return this.game.math.radToDeg(Math.atan2(dy, dx));
+        }
+        else
+        {
+            return Math.atan2(dy, dx);
+        }
+
+    },
+
+    /**
+     * Find the angle (in radians) between the two Sprite, taking their x/y and origin into account.
+     * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+     * 
+     * @param   a           The Sprite to test from
+     * @param   b           The Sprite to test to
+     * @param   asDegrees   If you need the value in degrees instead of radians, set to true
+     * 
+     * @return  Number The angle (in radians unless asDegrees is true)
+     */
+    angleBetween: function (a, b, asDegrees) {
+
+        asDegrees = asDegrees || false;
+
+        var dx = b.center.x - a.center.x;
+        var dy = b.center.y - a.center.y;
+        
+        if (asDegrees)
+        {
+            return this.game.math.radToDeg(Math.atan2(dy, dx));
+        }
+        else
+        {
+            return Math.atan2(dy, dx);
+        }
+
+    },
+
+    /**
+     * Given the GameObject and speed calculate the velocity and return it as an Point based on the direction the sprite is facing
+     * 
+     * @param   parent  The Sprite to get the facing value from
+     * @param   speed   The speed it will move, in pixels per second sq
+     * 
+     * @return  An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
+     */
+    velocityFromFacing: function (parent, speed) {
+
+        /*
+        var a;
+        
+        if (parent.facing == Collision.LEFT)
+        {
+            a = this._game.math.degreesToRadians(180);
+        }
+        else if (parent.facing == Collision.RIGHT)
+        {
+            a = this._game.math.degreesToRadians(0);
+        }
+        else if (parent.facing == Collision.UP)
+        {
+            a = this._game.math.degreesToRadians(-90);
+        }
+        else if (parent.facing == Collision.DOWN)
+        {
+            a = this._game.math.degreesToRadians(90);
+        }
+        
+        return new Point(Math.cos(a) * speed, Math.sin(a) * speed);
+        */
+
+    },
+    
+    /**
+     * Find the angle (in radians) between an Sprite and the mouse, taking their x/y and origin into account.
+     * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+     * 
+     * @param   a           The Object to test from
+     * @param   asDegrees   If you need the value in degrees instead of radians, set to true
+     * 
+     * @return  Number The angle (in radians unless asDegrees is true)
+     */
+    angleBetweenMouse: function (a, asDegrees) {
+
+        asDegrees = asDegrees || false;
+
+        var dx = this.game.input.x - a.bounds.x;
+        var dy = this.game.input.y - a.bounds.y;
+        
+        if (asDegrees)
+        {
+            return this.game.math.radToDeg(Math.atan2(dy, dx));
+        }
+        else
+        {
+            return Math.atan2(dy, dx);
+        }
+    }
 
 };

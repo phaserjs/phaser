@@ -38,10 +38,11 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.maxAngular = 1000;
     this.mass = 1;
 
-    this.quadTreeIndex = [];
+    this.quadTreeIDs = [];
+    this.quadTreeIndex = -1;
 
     //	Allow collision
-    this.allowCollision = { any: true, up: true, down: true, left: true, right: true };
+    this.allowCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
     this.touching = { none: true, up: false, down: false, left: false, right: false };
     this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
 
@@ -99,7 +100,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.bounds.x = this.x;
 		this.bounds.y = this.y;
 
-		if (this.allowCollisions & this.ANY)
+		if (this.allowCollision.none == false && this.sprite.visible && this.sprite.alive)
 		{
 		    this.quadTreeIDs = [];
 		    this.quadTreeIndex = -1;
