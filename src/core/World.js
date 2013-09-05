@@ -105,43 +105,43 @@ Phaser.World.prototype = {
 
 	},
 
-	swapChildren: function (stage, node1, node2) {
+	swapChildren: function (stage, child1, child2) {
 
-		if (node1 === node2 || !node1.parent || !node2.parent)
+		if (child1 === child2 || !child1.parent || !child2.parent)
 		{
-			console.warn('You cannot swap a node with itself or swap un-parented nodes');
+			console.warn('You cannot swap a child with itself or swap un-parented children');
 			return;
 		}
 
-		//	Cache the node values
-		var node1Prev = node1._iPrev;
-		var node1Next = node1._iNext;
-		var node2Prev = node2._iPrev;
-		var node2Next = node2._iNext;
+		//	Cache the values
+		var child1Prev = child1._iPrev;
+		var child1Next = child1._iNext;
+		var child2Prev = child2._iPrev;
+		var child2Next = child2._iNext;
 
 		var endNode = stage.last._iNext;
 		var currentNode = stage.first;
 			
 		do	
 		{
-			if (currentNode !== node1 && currentNode !== node2)
+			if (currentNode !== child1 && currentNode !== child2)
 			{
-				if (currentNode.first === node1)
+				if (currentNode.first === child1)
 				{
-					currentNode.first = node2;
+					currentNode.first = child2;
 				}
-				else if (currentNode.first === node2)
+				else if (currentNode.first === child2)
 				{
-					currentNode.first = node1;
+					currentNode.first = child1;
 				}
 
-				if (currentNode.last === node1)
+				if (currentNode.last === child1)
 				{
-					currentNode.last = node2;
+					currentNode.last = child2;
 				}
-				else if (currentNode.last === node2)
+				else if (currentNode.last === child2)
 				{
-					currentNode.last = node1;
+					currentNode.last = child1;
 				}
 			}
 
@@ -149,40 +149,40 @@ Phaser.World.prototype = {
 		}
 		while (currentNode != endNode)
 
-		if (node1._iNext == node2)
+		if (child1._iNext == child2)
 		{
-			//	This is an A-B neighbour swap
-			node1._iNext = node2Next;
-			node1._iPrev = node2;
-			node2._iNext = node1;
-			node2._iPrev = node1Prev;
+			//	This is a downward (A to B) neighbour swap
+			child1._iNext = child2Next;
+			child1._iPrev = child2;
+			child2._iNext = child1;
+			child2._iPrev = child1Prev;
 
-			if (node1Prev) { node1Prev._iNext = node2; }
-			if (node2Next) { node2Next._iPrev = node1; }
+			if (child1Prev) { child1Prev._iNext = child2; }
+			if (child2Next) { child2Next._iPrev = child1; }
 		}
-		else if (node2._iNext == node1)
+		else if (child2._iNext == child1)
 		{
-			//	This is a B-A neighbour swap
-			node1._iNext = node2;
-			node1._iPrev = node2Prev;
-			node2._iNext = node1Next;
-			node2._iPrev = node1;
+			//	This is am upward (B to A) neighbour swap
+			child1._iNext = child2;
+			child1._iPrev = child2Prev;
+			child2._iNext = child1Next;
+			child2._iPrev = child1;
 
-			if (node2Prev) { node2Prev._iNext = node1; }
-			if (node1Next) { node2Next._iPrev = node2; }
+			if (child2Prev) { child2Prev._iNext = child1; }
+			if (child1Next) { child2Next._iPrev = child2; }
 		}
 		else
 		{
-			//	Nodes are far apart
-			node1._iNext = node2Next;
-			node1._iPrev = node2Prev;
-			node2._iNext = node1Next;
-			node2._iPrev = node1Prev;
+			//	Children are far apart
+			child1._iNext = child2Next;
+			child1._iPrev = child2Prev;
+			child2._iNext = child1Next;
+			child2._iPrev = child1Prev;
 
-			if (node1Prev) { node1Prev._iNext = node2; }
-			if (node1Next) { node1Next._iPrev = node2; }
-			if (node2Prev) { node2Prev._iNext = node1; }
-			if (node2Next) { node2Next._iPrev = node1; }
+			if (child1Prev) { child1Prev._iNext = child2; }
+			if (child1Next) { child1Next._iPrev = child2; }
+			if (child2Prev) { child2Prev._iNext = child1; }
+			if (child2Next) { child2Next._iPrev = child1; }
 		}
 	}
 
