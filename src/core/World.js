@@ -5,6 +5,7 @@ Phaser.World = function (game) {
 	this._stage = new PIXI.Stage(0x000000);
 
 	this._container = new PIXI.DisplayObjectContainer();
+	this._container.name = 'R';
 
 	this._stage.addChild(this._container);
 

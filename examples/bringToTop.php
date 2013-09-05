@@ -56,7 +56,7 @@
 	}
 
 	function runChange () {
-		changeOrder(e, f);
+		changeOrder(a, c);
 	}
 
 	function changeOrder (node1, node2) {
@@ -71,28 +71,56 @@
 			//	Cache the node values
 			var node1Prev = node1._iPrev;
 			var node1Next = node1._iNext;
+			var node1First = node1.first;
+			var node1Last = node1.last;
 			var node2Prev = node2._iPrev;
 			var node2Next = node2._iNext;
+			var node2First = node2.first;
+			var node2Last = node2.last;
 
 			//	Now deep scan search and replace
-			var displayObject = this.game.world._stage;
+			var currentNode = game.world._stage;
 
-			var testObject = displayObject.last._iNext;
-			displayObject = displayObject.first;
+			var endNode = currentNode.last._iNext;
+			currentNode = currentNode.first;
 			
 			do	
 			{
+				console.log('Checking', currentNode.name, currentNode.first.name, currentNode.last.name);
 
-				displayObject = displayObject._iNext;
+				if (currentNode !== node1 && currentNode !== node2)
+				{
+					if (currentNode.first === node1)
+					{
+						console.log('F1');
+						currentNode.first = node2;
+					}
+					else if (currentNode.first === node2)
+					{
+						console.log('F2');
+						currentNode.first = node1;
+					}
 
+					if (currentNode.last === node1)
+					{
+						console.log('L1');
+						currentNode.last = node2;
+					}
+					else if (currentNode.last === node2)
+					{
+						console.log('L2');
+						currentNode.last = node1;
+					}
+				}
+
+				currentNode = currentNode._iNext;
 			}
-			while(displayObject != testObject)
-
+			while (currentNode != endNode)
 
 			//	Check for neighbours (cater for any order parameters)
 			if (node1._iNext == node2)
 			{
-				console.log('A-B neighbour swap. Parent is', node1.parent.name, 'tail is', tail.name);
+				console.log('A-B neighbour swap');
 
 				//	Starting
 				//	Node 1 (A)			Node 2 (B)		X 			C
@@ -104,42 +132,21 @@
 				//	Next: C 			Next: A 		Next: B 	Next: D
 				//	Prev: B 			Prev: X 		Prev: -		Prev: A
 
-				//	Was node2 a tail node?
-				/*
-				if (node2 === tail)
+				node1._iNext = node2Next;
+				node1._iPrev = node2;
+				node2._iNext = node1;
+				node2._iPrev = node1Prev;
+
+				//	Notify the head and tail
+				if (node1Prev)
 				{
-					node2._iNext = node1;
-					node2._iPrev = node1Prev;
-					node1._iNext = null;
-					node1._iPrev = node2;
-
-					//	Notify the head and tail
-					if (node1Prev)
-					{
-						node1Prev._iNext = node2;
-					}
-
-					node1.parent.last = node1;
+					node1Prev._iNext = node2;
 				}
-				else
+
+				if (node2Next)
 				{
-				*/
-					node1._iNext = node2Next;
-					node1._iPrev = node2;
-					node2._iNext = node1;
-					node2._iPrev = node1Prev;
-
-					//	Notify the head and tail
-					if (node1Prev)
-					{
-						node1Prev._iNext = node2;
-					}
-
-					if (node2Next)
-					{
-						node2Next._iPrev = node1;
-					}
-				// }
+					node2Next._iPrev = node1;
+				}
 			}
 			else if (node2._iNext == node1)
 			{
