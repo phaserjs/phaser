@@ -56,7 +56,7 @@
 	}
 
 	function runChange () {
-		changeOrder(a, c);
+		changeOrder(a, f);
 	}
 
 	function changeOrder (node1, node2) {
