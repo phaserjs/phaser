@@ -5,7 +5,7 @@ Phaser.World = function (game) {
 	this._stage = new PIXI.Stage(0x000000);
 
 	this._container = new PIXI.DisplayObjectContainer();
-	this._container.name = 'R';
+	this._container.name = '_stage_root';
 
 	this._stage.addChild(this._container);
 
@@ -105,12 +105,12 @@ Phaser.World.prototype = {
 
 	},
 
-	swapChildren: function (stage, child1, child2) {
+	swapChildren: function (child1, child2) {
 
 		if (child1 === child2 || !child1.parent || !child2.parent)
 		{
 			console.warn('You cannot swap a child with itself or swap un-parented children');
-			return;
+			return false;
 		}
 
 		//	Cache the values
@@ -119,8 +119,8 @@ Phaser.World.prototype = {
 		var child2Prev = child2._iPrev;
 		var child2Next = child2._iNext;
 
-		var endNode = stage.last._iNext;
-		var currentNode = stage.first;
+		var endNode = this._stage.last._iNext;
+		var currentNode = this._stage.first;
 			
 		do	
 		{
@@ -159,10 +159,12 @@ Phaser.World.prototype = {
 
 			if (child1Prev) { child1Prev._iNext = child2; }
 			if (child2Next) { child2Next._iPrev = child1; }
+
+			return true;
 		}
 		else if (child2._iNext == child1)
 		{
-			//	This is am upward (B to A) neighbour swap
+			//	This is an upward (B to A) neighbour swap
 			child1._iNext = child2;
 			child1._iPrev = child2Prev;
 			child2._iNext = child1Next;
@@ -170,6 +172,8 @@ Phaser.World.prototype = {
 
 			if (child2Prev) { child2Prev._iNext = child1; }
 			if (child1Next) { child2Next._iPrev = child2; }
+
+			return true;
 		}
 		else
 		{
@@ -183,7 +187,12 @@ Phaser.World.prototype = {
 			if (child1Next) { child1Next._iPrev = child2; }
 			if (child2Prev) { child2Prev._iNext = child1; }
 			if (child2Next) { child2Next._iPrev = child1; }
+
+			return true;
 		}
+
+		return false;
+		
 	}
 
 };

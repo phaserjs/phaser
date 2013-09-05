@@ -95,7 +95,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.lastX = this.x;
 		this.lastY = this.y;
 
-		this.game.physics.updateMotion(this);
+		if (this.moves)
+		{
+			this.game.physics.updateMotion(this);
+		}
 
 		this.bounds.x = this.x;
 		this.bounds.y = this.y;

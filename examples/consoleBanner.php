@@ -14,84 +14,63 @@
 
 (function () {
 
-	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+	var game = new Phaser.Game(50, 50, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
 	function preload() {
-		// game.load.image('piccie', 'assets/sprites/phaser_tiny.png');
+		game.load.image('piccie', 'assets/sprites/phaser_tiny.png');
 		// game.load.image('piccie', 'assets/sprites/carrot.png');
 		// game.load.image('piccie', 'assets/sprites/phaser-dude.png');
-		game.load.image('piccie', 'assets/pics/atari_fujilogo.png');
+		// game.load.image('piccie', 'assets/pics/atari_fujilogo.png');
 	}
 
 	var canvas;
 	var context;
+	var logo;
 
 	function create() {
 
-		var img = game.add.sprite(0, 0, 'piccie');
+		logo = game.add.sprite(0, 0, 'piccie');
 
-        canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        context = canvas.getContext('2d');
-
-        context.drawImage(game.cache.getImage('piccie'), 0, 0);
-
-        var result = '';
-
-        for (var y = 0; y < img.height; y++)
-        {
-        	var line = '';
-        	var css = '';
-        	var previousColor = '';
-
-        	for (var x = 0; x < img.width; x++)
-        	{
-                var c = context.getImageData(x, y, 1, 1);
-                var s = "#" + colorToHex(c.data[0]) + colorToHex(c.data[1]) + colorToHex(c.data[2]);
-
-                if (s == previousColor)
-                {
-                	line = line + ' ';
-                }
-                else
-                {
-	                line = line + '%c ';
-	                css = css + "'background: " + s + "', ";
-	                previousColor = s;
-                }
-        	}
-
-        	css = css.substr(0, css.length - 2);
-
-        	result = result + "console.log('" + line + "', " + css + ");\n";
-        }
-
-		document.getElementById('output').innerHTML = result;
+		logo.body.velocity = 10;
 
 	}
 
-    /**
-	* Return a string containing a hex representation of the given color
-	* 
-    * @method colorToHexstring
-	* @param {Number} color The color channel to get the hex value for, must be a value between 0 and 255)
-	* @return {String} A string of length 2 characters, i.e. 255 = FF, 0 = 00
-	*/
     function colorToHex(color) {
+        return "0123456789ABCDEF".charAt((color - (color % 16)) / 16) + "0123456789ABCDEF".charAt(color % 16);
+    }
 
-        var digits = "0123456789ABCDEF";
+    function canvasToConsole() {
 
-        var lsd = color % 16;
-        var msd = (color - lsd) / 16;
+        console.clear();
 
-        var hexified = digits.charAt(msd) + digits.charAt(lsd);
+        for (var y = 0; y < game.height; y++)
+        {
+        	// var line = '';
+        	var c = [];
+        	var previousColor = '';
 
-        return hexified;
+        	for (var x = 0; x < game.width; x++)
+        	{
+                var rgb = game.renderer.context.getImageData(x, y, 1, 1);
+                var s = "#" + colorToHex(rgb.data[0]) + colorToHex(rgb.data[1]) + colorToHex(rgb.data[2]);
+                c.push("'background: " + s + "'");
+        	}
+
+        	console.log('%c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c %c ', 
+        		c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], c[9], 
+        		c[10], c[11], c[12], c[13], c[14], c[15], c[16], c[17], c[18], c[19], 
+        		c[20], c[21], c[22], c[23], c[24], c[25], c[26], c[27], c[28], c[29], 
+        		c[30], c[31], c[32], c[33], c[34], c[35], c[36], c[37], c[38], c[39], 
+        		c[40], c[41], c[42], c[43], c[44], c[45], c[46], c[47], c[48], c[49], 
+        		c[50]);
+        }
 
     }
 
 	function update() {
+
+		canvasToConsole();
+
 	}
 
 	function render() {
