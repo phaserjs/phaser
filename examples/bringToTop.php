@@ -16,6 +16,7 @@
 
 	function preload() {
 		game.load.image('sonic', 'assets/sprites/sonic_havok_sanity.png');
+		game.load.image('carrot', 'assets/sprites/carrot.png');
 	}
 
 	var s;
@@ -25,6 +26,9 @@
 	var d;
 	var e;
 	var f;
+	var g;
+	var h;
+	var i;
 
 	var tests;
 
@@ -39,6 +43,9 @@
 		d = game.add.child(s, -280, 200, 'sonic');
 		e = game.add.child(s, -350, 200, 'sonic');
 		f = game.add.child(s, -420, 200, 'sonic');
+		g = game.add.child(f, -50, 0, 'carrot');
+		h = game.add.child(f, -80, 0, 'carrot');
+		i = game.add.child(f, -110, 0, 'carrot');
 
 		a.name = 'A';
 		b.name = 'B';
@@ -46,8 +53,11 @@
 		d.name = 'D';
 		e.name = 'E';
 		f.name = 'F';
+		g.name = 'g';
+		h.name = 'h';
+		i.name = 'i';
 
-		tests = [a,b,c,d,e,f];
+		tests = [a,b,c,d,e,f,g,h,i];
 
 		game.input.onUp.add(runChange, this);
 
@@ -56,27 +66,34 @@
 	}
 
 	function runChange () {
-		changeOrder(a, f);
+		changeOrder(a, h);
 	}
 
 	function changeOrder (node1, node2) {
 
+		// if (node1 === node2 || node1.parent !== node2.parent)
+		if (node1 === node2)
+		{
+			console.warn("You cannot swap a node with itself or re-parent");
+			return;
+		}
+
 		console.log('Changing order of', node1.name,'and',node2.name);
 
-		var index1 = s.children.indexOf(node1);
-		var index2 = s.children.indexOf(node2);
+		// var index1 = s.children.indexOf(node1);
+		// var index2 = s.children.indexOf(node2);
 
-		if (index1 !== -1 && index2 !== -1)
-		{
+		// if (index1 !== -1 && index2 !== -1)
+		// {
 			//	Cache the node values
 			var node1Prev = node1._iPrev;
 			var node1Next = node1._iNext;
-			var node1First = node1.first;
-			var node1Last = node1.last;
+			// var node1First = node1.first;
+			// var node1Last = node1.last;
 			var node2Prev = node2._iPrev;
 			var node2Next = node2._iNext;
-			var node2First = node2.first;
-			var node2Last = node2.last;
+			// var node2First = node2.first;
+			// var node2Last = node2.last;
 
 			//	Now deep scan search and replace
 			var currentNode = game.world._stage;
@@ -86,7 +103,7 @@
 			
 			do	
 			{
-				console.log('Checking', currentNode.name, currentNode.first.name, currentNode.last.name);
+				// console.log('Checking', currentNode.name, currentNode.first.name, currentNode.last.name);
 
 				if (currentNode !== node1 && currentNode !== node2)
 				{
@@ -239,7 +256,7 @@
 					node2Next._iPrev = node1;
 				}
 			}
-		} 
+		// } 
 
 		scanList(game.world._stage);
 
