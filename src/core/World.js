@@ -105,6 +105,87 @@ Phaser.World.prototype = {
 
 	},
 
+	swapChildren: function (stage, node1, node2) {
+
+		if (node1 === node2 || !node1.parent || !node2.parent)
+		{
+			console.warn('You cannot swap a node with itself or swap un-parented nodes');
+			return;
+		}
+
+		//	Cache the node values
+		var node1Prev = node1._iPrev;
+		var node1Next = node1._iNext;
+		var node2Prev = node2._iPrev;
+		var node2Next = node2._iNext;
+
+		var endNode = stage.last._iNext;
+		var currentNode = stage.first;
+			
+		do	
+		{
+			if (currentNode !== node1 && currentNode !== node2)
+			{
+				if (currentNode.first === node1)
+				{
+					currentNode.first = node2;
+				}
+				else if (currentNode.first === node2)
+				{
+					currentNode.first = node1;
+				}
+
+				if (currentNode.last === node1)
+				{
+					currentNode.last = node2;
+				}
+				else if (currentNode.last === node2)
+				{
+					currentNode.last = node1;
+				}
+			}
+
+			currentNode = currentNode._iNext;
+		}
+		while (currentNode != endNode)
+
+		if (node1._iNext == node2)
+		{
+			//	This is an A-B neighbour swap
+			node1._iNext = node2Next;
+			node1._iPrev = node2;
+			node2._iNext = node1;
+			node2._iPrev = node1Prev;
+
+			if (node1Prev) { node1Prev._iNext = node2; }
+			if (node2Next) { node2Next._iPrev = node1; }
+		}
+		else if (node2._iNext == node1)
+		{
+			//	This is a B-A neighbour swap
+			node1._iNext = node2;
+			node1._iPrev = node2Prev;
+			node2._iNext = node1Next;
+			node2._iPrev = node1;
+
+			if (node2Prev) { node2Prev._iNext = node1; }
+			if (node1Next) { node2Next._iPrev = node2; }
+		}
+		else
+		{
+			//	Nodes are far apart
+			node1._iNext = node2Next;
+			node1._iPrev = node2Prev;
+			node2._iNext = node1Next;
+			node2._iPrev = node1Prev;
+
+			if (node1Prev) { node1Prev._iNext = node2; }
+			if (node1Next) { node1Next._iPrev = node2; }
+			if (node2Prev) { node2Prev._iNext = node1; }
+			if (node2Next) { node2Next._iPrev = node1; }
+		}
+	}
+
 };
 
 //	Getters / Setters

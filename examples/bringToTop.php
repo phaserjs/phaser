@@ -71,10 +71,9 @@
 
 	function changeOrder (node1, node2) {
 
-		// if (node1 === node2 || node1.parent !== node2.parent)
-		if (node1 === node2)
+		if (node1 === node2 || !node1.parent || !node2.parent)
 		{
-			console.warn("You cannot swap a node with itself or re-parent");
+			console.warn("You cannot swap a node with itself or swap un-parented nodes");
 			return;
 		}
 
@@ -88,12 +87,8 @@
 			//	Cache the node values
 			var node1Prev = node1._iPrev;
 			var node1Next = node1._iNext;
-			// var node1First = node1.first;
-			// var node1Last = node1.last;
 			var node2Prev = node2._iPrev;
 			var node2Next = node2._iNext;
-			// var node2First = node2.first;
-			// var node2Last = node2.last;
 
 			//	Now deep scan search and replace
 			var currentNode = game.world._stage;
@@ -103,29 +98,23 @@
 			
 			do	
 			{
-				// console.log('Checking', currentNode.name, currentNode.first.name, currentNode.last.name);
-
 				if (currentNode !== node1 && currentNode !== node2)
 				{
 					if (currentNode.first === node1)
 					{
-						console.log('F1');
 						currentNode.first = node2;
 					}
 					else if (currentNode.first === node2)
 					{
-						console.log('F2');
 						currentNode.first = node1;
 					}
 
 					if (currentNode.last === node1)
 					{
-						console.log('L1');
 						currentNode.last = node2;
 					}
 					else if (currentNode.last === node2)
 					{
-						console.log('L2');
 						currentNode.last = node1;
 					}
 				}
