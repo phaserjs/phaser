@@ -50,6 +50,7 @@
 	<script src="../src/core/Plugin.js"></script>
 	<script src="../src/core/PluginManager.js"></script>
 	<script src="../src/core/Stage.js"></script>
+	<script src="../src/core/Group.js"></script>
 	<script src="../src/core/World.js"></script>
 	<script src="../src/core/Game.js"></script>
 	<script src="../src/input/Input.js"></script>

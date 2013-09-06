@@ -140,7 +140,7 @@ Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 
 /**
- * Automatically called by the game loop.
+ * Automatically called by World.update
  */
 Phaser.Sprite.prototype.update = function() {
 

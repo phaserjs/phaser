@@ -22,7 +22,7 @@ Phaser.Physics.Arcade = function (game) {
 	this.OVERLAP_BIAS = 4;
 	this.TILE_OVERLAP = false;
 
-    this.quadTree = null;
+    this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 	this.quadTreeID = 0;
 
 	//	avoid gc spikes by caching these values for re-use
@@ -123,6 +123,9 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     preUpdate: function () {
+
+        //  Clear the tree
+        this.quadTree.clear();
 
     	//	Create our tree which all of the Physics bodies will add themselves to
         this.quadTreeID = 0;

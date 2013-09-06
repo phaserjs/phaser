@@ -49,7 +49,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.immovable = false;
     this.moves = true;
     this.rotation = 0;
-    this.allowRotation = false;
+    this.allowRotation = true;
     this.allowGravity = true;
 
     this.collideWorldBounds = false;
@@ -95,6 +95,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.lastX = this.x;
 		this.lastY = this.y;
 
+		this.x = this.sprite.x;
+		this.y = this.sprite.y;
+		this.rotation = this.sprite.angle;
+
 		if (this.moves)
 		{
 			this.game.physics.updateMotion(this);
@@ -103,11 +107,25 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.bounds.x = this.x;
 		this.bounds.y = this.y;
 
+		if (this.collideWorldBounds)
+		{
+			this.checkWorldBounds();
+		}
+
 		if (this.allowCollision.none == false && this.sprite.visible && this.sprite.alive)
 		{
 		    this.quadTreeIDs = [];
 		    this.quadTreeIndex = -1;
 			this.game.physics.quadTree.insert(this);
+		}
+
+		//	Adjust the sprite based on all of the above, so the x/y coords will be correct going into the State update
+		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
+		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
+
+		if (this.allowRotation)
+		{
+			this.sprite.angle = this.rotation;
 		}
 
 	},
@@ -144,18 +162,31 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	postUpdate: function () {
 
+		/*
+		//	The State update may (almost certainly?) will had
+
 		if (this.collideWorldBounds)
 		{
+			//	Adjust sprite directly?
 			this.checkWorldBounds();
 		}
 
-		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
-		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
+		console.log('pre pu', this.x, this.y);
+
+		// if (this.moves)
+		// {
+			this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
+			this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
+		// }
+
+		console.log('post pu', this.sprite.x, this.sprite.y);
 
 		if (this.allowRotation)
 		{
 			this.sprite.angle = this.rotation;
 		}
+		*/
+
 
 	},
 

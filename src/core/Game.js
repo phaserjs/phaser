@@ -375,23 +375,27 @@ Phaser.Game.prototype = {
 
 		this.time.update(time);
 
-        this.plugins.preUpdate();
-        this.physics.preUpdate();
+		if (!this.paused)
+		{
+	        this.plugins.preUpdate();
+	        // this.world.preUpdate();
+	        this.physics.preUpdate();
 
-        this.input.update();
-        this.tweens.update();
-        this.sound.update();
-        this.world.update();
-		this.state.update();
-        this.plugins.update();
+	        this.input.update();
+	        this.tweens.update();
+	        this.sound.update();
+			this.world.update();
+			this.state.update();
+	        this.plugins.update();
 
-		this.renderer.render(this.world._stage);
-		this.state.render();
+			this.renderer.render(this.world._stage);
+			this.state.render();
 
-        this.world.postUpdate();
-        this.physics.postUpdate();
+	        // this.world.postUpdate();
+	        // this.physics.postUpdate();
 
-		this.plugins.postRender();
+			this.plugins.postRender();
+		}
 
 	},
 

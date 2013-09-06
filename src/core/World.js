@@ -3,9 +3,10 @@ Phaser.World = function (game) {
 	this.game = game;
 
 	this._stage = new PIXI.Stage(0x000000);
+	this._stage.name = '_stage_root';
 
 	this._container = new PIXI.DisplayObjectContainer();
-	this._container.name = '_stage_root';
+	// this._container.name = '_stage_root';
 
 	this._stage.addChild(this._container);
 
@@ -52,6 +53,7 @@ Phaser.World.prototype = {
 
 		this.camera.update();
 
+		//	TODO - sort this out, the nodes are wrong
 		var displayObject = this._stage;
 
 		var testObject = displayObject.last._iNext;
