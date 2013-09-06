@@ -7,9 +7,13 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
 	this.game = game;
 
+    //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
     this.exists = true;
-    this.active = true;
+
+    //  An "invisible" sprite isn't rendered at all
     this.visible = true;
+
+    //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
     this.alive = true;
 
     this.group = null;
@@ -143,6 +147,11 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
  * Automatically called by World.update
  */
 Phaser.Sprite.prototype.update = function() {
+
+    if (!this.exists)
+    {
+        return;
+    }
 
     this._cache.dirty = false;
 

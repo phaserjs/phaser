@@ -5,11 +5,6 @@ Phaser.World = function (game) {
 	this._stage = new PIXI.Stage(0x000000);
 	this._stage.name = '_stage_root';
 
-	this._container = new PIXI.DisplayObjectContainer();
-	// this._container.name = '_stage_root';
-
-	this._stage.addChild(this._container);
-
 	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 	
 };
@@ -17,7 +12,7 @@ Phaser.World = function (game) {
 Phaser.World.prototype = {
 
 	_stage: null,
-	_container: null,
+	_stage: null,
 	_length: 0,
 
 	bounds: null,
@@ -31,66 +26,51 @@ Phaser.World.prototype = {
 	},
 
 	add: function (gameobject) {
-		this._container.addChild(gameobject);
+
+		this._stage.addChild(gameobject);
 		return gameobject;
+
 	},
 
 	addAt: function (gameobject, index) {
-		this._container.addChildAt(gameobject, index);
+
+		this._stage.addChildAt(gameobject, index);
 		return gameobject;
+
 	},
 
 	getAt: function (index) {
-		return this._container.getChildAt(index);
+
+		return this._stage.getChildAt(index);
+
 	},
 
 	remove: function (gameobject) {
-		this._container.removeChild(gameobject);
+
+		this._stage.removeChild(gameobject);
 		return gameobject;
+
 	},
 
 	update: function () {
 
 		this.camera.update();
 
-		//	TODO - sort this out, the nodes are wrong
-		var displayObject = this._stage;
-
-		var testObject = displayObject.last._iNext;
-		displayObject = displayObject.first;
-		
-		do	
+		if (this._stage.first._iNext)
 		{
-			if (displayObject['update'])
-			{
-				displayObject.update();
-			}
+			var currentNode = this._stage.first._iNext;
 			
-			//	count++
-			displayObject = displayObject._iNext;
-		}
-		while(displayObject != testObject)
-
-	},
-
-	postUpdate: function () {
-
-		var displayObject = this._stage;
-
-		var testObject = displayObject.last._iNext;
-		displayObject = displayObject.first;
-		
-		do	
-		{
-			if (displayObject['postUpdate'])
+			do	
 			{
-				displayObject.postUpdate();
+				if (currentNode['update'])
+				{
+					currentNode.update();
+				}
+				
+				currentNode = currentNode._iNext;
 			}
-			
-			//	count++
-			displayObject = displayObject._iNext;
+			while (currentNode != this._stage.last._iNext)
 		}
-		while(displayObject != testObject)
 
 	},
 

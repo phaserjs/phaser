@@ -311,15 +311,20 @@ Phaser.Tween.prototype = {
 
 				this._startTime = time + this._delayTime;
 
+				this.onComplete.dispatch(this._object);
+
+				if ( this._onCompleteCallback !== null ) {
+					this._onCompleteCallback.call( this._object );
+				}
+
 				return true;
 
 			} else {
 
+				this.onComplete.dispatch(this._object);
+
 				if ( this._onCompleteCallback !== null ) {
-
-					this.onComplete.dispatch(this._object);
 					this._onCompleteCallback.call( this._object );
-
 				}
 
 				for ( var i = 0, numChainedTweens = this._chainedTweens.length; i < numChainedTweens; i ++ ) {

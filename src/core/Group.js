@@ -1,14 +1,21 @@
-Phaser.Group = function (game, name) {
+Phaser.Group = function (game, parent, name) {
+
+	parent = parent || null;
 
 	this.game = game;
-	this.name = name || '';
+	this.name = name || 'group';
 
 	this._container = new PIXI.DisplayObjectContainer();
 
-	//	Swap for proper access to stage
-	this.game.world._stage.addChild(this._container);
+	if (parent)
+	{
+		parent.addChild(this._container);
+	}
+	else
+	{
+		this.game.world.add(this._container);
+	}
 
-	this.active = true;
 	this.exists = true;
 
     /**
@@ -44,13 +51,13 @@ Phaser.Group.prototype = {
 
 	},
 
-	getChildAt: function (index) {
+	getAt: function (index) {
 
 		return this._container.getChildAt(index);
 
 	},
 
-	createSprite: function (x, y, key, frame) {
+	create: function (x, y, key, frame) {
 
 		var child = new Phaser.Sprite(this.game, x, y, key, frame);
 		child.group = this;
@@ -151,7 +158,7 @@ Phaser.Group.prototype = {
 
 	bringToTop: function (child) {
 
-		if (!child === this._container.last)
+		if (child !== this._container.last)
 		{
 			this.swap(child, this._container.last);
 		}
@@ -160,7 +167,32 @@ Phaser.Group.prototype = {
 
 	},
 
-	replace: function (newChild, oldChild) {
+	getIndex: function (child) {
+
+		return this._container.children.indexOf(child);
+
+	},
+
+	replace: function (oldChild, newChild) {
+
+		if (!this._container.first._iNext)
+		{
+			return;
+		}
+
+		var index = this.getIndex(oldChild);
+		
+		if (index != -1)
+		{
+			if (newChild.parent != undefined)
+			{
+				newChild.parent.removeChild(newChild);
+			}
+
+			this._container.removeChild(oldChild);
+			this._container.addChildAt(newChild, index);
+		}
+
 	},
 
 	/**
@@ -269,18 +301,21 @@ Phaser.Group.prototype = {
 		checkVisible = checkVisible || false;
 		operation = operation || 0;
 
-		var currentNode = this._container.first._iNext;
-			
-		do	
+		if (this._container.first._iNext)
 		{
-			if ((checkAlive == false || (checkAlive && currentNode.alive)) && (checkVisible == false || (checkVisible && currentNode.visible)))
+			var currentNode = this._container.first._iNext;
+				
+			do	
 			{
-				this.setProperty(currentNode, key, value, operation);
-			}
+				if ((checkAlive == false || (checkAlive && currentNode.alive)) && (checkVisible == false || (checkVisible && currentNode.visible)))
+				{
+					this.setProperty(currentNode, key, value, operation);
+				}
 
-			currentNode = currentNode._iNext;
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext)
 		}
-		while (currentNode != this._container.last._iNext)
 
 	},
 
@@ -308,16 +343,125 @@ Phaser.Group.prototype = {
 
 	},
 
-	callAll: function () {
+	/**
+    * Calls a function on all of the active children (children with exists=true).
+    * You must pass the context in which the callback is applied.
+    * After the context you can add as many parameters as you like, which will all be passed to the child.
+    */
+	callAll: function (callback, callbackContext) {
+
+		var args = Array.prototype.splice.call(arguments, 2);
+
+		if (this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.exists && currentNode[callback])
+				{
+					currentNode[callback].apply(currentNode, args);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext)
+
+		}
+
 	},
 
-	forEach: function () {
+	forEach: function (callback, callbackContext, checkExists) {
+
+		checkExists = checkExists || false;
+
+		if (this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (checkExists == false || (checkExists && currentNode.exists))
+				{
+					callback.call(callbackContext, currentNode);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+
+		}
+
 	},
 
 	forEachAlive: function () {
+
+		if (this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.alive)
+				{
+					callback.call(callbackContext, currentNode);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+
+		}
+
 	},
 
 	forEachDead: function () {
+
+		if (this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.alive == false)
+				{
+					callback.call(callbackContext, currentNode);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+
+		}
+	},
+
+	/**
+    * Call this function to retrieve the first object with exists == (the given state) in the group.
+    *
+    * @return {Any} The first child, or null if none found.
+    */
+	getFirstExists: function (state) {
+
+		state = state || true;
+
+		if (this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.exists == state)
+				{
+					return currentNode;
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+		}
+
+		return null;
+
 	},
 
 	/**
@@ -328,18 +472,21 @@ Phaser.Group.prototype = {
     */
 	getFirstAlive: function () {
 
-		var currentNode = this._container.first._iNext;
-			
-		do	
+		if (this._container.first._iNext)
 		{
-			if (currentNode.alive)
+			var currentNode = this._container.first._iNext;
+				
+			do	
 			{
-				return currentNode;
-			}
+				if (currentNode.alive)
+				{
+					return currentNode;
+				}
 
-			currentNode = currentNode._iNext;
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
 		}
-		while (currentNode != this._container.last._iNext)
 
 		return null;
 
@@ -353,18 +500,21 @@ Phaser.Group.prototype = {
     */
 	getFirstDead: function () {
 
-		var currentNode = this._container.first._iNext;
-			
-		do	
+		if (this._container.first._iNext)
 		{
-			if (!currentNode.alive)
+			var currentNode = this._container.first._iNext;
+				
+			do	
 			{
-				return currentNode;
-			}
+				if (!currentNode.alive)
+				{
+					return currentNode;
+				}
 
-			currentNode = currentNode._iNext;
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
 		}
-		while (currentNode != this._container.last._iNext)
 
 		return null;
 
@@ -378,18 +528,22 @@ Phaser.Group.prototype = {
 	countLiving: function () {
 
 		var total = -1;
-		var currentNode = this._container.first._iNext;
-			
-		do	
-		{
-			if (currentNode.alive)
-			{
-				total++;
-			}
 
-			currentNode = currentNode._iNext;
+		if (this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.alive)
+				{
+					total++;
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
 		}
-		while (currentNode != this._container.last._iNext);
 
 		return total;
 
@@ -403,18 +557,22 @@ Phaser.Group.prototype = {
 	countDead: function () {
 
 		var total = -1;
-		var currentNode = this._container.first._iNext;
-			
-		do	
-		{
-			if (!currentNode.alive)
-			{
-				total++;
-			}
 
-			currentNode = currentNode._iNext;
+		if (this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (!currentNode.alive)
+				{
+					total++;
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
 		}
-		while (currentNode != this._container.last._iNext);
 
 		return total;
 
@@ -438,9 +596,115 @@ Phaser.Group.prototype = {
 	},
 
 	remove: function (child) {
+
+		this._container.removeChild(child);
+
+	},
+
+	removeAll: function () {
+
+		do
+		{
+			this._container.removeChild(this._container.children[0]);
+		}
+		while (this._container.children.length > 0);
+
+	},
+
+	removeBetween: function (startIndex, endIndex) {
+
+		if (startIndex > endIndex || startIndex < 0 || endIndex > this._container.children.length)
+		{
+			return false;
+		}
+
+		for (var i = startIndex; i < endIndex; i++)
+		{
+			var child = this._container.children[i];
+			this._container.removeChild(child);
+		}
+
 	},
 
 	destroy: function () {
+
+		this.removeAll();
+
+		this._container.parent.removeChild(this._container);
+
+		this._container = null;
+
+		this.game = null;
+
+		this.exists = false;
+
+	},
+
+	dump: function () {
+
+		console.log("\nNode\t\t|\t\tNext\t\t|\t\tPrev\t\t|\t\tFirst\t\t|\t\tLast");
+		console.log("\t\t\t|\t\t\t\t\t|\t\t\t\t\t|\t\t\t\t\t|");
+
+		var displayObject = this._container;
+
+		var testObject = displayObject.last._iNext;
+		displayObject = displayObject.first;
+		
+		do	
+		{
+			var name = displayObject.name || '*';
+			var nameNext = '-';
+			var namePrev = '-';
+			var nameFirst = '-';
+			var nameLast = '-';
+
+			if (displayObject._iNext)
+			{
+				nameNext = displayObject._iNext.name;
+			}
+
+			if (displayObject._iPrev)
+			{
+				namePrev = displayObject._iPrev.name;
+			}
+
+			if (displayObject.first)
+			{
+				nameFirst = displayObject.first.name;
+			}
+
+			if (displayObject.last)
+			{
+				nameLast = displayObject.last.name;
+			}
+
+			if (typeof nameNext === 'undefined')
+			{
+				nameNext = '-';
+			}
+
+			if (typeof namePrev === 'undefined')
+			{
+				namePrev = '-';
+			}
+
+			if (typeof nameFirst === 'undefined')
+			{
+				nameFirst = '-';
+			}
+
+			if (typeof nameLast === 'undefined')
+			{
+				nameLast = '-';
+			}
+
+			console.log(name + '\t\t\t|\t\t' + nameNext + '\t\t\t|\t\t' + namePrev + '\t\t\t|\t\t' + nameFirst + '\t\t\t|\t\t' + nameLast);
+
+			displayObject = displayObject._iNext;
+
+		}
+		while(displayObject != testObject)
+
 	}
 
 };
@@ -481,7 +745,7 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 
     set: function(value) {
         this._container.rotation = Phaser.Math.degToRad(value);
-    }
+    },
 
     enumerable: true,
     configurable: true

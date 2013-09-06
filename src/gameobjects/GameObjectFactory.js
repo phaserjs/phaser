@@ -26,7 +26,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a new Sprite with specific position and sprite sheet key.
+    * Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.
     *
     * @param x {number} X position of the new sprite.
     * @param y {number} Y position of the new sprite.
@@ -52,6 +52,12 @@ Phaser.GameObjectFactory.prototype = {
     tween: function (obj, localReference) {
 
         return this.game.tweens.create(obj, localReference);
+
+    },
+
+    group: function (parent, name) {
+
+        return new Phaser.Group(this.game, parent, name);
 
     },
 

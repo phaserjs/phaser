@@ -16,6 +16,7 @@
 
 	function preload() {
 		game.load.image('diamond', 'assets/sprites/diamond.png');
+		game.load.image('carrot', 'assets/sprites/carrot.png');
 	}
 
 	var g;
@@ -24,26 +25,51 @@
 
 	function create() {
 
-		g = new Phaser.Group(game, 'aliens');
+		t = game.add.sprite(100, 100, 'carrot');
+		t.name = 'c0';
+		t.body.bounce.y = Math.random();
+		t.body.collideWorldBounds = true;
+
+		g = game.add.group();
+		// g.x = 400;
+		// g.y = 300;
+		// g._container.anchor.x = 0.5;
+		// g._container.anchor.y = 0.5;
 
 		for (var i = 0; i < 10; i++)
 		{
-			s = g.createSprite(100 + i * 64, 300, 'diamond');
-			s.name = 'diamond' + i;
-			s.body.collideWorldBounds = true;
-			s.body.bounce.y = Math.random();
+			var x = (i * 64);
+			s = g.create(x, 0, 'diamond');
+			s.name = 'd' + i;
+			s.anchor.setTo(0.5, 0.5);
 		}
 
-		g.getRandom().y += 200;
+		// g.forEach(setAlpha, this);
 
-		//g.setAll('body.velocity.y', 250);
+		// g.dump();
+
+		// g.replace(s, t);
+
+		// g.dump();
+
+		// g.callAll('dump', game, 123, 456, 789);
+
+		// g.getRandom().y += 200;
+
+		// g.setAll('body.velocity.y', 250);
 		// g.divideAll('y', 2);
 		// g.multiplyAll('y', 3);
 
 	}
 
+	function setAlpha (sprite) {
+		sprite.alpha = 0.4;
+	}
+
 	function update() {
 
+		// g.addAll('angle', 10);
+		g.angle++;
 
 	}
 

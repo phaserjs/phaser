@@ -160,36 +160,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
-	postUpdate: function () {
-
-		/*
-		//	The State update may (almost certainly?) will had
-
-		if (this.collideWorldBounds)
-		{
-			//	Adjust sprite directly?
-			this.checkWorldBounds();
-		}
-
-		console.log('pre pu', this.x, this.y);
-
-		// if (this.moves)
-		// {
-			this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
-			this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
-		// }
-
-		console.log('post pu', this.sprite.x, this.sprite.y);
-
-		if (this.allowRotation)
-		{
-			this.sprite.angle = this.rotation;
-		}
-		*/
-
-
-	},
-
 	setSize: function (width, height, offsetX, offsetY) {
 
 		offsetX = offsetX || this.offset.x;
@@ -206,60 +176,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.offset.setTo(offsetX, offsetY);
 
 	},
-
-	/*
-    hullWidth: function () {
-
-        if (this.deltaX() > 0)
-        {
-            return this.width + this.deltaX();
-        }
-        else
-        {
-            return this.width - this.deltaX();
-        }
-
-    },
-
-    hullHeight: function () {
-
-        if (this.deltaY() > 0)
-        {
-            return this.height + this.deltaY();
-        }
-        else
-        {
-            return this.height - this.deltaY();
-        }
-
-    },
-
-    hullX: function () {
-
-        if (this.x < this.lastX)
-        {
-            return this.x;
-        }
-        else
-        {
-            return this.lastX;
-        }
-
-    },
-
-    hullY: function () {
-
-        if (this.y < this.lastY)
-        {
-            return this.y;
-        }
-        else
-        {
-            return this.lastY;
-        }
-
-    },
-    */
 
     deltaAbsX: function () {
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
