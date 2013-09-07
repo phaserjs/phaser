@@ -95,8 +95,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.lastX = this.x;
 		this.lastY = this.y;
 
-		this.x = this.sprite.x;
-		this.y = this.sprite.y;
+		this.x = this.sprite.x - this.offset.x + (this.sprite.anchor.x * this.width));
+		this.y = this.sprite.y - this.offset.y + (this.sprite.anchor.y * this.height));
 		this.rotation = this.sprite.angle;
 
 		if (this.moves)
@@ -120,12 +120,14 @@ Phaser.Physics.Arcade.Body.prototype = {
 		}
 
 		//	Adjust the sprite based on all of the above, so the x/y coords will be correct going into the State update
-		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
-		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
+		// this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
+		// this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
+		// this.sprite.x = this.x;
+		// this.sprite.y = this.y;
 
 		if (this.allowRotation)
 		{
-			this.sprite.angle = this.rotation;
+			// this.sprite.angle = this.rotation;
 		}
 
 	},
