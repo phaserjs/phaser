@@ -104,7 +104,7 @@ Phaser.InputHandler.prototype = {
             this.enabled = true;
 
             //  Create the signals the Input component will emit
-            if (this.sprites.events && this.sprite.events.onInputOver == null)
+            if (this.sprite.events && this.sprite.events.onInputOver == null)
             {
                 this.sprite.events.onInputOver = new Phaser.Signal;
                 this.sprite.events.onInputOut = new Phaser.Signal;
@@ -316,13 +316,13 @@ Phaser.InputHandler.prototype = {
     },
 
 	/**
-    * Checks if the given pointer is over this Sprite. All checks are done in world coordinates.
+    * Checks if the given pointer is over this Sprite.
     */
     checkPointerOver: function (pointer) {
 
         if (this.enabled && this.sprite.visible)
         {
-            this.sprite.getLocalPosition(this._tempPoint, pointer.x, pointer.y);
+            this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
 
             //  Check against bounds
             var width = this.sprite.texture.frame.width,
@@ -330,11 +330,11 @@ Phaser.InputHandler.prototype = {
                 x1 = -width * this.sprite.anchor.x,
                 y1;
             
-            if(x > x1 && x < x1 + width)
+            if (this._tempPoint.x > x1 && this._tempPoint.x < x1 + width)
             {
                 y1 = -height * this.sprite.anchor.y;
             
-                if(y > y1 && y < y1 + height)
+                if (this._tempPoint.y > y1 && this._tempPoint.y < y1 + height)
                 {
                     return true;
                 }
@@ -364,7 +364,7 @@ Phaser.InputHandler.prototype = {
         }
         else if (this._pointerData[pointer.id].isOver == true)
         {
-            if (Phaser.SpriteUtils.overlapsPointer(this.sprite, pointer))
+            if (this.checkPointerOver(pointer))
             {
                 this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
                 this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
@@ -449,7 +449,7 @@ Phaser.InputHandler.prototype = {
             this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
 
             //  Only release the InputUp signal if the pointer is still over this sprite
-            if (Phaser.SpriteUtils.overlapsPointer(this.sprite, pointer))
+            if (this.checkPointerOver(pointer))
             {
                 //console.log('releasedHandler: ' + Date.now());
                 this.sprite.events.onInputUp.dispatch(this.sprite, pointer);

@@ -259,7 +259,7 @@ Phaser.Pointer.prototype = {
 
         if (this.targetObject !== null)
         {
-            this.targetObject.input._touchedHandler(this);
+            this.targetObject._touchedHandler(this);
         }
 
         return this;
@@ -349,9 +349,9 @@ Phaser.Pointer.prototype = {
         }
 
         //  Easy out if we're dragging something and it still exists
-        if (this.targetObject !== null && this.targetObject.input && this.targetObject.input.isDragged == true)
+        if (this.targetObject !== null && this.targetObject.isDragged == true)
         {
-            if (this.targetObject.input.update(this) == false)
+            if (this.targetObject.update(this) == false)
             {
                 this.targetObject = null;
             }
@@ -366,47 +366,36 @@ Phaser.Pointer.prototype = {
         this._highestInputPriorityID = -1;
 
         //  Just run through the linked list
-        if (this.game.input.interactiveItems.next)
+        if (this.game.input.interactiveItems.total > 0)
         {
             var currentNode = this.game.input.interactiveItems.next;
-            
+
             do  
             {
                 //  If the object has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID == this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID) && currentNode.checkPointerOver(this))
+                if (currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID == this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
                 {
-                    this._highestRenderOrderID = currentNode.sprite.renderOrderID;
-                    this._highestInputPriorityID = currentNode.priorityID;
-                    this._highestRenderObject = currentNode;
+                    if (currentNode.checkPointerOver(this))
+                    {
+                        // console.log('HRO set', currentNode.sprite.name);
+                        this._highestRenderOrderID = currentNode.sprite.renderOrderID;
+                        this._highestInputPriorityID = currentNode.priorityID;
+                        this._highestRenderObject = currentNode;
+                    }
                 }
-                
                 currentNode = currentNode.next;
             }
-            while (currentNode != this.game.input.interactiveItems.next)
+            while (currentNode != null)
         }
-
-
-/*
-        for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
-        {
-            if (this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.checkPointerOver(this))
-            {
-                //  If the object has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (this.game.input.inputObjects[i].input.priorityID > this._highestInputPriorityID || (this.game.input.inputObjects[i].input.priorityID == this._highestInputPriorityID && this.game.input.inputObjects[i].renderOrderID > this._highestRenderOrderID))
-                {
-                    this._highestRenderOrderID = this.game.input.inputObjects[i].renderOrderID;
-                    this._highestRenderObject = i;
-                    this._highestInputPriorityID = this.game.input.inputObjects[i].input.priorityID;
-                }
-            }
-        }
-*/
 
         if (this._highestRenderObject == null)
         {
+            // console.log("HRO null");
+
             //  The pointer isn't currently over anything, check if we've got a lingering previous target
             if (this.targetObject)
             {
+                // console.log("The pointer isn't currently over anything, check if we've got a lingering previous target");
                 this.targetObject._pointerOutHandler(this);
                 this.targetObject = null;
             }
@@ -416,15 +405,18 @@ Phaser.Pointer.prototype = {
             if (this.targetObject == null)
             {
                 //  And now set the new one
+                // console.log('And now set the new one');
                 this.targetObject = this._highestRenderObject;
                 this._highestRenderObject._pointerOverHandler(this);
             }
             else
             {
                 //  We've got a target from the last update
+                // console.log("We've got a target from the last update");
                 if (this.targetObject == this._highestRenderObject)
                 {
                     //  Same target as before, so update it
+                    // console.log("Same target as before, so update it");
                     if (this._highestRenderObject.update(this) == false)
                     {
                         this.targetObject = null;
@@ -433,6 +425,7 @@ Phaser.Pointer.prototype = {
                 else
                 {
                     //  The target has changed, so tell the old one we've left it
+                    // console.log("The target has changed, so tell the old one we've left it");
                     this.targetObject._pointerOutHandler(this);
 
                     //  And now set the new one
@@ -511,17 +504,20 @@ Phaser.Pointer.prototype = {
             this.game.input.currentPointers--;
         }
 
-        if (this.game.input.interactiveItems.next)
+        if (this.game.input.interactiveItems.total > 0)
         {
             var currentNode = this.game.input.interactiveItems.next;
             
             do  
             {
-                currentNode._releasedHandler(this);
+                if (currentNode)
+                {
+                    currentNode._releasedHandler(this);
+                }
                 
                 currentNode = currentNode.next;
             }
-            while (currentNode != this.game.input.interactiveItems.next)
+            while (currentNode != null)
         }
 
         if (this.targetObject)
@@ -631,7 +627,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
     */
     get: function () {
 
-		return this.game.world.camera.worldView.x + this.x;
+		return this.game.world.camera.x + this.x;
 
     },
 
@@ -647,7 +643,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
     */
     get: function () {
 
-		return this.game.world.camera.worldView.y + this.y;
+		return this.game.world.camera.y + this.y;
 
     },
 

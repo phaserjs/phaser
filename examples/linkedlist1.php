@@ -46,11 +46,11 @@
 		list = new Phaser.LinkedList();
 
 		list.add(a.input);
-		// list.add(b.input);
-		// list.add(c.input);
-		// list.add(d.input);
-		// list.add(e.input);
-		// list.add(f.input);
+		list.add(b.input);
+		list.add(c.input);
+		list.add(d.input);
+		list.add(e.input);
+		list.add(f.input);
 
 		list.dump();
 

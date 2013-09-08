@@ -62,6 +62,7 @@
 	<script src="../src/input/Touch.js"></script>
 	<script src="../src/input/InputHandler.js"></script>
 	<script src="../src/system/Canvas.js"></script>
+	<script src="../src/gameobjects/Events.js"></script>
 	<script src="../src/gameobjects/GameObjectFactory.js"></script>
 	<script src="../src/gameobjects/Sprite.js"></script>
 	<script src="../src/gameobjects/TileSprite.js"></script>

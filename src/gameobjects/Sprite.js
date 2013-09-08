@@ -29,7 +29,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         PIXI.Sprite.call(this);
     }
 
-    // this.events = new Phaser.Components.Events(this);
+    this.events = new Phaser.Events(this);
 
     /**
      * This manages animations of the sprite. You can modify animations through it. (see AnimationManager)
@@ -101,6 +101,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
         //  Transform cache
         a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
+
+        //  Input specific transform cache
+        i01: 0, i10: 0, idi: 1,
 
         //  Bounds check
         left: null, right: null, top: null, bottom: null, 
@@ -188,6 +191,7 @@ Phaser.Sprite.prototype.update = function() {
         {
             this._cache.a00 = this.worldTransform[0];  //  scaleX         a
             this._cache.a01 = this.worldTransform[1];  //  skewY          c
+            this._cache.i01 = this.worldTransform[1];  //  skewY          c
             this._cache.scaleX = Math.sqrt((this._cache.a00 * this._cache.a00) + (this._cache.a01 * this._cache.a01)); // round this off a bit?
             this._cache.a01 *= -1;
             this._cache.dirty = true;
@@ -197,6 +201,7 @@ Phaser.Sprite.prototype.update = function() {
         if (this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
         {
             this._cache.a10 = this.worldTransform[3];  //  skewX          b
+            this._cache.i10 = this.worldTransform[3];  //  skewX          b
             this._cache.a11 = this.worldTransform[4];  //  scaleY         d
             this._cache.scaleY = Math.sqrt((this._cache.a10 * this._cache.a10) + (this._cache.a11 * this._cache.a11)); // round this off a bit?
             this._cache.a10 *= -1;
@@ -227,6 +232,7 @@ Phaser.Sprite.prototype.update = function() {
             this._cache.halfHeight = Math.floor(this._cache.height / 2);
 
             this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
+            this._cache.idi = 1 / (this._cache.a00 * this._cache.a11 + this._cache.i01 * -this._cache.i10);
 
             this.updateBounds();
         }
@@ -261,11 +267,6 @@ Phaser.Sprite.prototype.update = function() {
     }
 
     this.body.update();
-
-    if (this.input.enabled)
-    {
-        this.input.update();
-    }
 
 }
 
@@ -304,6 +305,15 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
     p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this._cache.scaleX) + this._cache.a02;
     p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this._cache.scaleY) + this._cache.a12;
+
+    return p;
+
+}
+
+Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, x, y) {
+
+    p.x = this._cache.a11 * this._cache.idi * x + -this._cache.i01 * this._cache.idi * y + (this._cache.a12 * this._cache.i01 - this._cache.a02 * this._cache.a11) * this._cache.idi;
+    p.y = this._cache.a00 * this._cache.idi * y + -this._cache.i10 * this._cache.idi * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.i10) * this._cache.idi;
 
     return p;
 

@@ -7,17 +7,19 @@ Phaser.LinkedList.prototype = {
     prev: null,
     first: null,
     last: null,
+    total: 0,
     sprite: { name: 'HD' },
 
     add: function (child) {
 
     	//	If the list is empty
-    	if (this.first == null && this.last == null)
+    	if (this.total == 0 && this.first == null && this.last == null)
     	{
     		this.first = child;
     		this.last = child;
 	    	this.next = child;
 	    	child.prev = this;
+	    	this.total++;
     		return;
     	}
 
@@ -28,6 +30,10 @@ Phaser.LinkedList.prototype = {
 
     	this.last = child;
 
+		this.total++;
+
+		return child;
+
     },
 
     remove: function (child) {
@@ -37,6 +43,8 @@ Phaser.LinkedList.prototype = {
     	{
     		return;
     	}
+
+		this.total--;
 
     	//	The only node?
     	if (this.first == child && this.last == child)

@@ -370,7 +370,7 @@ Phaser.Input.prototype = {
     **/
     reset: function (hard) {
 
-        if (typeof hard === "undefined") { hard = false; }
+        hard = hard || false;
 
         this.keyboard.reset();
         this.mousePointer.reset();
@@ -428,7 +428,8 @@ Phaser.Input.prototype = {
     **/
     startPointer: function (event) {
 
-        if (this.maxPointers < 10 && this.totalActivePointers == this.maxPointers) {
+        if (this.maxPointers < 10 && this.totalActivePointers == this.maxPointers)
+        {
             return null;
         }
 
@@ -525,7 +526,7 @@ Phaser.Input.prototype = {
     **/
     getPointer: function (state) {
 
-        if (typeof state === "undefined") { state = false; }
+        state = state || false;
 
         if (this.pointer1.active == state)
         {
@@ -599,10 +600,7 @@ Phaser.Input.prototype = {
     **/
     getAngle: function (pointer1, pointer2) {
         // return Phaser.Vec2Utils.angle(pointer1.position, pointer2.position);
-    },
-
-    addGameObject: function() {},
-    removeGameObject: function() {},
+    }
 
 };
 

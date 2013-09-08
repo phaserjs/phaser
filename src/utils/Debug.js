@@ -246,21 +246,22 @@ Phaser.Utils.Debug.prototype = {
     */
     renderPointer: function (pointer, hideIfUp, downColor, upColor, color) {
 
-        if (this.context == null)
+        if (this.context == null || pointer == null)
         {
             return;
         }
 
-        if (typeof hideIfUp === "undefined") { hideIfUp = false; }
-        if (typeof downColor === "undefined") { downColor = 'rgba(0,255,0,0.5)'; }
-        if (typeof upColor === "undefined") { upColor = 'rgba(255,0,0,0.5)'; }
-        if (typeof color === "undefined") { color = 'rgb(255,255,255)'; }
+        hideIfUp = hideIfUp || false;
+        downColor = downColor || 'rgba(0,255,0,0.5)';
+        upColor = upColor || 'rgba(255,0,0,0.5)';
+        color = color || 'rgb(255,255,255)';
 
         if (hideIfUp == true && pointer.isUp == true)
         {
             return;
         }
 
+        this.start(pointer.x, pointer.y - 100, color);
         this.context.beginPath();
         this.context.arc(pointer.x, pointer.y, pointer.circle.radius, 0, Math.PI * 2);
 
@@ -285,11 +286,32 @@ Phaser.Utils.Debug.prototype = {
         this.context.closePath();
 
         //  Render the text
-        this.start(pointer.x, pointer.y - 100, color);
+        // this.start(pointer.x, pointer.y - 100, color);
         this.line('ID: ' + pointer.id + " Active: " + pointer.active);
         this.line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
         this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
         this.line('Duration: ' + pointer.duration + " ms");
+        this.stop();
+
+    },
+
+    /**
+    * Render Sprite Input Debug information
+    * @param x {number} X position of the debug info to be rendered.
+    * @param y {number} Y position of the debug info to be rendered.
+    * @param [color] {number} color of the debug info to be rendered. (format is css color string)
+    */    
+    renderSpriteInputInfo: function (sprite, x, y, color) {
+
+        color = color || 'rgb(255,255,255)';
+
+        this.start(x, y, color);
+        this.line('Sprite Input: (' + sprite.width + ' x ' + sprite.height + ')');
+        this.line('x: ' + sprite.input.pointerX().toFixed(1) + ' y: ' + sprite.input.pointerY().toFixed(1));
+        this.line('over: ' + sprite.input.pointerOver() + ' duration: ' + sprite.input.overDuration().toFixed(0));
+        this.line('down: ' + sprite.input.pointerDown() + ' duration: ' + sprite.input.downDuration().toFixed(0));
+        this.line('just over: ' + sprite.input.justOver() + ' just out: ' + sprite.input.justOut());
+        this.stop();
 
     },
 
