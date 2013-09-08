@@ -45,6 +45,7 @@
 	<script src="../src/core/Camera.js"></script>
 	<script src="../src/core/State.js"></script>
 	<script src="../src/core/StateManager.js"></script>
+	<script src="../src/core/LinkedList.js"></script>
 	<script src="../src/core/Signal.js"></script>
 	<script src="../src/core/SignalBinding.js"></script>
 	<script src="../src/core/Plugin.js"></script>
@@ -59,6 +60,7 @@
 	<script src="../src/input/MSPointer.js"></script>
 	<script src="../src/input/Pointer.js"></script>
 	<script src="../src/input/Touch.js"></script>
+	<script src="../src/input/InputHandler.js"></script>
 	<script src="../src/system/Canvas.js"></script>
 	<script src="../src/gameobjects/GameObjectFactory.js"></script>
 	<script src="../src/gameobjects/Sprite.js"></script>

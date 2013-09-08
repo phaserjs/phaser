@@ -253,6 +253,9 @@ Phaser.Input.prototype = {
     onTap: null,
     onHold: null,
 
+    //  A linked list of interactive objects
+    interactiveItems: new Phaser.LinkedList(),
+
 	/**
     * Starts the Input Manager running
     * @method start

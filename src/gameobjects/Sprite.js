@@ -10,9 +10,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
     this.exists = true;
 
-    //  An "invisible" sprite isn't rendered at all
-    this.visible = true;
-
     //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
     this.alive = true;
 
@@ -57,6 +54,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     {
         this.currentFrame = this.game.cache.getFrame(key);
     }
+
+    this.input = new Phaser.InputHandler(this);
 
     /**
      * The anchor sets the origin point of the texture.

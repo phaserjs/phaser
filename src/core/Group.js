@@ -205,6 +205,9 @@ Phaser.Group.prototype = {
     * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "z".
     * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
     */
+
+	//	http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.c
+
     sort: function (index, order) {
         // if (typeof index === "undefined") { index = 'z'; }
         // if (typeof order === "undefined") { order = Phaser.Types.SORT_ASCENDING; }

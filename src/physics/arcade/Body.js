@@ -122,7 +122,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
-	/*
 	postUpdate: function () {
 
 		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
@@ -134,7 +133,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 		}
 
 	},
-	*/
 
 	checkWorldBounds: function () {
 
