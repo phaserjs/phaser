@@ -25,7 +25,7 @@
 	function create() {
 
 		player = game.add.sprite(400, 500, 'ship');
-		// player.anchor.setTo(0.5, 0.5);
+		player.anchor.setTo(0.5, 0.5);
 
 		aliens = game.add.group();
 
@@ -33,13 +33,14 @@
 		{
 			for (var x = 0; x < 10; x++)
 			{
-				aliens.create(x * 48, y * 64, 'alien');
+				aliens.create(x * 48, y * 50, 'alien');
 			}
 		}
 
 		aliens.x = 100;
+		aliens.y = 50;
 
-		var tween = game.add.tween(aliens).to({x: 200}, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+		var tween = game.add.tween(aliens).to({x: 200}, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 		tween.onComplete.add(descend, this);
 
 	}

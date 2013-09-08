@@ -5,7 +5,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 
 	this.offset = new Phaser.Point;
 
-	//	the top-left of the Body
 	this.x = sprite.x;
 	this.y = sprite.y;
 
@@ -18,8 +17,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 	this.height = sprite.currentFrame.sourceSizeH;
 	this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
 	this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
-
-	this.bounds = new Phaser.Rectangle(sprite.x, sprite.y, this.width, this.height);
 
 	//	Scale value cache
 	this._sx = sprite.scale.x;
@@ -69,8 +66,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 			this.height = this.sourceHeight * scaleY;
 			this.halfWidth = Math.floor(this.width / 2);
 			this.halfHeight = Math.floor(this.height / 2);
-			this.bounds.width = this.width;
-			this.bounds.height = this.height;
 			this._sx = scaleX;
 			this._sy = scaleY;
 		}
@@ -94,18 +89,15 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 		this.lastX = this.x;
 		this.lastY = this.y;
-
-		this.x = this.sprite.x - this.offset.x + (this.sprite.anchor.x * this.width));
-		this.y = this.sprite.y - this.offset.y + (this.sprite.anchor.y * this.height));
 		this.rotation = this.sprite.angle;
+
+		this.x = (this.sprite.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.y = (this.sprite.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
 		if (this.moves)
 		{
 			this.game.physics.updateMotion(this);
 		}
-
-		this.bounds.x = this.x;
-		this.bounds.y = this.y;
 
 		if (this.collideWorldBounds)
 		{
@@ -120,44 +112,52 @@ Phaser.Physics.Arcade.Body.prototype = {
 		}
 
 		//	Adjust the sprite based on all of the above, so the x/y coords will be correct going into the State update
-		// this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
-		// this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
-		// this.sprite.x = this.x;
-		// this.sprite.y = this.y;
+		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
+		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
 
 		if (this.allowRotation)
 		{
-			// this.sprite.angle = this.rotation;
+			this.sprite.angle = this.rotation;
 		}
 
 	},
 
+	/*
+	postUpdate: function () {
+
+		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
+		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
+
+		if (this.allowRotation)
+		{
+			this.sprite.angle = this.rotation;
+		}
+
+	},
+	*/
+
 	checkWorldBounds: function () {
 
-		if (this.bounds.x < this.game.world.bounds.x)
+		if (this.x < this.game.world.bounds.x)
 		{
 			this.x = this.game.world.bounds.x;
-			this.velocity.x *= -1;
-			this.velocity.x *= this.bounce.x;
+			this.velocity.x *= -this.bounce.x;
 		}
-		else if (this.bounds.right > this.game.world.bounds.right)
+		else if (this.right > this.game.world.bounds.right)
 		{
 			this.x = this.game.world.bounds.right - this.width;
-			this.velocity.x *= -1;
-			this.velocity.x *= this.bounce.x;
+			this.velocity.x *= -this.bounce.x;
 		}
 
-		if (this.bounds.y < this.game.world.bounds.y)
+		if (this.y < this.game.world.bounds.y)
 		{
 			this.y = this.game.world.bounds.y;
-			this.velocity.y *= -1;
-			this.velocity.y *= this.bounce.y;
+			this.velocity.y *= -this.bounce.y;
 		}
-		else if (this.bounds.bottom > this.game.world.bounds.bottom)
+		else if (this.bottom > this.game.world.bounds.bottom)
 		{
 			this.y = this.game.world.bounds.bottom - this.height;
-			this.velocity.y *= -1;
-			this.velocity.y *= this.bounce.y;
+			this.velocity.y *= -this.bounce.y;
 		}
 
 	},
@@ -173,8 +173,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.height = this.sourceHeight * this._sy;
 		this.halfWidth = Math.floor(this.width / 2);
 		this.halfHeight = Math.floor(this.height / 2);
-		this.bounds.width = this.width;
-		this.bounds.height = this.height;
 		this.offset.setTo(offsetX, offsetY);
 
 	},
@@ -196,3 +194,59 @@ Phaser.Physics.Arcade.Body.prototype = {
     }
 
 };
+
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
+    
+    /**
+    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+    * @method bottom
+    * @return {Number}
+    **/
+    get: function () {
+        return this.y + this.height;
+    },
+
+    /**
+    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+    * @method bottom
+    * @param {Number} value
+    **/    
+    set: function (value) {
+        if(value <= this.y) {
+            this.height = 0;
+        } else {
+            this.height = (this.y - value);
+        }
+    },
+    enumerable: true,
+    configurable: true
+});
+
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
+    
+    /**
+    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+    * However it does affect the width property.
+    * @method right
+    * @return {Number}
+    **/    
+    get: function () {
+        return this.x + this.width;
+    },
+
+    /**
+    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+    * However it does affect the width property.
+    * @method right
+    * @param {Number} value
+    **/
+    set: function (value) {
+        if(value <= this.x) {
+            this.width = 0;
+        } else {
+            this.width = this.x + value;
+        }
+    },
+    enumerable: true,
+    configurable: true
+});

@@ -39,7 +39,7 @@
 
 		ship = game.add.sprite(400, 400, 'ship');
 		ship.body.collideWorldBounds = true;
-		ship.body.bounce.setTo(0.5, 0.5);
+		ship.body.bounce.setTo(1, 1);
 
 	}
 
@@ -64,14 +64,14 @@
         }
 
 		game.physics.collideGroup(aliens);
-		// total = game.physics.overlap(ship);
+		total = game.physics.overlap(ship);
 
 	}
 
 	function render() {
 
 		game.debug.renderQuadTree(game.physics.quadTree);
-		game.debug.renderRectangle(ship.body.bounds);
+		game.debug.renderRectangle(ship.body);
 
 		// game.debug.renderText('total: ' + total.length, 32, 50);
 

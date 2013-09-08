@@ -56,8 +56,8 @@
 	function render() {
 
 		game.debug.renderSpriteCorners(bunny, true, true);
-		game.debug.renderRectangle(bunny.body.bounds);
-		game.debug.renderRectangle(wall.body.bounds);
+		game.debug.renderRectangle(bunny.body);
+		game.debug.renderRectangle(wall.body);
 
 	}
 

@@ -28,6 +28,7 @@ Phaser.Utils.Debug.prototype = {
     renderShadow: true,
     currentX: 0,
     currentY: 0,
+    currentAlpha: 1,
     context: null,
 
     /**
@@ -55,16 +56,20 @@ Phaser.Utils.Debug.prototype = {
             this.currentColor = color;
         }
 
+        this.currentAlpha = this.context.globalAlpha;
+
         this.context.save();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
         this.context.fillStyle = color;
         this.context.font = this.font;
+        this.context.globalAlpha = 1;
 
     },
 
     stop: function () {
 
         this.context.restore();
+        this.context.globalAlpha = this.currentAlpha;
 
     },
 

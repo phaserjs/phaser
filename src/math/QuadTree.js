@@ -104,7 +104,7 @@ Phaser.QuadTree.prototype = {
 	 	//	if we have subnodes ...
 		if (this.nodes[0] != null)
 		{
-			index = this.getIndex(body.bounds);
+			index = this.getIndex(body);
 	 
 		  	if (index !== -1)
 		  	{
@@ -126,7 +126,7 @@ Phaser.QuadTree.prototype = {
 			//	Add objects to subnodes
 			while (i < this.objects.length)
 			{
-				index = this.getIndex(this.objects[i].bounds);
+				index = this.getIndex(this.objects[i]);
 				
 				if (index !== -1)
 				{
@@ -192,7 +192,7 @@ Phaser.QuadTree.prototype = {
 	 	
 		var returnObjects = this.objects;
 
-		sprite.body.quadTreeIndex = this.getIndex(sprite.body.bounds);
+		sprite.body.quadTreeIndex = this.getIndex(sprite.body);
 
 		//	Temp store for the node IDs this sprite is in, we can use this for fast elimination later
 		sprite.body.quadTreeIDs.push(this.ID);
