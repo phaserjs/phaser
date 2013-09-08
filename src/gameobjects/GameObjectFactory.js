@@ -79,5 +79,10 @@ Phaser.GameObjectFactory.prototype = {
 
     },
 
+    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+
+        return this.world.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+
+    },
 
 };
