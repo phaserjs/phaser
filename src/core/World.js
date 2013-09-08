@@ -18,6 +18,8 @@ Phaser.World.prototype = {
 	bounds: null,
 	camera: null,
 
+	currentRenderOrderID: 0,
+
 	boot: function () {
 
 		this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
@@ -55,6 +57,8 @@ Phaser.World.prototype = {
 	update: function () {
 
 		this.camera.update();
+
+		this.currentRenderOrderID = 0;
 
 		if (this._stage.first._iNext)
 		{

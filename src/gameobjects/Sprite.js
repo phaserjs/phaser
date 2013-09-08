@@ -14,7 +14,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.alive = true;
 
     this.group = null;
+
     this.name = '';
+
+    this.renderOrderID = -1;
 
     if (key)
     {
@@ -149,6 +152,7 @@ Phaser.Sprite.prototype.update = function() {
 
     if (!this.exists)
     {
+        this.renderOrderID = -1;
         return;
     }
 
@@ -173,6 +177,8 @@ Phaser.Sprite.prototype.update = function() {
 
     if (this.visible)
     {
+        this.renderOrderID = this.game.world.currentRenderOrderID++;
+
         //  |a c tx|
         //  |b d ty|
         //  |0 0  1|
@@ -255,6 +261,11 @@ Phaser.Sprite.prototype.update = function() {
     }
 
     this.body.update();
+
+    if (this.input.enabled)
+    {
+        this.input.update();
+    }
 
 }
 
@@ -371,6 +382,41 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     */
     get: function () {
         return this._cache.cameraVisible;
+    }
+
+});
+
+Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
+    
+    /**
+    * Get the input enabled state of this Sprite.
+    */
+    get: function () {
+
+        return (this.input.enabled);
+
+    },
+
+    /**
+    * Set the ability for this sprite to receive input events.
+    */
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.input.enabled == false)
+            {
+                this.input.start();
+            }
+        }
+        else
+        {
+            if (this.input.enabled)
+            {
+                this.input.stop();
+            }
+        }
+
     }
 
 });

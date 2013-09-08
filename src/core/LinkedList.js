@@ -3,8 +3,8 @@ Phaser.LinkedList = function () {
 
 Phaser.LinkedList.prototype = {
 
-    _iNext: null,
-    _iPrev: null,
+    next: null,
+    prev: null,
     first: null,
     last: null,
     sprite: { name: 'HD' },
@@ -16,15 +16,15 @@ Phaser.LinkedList.prototype = {
     	{
     		this.first = child;
     		this.last = child;
-	    	this._iNext = child;
-	    	child._iPrev = this;
+	    	this.next = child;
+	    	child.prev = this;
     		return;
     	}
 
     	//	Get gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
-    	this.last._iNext = child;
+    	this.last.next = child;
 
-    	child._iPrev = this.last;
+    	child.prev = this.last;
 
     	this.last = child;
 
@@ -43,22 +43,22 @@ Phaser.LinkedList.prototype = {
     	{
     		this.first = null;
     		this.last = null;
-    		this._iNext = null;
-    		child._iNext = null;
-    		child._iPrev = null;
+    		this.next = null;
+    		child.next = null;
+    		child.prev = null;
     		return;
     	}
 
-		var childPrev = child._iPrev;
+		var childPrev = child.prev;
 
     	//	Tail node?
-    	if (child._iNext)
+    	if (child.next)
     	{
 			//	Has another node after it?
-	    	child._iNext._iPrev = child._iPrev;
+	    	child.next.prev = child.prev;
     	}
 
-    	childPrev._iNext = child._iNext;
+    	childPrev.next = child.next;
 
     },
 
@@ -72,14 +72,14 @@ Phaser.LinkedList.prototype = {
 		var nameFirst = '-';
 		var nameLast = '-';
 
-		if (this._iNext)
+		if (this.next)
 		{
-			nameNext = this._iNext.sprite.name;
+			nameNext = this.next.sprite.name;
 		}
 
-		if (this._iPrev)
+		if (this.prev)
 		{
-			namePrev = this._iPrev.sprite.name;
+			namePrev = this.prev.sprite.name;
 		}
 
 		if (this.first)
@@ -116,7 +116,7 @@ Phaser.LinkedList.prototype = {
 
 		var entity = this;
 
-		var testObject = entity.last._iNext;
+		var testObject = entity.last.next;
 		entity = entity.first;
 		
 		do	
@@ -127,14 +127,14 @@ Phaser.LinkedList.prototype = {
 			var nameFirst = '-';
 			var nameLast = '-';
 
-			if (entity._iNext)
+			if (entity.next)
 			{
-				nameNext = entity._iNext.sprite.name;
+				nameNext = entity.next.sprite.name;
 			}
 
-			if (entity._iPrev)
+			if (entity.prev)
 			{
-				namePrev = entity._iPrev.sprite.name;
+				namePrev = entity.prev.sprite.name;
 			}
 
 			if (entity.first)
@@ -169,7 +169,7 @@ Phaser.LinkedList.prototype = {
 
 			console.log(name + '\t\t\t|\t\t' + nameNext + '\t\t\t|\t\t' + namePrev + '\t\t\t|\t\t' + nameFirst + '\t\t\t|\t\t' + nameLast);
 
-			entity = entity._iNext;
+			entity = entity.next;
 
 		}
 		while(entity != testObject)

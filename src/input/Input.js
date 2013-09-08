@@ -253,7 +253,7 @@ Phaser.Input.prototype = {
     onTap: null,
     onHold: null,
 
-    //  A linked list of interactive objects
+    //  A linked list of interactive objects, the InputHandler components (belong to Sprites) register themselves with this
     interactiveItems: new Phaser.LinkedList(),
 
 	/**

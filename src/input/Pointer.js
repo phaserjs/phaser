@@ -365,6 +365,24 @@ Phaser.Pointer.prototype = {
         this._highestRenderObject = -1;
         this._highestInputPriorityID = -1;
 
+        //  Just run through the linked list
+        if (this.game.input.interactiveItems.next)
+        {
+            var currentNode = this.game.input.interactiveItems.next;
+            
+            do  
+            {
+                if (currentNode['update'])
+                {
+                    currentNode.update();
+                }
+                
+                currentNode = currentNode.next;
+            }
+            while (currentNode != this.game.input.interactiveItems.next)
+        }
+
+
         for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
         {
             if (this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.checkPointerOver(this))

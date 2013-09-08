@@ -30,33 +30,33 @@
 
 	function create() {
 
-		a = game.add.sprite(game.world.randomX, game.world.randomY, 'ship');
+		a = game.add.sprite(100, 100, 'ship');
 		a.name = 's1';
-		b = game.add.sprite(game.world.randomX, game.world.randomY, 'ship');
+		b = game.add.sprite(130, 100, 'ship');
 		b.name = 's2';
-		c = game.add.sprite(game.world.randomX, game.world.randomY, 'ship');
+		c = game.add.sprite(160, 100, 'ship');
 		c.name = 's3';
-		d = game.add.sprite(game.world.randomX, game.world.randomY, 'alien');
+		d = game.add.sprite(190, 100, 'alien');
 		d.name = 'a1';
-		e = game.add.sprite(game.world.randomX, game.world.randomY, 'alien');
+		e = game.add.sprite(220, 100, 'alien');
 		e.name = 'a2';
-		f = game.add.sprite(game.world.randomX, game.world.randomY, 'alien');
+		f = game.add.sprite(250, 100, 'alien');
 		f.name = 'a3';
 
 		list = new Phaser.LinkedList();
 
 		list.add(a.input);
-		list.add(b.input);
-		list.add(c.input);
-		list.add(d.input);
-		list.add(e.input);
-		list.add(f.input);
+		// list.add(b.input);
+		// list.add(c.input);
+		// list.add(d.input);
+		// list.add(e.input);
+		// list.add(f.input);
 
 		list.dump();
 
-		list.remove(d.input);
+		// list.remove(d.input);
 
-		list.dump();
+		// list.dump();
 
 	}
 
