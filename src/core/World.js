@@ -91,6 +91,17 @@ Phaser.World.prototype = {
 
 	},
 
+	bringToTop: function (child) {
+
+		if (child !== this._stage.last)
+		{
+			this.swapChildren(child, this._stage.last);
+		}
+
+		return child;
+
+	},
+
 	swapChildren: function (child1, child2) {
 
 		if (child1 === child2 || !child1.parent || !child2.parent)

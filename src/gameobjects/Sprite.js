@@ -319,6 +319,19 @@ Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, x, y) {
 
 }
 
+Phaser.Sprite.prototype.bringToTop = function() {
+
+    if (this.group)
+    {
+        this.group.bringToTop(this);
+    }
+    else
+    {
+        this.game.world.bringToTop(this);
+    }
+
+}
+
 Phaser.Sprite.prototype.getBounds = function(rect) {
 
     rect = rect || new Phaser.Rectangle;

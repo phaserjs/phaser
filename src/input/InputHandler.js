@@ -672,7 +672,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.dragFromCenter)
         {
-            this.sprite.transform.centerOn(pointer.worldX, pointer.worldY);
+            // this.sprite.transform.centerOn(pointer.worldX, pointer.worldY);
             this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
         }
         else
