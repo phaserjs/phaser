@@ -49,6 +49,8 @@ Phaser.InputHandler = function (sprite) {
     */
     this.consumePointerEvent = false;
 
+    this._tempPoint = new Phaser.Point;
+
 };
 
 Phaser.InputHandler.prototype = {
@@ -102,7 +104,7 @@ Phaser.InputHandler.prototype = {
             this.enabled = true;
 
             //  Create the signals the Input component will emit
-            if (this.sprite.events.onInputOver == null)
+            if (this.sprites.events && this.sprite.events.onInputOver == null)
             {
                 this.sprite.events.onInputOver = new Phaser.Signal;
                 this.sprite.events.onInputOut = new Phaser.Signal;
@@ -318,12 +320,29 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer) {
 
-        if (this.enabled == false || this.sprite.visible == false)
+        if (this.enabled && this.sprite.visible)
         {
-            return false;
+            this.sprite.getLocalPosition(this._tempPoint, pointer.x, pointer.y);
+
+            //  Check against bounds
+            var width = this.sprite.texture.frame.width,
+                height = this.sprite.texture.frame.height,
+                x1 = -width * this.sprite.anchor.x,
+                y1;
+            
+            if(x > x1 && x < x1 + width)
+            {
+                y1 = -height * this.sprite.anchor.y;
+            
+                if(y > y1 && y < y1 + height)
+                {
+                    return true;
+                }
+            }
         }
         else
         {
+            return false;
         }
 
     },

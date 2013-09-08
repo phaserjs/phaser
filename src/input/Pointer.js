@@ -362,7 +362,7 @@ Phaser.Pointer.prototype = {
 
         //  Work out which object is on the top
         this._highestRenderOrderID = -1;
-        this._highestRenderObject = -1;
+        this._highestRenderObject = null;
         this._highestInputPriorityID = -1;
 
         //  Just run through the linked list
@@ -372,9 +372,12 @@ Phaser.Pointer.prototype = {
             
             do  
             {
-                if (currentNode['update'])
+                //  If the object has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
+                if (currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID == this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID) && currentNode.checkPointerOver(this))
                 {
-                    currentNode.update();
+                    this._highestRenderOrderID = currentNode.sprite.renderOrderID;
+                    this._highestInputPriorityID = currentNode.priorityID;
+                    this._highestRenderObject = currentNode;
                 }
                 
                 currentNode = currentNode.next;
@@ -383,6 +386,7 @@ Phaser.Pointer.prototype = {
         }
 
 
+/*
         for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
         {
             if (this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.checkPointerOver(this))
@@ -396,13 +400,14 @@ Phaser.Pointer.prototype = {
                 }
             }
         }
+*/
 
-        if (this._highestRenderObject == -1)
+        if (this._highestRenderObject == null)
         {
-            //  The pointer isn't over anything, check if we've got a lingering previous target
-            if (this.targetObject !== null)
+            //  The pointer isn't currently over anything, check if we've got a lingering previous target
+            if (this.targetObject)
             {
-                this.targetObject.input._pointerOutHandler(this);
+                this.targetObject._pointerOutHandler(this);
                 this.targetObject = null;
             }
         }
@@ -411,16 +416,16 @@ Phaser.Pointer.prototype = {
             if (this.targetObject == null)
             {
                 //  And now set the new one
-                this.targetObject = this.game.input.inputObjects[this._highestRenderObject];
-                this.targetObject.input._pointerOverHandler(this);
+                this.targetObject = this._highestRenderObject;
+                this._highestRenderObject._pointerOverHandler(this);
             }
             else
             {
                 //  We've got a target from the last update
-                if (this.targetObject == this.game.input.inputObjects[this._highestRenderObject])
+                if (this.targetObject == this._highestRenderObject)
                 {
                     //  Same target as before, so update it
-                    if (this.targetObject.input.update(this) == false)
+                    if (this._highestRenderObject.update(this) == false)
                     {
                         this.targetObject = null;
                     }
@@ -428,11 +433,11 @@ Phaser.Pointer.prototype = {
                 else
                 {
                     //  The target has changed, so tell the old one we've left it
-                    this.targetObject.input._pointerOutHandler(this);
+                    this.targetObject._pointerOutHandler(this);
 
                     //  And now set the new one
-                    this.targetObject = this.game.input.inputObjects[this._highestRenderObject];
-                    this.targetObject.input._pointerOverHandler(this);
+                    this.targetObject = this._highestRenderObject;
+                    this.targetObject._pointerOverHandler(this);
                 }
             }
         }
@@ -506,17 +511,22 @@ Phaser.Pointer.prototype = {
             this.game.input.currentPointers--;
         }
 
-        for (var i = 0; i < this.game.input.totalTrackedObjects; i++)
+        if (this.game.input.interactiveItems.next)
         {
-            if (this.game.input.inputObjects[i] && this.game.input.inputObjects[i].input && this.game.input.inputObjects[i].input.enabled)
+            var currentNode = this.game.input.interactiveItems.next;
+            
+            do  
             {
-                this.game.input.inputObjects[i].input._releasedHandler(this);
+                currentNode._releasedHandler(this);
+                
+                currentNode = currentNode.next;
             }
+            while (currentNode != this.game.input.interactiveItems.next)
         }
 
         if (this.targetObject)
         {
-            this.targetObject.input._releasedHandler(this);
+            this.targetObject._releasedHandler(this);
         }
 
         this.targetObject = null;
@@ -532,7 +542,7 @@ Phaser.Pointer.prototype = {
     */
     justPressed: function (duration) {
 
-        if (typeof duration === "undefined") { duration = this.game.input.justPressedRate; }
+        duration = duration || this.game.input.justPressedRate;
 
         return (this.isDown === true && (this.timeDown + duration) > this.game.time.now);
 
@@ -546,7 +556,7 @@ Phaser.Pointer.prototype = {
     */
     justReleased: function (duration) {
 
-        if (typeof duration === "undefined") { duration = this.game.input.justReleasedRate; }
+        duration = duration || this.game.input.justReleasedRate;
 
         return (this.isUp === true && (this.timeUp + duration) > this.game.time.now);
 
@@ -571,9 +581,9 @@ Phaser.Pointer.prototype = {
         this._history.length = 0;
         this._stateReset = true;
 
-        if (this.targetObject && this.targetObject.input)
+        if (this.targetObject)
         {
-            this.targetObject.input._releasedHandler(this);
+            this.targetObject._releasedHandler(this);
         }
 
         this.targetObject = null;
