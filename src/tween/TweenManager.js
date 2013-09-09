@@ -60,7 +60,7 @@ Phaser.TweenManager.prototype = {
     */
     create: function (object, localReference) {
 
-        if (typeof localReference === "undefined") { localReference = false; }
+        localReference = localReference || false;
 
         if (localReference)
         {

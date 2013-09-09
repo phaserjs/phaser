@@ -64,6 +64,7 @@
 	<script src="../src/gameobjects/TileSprite.js"></script>
 	<script src="../src/gameobjects/Text.js"></script>
 	<script src="../src/gameobjects/Button.js"></script>
+	<script src="../src/gameobjects/Graphics.js"></script>
 	<script src="../src/system/Canvas.js"></script>
 	<script src="../src/system/StageScaleMode.js"></script>
 	<script src="../src/system/Device.js"></script>

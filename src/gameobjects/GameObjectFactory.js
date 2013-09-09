@@ -85,4 +85,10 @@ Phaser.GameObjectFactory.prototype = {
 
     },
 
+    graphics: function (x, y) {
+
+        return this.world.add(new Phaser.Graphics(this.game, x, y));
+
+    },
+
 };

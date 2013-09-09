@@ -142,6 +142,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     //  Set-up the physics body
     this.body = new Phaser.Physics.Arcade.Body(this);
 
+    //  World bounds check
+    this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds);
+    this.inWorldThreshold = 0;
     this._outOfBoundsFired = false;
 
 };
@@ -280,7 +283,7 @@ Phaser.Sprite.prototype.reset = function(x, y) {
     this.exists = true;
     this.visible = true;
     this._outOfBoundsFired = false;
-
+    
 }
 
 Phaser.Sprite.prototype.updateBounds = function() {
@@ -306,11 +309,27 @@ Phaser.Sprite.prototype.updateBounds = function() {
     this._cache.boundsX = this._cache.x;
     this._cache.boundsY = this._cache.y;
 
-    //  Check world bounds
-    if (this._outOfBoundsFired == false && Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, 100) == false)
+    if (this.inWorld == false)
     {
-        this.events.onOutOfBounds.dispatch(this);
-        this._outOfBoundsFired = true;
+        //  Sprite WAS out of the screen, is it still?
+        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
+
+        if (this.inWorld)
+        {
+            //  It's back again, reset the OOB check
+            this._outOfBoundsFired = false;
+        }
+    }
+    else
+    {
+        //   Sprite WAS in the screen, has it now left?
+        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
+
+        if (this.inWorld == false)
+        {
+            this.events.onOutOfBounds.dispatch(this);
+            this._outOfBoundsFired = true;
+        }
     }
 
 }
