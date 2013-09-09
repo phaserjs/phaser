@@ -114,6 +114,12 @@ Phaser.Device = function () {
     */
     this.css3D = false;
 
+    /**
+    * Is Pointer Lock available?
+    * @type {boolean}
+    */
+    this.pointerLock = false;
+
     //  Browser
 
     /**
@@ -319,6 +325,8 @@ Phaser.Device.prototype = {
         if (window.navigator.msPointerEnabled) {
             this.mspointer = true;
         }
+        
+        this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
     },
 

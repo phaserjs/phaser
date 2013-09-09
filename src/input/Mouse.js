@@ -23,6 +23,12 @@ Phaser.Mouse.prototype = {
     */
 	disabled: false,
 
+    /**
+    * If the mouse has been Pointer Locked successfully this will be set to true.
+    * @type {bool}
+    */
+    locked: false,
+
 	/**
     * Starts the event listeners running
     * @method start
@@ -114,6 +120,58 @@ Phaser.Mouse.prototype = {
         event['identifier'] = 0;
 
         this.game.input.mousePointer.stop(event);
+
+    },
+
+    requestPointerLock: function () {
+
+        if (this.game.device.pointerLock)
+        {
+            var element = this.game.stage.canvas;
+
+            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
+            element.requestPointerLock();
+
+            var _this = this;
+
+            this._pointerLockChange = function (event) {
+                return _this.pointerLockChange(event);
+            };
+
+            document.addEventListener('pointerlockchange', this._pointerLockChange, false);
+            document.addEventListener('mozpointerlockchange', this._pointerLockChange, false);
+            document.addEventListener('webkitpointerlockchange', this._pointerLockChange, false);
+        }
+
+    },
+
+    pointerLockChange: function (event) {
+
+        var element = this.game.stage.canvas;
+
+        if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element)
+        {
+            //  Pointer was successfully locked
+            this.locked = true;
+        }
+        else
+        {
+            //  Pointer was unlocked
+            this.locked = false;
+        }
+
+    },
+
+    releasePointerLock: function () {
+
+        document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock || document.webkitExitPointerLock;
+
+        document.exitPointerLock();
+
+        document.removeEventListener('pointerlockchange', this._pointerLockChange);
+        document.removeEventListener('mozpointerlockchange', this._pointerLockChange);
+        document.removeEventListener('webkitpointerlockchange', this._pointerLockChange);
 
     },
 
