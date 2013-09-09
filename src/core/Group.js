@@ -32,6 +32,7 @@ Phaser.Group.prototype = {
 		if (child.group !== this)
 		{
 			child.group = this;
+			child.events.onAddedToGroup.dispatch(child, this);
 			this._container.addChild(child);
 		}
 
@@ -44,6 +45,7 @@ Phaser.Group.prototype = {
 		if (child.group !== this)
 		{
 			child.group = this;
+			child.events.onAddedToGroup.dispatch(child, this);
 			this._container.addChildAt(child, index);
 		}
 
@@ -61,6 +63,7 @@ Phaser.Group.prototype = {
 
 		var child = new Phaser.Sprite(this.game, x, y, key, frame);
 		child.group = this;
+		child.events.onAddedToGroup.dispatch(child, this);
 		this._container.addChild(child);
 		return child;
 
@@ -186,11 +189,13 @@ Phaser.Group.prototype = {
 		{
 			if (newChild.parent != undefined)
 			{
+				newChild.events.onRemovedFromGroup.dispatch(newChild, this);
 				newChild.parent.removeChild(newChild);
 			}
 
 			this._container.removeChild(oldChild);
 			this._container.addChildAt(newChild, index);
+			newChild.events.onAddedToGroup.dispatch(newChild, this);
 		}
 
 	},
@@ -600,6 +605,7 @@ Phaser.Group.prototype = {
 
 	remove: function (child) {
 
+		child.events.onRemovedFromGroup.dispatch(child, this);
 		this._container.removeChild(child);
 
 	},
@@ -608,6 +614,7 @@ Phaser.Group.prototype = {
 
 		do
 		{
+			this._container.children[0].events.onRemovedFromGroup.dispatch(this._container.children[0], this);
 			this._container.removeChild(this._container.children[0]);
 		}
 		while (this._container.children.length > 0);
@@ -624,6 +631,7 @@ Phaser.Group.prototype = {
 		for (var i = startIndex; i < endIndex; i++)
 		{
 			var child = this._container.children[i];
+			child.events.onRemovedFromGroup.dispatch(child, this);
 			this._container.removeChild(child);
 		}
 

@@ -142,6 +142,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     //  Set-up the physics body
     this.body = new Phaser.Physics.Arcade.Body(this);
 
+    this._outOfBoundsFired = false;
+
 };
 
 //  Needed to keep the PIXI.Sprite constructor in the prototype chain (as the core pixi renderer uses an instanceof check sadly)
@@ -270,9 +272,14 @@ Phaser.Sprite.prototype.update = function() {
 
 }
 
-Phaser.Sprite.prototype.postUpdate = function() {
+Phaser.Sprite.prototype.reset = function(x, y) {
 
-    this.body.postUpdate();
+    this.x = x;
+    this.y = y;
+    this.alive = true;
+    this.exists = true;
+    this.visible = true;
+    this._outOfBoundsFired = false;
 
 }
 
@@ -298,6 +305,13 @@ Phaser.Sprite.prototype.updateBounds = function() {
     //  This is the coordinate the Sprite was at when the last bounds was created
     this._cache.boundsX = this._cache.x;
     this._cache.boundsY = this._cache.y;
+
+    //  Check world bounds
+    if (this._outOfBoundsFired == false && Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, 100) == false)
+    {
+        this.events.onOutOfBounds.dispatch(this);
+        this._outOfBoundsFired = true;
+    }
 
 }
 

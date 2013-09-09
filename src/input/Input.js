@@ -381,7 +381,7 @@ Phaser.Input.prototype = {
         }
 
         this.currentPointers = 0;
-        // this.game.stage.canvas.style.cursor = "default";
+        this.game.stage.canvas.style.cursor = "default";
 
         if (hard == true)
         {
