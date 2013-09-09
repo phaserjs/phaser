@@ -286,10 +286,11 @@ Phaser.Game.prototype = {
 			this.math = Phaser.Math;
 			this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
+			this.stage = new Phaser.Stage(this, this.width, this.height);
+
 			this.setUpRenderer();
 
 			this.world = new Phaser.World(this);
-			this.stage = new Phaser.Stage(this);
 			this.add = new Phaser.GameObjectFactory(this);
 			this.cache = new Phaser.Cache(this);
 			this.load = new Phaser.Loader(this);
@@ -334,7 +335,7 @@ Phaser.Game.prototype = {
 			if (this.device.canvas)
 			{
 				this.renderType = Phaser.CANVAS;
-				this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, this.transparent);
+				this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.stage.canvas, this.transparent);
 				Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
 				this.canvas = this.renderer.view;
 				this.context = this.renderer.context;
@@ -387,7 +388,7 @@ Phaser.Game.prototype = {
 			this.state.update();
 	        this.plugins.update();
 
-			this.renderer.render(this.world._stage);
+			this.renderer.render(this.stage._stage);
 			this.state.render();
 
 			this.plugins.postRender();

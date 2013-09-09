@@ -9,17 +9,32 @@
  * @copyright  2013 Photon Storm Ltd.
  * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
  */
-Phaser.Stage = function (game) {
+Phaser.Stage = function (game, width, height) {
 	
 	this.game = game;
-    this.canvas = game.renderer.view;
+
+    /**
+    * Background color of the stage (defaults to black). Set via the public backgroundColor property.
+    * @type {string}
+    */
+    this._backgroundColor = 'rgb(0,0,0)';
 
 	//	Get the offset values (for input and other things)
 	this.offset = new Phaser.Point;
 
+    this.canvas = Phaser.Canvas.create(width, height);    
+
+    //  The Pixi Stage which is hooked to the renderer
+    this._stage = new PIXI.Stage(0x000000, false);
+    this._stage.name = '_stage_root';
+
 	Phaser.Canvas.getOffset(this.canvas, this.offset);
 
 	this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
+
+    this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
+    this.scale = new Phaser.StageScaleMode(this.game, width, height);
+    this.aspectRatio = width / height;
 
 	var _this = this;
 
@@ -69,3 +84,18 @@ Phaser.Stage.prototype = {
     },
 
 };
+
+Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
+
+    get: function () {
+        return this._backgroundColor;
+    },
+
+    set: function (color) {
+        this._stage.setBackgroundColor(color);
+        this._backgroundColor = color;
+    },
+
+    enumerable: true,
+    configurable: true
+});

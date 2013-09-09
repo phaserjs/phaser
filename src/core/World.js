@@ -2,18 +2,11 @@ Phaser.World = function (game) {
 
 	this.game = game;
 
-	this._stage = new PIXI.Stage(0x000000);
-	this._stage.name = '_stage_root';
-
 	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 	
 };
 
 Phaser.World.prototype = {
-
-	_stage: null,
-	_stage: null,
-	_length: 0,
 
 	bounds: null,
 	camera: null,
@@ -29,27 +22,27 @@ Phaser.World.prototype = {
 
 	add: function (gameobject) {
 
-		this._stage.addChild(gameobject);
+		this.game.stage._stage.addChild(gameobject);
 		return gameobject;
 
 	},
 
 	addAt: function (gameobject, index) {
 
-		this._stage.addChildAt(gameobject, index);
+		this.game.stage._stage.addChildAt(gameobject, index);
 		return gameobject;
 
 	},
 
 	getAt: function (index) {
 
-		return this._stage.getChildAt(index);
+		return this.game.stage._stage.getChildAt(index);
 
 	},
 
 	remove: function (gameobject) {
 
-		this._stage.removeChild(gameobject);
+		this.game.stage._stage.removeChild(gameobject);
 		return gameobject;
 
 	},
@@ -60,9 +53,9 @@ Phaser.World.prototype = {
 
 		this.currentRenderOrderID = 0;
 
-		if (this._stage.first._iNext)
+		if (this.game.stage._stage.first._iNext)
 		{
-			var currentNode = this._stage.first._iNext;
+			var currentNode = this.game.stage._stage.first._iNext;
 			
 			do	
 			{
@@ -73,7 +66,7 @@ Phaser.World.prototype = {
 				
 				currentNode = currentNode._iNext;
 			}
-			while (currentNode != this._stage.last._iNext)
+			while (currentNode != this.game.stage._stage.last._iNext)
 		}
 
 	},
@@ -93,9 +86,9 @@ Phaser.World.prototype = {
 
 	bringToTop: function (child) {
 
-		if (child !== this._stage.last)
+		if (child !== this.game.stage._stage.last)
 		{
-			this.swapChildren(child, this._stage.last);
+			this.swapChildren(child, this.game.stage._stage.last);
 		}
 
 		return child;
@@ -116,8 +109,8 @@ Phaser.World.prototype = {
 		var child2Prev = child2._iPrev;
 		var child2Next = child2._iNext;
 
-		var endNode = this._stage.last._iNext;
-		var currentNode = this._stage.first;
+		var endNode = this.game.stage._stage.last._iNext;
+		var currentNode = this.game.stage._stage.first;
 			
 		do	
 		{

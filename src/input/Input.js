@@ -7,9 +7,6 @@
 Phaser.Input = function (game) {
 
 	this.game = game;
-
-    // this.inputObjects = [];
-    // this.totalTrackedObjects = 0;
 	
 };
 
@@ -397,16 +394,7 @@ Phaser.Input.prototype = {
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
 
-            for (var i = 0; i < this.totalTrackedObjects; i++)
-            {
-                if (this.inputObjects[i] && this.inputObjects[i].input)
-                {
-                    this.inputObjects[i].input.reset();
-                }
-            }
-
-            this.inputObjects.length = 0;
-            this.totalTrackedObjects = 0;
+            this.interactiveItems.callAll('reset');
         }
 
         this._pollCounter = 0;

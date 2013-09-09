@@ -70,6 +70,24 @@ Phaser.LinkedList.prototype = {
 
     },
 
+    callAll: function (callback) {
+
+		var entity = this.first;
+		
+		do	
+		{
+			if (entity[callback])
+			{
+				entity[callback].call(entity);
+			}
+
+			entity = entity.next;
+
+		}
+		while(entity != this.last.next)			
+
+    },
+
 	dump: function () {
 
 		console.log("\nNode\t\t|\t\tNext\t\t|\t\tPrev\t\t|\t\tFirst\t\t|\t\tLast");

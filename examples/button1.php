@@ -12,7 +12,7 @@
 
 (function () {
 
-    var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, render: render });
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, render: render });
 
     function preload() {
 
@@ -25,6 +25,8 @@
     var button;
 
     function create() {
+
+        game.stage.backgroundColor = 0xefefef;
 
         //  This is just an image that we'll toggle the display of when you click the button
         image = game.add.sprite(game.world.centerX, 0, 'beast');

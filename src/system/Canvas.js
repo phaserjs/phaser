@@ -7,12 +7,25 @@
 
 Phaser.Canvas = {
 
+    create: function (width, height) {
+
+        width = width || 256;
+        height = height || 256;
+
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        return canvas;
+
+    },
+
     /**
     * Get the DOM offset values of any given element
     */    
     getOffset: function (element, point) {
 
-        if (typeof point === "undefined") { point = new Phaser.Point; }
+        point = point || new Phaser.Point;
 
         var box = element.getBoundingClientRect();
         var clientTop = element.clientTop || document.body.clientTop || 0;
@@ -48,7 +61,7 @@ Phaser.Canvas = {
     */
     setBackgroundColor: function (canvas, color) {
 
-        if (typeof color === "undefined") { color = 'rgb(0,0,0)'; }
+        color = color || 'rgb(0,0,0)';
 
         canvas.style.backgroundColor = color;
         
@@ -66,7 +79,7 @@ Phaser.Canvas = {
     */
     setTouchAction: function (canvas, value) {
 
-        if (typeof value === "undefined") { value = 'none'; }
+        value = value || 'none';
 
         canvas.style.msTouchAction = value;
         canvas.style['ms-touch-action'] = value;
@@ -88,8 +101,8 @@ Phaser.Canvas = {
     */
     addToDOM: function (canvas, parent, overflowHidden) {
 
-        if (typeof parent === "undefined") { parent = ''; }
-        if (typeof overflowHidden === "undefined") { overflowHidden = true; }
+        parent = parent || '';
+        overflowHidden = overflowHidden || true;
 
         if ((parent !== '' || parent !== null) && document.getElementById(parent))
         {
