@@ -18,13 +18,8 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     key = key || null;
     callback = callback || null;
     callbackContext = callbackContext || this;
-    overFrame = overFrame || null;
-    outFrame = outFrame || null;
-    downFrame = downFrame || null;
 
 	Phaser.Sprite.call(this, game, x, y, key, outFrame);
-
-    // this.texture = PIXI.TextureCache[key];
 
     this._onOverFrameName = null;
     this._onOutFrameName = null;
@@ -35,43 +30,15 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     this._onDownFrameID = null;
     this._onUpFrameID = null;
 
-    if (typeof overFrame == 'string')
-    {
-        this._onOverFrameName = overFrame;
-    }
-    else
-    {
-        this._onOverFrameID = overFrame;
-    }
-
-    if (typeof outFrame == 'string')
-    {
-        this._onOutFrameName = outFrame;
-        this._onUpFrameName = outFrame;
-    }
-    else
-    {
-        this._onOutFrameID = outFrame;
-        this._onUpFrameID = outFrame;
-    }
-
-    if (typeof downFrame == 'string')
-    {
-        this._onDownFrameName = downFrame;
-    }
-    else
-    {
-        this._onDownFrameID = downFrame;
-    }
-
     //  These are the signals the game will subscribe to
-    this.onInputOver = new Phaser.Signal();
-    this.onInputOut = new Phaser.Signal();
-    this.onInputDown = new Phaser.Signal();
-    this.onInputUp = new Phaser.Signal();
+    this.onInputOver = new Phaser.Signal;
+    this.onInputOut = new Phaser.Signal;
+    this.onInputDown = new Phaser.Signal;
+    this.onInputUp = new Phaser.Signal;
 
-    //  Set a default signal for them
-    if (callback)
+    this.setFrames(overFrame, outFrame, downFrame);
+
+    if (callback !== null)
     {
         this.onInputUp.add(callback, callbackContext);
     }
@@ -91,13 +58,55 @@ Phaser.Button.prototype.constructor = Phaser.Button;
 
 //  Add our own custom methods
 
+Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
+
+    if (overFrame !== null)
+    {
+        if (typeof overFrame === 'string')
+        {
+            this._onOverFrameName = overFrame;
+        }
+        else
+        {
+            this._onOverFrameID = overFrame;
+        }
+    }
+
+    if (outFrame !== null)
+    {
+        if (typeof outFrame === 'string')
+        {
+            this._onOutFrameName = outFrame;
+            this._onUpFrameName = outFrame;
+        }
+        else
+        {
+            this._onOutFrameID = outFrame;
+            this._onUpFrameID = outFrame;
+        }
+    }
+
+    if (downFrame !== null)
+    {
+        if (typeof downFrame === 'string')
+        {
+            this._onDownFrameName = downFrame;
+        }
+        else
+        {
+            this._onDownFrameID = downFrame;
+        }
+    }
+
+};
+
 Phaser.Button.prototype.onInputOverHandler = function (pointer) {
 
     if (this._onOverFrameName != null)
     {
         this.frameName = this._onOverFrameName;
     }
-    else if(this._onOverFrameID != null)
+    else if (this._onOverFrameID != null)
     {
         this.frame = this._onOverFrameID;
     }

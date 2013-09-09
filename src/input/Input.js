@@ -8,8 +8,8 @@ Phaser.Input = function (game) {
 
 	this.game = game;
 
-    this.inputObjects = [];
-    this.totalTrackedObjects = 0;
+    // this.inputObjects = [];
+    // this.totalTrackedObjects = 0;
 	
 };
 

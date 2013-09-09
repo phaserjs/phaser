@@ -37,7 +37,7 @@
         //  The function "clickedIt" will be called when the button is clicked or touched
         button = game.add.button(game.world.centerX, 400, 'button', clickedIt, this, 2, 1, 0);
 
-        //  Just makes the button origin set to the middle, we only do this to center the button on-screen, no other reason
+        //  Just makes the button anchor set to the middle, we only do this to center the button on-screen, no other reason
         button.anchor.setTo(0.5, 0.5);
 
     }
