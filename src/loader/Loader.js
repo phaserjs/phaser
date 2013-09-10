@@ -217,6 +217,64 @@ Phaser.Loader.prototype = {
 
 	},
 
+	/**
+	* Add a new bitmap font loading request.
+	* @param key {string} Unique asset key of the bitmap font.
+	* @param textureURL {string} The url of the font image file.
+	* @param [xmlURL] {string} The url of the font data file (xml/fnt)
+	* @param [xmlData] {object} An optional XML data object.
+	*/
+	bitmapFont: function (key, textureURL, xmlURL, xmlData) {
+
+		if (typeof xmlURL === "undefined") { xmlURL = null; }
+		if (typeof xmlData === "undefined") { xmlData = null; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			//  A URL to a json/xml file has been given
+			if (xmlURL)
+			{
+				this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
+			}
+			else
+			{
+				//  An xml string or object has been given
+				if (typeof xmlData === 'string')
+				{
+					var xml;
+
+					try  {
+						if (window['DOMParser'])
+						{
+							var domparser = new DOMParser();
+							xml = domparser.parseFromString(xmlData, "text/xml");
+						}
+						else
+						{
+							xml = new ActiveXObject("Microsoft.XMLDOM");
+							xml.async = 'false';
+							xml.loadXML(xmlData);
+						}
+					}
+					catch (e)
+					{
+						xml = undefined;
+					}
+
+					if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+					{
+						throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
+					}
+					else
+					{
+						this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
+					}
+				}
+			}
+		}
+
+	},
+
 	atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
 
 		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
@@ -249,20 +307,22 @@ Phaser.Loader.prototype = {
 		if (typeof atlasData === "undefined") { atlasData = null; }
 		if (typeof format === "undefined") { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
 
-		if (this.checkKeyExists(key) === false) {
-
+		if (this.checkKeyExists(key) === false)
+		{
 			//  A URL to a json/xml file has been given
-			if (atlasURL) {
+			if (atlasURL)
+			{
 				this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
 			}
 			else
 			{
-				switch (format) {
-
+				switch (format)
+				{
 					//  A json string or object has been given
 					case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY: 
 
-						if (typeof atlasData === 'string') {
+						if (typeof atlasData === 'string')
+						{
 							atlasData = JSON.parse(atlasData);
 						}
 						break;
@@ -270,24 +330,34 @@ Phaser.Loader.prototype = {
 					//  An xml string or object has been given
 					case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
 
-						if (typeof atlasData === 'string') {
+						if (typeof atlasData === 'string')
+						{
 							var xml;
+
 							try  {
-								if (window['DOMParser']) {
+								if (window['DOMParser'])
+								{
 									var domparser = new DOMParser();
 									xml = domparser.parseFromString(atlasData, "text/xml");
-								} else {
+								}
+								else
+								{
 									xml = new ActiveXObject("Microsoft.XMLDOM");
 									xml.async = 'false';
 									xml.loadXML(atlasData);
 								}
-							} catch (e) {
+							}
+							catch (e)
+							{
 								xml = undefined;
 							}
 
-							if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length) {
+							if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+							{
 								throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
-							} else {
+							}
+							else
+							{
 								atlasData = xml;
 							}
 						}
@@ -297,7 +367,6 @@ Phaser.Loader.prototype = {
 				this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
 
 			}
-
 
 		}
 
@@ -367,6 +436,7 @@ Phaser.Loader.prototype = {
 			case 'image':
 			case 'spritesheet':
 			case 'textureatlas':
+			case 'bitmapfont':
 				file.data = new Image();
 				file.data.name = file.key;
 				file.data.onload = function () {
@@ -537,6 +607,29 @@ Phaser.Loader.prototype = {
 				}
 				break;
 
+			case 'bitmapfont':
+				if (file.xmlURL == null)
+				{
+					this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData);
+				}
+				else
+				{
+					//  Load the XML before carrying on with the next file
+					loadNext = false;
+					this._xhr.open("GET", this.baseURL + file.xmlURL, true);
+					this._xhr.responseType = "text";
+
+					this._xhr.onload = function () {
+						return _this.xmlLoadComplete(file.key);
+					};
+
+					this._xhr.onerror = function () {
+						return _this.dataLoadError(file.key);
+					};
+					this._xhr.send();
+				}
+				break;
+
 			case 'audio':
 
 				if (this.game.sound.usingWebAudio)
@@ -605,7 +698,7 @@ Phaser.Loader.prototype = {
 
 		file.error = true;
 
-		throw new Error("Phaser.Loader dataLoadError: " + key);
+		console.warn("Phaser.Loader dataLoadError: " + key);
 
 		this.nextFile(key, true);
 
@@ -613,7 +706,7 @@ Phaser.Loader.prototype = {
 
 	xmlLoadComplete: function (key) {
 
-		var atlasData = this._xhr.response;
+		var data = this._xhr.response;
 		var xml;
 
 		try
@@ -621,13 +714,13 @@ Phaser.Loader.prototype = {
 			if (window['DOMParser'])
 			{
 				var domparser = new DOMParser();
-				xml = domparser.parseFromString(atlasData, "text/xml");
+				xml = domparser.parseFromString(data, "text/xml");
 			}
 			else
 			{
 				xml = new ActiveXObject("Microsoft.XMLDOM");
 				xml.async = 'false';
-				xml.loadXML(atlasData);
+				xml.loadXML(data);
 			}
 		}
 		catch (e)
@@ -641,7 +734,15 @@ Phaser.Loader.prototype = {
 		}
 
 		var file = this._fileList[key];
-		this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+
+		if (file.type == 'bitmapfont')
+		{
+			this.game.cache.addBitmapFont(file.key, file.url, file.data, xml);
+		}
+		else if (file.type == 'textureatlas')
+		{
+			this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+		}
 
 		this.nextFile(key, true);
 

@@ -66,6 +66,7 @@
 	<script src="../src/gameobjects/Button.js"></script>
 	<script src="../src/gameobjects/Graphics.js"></script>
 	<script src="../src/gameobjects/RenderTexture.js"></script>
+	<script src="../src/gameobjects/BitmapText.js"></script>
 	<script src="../src/system/Canvas.js"></script>
 	<script src="../src/system/StageScaleMode.js"></script>
 	<script src="../src/system/Device.js"></script>
@@ -88,6 +89,7 @@
 	<script src="../src/animation/Parser.js"></script>
 	<script src="../src/loader/Cache.js"></script>
 	<script src="../src/loader/Loader.js"></script>
+	<script src="../src/loader/Parser.js"></script>
 	<script src="../src/sound/Sound.js"></script>
 	<script src="../src/sound/SoundManager.js"></script>
 	<script src="../src/utils/Debug.js"></script>

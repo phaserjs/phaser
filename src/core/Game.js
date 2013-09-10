@@ -34,17 +34,205 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	transparent = transparent || false;
 	antialias = antialias || true;
 
+	/**
+	* Phaser Game ID (for when Pixi supports multiple instances)
+	* @type {number}
+	*/
 	this.id = Phaser.GAMES.push(this) - 1;
+
+	/**
+	* The Games DOM parent.
+	* @type {HTMLElement}
+	*/
 	this.parent = parent;
 
 	//	Do some more intelligent size parsing here, so they can set "100%" for example, maybe pass the scale mode in here too?
+
+	/**
+	* The Game width (in pixels).
+	* @type {number}
+	*/
 	this.width = width;
+
+	/**
+	* The Game height (in pixels).
+	* @type {number}
+	*/
 	this.height = height;
+
+	/**
+	* Use a transparent canvas background or not.
+	* @type {boolean}
+	*/
 	this.transparent = transparent;
+
+	/**
+	* Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality)
+	* @type {boolean}
+	*/
 	this.antialias = antialias;
+
+	/**
+	* The Pixi Renderer
+	* @type {number}
+	*/
 	this.renderType = renderer;
 
+    /**
+     * The StateManager.
+     * @type {Phaser.StateManager}
+     */
 	this.state = new Phaser.StateManager(this, state);
+
+	/**
+	* Is game paused?
+	* @type {bool}
+	*/
+	this._paused = false;
+
+	/**
+	* The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL
+	* @type {number}
+	*/
+	this.renderType = 0;
+
+	/**
+	* Whether load complete loading or not.
+	* @type {bool}
+	*/
+	this._loadComplete = false;
+
+	/**
+	* Whether the game engine is booted, aka available.
+	* @type {bool}
+	*/
+	this.isBooted = false;
+
+	/**
+	* Is game running or paused?
+	* @type {bool}
+	*/
+	this.isRunning = false;
+
+	/**
+	* Automatically handles the core game loop via requestAnimationFrame or setTimeout
+     * @type {Phaser.RequestAnimationFrame}
+	*/
+	this.raf = null;
+
+    /**
+     * Reference to the GameObject Factory.
+     * @type {Phaser.GameObjectFactory}
+     */
+    this.add = null;
+
+    /**
+     * Reference to the assets cache.
+     * @type {Phaser.Cache}
+     */
+    this.cache = null;
+
+    /**
+     * Reference to the input manager
+     * @type {Phaser.Input}
+     */
+    this.input = null;
+
+    /**
+     * Reference to the assets loader.
+     * @type {Phaser.Loader}
+     */
+    this.load = null;
+
+    /**
+     * Reference to the math helper.
+     * @type {Phaser.GameMath}
+     */
+    this.math = null;
+
+    /**
+     * Reference to the network class.
+     * @type {Phaser.Net}
+     */
+    this.net = null;
+
+    /**
+     * Reference to the sound manager.
+     * @type {Phaser.SoundManager}
+     */
+    this.sound = null;
+
+    /**
+     * Reference to the stage.
+     * @type {Phaser.Stage}
+     */
+    this.stage = null;
+
+    /**
+     * Reference to game clock.
+     * @type {Phaser.TimeManager}
+     */
+    this.time = null;
+
+    /**
+     * Reference to the tween manager.
+     * @type {Phaser.TweenManager}
+     */
+    this.tweens = null;
+
+    /**
+     * Reference to the world.
+     * @type {Phaser.World}
+     */
+    this.world = null;
+
+    /**
+     * Reference to the physics manager.
+     * @type {Phaser.Physics.PhysicsManager}
+     */
+    this.physics = null;
+
+    /**
+     * Instance of repeatable random data generator helper.
+     * @type {Phaser.RandomDataGenerator}
+     */
+    this.rnd = null;
+
+    /**
+     * Contains device information and capabilities.
+     * @type {Phaser.Device}
+     */
+    this.device = null;
+
+	/**
+	* A handy reference to world.camera
+	* @type {Phaser.Camera}
+	*/
+	this.camera = null;
+
+	/**
+	* A handy reference to renderer.view
+	* @type {HTMLCanvasElement}
+	*/
+	this.canvas = null;
+
+	/**
+	* A handy reference to renderer.context (only set for CANVAS games)
+	* @type {Context}
+	*/
+	this.context = null;
+
+	/**
+	* A set of useful debug utilities
+	* @type {Phaser.Utils.Debug}
+	*/
+	this.debug = null;
+
+	/**
+	* The Particle Manager
+	* @type {Phaser.Particles}
+	*/
+	this.particles = null;
 
 	var _this = this;
 
@@ -67,199 +255,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 };
 
 Phaser.Game.prototype = {
-
-	//	temps so we can clean-up the event listeneres
-	_tempState: null,
-	_onBoot: null,
-
-	/**
-	* Phaser Game ID.
-	* @type {number}
-	*/
-	id: 0,
-
-	/**
-	* The Game width (in pixels).
-	* @type {number}
-	*/
-	width: 0,
-
-	/**
-	* The Game height (in pixels).
-	* @type {number}
-	*/
-	height: 0,
-
-	transparent: false,
-	antialias: true,
-
-	/**
-	* The Games DOM parent.
-	* @type {HTMLElement}
-	*/
-	parent: '',
-
-	/**
-	* The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL
-	* @type {number}
-	*/
-	renderType: 0,
-
-	/**
-	* The Pixi Renderer
-	* @type {number}
-	*/
-	renderer: null,
-
-	/**
-	* Whether load complete loading or not.
-	* @type {bool}
-	*/
-	_loadComplete: false,
-
-	/**
-	* Is game paused?
-	* @type {bool}
-	*/
-	paused: false,
-
-	/**
-	* Whether the game engine is booted, aka available.
-	* @type {bool}
-	*/
-	isBooted: false,
-
-	/**
-	* Is game running or paused?
-	* @type {bool}
-	*/
-	isRunning: false,
-
-	/**
-	* Automatically handles the core game loop via requestAnimationFrame or setTimeout
-     * @type {Phaser.RequestAnimationFrame}
-	*/
-	raf: null,
-
-    /**
-     * The StateManager.
-     * @type {Phaser.StateManager}
-     */
-    state: null,
-
-    /**
-     * Reference to the GameObject Factory.
-     * @type {Phaser.GameObjectFactory}
-     */
-    add: null,
-
-    /**
-     * Reference to the assets cache.
-     * @type {Phaser.Cache}
-     */
-    cache: null,
-
-    /**
-     * Reference to the input manager
-     * @type {Phaser.Input}
-     */
-    input: null,
-
-    /**
-     * Reference to the assets loader.
-     * @type {Phaser.Loader}
-     */
-    load: null,
-
-    /**
-     * Reference to the math helper.
-     * @type {Phaser.GameMath}
-     */
-    math: null,
-
-    /**
-     * Reference to the network class.
-     * @type {Phaser.Net}
-     */
-    net: null,
-
-    /**
-     * Reference to the sound manager.
-     * @type {Phaser.SoundManager}
-     */
-    sound: null,
-
-    /**
-     * Reference to the stage.
-     * @type {Phaser.Stage}
-     */
-    stage: null,
-
-    /**
-     * Reference to game clock.
-     * @type {Phaser.TimeManager}
-     */
-    time: null,
-
-    /**
-     * Reference to the tween manager.
-     * @type {Phaser.TweenManager}
-     */
-    tweens: null,
-
-    /**
-     * Reference to the world.
-     * @type {Phaser.World}
-     */
-    world: null,
-
-    /**
-     * Reference to the physics manager.
-     * @type {Phaser.Physics.PhysicsManager}
-     */
-    physics: null,
-
-    /**
-     * Instance of repeatable random data generator helper.
-     * @type {Phaser.RandomDataGenerator}
-     */
-    rnd: null,
-
-    /**
-     * Contains device information and capabilities.
-     * @type {Phaser.Device}
-     */
-    device: null,
-
-	/**
-	* A handy reference to world.camera
-	* @type {Phaser.Camera}
-	*/
-	camera: null,
-
-	/**
-	* A handy reference to renderer.view
-	* @type {HTMLCanvasElement}
-	*/
-	canvas: null,
-
-	/**
-	* A handy reference to renderer.context (only set for CANVAS games)
-	* @type {Context}
-	*/
-	context: null,
-
-	/**
-	* A set of useful debug utilities
-	* @type {Phaser.Utils.Debug}
-	*/
-	debug: null,
-
-	/**
-	* The Particle Manager
-	* @type {Phaser.Particles}
-	*/
-	particles: null,
 
 	/**
 	* Initialize engine sub modules and start the game.
@@ -385,7 +380,7 @@ Phaser.Game.prototype = {
 
 		this.time.update(time);
 
-		if (!this.paused)
+		if (!this._paused)
 		{
 	        this.plugins.preUpdate();
 	        this.physics.preUpdate();
@@ -426,3 +421,35 @@ Phaser.Game.prototype = {
     }
 
 };
+
+Object.defineProperty(Phaser.Game.prototype, "paused", {
+
+    get: function () {
+        return this._paused;
+    },
+
+    set: function (value) {
+
+    	if (value === true)
+    	{
+    		if (this._paused == false)
+    		{
+	    		this._paused = true;
+	    		this.onPause.dispatch(this);
+    		}
+    	}
+    	else
+    	{
+    		if (this._paused)
+    		{
+	    		this._paused = false;
+	    		this.onResume.dispatch(this);
+    		}
+    	}
+
+    },
+
+    enumerable: true,
+    configurable: true
+});
+

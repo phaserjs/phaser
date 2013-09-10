@@ -23,6 +23,7 @@ Phaser.Stage = function (game, width, height) {
 	this.offset = new Phaser.Point;
 
     this.canvas = Phaser.Canvas.create(width, height);    
+    this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
 
     //  The Pixi Stage which is hooked to the renderer
     this._stage = new PIXI.Stage(0x000000, false);

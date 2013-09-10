@@ -109,6 +109,25 @@ Phaser.Cache.prototype = {
     },
 
     /**
+     * Add a new Bitmap Font.
+     * @param key  {string} Asset key for the font texture.
+     * @param url  {string} URL of this font xml file.
+     * @param data {object} Extra font data.
+     * @param xmlData {object} Texture atlas frames data.
+     */
+    addBitmapFont: function (key, url, data, xmlData) {
+
+        this._images[key] = { url: url, data: data, spriteSheet: true };
+
+        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+
+        Phaser.Loader.Parser.bitmapFont(this.game, xmlData, key);
+        // this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, xmlData, key);
+
+    },
+
+    /**
      * Adds a default image to be used when a key is wrong / missing.
      * Is mapped to the key __default
      */

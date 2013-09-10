@@ -144,8 +144,11 @@ Phaser.StageScaleMode.prototype = {
         }
         else if (element['webkitRequestFullScreen'])
         {
-            element['webkitRequestFullScreen']();
+            element['webkitRequestFullScreen'](Element.ALLOW_KEYBOARD_INPUT);
         }
+
+        this.game.stage.canvas.style['width'] = '100%';
+        this.game.stage.canvas.style['height'] = '100%';
 
     },
 

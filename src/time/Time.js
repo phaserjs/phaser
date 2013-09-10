@@ -158,6 +158,10 @@ Phaser.Time = function (game) {
 	*/
 	this.lastTime = 0;
 
+	//	Listen for game pause/resume events
+	this.game.onPause.add(this.gamePaused, this);
+	this.game.onResume.add(this.gameResumed, this);
+
 };
 
 Phaser.Time.prototype = {
@@ -229,7 +233,6 @@ Phaser.Time.prototype = {
 		//  Level out the elapsed timer to avoid spikes
 		this.elapsed = 0;
 		this.physicsElapsed = 0;
-		this.time = Date.now();
 		this.pauseDuration = this.pausedTime;
 
 	},

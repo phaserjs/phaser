@@ -97,4 +97,10 @@ Phaser.GameObjectFactory.prototype = {
 
     },
 
+    bitmapText: function (x, y, text, style) {
+
+        return this.world.add(new Phaser.BitmapText(this.game, x, y, text, style));
+
+    },
+
 };

@@ -14,6 +14,9 @@ Phaser.TweenManager = function (game) {
 	this.game = game;
 	this._tweens = [];
 
+	this.game.onPause.add(this.pauseAll, this);
+	this.game.onResume.add(this.resumeAll, this);
+
 };
 
 Phaser.TweenManager.prototype = {
