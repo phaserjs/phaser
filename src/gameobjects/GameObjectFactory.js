@@ -91,4 +91,10 @@ Phaser.GameObjectFactory.prototype = {
 
     },
 
+    emitter: function (x, y, maxParticles) {
+
+        return this.game.particles.add(new Phaser.Particles.Arcade.Emitter(this.game, x, y, maxParticles));
+
+    },
+
 };

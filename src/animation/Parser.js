@@ -23,7 +23,8 @@ Phaser.Animation.Parser = {
         //  How big is our image?
         var img = game.cache.getImage(key);
 
-        if (img == null) {
+        if (img == null)
+        {
             return null;
         }
 
@@ -33,13 +34,15 @@ Phaser.Animation.Parser = {
         var column = Math.round(height / frameHeight);
         var total = row * column;
         
-        if (frameMax !== -1) {
+        if (frameMax !== -1)
+        {
             total = frameMax;
         }
 
         //  Zero or smaller than frame sizes?
-        if (width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0) {
-            throw new Error("AnimationLoader.parseSpriteSheet: width/height zero or width/height < given frameWidth/frameHeight");
+        if (width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0)
+        {
+            console.warn("Phaser.Animation.Parser.spriteSheet: width/height zero or width/height < given frameWidth/frameHeight");
             return null;
         }
 
@@ -82,9 +85,11 @@ Phaser.Animation.Parser = {
     JSONData: function (game, json, cacheKey) {
 
         //  Malformed?
-        if (!json['frames']) {
+        if (!json['frames'])
+        {
+            console.warn("Phaser.Animation.Parser.JSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
             console.log(json);
-            throw new Error("Phaser.AnimationLoader.parseJSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
+            return;
         }
 
         //  Let's create some frames then
@@ -143,14 +148,16 @@ Phaser.Animation.Parser = {
     JSONDataHash: function (game, json, cacheKey) {
 
         //  Malformed?
-        if (!json['frames']) {
+        if (!json['frames'])
+        {
+            console.warn("Phaser.Animation.Parser.JSONDataHash: Invalid Texture Atlas JSON given, missing 'frames' object");
             console.log(json);
-            throw new Error("Phaser.AnimationLoader.parseJSONDataHash: Invalid Texture Atlas JSON given, missing 'frames' object");
+            return;
         }
             
         //  Let's create some frames then
         var data = new Phaser.Animation.FrameData();
-        
+
         //  By this stage frames is a fully parsed array
         var frames = json['frames'];
         var newFrame;
@@ -204,8 +211,10 @@ Phaser.Animation.Parser = {
     XMLData: function (game, xml, cacheKey) {
 
         //  Malformed?
-        if (!xml.getElementsByTagName('TextureAtlas')) {
-            throw new Error("Phaser.AnimationLoader.parseXMLData: Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
+        if (!xml.getElementsByTagName('TextureAtlas'))
+        {
+            console.warn("Phaser.Animation.Parser.XMLData: Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
+            return;
         }
 
         //  Let's create some frames then

@@ -9,6 +9,10 @@
 * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 Phaser.Animation.FrameData = function () {
+
+    this._frames = [];
+    this._frameNames = [];
+
 };
 
 Phaser.Animation.FrameData.prototype = {

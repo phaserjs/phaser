@@ -10,7 +10,15 @@
 * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
 Phaser.Cache = function (game) {
+
 	this.game = game;
+    this._canvases = {};
+    this._images = {};
+    this._sounds = {};
+    this._text = {};
+
+    this.addDefaultImage();
+
 };
 
 Phaser.Cache.prototype = {
@@ -103,6 +111,25 @@ Phaser.Cache.prototype = {
         {
             this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, atlasData, key);
         }
+
+    },
+
+    /**
+     * Adds a default image to be used when a key is wrong / missing.
+     * Is mapped to the key __default
+     */
+    addDefaultImage: function () {
+
+        this._images['__default'] = { url: null, data: null, spriteSheet: false };
+        this._images['__default'].frame = new Phaser.Animation.Frame(0, 0, 32, 32, '', '');
+
+        var base = new PIXI.BaseTexture();
+        base.width = 32;
+        base.height = 32;
+        base.hasLoaded = true; // avoids a hanging event listener
+
+        PIXI.BaseTextureCache['__default'] = base;
+        PIXI.TextureCache['__default'] = new PIXI.Texture(base);
 
     },
 
@@ -217,6 +244,22 @@ Phaser.Cache.prototype = {
         }
 
         return null;
+    },
+
+    /**
+    * Checks if an image key exists.
+    * @param key Asset key of the image you want.
+    * @return {boolean} True if the key exists, otherwise false.
+    */    
+    checkImageKey: function (key) {
+
+        if (this._images[key])
+        {
+            return true;
+        }
+
+        return false;
+
     },
 
 	/**

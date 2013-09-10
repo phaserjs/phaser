@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"em",
+				"emitY  (variable)"
+			],
+			[
+				"emit",
+				"emitX  (variable)"
+			],
+			[
+				"int",
+				"integerInRange"
+			],
+			[
+				"max",
+				"maxParticleSpeed"
+			],
+			[
+				"k",
+				"kill"
+			],
+			[
+				"pointerlo",
+				"pointerLockChange"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"inw",
+				"inWorld"
+			],
+			[
+				"inwo",
+				"inWorldThreshold"
+			],
+			[
+				"update",
+				"updateBounds"
+			],
+			[
 				"call",
 				"callbackContext  (argument)"
 			],
@@ -162,10 +202,6 @@
 			[
 				"bo",
 				"bottom"
-			],
-			[
-				"max",
-				"maxLevels  (variable)"
 			],
 			[
 				"al",
@@ -478,68 +514,49 @@
 			[
 				"prop",
 				"properties"
-			],
-			[
-				"the",
-				"the_terms"
-			],
-			[
-				"load",
-				"loadPuzzleRatings"
-			],
-			[
-				"tr",
-				"true"
-			],
-			[
-				"font-",
-				"font-family"
-			],
-			[
-				"sca",
-				"scaling"
-			],
-			[
-				"Pos",
-				"Position"
-			],
-			[
-				"Po",
-				"Position"
-			],
-			[
-				"to",
-				"toString"
-			],
-			[
-				"phas",
-				"phaserSpace"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/gameobjects/Button.js",
+			"file": "src/particles/arcade/Emitter.js",
 			"settings":
 			{
-				"buffer_size": 4621,
+				"buffer_size": 12517,
+				"line_ending": "Windows",
+				"name": "/**"
+			}
+		},
+		{
+			"file": "examples/particles.php",
+			"settings":
+			{
+				"buffer_size": 1457,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/gameobjects/GameObjectFactory.js",
+			"file": "src/core/Game.js",
 			"settings":
 			{
-				"buffer_size": 2971,
+				"buffer_size": 9096,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "examples/button1.php",
+			"file": "src/gameobjects/Sprite.js",
 			"settings":
 			{
-				"buffer_size": 1548,
+				"buffer_size": 16356,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/physics/arcade/Body.js",
+			"settings":
+			{
+				"buffer_size": 7207,
 				"line_ending": "Windows"
 			}
 		}
@@ -572,21 +589,40 @@
 	},
 	"file_history":
 	[
+		"/D/wamp/www/phaser/src/core/Group.js",
+		"/D/wamp/www/phaser/src/particles/Particles.js",
+		"/D/wamp/www/phaser/src/gameobjects/Sprite.js",
+		"/D/wamp/www/phaser/src/physics/arcade/Body.js",
+		"/D/wamp/www/phaser/src/math/RandomDataGenerator.js",
+		"/D/wamp/www/phaser/src/core/World.js",
+		"/D/wamp/www/phaser/src/gameobjects/RenderTexture.js",
+		"/D/wamp/www/phaser/examples/js.php",
+		"/D/wamp/www/phaser/src/particles/arcade/ArcadeParticles.js",
+		"/D/wamp/www/phaser/examples/rendertexture.php",
+		"/D/wamp/www/pixi.js/examples/example 11 - RenderTexture/index.html",
+		"/D/wamp/www/phaser/src/gameobjects/Graphics.js",
+		"/D/wamp/www/phaser/src/pixi/textures/RenderTexture.js",
+		"/D/wamp/www/phaser/src/input/Mouse.js",
+		"/D/wamp/www/phaser/src/system/Device.js",
+		"/D/wamp/www/phaser/src/pixi/primitives/Graphics.js",
+		"/D/wamp/www/phaser/examples/graphics.php",
+		"/D/wamp/www/phaser/src/gameobjects/GameObjectFactory.js",
+		"/D/wamp/www/pixi.js/examples/example 13 - Graphics/index.html",
+		"/D/wamp/www/phaser/src/tween/TweenManager.js",
+		"/D/wamp/www/phaser/src/gameobjects/Button.js",
+		"/D/wamp/www/phaser/examples/button1.php",
+		"/D/wamp/www/phaser/examples/outofbounds.php",
 		"/D/wamp/www/phaser/TS Tests/buttons/basic button.ts",
 		"/D/wamp/www/phaser/TS Source/gameobjects/GameObjectFactory.js",
-		"/D/wamp/www/phaser/examples/js.php",
 		"/D/wamp/www/phaser/src/gameobjects/TileSprite.js",
 		"/D/wamp/www/phaser/TS Source/ui/Button.js",
 		"/D/wamp/www/phaser/src/input/InputHandler.js",
-		"/D/wamp/www/phaser/src/gameobjects/Sprite.js",
 		"/D/wamp/www/phaser/src/Phaser.js",
 		"/D/wamp/www/phaser/build/build.php",
 		"/D/wamp/www/phaser/src/Intro.js",
 		"/D/wamp/www/phaser/build/phaser.js",
 		"/D/wamp/www/phaser/src/input/Input.js",
 		"/D/wamp/www/phaser/src/input/Pointer.js",
-		"/D/wamp/www/phaser/src/core/World.js",
-		"/D/wamp/www/phaser/src/core/Group.js",
 		"/D/wamp/www/phaser/examples/js-physics.php",
 		"/D/wamp/www/phaser/src/utils/Utils.js",
 		"/D/wamp/www/phaser/src/pixi/utils/Utils.js",
@@ -607,7 +643,6 @@
 		"/D/wamp/www/phaser/src/pixi/display/DisplayObjectContainer.js",
 		"/D/wamp/www/phaser/src/pixi/display/DisplayObject.js",
 		"/D/wamp/www/phaser/src/pixi/text/BitmapText.js",
-		"/D/wamp/www/phaser/src/physics/arcade/Body.js",
 		"/D/wamp/www/phaser/src/core/Game.js",
 		"/D/wamp/www/phaser/examples/quadtree2.php",
 		"/D/wamp/www/phaser/examples/body3.php",
@@ -617,7 +652,6 @@
 		"/D/wamp/www/phaser/examples/anchor1.php",
 		"/D/wamp/www/phaser/src/physics/arcade/ArcadePhysics.js",
 		"/D/wamp/www/phaser/src/geom/Rectangle.js",
-		"/D/wamp/www/phaser/src/gameobjects/GameObjectFactory.js",
 		"/D/wamp/www/phaser/src/tween/Tween.js",
 		"/D/wamp/www/phaser/TS Source/core/Group.ts",
 		"/D/wamp/www/phaser/TS Source/core/Group.js",
@@ -682,24 +716,7 @@
 		"/D/wamp/www/phaser/TS Source/gameobjects/GameObjectFactory.ts",
 		"/D/wamp/www/phaser/TS Source/sound/Sound.js",
 		"/D/wamp/www/phaser/src/sound/Sound.js",
-		"/D/wamp/www/phaser/TS Source/sound/Sound.ts",
-		"/D/wamp/www/phaser/TS Source/sound/SoundManager.js",
-		"/D/wamp/www/phaser/TS Source/math/QuadTree.js",
-		"/D/wamp/www/phaser/examples/camera_cull1.php",
-		"/D/wamp/www/bbc-wolfblood/assets/1024/help/help_titles.json",
-		"/D/wamp/www/phaser/src/math/LinkedList.js",
-		"/D/wamp/www/phaser/TS Source/math/LinkedList.js",
-		"/D/wamp/www/phaser/src/animation/Parser.js",
-		"/D/wamp/www/phaser/examples/camera4.php",
-		"/D/wamp/www/phaser/examples/sprite3.php",
-		"/D/wamp/www/phaser/examples/camera5.php",
-		"/D/wamp/www/pixi.js/examples/example 6 - Interactivity/index.html",
-		"/D/wamp/www/phaser/src/math/Math.js",
-		"/D/wamp/www/phaser/src/geom/Point.js",
-		"/D/wamp/www/phaser/TS Source/gameobjects/TransformManager.ts",
-		"/D/wamp/www/phaser/TS Source/utils/SpriteUtils.ts",
-		"/D/wamp/www/phaser/TS Source/utils/SpriteUtils.js",
-		"/D/wamp/www/phaser/src/core/Camera.js"
+		"/D/wamp/www/phaser/TS Source/sound/Sound.ts"
 	],
 	"find":
 	{
@@ -707,7 +724,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 90.0,
+		"height": 0.0,
 		"where_history":
 		[
 			"D:\\wamp\\www\\phaser\\src\\pixi",
@@ -738,6 +755,23 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"star2",
+			"reset",
+			"this.maxSize",
+			"Phaser.Physics.Arcade.Body",
+			"integer",
+			"x",
+			"reset",
+			"false",
+			": number",
+			"TileSprite",
+			"Vec2",
+			"Graphics",
+			", false",
+			"add",
+			"Phaser.Sprite",
+			"TileSprite",
+			"reset",
 			"this.",
 			"transform.origin",
 			"TileSprite",
@@ -848,24 +882,7 @@
 			"this.obj1Bounds",
 			"obj2Bounds",
 			"obj1Bounds",
-			"Phaser.Physics.Arcade.prototype",
-			"Collision",
-			"object1",
-			"this._oy",
-			"this._ox",
-			"this._y",
-			"this._x",
-			"Collision",
-			"Phaser.Collision",
-			"Collision.",
-			": number",
-			"this.oldPosition.y",
-			"this.position.y",
-			"this.oldPosition.x",
-			"this.position.x",
-			"position.x",
-			"Position.x",
-			"position.x"
+			"Phaser.Physics.Arcade.prototype"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -873,6 +890,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"",
 			"sprite",
 			"if (",
 			"sprite",
@@ -973,27 +991,28 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/gameobjects/Button.js",
+					"file": "src/particles/arcade/Emitter.js",
 					"settings":
 					{
-						"buffer_size": 4621,
+						"buffer_size": 12517,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2537,
-								2537
+								8938,
+								8938
 							]
 						],
 						"settings":
 						{
+							"auto_name": "/**",
 							"codeintel": true,
 							"codeintel_config":
 							{
@@ -1100,156 +1119,25 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1188.0,
+						"translation.y": 5852.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/gameobjects/GameObjectFactory.js",
+					"file": "examples/particles.php",
 					"settings":
 					{
-						"buffer_size": 2971,
+						"buffer_size": 1457,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2960,
-								2960
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 758.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "examples/button1.php",
-					"settings":
-					{
-						"buffer_size": 1548,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								510,
-								510
+								353,
+								353
 							]
 						],
 						"settings":
@@ -1362,7 +1250,396 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 328.0,
+						"translation.y": 166.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/core/Game.js",
+					"settings":
+					{
+						"buffer_size": 9096,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5074,
+								5074
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"sublime_auto_complete": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 3962.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/gameobjects/Sprite.js",
+					"settings":
+					{
+						"buffer_size": 16356,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10652,
+								10652
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"sublime_auto_complete": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5193.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/physics/arcade/Body.js",
+					"settings":
+					{
+						"buffer_size": 7207,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4775,
+								4775
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"sublime_auto_complete": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2666.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

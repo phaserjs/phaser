@@ -23,15 +23,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     //  The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
     this.lifespan = 0;
 
-    if (key)
+    if (key == null || this.game.cache.checkImageKey(key) == false)
     {
-        PIXI.Sprite.call(this, PIXI.TextureCache[key]);
+        key = '__default';
     }
-    else
-    {
-        //  No texture yet
-        PIXI.Sprite.call(this);
-    }
+
+    PIXI.Sprite.call(this, PIXI.TextureCache[key]);
 
     this.events = new Phaser.Events(this);
 

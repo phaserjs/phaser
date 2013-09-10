@@ -305,6 +305,7 @@ Phaser.Game.prototype = {
 			this.input = new Phaser.Input(this);
 			this.sound = new Phaser.SoundManager(this);
 			this.physics = new Phaser.Physics.Arcade(this);
+			this.particles = new Phaser.Particles(this);
 			this.plugins = new Phaser.PluginManager(this, this);
 			this.net = new Phaser.Net(this);
 			this.debug = new Phaser.Utils.Debug(this);
@@ -391,6 +392,7 @@ Phaser.Game.prototype = {
 	        this.tweens.update();
 	        this.sound.update();
 			this.world.update();
+			this.particles.update();
 			this.state.update();
 	        this.plugins.update();
 

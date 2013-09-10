@@ -12,6 +12,8 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
 
 	Phaser.Group.call(this, game);
 
+    this.name = 'emitter' + this.game.particles.ID++;
+
     /**
      * The X position of the top left corner of the emitter in world space.
      */
@@ -119,12 +121,16 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
      */
     this.on = false;
 
+    /**
+     * Determines whether the emitter is being updated by the core game loop.
+     */
     this.exists = true;
-    this.active = true;
-    //	Needs to be a setter/getter and toggle the _container property
-    this.visible = true;
 
-    //	The point the particles are emitted from (Emitter.x/y control the container location, i.e. all particles, this controls position within it)
+    /**
+     * The point the particles are emitted from.
+     * Emitter.x and Emitter.y control the containers location, which updates all current particles
+     * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
+     */
     this.emitX = 0;
     this.emitY = 0;
 	
@@ -186,40 +192,40 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
  *
  * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
  */
-Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (key, quantity, multiple, collide) {
+Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames, quantity, collide) {
+
+    if (typeof frames == 'undefined')
+    {
+        frames = 0;
+    }
 
 	quantity = quantity || this.maxParticles;
-	multiple = multiple || false;
 	collide = collide || 0;
 
-    var totalFrames = 1;
-    var randomFrame;
     var particle;
     var i = 0;
+    var rndKey = keys;
+    var rndFrame = 0;
 
     while (i < quantity)
     {
         if (this.particleClass == null)
         {
-            particle = new Phaser.Sprite(this.game, 0, 0, key);
+            if (typeof keys == 'object')
+            {
+                rndKey = this.game.rnd.pick(keys);
+            }
+
+            if (typeof frames == 'object')
+            {
+                rndFrame = this.game.rnd.pick(frames);
+            }
+
+            particle = new Phaser.Sprite(this.game, 0, 0, rndKey, rndFrame);
         }
         else
         {
             // particle = new this.particleClass(this.game);
-        }
-
-        if (multiple)
-        {
-            /*
-            randomFrame = this.game.math.random()*totalFrames;
-            */
-        }
-        else
-        {
-            // if (graphics)
-            // {
-                // particle.texture.loadImage(graphics);
-            // }
         }
 
         if (collide > 0)
@@ -433,10 +439,46 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
  */
 Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
 
-    //this.x = object.body.bounds.halfWidth - (this.width >> 1);
-    //this.y = object.body.bounds.halfHeight - (this.height >> 1);
+    this.emitX = object.center.x;
+    this.emitY = object.center.y;
 
 }
+
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "alpha", {
+    
+    /**
+    * Get the emitter alpha.
+    */
+    get: function () {
+        return this._container.alpha;
+    },
+
+    /**
+    * Set the emiter alpha value.
+    */
+    set: function (value) {
+        this._container.alpha = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "visible", {
+    
+    /**
+    * Get the emitter visible state.
+    */
+    get: function () {
+        return this._container.visible;
+    },
+
+    /**
+    * Set the emitter visible state.
+    */
+    set: function (value) {
+        this._container.visible = value;
+    }
+
+});
 
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
     
