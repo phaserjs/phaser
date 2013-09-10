@@ -256,6 +256,12 @@ Phaser.Game.prototype = {
 	debug: null,
 
 	/**
+	* The Particle Manager
+	* @type {Phaser.Particles}
+	*/
+	particles: null,
+
+	/**
 	* Initialize engine sub modules and start the game.
 	* @param parent {string} ID of parent Dom element.
 	* @param width {number} Width of the game screen.

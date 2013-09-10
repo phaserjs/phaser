@@ -450,7 +450,10 @@ Phaser.Group.prototype = {
     */
 	getFirstExists: function (state) {
 
-		state = state || true;
+		if (typeof state !== 'boolean')
+		{
+			state = true;
+		}
 
 		if (this._container.first._iNext)
 		{
@@ -458,7 +461,7 @@ Phaser.Group.prototype = {
 				
 			do	
 			{
-				if (currentNode.exists == state)
+				if (currentNode.exists === state)
 				{
 					return currentNode;
 				}

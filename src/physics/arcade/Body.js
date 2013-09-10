@@ -175,6 +175,23 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
+	reset: function () {
+
+	    this.velocity = new Phaser.Point;
+	    this.acceleration = new Phaser.Point;
+	    this.drag = new Phaser.Point;
+	    this.gravity = new Phaser.Point;
+	    this.bounce = new Phaser.Point;
+	    this.maxVelocity = new Phaser.Point(10000, 10000);
+
+	    this.angularVelocity = 0;
+	    this.angularAcceleration = 0;
+	    this.angularDrag = 0;
+	    this.maxAngular = 1000;
+	    this.mass = 1;
+
+	},
+
     deltaAbsX: function () {
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
     },

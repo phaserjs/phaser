@@ -19,6 +19,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     this.renderOrderID = -1;
 
+    //  If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
+    //  The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
+    this.lifespan = 0;
+
     if (key)
     {
         PIXI.Sprite.call(this, PIXI.TextureCache[key]);
@@ -164,6 +168,17 @@ Phaser.Sprite.prototype.update = function() {
         return;
     }
 
+    if (this.lifespan > 0)
+    {
+        this.lifespan -= this.game.time.elapsed;
+
+        if (this.lifespan <= 0)
+        {
+            this.kill();
+            return;
+        }
+    }
+
     this._cache.dirty = false;
 
     if (this.animations.update())
@@ -275,14 +290,35 @@ Phaser.Sprite.prototype.update = function() {
 
 }
 
+Phaser.Sprite.prototype.revive = function() {
+
+    this.alive = true;
+    this.exists = true;
+    this.visible = true;
+    this.events.onRevived.dispatch(this);
+
+}
+
+Phaser.Sprite.prototype.kill = function() {
+
+    this.alive = false;
+    this.exists = false;
+    this.visible = false;
+    this.events.onKilled.dispatch(this);
+
+}
+
 Phaser.Sprite.prototype.reset = function(x, y) {
 
     this.x = x;
     this.y = y;
+    this.position.x = x;
+    this.position.y = y;
     this.alive = true;
     this.exists = true;
     this.visible = true;
     this._outOfBoundsFired = false;
+    this.body.reset();
     
 }
 

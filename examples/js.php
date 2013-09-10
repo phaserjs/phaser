@@ -65,6 +65,7 @@
 	<script src="../src/gameobjects/Text.js"></script>
 	<script src="../src/gameobjects/Button.js"></script>
 	<script src="../src/gameobjects/Graphics.js"></script>
+	<script src="../src/gameobjects/RenderTexture.js"></script>
 	<script src="../src/system/Canvas.js"></script>
 	<script src="../src/system/StageScaleMode.js"></script>
 	<script src="../src/system/Device.js"></script>
@@ -93,3 +94,7 @@
 
 	<script src="../src/physics/arcade/ArcadePhysics.js"></script>
 	<script src="../src/physics/arcade/Body.js"></script>
+
+	<script src="../src/particles/Particles.js"></script>
+	<script src="../src/particles/arcade/ArcadeParticles.js"></script>
+	<script src="../src/particles/arcade/Emitter.js"></script>
