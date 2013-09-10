@@ -92,8 +92,16 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
     },
 
     set: function (color) {
-        this._stage.setBackgroundColor(color);
+
         this._backgroundColor = color;
+
+        if (typeof color === 'string')
+        {
+            color = Phaser.Color.hexToRGB(color);
+        }
+
+        this._stage.setBackgroundColor(color);
+
     },
 
     enumerable: true,

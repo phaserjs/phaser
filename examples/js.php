@@ -91,6 +91,7 @@
 	<script src="../src/sound/Sound.js"></script>
 	<script src="../src/sound/SoundManager.js"></script>
 	<script src="../src/utils/Debug.js"></script>
+	<script src="../src/utils/Color.js"></script>
 
 	<script src="../src/physics/arcade/ArcadePhysics.js"></script>
 	<script src="../src/physics/arcade/Body.js"></script>
@@ -98,3 +99,5 @@
 	<script src="../src/particles/Particles.js"></script>
 	<script src="../src/particles/arcade/ArcadeParticles.js"></script>
 	<script src="../src/particles/arcade/Emitter.js"></script>
+
+	
