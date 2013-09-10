@@ -6,10 +6,18 @@ Phaser.Group = function (game, parent, name) {
 	this.name = name || 'group';
 
 	this._container = new PIXI.DisplayObjectContainer();
+	this._container.name = this.name;
 
 	if (parent)
 	{
-		parent.addChild(this._container);
+		if (parent instanceof Phaser.Group)
+		{
+			parent._container.addChild(this._container);
+		}
+		else
+		{
+			parent.addChild(this._container);
+		}
 	}
 	else
 	{
@@ -84,9 +92,9 @@ Phaser.Group.prototype = {
 		var child2Next = child2._iNext;
 
 		var endNode = this._container.last._iNext;
-		var currentNode = this._container.first;
+		var currentNode = this.game.stage._stage;
 			
-		do	
+		do
 		{
 			if (currentNode !== child1 && currentNode !== child2)
 			{
@@ -161,9 +169,10 @@ Phaser.Group.prototype = {
 
 	bringToTop: function (child) {
 
-		if (child !== this._container.last)
+		if (child.group === this)
 		{
-			this.swap(child, this._container.last);
+			this.remove(child);
+			this.add(child);
 		}
 
 		return child;
@@ -610,6 +619,7 @@ Phaser.Group.prototype = {
 
 		child.events.onRemovedFromGroup.dispatch(child, this);
 		this._container.removeChild(child);
+		child.group = null;
 
 	},
 
@@ -654,15 +664,31 @@ Phaser.Group.prototype = {
 
 	},
 
-	dump: function () {
+	dump: function (full) {
 
-		console.log("\nNode\t\t|\t\tNext\t\t|\t\tPrev\t\t|\t\tFirst\t\t|\t\tLast");
-		console.log("\t\t\t|\t\t\t\t\t|\t\t\t\t\t|\t\t\t\t\t|");
+		if (typeof full == 'undefined')
+		{
+			full = false;
+		}
 
-		var displayObject = this._container;
+		var spacing = 20;
+		var output = "\n" + Phaser.Utils.pad('Node', spacing) + "|" + Phaser.Utils.pad('Next', spacing) + "|" + Phaser.Utils.pad('Previous', spacing) + "|" + Phaser.Utils.pad('First', spacing) + "|" + Phaser.Utils.pad('Last', spacing);
 
-		var testObject = displayObject.last._iNext;
-		displayObject = displayObject.first;
+		console.log(output);
+
+		var output = Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing);
+		console.log(output);
+
+		if (full)
+		{
+			var testObject = this.game.stage._stage.last._iNext;
+			var displayObject = this.game.stage._stage;
+		}
+		else
+		{
+			var testObject = this._container.last._iNext;
+			var displayObject = this._container;
+		}
 		
 		do	
 		{
@@ -712,7 +738,8 @@ Phaser.Group.prototype = {
 				nameLast = '-';
 			}
 
-			console.log(name + '\t\t\t|\t\t' + nameNext + '\t\t\t|\t\t' + namePrev + '\t\t\t|\t\t' + nameFirst + '\t\t\t|\t\t' + nameLast);
+			var output = Phaser.Utils.pad(name, spacing) + "|" + Phaser.Utils.pad(nameNext, spacing) + "|" + Phaser.Utils.pad(namePrev, spacing) + "|" + Phaser.Utils.pad(nameFirst, spacing) + "|" + Phaser.Utils.pad(nameLast, spacing);
+			console.log(output);
 
 			displayObject = displayObject._iNext;
 

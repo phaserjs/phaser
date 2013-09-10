@@ -30,14 +30,14 @@
     function create() {
 
         //  This returns an array of all the image keys in the cache
-        var images = game.cache.getImageKeys()
+        var images = game.cache.getImageKeys();
 
         //  Now let's create some random sprites and enable them all for drag and 'bring to top'
         for (var i = 0; i < 20; i++)
         {
-            var tempSprite = game.add.sprite(game.world.randomX, game.world.randomY, game.rnd.pick(images));
+            var img = game.rnd.pick(images);
+            var tempSprite = game.add.sprite(game.world.randomX, game.world.randomY, img);
             tempSprite.inputEnabled = true;
-            // tempSprite.input.start(i, false, true);
             tempSprite.input.enableDrag(false, true);
         }
 

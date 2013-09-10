@@ -86,10 +86,8 @@ Phaser.World.prototype = {
 
 	bringToTop: function (child) {
 
-		if (child !== this.game.stage._stage.last)
-		{
-			this.swapChildren(child, this.game.stage._stage.last);
-		}
+		this.remove(child);
+		this.add(child);
 
 		return child;
 

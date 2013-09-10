@@ -5,10 +5,6 @@
 * @module       Phaser
 */
 
-Phaser.Utils = {
-    //  Until we have a proper entry-point
-}
-
 /**
 * A collection of methods for displaying debug information about game objects.
 *

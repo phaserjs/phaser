@@ -1,5 +1,42 @@
+
 Phaser.Utils = {
 	
+	/**
+	*  Javascript string pad
+	*  http://www.webtoolkit.info/
+	* pad = the string to pad it out with (defaults to a space)
+	* dir = 1 (left), 2 (right), 3 (both)
+	**/
+	pad: function (str, len, pad, dir) {
+
+	    if (typeof(len) == "undefined") { var len = 0; }
+	    if (typeof(pad) == "undefined") { var pad = ' '; }
+	    if (typeof(dir) == "undefined") { var dir = 3; }
+
+	    if (len + 1 >= str.length)
+	    {
+	        switch (dir)
+	        {
+	            case 1:
+	                str = Array(len + 1 - str.length).join(pad) + str;
+		            break;
+
+	            case 3:
+	                var right = Math.ceil((padlen = len - str.length) / 2);
+	                var left = padlen - right;
+	                str = Array(left+1).join(pad) + str + Array(right+1).join(pad);
+		            break;
+
+	            default:
+	                str = str + Array(len + 1 - str.length).join(pad);
+		            break;
+	        }
+	    }
+
+	    return str;
+
+	},
+
 	//	This is a slightly modified version of jQuery.isPlainObject
 	isPlainObject: function (obj) {
 

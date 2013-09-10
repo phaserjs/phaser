@@ -391,8 +391,12 @@ Phaser.Cache.prototype = {
 
         var output = [];
 
-        for (var item in array) {
-            output.push(item);
+        for (var item in array)
+        {
+            if (item !== '__default')
+            {
+                output.push(item);
+            }
         }
 
         return output;

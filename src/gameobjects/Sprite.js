@@ -2,7 +2,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     x = x || 0;
     y = y || 0;
-    key = key || null;      //  if null we ought to set to the phaser logo or something :)
+    key = key || null;
     frame = frame || null;
 
 	this.game = game;
