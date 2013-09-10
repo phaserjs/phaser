@@ -11,28 +11,34 @@
 **/
 Phaser.Circle = function (x, y, diameter) {
 
-    if (typeof x === "undefined") { x = 0; }
-    if (typeof y === "undefined") { y = 0; }
-    if (typeof diameter === "undefined") { diameter = 0; }
-
-    this._diameter = 0;
-    this._radius = 0;
+    x = x || 0;
+    y = y || 0;
+    diameter = diameter || 0;
 
     /**
     * The x coordinate of the center of the circle
     * @property x
     * @type Number
     **/
-    this.x = 0;
+    this.x = x;
 
     /**
     * The y coordinate of the center of the circle
     * @property y
     * @type Number
     **/
-    this.y = 0;
+    this.y = y;
 
-    this.setTo(x, y, diameter);
+    this._diameter = diameter;
+
+    if (diameter > 0)
+    {
+        this._radius = diameter * 0.5;
+    }
+    else
+    {
+        this._radius = 0;
+    }
 
 };
 

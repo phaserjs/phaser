@@ -36,12 +36,6 @@ Phaser.Stage = function (game, width, height) {
 
 Phaser.Stage.prototype = {
 
-	_onChange: null,
-
-    canvas: null,
-	bounds: null,
-	offset: null,
-
     boot: function () {
 
         Phaser.Canvas.getOffset(this.canvas, this.offset);

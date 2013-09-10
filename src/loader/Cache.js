@@ -11,10 +11,34 @@
 */
 Phaser.Cache = function (game) {
 
+    /**
+     * Local reference to Game.
+     */
 	this.game = game;
+
+    /**
+     * Canvas key-value container.
+     * @type {object}
+     * @private
+     */
     this._canvases = {};
+
+    /**
+     * Image key-value container.
+     * @type {object}
+     */
     this._images = {};
+
+    /**
+     * Sound key-value container.
+     * @type {object}
+     */
     this._sounds = {};
+
+    /**
+     * Text key-value container.
+     * @type {object}
+     */
     this._text = {};
 
     this.addDefaultImage();
@@ -22,36 +46,6 @@ Phaser.Cache = function (game) {
 };
 
 Phaser.Cache.prototype = {
-
-    /**
-     * Local reference to Game.
-     */
-    game: null,
-
-    /**
-     * Canvas key-value container.
-     * @type {object}
-     * @private
-     */
-    _canvases: {},
-
-    /**
-     * Image key-value container.
-     * @type {object}
-     */
-    _images: {},
-
-    /**
-     * Sound key-value container.
-     * @type {object}
-     */
-    _sounds: {},
-
-    /**
-     * Text key-value container.
-     * @type {object}
-     */
-    _text: {},
 
     /**
      * Add a new canvas.

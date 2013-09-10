@@ -6,6 +6,9 @@ Phaser.InputHandler = function (sprite) {
     this.enabled = false;
 
     //	Linked list references
+    this.parent = null;
+    this.next = null;
+    this.prev = null;
 	this.last = this;
 	this.first = this;
 
@@ -54,16 +57,6 @@ Phaser.InputHandler = function (sprite) {
 };
 
 Phaser.InputHandler.prototype = {
-
-	game: null,
-	sprite: null,
-
-	//	Linked list references
-	parent: null,
-	next: null,
-	prev: null,
-	first: null,
-	last: null,
 
 	start: function (priority, checkBody, useHandCursor) {
 

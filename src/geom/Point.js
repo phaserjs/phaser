@@ -18,8 +18,8 @@
 **/
 Phaser.Point = function (x, y) {
 
-    if (typeof x === "undefined") { x = 0; }
-    if (typeof y === "undefined") { y = 0; }
+    x = x || 0;
+    y = y || 0;
 
     this.x = x;
     this.y = y;

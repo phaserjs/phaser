@@ -10,133 +10,119 @@
 */
 Phaser.Animation.Frame = function (x, y, width, height, name, uuid) {
 
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
-    this.sourceSizeW = width;
-    this.sourceSizeH = height;
-    this.centerX = Math.floor(width / 2);
-    this.centerY = Math.floor(height / 2);
-	this.name = name;
-	this.uuid = uuid;
-	this.distance = Phaser.Math.distance(0, 0, width, height);
-
-};
-
-Phaser.Animation.Frame.prototype = {
-
-	/**
-	 * A link to the PIXI.TextureCache entry
-	 */
-	uuid: '',
-
 	/**
 	 * X position within the image to cut from.
 	 * @type {number}
 	 */
-	x: 0,
+	this.x = x;
 
 	/**
 	 * Y position within the image to cut from.
 	 * @type {number}
 	 */
-	y: 0,
+	this.y = y;
 
 	/**
 	 * Width of the frame.
 	 * @type {number}
 	 */
-	width: 0,
+	this.width = width;
 
 	/**
 	 * Height of the frame.
 	 * @type {number}
 	 */
-	height: 0,
+	this.height = height;
 
 	/**
 	 * center X position within the image to cut from.
 	 * @type {number}
 	 */
-	centerX: 0,
+    this.centerX = Math.floor(width / 2);
 
 	/**
 	 * center Y position within the image to cut from.
 	 * @type {number}
 	 */
-	centerY: 0,
-
-	/**
-	 * The distance from the top left to the bottom-right of this Frame.
-	 * @type {number}
-	 */
-	distance: 0,
+    this.centerY = Math.floor(height / 2);
 
 	/**
 	 * Useful for Sprite Sheets.
 	 * @type {number}
 	 */
-	index: 0,
+	this.index = 0;
 
 	/**
 	 * Useful for Texture Atlas files. (is set to the filename value)
 	 */
-	name: '',
+	this.name = name;
+
+	/**
+	 * A link to the PIXI.TextureCache entry
+	 */
+	this.uuid = uuid;
+
+	/**
+	 * The distance from the top left to the bottom-right of this Frame.
+	 * @type {number}
+	 */
+	this.distance = Phaser.Math.distance(0, 0, width, height);
 
 	/**
 	 * Rotated? (not yet implemented)
 	 */
-	rotated: false,
+	this.rotated = false;
 
 	/**
 	 * Either cw or ccw, rotation is always 90 degrees.
 	 */
-	rotationDirection: 'cw',
+	this.rotationDirection = 'cw';
 
 	/**
 	 * Was it trimmed when packed?
 	 * @type {bool}
 	 */
-	trimmed: false,
-
-	//  The coordinates of the trimmed sprite inside the original sprite
+	this.trimmed = false;
 
 	/**
 	 * Width of the original sprite.
 	 * @type {number}
 	 */
-	sourceSizeW: 0,
+    this.sourceSizeW = width;
 
 	/**
 	 * Height of the original sprite.
 	 * @type {number}
 	 */
-	sourceSizeH: 0,
+    this.sourceSizeH = height;
 
 	/**
 	 * X position of the trimmed sprite inside original sprite.
 	 * @type {number}
 	 */
-	spriteSourceSizeX: 0,
+	this.spriteSourceSizeX = 0;
 
 	/**
 	 * Y position of the trimmed sprite inside original sprite.
 	 * @type {number}
 	 */
-	spriteSourceSizeY: 0,
+	this.spriteSourceSizeY = 0;
 
 	/**
 	 * Width of the trimmed sprite.
 	 * @type {number}
 	 */
-	spriteSourceSizeW: 0,
+	this.spriteSourceSizeW = 0;
 
 	/**
 	 * Height of the trimmed sprite.
 	 * @type {number}
 	 */
-	spriteSourceSizeH: 0,
+	this.spriteSourceSizeH = 0;
+
+};
+
+Phaser.Animation.Frame.prototype = {
 
 	/**
 	* Set trim of the frame.

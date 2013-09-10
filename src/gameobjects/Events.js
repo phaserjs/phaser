@@ -18,4 +18,8 @@ Phaser.Events = function (sprite) {
     this.onDragStart = null;
     this.onDragStop = null;
 
+	this.onAnimationStart = null;
+	this.onAnimationComplete = null;
+	this.onAnimationLoop = null;
+
 };

@@ -1,14 +1,15 @@
 Phaser.LinkedList = function () {
+
+    this.next = null;
+    this.prev = null;
+    this.first = null;
+    this.last = null;
+    this.total = 0;
+
 };
 
 Phaser.LinkedList.prototype = {
 
-    next: null,
-    prev: null,
-    first: null,
-    last: null,
-    total: 0,
-    sprite: { name: 'HD' },
 
     add: function (child) {
 

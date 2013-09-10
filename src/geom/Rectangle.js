@@ -49,34 +49,6 @@ Phaser.Rectangle = function (x, y, width, height) {
 Phaser.Rectangle.prototype = {
 
     /**
-     * @property x
-     * @type Number
-     * @default 0
-     */
-    x: 0,
-    
-    /**
-     * @property y
-     * @type Number
-     * @default 0
-     */
-    y: 0,
-    
-    /**
-     * @property width
-     * @type Number
-     * @default 0
-     */
-    width: 0,
-    
-    /**
-     * @property height
-     * @type Number
-     * @default 0
-     */
-    height: 0,
-
-    /**
     * Adjusts the location of the Rectangle object, as determined by its top-left corner, by the specified amounts.
     * @method offset
     * @param {Number} dx Moves the x value of the Rectangle object by this amount.

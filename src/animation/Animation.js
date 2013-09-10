@@ -65,7 +65,7 @@ Phaser.Animation.prototype = {
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 		this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-        // this._parent.events.onAnimationStart.dispatch(this._parent, this);
+        this._parent.events.onAnimationStart.dispatch(this._parent, this);
 
         return this;
 
@@ -114,7 +114,7 @@ Phaser.Animation.prototype = {
                     this._frameIndex = 0;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                     this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-                    // this._parent.events.onAnimationLoop.dispatch(this._parent, this);
+                    this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                 }
                 else
                 {
@@ -158,7 +158,7 @@ Phaser.Animation.prototype = {
 
         this.isPlaying = false;
         this.isFinished = true;
-        // this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+        this._parent.events.onAnimationComplete.dispatch(this._parent, this);
 
     }
 

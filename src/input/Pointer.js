@@ -5,6 +5,181 @@
 */
 Phaser.Pointer = function (game, id) {
 
+    /**
+    * Local private variable to store the status of dispatching a hold event
+    * @property _holdSent
+    * @type {bool}
+    * @private
+    */
+    this._holdSent = false;
+
+    /**
+    * Local private variable storing the short-term history of pointer movements
+    * @property _history
+    * @type {Array}
+    * @private
+    */
+    this._history = [];
+
+    /**
+    * Local private variable storing the time at which the next history drop should occur
+    * @property _lastDrop
+    * @type {Number}
+    * @private
+    */
+    this._nextDrop = 0;
+
+    //  Monitor events outside of a state reset loop
+    this._stateReset = false;
+
+    /**
+    * A Vector object containing the initial position when the Pointer was engaged with the screen.
+    * @property positionDown
+    * @type {Vec2}
+    **/
+    this.positionDown = null;
+
+    /**
+    * A Vector object containing the current position of the Pointer on the screen.
+    * @property position
+    * @type {Vec2}
+    **/
+    this.position = null;
+
+    /**
+    * A Circle object centered on the x/y screen coordinates of the Pointer.
+    * Default size of 44px (Apple's recommended "finger tip" size)
+    * @property circle
+    * @type {Circle}
+    **/
+    this.circle = null;
+
+    /**
+    *
+    * @property withinGame
+    * @type {bool}
+    */
+    this.withinGame = false;
+
+    /**
+    * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
+    * @property clientX
+    * @type {Number}
+    */
+    this.clientX = -1;
+
+    /**
+    * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
+    * @property clientY
+    * @type {Number}
+    */
+    this.clientY = -1;
+
+    /**
+    * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
+    * @property pageX
+    * @type {Number}
+    */
+    this.pageX = -1;
+
+    /**
+    * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
+    * @property pageY
+    * @type {Number}
+    */
+    this.pageY = -1;
+
+    /**
+    * The horizontal coordinate of point relative to the screen in pixels
+    * @property screenX
+    * @type {Number}
+    */
+    this.screenX = -1;
+
+    /**
+    * The vertical coordinate of point relative to the screen in pixels
+    * @property screenY
+    * @type {Number}
+    */
+    this.screenY = -1;
+
+    /**
+    * The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
+    * @property x
+    * @type {Number}
+    */
+    this.x = -1;
+
+    /**
+    * The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.
+    * @property y
+    * @type {Number}
+    */
+    this.y = -1;
+
+    /**
+    * If the Pointer is a mouse this is true, otherwise false
+    * @property isMouse
+    * @type {bool}
+    **/
+    this.isMouse = false;
+
+    /**
+    * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
+    * @property isDown
+    * @type {bool}
+    **/
+    this.isDown = false;
+
+    /**
+    * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
+    * @property isUp
+    * @type {bool}
+    **/
+    this.isUp = true;
+
+    /**
+    * A timestamp representing when the Pointer first touched the touchscreen.
+    * @property timeDown
+    * @type {Number}
+    **/
+    this.timeDown = 0;
+
+    /**
+    * A timestamp representing when the Pointer left the touchscreen.
+    * @property timeUp
+    * @type {Number}
+    **/
+    this.timeUp = 0;
+
+    /**
+    * A timestamp representing when the Pointer was last tapped or clicked
+    * @property previousTapTime
+    * @type {Number}
+    **/
+    this.previousTapTime = 0;
+
+    /**
+    * The total number of times this Pointer has been touched to the touchscreen
+    * @property totalTouches
+    * @type {Number}
+    **/
+    this.totalTouches = 0;
+
+    /**
+    * The number of miliseconds since the last click
+    * @property msSinceLastClick
+    * @type {Number}
+    **/
+    this.msSinceLastClick = Number.MAX_VALUE;
+
+    /**
+    * The Game Object this Pointer is currently over / touching / dragging.
+    * @property targetObject
+    * @type {Any}
+    **/
+    this.targetObject = null;
+
 	this.game = game;
     this.id = id;
 
@@ -25,181 +200,6 @@ Phaser.Pointer = function (game, id) {
 Phaser.Pointer.prototype = {
 
 	/**
-	* Local private variable to store the status of dispatching a hold event
-	* @property _holdSent
-	* @type {bool}
-	* @private
-	*/
-	_holdSent: false,
-
-	/**
-	* Local private variable storing the short-term history of pointer movements
-	* @property _history
-	* @type {Array}
-	* @private
-	*/
-	_history: [],
-
-	/**
-	* Local private variable storing the time at which the next history drop should occur
-	* @property _lastDrop
-	* @type {Number}
-	* @private
-	*/
-	_nextDrop: 0,
-
-	//  Monitor events outside of a state reset loop
-	_stateReset: false,
-
-	/**
-	* A Vector object containing the initial position when the Pointer was engaged with the screen.
-	* @property positionDown
-	* @type {Vec2}
-	**/
-	positionDown: null,
-
-	/**
-	* A Vector object containing the current position of the Pointer on the screen.
-	* @property position
-	* @type {Vec2}
-	**/
-	position: null,
-
-	/**
-	* A Circle object centered on the x/y screen coordinates of the Pointer.
-	* Default size of 44px (Apple's recommended "finger tip" size)
-	* @property circle
-	* @type {Circle}
-	**/
-	circle: null,
-
-	/**
-	*
-	* @property withinGame
-	* @type {bool}
-	*/
-	withinGame: false,
-
-	/**
-	* The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset
-	* @property clientX
-	* @type {Number}
-	*/
-	clientX: -1,
-
-	/**
-	* The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset
-	* @property clientY
-	* @type {Number}
-	*/
-	clientY: -1,
-
-	/**
-	* The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset
-	* @property pageX
-	* @type {Number}
-	*/
-	pageX: -1,
-
-	/**
-	* The vertical coordinate of point relative to the viewport in pixels, including any scroll offset
-	* @property pageY
-	* @type {Number}
-	*/
-	pageY: -1,
-
-	/**
-	* The horizontal coordinate of point relative to the screen in pixels
-	* @property screenX
-	* @type {Number}
-	*/
-	screenX: -1,
-
-	/**
-	* The vertical coordinate of point relative to the screen in pixels
-	* @property screenY
-	* @type {Number}
-	*/
-	screenY: -1,
-
-	/**
-	* The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
-	* @property x
-	* @type {Number}
-	*/
-	x: -1,
-
-	/**
-	* The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.
-	* @property y
-	* @type {Number}
-	*/
-	y: -1,
-
-	/**
-	* If the Pointer is a mouse this is true, otherwise false
-	* @property isMouse
-	* @type {bool}
-	**/
-	isMouse: false,
-
-	/**
-	* If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true
-	* @property isDown
-	* @type {bool}
-	**/
-	isDown: false,
-
-	/**
-	* If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
-	* @property isUp
-	* @type {bool}
-	**/
-	isUp: true,
-
-	/**
-	* A timestamp representing when the Pointer first touched the touchscreen.
-	* @property timeDown
-	* @type {Number}
-	**/
-	timeDown: 0,
-
-	/**
-	* A timestamp representing when the Pointer left the touchscreen.
-	* @property timeUp
-	* @type {Number}
-	**/
-	timeUp: 0,
-
-	/**
-	* A timestamp representing when the Pointer was last tapped or clicked
-	* @property previousTapTime
-	* @type {Number}
-	**/
-	previousTapTime: 0,
-
-	/**
-	* The total number of times this Pointer has been touched to the touchscreen
-	* @property totalTouches
-	* @type {Number}
-	**/
-	totalTouches: 0,
-
-	/**
-	* The number of miliseconds since the last click
-	* @property msSinceLastClick
-	* @type {Number}
-	**/
-	msSinceLastClick: Number.MAX_VALUE,
-
-	/**
-	* The Game Object this Pointer is currently over / touching / dragging.
-	* @property targetObject
-	* @type {Any}
-	**/
-	targetObject: null,
-
-	/**
     * Called when the Pointer is pressed onto the touchscreen
     * @method start
     * @param {Any} event
@@ -215,11 +215,11 @@ Phaser.Pointer.prototype = {
         }
 
         //  Fix to stop rogue browser plugins from blocking the visibility state event
-        // if (this.game.paused == true && this.game.stage.scale.incorrectOrientation == false)
-        // {
-        //     this.game.stage.resumeGame();
-        //     return this;
-        // }
+        if (this.game.paused == true && this.game.stage.scale.incorrectOrientation == false)
+        {
+            this.game.paused = false;
+            return this;
+        }
 
         this._history.length = 0;
         this.active = true;

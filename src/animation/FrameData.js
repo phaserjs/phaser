@@ -10,25 +10,22 @@
 */
 Phaser.Animation.FrameData = function () {
 
+    /**
+     * Local frame container.
+     * @type {Phaser.Frame[]}
+     * @private
+     */
     this._frames = [];
+
+    /**
+     * Local frameName<->index container.
+     * @private
+     */
     this._frameNames = [];
 
 };
 
 Phaser.Animation.FrameData.prototype = {
-
-	/**
-	 * Local frame container.
-	 * @type {Phaser.Frame[]}
-	 * @private
-	 */
-	_frames: [],
-
-	/**
-	 * Local frameName<->index container.
-	 * @private
-	 */
-	_frameNames: [],
 
 	/**
 	* Add a new frame.
@@ -41,7 +38,8 @@ Phaser.Animation.FrameData.prototype = {
 
         this._frames.push(frame);
 
-        if (frame.name !== '') {
+        if (frame.name !== '')
+        {
             this._frameNames[frame.name] = frame.index;
         }
 
@@ -56,7 +54,8 @@ Phaser.Animation.FrameData.prototype = {
 	*/
     getFrame: function (index) {
 
-        if (this._frames[index]) {
+        if (this._frames[index])
+        {
             return this._frames[index];
         }
 
@@ -71,7 +70,8 @@ Phaser.Animation.FrameData.prototype = {
 	*/    
     getFrameByName: function (name) {
 
-        if (this._frameNames[name] !== '') {
+        if (this._frameNames[name] !== '')
+        {
             return this._frames[this._frameNames[name]];
         }
 
@@ -86,7 +86,8 @@ Phaser.Animation.FrameData.prototype = {
 	*/
     checkFrameName: function (name) {
 
-        if (this._frameNames[name] == null) {
+        if (this._frameNames[name] == null)
+        {
             return false;
         }
 

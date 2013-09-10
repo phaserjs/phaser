@@ -15,21 +15,12 @@
 */
 Phaser.Time = function (game) {
 
-	this.game = game;
-
-	// this.game.onPause.add(this.gamePaused, this);
-	// this.game.onResume.add(this.gameResumed, this);
-
-};
-
-Phaser.Time.prototype = {
-
 	/**
 	* A reference to the currently running Game.
 	* @property game
 	* @type {Phaser.Game}
 	*/
-	game: null,
+	this.game = game;
 
 	/**
 	* The time at which the Game instance started.
@@ -37,7 +28,7 @@ Phaser.Time.prototype = {
 	* @private
 	* @type {Number}
 	*/
-	_started: 0,
+	this._started = 0;
 
 	/**
 	* The time (in ms) that the last second counter ticked over.
@@ -45,7 +36,7 @@ Phaser.Time.prototype = {
 	* @private
 	* @type {Number}
 	*/
-	_timeLastSecond: 0,
+	this._timeLastSecond = 0;
 
 	/**
 	* The time the game started being paused.
@@ -53,7 +44,7 @@ Phaser.Time.prototype = {
 	* @private
 	* @type {Number}
 	*/
-	_pauseStarted: 0,
+	this._pauseStarted = 0;
 
 	/**
 	* The elapsed time calculated for the physics motion updates.
@@ -61,7 +52,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	physicsElapsed: 0,
+	this.physicsElapsed = 0;
 
 	/**
 	* Game time counter.
@@ -69,7 +60,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	time: 0,
+	this.time = 0;
 
 	/**
 	* Records how long the game has been paused for. Is reset each time the game pauses.
@@ -77,7 +68,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	pausedTime: 0,
+	this.pausedTime = 0;
 
 	/**
 	* The time right now.
@@ -85,7 +76,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	now: 0,
+	this.now = 0;
 
 	/**
 	* Elapsed time since the last frame.
@@ -93,7 +84,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	elapsed: 0,
+	this.elapsed = 0;
 
 	/**
 	* Frames per second.
@@ -101,7 +92,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	fps: 0,
+	this.fps = 0;
 
 	/**
 	* The lowest rate the fps has dropped to.
@@ -109,7 +100,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	fpsMin: 1000,
+	this.fpsMin = 1000;
 
 	/**
 	* The highest rate the fps has reached (usually no higher than 60fps).
@@ -117,7 +108,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	fpsMax: 0,
+	this.fpsMax = 0;
 
 	/**
 	* The minimum amount of time the game has taken between two frames.
@@ -125,7 +116,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	msMin: 1000,
+	this.msMin = 1000;
 
 	/**
 	* The maximum amount of time the game has taken between two frames.
@@ -133,7 +124,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	msMax: 0,
+	this.msMax = 0;
 
 	/**
 	* The number of frames record in the last second.
@@ -141,7 +132,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	frames: 0,
+	this.frames = 0;
 
 	/**
 	* Records how long the game was paused for in miliseconds.
@@ -149,7 +140,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	pauseDuration: 0,
+	this.pauseDuration = 0;
 
 	/**
 	* The value that setTimeout needs to work out when to next update
@@ -157,7 +148,7 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	timeToCall: 0,
+	this.timeToCall = 0;
 
 	/**
 	* Internal value used by timeToCall as part of the setTimeout loop
@@ -165,7 +156,11 @@ Phaser.Time.prototype = {
 	* @public
 	* @type {Number}
 	*/
-	lastTime: 0,
+	this.lastTime = 0;
+
+};
+
+Phaser.Time.prototype = {
 
 	/**
 	* The number of seconds that have elapsed since the game was started.
@@ -208,7 +203,8 @@ Phaser.Time.prototype = {
 		this.physicsElapsed = 1.0 * (this.elapsed / 1000);
 
 		//  Paused?
-		if (this.game.paused) {
+		if (this.game.paused)
+		{
 			this.pausedTime = this.now - this._pauseStarted;
 		}
 

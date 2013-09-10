@@ -3,6 +3,13 @@ Phaser.Sound = function (game, key, volume, loop) {
 	volume = volume || 1;
 	loop = loop || false;
 
+    this.game = game;
+    this.name = '';
+    this.key = key;
+    this.loop = loop;
+    this._volume = volume;
+    this.markers = {};
+
     /**
     * Reference to AudioContext instance.
     */
@@ -15,9 +22,6 @@ Phaser.Sound = function (game, key, volume, loop) {
 
     this._muted = false;
 
-    this.name = '';
-    this.markers = {};
-
     this.autoplay = false;
     this.totalDuration = 0;
     this.startTime = 0;
@@ -29,20 +33,6 @@ Phaser.Sound = function (game, key, volume, loop) {
     this.currentMarker = '';
     this.pendingPlayback = false;
     this.override = false;
-
-    this.onDecoded = null;
-    this.onPlay = null;
-    this.onPause = null;
-    this.onResume = null;
-    this.onLoop = null;
-    this.onStop = null;
-    this.onMute = null;
-    this.onMarkerComplete = null;
-
-    this.game = game;
-    this.key = key;
-    this._volume = volume;
-    this.loop = loop;
 
     this.usingWebAudio = this.game.sound.usingWebAudio;
     this.usingAudioTag = this.game.sound.usingAudioTag;

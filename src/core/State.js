@@ -11,6 +11,22 @@
 */
 
 Phaser.State = function () {
+
+    this.game = null;
+    this.add = null;
+    this.camera = null;
+    this.cache = null;
+    this.input = null;
+    this.load = null;
+    // this.math = null;
+    this.sound = null;
+    this.stage = null;
+    this.time = null;
+    this.tweens = null;
+    this.world = null;
+    this.particles = null;
+    this.physics = null;
+
 };
 
 Phaser.State.prototype = {
@@ -18,17 +34,19 @@ Phaser.State.prototype = {
     link: function (game) {
 
         this.game = game;
-        // this.add = game.add;
-        // this.camera = game.camera;
+        this.add = game.add;
+        this.camera = game.camera;
         this.cache = game.cache;
-        // this.input = game.input;
+        this.input = game.input;
         this.load = game.load;
-        this.math = game.math;
-        // this.sound = game.sound;
-        // this.stage = game.stage;
+        // this.math = game.math;
+        this.sound = game.sound;
+        this.stage = game.stage;
         this.time = game.time;
         this.tweens = game.tweens;
-        // this.world = game.world;
+        this.world = game.world;
+        this.particles = game.particles;
+        this.physics = game.physics;
 
     },
 

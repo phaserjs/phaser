@@ -55,22 +55,11 @@ Phaser.TweenManager.prototype = {
     * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
     *
     * @param obj {object} Object the tween will be run on.
-    * @param [localReference] {bool} If true the tween will be stored in the object.tween property so long as it exists. If already set it'll be over-written.
     * @return {Phaser.Tween} The newly created tween object.
     */
-    create: function (object, localReference) {
+    create: function (object) {
 
-        localReference = localReference || false;
-
-        if (localReference)
-        {
-            object['tween'] = new Phaser.Tween(object, this.game);
-            return object['tween'];
-        }
-        else
-        {
-            return new Phaser.Tween(object, this.game);
-        }
+        return new Phaser.Tween(object, this.game);
 
     },
 

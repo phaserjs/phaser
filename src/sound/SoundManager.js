@@ -7,28 +7,25 @@ Phaser.SoundManager = function (game) {
 	this.game = game;
 
 	this.onSoundDecode = new Phaser.Signal;
+
+    this._muted = false;
+    this._unlockSource = null;
+    this._volume = 1;
+    this._muted = false;
+    this._sounds = [];
+
+    this.context = null;
+    this.usingWebAudio = true;
+    this.usingAudioTag = false;
+    this.noAudio = false;
+
+    this.touchLocked = false;
+
+    this.channels = 32;
 	
 };
 
 Phaser.SoundManager.prototype = {
-
-	game: null,
-
-    _muted: false,
-    _unlockSource: null,
-    _volume: 1,
-    _muted: false,
-    _sounds: [],
-
-    context: null,
-    usingWebAudio: true,
-    usingAudioTag: false,
-    noAudio: false,
-
-    touchLocked: false,
-    onSoundDecode: null,
-
-    channels: 32,
 
     boot: function () {
 

@@ -9,7 +9,7 @@
 * @copyright  2013 Photon Storm Ltd.
 * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 */
-Phaser.AnimationManager = function (parent) {
+Phaser.AnimationManager = function (sprite) {
 
 	/**
 	* Data contains animation frames.
@@ -22,17 +22,18 @@ Phaser.AnimationManager = function (parent) {
 	*/
 	this.currentFrame = null;
 
-	this._parent = parent;
+	this.sprite = sprite;
 
-	this.game = parent.game;
+	this.game = sprite.game;
 
 	this._anims = {};
+
+	this.updateIfVisible = true;
 
 };
 
 Phaser.AnimationManager.prototype = {
 
-	updateIfVisible: true,
 
 	/**
 	* Load animation frame data.
@@ -68,12 +69,12 @@ Phaser.AnimationManager.prototype = {
 		}
 
 		//  Create the signals the AnimationManager will emit
-		// if (this._parent.events.onAnimationStart == null)
-		// {
-			// this._parent.events.onAnimationStart = new Phaser.Signal();
-			// this._parent.events.onAnimationComplete = new Phaser.Signal();
-			// this._parent.events.onAnimationLoop = new Phaser.Signal();
-		// }
+		if (this.sprite.events.onAnimationStart == null)
+		{
+			this.sprite.events.onAnimationStart = new Phaser.Signal();
+			this.sprite.events.onAnimationComplete = new Phaser.Signal();
+			this.sprite.events.onAnimationLoop = new Phaser.Signal();
+		}
 
 		if (frames == null)
 		{
@@ -93,10 +94,10 @@ Phaser.AnimationManager.prototype = {
 			frames = this._frameData.getFrameIndexesByName(frames);
 		}
 
-		this._anims[name] = new Phaser.Animation(this.game, this._parent, this._frameData, name, frames, frameRate, loop);
+		this._anims[name] = new Phaser.Animation(this.game, this.sprite, this._frameData, name, frames, frameRate, loop);
 		this.currentAnim = this._anims[name];
 		this.currentFrame = this.currentAnim.currentFrame;
-		this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+		this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
 		return this._anims[name];
 
@@ -181,7 +182,7 @@ Phaser.AnimationManager.prototype = {
 	*/
 	update: function () {
 
-		if (this.updateIfVisible && this._parent.visible == false)
+		if (this.updateIfVisible && this.sprite.visible == false)
 		{
 			return false;
 		}
@@ -189,7 +190,7 @@ Phaser.AnimationManager.prototype = {
 		if (this.currentAnim && this.currentAnim.update() == true)
 		{
 			this.currentFrame = this.currentAnim.currentFrame;
-			this._parent.currentFrame = this.currentFrame;
+			this.sprite.currentFrame = this.currentFrame;
 			return true;
 		}
 
@@ -261,8 +262,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
         {
             this.currentFrame = this._frameData.getFrame(value);
             this._frameIndex = value;
-            this._parent.currentFrame = this.currentFrame;
-			this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this.sprite.currentFrame = this.currentFrame;
+			this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
 
     },
@@ -288,8 +289,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
         {
             this.currentFrame = this._frameData.getFrameByName(value);
             this._frameIndex = this.currentFrame.index;
-            this._parent.currentFrame = this.currentFrame;
-			this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this.sprite.currentFrame = this.currentFrame;
+			this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
         else
         {

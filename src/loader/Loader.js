@@ -6,10 +6,74 @@
 */
 Phaser.Loader = function (game) {
 
+	/**
+	* Local reference to Game.
+	*/
 	this.game = game;
 
+	/**
+	* Array stores assets keys. So you can get that asset by its unique key.
+	*/
+	this._keys = [];
+
+	/**
+	* Contains all the assets file infos.
+	*/
+	this._fileList = {};
+
+	/**
+	* Indicates assets loading progress. (from 0 to 100)
+	* @type {number}
+	*/
+	this._progressChunk = 0;
+
+	/**
+	* An XMLHttpRequest object used for loading text and audio data
+	* @type {XMLHttpRequest}
+	*/
 	this._xhr = new XMLHttpRequest();
 
+	/**
+	* Length of assets queue.
+	* @type {number}
+	*/
+	this.queueSize = 0;
+
+	/**
+	* True if the Loader is in the process of loading the queue.
+	* @type {bool}
+	*/
+	this.isLoading = false;
+
+	/**
+	* True if all assets in the queue have finished loading.
+	* @type {bool}
+	*/
+	this.hasLoaded = false;
+
+	/**
+	* The Load progress percentage value (from 0 to 100)
+	* @type {number}
+	*/
+	this.progress = 0;
+
+	/**
+	* The crossOrigin value applied to loaded images
+	* @type {string}
+	*/
+	this.crossOrigin = '';
+
+	/**
+	* If you want to append a URL before the path of any asset you can set this here.
+	* Useful if you need to allow an asset url to be configured outside of the game code.
+	* MUST have / on the end of it!
+	* @type {string}
+	*/
+	this.baseURL = '';
+
+	/**
+	 * Event Signals
+	 */
 	this.onFileComplete = new Phaser.Signal;
 	this.onFileError = new Phaser.Signal;
 	this.onLoadStart = new Phaser.Signal;
@@ -27,88 +91,18 @@ Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 Phaser.Loader.prototype = {
 
 	/**
-	* Local reference to Game.
-	*/
-	game: null,
-
-	/**
-	* Array stores assets keys. So you can get that asset by its unique key.
-	*/
-	_keys: [],
-
-	/**
-	* Contains all the assets file infos.
-	*/
-	_fileList: {},
-
-	/**
-	* Indicates assets loading progress. (from 0 to 100)
-	* @type {number}
-	*/
-	_progressChunk: 0,
-
-	/**
-	* An XMLHttpRequest object used for loading text and audio data
-	* @type {XMLHttpRequest}
-	*/
-	_xhr: null,
-
-	/**
-	* Length of assets queue.
-	* @type {number}
-	*/
-	queueSize: 0,
-
-	/**
-	* True if the Loader is in the process of loading the queue.
-	* @type {bool}
-	*/
-	isLoading: false,
-
-	/**
-	* True if all assets in the queue have finished loading.
-	* @type {bool}
-	*/
-	hasLoaded: false,
-
-	/**
-	* The Load progress percentage value (from 0 to 100)
-	* @type {number}
-	*/
-	progress: 0,
-
-	/**
-	* The crossOrigin value applied to loaded images
-	* @type {string}
-	*/
-	crossOrigin: '',
-
-	/**
-	* If you want to append a URL before the path of any asset you can set this here.
-	* Useful if you need to allow an asset url to be configured outside of the game code.
-	* MUST have / on the end of it!
-	* @type {string}
-	*/
-	baseURL: '',
-
-	/**
-	 * Event Signals
-	 */
-	onFileComplete: null,
-	onFileError: null,
-	onLoadStart: null,
-	onLoadComplete: null,
-
-	/**
 	* Check whether asset exists with a specific key.
 	* @param key {string} Key of the asset you want to check.
 	* @return {bool} Return true if exists, otherwise return false.
 	*/
 	checkKeyExists: function (key) {
 
-		if (this._fileList[key]) {
+		if (this._fileList[key])
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 		
@@ -118,8 +112,10 @@ Phaser.Loader.prototype = {
 	 * Reset loader, this will remove all loaded assets.
 	 */
 	reset: function () {
+
 		this.queueSize = 0;
 		this.isLoading = false;
+
 	},
 
 	/**
@@ -136,12 +132,12 @@ Phaser.Loader.prototype = {
 			loaded: false
 		};
 
-		if (typeof properties !== "undefined") {
-
-			for (var prop in properties) {
+		if (typeof properties !== "undefined")
+		{
+			for (var prop in properties)
+			{
 				entry[prop] = properties[prop];
 			}
-			
 		}
 
 		this._fileList[key] = entry;
@@ -162,7 +158,8 @@ Phaser.Loader.prototype = {
 
 		if (typeof overwrite === "undefined") { overwrite = false; }
 
-		if (overwrite || this.checkKeyExists(key) == false) {
+		if (overwrite || this.checkKeyExists(key) == false)
+		{
 			this.addToFileList('image', key, url);
 		}
 
@@ -221,21 +218,21 @@ Phaser.Loader.prototype = {
 	},
 
 	atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
-		if (typeof atlasURL === "undefined") { atlasURL = null; }
-		if (typeof atlasData === "undefined") { atlasData = null; }
+
 		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+
 	},
 
 	atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
-		if (typeof atlasURL === "undefined") { atlasURL = null; }
-		if (typeof atlasData === "undefined") { atlasData = null; }
+
 		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
 	},
 
 	atlasXML: function (key, textureURL, atlasURL, atlasData) {
-		if (typeof atlasURL === "undefined") { atlasURL = null; }
-		if (typeof atlasData === "undefined") { atlasData = null; }
+
 		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
+
 	},
 
 	/**

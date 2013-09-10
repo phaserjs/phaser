@@ -3,15 +3,15 @@ Phaser.World = function (game) {
 	this.game = game;
 
 	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
+
+	this.camera = null;
+
+	this.currentRenderOrderID = 0;
 	
 };
 
 Phaser.World.prototype = {
 
-	bounds: null,
-	camera: null,
-
-	currentRenderOrderID: 0,
 
 	boot: function () {
 

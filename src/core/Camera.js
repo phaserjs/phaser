@@ -14,9 +14,32 @@ Phaser.Camera = function (game, id, x, y, width, height) {
 	//  The view into the world we wish to render (by default the game dimensions)
 	//  The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render
 	//	Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?)
+
+    /**
+    * Camera view.
+    * @type {Rectangle}
+    */
     this.view = new Phaser.Rectangle(x, y, width, height);
+
 	this.screenView = new Phaser.Rectangle(x, y, width, height);
 
+    /**
+    * Sprite moving inside this Rectangle will not cause camera moving.
+    * @type {Rectangle}
+    */
+    this.deadzone = null;
+
+    /**
+    * Whether this camera is visible or not. (default is true)
+    * @type {bool}
+    */
+    this.visible = true;
+
+    /**
+    * If the camera is tracking a Sprite, this is a reference to it, otherwise null
+    * @type {Sprite}
+    */
+    this.target = null;
 	
 };
 
@@ -27,35 +50,6 @@ Phaser.Camera.FOLLOW_TOPDOWN = 2;
 Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 
 Phaser.Camera.prototype = {
-
-    game: null,
-    world: null,
-
-    id: 0,
-
-	/**
-	* Camera view.
-	* @type {Rectangle}
-	*/
-	view: null,
-
-	/**
-	* Sprite moving inside this Rectangle will not cause camera moving.
-	* @type {Rectangle}
-	*/
-	deadzone: null,
-
-	/**
-	* Whether this camera is visible or not. (default is true)
-	* @type {bool}
-	*/
-	visible: true,
-
-	/**
-	* If the camera is tracking a Sprite, this is a reference to it, otherwise null
-	* @type {Sprite}
-	*/
-	target: null,
 
 	/**
     * Tells this camera which sprite to follow.
