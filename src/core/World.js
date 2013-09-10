@@ -59,6 +59,11 @@ Phaser.World.prototype = {
 			
 			do	
 			{
+				if (currentNode['preUpdate'])
+				{
+					currentNode.preUpdate();
+				}
+
 				if (currentNode['update'])
 				{
 					currentNode.update();

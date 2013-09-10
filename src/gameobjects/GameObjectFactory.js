@@ -10,6 +10,12 @@ Phaser.GameObjectFactory.prototype = {
 	game: null,
     world: null,
 
+    existing: function (object) {
+
+        return this.world.add(object);
+
+    },
+
 	/**
     * Create a new Sprite with specific position and sprite sheet key.
     *
