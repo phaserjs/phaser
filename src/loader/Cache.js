@@ -167,7 +167,7 @@ Phaser.Cache.prototype = {
             decoded = true;
         }
 
-        this._sounds[key] = { url: url, data: data, locked: locked, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag };
+        this._sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag };
 
     },
 
@@ -354,7 +354,9 @@ Phaser.Cache.prototype = {
 	* @return {object} The sound data you want.
 	*/
     isSoundReady: function (key) {
-    	return (this._sounds[key] && this._sounds[key].decoded == true && this._sounds[key].locked == false);
+
+        return (this._sounds[key] && this._sounds[key].decoded && this.game.sound.touchLocked == false);
+
     },
 
 	/**

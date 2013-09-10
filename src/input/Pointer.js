@@ -242,8 +242,6 @@ Phaser.Pointer.prototype = {
         {
             this.game.input.x = this.x * this.game.input.scale.x;
             this.game.input.y = this.y * this.game.input.scale.y;
-            // this.game.input.x = this.x;
-            // this.game.input.y = this.y;
             this.game.input.position.setTo(this.x, this.y);
             this.game.input.onDown.dispatch(this);
             this.game.input.resetSpeed(this.x, this.y);

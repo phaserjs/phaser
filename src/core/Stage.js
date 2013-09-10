@@ -27,28 +27,10 @@ Phaser.Stage = function (game, width, height) {
     //  The Pixi Stage which is hooked to the renderer
     this._stage = new PIXI.Stage(0x000000, false);
     this._stage.name = '_stage_root';
-
-	Phaser.Canvas.getOffset(this.canvas, this.offset);
-
-	this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
-
+    
     this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
     this.scale = new Phaser.StageScaleMode(this.game, width, height);
     this.aspectRatio = width / height;
-
-	var _this = this;
-
-    this._onChange = function (event) {
-        return _this.visibilityChange(event);
-    }
-
-    document.addEventListener('visibilitychange', this._onChange, false);
-    document.addEventListener('webkitvisibilitychange', this._onChange, false);
-    document.addEventListener('pagehide', this._onChange, false);
-    document.addEventListener('pageshow', this._onChange, false);
-
-    window.onblur = this._onChange;
-    window.onfocus = this._onChange;
 
 };
 
@@ -59,6 +41,28 @@ Phaser.Stage.prototype = {
     canvas: null,
 	bounds: null,
 	offset: null,
+
+    boot: function () {
+
+        Phaser.Canvas.getOffset(this.canvas, this.offset);
+
+        this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
+
+        var _this = this;
+
+        this._onChange = function (event) {
+            return _this.visibilityChange(event);
+        }
+
+        document.addEventListener('visibilitychange', this._onChange, false);
+        document.addEventListener('webkitvisibilitychange', this._onChange, false);
+        document.addEventListener('pagehide', this._onChange, false);
+        document.addEventListener('pageshow', this._onChange, false);
+
+        window.onblur = this._onChange;
+        window.onfocus = this._onChange;
+
+    },
 
 	/**
     * This method is called when the document visibility is changed.

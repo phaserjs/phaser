@@ -3,6 +3,42 @@ Phaser.Sound = function (game, key, volume, loop) {
 	volume = volume || 1;
 	loop = loop || false;
 
+    /**
+    * Reference to AudioContext instance.
+    */
+    this.context = null;
+
+    /**
+    * Decoded data buffer / Audio tag.
+    */
+    this._buffer = null;
+
+    this._muted = false;
+
+    this.name = '';
+    this.markers = {};
+
+    this.autoplay = false;
+    this.totalDuration = 0;
+    this.startTime = 0;
+    this.currentTime = 0;
+    this.duration = 0;
+    this.stopTime = 0;
+    this.paused = false;
+    this.isPlaying = false;
+    this.currentMarker = '';
+    this.pendingPlayback = false;
+    this.override = false;
+
+    this.onDecoded = null;
+    this.onPlay = null;
+    this.onPause = null;
+    this.onResume = null;
+    this.onLoop = null;
+    this.onStop = null;
+    this.onMute = null;
+    this.onMarkerComplete = null;
+
     this.game = game;
     this.key = key;
     this._volume = volume;
@@ -54,55 +90,13 @@ Phaser.Sound = function (game, key, volume, loop) {
 
 Phaser.Sound.prototype = {
 
-    game: null,
-
-    /**
-    * Reference to AudioContext instance.
-    */
-    context: null,
-
-    /**
-    * Decoded data buffer / Audio tag.
-    */
-    _buffer: null,
-
-    _muted: false,
-
-    key: '',
-    name: '',
-    markers: {},
-
-    usingWebAudio: false,
-    usingAudioTag: false,
-    autoplay: false,
-    totalDuration: 0,
-    startTime: 0,
-    currentTime: 0,
-    duration: 0,
-    stopTime: 0,
-    paused: false,
-    loop: false,
-    isPlaying: false,
-    currentMarker: '',
-    pendingPlayback: false,
-    override: false,
-
-    onDecoded: null,
-    onPlay: null,
-    onPause: null,
-    onResume: null,
-    onLoop: null,
-    onStop: null,
-    onMute: null,
-    onMarkerComplete: null,
-
     soundHasUnlocked: function (key) {
 
         if (key == this.key)
         {
             this._sound = this.game.cache.getSoundData(this.key);
             this.totalDuration = this._sound.duration;
-            console.log('sound has unlocked', this._sound);
+            // console.log('sound has unlocked' + this._sound);
 	    }
 
 	},
@@ -201,7 +195,7 @@ Phaser.Sound.prototype = {
     	loop = loop || false;
     	forceRestart = forceRestart || false;
 
-        console.log('play', marker, 'current is', this.currentMarker);
+        // console.log('play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {
@@ -211,7 +205,7 @@ Phaser.Sound.prototype = {
 
         if (this.isPlaying && this.override)
         {
-            //console.log('asked to play', marker, 'but already playing', this.currentMarker);
+            // console.log('asked to play ' + marker + ' but already playing ' + this.currentMarker);
         
             if (this.usingWebAudio)
             {
@@ -240,7 +234,7 @@ Phaser.Sound.prototype = {
             this.loop = this.markers[marker].loop;
             this.duration = this.markers[marker].duration * 1000;
 
-            //console.log('marker info loaded', this.loop, this.duration);
+            // console.log('marker info loaded', this.loop, this.duration);
             this._tempMarker = marker;
             this._tempPosition = this.position;
             this._tempVolume = this.volume;
@@ -301,8 +295,6 @@ Phaser.Sound.prototype = {
                 this.currentTime = 0;
                 this.stopTime = this.startTime + this.duration;
                 this.onPlay.dispatch(this);
-                
-                //console.log('playing, start', this.startTime, 'stop');
 			}
 			else
 			{

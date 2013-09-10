@@ -7,79 +7,6 @@ Phaser.SoundManager = function (game) {
 	this.game = game;
 
 	this.onSoundDecode = new Phaser.Signal;
-
-    if (this.game.device.iOS && this.game.device.webAudio == false)
-    {
-        this.channels = 1;
-    }
-
-    if (game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
-    {
-        this.game.input.touch.callbackContext = this;
-        this.game.input.touch.touchStartCallback = this.unlock;
-        this.game.input.mouse.callbackContext = this;
-        this.game.input.mouse.mouseDownCallback = this.unlock;
-        this.touchLocked = true;
-    }
-    else
-    {
-        //  What about iOS5?
-        this.touchLocked = false;
-    }
-
-    if (window['PhaserGlobal'])
-    {
-        //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
-        if (window['PhaserGlobal'].disableAudio == true)
-        {
-            this.usingWebAudio = false;
-            this.noAudio = true;
-            return;
-        }
-
-        //  Check if the Web Audio API is disabled (for testing Audio Tag playback during development)
-        if (window['PhaserGlobal'].disableWebAudio == true)
-        {
-            this.usingWebAudio = false;
-            this.usingAudioTag = true;
-            this.noAudio = false;
-            return;
-        }
-    }
-
-    if (!!window['AudioContext'])
-    {
-        this.context = new window['AudioContext']();
-    }
-    else if(!!window['webkitAudioContext'])
-    {
-        this.context = new window['webkitAudioContext']();
-    }
-    else if(!!window['Audio'])
-    {
-        this.usingWebAudio = false;
-        this.usingAudioTag = true;
-    }
-    else
-    {
-        this.usingWebAudio = false;
-        this.noAudio = true;
-    }
-
-    if (this.context !== null)
-    {
-        if (typeof this.context.createGain === 'undefined')
-        {
-            this.masterGain = this.context.createGainNode();
-        }
-        else
-        {
-            this.masterGain = this.context.createGain();
-        }
-
-        this.masterGain.gain.value = 1;
-        this.masterGain.connect(this.context.destination);
-    }
 	
 };
 
@@ -103,6 +30,84 @@ Phaser.SoundManager.prototype = {
 
     channels: 32,
 
+    boot: function () {
+
+        if (this.game.device.iOS && this.game.device.webAudio == false)
+        {
+            this.channels = 1;
+        }
+
+        if (this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
+        {
+            this.game.input.touch.callbackContext = this;
+            this.game.input.touch.touchStartCallback = this.unlock;
+            this.game.input.mouse.callbackContext = this;
+            this.game.input.mouse.mouseDownCallback = this.unlock;
+            this.touchLocked = true;
+        }
+        else
+        {
+            //  What about iOS5?
+            this.touchLocked = false;
+        }
+
+        if (window['PhaserGlobal'])
+        {
+            //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
+            if (window['PhaserGlobal'].disableAudio == true)
+            {
+                this.usingWebAudio = false;
+                this.noAudio = true;
+                return;
+            }
+
+            //  Check if the Web Audio API is disabled (for testing Audio Tag playback during development)
+            if (window['PhaserGlobal'].disableWebAudio == true)
+            {
+                this.usingWebAudio = false;
+                this.usingAudioTag = true;
+                this.noAudio = false;
+                return;
+            }
+        }
+
+        if (!!window['AudioContext'])
+        {
+            this.context = new window['AudioContext']();
+        }
+        else if(!!window['webkitAudioContext'])
+        {
+            this.context = new window['webkitAudioContext']();
+        }
+        else if(!!window['Audio'])
+        {
+            this.usingWebAudio = false;
+            this.usingAudioTag = true;
+        }
+        else
+        {
+            this.usingWebAudio = false;
+            this.noAudio = true;
+        }
+
+        if (this.context !== null)
+        {
+            if (typeof this.context.createGain === 'undefined')
+            {
+                this.masterGain = this.context.createGainNode();
+            }
+            else
+            {
+                this.masterGain = this.context.createGain();
+            }
+
+            this.masterGain.gain.value = 1;
+            this.masterGain.connect(this.context.destination);
+        }
+
+
+    },
+
     unlock: function () {
 
         if (this.touchLocked == false)
@@ -110,18 +115,8 @@ Phaser.SoundManager.prototype = {
             return;
         }
 
-        console.log('SoundManager touch unlocked');
-
-        if (this.game.device.webAudio && (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == false))
-        {
-            // Create empty buffer and play it
-            var buffer = this.context.createBuffer(1, 1, 22050);
-            this._unlockSource = this.context.createBufferSource();
-            this._unlockSource.buffer = buffer;
-            this._unlockSource.connect(this.context.destination);
-            this._unlockSource.noteOn(0);
-        }
-        else
+        //  Global override (mostly for Audio Tag testing)
+        if (this.game.device.webAudio == false || (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == true))
         {
             //  Create an Audio tag?
             this.touchLocked = false;
@@ -130,6 +125,15 @@ Phaser.SoundManager.prototype = {
             this.game.input.touch.touchStartCallback = null;
             this.game.input.mouse.callbackContext = null;
             this.game.input.mouse.mouseDownCallback = null;
+        }
+        else
+        {
+            // Create empty buffer and play it
+            var buffer = this.context.createBuffer(1, 1, 22050);
+            this._unlockSource = this.context.createBufferSource();
+            this._unlockSource.buffer = buffer;
+            this._unlockSource.connect(this.context.destination);
+            this._unlockSource.noteOn(0);
         }
 
     },

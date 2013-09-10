@@ -52,12 +52,12 @@ Phaser.MSPointer.prototype = {
                 return _this.onPointerUp(event);
             };
 
-            this.game.stage.canvas.addEventListener('MSPointerDown', this._onMSPointerDown, false);
-            this.game.stage.canvas.addEventListener('MSPointerMove', this._onMSPointerMove, false);
-            this.game.stage.canvas.addEventListener('MSPointerUp', this._onMSPointerUp, false);
+            this.game.renderer.view.addEventListener('MSPointerDown', this._onMSPointerDown, false);
+            this.game.renderer.view.addEventListener('MSPointerMove', this._onMSPointerMove, false);
+            this.game.renderer.view.addEventListener('MSPointerUp', this._onMSPointerUp, false);
 
-            this.game.stage.canvas.style['-ms-content-zooming'] = 'none';
-            this.game.stage.canvas.style['-ms-touch-action'] = 'none';
+            this.game.renderer.view.style['-ms-content-zooming'] = 'none';
+            this.game.renderer.view.style['-ms-touch-action'] = 'none';
 
         }
 

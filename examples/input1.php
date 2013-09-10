@@ -8,6 +8,11 @@
 </head>
 <body>
 
+<input type="text" id="mx" value="0" />
+<input type="text" id="my" value="0" />
+
+<br />
+
 <script type="text/javascript">
 
 (function () {
@@ -31,6 +36,8 @@
 	}
 
 	function update() {
+		document.getElementById('mx').value = game.input.x;
+		document.getElementById('my').value = game.input.y;
 	}
 
 })();

@@ -148,6 +148,16 @@ Phaser.World.prototype = {
 			if (child1Prev) { child1Prev._iNext = child2; }
 			if (child2Next) { child2Next._iPrev = child1; }
 
+			if (child1.__renderGroup)
+			{
+				child1.__renderGroup.updateTexture(child1);
+			}
+
+			if (child2.__renderGroup)
+			{
+				child2.__renderGroup.updateTexture(child2);
+			}
+
 			return true;
 		}
 		else if (child2._iNext == child1)
@@ -160,6 +170,16 @@ Phaser.World.prototype = {
 
 			if (child2Prev) { child2Prev._iNext = child1; }
 			if (child1Next) { child2Next._iPrev = child2; }
+
+			if (child1.__renderGroup)
+			{
+				child1.__renderGroup.updateTexture(child1);
+			}
+
+			if (child2.__renderGroup)
+			{
+				child2.__renderGroup.updateTexture(child2);
+			}
 
 			return true;
 		}
@@ -175,6 +195,16 @@ Phaser.World.prototype = {
 			if (child1Next) { child1Next._iPrev = child2; }
 			if (child2Prev) { child2Prev._iNext = child1; }
 			if (child2Next) { child2Next._iPrev = child1; }
+
+			if (child1.__renderGroup)
+			{
+				child1.__renderGroup.updateTexture(child1);
+			}
+
+			if (child2.__renderGroup)
+			{
+				child2.__renderGroup.updateTexture(child2);
+			}
 
 			return true;
 		}

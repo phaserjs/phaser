@@ -55,9 +55,10 @@ Phaser.Mouse.prototype = {
             return _this.onMouseUp(event);
         };
 
-        this.game.stage.canvas.addEventListener('mousedown', this._onMouseDown, true);
-        this.game.stage.canvas.addEventListener('mousemove', this._onMouseMove, true);
-        this.game.stage.canvas.addEventListener('mouseup', this._onMouseUp, true);
+        this.game.renderer.view.addEventListener('mousedown', this._onMouseDown, true);
+        this.game.renderer.view.addEventListener('mousemove', this._onMouseMove, true);
+        this.game.renderer.view.addEventListener('mouseup', this._onMouseUp, true);
+
     },
 
 	/**

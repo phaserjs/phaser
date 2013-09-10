@@ -15,6 +15,7 @@ Phaser.Canvas = {
         var canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
+        canvas.style.display = 'block';
 
         return canvas;
 

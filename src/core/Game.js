@@ -312,9 +312,11 @@ Phaser.Game.prototype = {
 
 			this.load.onLoadComplete.add(this.loadComplete, this);
 
+			this.stage.boot();
 			this.world.boot();
 			this.state.boot();
 			this.input.boot();
+			this.sound.boot();
 
 			if (this.renderType == Phaser.CANVAS)
 			{
@@ -355,7 +357,7 @@ Phaser.Game.prototype = {
 		else
 		{
 			//	They must have requested WebGL and their browser supports it
-			this.renderer = new PIXI.WebGLRenderer(this.width, this.height, null, this.transparent, this.antialias);
+			this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.stage.canvas, this.transparent, this.antialias);
 			this.canvas = this.renderer.view;
 			this.context = null;
 		}

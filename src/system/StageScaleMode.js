@@ -106,10 +106,6 @@ Phaser.StageScaleMode = function (game, width, height) {
 
     this.scaleFactor = new Phaser.Point(1, 1);
     this.aspectRatio = 0;
-    this.minWidth = width;
-    this.minHeight = height;
-    this.maxWidth = width;
-    this.maxHeight = height;
 
     var _this = this;
 
@@ -136,7 +132,7 @@ Phaser.StageScaleMode.prototype = {
             return;
         }
 
-        var element = this.game.stage.canvas;
+        var element = this.game.canvas;
         
         if (element['requestFullScreen'])
         {
@@ -286,7 +282,10 @@ Phaser.StageScaleMode.prototype = {
     */
     setScreenSize: function (force) {
 
-        force = force || false;
+        if (typeof force == 'undefined')
+        {
+            force = false;
+        }
         
         if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false) 
         {
@@ -307,7 +306,8 @@ Phaser.StageScaleMode.prototype = {
             // Set minimum height of content to new window height
             document.documentElement['style'].minHeight = window.innerHeight + 'px';
         
-            if (this.incorrectOrientation == true) {
+            if (this.incorrectOrientation == true)
+            {
                 this.setMaximum();
             }
             else if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
@@ -351,20 +351,20 @@ Phaser.StageScaleMode.prototype = {
             }
         }
 
-        this.game.stage.canvas.style.width = this.width + 'px';
-        this.game.stage.canvas.style.height = this.height + 'px';
+        this.game.canvas.style.width = this.width + 'px';
+        this.game.canvas.style.height = this.height + 'px';
         
-        this.game.input.scale.setTo(this.game.stage.width / this.width, this.game.stage.height / this.height);
+        this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
 
         if (this.pageAlignHorizontally)
         {
             if (this.width < window.innerWidth && this.incorrectOrientation == false)
             {
-                this.game.stage.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
+                this.game.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
             }
             else
             {
-                this.game.stage.canvas.style.marginLeft = '0px';
+                this.game.canvas.style.marginLeft = '0px';
             }
         }
 
@@ -372,19 +372,21 @@ Phaser.StageScaleMode.prototype = {
         {
             if (this.height < window.innerHeight && this.incorrectOrientation == false)
             {
-                this.game.stage.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
+                this.game.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
             }
             else
             {
-                this.game.stage.canvas.style.marginTop = '0px';
+                this.game.canvas.style.marginTop = '0px';
             }
         }
 
-        this.game.stage.getOffset(this.game.stage.canvas);
+        Phaser.Canvas.getOffset(this.game.canvas, this.game.stage.offset);
+        
         this.aspectRatio = this.width / this.height;
         
-        this.scaleFactor.x = this.game.stage.width / this.width;
-        this.scaleFactor.y = this.game.stage.height / this.height;
+        this.scaleFactor.x = this.game.width / this.width;
+        this.scaleFactor.y = this.game.height / this.height;
+
     },
 
     setMaximum: function () {
@@ -396,32 +398,39 @@ Phaser.StageScaleMode.prototype = {
 
     setShowAll: function () {
 
-        var multiplier = Math.min((window.innerHeight / this.game.stage.height), (window.innerWidth / this.game.stage.width));
+        var multiplier = Math.min((window.innerHeight / this.game.height), (window.innerWidth / this.game.width));
 
-        this.width = Math.round(this.game.stage.width * multiplier);
-        this.height = Math.round(this.game.stage.height * multiplier);
+        this.width = Math.round(this.game.width * multiplier);
+        this.height = Math.round(this.game.height * multiplier);
 
     },
 
     setExactFit: function () {
 
-        if (this.maxWidth && window.innerWidth > this.maxWidth)
+        var availableWidth = window.innerWidth - 0;
+        var availableHeight = window.innerHeight - 5;
+
+        console.log('available', availableWidth, availableHeight);
+
+        if (this.maxWidth && availableWidth > this.maxWidth)
         {
             this.width = this.maxWidth;
         }
         else
         {
-            this.width = window.innerWidth;
+            this.width = availableWidth;
         }
 
-        if (this.maxHeight && window.innerHeight > this.maxHeight)
+        if (this.maxHeight && availableHeight > this.maxHeight)
         {
             this.height = this.maxHeight;
         }
         else
         {
-            this.height = window.innerHeight;
+            this.height = availableHeight;
         }
+
+        console.log('setExactFit', this.width, this.height, this.game.stage.offset);
 
     }
 

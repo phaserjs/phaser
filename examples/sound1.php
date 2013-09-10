@@ -26,7 +26,7 @@
 
 	function create() {
 
-		game.world._stage.backgroundColorString = '#182d3b';
+		game.stage.backgroundColor = '#182d3b';
 
         music = game.add.audio('boden');
         music.play();
@@ -37,15 +37,11 @@
 	}
 
 	function update() {
-
 		s.rotation += 0.01;
-
 	}
 
 	function render() {
-
         game.debug.renderSoundInfo(music, 20, 32);
-
 	}
 
 })();
