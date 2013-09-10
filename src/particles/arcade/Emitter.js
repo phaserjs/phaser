@@ -47,14 +47,24 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.maxParticleSpeed = new Phaser.Point(100, 100);
 
     /**
+     * The minimum possible scale of a particle.
+     * The default value is 1.
+     */
+    this.minParticleScale = 1;
+
+    /**
+     * The maximum possible scale of a particle.
+     * The default value is 1.
+     */
+    this.maxParticleScale = 1;
+
+    /**
      * The minimum possible angular velocity of a particle.  The default value is -360.
-     * NOTE: rotating particles are more expensive to draw than non-rotating ones!
      */
     this.minRotation = -360;
 
     /**
      * The maximum possible angular velocity of a particle.  The default value is 360.
-     * NOTE: rotating particles are more expensive to draw than non-rotating ones!
      */
     this.maxRotation = 360;
 
@@ -325,7 +335,6 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     if (this.width > 1 || this.height > 1)
     {
-    	// particle.reset(this.x - this.game.rnd.integerInRange(this.left, this.right), this.y - this.game.rnd.integerInRange(this.top, this.bottom));
     	particle.reset(this.x - this.game.rnd.integerInRange(this.left, this.right), this.y - this.game.rnd.integerInRange(this.top, this.bottom));
     }
     else
@@ -364,6 +373,12 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     else
     {
         particle.body.angularVelocity = this.minRotation;
+    }
+
+    if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
+    {
+        var scale = this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale);
+        particle.scale.setTo(scale, scale);
     }
 
     particle.body.drag.x = this.particleDrag.x;

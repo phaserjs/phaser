@@ -33,15 +33,18 @@
 
         game.stage.backgroundColor = 0x337799;
 
-        p = game.add.emitter(200, 100, 50);
+        p = game.add.emitter(200, 100, 250);
 
         // p.width = 200;
         // p.height = 200;
 
         //  keys, frames, quantity, collide
         // p.makeParticles(['diamond', 'carrot', 'star']);
-        p.makeParticles('balls', [0,1,2,3,4,5]);
-        // p.makeParticles('pixies', [0,1,2,3]);
+        // p.makeParticles('balls', [0,1,2,3,4,5]);
+        p.makeParticles('pixies', [0,1,2,3]);
+
+        p.minParticleScale = 0.1;
+        p.maxParticleScale = 0.5;
 
         //  Steady constant stream at 250ms delay and 10 seconds lifespan
         // p.start(false, 10000, 250, 100);
