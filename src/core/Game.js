@@ -76,7 +76,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	* The Pixi Renderer
 	* @type {number}
 	*/
-	this.renderType = renderer;
+	this.renderer = null;
 
     /**
      * The StateManager.
@@ -94,7 +94,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	* The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL
 	* @type {number}
 	*/
-	this.renderType = 0;
+	this.renderType = renderer;
 
 	/**
 	* Whether load complete loading or not.
@@ -334,7 +334,7 @@ Phaser.Game.prototype = {
 
 	setUpRenderer: function () {
 
-		if (this.renderType == Phaser.CANVAS || (this.renderType == Phaser.AUTO && this.device.webGL == false))
+		if (this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL == false))
 		{
 			if (this.device.canvas)
 			{

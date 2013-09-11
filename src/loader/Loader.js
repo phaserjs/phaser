@@ -471,7 +471,7 @@ Phaser.Loader.prototype = {
 					{
 						if (this.game.sound.touchLocked)
 						{
-							//  If audio is locked we can't do this yet, so need to queue this load request somehow. Bum.
+							//  If audio is locked we can't do this yet, so need to queue this load request. Bum.
 							file.data = new Audio();
 							file.data.name = file.key;
 							file.data.preload = 'auto';
@@ -491,6 +491,10 @@ Phaser.Loader.prototype = {
 							file.data.load();
 						}
 					}
+				}
+				else
+				{
+					this.fileError(file.key);
 				}
 
 				break;

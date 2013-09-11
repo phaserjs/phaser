@@ -105,9 +105,16 @@ Phaser.Canvas = {
         parent = parent || '';
         overflowHidden = overflowHidden || true;
 
-        if ((parent !== '' || parent !== null) && document.getElementById(parent))
+        if (parent !== '')
         {
-            document.getElementById(parent).appendChild(canvas);
+            if (document.getElementById(parent))
+            {
+                document.getElementById(parent).appendChild(canvas);
+            }
+            else
+            {
+                document.body.appendChild(canvas);
+            }
 
             if (overflowHidden)
             {

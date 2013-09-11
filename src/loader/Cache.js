@@ -49,6 +49,8 @@ Phaser.Cache = function (game) {
 
     this.addDefaultImage();
 
+    this.onSoundUnlock = new Phaser.Signal;
+
 };
 
 Phaser.Cache.prototype = {

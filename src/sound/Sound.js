@@ -56,10 +56,15 @@ Phaser.Sound = function (game, key, volume, loop) {
     }
     else
     {
-        if (this.game.cache.getSound(key) && this.game.cache.getSound(key).locked == false)
+        if (this.game.cache.getSound(key) && this.game.cache.isSoundReady(key))
         {
             this._sound = this.game.cache.getSoundData(key);
-            this.totalDuration = this._sound.duration;
+            this.totalDuration = 0;
+
+            if (this._sound.duration)
+            {
+                this.totalDuration = this._sound.duration;
+            }
         }
         else
         {
@@ -86,7 +91,7 @@ Phaser.Sound.prototype = {
         {
             this._sound = this.game.cache.getSoundData(this.key);
             this.totalDuration = this._sound.duration;
-            // console.log('sound has unlocked' + this._sound);
+            console.log('sound has unlocked' + this._sound);
 	    }
 
 	},
@@ -298,24 +303,28 @@ Phaser.Sound.prototype = {
         }
         else
         {
-            //console.log('Sound play Audio');
+            // console.log('Sound play Audio');
             if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).locked)
             {
-                //console.log('tried playing locked sound, pending set, reload started');
+                // console.log('tried playing locked sound, pending set, reload started');
                 this.game.cache.reloadSound(this.key);
                 this.pendingPlayback = true;
             }
             else
             {
-                //console.log('sound not locked, state?', this._sound.readyState);
+                // console.log('sound not locked, state?', this._sound.readyState);
                 if (this._sound && this._sound.readyState == 4)
                 {
+                    this._sound.play();
+                    //  This doesn't become available until you call play(), wonderful ...
+                    this.totalDuration = this._sound.duration;
+
                     if (this.duration == 0)
                     {
                         this.duration = this.totalDuration * 1000;
                     }
 
-                    //console.log('playing', this._sound);
+                    // console.log('playing', this._sound);
                     this._sound.currentTime = this.position;
                     this._sound.muted = this._muted;
                     
@@ -328,7 +337,6 @@ Phaser.Sound.prototype = {
                         this._sound.volume = this._volume;
                     }
 
-                    this._sound.play();
                     this.isPlaying = true;
                     this.startTime = this.game.time.now;
                     this.currentTime = 0;
@@ -507,15 +515,19 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 
     set: function (value) {
 
-        this._volume = value;
-        
         if (this.usingWebAudio)
         {
+            this._volume = value;
             this.gainNode.gain.value = value;
         }
-        else if(this.usingAudioTag && this._sound)
+        else if (this.usingAudioTag && this._sound)
         {
-            this._sound.volume = value;
+            //  Causes an Index size error in Firefox if you don't clamp the value
+            if (value >= 0 && value <= 1)
+            {
+                this._volume = value;
+                this._sound.volume = value;
+            }
         }
     },
 
