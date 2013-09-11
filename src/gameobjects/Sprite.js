@@ -1,8 +1,8 @@
-Phaser.Sprite = function (game, x, y, texture, frame) {
+Phaser.Sprite = function (game, x, y, key, frame) {
 
     x = x || 0;
     y = y || 0;
-    texture = texture || null;
+    key = key || null;
     frame = frame || null;
 
 	this.game = game;
@@ -23,24 +23,26 @@ Phaser.Sprite = function (game, x, y, texture, frame) {
     //  The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
     this.lifespan = 0;
 
-    if (texture instanceof Phaser.RenderTexture)
-    {
-        PIXI.Sprite.call(this, texture);
+    this.key = key;
 
-        this.currentFrame = this.game.cache.getTextureFrame(texture.name);
+    if (key instanceof Phaser.RenderTexture)
+    {
+        PIXI.Sprite.call(this, key);
+
+        this.currentFrame = this.game.cache.getTextureFrame(key.name);
     }
     else
     {
-        if (texture == null || this.game.cache.checkImageKey(texture) == false)
+        if (key == null || this.game.cache.checkImageKey(key) == false)
         {
-            texture = '__default';
+            key = '__default';
         }
 
-        PIXI.Sprite.call(this, PIXI.TextureCache[texture]);
+        PIXI.Sprite.call(this, PIXI.TextureCache[key]);
 
-        if (this.game.cache.isSpriteSheet(texture))
+        if (this.game.cache.isSpriteSheet(key))
         {
-            this.animations.loadFrameData(this.game.cache.getFrameData(texture));
+            this.animations.loadFrameData(this.game.cache.getFrameData(key));
 
             if (frame !== null)
             {
@@ -56,7 +58,7 @@ Phaser.Sprite = function (game, x, y, texture, frame) {
         }
         else
         {
-            this.currentFrame = this.game.cache.getFrame(texture);
+            this.currentFrame = this.game.cache.getFrame(key);
         }
     }
 
@@ -88,6 +90,9 @@ Phaser.Sprite = function (game, x, y, texture, frame) {
      * @type Point
      */
     this.anchor = new Phaser.Point();
+
+    this._cropUUID = null;
+    this._cropRect = null;
 
     this.x = x;
     this.y = y;
@@ -204,7 +209,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
     this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
     //  If this sprite or the camera have moved then let's update everything
-    //  It may have rotated though ...
     if (this.position.x != this._cache.x || this.position.y != this._cache.y)
     {
         this.position.x = this._cache.x;
@@ -488,6 +492,48 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     */
     get: function () {
         return this._cache.cameraVisible;
+    }
+
+});
+
+Object.defineProperty(Phaser.Sprite.prototype, "crop", {
+
+    /**
+    * Get the input enabled state of this Sprite.
+    */
+    get: function () {
+
+        return this._cropRect;
+
+    },
+
+    /**
+    * Set the ability for this sprite to receive input events.
+    */
+    set: function (value) {
+
+        if (value instanceof Phaser.Rectangle)
+        {
+            if (this._cropUUID == null)
+            {
+                this._cropUUID = this.game.rnd.uuid();
+
+                PIXI.TextureCache[this._cropUUID] = new PIXI.Texture(PIXI.BaseTextureCache[this.key], {
+                    x: value.x,
+                    y: value.y,
+                    width: value.width,
+                    height: value.height
+                });
+            }
+            else
+            {
+                PIXI.TextureCache[this._cropUUID].frame = value;
+            }
+
+            this._cropRect = value;
+            this.setTexture(PIXI.TextureCache[this._cropUUID]);
+        }
+
     }
 
 });

@@ -21,13 +21,13 @@ Phaser.GameObjectFactory.prototype = {
     *
     * @param x {number} X position of the new sprite.
     * @param y {number} Y position of the new sprite.
-    * @param [texture] {string|RenderTexture} The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture
+    * @param [key] {string|RenderTexture} The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture
     * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
     * @returns {Sprite} The newly created sprite object.
     */
-    sprite: function (x, y, texture, frame) {
+    sprite: function (x, y, key, frame) {
 
-        return this.world.add(new Phaser.Sprite(this.game, x, y, texture, frame));
+        return this.world.add(new Phaser.Sprite(this.game, x, y, key, frame));
 
     },
 
@@ -36,13 +36,13 @@ Phaser.GameObjectFactory.prototype = {
     *
     * @param x {number} X position of the new sprite.
     * @param y {number} Y position of the new sprite.
-    * @param [texture] {string|RenderTexture} The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture
+    * @param [key] {string|RenderTexture} The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture
     * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
     * @returns {Sprite} The newly created sprite object.
     */
-    child: function (parent, x, y, texture, frame) {
+    child: function (parent, x, y, key, frame) {
 
-        var child = this.world.add(new Phaser.Sprite(this.game, x, y, texture, frame));
+        var child = this.world.add(new Phaser.Sprite(this.game, x, y, key, frame));
         parent.addChild(child);
         return child;
 
