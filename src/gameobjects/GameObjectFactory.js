@@ -12,7 +12,7 @@ Phaser.GameObjectFactory.prototype = {
 
     existing: function (object) {
 
-        return this.world.add(object);
+        return this.world.group.add(object);
 
     },
 
@@ -27,7 +27,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     sprite: function (x, y, key, frame) {
 
-        return this.world.add(new Phaser.Sprite(this.game, x, y, key, frame));
+        return this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
 
     },
 
@@ -42,7 +42,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     child: function (parent, x, y, key, frame) {
 
-        var child = this.world.add(new Phaser.Sprite(this.game, x, y, key, frame));
+        var child = this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
         parent.addChild(child);
         return child;
 
@@ -74,25 +74,25 @@ Phaser.GameObjectFactory.prototype = {
 
     tileSprite: function (x, y, width, height, key, frame) {
 
-        return this.world.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
+        return this.world.group.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
 
     },
 
     text: function (x, y, text, style) {
 
-        return this.world.add(new Phaser.Text(this.game, x, y, text, style));
+        return this.world.group.add(new Phaser.Text(this.game, x, y, text, style));
 
     },
 
     button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
 
-        return this.world.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        return this.world.group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
 
     },
 
     graphics: function (x, y) {
 
-        return this.world.add(new Phaser.Graphics(this.game, x, y));
+        return this.world.group.add(new Phaser.Graphics(this.game, x, y));
 
     },
 
@@ -104,7 +104,7 @@ Phaser.GameObjectFactory.prototype = {
 
     bitmapText: function (x, y, text, style) {
 
-        return this.world.add(new Phaser.BitmapText(this.game, x, y, text, style));
+        return this.world.group.add(new Phaser.BitmapText(this.game, x, y, text, style));
 
     },
 

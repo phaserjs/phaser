@@ -72,11 +72,11 @@ Phaser.SoundManager.prototype = {
         {
             this.context = new window['AudioContext']();
         }
-        else if(!!window['webkitAudioContext'])
+        else if (!!window['webkitAudioContext'])
         {
             this.context = new window['webkitAudioContext']();
         }
-        else if(!!window['Audio'])
+        else if (!!window['Audio'])
         {
             this.usingWebAudio = false;
             this.usingAudioTag = true;
@@ -346,7 +346,6 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
             }
         }
         
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });

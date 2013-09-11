@@ -101,8 +101,6 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
         this._stage.setBackgroundColor(color);
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });

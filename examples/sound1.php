@@ -30,6 +30,7 @@
 	function create() {
 
 		game.stage.backgroundColor = '#182d3b';
+		game.input.touch.preventDefault = false;
 
         music = game.add.audio('boden');
         music.play();

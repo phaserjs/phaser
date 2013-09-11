@@ -19,6 +19,8 @@ Phaser.Touch = function (game) {
     this.touchLeaveCallback = null;
     this.touchCancelCallback = null;
 
+    this.preventDefault = true;
+
 };
 
 Phaser.Touch.prototype = {
@@ -73,30 +75,28 @@ Phaser.Touch.prototype = {
                 return _this.onTouchCancel(event);
             };
 
-            this._documentTouchMove = function (event) {
-                return _this.consumeTouchMove(event);
-            };
-
             this.game.renderer.view.addEventListener('touchstart', this._onTouchStart, false);
             this.game.renderer.view.addEventListener('touchmove', this._onTouchMove, false);
             this.game.renderer.view.addEventListener('touchend', this._onTouchEnd, false);
             this.game.renderer.view.addEventListener('touchenter', this._onTouchEnter, false);
             this.game.renderer.view.addEventListener('touchleave', this._onTouchLeave, false);
             this.game.renderer.view.addEventListener('touchcancel', this._onTouchCancel, false);
-
-            document.addEventListener('touchmove', this._documentTouchMove, false);
         }
 
     },
 
-	/**
-    * Prevent iOS bounce-back (doesn't work?)
+    /**
+    * Consumes all touchmove events on the document (only enable this if you know you need it!)
     * @method consumeTouchMove
     * @param {Any} event
     **/
-    consumeTouchMove: function (event) {
+    consumeDocumentTouches: function () {
 
-        event.preventDefault();
+        this._documentTouchMove = function (event) {
+            event.preventDefault();
+        };
+
+        document.addEventListener('touchmove', this._documentTouchMove, false);
 
     },
 
@@ -117,7 +117,10 @@ Phaser.Touch.prototype = {
             return;
         }
 
-        event.preventDefault();
+        if (this.preventDefault)
+        {
+            event.preventDefault();
+        }
 
         //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
         //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
@@ -147,7 +150,10 @@ Phaser.Touch.prototype = {
             return;
         }
 
-        event.preventDefault();
+        if (this.preventDefault)
+        {
+            event.preventDefault();
+        }
 
         //  Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
         //  http://www.w3.org/TR/touch-events/#dfn-touchcancel
@@ -176,7 +182,10 @@ Phaser.Touch.prototype = {
             return;
         }
 
-        event.preventDefault();
+        if (this.preventDefault)
+        {
+            event.preventDefault();
+        }
 
         for (var i = 0; i < event.changedTouches.length; i++)
         {
@@ -198,7 +207,10 @@ Phaser.Touch.prototype = {
             this.touchLeaveCallback.call(this.callbackContext, event);
         }
 
-        event.preventDefault();
+        if (this.preventDefault)
+        {
+            event.preventDefault();
+        }
 
         for (var i = 0; i < event.changedTouches.length; i++)
         {
@@ -219,7 +231,10 @@ Phaser.Touch.prototype = {
             this.touchMoveCallback.call(this.callbackContext, event);
         }
 
-        event.preventDefault();
+        if (this.preventDefault)
+        {
+            event.preventDefault();
+        }
 
         for (var i = 0; i < event.changedTouches.length; i++)
         {
@@ -240,7 +255,10 @@ Phaser.Touch.prototype = {
             this.touchEndCallback.call(this.callbackContext, event);
         }
 
-        event.preventDefault();
+        if (this.preventDefault)
+        {
+            event.preventDefault();
+        }
 
         //  For touch end its a list of the touch points that have been removed from the surface
         //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
@@ -266,8 +284,6 @@ Phaser.Touch.prototype = {
             this.game.stage.canvas.removeEventListener('touchenter', this._onTouchEnter);
             this.game.stage.canvas.removeEventListener('touchleave', this._onTouchLeave);
             this.game.stage.canvas.removeEventListener('touchcancel', this._onTouchCancel);
-            
-            document.removeEventListener('touchmove', this._documentTouchMove);
         }
 
     }

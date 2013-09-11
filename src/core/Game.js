@@ -447,9 +447,7 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
     		}
     	}
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 

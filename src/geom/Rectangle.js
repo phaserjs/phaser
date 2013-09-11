@@ -266,9 +266,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "halfWidth", {
     **/
     get: function () {
         return Math.round(this.width / 2);
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "halfHeight", {
@@ -280,9 +279,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "halfHeight", {
     **/
     get: function () {
         return Math.round(this.height / 2);
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "bottom", {
@@ -302,14 +300,13 @@ Object.defineProperty(Phaser.Rectangle.prototype, "bottom", {
     * @param {Number} value
     **/    
     set: function (value) {
-        if(value <= this.y) {
+        if (value <= this.y) {
             this.height = 0;
         } else {
             this.height = (this.y - value);
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "bottomRight", {
@@ -330,9 +327,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "bottomRight", {
     set: function (value) {
         this.right = value.x;
         this.bottom = value.y;
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "left", {
@@ -359,9 +355,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "left", {
             this.width = this.right - value;
         }
         this.x = value;
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "right", {
@@ -383,14 +378,13 @@ Object.defineProperty(Phaser.Rectangle.prototype, "right", {
     * @param {Number} value
     **/
     set: function (value) {
-        if(value <= this.x) {
+        if (value <= this.x) {
             this.width = 0;
         } else {
             this.width = this.x + value;
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "volume", {
@@ -402,9 +396,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "volume", {
     **/    
     get: function () {
         return this.width * this.height;
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "perimeter", {
@@ -416,9 +409,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "perimeter", {
     **/
     get: function () {
         return (this.width * 2) + (this.height * 2);
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "centerX", {
@@ -439,9 +431,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "centerX", {
     **/
     set: function (value) {
         this.x = value - this.halfWidth;
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "centerY", {
@@ -462,9 +453,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "centerY", {
     **/
     set: function (value) {
         this.y = value - this.halfHeight;
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "top", {
@@ -486,15 +476,14 @@ Object.defineProperty(Phaser.Rectangle.prototype, "top", {
     * @param {Number} value
     **/
     set: function (value) {
-        if(value >= this.bottom) {
+        if (value >= this.bottom) {
             this.height = 0;
             this.y = value;
         } else {
             this.height = (this.bottom - value);
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "topLeft", {
@@ -515,9 +504,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "topLeft", {
     set: function (value) {
         this.x = value.x;
         this.y = value.y;
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
@@ -538,9 +526,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
     **/
     set: function (value) {
         this.setTo(0, 0, 0, 0);
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 //  Statics

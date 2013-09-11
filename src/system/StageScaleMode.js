@@ -450,29 +450,23 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 
         return true;
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 
     get: function () {
         return this.orientation == 0 || this.orientation == 180;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isLandscape", {
 
     get: function () {
         return this.orientation === 90 || this.orientation === -90;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 

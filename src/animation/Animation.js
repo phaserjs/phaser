@@ -168,10 +168,7 @@ Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
     get: function () {
         return this._frames.length;
-    },
-
-    enumerable: true,
-    configurable: true
+    }
 
 });
 
@@ -200,9 +197,6 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 			this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
 
-    },
-
-    enumerable: true,
-    configurable: true
+    }
 
 });

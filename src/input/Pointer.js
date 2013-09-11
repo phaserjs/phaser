@@ -611,10 +611,8 @@ Object.defineProperty(Phaser.Pointer.prototype, "duration", {
 
         return this.game.time.now - this.timeDown;
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
@@ -627,10 +625,8 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
 
 		return this.game.world.camera.x + this.x;
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
@@ -643,8 +639,6 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
 
 		return this.game.world.camera.y + this.y;
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });

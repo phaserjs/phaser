@@ -1,52 +1,65 @@
+/**
+ * World
+ *
+ * "This world is but a canvas to our imagination." - Henry David Thoreau
+ *
+ * A game has only one world. The world is an abstract place in which all game objects live. It is not bound
+ * by stage limits and can be any size. You look into the world via cameras. All game objects live within
+ * the world at world-based coordinates. By default a world is created the same size as your Stage.
+ *
+ * @package    Phaser.World
+ * @author     Richard Davey <rich@photonstorm.com>
+ * @copyright  2013 Photon Storm Ltd.
+ * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ */
 Phaser.World = function (game) {
 
+    /**
+     * Local reference to Game.
+     */
 	this.game = game;
 
+    /**
+     * Bound of this world that objects can not escape from.
+     * @type {Rectangle}
+     */
 	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 
+    /**
+     * Camera instance.
+     * @type {Camera}
+     */
 	this.camera = null;
 
+    /**
+     * Reset each frame, keeps a count of the total number of objects updated.
+     * @type {Number}
+     */
 	this.currentRenderOrderID = 0;
+
+    /**
+     * Object container stores every object created with `create*` methods.
+     * @type {Group}
+     */
+    this.group = null;
 	
 };
 
 Phaser.World.prototype = {
 
-
 	boot: function () {
 
 		this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
+
 		this.game.camera = this.camera;
 
-	},
-
-	add: function (gameobject) {
-
-		this.game.stage._stage.addChild(gameobject);
-		return gameobject;
+		this.group = new Phaser.Group(this.game, null, '__world', true);
 
 	},
 
-	addAt: function (gameobject, index) {
-
-		this.game.stage._stage.addChildAt(gameobject, index);
-		return gameobject;
-
-	},
-
-	getAt: function (index) {
-
-		return this.game.stage._stage.getChildAt(index);
-
-	},
-
-	remove: function (gameobject) {
-
-		this.game.stage._stage.removeChild(gameobject);
-		return gameobject;
-
-	},
-
+    /**
+     * This is called automatically every frame, and is where main logic happens.
+     */
 	update: function () {
 
 		this.camera.update();
@@ -87,137 +100,8 @@ Phaser.World.prototype = {
 		this.bounds.width = width;
 		this.bounds.height = height;
 
-	},
-
-	bringToTop: function (child) {
-
-		this.remove(child);
-		this.add(child);
-
-		return child;
-
-	},
-
-	swapChildren: function (child1, child2) {
-
-		if (child1 === child2 || !child1.parent || !child2.parent)
-		{
-			console.warn('You cannot swap a child with itself or swap un-parented children');
-			return false;
-		}
-
-		//	Cache the values
-		var child1Prev = child1._iPrev;
-		var child1Next = child1._iNext;
-		var child2Prev = child2._iPrev;
-		var child2Next = child2._iNext;
-
-		var endNode = this.game.stage._stage.last._iNext;
-		var currentNode = this.game.stage._stage.first;
-			
-		do	
-		{
-			if (currentNode !== child1 && currentNode !== child2)
-			{
-				if (currentNode.first === child1)
-				{
-					currentNode.first = child2;
-				}
-				else if (currentNode.first === child2)
-				{
-					currentNode.first = child1;
-				}
-
-				if (currentNode.last === child1)
-				{
-					currentNode.last = child2;
-				}
-				else if (currentNode.last === child2)
-				{
-					currentNode.last = child1;
-				}
-			}
-
-			currentNode = currentNode._iNext;
-		}
-		while (currentNode != endNode)
-
-		if (child1._iNext == child2)
-		{
-			//	This is a downward (A to B) neighbour swap
-			child1._iNext = child2Next;
-			child1._iPrev = child2;
-			child2._iNext = child1;
-			child2._iPrev = child1Prev;
-
-			if (child1Prev) { child1Prev._iNext = child2; }
-			if (child2Next) { child2Next._iPrev = child1; }
-
-			if (child1.__renderGroup)
-			{
-				child1.__renderGroup.updateTexture(child1);
-			}
-
-			if (child2.__renderGroup)
-			{
-				child2.__renderGroup.updateTexture(child2);
-			}
-
-			return true;
-		}
-		else if (child2._iNext == child1)
-		{
-			//	This is an upward (B to A) neighbour swap
-			child1._iNext = child2;
-			child1._iPrev = child2Prev;
-			child2._iNext = child1Next;
-			child2._iPrev = child1;
-
-			if (child2Prev) { child2Prev._iNext = child1; }
-			if (child1Next) { child2Next._iPrev = child2; }
-
-			if (child1.__renderGroup)
-			{
-				child1.__renderGroup.updateTexture(child1);
-			}
-
-			if (child2.__renderGroup)
-			{
-				child2.__renderGroup.updateTexture(child2);
-			}
-
-			return true;
-		}
-		else
-		{
-			//	Children are far apart
-			child1._iNext = child2Next;
-			child1._iPrev = child2Prev;
-			child2._iNext = child1Next;
-			child2._iPrev = child1Prev;
-
-			if (child1Prev) { child1Prev._iNext = child2; }
-			if (child1Next) { child1Next._iPrev = child2; }
-			if (child2Prev) { child2Prev._iNext = child1; }
-			if (child2Next) { child2Next._iPrev = child1; }
-
-			if (child1.__renderGroup)
-			{
-				child1.__renderGroup.updateTexture(child1);
-			}
-
-			if (child2.__renderGroup)
-			{
-				child2.__renderGroup.updateTexture(child2);
-			}
-
-			return true;
-		}
-
-		return false;
-		
 	}
-
+	
 };
 
 //	Getters / Setters
@@ -230,10 +114,8 @@ Object.defineProperty(Phaser.World.prototype, "width", {
 
     set: function (value) {
         this.bounds.width = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.World.prototype, "height", {
@@ -244,48 +126,38 @@ Object.defineProperty(Phaser.World.prototype, "height", {
 
     set: function (value) {
         this.bounds.height = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.World.prototype, "centerX", {
 
     get: function () {
         return this.bounds.halfWidth;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.World.prototype, "centerY", {
 
     get: function () {
         return this.bounds.halfHeight;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.World.prototype, "randomX", {
 
     get: function () {
         return Math.round(Math.random() * this.bounds.width);
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.World.prototype, "randomY", {
 
     get: function () {
         return Math.round(Math.random() * this.bounds.height);
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });

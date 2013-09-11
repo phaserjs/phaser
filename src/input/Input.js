@@ -456,7 +456,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.move(event);
         }
-        else if(this.pointer2.active && this.pointer2.identifier == event.identifier)
+        else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
         {
             return this.pointer2.move(event);
         }
@@ -487,7 +487,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.stop(event);
         }
-        else if(this.pointer2.active && this.pointer2.identifier == event.identifier)
+        else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
         {
             return this.pointer2.stop(event);
         }
@@ -520,7 +520,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1;
         }
-        else if(this.pointer2.active == state)
+        else if (this.pointer2.active == state)
         {
             return this.pointer2;
         }
@@ -551,7 +551,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1;
         }
-        else if(this.pointer2.identifier == identifier)
+        else if (this.pointer2.identifier == identifier)
         {
             return this.pointer2;
         }
@@ -608,10 +608,8 @@ Object.defineProperty(Phaser.Input.prototype, "x", {
 
     set: function (value) {
         this._x = Math.floor(value);
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Input.prototype, "y", {
@@ -628,20 +626,16 @@ Object.defineProperty(Phaser.Input.prototype, "y", {
 
     set: function (value) {
         this._y = Math.floor(value);
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Input.prototype, "pollLocked", {
 
     get: function () {
         return (this.pollRate > 0 && this._pollCounter < this.pollRate);
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Input.prototype, "totalInactivePointers", {
@@ -653,10 +647,8 @@ Object.defineProperty(Phaser.Input.prototype, "totalInactivePointers", {
     **/
     get: function () {
         return 10 - this.currentPointers;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
@@ -680,28 +672,22 @@ Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 
         return this.currentPointers;
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Input.prototype, "worldX", {
 
     get: function () {
 		return this.game.camera.view.x + this.x;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
     get: function () {
 		return this.game.camera.view.y + this.y;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });

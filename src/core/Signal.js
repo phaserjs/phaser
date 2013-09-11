@@ -76,7 +76,7 @@ Phaser.Signal.prototype = {
 			this._addBinding(binding);
 		}
 
-		if(this.memorize && this._prevParams){
+		if (this.memorize && this._prevParams){
 			binding.execute(this._prevParams);
 		}
 

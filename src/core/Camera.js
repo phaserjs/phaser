@@ -207,10 +207,8 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 
     set: function (value) {
         this.view.x = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Camera.prototype, "y", {
@@ -221,10 +219,8 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 
     set: function (value) {
         this.view.y = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Camera.prototype, "width", {
@@ -235,10 +231,8 @@ Object.defineProperty(Phaser.Camera.prototype, "width", {
 
     set: function (value) {
         this.view.width = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Camera.prototype, "height", {
@@ -249,8 +243,6 @@ Object.defineProperty(Phaser.Camera.prototype, "height", {
 
     set: function (value) {
         this.view.height = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });

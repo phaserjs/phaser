@@ -1,27 +1,39 @@
-Phaser.Group = function (game, parent, name) {
+Phaser.Group = function (game, parent, name, useStage) {
 
 	parent = parent || null;
+
+	if (typeof useStage == 'undefined')
+	{
+		useStage = false;
+	}
 
 	this.game = game;
 	this.name = name || 'group';
 
-	this._container = new PIXI.DisplayObjectContainer();
-	this._container.name = this.name;
-
-	if (parent)
+	if (useStage)
 	{
-		if (parent instanceof Phaser.Group)
-		{
-			parent._container.addChild(this._container);
-		}
-		else
-		{
-			parent.addChild(this._container);
-		}
+		this._container = this.game.stage._stage;
 	}
 	else
 	{
-		this.game.world.add(this._container);
+		this._container = new PIXI.DisplayObjectContainer();
+		this._container.name = this.name;
+
+		if (parent)
+		{
+			if (parent instanceof Phaser.Group)
+			{
+				parent._container.addChild(this._container);
+			}
+			else
+			{
+				parent.addChild(this._container);
+			}
+		}
+		else
+		{
+			this.game.stage._stage.addChild(this._container);
+		}
 	}
 
 	this.exists = true;
@@ -274,13 +286,13 @@ Phaser.Group.prototype = {
     sortHandler: function (obj1, obj2) {
 
     	/*
-        if(!obj1 || !obj2) {
+        if (!obj1 || !obj2) {
             //console.log('null objects in sort', obj1, obj2);
             return 0;
         }
-        if(obj1[this._sortIndex] < obj2[this._sortIndex]) {
+        if (obj1[this._sortIndex] < obj2[this._sortIndex]) {
             return this._sortOrder;
-        } else if(obj1[this._sortIndex] > obj2[this._sortIndex]) {
+        } else if (obj1[this._sortIndex] > obj2[this._sortIndex]) {
             return -this._sortOrder;
         }
         return 0;
@@ -788,10 +800,8 @@ Object.defineProperty(Phaser.Group.prototype, "x", {
 
     set: function (value) {
         this._container.position.x = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Group.prototype, "y", {
@@ -802,10 +812,8 @@ Object.defineProperty(Phaser.Group.prototype, "y", {
 
     set: function (value) {
         this._container.position.y = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Group.prototype, "angle", {
@@ -816,10 +824,8 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 
     set: function(value) {
         this._container.rotation = Phaser.Math.degToRad(value);
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Group.prototype, "rotation", {
@@ -830,10 +836,8 @@ Object.defineProperty(Phaser.Group.prototype, "rotation", {
 
     set: function (value) {
         this._container.rotation = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Group.prototype, "visible", {
@@ -844,8 +848,6 @@ Object.defineProperty(Phaser.Group.prototype, "visible", {
 
     set: function (value) {
         this._container.visible = value;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });

@@ -91,55 +91,13 @@ Phaser.LinkedList.prototype = {
 
 	dump: function () {
 
-		console.log("\nNode\t\t|\t\tNext\t\t|\t\tPrev\t\t|\t\tFirst\t\t|\t\tLast");
-		console.log("\t\t\t|\t\t\t\t\t|\t\t\t\t\t|\t\t\t\t\t|");
+		var spacing = 20;
 
-		var nameNext = '-';
-		var namePrev = '-';
-		var nameFirst = '-';
-		var nameLast = '-';
+		var output = "\n" + Phaser.Utils.pad('Node', spacing) + "|" + Phaser.Utils.pad('Next', spacing) + "|" + Phaser.Utils.pad('Previous', spacing) + "|" + Phaser.Utils.pad('First', spacing) + "|" + Phaser.Utils.pad('Last', spacing);
+		console.log(output);
 
-		if (this.next)
-		{
-			nameNext = this.next.sprite.name;
-		}
-
-		if (this.prev)
-		{
-			namePrev = this.prev.sprite.name;
-		}
-
-		if (this.first)
-		{
-			nameFirst = this.first.sprite.name;
-		}
-
-		if (this.last)
-		{
-			nameLast = this.last.sprite.name;
-		}
-
-		if (typeof nameNext === 'undefined')
-		{
-			nameNext = '-';
-		}
-
-		if (typeof namePrev === 'undefined')
-		{
-			namePrev = '-';
-		}
-
-		if (typeof nameFirst === 'undefined')
-		{
-			nameFirst = '-';
-		}
-
-		if (typeof nameLast === 'undefined')
-		{
-			nameLast = '-';
-		}
-
-		console.log('HD' + '\t\t\t|\t\t' + nameNext + '\t\t\t|\t\t' + namePrev + '\t\t\t|\t\t' + nameFirst + '\t\t\t|\t\t' + nameLast);
+		var output = Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing);
+		console.log(output);
 
 		var entity = this;
 
@@ -194,7 +152,8 @@ Phaser.LinkedList.prototype = {
 				nameLast = '-';
 			}
 
-			console.log(name + '\t\t\t|\t\t' + nameNext + '\t\t\t|\t\t' + namePrev + '\t\t\t|\t\t' + nameFirst + '\t\t\t|\t\t' + nameLast);
+			var output = Phaser.Utils.pad(name, spacing) + "|" + Phaser.Utils.pad(nameNext, spacing) + "|" + Phaser.Utils.pad(namePrev, spacing) + "|" + Phaser.Utils.pad(nameFirst, spacing) + "|" + Phaser.Utils.pad(nameLast, spacing);
+			console.log(output);
 
 			entity = entity.next;
 

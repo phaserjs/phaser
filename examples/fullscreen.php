@@ -31,6 +31,10 @@
 
         game.stage.backgroundColor = '#e3ed49';
 
+        //  Testing iOS7 lack of fullscreen. Damnit.
+        document.documentElement['style'].minHeight = '2000px';
+        window.scrollTo(0, document.body.scrollHeight);
+
         game.input.onDown.add(gofull, this);
 
     }
@@ -40,6 +44,13 @@
     }
 
     function update() {
+
+        if (document.getElementsByTagName('body')[0].scrollTop > 1000)
+        {
+            game.stage.backgroundColor = '#87ff55';
+            window.scrollTo(0, 0);
+        }
+
     }
 
     function render() {

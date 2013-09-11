@@ -227,14 +227,18 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     * @param {Number} value
     **/    
     set: function (value) {
-        if(value <= this.y) {
+
+        if (value <= this.y)
+        {
             this.height = 0;
-        } else {
+        }
+        else
+        {
             this.height = (this.y - value);
         }
-    },
-    enumerable: true,
-    configurable: true
+        
+    }
+
 });
 
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
@@ -256,12 +260,16 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * @param {Number} value
     **/
     set: function (value) {
-        if(value <= this.x) {
+
+        if (value <= this.x)
+        {
             this.width = 0;
-        } else {
+        }
+        else
+        {
             this.width = this.x + value;
         }
-    },
-    enumerable: true,
-    configurable: true
+
+    }
+
 });

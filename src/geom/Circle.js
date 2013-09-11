@@ -205,13 +205,12 @@ Object.defineProperty(Phaser.Circle.prototype, "diameter", {
     * @param {Number} The diameter of the circle.
     **/
     set: function (value) {
-        if(value > 0) {
+        if (value > 0) {
             this._diameter = value;
             this._radius = value * 0.5;
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Circle.prototype, "radius", {
@@ -231,13 +230,12 @@ Object.defineProperty(Phaser.Circle.prototype, "radius", {
     * @param {Number} The radius of the circle.
     **/
     set: function (value) {
-        if(value > 0) {
+        if (value > 0) {
             this._radius = value;
             this._diameter = value * 2;
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Circle.prototype, "left", {
@@ -257,15 +255,14 @@ Object.defineProperty(Phaser.Circle.prototype, "left", {
     * @param {Number} The value to adjust the position of the leftmost point of the circle by.
     **/
     set: function (value) {
-        if(value > this.x) {
+        if (value > this.x) {
             this._radius = 0;
             this._diameter = 0;
         } else {
             this.radius = this.x - value;
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Circle.prototype, "right", {
@@ -285,15 +282,14 @@ Object.defineProperty(Phaser.Circle.prototype, "right", {
     * @param {Number} The amount to adjust the diameter of the circle by.
     **/
     set: function (value) {
-        if(value < this.x) {
+        if (value < this.x) {
             this._radius = 0;
             this._diameter = 0;
         } else {
             this.radius = value - this.x;
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Circle.prototype, "top", {
@@ -313,15 +309,14 @@ Object.defineProperty(Phaser.Circle.prototype, "top", {
     * @param {Number} The amount to adjust the height of the circle by.
     **/
     set: function (value) {
-        if(value > this.y) {
+        if (value > this.y) {
             this._radius = 0;
             this._diameter = 0;
         } else {
             this.radius = this.y - value;
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Circle.prototype, "bottom", {
@@ -348,9 +343,8 @@ Object.defineProperty(Phaser.Circle.prototype, "bottom", {
         } else {
             this.radius = value - this.y;
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Circle.prototype, "area", {
@@ -361,14 +355,13 @@ Object.defineProperty(Phaser.Circle.prototype, "area", {
     * @return {Number} This area of this circle.
     **/
     get: function () {
-        if(this._radius > 0) {
+        if (this._radius > 0) {
             return Math.PI * this._radius * this._radius;
         } else {
             return 0;
         }
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 Object.defineProperty(Phaser.Circle.prototype, "empty", {
@@ -389,9 +382,8 @@ Object.defineProperty(Phaser.Circle.prototype, "empty", {
     **/
     set: function (value) {
         this.setTo(0, 0, 0);
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 
 //  Statics

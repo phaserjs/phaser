@@ -509,9 +509,9 @@ Phaser.Math = {
 	*/
     angleLimit: function (angle, min, max) {
         var result = angle;
-        if(angle > max) {
+        if (angle > max) {
             result = max;
-        } else if(angle < min) {
+        } else if (angle < min) {
             result = min;
         }
         return result;
@@ -527,10 +527,10 @@ Phaser.Math = {
         var m = v.length - 1;
         var f = m * k;
         var i = Math.floor(f);
-        if(k < 0) {
+        if (k < 0) {
             return this.linear(v[0], v[1], f);
         }
-        if(k > 1) {
+        if (k > 1) {
             return this.linear(v[m], v[m - 1], m - f);
         }
         return this.linear(v[i], v[i + 1 > m ? m : i + 1], f - i);
@@ -545,7 +545,7 @@ Phaser.Math = {
     bezierInterpolation: function (v, k) {
         var b = 0;
         var n = v.length - 1;
-        for(var i = 0; i <= n; i++) {
+        for (var i = 0; i <= n; i++) {
             b += Math.pow(1 - k, n - i) * Math.pow(k, i) * v[i] * this.bernstein(n, i);
         }
         return b;
@@ -564,15 +564,15 @@ Phaser.Math = {
         var i = Math.floor(f);
 
         if (v[0] === v[m]) {
-            if(k < 0) {
+            if (k < 0) {
                 i = Math.floor(f = m * (1 + k));
             }
             return this.catmullRom(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);
         } else {
-            if(k < 0) {
+            if (k < 0) {
                 return v[0] - (this.catmullRom(v[0], v[0], v[1], v[1], -f) - v[0]);
             }
-            if(k > 1) {
+            if (k > 1) {
                 return v[m] - (this.catmullRom(v[m], v[m], v[m - 1], v[m - 1], f - m) - v[m]);
             }
             return this.catmullRom(v[i ? i - 1 : 0], v[i], v[m < i + 1 ? m : i + 1], v[m < i + 2 ? m : i + 2], f - i);

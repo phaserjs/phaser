@@ -92,6 +92,7 @@ Phaser.Animation.FrameData.prototype = {
         }
 
         return true;
+        
     },
 
 	/**
@@ -105,7 +106,8 @@ Phaser.Animation.FrameData.prototype = {
         
         if (typeof output === "undefined") { output = []; }
 
-        for (var i = start; i <= end; i++) {
+        for (var i = start; i <= end; i++)
+        {
             output.push(this._frames[i]);
         }
 
@@ -122,7 +124,8 @@ Phaser.Animation.FrameData.prototype = {
 
         if (typeof output === "undefined") { output = []; }
 
-        for (var i = 0; i < this._frames.length; i++) {
+        for (var i = 0; i < this._frames.length; i++)
+        {
             output.push(i);
         }
 
@@ -139,12 +142,12 @@ Phaser.Animation.FrameData.prototype = {
 
         var output = [];
 
-        for (var i = 0; i < input.length; i++) {
-
-            if (this.getFrameByName(input[i])) {
+        for (var i = 0; i < input.length; i++)
+        {
+            if (this.getFrameByName(input[i]))
+            {
                 output.push(this.getFrameByName(input[i]).index);
             }
-
         }
 
         return output;
@@ -168,7 +171,8 @@ Phaser.Animation.FrameData.prototype = {
 
         var output = [];
 
-        for (var i = 0; i < range.length; i++) {
+        for (var i = 0; i < range.length; i++)
+        {
             output.push(this._frames[i]);
         }
 
@@ -178,10 +182,10 @@ Phaser.Animation.FrameData.prototype = {
 };
 
 Object.defineProperty(Phaser.Animation.FrameData.prototype, "total", {
+
     get: function () {
         return this._frames.length;
-    },
-    enumerable: true,
-    configurable: true
+    }
+
 });
 

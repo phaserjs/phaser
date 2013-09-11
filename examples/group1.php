@@ -38,8 +38,8 @@
 
 		for (var i = 0; i < 10; i++)
 		{
-			var x = (i * 64);
-			s = g.create(x, 0, 'diamond');
+			var x = 50 + (i * 64);
+			s = g.create(x, 100, 'diamond');
 			s.name = 'd' + i;
 			s.anchor.setTo(0.5, 0.5);
 		}
@@ -68,8 +68,8 @@
 
 	function update() {
 
-		// g.addAll('angle', 10);
-		g.angle++;
+		g.addAll('angle', 10);
+		// g.angle++;
 
 	}
 

@@ -420,7 +420,7 @@ Phaser.Sound.prototype = {
                     this._sound.stop(0);
                 }
             }
-            else if(this.usingAudioTag)
+            else if (this.usingAudioTag)
             {
                 this._sound.pause();
                 this._sound.currentTime = 0;
@@ -441,20 +441,16 @@ Object.defineProperty(Phaser.Sound.prototype, "isDecoding", {
 
     get: function () {
         return this.game.cache.getSound(this.key).isDecoding;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 
     get: function () {
         return this.game.cache.isSoundDecoded(this.key);
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Sound.prototype, "mute", {
@@ -501,10 +497,8 @@ Object.defineProperty(Phaser.Sound.prototype, "mute", {
 
         this.onMute.dispatch(this);
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.Sound.prototype, "volume", {
@@ -529,8 +523,6 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
                 this._sound.volume = value;
             }
         }
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });

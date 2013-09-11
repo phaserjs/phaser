@@ -217,10 +217,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
 
     get: function () {
         return this._frameData;
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
@@ -235,10 +233,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
         {
             return -1;
         }
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
@@ -266,10 +262,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 			this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
 
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
@@ -296,8 +290,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
         {
             console.warn("Cannot set frameName: " + value);
         }
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
