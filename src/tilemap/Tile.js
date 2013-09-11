@@ -22,6 +22,12 @@ Phaser.Tile = function (game, tilemap, index, width, height) {
     this.mass = 1.0;
 
     /**
+    * Indicating this Tile doesn't collide at all.
+    * @type {bool}
+    */
+    this.collideNone = true;
+
+    /**
     * Indicating collide with any object on the left.
     * @type {bool}
     */
@@ -62,7 +68,6 @@ Phaser.Tile = function (game, tilemap, index, width, height) {
     this.index = index;
     this.width = width;
     this.height = height;
-    this.allowCollisions = Phaser.Types.NONE;
 
 };
 
@@ -82,44 +87,25 @@ Phaser.Tile.prototype = {
     * @param separateX {bool} Enable seprate at x-axis.
     * @param separateY {bool} Enable seprate at y-axis.
     */
-    setCollision: function (collision, resetCollisions, separateX, separateY) {
+    setCollision: function (left, right, up, down, reset, separateX, separateY) {
 
-        if (resetCollisions)
+        if (reset)
         {
             this.resetCollision();
         }
 
         this.separateX = separateX;
         this.separateY = separateY;
-        this.allowCollisions = collision;
 
-        if (collision & Phaser.Types.ANY)
-        {
-            this.collideLeft = true;
-            this.collideRight = true;
-            this.collideUp = true;
-            this.collideDown = true;
-            return;
-        }
+        this.collideNone = true;
+        this.collideLeft = left;
+        this.collideRight = right;
+        this.collideUp = up;
+        this.collideDown = down;
 
-        if (collision & Phaser.Types.LEFT || collision & Phaser.Types.WALL)
+        if (left || right || up || down)
         {
-            this.collideLeft = true;
-        }
-
-        if (collision & Phaser.Types.RIGHT || collision & Phaser.Types.WALL)
-        {
-            this.collideRight = true;
-        }
-
-        if (collision & Phaser.Types.UP || collision & Phaser.Types.CEILING)
-        {
-            this.collideUp = true;
-        }
-
-        if (collision & Phaser.Types.DOWN || collision & Phaser.Types.CEILING)
-        {
-            this.collideDown = true;
+            this.collideNone = false;
         }
 
     },
@@ -129,7 +115,7 @@ Phaser.Tile.prototype = {
     */
     resetCollision: function () {
 
-        this.allowCollisions = Phaser.Types.NONE;
+        this.collideNone = true;
         this.collideLeft = false;
         this.collideRight = false;
         this.collideUp = false;
@@ -144,7 +130,8 @@ Phaser.Tile.prototype = {
     **/
     toString: function () {
 
-        return "[{Tile (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
+        // return "[{Tile (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
+        return '';
 
     }
 

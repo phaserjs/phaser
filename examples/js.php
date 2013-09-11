@@ -105,4 +105,5 @@
 	<script src="../src/tilemap/Tilemap.js"></script>
 	<script src="../src/tilemap/TilemapLayer.js"></script>
 	<script src="../src/tilemap/Tile.js"></script>
+	<script src="../src/tilemap/TilemapRenderer.js"></script>
 	

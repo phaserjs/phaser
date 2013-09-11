@@ -26,6 +26,14 @@
 
     }
 
+    var canvas;
+    var context;
+    var baseTexture;
+    var texture;
+    var s;
+    var r;
+    var t;
+
     function create() {
 
         //  game, key, mapData, format, resizeWorld, tileWidth, tileHeight
@@ -33,11 +41,16 @@
         //  This creates the tilemap using the csv and tile sheet we loaded.
         //  We tell it use to CSV format parser. The 16x16 are the tile sizes.
         //  The 4th parameter (true) tells the game world to resize itself based on the map dimensions or not.
-        var t = new Phaser.Tilemap(game, 'csvtiles', 'csvtest', Phaser.Tilemap.FORMAT_CSV, true, 16, 16);
+        
+        t = new Phaser.Tilemap(game, 'csvtiles', 'csvtest', Phaser.Tilemap.FORMAT_CSV, true, 16, 16);
+
+        r = new Phaser.TilemapRenderer(game);
 
     }
 
     function update() {
+
+        r.render(t);
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {

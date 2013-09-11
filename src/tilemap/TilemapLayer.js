@@ -67,27 +67,28 @@ Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, til
     * @type {number}
     */
     this.tileSpacing = 0;
+
     this.parent = parent;
     this.game = parent.game;
     this.ID = id;
     this.name = name;
+
     this.mapFormat = mapFormat;
+
     this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
+
     this.boundsInTiles = new Phaser.Rectangle();
 
-    // this.texture = new Phaser.Display.Texture(this);
-    // this.transform = new Phaser.Components.TransformManager(this);
-    
-    // if (key !== null)
-    // {
-    //     this.texture.loadImage(key, false);
-    // } else {
-    //     this.texture.opaque = true;
-    // }
+    this.tileset = this.game.cache.getImage(key);
 
-    //  Handy proxies
-    // this.alpha = this.texture.alpha;
+    this.alpha = 1;
+    this.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
+    this.context = this.canvas.getContext('2d');
+    this.baseTexture = new PIXI.BaseTexture(this.canvas);
+    this.texture = new PIXI.Texture(this.baseTexture);
+    this.sprite = new PIXI.Sprite(this.texture);
+    this.game.stage._stage.addChild(this.sprite);
 
     this.mapData = [];
     this._tempTileBlock = [];
@@ -470,9 +471,9 @@ Phaser.TilemapLayer.prototype = {
             i = 1;
         }
 
-        for (var ty = this.tileMargin; ty < this.texture.height; ty += (this.tileHeight + this.tileSpacing))
+        for (var ty = this.tileMargin; ty < this.tileset.height; ty += (this.tileHeight + this.tileSpacing))
         {
-            for (var tx = this.tileMargin; tx < this.texture.width; tx += (this.tileWidth + this.tileSpacing))
+            for (var tx = this.tileMargin; tx < this.tileset.width; tx += (this.tileWidth + this.tileSpacing))
             {
                 this.tileOffsets[i] = {
                     x: tx,

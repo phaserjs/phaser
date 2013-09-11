@@ -46,9 +46,6 @@ Phaser.Tilemap = function (game, key, mapData, format, resizeWorld, tileWidth, t
     this.exists = true;
     this.visible = true;
 
-    // this.texture = new Phaser.Display.Texture(this);
-    // this.transform = new Phaser.Components.TransformManager(this);
-
     this.tiles = [];
     this.layers = [];
     this.mapFormat = format;
