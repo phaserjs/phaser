@@ -7,6 +7,9 @@
 Phaser.Input = function (game) {
 
 	this.game = game;
+
+    this.hitCanvas = null;
+    this.hitContext = null;
 	
 };
 
@@ -283,10 +286,18 @@ Phaser.Input.prototype = {
 	    this.activePointer = this.mousePointer;
 	    this.currentPointers = 0;
 
-	    // this.hitCanvas = document.createElement('canvas');
-	    // this.hitCanvas.width = 1;
-	    // this.hitCanvas.height = 1;
-	    // this.hitContext = this.hitCanvas.getContext('2d');
+	    this.hitCanvas = document.createElement('canvas');
+	    this.hitCanvas.width = 1;
+	    this.hitCanvas.height = 1;
+        this.hitContext = this.hitCanvas.getContext('2d');
+
+        //  Debugging
+        // this.hitCanvas.style['width'] = '200px';
+        // this.hitCanvas.style['height'] = '200px';
+        // this.hitCanvas.style['position'] = 'absolute';
+        // this.hitCanvas.style['left'] = '810px';
+        // this.hitCanvas.style['backgroundColor'] = '#ef0000';
+        // Phaser.Canvas.addToDOM(this.hitCanvas);
 
         this.mouse.start();
         this.keyboard.start();

@@ -21,6 +21,10 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     */
     this.view = new Phaser.Rectangle(x, y, width, height);
 
+    /**
+    * Used by Sprites to work out Camera culling.
+    * @type {Rectangle}
+    */
 	this.screenView = new Phaser.Rectangle(x, y, width, height);
 
     /**
@@ -36,10 +40,18 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.visible = true;
 
     /**
+    * Whether this camera is flush with the World Bounds or not.
+    * @type {bool}
+    */
+    this.atLimit = { x: false, y: false };
+
+    /**
     * If the camera is tracking a Sprite, this is a reference to it, otherwise null
     * @type {Sprite}
     */
     this.target = null;
+
+    this._edge = 0;
 	
 };
 
@@ -66,23 +78,23 @@ Phaser.Camera.prototype = {
 
         switch (style) {
 
-            case Phaser.Types.CAMERA_FOLLOW_PLATFORMER:
+            case Phaser.Camera.FOLLOW_PLATFORMER:
                 var w = this.width / 8;
                 var h = this.height / 3;
                 this.deadzone = new Phaser.Rectangle((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
                 break;
 
-            case Phaser.Types.CAMERA_FOLLOW_TOPDOWN:
+            case Phaser.Camera.FOLLOW_TOPDOWN:
                 helper = Math.max(this.width, this.height) / 4;
                 this.deadzone = new Phaser.Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
                 break;
 
-            case Phaser.Types.CAMERA_FOLLOW_TOPDOWN_TIGHT:
+            case Phaser.Camera.FOLLOW_TOPDOWN_TIGHT:
                 helper = Math.max(this.width, this.height) / 8;
                 this.deadzone = new Phaser.Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
                 break;
 
-            case Phaser.Types.CAMERA_FOLLOW_LOCKON:
+            case Phaser.Camera.FOLLOW_LOCKON:
             default:
                 this.deadzone = null;
                 break;
@@ -97,9 +109,6 @@ Phaser.Camera.prototype = {
     */
     focusOnXY: function (x, y) {
 
-        x += (x > 0) ? 0.0000001 : -0.0000001;
-        y += (y > 0) ? 0.0000001 : -0.0000001;
-
         this.view.x = Math.round(x - this.view.halfWidth);
         this.view.y = Math.round(y - this.view.halfHeight);
 
@@ -110,76 +119,81 @@ Phaser.Camera.prototype = {
     */
     update: function () {
 
-        // this.plugins.preUpdate();
-
         //  Add dirty flag
 
         if (this.target !== null)
         {
-            if (this.deadzone == null)
+            if (this.deadzone)
             {
-                this.focusOnXY(this.target.x, this.target.y);
+                this._edge = this.target.x - this.deadzone.x;
+
+                if (this.view.x > this._edge)
+                {
+                    this.view.x = this._edge;
+                }
+
+                this._edge = this.target.x + this.target.width - this.deadzone.x - this.deadzone.width;
+
+                if (this.view.x < this._edge)
+                {
+                    this.view.x = this._edge;
+                }
+
+                this._edge = this.target.y - this.deadzone.y;
+
+                if (this.view.y > this._edge)
+                {
+                    this.view.y = this._edge;
+                }
+
+                this._edge = this.target.y + this.target.height - this.deadzone.y - this.deadzone.height;
+
+                if (this.view.y < this._edge)
+                {
+                    this.view.y = this._edge;
+                }
             }
             else
             {
-                var edge;
-                var targetX = this.target.x + ((this.target.x > 0) ? 0.0000001 : -0.0000001);
-                var targetY = this.target.y + ((this.target.y > 0) ? 0.0000001 : -0.0000001);
-
-                edge = targetX - this.deadzone.x;
-
-                if (this.view.x > edge)
-                {
-                    this.view.x = edge;
-                }
-
-                edge = targetX + this.target.width - this.deadzone.x - this.deadzone.width;
-
-                if (this.view.x < edge)
-                {
-                    this.view.x = edge;
-                }
-
-                edge = targetY - this.deadzone.y;
-
-                if (this.view.y > edge)
-                {
-                    this.view.y = edge;
-                }
-
-                edge = targetY + this.target.height - this.deadzone.y - this.deadzone.height;
-
-                if (this.view.y < edge)
-                {
-                    this.view.y = edge;
-                }
+                this.focusOnXY(this.target.x, this.target.y);
             }
         }
+
+        this.checkWorldBounds();
+
+    },
+
+    checkWorldBounds: function () {
+
+        this.atLimit.x = false;
+        this.atLimit.y = false;
 
         //  Make sure we didn't go outside the cameras worldBounds
         if (this.view.x < this.world.bounds.left)
         {
+            this.atLimit.x = true;
             this.view.x = this.world.bounds.left;
         }
 
         if (this.view.x > this.world.bounds.right - this.width)
         {
+            this.atLimit.x = true;
             this.view.x = (this.world.bounds.right - this.width) + 1;
         }
 
         if (this.view.y < this.world.bounds.top)
         {
+            this.atLimit.y = true;
             this.view.y = this.world.bounds.top;
         }
 
         if (this.view.y > this.world.bounds.bottom - this.height)
         {
+            this.atLimit.y = true;
             this.view.y = (this.world.bounds.bottom - this.height) + 1;
         }
 
         this.view.floor();
-
-        // this.plugins.update();
 
     },
 
@@ -187,6 +201,7 @@ Phaser.Camera.prototype = {
 
         this.view.x = x;
         this.view.y = y;
+        this.checkWorldBounds();
 
     },
 
@@ -207,6 +222,7 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 
     set: function (value) {
         this.view.x = value;
+        this.checkWorldBounds();
     }
 
 });
@@ -219,6 +235,7 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 
     set: function (value) {
         this.view.y = value;
+        this.checkWorldBounds();
     }
 
 });

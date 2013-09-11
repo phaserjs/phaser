@@ -15,17 +15,17 @@ Phaser.Utils.Debug = function (game) {
     this.game = game;
     this.context = game.context;
 
+    this.font = '14px Courier';
+    this.lineHeight = 16;
+    this.renderShadow = true;
+    this.currentX = 0;
+    this.currentY = 0;
+    this.currentAlpha = 1;
+
 };
 
 Phaser.Utils.Debug.prototype = {
 
-    font: '14px Courier',
-    lineHeight: 16,
-    renderShadow: true,
-    currentX: 0,
-    currentY: 0,
-    currentAlpha: 1,
-    context: null,
 
     /**
     * Internal method that resets the debug output values.

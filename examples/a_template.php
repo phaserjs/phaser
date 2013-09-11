@@ -22,8 +22,11 @@
 
     function create() {
 
-        // var tempSprite = game.add.sprite(game.world.randomX, game.world.randomY, game.rnd.pick(images));
+        // var tempSprite = game.add.sprite(game.world.randomX, game.world.randomY, 'atari1');
 
+    }
+
+    function update() {
     }
 
     function render() {

@@ -23,6 +23,24 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     //  The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
     this.lifespan = 0;
 
+    /**
+     * The Signals you can subscribe to that are dispatched when certain things happen on this Sprite or its components
+     * @type Events
+     */
+    this.events = new Phaser.Events(this);
+
+    /**
+     * This manages animations of the sprite. You can modify animations through it. (see AnimationManager)
+     * @type AnimationManager
+     */
+    this.animations = new Phaser.AnimationManager(this);
+
+    /**
+     * The Input Handler Component
+     * @type InputHandler
+     */
+    this.input = new Phaser.InputHandler(this);
+
     this.key = key;
 
     if (key instanceof Phaser.RenderTexture)
@@ -61,24 +79,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
             this.currentFrame = this.game.cache.getFrame(key);
         }
     }
-
-    /**
-     * The Signals you can subscribe to that are dispatched when certain things happen on this Sprite or its components
-     * @type Events
-     */
-    this.events = new Phaser.Events(this);
-
-    /**
-     * This manages animations of the sprite. You can modify animations through it. (see AnimationManager)
-     * @type AnimationManager
-     */
-    this.animations = new Phaser.AnimationManager(this);
-
-    /**
-     * The Input Handler Component
-     * @type InputHandler
-     */
-    this.input = new Phaser.InputHandler(this);
 
     /**
      * The anchor sets the origin point of the texture.

@@ -16,16 +16,30 @@ Phaser.InputHandler = function (sprite) {
     * The PriorityID controls which Sprite receives an Input event first if they should overlap.
     */
     this.priorityID = 0;
+    this.useHandCursor = false;
 	
     this.isDragged = false;
-    this.dragPixelPerfect = false;
     this.allowHorizontalDrag = true;
     this.allowVerticalDrag = true;
     this.bringToTop = false;
+
+    this.snapOffset = null;
     this.snapOnDrag = false;
     this.snapOnRelease = false;
     this.snapX = 0;
     this.snapY = 0;
+
+    /**
+    * Should we use pixel perfect hit detection? Warning: expensive. Only enable if you really need it!
+    * @default false
+    */
+    this.pixelPerfect = false;
+
+    /**
+    * The alpha tolerance threshold. If the alpha value of the pixel matches or is above this value, it's considered a hit.
+    * @default 255
+    */
+    this.pixelPerfectAlpha = 255;
 
     /**
     * Is this sprite allowed to be dragged by the mouse? true = yes, false = no
@@ -58,10 +72,9 @@ Phaser.InputHandler = function (sprite) {
 
 Phaser.InputHandler.prototype = {
 
-	start: function (priority, checkBody, useHandCursor) {
+	start: function (priority, useHandCursor) {
 
 		priority = priority || 0;
-		checkBody = checkBody || false;
 		useHandCursor = useHandCursor || false;
 
         //  Turning on
@@ -69,7 +82,6 @@ Phaser.InputHandler.prototype = {
         {
             //  Register, etc
 			this.game.input.interactiveItems.add(this);
-            this.checkBody = checkBody;
             this.useHandCursor = useHandCursor;
             this.priorityID = priority;
             this._pointerData = [];
@@ -317,19 +329,24 @@ Phaser.InputHandler.prototype = {
         {
             this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
 
-            //  Check against bounds
-            var width = this.sprite.texture.frame.width,
-                height = this.sprite.texture.frame.height,
-                x1 = -width * this.sprite.anchor.x,
-                y1;
+            //  Check against bounds first (move these to private vars)
+            var x1 = -(this.sprite.texture.frame.width) * this.sprite.anchor.x;
+            var y1;
             
-            if (this._tempPoint.x > x1 && this._tempPoint.x < x1 + width)
+            if (this._tempPoint.x > x1 && this._tempPoint.x < x1 + this.sprite.texture.frame.width)
             {
-                y1 = -height * this.sprite.anchor.y;
+                y1 = -(this.sprite.texture.frame.height) * this.sprite.anchor.y;
             
-                if (this._tempPoint.y > y1 && this._tempPoint.y < y1 + height)
+                if (this._tempPoint.y > y1 && this._tempPoint.y < y1 + this.sprite.texture.frame.height)
                 {
-                    return true;
+                    if (this.pixelPerfect)
+                    {
+                        return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -337,6 +354,30 @@ Phaser.InputHandler.prototype = {
         {
             return false;
         }
+
+    },
+
+    checkPixel: function (x, y) {
+
+        x += (this.sprite.texture.frame.width * this.sprite.anchor.x);
+        y += (this.sprite.texture.frame.height * this.sprite.anchor.y);
+
+        //  Grab a pixel from our image into the hitCanvas and then test it
+
+        if (this.sprite.texture.baseTexture.source)
+        {
+            this.game.input.hitContext.clearRect(0, 0, 1, 1);
+            this.game.input.hitContext.drawImage(this.sprite.texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
+            
+            var rgb = this.game.input.hitContext.getImageData(0, 0, 1, 1);
+
+            if (rgb.data[3] >= this.pixelPerfectAlpha)
+            {
+                return true;
+            }
+        }
+
+        return false;
 
     },
 
@@ -620,8 +661,9 @@ Phaser.InputHandler.prototype = {
         this.bringToTop = bringToTop;
         this.dragOffset = new Phaser.Point();
         this.dragFromCenter = lockCenter;
-        this.dragPixelPerfect = pixelPerfect;
-        this.dragPixelPerfectAlpha = alphaThreshold;
+
+        this.pixelPerfect = pixelPerfect;
+        this.pixelPerfectAlpha = alphaThreshold;
         
         if (boundsRect)
         {
