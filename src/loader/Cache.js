@@ -331,6 +331,36 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Get a single frame out of a frameData set by key.
+    * @param key Asset key of the frame data you want.
+    * @return {object} The frame data you want.
+    */
+    getFrameByIndex: function (key, frame) {
+
+        if (this._images[key] && this._images[key].frameData)
+        {
+            return this._images[key].frameData.getFrame(frame);
+        }
+
+        return null;
+    },
+
+    /**
+    * Get a single frame out of a frameData set by key.
+    * @param key Asset key of the frame data you want.
+    * @return {object} The frame data you want.
+    */
+    getFrameByName: function (key, frame) {
+
+        if (this._images[key] && this._images[key].frameData)
+        {
+            return this._images[key].frameData.getFrameByName(frame);
+        }
+
+        return null;
+    },
+
+    /**
     * Get a single frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.
     * @param key Asset key of the frame data you want.
     * @return {object} The frame data you want.

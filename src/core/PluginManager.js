@@ -36,52 +36,45 @@ Phaser.PluginManager.prototype = {
         }
 
         //  Check for methods now to avoid having to do this every loop
-        if (typeof plugin['preUpdate'] === 'function') {
+        if (typeof plugin['preUpdate'] === 'function')
+        {
             plugin.hasPreUpdate = true;
             result = true;
         }
 
-        if (typeof plugin['update'] === 'function') {
+        if (typeof plugin['update'] === 'function')
+        {
             plugin.hasUpdate = true;
             result = true;
         }
 
-        if (typeof plugin['postUpdate'] === 'function') {
-            plugin.hasPostUpdate = true;
-            result = true;
-        }
-
-        if (typeof plugin['preRender'] === 'function') {
-            plugin.hasPreRender = true;
-            result = true;
-        }
-
-        if (typeof plugin['render'] === 'function') {
+        if (typeof plugin['render'] === 'function')
+        {
             plugin.hasRender = true;
             result = true;
         }
 
-        if (typeof plugin['postRender'] === 'function') {
+        if (typeof plugin['postRender'] === 'function')
+        {
             plugin.hasPostRender = true;
             result = true;
         }
 
         //  The plugin must have at least one of the above functions to be added to the PluginManager.
-        if (result) {
-
-            if (plugin.hasPreUpdate || plugin.hasUpdate || plugin.hasPostUpdate)
+        if (result)
+        {
+            if (plugin.hasPreUpdate || plugin.hasUpdate)
             {
                 plugin.active = true;
             }
 
-            if (plugin.hasPreRender || plugin.hasRender || plugin.hasPostRender)
+            if (plugin.hasRender || plugin.hasPostRender)
             {
                 plugin.visible = true;
             }
 
             this._pluginsLength = this.plugins.push(plugin);
             return plugin;
-
         }
         else
         {
@@ -103,8 +96,10 @@ Phaser.PluginManager.prototype = {
             return;
         }
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++) {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasPreUpdate) {
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            if (this.plugins[this._p].active && this.plugins[this._p].hasPreUpdate)
+            {
                 this.plugins[this._p].preUpdate();
             }
         }
@@ -118,39 +113,11 @@ Phaser.PluginManager.prototype = {
             return;
         }
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++) {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasUpdate) {
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            if (this.plugins[this._p].active && this.plugins[this._p].hasUpdate)
+            {
                 this.plugins[this._p].update();
-            }
-        }
-
-    },
-
-    postUpdate: function () {
-
-        if (this._pluginsLength == 0)
-        {
-            return;
-        }
-
-        for (this._p = 0; this._p < this._pluginsLength; this._p++) {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasPostUpdate) {
-                this.plugins[this._p].postUpdate();
-            }
-        }
-
-    },
-
-    preRender: function () {
-
-        if (this._pluginsLength == 0)
-        {
-            return;
-        }
-
-        for (this._p = 0; this._p < this._pluginsLength; this._p++) {
-            if (this.plugins[this._p].visible && this.plugins[this._p].hasPreRender) {
-                this.plugins[this._p].preRender();
             }
         }
 
@@ -163,8 +130,10 @@ Phaser.PluginManager.prototype = {
             return;
         }
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++) {
-            if (this.plugins[this._p].visible && this.plugins[this._p].hasRender) {
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            if (this.plugins[this._p].visible && this.plugins[this._p].hasRender)
+            {
                 this.plugins[this._p].render();
             }
         }
@@ -178,9 +147,10 @@ Phaser.PluginManager.prototype = {
             return;
         }
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++) {
-            
-            if (this.plugins[this._p].visible && this.plugins[this._p].hasPostRender) {
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            if (this.plugins[this._p].visible && this.plugins[this._p].hasPostRender)
+            {
                 this.plugins[this._p].postRender();
             }
         }
