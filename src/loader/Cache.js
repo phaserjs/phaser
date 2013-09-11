@@ -30,6 +30,12 @@ Phaser.Cache = function (game) {
     this._images = {};
 
     /**
+     * RenderTexture key-value container.
+     * @type {object}
+     */
+    this._textures = {};
+
+    /**
      * Sound key-value container.
      * @type {object}
      */
@@ -56,6 +62,19 @@ Phaser.Cache.prototype = {
     addCanvas: function (key, canvas, context) {
 
         this._canvases[key] = { canvas: canvas, context: context };
+
+    },
+
+    /**
+     * Add a new canvas.
+     * @param key {string} Asset key for this canvas.
+     * @param canvas {RenderTexture} A RenderTexture.
+     */
+    addRenderTexture: function (key, texture) {
+
+        var frame = new Phaser.Animation.Frame(0, 0, texture.width, texture.height, '', '');
+
+        this._textures[key] = { texture: texture, frame: frame };
 
     },
 
@@ -176,7 +195,8 @@ Phaser.Cache.prototype = {
         var locked = this.game.sound.touchLocked;
         var decoded = false;
 
-        if (audioTag) {
+        if (audioTag)
+        {
             decoded = true;
         }
 
@@ -188,8 +208,8 @@ Phaser.Cache.prototype = {
 
         var _this = this;
 
-        if (this._sounds[key]) {
-
+        if (this._sounds[key])
+        {
             this._sounds[key].data.src = this._sounds[key].url;
 
             this._sounds[key].data.addEventListener('canplaythrough', function () {
@@ -202,7 +222,8 @@ Phaser.Cache.prototype = {
 
     reloadSoundComplete: function (key) {
 
-        if (this._sounds[key]) {
+        if (this._sounds[key])
+        {
             this._sounds[key].locked = false;
             this.onSoundUnlock.dispatch(key);
         }
@@ -211,7 +232,8 @@ Phaser.Cache.prototype = {
 
     updateSound: function (key, property, value) {
         
-        if (this._sounds[key]) {
+        if (this._sounds[key])
+        {
             this._sounds[key][property] = value;
         }
 
@@ -252,7 +274,8 @@ Phaser.Cache.prototype = {
 	*/
     getCanvas: function (key) {
 
-        if (this._canvases[key]) {
+        if (this._canvases[key])
+        {
             return this._canvases[key].canvas;
         }
 
@@ -282,7 +305,8 @@ Phaser.Cache.prototype = {
 	*/    
     getImage: function (key) {
 
-        if (this._images[key]) {
+        if (this._images[key])
+        {
             return this._images[key].data;
         }
 
@@ -296,7 +320,8 @@ Phaser.Cache.prototype = {
 	*/
     getFrameData: function (key) {
 
-        if (this._images[key] && this._images[key].frameData) {
+        if (this._images[key] && this._images[key].frameData)
+        {
             return this._images[key].frameData;
         }
 
@@ -318,6 +343,37 @@ Phaser.Cache.prototype = {
         return null;
     },
 
+    /**
+    * Get a single frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.
+    * @param key Asset key of the frame data you want.
+    * @return {object} The frame data you want.
+    */
+    getTextureFrame: function (key) {
+
+        if (this._textures[key])
+        {
+            return this._textures[key].frame;
+        }
+
+        return null;
+    },
+
+    /**
+    * Get a RenderTexture by key.
+    * @param key Asset key of the RenderTexture you want.
+    * @return {object} The RenderTexture you want.
+    */
+    getTexture: function (key) {
+
+        if (this._textures[key])
+        {
+            return this._textures[key];
+        }
+
+        return null;
+
+    },
+
 	/**
 	* Get sound by key.
 	* @param key Asset key of the sound you want.
@@ -325,7 +381,8 @@ Phaser.Cache.prototype = {
 	*/
     getSound: function (key) {
 
-        if (this._sounds[key]) {
+        if (this._sounds[key])
+        {
             return this._sounds[key];
         }
 
@@ -340,7 +397,8 @@ Phaser.Cache.prototype = {
 	*/
     getSoundData: function (key) {
 
-        if (this._sounds[key]) {
+        if (this._sounds[key])
+        {
             return this._sounds[key].data;
         }
 
@@ -355,7 +413,8 @@ Phaser.Cache.prototype = {
 	*/
     isSoundDecoded: function (key) {
 
-        if (this._sounds[key]) {
+        if (this._sounds[key])
+        {
             return this._sounds[key].decoded;
         }
 
@@ -379,7 +438,8 @@ Phaser.Cache.prototype = {
 	*/
     isSpriteSheet: function (key) {
 
-        if (this._images[key]) {
+        if (this._images[key])
+        {
             return this._images[key].spriteSheet;
         }
 
@@ -394,7 +454,8 @@ Phaser.Cache.prototype = {
 	*/
     getText: function (key) {
 
-        if (this._text[key]) {
+        if (this._text[key])
+        {
             return this._text[key].data;
         }
 
@@ -463,19 +524,23 @@ Phaser.Cache.prototype = {
 	*/
     destroy: function () {
 
-        for (var item in this._canvases) {
+        for (var item in this._canvases)
+        {
             delete this._canvases[item['key']];
         }
 
-        for (var item in this._images) {
+        for (var item in this._images)
+        {
             delete this._images[item['key']];
         }
 
-        for (var item in this._sounds) {
+        for (var item in this._sounds)
+        {
             delete this._sounds[item['key']];
         }
 
-        for (var item in this._text) {
+        for (var item in this._text)
+        {
             delete this._text[item['key']];
         }
     }

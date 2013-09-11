@@ -102,4 +102,7 @@
 	<script src="../src/particles/arcade/ArcadeParticles.js"></script>
 	<script src="../src/particles/arcade/Emitter.js"></script>
 
+	<script src="../src/tilemap/Tilemap.js"></script>
+	<script src="../src/tilemap/TilemapLayer.js"></script>
+	<script src="../src/tilemap/Tile.js"></script>
 	

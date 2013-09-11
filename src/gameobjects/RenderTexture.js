@@ -1,16 +1,8 @@
-Phaser.RenderTexture = function (game, width, height) {
-
-    //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
-    this.exists = true;
-
-    //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
-    this.alive = true;
-
-    this.group = null;
-
-    this.name = '';
+Phaser.RenderTexture = function (game, key, width, height) {
 
 	this.game = game;
+
+    this.name = key;
 
 	PIXI.EventTarget.call( this );
 

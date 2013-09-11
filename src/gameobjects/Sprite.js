@@ -1,8 +1,8 @@
-Phaser.Sprite = function (game, x, y, key, frame) {
+Phaser.Sprite = function (game, x, y, texture, frame) {
 
     x = x || 0;
     y = y || 0;
-    key = key || null;
+    texture = texture || null;
     frame = frame || null;
 
 	this.game = game;
@@ -23,13 +23,47 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     //  The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
     this.lifespan = 0;
 
-    if (key == null || this.game.cache.checkImageKey(key) == false)
+    if (texture instanceof Phaser.RenderTexture)
     {
-        key = '__default';
+        PIXI.Sprite.call(this, texture);
+
+        this.currentFrame = this.game.cache.getTextureFrame(texture.name);
+    }
+    else
+    {
+        if (texture == null || this.game.cache.checkImageKey(texture) == false)
+        {
+            texture = '__default';
+        }
+
+        PIXI.Sprite.call(this, PIXI.TextureCache[texture]);
+
+        if (this.game.cache.isSpriteSheet(texture))
+        {
+            this.animations.loadFrameData(this.game.cache.getFrameData(texture));
+
+            if (frame !== null)
+            {
+                if (typeof frame === 'string')
+                {
+                    this.frameName = frame;
+                }
+                else
+                {
+                    this.frame = frame;
+                }
+            }
+        }
+        else
+        {
+            this.currentFrame = this.game.cache.getFrame(texture);
+        }
     }
 
-    PIXI.Sprite.call(this, PIXI.TextureCache[key]);
-
+    /**
+     * The Signals you can subscribe to that are dispatched when certain things happen on this Sprite or its components
+     * @type Events
+     */
     this.events = new Phaser.Events(this);
 
     /**
@@ -38,27 +72,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
      */
     this.animations = new Phaser.AnimationManager(this);
 
-    if (this.game.cache.isSpriteSheet(key))
-    {
-        this.animations.loadFrameData(this.game.cache.getFrameData(key));
-
-        if (frame !== null)
-        {
-            if (typeof frame === 'string')
-            {
-                this.frameName = frame;
-            }
-            else
-            {
-                this.frame = frame;
-            }
-        }
-    }
-    else
-    {
-        this.currentFrame = this.game.cache.getFrame(key);
-    }
-
+    /**
+     * The Input Handler Component
+     * @type InputHandler
+     */
     this.input = new Phaser.InputHandler(this);
 
     /**
