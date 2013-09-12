@@ -141,9 +141,107 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     //  Collides the given object with everything in the world quadtree
-    collide: function (object, notifyCallback, callbackContext) {
 
-        return this.overlap(object, null, notifyCallback, this.separate, callbackContext);
+    //  You need to provide 2 objects to check for collision against
+    //  collideCallback is an optional callback, it will be sent the 2 objects in the same order you supplied them to the collide function
+    //  callbackContext is the context in which the callback is called
+    //  processCallback - an optional additional check. If the 2 objects collide, the processCallback will be run. If it returns true they'll be sent to your collideCallback.
+    collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
+
+        collideCallback = collideCallback || null;
+        processCallback = processCallback || null;
+        callbackContext = callbackContext || collideCallback;
+
+        var result = false;
+
+        //  Only collide valid objects
+        if (object1 && object2 && object1.exists && object2.exists)
+        {
+            //  Need to support:
+
+            //  game.physics.collide(sprite1, sprite2)
+            //  game.physics.collide(sprite, group)
+            //  game.physics.collide(group1, group2)
+            //  game.physics.collide(sprite, tilemap)
+            //  game.physics.collide(group, tilemap)
+
+            //  Can expand to support Buttons, Text, etc at a later date. For now these are the essentials.
+
+            if (object1.type == Phaser.SPRITE && object2.type == Phaser.SPRITE)
+            {
+                result = this.separate(object1.body, object2.body);
+
+                if (result && processCallback)
+                {
+                    result = processCallback.call(callbackContext, object1, object2);
+                }
+            }
+            else if (object1.type == Phaser.SPRITE && object2.type == Phaser.GROUP)
+            {
+                result = this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+            }
+            else if (object1.type == Phaser.GROUP && object2.type == Phaser.SPRITE)
+            {
+
+            }
+
+
+        }
+
+        return result;
+
+        // return this.overlap(object, null, notifyCallback, this.separate, callbackContext);
+
+    },
+
+    //  collideSpriteVsWorld
+
+    collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext)
+    {
+        //  What is the sprite colliding with in the quadtree?
+        this._potentials = this.quadTree.retrieve(sprite);
+        this._output.length = 0;
+
+        for (var i = 0, len = potentials.length; i < len; i++)
+        {
+            //  We have our potential suspects, are they in this group?
+            if (potentials[i].sprite.group == group)
+            {
+                if (this.separate(sprite, potentials[i].sprite);
+
+            }
+
+
+            if (processCallback.call(callbackContext, object1.body, potentials[i]))
+            {
+                if (notifyCallback)
+                {
+                    notifyCallback.call(callbackContext, object1, potentials[i].sprite);
+                }
+
+                output.push(potentials[i]);
+            }
+        }
+
+
+
+        if (group._container.first._iNext)
+        {
+            var currentNode = group._container.first._iNext;
+                
+            do  
+            {
+                if (currentNode.exists && currentNode.type == Phaser.SPRITE)
+                {
+                    result = this.separate(sprite, currentNode);
+                }
+
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != group._container.last._iNext);
+
+        }
+
 
     },
 
@@ -179,11 +277,13 @@ Phaser.Physics.Arcade.prototype = {
     */
     overlap: function (object1, object2, notifyCallback, processCallback, callbackContext) {
 
-        object1 = object1 || null;
         object2 = object2 || null;
         notifyCallback = notifyCallback || null;
         processCallback = processCallback || this.separate;
         callbackContext = callbackContext || this;
+
+        //  You have to give an object first
+        if (object.type )
 
         //  World vs. World check
         if (object1 == null)
@@ -231,72 +331,81 @@ Phaser.Physics.Arcade.prototype = {
     },
 
 	 /**
-     * The core Collision separation function used by Collision.overlap.
-     * @param object1 The first GameObject to separate
-     * @param object2 The second GameObject to separate
-     * @returns {boolean} Returns true if the objects were separated, otherwise false.
+     * The core Collision separation function to separate two physics bodies.
+     * @param body1 The first Sprite.Body to separate
+     * @param body2 The second Sprite.Body to separate
+     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
      */
-    separate: function (object1, object2) {
+    separate: function (body1, body2) {
 
-        return this.separateX(object1, object2) || this.separateY(object1, object2)
+        if (this.separateX(body1, body2) || this.separateY(body1, body2))
+        {
+            body1.postUpdate();
+            body2.postUpdate();
+            return true;
+        }
+
+        return false;
+
+        return 
 
     },
 
     /**
-     * Separates the two objects on their x axis
-     * @param object1 The first GameObject to separate
-     * @param object2 The second GameObject to separate
+     * Separates the two physics bodies on their X axis
+     * @param body1 The first Sprite.Body to separate
+     * @param body2 The second Sprite.Body to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    separateX: function (object1, object2) {
+    separateX: function (body1, body2) {
 
-        //  Can't separate two immovable objects
-        if (object1.immovable && object2.immovable)
+        //  Can't separate two immovable or non-existing bodys
+        if (body1.immovable && body2.immovable)
         {
             return false;
         }
 
-        //  First, get the two object deltas
+        //  First, get the two body deltas
         this._overlap = 0;
 
-        if (object1.deltaX() != object2.deltaX())
+        if (body1.deltaX() != body2.deltaX())
         {
             //  Check if the X hulls actually overlap
 
-            this._obj1Bounds.setTo(object1.x - ((object1.deltaX() > 0) ? object1.deltaX() : 0), object1.lastY, object1.width + ((object1.deltaX() > 0) ? object1.deltaX() : -object1.deltaX()), object1.height);
-            this._obj2Bounds.setTo(object2.x - ((object2.deltaX() > 0) ? object2.deltaX() : 0), object2.lastY, object2.width + ((object2.deltaX() > 0) ? object2.deltaX() : -object2.deltaX()), object2.height);
+            this._obj1Bounds.setTo(body1.x - ((body1.deltaX() > 0) ? body1.deltaX() : 0), body1.lastY, body1.width + ((body1.deltaX() > 0) ? body1.deltaX() : -body1.deltaX()), body1.height);
+            this._obj2Bounds.setTo(body2.x - ((body2.deltaX() > 0) ? body2.deltaX() : 0), body2.lastY, body2.width + ((body2.deltaX() > 0) ? body2.deltaX() : -body2.deltaX()), body2.height);
 
             if ((this._obj1Bounds.right > this._obj2Bounds.x) && (this._obj1Bounds.x < this._obj2Bounds.right) && (this._obj1Bounds.bottom > this._obj2Bounds.y) && (this._obj1Bounds.y < this._obj2Bounds.bottom))
             {
-                this._maxOverlap = object1.deltaAbsX() + object2.deltaAbsX() + this.OVERLAP_BIAS;
+                this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
 
                 //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                if (object1.deltaX() > object2.deltaX())
+                if (body1.deltaX() > body2.deltaX())
                 {
-                    this._overlap = object1.x + object1.width - object2.x;
+                    this._overlap = body1.x + body1.width - body2.x;
 
-                    if ((this._overlap > this._maxOverlap) || object1.allowCollision.right == false || object2.allowCollision.left == false)
+                    if ((this._overlap > this._maxOverlap) || body1.allowCollision.right == false || body2.allowCollision.left == false)
                     {
                         this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching.right = true;
-                        object2.touching.left = true;
+                        body1.touching.right = true;
+                        body2.touching.left = true;
                     }
                 }
-                else if (object1.deltaX() < object2.deltaX())
+                else if (body1.deltaX() < body2.deltaX())
                 {
-                    this._overlap = object1.x - object2.width - object2.x;
+                    this._overlap = body1.x - body2.width - body2.x;
 
-                    if ((-this._overlap > this._maxOverlap) || object1.allowCollision.left == false || object2.allowCollision.right == false)
+                    if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left == false || body2.allowCollision.right == false)
                     {
                         this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching.left = true;
-                        object2.touching.right = true;
+                        body1.touching.left = true;
+                        body2.touching.right = true;
                     }
                 }
             }
@@ -305,33 +414,34 @@ Phaser.Physics.Arcade.prototype = {
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
         if (this._overlap != 0)
         {
-            this._obj1Velocity = object1.velocity.x;
-            this._obj2Velocity = object2.velocity.x;
+            this._obj1Velocity = body1.velocity.x;
+            this._obj2Velocity = body2.velocity.x;
 
-            if (!object1.immovable && !object2.immovable)
+            if (!body1.immovable && !body2.immovable)
             {
                 this._overlap *= 0.5;
-                object1.x = object1.x - this._overlap;
-                object2.x += this._overlap;
+                body1.x = body1.x - this._overlap;
+                body2.x += this._overlap;
 
-                this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * object2.mass) / object1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
-                this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * object1.mass) / object2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
                 this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
                 this._obj1NewVelocity -= this._average;
                 this._obj2NewVelocity -= this._average;
-                object1.velocity.x = this._average + this._obj1NewVelocity * object1.bounce.x;
-                object2.velocity.x = this._average + this._obj2NewVelocity * object2.bounce.x;
+                body1.velocity.x = this._average + this._obj1NewVelocity * body1.bounce.x;
+                body2.velocity.x = this._average + this._obj2NewVelocity * body2.bounce.x;
             }
-            else if (!object1.immovable)
+            else if (!body1.immovable)
             {
-                object1.x = object1.x - this._overlap;
-                object1.velocity.x = this._obj2Velocity - this._obj1Velocity * object1.bounce.x;
+                body1.x = body1.x - this._overlap;
+                body1.velocity.x = this._obj2Velocity - this._obj1Velocity * body1.bounce.x;
             }
-            else if (!object2.immovable)
+            else if (!body2.immovable)
             {
-                object2.x += this._overlap;
-                object2.velocity.x = this._obj1Velocity - this._obj2Velocity * object2.bounce.x;
+                body2.x += this._overlap;
+                body2.velocity.x = this._obj1Velocity - this._obj2Velocity * body2.bounce.x;
             }
+
             return true;
         }
         else
@@ -342,59 +452,59 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-     * Separates the two objects on their y axis
-     * @param object1 The first GameObject to separate
-     * @param object2 The second GameObject to separate
-     * @returns {boolean} Whether the objects in fact touched and were separated along the Y axis.
+     * Separates the two physics bodies on their Y axis
+     * @param body1 The first Sprite.Body to separate
+     * @param body2 The second Sprite.Body to separate
+     * @returns {boolean} Whether the bodys in fact touched and were separated along the Y axis.
      */
-    separateY: function (object1, object2) {
+    separateY: function (body1, body2) {
 
-        //  Can't separate two immovable objects
-        if (object1.immovable && object2.immovable)
+        //  Can't separate two immovable or non-existing bodys
+        if (body1.immovable && body2.immovable)
         {
             return false;
         }
 
-        //  First, get the two object deltas
+        //  First, get the two body deltas
         this._overlap = 0;
 
-        if (object1.deltaY() != object2.deltaY())
+        if (body1.deltaY() != body2.deltaY())
         {
             //  Check if the Y hulls actually overlap
-            this._obj1Bounds.setTo(object1.x, object1.y - ((object1.deltaY() > 0) ? object1.deltaY() : 0), object1.width, object1.height + object1.deltaAbsY());
-            this._obj2Bounds.setTo(object2.x, object2.y - ((object2.deltaY() > 0) ? object2.deltaY() : 0), object2.width, object2.height + object2.deltaAbsY());
+            this._obj1Bounds.setTo(body1.x, body1.y - ((body1.deltaY() > 0) ? body1.deltaY() : 0), body1.width, body1.height + body1.deltaAbsY());
+            this._obj2Bounds.setTo(body2.x, body2.y - ((body2.deltaY() > 0) ? body2.deltaY() : 0), body2.width, body2.height + body2.deltaAbsY());
 
             if ((this._obj1Bounds.right > this._obj2Bounds.x) && (this._obj1Bounds.x < this._obj2Bounds.right) && (this._obj1Bounds.bottom > this._obj2Bounds.y) && (this._obj1Bounds.y < this._obj2Bounds.bottom))
             {
-                this._maxOverlap = object1.deltaAbsY() + object2.deltaAbsY() + this.OVERLAP_BIAS;
+                this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
 
                 //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                if (object1.deltaY() > object2.deltaY())
+                if (body1.deltaY() > body2.deltaY())
                 {
-                    this._overlap = object1.y + object1.height - object2.y;
+                    this._overlap = body1.y + body1.height - body2.y;
 
-                    if ((this._overlap > this._maxOverlap) || object1.allowCollision.down == false || object2.allowCollision.up == false)
+                    if ((this._overlap > this._maxOverlap) || body1.allowCollision.down == false || body2.allowCollision.up == false)
                     {
                         this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching.down = true;
-                        object2.touching.up = true;
+                        body1.touching.down = true;
+                        body2.touching.up = true;
                     }
                 }
-                else if (object1.deltaY() < object2.deltaY())
+                else if (body1.deltaY() < body2.deltaY())
                 {
-                    this._overlap = object1.y - object2.height - object2.y;
+                    this._overlap = body1.y - body2.height - body2.y;
 
-                    if ((-this._overlap > this._maxOverlap) || object1.allowCollision.up == false || object2.allowCollision.down == false)
+                    if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up == false || body2.allowCollision.down == false)
                     {
                         this._overlap = 0;
                     }
                     else
                     {
-                        object1.touching.up = true;
-                        object2.touching.down = true;
+                        body1.touching.up = true;
+                        body2.touching.down = true;
                     }
                 }
             }
@@ -403,43 +513,44 @@ Phaser.Physics.Arcade.prototype = {
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
         if (this._overlap != 0)
         {
-            this._obj1Velocity = object1.velocity.y;
-            this._obj2Velocity = object2.velocity.y;
+            this._obj1Velocity = body1.velocity.y;
+            this._obj2Velocity = body2.velocity.y;
 
-            if (!object1.immovable && !object2.immovable)
+            if (!body1.immovable && !body2.immovable)
             {
                 this._overlap *= 0.5;
-                object1.y = object1.y - this._overlap;
-                object2.y += this._overlap;
+                body1.y = body1.y - this._overlap;
+                body2.y += this._overlap;
 
-                this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * object2.mass) / object1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
-                this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * object1.mass) / object2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
+                this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
+                this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
                 this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
                 this._obj1NewVelocity -= this._average;
                 this._obj2NewVelocity -= this._average;
-                object1.velocity.y = this._average + this._obj1NewVelocity * object1.bounce.y;
-                object2.velocity.y = this._average + this._obj2NewVelocity * object2.bounce.y;
+                body1.velocity.y = this._average + this._obj1NewVelocity * body1.bounce.y;
+                body2.velocity.y = this._average + this._obj2NewVelocity * body2.bounce.y;
             }
-            else if (!object1.immovable)
+            else if (!body1.immovable)
             {
-                object1.y = object1.y - this._overlap;
-                object1.velocity.y = this._obj2Velocity - this._obj1Velocity * object1.bounce.y;
+                body1.y = body1.y - this._overlap;
+                body1.velocity.y = this._obj2Velocity - this._obj1Velocity * body1.bounce.y;
                 //  This is special case code that handles things like horizontal moving platforms you can ride
-                if (object2.active && object2.moves && (object1.deltaY() > object2.deltaY()))
+                if (body2.active && body2.moves && (body1.deltaY() > body2.deltaY()))
                 {
-                    object1.x += object2.x - object2.lastX;
+                    body1.x += body2.x - body2.lastX;
                 }
             }
-            else if (!object2.immovable)
+            else if (!body2.immovable)
             {
-                object2.y += this._overlap;
-                object2.velocity.y = this._obj1Velocity - this._obj2Velocity * object2.bounce.y;
+                body2.y += this._overlap;
+                body2.velocity.y = this._obj1Velocity - this._obj2Velocity * body2.bounce.y;
                 //  This is special case code that handles things like horizontal moving platforms you can ride
-                if (object1.sprite.active && object1.moves && (object1.deltaY() < object2.deltaY()))
+                if (body1.sprite.active && body1.moves && (body1.deltaY() < body2.deltaY()))
                 {
-                    object2.x += object1.x - object1.lastX;
+                    body2.x += body1.x - body1.lastX;
                 }
             }
+
             return true;
         }
         else
