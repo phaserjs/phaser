@@ -17,7 +17,7 @@
 * @param tileWidth {number} Width of tiles in this map (used for CSV maps).
 * @param tileHeight {number} Height of tiles in this map (used for CSV maps).
 */
-Phaser.Tilemap = function (game, key, resizeWorld, tileWidth, tileHeight) {
+Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) {
 
     if (typeof resizeWorld === "undefined") { resizeWorld = true; }
     if (typeof tileWidth === "undefined") { tileWidth = 0; }
@@ -47,8 +47,9 @@ Phaser.Tilemap = function (game, key, resizeWorld, tileWidth, tileHeight) {
 
     var map = this.game.cache.getTilemap(key);
 
-    // this._container = new PIXI.DisplayObjectContainer();
     PIXI.DisplayObjectContainer.call(this);
+    this.position.x = x;
+    this.position.y = y;
 
     this.renderer = new Phaser.TilemapRenderer(this.game);
 
@@ -208,16 +209,16 @@ Phaser.Tilemap.prototype.setCollisionCallback = function (context, callback) {
 * @param separateX {bool} Enable seprate at x-axis.
 * @param separateY {bool} Enable seprate at y-axis.
 */
-Phaser.Tilemap.prototype.setCollisionRange = function (start, end, collision, resetCollisions, separateX, separateY) {
+Phaser.Tilemap.prototype.setCollisionRange = function (start, end, left, right, up, down, resetCollisions, separateX, separateY) {
 
-    if (typeof collision === "undefined") { collision = Phaser.Types.ANY; }
     if (typeof resetCollisions === "undefined") { resetCollisions = false; }
     if (typeof separateX === "undefined") { separateX = true; }
     if (typeof separateY === "undefined") { separateY = true; }
 
     for (var i = start; i < end; i++)
     {
-        this.tiles[i].setCollision(collision, resetCollisions, separateX, separateY);
+        //setCollision: function (left, right, up, down, reset, separateX, separateY) {
+        this.tiles[i].setCollision(left, right, up, down, resetCollisions, separateX, separateY);
     }
 
 };
@@ -343,13 +344,13 @@ Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
     }
 
     //  Group?
-    if (objectOrGroup.isGroup == false)
+    if (objectOrGroup instanceof Phaser.Group)
     {
-        this.collideGameObject(objectOrGroup);
+        // objectOrGroup.forEachAlive(this, this.collideGameObject, true);
     }
     else
     {
-        objectOrGroup.forEachAlive(this, this.collideGameObject, true);
+        this.collideGameObject(objectOrGroup);
     }
 
 };
@@ -361,7 +362,7 @@ Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
 */
 Phaser.Tilemap.prototype.collideGameObject = function (object) {
 
-    if (object.body.type == Phaser.Types.BODY_DYNAMIC && object.exists == true && object.body.allowCollisions != Phaser.Types.NONE)
+    if (object.exists && object.body.allowCollision.none == false)
     {
         this._tempCollisionData = this.collisionLayer.getTileOverlaps(object);
 

@@ -1,6 +1,6 @@
 <?php
-	//	All JS files in build order.
-	//	Much easier for debugging
+	//	All JS files in build order. Much easier for debugging
+	//	<xscript src="../src/pixi/extras/Spine.js"></script> <xscript src="../src/pixi/display/MovieClip.js"></script>
 ?>
 	<script src="../src/Intro.js"></script>
 	<script src="../src/pixi/Pixi.js"></script>
@@ -13,12 +13,12 @@
 	<script src="../src/pixi/display/DisplayObject.js"></script>
 	<script src="../src/pixi/display/DisplayObjectContainer.js"></script>
 	<script src="../src/pixi/display/Sprite.js"></script>
-	<script src="../src/pixi/display/MovieClip.js"></script>
+	
 	<script src="../src/pixi/display/Stage.js"></script>
 	<script src="../src/pixi/extras/CustomRenderable.js"></script>
 	<script src="../src/pixi/extras/Strip.js"></script>
 	<script src="../src/pixi/extras/Rope.js"></script>
-	<script src="../src/pixi/extras/Spine.js"></script>
+	
 	<script src="../src/pixi/extras/TilingSprite.js"></script>
 	<script src="../src/pixi/filters/FilterBlock.js"></script>
 	<script src="../src/pixi/filters/MaskFilter.js"></script>

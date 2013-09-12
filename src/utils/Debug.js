@@ -312,6 +312,22 @@ Phaser.Utils.Debug.prototype = {
 
     },
 
+    renderSpriteCollision: function (sprite, x, y, color) {
+
+        color = color || 'rgb(255,255,255)';
+
+        this.start(x, y, color);
+        this.line('Sprite Collision: (' + sprite.width + ' x ' + sprite.height + ')');
+        this.line('left: ' + sprite.body.touching.left);
+        this.line('right: ' + sprite.body.touching.right);
+        this.line('up: ' + sprite.body.touching.up);
+        this.line('down: ' + sprite.body.touching.down);
+        this.line('velocity.x: ' + sprite.body.velocity.x);
+        this.line('velocity.y: ' + sprite.body.velocity.y);
+        this.stop();
+
+    },
+
     /**
     * Render debug information about the Input object.
     * @param x {number} X position of the debug info to be rendered.

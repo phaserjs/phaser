@@ -306,31 +306,30 @@ Phaser.TilemapLayer.prototype = {
     getTileOverlaps: function (object) {
 
         //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
-        if (object.body.bounds.x < 0 || object.body.bounds.x > this.widthInPixels || object.body.bounds.y < 0 || object.body.bounds.bottom > this.heightInPixels)
+        if (object.body.x < 0 || object.body.x > this.widthInPixels || object.body.y < 0 || object.body.bottom > this.heightInPixels)
         {
             return;
         }
 
         //  What tiles do we need to check against?
-        this._tempTileX = this.game.math.snapToFloor(object.body.bounds.x, this.tileWidth) / this.tileWidth;
-        this._tempTileY = this.game.math.snapToFloor(object.body.bounds.y, this.tileHeight) / this.tileHeight;
-        this._tempTileW = (this.game.math.snapToCeil(object.body.bounds.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-        this._tempTileH = (this.game.math.snapToCeil(object.body.bounds.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
+        this._tempTileX = this.game.math.snapToFloor(object.body.x, this.tileWidth) / this.tileWidth;
+        this._tempTileY = this.game.math.snapToFloor(object.body.y, this.tileHeight) / this.tileHeight;
+        this._tempTileW = (this.game.math.snapToCeil(object.body.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
+        this._tempTileH = (this.game.math.snapToCeil(object.body.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
 
         //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
         this._tempBlockResults = [];
 
         this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
 
-        /*
         for (var r = 0; r < this._tempTileBlock.length; r++)
         {
-        if (this.game.world.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY) == true)
-        {
-        this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
+            //  separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY)
+            if (this.game.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY))
+            {
+                this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
+            }
         }
-        }
-        */
 
         return this._tempBlockResults;
 
@@ -377,7 +376,7 @@ Phaser.TilemapLayer.prototype = {
                 if (collisionOnly)
                 {
                     //  We only want to consider the tile for checking if you can actually collide with it
-                    if (this.mapData[ty] && this.mapData[ty][tx] && this.parent.tiles[this.mapData[ty][tx]].allowCollisions != Phaser.Types.NONE)
+                    if (this.mapData[ty] && this.mapData[ty][tx] && this.parent.tiles[this.mapData[ty][tx]].collideNone == false)
                     {
                         this._tempTileBlock.push({
                             x: tx,

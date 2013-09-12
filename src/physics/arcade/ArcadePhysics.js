@@ -424,6 +424,204 @@ Phaser.Physics.Arcade.prototype = {
         }
     },
 
+     /**
+     * The core Collision separation function used by Collision.overlap.
+     * @param object1 The first GameObject to separate
+     * @param object2 The second GameObject to separate
+     * @returns {boolean} Returns true if the objects were separated, otherwise false.
+     */
+    separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
+
+        //  Yes, the Y first
+        var separatedY = this.separateTileY(object.body, x, y, width, height, mass, collideUp, collideDown, separateY);
+        var separatedX = this.separateTileX(object.body, x, y, width, height, mass, collideLeft, collideRight, separateX);
+
+        if (separatedX || separatedY)
+        {
+            object.body.postUpdate();
+            return true;
+        }
+
+        return false;
+
+    },
+
+    /**
+     * Separates the two objects on their x axis
+     * @param object The GameObject to separate
+     * @param tile The Tile to separate
+     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+     */
+    separateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
+
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+            return false;
+        }
+
+        //  First, get the object delta
+        this._overlap = 0;
+
+        // console.log('separatedX', x, y, object.deltaX());
+
+        if (object.deltaX() != 0)
+        {
+            this._obj1Bounds.setTo(object.x, object.y, object.width, object.height);
+
+            if ((this._obj1Bounds.right > x) && (this._obj1Bounds.x < x + width) && (this._obj1Bounds.bottom > y) && (this._obj1Bounds.y < y + height))
+            {
+                //  The hulls overlap, let's process it
+                this._maxOverlap = object.deltaAbsX() + this.OVERLAP_BIAS;
+
+                //  TODO - We need to check if we're already inside of the tile, i.e. jumping through an n-way tile
+                //  in which case we didn't ought to separate because it'll look like tunneling
+
+                if (object.deltaX() < 0)
+                {
+                    //  Going left ...
+                    this._overlap = object.x - width - x;
+
+                    if (object.allowCollision.left && collideLeft && this._overlap < this._maxOverlap)
+                    {
+                        object.touching.left = true;
+                        // console.log('left', this._overlap);
+                    }
+                    else
+                    {
+                        this._overlap = 0;
+                    }
+                }
+                else
+                {
+                    //  Going right ...
+                    this._overlap = object.right - x;
+
+                    if (object.allowCollision.right && collideRight && this._overlap < this._maxOverlap)
+                    {
+                        object.touching.right = true;
+                        // console.log('right', this._overlap);
+                    }
+                    else
+                    {
+                        this._overlap = 0;
+                    }
+                }
+            }
+        }
+
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (this._overlap != 0)
+        {
+            if (separate)
+            {
+                object.x = object.x - this._overlap;
+
+                if (object.bounce.x == 0)
+                {
+                    object.velocity.x = 0;
+                }
+                else
+                {
+                    object.velocity.x = -object.velocity.x * object.bounce.x;
+                }
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    },
+
+    /**
+     * Separates the two objects on their x axis
+     * @param object The GameObject to separate
+     * @param tile The Tile to separate
+     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+     */
+    separateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
+
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+            return false;
+        }
+
+        //  First, get the object delta
+        this._overlap = 0;
+
+        if (object.deltaY() != 0)
+        {
+            this._obj1Bounds.setTo(object.x, object.y, object.width, object.height);
+
+            if ((this._obj1Bounds.right > x) && (this._obj1Bounds.x < x + width) && (this._obj1Bounds.bottom > y) && (this._obj1Bounds.y < y + height))
+            {
+                //  The hulls overlap, let's process it
+
+                //  Not currently used, may need it so keep for now
+                this._maxOverlap = object.deltaAbsY() + this.OVERLAP_BIAS;
+
+                //  TODO - We need to check if we're already inside of the tile, i.e. jumping through an n-way tile
+                //  in which case we didn't ought to separate because it'll look like tunneling
+
+                if (object.deltaY() > 0)
+                {
+                    //  Going down ...
+                    this._overlap = object.bottom - y;
+
+                    if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
+                    {
+                        object.touching.down = true;
+                    }
+                    else
+                    {
+                        this._overlap = 0;
+                    }
+                }
+                else
+                {
+                    //  Going up ...
+                    this._overlap = object.y - height - y;
+
+                    if (object.allowCollision.up && collideUp && this._overlap < this._maxOverlap)
+                    {
+                        object.touching.up = true;
+                    }
+                    else
+                    {
+                        this._overlap = 0;
+                    }
+                }
+            }
+        }
+
+        //  Then adjust their positions and velocities accordingly (if there was any overlap)
+        if (this._overlap != 0)
+        {
+            if (separate)
+            {
+                object.y = object.y - this._overlap;
+
+                if (object.bounce.y == 0)
+                {
+                    object.velocity.y = 0;
+                }
+                else
+                {
+                    object.velocity.y = -object.velocity.y * object.bounce.y;
+                }
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    },
+
     /**
     * Given the angle and speed calculate the velocity and return it as a Point
     * 

@@ -110,7 +110,7 @@ Phaser.GameObjectFactory.prototype = {
 
     tilemap: function (x, y, key, resizeWorld, tileWidth, tileHeight) {
 
-        return this.world.group.add(new Phaser.Tilemap(this.game, key, resizeWorld, tileWidth, tileHeight));
+        return this.world.group.add(new Phaser.Tilemap(this.game, key, x, y, resizeWorld, tileWidth, tileHeight));
 
     },
 

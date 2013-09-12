@@ -162,6 +162,8 @@ Phaser.Time = function (game) {
 	this.game.onPause.add(this.gamePaused, this);
 	this.game.onResume.add(this.gameResumed, this);
 
+	this._justResumed = false;
+
 };
 
 Phaser.Time.prototype = {
@@ -212,6 +214,18 @@ Phaser.Time.prototype = {
 			this.pausedTime = this.now - this._pauseStarted;
 		}
 
+		if (this._justResumed)
+		{
+			console.log('Time just resumed');
+			console.log('now', this.now);
+			console.log('timeToCall', this.timeToCall);
+			console.log('elapsed', this.elapsed);
+			console.log('lastTime', this.lastTime);
+			console.log('physicsElapsed', this.physicsElapsed);
+
+			this._justResumed = false;
+		}
+
 	},
 
 	/**
@@ -221,6 +235,12 @@ Phaser.Time.prototype = {
 	*/
 	gamePaused: function () {
 		this._pauseStarted = this.now;
+			console.log('Time paused');
+			console.log('now', this.now);
+			console.log('timeToCall', this.timeToCall);
+			console.log('elapsed', this.elapsed);
+			console.log('lastTime', this.lastTime);
+			console.log('physicsElapsed', this.physicsElapsed);
 	},
 
 	/**
@@ -234,6 +254,8 @@ Phaser.Time.prototype = {
 		this.elapsed = 0;
 		this.physicsElapsed = 0;
 		this.pauseDuration = this.pausedTime;
+
+		this._justResumed = true;
 
 	},
 
