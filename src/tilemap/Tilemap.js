@@ -100,6 +100,7 @@ Phaser.Tilemap.prototype = {
         }
 
         layer.updateBounds();
+        layer.createCanvas();
 
         var tileQuantity = layer.parseTileOffsets();
 
@@ -159,6 +160,7 @@ Phaser.Tilemap.prototype = {
             }
 
             layer.updateBounds();
+            layer.createCanvas();
             
             var tileQuantity = layer.parseTileOffsets();
             

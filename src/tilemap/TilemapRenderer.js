@@ -43,8 +43,6 @@ Phaser.TilemapRenderer.prototype = {
             this._maxY = this.game.math.ceil(layer.canvas.height / layer.tileHeight) + 1;
 
             //  And now work out where in the tilemap the camera actually is
-            // this._startX = this.game.math.floor(camera.worldView.x / layer.tileWidth);
-            // this._startY = this.game.math.floor(camera.worldView.y / layer.tileHeight);
             this._startX = this.game.math.floor(this.game.camera.x / layer.tileWidth);
             this._startY = this.game.math.floor(this.game.camera.y / layer.tileHeight);
 
@@ -80,15 +78,8 @@ Phaser.TilemapRenderer.prototype = {
             }
 
             //  Finally get the offset to avoid the blocky movement
-            //this._dx = (camera.screenView.x * layer.transform.scrollFactor.x) - (camera.worldView.x * layer.transform.scrollFactor.x);
-            //this._dy = (camera.screenView.y * layer.transform.scrollFactor.y) - (camera.worldView.y * layer.transform.scrollFactor.y);
-            //this._dx = (camera.screenView.x * this.scrollFactor.x) + this.x - (camera.worldView.x * this.scrollFactor.x);
-            //this._dy = (camera.screenView.y * this.scrollFactor.y) + this.y - (camera.worldView.y * this.scrollFactor.y);
-            this._dx = 0;
-            this._dy = 0;
-
-            this._dx += -(this.game.camera.x - (this._startX * layer.tileWidth));
-            this._dy += -(this.game.camera.y - (this._startY * layer.tileHeight));
+            this._dx = -(this.game.camera.x - (this._startX * layer.tileWidth));
+            this._dy = -(this.game.camera.y - (this._startY * layer.tileHeight));
 
             this._tx = this._dx;
             this._ty = this._dy;

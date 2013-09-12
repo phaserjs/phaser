@@ -82,13 +82,23 @@ Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, til
 
     this.tileset = this.game.cache.getImage(key);
 
+    //  Sprite property surely?
     this.alpha = 1;
-    this.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
-    this.context = this.canvas.getContext('2d');
-    this.baseTexture = new PIXI.BaseTexture(this.canvas);
-    this.texture = new PIXI.Texture(this.baseTexture);
-    this.sprite = new PIXI.Sprite(this.texture);
-    this.game.stage._stage.addChild(this.sprite);
+
+    this.canvas = null;
+    this.context = null;
+    this.baseTexture = null;
+    this.texture = null;
+    this.sprite = null;
+
+        // this.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
+        // this.context = this.canvas.getContext('2d');
+
+        // this.baseTexture = new PIXI.BaseTexture(this.canvas);
+        // this.texture = new PIXI.Texture(this.baseTexture);
+        // this.sprite = new PIXI.Sprite(this.texture);
+
+        // this.game.stage._stage.addChild(this.sprite);
 
     this.mapData = [];
     this._tempTileBlock = [];
@@ -445,6 +455,32 @@ Phaser.TilemapLayer.prototype = {
 
     },
 
+    createCanvas: function () {
+
+        var width = this.game.width;
+        var height = this.game.height;
+
+        if (this.widthInPixels < width)
+        {
+            width = this.widthInPixels;
+        }
+
+        if (this.heightInPixels < height)
+        {
+            height = this.heightInPixels;
+        }
+
+        this.canvas = Phaser.Canvas.create(width, height);
+        this.context = this.canvas.getContext('2d');
+
+        this.baseTexture = new PIXI.BaseTexture(this.canvas);
+        this.texture = new PIXI.Texture(this.baseTexture);
+        this.sprite = new PIXI.Sprite(this.texture);
+
+        this.game.stage._stage.addChild(this.sprite);
+
+    },
+
 	/**
     * Update boundsInTiles with widthInTiles and heightInTiles.
     */
@@ -456,6 +492,9 @@ Phaser.TilemapLayer.prototype = {
 
 	/**
     * Parse tile offsets from map data.
+    * Basically this creates a large array of objects that contain the x/y coordinates to grab each tile from
+    * for the entire map. Yes we could calculate this at run-time by using the tile index and some math, but we're
+    * trading a quite small bit of memory here to not have to process that in our main render loop.
     * @return {number} length of tileOffsets array.
     */
     parseTileOffsets: function () {

@@ -97,8 +97,15 @@ Phaser.World.prototype = {
 	*/
 	setSize: function (width, height) {
 
-		this.bounds.width = width;
-		this.bounds.height = height;
+		if (width >= this.game.width)
+        {
+            this.bounds.width = width;
+        }
+
+        if (height >= this.game.height)
+        {
+            this.bounds.height = height;
+        }
 
 	}
 	

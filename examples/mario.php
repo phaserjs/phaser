@@ -16,25 +16,20 @@
 
     function preload() {
 
-        //  CSV Tilemap Test
-
         //  First we load our map data (a csv file)
-        game.load.text('csvtest', 'assets/maps/catastrophi_level2.csv');
+        game.load.text('marioMap', 'assets/maps/mario1.json');
 
         //  Then we load the actual tile sheet image
-        game.load.image('csvtiles', 'assets/tiles/catastrophi_tiles_16.png');
+        game.load.image('marioTiles', 'assets/maps/mario1.png');
 
     }
 
-    var canvas;
-    var context;
-    var baseTexture;
-    var texture;
-    var s;
     var r;
     var t;
 
     function create() {
+
+        game.stage.backgroundColor = '#787878';
 
         //  game, key, mapData, format, resizeWorld, tileWidth, tileHeight
 
@@ -42,7 +37,7 @@
         //  We tell it use to CSV format parser. The 16x16 are the tile sizes.
         //  The 4th parameter (true) tells the game world to resize itself based on the map dimensions or not.
         
-        t = new Phaser.Tilemap(game, 'csvtiles', 'csvtest', Phaser.Tilemap.FORMAT_CSV, true, 16, 16);
+        t = new Phaser.Tilemap(game, 'marioTiles', 'marioMap', Phaser.Tilemap.FORMAT_TILED_JSON);
 
         //  SHould be added to the World and rendered automatically :)
         r = new Phaser.TilemapRenderer(game);
