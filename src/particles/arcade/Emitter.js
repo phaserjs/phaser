@@ -17,12 +17,12 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     /**
      * The X position of the top left corner of the emitter in world space.
      */
-    this.x = x;
+    this.x = 0;
 
     /**
      * The Y position of the top left corner of emitter in world space.
      */
-    this.y = y;
+    this.y = 0;
 
     /**
      * The width of the emitter.  Particles can be randomly generated from anywhere within this box.
@@ -141,8 +141,8 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
      * Emitter.x and Emitter.y control the containers location, which updates all current particles
      * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
      */
-    this.emitX = 0;
-    this.emitY = 0;
+    this.emitX = x;
+    this.emitY = y;
 	
 };
 
@@ -241,6 +241,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
         if (collide > 0)
         {
             particle.body.allowCollision.any = true;
+            particle.body.allowCollision.none = false;
         }
         else
         {
@@ -491,6 +492,30 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "visible", {
     */
     set: function (value) {
         this._container.visible = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "x", {
+
+    get: function () {
+        return this.emitX;
+    },
+
+    set: function (value) {
+        this.emitX = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "y", {
+
+    get: function () {
+        return this.emitY;
+    },
+
+    set: function (value) {
+        this.emitY = value;
     }
 
 });

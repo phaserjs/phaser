@@ -124,8 +124,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	postUpdate: function () {
 
-		this.sprite.x = this.x;
-		this.sprite.y = this.y;
+		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
+		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
 
 		if (this.allowRotation)
 		{

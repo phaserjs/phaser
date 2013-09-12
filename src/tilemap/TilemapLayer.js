@@ -94,6 +94,7 @@ Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, til
 
     this.mapData = [];
     this._tempTileBlock = [];
+    this._tempBlockResults = [];
 
 };
 
@@ -305,10 +306,12 @@ Phaser.TilemapLayer.prototype = {
     */
     getTileOverlaps: function (object) {
 
+        this._tempBlockResults.length = 0;
+
         //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
         if (object.body.x < 0 || object.body.x > this.widthInPixels || object.body.y < 0 || object.body.bottom > this.heightInPixels)
         {
-            return;
+            return this._tempBlockResults;
         }
 
         //  What tiles do we need to check against?
@@ -318,13 +321,10 @@ Phaser.TilemapLayer.prototype = {
         this._tempTileH = (this.game.math.snapToCeil(object.body.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
 
         //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
-        this._tempBlockResults = [];
-
         this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
 
         for (var r = 0; r < this._tempTileBlock.length; r++)
         {
-            //  separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY)
             if (this.game.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY))
             {
                 this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });

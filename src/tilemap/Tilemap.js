@@ -336,7 +336,6 @@ Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
         this.collisionCallbackContext = context;
     }
 
-    //  Group?
     if (objectOrGroup instanceof Phaser.Group)
     {
         objectOrGroup.forEachAlive(this.collideGameObject, this);
@@ -364,7 +363,7 @@ Phaser.Tilemap.prototype.collideGameObject = function (object) {
     {
         this._tempCollisionData = this.collisionLayer.getTileOverlaps(object);
 
-        if (this.collisionCallback !== null && this._tempCollisionData.length > 0)
+        if (this.collisionCallback && this._tempCollisionData.length > 0)
         {
             this.collisionCallback.call(this.collisionCallbackContext, object, this._tempCollisionData);
         }
