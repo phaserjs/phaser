@@ -13,6 +13,8 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
 	PIXI.TilingSprite.call(this, this.texture, width, height);
 
+	this.type = Phaser.TILESPRITE;
+
 	/**
 	 * The scaling of the image that is being tiled
 	 *

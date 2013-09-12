@@ -17,6 +17,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     this.name = '';
 
+    this.type = Phaser.SPRITE;
+
     this.renderOrderID = -1;
 
     //  If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.

@@ -179,10 +179,34 @@ Phaser.Physics.Arcade.prototype = {
     */
     overlap: function (object1, object2, notifyCallback, processCallback, callbackContext) {
 
+        object1 = object1 || null;
         object2 = object2 || null;
         notifyCallback = notifyCallback || null;
         processCallback = processCallback || this.separate;
         callbackContext = callbackContext || this;
+
+        //  World vs. World check
+        if (object1 == null)
+        {
+            //  Scan the entire display list, comparing every object! (ouch)
+            if (this.game.world._container.first._iNext)
+            {
+                var currentNode = this.game.world._container.first._iNext;
+                    
+                do  
+                {
+                    if (checkExists == false || (checkExists && currentNode.exists))
+                    {
+                        callback.call(callbackContext, currentNode);
+                    }
+
+                    currentNode = currentNode._iNext;
+                }
+                while (currentNode != this.game.world._container.last._iNext);
+            }
+        }
+
+
 
         //  Get the ships top-most ID. If the length of that ID is 1 then we can ignore every other result, 
         //  it's simply not colliding with anything :)

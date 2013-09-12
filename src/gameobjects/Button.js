@@ -21,6 +21,8 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 
 	Phaser.Sprite.call(this, game, x, y, key, outFrame);
 
+    this.type = Phaser.BUTTON;
+
     this._onOverFrameName = null;
     this._onOutFrameName = null;
     this._onDownFrameName = null;

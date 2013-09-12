@@ -73,6 +73,7 @@ Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, til
     this.ID = id;
     this.name = name;
     this.key = key;
+    this.type = Phaser.TILEMAPLAYER;
 
     this.mapFormat = mapFormat;
     this.tileWidth = tileWidth;

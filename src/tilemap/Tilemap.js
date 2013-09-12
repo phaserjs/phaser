@@ -51,6 +51,8 @@ Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) 
     this.position.x = x;
     this.position.y = y;
 
+    this.type = Phaser.TILEMAP;
+
     this.renderer = new Phaser.TilemapRenderer(this.game);
 
     this.mapFormat = map.format;

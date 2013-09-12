@@ -13,6 +13,8 @@ Phaser.RenderTexture = function (game, key, width, height) {
 
 	this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);	
 
+	this.type = Phaser.RENDERTEXTURE;
+
 	if (PIXI.gl)
 	{
 		this.initWebGL();

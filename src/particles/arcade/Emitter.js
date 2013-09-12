@@ -14,6 +14,8 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
 
     this.name = 'emitter' + this.game.particles.ID++;
 
+    this.type = Phaser.EMITTER;
+
     /**
      * The X position of the top left corner of the emitter in world space.
      */

@@ -36,6 +36,8 @@ Phaser.Group = function (game, parent, name, useStage) {
 		}
 	}
 
+	this.type = Phaser.GROUP;
+
 	this.exists = true;
 
     /**

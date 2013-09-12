@@ -7,7 +7,20 @@ var Phaser = Phaser || {
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
-	WEBGL: 2
+	WEBGL: 2,
+
+	SPRITE: 0,
+	BUTTON: 1,
+	BULLET: 2,
+	GRAPHICS: 3,
+	TEXT: 4,
+	TILESPRITE: 5,
+	BITMAPTEXT: 6,
+	GROUP: 7,
+	RENDERTEXTURE: 8,
+	TILEMAP: 9,
+	TILEMAPLAYER: 10,
+	EMITTER: 11
 
  };
 

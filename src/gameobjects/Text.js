@@ -14,6 +14,8 @@ Phaser.Text = function (game, x, y, text, style) {
 
 	Phaser.Sprite.call(this, game, x, y, canvasID);
 
+    this.type = Phaser.TEXT;
+
     this.setText(text);
     this.setStyle(style);
     

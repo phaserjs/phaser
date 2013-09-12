@@ -14,6 +14,8 @@ Phaser.Graphics = function (game, x, y) {
 
 	PIXI.DisplayObjectContainer.call(this);
 
+    this.type = Phaser.GRAPHICS;
+
 	this.position.x = x;
 	this.position.y = y;
 
