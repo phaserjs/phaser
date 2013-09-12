@@ -218,6 +218,52 @@ Phaser.Loader.prototype = {
 	},
 
 	/**
+	* Add a new tilemap loading request.
+	* @param key {string} Unique asset key of the tilemap data.
+	* @param tilesetURL {string} The url of the tile set image file.
+	* @param [mapDataURL] {string} The url of the map data file (csv/json)
+	* @param [mapData] {object} An optional JSON data object (can be given in place of a URL).
+	* @param [format] {string} The format of the map data.
+	*/
+	tilemap: function (key, tilesetURL, mapDataURL, mapData, format) {
+
+		if (typeof mapDataURL === "undefined") { mapDataURL = null; }
+		if (typeof mapData === "undefined") { mapData = null; }
+		if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			//  A URL to a json/csv file has been given
+			if (mapDataURL)
+			{
+				this.addToFileList('tilemap', key, tilesetURL, { mapDataURL: mapDataURL, format: format });
+			}
+			else
+			{
+				switch (format)
+				{
+					//  A csv string or object has been given
+					case Phaser.Tilemap.CSV:
+						break;
+
+					//  An xml string or object has been given
+					case Phaser.Tilemap.JSON:
+
+						if (typeof mapData === 'string')
+						{
+							mapData = JSON.parse(mapData);
+						}
+						break;
+				}
+
+				this.addToFileList('tilemap', key, tilesetURL, { mapDataURL: null, mapData: mapData, format: format });
+
+			}
+		}
+
+	},
+
+	/**
 	* Add a new bitmap font loading request.
 	* @param key {string} Unique asset key of the bitmap font.
 	* @param textureURL {string} The url of the font image file.
@@ -437,6 +483,7 @@ Phaser.Loader.prototype = {
 			case 'spritesheet':
 			case 'textureatlas':
 			case 'bitmapfont':
+			case 'tilemap':
 				file.data = new Image();
 				file.data.name = file.key;
 				file.data.onload = function () {
@@ -572,14 +619,50 @@ Phaser.Loader.prototype = {
 		switch (file.type)
 		{
 			case 'image':
+
 				this.game.cache.addImage(file.key, file.url, file.data);
 				break;
 
 			case 'spritesheet':
+
 				this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
 				break;
 
+			case 'tilemap':
+
+				if (file.mapDataURL == null)
+				{
+					this.game.cache.addTilemap(file.key, file.url, file.data, file.mapData, file.format);
+				}
+				else
+				{
+					//  Load the JSON or CSV before carrying on with the next file
+					loadNext = false;
+					this._xhr.open("GET", this.baseURL + file.mapDataURL, true);
+					this._xhr.responseType = "text";
+
+					if (file.format == Phaser.Tilemap.JSON)
+					{
+						this._xhr.onload = function () {
+							return _this.jsonLoadComplete(file.key);
+						};
+					}
+					else if (file.format == Phaser.Tilemap.CSV)
+					{
+						this._xhr.onload = function () {
+							return _this.csvLoadComplete(file.key);
+						};
+					}
+
+					this._xhr.onerror = function () {
+						return _this.dataLoadError(file.key);
+					};
+					this._xhr.send();
+				}
+				break;
+
 			case 'textureatlas':
+
 				if (file.atlasURL == null)
 				{
 					this.game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
@@ -612,6 +695,7 @@ Phaser.Loader.prototype = {
 				break;
 
 			case 'bitmapfont':
+
 				if (file.xmlURL == null)
 				{
 					this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData);
@@ -686,7 +770,29 @@ Phaser.Loader.prototype = {
 		var data = JSON.parse(this._xhr.response);
 		var file = this._fileList[key];
 
-		this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
+		if (file.type == 'tilemap')
+		{
+			this.game.cache.addTilemap(file.key, file.url, file.data, data, file.format);
+		}
+		else
+		{
+			this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
+		}
+
+		this.nextFile(key, true);
+
+	},
+
+	/**
+	 * Successfully loaded a CSV file.
+	 * @param key {string} Key of the loaded CSV file.
+	 */
+	csvLoadComplete: function (key) {
+
+		var data = this._xhr.response;
+		var file = this._fileList[key];
+
+		this.game.cache.addTilemap(file.key, file.url, file.data, data, file.format);
 
 		this.nextFile(key, true);
 

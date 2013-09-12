@@ -52,7 +52,12 @@ Phaser.Group.prototype = {
 		if (child.group !== this)
 		{
 			child.group = this;
-			child.events.onAddedToGroup.dispatch(child, this);
+
+			if (child.events)
+			{
+				child.events.onAddedToGroup.dispatch(child, this);
+			}
+
 			this._container.addChild(child);
 		}
 
@@ -65,7 +70,12 @@ Phaser.Group.prototype = {
 		if (child.group !== this)
 		{
 			child.group = this;
-			child.events.onAddedToGroup.dispatch(child, this);
+
+			if (child.events)
+			{
+				child.events.onAddedToGroup.dispatch(child, this);
+			}
+
 			this._container.addChildAt(child, index);
 		}
 
@@ -82,9 +92,16 @@ Phaser.Group.prototype = {
 	create: function (x, y, key, frame) {
 
 		var child = new Phaser.Sprite(this.game, x, y, key, frame);
+
 		child.group = this;
-		child.events.onAddedToGroup.dispatch(child, this);
+
+		if (child.events)
+		{
+			child.events.onAddedToGroup.dispatch(child, this);
+		}
+
 		this._container.addChild(child);
+
 		return child;
 
 	},

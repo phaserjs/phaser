@@ -11,7 +11,7 @@
 * @param parent {Tilemap} The tilemap that contains this layer.
 * @param id {number} The ID of this layer within the Tilemap array.
 * @param key {string} Asset key for this map.
-* @param mapFormat {number} Format of this map data, available: Tilemap.FORMAT_CSV or Tilemap.FORMAT_TILED_JSON.
+* @param mapFormat {number} Format of this map data, available: Tilemap.CSV or Tilemap.JSON.
 * @param name {string} Name of this layer, so you can get this layer by its name.
 * @param tileWidth {number} Width of tiles in this map.
 * @param tileHeight {number} Height of tiles in this map.
@@ -72,33 +72,25 @@ Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, til
     this.game = parent.game;
     this.ID = id;
     this.name = name;
+    this.key = key;
 
     this.mapFormat = mapFormat;
-
     this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
 
     this.boundsInTiles = new Phaser.Rectangle();
 
-    this.tileset = this.game.cache.getImage(key);
+    var map = this.game.cache.getTilemap(key);
 
-    //  Sprite property surely?
-    this.alpha = 1;
+    this.tileset = map.data;
+
+    this._alpha = 1;
 
     this.canvas = null;
     this.context = null;
     this.baseTexture = null;
     this.texture = null;
     this.sprite = null;
-
-        // this.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
-        // this.context = this.canvas.getContext('2d');
-
-        // this.baseTexture = new PIXI.BaseTexture(this.canvas);
-        // this.texture = new PIXI.Texture(this.baseTexture);
-        // this.sprite = new PIXI.Sprite(this.texture);
-
-        // this.game.stage._stage.addChild(this.sprite);
 
     this.mapData = [];
     this._tempTileBlock = [];
@@ -477,7 +469,7 @@ Phaser.TilemapLayer.prototype = {
         this.texture = new PIXI.Texture(this.baseTexture);
         this.sprite = new PIXI.Sprite(this.texture);
 
-        this.game.stage._stage.addChild(this.sprite);
+        this.parent.addChild(this.sprite);
 
     },
 
@@ -503,7 +495,7 @@ Phaser.TilemapLayer.prototype = {
 
         var i = 0;
 
-        if (this.mapFormat == Phaser.Tilemap.FORMAT_TILED_JSON)
+        if (this.mapFormat == Phaser.Tilemap.JSON)
         {
             //  For some reason Tiled counts from 1 not 0
             this.tileOffsets[0] = null;
@@ -527,3 +519,21 @@ Phaser.TilemapLayer.prototype = {
     }
 
 };
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, 'alpha', {
+
+    get: function() {
+        return this._alpha;
+    },
+
+    set: function(value) {
+
+        if (this.sprite)
+        {
+            this.sprite.alpha = value;
+        }
+        
+        this._alpha = value;
+    }
+
+});

@@ -108,6 +108,12 @@ Phaser.GameObjectFactory.prototype = {
 
     },
 
+    tilemap: function (x, y, key, resizeWorld, tileWidth, tileHeight) {
+
+        return this.world.group.add(new Phaser.Tilemap(this.game, key, resizeWorld, tileWidth, tileHeight));
+
+    },
+
     renderTexture: function (key, width, height) {
 
         var texture = new Phaser.RenderTexture(this.game, key, width, height);

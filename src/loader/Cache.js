@@ -47,6 +47,12 @@ Phaser.Cache = function (game) {
      */
     this._text = {};
 
+    /**
+     * Tilemap key-value container.
+     * @type {object}
+     */
+    this._tilemaps = {};
+
     this.addDefaultImage();
 
     this.onSoundUnlock = new Phaser.Signal;
@@ -97,6 +103,22 @@ Phaser.Cache.prototype = {
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         this._images[key].frameData = Phaser.Animation.Parser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
+
+    },
+
+    /**
+     * Add a new tilemap.
+     * @param key  {string} Asset key for the texture atlas.
+     * @param url  {string} URL of this texture atlas file.
+     * @param data {object} Extra texture atlas data.
+     * @param atlasData {object} Texture atlas frames data.
+     */
+    addTilemap: function (key, url, data, mapData, format) {
+
+        this._tilemaps[key] = { url: url, data: data, spriteSheet: true, mapData: mapData, format: format };
+
+        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
     },
 
@@ -310,6 +332,21 @@ Phaser.Cache.prototype = {
         if (this._images[key])
         {
             return this._images[key].data;
+        }
+
+        return null;
+    },
+
+    /**
+    * Get tilemap data by key.
+    * @param key Asset key of the tilemap you want.
+    * @return {object} The tilemap data. The tileset image is in the data property, the map data in mapData.
+    */
+    getTilemap: function (key) {
+
+        if (this._tilemaps[key])
+        {
+            return this._tilemaps[key];
         }
 
         return null;

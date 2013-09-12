@@ -16,42 +16,21 @@
 
     function preload() {
 
-        //  CSV Tilemap Test
-
-        //  First we load our map data (a csv file)
-        game.load.text('csvtest', 'assets/maps/catastrophi_level2.csv');
-
-        //  Then we load the actual tile sheet image
-        game.load.image('csvtiles', 'assets/tiles/catastrophi_tiles_16.png');
+        game.load.tilemap('catastrophi', 'assets/tiles/catastrophi_tiles_16.png', 'assets/maps/catastrophi_level2.csv', null, Phaser.Tilemap.CSV);
 
     }
 
-    var canvas;
-    var context;
-    var baseTexture;
-    var texture;
-    var s;
-    var r;
-    var t;
-
     function create() {
-
-        //  game, key, mapData, format, resizeWorld, tileWidth, tileHeight
 
         //  This creates the tilemap using the csv and tile sheet we loaded.
         //  We tell it use to CSV format parser. The 16x16 are the tile sizes.
         //  The 4th parameter (true) tells the game world to resize itself based on the map dimensions or not.
         
-        t = new Phaser.Tilemap(game, 'csvtiles', 'csvtest', Phaser.Tilemap.FORMAT_CSV, true, 16, 16);
-
-        //  SHould be added to the World and rendered automatically :)
-        r = new Phaser.TilemapRenderer(game);
+        game.add.tilemap(0, 0, 'catastrophi', true, 16, 16);
 
     }
 
     function update() {
-
-        r.render(t);
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {

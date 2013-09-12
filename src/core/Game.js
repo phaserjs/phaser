@@ -351,7 +351,8 @@ Phaser.Game.prototype = {
 		}
 		else
 		{
-			//	They must have requested WebGL and their browser supports it
+			//	They requested WebGL, and their browser supports it
+			this.renderType = Phaser.WEBGL;
 			this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.stage.canvas, this.transparent, this.antialias);
 			this.canvas = this.renderer.view;
 			this.context = null;
