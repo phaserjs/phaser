@@ -186,20 +186,27 @@ Phaser.Time.prototype = {
 	update: function (time) {
 
 		this.now = time;
-		this.timeToCall = Math.max(0, 16 - (time - this.lastTime));
+
+		if (this._justResumed)
+		{
+			this.time = this.now;
+			this._justResumed = false;
+		}
+
+		this.timeToCall = this.game.math.max(0, 16 - (time - this.lastTime));
 
 		this.elapsed = this.now - this.time;
 
-		this.msMin = Math.min(this.msMin, this.elapsed);
-		this.msMax = Math.max(this.msMax, this.elapsed);
+		this.msMin = this.game.math.min(this.msMin, this.elapsed);
+		this.msMax = this.game.math.max(this.msMax, this.elapsed);
 
 		this.frames++;
 
 		if (this.now > this._timeLastSecond + 1000)
 		{
 			this.fps = Math.round((this.frames * 1000) / (this.now - this._timeLastSecond));
-			this.fpsMin = Math.min(this.fpsMin, this.fps);
-			this.fpsMax = Math.max(this.fpsMax, this.fps);
+			this.fpsMin = this.game.math.min(this.fpsMin, this.fps);
+			this.fpsMax = this.game.math.max(this.fpsMax, this.fps);
 			this._timeLastSecond = this.now;
 			this.frames = 0;
 		}
@@ -214,18 +221,6 @@ Phaser.Time.prototype = {
 			this.pausedTime = this.now - this._pauseStarted;
 		}
 
-		if (this._justResumed)
-		{
-			console.log('Time just resumed');
-			console.log('now', this.now);
-			console.log('timeToCall', this.timeToCall);
-			console.log('elapsed', this.elapsed);
-			console.log('lastTime', this.lastTime);
-			console.log('physicsElapsed', this.physicsElapsed);
-
-			this._justResumed = false;
-		}
-
 	},
 
 	/**
@@ -234,13 +229,9 @@ Phaser.Time.prototype = {
 	* @private
 	*/
 	gamePaused: function () {
+		
 		this._pauseStarted = this.now;
-			console.log('Time paused');
-			console.log('now', this.now);
-			console.log('timeToCall', this.timeToCall);
-			console.log('elapsed', this.elapsed);
-			console.log('lastTime', this.lastTime);
-			console.log('physicsElapsed', this.physicsElapsed);
+
 	},
 
 	/**
@@ -251,10 +242,8 @@ Phaser.Time.prototype = {
 	gameResumed: function () {
 
 		//  Level out the elapsed timer to avoid spikes
-		this.elapsed = 0;
-		this.physicsElapsed = 0;
+		this.time = Date.now();
 		this.pauseDuration = this.pausedTime;
-
 		this._justResumed = true;
 
 	},

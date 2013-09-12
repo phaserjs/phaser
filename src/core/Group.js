@@ -449,7 +449,7 @@ Phaser.Group.prototype = {
 
 	forEach: function (callback, callbackContext, checkExists) {
 
-		checkExists = checkExists || false;
+		if (typeof checkExists == 'undefined') { checkExists = false; }
 
 		if (this._container.first._iNext)
 		{
@@ -470,7 +470,7 @@ Phaser.Group.prototype = {
 
 	},
 
-	forEachAlive: function () {
+	forEachAlive: function (callback, callbackContext) {
 
 		if (this._container.first._iNext)
 		{
@@ -491,7 +491,7 @@ Phaser.Group.prototype = {
 
 	},
 
-	forEachDead: function () {
+	forEachDead: function (callback, callbackContext) {
 
 		if (this._container.first._iNext)
 		{

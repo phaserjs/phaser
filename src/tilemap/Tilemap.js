@@ -217,7 +217,6 @@ Phaser.Tilemap.prototype.setCollisionRange = function (start, end, left, right, 
 
     for (var i = start; i < end; i++)
     {
-        //setCollision: function (left, right, up, down, reset, separateX, separateY) {
         this.tiles[i].setCollision(left, right, up, down, resetCollisions, separateX, separateY);
     }
 
@@ -231,16 +230,15 @@ Phaser.Tilemap.prototype.setCollisionRange = function (start, end, left, right, 
 * @param separateX {bool} Enable seprate at x-axis.
 * @param separateY {bool} Enable seprate at y-axis.
 */
-Phaser.Tilemap.prototype.setCollisionByIndex = function (values, collision, resetCollisions, separateX, separateY) {
+Phaser.Tilemap.prototype.setCollisionByIndex = function (values, left, right, up, down, resetCollisions, separateX, separateY) {
 
-    if (typeof collision === "undefined") { collision = Phaser.Types.ANY; }
     if (typeof resetCollisions === "undefined") { resetCollisions = false; }
     if (typeof separateX === "undefined") { separateX = true; }
     if (typeof separateY === "undefined") { separateY = true; }
 
     for (var i = 0; i < values.length; i++)
     {
-        this.tiles[values[i]].setCollision(collision, resetCollisions, separateX, separateY);
+        this.tiles[values[i]].setCollision(left, right, up, down, resetCollisions, separateX, separateY);
     }
 
 };
@@ -328,25 +326,20 @@ Phaser.Tilemap.prototype.getTileOverlaps = function (object) {
 */
 Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
 
-    if (typeof objectOrGroup === "undefined") { objectOrGroup = null; }
-    if (typeof callback === "undefined") { callback = null; }
-    if (typeof context === "undefined") { context = null; }
+    objectOrGroup = objectOrGroup || this.game.world.group;
+    callback = callback || null;
+    context = context || null;
 
-    if (callback !== null && context !== null)
+    if (callback && context)
     {
         this.collisionCallback = callback;
         this.collisionCallbackContext = context;
     }
 
-    if (objectOrGroup == null)
-    {
-        objectOrGroup = this.game.world.group;
-    }
-
     //  Group?
     if (objectOrGroup instanceof Phaser.Group)
     {
-        // objectOrGroup.forEachAlive(this, this.collideGameObject, true);
+        objectOrGroup.forEachAlive(this.collideGameObject, this);
     }
     else
     {
@@ -361,6 +354,11 @@ Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
 * @return {bool} Return true if this collides with given object, otherwise return false.
 */
 Phaser.Tilemap.prototype.collideGameObject = function (object) {
+
+    if (object instanceof Phaser.Group || object instanceof Phaser.Tilemap)
+    {
+        return false;
+    }
 
     if (object.exists && object.body.allowCollision.none == false)
     {
