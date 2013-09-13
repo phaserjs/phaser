@@ -49,6 +49,17 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.allowRotation = true;
     this.allowGravity = true;
 
+    //	These two flags allow you to disable the custom separation that takes place
+    //	Used in combination with your own collision processHandler you can create whatever
+    //	type of collision response you need.
+    this.customSeparateX = false;
+    this.customSeparateY = false;
+
+    //	When this body collides with another the amount of overlap is stored in here
+    //	These values are useful if you want to provide your own custom separation logic.
+    this.overlapX = 0;
+    this.overlapY = 0;
+
     this.collideWorldBounds = false;
 
 	this.lastX = sprite.x;

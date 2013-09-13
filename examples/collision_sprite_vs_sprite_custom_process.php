@@ -30,20 +30,25 @@
 
         //  This will check Sprite vs. Sprite collision using a custom process callback
 
-        sprite1 = game.add.sprite(50, 200, 'atari');
+        sprite1 = game.add.sprite(0, 200, 'atari');
         sprite1.name = 'atari';
-        sprite1.body.velocity.x = 100;
+        //  We'll use a random velocity here so we can test it in our processHandler
+        sprite1.body.velocity.x = 50 + Math.random() * 100;
+        //  This tells phaser to not use the built-in body separation, instead you should handle it in your process callback (see below)
+        sprite1.body.customSeparateX = true;
 
-        sprite2 = game.add.sprite(700, 220, 'mushroom');
+        sprite2 = game.add.sprite(750, 220, 'mushroom');
         sprite2.name = 'mushroom';
-        sprite2.body.velocity.x = -100;
+        //  We'll use a random velocity here so we can test it in our processHandler
+        sprite2.body.velocity.x = -(50 + Math.random() * 100);
+        //  This tells phaser to not use the built-in body separation, instead you should handle it in your process callback (see below)
+        sprite2.body.customSeparateX = true;
 
     }
 
     function update() {
 
-        // object1, object2, collideCallback, processCallback, callbackContext
-        game.physics.collide(sprite1, sprite2, collisionHandler, null, this);
+        game.physics.collide(sprite1, sprite2, collisionHandler, processHandler, this);
 
     }
 
@@ -53,7 +58,23 @@
         //  For example you could test for velocity, health, etc.
         //  If you want the collision to be deemed successful this function must return true.
         //  In which case the collisionHandler will be called, otherwise it won't.
-        //  Note: the objects will have already collided and separated by this point.
+
+        //  Note: the objects will have already been separated by this point unless you have set
+        //  their customSeparateX/Y flags to true. If you do that it's up to you to handle separation.
+
+        //  Whichever one is going fastest wins, the other dies :)
+        if (obj1.body.velocity.x > Math.abs(obj2.body.velocity.x))
+        {
+            obj2.kill();
+            obj1.body.velocity.x = 0;
+        }
+        else
+        {
+            obj1.kill();
+            obj2.body.velocity.x = 0;
+        }
+
+        return true;
 
     }
 

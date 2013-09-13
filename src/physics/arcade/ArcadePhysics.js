@@ -424,11 +424,12 @@ Phaser.Physics.Arcade.prototype = {
      */
     separate: function (body1, body2) {
 
-        if (this.separateX(body1, body2) || this.separateY(body1, body2))
+        this._result = (this.separateX(body1, body2) || this.separateY(body1, body2));
+
+        if (this._result)
         {
             body1.postUpdate();
             body2.postUpdate();
-            this._result = true;
         }
 
     },
@@ -496,12 +497,21 @@ Phaser.Physics.Arcade.prototype = {
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
         if (this._overlap != 0)
         {
+            body1.overlapX = this._overlap;
+            body2.overlapX = this._overlap;
+
+            if (body1.customSeparateX || body2.customSeparateX)
+            {
+                return true;
+            }
+
             this._velocity1 = body1.velocity.x;
             this._velocity2 = body2.velocity.x;
 
             if (!body1.immovable && !body2.immovable)
             {
                 this._overlap *= 0.5;
+
                 body1.x = body1.x - this._overlap;
                 body2.x += this._overlap;
 
@@ -510,6 +520,7 @@ Phaser.Physics.Arcade.prototype = {
                 this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
                 this._newVelocity1 -= this._average;
                 this._newVelocity2 -= this._average;
+
                 body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
                 body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
             }
@@ -595,12 +606,21 @@ Phaser.Physics.Arcade.prototype = {
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
         if (this._overlap != 0)
         {
+            body1.overlapY = this._overlap;
+            body2.overlapY = this._overlap;
+
+            if (body1.customSeparateY || body2.customSeparateY)
+            {
+                return true;
+            }
+
             this._velocity1 = body1.velocity.y;
             this._velocity2 = body2.velocity.y;
 
             if (!body1.immovable && !body2.immovable)
             {
                 this._overlap *= 0.5;
+
                 body1.y = body1.y - this._overlap;
                 body2.y += this._overlap;
 
@@ -609,6 +629,7 @@ Phaser.Physics.Arcade.prototype = {
                 this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
                 this._newVelocity1 -= this._average;
                 this._newVelocity2 -= this._average;
+
                 body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
                 body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
             }
@@ -616,6 +637,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 body1.y = body1.y - this._overlap;
                 body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
+
                 //  This is special case code that handles things like horizontal moving platforms you can ride
                 if (body2.active && body2.moves && (body1.deltaY() > body2.deltaY()))
                 {
@@ -626,6 +648,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 body2.y += this._overlap;
                 body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
+
                 //  This is special case code that handles things like horizontal moving platforms you can ride
                 if (body1.sprite.active && body1.moves && (body1.deltaY() < body2.deltaY()))
                 {

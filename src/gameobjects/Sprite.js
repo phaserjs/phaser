@@ -167,6 +167,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     //  Set-up the physics body
     this.body = new Phaser.Physics.Arcade.Body(this);
 
+    this.velocity = this.body.velocity;
+    this.acceleration = this.body.acceleration;
+
     //  World bounds check
     this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds);
     this.inWorldThreshold = 0;
