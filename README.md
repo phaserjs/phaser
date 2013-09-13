@@ -1,19 +1,18 @@
-Phaser
-======
-
 ![Phaser Logo](http://www.gametest.mobi/phaser/phaser-logo-small.png)
+
+Phaser 1.0
+==========
+
+Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It supports Canvas and WebGL rendering.
 
 Version: 1.0.0 - Released: September 13th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
-Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It supports Canvas and WebGL rendering.
-
-The [Official Website](http://phaser.io)<br />
+View the [Official Website](http://phaser.io)<br />
 Follow on [Twitter](https://twitter.com/photonstorm)<br />
 Read the [Development Blog](http://www.photonstorm.com)<br />
-Join the [Support Forum](http://www.html5gamedevs.com/forum/14-phaser/)
-
+Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
 Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
 "Being negative is not how we make progress" - Larry Page, Google
@@ -123,16 +122,19 @@ Known Issues
 Future Plans
 ------------
 
-* Ability to layer another DOM object and have it controlled by the game somehow. Can then do stacked canvas effects.
-* Add ability to create extra <div>s within the game container, layered above/below the canvas.
-* Basic set of GUI components, checkbox, window, etc.
-* Tilemap: remove tiles of a certain type, replace tile with sprite, change layer order, Tiled object support.
+The following list is not exhaustive and is subject to change:
+
+* Integrate Advanced Physics system.
+* Integrate Advanced Particle system.
+* Better sound controls and audio effects.
+* Google Play Game Services.
+* Ability to layer another DOM object and have it controlled by the game.
+* More GUI components: checkbox, radio button, window, etc.
+* Tilemap: more advanced Tiled support and support for DAME tilemaps.
 * Joypad support.
 * Gestures input class.
-* Integrate Advanced Physics system.
-* Integrate Advanced Particles system.
-* Better sound controls and effects.
-* Google Play Game Services.
+
+Right now our main focus is on documentation.
 
 Test Suite
 ----------
