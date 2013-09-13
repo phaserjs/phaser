@@ -338,7 +338,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     if (this.width > 1 || this.height > 1)
     {
-    	particle.reset(this.x - this.game.rnd.integerInRange(this.left, this.right), this.y - this.game.rnd.integerInRange(this.top, this.bottom));
+    	particle.reset(this.emiteX - this.game.rnd.integerInRange(this.left, this.right), this.emiteY - this.game.rnd.integerInRange(this.top, this.bottom));
     }
     else
     {
