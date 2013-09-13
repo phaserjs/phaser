@@ -313,6 +313,17 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
 }
 
+/**
+ * Moves the sprite so its center is located on the given x and y coordinates.
+ * Doesn't change the origin of the sprite.
+ */
+Phaser.Sprite.prototype.centerOn = function(x, y) {
+
+    this.x = x + (this.x - this.center.x);
+    this.y = y + (this.y - this.center.y);
+
+}
+
 Phaser.Sprite.prototype.revive = function() {
 
     this.alive = true;

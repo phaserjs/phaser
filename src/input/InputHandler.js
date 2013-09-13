@@ -649,9 +649,10 @@ Phaser.InputHandler.prototype = {
     */
     enableDrag: function (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
 
-        lockCenter = lockCenter || false;
-        bringToTop = bringToTop || false;
-        pixelPerfect = pixelPerfect || false;
+        if (typeof lockCenter == 'undefined') { lockCenter = false; }
+        if (typeof bringToTop == 'undefined') { bringToTop = false; }
+        if (typeof pixelPerfect == 'undefined') { pixelPerfect = false; }
+
         alphaThreshold = alphaThreshold || 255;
         boundsRect = boundsRect || null;
         boundsSprite = boundsSprite || null;
@@ -707,7 +708,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.dragFromCenter)
         {
-            // this.sprite.transform.centerOn(pointer.worldX, pointer.worldY);
+            this.sprite.centerOn(pointer.x, pointer.y);
             this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
         }
         else
@@ -773,13 +774,13 @@ Phaser.InputHandler.prototype = {
     */
     enableSnap: function (snapX, snapY, onDrag, onRelease) {
 
-    	onDrag = onDrag || true;
-    	onRelease = onRelease || false;
+        if (typeof onDrag == 'undefined') { onDrag = true; }
+        if (typeof onRelease == 'undefined') { onRelease = false; }
 
-        this.snapOnDrag = onDrag;
-        this.snapOnRelease = onRelease;
         this.snapX = snapX;
         this.snapY = snapY;
+        this.snapOnDrag = onDrag;
+        this.snapOnRelease = onRelease;
 
     },
 
