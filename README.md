@@ -1,6 +1,8 @@
 Phaser
 ======
 
+![Phaser Logo](http://www.gametest.mobi/phaser/phaser-logo-small.png)
+
 Version: 1.0.0 - Released: September 13th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
@@ -45,77 +47,70 @@ Phaser is 275 KB minified and 62 KB gzipped.
 Features
 --------
 
-Phaser was born from a cross-pollination of the AS3 Flixel game library and our own internal HTML5 game framework. The objective was to allow you to make games _really_ quickly and remove some of the speed barriers HTML5 puts in your way.
+**WebGL &amp; Canvas**
 
-Phaser fully supports the following features:
+Phaser uses both a Canvas and WebGL renderer internally and can automatically swap between them based on browser support. This allows for lightning fast rendering across Desktop and Mobile. Phaser uses and contributes towards the excellent Pixi.js library for rendering.
 
-*	Easy asset Loading<br />
+**Preloader**
 
-	Images, Sprite Sheets, Texture Packer Data, JSON, Text Files, Audio File.
+We've made the loading of assets as simple as one line of code. Images, Sounds, Sprite Sheets, Tilemaps, JSON data, XML - all parsed and handled automatically, ready for use in game and stored in a global Cache for Sprites to share.
 
-*	Cameras<br />
+**Physics**
 
-	Multiple world cameras, camera scale, zoom, rotation, deadzones and Sprite following.
+Phaser ships with our Arcade Physics system. An extremely light-weight AABB physics library perfect for low-powered devices and fast collision response. Control velocity, acceleration, bounce, drag and full collision and separation control.
 
-*	Sprites<br />
+**Sprites**
 
-	All sprites have physics properties including velocity, acceleration, bounce and drag.
-	ScrollFactor allows them to re-act to cameras at different rates.
+Sprites are the life-blood of your game. Position them, tween them, rotate them, scale them, animate them, collide them, paint them onto custom textures and so much more!
+Sprites also have full Input support: click them, touch them, drag them around, snap them - even pixel perfect click detection if needed.
 
-*	Groups<br />
+**Groups**
 
-	Group sprites together for collision checks, visibility toggling and function iteration.
+Group bundles of Sprites together for easy pooling and recycling, avoiding constant object creation. Groups can also be collided: for example a "Bullets" group checking for collision against the "Aliens" group, with a custom collision callback to handle the outcome.
 
-*	Animation<br />
+**Animation**
 
-	Sprites can be animated by a sprite sheet or Texture Atlas (JSON Array format supported).
-	Animation playback controls, looping, fps based timer and custom frames.
+Phaser supports classic Sprite Sheets with a fixed frame size, Texture Packer and Flash CS6/CC JSON files (both Hash and Array formats) and Starling XML files. All of these can be used to easily create animation for Sprites.
 
-*	Scroll Zones<br />
+**Particles**
 
-	Scroll any image seamlessly in any direction. Or create multiple scrolling regions within an image.
+An Arcade Particle system is built-in, which allows you to create fun particle effects easily. Create explosions or constant streams for effects like rain or fire. Or attach the Emitter to a Sprite for a jet trail.
 
-*	Collision<br />
+**Camera**
 
-	A QuadTree based Sprite to Sprite, Sprite to Group or Group to Group collision system.
+Phaser has a built-in Game World. Objects can be placed anywhere within the world and you've got access to a powerful Camera to look into that world. Pan around and follow Sprites with ease.
 
-*	Particles<br />
+**Input**
 
-	An Emitter can emit Sprites in a burst or at a constant rate, setting physics properties.
+Talk to a Phaser.Pointer and it doesn't matter if the input came from a touch-screen or mouse, it can even change mid-game without dropping a beat. Multi-touch, Mouse, Keyboard and lots of useful functions allow you to code custom gesture recognition.
 
-*	Input<br />
+**Sound**
 
-	Keyboard, Mouse and Touch handling supported (MSPointer events coming soon)
+Phaser supports both Web Audio and legacy HTML Audio. It automatically handles mobile device locking, easy Audio Sprite creation, looping, streaming and volume. We know how much of a pain dealing with audio on mobile is, so we did our best to resolve that!
 
-*	Stage<br />
+**Tilemaps**
 
-	Easily change properties about your game via the stage, such as background color, position, size and scale.
+Phaser can load, render and collide with a tilemap with just a couple of lines of code. We support CSV and Tiled map data formats with multiple tile layers. There are lots of powerful tile manipulation functions: swap tiles, replace them, delete them, add them and update the map in realtime.
 
-*	World<br />
+**Device Scaling**
 
-	The game world can be any size and Sprites and collision happens within it.
+Phaser has a built-in Scale Manager which allows you to scale your game to fit any size screen. Control aspect ratios, minimum and maximum scales and full-screen support.
 
-*	Sound<br />
+**Plugin system**
 
-	Currently uses WebAudio for playback. A lot more work needs to be done in this area.
+We are trying hard to keep the core of Phaser limited to only essential classes, so we built a smart Plugin system to handle everything else. Create your own plugins easily and share them with the community.
 
-*	State Management<br />
+**Mobile Browser**
 
-	For larger games it's useful to break your game down into States, i.e. MainMenu, Level1, GameOver, etc.
-	The state manager makes swapping states easy, but the use of a state is completely optional.
+Phaser was built specifically for Mobile web browsers. Of course it works blazingly fast on Desktop too, but unlike lots of frameworks mobile was our main focus. If it doesn't perform well on mobile then we don't add it into the Core.
 
-*	Cache<br />
+**Developer Support**
 
-	All loaded resources are stored in an easy to access cache, which can be cleared between State changes
-	or persist through-out the whole game.
+We use Phaser every day on our many client projects. As a result it's constantly evolving and improving and we jump on bugs and pull requests quickly. This is a living, breathing framework maintained by a commercial company with custom feature development and support packages available. We live and breathe HTML5 games.
 
-*	Tilemaps<br />
+**Battle Tested**
 
-	Support for CSV and Tiled JSON format tile maps. Supports Layered Tiled maps and layer based collision.
-
-*	Game Scaling<br />
-
-	Game scaling under your control. Removes URL/status bar on mobile (iOS and Android) and allows proportional scaling, fixed size and orientation checks.
+Although Phaser 1.0 is a brand new release it is born from years of experience building some of the biggest HTML5 games out there. We're not saying it is 100% bug free, but we use it for our client work every day, so issues get resolved <em>fast</em> and we stay on-top of the changing browser landscape.
 
 ![Phaser Particles](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_particles.png)
 
@@ -171,8 +166,6 @@ Bugs?
 Please add them to the [Issue Tracker][1] with as much info as possible.
 
 ![Phaser Tilemap](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_tilemap.png)
-
-![Phaser Cameras](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_cams.png)
 
 License
 -------
