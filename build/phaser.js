@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.0 - Built at: Fri, 13 Sep 2013 03:04:56 +0000
+* v1.0.0 - Built at: Fri, 13 Sep 2013 16:50:35 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -7396,7 +7396,7 @@ Object.defineProperty(Phaser.Camera.prototype, "height", {
 /**
 * State
 *
-* This is a base State class which can be extended if you are creating your game with TypeScript.
+* This is a base State class which can be extended if you are creating your own game.
 * It provides quick access to common functions such as the camera, cache, input, match, sound and more.
 *
 * @package    Phaser.State
@@ -7413,7 +7413,7 @@ Phaser.State = function () {
     this.cache = null;
     this.input = null;
     this.load = null;
-    // this.math = null;
+    this.math = null;
     this.sound = null;
     this.stage = null;
     this.time = null;
@@ -7434,7 +7434,7 @@ Phaser.State.prototype = {
         this.cache = game.cache;
         this.input = game.input;
         this.load = game.load;
-        // this.math = game.math;
+        this.math = game.math;
         this.sound = game.sound;
         this.stage = game.stage;
         this.time = game.time;
@@ -7638,6 +7638,7 @@ Phaser.StateManager.prototype = {
 		{
 			// console.log('Phaser.StateManager.addState: Object given');
 			newState = state;
+			newState.game = this.game;
 		}
 		else if (typeof state === 'function')
 		{
@@ -7724,9 +7725,10 @@ Phaser.StateManager.prototype = {
 
 	        if (clearWorld) {
 
-	            //this.game.world.destroy();
+	            this.game.world.destroy();
 
-	            if (clearCache == true) {
+	            if (clearCache == true)
+	            {
 	                this.game.cache.destroy();
 	            }
 	        }
@@ -7994,11 +7996,16 @@ Phaser.LinkedList.prototype = {
 
     callAll: function (callback) {
 
+    	if (!this.first || !this.last)
+    	{
+    		return;
+    	}
+
 		var entity = this.first;
 		
 		do	
 		{
-			if (entity[callback])
+			if (entity && entity[callback])
 			{
 				entity[callback].call(entity);
 			}
@@ -9513,9 +9520,17 @@ Phaser.Group.prototype = {
 
 	removeAll: function () {
 
+		if (this._container.children.length == 0)
+		{
+			return;
+		}
+
 		do
 		{
-			this._container.children[0].events.onRemovedFromGroup.dispatch(this._container.children[0], this);
+			if (this._container.children[0].events)
+			{
+				this._container.children[0].events.onRemovedFromGroup.dispatch(this._container.children[0], this);
+			}
 			this._container.removeChild(this._container.children[0]);
 		}
 		while (this._container.children.length > 0);
@@ -9807,7 +9822,21 @@ Phaser.World.prototype = {
             this.bounds.height = height;
         }
 
-	}
+	},
+
+    /**
+    * Destroyer of worlds.
+    */
+    destroy: function () {
+
+        this.camera.x = 0;
+        this.camera.y = 0;
+
+        this.game.input.reset(true);
+
+        this.group.removeAll();
+
+    }
 	
 };
 
@@ -10180,9 +10209,9 @@ Phaser.Game.prototype = {
 
 			this.stage.boot();
 			this.world.boot();
-			this.state.boot();
 			this.input.boot();
 			this.sound.boot();
+			this.state.boot();
 
 			if (this.renderType == Phaser.CANVAS)
 			{
@@ -10242,9 +10271,6 @@ Phaser.Game.prototype = {
         this._loadComplete = true;
 
         this.state.loadComplete();
-
-        //	?
-		// this.load.onLoadComplete.remove(this.loadComplete, this);
 
     },
 
@@ -10618,14 +10644,6 @@ Phaser.Input.prototype = {
 	    this.hitCanvas.height = 1;
         this.hitContext = this.hitCanvas.getContext('2d');
 
-        //  Debugging
-        // this.hitCanvas.style['width'] = '200px';
-        // this.hitCanvas.style['height'] = '200px';
-        // this.hitCanvas.style['position'] = 'absolute';
-        // this.hitCanvas.style['left'] = '810px';
-        // this.hitCanvas.style['backgroundColor'] = '#ef0000';
-        // Phaser.Canvas.addToDOM(this.hitCanvas);
-
         this.mouse.start();
         this.keyboard.start();
         this.touch.start();
@@ -10705,7 +10723,12 @@ Phaser.Input.prototype = {
     **/
     reset: function (hard) {
 
-        hard = hard || false;
+        if (this.game.isBooted == false)
+        {
+            return;
+        }
+
+        if (typeof hard == 'undefined') { hard = false; }
 
         this.keyboard.reset();
         this.mousePointer.reset();
@@ -13247,9 +13270,10 @@ Phaser.InputHandler.prototype = {
     */
     enableDrag: function (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
 
-        lockCenter = lockCenter || false;
-        bringToTop = bringToTop || false;
-        pixelPerfect = pixelPerfect || false;
+        if (typeof lockCenter == 'undefined') { lockCenter = false; }
+        if (typeof bringToTop == 'undefined') { bringToTop = false; }
+        if (typeof pixelPerfect == 'undefined') { pixelPerfect = false; }
+
         alphaThreshold = alphaThreshold || 255;
         boundsRect = boundsRect || null;
         boundsSprite = boundsSprite || null;
@@ -13305,7 +13329,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.dragFromCenter)
         {
-            // this.sprite.transform.centerOn(pointer.worldX, pointer.worldY);
+            this.sprite.centerOn(pointer.x, pointer.y);
             this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
         }
         else
@@ -13371,13 +13395,13 @@ Phaser.InputHandler.prototype = {
     */
     enableSnap: function (snapX, snapY, onDrag, onRelease) {
 
-    	onDrag = onDrag || true;
-    	onRelease = onRelease || false;
+        if (typeof onDrag == 'undefined') { onDrag = true; }
+        if (typeof onRelease == 'undefined') { onRelease = false; }
 
-        this.snapOnDrag = onDrag;
-        this.snapOnRelease = onRelease;
         this.snapX = snapX;
         this.snapY = snapY;
+        this.snapOnDrag = onDrag;
+        this.snapOnRelease = onRelease;
 
     },
 
@@ -14124,6 +14148,17 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
 }
 
+/**
+ * Moves the sprite so its center is located on the given x and y coordinates.
+ * Doesn't change the origin of the sprite.
+ */
+Phaser.Sprite.prototype.centerOn = function(x, y) {
+
+    this.x = x + (this.x - this.center.x);
+    this.y = y + (this.y - this.center.y);
+
+}
+
 Phaser.Sprite.prototype.revive = function() {
 
     this.alive = true;
@@ -14436,6 +14471,9 @@ Phaser.Text = function (game, x, y, text, style) {
     text = text || '';
     style = style || '';
 
+    PIXI.Text.call(this, text, style);
+
+    /*
     this.canvas = document.createElement("canvas");
     this.context = this.canvas.getContext("2d");
 
@@ -14452,10 +14490,12 @@ Phaser.Text = function (game, x, y, text, style) {
     
     this.updateText();
     this.dirty = false;
+    */
 
 };
 
-Phaser.Text.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Text.prototype);
+// Phaser.Text.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Text.prototype);
+Phaser.Text.prototype = Phaser.Utils.extend(true, PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
 //  Add our own custom methods
@@ -21317,10 +21357,10 @@ Phaser.Animation.Parser = {
 			));
 
             PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: frames[key].frame.x,
-                y: frames[key].frame.y,
-                width: frames[key].frame.w,
-                height: frames[key].frame.h
+                x: frames[i].frame.x,
+                y: frames[i].frame.y,
+                width: frames[i].frame.w,
+                height: frames[i].frame.h
             });
 
             if (frames[i].trimmed)
@@ -21335,7 +21375,7 @@ Phaser.Animation.Parser = {
                     frames[i].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
+                PIXI.TextureCache[uuid].realSize = frames[i].spriteSourceSize;
                 PIXI.TextureCache[uuid].trim.x = 0;
             }
         }
@@ -24944,11 +24984,11 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Checks for collision between two game objects. The objects can be Sprites, Groups or Tilemaps.
+    * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemaps.
     * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap or Group vs. Tilemap collisions.
     *
-    * @param object1 The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Tilemap
-    * @param object2 The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Tilemap
+    * @param object1 The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap
+    * @param object2 The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap
     * @param collideCallback An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
     * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collideCallback will only be called if processCallback returns true.
     * @param callbackContext The context in which to run the callbacks.
@@ -24968,55 +25008,65 @@ Phaser.Physics.Arcade.prototype = {
         {
             //  Can expand to support Buttons, Text, etc at a later date. For now these are the essentials.
 
-            //  SPRITE vs. SPRITE
-            if (object1.type == Phaser.SPRITE && object2.type == Phaser.SPRITE)
+            //  SPRITES
+            if (object1.type == Phaser.SPRITE)
             {
-                this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext);
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.TILEMAP)
+                {
+                    this.collideSpriteVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                }
             }
-            //  SPRITE vs. GROUP
-            else if (object1.type == Phaser.SPRITE && object2.type == Phaser.GROUP)
+            //  GROUPS
+            else if (object1.type == Phaser.GROUP)
             {
-                this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.TILEMAP)
+                {
+                    this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                }
             }
-            //  GROUP vs. SPRITE
-            else if (object1.type == Phaser.GROUP && object2.type == Phaser.SPRITE)
+            //  TILEMAPS
+            else if (object1.type == Phaser.TILEMAP)
             {
-                this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.collideSpriteVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+                }
             }
-            //  GROUP vs. GROUP
-            else if (object1.type == Phaser.GROUP && object2.type == Phaser.GROUP)
+            //  EMITTER
+            else if (object1.type == Phaser.EMITTER)
             {
-                this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
-            }
-            //  SPRITE vs. TILEMAP
-            else if (object1.type == Phaser.SPRITE && object2.type == Phaser.TILEMAP)
-            {
-                this.collideSpriteVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
-            }
-            //  TILEMAP vs. SPRITE
-            else if (object1.type == Phaser.TILEMAP && object2.type == Phaser.SPRITE)
-            {
-                this.collideSpriteVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
-            }
-            //  GROUP vs. TILEMAP
-            else if (object1.type == Phaser.GROUP && object2.type == Phaser.TILEMAP)
-            {
-                this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
-            }
-            //  TILEMAP vs. GROUP
-            else if (object1.type == Phaser.TILEMAP && object2.type == Phaser.GROUP)
-            {
-                this.collideGroupVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
-            }
-            //  EMITTER vs. TILEMAP
-            else if (object1.type == Phaser.EMITTER && object2.type == Phaser.TILEMAP)
-            {
-                this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
-            }
-            //  TILEMAP vs. EMITTER
-            else if (object1.type == Phaser.TILEMAP && object2.type == Phaser.EMITTER)
-            {
-                this.collideGroupVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.TILEMAP)
+                {
+                    this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                }
             }
         }
 
