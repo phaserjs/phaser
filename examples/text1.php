@@ -12,7 +12,7 @@
 
 (function () {
 
-	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { create: create });
+	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { create: create });
 
 	function create() {
 

@@ -686,9 +686,17 @@ Phaser.Group.prototype = {
 
 	removeAll: function () {
 
+		if (this._container.children.length == 0)
+		{
+			return;
+		}
+
 		do
 		{
-			this._container.children[0].events.onRemovedFromGroup.dispatch(this._container.children[0], this);
+			if (this._container.children[0].events)
+			{
+				this._container.children[0].events.onRemovedFromGroup.dispatch(this._container.children[0], this);
+			}
 			this._container.removeChild(this._container.children[0]);
 		}
 		while (this._container.children.length > 0);

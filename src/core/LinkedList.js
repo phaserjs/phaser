@@ -73,11 +73,16 @@ Phaser.LinkedList.prototype = {
 
     callAll: function (callback) {
 
+    	if (!this.first || !this.last)
+    	{
+    		return;
+    	}
+
 		var entity = this.first;
 		
 		do	
 		{
-			if (entity[callback])
+			if (entity && entity[callback])
 			{
 				entity[callback].call(entity);
 			}

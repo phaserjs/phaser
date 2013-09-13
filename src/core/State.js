@@ -1,7 +1,7 @@
 /**
 * State
 *
-* This is a base State class which can be extended if you are creating your game with TypeScript.
+* This is a base State class which can be extended if you are creating your own game.
 * It provides quick access to common functions such as the camera, cache, input, match, sound and more.
 *
 * @package    Phaser.State
@@ -18,7 +18,7 @@ Phaser.State = function () {
     this.cache = null;
     this.input = null;
     this.load = null;
-    // this.math = null;
+    this.math = null;
     this.sound = null;
     this.stage = null;
     this.time = null;
@@ -39,7 +39,7 @@ Phaser.State.prototype = {
         this.cache = game.cache;
         this.input = game.input;
         this.load = game.load;
-        // this.math = game.math;
+        this.math = game.math;
         this.sound = game.sound;
         this.stage = game.stage;
         this.time = game.time;

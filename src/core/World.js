@@ -107,7 +107,21 @@ Phaser.World.prototype = {
             this.bounds.height = height;
         }
 
-	}
+	},
+
+    /**
+    * Destroyer of worlds.
+    */
+    destroy: function () {
+
+        this.camera.x = 0;
+        this.camera.y = 0;
+
+        this.game.input.reset(true);
+
+        this.group.removeAll();
+
+    }
 	
 };
 

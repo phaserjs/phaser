@@ -5,6 +5,9 @@ Phaser.Text = function (game, x, y, text, style) {
     text = text || '';
     style = style || '';
 
+    PIXI.Text.call(this, text, style);
+
+    /*
     this.canvas = document.createElement("canvas");
     this.context = this.canvas.getContext("2d");
 
@@ -21,10 +24,12 @@ Phaser.Text = function (game, x, y, text, style) {
     
     this.updateText();
     this.dirty = false;
+    */
 
 };
 
-Phaser.Text.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Text.prototype);
+// Phaser.Text.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Text.prototype);
+Phaser.Text.prototype = Phaser.Utils.extend(true, PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
 //  Add our own custom methods

@@ -378,7 +378,7 @@ Phaser.Input.prototype = {
     **/
     reset: function (hard) {
 
-        hard = hard || false;
+        if (typeof hard == 'undefined') { hard = false; }
 
         this.keyboard.reset();
         this.mousePointer.reset();

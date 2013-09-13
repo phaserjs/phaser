@@ -151,6 +151,7 @@ Phaser.StateManager.prototype = {
 		{
 			// console.log('Phaser.StateManager.addState: Object given');
 			newState = state;
+			newState.game = this.game;
 		}
 		else if (typeof state === 'function')
 		{
@@ -237,9 +238,10 @@ Phaser.StateManager.prototype = {
 
 	        if (clearWorld) {
 
-	            //this.game.world.destroy();
+	            this.game.world.destroy();
 
-	            if (clearCache == true) {
+	            if (clearCache == true)
+	            {
 	                this.game.cache.destroy();
 	            }
 	        }
