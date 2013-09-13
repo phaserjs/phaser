@@ -144,11 +144,11 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Checks for collision between two game objects. The objects can be Sprites, Groups or Tilemaps.
+    * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemaps.
     * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap or Group vs. Tilemap collisions.
     *
-    * @param object1 The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Tilemap
-    * @param object2 The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Tilemap
+    * @param object1 The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap
+    * @param object2 The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap
     * @param collideCallback An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
     * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collideCallback will only be called if processCallback returns true.
     * @param callbackContext The context in which to run the callbacks.
@@ -168,53 +168,71 @@ Phaser.Physics.Arcade.prototype = {
         {
             //  Can expand to support Buttons, Text, etc at a later date. For now these are the essentials.
 
-            //  SPRITE vs. SPRITE
-            if (object1.type == Phaser.SPRITE && object2.type == Phaser.SPRITE)
+            //  SPRITES
+            if (object1.type == Phaser.SPRITE)
             {
-                this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext);
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.TILEMAP)
+                {
+                    this.collideSpriteVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                }
             }
-            //  SPRITE vs. GROUP
-            else if (object1.type == Phaser.SPRITE && object2.type == Phaser.GROUP)
+            //  GROUPS
+            else if (object1.type == Phaser.GROUP)
             {
-                this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.TILEMAP)
+                {
+                    this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                }
             }
-            //  GROUP vs. SPRITE
-            else if (object1.type == Phaser.GROUP && object2.type == Phaser.SPRITE)
+            //  TILEMAPS
+            else if (object1.type == Phaser.TILEMAP)
             {
-                this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.collideSpriteVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+                }
             }
-            //  GROUP vs. GROUP
-            else if (object1.type == Phaser.GROUP && object2.type == Phaser.GROUP)
+            //  EMITTER
+            else if (object1.type == Phaser.EMITTER)
             {
-                this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
-            }
-            //  SPRITE vs. TILEMAP
-            else if (object1.type == Phaser.SPRITE && object2.type == Phaser.TILEMAP)
-            {
-                this.collideSpriteVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
-            }
-            //  TILEMAP vs. SPRITE
-            else if (object1.type == Phaser.TILEMAP && object2.type == Phaser.SPRITE)
-            {
-                this.collideSpriteVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
-            }
-            //  GROUP vs. TILEMAP
-            else if (object1.type == Phaser.GROUP && object2.type == Phaser.TILEMAP)
-            {
-                this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
-            }
-            //  TILEMAP vs. GROUP
-            else if (object1.type == Phaser.TILEMAP && object2.type == Phaser.GROUP)
-            {
-                this.collideGroupVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.TILEMAP)
+                {
+                    this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                }
             }
         }
 
         return (this._total > 0);
 
     },
-
-    //  collideSpriteVsWorld
 
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext) {
 
@@ -352,72 +370,8 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-    /**
-    * Checks for overlaps between two objects using the world QuadTree. Can be GameObject vs. GameObject, GameObject vs. Group or Group vs. Group.
-    * Note: Does not take the objects scrollFactor into account. All overlaps are check in world space.
-    * @param object1 The first GameObject or Group to check. If null the world.group is used.
-    * @param object2 The second GameObject or Group to check.
-    * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
-    * @returns {boolean} true if the objects overlap, otherwise false.
-    overlap: function (object1, object2, notifyCallback, processCallback, callbackContext) {
-
-        object2 = object2 || null;
-        notifyCallback = notifyCallback || null;
-        processCallback = processCallback || this.separate;
-        callbackContext = callbackContext || this;
-
-        //  You have to give an object first
-        if (object.type )
-
-        //  World vs. World check
-        if (object1 == null)
-        {
-            //  Scan the entire display list, comparing every object! (ouch)
-            if (this.game.world._container.first._iNext)
-            {
-                var currentNode = this.game.world._container.first._iNext;
-                    
-                do  
-                {
-                    if (checkExists == false || (checkExists && currentNode.exists))
-                    {
-                        callback.call(callbackContext, currentNode);
-                    }
-
-                    currentNode = currentNode._iNext;
-                }
-                while (currentNode != this.game.world._container.last._iNext);
-            }
-        }
-
-
-
-        //  Get the ships top-most ID. If the length of that ID is 1 then we can ignore every other result, 
-        //  it's simply not colliding with anything :)
-        var potentials = this.quadTree.retrieve(object1);
-        var output = [];
-
-        for (var i = 0, len = potentials.length; i < len; i++)
-        {
-            if (processCallback.call(callbackContext, object1.body, potentials[i]))
-            {
-                if (notifyCallback)
-                {
-                    notifyCallback.call(callbackContext, object1, potentials[i].sprite);
-                }
-
-                output.push(potentials[i]);
-            }
-        }
-
-        return (output.length);
-
-    },
-    */
-
 	 /**
-     * The core Collision separation function to separate two physics bodies.
+     * The core separation function to separate two physics bodies.
      * @param body1 The first Sprite.Body to separate
      * @param body2 The second Sprite.Body to separate
      * @returns {boolean} Returns true if the bodies were separated, otherwise false.

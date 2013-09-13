@@ -12,7 +12,7 @@
 
 (function () {
 
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
     function preload() {
 
@@ -22,10 +22,8 @@
 
     }
 
-    var p;
+    var balls;
     var map;
-    var test = [];
-    var g;
 
     function create() {
 
@@ -36,22 +34,21 @@
         map = game.add.tilemap(0, 0, 'level1');
         map.setCollisionByIndex([9,10,11,14,15,16,18,19,22,23,24,32,37,38], true, true, true, true);
 
-        p = game.add.emitter(300, 50, 500);
-        p.bounce = 0.5;
-        p.makeParticles('balls', [0,1,2,3,4,5], 500, 1);
-        p.minParticleSpeed.setTo(-150, 150);
-        p.maxParticleSpeed.setTo(100, 100);
-        p.gravity = 8;
-        p.start(false, 5000, 50);
+        balls = game.add.emitter(300, 50, 500);
+        balls.bounce = 0.5;
+        balls.makeParticles('balls', [0,1,2,3,4,5], 500, 1);
+        balls.minParticleSpeed.setTo(-150, 150);
+        balls.maxParticleSpeed.setTo(100, 100);
+        balls.gravity = 8;
+        balls.start(false, 5000, 50);
 
-        game.add.tween(p).to({ x: 4000 }, 7500, Phaser.Easing.Quadratic.InOut, true, 0, 1000, true);
+        game.add.tween(balls).to({ x: 4000 }, 7500, Phaser.Easing.Sinusoidal.InOut, true, 0, 1000, true);
 
     }
 
     function update() {
 
-        map.collide(g);
-        map.collide(p);
+        game.physics.collide(balls, map);
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
@@ -71,9 +68,6 @@
             game.camera.y += 8;
         }
 
-    }
-
-    function render() {
     }
 
 })();

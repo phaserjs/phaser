@@ -1,3 +1,5 @@
+<a href="http://yui.2clics.net/">Minify it</a><br />
+
 <textarea style="width: 800px; height: 800px">
 <?php
 	
