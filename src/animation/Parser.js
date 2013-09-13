@@ -113,10 +113,10 @@ Phaser.Animation.Parser = {
 			));
 
             PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: frames[key].frame.x,
-                y: frames[key].frame.y,
-                width: frames[key].frame.w,
-                height: frames[key].frame.h
+                x: frames[i].frame.x,
+                y: frames[i].frame.y,
+                width: frames[i].frame.w,
+                height: frames[i].frame.h
             });
 
             if (frames[i].trimmed)
@@ -131,7 +131,7 @@ Phaser.Animation.Parser = {
                     frames[i].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
+                PIXI.TextureCache[uuid].realSize = frames[i].spriteSourceSize;
                 PIXI.TextureCache[uuid].trim.x = 0;
             }
         }
