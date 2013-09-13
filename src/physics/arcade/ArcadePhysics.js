@@ -25,16 +25,19 @@ Phaser.Physics.Arcade = function (game) {
     this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 	this.quadTreeID = 0;
 
-	//	avoid gc spikes by caching these values for re-use
-	this._obj1Bounds = new Phaser.Rectangle;
-	this._obj2Bounds = new Phaser.Rectangle;
+	//	Avoid gc spikes by caching these values for re-use
+	this._bounds1 = new Phaser.Rectangle;
+	this._bounds2 = new Phaser.Rectangle;
 	this._overlap = 0;
 	this._maxOverlap = 0;
-	this._obj1Velocity = 0;
-	this._obj2Velocity = 0;
-	this._obj1NewVelocity = 0;
-	this._obj2NewVelocity = 0;
+	this._velocity1 = 0;
+	this._velocity2 = 0;
+	this._newVelocity1 = 0;
+	this._newVelocity2 = 0;
 	this._average = 0;
+    this._mapData = [];
+    this._result = false;
+    this._total = 0;
 
 };
 
@@ -140,90 +143,112 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-    //  Collides the given object with everything in the world quadtree
-
-    //  You need to provide 2 objects to check for collision against
-    //  collideCallback is an optional callback, it will be sent the 2 objects in the same order you supplied them to the collide function
-    //  callbackContext is the context in which the callback is called
-    //  processCallback - an optional additional check. If the 2 objects collide, the processCallback will be run. If it returns true they'll be sent to your collideCallback.
+    /**
+    * Checks for collision between two game objects. The objects can be Sprites, Groups or Tilemaps.
+    * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap or Group vs. Tilemap collisions.
+    *
+    * @param object1 The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Tilemap
+    * @param object2 The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Tilemap
+    * @param collideCallback An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collideCallback will only be called if processCallback returns true.
+    * @param callbackContext The context in which to run the callbacks.
+    * @returns {boolean} true if any collisions were detected, otherwise false.
+    **/
     collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
 
         collideCallback = collideCallback || null;
         processCallback = processCallback || null;
         callbackContext = callbackContext || collideCallback;
 
-        var result = false;
+        this._result = false;
+        this._total = 0;
 
         //  Only collide valid objects
         if (object1 && object2 && object1.exists && object2.exists)
         {
-            //  Need to support:
-
-            //  game.physics.collide(sprite1, sprite2)
-            //  game.physics.collide(sprite, group)
-            //  game.physics.collide(group1, group2)
-            //  game.physics.collide(sprite, tilemap)
-            //  game.physics.collide(group, tilemap)
-
             //  Can expand to support Buttons, Text, etc at a later date. For now these are the essentials.
 
+            //  SPRITE vs. SPRITE
             if (object1.type == Phaser.SPRITE && object2.type == Phaser.SPRITE)
             {
-                result = this.separate(object1.body, object2.body);
-
-                if (result && processCallback)
-                {
-                    result = processCallback.call(callbackContext, object1, object2);
-                }
+                this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext);
             }
+            //  SPRITE vs. GROUP
             else if (object1.type == Phaser.SPRITE && object2.type == Phaser.GROUP)
             {
-                result = this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+                this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
             }
+            //  GROUP vs. SPRITE
             else if (object1.type == Phaser.GROUP && object2.type == Phaser.SPRITE)
             {
-
+                this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
             }
-
-
+            //  GROUP vs. GROUP
+            else if (object1.type == Phaser.GROUP && object2.type == Phaser.GROUP)
+            {
+                this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
+            }
+            //  SPRITE vs. TILEMAP
+            else if (object1.type == Phaser.SPRITE && object2.type == Phaser.TILEMAP)
+            {
+                this.collideSpriteVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+            }
+            //  TILEMAP vs. SPRITE
+            else if (object1.type == Phaser.TILEMAP && object2.type == Phaser.SPRITE)
+            {
+                this.collideSpriteVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+            }
+            //  GROUP vs. TILEMAP
+            else if (object1.type == Phaser.GROUP && object2.type == Phaser.TILEMAP)
+            {
+                this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+            }
+            //  TILEMAP vs. GROUP
+            else if (object1.type == Phaser.TILEMAP && object2.type == Phaser.GROUP)
+            {
+                this.collideGroupVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+            }
         }
 
-        return result;
-
-        // return this.overlap(object, null, notifyCallback, this.separate, callbackContext);
+        return (this._total > 0);
 
     },
 
     //  collideSpriteVsWorld
 
-    collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext)
-    {
-        //  What is the sprite colliding with in the quadtree?
-        this._potentials = this.quadTree.retrieve(sprite);
-        this._output.length = 0;
+    collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext) {
 
-        for (var i = 0, len = potentials.length; i < len; i++)
+        this.separate(sprite1.body, sprite2.body);
+
+        if (this._result)
         {
-            //  We have our potential suspects, are they in this group?
-            if (potentials[i].sprite.group == group)
+            //  They collided, is there a custom process callback?
+            if (processCallback)
             {
-                if (this.separate(sprite, potentials[i].sprite);
-
-            }
-
-
-            if (processCallback.call(callbackContext, object1.body, potentials[i]))
-            {
-                if (notifyCallback)
+                if (processCallback.call(callbackContext, sprite1, sprite2))
                 {
-                    notifyCallback.call(callbackContext, object1, potentials[i].sprite);
-                }
+                    this._total++;
 
-                output.push(potentials[i]);
+                    if (collideCallback)
+                    {
+                        collideCallback.call(callbackContext, sprite1, sprite2);
+                    }
+                }
+            }
+            else
+            {
+                this._total++;
+
+                if (collideCallback)
+                {
+                    collideCallback.call(callbackContext, sprite1, sprite2);
+                }
             }
         }
 
+    },
 
+    collideGroupVsTilemap: function (group, tilemap, collideCallback, processCallback, callbackContext) {
 
         if (group._container.first._iNext)
         {
@@ -231,37 +256,98 @@ Phaser.Physics.Arcade.prototype = {
                 
             do  
             {
-                if (currentNode.exists && currentNode.type == Phaser.SPRITE)
+                if (currentNode.exists)
                 {
-                    result = this.separate(sprite, currentNode);
+                    this.collideSpriteVsTilemap(currentNode, tilemap, collideCallback, processCallback, callbackContext);
                 }
-
                 currentNode = currentNode._iNext;
             }
             while (currentNode != group._container.last._iNext);
-
         }
-
 
     },
 
-    collideGroup: function (group, notifyCallback, callbackContext) {
+    collideSpriteVsTilemap: function (sprite, tilemap, collideCallback, processCallback, callbackContext) {
 
-        notifyCallback = notifyCallback || null;
-        callbackContext = callbackContext || notifyCallback;
+        this._mapData = tilemap.collisionLayer.getTileOverlaps(sprite);
 
-        for (var g = 0, len = group.length; g < len; g++)
+        //  If the sprite actually collided with the tilemap then _mapData contains an array of the tiles it collided with
+        var i = this._mapData.length;
+
+        while (i--)
         {
-            for (var i = 0, gi = group.length; i < gi; i++)
+            if (processCallback)
             {
-                if (this.separate(group[g].body, group[i].body))
+                //  We've got a custom process callback to hit first
+                if (processCallback.call(callbackContext, sprite, this._mapData[i].tile))
                 {
-                    if (notifyCallback)
+                    this._total++;
+
+                    if (collideCallback)
                     {
-                        notifyCallback.call(callbackContext, group[g], group[i].sprite);
+                        collideCallback.call(callbackContext, sprite, this._mapData[i].tile);
                     }
                 }
             }
+            else
+            {
+                this._total++;
+
+                if (collideCallback)
+                {
+                    collideCallback.call(callbackContext, sprite, this._mapData[i].tile);
+                }
+            }
+        }
+
+    },
+
+    collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext) {
+
+        //  What is the sprite colliding with in the quadtree?
+        this._potentials = this.quadTree.retrieve(sprite);
+
+        for (var i = 0, len = this._potentials.length; i < len; i++)
+        {
+            //  We have our potential suspects, are they in this group?
+            if (this._potentials[i].sprite.group == group)
+            {
+                this.separate(sprite.body, this._potentials[i]);
+
+                if (this._result && processCallback)
+                {
+                    this._result = processCallback.call(callbackContext, sprite, this._potentials[i].sprite);
+                }
+
+                if (this._result)
+                {
+                    this._total++;
+
+                    if (collideCallback)
+                    {
+                        collideCallback.call(callbackContext, sprite, this._potentials[i].sprite);
+                    }
+                }
+            }
+        }
+
+    },
+
+    collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext) {
+
+        if (group1._container.first._iNext)
+        {
+            var currentNode = group1._container.first._iNext;
+                
+            do  
+            {
+                if (currentNode.exists)
+                {
+                    this.collideSpriteVsGroup(currentNode, group2, collideCallback, processCallback, callbackContext);
+                }
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != group1._container.last._iNext);
         }
 
     },
@@ -274,7 +360,6 @@ Phaser.Physics.Arcade.prototype = {
     * @param notifyCallback A callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
     * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then notifyCallback will only be called if processCallback returns true.
     * @returns {boolean} true if the objects overlap, otherwise false.
-    */
     overlap: function (object1, object2, notifyCallback, processCallback, callbackContext) {
 
         object2 = object2 || null;
@@ -329,6 +414,7 @@ Phaser.Physics.Arcade.prototype = {
         return (output.length);
 
     },
+    */
 
 	 /**
      * The core Collision separation function to separate two physics bodies.
@@ -342,12 +428,8 @@ Phaser.Physics.Arcade.prototype = {
         {
             body1.postUpdate();
             body2.postUpdate();
-            return true;
+            this._result = true;
         }
-
-        return false;
-
-        return 
 
     },
 
@@ -372,10 +454,10 @@ Phaser.Physics.Arcade.prototype = {
         {
             //  Check if the X hulls actually overlap
 
-            this._obj1Bounds.setTo(body1.x - ((body1.deltaX() > 0) ? body1.deltaX() : 0), body1.lastY, body1.width + ((body1.deltaX() > 0) ? body1.deltaX() : -body1.deltaX()), body1.height);
-            this._obj2Bounds.setTo(body2.x - ((body2.deltaX() > 0) ? body2.deltaX() : 0), body2.lastY, body2.width + ((body2.deltaX() > 0) ? body2.deltaX() : -body2.deltaX()), body2.height);
+            this._bounds1.setTo(body1.x - ((body1.deltaX() > 0) ? body1.deltaX() : 0), body1.lastY, body1.width + ((body1.deltaX() > 0) ? body1.deltaX() : -body1.deltaX()), body1.height);
+            this._bounds2.setTo(body2.x - ((body2.deltaX() > 0) ? body2.deltaX() : 0), body2.lastY, body2.width + ((body2.deltaX() > 0) ? body2.deltaX() : -body2.deltaX()), body2.height);
 
-            if ((this._obj1Bounds.right > this._obj2Bounds.x) && (this._obj1Bounds.x < this._obj2Bounds.right) && (this._obj1Bounds.bottom > this._obj2Bounds.y) && (this._obj1Bounds.y < this._obj2Bounds.bottom))
+            if ((this._bounds1.right > this._bounds2.x) && (this._bounds1.x < this._bounds2.right) && (this._bounds1.bottom > this._bounds2.y) && (this._bounds1.y < this._bounds2.bottom))
             {
                 this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
 
@@ -414,8 +496,8 @@ Phaser.Physics.Arcade.prototype = {
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
         if (this._overlap != 0)
         {
-            this._obj1Velocity = body1.velocity.x;
-            this._obj2Velocity = body2.velocity.x;
+            this._velocity1 = body1.velocity.x;
+            this._velocity2 = body2.velocity.x;
 
             if (!body1.immovable && !body2.immovable)
             {
@@ -423,23 +505,23 @@ Phaser.Physics.Arcade.prototype = {
                 body1.x = body1.x - this._overlap;
                 body2.x += this._overlap;
 
-                this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
-                this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
-                this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
-                this._obj1NewVelocity -= this._average;
-                this._obj2NewVelocity -= this._average;
-                body1.velocity.x = this._average + this._obj1NewVelocity * body1.bounce.x;
-                body2.velocity.x = this._average + this._obj2NewVelocity * body2.bounce.x;
+                this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                this._newVelocity1 -= this._average;
+                this._newVelocity2 -= this._average;
+                body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
+                body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
             }
             else if (!body1.immovable)
             {
                 body1.x = body1.x - this._overlap;
-                body1.velocity.x = this._obj2Velocity - this._obj1Velocity * body1.bounce.x;
+                body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
             }
             else if (!body2.immovable)
             {
                 body2.x += this._overlap;
-                body2.velocity.x = this._obj1Velocity - this._obj2Velocity * body2.bounce.x;
+                body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
             }
 
             return true;
@@ -471,10 +553,10 @@ Phaser.Physics.Arcade.prototype = {
         if (body1.deltaY() != body2.deltaY())
         {
             //  Check if the Y hulls actually overlap
-            this._obj1Bounds.setTo(body1.x, body1.y - ((body1.deltaY() > 0) ? body1.deltaY() : 0), body1.width, body1.height + body1.deltaAbsY());
-            this._obj2Bounds.setTo(body2.x, body2.y - ((body2.deltaY() > 0) ? body2.deltaY() : 0), body2.width, body2.height + body2.deltaAbsY());
+            this._bounds1.setTo(body1.x, body1.y - ((body1.deltaY() > 0) ? body1.deltaY() : 0), body1.width, body1.height + body1.deltaAbsY());
+            this._bounds2.setTo(body2.x, body2.y - ((body2.deltaY() > 0) ? body2.deltaY() : 0), body2.width, body2.height + body2.deltaAbsY());
 
-            if ((this._obj1Bounds.right > this._obj2Bounds.x) && (this._obj1Bounds.x < this._obj2Bounds.right) && (this._obj1Bounds.bottom > this._obj2Bounds.y) && (this._obj1Bounds.y < this._obj2Bounds.bottom))
+            if ((this._bounds1.right > this._bounds2.x) && (this._bounds1.x < this._bounds2.right) && (this._bounds1.bottom > this._bounds2.y) && (this._bounds1.y < this._bounds2.bottom))
             {
                 this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
 
@@ -513,8 +595,8 @@ Phaser.Physics.Arcade.prototype = {
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
         if (this._overlap != 0)
         {
-            this._obj1Velocity = body1.velocity.y;
-            this._obj2Velocity = body2.velocity.y;
+            this._velocity1 = body1.velocity.y;
+            this._velocity2 = body2.velocity.y;
 
             if (!body1.immovable && !body2.immovable)
             {
@@ -522,18 +604,18 @@ Phaser.Physics.Arcade.prototype = {
                 body1.y = body1.y - this._overlap;
                 body2.y += this._overlap;
 
-                this._obj1NewVelocity = Math.sqrt((this._obj2Velocity * this._obj2Velocity * body2.mass) / body1.mass) * ((this._obj2Velocity > 0) ? 1 : -1);
-                this._obj2NewVelocity = Math.sqrt((this._obj1Velocity * this._obj1Velocity * body1.mass) / body2.mass) * ((this._obj1Velocity > 0) ? 1 : -1);
-                this._average = (this._obj1NewVelocity + this._obj2NewVelocity) * 0.5;
-                this._obj1NewVelocity -= this._average;
-                this._obj2NewVelocity -= this._average;
-                body1.velocity.y = this._average + this._obj1NewVelocity * body1.bounce.y;
-                body2.velocity.y = this._average + this._obj2NewVelocity * body2.bounce.y;
+                this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                this._newVelocity1 -= this._average;
+                this._newVelocity2 -= this._average;
+                body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
+                body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
             }
             else if (!body1.immovable)
             {
                 body1.y = body1.y - this._overlap;
-                body1.velocity.y = this._obj2Velocity - this._obj1Velocity * body1.bounce.y;
+                body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
                 //  This is special case code that handles things like horizontal moving platforms you can ride
                 if (body2.active && body2.moves && (body1.deltaY() > body2.deltaY()))
                 {
@@ -543,7 +625,7 @@ Phaser.Physics.Arcade.prototype = {
             else if (!body2.immovable)
             {
                 body2.y += this._overlap;
-                body2.velocity.y = this._obj1Velocity - this._obj2Velocity * body2.bounce.y;
+                body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
                 //  This is special case code that handles things like horizontal moving platforms you can ride
                 if (body1.sprite.active && body1.moves && (body1.deltaY() < body2.deltaY()))
                 {
@@ -602,9 +684,9 @@ Phaser.Physics.Arcade.prototype = {
 
         if (object.deltaX() != 0)
         {
-            this._obj1Bounds.setTo(object.x, object.y, object.width, object.height);
+            this._bounds1.setTo(object.x, object.y, object.width, object.height);
 
-            if ((this._obj1Bounds.right > x) && (this._obj1Bounds.x < x + width) && (this._obj1Bounds.bottom > y) && (this._obj1Bounds.y < y + height))
+            if ((this._bounds1.right > x) && (this._bounds1.x < x + width) && (this._bounds1.bottom > y) && (this._bounds1.y < y + height))
             {
                 //  The hulls overlap, let's process it
                 this._maxOverlap = object.deltaAbsX() + this.OVERLAP_BIAS;
@@ -689,9 +771,9 @@ Phaser.Physics.Arcade.prototype = {
 
         if (object.deltaY() != 0)
         {
-            this._obj1Bounds.setTo(object.x, object.y, object.width, object.height);
+            this._bounds1.setTo(object.x, object.y, object.width, object.height);
 
-            if ((this._obj1Bounds.right > x) && (this._obj1Bounds.x < x + width) && (this._obj1Bounds.bottom > y) && (this._obj1Bounds.y < y + height))
+            if ((this._bounds1.right > x) && (this._bounds1.x < x + width) && (this._bounds1.bottom > y) && (this._bounds1.y < y + height))
             {
                 //  The hulls overlap, let's process it
 
