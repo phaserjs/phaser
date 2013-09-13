@@ -309,9 +309,9 @@ Phaser.Game.prototype = {
 
 			this.stage.boot();
 			this.world.boot();
-			this.state.boot();
 			this.input.boot();
 			this.sound.boot();
+			this.state.boot();
 
 			if (this.renderType == Phaser.CANVAS)
 			{
@@ -371,9 +371,6 @@ Phaser.Game.prototype = {
         this._loadComplete = true;
 
         this.state.loadComplete();
-
-        //	?
-		// this.load.onLoadComplete.remove(this.loadComplete, this);
 
     },
 

@@ -1,6 +1,6 @@
 <?php
-	//	All JS files in build order.
-	//	Much easier for debugging re: line numbers
+	//	All JS files in build order. Much easier for debugging
+	//	<xscript src="../src/pixi/extras/Spine.js"></script> <xscript src="../src/pixi/display/MovieClip.js"></script>
 ?>
 	<script src="../src/Intro.js"></script>
 	<script src="../src/pixi/Pixi.js"></script>

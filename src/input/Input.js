@@ -291,14 +291,6 @@ Phaser.Input.prototype = {
 	    this.hitCanvas.height = 1;
         this.hitContext = this.hitCanvas.getContext('2d');
 
-        //  Debugging
-        // this.hitCanvas.style['width'] = '200px';
-        // this.hitCanvas.style['height'] = '200px';
-        // this.hitCanvas.style['position'] = 'absolute';
-        // this.hitCanvas.style['left'] = '810px';
-        // this.hitCanvas.style['backgroundColor'] = '#ef0000';
-        // Phaser.Canvas.addToDOM(this.hitCanvas);
-
         this.mouse.start();
         this.keyboard.start();
         this.touch.start();
@@ -377,6 +369,11 @@ Phaser.Input.prototype = {
     * @param hard {bool} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
     **/
     reset: function (hard) {
+
+        if (this.game.isBooted == false)
+        {
+            return;
+        }
 
         if (typeof hard == 'undefined') { hard = false; }
 
