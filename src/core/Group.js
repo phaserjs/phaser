@@ -91,11 +91,14 @@ Phaser.Group.prototype = {
 
 	},
 
-	create: function (x, y, key, frame) {
+	create: function (x, y, key, frame, exists) {
+
+		if (typeof exists == 'undefined') { exists = true; }
 
 		var child = new Phaser.Sprite(this.game, x, y, key, frame);
 
 		child.group = this;
+		child.exists = exists;
 
 		if (child.events)
 		{
@@ -379,7 +382,7 @@ Phaser.Group.prototype = {
 		checkVisible = checkVisible || false;
 		operation = operation || 0;
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -430,7 +433,7 @@ Phaser.Group.prototype = {
 
 		var args = Array.prototype.splice.call(arguments, 2);
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -453,7 +456,7 @@ Phaser.Group.prototype = {
 
 		if (typeof checkExists == 'undefined') { checkExists = false; }
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -474,7 +477,7 @@ Phaser.Group.prototype = {
 
 	forEachAlive: function (callback, callbackContext) {
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -495,7 +498,7 @@ Phaser.Group.prototype = {
 
 	forEachDead: function (callback, callbackContext) {
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -525,7 +528,7 @@ Phaser.Group.prototype = {
 			state = true;
 		}
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -553,7 +556,7 @@ Phaser.Group.prototype = {
     */
 	getFirstAlive: function () {
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -581,7 +584,7 @@ Phaser.Group.prototype = {
     */
 	getFirstDead: function () {
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -610,7 +613,7 @@ Phaser.Group.prototype = {
 
 		var total = -1;
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -639,7 +642,7 @@ Phaser.Group.prototype = {
 
 		var total = -1;
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -668,6 +671,11 @@ Phaser.Group.prototype = {
     * @return {Any} A random child of this Group.
     */
 	getRandom: function (startIndex, length) {
+
+		if (this._container.children.length == 0)
+		{
+			return null;
+		}
 
 		startIndex = startIndex || 0;
 		length = length || this._container.children.length;
@@ -704,6 +712,11 @@ Phaser.Group.prototype = {
 	},
 
 	removeBetween: function (startIndex, endIndex) {
+
+		if (this._container.children.length == 0)
+		{
+			return;
+		}
 
 		if (startIndex > endIndex || startIndex < 0 || endIndex > this._container.children.length)
 		{

@@ -113,6 +113,12 @@ Although Phaser 1.0 is a brand new release it is born from years of experience b
 
 ![Phaser Particles](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_particles.png)
 
+Change Log
+----------
+
+* Added checks into every Group function to ensure that the Group has children before running them.
+* Added optional flag to Group.create which allows you to set the default exists state of the Sprites.
+
 Known Issues
 ------------
 
