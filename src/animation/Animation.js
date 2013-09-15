@@ -91,10 +91,17 @@ Phaser.Animation.prototype = {
 	/**
     * Stop playing animation and set it finished.
     */
-    stop: function () {
+    stop: function (resetFrame) {
+
+        if (typeof resetFrame == 'undefined') { resetFrame = false; }
 
         this.isPlaying = false;
         this.isFinished = true;
+
+        if (resetFrame)
+        {
+            this.currentFrame = this._frameData.getFrame(this._frames[0]);
+        }
 
     },
 

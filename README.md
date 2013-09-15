@@ -20,6 +20,10 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 Latest Update
 -------------
 
+September 15th 2013
+
+Version 1.0.1 and 1.0.2 have been tagged and released. See the Change Log for full details. As 1.0 is so fresh please expect small minor updates every few days, but we will be sure to tag them.
+
 September 13th 2013
 
 We're very pleased to have finally shipped the 1.0 release of Phaser. This version represents many months of hard work, feedback and refactoring based on the previous 0.5 through to 0.97 releases. You can see the full gory details in our change log.
@@ -33,6 +37,21 @@ Thank you to everyone who has encouraged us along the way. To those of you who w
 Phaser is everything we ever wanted from an HTML5 game framework. It will power all our client work going forward and we look forward to you joining us on this journey.
 
 ![Blasteroids](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_blaster.png)
+
+Change Log
+----------
+
+Version 1.0.2
+
+* Added optional parameter to Animation.stop: resetFrame. If true the animation will be stopped and then the current frame reset to the first frame in the animation.
+
+Version 1.0.1
+
+* Added checks into every Group function to ensure that the Group has children before running them.
+* Added optional flag to Group.create which allows you to set the default exists state of the Sprites.
+* Sprite.animation.stop no longer needs an animation name parameter, will default to stopping the current animation.
+* Fixed the license in package.json
+* Fixed a logic bug in the separateTileX function that would sometimes cause tunneling of big sprites through small tiles.
 
 Requirements
 ------------
@@ -112,17 +131,6 @@ We use Phaser every day on our many client projects. As a result it's constantly
 Although Phaser 1.0 is a brand new release it is born from years of experience building some of the biggest HTML5 games out there. We're not saying it is 100% bug free, but we use it for our client work every day, so issues get resolved <em>fast</em> and we stay on-top of the changing browser landscape.
 
 ![Phaser Particles](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_particles.png)
-
-Change Log
-----------
-
-Version 1.0.1
-
-* Added checks into every Group function to ensure that the Group has children before running them.
-* Added optional flag to Group.create which allows you to set the default exists state of the Sprites.
-* Sprite.animation.stop no longer needs an animation name parameter, will default to stopping the current animation.
-* Fixed the license in package.json
-* Fixed a logic bug in the separateTileX function that would sometimes cause tunneling of big sprites through small tiles.
 
 Known Issues
 ------------

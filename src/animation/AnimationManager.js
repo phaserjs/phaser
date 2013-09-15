@@ -166,21 +166,23 @@ Phaser.AnimationManager.prototype = {
 	* Stop animation. If a name is given that specific animation is stopped, otherwise the current one is stopped.
 	* Current animation will be automatically set to the stopped one.
 	*/
-	stop: function (name) {
+	stop: function (name, resetFrame) {
+
+		if (typeof resetFrame == 'undefined') { resetFrame = false; }
 
 		if (typeof name == 'string')
 		{
 			if (this._anims[name])
 			{
 				this.currentAnim = this._anims[name];
-				this.currentAnim.stop();
+				this.currentAnim.stop(resetFrame);
 			}
 		}
 		else
 		{
 			if (this.currentAnim)
 			{
-				this.currentAnim.stop();
+				this.currentAnim.stop(resetFrame);
 			}
 		}
 

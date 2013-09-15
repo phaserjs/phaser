@@ -34,7 +34,7 @@
         bg.scrollFactor.setTo(0, 0);
 
         map = game.add.tilemap(0, 0, 'level1');
-        map.setCollisionRange(1, 20, true, true, true, true);
+        map.setCollisionRange(1, 12, true, true, true, true);
         map.setCollisionRange(18, 47, true, true, true, true);
         map.setCollisionRange(53, 69, true, true, true, true);
 
