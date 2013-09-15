@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.0 - Built at: {buildDate}
+* v1.0.1 - Built at: {buildDate}
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *

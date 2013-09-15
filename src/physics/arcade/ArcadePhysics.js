@@ -626,7 +626,6 @@ Phaser.Physics.Arcade.prototype = {
      */
     separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
 
-        //  Yes, the Y first
         var separatedY = this.separateTileY(object.body, x, y, width, height, mass, collideUp, collideDown, separateY);
         var separatedX = this.separateTileX(object.body, x, y, width, height, mass, collideLeft, collideRight, separateX);
 
@@ -671,34 +670,32 @@ Phaser.Physics.Arcade.prototype = {
                 //  TODO - We need to check if we're already inside of the tile, i.e. jumping through an n-way tile
                 //  in which case we didn't ought to separate because it'll look like tunneling
 
-                if (object.deltaX() < 0)
+                if (object.deltaX() > 0)
+                {
+                    //  Going right ...
+                    this._overlap = object.x + object.width - x;
+
+                    if ((this._overlap > this._maxOverlap) || !object.allowCollision.right || !collideLeft)
+                    {
+                        this._overlap = 0;
+                    }
+                    else
+                    {
+                        object.touching.right = true;
+                    }
+                }
+                else if (object.deltaX() < 0)
                 {
                     //  Going left ...
                     this._overlap = object.x - width - x;
 
-                    if (object.allowCollision.left && collideLeft && this._overlap < this._maxOverlap)
+                    if ((-this._overlap > this._maxOverlap) || !object.allowCollision.left || !collideRight)
+                    {
+                        this._overlap = 0;
+                    }
+                    else
                     {
                         object.touching.left = true;
-                        // console.log('left', this._overlap);
-                    }
-                    else
-                    {
-                        this._overlap = 0;
-                    }
-                }
-                else
-                {
-                    //  Going right ...
-                    this._overlap = object.right - x;
-
-                    if (object.allowCollision.right && collideRight && this._overlap < this._maxOverlap)
-                    {
-                        object.touching.right = true;
-                        // console.log('right', this._overlap);
-                    }
-                    else
-                    {
-                        this._overlap = 0;
                     }
                 }
             }
@@ -765,13 +762,14 @@ Phaser.Physics.Arcade.prototype = {
                     //  Going down ...
                     this._overlap = object.bottom - y;
 
-                    if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
+                    // if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
+                    if ((this._overlap > this._maxOverlap) || !object.allowCollision.down || !collideDown)
                     {
-                        object.touching.down = true;
+                        this._overlap = 0;
                     }
                     else
                     {
-                        this._overlap = 0;
+                        object.touching.down = true;
                     }
                 }
                 else
@@ -779,13 +777,13 @@ Phaser.Physics.Arcade.prototype = {
                     //  Going up ...
                     this._overlap = object.y - height - y;
 
-                    if (object.allowCollision.up && collideUp && this._overlap < this._maxOverlap)
+                    if ((-this._overlap > this._maxOverlap) || !object.allowCollision.up || !collideUp)
                     {
-                        object.touching.up = true;
+                        this._overlap = 0;
                     }
                     else
                     {
-                        this._overlap = 0;
+                        object.touching.up = true;
                     }
                 }
             }

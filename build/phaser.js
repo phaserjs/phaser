@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.0 - Built at: Fri, 13 Sep 2013 16:50:35 +0000
+* v1.0.1 - Built at: Sun, 15 Sep 2013 02:56:00 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -34,7 +34,7 @@ var PIXI = PIXI || {};
  */
 var Phaser = Phaser || { 
 
-	VERSION: '1.0.0', 
+	VERSION: '1.0.1', 
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
@@ -8925,11 +8925,14 @@ Phaser.Group.prototype = {
 
 	},
 
-	create: function (x, y, key, frame) {
+	create: function (x, y, key, frame, exists) {
+
+		if (typeof exists == 'undefined') { exists = true; }
 
 		var child = new Phaser.Sprite(this.game, x, y, key, frame);
 
 		child.group = this;
+		child.exists = exists;
 
 		if (child.events)
 		{
@@ -9213,7 +9216,7 @@ Phaser.Group.prototype = {
 		checkVisible = checkVisible || false;
 		operation = operation || 0;
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9264,7 +9267,7 @@ Phaser.Group.prototype = {
 
 		var args = Array.prototype.splice.call(arguments, 2);
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9287,7 +9290,7 @@ Phaser.Group.prototype = {
 
 		if (typeof checkExists == 'undefined') { checkExists = false; }
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9308,7 +9311,7 @@ Phaser.Group.prototype = {
 
 	forEachAlive: function (callback, callbackContext) {
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9329,7 +9332,7 @@ Phaser.Group.prototype = {
 
 	forEachDead: function (callback, callbackContext) {
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9359,7 +9362,7 @@ Phaser.Group.prototype = {
 			state = true;
 		}
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9387,7 +9390,7 @@ Phaser.Group.prototype = {
     */
 	getFirstAlive: function () {
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9415,7 +9418,7 @@ Phaser.Group.prototype = {
     */
 	getFirstDead: function () {
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9444,7 +9447,7 @@ Phaser.Group.prototype = {
 
 		var total = -1;
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9473,7 +9476,7 @@ Phaser.Group.prototype = {
 
 		var total = -1;
 
-		if (this._container.first._iNext)
+		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
@@ -9502,6 +9505,11 @@ Phaser.Group.prototype = {
     * @return {Any} A random child of this Group.
     */
 	getRandom: function (startIndex, length) {
+
+		if (this._container.children.length == 0)
+		{
+			return null;
+		}
 
 		startIndex = startIndex || 0;
 		length = length || this._container.children.length;
@@ -9538,6 +9546,11 @@ Phaser.Group.prototype = {
 	},
 
 	removeBetween: function (startIndex, endIndex) {
+
+		if (this._container.children.length == 0)
+		{
+			return;
+		}
 
 		if (startIndex > endIndex || startIndex < 0 || endIndex > this._container.children.length)
 		{
@@ -20558,15 +20571,25 @@ Phaser.AnimationManager.prototype = {
 	},
 
 	/**
-	* Stop animation by name.
+	* Stop animation. If a name is given that specific animation is stopped, otherwise the current one is stopped.
 	* Current animation will be automatically set to the stopped one.
 	*/
 	stop: function (name) {
 
-		if (this._anims[name])
+		if (typeof name == 'string')
 		{
-			this.currentAnim = this._anims[name];
-			this.currentAnim.stop();
+			if (this._anims[name])
+			{
+				this.currentAnim = this._anims[name];
+				this.currentAnim.stop();
+			}
+		}
+		else
+		{
+			if (this.currentAnim)
+			{
+				this.currentAnim.stop();
+			}
 		}
 
 	},
@@ -25466,7 +25489,6 @@ Phaser.Physics.Arcade.prototype = {
      */
     separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
 
-        //  Yes, the Y first
         var separatedY = this.separateTileY(object.body, x, y, width, height, mass, collideUp, collideDown, separateY);
         var separatedX = this.separateTileX(object.body, x, y, width, height, mass, collideLeft, collideRight, separateX);
 
@@ -25511,34 +25533,32 @@ Phaser.Physics.Arcade.prototype = {
                 //  TODO - We need to check if we're already inside of the tile, i.e. jumping through an n-way tile
                 //  in which case we didn't ought to separate because it'll look like tunneling
 
-                if (object.deltaX() < 0)
+                if (object.deltaX() > 0)
+                {
+                    //  Going right ...
+                    this._overlap = object.x + object.width - x;
+
+                    if ((this._overlap > this._maxOverlap) || !object.allowCollision.right || !collideLeft)
+                    {
+                        this._overlap = 0;
+                    }
+                    else
+                    {
+                        object.touching.right = true;
+                    }
+                }
+                else if (object.deltaX() < 0)
                 {
                     //  Going left ...
                     this._overlap = object.x - width - x;
 
-                    if (object.allowCollision.left && collideLeft && this._overlap < this._maxOverlap)
+                    if ((-this._overlap > this._maxOverlap) || !object.allowCollision.left || !collideRight)
+                    {
+                        this._overlap = 0;
+                    }
+                    else
                     {
                         object.touching.left = true;
-                        // console.log('left', this._overlap);
-                    }
-                    else
-                    {
-                        this._overlap = 0;
-                    }
-                }
-                else
-                {
-                    //  Going right ...
-                    this._overlap = object.right - x;
-
-                    if (object.allowCollision.right && collideRight && this._overlap < this._maxOverlap)
-                    {
-                        object.touching.right = true;
-                        // console.log('right', this._overlap);
-                    }
-                    else
-                    {
-                        this._overlap = 0;
                     }
                 }
             }
@@ -25605,13 +25625,14 @@ Phaser.Physics.Arcade.prototype = {
                     //  Going down ...
                     this._overlap = object.bottom - y;
 
-                    if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
+                    // if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
+                    if ((this._overlap > this._maxOverlap) || !object.allowCollision.down || !collideDown)
                     {
-                        object.touching.down = true;
+                        this._overlap = 0;
                     }
                     else
                     {
-                        this._overlap = 0;
+                        object.touching.down = true;
                     }
                 }
                 else
@@ -25619,13 +25640,13 @@ Phaser.Physics.Arcade.prototype = {
                     //  Going up ...
                     this._overlap = object.y - height - y;
 
-                    if (object.allowCollision.up && collideUp && this._overlap < this._maxOverlap)
+                    if ((-this._overlap > this._maxOverlap) || !object.allowCollision.up || !collideUp)
                     {
-                        object.touching.up = true;
+                        this._overlap = 0;
                     }
                     else
                     {
-                        this._overlap = 0;
+                        object.touching.up = true;
                     }
                 }
             }
@@ -27658,6 +27679,7 @@ Phaser.TilemapLayer.prototype = {
 
         for (var r = 0; r < this._tempTileBlock.length; r++)
         {
+            //  separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY)            
             if (this.game.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY))
             {
                 this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });

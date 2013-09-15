@@ -5,7 +5,7 @@ Phaser 1.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It supports Canvas and WebGL rendering.
 
-Version: 1.0.0 - Released: September 13th 2013
+Version: 1.0.1 - Released: September 15th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -116,8 +116,13 @@ Although Phaser 1.0 is a brand new release it is born from years of experience b
 Change Log
 ----------
 
+Version 1.0.1
+
 * Added checks into every Group function to ensure that the Group has children before running them.
 * Added optional flag to Group.create which allows you to set the default exists state of the Sprites.
+* Sprite.animation.stop no longer needs an animation name parameter, will default to stopping the current animation.
+* Fixed the license in package.json
+* Fixed a logic bug in the separateTileX function that would sometimes cause tunneling of big sprites through small tiles.
 
 Known Issues
 ------------
