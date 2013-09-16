@@ -164,6 +164,7 @@ Phaser.Animation.Parser = {
         
         for (var key in frames)
         {
+            console.log(key);
             var uuid = game.rnd.uuid();
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(

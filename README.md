@@ -48,7 +48,10 @@ Version 1.0.2
 * Added 'collideWorldBounds' to Emitter.makeParticles function.
 * Added Emitter.angularDrag
 * Changed Emitter.bounce from a number to a Point, so now set its x/y properties to control different amounts of bounce per axis.
-
+* Fixed a bug in the AnimationManager where useNumericIndex was always set to true
+* Added in lots of Particle examples
+* Added in the start of a Breakout game
+* Added in the start of a Platformer game
 
 Version 1.0.1
 

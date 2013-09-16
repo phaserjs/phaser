@@ -59,8 +59,9 @@ Phaser.AnimationManager.prototype = {
 
 		frames = frames || null;
 		frameRate = frameRate || 60;
-		loop = loop || false;
-		useNumericIndex = useNumericIndex || true;
+
+		if (typeof loop == 'undefined') { loop = false; }
+		if (typeof useNumericIndex == 'undefined') { useNumericIndex = true; }
 
 		if (this._frameData == null)
 		{
@@ -110,6 +111,8 @@ Phaser.AnimationManager.prototype = {
 	* @return {bool} True if they're valid, otherwise return false.
 	*/
 	validateFrames: function (frames, useNumericIndex) {
+
+		if (typeof useNumericIndex == 'undefined') { useNumericIndex = true; }
 
 		for (var i = 0; i < frames.length; i++)
 		{
