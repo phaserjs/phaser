@@ -11,6 +11,10 @@
  * @author     Richard Davey <rich@photonstorm.com>
  * @copyright  2013 Photon Storm Ltd.
  * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+
+ * @class World
+ * @constructor
+ * @param game {Phaser.Game} reference to the current game instance.
  */
 Phaser.World = function (game) {
 
@@ -91,7 +95,7 @@ Phaser.World.prototype = {
 
 	/**
 	* Updates the size of this world.
-	*
+	* @method setSize
 	* @param width {number} New width of the world.
 	* @param height {number} New height of the world.
 	*/
@@ -111,6 +115,7 @@ Phaser.World.prototype = {
 
     /**
     * Destroyer of worlds.
+    * @method setSize
     */
     destroy: function () {
 

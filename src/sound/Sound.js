@@ -1,7 +1,17 @@
+/**
+* The Sound class
+*
+* @class Sound
+* @constructor
+* @param game {Phaser.Game} reference to the current game instance.
+* @param key {string} Asset key for the sound.
+* @param volume {number} default value for the volume.
+* @param loop {bool} Whether or not the sound will loop.
+*/
 Phaser.Sound = function (game, key, volume, loop) {
 	
 	volume = volume || 1;
-	loop = loop || false;
+	if (typeof loop == 'undefined') { loop = false; }
 
     this.game = game;
     this.name = '';
@@ -187,8 +197,8 @@ Phaser.Sound.prototype = {
     	marker = marker || '';
     	position = position || 0;
     	volume = volume || 1;
-    	loop = loop || false;
-    	forceRestart = forceRestart || false;
+    	if (typeof loop == 'undefined') { loop = false; }
+    	if (typeof forceRestart == 'undefined') { forceRestart = false; }
 
         // console.log('play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
 
@@ -356,7 +366,7 @@ Phaser.Sound.prototype = {
     	marker = marker || '';
     	position = position || 0;
     	volume = volume || 1;
-    	loop = loop || false;
+    	if (typeof loop == 'undefined') { loop = false; }
 
         this.play(marker, position, volume, loop, true);
 
