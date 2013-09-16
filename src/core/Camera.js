@@ -3,6 +3,15 @@
 *
 * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
 * The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
+*
+* @class Phaser.Camera
+* @constructor
+* @param game {Phaser.Game} game reference to the currently running game.
+* @param id {number} not being used at the moment, will be when Phaser supports multiple camera
+* @param x {number} position of the camera on the X axis
+* @param y {number} position of the camera on the Y axis
+* @param width {number} the width of the view rectangle
+* @param height {number} the height of the view rectangle
 */
 
 Phaser.Camera = function (game, id, x, y, width, height) {
