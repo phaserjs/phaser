@@ -115,7 +115,7 @@ Phaser.World.prototype = {
 
     /**
     * Destroyer of worlds.
-    * @method setSize
+    * @method destroy
     */
     destroy: function () {
 

@@ -20,6 +20,7 @@ Phaser.Sound = function (game, key, volume, loop) {
     this._volume = volume;
     this.markers = {};
 
+    
     /**
     * Reference to AudioContext instance.
     */
@@ -109,7 +110,7 @@ Phaser.Sound.prototype = {
     addMarker: function (name, start, stop, volume, loop) {
 
     	volume = volume || 1;
-    	loop = loop || false;
+    	if (typeof loop == 'undefined') { loop = false; }
 
         this.markers[name] = {
             name: name,
@@ -187,7 +188,9 @@ Phaser.Sound.prototype = {
 
 	/**
     * Play this sound, or a marked section of it.
+    
     * @param marker {string} Assets key of the sound you want to play.
+    * @param position {number} the starting position
     * @param [volume] {number} volume of the sound you want to play.
     * @param [loop] {bool} loop when it finished playing? (Default to false)
     * @return {Sound} The playing sound object.
@@ -200,7 +203,9 @@ Phaser.Sound.prototype = {
     	if (typeof loop == 'undefined') { loop = false; }
     	if (typeof forceRestart == 'undefined') { forceRestart = false; }
 
-        // console.log('play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
+
+
+        console.log('play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {

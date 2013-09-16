@@ -7,7 +7,7 @@
 
 (function () {
 
-	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create});
 
 	function preload() {
 
@@ -27,20 +27,15 @@
 
 
         music = game.add.audio('squit',1,true);
-        music.play();
+
+        music.play('',0,1,true);
 
 		s = game.add.sprite(game.world.centerX, game.world.centerY, 'spyro');
 		s.anchor.setTo(0.5, 0.5);
 
 	}
 
-	function update() {
-		//s.rotation += 0.01;
-	}
 
-	function render() {
-        game.debug.renderSoundInfo(music, 20, 32);
-	}
 
 })();
 

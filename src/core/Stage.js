@@ -10,7 +10,7 @@
  * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
 
 
-* @class Phaser.Camera
+* @class Stage
 * @constructor
 * @param game {Phaser.Game} game reference to the currently running game.
 * @param width {number} width of the canvas element
