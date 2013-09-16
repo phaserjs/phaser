@@ -1,5 +1,7 @@
 /**
 * Create a new <code>Button</code> object.
+* @class Button
+* @constructor
 *
 * @param game {Phaser.Game} Current game instance.
 * @param [x] {number} X position of the button.
@@ -58,7 +60,15 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 Phaser.Button.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
 Phaser.Button.prototype.constructor = Phaser.Button;
 
-//  Add our own custom methods
+/**
+* Used to manually set the frames that will be used for the different states of the button
+* exactly like setting them in the constructor
+*
+* @method setFrames
+* @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+* @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+* @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+*/
 
 Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
 

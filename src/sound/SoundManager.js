@@ -1,6 +1,9 @@
 /**
 * Phaser - SoundManager
 *
+* @class SoundManager
+* @constructor
+* @param game {Phaser.Game} reference to the current game instance.
 */
 Phaser.SoundManager = function (game) {
 
@@ -225,10 +228,21 @@ Phaser.SoundManager.prototype = {
 
     },
 
+
+    /**
+    * 
+    * @method add
+    * @param key {string} Asset key for the sound.
+    * @param volume {number} default value for the volume.
+    * @param loop {bool} Whether or not the sound will loop.
+    */
+
     add: function (key, volume, loop) {
 
     	volume = volume || 1;
-    	loop = loop || false;
+    	if (typeof loop == 'undefined') { loop = false; }
+
+        
 
         var sound = new Phaser.Sound(this.game, key, volume, loop);
 

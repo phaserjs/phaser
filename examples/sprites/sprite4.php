@@ -17,8 +17,6 @@
 
 	function create() {
 
-		// game.world._stage.backgroundColorString = '#182d3b';
-
 		s = game.add.sprite(game.world.centerX, game.world.centerY, 'bot');
 		// s.anchor.setTo(0.5, 0.5);
 		s.scale.setTo(2, 2);
