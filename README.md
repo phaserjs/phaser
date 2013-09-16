@@ -44,6 +44,11 @@ Change Log
 Version 1.0.2
 
 * Added optional parameter to Animation.stop: resetFrame. If true the animation will be stopped and then the current frame reset to the first frame in the animation.
+* Fixed an issue causing 'explode' particle bursts to ignore the quantity parameter.
+* Added 'collideWorldBounds' to Emitter.makeParticles function.
+* Added Emitter.angularDrag
+* Changed Emitter.bounce from a number to a Point, so now set its x/y properties to control different amounts of bounce per axis.
+
 
 Version 1.0.1
 
