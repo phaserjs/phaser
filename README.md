@@ -5,7 +5,7 @@ Phaser 1.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It supports Canvas and WebGL rendering.
 
-Version: 1.0.1 - Released: September 15th 2013
+Version: 1.0.2 - Released: September 15th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 

@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.1 - Built at: Sun, 15 Sep 2013 02:56:00 +0000
+* v1.0.1 - Built at: Mon, 16 Sep 2013 00:53:02 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -34,7 +34,7 @@ var PIXI = PIXI || {};
  */
 var Phaser = Phaser || { 
 
-	VERSION: '1.0.1', 
+	VERSION: '1.0.2', 
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
@@ -20467,8 +20467,9 @@ Phaser.AnimationManager.prototype = {
 
 		frames = frames || null;
 		frameRate = frameRate || 60;
-		loop = loop || false;
-		useNumericIndex = useNumericIndex || true;
+
+		if (typeof loop == 'undefined') { loop = false; }
+		if (typeof useNumericIndex == 'undefined') { useNumericIndex = true; }
 
 		if (this._frameData == null)
 		{
@@ -20518,6 +20519,8 @@ Phaser.AnimationManager.prototype = {
 	* @return {bool} True if they're valid, otherwise return false.
 	*/
 	validateFrames: function (frames, useNumericIndex) {
+
+		if (typeof useNumericIndex == 'undefined') { useNumericIndex = true; }
 
 		for (var i = 0; i < frames.length; i++)
 		{
@@ -20574,21 +20577,23 @@ Phaser.AnimationManager.prototype = {
 	* Stop animation. If a name is given that specific animation is stopped, otherwise the current one is stopped.
 	* Current animation will be automatically set to the stopped one.
 	*/
-	stop: function (name) {
+	stop: function (name, resetFrame) {
+
+		if (typeof resetFrame == 'undefined') { resetFrame = false; }
 
 		if (typeof name == 'string')
 		{
 			if (this._anims[name])
 			{
 				this.currentAnim = this._anims[name];
-				this.currentAnim.stop();
+				this.currentAnim.stop(resetFrame);
 			}
 		}
 		else
 		{
 			if (this.currentAnim)
 			{
-				this.currentAnim.stop();
+				this.currentAnim.stop(resetFrame);
 			}
 		}
 
@@ -20805,10 +20810,17 @@ Phaser.Animation.prototype = {
 	/**
     * Stop playing animation and set it finished.
     */
-    stop: function () {
+    stop: function (resetFrame) {
+
+        if (typeof resetFrame == 'undefined') { resetFrame = false; }
 
         this.isPlaying = false;
         this.isFinished = true;
+
+        if (resetFrame)
+        {
+            this.currentFrame = this._frameData.getFrame(this._frames[0]);
+        }
 
     },
 
@@ -21431,6 +21443,7 @@ Phaser.Animation.Parser = {
         
         for (var key in frames)
         {
+            console.log(key);
             var uuid = game.rnd.uuid();
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
@@ -26456,6 +26469,11 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.particleDrag = new Phaser.Point();
 
     /**
+     * The angular drag component of particles launched from the emitter if they are rotating.
+     */
+    this.angularDrag = 0;
+
+    /**
      * How often a particle is emitted in ms (if emitter is started with Explode == false).
      */
     this.frequency = 100;
@@ -26472,9 +26490,9 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.lifespan = 2000;
 
     /**
-     * How much each particle should bounce.  1 = full bounce, 0 = no bounce.
+     * How much each particle should bounce on each axis.  1 = full bounce, 0 = no bounce.
      */
-    this.bounce = 0;
+    this.bounce = new Phaser.Point();
 
     /**
      * Internal helper for deciding how many particles to launch.
@@ -26573,7 +26591,7 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
  *
  * @return  This Emitter instance (nice for chaining stuff together, if you're into that).
  */
-Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames, quantity, collide) {
+Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames, quantity, collide, collideWorldBounds) {
 
     if (typeof frames == 'undefined')
     {
@@ -26581,7 +26599,12 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
     }
 
 	quantity = quantity || this.maxParticles;
-	collide = collide || 0;
+    collide = collide || 0;
+
+    if (typeof collideWorldBounds == 'undefined')
+    {
+        collideWorldBounds = false;
+    }
 
     var particle;
     var i = 0;
@@ -26618,6 +26641,8 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
         {
             particle.body.allowCollision.none = true;
         }
+
+        particle.body.collideWorldBounds = collideWorldBounds;
 
         particle.exists = false;
         particle.visible = false;
@@ -26686,7 +26711,15 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
     this._explode = explode;
     this.lifespan = lifespan;
     this.frequency = frequency;
-	this._quantity += quantity;
+
+    if (explode)
+    {
+        this._quantity = quantity;
+    }
+    else
+    {
+        this._quantity += quantity;
+    }
 
     this._counter = 0;
     this._timer = this.game.time.now + frequency;
@@ -26716,7 +26749,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     particle.lifespan = this.lifespan;
 
-    particle.body.bounce.setTo(this.bounce, this.bounce);
+    particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
 
     if (this.minParticleSpeed.x != this.maxParticleSpeed.x)
     {
@@ -26755,6 +26788,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     particle.body.drag.x = this.particleDrag.x;
     particle.body.drag.y = this.particleDrag.y;
+    particle.body.angularDrag = this.angularDrag;
 
 }
 
