@@ -1,4 +1,4 @@
-![Phaser Logo](http://www.gametest.mobi/phaser/phaser-logo-small.png)
+![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
 Phaser 1.0
 ==========
@@ -17,10 +17,8 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
 "Being negative is not how we make progress" - Larry Page, Google
 
-Latest Update
--------------
-
-September 13th 2013
+Welcome to Phaser!
+------------------
 
 We're very pleased to have finally shipped the 1.0 release of Phaser. This version represents many months of hard work, feedback and refactoring based on the previous 0.5 through to 0.97 releases. You can see the full gory details in our change log.
 
@@ -198,7 +196,7 @@ Bugs?
 
 Please add them to the [Issue Tracker][1] with as much info as possible.
 
-![Phaser Tilemap](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_tilemap.png)
+![Phaser Tilemap](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_tilemap_collision.png)
 
 License
 -------
