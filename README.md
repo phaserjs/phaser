@@ -3,7 +3,7 @@
 Phaser 1.0
 ==========
 
-Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It supports Canvas and WebGL rendering.
+Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
 Version: 1.0.3 - Released: September 17th 2013
 
@@ -17,8 +17,8 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
 "Being negative is not how we make progress" - Larry Page, Google
 
-Welcome to Phaser!
-------------------
+Welcome to Phaser
+-----------------
 
 We're very pleased to have finally shipped the 1.0 release of Phaser. This version represents many months of hard work, feedback and refactoring based on the previous 0.5 through to 0.97 releases. You can see the full gory details in our change log.
 
@@ -162,8 +162,9 @@ The following list is not exhaustive and is subject to change:
 * Tilemap: more advanced Tiled support and support for DAME tilemaps.
 * Joypad support.
 * Gestures input class.
+* Flash CC html output support.
 
-Right now our main focus is on documentation.
+Right now however our main focus is on documentation and examples, we won't be touching any of the above features until the docs are finished.
 
 Test Suite
 ----------
@@ -183,9 +184,9 @@ You can also browse the [Phaser Test Suite](http://gametest.mobi/phaser/) online
 Contributing
 ------------
 
-Phaser is in early stages and although we've still got a lot to add to it, we wanted to just get it out there and share it with the world.
+Phaser is in early stages and although we've still got a lot to add to it, we wanted to get it out there and share it with the world.
 
-If you find a bug (highly likely!) then please report it on github.
+If you find a bug (highly likely!) then please report it on github or our forum.
 
 If you have a feature request, or have written a small game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
 
