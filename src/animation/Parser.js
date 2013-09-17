@@ -1,23 +1,25 @@
 /**
-* Animation Parser
-*
 * Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
 *
-* @package    Phaser.Animation.Parser
-* @author     Richard Davey <rich@photonstorm.com>
-* @copyright  2013 Photon Storm Ltd.
-* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation
 */
+
 Phaser.Animation.Parser = {
 
-	/**
-	* Parse a sprite sheet from asset data.
-	* @param key {string} Asset key for the sprite sheet data.
-	* @param frameWidth {number} Width of animation frame.
-	* @param frameHeight {number} Height of animation frame.
-	* @param frameMax {number} Number of animation frames.
-	* @return {FrameData} Generated FrameData object.
-	*/
+    /**
+    * Parse a Sprite Sheet and extract the animation frame data from it.
+    *
+    * @method spriteSheet
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {String} key The Game.Cache asset key of the Sprite Sheet image.
+    * @param {Number} frameWidth The fixed width of each frame of the animation.
+    * @param {Number} frameHeight The fixed height of each frame of the animation.
+    * @param {Number} [frameMax=-1] The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    */
     spriteSheet: function (game, key, frameWidth, frameHeight, frameMax) {
 
         //  How big is our image?
@@ -55,7 +57,7 @@ Phaser.Animation.Parser = {
         {
             var uuid = game.rnd.uuid();
 
-            data.addFrame(new Phaser.Animation.Frame(x, y, frameWidth, frameHeight, '', uuid));
+            data.addFrame(new Phaser.Animation.Frame(i, x, y, frameWidth, frameHeight, '', uuid));
 
             PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
                 x: x,
@@ -78,9 +80,13 @@ Phaser.Animation.Parser = {
     },
 
     /**
-    * Parse frame data from json texture atlas in Array format.
-    * @param json {object} Json data you want to parse.
-    * @return {FrameData} Generated FrameData object.
+    * Parse the JSON data and extract the animation frame data from it.
+    *
+    * @method JSONData
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} json The JSON data from the Texture Atlas. Must be in Array format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
     */
     JSONData: function (game, json, cacheKey) {
 
@@ -104,6 +110,7 @@ Phaser.Animation.Parser = {
             var uuid = game.rnd.uuid();
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
             	frames[i].frame.x, 
             	frames[i].frame.y, 
             	frames[i].frame.w, 
@@ -141,9 +148,13 @@ Phaser.Animation.Parser = {
     },
 
     /**
-    * Parse frame data from json texture atlas in Hash format.
-    * @param json {object} Json data you want to parse.
-    * @return {FrameData} Generated FrameData object.
+    * Parse the JSON data and extract the animation frame data from it.
+    *
+    * @method JSONDataHash
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} json The JSON data from the Texture Atlas. Must be in JSON Hash format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
     */
     JSONDataHash: function (game, json, cacheKey) {
 
@@ -161,13 +172,14 @@ Phaser.Animation.Parser = {
         //  By this stage frames is a fully parsed array
         var frames = json['frames'];
         var newFrame;
+        var i = 0;
         
         for (var key in frames)
         {
-            console.log(key);
             var uuid = game.rnd.uuid();
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
                 frames[key].frame.x, 
                 frames[key].frame.y, 
                 frames[key].frame.w, 
@@ -198,6 +210,8 @@ Phaser.Animation.Parser = {
                 PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
                 PIXI.TextureCache[uuid].trim.x = 0;
             }
+
+            i++;
         }
 
         return data;
@@ -205,9 +219,13 @@ Phaser.Animation.Parser = {
     },
 
     /**
-    * Parse frame data from an XML file.
-    * @param xml {object} XML data you want to parse.
-    * @return {FrameData} Generated FrameData object.
+    * Parse the XML data and extract the animation frame data from it.
+    *
+    * @method XMLData
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} xml The XML data from the Texture Atlas. Must be in Starling XML format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
     */
     XMLData: function (game, xml, cacheKey) {
 
@@ -230,6 +248,7 @@ Phaser.Animation.Parser = {
             var frame = frames[i].attributes;
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
             	frame.x.nodeValue, 
             	frame.y.nodeValue, 
             	frame.width.nodeValue, 

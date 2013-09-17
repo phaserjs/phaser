@@ -5,7 +5,7 @@ Phaser 1.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It supports Canvas and WebGL rendering.
 
-Version: 1.0.2 - Released: September 15th 2013
+Version: 1.0.3 - Released: September 17th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -19,10 +19,6 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 
 Latest Update
 -------------
-
-September 15th 2013
-
-Version 1.0.1 and 1.0.2 have been tagged and released. See the Change Log for full details. As 1.0 is so fresh please expect small minor updates every few days, but we will be sure to tag them.
 
 September 13th 2013
 
@@ -41,7 +37,15 @@ Phaser is everything we ever wanted from an HTML5 game framework. It will power 
 Change Log
 ----------
 
-Version 1.0.2
+Version 1.0.3 (September 17th 2013)
+
+* FrameData.getFrameIndexes and getFrameIndexesByName refactored into a more versatile getFrames function.
+* Various fixes to looping parameters in the Sound system.
+* Documentation started across most classes. Keep track of progress in the Docs folder.
+* Optimised AnimationManager.add so it will only get the required frames rather than all of them and is now faster at parsing the frame data.
+* Fixed Phaser.Text and Phaser.BitmapText so they now render correctly and added several Text examples.
+
+Version 1.0.2 (September 16th 2013)
 
 * Added optional parameter to Animation.stop: resetFrame. If true the animation will be stopped and then the current frame reset to the first frame in the animation.
 * Fixed an issue causing 'explode' particle bursts to ignore the quantity parameter.
@@ -53,7 +57,7 @@ Version 1.0.2
 * Added in the start of a Breakout game
 * Added in the start of a Platformer game
 
-Version 1.0.1
+Version 1.0.1 (September 15th 2013)
 
 * Added checks into every Group function to ensure that the Group has children before running them.
 * Added optional flag to Group.create which allows you to set the default exists state of the Sprites.

@@ -19,10 +19,13 @@ Phaser.BitmapText = function (game, x, y, text, style) {
 
     PIXI.BitmapText.call(this, text, style);
 
+    this.type = Phaser.BITMAPTEXT;
+
     this.position.x = x;
     this.position.y = y;
 
     //  Replaces the PIXI.Point with a slightly more flexible one
+    this.anchor = new Phaser.Point();
     this.scale = new Phaser.Point(1, 1);
 
     //  Influence of camera movement upon the position
@@ -51,10 +54,9 @@ Phaser.BitmapText = function (game, x, y, text, style) {
 
 };
 
-Phaser.BitmapText.prototype = Phaser.Utils.extend(true, PIXI.BitmapText.prototype);
+Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
+// Phaser.BitmapText.prototype = Phaser.Utils.extend(true, PIXI.BitmapText.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
-
-//  Add our own custom methods
 
 /**
  * Automatically called by World.update

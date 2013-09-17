@@ -69,6 +69,9 @@ Phaser.Utils = {
 
 	//	deep, target, objects to copy to the target object
 	//	This is a slightly modified version of jQuery.extend (http://api.jquery.com/jQuery.extend/)
+	//	deep (boolean)
+	//	target (object to add to)
+	//	objects ... (objects to recurse and copy from)
 	extend: function () {
 
 		var options, name, src, copy, copyIsArray, clone,

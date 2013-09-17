@@ -41,6 +41,7 @@
         player = game.add.sprite(32, 32, 'dude');
         player.body.bounce.y = 0.2;
         player.body.collideWorldBounds = true;
+        player.body.gravity.y = 10;
 
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('turn', [4], 20, true);
@@ -55,7 +56,7 @@
         game.physics.collide(player, map);
 
         player.body.velocity.x = 0;
-        player.body.acceleration.y = 500;
+        // player.body.acceleration.y = 500;
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
