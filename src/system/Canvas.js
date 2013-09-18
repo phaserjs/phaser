@@ -103,22 +103,23 @@ Phaser.Canvas = {
     addToDOM: function (canvas, parent, overflowHidden) {
 
         parent = parent || '';
-        overflowHidden = overflowHidden || true;
+
+        if (typeof overflowHidden === 'undefined') { overflowHidden = true; }
 
         if (parent !== '')
         {
             if (document.getElementById(parent))
             {
                 document.getElementById(parent).appendChild(canvas);
+
+                if (overflowHidden)
+                {
+                    document.getElementById(parent).style.overflow = 'hidden';
+                }
             }
             else
             {
                 document.body.appendChild(canvas);
-            }
-
-            if (overflowHidden)
-            {
-                document.getElementById(parent).style.overflow = 'hidden';
             }
         }
         else

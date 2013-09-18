@@ -5,7 +5,7 @@ Phaser 1.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.0.3 - Released: September 17th 2013
+Version: 1.0.4 - Released: September 18th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -34,6 +34,17 @@ Phaser is everything we ever wanted from an HTML5 game framework. It will power 
 
 Change Log
 ----------
+
+Version 1.0.4 (September 18th 2013)
+
+* Small fix to Phaser.Canvas to stop it from setting overflow hidden if the parent DOM element doesn't exist.
+* Added Loader.setPreloadSprite(sprite, direction) - this will automatically apply a crop rect to the Sprite which is updated in line with the load progress.
+* A lot of changes inside the StateManager. State functions are now passed through link() which automatically creates the key Game properties (load, input, etc)
+* Fixed a bug in getFrameByName that wouldn't return the first frame in the array.
+* Updated Phaser.Rectangle.intersects to use x and y instead of left and top so it can be used to check Physics bodies overlapping.
+* Fixed issue in Cache where the Frame index wasn't being set correctly (thanks Cameron)
+* Fixed issue in Sprite where boundsY wasn't set (thanks Cameron)
+* For some reason there were 2 copies of the Canvas class in the build file - fixed, a few KB saved :)
 
 Version 1.0.3 (September 17th 2013)
 

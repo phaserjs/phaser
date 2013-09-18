@@ -80,7 +80,7 @@ Phaser.Cache.prototype = {
      */
     addRenderTexture: function (key, texture) {
 
-        var frame = new Phaser.Animation.Frame(0, 0, texture.width, texture.height, '', '');
+        var frame = new Phaser.Animation.Frame(0, 0, 0, texture.width, texture.height, '', '');
 
         this._textures[key] = { texture: texture, frame: frame };
 
@@ -177,7 +177,7 @@ Phaser.Cache.prototype = {
     addDefaultImage: function () {
 
         this._images['__default'] = { url: null, data: null, spriteSheet: false };
-        this._images['__default'].frame = new Phaser.Animation.Frame(0, 0, 32, 32, '', '');
+        this._images['__default'].frame = new Phaser.Animation.Frame(0, 0, 0, 32, 32, '', '');
 
         var base = new PIXI.BaseTexture();
         base.width = 32;
@@ -198,7 +198,7 @@ Phaser.Cache.prototype = {
     addImage: function (key, url, data) {
 
         this._images[key] = { url: url, data: data, spriteSheet: false };
-        this._images[key].frame = new Phaser.Animation.Frame(0, 0, data.width, data.height, '', '');
+        this._images[key].frame = new Phaser.Animation.Frame(0, 0, 0, data.width, data.height, '', '');
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);

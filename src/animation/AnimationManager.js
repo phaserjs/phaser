@@ -359,7 +359,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
     */
     set: function (value) {
 
-        if (this._frameData && this._frameData.getFrameByName(value))
+        if (this._frameData && this._frameData.getFrameByName(value) !== null)
         {
             this.currentFrame = this._frameData.getFrameByName(value);
             this._frameIndex = this.currentFrame.index;

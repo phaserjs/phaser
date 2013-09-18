@@ -58,6 +58,12 @@ Phaser.Loader = function (game) {
 	this.progress = 0;
 
 	/**
+	* You can optionally link a sprite to the preloader.
+	* If you do so the Sprite's width or height will be cropped based on the percentage loaded.
+	*/
+	this.preloadSprite = null;
+
+	/**
 	* The crossOrigin value applied to loaded images
 	* @type {string}
 	*/
@@ -90,6 +96,27 @@ Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 
 Phaser.Loader.prototype = {
 
+	setPreloadSprite: function (sprite, direction) {
+
+		direction = direction || 0;
+
+		this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, crop: null };
+
+		if (direction == 0)
+		{
+			//	Horizontal crop
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 0, sprite.height);
+		}
+		else
+		{
+			//	Vertical crop
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 0);
+		}
+
+		sprite.crop = this.preloadSprite.crop;
+
+	},
+
 	/**
 	* Check whether asset exists with a specific key.
 	* @param key {string} Key of the asset you want to check.
@@ -113,6 +140,7 @@ Phaser.Loader.prototype = {
 	 */
 	reset: function () {
 
+		this.preloadSprite = null;
 		this.queueSize = 0;
 		this.isLoading = false;
 
@@ -870,6 +898,20 @@ Phaser.Loader.prototype = {
 		if (this.progress > 100)
 		{
 			this.progress = 100;
+		}
+
+		if (this.preloadSprite !== null)
+		{
+			if (this.preloadSprite.direction == 0)
+			{
+				this.preloadSprite.crop.width = (this.preloadSprite.width / 100) * this.progress;
+			}
+			else
+			{
+				this.preloadSprite.crop.height = (this.preloadSprite.height / 100) * this.progress;
+			}
+
+			this.preloadSprite.sprite.crop = this.preloadSprite.crop;
 		}
 
 		this.onFileComplete.dispatch(this.progress, previousKey, success, this.queueSize - this._keys.length, this.queueSize);

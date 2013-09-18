@@ -290,7 +290,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
             this.bounds.x -= this._cache.boundsX - this._cache.x;
             this._cache.boundsX = this._cache.x;
 
-            this.bounds.y -= this._cache.boundsy - this._cache.y;
+            this.bounds.y -= this._cache.boundsY - this._cache.y;
             this._cache.boundsY = this._cache.y;
         }
     }

@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.1 - Built at: Mon, 16 Sep 2013 00:53:02 +0000
+* v1.0.1 - Built at: Wed, 18 Sep 2013 05:29:56 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -34,7 +34,7 @@ var PIXI = PIXI || {};
  */
 var Phaser = Phaser || { 
 
-	VERSION: '1.0.2', 
+	VERSION: '1.0.4', 
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
@@ -130,6 +130,9 @@ Phaser.Utils = {
 
 	//	deep, target, objects to copy to the target object
 	//	This is a slightly modified version of jQuery.extend (http://api.jquery.com/jQuery.extend/)
+	//	deep (boolean)
+	//	target (object to add to)
+	//	objects ... (objects to recurse and copy from)
 	extend: function () {
 
 		var options, name, src, copy, copyIsArray, clone,
@@ -7132,6 +7135,15 @@ PIXI.PolyK._convex = function(ax, ay, bx, by, cx, cy, sign)
 *
 * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
 * The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
+*
+* @class Phaser.Camera
+* @constructor
+* @param game {Phaser.Game} game reference to the currently running game.
+* @param id {number} not being used at the moment, will be when Phaser supports multiple camera
+* @param x {number} position of the camera on the X axis
+* @param y {number} position of the camera on the Y axis
+* @param width {number} the width of the view rectangle
+* @param height {number} the height of the view rectangle
 */
 
 Phaser.Camera = function (game, id, x, y, width, height) {
@@ -7426,25 +7438,6 @@ Phaser.State = function () {
 
 Phaser.State.prototype = {
 
-    link: function (game) {
-
-        this.game = game;
-        this.add = game.add;
-        this.camera = game.camera;
-        this.cache = game.cache;
-        this.input = game.input;
-        this.load = game.load;
-        this.math = game.math;
-        this.sound = game.sound;
-        this.stage = game.stage;
-        this.time = game.time;
-        this.tweens = game.tweens;
-        this.world = game.world;
-        this.particles = game.particles;
-        this.physics = game.physics;
-
-    },
-
     /**
     * Override this method to add some load operations.
     * If you need to use the loader, you may need to use them here.
@@ -7454,7 +7447,7 @@ Phaser.State.prototype = {
 
     /**
     * This method is called after the game engine successfully switches states.
-    * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+    * Feel free to add any setup code here.(Do not load anything here, override preload() instead)
     */
     create: function () {
     },
@@ -7632,7 +7625,6 @@ Phaser.StateManager.prototype = {
 		{
 			// console.log('Phaser.StateManager.addState: Phaser.State given');
 			newState = state;
-    		newState.link(this.game);
 		}
 		else if (typeof state === 'object')
 		{
@@ -7815,9 +7807,32 @@ Phaser.StateManager.prototype = {
 
     },
 
+    link: function (key) {
+
+		// console.log('linked');
+        this.states[key].game = this.game;
+        this.states[key].add = this.game.add;
+        this.states[key].camera = this.game.camera;
+        this.states[key].cache = this.game.cache;
+        this.states[key].input = this.game.input;
+        this.states[key].load = this.game.load;
+        this.states[key].math = this.game.math;
+        this.states[key].sound = this.game.sound;
+        this.states[key].stage = this.game.stage;
+        this.states[key].time = this.game.time;
+        this.states[key].tweens = this.game.tweens;
+        this.states[key].world = this.game.world;
+        this.states[key].particles = this.game.particles;
+        this.states[key].physics = this.game.physics;
+        this.states[key].rnd = this.game.rnd;
+
+    },
+
 	setCurrentState: function (key) {
 
         this.callbackContext = this.states[key];
+
+        this.link(key);
 
         //	Used when the state is set as being the current active state
         this.onInitCallback = this.states[key]['init'] || this.dummy;
@@ -7848,8 +7863,8 @@ Phaser.StateManager.prototype = {
         if (this._created == false && this.onCreateCallback)
         {
 			// console.log('Create callback found');
-            this.onCreateCallback.call(this.callbackContext);
             this._created = true;
+            this.onCreateCallback.call(this.callbackContext);
         }
 
     },
@@ -8735,6 +8750,13 @@ Phaser.PluginManager.prototype = {
  * @author     Richard Davey <rich@photonstorm.com>
  * @copyright  2013 Photon Storm Ltd.
  * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+
+
+* @class Stage
+* @constructor
+* @param game {Phaser.Game} game reference to the currently running game.
+* @param width {number} width of the canvas element
+* @param height {number} height of the canvas element
  */
 Phaser.Stage = function (game, width, height) {
 	
@@ -9739,6 +9761,10 @@ Object.defineProperty(Phaser.Group.prototype, "visible", {
  * @author     Richard Davey <rich@photonstorm.com>
  * @copyright  2013 Photon Storm Ltd.
  * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+
+ * @class World
+ * @constructor
+ * @param game {Phaser.Game} reference to the current game instance.
  */
 Phaser.World = function (game) {
 
@@ -9819,7 +9845,7 @@ Phaser.World.prototype = {
 
 	/**
 	* Updates the size of this world.
-	*
+	* @method setSize
 	* @param width {number} New width of the world.
 	* @param height {number} New height of the world.
 	*/
@@ -9839,6 +9865,7 @@ Phaser.World.prototype = {
 
     /**
     * Destroyer of worlds.
+    * @method destroy
     */
     destroy: function () {
 
@@ -13480,221 +13507,6 @@ Phaser.InputHandler.prototype = {
 
 };
 /**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
-* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
-* @module       Phaser.Canvas
-*/
-
-Phaser.Canvas = {
-
-    create: function (width, height) {
-
-        width = width || 256;
-        height = height || 256;
-
-        var canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        canvas.style.display = 'block';
-
-        return canvas;
-
-    },
-
-    /**
-    * Get the DOM offset values of any given element
-    */    
-    getOffset: function (element, point) {
-
-        point = point || new Phaser.Point;
-
-        var box = element.getBoundingClientRect();
-        var clientTop = element.clientTop || document.body.clientTop || 0;
-        var clientLeft = element.clientLeft || document.body.clientLeft || 0;
-        var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
-        var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
-
-        point.x = box.left + scrollLeft - clientLeft;
-        point.y = box.top + scrollTop - clientTop;
-
-        return point;
-
-    },
-
-    /**
-    * Returns the aspect ratio of the given canvas.
-    *
-    * @method getAspectRatio
-    * @param {HTMLCanvasElement} canvas The canvas to get the aspect ratio from.
-    * @return {Number} Returns true on success
-    */        
-    getAspectRatio: function (canvas) {
-        return canvas.width / canvas.height;
-    },
-
-    /**
-    * Sets the background color behind the canvas. This changes the canvas style property.
-    *
-    * @method setBackgroundColor
-    * @param {HTMLCanvasElement} canvas The canvas to set the background color on.
-    * @param {String} color The color to set. Can be in the format 'rgb(r,g,b)', or '#RRGGBB' or any valid CSS color.
-    * @return {HTMLCanvasElement} Returns the source canvas.
-    */
-    setBackgroundColor: function (canvas, color) {
-
-        color = color || 'rgb(0,0,0)';
-
-        canvas.style.backgroundColor = color;
-        
-        return canvas;
-
-    },
-
-    /**
-    * Sets the touch-action property on the canvas style. Can be used to disable default browser touch actions.
-    *
-    * @method setTouchAction
-    * @param {HTMLCanvasElement} canvas The canvas to set the touch action on.
-    * @param {String} value The touch action to set. Defaults to 'none'.
-    * @return {HTMLCanvasElement} Returns the source canvas.
-    */
-    setTouchAction: function (canvas, value) {
-
-        value = value || 'none';
-
-        canvas.style.msTouchAction = value;
-        canvas.style['ms-touch-action'] = value;
-        canvas.style['touch-action'] = value;
-
-        return canvas;
-
-    },
-
-    /**
-    * Adds the given canvas element to the DOM. The canvas will be added as a child of the given parent.
-    * If no parent is given it will be added as a child of the document.body.
-    *
-    * @method addToDOM
-    * @param {HTMLCanvasElement} canvas The canvas to set the touch action on.
-    * @param {String} parent The DOM element to add the canvas to. Defaults to ''.
-    * @param {bool} overflowHidden If set to true it will add the overflow='hidden' style to the parent DOM element.
-    * @return {HTMLCanvasElement} Returns the source canvas.
-    */
-    addToDOM: function (canvas, parent, overflowHidden) {
-
-        parent = parent || '';
-        overflowHidden = overflowHidden || true;
-
-        if (parent !== '')
-        {
-            if (document.getElementById(parent))
-            {
-                document.getElementById(parent).appendChild(canvas);
-            }
-            else
-            {
-                document.body.appendChild(canvas);
-            }
-
-            if (overflowHidden)
-            {
-                document.getElementById(parent).style.overflow = 'hidden';
-            }
-        }
-        else
-        {
-            document.body.appendChild(canvas);
-        }
-
-        return canvas;
-
-    },
-
-    /**
-    * Sets the transform of the given canvas to the matrix values provided.
-    *
-    * @method setTransform
-    * @param {CanvasRenderingContext2D} context The context to set the transform on.
-    * @param {Number} translateX The value to translate horizontally by.
-    * @param {Number} translateY The value to translate vertically by.
-    * @param {Number} scaleX The value to scale horizontally by.
-    * @param {Number} scaleY The value to scale vertically by.
-    * @param {Number} skewX The value to skew horizontaly by.
-    * @param {Number} skewY The value to skew vertically by.
-    * @return {CanvasRenderingContext2D} Returns the source context.
-    */
-    setTransform: function (context, translateX, translateY, scaleX, scaleY, skewX, skewY) {
-
-        context.setTransform(scaleX, skewX, skewY, scaleY, translateX, translateY);
-
-        return context;
-
-    },
-
-    /**
-    * Sets the Image Smoothing property on the given context. Set to false to disable image smoothing.
-    * By default browsers have image smoothing enabled, which isn't always what you visually want, especially
-    * when using pixel art in a game. Note that this sets the property on the context itself, so that any image
-    * drawn to the context will be affected. This sets the property across all current browsers but support is
-    * patchy on earlier browsers, especially on mobile.
-    *
-    * @method setSmoothingEnabled
-    * @param {CanvasRenderingContext2D} context The context to enable or disable the image smoothing on.
-    * @param {bool} value If set to true it will enable image smoothing, false will disable it.
-    * @return {CanvasRenderingContext2D} Returns the source context.
-    */
-    setSmoothingEnabled: function (context, value) {
-
-        context['imageSmoothingEnabled'] = value;
-        context['mozImageSmoothingEnabled'] = value;
-        context['oImageSmoothingEnabled'] = value;
-        context['webkitImageSmoothingEnabled'] = value;
-        context['msImageSmoothingEnabled'] = value;
-
-        return context;
-
-    },
-
-    /**
-    * Sets the CSS image-rendering property on the given canvas to be 'crisp' (aka 'optimize contrast on webkit').
-    * Note that if this doesn't given the desired result then see the setSmoothingEnabled.
-    *
-    * @method setImageRenderingCrisp
-    * @param {HTMLCanvasElement} canvas The canvas to set image-rendering crisp on.
-    * @return {HTMLCanvasElement} Returns the source canvas.
-    */
-    setImageRenderingCrisp: function (canvas) {
-
-        canvas.style['image-rendering'] = 'crisp-edges';
-        canvas.style['image-rendering'] = '-moz-crisp-edges';
-        canvas.style['image-rendering'] = '-webkit-optimize-contrast';
-        canvas.style.msInterpolationMode = 'nearest-neighbor';
-
-        return canvas;
-
-    },
-
-    /**
-    * Sets the CSS image-rendering property on the given canvas to be 'bicubic' (aka 'auto').
-    * Note that if this doesn't given the desired result then see the CanvasUtils.setSmoothingEnabled method.
-    *
-    * @method setImageRenderingBicubic
-    * @param {HTMLCanvasElement} canvas The canvas to set image-rendering bicubic on.
-    * @return {HTMLCanvasElement} Returns the source canvas.
-    */
-    setImageRenderingBicubic: function (canvas) {
-
-        canvas.style['image-rendering'] = 'auto';
-        canvas.style.msInterpolationMode = 'bicubic';
-
-        return canvas;
-
-    }
-
-};
-
-/**
 * The Events component is a collection of events fired by the parent game object and its components.
 * @param parent The game object using this Input component
 */
@@ -14138,7 +13950,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
             this.bounds.x -= this._cache.boundsX - this._cache.x;
             this._cache.boundsX = this._cache.x;
 
-            this.bounds.y -= this._cache.boundsy - this._cache.y;
+            this.bounds.y -= this._cache.boundsY - this._cache.y;
             this._cache.boundsY = this._cache.y;
         }
     }
@@ -14484,37 +14296,240 @@ Phaser.Text = function (game, x, y, text, style) {
     text = text || '';
     style = style || '';
 
+    //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
+    this.exists = true;
+
+    //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
+    this.alive = true;
+
+    this.group = null;
+
+    this.name = '';
+
+    this.game = game;
+
     PIXI.Text.call(this, text, style);
-
-    /*
-    this.canvas = document.createElement("canvas");
-    this.context = this.canvas.getContext("2d");
-
-	var canvasID = game.rnd.uuid();
-
-	PIXI.TextureCache[canvasID] = new PIXI.Texture(new PIXI.BaseTexture(this.canvas));
-
-	Phaser.Sprite.call(this, game, x, y, canvasID);
 
     this.type = Phaser.TEXT;
 
-    this.setText(text);
-    this.setStyle(style);
-    
-    this.updateText();
-    this.dirty = false;
-    */
+    this.position.x = x;
+    this.position.y = y;
+
+    //  Replaces the PIXI.Point with a slightly more flexible one
+    this.anchor = new Phaser.Point();
+    this.scale = new Phaser.Point(1, 1);
+
+    //  Influence of camera movement upon the position
+    this.scrollFactor = new Phaser.Point(1, 1);
+
+    //  A mini cache for storing all of the calculated values
+    this._cache = { 
+
+        dirty: false,
+
+        //  Transform cache
+        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
+
+        //  The previous calculated position inc. camera x/y and scrollFactor
+        x: -1, y: -1,
+
+        //  The actual scale values based on the worldTransform
+        scaleX: 1, scaleY: 1
+
+    };
+
+    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+
+    this.renderable = true;
 
 };
 
-// Phaser.Text.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Text.prototype);
-Phaser.Text.prototype = Phaser.Utils.extend(true, PIXI.Text.prototype);
+Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
-//  Add our own custom methods
+// Automatically called by World.update
+Phaser.Text.prototype.update = function() {
+
+    if (!this.exists)
+    {
+        return;
+    }
+
+    this._cache.dirty = false;
+
+    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+
+    if (this.position.x != this._cache.x || this.position.y != this._cache.y)
+    {
+        this.position.x = this._cache.x;
+        this.position.y = this._cache.y;
+        this._cache.dirty = true;
+    }
+
+}
+
+Object.defineProperty(Phaser.Text.prototype, 'angle', {
+
+    get: function() {
+        return Phaser.Math.radToDeg(this.rotation);
+    },
+
+    set: function(value) {
+        this.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
+
+Object.defineProperty(Phaser.Text.prototype, 'x', {
+
+    get: function() {
+        return this.position.x;
+    },
+
+    set: function(value) {
+        this.position.x = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Text.prototype, 'y', {
+
+    get: function() {
+        return this.position.y;
+    },
+
+    set: function(value) {
+        this.position.y = value;
+    }
+
+});
+
+Phaser.BitmapText = function (game, x, y, text, style) {
+
+    x = x || 0;
+    y = y || 0;
+    text = text || '';
+    style = style || '';
+
+    //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
+    this.exists = true;
+
+    //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
+    this.alive = true;
+
+    this.group = null;
+
+    this.name = '';
+
+    this.game = game;
+
+    PIXI.BitmapText.call(this, text, style);
+
+    this.type = Phaser.BITMAPTEXT;
+
+    this.position.x = x;
+    this.position.y = y;
+
+    //  Replaces the PIXI.Point with a slightly more flexible one
+    this.anchor = new Phaser.Point();
+    this.scale = new Phaser.Point(1, 1);
+
+    //  Influence of camera movement upon the position
+    this.scrollFactor = new Phaser.Point(1, 1);
+
+    //  A mini cache for storing all of the calculated values
+    this._cache = { 
+
+        dirty: false,
+
+        //  Transform cache
+        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
+
+        //  The previous calculated position inc. camera x/y and scrollFactor
+        x: -1, y: -1,
+
+        //  The actual scale values based on the worldTransform
+        scaleX: 1, scaleY: 1
+
+    };
+
+    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+
+    this.renderable = true;
+
+};
+
+Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
+// Phaser.BitmapText.prototype = Phaser.Utils.extend(true, PIXI.BitmapText.prototype);
+Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
+
+/**
+ * Automatically called by World.update
+ */
+Phaser.BitmapText.prototype.update = function() {
+
+    if (!this.exists)
+    {
+        return;
+    }
+
+    this._cache.dirty = false;
+
+    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+
+    if (this.position.x != this._cache.x || this.position.y != this._cache.y)
+    {
+        this.position.x = this._cache.x;
+        this.position.y = this._cache.y;
+        this._cache.dirty = true;
+    }
+
+}
+
+Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
+
+    get: function() {
+        return Phaser.Math.radToDeg(this.rotation);
+    },
+
+    set: function(value) {
+        this.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
+
+Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
+
+    get: function() {
+        return this.position.x;
+    },
+
+    set: function(value) {
+        this.position.x = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
+
+    get: function() {
+        return this.position.y;
+    },
+
+    set: function(value) {
+        this.position.y = value;
+    }
+
+});
 
 /**
 * Create a new <code>Button</code> object.
+* @class Button
+* @constructor
 *
 * @param game {Phaser.Game} Current game instance.
 * @param [x] {number} X position of the button.
@@ -14573,7 +14588,15 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 Phaser.Button.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
 Phaser.Button.prototype.constructor = Phaser.Button;
 
-//  Add our own custom methods
+/**
+* Used to manually set the frames that will be used for the different states of the button
+* exactly like setting them in the constructor
+*
+* @method setFrames
+* @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+* @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+* @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+*/
 
 Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
 
@@ -14873,124 +14896,6 @@ Phaser.RenderTexture = function (game, key, width, height) {
 Phaser.RenderTexture.prototype = Phaser.Utils.extend(true, PIXI.RenderTexture.prototype);
 Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
 
-Phaser.BitmapText = function (game, x, y, text, style) {
-
-    x = x || 0;
-    y = y || 0;
-    text = text || '';
-    style = style || '';
-
-    //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
-    this.exists = true;
-
-    //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
-    this.alive = true;
-
-    this.group = null;
-
-    this.name = '';
-
-    this.game = game;
-
-    PIXI.BitmapText.call(this, text, style);
-
-    this.position.x = x;
-    this.position.y = y;
-
-    //  Replaces the PIXI.Point with a slightly more flexible one
-    this.scale = new Phaser.Point(1, 1);
-
-    //  Influence of camera movement upon the position
-    this.scrollFactor = new Phaser.Point(1, 1);
-
-    //  A mini cache for storing all of the calculated values
-    this._cache = { 
-
-        dirty: false,
-
-        //  Transform cache
-        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
-
-        //  The previous calculated position inc. camera x/y and scrollFactor
-        x: -1, y: -1,
-
-        //  The actual scale values based on the worldTransform
-        scaleX: 1, scaleY: 1
-
-    };
-
-    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
-
-    this.renderable = true;
-
-};
-
-Phaser.BitmapText.prototype = Phaser.Utils.extend(true, PIXI.BitmapText.prototype);
-Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
-
-//  Add our own custom methods
-
-/**
- * Automatically called by World.update
- */
-Phaser.BitmapText.prototype.update = function() {
-
-    if (!this.exists)
-    {
-        return;
-    }
-
-    this._cache.dirty = false;
-
-    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
-
-    if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-    {
-        this.position.x = this._cache.x;
-        this.position.y = this._cache.y;
-        this._cache.dirty = true;
-    }
-
-}
-
-Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
-
-    get: function() {
-        return Phaser.Math.radToDeg(this.rotation);
-    },
-
-    set: function(value) {
-        this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
-
-    get: function() {
-        return this.position.x;
-    },
-
-    set: function(value) {
-        this.position.x = value;
-    }
-
-});
-
-Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
-
-    get: function() {
-        return this.position.y;
-    },
-
-    set: function(value) {
-        this.position.y = value;
-    }
-
-});
-
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -15096,22 +15001,23 @@ Phaser.Canvas = {
     addToDOM: function (canvas, parent, overflowHidden) {
 
         parent = parent || '';
-        overflowHidden = overflowHidden || true;
+
+        if (typeof overflowHidden === 'undefined') { overflowHidden = true; }
 
         if (parent !== '')
         {
             if (document.getElementById(parent))
             {
                 document.getElementById(parent).appendChild(canvas);
+
+                if (overflowHidden)
+                {
+                    document.getElementById(parent).style.overflow = 'hidden';
+                }
             }
             else
             {
                 document.body.appendChild(canvas);
-            }
-
-            if (overflowHidden)
-            {
-                document.getElementById(parent).style.overflow = 'hidden';
             }
         }
         else
@@ -19192,7 +19098,7 @@ Phaser.Rectangle.intersects = function (a, b, tolerance) {
 
     tolerance = tolerance || 0;
 
-    return !(a.left > b.right + tolerance || a.right < b.left - tolerance || a.top > b.bottom + tolerance || a.bottom < b.top - tolerance);
+    return !(a.x > b.right + tolerance || a.right < b.x - tolerance || a.y > b.bottom + tolerance || a.bottom < b.y - tolerance);
 
 };
 
@@ -20407,46 +20313,91 @@ Phaser.Time.prototype = {
 
 };
 /**
-* AnimationManager
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation
+*/
+
+/**
+* The AnimationManager is used to add, play and update Phaser Animations.
+* Any Game Object such as Phaser.Sprite that supports animation contains a single AnimationManager instance.
 *
-* Any Game Object that supports animation contains a single AnimationManager instance. It is used to add,
-* play and update Phaser.Animation objects.
-*
-* @package    Phaser.Components.AnimationManager
-* @author     Richard Davey <rich@photonstorm.com>
-* @copyright  2013 Photon Storm Ltd.
-* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @class AnimationManager
+* @constructor
+* @param {Phaser.Sprite} sprite A reference to the Game Object that owns this AnimationManager.
 */
 Phaser.AnimationManager = function (sprite) {
 
-	/**
-	* Data contains animation frames.
-	* @type {FrameData}
-	*/
-	this._frameData = null;
-
-	/**
-	* Keeps track of the current frame of the animation.
-	*/
-	this.currentFrame = null;
-
+    /**
+    * A reference to the parent Sprite that owns this AnimationManager.
+    * @property sprite
+    * @public
+    * @type {Phaser.Sprite}
+    */
 	this.sprite = sprite;
 
+    /**
+    * A reference to the currently running Game.
+    * @property game
+    * @public
+    * @type {Phaser.Game}
+    */
 	this.game = sprite.game;
 
+    /**
+    * The currently displayed Frame of animation, if any.
+    * @property currentFrame
+    * @public
+    * @type {Phaser.Animation.Frame}
+    */
+	this.currentFrame = null;
+
+    /**
+    * Should the animation data continue to update even if the Sprite.visible is set to false.
+    * @property updateIfVisible
+    * @public
+    * @type {Boolean}
+    * @default true
+    */
+	this.updateIfVisible = true;
+
+    /**
+    * A temp. var for holding the currently playing Animations FrameData.
+    * @property _frameData
+    * @private
+    * @type {Phaser.Animation.FrameData}
+    */
+	this._frameData = null;
+
+    /**
+    * An internal object that stores all of the Animation instances.
+    * @property _anims
+    * @private
+    * @type {Object}
+    */
 	this._anims = {};
 
-	this.updateIfVisible = true;
+    /**
+    * An internal object to help avoid gc.
+    * @property _outputFrames
+    * @private
+    * @type {Object}
+    */
+	this._outputFrames = [];
 
 };
 
 Phaser.AnimationManager.prototype = {
 
-
-	/**
-	* Load animation frame data.
-	* @param frameData Data to be loaded.
-	*/
+    /**
+    * Loads FrameData into the internal temporary vars and resets the frame index to zero.
+    * This is called automatically when a new Sprite is created.
+    *
+    * @method loadFrameData
+    * @private
+    * @param {Phaser.Animation.FrameData} frameData The FrameData set to load.
+    */
 	loadFrameData: function (frameData) {
 
 		this._frameData = frameData;
@@ -20455,27 +20406,29 @@ Phaser.AnimationManager.prototype = {
 	},
 
 	/**
-	* Add a new animation.
-	* @param name {string} What this animation should be called (e.g. "run").
-	* @param frames {any[]} An array of numbers/strings indicating what frames to play in what order (e.g. [1, 2, 3] or ['run0', 'run1', run2]).
-	* @param frameRate {number} The speed in frames per second that the animation should play at (e.g. 60 fps).
-	* @param loop {bool} Whether or not the animation is looped or just plays once.
-	* @param useNumericIndex {bool} Use number indexes instead of string indexes?
-	* @return {Animation} The Animation that was created
+	* Adds a new animation under the given key. Optionally set the frames, frame rate and loop.
+	* Animations added in this way are played back with the play function.
+	*
+    * @method add
+	* @param {String} name The unique (within this Sprite) name for the animation, i.e. "run", "fire", "walk".
+	* @param {Array} [frames=null] An array of numbers/strings that correspond to the frames to add to this animation and in which order. e.g. [1, 2, 3] or ['run0', 'run1', run2]). If null then all frames will be used.
+	* @param {Number} [frameRate=60] The speed at which the animation should play. The speed is given in frames per second.
+	* @param {Boolean} [loop=false] {bool} Whether or not the animation is looped or just plays once.
+	* @param {Boolean} [useNumericIndex=true] Are the given frames using numeric indexes (default) or strings? (false)
+	* @return {Phaser.Animation} The Animation object that was created.
 	*/
 	add: function (name, frames, frameRate, loop, useNumericIndex) {
 
-		frames = frames || null;
-		frameRate = frameRate || 60;
-
-		if (typeof loop == 'undefined') { loop = false; }
-		if (typeof useNumericIndex == 'undefined') { useNumericIndex = true; }
-
 		if (this._frameData == null)
 		{
-			console.warn('No frameData available for Phaser.Animation ' + name);
+			console.warn('No FrameData available for Phaser.Animation ' + name);
 			return;
 		}
+
+		frameRate = frameRate || 60;
+
+		if (typeof loop === 'undefined') { loop = false; }
+		if (typeof useNumericIndex === 'undefined') { useNumericIndex = true; }
 
 		//  Create the signals the AnimationManager will emit
 		if (this.sprite.events.onAnimationStart == null)
@@ -20485,25 +20438,11 @@ Phaser.AnimationManager.prototype = {
 			this.sprite.events.onAnimationLoop = new Phaser.Signal();
 		}
 
-		if (frames == null)
-		{
-			frames = this._frameData.getFrameIndexes();
-		}
-		else
-		{
-			if (this.validateFrames(frames, useNumericIndex) == false)
-			{
-				console.warn('Invalid frames given to Phaser.Animation ' + name);
-				return;
-			}
-		}
+    	this._outputFrames.length = 0;
 
-		if (useNumericIndex == false)
-		{
-			frames = this._frameData.getFrameIndexesByName(frames);
-		}
+		this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
 
-		this._anims[name] = new Phaser.Animation(this.game, this.sprite, this._frameData, name, frames, frameRate, loop);
+		this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
 		this.currentAnim = this._anims[name];
 		this.currentFrame = this.currentAnim.currentFrame;
 		this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
@@ -20513,10 +20452,12 @@ Phaser.AnimationManager.prototype = {
 	},
 
 	/**
-	* Check whether the frames is valid.
-	* @param frames {any[]} Frames to be validated.
-	* @param useNumericIndex {bool} Does these frames use number indexes or string indexes?
-	* @return {bool} True if they're valid, otherwise return false.
+	* Check whether the frames in the given array are valid and exist.
+	*
+    * @method validateFrames
+	* @param {Array} frames An array of frames to be validated.
+	* @param {Boolean} [useNumericIndex=true] Validate the frames based on their numeric index (true) or string index (false)
+	* @return {Boolean} True if all given Frames are valid, otherwise false.
 	*/
 	validateFrames: function (frames, useNumericIndex) {
 
@@ -20545,16 +20486,17 @@ Phaser.AnimationManager.prototype = {
 	},
 
 	/**
-	* Play animation with specific name.
-	* @param name {string} The string name of the animation you want to play.
-	* @param frameRate {number} FrameRate you want to specify instead of using default.
-	* @param loop {bool} Whether or not the animation is looped or just plays once.
+	* Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
+	* If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
+	* 
+	* @method play
+	* @param {String} name The name of the animation to be played, e.g. "fire", "walk", "jump".
+    * @param {Number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+    * @param {Boolean} [loop=null] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+    * @return {Phaser.Animation} A reference to playing Animation instance.
 	*/
 	play: function (name, frameRate, loop) {
 
-		frameRate = frameRate || null;
-		loop = loop || null;
-		
 		if (this._anims[name])
 		{
 			if (this.currentAnim == this._anims[name])
@@ -20574,8 +20516,12 @@ Phaser.AnimationManager.prototype = {
 	},
 
 	/**
-	* Stop animation. If a name is given that specific animation is stopped, otherwise the current one is stopped.
-	* Current animation will be automatically set to the stopped one.
+	* Stop playback of an animation. If a name is given that specific animation is stopped, otherwise the current animation is stopped.
+	* The currentAnim property of the AnimationManager is automatically set to the animation given.
+	*
+	* @method stop
+	* @param {String} [name=null] The name of the animation to be stopped, e.g. "fire". If none is given the currently running animation is stopped.
+	* @param {Boolean} [resetFrame=false] When the animation is stopped should the currentFrame be set to the first frame of the animation (true) or paused on the last frame displayed (false)
 	*/
 	stop: function (name, resetFrame) {
 
@@ -20600,8 +20546,11 @@ Phaser.AnimationManager.prototype = {
 	},
 
 	/**
-	* Update animation and parent sprite's bounds.
-	* Returns true if a new frame has been set, otherwise false.
+	* The main update function is called by the Sprites update loop. It's responsible for updating animation frames and firing related events.
+	* 
+	* @method update
+	* @protected
+    * @return {Boolean} True if a new animation frame has been set, otherwise false.
 	*/
 	update: function () {
 
@@ -20621,8 +20570,10 @@ Phaser.AnimationManager.prototype = {
 
 	},
 
-	/**
-    * Removes all related references
+    /**
+    * Destroys all references this AnimationManager contains. Sets the _anims to a new object and nulls the current animation.
+    *
+    * @method destroy
     */
     destroy: function () {
 
@@ -20638,6 +20589,10 @@ Phaser.AnimationManager.prototype = {
 
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
 
+    /**
+    * @method frameData
+    * @return {Phaser.Animation.FrameData} Returns the FrameData of the current animation.
+    */
     get: function () {
         return this._frameData;
     }
@@ -20646,6 +20601,10 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
 
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
 
+    /**
+    * @method frameTotal
+    * @return {Number} Returns the total number of frames in the loaded FrameData, or -1 if no FrameData is loaded.
+    */
     get: function () {
 
         if (this._frameData)
@@ -20662,6 +20621,10 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
 
 Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 
+    /**
+    * @method frame
+    * @return {Number} Returns the index of the current frame.
+    */
     get: function () {
 
     	if (this.currentFrame)
@@ -20672,8 +20635,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
     },
 
 	/**
-    *
-    * @param value
+    * @method frame
+    * @param {Number} value Sets the current frame on the Sprite and updates the texture cache for display.
     */
     set: function (value) {
 
@@ -20691,6 +20654,10 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
 
+    /**
+    * @method frameName
+    * @return {String} Returns the name of the current frame if it has one.
+    */
     get: function () {
 
     	if (this.currentFrame)
@@ -20700,9 +20667,13 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
 
     },
 
+	/**
+    * @method frameName
+    * @param {String} value Sets the current frame on the Sprite and updates the texture cache for display.
+    */
     set: function (value) {
 
-        if (this._frameData && this._frameData.getFrameByName(value))
+        if (this._frameData && this._frameData.getFrameByName(value) !== null)
         {
             this.currentFrame = this._frameData.getFrameByName(value);
             this._frameIndex = this.currentFrame.index;
@@ -20718,45 +20689,128 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
 });
 
 /**
-* Animation
-*
-* An Animation instance contains a single animation and the controls to play it.
-* It is created by the AnimationManager and belongs to Game Objects such as Sprite.
-*
-* @package    Phaser.Animation
-* @author     Richard Davey <rich@photonstorm.com>
-* @copyright  2013 Photon Storm Ltd.
-* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
-*
-* @param parent {Sprite} Owner sprite of this animation.
-* @param frameData {FrameData} The FrameData object contains animation data.
-* @param name {string} Unique name of this animation.
-* @param frames {number[]/string[]} An array of numbers or strings indicating what frames to play in what order.
-* @param delay {number} Time between frames in ms.
-* @param looped {bool} Whether or not the animation is looped or just plays once.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation
 */
-Phaser.Animation = function (game, parent, frameData, name, frames, delay, looped) {
 
+/**
+* An Animation instance contains a single animation and the controls to play it.
+* It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
+*
+* @class Animation
+* @constructor
+* @param {Phaser.Game} game A reference to the currently running game.
+* @param {Phaser.Sprite} parent A reference to the owner of this Animation.
+* @param {String} name The unique name for this animation, used in playback commands.
+* @param {Phaser.Animation.FrameData} frameData The FrameData object that contains all frames used by this Animation.
+* @param {Mixed} frames An array of numbers or strings indicating which frames to play in which order.
+* @param {Number} delay The time between each frame of the animation, given in ms.
+* @param {Boolean} looped Should this animation loop or play through once.
+*/
+Phaser.Animation = function (game, parent, name, frameData, frames, delay, looped) {
+
+    /**
+    * A reference to the currently running Game.
+    * @property game
+    * @public
+    * @type {Phaser.Game}
+    */
 	this.game = game;
+
+    /**
+    * A reference to the parent Sprite that owns this Animation.
+    * @property _parent
+    * @private
+    * @type {Phaser.Sprite}
+    */
 	this._parent = parent;
+
+    /**
+    * The FrameData the Animation uses.
+    * @property _frameData
+    * @private
+    * @type {Phaser.FrameData}
+    */
+    this._frameData = frameData;
+
+    /**
+    * The user defined name given to this Animation.
+    * @property name
+    * @public
+    * @type {String}
+    */
+    this.name = name;
+
+    /**
+    * @property _frames
+    * @private
+    * @type {Object}
+    */
 	this._frames = frames;
-	this._frameData = frameData;
-	this.name = name;
+
+    /**
+    * The delay in ms between each frame of the Animation.
+    * @property delay
+    * @public
+    * @type {Number}
+    */
 	this.delay = 1000 / delay;
+
+    /**
+    * The loop state of the Animation.
+    * @property looped
+    * @public
+    * @type {Boolean}
+    */
 	this.looped = looped;
+
+    /**
+    * The finished state of the Animation. Set to true once playback completes, false during playback.
+    * @property isFinished
+    * @public
+    * @type {Boolean}
+    * default true
+    */
 	this.isFinished = false;
+
+    /**
+    * The playing state of the Animation. Set to false once playback completes, true during playback.
+    * @property isPlaying
+    * @public
+    * @type {Boolean}
+    * default false
+    */
 	this.isPlaying = false;
+
+    /**
+    * @property _frameIndex
+    * @private
+    * @type {Number}
+    * default 0
+    */
 	this._frameIndex = 0;
+
+    /**
+    * The currently displayed frame of the Animation.
+    * @property currentFrame
+    * @public
+    * @type {Phaser.Animation.Frame}
+    */
 	this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 	
 };
 
 Phaser.Animation.prototype = {
 
-	/**
-    * Play this animation.
-    * @param frameRate {number} FrameRate you want to specify instead of using default.
-    * @param loop {bool} Whether or not the animation is looped or just plays once.
+    /**
+    * Plays this animation.
+    *
+    * @method play
+    * @param {Number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+    * @param {Boolean} [loop=null] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+    * @return {Phaser.Animation} A reference to this Animation instance.
     */
     play: function (frameRate, loop) {
 
@@ -20765,7 +20819,8 @@ Phaser.Animation.prototype = {
 
         if (frameRate !== null)
         {
-            this.delay = 1000 / frameRate;
+            // this.delay = 1000 / frameRate;
+            this.delay = frameRate;
         }
 
         if (loop !== null)
@@ -20784,14 +20839,20 @@ Phaser.Animation.prototype = {
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 		this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-        this._parent.events.onAnimationStart.dispatch(this._parent, this);
+
+        if (this._parent.events)
+        {
+            this._parent.events.onAnimationStart.dispatch(this._parent, this);
+        }
 
         return this;
 
     },
 
-	/**
-    * Play this animation from the first frame.
+    /**
+    * Sets this animation back to the first frame and restarts the animation.
+    *
+    * @method restart
     */
     restart: function () {
 
@@ -20807,12 +20868,15 @@ Phaser.Animation.prototype = {
 
     },
 
-	/**
-    * Stop playing animation and set it finished.
+    /**
+    * Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.
+    *
+    * @method stop
+    * @param {Boolean} [resetFrame=false] If true after the animation stops the currentFrame value will be set to the first frame in this animation.
     */
     stop: function (resetFrame) {
 
-        if (typeof resetFrame == 'undefined') { resetFrame = false; }
+        if (typeof resetFrame === 'undefined') { resetFrame = false; }
 
         this.isPlaying = false;
         this.isFinished = true;
@@ -20824,8 +20888,10 @@ Phaser.Animation.prototype = {
 
     },
 
-	/**
-    * Update animation frames.
+    /**
+    * Updates this animation. Called automatically by the AnimationManager.
+    *
+    * @method update
     */
     update: function () {
 
@@ -20863,8 +20929,10 @@ Phaser.Animation.prototype = {
 
     },
 
-	/**
-    * Clean up animation memory.
+    /**
+    * Cleans up this animation ready for deletion. Nulls all values and references.
+    *
+    * @method destroy
     */
     destroy: function () {
 
@@ -20877,14 +20945,20 @@ Phaser.Animation.prototype = {
 
     },
 
-	/**
-    * Animation complete callback method.
+    /**
+    * Called internally when the animation finishes playback. Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent.
+    *
+    * @method onComplete
     */
     onComplete: function () {
 
         this.isPlaying = false;
         this.isFinished = true;
-        this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+
+        if (this._parent.events)
+        {
+            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+        }
 
     }
 
@@ -20892,6 +20966,10 @@ Phaser.Animation.prototype = {
 
 Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
+    /**
+    * @method frameTotal
+    * @return {Number} The total number of frames in this animation.
+    */
     get: function () {
         return this._frames.length;
     }
@@ -20900,6 +20978,10 @@ Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
 Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
+    /**
+    * @method frame
+    * @return {Animation.Frame} Returns the current frame, or if not set the index of the most recent frame.
+    */
     get: function () {
 
         if (this.currentFrame !== null)
@@ -20913,6 +20995,10 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
     },
 
+    /**
+    * @method frame
+    * @return {Number} Sets the current frame to the given frame index and updates the texture cache.
+    */
     set: function (value) {
 
         this.currentFrame = this._frameData.getFrame(value);
@@ -20928,125 +21014,183 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 });
 
 /**
-* Frame
-*
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation
+*/
+
+/**
 * A Frame is a single frame of an animation and is part of a FrameData collection.
 *
-* @package    Phaser.Animation.Frame
-* @author     Richard Davey <rich@photonstorm.com>
-* @copyright  2013 Photon Storm Ltd.
-* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @class Frame
+* @constructor
+* @param {Number} index The index of this Frame within the FrameData set it is being added to.
+* @param {Number} x X position of the frame within the texture image.
+* @param {Number} y Y position of the frame within the texture image.
+* @param {Number} width Width of the frame within the texture image.
+* @param {Number} height Height of the frame within the texture image.
+* @param {String} name The name of the frame. In Texture Atlas data this is usually set to the filename.
+* @param {String} uuid Internal UUID key.
 */
-Phaser.Animation.Frame = function (x, y, width, height, name, uuid) {
+Phaser.Animation.Frame = function (index, x, y, width, height, name, uuid) {
 
 	/**
-	 * X position within the image to cut from.
-	 * @type {number}
-	 */
+	* The index of this Frame within the FrameData set it is being added to.
+    * @property index
+    * @public
+	* @type {Number}
+	*/
+	this.index = index;
+
+	/**
+	* X position within the image to cut from.
+    * @property x
+    * @public
+	* @type {Number}
+	*/
 	this.x = x;
 
 	/**
-	 * Y position within the image to cut from.
-	 * @type {number}
-	 */
+	* Y position within the image to cut from.
+    * @property y
+    * @public
+	* @type {Number}
+	*/
 	this.y = y;
 
 	/**
-	 * Width of the frame.
-	 * @type {number}
-	 */
+	* Width of the frame.
+    * @property width
+    * @public
+	* @type {Number}
+	*/
 	this.width = width;
 
 	/**
-	 * Height of the frame.
-	 * @type {number}
-	 */
+	* Height of the frame.
+    * @property height
+    * @public
+	* @type {Number}
+	*/
 	this.height = height;
 
 	/**
-	 * center X position within the image to cut from.
-	 * @type {number}
-	 */
-    this.centerX = Math.floor(width / 2);
-
-	/**
-	 * center Y position within the image to cut from.
-	 * @type {number}
-	 */
-    this.centerY = Math.floor(height / 2);
-
-	/**
-	 * Useful for Sprite Sheets.
-	 * @type {number}
-	 */
-	this.index = 0;
-
-	/**
-	 * Useful for Texture Atlas files. (is set to the filename value)
-	 */
+	* Useful for Texture Atlas files. (is set to the filename value)
+    * @property name
+    * @public
+    * @type {String}
+	*/
 	this.name = name;
 
 	/**
-	 * A link to the PIXI.TextureCache entry
-	 */
+	* A link to the PIXI.TextureCache entry
+    * @property uuid
+    * @public
+    * @type {String}
+	*/
 	this.uuid = uuid;
 
 	/**
-	 * The distance from the top left to the bottom-right of this Frame.
-	 * @type {number}
-	 */
+	* center X position within the image to cut from.
+    * @property centerX
+    * @public
+	* @type {Number}
+	*/
+    this.centerX = Math.floor(width / 2);
+
+	/**
+	* center Y position within the image to cut from.
+    * @property centerY
+    * @public
+	* @type {Number}
+	*/
+    this.centerY = Math.floor(height / 2);
+
+	/**
+	* The distance from the top left to the bottom-right of this Frame.
+    * @property distance
+    * @public
+	* @type {Number}
+	*/
 	this.distance = Phaser.Math.distance(0, 0, width, height);
 
 	/**
-	 * Rotated? (not yet implemented)
-	 */
+	* Rotated? (not yet implemented)
+    * @property rotated
+    * @public
+    * @type {Boolean}
+    * @default false
+	*/
 	this.rotated = false;
 
 	/**
-	 * Either cw or ccw, rotation is always 90 degrees.
-	 */
+	* Either cw or ccw, rotation is always 90 degrees.
+    * @property rotationDirection
+    * @public
+    * @type {String}
+    * @default "cw"
+	*/
 	this.rotationDirection = 'cw';
 
 	/**
-	 * Was it trimmed when packed?
-	 * @type {bool}
-	 */
+	* Was it trimmed when packed?
+    * @property trimmed
+    * @public
+	* @type {Boolean}
+	*/
 	this.trimmed = false;
 
 	/**
-	 * Width of the original sprite.
-	 * @type {number}
-	 */
+	* Width of the original sprite.
+    * @property sourceSizeW
+    * @public
+	* @type {Number}
+	*/
     this.sourceSizeW = width;
 
 	/**
-	 * Height of the original sprite.
-	 * @type {number}
-	 */
+	* Height of the original sprite.
+    * @property sourceSizeH
+    * @public
+	* @type {Number}
+	*/
     this.sourceSizeH = height;
 
 	/**
-	 * X position of the trimmed sprite inside original sprite.
-	 * @type {number}
-	 */
+	* X position of the trimmed sprite inside original sprite.
+    * @property spriteSourceSizeX
+    * @public
+	* @type {Number}
+    * @default 0
+	*/
 	this.spriteSourceSizeX = 0;
 
 	/**
-	 * Y position of the trimmed sprite inside original sprite.
-	 * @type {number}
-	 */
+	* Y position of the trimmed sprite inside original sprite.
+    * @property spriteSourceSizeY
+    * @public
+	* @type {Number}
+    * @default 0
+	*/
 	this.spriteSourceSizeY = 0;
 
 	/**
-	 * Width of the trimmed sprite.
-	 * @type {number}
-	 */
+	* Width of the trimmed sprite.
+    * @property spriteSourceSizeW
+    * @public
+	* @type {Number}
+    * @default 0
+	*/
 	this.spriteSourceSizeW = 0;
 
 	/**
-	 * Height of the trimmed sprite.
-	 * @type {number}
-	 */
+	* Height of the trimmed sprite.
+    * @property spriteSourceSizeH
+    * @public
+	* @type {Number}
+    * @default 0
+	*/
 	this.spriteSourceSizeH = 0;
 
 };
@@ -21054,14 +21198,16 @@ Phaser.Animation.Frame = function (x, y, width, height, name, uuid) {
 Phaser.Animation.Frame.prototype = {
 
 	/**
-	* Set trim of the frame.
-	* @param trimmed {bool} Whether this frame trimmed or not.
-	* @param actualWidth {number} Actual width of this frame.
-	* @param actualHeight {number} Actual height of this frame.
-	* @param destX {number} Destination x position.
-	* @param destY {number} Destination y position.
-	* @param destWidth {number} Destination draw width.
-	* @param destHeight {number} Destination draw height.
+	* If the frame was trimmed when added to the Texture Atlas this records the trim and source data.
+	*
+	* @method setTrim
+	* @param {Boolean} trimmed If this frame was trimmed or not.
+	* @param {Number} actualWidth The width of the frame before being trimmed.
+	* @param {Number} actualHeight The height of the frame before being trimmed.
+	* @param {Number} destX The destination X position of the trimmed frame for display.
+	* @param {Number} destY The destination Y position of the trimmed frame for display.
+	* @param {Number} destWidth The destination width of the trimmed frame for display.
+	* @param {Number} destHeight The destination height of the trimmed frame for display.
 	*/
     setTrim: function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
 
@@ -21086,39 +21232,47 @@ Phaser.Animation.Frame.prototype = {
 };
 
 /**
-* FrameData
-*
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation.FrameData
+*/
+
+/**
 * FrameData is a container for Frame objects, which are the internal representation of animation data in Phaser.
 *
-* @package    Phaser.Animation.FrameData
-* @author     Richard Davey <rich@photonstorm.com>
-* @copyright  2013 Photon Storm Ltd.
-* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @class FrameData
+* @constructor
 */
 Phaser.Animation.FrameData = function () {
 
     /**
-     * Local frame container.
-     * @type {Phaser.Frame[]}
-     * @private
-     */
+    * Local array of frames.
+    * @property _frames
+    * @private
+    * @type {Array}
+    */
     this._frames = [];
 
     /**
-     * Local frameName<->index container.
-     * @private
-     */
+    * Local array of frame names for name to index conversions.
+    * @property _frameNames
+    * @private
+    * @type {Array}
+    */
     this._frameNames = [];
 
 };
 
 Phaser.Animation.FrameData.prototype = {
 
-	/**
-	* Add a new frame.
-	* @param frame {Frame} The frame you want to add.
-	* @return {Frame} The frame you just added.
-	*/
+    /**
+    * Adds a new Frame to this FrameData collection. Typically called by the Animation.Parser and not directly.
+    *
+    * @method addFrame
+    * @param {Phaser.Animation.Frame} frame The frame to add to this FrameData set.
+    * @return {Phaser.Animation.Frame} The frame that was just added.
+    */
     addFrame: function (frame) {
 
         frame.index = this._frames.length;
@@ -21135,9 +21289,11 @@ Phaser.Animation.FrameData.prototype = {
     },
 
 	/**
-	* Get a frame by its index.
-	* @param index {number} Index of the frame you want to get.
-	* @return {Frame} The frame you want.
+	* Get a Frame by its numerical index.
+    *
+    * @method getFrame
+	* @param {Number} index The index of the frame you want to get.
+	* @return {Phaser.Animation.Frame} The frame, if found.
 	*/
     getFrame: function (index) {
 
@@ -21150,14 +21306,16 @@ Phaser.Animation.FrameData.prototype = {
 
     },
 
-	/**
-	* Get a frame by its name.
-	* @param name {string} Name of the frame you want to get.
-	* @return {Frame} The frame you want.
-	*/    
+    /**
+    * Get a Frame by its frame name.
+    *
+    * @method getFrameByName
+    * @param {String} name The name of the frame you want to get.
+    * @return {Phaser.Animation.Frame} The frame, if found.
+    */
     getFrameByName: function (name) {
 
-        if (this._frameNames[name] !== '')
+        if (typeof this._frameNames[name] === 'number')
         {
             return this._frames[this._frameNames[name]];
         }
@@ -21166,11 +21324,13 @@ Phaser.Animation.FrameData.prototype = {
 
     },
 
-	/**
-	* Check whether there's a frame with given name.
-	* @param name {string} Name of the frame you want to check.
-	* @return {bool} True if frame with given name found, otherwise return false.
-	*/
+    /**
+    * Check if there is a Frame with the given name.
+    *
+    * @method checkFrameName
+    * @param {String} name The name of the frame you want to check.
+    * @return {Boolean} True if the frame is found, otherwise false.
+    */
     checkFrameName: function (name) {
 
         if (this._frameNames[name] == null)
@@ -21183,11 +21343,13 @@ Phaser.Animation.FrameData.prototype = {
     },
 
 	/**
-	* Get ranges of frames in an array.
-	* @param start {number} Start index of frames you want.
-	* @param end {number} End index of frames you want.
-	* @param [output] {Frame[]} result will be added into this array.
-	* @return {Frame[]} Ranges of specific frames in an array.
+	* Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
+    *
+    * @method getFrameRange
+    * @param {Number} start The starting frame index.
+	* @param {Number} end The ending frame index.
+	* @param {Array} [output] Optional array. If given the results will be appended to the end of this Array.
+	* @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
 	*/
     getFrameRange: function (start, end, output) {
         
@@ -21203,37 +21365,45 @@ Phaser.Animation.FrameData.prototype = {
     },
 
 	/**
-	* Get all indexes of frames by giving their name.
-	* @param [output] {number[]} result will be added into this array.
-	* @return {number[]} Indexes of specific frames in an array.
+	* Returns all of the Frames in this FrameData set where the frame index is found in the input array.
+    * The frames are returned in the output array, or if none is provided in a new Array object.
+    *
+    * @method getFrames
+    * @param {Array} frames An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.
+    * @param {Boolean} [useNumericIndex=true] Are the given frames using numeric indexes (default) or strings? (false)
+    * @param {Array} [output] Optional array. If given the results will be appended to the end of this Array, otherwise a new array is created.
+    * @return {Array} An array of all Frames in this FrameData set matching the given names or IDs.
 	*/
-    getFrameIndexes: function (output) {
+    getFrames: function (frames, useNumericIndex, output) {
 
+        if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
-        for (var i = 0; i < this._frames.length; i++)
+        if (typeof frames === "undefined" || frames.length == 0)
         {
-            output.push(i);
-        }
-
-        return output;
-
-    },
-
-	/**
-	* Get the frame indexes by giving the frame names.
-	* @param [output] {number[]} result will be added into this array.
-	* @return {number[]} Names of specific frames in an array.
-	*/
-    getFrameIndexesByName: function (input) {
-
-        var output = [];
-
-        for (var i = 0; i < input.length; i++)
-        {
-            if (this.getFrameByName(input[i]))
+            //  No input array, so we loop through all frames
+            for (var i = 0; i < this._frames.length; i++)
             {
-                output.push(this.getFrameByName(input[i]).index);
+                //  We only need the indexes
+                output.push(this._frames[i]);
+            }
+        }
+        else
+        {
+            //  Input array given, loop through that instead
+            for (var i = 0, len = frames.length; i < len; i++)
+            {
+                //  Does the input array contain names or indexes?
+                if (useNumericIndex)
+                {
+                    //  The actual frame
+                    output.push(this.getFrame(input[i]));
+                }
+                else
+                {
+                    //  The actual frame
+                    output.push(this.getFrameByName(input[i]));
+                }
             }
         }
 
@@ -21241,35 +21411,60 @@ Phaser.Animation.FrameData.prototype = {
 
     },
 
-	/**
-	* Get all frames in this frame data.
-	* @return {Frame[]} All the frames in an array.
-	*/
-    getAllFrames: function () {
-        return this._frames;
-    },
+    /**
+    * Returns all of the Frame indexes in this FrameData set.
+    * The frames indexes are returned in the output array, or if none is provided in a new Array object.
+    *
+    * @method getFrameIndexes
+    * @param {Array} frames An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.
+    * @param {Boolean} [useNumericIndex=true] Are the given frames using numeric indexes (default) or strings? (false)
+    * @param {Array} [output] Optional array. If given the results will be appended to the end of this Array, otherwise a new array is created.
+    * @return {Array} An array of all Frame indexes matching the given names or IDs.
+    */
+    getFrameIndexes: function (input, useNumericIndex, output) {
 
-	/**
-	* Get All frames with specific ranges.
-	* @param range {number[]} Ranges in an array.
-	* @return {Frame[]} All frames in an array.
-	*/
-    getFrames: function (range) {
+        if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
+        if (typeof output === "undefined") { output = []; }
 
-        var output = [];
-
-        for (var i = 0; i < range.length; i++)
+        if (typeof frames === "undefined" || frames.length == 0)
         {
-            output.push(this._frames[i]);
+            //  No input array, so we loop through all frames
+            for (var i = 0, len = this._frames.length; i < len; i++)
+            {
+                output.push(this._frames[i].index);
+            }
+        }
+        else
+        {
+            //  Input array given, loop through that instead
+            for (var i = 0, len = input.length; i < len; i++)
+            {
+                //  Does the input array contain names or indexes?
+                if (useNumericIndex)
+                {
+                    output.push(input[i].index);
+                }
+                else
+                {
+                    output.push(this.getFrameByName(input[i]).index);
+                }
+            }
         }
 
         return output;
+
     }
 
 };
 
 Object.defineProperty(Phaser.Animation.FrameData.prototype, "total", {
 
+    /**
+    * Returns the total number of frames in this FrameData set.
+    *
+    * @method total
+    * @return {Number} The total number of frames in this FrameData set.
+    */
     get: function () {
         return this._frames.length;
     }
@@ -21278,25 +21473,27 @@ Object.defineProperty(Phaser.Animation.FrameData.prototype, "total", {
 
 
 /**
-* Animation Parser
-*
 * Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
 *
-* @package    Phaser.Animation.Parser
-* @author     Richard Davey <rich@photonstorm.com>
-* @copyright  2013 Photon Storm Ltd.
-* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation
 */
+
 Phaser.Animation.Parser = {
 
-	/**
-	* Parse a sprite sheet from asset data.
-	* @param key {string} Asset key for the sprite sheet data.
-	* @param frameWidth {number} Width of animation frame.
-	* @param frameHeight {number} Height of animation frame.
-	* @param frameMax {number} Number of animation frames.
-	* @return {FrameData} Generated FrameData object.
-	*/
+    /**
+    * Parse a Sprite Sheet and extract the animation frame data from it.
+    *
+    * @method spriteSheet
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {String} key The Game.Cache asset key of the Sprite Sheet image.
+    * @param {Number} frameWidth The fixed width of each frame of the animation.
+    * @param {Number} frameHeight The fixed height of each frame of the animation.
+    * @param {Number} [frameMax=-1] The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    */
     spriteSheet: function (game, key, frameWidth, frameHeight, frameMax) {
 
         //  How big is our image?
@@ -21334,7 +21531,7 @@ Phaser.Animation.Parser = {
         {
             var uuid = game.rnd.uuid();
 
-            data.addFrame(new Phaser.Animation.Frame(x, y, frameWidth, frameHeight, '', uuid));
+            data.addFrame(new Phaser.Animation.Frame(i, x, y, frameWidth, frameHeight, '', uuid));
 
             PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
                 x: x,
@@ -21357,9 +21554,13 @@ Phaser.Animation.Parser = {
     },
 
     /**
-    * Parse frame data from json texture atlas in Array format.
-    * @param json {object} Json data you want to parse.
-    * @return {FrameData} Generated FrameData object.
+    * Parse the JSON data and extract the animation frame data from it.
+    *
+    * @method JSONData
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} json The JSON data from the Texture Atlas. Must be in Array format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
     */
     JSONData: function (game, json, cacheKey) {
 
@@ -21383,6 +21584,7 @@ Phaser.Animation.Parser = {
             var uuid = game.rnd.uuid();
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
             	frames[i].frame.x, 
             	frames[i].frame.y, 
             	frames[i].frame.w, 
@@ -21420,9 +21622,13 @@ Phaser.Animation.Parser = {
     },
 
     /**
-    * Parse frame data from json texture atlas in Hash format.
-    * @param json {object} Json data you want to parse.
-    * @return {FrameData} Generated FrameData object.
+    * Parse the JSON data and extract the animation frame data from it.
+    *
+    * @method JSONDataHash
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} json The JSON data from the Texture Atlas. Must be in JSON Hash format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
     */
     JSONDataHash: function (game, json, cacheKey) {
 
@@ -21440,13 +21646,14 @@ Phaser.Animation.Parser = {
         //  By this stage frames is a fully parsed array
         var frames = json['frames'];
         var newFrame;
+        var i = 0;
         
         for (var key in frames)
         {
-            console.log(key);
             var uuid = game.rnd.uuid();
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
                 frames[key].frame.x, 
                 frames[key].frame.y, 
                 frames[key].frame.w, 
@@ -21477,6 +21684,8 @@ Phaser.Animation.Parser = {
                 PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
                 PIXI.TextureCache[uuid].trim.x = 0;
             }
+
+            i++;
         }
 
         return data;
@@ -21484,9 +21693,13 @@ Phaser.Animation.Parser = {
     },
 
     /**
-    * Parse frame data from an XML file.
-    * @param xml {object} XML data you want to parse.
-    * @return {FrameData} Generated FrameData object.
+    * Parse the XML data and extract the animation frame data from it.
+    *
+    * @method XMLData
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} xml The XML data from the Texture Atlas. Must be in Starling XML format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
     */
     XMLData: function (game, xml, cacheKey) {
 
@@ -21509,6 +21722,7 @@ Phaser.Animation.Parser = {
             var frame = frames[i].attributes;
 
             newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
             	frame.x.nodeValue, 
             	frame.y.nodeValue, 
             	frame.width.nodeValue, 
@@ -21636,7 +21850,7 @@ Phaser.Cache.prototype = {
      */
     addRenderTexture: function (key, texture) {
 
-        var frame = new Phaser.Animation.Frame(0, 0, texture.width, texture.height, '', '');
+        var frame = new Phaser.Animation.Frame(0, 0, 0, texture.width, texture.height, '', '');
 
         this._textures[key] = { texture: texture, frame: frame };
 
@@ -21733,7 +21947,7 @@ Phaser.Cache.prototype = {
     addDefaultImage: function () {
 
         this._images['__default'] = { url: null, data: null, spriteSheet: false };
-        this._images['__default'].frame = new Phaser.Animation.Frame(0, 0, 32, 32, '', '');
+        this._images['__default'].frame = new Phaser.Animation.Frame(0, 0, 0, 32, 32, '', '');
 
         var base = new PIXI.BaseTexture();
         base.width = 32;
@@ -21754,7 +21968,7 @@ Phaser.Cache.prototype = {
     addImage: function (key, url, data) {
 
         this._images[key] = { url: url, data: data, spriteSheet: false };
-        this._images[key].frame = new Phaser.Animation.Frame(0, 0, data.width, data.height, '', '');
+        this._images[key].frame = new Phaser.Animation.Frame(0, 0, 0, data.width, data.height, '', '');
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
@@ -22232,6 +22446,12 @@ Phaser.Loader = function (game) {
 	this.progress = 0;
 
 	/**
+	* You can optionally link a sprite to the preloader.
+	* If you do so the Sprite's width or height will be cropped based on the percentage loaded.
+	*/
+	this.preloadSprite = null;
+
+	/**
 	* The crossOrigin value applied to loaded images
 	* @type {string}
 	*/
@@ -22264,6 +22484,27 @@ Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 
 Phaser.Loader.prototype = {
 
+	setPreloadSprite: function (sprite, direction) {
+
+		direction = direction || 0;
+
+		this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, crop: null };
+
+		if (direction == 0)
+		{
+			//	Horizontal crop
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 0, sprite.height);
+		}
+		else
+		{
+			//	Vertical crop
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 0);
+		}
+
+		sprite.crop = this.preloadSprite.crop;
+
+	},
+
 	/**
 	* Check whether asset exists with a specific key.
 	* @param key {string} Key of the asset you want to check.
@@ -22287,6 +22528,7 @@ Phaser.Loader.prototype = {
 	 */
 	reset: function () {
 
+		this.preloadSprite = null;
 		this.queueSize = 0;
 		this.isLoading = false;
 
@@ -23046,6 +23288,20 @@ Phaser.Loader.prototype = {
 			this.progress = 100;
 		}
 
+		if (this.preloadSprite !== null)
+		{
+			if (this.preloadSprite.direction == 0)
+			{
+				this.preloadSprite.crop.width = (this.preloadSprite.width / 100) * this.progress;
+			}
+			else
+			{
+				this.preloadSprite.crop.height = (this.preloadSprite.height / 100) * this.progress;
+			}
+
+			this.preloadSprite.sprite.crop = this.preloadSprite.crop;
+		}
+
 		this.onFileComplete.dispatch(this.progress, previousKey, success, this.queueSize - this._keys.length, this.queueSize);
 
 		if (this._keys.length > 0)
@@ -23136,10 +23392,20 @@ Phaser.Loader.Parser = {
     }
 
 };
+/**
+* The Sound class
+*
+* @class Sound
+* @constructor
+* @param game {Phaser.Game} reference to the current game instance.
+* @param key {string} Asset key for the sound.
+* @param volume {number} default value for the volume.
+* @param loop {bool} Whether or not the sound will loop.
+*/
 Phaser.Sound = function (game, key, volume, loop) {
 	
 	volume = volume || 1;
-	loop = loop || false;
+	if (typeof loop == 'undefined') { loop = false; }
 
     this.game = game;
     this.name = '';
@@ -23148,6 +23414,7 @@ Phaser.Sound = function (game, key, volume, loop) {
     this._volume = volume;
     this.markers = {};
 
+    
     /**
     * Reference to AudioContext instance.
     */
@@ -23237,7 +23504,7 @@ Phaser.Sound.prototype = {
     addMarker: function (name, start, stop, volume, loop) {
 
     	volume = volume || 1;
-    	loop = loop || false;
+    	if (typeof loop == 'undefined') { loop = false; }
 
         this.markers[name] = {
             name: name,
@@ -23315,7 +23582,9 @@ Phaser.Sound.prototype = {
 
 	/**
     * Play this sound, or a marked section of it.
+    
     * @param marker {string} Assets key of the sound you want to play.
+    * @param position {number} the starting position
     * @param [volume] {number} volume of the sound you want to play.
     * @param [loop] {bool} loop when it finished playing? (Default to false)
     * @return {Sound} The playing sound object.
@@ -23325,10 +23594,12 @@ Phaser.Sound.prototype = {
     	marker = marker || '';
     	position = position || 0;
     	volume = volume || 1;
-    	loop = loop || false;
-    	forceRestart = forceRestart || false;
+    	if (typeof loop == 'undefined') { loop = false; }
+    	if (typeof forceRestart == 'undefined') { forceRestart = false; }
 
-        // console.log('play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
+
+
+        console.log('play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {
@@ -23494,7 +23765,7 @@ Phaser.Sound.prototype = {
     	marker = marker || '';
     	position = position || 0;
     	volume = volume || 1;
-    	loop = loop || false;
+    	if (typeof loop == 'undefined') { loop = false; }
 
         this.play(marker, position, volume, loop, true);
 
@@ -23668,6 +23939,9 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 /**
 * Phaser - SoundManager
 *
+* @class SoundManager
+* @constructor
+* @param game {Phaser.Game} reference to the current game instance.
 */
 Phaser.SoundManager = function (game) {
 
@@ -23892,10 +24166,21 @@ Phaser.SoundManager.prototype = {
 
     },
 
+
+    /**
+    * 
+    * @method add
+    * @param key {string} Asset key for the sound.
+    * @param volume {number} default value for the volume.
+    * @param loop {bool} Whether or not the sound will loop.
+    */
+
     add: function (key, volume, loop) {
 
     	volume = volume || 1;
-    	loop = loop || false;
+    	if (typeof loop == 'undefined') { loop = false; }
+
+        
 
         var sound = new Phaser.Sound(this.game, key, volume, loop);
 

@@ -145,7 +145,6 @@ Phaser.StateManager.prototype = {
 		{
 			// console.log('Phaser.StateManager.addState: Phaser.State given');
 			newState = state;
-    		newState.link(this.game);
 		}
 		else if (typeof state === 'object')
 		{
@@ -328,9 +327,32 @@ Phaser.StateManager.prototype = {
 
     },
 
+    link: function (key) {
+
+		// console.log('linked');
+        this.states[key].game = this.game;
+        this.states[key].add = this.game.add;
+        this.states[key].camera = this.game.camera;
+        this.states[key].cache = this.game.cache;
+        this.states[key].input = this.game.input;
+        this.states[key].load = this.game.load;
+        this.states[key].math = this.game.math;
+        this.states[key].sound = this.game.sound;
+        this.states[key].stage = this.game.stage;
+        this.states[key].time = this.game.time;
+        this.states[key].tweens = this.game.tweens;
+        this.states[key].world = this.game.world;
+        this.states[key].particles = this.game.particles;
+        this.states[key].physics = this.game.physics;
+        this.states[key].rnd = this.game.rnd;
+
+    },
+
 	setCurrentState: function (key) {
 
         this.callbackContext = this.states[key];
+
+        this.link(key);
 
         //	Used when the state is set as being the current active state
         this.onInitCallback = this.states[key]['init'] || this.dummy;

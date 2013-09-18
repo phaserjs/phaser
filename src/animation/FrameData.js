@@ -82,7 +82,7 @@ Phaser.Animation.FrameData.prototype = {
     */
     getFrameByName: function (name) {
 
-        if (this._frameNames[name] && this._frameNames[name] !== '')
+        if (typeof this._frameNames[name] === 'number')
         {
             return this._frames[this._frameNames[name]];
         }

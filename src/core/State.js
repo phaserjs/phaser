@@ -31,25 +31,6 @@ Phaser.State = function () {
 
 Phaser.State.prototype = {
 
-    link: function (game) {
-
-        this.game = game;
-        this.add = game.add;
-        this.camera = game.camera;
-        this.cache = game.cache;
-        this.input = game.input;
-        this.load = game.load;
-        this.math = game.math;
-        this.sound = game.sound;
-        this.stage = game.stage;
-        this.time = game.time;
-        this.tweens = game.tweens;
-        this.world = game.world;
-        this.particles = game.particles;
-        this.physics = game.physics;
-
-    },
-
     /**
     * Override this method to add some load operations.
     * If you need to use the loader, you may need to use them here.
@@ -59,7 +40,7 @@ Phaser.State.prototype = {
 
     /**
     * This method is called after the game engine successfully switches states.
-    * Feel free to add any setup code here.(Do not load anything here, override init() instead)
+    * Feel free to add any setup code here.(Do not load anything here, override preload() instead)
     */
     create: function () {
     },
