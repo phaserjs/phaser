@@ -325,6 +325,26 @@ Phaser.Math = {
 
     },
 
+    /**
+    * Returns an Array containing the numbers from min to max (inclusive)
+    *
+    * @param min The minimum value the array starts with
+    * @param max The maximum value the array contains
+    * @return The array of number values
+    */
+    numberArray: function (min, max) {
+
+        var result = [];
+
+        for (var i = min; i <= max; i++)
+        {
+            result.push(i);
+        }
+
+        return result;
+
+    },
+
 	/**
 	* Adds the given amount to the value, but never lets the value go over the specified maximum
 	*

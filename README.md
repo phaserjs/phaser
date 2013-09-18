@@ -35,9 +35,10 @@ Phaser is everything we ever wanted from an HTML5 game framework. It will power 
 Change Log
 ----------
 
-Version 1.0.5 (September 19th 2013)
+Version 1.0.5 (In progress)
 
 * Fixed issue in FrameData.getFrameIndexes where the input array was being ignored.
+* Added Math.numberArray - Returns an Array containing the numbers from min to max (inclusive), useful for animation frame construction.
 
 
 Version 1.0.4 (September 18th 2013)
