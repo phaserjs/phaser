@@ -193,7 +193,7 @@ Phaser.Animation.FrameData.prototype = {
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
-        if (typeof frames === "undefined" || frames.length == 0)
+        if (typeof input === "undefined" || input.length == 0)
         {
             //  No input array, so we loop through all frames
             for (var i = 0, len = this._frames.length; i < len; i++)
@@ -209,7 +209,7 @@ Phaser.Animation.FrameData.prototype = {
                 //  Does the input array contain names or indexes?
                 if (useNumericIndex)
                 {
-                    output.push(input[i].index);
+                    output.push(input[i]);
                 }
                 else
                 {
