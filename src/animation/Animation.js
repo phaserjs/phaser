@@ -129,8 +129,8 @@ Phaser.Animation.prototype = {
 
         if (frameRate !== null)
         {
-            // this.delay = 1000 / frameRate;
-            this.delay = frameRate;
+            this.delay = 1000 / frameRate;
+            // this.delay = frameRate;
         }
 
         if (loop !== null)
