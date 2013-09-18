@@ -35,6 +35,11 @@ Phaser is everything we ever wanted from an HTML5 game framework. It will power 
 Change Log
 ----------
 
+Version 1.0.5 (September 19th 2013)
+
+* Fixed issue in FrameData.getFrameIndexes where the input array was being ignored.
+
+
 Version 1.0.4 (September 18th 2013)
 
 * Small fix to Phaser.Canvas to stop it from setting overflow hidden if the parent DOM element doesn't exist.

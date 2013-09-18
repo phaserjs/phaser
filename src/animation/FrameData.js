@@ -188,14 +188,14 @@ Phaser.Animation.FrameData.prototype = {
     * @param {Array} [output] Optional array. If given the results will be appended to the end of this Array, otherwise a new array is created.
     * @return {Array} An array of all Frame indexes matching the given names or IDs.
     */
-    getFrameIndexes: function (input, useNumericIndex, output) {
+    getFrameIndexes: function (frames, useNumericIndex, output) {
 
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
         if (typeof frames === "undefined" || frames.length == 0)
         {
-            //  No input array, so we loop through all frames
+            //  No frames array, so we loop through all frames
             for (var i = 0, len = this._frames.length; i < len; i++)
             {
                 output.push(this._frames[i].index);
@@ -204,16 +204,16 @@ Phaser.Animation.FrameData.prototype = {
         else
         {
             //  Input array given, loop through that instead
-            for (var i = 0, len = input.length; i < len; i++)
+            for (var i = 0, len = frames.length; i < len; i++)
             {
-                //  Does the input array contain names or indexes?
+                //  Does the frames array contain names or indexes?
                 if (useNumericIndex)
                 {
-                    output.push(input[i].index);
+                    output.push(frames[i].index);
                 }
                 else
                 {
-                    output.push(this.getFrameByName(input[i]).index);
+                    output.push(this.getFrameByName(frames[i]).index);
                 }
             }
         }
