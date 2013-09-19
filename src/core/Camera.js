@@ -6,12 +6,12 @@
 *
 * @class Phaser.Camera
 * @constructor
-* @param game {Phaser.Game} game reference to the currently running game.
-* @param id {number} not being used at the moment, will be when Phaser supports multiple camera
-* @param x {number} position of the camera on the X axis
-* @param y {number} position of the camera on the Y axis
-* @param width {number} the width of the view rectangle
-* @param height {number} the height of the view rectangle
+* @param {Phaser.Game} game game reference to the currently running game.
+* @param {number} id not being used at the moment, will be when Phaser supports multiple camera
+* @param {number} x position of the camera on the X axis
+* @param {number} y position of the camera on the Y axis
+* @param {number} width the width of the view rectangle
+* @param {number} height the height of the view rectangle
 */
 
 Phaser.Camera = function (game, id, x, y, width, height) {
@@ -26,36 +26,43 @@ Phaser.Camera = function (game, id, x, y, width, height) {
 
     /**
     * Camera view.
+    * @property view
     * @type {Rectangle}
     */
     this.view = new Phaser.Rectangle(x, y, width, height);
 
     /**
     * Used by Sprites to work out Camera culling.
+    * @property screenView
     * @type {Rectangle}
     */
 	this.screenView = new Phaser.Rectangle(x, y, width, height);
 
     /**
     * Sprite moving inside this Rectangle will not cause camera moving.
+    * @property deadzone
     * @type {Rectangle}
     */
     this.deadzone = null;
 
     /**
     * Whether this camera is visible or not. (default is true)
+    * @property visible
+    * @default true
     * @type {bool}
     */
     this.visible = true;
 
     /**
     * Whether this camera is flush with the World Bounds or not.
+    * @property atLimit
     * @type {bool}
     */
     this.atLimit = { x: false, y: false };
 
     /**
     * If the camera is tracking a Sprite, this is a reference to it, otherwise null
+    * @property target
     * @type {Sprite}
     */
     this.target = null;
@@ -74,6 +81,7 @@ Phaser.Camera.prototype = {
 
 	/**
     * Tells this camera which sprite to follow.
+    * @method follow
     * @param target {Sprite} The object you want the camera to track. Set to null to not follow anything.
     * @param [style] {number} Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
@@ -113,6 +121,7 @@ Phaser.Camera.prototype = {
 
 	/**
     * Move the camera focus to this location instantly.
+    * @method focusOnXY
     * @param x {number} X position.
     * @param y {number} Y position.
     */
@@ -125,6 +134,7 @@ Phaser.Camera.prototype = {
 
 	/**
     * Update focusing and scrolling.
+    * @method update
     */
     update: function () {
 
@@ -172,6 +182,10 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Method called to ensure the camera doesn't venture outside of the game world
+    * @method checkWorldBounds
+    */
     checkWorldBounds: function () {
 
         this.atLimit.x = false;
@@ -206,6 +220,14 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * A helper function to set both the X and Y properties of the camera at once
+    * without having to use game.camera.x and game.camera.y
+    * 
+    * @method setPosition
+    * @param x {number} X position.
+    * @param y {number} Y position.
+    */
     setPosition: function (x, y) {
 
         this.view.x = x;
@@ -214,6 +236,13 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Sets the size of the view rectangle
+    * 
+    * @method setSize
+    * @param x {number} X position.
+    * @param y {number} Y position.
+    */
     setSize: function (width, height) {
 
         this.view.width = width;

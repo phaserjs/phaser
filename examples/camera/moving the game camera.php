@@ -21,13 +21,11 @@
 		//setting the size of the game world larger than the tilemap's size
 		game.world.setSize(2000,2000);
 
-        // game.camera.width=150;
-        // game.camera.height=150;
-
 		game.stage.backgroundColor = '#255d3b';
 
 		// adding the tilemap
-        game.add.tilemap(0, 168, 'snes');
+        game.add.tilemap(0, 150, 'snes');
+
 
 	}
 
