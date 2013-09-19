@@ -15,7 +15,7 @@
  *
  * @class World
  * @constructor
- * @param game {Phaser.Game} reference to the current game instance.
+ * @param {Phaser.Game} game Reference to the current game instance.
  */
 Phaser.World = function (game) {
 
@@ -115,8 +115,8 @@ Phaser.World.prototype = {
 	/**
 	* Updates the size of this world.
 	* @method setSize
-	* @param width {number} New width of the world.
-	* @param height {number} New height of the world.
+	* @param {number} width New width of the world.
+	* @param {number} height New height of the world.
 	*/
 	setSize: function (width, height) {
 

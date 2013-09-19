@@ -3,19 +3,46 @@
 *
 * @class SoundManager
 * @constructor
-* @param game {Phaser.Game} reference to the current game instance.
+* @param {Phaser.Game} game reference to the current game instance.
 */
 Phaser.SoundManager = function (game) {
 
+    /**
+    * A reference to the currently running Game.
+    * @property game
+    * @public
+    * @type {Phaser.Game}
+    */
 	this.game = game;
 
 	this.onSoundDecode = new Phaser.Signal;
 
+
+    /**
+    * Boolean indicating whether the game is on "mute" 
+    * @property _muted
+    * @private
+    * @type {bool} 
+    */
     this._muted = false;
     this._unlockSource = null;
+
+    /**
+    * The global audio volume. A value between 0 (silence) and 1 (full volume)
+    * @property _volume
+    * @private
+    * @type {number} 
+    */
     this._volume = 1;
-    this._muted = false;
+
+    /**
+    * An array containing all the sounds 
+    * @property _sounds
+    * @private
+    * @type {array} 
+    */
     this._sounds = [];
+
 
     this.context = null;
     this.usingWebAudio = true;
@@ -30,6 +57,10 @@ Phaser.SoundManager = function (game) {
 
 Phaser.SoundManager.prototype = {
 
+    /**
+    * Initialises the sound manager
+    * @method boot
+    */
     boot: function () {
 
         if (this.game.device.iOS && this.game.device.webAudio == false)
@@ -108,6 +139,10 @@ Phaser.SoundManager.prototype = {
 
     },
 
+    /**
+    * Enables the audio, usually after the first touch
+    * @method unlock
+    */
     unlock: function () {
 
         if (this.touchLocked == false)
@@ -138,6 +173,10 @@ Phaser.SoundManager.prototype = {
 
     },
 
+    /**
+    * Stops all the sounds in the game
+    * @method stopAll
+    */
     stopAll: function () {
 
         for (var i = 0; i < this._sounds.length; i++)
@@ -150,6 +189,10 @@ Phaser.SoundManager.prototype = {
 
     },
 
+    /**
+    * Pauses all the sounds in the game
+    * @method pauseAll
+    */
     pauseAll: function () {
 
         for (var i = 0; i < this._sounds.length; i++)
@@ -162,6 +205,10 @@ Phaser.SoundManager.prototype = {
 
     },
 
+    /**
+    * resumes every sound in the game
+    * @method resumeAll
+    */
     resumeAll: function () {
 
         for (var i = 0; i < this._sounds.length; i++)
@@ -176,8 +223,9 @@ Phaser.SoundManager.prototype = {
 
 	/**
     * Decode a sound with its assets key.
+    * @method decode
     * @param key {string} Assets key of the sound to be decoded.
-    * @param [sound] {Sound} its bufer will be set to decoded data.
+    * @param [sound] {Phaser.Sound} its bufer will be set to decoded data.
     */
     decode: function (key, sound) {
 
@@ -205,6 +253,10 @@ Phaser.SoundManager.prototype = {
 
     },
 
+    /**
+    * updates every sound in the game
+    * @method update
+    */
     update: function () {
 
         if (this.touchLocked)
@@ -232,11 +284,10 @@ Phaser.SoundManager.prototype = {
     /**
     * 
     * @method add
-    * @param key {string} Asset key for the sound.
-    * @param volume {number} default value for the volume.
-    * @param loop {bool} Whether or not the sound will loop.
+    * @param {string} key Asset key for the sound.
+    * @param {number} volume Default value for the volume.
+    * @param {bool} loop Whether or not the sound will loop.
     */
-
     add: function (key, volume, loop) {
 
     	volume = volume || 1;
@@ -258,6 +309,8 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 
 	/**
     * A global audio mute toggle.
+    * @method mute
+    * @return {bool} whether or not the game is on "mute"
     */
     get: function () {
 
@@ -265,6 +318,11 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 
     },
 
+    /**
+    * Mute sounds.
+    * @method mute
+    * @return {bool} whether or not the game is on "mute"
+    */
     set: function (value) {
 
         value = value || null;
@@ -316,14 +374,16 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
                 }
             }
         }
-    },
+    }
 
-    enumerable: true,
-    configurable: true
 });
 
 Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
     
+    /**
+    * @method volume
+    * @return {number} The global audio volume. A value between 0 (silence) and 1 (full volume)
+    */
     get: function () {
 
         if (this.usingWebAudio)
@@ -338,7 +398,9 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
     },
 
 	/**
-    * The global audio volume. A value between 0 (silence) and 1 (full volume)
+    * Sets the global volume
+    * @method volume
+    * @return {number} The global audio volume. A value between 0 (silence) and 1 (full volume)
     */
     set: function (value) {
 

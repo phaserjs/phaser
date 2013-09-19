@@ -1,4 +1,15 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Utils
+*/
 
+/**
+* 
+* @class Utils
+* @static
+*/
 Phaser.Utils = {
 	
 	/**
@@ -6,6 +17,11 @@ Phaser.Utils = {
 	*  http://www.webtoolkit.info/
 	* pad = the string to pad it out with (defaults to a space)
 	* dir = 1 (left), 2 (right), 3 (both)
+	* @method pad
+	* @param {string} str the target string 
+	* @param {number} pad the string to pad it out with (defaults to a space)
+	* @param {number} len 
+	* @param {number} [dir=3] the direction dir = 1 (left), 2 (right), 3 (both)
 	**/
 	pad: function (str, len, pad, dir) {
 
@@ -37,7 +53,11 @@ Phaser.Utils = {
 
 	},
 
-	//	This is a slightly modified version of jQuery.isPlainObject
+	/**
+    * This is a slightly modified version of jQuery.isPlainObject
+    * @method isPlainObject
+    * @param {object} obj
+    */
 	isPlainObject: function (obj) {
 
 		// Not plain objects:
@@ -67,11 +87,20 @@ Phaser.Utils = {
 		return true;
 	},
 
+
 	//	deep, target, objects to copy to the target object
 	//	This is a slightly modified version of jQuery.extend (http://api.jquery.com/jQuery.extend/)
 	//	deep (boolean)
 	//	target (object to add to)
 	//	objects ... (objects to recurse and copy from)
+
+	/**
+    * This is a slightly modified version of jQuery.extend (http://api.jquery.com/jQuery.extend/)
+    * @method extend
+    * @param {bool} [deep] If true, the merge becomes recursive (aka. deep copy).
+    * @param {object} target The object to add to
+    * @param {object} objets Objects to recurse and copy from
+    */
 	extend: function () {
 
 		var options, name, src, copy, copyIsArray, clone,
@@ -147,17 +176,18 @@ Phaser.Utils = {
 
 //	Global functions that PIXI needs
 
-/**
+ /**
  * Converts a hex color number to an [R, G, B] array
  *
  * @method HEXtoRGB
- * @param hex {Number}
+ * @param {Number} hex 
+ * @return {array}
  */
 function HEXtoRGB(hex) {
 	return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
 }
 
-/**
+ /**
  * A polyfill for Function.prototype.bind
  *
  * @method bind

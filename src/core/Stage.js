@@ -12,9 +12,9 @@
 *
 * @class Stage
 * @constructor
-* @param game {Phaser.Game} game reference to the currently running game.
-* @param width {number} width of the canvas element
-* @param height {number} height of the canvas element
+* @param {Phaser.Game} game Game reference to the currently running game.
+* @param {number} width Width of the canvas element
+* @param {number} height Height of the canvas element
  */
 Phaser.Stage = function (game, width, height) {
 
@@ -64,7 +64,7 @@ Phaser.Stage = function (game, width, height) {
     * The current scaleMode
     * @property scaleMode
     * @public
-    * @type {Phaser.StageScaleMode}
+    * @type {number}
     */
     this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
 
@@ -117,7 +117,7 @@ Phaser.Stage.prototype = {
 	/**
     * This method is called when the document visibility is changed.
     * @method visibilityChange
-    * @param event [Event] its type will be used to decide whether the game should be paused or not
+    * @param {Event} event Its type will be used to decide whether the game should be paused or not
     */
     visibilityChange: function (event) {
 
