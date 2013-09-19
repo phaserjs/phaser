@@ -43,8 +43,7 @@ Version 1.0.5 (In progress)
 * Added a pendingDelete property to Tween to stop tweens that were removed during a callback from causing update errors during the TweenManager loop.
 * Added Group.length property.
 * Added explicit x/y attributes to Phaser.Text to make it work with the camera system (thanks cocoademon).
-
-
+* Fixed issue stopping multiple animations from playing, only the most recent would play (frames array was being overwritten, thanks Legrandk)
 
 Version 1.0.4 (September 18th 2013)
 

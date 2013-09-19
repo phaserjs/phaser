@@ -9,104 +9,78 @@
 * An Animation instance contains a single animation and the controls to play it.
 * It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
 *
-* @class Animation
+* @class Phaser.Animation
 * @constructor
-* @param {Phaser.Game} game A reference to the currently running game.
-* @param {Phaser.Sprite} parent A reference to the owner of this Animation.
-* @param {String} name The unique name for this animation, used in playback commands.
-* @param {Phaser.Animation.FrameData} frameData The FrameData object that contains all frames used by this Animation.
-* @param {Mixed} frames An array of numbers or strings indicating which frames to play in which order.
-* @param {Number} delay The time between each frame of the animation, given in ms.
-* @param {Boolean} looped Should this animation loop or play through once.
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Phaser.Sprite} parent - A reference to the owner of this Animation.
+* @param {string} name - The unique name for this animation, used in playback commands.
+* @param {Phaser.Animation.FrameData} frameData - The FrameData object that contains all frames used by this Animation.
+* @param {(Array.<number>|Array.<string>)} frames - An array of numbers or strings indicating which frames to play in which order.
+* @param {number} delay - The time between each frame of the animation, given in ms.
+* @param {boolean} looped - Should this animation loop or play through once.
 */
 Phaser.Animation = function (game, parent, name, frameData, frames, delay, looped) {
 
     /**
-    * A reference to the currently running Game.
-    * @property game
-    * @public
-    * @type {Phaser.Game}
+    * @property {Phaser.Game} game - A reference to the currently running Game.
     */
 	this.game = game;
 
     /**
-    * A reference to the parent Sprite that owns this Animation.
-    * @property _parent
+    * @property {Phaser.Sprite} _parent - A reference to the parent Sprite that owns this Animation.
     * @private
-    * @type {Phaser.Sprite}
     */
 	this._parent = parent;
 
     /**
-    * The FrameData the Animation uses.
-    * @property _frameData
+    * @property {Phaser.FrameData} _frameData - The FrameData the Animation uses.
     * @private
-    * @type {Phaser.FrameData}
     */
     this._frameData = frameData;
 
     /**
-    * The user defined name given to this Animation.
-    * @property name
-    * @public
-    * @type {String}
+    * @property {string} name - The user defined name given to this Animation.
     */
     this.name = name;
 
     /**
-    * @property _frames
+    * @property {object} _frames
     * @private
-    * @type {Object}
     */
-	this._frames = frames;
+	this._frames = [];
+    this._frames = this._frames.concat(frames);
 
     /**
-    * The delay in ms between each frame of the Animation.
-    * @property delay
-    * @public
-    * @type {Number}
+    * @property {number} delay - The delay in ms between each frame of the Animation.
     */
 	this.delay = 1000 / delay;
 
     /**
-    * The loop state of the Animation.
-    * @property looped
-    * @public
-    * @type {Boolean}
+    * @property {boolean} looped - The loop state of the Animation.
     */
 	this.looped = looped;
 
     /**
-    * The finished state of the Animation. Set to true once playback completes, false during playback.
-    * @property isFinished
-    * @public
-    * @type {Boolean}
-    * default true
+    * @property {boolean} isFinished - The finished state of the Animation. Set to true once playback completes, false during playback.
+    * @default
     */
 	this.isFinished = false;
 
     /**
-    * The playing state of the Animation. Set to false once playback completes, true during playback.
-    * @property isPlaying
-    * @public
-    * @type {Boolean}
-    * default false
+    * @property {boolean} isPlaying - The playing state of the Animation. Set to false once playback completes, true during playback.
+    * @default
     */
 	this.isPlaying = false;
 
     /**
-    * @property _frameIndex
+    * @property {number} _frameIndex
     * @private
-    * @type {Number}
-    * default 0
+    * @default
     */
 	this._frameIndex = 0;
 
     /**
-    * The currently displayed frame of the Animation.
-    * @property currentFrame
-    * @public
-    * @type {Phaser.Animation.Frame}
+    * @property {Phaser.Animation.Frame} currentFrame - The currently displayed frame of the Animation.
     */
 	this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 	
