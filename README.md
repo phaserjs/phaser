@@ -42,6 +42,7 @@ Version 1.0.5 (In progress)
 * Fixed a horrendously sneaky bug: If a new tween was created in the onComplete callback of a tween about to be deleted, it would get automatically spliced.
 * Added a pendingDelete property to Tween to stop tweens that were removed during a callback from causing update errors during the TweenManager loop.
 * Added Group.length property.
+* Added explicit x/y attributes to Phaser.Text to make it work with the camera system (thanks cocoademon).
 
 
 

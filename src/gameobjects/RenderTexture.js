@@ -9,7 +9,9 @@ Phaser.RenderTexture = function (game, key, width, height) {
 	this.width = width || 100;
 	this.height = height || 100;
 
-	this.identityMatrix = PIXI.mat3.create();
+	//	I know this has a typo in it, but it's because the PIXI.RenderTexture does and we need to pair-up with it
+	//	once they update pixi to fix the typo, we'll fix it here too :)
+	this.indetityMatrix = PIXI.mat3.create();
 
 	this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);	
 
