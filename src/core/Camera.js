@@ -1,10 +1,16 @@
 /**
-* Phaser - Camera
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Camera
+*/
+
+/**
 *
 * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
 * The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
 *
-* @class Phaser.Camera
+* @class Camera
 * @constructor
 * @param {Phaser.Game} game game reference to the currently running game.
 * @param {number} id not being used at the moment, will be when Phaser supports multiple camera
@@ -16,38 +22,60 @@
 
 Phaser.Camera = function (game, id, x, y, width, height) {
 
+    /**
+    * A reference to the currently running Game.
+    * @property game
+    * @public
+    * @type {Phaser.Game}
+    */
 	this.game = game;
+
+    /**
+    * A reference to the game world
+    * @property world
+    * @public
+    * @type {Phaser.World}
+    */
 	this.world = game.world;
-	this.id = 0; // reserved for future multiple camera set-ups
-	
-	//  The view into the world we wish to render (by default the game dimensions)
-	//  The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render
-	//	Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?)
+
+    /**
+    * reserved for future multiple camera set-ups
+    * @property id
+    * @public
+    * @type {number}
+    */
+	this.id = 0; 
 
     /**
     * Camera view.
+    * The view into the world we wish to render (by default the game dimensions)
+    * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render
+    * Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?)
     * @property view
-    * @type {Rectangle}
+    * @public
+    * @type {Phaser.Rectangle}
     */
     this.view = new Phaser.Rectangle(x, y, width, height);
 
     /**
     * Used by Sprites to work out Camera culling.
     * @property screenView
-    * @type {Rectangle}
+    * @public
+    * @type {Phaser.Rectangle}
     */
 	this.screenView = new Phaser.Rectangle(x, y, width, height);
 
     /**
     * Sprite moving inside this Rectangle will not cause camera moving.
     * @property deadzone
-    * @type {Rectangle}
+    * @type {Phaser.Rectangle}
     */
     this.deadzone = null;
 
     /**
     * Whether this camera is visible or not. (default is true)
     * @property visible
+    * @public
     * @default true
     * @type {bool}
     */
@@ -63,10 +91,17 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     /**
     * If the camera is tracking a Sprite, this is a reference to it, otherwise null
     * @property target
-    * @type {Sprite}
+    * @public
+    * @type {Phaser.Sprite}
     */
     this.target = null;
 
+    /**
+    * Edge property
+    * @property edge
+    * @private
+    * @type {number}
+    */
     this._edge = 0;
 	
 };
@@ -82,7 +117,7 @@ Phaser.Camera.prototype = {
 	/**
     * Tells this camera which sprite to follow.
     * @method follow
-    * @param target {Sprite} The object you want the camera to track. Set to null to not follow anything.
+    * @param target {Phaser.Sprite} The object you want the camera to track. Set to null to not follow anything.
     * @param [style] {number} Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
     follow: function (target, style) {
@@ -120,7 +155,7 @@ Phaser.Camera.prototype = {
     },
 
 	/**
-    * Move the camera focus to this location instantly.
+    * Move the camera focus to a location instantly.
     * @method focusOnXY
     * @param x {number} X position.
     * @param y {number} Y position.
@@ -237,11 +272,11 @@ Phaser.Camera.prototype = {
     },
 
     /**
-    * Sets the size of the view rectangle
+    * Sets the size of the view rectangle given the width and height in parameters
     * 
     * @method setSize
-    * @param x {number} X position.
-    * @param y {number} Y position.
+    * @param width {number} the desired width.
+    * @param height {number} the desired height.
     */
     setSize: function (width, height) {
 
@@ -254,10 +289,17 @@ Phaser.Camera.prototype = {
 
 Object.defineProperty(Phaser.Camera.prototype, "x", {
 
+    /**
+    * @method x
+    * @return {Number} The x position
+    */
     get: function () {
         return this.view.x;
     },
-
+    /**
+    * @method x
+    * @return {Number} Sets the camera's x position and clamp it if it's outside the world bounds
+    */
     set: function (value) {
         this.view.x = value;
         this.checkWorldBounds();
@@ -267,10 +309,18 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 
 Object.defineProperty(Phaser.Camera.prototype, "y", {
 
+    /**
+    * @method y
+    * @return {Number} The y position
+    */
     get: function () {
         return this.view.y;
     },
 
+    /**
+    * @method y
+    * @return {Number} Sets the camera's y position and clamp it if it's outside the world bounds
+    */
     set: function (value) {
         this.view.y = value;
         this.checkWorldBounds();
@@ -280,10 +330,18 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 
 Object.defineProperty(Phaser.Camera.prototype, "width", {
 
+    /**
+    * @method width
+    * @return {Number} The width of the view rectangle, in pixels
+    */
     get: function () {
         return this.view.width;
     },
 
+    /**
+    * @method width
+    * @return {Number} Sets the width of the view rectangle
+    */
     set: function (value) {
         this.view.width = value;
     }
@@ -292,10 +350,18 @@ Object.defineProperty(Phaser.Camera.prototype, "width", {
 
 Object.defineProperty(Phaser.Camera.prototype, "height", {
 
+    /**
+    * @method height
+    * @return {Number} The height of the view rectangle, in pixels
+    */
     get: function () {
         return this.view.height;
     },
 
+    /**
+    * @method height
+    * @return {Number} Sets the height of the view rectangle
+    */
     set: function (value) {
         this.view.height = value;
     }

@@ -1,4 +1,11 @@
 /**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Button
+*/
+
+/**
 * Create a new <code>Button</code> object.
 * @class Button
 * @constructor
@@ -14,6 +21,7 @@
 * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
 */
 Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+
 
     x = x || 0;
     y = y || 0;
@@ -69,7 +77,6 @@ Phaser.Button.prototype.constructor = Phaser.Button;
 * @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
 * @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
 */
-
 Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
 
     if (overFrame !== null)
