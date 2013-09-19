@@ -1,5 +1,11 @@
 /**
- * World
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.World
+*/
+
+/**
  *
  * "This world is but a canvas to our imagination." - Henry David Thoreau
  *
@@ -7,50 +13,62 @@
  * by stage limits and can be any size. You look into the world via cameras. All game objects live within
  * the world at world-based coordinates. By default a world is created the same size as your Stage.
  *
- * @package    Phaser.World
- * @author     Richard Davey <rich@photonstorm.com>
- * @copyright  2013 Photon Storm Ltd.
- * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
-
  * @class World
  * @constructor
- * @param game {Phaser.Game} reference to the current game instance.
+ * @param {Phaser.Game} game Reference to the current game instance.
  */
 Phaser.World = function (game) {
 
     /**
-     * Local reference to Game.
-     */
+    * A reference to the currently running Game.
+    * @property game
+    * @public
+    * @type {Phaser.Game}
+    */
 	this.game = game;
 
     /**
-     * Bound of this world that objects can not escape from.
-     * @type {Rectangle}
-     */
+    * Bound of this world that objects can not escape from.
+    * @property bounds
+    * @public
+    * @type {Phaser.Rectangle}
+    */
 	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 
     /**
-     * Camera instance.
-     * @type {Camera}
-     */
+    * Camera instance.
+    * @property camera
+    * @public
+    * @type {Phaser.Camera}
+    */
 	this.camera = null;
 
     /**
-     * Reset each frame, keeps a count of the total number of objects updated.
-     * @type {Number}
-     */
+    * Reset each frame, keeps a count of the total number of objects updated.
+    * @property currentRenderOrderID
+    * @public
+    * @type {Number}
+    */
 	this.currentRenderOrderID = 0;
 
     /**
-     * Object container stores every object created with `create*` methods.
-     * @type {Group}
-     */
+    * Object container stores every object created with `create*` methods.
+    * @property group
+    * @public
+    * @type {Phaser.Group}
+    */
     this.group = null;
 	
 };
 
 Phaser.World.prototype = {
 
+
+    /**
+    * Initialises the game world
+    *
+    * @method boot
+    */
 	boot: function () {
 
 		this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
@@ -62,8 +80,9 @@ Phaser.World.prototype = {
 	},
 
     /**
-     * This is called automatically every frame, and is where main logic happens.
-     */
+    * This is called automatically every frame, and is where main logic happens.
+    * @method update
+    */
 	update: function () {
 
 		this.camera.update();
@@ -96,8 +115,8 @@ Phaser.World.prototype = {
 	/**
 	* Updates the size of this world.
 	* @method setSize
-	* @param width {number} New width of the world.
-	* @param height {number} New height of the world.
+	* @param {number} width New width of the world.
+	* @param {number} height New height of the world.
 	*/
 	setSize: function (width, height) {
 
@@ -134,10 +153,18 @@ Phaser.World.prototype = {
 
 Object.defineProperty(Phaser.World.prototype, "width", {
 
+    /**
+    * @method width
+    * @return {Number} The current width of the game world
+    */
     get: function () {
         return this.bounds.width;
     },
 
+    /**
+    * @method width
+    * @return {Number} Sets the width of the game world
+    */
     set: function (value) {
         this.bounds.width = value;
     }
@@ -146,10 +173,18 @@ Object.defineProperty(Phaser.World.prototype, "width", {
 
 Object.defineProperty(Phaser.World.prototype, "height", {
 
+    /**
+    * @method height
+    * @return {Number} The current height of the game world
+    */
     get: function () {
         return this.bounds.height;
     },
 
+    /**
+    * @method height
+    * @return {Number} Sets the width of the game world
+    */
     set: function (value) {
         this.bounds.height = value;
     }
@@ -158,6 +193,10 @@ Object.defineProperty(Phaser.World.prototype, "height", {
 
 Object.defineProperty(Phaser.World.prototype, "centerX", {
 
+    /**
+    * @method centerX
+    * @return {Number} return the X position of the center point of the world
+    */
     get: function () {
         return this.bounds.halfWidth;
     }
@@ -166,6 +205,10 @@ Object.defineProperty(Phaser.World.prototype, "centerX", {
 
 Object.defineProperty(Phaser.World.prototype, "centerY", {
 
+     /**
+    * @method centerY
+    * @return {Number} return the Y position of the center point of the world
+    */
     get: function () {
         return this.bounds.halfHeight;
     }
@@ -174,6 +217,10 @@ Object.defineProperty(Phaser.World.prototype, "centerY", {
 
 Object.defineProperty(Phaser.World.prototype, "randomX", {
 
+    /**
+    * @method randomX
+    * @return {Number} a random integer which is lesser or equal to the current width of the game world
+    */
     get: function () {
         return Math.round(Math.random() * this.bounds.width);
     }
@@ -182,6 +229,10 @@ Object.defineProperty(Phaser.World.prototype, "randomX", {
 
 Object.defineProperty(Phaser.World.prototype, "randomY", {
 
+    /**
+    * @method randomY
+    * @return {Number} a random integer which is lesser or equal to the current height of the game world
+    */
     get: function () {
         return Math.round(Math.random() * this.bounds.height);
     }

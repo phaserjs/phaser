@@ -1,19 +1,27 @@
 /**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Button
+*/
+
+/**
 * Create a new <code>Button</code> object.
 * @class Button
 * @constructor
 *
-* @param game {Phaser.Game} Current game instance.
-* @param [x] {number} X position of the button.
-* @param [y] {number} Y position of the button.
-* @param [key] {string} The image key as defined in the Game.Cache to use as the texture for this button.
-* @param [callback] {function} The function to call when this button is pressed
-* @param [callbackContext] {object} The context in which the callback will be called (usually 'this')
-* @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
-* @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
-* @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+* @param {Phaser.Game} game Current game instance.
+* @param {number} [x] X position of the button.
+* @param {number} [y] Y position of the button.
+* @param {string} [key] The image key as defined in the Game.Cache to use as the texture for this button.
+* @param {function} [callback] The function to call when this button is pressed
+* @param {object} [callbackContext] The context in which the callback will be called (usually 'this')
+* @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
 */
 Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+
 
     x = x || 0;
     y = y || 0;
@@ -65,11 +73,10 @@ Phaser.Button.prototype.constructor = Phaser.Button;
 * exactly like setting them in the constructor
 *
 * @method setFrames
-* @param [overFrame] {string|number} This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
-* @param [outFrame] {string|number} This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
-* @param [downFrame] {string|number} This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
 */
-
 Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
 
     if (overFrame !== null)

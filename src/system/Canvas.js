@@ -5,8 +5,22 @@
 * @module       Phaser.Canvas
 */
 
-Phaser.Canvas = {
+/**
+* The Canvas class handles everything related to the <canvas> tag as a DOM Element, like styles, offset, aspect ratio
+*
+* @class Canvas
+* @static
+*/
 
+Phaser.Canvas = {
+    /**
+    * Creates the <canvas> tag
+    *
+    * @method create
+    * @param {number} width The desired width
+    * @param {number} height The desired height
+    * @return {HTMLCanvasElement} the newly created <canvas> tag
+    */
     create: function (width, height) {
 
         width = width || 256;
@@ -23,6 +37,10 @@ Phaser.Canvas = {
 
     /**
     * Get the DOM offset values of any given element
+    * @method getOffset
+    * @param {HTMLElement} element The targeted element that we want to retrieve the offset
+    * @param {Phaser.Point} [point] The point we want to take the x/y values of the offset
+    * @return point {Phaser.Point} A point objet with the offsetX and Y as its properties
     */    
     getOffset: function (element, point) {
 
