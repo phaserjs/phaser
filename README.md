@@ -39,6 +39,10 @@ Version 1.0.5 (In progress)
 
 * Fixed issue in FrameData.getFrameIndexes where the input array was being ignored.
 * Added Math.numberArray - Returns an Array containing the numbers from min to max (inclusive), useful for animation frame construction.
+* Fixed a horrendously sneaky bug: If a new tween was created in the onComplete callback of a tween about to be deleted, it would get automatically spliced.
+* Added a pendingDelete property to Tween to stop tweens that were removed during a callback from causing update errors during the TweenManager loop.
+* Added Group.length property.
+
 
 
 Version 1.0.4 (September 18th 2013)

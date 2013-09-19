@@ -832,6 +832,14 @@ Phaser.Group.prototype = {
 
 };
 
+Object.defineProperty(Phaser.Group.prototype, "length", {
+
+    get: function () {
+        return this._container.children.length;
+    }
+
+});
+
 Object.defineProperty(Phaser.Group.prototype, "x", {
 
     get: function () {

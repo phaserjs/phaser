@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.1 - Built at: Wed, 18 Sep 2013 05:29:56 +0000
+* v1.0.5 - Built at: Thu, 19 Sep 2013 03:03:05 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -34,7 +34,7 @@ var PIXI = PIXI || {};
  */
 var Phaser = Phaser || { 
 
-	VERSION: '1.0.4', 
+	VERSION: '1.0.5', 
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
@@ -16771,6 +16771,26 @@ Phaser.Math = {
 
     },
 
+    /**
+    * Returns an Array containing the numbers from min to max (inclusive)
+    *
+    * @param min The minimum value the array starts with
+    * @param max The maximum value the array contains
+    * @return The array of number values
+    */
+    numberArray: function (min, max) {
+
+        var result = [];
+
+        for (var i = min; i <= max; i++)
+        {
+            result.push(i);
+        }
+
+        return result;
+
+    },
+
 	/**
 	* Adds the given amount to the value, but never lets the value go over the specified maximum
 	*
@@ -19282,6 +19302,7 @@ Phaser.TweenManager = function (game) {
 
 	this.game = game;
 	this._tweens = [];
+	this._add = [];
 
 	this.game.onPause.add(this.pauseAll, this);
 	this.game.onResume.add(this.resumeAll, this);
@@ -19319,7 +19340,7 @@ Phaser.TweenManager.prototype = {
 	*/
 	add: function ( tween ) {
 
-		this._tweens.push( tween );
+		this._add.push( tween );
 
 	},
 
@@ -19346,7 +19367,7 @@ Phaser.TweenManager.prototype = {
 
 		if ( i !== -1 ) {
 
-			this._tweens.splice( i, 1 );
+			this._tweens[i].pendingDelete = true;
 
 		}
 
@@ -19359,9 +19380,10 @@ Phaser.TweenManager.prototype = {
 	*/
 	update: function () {
 
-		if ( this._tweens.length === 0 ) return false;
+		if ( this._tweens.length === 0 && this._add.length === 0 ) return false;
 
-		var i = 0, numTweens = this._tweens.length;
+		var i = 0;
+		var numTweens = this._tweens.length;
 
 		while ( i < numTweens ) {
 
@@ -19377,6 +19399,13 @@ Phaser.TweenManager.prototype = {
 
 			}
 
+		}
+
+		//	If there are any new tweens to be added, do so now - otherwise they can be spliced out of the array before ever running
+		if (this._add.length > 0)
+		{
+			this._tweens = this._tweens.concat(this._add);
+			this._add.length = 0;
 		}
 
 		return true;
@@ -19443,6 +19472,8 @@ Phaser.Tween = function (object, game) {
 	this._onCompleteCallback = null;
 
     this._pausedTime = 0;
+
+    this.pendingDelete = false;
 
 	// Set all starting values present on the target object
 	for ( var field in object ) {
@@ -19598,21 +19629,21 @@ Phaser.Tween.prototype = {
 
 	},
 
-	onStart: function ( callback ) {
+	onStartCallback: function ( callback ) {
 
 		this._onStartCallback = callback;
 		return this;
 
 	},
 
-	onUpdate: function ( callback ) {
+	onUpdateCallback: function ( callback ) {
 
 		this._onUpdateCallback = callback;
 		return this;
 
 	},
 
-	onComplete: function ( callback ) {
+	onCompleteCallback: function ( callback ) {
 
 		this._onCompleteCallback = callback;
 		return this;
@@ -19629,6 +19660,11 @@ Phaser.Tween.prototype = {
     },
 
 	update: function ( time ) {
+
+		if (this.pendingDelete)
+		{
+			return false;
+		}
 
         if (this._paused || time < this._startTime) {
 
@@ -20819,8 +20855,8 @@ Phaser.Animation.prototype = {
 
         if (frameRate !== null)
         {
-            // this.delay = 1000 / frameRate;
-            this.delay = frameRate;
+            this.delay = 1000 / frameRate;
+            // this.delay = frameRate;
         }
 
         if (loop !== null)
@@ -21421,14 +21457,14 @@ Phaser.Animation.FrameData.prototype = {
     * @param {Array} [output] Optional array. If given the results will be appended to the end of this Array, otherwise a new array is created.
     * @return {Array} An array of all Frame indexes matching the given names or IDs.
     */
-    getFrameIndexes: function (input, useNumericIndex, output) {
+    getFrameIndexes: function (frames, useNumericIndex, output) {
 
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
         if (typeof frames === "undefined" || frames.length == 0)
         {
-            //  No input array, so we loop through all frames
+            //  No frames array, so we loop through all frames
             for (var i = 0, len = this._frames.length; i < len; i++)
             {
                 output.push(this._frames[i].index);
@@ -21437,16 +21473,16 @@ Phaser.Animation.FrameData.prototype = {
         else
         {
             //  Input array given, loop through that instead
-            for (var i = 0, len = input.length; i < len; i++)
+            for (var i = 0, len = frames.length; i < len; i++)
             {
-                //  Does the input array contain names or indexes?
+                //  Does the frames array contain names or indexes?
                 if (useNumericIndex)
                 {
-                    output.push(input[i].index);
+                    output.push(frames[i].index);
                 }
                 else
                 {
-                    output.push(this.getFrameByName(input[i]).index);
+                    output.push(this.getFrameByName(frames[i]).index);
                 }
             }
         }
@@ -21613,6 +21649,7 @@ Phaser.Animation.Parser = {
                 );
 
                 PIXI.TextureCache[uuid].realSize = frames[i].spriteSourceSize;
+                // PIXI.TextureCache[uuid].realSize = frames[i].sourceSize;
                 PIXI.TextureCache[uuid].trim.x = 0;
             }
         }
@@ -21682,6 +21719,7 @@ Phaser.Animation.Parser = {
                 );
 
                 PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
+                // PIXI.TextureCache[uuid].realSize = frames[key].sourceSize;
                 PIXI.TextureCache[uuid].trim.x = 0;
             }
 

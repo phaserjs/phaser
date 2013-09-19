@@ -36,6 +36,8 @@ Phaser.Tween = function (object, game) {
 
     this._pausedTime = 0;
 
+    this.pendingDelete = false;
+
 	// Set all starting values present on the target object
 	for ( var field in object ) {
 		this._valuesStart[ field ] = parseFloat(object[field], 10);
@@ -190,21 +192,21 @@ Phaser.Tween.prototype = {
 
 	},
 
-	onStart: function ( callback ) {
+	onStartCallback: function ( callback ) {
 
 		this._onStartCallback = callback;
 		return this;
 
 	},
 
-	onUpdate: function ( callback ) {
+	onUpdateCallback: function ( callback ) {
 
 		this._onUpdateCallback = callback;
 		return this;
 
 	},
 
-	onComplete: function ( callback ) {
+	onCompleteCallback: function ( callback ) {
 
 		this._onCompleteCallback = callback;
 		return this;
@@ -221,6 +223,11 @@ Phaser.Tween.prototype = {
     },
 
 	update: function ( time ) {
+
+		if (this.pendingDelete)
+		{
+			return false;
+		}
 
         if (this._paused || time < this._startTime) {
 

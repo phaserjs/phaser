@@ -139,6 +139,7 @@ Phaser.Animation.Parser = {
                 );
 
                 PIXI.TextureCache[uuid].realSize = frames[i].spriteSourceSize;
+                // PIXI.TextureCache[uuid].realSize = frames[i].sourceSize;
                 PIXI.TextureCache[uuid].trim.x = 0;
             }
         }
@@ -208,6 +209,7 @@ Phaser.Animation.Parser = {
                 );
 
                 PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
+                // PIXI.TextureCache[uuid].realSize = frames[key].sourceSize;
                 PIXI.TextureCache[uuid].trim.x = 0;
             }
 
