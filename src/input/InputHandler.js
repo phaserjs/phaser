@@ -755,8 +755,8 @@ Phaser.InputHandler.prototype = {
     */
     setDragLock: function (allowHorizontal, allowVertical) {
 
-    	allowHorizontal = allowHorizontal || true;
-    	allowVertical = allowVertical || true;
+        if (typeof allowHorizontal == 'undefined') { allowHorizontal = true; }
+    	if (typeof allowVertical == 'undefined') { allowVertical = true; }
 
         this.allowHorizontalDrag = allowHorizontal;
         this.allowVerticalDrag = allowVertical;
