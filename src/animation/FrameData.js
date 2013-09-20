@@ -164,12 +164,12 @@ Phaser.Animation.FrameData.prototype = {
                 if (useNumericIndex)
                 {
                     //  The actual frame
-                    output.push(this.getFrame(input[i]));
+                    output.push(this.getFrame(frames[i]));
                 }
                 else
                 {
                     //  The actual frame
-                    output.push(this.getFrameByName(input[i]));
+                    output.push(this.getFrameByName(frames[i]));
                 }
             }
         }
