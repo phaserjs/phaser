@@ -5,7 +5,7 @@ Phaser 1.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.0.4 - Released: September 18th 2013
+Version: 1.0.5 - Released: September 20th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -35,7 +35,7 @@ Phaser is everything we ever wanted from an HTML5 game framework. It will power 
 Change Log
 ----------
 
-Version 1.0.5 (In progress)
+Version 1.0.5 (September 20th 2013)
 
 * Fixed issue in FrameData.getFrameIndexes where the input array was being ignored.
 * Added Math.numberArray - Returns an Array containing the numbers from min to max (inclusive), useful for animation frame construction.
@@ -44,6 +44,15 @@ Version 1.0.5 (In progress)
 * Added Group.length property.
 * Added explicit x/y attributes to Phaser.Text to make it work with the camera system (thanks cocoademon).
 * Fixed issue stopping multiple animations from playing, only the most recent would play (frames array was being overwritten, thanks Legrandk)
+* Updated Debug.renderSpriteBounds() so it doesn't use the deprecated Sprite.worldView any more (thanks MikeMnD)
+* Added 2 new properties to the Text object: Text.text and Text.style, both are getter/setters and don't flag dirty unless changed, so safe for core loop use.
+* Removed the exists check from Group.callAll, it now runs on all children (as the name implies)
+* Added Group.callAllExists - you can now call a function on all children who have exists = the provided boolean.
+* Finished off the Breakout example game - now fully playable, proper rebound, scoring, lives, etc.
+* Removed Group.sort dummy entry until it's working.
+* Removed ArcadePhysics.postUpdate.
+* Updated Sprite.update to set renderable to false when the object goes out of Camera, not 'visible' false, otherwise it stops the transform being updated by Pixi.
+* BUG: There is a known issue where the wrong rect coordinates are given to the QuadTree if the Sprite is a child of a Group or another Sprite which has an x/y offset.
 
 Version 1.0.4 (September 18th 2013)
 

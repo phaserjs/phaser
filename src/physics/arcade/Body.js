@@ -7,6 +7,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 
 	this.x = sprite.x;
 	this.y = sprite.y;
+	this.lastX = sprite.x;
+	this.lastY = sprite.y;
 
 	//	un-scaled original size
 	this.sourceWidth = sprite.currentFrame.sourceSizeW;
@@ -62,9 +64,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 
     this.collideWorldBounds = false;
 
-	this.lastX = sprite.x;
-	this.lastY = sprite.y;
-
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
@@ -102,8 +101,11 @@ Phaser.Physics.Arcade.Body.prototype = {
 		this.lastY = this.y;
 		this.rotation = this.sprite.angle;
 
+		//	There is a bug here in that the worldTransform values are what should be used, otherwise the quadTree gets the wrong rect given to it
 		this.x = (this.sprite.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.y = (this.sprite.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		// this.x = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		// this.y = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
 		if (this.moves)
 		{
@@ -120,6 +122,16 @@ Phaser.Physics.Arcade.Body.prototype = {
 		    this.quadTreeIDs = [];
 		    this.quadTreeIndex = -1;
 			this.game.physics.quadTree.insert(this);
+		}
+
+		if (this.deltaX() != 0)
+		{
+			this.sprite.x -= this.deltaX();
+		}
+
+		if (this.deltaY() != 0)
+		{
+			this.sprite.y -= this.deltaY();
 		}
 
 		//	Adjust the sprite based on all of the above, so the x/y coords will be correct going into the State update

@@ -12,11 +12,11 @@
 	var s;
 
 	function preload() {
-		game.load.image('disk', 'assets/misc/starfield.jpg');
+		game.load.image('starfield', 'assets/misc/starfield.jpg');
 	}
 
 	function create() {
-		s = game.add.tileSprite(0, 0, 800, 600, 'disk');
+		s = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 	}
 
 	function update() {

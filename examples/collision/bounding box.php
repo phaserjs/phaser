@@ -55,8 +55,11 @@
 
     function render() {
 
-        game.debug.renderRectangle(sprite1.body);
-        game.debug.renderRectangle(sprite2.body);
+        game.debug.renderSpriteInfo(sprite1, 32, 32);
+        game.debug.renderSpriteCollision(sprite1, 32, 400);
+
+        game.debug.renderSpriteBody(sprite1);
+        game.debug.renderSpriteBody(sprite2);
 
     }
 

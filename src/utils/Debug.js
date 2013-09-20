@@ -119,6 +119,14 @@ Phaser.Utils.Debug.prototype = {
             this.context.strokeStyle = color;
             this.context.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
             this.renderText(quadtree.ID + ' / ' + quadtree.objects.length, bounds.x + 4, bounds.y + 16, 'rgb(0,200,0)', '12px Courier');
+
+            this.context.strokeStyle = 'rgb(0,255,0)';
+
+            // children
+            for (var i = 0; i < quadtree.objects.length; i++)
+            {
+                this.context.strokeRect(quadtree.objects[i].x, quadtree.objects[i].y, quadtree.objects[i].width, quadtree.objects[i].height);
+            }
         }
         else
         {
@@ -374,6 +382,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible);
         this.line('in camera: ' + sprite.inCamera);
+        this.line('body x: ' + sprite.body.x.toFixed(1) + ' y: ' + sprite.body.y.toFixed(1));
 
         //  0 = scaleX
         //  1 = skewY
@@ -382,7 +391,6 @@ Phaser.Utils.Debug.prototype = {
         //  4 = scaleY
         //  5 = translateY
 
-
         // this.line('id: ' + sprite._id);
         // this.line('scale x: ' + sprite.worldTransform[0]);
         // this.line('scale y: ' + sprite.worldTransform[4]);
@@ -390,6 +398,8 @@ Phaser.Utils.Debug.prototype = {
         // this.line('ty: ' + sprite.worldTransform[5]);
         // this.line('skew x: ' + sprite.worldTransform[3]);
         // this.line('skew y: ' + sprite.worldTransform[1]);
+        // this.line('dx: ' + sprite.body.deltaX());
+        // this.line('dy: ' + sprite.body.deltaY());
 
         // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
 
@@ -454,18 +464,48 @@ Phaser.Utils.Debug.prototype = {
 
     },
 
-    renderSpriteBounds: function (sprite, color) {
+    renderSpriteBody: function (sprite, color) {
 
         if (this.context == null)
         {
             return;
         }
 
-        color = color || 'rgba(0, 255, 0, 0.2)';
+        color = color || 'rgba(255,0,255, 0.3)';
 
-        this.start();
+        this.start(0, 0, color);
+
         this.context.fillStyle = color;
-        this.context.fillRect(sprite.worldView.x, sprite.worldView.y, sprite.worldView.width, sprite.worldView.height);
+        // this.context.fillRect(sprite.body.x - sprite.body.deltaX(), sprite.body.y - sprite.body.deltaY(), sprite.body.width, sprite.body.height);
+        this.context.fillRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
+
+        this.stop();
+
+    },
+
+    renderSpriteBounds: function (sprite, color, fill) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255,0,255)';
+
+        this.start(0, 0, color);
+
+        if (fill)
+        {
+            this.context.fillStyle = color;
+            this.context.fillRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
+        }
+        else
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
+            this.context.stroke();
+        }
+
         this.stop();
 
     },

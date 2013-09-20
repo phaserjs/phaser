@@ -214,6 +214,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
     this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
     //  If this sprite or the camera have moved then let's update everything
+    //  Note: The actual position shouldn't be changed if this item is inside a Group?
     if (this.position.x != this._cache.x || this.position.y != this._cache.y)
     {
         this.position.x = this._cache.x;
@@ -224,76 +225,77 @@ Phaser.Sprite.prototype.preUpdate = function() {
     if (this.visible)
     {
         this.renderOrderID = this.game.world.currentRenderOrderID++;
-
-        //  |a c tx|
-        //  |b d ty|
-        //  |0 0  1|
-
-        //  Only update the values we need
-        if (this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.a01)
-        {
-            this._cache.a00 = this.worldTransform[0];  //  scaleX         a
-            this._cache.a01 = this.worldTransform[1];  //  skewY          c
-            this._cache.i01 = this.worldTransform[1];  //  skewY          c
-            this._cache.scaleX = Math.sqrt((this._cache.a00 * this._cache.a00) + (this._cache.a01 * this._cache.a01)); // round this off a bit?
-            this._cache.a01 *= -1;
-            this._cache.dirty = true;
-        }
-
-        //  Need to test, but probably highly unlikely that a scaleX would happen without effecting the Y skew
-        if (this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
-        {
-            this._cache.a10 = this.worldTransform[3];  //  skewX          b
-            this._cache.i10 = this.worldTransform[3];  //  skewX          b
-            this._cache.a11 = this.worldTransform[4];  //  scaleY         d
-            this._cache.scaleY = Math.sqrt((this._cache.a10 * this._cache.a10) + (this._cache.a11 * this._cache.a11)); // round this off a bit?
-            this._cache.a10 *= -1;
-            this._cache.dirty = true;
-        }
-
-        if (this.worldTransform[2] != this._cache.a02 || this.worldTransform[5] != this._cache.a12)
-        {
-            this._cache.a02 = this.worldTransform[2];  //  translateX     tx
-            this._cache.a12 = this.worldTransform[5];  //  translateY     ty
-            this._cache.dirty = true;
-        }
-
-        //  Frame updated?
-        if (this.currentFrame.uuid != this._cache.frameID)
-        {
-            this._cache.frameWidth = this.texture.frame.width;
-            this._cache.frameHeight = this.texture.frame.height;
-            this._cache.frameID = this.currentFrame.uuid;
-            this._cache.dirty = true;
-        }
-
-        if (this._cache.dirty)
-        {
-            this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
-            this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
-            this._cache.halfWidth = Math.floor(this._cache.width / 2);
-            this._cache.halfHeight = Math.floor(this._cache.height / 2);
-
-            this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
-            this._cache.idi = 1 / (this._cache.a00 * this._cache.a11 + this._cache.i01 * -this._cache.i10);
-
-            this.updateBounds();
-        }
     }
-    else
+
+    //  |a c tx|
+    //  |b d ty|
+    //  |0 0  1|
+
+    //  Only update the values we need
+    if (this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.a01)
     {
+        this._cache.a00 = this.worldTransform[0];  //  scaleX         a
+        this._cache.a01 = this.worldTransform[1];  //  skewY          c
+        this._cache.i01 = this.worldTransform[1];  //  skewY          c
+        this._cache.scaleX = Math.sqrt((this._cache.a00 * this._cache.a00) + (this._cache.a01 * this._cache.a01)); // round this off a bit?
+        this._cache.a01 *= -1;
+        this._cache.dirty = true;
+    }
+
+    //  Need to test, but probably highly unlikely that a scaleX would happen without effecting the Y skew
+    if (this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
+    {
+        this._cache.a10 = this.worldTransform[3];  //  skewX          b
+        this._cache.i10 = this.worldTransform[3];  //  skewX          b
+        this._cache.a11 = this.worldTransform[4];  //  scaleY         d
+        this._cache.scaleY = Math.sqrt((this._cache.a10 * this._cache.a10) + (this._cache.a11 * this._cache.a11)); // round this off a bit?
+        this._cache.a10 *= -1;
+        this._cache.dirty = true;
+    }
+
+    if (this.worldTransform[2] != this._cache.a02 || this.worldTransform[5] != this._cache.a12)
+    {
+        this._cache.a02 = this.worldTransform[2];  //  translateX     tx
+        this._cache.a12 = this.worldTransform[5];  //  translateY     ty
+        this._cache.dirty = true;
+    }
+
+    //  Frame updated?
+    if (this.currentFrame.uuid != this._cache.frameID)
+    {
+        this._cache.frameWidth = this.texture.frame.width;
+        this._cache.frameHeight = this.texture.frame.height;
+        this._cache.frameID = this.currentFrame.uuid;
+        this._cache.dirty = true;
+    }
+
+    if (this._cache.dirty)
+    {
+        this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
+        this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
+        this._cache.halfWidth = Math.floor(this._cache.width / 2);
+        this._cache.halfHeight = Math.floor(this._cache.height / 2);
+
+        this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
+        this._cache.idi = 1 / (this._cache.a00 * this._cache.a11 + this._cache.i01 * -this._cache.i10);
+
+        this.updateBounds();
+    }
+    // }
+    // else
+    // {
         //  We still need to work out the bounds in case the camera has moved
         //  but we can't use the local or worldTransform to do it, as Pixi resets that if a Sprite is invisible.
         //  So we'll compare against the cached state + new position.
-        if (this._cache.dirty && this.visible == false)
-        {
-            this.bounds.x -= this._cache.boundsX - this._cache.x;
-            this._cache.boundsX = this._cache.x;
+    //     if (this._cache.dirty && this.visible == false)
+    //     {
+    //         this.bounds.x -= this._cache.boundsX - this._cache.x;
+    //         this._cache.boundsX = this._cache.x;
 
-            this.bounds.y -= this._cache.boundsY - this._cache.y;
-            this._cache.boundsY = this._cache.y;
-        }
-    }
+    //         this.bounds.y -= this._cache.boundsY - this._cache.y;
+    //         this._cache.boundsY = this._cache.y;
+    //     }
+    // }
 
     //  Re-run the camera visibility check
     if (this._cache.dirty)
@@ -302,7 +304,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
         if (this.autoCull == true)
         {
-            this.visible = this._cache.cameraVisible;
+            //  Won't get rendered but will still get its transform updated
+            this.renderable = this._cache.cameraVisible;
         }
 
         //  Update our physics bounds
@@ -310,6 +313,15 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     this.body.update();
+
+}
+
+Phaser.Sprite.prototype.postUpdate = function() {
+
+    if (this.exists)
+    {
+        this.body.postUpdate();
+    }
 
 }
 

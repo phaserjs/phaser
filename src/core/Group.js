@@ -273,54 +273,6 @@ Phaser.Group.prototype = {
 
 	},
 
-	/**
-    * Call this function to sort the group according to a particular value and order.
-    * For example, to sort game objects for Zelda-style overlaps you might call
-    * <code>myGroup.sort("y",Group.ASCENDING)</code> at the bottom of your
-    * <code>State.update()</code> override.  To sort all existing objects after
-    * a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
-    *
-    * @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "z".
-    * @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
-    */
-
-	//	http://www.chiark.greenend.org.uk/~sgtatham/algorithms/listsort.c
-
-    sort: function (index, order) {
-        // if (typeof index === "undefined") { index = 'z'; }
-        // if (typeof order === "undefined") { order = Phaser.Types.SORT_ASCENDING; }
-        // var _this = this;
-        // this._sortIndex = index;
-        // this._sortOrder = order;
-        // this.members.sort(function (a, b) {
-        //     return _this.sortHandler(a, b);
-        // });
-    },
-
-	/**
-    * Helper function for the sort process.
-    *
-    * @param {Basic} Obj1 The first object being sorted.
-    * @param {Basic} Obj2 The second object being sorted.
-    *
-    * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2).
-    */
-    sortHandler: function (obj1, obj2) {
-
-    	/*
-        if (!obj1 || !obj2) {
-            //console.log('null objects in sort', obj1, obj2);
-            return 0;
-        }
-        if (obj1[this._sortIndex] < obj2[this._sortIndex]) {
-            return this._sortOrder;
-        } else if (obj1[this._sortIndex] > obj2[this._sortIndex]) {
-            return -this._sortOrder;
-        }
-        return 0;
-        */
-    },
-
 	//	key is an ARRAY of values.
 	setProperty: function (child, key, value, operation) {
 
@@ -424,8 +376,31 @@ Phaser.Group.prototype = {
 
 	},
 
+	callAllExists: function (callback, callbackContext, existsValue) {
+
+		var args = Array.prototype.splice.call(arguments, 3);
+
+		if (this._container.children.length > 0 && this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.exists == existsValue && currentNode[callback])
+				{
+					currentNode[callback].apply(currentNode, args);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext)
+
+		}
+
+	},
+
 	/**
-    * Calls a function on all of the active children (children with exists=true).
+    * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
     * You must pass the context in which the callback is applied.
     * After the context you can add as many parameters as you like, which will all be passed to the child.
     */
@@ -439,7 +414,7 @@ Phaser.Group.prototype = {
 				
 			do	
 			{
-				if (currentNode.exists && currentNode[callback])
+				if (currentNode[callback])
 				{
 					currentNode[callback].apply(currentNode, args);
 				}

@@ -17,6 +17,9 @@ Phaser.Text = function (game, x, y, text, style) {
 
     this.game = game;
 
+    this._text = text;
+    this._style = style;
+
     PIXI.Text.call(this, text, style);
 
     this.type = Phaser.TEXT;
@@ -91,3 +94,40 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 });
 
+Object.defineProperty(Phaser.Text.prototype, 'text', {
+
+    get: function() {
+        return this._text;
+    },
+
+    set: function(value) {
+
+        //  Let's not update unless needed, this way we can safely update the text in a core loop without constant re-draws
+        if (value !== this._text)
+        {
+            this._text = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+Object.defineProperty(Phaser.Text.prototype, 'style', {
+
+    get: function() {
+        return this._style;
+    },
+
+    set: function(value) {
+
+        //  Let's not update unless needed, this way we can safely update the text in a core loop without constant re-draws
+        if (value !== this._style)
+        {
+            this._style = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
