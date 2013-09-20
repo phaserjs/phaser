@@ -35,6 +35,7 @@ Phaser.Tween = function (object, game) {
 	this._onCompleteCallback = null;
 
     this._pausedTime = 0;
+    this._parent = null;
 
     this.pendingDelete = false;
 
@@ -71,26 +72,39 @@ Phaser.Tween.prototype = {
 		repeat = repeat || 0;
 		yoyo = yoyo || false;
 
-		this._repeat = repeat;
-        this._duration = duration;
-		this._valuesEnd = properties;
+		var self;
+		if (this._parent)
+		{
+			self = this._manager.create(this._object);
+			self._parent = this;
+			this.chain(self);
+		}
+		else
+		{
+			self = this;
+			self._parent = self;
+		}
+
+		self._repeat = repeat;
+        self._duration = duration;
+		self._valuesEnd = properties;
 
         if (ease !== null)
         {
-            this._easingFunction = ease;
+            self._easingFunction = ease;
         }
 
         if (delay > 0)
         {
-            this._delayTime = delay;
+            self._delayTime = delay;
         }
 
-        this._yoyo = yoyo;
+        self._yoyo = yoyo;
 
         if (autoStart) {
-            return this.start();
+            return self.start();
         } else {
-            return this;
+            return self;
         }
 
 	},
