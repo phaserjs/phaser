@@ -209,7 +209,7 @@ Phaser.Animation.FrameData.prototype = {
                 //  Does the frames array contain names or indexes?
                 if (useNumericIndex)
                 {
-                    output.push(frames[i].index);
+                    output.push(frames[i]);
                 }
                 else
                 {
