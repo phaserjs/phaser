@@ -35,6 +35,12 @@ Phaser is everything we ever wanted from an HTML5 game framework. It will power 
 Change Log
 ----------
 
+Version 1.0.6 (in progress)
+
+* Added check into Pointer.move to always consider a Sprite that has pixelPerfect enabled, regardless of render ID.
+* BUG Found: The pixel perfect click check doesn't work if the sprite is part of a texture atlas yet.
+
+
 Version 1.0.5 (September 20th 2013)
 
 * Fixed issue in FrameData.getFrameIndexes where the input array was being ignored.

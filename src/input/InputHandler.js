@@ -367,6 +367,8 @@ Phaser.InputHandler.prototype = {
         if (this.sprite.texture.baseTexture.source)
         {
             this.game.input.hitContext.clearRect(0, 0, 1, 1);
+
+            //  This will fail if the image is part of a texture atlas - need to modify the x/y values here
             this.game.input.hitContext.drawImage(this.sprite.texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
             
             var rgb = this.game.input.hitContext.getImageData(0, 0, 1, 1);
@@ -665,7 +667,7 @@ Phaser.InputHandler.prototype = {
 
         this.pixelPerfect = pixelPerfect;
         this.pixelPerfectAlpha = alphaThreshold;
-        
+
         if (boundsRect)
         {
             this.boundsRect = boundsRect;
