@@ -10,7 +10,6 @@
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
     var p;
-    var p2;
 
     function preload() {
 
@@ -27,13 +26,11 @@
         game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
         .to({ y: 300 }, 1000, Phaser.Easing.Linear.None)
         .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
-        .to({ y: 0 }, 1000, Phaser.Easing.Linear.None);
+        .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
+        .loop();
     }
 
     function update() {
-
-        // p.y = game.math.min(100, game.input.y);
-
     }
 
     function render() {

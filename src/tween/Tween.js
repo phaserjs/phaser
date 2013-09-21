@@ -76,7 +76,7 @@ Phaser.Tween.prototype = {
 		if (this._parent)
 		{
 			self = this._manager.create(this._object);
-			self._parent = this;
+			self._parent = this._parent;
 			this.chain(self);
 		}
 		else
@@ -204,6 +204,23 @@ Phaser.Tween.prototype = {
 		this._chainedTweens = arguments;
 		return this;
 
+	},
+
+	/**
+	* Loop a chain of tweens
+	* 
+	* Usage:
+	* game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
+	* .to({ y: 300 }, 1000, Phaser.Easing.Linear.None)
+	* .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
+	* .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
+	* .loop();
+	* 
+	* @return {Tween} Itself.
+	*/
+	loop: function() {
+		if (this._parent) this.chain(this._parent);
+		return this;
 	},
 
 	onStartCallback: function ( callback ) {
