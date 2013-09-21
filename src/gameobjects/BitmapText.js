@@ -80,6 +80,9 @@ Phaser.BitmapText.prototype.update = function() {
         this._cache.dirty = true;
     }
 
+    this.pivot.x = this.anchor.x*this.width;
+    this.pivot.y = this.anchor.y*this.height;
+
 }
 
 Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
