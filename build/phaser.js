@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.5 - Built at: Fri, 20 Sep 2013 21:16:39 +0000
+* v1.0.6 - Built at: Sun, 22 Sep 2013 22:05:45 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -34,7 +34,7 @@ var PIXI = PIXI || {};
  */
 var Phaser = Phaser || { 
 
-	VERSION: '1.0.5', 
+	VERSION: '1.0.6', 
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
@@ -148,13 +148,6 @@ Phaser.Utils = {
 		return true;
 	},
 
-
-	//	deep, target, objects to copy to the target object
-	//	This is a slightly modified version of jQuery.extend (http://api.jquery.com/jQuery.extend/)
-	//	deep (boolean)
-	//	target (object to add to)
-	//	objects ... (objects to recurse and copy from)
-
 	/**
     * This is a slightly modified version of jQuery.extend (http://api.jquery.com/jQuery.extend/)
     * @method extend
@@ -217,7 +210,7 @@ Phaser.Utils = {
 						}
 
 						// Never move original objects, clone them
-						target[name] = extend(deep, clone, copy);
+						target[name] = Phaser.Utils.extend(deep, clone, copy);
 
 					// Don't bring in undefined values
 					}
@@ -6027,7 +6020,7 @@ PIXI.BitmapText.prototype.updateText = function()
         this.addChild(c);
     }
 
-    this.width = pos.x * scale;
+    this.width = maxLineWidth * scale;
     this.height = (pos.y + data.lineHeight) * scale;
 };
 
@@ -10176,7 +10169,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	parent = parent || '';
 	state = state || null;
 	transparent = transparent || false;
-	antialias = antialias || true;
+	antialias = typeof antialias === 'undefined' ? true : antialias;
 
 	/**
 	* Phaser Game ID (for when Pixi supports multiple instances)
@@ -12299,8 +12292,8 @@ Phaser.Pointer.prototype = {
 
             do  
             {
-                //  If the object has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID == this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
+                //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
+                if (currentNode.pixelPerfect || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID == this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
                 {
                     if (currentNode.checkPointerOver(this))
                     {
@@ -13232,6 +13225,8 @@ Phaser.InputHandler.prototype = {
         if (this.sprite.texture.baseTexture.source)
         {
             this.game.input.hitContext.clearRect(0, 0, 1, 1);
+
+            //  This will fail if the image is part of a texture atlas - need to modify the x/y values here
             this.game.input.hitContext.drawImage(this.sprite.texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
             
             var rgb = this.game.input.hitContext.getImageData(0, 0, 1, 1);
@@ -13530,7 +13525,7 @@ Phaser.InputHandler.prototype = {
 
         this.pixelPerfect = pixelPerfect;
         this.pixelPerfectAlpha = alphaThreshold;
-        
+
         if (boundsRect)
         {
             this.boundsRect = boundsRect;
@@ -13620,8 +13615,8 @@ Phaser.InputHandler.prototype = {
     */
     setDragLock: function (allowHorizontal, allowVertical) {
 
-    	allowHorizontal = allowHorizontal || true;
-    	allowVertical = allowVertical || true;
+        if (typeof allowHorizontal == 'undefined') { allowHorizontal = true; }
+    	if (typeof allowVertical == 'undefined') { allowVertical = true; }
 
         this.allowHorizontalDrag = allowHorizontal;
         this.allowVerticalDrag = allowVertical;
@@ -14721,6 +14716,9 @@ Phaser.BitmapText.prototype.update = function() {
         this._cache.dirty = true;
     }
 
+    this.pivot.x = this.anchor.x*this.width;
+    this.pivot.y = this.anchor.y*this.height;
+
 }
 
 Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
@@ -14950,124 +14948,19 @@ Phaser.Button.prototype.onInputUpHandler = function (pointer) {
 
 Phaser.Graphics = function (game, x, y) {
 
-    //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
-    this.exists = true;
+    PIXI.Graphics.call(this);
 
-    //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
-    this.alive = true;
-
-    this.group = null;
-
-    this.name = '';
-
-	this.game = game;
-
-	PIXI.DisplayObjectContainer.call(this);
+	Phaser.Sprite.call(this, game, x, y);
 
     this.type = Phaser.GRAPHICS;
 
-	this.position.x = x;
-	this.position.y = y;
-
-    //  Replaces the PIXI.Point with a slightly more flexible one
-    this.scale = new Phaser.Point(1, 1);
-
-    //  Influence of camera movement upon the position
-    this.scrollFactor = new Phaser.Point(1, 1);
-
-    //  A mini cache for storing all of the calculated values
-    this._cache = { 
-
-        dirty: false,
-
-        //  Transform cache
-        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
-
-        //  The previous calculated position inc. camera x/y and scrollFactor
-        x: -1, y: -1,
-
-        //  The actual scale values based on the worldTransform
-        scaleX: 1, scaleY: 1
-
-    };
-
-    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
-
-	this.renderable = true;
-
-    /**
-     * The alpha of the fill of this graphics object
-     *
-     * @property fillAlpha
-     * @type Number
-     */
-	this.fillAlpha = 1;
-
-    /**
-     * The width of any lines drawn
-     *
-     * @property lineWidth
-     * @type Number
-     */
-	this.lineWidth = 0;
-
-    /**
-     * The color of any lines drawn
-     *
-     * @property lineColor
-     * @type String
-     */
-	this.lineColor = "black";
-
-    /**
-     * Graphics data
-     *
-     * @property graphicsData
-     * @type Array
-     * @private
-     */
-	this.graphicsData = [];
-
-    /**
-     * Current path
-     *
-     * @property currentPath
-     * @type Object
-     * @private
-     */
-	this.currentPath = {points:[]};
-
 };
 
-Phaser.Graphics.prototype = Phaser.Utils.extend(true, PIXI.Graphics.prototype, PIXI.DisplayObjectContainer.prototype, Phaser.Sprite.prototype);
+Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
+Phaser.Graphics.prototype = Phaser.Utils.extend(true, Phaser.Graphics.prototype, Phaser.Sprite.prototype);
 
 //  Add our own custom methods
-
-/**
- * Automatically called by World.update
- */
-Phaser.Graphics.prototype.update = function() {
-
-    if (!this.exists)
-    {
-        return;
-    }
-
-    this._cache.dirty = false;
-
-    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
-
-    if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-    {
-        this.position.x = this._cache.x;
-        this.position.y = this._cache.y;
-        this._cache.dirty = true;
-    }
-
-}
 
 Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 
@@ -15077,30 +14970,6 @@ Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-Object.defineProperty(Phaser.Graphics.prototype, 'x', {
-
-    get: function() {
-        return this.position.x;
-    },
-
-    set: function(value) {
-        this.position.x = value;
-    }
-
-});
-
-Object.defineProperty(Phaser.Graphics.prototype, 'y', {
-
-    get: function() {
-        return this.position.y;
-    },
-
-    set: function(value) {
-        this.position.y = value;
     }
 
 });
@@ -16950,8 +16819,8 @@ Phaser.Math = {
 
         if (typeof radians === "undefined") { radians = true; }
 
-        var rd = (radians) ? GameMath.PI : 180;
-        return this.wrap(angle, rd, -rd);
+        var rd = (radians) ? Math.PI : 180;
+        return this.wrap(angle, -rd, rd);
         
     },
 
@@ -16963,7 +16832,7 @@ Phaser.Math = {
 
         if (typeof radians === "undefined") { radians = true; }
 
-        var rd = (radians) ? GameMath.PI : 180;
+        var rd = (radians) ? Math.PI : 180;
         a1 = this.normalizeAngle(a1, radians);
         a2 = this.normalizeAngle(a2, radians);
         
@@ -17093,15 +16962,39 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-	* <p>Values must be positive integers, and are passed through Math.abs</p>
-	*
-	* @param value The value to add the amount to
-	* @param amount The amount to add to the value
-	* @param max The maximum the value is allowed to be
-	* @return The wrapped value
-	*/
+    /**
+    * Ensures that the value always stays between min and max, by wrapping the value around.
+    * <p>max should be larger than min, or the function will return 0</p>
+    *
+    * @param value The value to wrap
+    * @param min The minimum the value is allowed to be
+    * @param max The maximum the value is allowed to be
+    * @return The wrapped value
+    */
+    wrap: function (value, min, max) {
+
+        var range = max - min;
+        if (range <= 0)
+        {
+            return 0;
+        }
+        var result = (value - min) % range;
+        if (result < 0)
+        {
+            result += range;
+        }
+        return result + min;
+    },
+
+    /**
+    * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
+    * <p>Values must be positive integers, and are passed through Math.abs</p>
+    *
+    * @param value The value to add the amount to
+    * @param amount The amount to add to the value
+    * @param max The maximum the value is allowed to be
+    * @return The wrapped value
+    */
     wrapValue: function (value, amount, max) {
 
         var diff;
@@ -19732,6 +19625,7 @@ Phaser.Tween = function (object, game) {
 	this._onCompleteCallback = null;
 
     this._pausedTime = 0;
+    this._parent = null;
 
     this.pendingDelete = false;
 
@@ -19768,26 +19662,39 @@ Phaser.Tween.prototype = {
 		repeat = repeat || 0;
 		yoyo = yoyo || false;
 
-		this._repeat = repeat;
-        this._duration = duration;
-		this._valuesEnd = properties;
+		var self;
+		if (this._parent)
+		{
+			self = this._manager.create(this._object);
+			self._parent = this._parent;
+			this.chain(self);
+		}
+		else
+		{
+			self = this;
+			self._parent = self;
+		}
+
+		self._repeat = repeat;
+        self._duration = duration;
+		self._valuesEnd = properties;
 
         if (ease !== null)
         {
-            this._easingFunction = ease;
+            self._easingFunction = ease;
         }
 
         if (delay > 0)
         {
-            this._delayTime = delay;
+            self._delayTime = delay;
         }
 
-        this._yoyo = yoyo;
+        self._yoyo = yoyo;
 
         if (autoStart) {
-            return this.start();
+            return self.start();
         } else {
-            return this;
+            return self;
         }
 
 	},
@@ -19887,6 +19794,23 @@ Phaser.Tween.prototype = {
 		this._chainedTweens = arguments;
 		return this;
 
+	},
+
+	/**
+	* Loop a chain of tweens
+	* 
+	* Usage:
+	* game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
+	* .to({ y: 300 }, 1000, Phaser.Easing.Linear.None)
+	* .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
+	* .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
+	* .loop();
+	* 
+	* @return {Tween} Itself.
+	*/
+	loop: function() {
+		if (this._parent) this.chain(this._parent);
+		return this;
 	},
 
 	onStartCallback: function ( callback ) {
@@ -21759,8 +21683,8 @@ Phaser.Animation.Parser = {
     * @method spriteSheet
     * @param {Phaser.Game} game A reference to the currently running game.
     * @param {String} key The Game.Cache asset key of the Sprite Sheet image.
-    * @param {Number} frameWidth The fixed width of each frame of the animation.
-    * @param {Number} frameHeight The fixed height of each frame of the animation.
+    * @param {Number} frameWidth The fixed width of each frame of the animation. If negative, indicates how many columns there are.
+    * @param {Number} frameHeight The fixed height of each frame of the animation. If negative, indicates how many rows there are.
     * @param {Number} [frameMax=-1] The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".
     * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
     */
@@ -21776,6 +21700,14 @@ Phaser.Animation.Parser = {
 
         var width = img.width;
         var height = img.height;
+        if (frameWidth <= 0)
+        {
+            frameWidth = Math.floor(-width/Math.min(-1, frameWidth));
+        }
+        if (frameHeight <= 0)
+        {
+            frameHeight = Math.floor(-height/Math.min(-1, frameHeight));
+        }
         var row = Math.round(width / frameWidth);
         var column = Math.round(height / frameHeight);
         var total = row * column;
@@ -23693,7 +23625,7 @@ Phaser.Sound = function (game, key, volume, loop) {
     * @public
     * @type {string}
     */
-    this.name = '';
+    this.name = key;
 
     /**
     * Asset key for the sound.
@@ -23932,9 +23864,7 @@ Phaser.Sound.prototype = {
     	if (typeof loop == 'undefined') { loop = false; }
     	if (typeof forceRestart == 'undefined') { forceRestart = false; }
 
-
-
-        console.log('play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
+        console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {
