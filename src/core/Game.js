@@ -32,7 +32,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	parent = parent || '';
 	state = state || null;
 	transparent = transparent || false;
-	antialias = antialias || true;
+	antialias = typeof antialias === 'undefined' ? true : antialias;
 
 	/**
 	* Phaser Game ID (for when Pixi supports multiple instances)
