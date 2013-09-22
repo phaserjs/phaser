@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.5 - Built at: Fri, 20 Sep 2013 12:59:22 +0000
+* v1.0.5 - Built at: Fri, 20 Sep 2013 21:16:39 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -7864,13 +7864,6 @@ Phaser.StateManager.prototype = {
             {
 		    	// console.log('Loader queue empty');
                 this.game.loadComplete();
-
-                if (this.onCreateCallback)
-                {
-                    this.onCreateCallback.call(this.callbackContext);
-                }
-
-				this._created = true;
             }
             else
             {
@@ -7883,14 +7876,6 @@ Phaser.StateManager.prototype = {
         {
 			// console.log('Preload callback not found');
             //  No init? Then there was nothing to load either
-            if (this.onCreateCallback)
-            {
-				// console.log('Create callback found');
-                this.onCreateCallback.call(this.callbackContext);
-            }
-
-			this._created = true;
-
             this.game.loadComplete();
         }
 
@@ -7988,9 +7973,9 @@ Phaser.StateManager.prototype = {
         if (this._created == false && this.onCreateCallback)
         {
 			// console.log('Create callback found');
-            this._created = true;
             this.onCreateCallback.call(this.callbackContext);
         }
+        this._created = true;
 
     },
 
@@ -8061,6 +8046,7 @@ Phaser.StateManager.prototype = {
     }
 
 };
+
 Phaser.LinkedList = function () {
 
     this.next = null;
@@ -21681,12 +21667,12 @@ Phaser.Animation.FrameData.prototype = {
                 if (useNumericIndex)
                 {
                     //  The actual frame
-                    output.push(this.getFrame(input[i]));
+                    output.push(this.getFrame(frames[i]));
                 }
                 else
                 {
                     //  The actual frame
-                    output.push(this.getFrameByName(input[i]));
+                    output.push(this.getFrameByName(frames[i]));
                 }
             }
         }
@@ -21726,7 +21712,7 @@ Phaser.Animation.FrameData.prototype = {
                 //  Does the frames array contain names or indexes?
                 if (useNumericIndex)
                 {
-                    output.push(frames[i].index);
+                    output.push(frames[i]);
                 }
                 else
                 {

@@ -244,8 +244,8 @@ Phaser.Math = {
 
         if (typeof radians === "undefined") { radians = true; }
 
-        var rd = (radians) ? GameMath.PI : 180;
-        return this.wrap(angle, rd, -rd);
+        var rd = (radians) ? Math.PI : 180;
+        return this.wrap(angle, -rd, rd);
         
     },
 
@@ -257,7 +257,7 @@ Phaser.Math = {
 
         if (typeof radians === "undefined") { radians = true; }
 
-        var rd = (radians) ? GameMath.PI : 180;
+        var rd = (radians) ? Math.PI : 180;
         a1 = this.normalizeAngle(a1, radians);
         a2 = this.normalizeAngle(a2, radians);
         
@@ -387,15 +387,39 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-	* <p>Values must be positive integers, and are passed through Math.abs</p>
-	*
-	* @param value The value to add the amount to
-	* @param amount The amount to add to the value
-	* @param max The maximum the value is allowed to be
-	* @return The wrapped value
-	*/
+    /**
+    * Ensures that the value always stays between min and max, by wrapping the value around.
+    * <p>max should be larger than min, or the function will return 0</p>
+    *
+    * @param value The value to wrap
+    * @param min The minimum the value is allowed to be
+    * @param max The maximum the value is allowed to be
+    * @return The wrapped value
+    */
+    wrap: function (value, min, max) {
+
+        var range = max - min;
+        if (range <= 0)
+        {
+            return 0;
+        }
+        var result = (value - min) % range;
+        if (result < 0)
+        {
+            result += range;
+        }
+        return result + min;
+    },
+
+    /**
+    * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
+    * <p>Values must be positive integers, and are passed through Math.abs</p>
+    *
+    * @param value The value to add the amount to
+    * @param amount The amount to add to the value
+    * @param max The maximum the value is allowed to be
+    * @return The wrapped value
+    */
     wrapValue: function (value, amount, max) {
 
         var diff;
