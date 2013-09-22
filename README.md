@@ -38,7 +38,15 @@ Change Log
 Version 1.0.6 (in progress)
 
 * Added check into Pointer.move to always consider a Sprite that has pixelPerfect enabled, regardless of render ID.
-* BUG Found: The pixel perfect click check doesn't work if the sprite is part of a texture atlas yet.
+* BUG: The pixel perfect click check doesn't work if the sprite is part of a texture atlas yet.
+* Fixed issue with anti-alias in the Game constructor not being set correctly (thanks luizbills)
+* Added support for the Graphics game object back in and two examples (thanks earok for spotting)
+* New: Tweens can now be chained via multiple to() calls + example created (thanks to powerfear for adding)
+* Fixed Math.wrap (thanks TheJare)
+* New: When loading a Sprite Sheet you can now pass negative values for the frame sizes which specifies the number of rows/columns to load instead (thanks TheJare)
+* New: BitmapText now supports anchor and has fixed box dimensions (thanks TheJare)
+* Fixed bug where if a State contains an empty Preloader the Update will not be called (thanks TheJare)
+
 
 
 Version 1.0.5 (September 20th 2013)

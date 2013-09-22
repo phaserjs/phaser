@@ -1,5 +1,5 @@
 <?php
-    $title = "Canvas Smoothing";
+    $title = "Graphics";
     require('../head.php');
 ?>
 
@@ -9,14 +9,7 @@
 
 (function () {
 
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
-
-    function preload() {
-
-        game.load.image('atari1', 'assets/sprites/atari130xe.png');
-
-    }
-
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { create: create });
 
     function create() {
 
@@ -27,12 +20,12 @@
         graphics.lineStyle(10, 0xffd900, 1);
         
         // draw a shape
-        graphics.moveTo(50,50);
+        graphics.moveTo(0,50);
         graphics.lineTo(250, 50);
         graphics.lineTo(100, 100);
         graphics.lineTo(250, 220);
         graphics.lineTo(50, 220);
-        graphics.lineTo(50, 50);
+        graphics.lineTo(0, 50);
         graphics.endFill();
         
         // set a fill and line style again
@@ -49,7 +42,7 @@
         graphics.lineTo(210,300);
         graphics.endFill();
         
-        // draw a rectangel
+        // draw a rectangle
         graphics.lineStyle(2, 0x0000FF, 1);
         graphics.drawRect(50, 250, 100, 100);
         
@@ -64,15 +57,6 @@
 
         game.add.tween(graphics).to({ x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
-        // graphics.rotation = 1.2;
-        // graphics.angle = 10;
-
-    }
-
-    function update() {
-    }
-
-    function render() {
     }
 
 })();
