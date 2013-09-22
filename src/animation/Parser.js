@@ -15,8 +15,8 @@ Phaser.Animation.Parser = {
     * @method spriteSheet
     * @param {Phaser.Game} game A reference to the currently running game.
     * @param {String} key The Game.Cache asset key of the Sprite Sheet image.
-    * @param {Number} frameWidth The fixed width of each frame of the animation.
-    * @param {Number} frameHeight The fixed height of each frame of the animation.
+    * @param {Number} frameWidth The fixed width of each frame of the animation. If negative, indicates how many columns there are.
+    * @param {Number} frameHeight The fixed height of each frame of the animation. If negative, indicates how many rows there are.
     * @param {Number} [frameMax=-1] The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".
     * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
     */
@@ -32,6 +32,14 @@ Phaser.Animation.Parser = {
 
         var width = img.width;
         var height = img.height;
+        if (frameWidth <= 0)
+        {
+            frameWidth = Math.floor(-width/Math.min(-1, frameWidth));
+        }
+        if (frameHeight <= 0)
+        {
+            frameHeight = Math.floor(-height/Math.min(-1, frameHeight));
+        }
         var row = Math.round(width / frameWidth);
         var column = Math.round(height / frameHeight);
         var total = row * column;

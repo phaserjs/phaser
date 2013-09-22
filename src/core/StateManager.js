@@ -259,13 +259,6 @@ Phaser.StateManager.prototype = {
             {
 		    	// console.log('Loader queue empty');
                 this.game.loadComplete();
-
-                if (this.onCreateCallback)
-                {
-                    this.onCreateCallback.call(this.callbackContext);
-                }
-
-				this._created = true;
             }
             else
             {
@@ -278,14 +271,6 @@ Phaser.StateManager.prototype = {
         {
 			// console.log('Preload callback not found');
             //  No init? Then there was nothing to load either
-            if (this.onCreateCallback)
-            {
-				// console.log('Create callback found');
-                this.onCreateCallback.call(this.callbackContext);
-            }
-
-			this._created = true;
-
             this.game.loadComplete();
         }
 
@@ -383,9 +368,9 @@ Phaser.StateManager.prototype = {
         if (this._created == false && this.onCreateCallback)
         {
 			// console.log('Create callback found');
-            this._created = true;
             this.onCreateCallback.call(this.callbackContext);
         }
+        this._created = true;
 
     },
 
