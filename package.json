@@ -27,6 +27,7 @@
     "grunt-contrib-watch": "~0.3.1",
     "grunt-contrib-connect": "~0.3.0",
     "grunt-open": "~0.2.0",
-    "grunt-contrib-copy": "~0.4.1"
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-yuidoc": "~0.5.0"
   }
 }
