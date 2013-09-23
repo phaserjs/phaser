@@ -44,6 +44,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.allowCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
     this.touching = { none: true, up: false, down: false, left: false, right: false };
     this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
+    this.facing = Phaser.NONE;
 
     this.immovable = false;
     this.moves = true;
@@ -129,6 +130,34 @@ Phaser.Physics.Arcade.Body.prototype = {
 	},
 
 	postUpdate: function () {
+
+		//	Calculate forward-facing edge
+		if (this.deltaX() == 0 && this.deltaY() == 0)
+		{
+			//	Can't work it out from the Body, how about from x position?
+			if (this.sprite.deltaX() == 0 && this.sprite.deltaY() == 0)
+			{
+				//	still as a statue
+			}
+		}
+
+		if (this.deltaX() < 0)
+		{
+			this.facing = Phaser.LEFT;
+		}
+		else if (this.deltaX() > 0)
+		{
+			this.facing = Phaser.RIGHT;
+		}
+
+		if (this.deltaY() < 0)
+		{
+			this.facing = Phaser.UP;
+		}
+		else if (this.deltaY() > 0)
+		{
+			this.facing = Phaser.DOWN;
+		}
 
 		if (this.deltaX() != 0)
 		{

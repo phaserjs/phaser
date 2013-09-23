@@ -99,6 +99,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.x = x;
     this.y = y;
 
+    this.prevX = x;
+    this.prevY = y;
+
 	this.position.x = x;
 	this.position.y = y;
 
@@ -215,6 +218,9 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this.renderOrderID = this.game.world.currentRenderOrderID++;
     }
 
+    this.prevX = this.x;
+    this.prevY = this.y;
+
     //  |a c tx|
     //  |b d ty|
     //  |0 0  1|
@@ -306,6 +312,22 @@ Phaser.Sprite.prototype.postUpdate = function() {
         }
     }
 
+}
+
+Phaser.Sprite.prototype.deltaAbsX = function () {
+    return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+}
+
+Phaser.Sprite.prototype.deltaAbsY = function () {
+    return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+}
+
+Phaser.Sprite.prototype.deltaX = function () {
+    return this.x - this.prevX;
+}
+
+Phaser.Sprite.prototype.deltaY = function () {
+    return this.y - this.prevY;
 }
 
 /**

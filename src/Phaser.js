@@ -20,7 +20,13 @@ var Phaser = Phaser || {
 	RENDERTEXTURE: 8,
 	TILEMAP: 9,
 	TILEMAPLAYER: 10,
-	EMITTER: 11
+	EMITTER: 11,
+
+	NONE: 0,
+	LEFT: 1,
+	RIGHT: 2,
+	UP: 3,
+	DOWN: 4
 
  };
 

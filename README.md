@@ -51,7 +51,8 @@ Version 1.0.6 (in progress)
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
 * QuadTree bug found in 1.0.5 now fixed. The QuadTree is updated properly now using worldTransform values.
 * Several new examples added (cameras, tweens, etc)
-
+* TODO: addMarker hh:mm:ss:ms
+* TODO: Direction constants
 
 
 Version 1.0.5 (September 20th 2013)
